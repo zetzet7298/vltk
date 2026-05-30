@@ -1,0 +1,16 @@
+{
+    "name": "VLTK.Core",
+    "rootNamespace": "VLTK.Core",
+    "references": [
+        "VLTK.Model"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

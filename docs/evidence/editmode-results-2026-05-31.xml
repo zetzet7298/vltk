@@ -1,0 +1,1373 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test-run id="2" testcasecount="167" result="Passed" total="167" passed="167" failed="0" inconclusive="0" skipped="0" asserts="0" engine-version="3.5.0.0" clr-version="4.0.30319.42000" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.9918136">
+  <test-suite type="TestSuite" id="1000" name="vltk-mobile" fullname="vltk-mobile" runstate="Runnable" testcasecount="167" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.991814" total="167" passed="167" failed="0" inconclusive="0" skipped="0" asserts="0">
+    <properties>
+      <property name="platform" value="EditMode" />
+    </properties>
+    <test-suite type="Assembly" id="1192" name="VLTK.Tests.EditMode.dll" fullname="/var/www/vltk-mobile/Library/ScriptAssemblies/VLTK.Tests.EditMode.dll" runstate="Runnable" testcasecount="167" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.984310" total="167" passed="167" failed="0" inconclusive="0" skipped="0" asserts="0">
+      <properties>
+        <property name="_PID" value="2033698" />
+        <property name="_APPDOMAIN" value="Unity Child Domain" />
+        <property name="platform" value="EditMode" />
+        <property name="EditorOnly" value="True" />
+      </properties>
+      <test-suite type="TestSuite" id="1193" name="VLTK" fullname="VLTK" runstate="Runnable" testcasecount="167" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.983180" total="167" passed="167" failed="0" inconclusive="0" skipped="0" asserts="0">
+        <properties />
+        <test-suite type="TestSuite" id="1194" name="Tests" fullname="VLTK.Tests" runstate="Runnable" testcasecount="167" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.982225" total="167" passed="167" failed="0" inconclusive="0" skipped="0" asserts="0">
+          <properties />
+          <test-suite type="TestSuite" id="1198" name="Model" fullname="VLTK.Tests.Model" runstate="Runnable" testcasecount="28" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.045517" total="28" passed="28" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1159" name="AssetRegistryTests" fullname="VLTK.Tests.Model.AssetRegistryTests" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" testcasecount="9" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.029164" total="9" passed="9" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1168" name="GetAll_ReturnsAllRegisteredEntries" fullname="VLTK.Tests.Model.AssetRegistryTests.GetAll_ReturnsAllRegisteredEntries" methodname="GetAll_ReturnsAllRegisteredEntries" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="1727938399" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.010475" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1164" name="GetByStatus_Missing_ReturnsMissingEntries" fullname="VLTK.Tests.Model.AssetRegistryTests.GetByStatus_Missing_ReturnsMissingEntries" methodname="GetByStatus_Missing_ReturnsMissingEntries" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="1111201253" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000493" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1167" name="Register_ThenResolve_ReturnsSameEntry" fullname="VLTK.Tests.Model.AssetRegistryTests.Register_ThenResolve_ReturnsSameEntry" methodname="Register_ThenResolve_ReturnsSameEntry" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="1781337203" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002014" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1160" name="Resolve_ByPath_ReturnsCorrectEntry" fullname="VLTK.Tests.Model.AssetRegistryTests.Resolve_ByPath_ReturnsCorrectEntry" methodname="Resolve_ByPath_ReturnsCorrectEntry" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="836344737" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000180" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1162" name="Resolve_BySourceAssetId_PrefersPath" fullname="VLTK.Tests.Model.AssetRegistryTests.Resolve_BySourceAssetId_PrefersPath" methodname="Resolve_BySourceAssetId_PrefersPath" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="249871096" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000193" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1161" name="Resolve_ByUid_ReturnsCorrectEntry" fullname="VLTK.Tests.Model.AssetRegistryTests.Resolve_ByUid_ReturnsCorrectEntry" methodname="Resolve_ByUid_ReturnsCorrectEntry" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="1666697566" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000216" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1163" name="Resolve_UnknownPath_ReturnsNull" fullname="VLTK.Tests.Model.AssetRegistryTests.Resolve_UnknownPath_ReturnsNull" methodname="Resolve_UnknownPath_ReturnsNull" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="565385391" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1165" name="Validate_DuplicateKey_ReportsWarning" fullname="VLTK.Tests.Model.AssetRegistryTests.Validate_DuplicateKey_ReportsWarning" methodname="Validate_DuplicateKey_ReportsWarning" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="200665715" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002460" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Registry] Duplicate source path: maps/dup.dat
+[Registry] Duplicate uid: 1
+]]></output>
+              </test-case>
+              <test-case id="1166" name="Validate_InvalidEntry_ReportsError" fullname="VLTK.Tests.Model.AssetRegistryTests.Validate_InvalidEntry_ReportsError" methodname="Validate_InvalidEntry_ReportsError" classname="VLTK.Tests.Model.AssetRegistryTests" runstate="Runnable" seed="1033307955" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000260" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1169" name="ConversionManifestTests" fullname="VLTK.Tests.Model.ConversionManifestTests" classname="VLTK.Tests.Model.ConversionManifestTests" runstate="Runnable" testcasecount="2" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.006296" total="2" passed="2" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1171" name="ConversionManifest_EmptyByDefault" fullname="VLTK.Tests.Model.ConversionManifestTests.ConversionManifest_EmptyByDefault" methodname="ConversionManifest_EmptyByDefault" classname="VLTK.Tests.Model.ConversionManifestTests" runstate="Runnable" seed="741550900" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000548" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1170" name="ConversionManifest_RoundTrip_ViaJsonUtility" fullname="VLTK.Tests.Model.ConversionManifestTests.ConversionManifest_RoundTrip_ViaJsonUtility" methodname="ConversionManifest_RoundTrip_ViaJsonUtility" classname="VLTK.Tests.Model.ConversionManifestTests" runstate="Runnable" seed="1086959430" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001009" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1172" name="MapModelTests" fullname="VLTK.Tests.Model.MapModelTests" classname="VLTK.Tests.Model.MapModelTests" runstate="Runnable" testcasecount="4" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002613" total="4" passed="4" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1174" name="MapCatalogEntry_RoundTrip_ViaJsonUtility" fullname="VLTK.Tests.Model.MapModelTests.MapCatalogEntry_RoundTrip_ViaJsonUtility" methodname="MapCatalogEntry_RoundTrip_ViaJsonUtility" classname="VLTK.Tests.Model.MapModelTests" runstate="Runnable" seed="1783303375" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001044" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1173" name="MapCatalogEntry_Serializable_DefaultValues" fullname="VLTK.Tests.Model.MapModelTests.MapCatalogEntry_Serializable_DefaultValues" methodname="MapCatalogEntry_Serializable_DefaultValues" classname="VLTK.Tests.Model.MapModelTests" runstate="Runnable" seed="1299448668" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000145" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1176" name="MapDefinition_RoundTrip_ViaJsonUtility" fullname="VLTK.Tests.Model.MapModelTests.MapDefinition_RoundTrip_ViaJsonUtility" methodname="MapDefinition_RoundTrip_ViaJsonUtility" classname="VLTK.Tests.Model.MapModelTests" runstate="Runnable" seed="1085520161" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000528" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1175" name="MapDefinition_Serializable_DefaultValues" fullname="VLTK.Tests.Model.MapModelTests.MapDefinition_Serializable_DefaultValues" methodname="MapDefinition_Serializable_DefaultValues" classname="VLTK.Tests.Model.MapModelTests" runstate="Runnable" seed="1271438111" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000138" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1177" name="RegionModelTests" fullname="VLTK.Tests.Model.RegionModelTests" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002112" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1180" name="CanFly_FlyBlockedCell_ReturnsFalse" fullname="VLTK.Tests.Model.RegionModelTests.CanFly_FlyBlockedCell_ReturnsFalse" methodname="CanFly_FlyBlockedCell_ReturnsFalse" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="1181038895" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000268" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1181" name="CanJump_JumpBlockedCell_ReturnsFalse" fullname="VLTK.Tests.Model.RegionModelTests.CanJump_JumpBlockedCell_ReturnsFalse" methodname="CanJump_JumpBlockedCell_ReturnsFalse" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="1023328919" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000152" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1178" name="CanWalk_ClearCell_ReturnsTrue" fullname="VLTK.Tests.Model.RegionModelTests.CanWalk_ClearCell_ReturnsTrue" methodname="CanWalk_ClearCell_ReturnsTrue" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="1794397008" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000082" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1179" name="CanWalk_WalkBlockedCell_ReturnsFalse" fullname="VLTK.Tests.Model.RegionModelTests.CanWalk_WalkBlockedCell_ReturnsFalse" methodname="CanWalk_WalkBlockedCell_ReturnsFalse" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="2036068677" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000077" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1183" name="GetRawFlags_OutOfBounds_Returns0xFF" fullname="VLTK.Tests.Model.RegionModelTests.GetRawFlags_OutOfBounds_Returns0xFF" methodname="GetRawFlags_OutOfBounds_Returns0xFF" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="1670726470" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000200" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1184" name="MultipleFlagBits_CanCoexist" fullname="VLTK.Tests.Model.RegionModelTests.MultipleFlagBits_CanCoexist" methodname="MultipleFlagBits_CanCoexist" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="1920051368" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000103" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1182" name="OutOfBounds_ReturnsBlockedForWalk" fullname="VLTK.Tests.Model.RegionModelTests.OutOfBounds_ReturnsBlockedForWalk" methodname="OutOfBounds_ReturnsBlockedForWalk" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="2035535354" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000094" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1185" name="RegionDefinition_Serializable_DefaultValues" fullname="VLTK.Tests.Model.RegionModelTests.RegionDefinition_Serializable_DefaultValues" methodname="RegionDefinition_Serializable_DefaultValues" classname="VLTK.Tests.Model.RegionModelTests" runstate="Runnable" seed="206756878" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000133" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1186" name="SourceAssetIdTests" fullname="VLTK.Tests.Model.SourceAssetIdTests" classname="VLTK.Tests.Model.SourceAssetIdTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001273" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1191" name="AllResourceKinds_AreDefined" fullname="VLTK.Tests.Model.SourceAssetIdTests.AllResourceKinds_AreDefined" methodname="AllResourceKinds_AreDefined" classname="VLTK.Tests.Model.SourceAssetIdTests" runstate="Runnable" seed="687821933" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000195" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1188" name="ToKey_FallsBackToPackageAndUid_WhenSourcePathEmpty" fullname="VLTK.Tests.Model.SourceAssetIdTests.ToKey_FallsBackToPackageAndUid_WhenSourcePathEmpty" methodname="ToKey_FallsBackToPackageAndUid_WhenSourcePathEmpty" classname="VLTK.Tests.Model.SourceAssetIdTests" runstate="Runnable" seed="527536129" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000116" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1189" name="ToKey_FallsBackToPackageAndUid_WhenSourcePathNull" fullname="VLTK.Tests.Model.SourceAssetIdTests.ToKey_FallsBackToPackageAndUid_WhenSourcePathNull" methodname="ToKey_FallsBackToPackageAndUid_WhenSourcePathNull" classname="VLTK.Tests.Model.SourceAssetIdTests" runstate="Runnable" seed="626906007" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000092" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1190" name="ToKey_IsStable_ForSameValues" fullname="VLTK.Tests.Model.SourceAssetIdTests.ToKey_IsStable_ForSameValues" methodname="ToKey_IsStable_ForSameValues" classname="VLTK.Tests.Model.SourceAssetIdTests" runstate="Runnable" seed="1392384574" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000087" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1187" name="ToKey_PrefersSourcPath_WhenSet" fullname="VLTK.Tests.Model.SourceAssetIdTests.ToKey_PrefersSourcPath_WhenSet" methodname="ToKey_PrefersSourcPath_WhenSet" classname="VLTK.Tests.Model.SourceAssetIdTests" runstate="Runnable" seed="1800075789" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000080" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestSuite" id="1197" name="Resources" fullname="VLTK.Tests.Resources" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.033124" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1144" name="ResourceLookupTests" fullname="VLTK.Tests.Resources.ResourceLookupTests" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" testcasecount="14" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.032811" total="14" passed="14" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1147" name="AC1_Resolve_EmptyPath_ReturnsError" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC1_Resolve_EmptyPath_ReturnsError" methodname="AC1_Resolve_EmptyPath_ReturnsError" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="1669478911" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004246" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_eb627456f9c44bff9b9e7fd64ba11a17
+]]></output>
+              </test-case>
+              <test-case id="1145" name="AC1_Resolve_KnownPath_ReturnsFoundWithBytes" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC1_Resolve_KnownPath_ReturnsFoundWithBytes" methodname="AC1_Resolve_KnownPath_ReturnsFoundWithBytes" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="652536971" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002665" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_6bab72ad039044bcb22c3f7f4aba0318
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_6bab72ad039044bcb22c3f7f4aba0318
+]]></output>
+              </test-case>
+              <test-case id="1146" name="AC1_Resolve_UnknownPath_ReturnsMissing" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC1_Resolve_UnknownPath_ReturnsMissing" methodname="AC1_Resolve_UnknownPath_ReturnsMissing" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="581007335" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001120" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_40c3709ca851442185d783bb2a499795
+[ResourceLookup] Indexed 0 files from /tmp/vltk_test_40c3709ca851442185d783bb2a499795
+]]></output>
+              </test-case>
+              <test-case id="1149" name="AC2_Resolve_AutoDetectEncoding_SetsEncodingNote" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC2_Resolve_AutoDetectEncoding_SetsEncodingNote" methodname="AC2_Resolve_AutoDetectEncoding_SetsEncodingNote" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="2081980049" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001197" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_7ee675272bb04ff8b545950a5106814b
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_7ee675272bb04ff8b545950a5106814b
+]]></output>
+              </test-case>
+              <test-case id="1148" name="AC2_Resolve_GbkEncoding_SetsEncodingNote" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC2_Resolve_GbkEncoding_SetsEncodingNote" methodname="AC2_Resolve_GbkEncoding_SetsEncodingNote" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="83833813" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001581" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_ed80c7ef7f71449a98e82e30cdf2d806
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_ed80c7ef7f71449a98e82e30cdf2d806
+]]></output>
+              </test-case>
+              <test-case id="1150" name="AC2_Resolve_Utf8Encoding_EncodingNoteIsEmpty" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC2_Resolve_Utf8Encoding_EncodingNoteIsEmpty" methodname="AC2_Resolve_Utf8Encoding_EncodingNoteIsEmpty" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="2015374011" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001203" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_7f0626d7a7f44fc2ab91bd084c51e3fd
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_7f0626d7a7f44fc2ab91bd084c51e3fd
+]]></output>
+              </test-case>
+              <test-case id="1152" name="AC3_Resolve_GzipCompression_DecompressesCorrectly" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC3_Resolve_GzipCompression_DecompressesCorrectly" methodname="AC3_Resolve_GzipCompression_DecompressesCorrectly" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="2032793116" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004622" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_aed8f67c15814f5b8bac59273d45f09f
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_aed8f67c15814f5b8bac59273d45f09f
+]]></output>
+              </test-case>
+              <test-case id="1151" name="AC3_Resolve_NoCompression_BytesUnchanged" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC3_Resolve_NoCompression_BytesUnchanged" methodname="AC3_Resolve_NoCompression_BytesUnchanged" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="1590617537" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001143" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_73de2277c6674c3795982da7782ed913
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_73de2277c6674c3795982da7782ed913
+]]></output>
+              </test-case>
+              <test-case id="1153" name="AC3_Resolve_ZlibCompression_InvalidData_ReturnsError" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC3_Resolve_ZlibCompression_InvalidData_ReturnsError" methodname="AC3_Resolve_ZlibCompression_InvalidData_ReturnsError" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="251783833" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002789" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_906ac82487954d6bb46651bdd62dac2c
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_906ac82487954d6bb46651bdd62dac2c
+[ResourceLookup] Decompress failed for 'bad.zlib': Corrupted data ReadInternal
+]]></output>
+              </test-case>
+              <test-case id="1154" name="AC3_Resolve_ZlibCompression_ValidData_DecompressesCorrectly" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC3_Resolve_ZlibCompression_ValidData_DecompressesCorrectly" methodname="AC3_Resolve_ZlibCompression_ValidData_DecompressesCorrectly" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="975740762" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001580" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:vltk_test_d1176eb146254b04a124f263fd739ba0
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_d1176eb146254b04a124f263fd739ba0
+]]></output>
+              </test-case>
+              <test-case id="1155" name="AC4_CreateRuntimeLookup_OnlyHasStreamingAssetsProvider" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC4_CreateRuntimeLookup_OnlyHasStreamingAssetsProvider" methodname="AC4_CreateRuntimeLookup_OnlyHasStreamingAssetsProvider" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="430022715" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.003166" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: StreamingAssets:
+[ResourceLookup] Runtime lookup created (StreamingAssets only — no PAK parsing)
+[ResourceLookup] StreamingAssetsResourceProvider indexed 18 files from '/var/www/vltk-mobile/Assets/StreamingAssets'
+]]></output>
+              </test-case>
+              <test-case id="1156" name="AC4_CreateRuntimeLookup_ProviderId_IsStreamingAssets" fullname="VLTK.Tests.Resources.ResourceLookupTests.AC4_CreateRuntimeLookup_ProviderId_IsStreamingAssets" methodname="AC4_CreateRuntimeLookup_ProviderId_IsStreamingAssets" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="554006238" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001313" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: StreamingAssets:
+[ResourceLookup] Runtime lookup created (StreamingAssets only — no PAK parsing)
+[ResourceLookup] StreamingAssetsResourceProvider indexed 18 files from '/var/www/vltk-mobile/Assets/StreamingAssets'
+]]></output>
+              </test-case>
+              <test-case id="1158" name="MultiProvider_FallsThrough_ToSecondProvider" fullname="VLTK.Tests.Resources.ResourceLookupTests.MultiProvider_FallsThrough_ToSecondProvider" methodname="MultiProvider_FallsThrough_ToSecondProvider" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="1139153449" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002201" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:A
+[ResourceLookup] Registered provider: FS:B
+[ResourceLookup] Indexed 0 files from /tmp/vltk_test_047eebb3d5804c0d9368348e5f5d0910/A
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_047eebb3d5804c0d9368348e5f5d0910/B
+]]></output>
+              </test-case>
+              <test-case id="1157" name="MultiProvider_FirstMatchWins" fullname="VLTK.Tests.Resources.ResourceLookupTests.MultiProvider_FirstMatchWins" methodname="MultiProvider_FirstMatchWins" classname="VLTK.Tests.Resources.ResourceLookupTests" runstate="Runnable" seed="1199571194" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001610" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ResourceLookup] Registered provider: FS:A
+[ResourceLookup] Registered provider: FS:B
+[ResourceLookup] Indexed 1 files from /tmp/vltk_test_335618455c084d1699cfca4966fd3ec4/A
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestSuite" id="1196" name="Sandbox" fullname="VLTK.Tests.Sandbox" runstate="Runnable" testcasecount="98" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.299806" total="98" passed="98" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1121" name="BuiltinLayerConverterTests" fullname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests" classname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests" runstate="Runnable" testcasecount="5" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.010765" total="5" passed="5" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1123" name="Convert_ForegroundFlag_Detected" fullname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests.Convert_ForegroundFlag_Detected" methodname="Convert_ForegroundFlag_Detected" classname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests" runstate="Runnable" seed="1245573842" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.003617" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Builtin] Region [0,0]: 0/3 objects. 3 foreground. 3 missing sprites.
+]]></output>
+              </test-case>
+              <test-case id="1125" name="Convert_HighObjectCount_DrawCallWarning" fullname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests.Convert_HighObjectCount_DrawCallWarning" methodname="Convert_HighObjectCount_DrawCallWarning" classname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests" runstate="Runnable" seed="470340771" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.005048" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Builtin] Region [0,0]: 0/600 objects. 599 foreground. 600 missing sprites.
+]]></output>
+              </test-case>
+              <test-case id="1124" name="Convert_MissingSprite_ReportedInWarnings" fullname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests.Convert_MissingSprite_ReportedInWarnings" methodname="Convert_MissingSprite_ReportedInWarnings" classname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests" runstate="Runnable" seed="992113870" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000597" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Builtin] Region [0,0]: 0/2 objects. 1 foreground. 2 missing sprites.
+]]></output>
+              </test-case>
+              <test-case id="1126" name="Convert_NullData_ReturnsFailed" fullname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests.Convert_NullData_ReturnsFailed" methodname="Convert_NullData_ReturnsFailed" classname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests" runstate="Runnable" seed="1058232965" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000127" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1122" name="Convert_PopulatesObjectPlacements" fullname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests.Convert_PopulatesObjectPlacements" methodname="Convert_PopulatesObjectPlacements" classname="VLTK.Tests.Sandbox.BuiltinLayerConverterTests" runstate="Runnable" seed="692513924" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000537" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Builtin] Region [0,0]: 0/3 objects. 2 foreground. 3 missing sprites.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1035" name="CoverageReportTests" fullname="VLTK.Tests.Sandbox.CoverageReportTests" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.031420" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1036" name="Build_EmptyCatalog_ReturnsZeroMaps" fullname="VLTK.Tests.Sandbox.CoverageReportTests.Build_EmptyCatalog_ReturnsZeroMaps" methodname="Build_EmptyCatalog_ReturnsZeroMaps" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="660115308" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002928" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Coverage] Report built: 0 maps, 0 missing assets, 0 errors
+]]></output>
+              </test-case>
+              <test-case id="1038" name="Build_GeneratedAt_IsSet" fullname="VLTK.Tests.Sandbox.CoverageReportTests.Build_GeneratedAt_IsSet" methodname="Build_GeneratedAt_IsSet" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="1161420567" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000475" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Coverage] Report built: 0 maps, 0 missing assets, 0 errors
+]]></output>
+              </test-case>
+              <test-case id="1039" name="Build_MapEntries_HaveRegionCounts" fullname="VLTK.Tests.Sandbox.CoverageReportTests.Build_MapEntries_HaveRegionCounts" methodname="Build_MapEntries_HaveRegionCounts" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="1211943679" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.008150" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[Coverage] Report built: 159 maps, 0 missing assets, 1 errors
+]]></output>
+              </test-case>
+              <test-case id="1041" name="Build_NullManager_ReturnsEmptyReport" fullname="VLTK.Tests.Sandbox.CoverageReportTests.Build_NullManager_ReturnsEmptyReport" methodname="Build_NullManager_ReturnsEmptyReport" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="489523138" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000131" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1037" name="Build_WithMaps_TotalMapsMatchesCatalog" fullname="VLTK.Tests.Sandbox.CoverageReportTests.Build_WithMaps_TotalMapsMatchesCatalog" methodname="Build_WithMaps_TotalMapsMatchesCatalog" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="718421334" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.011820" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[Coverage] Report built: 159 maps, 0 missing assets, 1 errors
+]]></output>
+              </test-case>
+              <test-case id="1040" name="Build_WithMissingAsset_IssueHasWarningSeverity" fullname="VLTK.Tests.Sandbox.CoverageReportTests.Build_WithMissingAsset_IssueHasWarningSeverity" methodname="Build_WithMissingAsset_IssueHasWarningSeverity" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="1762930779" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004988" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[Coverage] Report built: 159 maps, 1 missing assets, 1 errors
+]]></output>
+              </test-case>
+              <test-case id="1043" name="GetIssues_FilterByKind_ReturnsOnlyMatchingKind" fullname="VLTK.Tests.Sandbox.CoverageReportTests.GetIssues_FilterByKind_ReturnsOnlyMatchingKind" methodname="GetIssues_FilterByKind_ReturnsOnlyMatchingKind" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="1863523504" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000436" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1042" name="GetIssues_FilterBySeverity_ReturnsOnlyMatchingSeverity" fullname="VLTK.Tests.Sandbox.CoverageReportTests.GetIssues_FilterBySeverity_ReturnsOnlyMatchingSeverity" methodname="GetIssues_FilterBySeverity_ReturnsOnlyMatchingSeverity" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="1814442474" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000440" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1044" name="GetIssues_FilterBySeverityAndKind_CombinesFilters" fullname="VLTK.Tests.Sandbox.CoverageReportTests.GetIssues_FilterBySeverityAndKind_CombinesFilters" methodname="GetIssues_FilterBySeverityAndKind_CombinesFilters" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="866450580" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000313" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1045" name="GetIssues_GlobalIssues_IncludedInFilter" fullname="VLTK.Tests.Sandbox.CoverageReportTests.GetIssues_GlobalIssues_IncludedInFilter" methodname="GetIssues_GlobalIssues_IncludedInFilter" classname="VLTK.Tests.Sandbox.CoverageReportTests" runstate="Runnable" seed="1846156512" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000207" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1046" name="MapCatalogDiscoveryTests" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.003817" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1051" name="DisplayNameNormalized_FallsBackToMapId_WhenEmpty" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.DisplayNameNormalized_FallsBackToMapId_WhenEmpty" methodname="DisplayNameNormalized_FallsBackToMapId_WhenEmpty" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="1955515981" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000416" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1050" name="DisplayNameNormalized_UsedWhenProvided" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.DisplayNameNormalized_UsedWhenProvided" methodname="DisplayNameNormalized_UsedWhenProvided" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="423838103" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000168" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1047" name="StatusAvailable_MapsTo_ConversionStatusNotStarted" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.StatusAvailable_MapsTo_ConversionStatusNotStarted" methodname="StatusAvailable_MapsTo_ConversionStatusNotStarted" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="347310040" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000141" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1049" name="StatusIncomplete_MapsTo_ConversionStatusPartial" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.StatusIncomplete_MapsTo_ConversionStatusPartial" methodname="StatusIncomplete_MapsTo_ConversionStatusPartial" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="388295893" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000131" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1048" name="StatusMissing_MapsTo_ConversionStatusFailed" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.StatusMissing_MapsTo_ConversionStatusFailed" methodname="StatusMissing_MapsTo_ConversionStatusFailed" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="1099875926" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000130" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1052" name="ToDiscoveryReport_ReturnsCorrectCounts" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.ToDiscoveryReport_ReturnsCorrectCounts" methodname="ToDiscoveryReport_ReturnsCorrectCounts" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="1802971549" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000197" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1053" name="ToDiscoveryReport_ReturnsNull_WhenReportMissing" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.ToDiscoveryReport_ReturnsNull_WhenReportMissing" methodname="ToDiscoveryReport_ReturnsNull_WhenReportMissing" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="1054868355" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000150" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1054" name="ToModelEntries_IncludesAllStatuses" fullname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests.ToModelEntries_IncludesAllStatuses" methodname="ToModelEntries_IncludesAllStatuses" classname="VLTK.Tests.Sandbox.MapCatalogDiscoveryTests" runstate="Runnable" seed="952985762" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001311" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1055" name="MapManagerRegistryTests" fullname="VLTK.Tests.Sandbox.MapManagerRegistryTests" classname="VLTK.Tests.Sandbox.MapManagerRegistryTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.057588" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1061" name="LoadCatalog_IsSameAs_LoadPlaceholderCatalog" fullname="VLTK.Tests.Sandbox.MapManagerRegistryTests.LoadCatalog_IsSameAs_LoadPlaceholderCatalog" methodname="LoadCatalog_IsSameAs_LoadPlaceholderCatalog" classname="VLTK.Tests.Sandbox.MapManagerRegistryTests" runstate="Runnable" seed="559918679" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.018970" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+]]></output>
+              </test-case>
+              <test-case id="1056" name="LoadMap_RegistersEntryInAssetRegistry" fullname="VLTK.Tests.Sandbox.MapManagerRegistryTests.LoadMap_RegistersEntryInAssetRegistry" methodname="LoadMap_RegistersEntryInAssetRegistry" classname="VLTK.Tests.Sandbox.MapManagerRegistryTests" runstate="Runnable" seed="1459871324" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.005830" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=1 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_1 (id=1)
+]]></output>
+              </test-case>
+              <test-case id="1057" name="LoadMap_RegistryEntry_HasCorrectStatus_WhenNotConverted" fullname="VLTK.Tests.Sandbox.MapManagerRegistryTests.LoadMap_RegistryEntry_HasCorrectStatus_WhenNotConverted" methodname="LoadMap_RegistryEntry_HasCorrectStatus_WhenNotConverted" classname="VLTK.Tests.Sandbox.MapManagerRegistryTests" runstate="Runnable" seed="1720564757" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004488" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=1 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_1 (id=1)
+]]></output>
+              </test-case>
+              <test-case id="1058" name="LoadMap_ThenSwitch_RegistryRetainsBothMaps" fullname="VLTK.Tests.Sandbox.MapManagerRegistryTests.LoadMap_ThenSwitch_RegistryRetainsBothMaps" methodname="LoadMap_ThenSwitch_RegistryRetainsBothMaps" classname="VLTK.Tests.Sandbox.MapManagerRegistryTests" runstate="Runnable" seed="1689096888" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.005662" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=1 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_1 (id=1)
+[MapManager] Unloaded map id=1
+[MapManager] Registered map id=2 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_2 (id=2)
+]]></output>
+              </test-case>
+              <test-case id="1059" name="LoadMap_UnknownId_DoesNotRegisterInRegistry" fullname="VLTK.Tests.Sandbox.MapManagerRegistryTests.LoadMap_UnknownId_DoesNotRegisterInRegistry" methodname="LoadMap_UnknownId_DoesNotRegisterInRegistry" classname="VLTK.Tests.Sandbox.MapManagerRegistryTests" runstate="Runnable" seed="823415043" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.010038" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Map 9999 not found in catalog
+]]></output>
+              </test-case>
+              <test-case id="1060" name="NoRegistry_LoadMap_DoesNotThrow" fullname="VLTK.Tests.Sandbox.MapManagerRegistryTests.NoRegistry_LoadMap_DoesNotThrow" methodname="NoRegistry_LoadMap_DoesNotThrow" classname="VLTK.Tests.Sandbox.MapManagerRegistryTests" runstate="Runnable" seed="600436027" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.011398" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Loaded map: Map_1 (id=1)
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1062" name="MapMetadataTests" fullname="VLTK.Tests.Sandbox.MapMetadataTests" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" testcasecount="12" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.007013" total="12" passed="12" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1074" name="ToMapDefinitions_EmptyCatalog_ReturnsEmptyList" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_EmptyCatalog_ReturnsEmptyList" methodname="ToMapDefinitions_EmptyCatalog_ReturnsEmptyList" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="735058475" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001673" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1065" name="ToMapDefinitions_EnvironmentProfile_BrightnessSet" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_EnvironmentProfile_BrightnessSet" methodname="ToMapDefinitions_EnvironmentProfile_BrightnessSet" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="297422302" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001812" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1073" name="ToMapDefinitions_FullyValid_NoWarnings" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_FullyValid_NoWarnings" methodname="ToMapDefinitions_FullyValid_NoWarnings" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="361970707" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000172" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1072" name="ToMapDefinitions_HaveMapFalse_AddsWarning" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_HaveMapFalse_AddsWarning" methodname="ToMapDefinitions_HaveMapFalse_AddsWarning" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="93991641" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000149" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1066" name="ToMapDefinitions_LightProfile_GeneratedFromSection" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_LightProfile_GeneratedFromSection" methodname="ToMapDefinitions_LightProfile_GeneratedFromSection" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="288431852" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000282" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1067" name="ToMapDefinitions_LightProfile_NullWhenNoLightSection" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_LightProfile_NullWhenNoLightSection" methodname="ToMapDefinitions_LightProfile_NullWhenNoLightSection" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="420328776" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000119" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1064" name="ToMapDefinitions_MapLtRegionIndex_Preserved" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_MapLtRegionIndex_Preserved" methodname="ToMapDefinitions_MapLtRegionIndex_Preserved" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="789741818" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000120" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1071" name="ToMapDefinitions_MissingRect_AddsWarning" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_MissingRect_AddsWarning" methodname="ToMapDefinitions_MissingRect_AddsWarning" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="200463182" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000190" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1063" name="ToMapDefinitions_SourceBoundsRect_MatchesInputRect" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_SourceBoundsRect_MatchesInputRect" methodname="ToMapDefinitions_SourceBoundsRect_MatchesInputRect" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="1318126814" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000193" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1068" name="ToMapDefinitions_WeatherProfile_GeneratedFromEntries" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_WeatherProfile_GeneratedFromEntries" methodname="ToMapDefinitions_WeatherProfile_GeneratedFromEntries" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="906606015" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000149" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1070" name="ToMapDefinitions_WeatherProfile_NullWhenNoWeather" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_WeatherProfile_NullWhenNoWeather" methodname="ToMapDefinitions_WeatherProfile_NullWhenNoWeather" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="643231576" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000102" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1069" name="ToMapDefinitions_WeatherProfile_WindSpeedParsed" fullname="VLTK.Tests.Sandbox.MapMetadataTests.ToMapDefinitions_WeatherProfile_WindSpeedParsed" methodname="ToMapDefinitions_WeatherProfile_WindSpeedParsed" classname="VLTK.Tests.Sandbox.MapMetadataTests" runstate="Runnable" seed="330828202" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000127" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1075" name="ObstacleTests" fullname="VLTK.Tests.Sandbox.ObstacleTests" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" testcasecount="11" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.039569" total="11" passed="11" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1076" name="ObstacleGrid_CellFlags_StoredCorrectly" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleGrid_CellFlags_StoredCorrectly" methodname="ObstacleGrid_CellFlags_StoredCorrectly" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="1105476399" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000204" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1084" name="ObstacleGridLoader_LoadDefault_ReturnsPassableGrid" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleGridLoader_LoadDefault_ReturnsPassableGrid" methodname="ObstacleGridLoader_LoadDefault_ReturnsPassableGrid" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="562085350" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001171" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ObstacleLoader] Using default passable grid 16x32 — no obstacle data available. Mark as risk in report.
+]]></output>
+              </test-case>
+              <test-case id="1085" name="ObstacleGridLoader_LoadFromStreamingAssets_Nonexistent_ReturnsNull" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleGridLoader_LoadFromStreamingAssets_Nonexistent_ReturnsNull" methodname="ObstacleGridLoader_LoadFromStreamingAssets_Nonexistent_ReturnsNull" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="30248499" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.034642" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ObstacleLoader] Loaded obstacle pack v1: 57807 regions (30,984,568 bytes)
+[ObstacleLoader] Region not in obstacle pack: nonexistent_region_xyz — marked missing
+]]></output>
+              </test-case>
+              <test-case id="1086" name="ObstacleGridLoader_LoadFromStreamingAssets_NullInput_ReturnsNull" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleGridLoader_LoadFromStreamingAssets_NullInput_ReturnsNull" methodname="ObstacleGridLoader_LoadFromStreamingAssets_NullInput_ReturnsNull" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="513179153" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000657" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[ObstacleLoader] LoadFromStreamingAssets: null/empty regionFile
+]]></output>
+              </test-case>
+              <test-case id="1077" name="ObstacleOverlayRenderer_TypeExists" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleOverlayRenderer_TypeExists" methodname="ObstacleOverlayRenderer_TypeExists" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="402119278" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000183" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1078" name="ObstacleQueryService_CanWalkAt_ReturnsFalse_ForBlockedCell" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleQueryService_CanWalkAt_ReturnsFalse_ForBlockedCell" methodname="ObstacleQueryService_CanWalkAt_ReturnsFalse_ForBlockedCell" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="116121510" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000446" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1079" name="ObstacleQueryService_CanWalkAt_ReturnsTrue_ForClearCell" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleQueryService_CanWalkAt_ReturnsTrue_ForClearCell" methodname="ObstacleQueryService_CanWalkAt_ReturnsTrue_ForClearCell" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="1938170429" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000171" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1080" name="ObstacleQueryService_Query_ConvertsWorldPosToCellCorrectly" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleQueryService_Query_ConvertsWorldPosToCellCorrectly" methodname="ObstacleQueryService_Query_ConvertsWorldPosToCellCorrectly" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="303205577" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000185" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1082" name="ObstacleQueryService_Query_NullGrid_ReturnsSafe" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleQueryService_Query_NullGrid_ReturnsSafe" methodname="ObstacleQueryService_Query_NullGrid_ReturnsSafe" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="396672296" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000140" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1081" name="ObstacleQueryService_Query_OutOfBounds_IsBlocked" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleQueryService_Query_OutOfBounds_IsBlocked" methodname="ObstacleQueryService_Query_OutOfBounds_IsBlocked" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="1700756815" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000146" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1083" name="ObstacleQueryService_Query_RawFlags_Match" fullname="VLTK.Tests.Sandbox.ObstacleTests.ObstacleQueryService_Query_RawFlags_Match" methodname="ObstacleQueryService_Query_RawFlags_Match" classname="VLTK.Tests.Sandbox.ObstacleTests" runstate="Runnable" seed="992312797" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000155" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1087" name="RegionFileConversionTests" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.003924" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1095" name="ToConversionReport_CountsMatchInput" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToConversionReport_CountsMatchInput" methodname="ToConversionReport_CountsMatchInput" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="1077484123" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000740" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1096" name="ToConversionReport_EmptyCatalog_ReturnsZeroCounts" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToConversionReport_EmptyCatalog_ReturnsZeroCounts" methodname="ToConversionReport_EmptyCatalog_ReturnsZeroCounts" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="12954542" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000138" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1088" name="ToModelEntries_AllSections_ManifestAllTrue" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_AllSections_ManifestAllTrue" methodname="ToModelEntries_AllSections_ManifestAllTrue" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="1256465105" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000774" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1092" name="ToModelEntries_AllSections_MissingSectionsEmpty" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_AllSections_MissingSectionsEmpty" methodname="ToModelEntries_AllSections_MissingSectionsEmpty" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="370689077" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000134" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1093" name="ToModelEntries_MissingGround_ReportsInManifest" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_MissingGround_ReportsInManifest" methodname="ToModelEntries_MissingGround_ReportsInManifest" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="1432551481" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000130" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1097" name="ToModelEntries_MultiplEntries_CountMatches" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_MultiplEntries_CountMatches" methodname="ToModelEntries_MultiplEntries_CountMatches" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="1916725251" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000139" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1094" name="ToModelEntries_NeighborRefs_DefaultToMinusOne" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_NeighborRefs_DefaultToMinusOne" methodname="ToModelEntries_NeighborRefs_DefaultToMinusOne" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="739692132" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000147" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1090" name="ToModelEntries_NoSections_StatusFailed" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_NoSections_StatusFailed" methodname="ToModelEntries_NoSections_StatusFailed" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="66661257" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000134" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1091" name="ToModelEntries_PartialSections_StatusPartialOrComplete" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_PartialSections_StatusPartialOrComplete" methodname="ToModelEntries_PartialSections_StatusPartialOrComplete" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="1544474357" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000116" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1089" name="ToModelEntries_SourcePathPreserved" fullname="VLTK.Tests.Sandbox.RegionFileConversionTests.ToModelEntries_SourcePathPreserved" methodname="ToModelEntries_SourcePathPreserved" classname="VLTK.Tests.Sandbox.RegionFileConversionTests" runstate="Runnable" seed="1740261197" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000107" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1098" name="SandboxMapFlowTests" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" testcasecount="15" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.107594" total="15" passed="15" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1100" name="GetAllEntries_ReturnsSortedById" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.GetAllEntries_ReturnsSortedById" methodname="GetAllEntries_ReturnsSortedById" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="1277405731" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004378" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+]]></output>
+              </test-case>
+              <test-case id="1105" name="LoadMap_AlreadyLoaded_DoesNotFireEventAgain" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.LoadMap_AlreadyLoaded_DoesNotFireEventAgain" methodname="LoadMap_AlreadyLoaded_DoesNotFireEventAgain" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="216294807" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.012999" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=0 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_0 (id=0)
+[MapManager] Map 0 already loaded
+]]></output>
+              </test-case>
+              <test-case id="1112" name="LoadMap_UnknownId_ActiveMapRemainsNull_WhenNoneWasLoaded" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.LoadMap_UnknownId_ActiveMapRemainsNull_WhenNoneWasLoaded" methodname="LoadMap_UnknownId_ActiveMapRemainsNull_WhenNoneWasLoaded" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="1112815930" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.012494" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Map 99999 not found in catalog
+]]></output>
+              </test-case>
+              <test-case id="1111" name="LoadMap_UnknownId_DoesNotChangeActiveMap" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.LoadMap_UnknownId_DoesNotChangeActiveMap" methodname="LoadMap_UnknownId_DoesNotChangeActiveMap" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="1945929601" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004965" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=0 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_0 (id=0)
+[MapManager] Map 99999 not found in catalog
+]]></output>
+              </test-case>
+              <test-case id="1110" name="LoadMap_UnknownId_FiresOnMapErrorEvent" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.LoadMap_UnknownId_FiresOnMapErrorEvent" methodname="LoadMap_UnknownId_FiresOnMapErrorEvent" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="385212166" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004449" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Map 99999 not found in catalog
+]]></output>
+              </test-case>
+              <test-case id="1104" name="LoadMap_ValidId_FiresOnMapLoadedEvent" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.LoadMap_ValidId_FiresOnMapLoadedEvent" methodname="LoadMap_ValidId_FiresOnMapLoadedEvent" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="697821862" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004774" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=0 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_0 (id=0)
+]]></output>
+              </test-case>
+              <test-case id="1103" name="LoadMap_ValidId_SetsActiveMap" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.LoadMap_ValidId_SetsActiveMap" methodname="LoadMap_ValidId_SetsActiveMap" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="2022517041" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.005064" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=0 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_0 (id=0)
+]]></output>
+              </test-case>
+              <test-case id="1099" name="LoadPlaceholderCatalog_PopulatesCatalog" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.LoadPlaceholderCatalog_PopulatesCatalog" methodname="LoadPlaceholderCatalog_PopulatesCatalog" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="445555861" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.007765" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+]]></output>
+              </test-case>
+              <test-case id="1113" name="RegistryContains_LoadedMap_ByUid" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.RegistryContains_LoadedMap_ByUid" methodname="RegistryContains_LoadedMap_ByUid" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="251302767" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.005015" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=1 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_1 (id=1)
+]]></output>
+              </test-case>
+              <test-case id="1102" name="Search_ByMapId_ReturnsFilteredList" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.Search_ByMapId_ReturnsFilteredList" methodname="Search_ByMapId_ReturnsFilteredList" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="1583005812" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004787" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+]]></output>
+              </test-case>
+              <test-case id="1101" name="Search_EmptyQuery_ReturnsAllEntries" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.Search_EmptyQuery_ReturnsAllEntries" methodname="Search_EmptyQuery_ReturnsAllEntries" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="2058161828" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.005576" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+]]></output>
+              </test-case>
+              <test-case id="1106" name="SwitchMap_UnloadsOldBeforeLoadingNew" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.SwitchMap_UnloadsOldBeforeLoadingNew" methodname="SwitchMap_UnloadsOldBeforeLoadingNew" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="583279113" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.006059" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=0 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_0 (id=0)
+[MapManager] Unloaded map id=0
+[MapManager] Registered map id=1 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_1 (id=1)
+]]></output>
+              </test-case>
+              <test-case id="1107" name="SwitchMapRepeatedly_OnlyOneActiveAtATime" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.SwitchMapRepeatedly_OnlyOneActiveAtATime" methodname="SwitchMapRepeatedly_OnlyOneActiveAtATime" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="2089479789" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.008735" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=0 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_0 (id=0)
+[MapManager] Unloaded map id=0
+[MapManager] Registered map id=1 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_1 (id=1)
+[MapManager] Unloaded map id=1
+[MapManager] Registered map id=2 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_2 (id=2)
+[MapManager] Unloaded map id=2
+[MapManager] Registered map id=3 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_3 (id=3)
+[MapManager] Unloaded map id=3
+[MapManager] Registered map id=4 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_4 (id=4)
+]]></output>
+              </test-case>
+              <test-case id="1108" name="UnloadCurrentMap_ClearsActiveMap" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.UnloadCurrentMap_ClearsActiveMap" methodname="UnloadCurrentMap_ClearsActiveMap" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="93241794" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.011082" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+[MapManager] Registered map id=0 in asset registry (status=Pending)
+[MapManager] Loaded map: Map_0 (id=0)
+[MapManager] Unloaded map id=0
+]]></output>
+              </test-case>
+              <test-case id="1109" name="UnloadCurrentMap_WhenNoneLoaded_DoesNotThrow" fullname="VLTK.Tests.Sandbox.SandboxMapFlowTests.UnloadCurrentMap_WhenNoneLoaded_DoesNotThrow" methodname="UnloadCurrentMap_WhenNoneLoaded_DoesNotThrow" classname="VLTK.Tests.Sandbox.SandboxMapFlowTests" runstate="Runnable" seed="1194146006" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.004134" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[MapCatalog] Loaded 158 maps (57 outdoor, 101 indoor, 95524 regions)
+[MapManager] Discovery: 231 total, 158 available, 73 missing
+[MapManager] Real catalog loaded: 159 maps
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1135" name="SpawnSectionConverterTests" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" testcasecount="8" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.013478" total="8" passed="8" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1138" name="Convert_MissingTemplate_ReportedSeparately" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.Convert_MissingTemplate_ReportedSeparately" methodname="Convert_MissingTemplate_ReportedSeparately" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="1517563036" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.002044" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Spawn] Region [0,0]: 2 NPCs (2 missing template), 0 objects (0 missing sprite)
+]]></output>
+              </test-case>
+              <test-case id="1136" name="Convert_NpcSpawn_HasAllRequiredFields" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.Convert_NpcSpawn_HasAllRequiredFields" methodname="Convert_NpcSpawn_HasAllRequiredFields" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="1300686981" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000664" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Spawn] Region [3,5]: 2 NPCs (0 missing template), 0 objects (0 missing sprite)
+]]></output>
+              </test-case>
+              <test-case id="1141" name="Convert_NullInputs_ReturnsEmptyManifest" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.Convert_NullInputs_ReturnsEmptyManifest" methodname="Convert_NullInputs_ReturnsEmptyManifest" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="406823004" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000461" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Spawn] Region [0,0]: 0 NPCs (0 missing template), 0 objects (0 missing sprite)
+]]></output>
+              </test-case>
+              <test-case id="1137" name="Convert_ObjectPlacement_Foreground_FlagSet" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.Convert_ObjectPlacement_Foreground_FlagSet" methodname="Convert_ObjectPlacement_Foreground_FlagSet" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="1152562832" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000784" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Spawn] Region [0,0]: 0 NPCs (0 missing template), 1 objects (0 missing sprite)
+]]></output>
+              </test-case>
+              <test-case id="1139" name="Convert_ValidTemplate_TemplateFoundTrue" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.Convert_ValidTemplate_TemplateFoundTrue" methodname="Convert_ValidTemplate_TemplateFoundTrue" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="1940198813" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000472" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Spawn] Region [0,0]: 1 NPCs (0 missing template), 0 objects (0 missing sprite)
+]]></output>
+              </test-case>
+              <test-case id="1140" name="Convert_WithObjData_ObjectsIncluded" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.Convert_WithObjData_ObjectsIncluded" methodname="Convert_WithObjData_ObjectsIncluded" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="1224116795" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000456" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Spawn] Region [0,0]: 0 NPCs (0 missing template), 3 objects (0 missing sprite)
+]]></output>
+              </test-case>
+              <test-case id="1142" name="NpcSectionParser_Parse_ZeroCount_EmptyEntries" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.NpcSectionParser_Parse_ZeroCount_EmptyEntries" methodname="NpcSectionParser_Parse_ZeroCount_EmptyEntries" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="1840846027" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.006595" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1143" name="ObjSectionParser_Parse_ZeroCount_EmptyEntries" fullname="VLTK.Tests.Sandbox.SpawnSectionConverterTests.ObjSectionParser_Parse_ZeroCount_EmptyEntries" methodname="ObjSectionParser_Parse_ZeroCount_EmptyEntries" classname="VLTK.Tests.Sandbox.SpawnSectionConverterTests" runstate="Runnable" seed="900807350" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000392" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1114" name="TerrainLayerConverterTests" fullname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" classname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" runstate="Runnable" testcasecount="6" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.017491" total="6" passed="6" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1120" name="Convert_AllResolved_StatusComplete" fullname="VLTK.Tests.Sandbox.TerrainLayerConverterTests.Convert_AllResolved_StatusComplete" methodname="Convert_AllResolved_StatusComplete" classname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" runstate="Runnable" seed="649894232" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001928" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrain] Region [0,0]: 1/1 tiles, 0/0 objects resolved. 0 missing.
+]]></output>
+              </test-case>
+              <test-case id="1118" name="Convert_LargeBatch_DrawCallWarning" fullname="VLTK.Tests.Sandbox.TerrainLayerConverterTests.Convert_LargeBatch_DrawCallWarning" methodname="Convert_LargeBatch_DrawCallWarning" classname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" runstate="Runnable" seed="1616740104" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.012582" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrain] Region [0,0] processed 256 tiles...
+[Terrain] Region [0,0] processed 512 tiles...
+[Terrain] Region [0,0]: 0/600 tiles, 0/500 objects resolved. 1100 missing.
+]]></output>
+              </test-case>
+              <test-case id="1117" name="Convert_MissingTile_ReportedInMissingSprites" fullname="VLTK.Tests.Sandbox.TerrainLayerConverterTests.Convert_MissingTile_ReportedInMissingSprites" methodname="Convert_MissingTile_ReportedInMissingSprites" classname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" runstate="Runnable" seed="80320559" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000619" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrain] Region [0,0]: 0/1 tiles, 0/0 objects resolved. 1 missing.
+]]></output>
+              </test-case>
+              <test-case id="1119" name="Convert_NullData_ReturnsFailed" fullname="VLTK.Tests.Sandbox.TerrainLayerConverterTests.Convert_NullData_ReturnsFailed" methodname="Convert_NullData_ReturnsFailed" classname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" runstate="Runnable" seed="1566579792" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000156" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1116" name="Convert_Tiles_DrawLayerIncremental" fullname="VLTK.Tests.Sandbox.TerrainLayerConverterTests.Convert_Tiles_DrawLayerIncremental" methodname="Convert_Tiles_DrawLayerIncremental" classname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" runstate="Runnable" seed="2130493629" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000543" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrain] Region [0,0]: 0/5 tiles, 0/0 objects resolved. 5 missing.
+]]></output>
+              </test-case>
+              <test-case id="1115" name="Convert_Tiles_ResolvedThroughRegistry" fullname="VLTK.Tests.Sandbox.TerrainLayerConverterTests.Convert_Tiles_ResolvedThroughRegistry" methodname="Convert_Tiles_ResolvedThroughRegistry" classname="VLTK.Tests.Sandbox.TerrainLayerConverterTests" runstate="Runnable" seed="1119654378" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000566" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Terrain] Region [0,0]: 1/2 tiles, 0/0 objects resolved. 1 missing.
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1127" name="TrapSectionConverterTests" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" testcasecount="7" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.005286" total="7" passed="7" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1132" name="Convert_AllScriptsPresent_StatusComplete" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests.Convert_AllScriptsPresent_StatusComplete" methodname="Convert_AllScriptsPresent_StatusComplete" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" seed="587465946" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.001409" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Trap] Region [0,0]: 2 traps, 0 missing scripts
+]]></output>
+              </test-case>
+              <test-case id="1130" name="Convert_MissingScript_ReportedInWarnings" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests.Convert_MissingScript_ReportedInWarnings" methodname="Convert_MissingScript_ReportedInWarnings" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" seed="847737773" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000505" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Trap] Region [0,0]: 2 traps, 2 missing scripts
+]]></output>
+              </test-case>
+              <test-case id="1131" name="Convert_NullData_ReturnsNotStarted" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests.Convert_NullData_ReturnsNotStarted" methodname="Convert_NullData_ReturnsNotStarted" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" seed="1603428507" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000110" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1128" name="Convert_TrapDefinition_HasBoundsAndScript" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests.Convert_TrapDefinition_HasBoundsAndScript" methodname="Convert_TrapDefinition_HasBoundsAndScript" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" seed="193077325" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000559" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Trap] Region [0,0]: 2 traps, 0 missing scripts
+]]></output>
+              </test-case>
+              <test-case id="1129" name="Convert_TrapDefinition_IndexSequential" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests.Convert_TrapDefinition_IndexSequential" methodname="Convert_TrapDefinition_IndexSequential" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" seed="1615649167" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000473" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Trap] Region [0,0]: 3 traps, 0 missing scripts
+]]></output>
+              </test-case>
+              <test-case id="1133" name="TrapSectionParser_Parse_EmptyData_ReturnsNull" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests.TrapSectionParser_Parse_EmptyData_ReturnsNull" methodname="TrapSectionParser_Parse_EmptyData_ReturnsNull" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" seed="615177413" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000665" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[Trap] Trap section data too small
+]]></output>
+              </test-case>
+              <test-case id="1134" name="TrapSectionParser_Parse_ZeroCount_ReturnsEmpty" fullname="VLTK.Tests.Sandbox.TrapSectionConverterTests.TrapSectionParser_Parse_ZeroCount_ReturnsEmpty" methodname="TrapSectionParser_Parse_ZeroCount_ReturnsEmpty" classname="VLTK.Tests.Sandbox.TrapSectionConverterTests" runstate="Runnable" seed="13375737" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000455" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+            </test-suite>
+          </test-suite>
+          <test-suite type="TestSuite" id="1195" name="Sprites" fullname="VLTK.Tests.Sprites" runstate="Runnable" testcasecount="27" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.602572" total="27" passed="27" failed="0" inconclusive="0" skipped="0" asserts="0">
+            <properties />
+            <test-suite type="TestFixture" id="1006" name="SprAtlasPackerTests" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" testcasecount="10" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.560431" total="10" passed="10" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1013" name="Pack_ClipDefinition_AtlasRefMatchesRegistryKey" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_ClipDefinition_AtlasRefMatchesRegistryKey" methodname="Pack_ClipDefinition_AtlasRefMatchesRegistryKey" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="557104445" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.061194" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Registered atlas 'sprites/test.spr' in registry (96 frames)
+[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+              <test-case id="1012" name="Pack_ClipDefinition_HasCorrectFrameCount" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_ClipDefinition_HasCorrectFrameCount" methodname="Pack_ClipDefinition_HasCorrectFrameCount" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="280479954" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.077948" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+              <test-case id="1015" name="Pack_FailedDecodeResult_ReturnsError" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_FailedDecodeResult_ReturnsError" methodname="Pack_FailedDecodeResult_ReturnsError" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="1082409340" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000455" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1014" name="Pack_NullDecodeResult_ReturnsError" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_NullDecodeResult_ReturnsError" methodname="Pack_NullDecodeResult_ReturnsError" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="2052147681" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.000266" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1008" name="Pack_ValidDecodeResult_AtlasIsPow2" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_ValidDecodeResult_AtlasIsPow2" methodname="Pack_ValidDecodeResult_AtlasIsPow2" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="288191794" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.066773" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+              <test-case id="1009" name="Pack_ValidDecodeResult_FrameRectCountMatchesFrames" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_ValidDecodeResult_FrameRectCountMatchesFrames" methodname="Pack_ValidDecodeResult_FrameRectCountMatchesFrames" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="468221793" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:10Z" duration="0.062071" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+              <test-case id="1007" name="Pack_ValidDecodeResult_Succeeds" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_ValidDecodeResult_Succeeds" methodname="Pack_ValidDecodeResult_Succeeds" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="1426968923" result="Passed" start-time="2026-05-30 19:15:10Z" end-time="2026-05-30 19:15:11Z" duration="0.073433" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+              <test-case id="1016" name="Pack_WithoutRegistry_DoesNotThrow" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_WithoutRegistry_DoesNotThrow" methodname="Pack_WithoutRegistry_DoesNotThrow" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="725735173" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.072254" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+              <test-case id="1010" name="Pack_WithRegistry_RegistersAtlasEntry" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_WithRegistry_RegistersAtlasEntry" methodname="Pack_WithRegistry_RegistersAtlasEntry" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="202566948" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.072383" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Registered atlas 'sprites/00002d56.spr' in registry (96 frames)
+[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+              <test-case id="1011" name="Pack_WithRegistry_ResolveByUid_Works" fullname="VLTK.Tests.Sprites.SprAtlasPackerTests.Pack_WithRegistry_ResolveByUid_Works" methodname="Pack_WithRegistry_ResolveByUid_Works" classname="VLTK.Tests.Sprites.SprAtlasPackerTests" runstate="Runnable" seed="1682042232" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.071173" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[[SprAtlas] Registered atlas 'sprites/00002d56.spr' in registry (96 frames)
+[SprAtlas] Packed 96/96 frames into 4096x4096 atlas (10x10 grid)
+]]></output>
+              </test-case>
+            </test-suite>
+            <test-suite type="TestFixture" id="1017" name="SprDecoderTests" fullname="VLTK.Tests.Sprites.SprDecoderTests" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" testcasecount="17" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.038203" total="17" passed="17" failed="0" inconclusive="0" skipped="0" asserts="0">
+              <properties />
+              <test-case id="1029" name="CreateSprite_FromDecodedFrame_ReturnsNonNull" fullname="VLTK.Tests.Sprites.SprDecoderTests.CreateSprite_FromDecodedFrame_ReturnsNonNull" methodname="CreateSprite_FromDecodedFrame_ReturnsNonNull" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="632755863" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.002741" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1026" name="Decode_CorruptedData_DoesNotThrow" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_CorruptedData_DoesNotThrow" methodname="Decode_CorruptedData_DoesNotThrow" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="93683832" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000510" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1023" name="Decode_NullData_ReturnsError" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_NullData_ReturnsError" methodname="Decode_NullData_ReturnsError" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="723964789" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000207" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1024" name="Decode_TooSmallData_ReturnsError" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_TooSmallData_ReturnsError" methodname="Decode_TooSmallData_ReturnsError" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="1267031015" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000167" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1021" name="Decode_ValidSpr_FrameCountMatchesHeader" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_ValidSpr_FrameCountMatchesHeader" methodname="Decode_ValidSpr_FrameCountMatchesHeader" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="354816252" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000310" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1022" name="Decode_ValidSpr_FramesHavePixelData" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_ValidSpr_FramesHavePixelData" methodname="Decode_ValidSpr_FramesHavePixelData" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="115138851" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000314" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1019" name="Decode_ValidSpr_HasCorrectHeaderFields" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_ValidSpr_HasCorrectHeaderFields" methodname="Decode_ValidSpr_HasCorrectHeaderFields" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="1395809591" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000320" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1027" name="Decode_ValidSpr_OffsetTablePopulated" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_ValidSpr_OffsetTablePopulated" methodname="Decode_ValidSpr_OffsetTablePopulated" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="739363870" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000457" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1020" name="Decode_ValidSpr_PaletteHasCorrectSize" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_ValidSpr_PaletteHasCorrectSize" methodname="Decode_ValidSpr_PaletteHasCorrectSize" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="1223263524" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000263" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1028" name="Decode_ValidSpr_SomeFramesHaveOffsets" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_ValidSpr_SomeFramesHaveOffsets" methodname="Decode_ValidSpr_SomeFramesHaveOffsets" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="1431194607" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000290" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1018" name="Decode_ValidSpr_Succeeds" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_ValidSpr_Succeeds" methodname="Decode_ValidSpr_Succeeds" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="199117833" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000280" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1025" name="Decode_WrongSignature_ReturnsInvalidSignatureError" fullname="VLTK.Tests.Sprites.SprDecoderTests.Decode_WrongSignature_ReturnsInvalidSignatureError" methodname="Decode_WrongSignature_ReturnsInvalidSignatureError" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="847822636" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000390" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1032" name="Validator_BadData_ReturnsInvalidWithError" fullname="VLTK.Tests.Sprites.SprDecoderTests.Validator_BadData_ReturnsInvalidWithError" methodname="Validator_BadData_ReturnsInvalidWithError" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="962992637" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000472" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1031" name="Validator_NullData_ReturnsInvalid" fullname="VLTK.Tests.Sprites.SprDecoderTests.Validator_NullData_ReturnsInvalid" methodname="Validator_NullData_ReturnsInvalid" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="985349336" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000177" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1030" name="Validator_ValidSpr_ReturnsValid" fullname="VLTK.Tests.Sprites.SprDecoderTests.Validator_ValidSpr_ReturnsValid" methodname="Validator_ValidSpr_ReturnsValid" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="1259669422" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000316" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1033" name="Validator_ValidSpr_SourcePathPreserved" fullname="VLTK.Tests.Sprites.SprDecoderTests.Validator_ValidSpr_SourcePathPreserved" methodname="Validator_ValidSpr_SourcePathPreserved" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="1529944148" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000246" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+              </test-case>
+              <test-case id="1034" name="Validator_ValidSpr_ToStringDoesNotThrow" fullname="VLTK.Tests.Sprites.SprDecoderTests.Validator_ValidSpr_ToStringDoesNotThrow" methodname="Validator_ValidSpr_ToStringDoesNotThrow" classname="VLTK.Tests.Sprites.SprDecoderTests" runstate="Runnable" seed="975557466" result="Passed" start-time="2026-05-30 19:15:11Z" end-time="2026-05-30 19:15:11Z" duration="0.000385" asserts="0">
+                <properties>
+                  <property name="retryIteration" value="0" />
+                  <property name="repeatIteration" value="0" />
+                </properties>
+                <output><![CDATA[<b><color=#2EA3FF>MCP-FOR-UNITY</color></b>: [TestRunnerNoThrottle] Restored Interaction Mode after test run.
+Saving results to: /tmp/vltk-editmode-results.xml
+]]></output>
+              </test-case>
+            </test-suite>
+          </test-suite>
+        </test-suite>
+      </test-suite>
+    </test-suite>
+  </test-suite>
+</test-run>
