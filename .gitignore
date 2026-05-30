@@ -1,0 +1,152 @@
+# ============================================================
+# .gitignore — vltk-mobile (Unity Mobile Project)
+# Unity 2022+ / C# / Android / iOS
+# ============================================================
+
+# ─────────────────────────────────────────────────
+# Harness durable layer (pre-existing entries)
+# ─────────────────────────────────────────────────
+harness.db
+harness.db-wal
+harness.db-shm
+
+# Rust build output for harness tooling.
+target/
+dist/
+
+# Downloaded Harness CLI binary for installed project instances.
+scripts/bin/harness-cli
+
+# ─────────────────────────────────────────────────
+# PC source code subfolder — tracked as SEPARATE git repo
+# ─────────────────────────────────────────────────
+jxwin-kinnox/
+
+# ─────────────────────────────────────────────────
+# Unity generated folders
+# ─────────────────────────────────────────────────
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+MemoryCaptures/
+Recordings/
+.idea/
+.vs/
+
+# ─────────────────────────────────────────────────
+# Unity auto-generated project files
+# ─────────────────────────────────────────────────
+# Note: DO commit *.meta files — Unity needs them for asset GUIDs
+*.csproj
+*.sln
+*.unityproj
+Assembly-CSharp*.csproj
+
+# ─────────────────────────────────────────────────
+# OS generated
+# ─────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ─────────────────────────────────────────────────
+# Rider / JetBrains
+# ─────────────────────────────────────────────────
+.idea/
+*.sln.iml
+
+# ─────────────────────────────────────────────────
+# Visual Studio / VS Code workspace
+# ─────────────────────────────────────────────────
+.vs/
+*.suo
+*.user
+
+# ─────────────────────────────────────────────────
+# Mobile build output
+# ─────────────────────────────────────────────────
+*.apk
+*.aab
+*.ipa
+ExportedProject/
+export_Gradle/
+
+# ─────────────────────────────────────────────────
+# Unity crash & log files
+# ─────────────────────────────────────────────────
+sysinfo.txt
+*.stacktrace
+
+# ─────────────────────────────────────────────────
+# Addressables / AssetBundles (generated)
+# ─────────────────────────────────────────────────
+Assets/StreamingAssets/aa/
+Assets/AssetBundles/
+
+# ─────────────────────────────────────────────────
+# Converted/extracted game assets (intermediate output from vltktool)
+# ─────────────────────────────────────────────────
+Assets/Resources/Extracted/
+Assets/Resources/Converted/
+unpacked/
+
+# ─────────────────────────────────────────────────
+# Python tool cache (vltktool)
+# ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# ─────────────────────────────────────────────────
+# Node / JS tooling
+# ─────────────────────────────────────────────────
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# ─────────────────────────────────────────────────
+# Secrets & signing keys
+# ─────────────────────────────────────────────────
+*.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.keystore
+keystore.properties
+google-services.json
+GoogleService-Info.plist
+
+# ─────────────────────────────────────────────────
+# Antigravity agent workspace
+# ─────────────────────────────────────────────────
+.antigravitycli/
+
+# ─────────────────────────────────────────────────
+# What IS tracked
+# ─────────────────────────────────────────────────
+# Assets/**/*.cs            → C# scripts
+# Assets/**/*.meta          → Unity asset metadata (REQUIRED!)
+# Assets/**/*.unity         → Scenes
+# Assets/**/*.prefab        → Prefabs
+# Assets/**/*.mat           → Materials
+# Assets/**/*.anim          → Animations
+# Assets/**/*.controller    → Animator controllers
+# ProjectSettings/          → Unity project settings
+# Packages/                 → Package manifest
+# docs/                     → Documentation
+# scripts/                  → Harness & tool scripts
