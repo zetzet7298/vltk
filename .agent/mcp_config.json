@@ -1,0 +1,45 @@
+{
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ],
+      "disabled": true
+    },
+    "exa": {
+      "serverUrl": "https://mcp.exa.ai/mcp",
+      "disabled": false
+    },
+    "unity-http": {
+      "serverUrl": "http://127.0.0.1:8080/mcp",
+      "disabled": false
+    },
+    "unity-relay": {
+      "command": "/home/zet/.unity/relay/relay_linux",
+      "args": [
+        "mcp"
+      ],
+      "disabled": true
+    },
+    "stitch": {
+      "serverUrl": "https://stitch.googleapis.com/mcp",
+      "headers": {
+        "X-Goog-Api-Key": "YOUR_STITCH_API_KEY"
+      },
+      "disabled": true
+    },
+        "semble": {
+      "command": "uvx",
+      "args": ["--from", "semble[mcp]", "semble"]
+    },
+        "gitnexus": {
+      "command": "/home/zet/.local/npm-global/bin/gitnexus",
+      "args": [
+        "mcp"
+      ],
+      "disabled": false
+    }
+  }
+}
