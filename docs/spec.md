@@ -86,7 +86,7 @@ gitnexus context --repo jxwin-kinnox --name KScenePlaceRegionC
 gitnexus query --repo vltk-mobile "Sandbox GM Panel MapManager AssetRegistry"
 ```
 
-Current discovery note: GitNexus listed `vltk-mobile`, but did not list `jxwin-kinnox` during the documentation update. Until `jxwin-kinnox` appears in GitNexus, treat Semble evidence as the active source-research path and record the GitNexus indexing gap in task notes.
+Current discovery note: GitNexus now lists `jxwin-kinnox`. Its `.gitnexusignore` intentionally scopes analysis to stable runtime game/engine/render code so `gitnexus analyze` completes. Treat GitNexus as the source for core symbol/call-graph/process context, and use Semble for excluded Utility/server/payment/update tooling, bulk Lua scripts, and config text.
 
 ### 2.3 Evidence anchors already identified
 

@@ -43,7 +43,7 @@ Xây dựng VLTK Mobile theo hướng **Sandbox-first, Data-model-first, Map-fir
    Ưu tiên port toàn bộ map vào sandbox đầu tiên. Dữ liệu map được convert offline thành Unity-native data: metadata, terrain tiles/atlases, region data, obstacle grid, object placement, minimap/overview, lighting/weather, NPC/trap spawn tables. Runtime sandbox chỉ load assets đã convert, không parse raw PAK/MAP nặng trong gameplay loop.
 
 4. **`jxwin-kinnox` là reference truth, `vltktool` là conversion support**  
-   Khi cần hiểu logic PC, dùng Semble để search semantic/text trên `/var/www/vltk-mobile/jxwin-kinnox`. Dùng GitNexus cho knowledge graph khi repo `jxwin-kinnox` đã được index; nếu GitNexus chưa list repo này, ghi nhận indexing gap và dùng Semble evidence cho tới khi index được cập nhật. Dùng `/var/www/vltktool` để tái sử dụng tool extraction/conversion đã có: PAK unpacking, SPR decoding, BLH terrain experiments, item contract bundles, Unity scaffold generation, and quality gates.
+   Khi cần hiểu logic PC, dùng Semble để search semantic/text trên `/var/www/vltk-mobile/jxwin-kinnox`. Dùng GitNexus repo `jxwin-kinnox` cho knowledge graph của phần core game/engine/render đã index; các vùng bị loại khỏi graph để tránh treo analyzer như Utility, server/payment/update tooling, config text, và Lua script bulk vẫn tra cứu bằng Semble khi cần. Dùng `/var/www/vltktool` để tái sử dụng tool extraction/conversion đã có: PAK unpacking, SPR decoding, BLH terrain experiments, item contract bundles, Unity scaffold generation, and quality gates.
 
 5. **Deep modules thay vì script lẻ**  
    Tách thành các module sâu, testable, ít thay đổi interface: Source Intelligence, Asset Conversion Pipeline, Canonical Data Model, Asset Registry, Map Port Pipeline, Sprite/Animation Pipeline, Sandbox Runtime, GM Panel, Lua Bridge, Gameplay Systems, Validation Harness.
@@ -149,8 +149,9 @@ The PC source under `/var/www/vltk-mobile/jxwin-kinnox` should not be modified d
 ### 5. Reference research protocol uses Semble and GitNexus appropriately
 
 - Use Semble for semantic/text search across `jxwin-kinnox`, especially when locating source modules, class names, data structures, or config examples.
-- Use GitNexus for symbol context, call graph, process flows, and impact when `jxwin-kinnox` is indexed and visible in the GitNexus repo list.
-- If GitNexus does not list `jxwin-kinnox`, do not fabricate GitNexus evidence. Record the gap and use Semble until the index is refreshed.
+- Use GitNexus for symbol context, call graph, process flows, and impact from the indexed `jxwin-kinnox` core graph.
+- The `jxwin-kinnox` GitNexus graph is intentionally scoped by `.gitnexusignore` to stable runtime game/engine/render code so `gitnexus analyze` completes; use Semble for excluded legacy tooling, server/payment/update code, config text, and bulk Lua script research.
+- If GitNexus ever does not list `jxwin-kinnox`, do not fabricate GitNexus evidence. Record the gap and use Semble until the index is refreshed.
 - Use GitNexus for `vltk-mobile` when checking current Unity-side symbols/docs.
 
 ### 6. `/var/www/vltktool` is a helper suite, not a runtime dependency
@@ -274,7 +275,7 @@ Semble review of `/var/www/vltktool` found helper anchors:
 
 ### GitNexus note
 
-Current discovery confirmed GitNexus has `vltk-mobile` indexed, but did not list `jxwin-kinnox` in the available repository list during this session. The desired workflow remains: index `jxwin-kinnox`, then use GitNexus for symbol/call-graph/process context and Semble for semantic repository search.
+Current discovery now confirms GitNexus has `jxwin-kinnox` indexed. The index is intentionally scoped to core runtime source paths that complete reliably: Core, Engine, Represent, and shared headers. Use GitNexus for symbol/call-graph/process context in that scope, and use Semble for semantic repository search across excluded legacy tooling, server/payment/update code, Lua bulk scripts, and config files.
 
 ### Milestone suggestion
 
