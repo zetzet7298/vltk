@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using UnityEngine;
 using VLTK.Core;
 using VLTK.Model;
@@ -14,7 +15,8 @@ namespace VLTK.Sprites
     /// Search order for a requested sprite name (e.g. "image\tree\abc" or "00002d56"):
     ///   1. StreamingAssets/Sprites/{uid}.spr  (pre-converted flat files)
     ///   2. StreamingAssets/Sprites/{sanitizedName}.spr
-    ///   3. Fallback to procedural sprite
+    ///   3. StreamingAssets/Sprites/{JX path hash}.spr
+    ///   4. Fallback to procedural sprite
     /// </summary>
     public class SprRuntimeService
     {
@@ -178,6 +180,18 @@ namespace VLTK.Sprites
                     return File.ReadAllBytes(uidPath);
             }
 
+            // Strategy 4: compute the JX/PAK UID from the source path.
+            // vltktool extracts unknown PAK entries as {uid:08x}.spr using this hash.
+            string hashedUid = ComputePathUidHex(originalName);
+            if (!string.IsNullOrEmpty(hashedUid) &&
+                hashedUid != sanitizedKey &&
+                hashedUid != uidFromPath)
+            {
+                var hashedPath = Path.Combine(_spritesRoot, $"{hashedUid}.spr");
+                if (File.Exists(hashedPath))
+                    return File.ReadAllBytes(hashedPath);
+            }
+
             return null;
         }
 
@@ -254,7 +268,7 @@ namespace VLTK.Sprites
         {
             if (string.IsNullOrEmpty(name)) return "";
             // Normalize to lowercase, strip path separators and extensions
-            var key = name.Replace('\\', '_').Replace('/', '_');
+            var key = name.TrimEnd('\0').Replace('\\', '_').Replace('/', '_');
             // Remove file extension if present
             int dotIdx = key.LastIndexOf('.');
             if (dotIdx > 0)
@@ -280,6 +294,52 @@ namespace VLTK.Sprites
                 if (allHex) return filename.ToLowerInvariant();
             }
             return null;
+        }
+
+        public static string NormalizeResourcePath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return "";
+
+            var normalized = path.Trim().TrimEnd('\0').Replace('/', '\\');
+            if (normalized.Length == 0) return "";
+            if (!normalized.StartsWith("\\", StringComparison.Ordinal))
+                normalized = "\\" + normalized;
+            return normalized;
+        }
+
+        public static uint ComputePathUid(string path, string encodingName = "GB2312")
+        {
+            var normalized = NormalizeResourcePath(path);
+            if (string.IsNullOrEmpty(normalized)) return 0;
+
+            byte[] bytes;
+            try
+            {
+                bytes = Encoding.GetEncoding(encodingName).GetBytes(normalized);
+            }
+            catch
+            {
+                bytes = Encoding.UTF8.GetBytes(normalized);
+            }
+
+            uint value = 0;
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                uint b = bytes[i];
+                if (b >= 65 && b <= 90)
+                    b += 32;
+
+                uint index = (uint)(i + 1);
+                value = ((value + index * b) % 0x8000000B) * 0xFFFFFFEF;
+            }
+
+            return value ^ 0x12345678;
+        }
+
+        public static string ComputePathUidHex(string path, string encodingName = "GB2312")
+        {
+            uint uid = ComputePathUid(path, encodingName);
+            return uid == 0 ? null : uid.ToString("x8");
         }
     }
 }

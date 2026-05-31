@@ -262,6 +262,31 @@ namespace VLTK.Tests.EditMode.Sprites
         }
 
         [Test]
+        public void ComputePathUidHex_MatchesVltktoolHasher()
+        {
+            Assert.AreEqual("50d1a3a0", SprRuntimeService.ComputePathUidHex("\\image\\effect\\abc12345.spr"));
+            Assert.AreEqual("50d1a3a0", SprRuntimeService.ComputePathUidHex("\\Image\\Effect\\ABC12345.SPR"));
+            Assert.AreEqual("bccbbad2", SprRuntimeService.ComputePathUidHex("\\游戏资源\\美术图素\\野外\\st_01.spr"));
+        }
+
+        [Test]
+        public void NormalizeResourcePath_AddsLeadingBackslashAndStripsNull()
+        {
+            Assert.AreEqual("\\image\\effect\\abc.spr", SprRuntimeService.NormalizeResourcePath("image/effect/abc.spr\0"));
+            Assert.AreEqual("\\image\\effect\\abc.spr", SprRuntimeService.NormalizeResourcePath("\\image\\effect\\abc.spr"));
+        }
+
+        [Test]
+        public void ResolveSprite_SourcePath_ResolvesByComputedPakUid()
+        {
+            var sprData = MakeSprWithPixels();
+            File.WriteAllBytes(Path.Combine(_testDir, "50d1a3a0.spr"), sprData);
+
+            var sprite = _service.ResolveSprite("\\image\\effect\\abc12345.spr");
+            Assert.IsNotNull(sprite);
+        }
+
+        [Test]
         public void ResolveSprite_HexUID_ResolvesDirectly()
         {
             var sprData = MakeSprWithPixels();
