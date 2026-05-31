@@ -1,0 +1,26 @@
+{
+    "name": "VLTK.Tests.EditMode",
+    "rootNamespace": "VLTK.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "VLTK.Core",
+        "VLTK.Model",
+        "VLTK.Sandbox",
+        "VLTK.Resources",
+        "VLTK.Sprites"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -1,3 +1,10 @@
 ﻿<Solution>
+  <Project Path="VLTK.Model.csproj" />
+  <Project Path="VLTK.Sandbox.csproj" />
+  <Project Path="VLTK.Tests.EditMode.csproj" />
+  <Project Path="VLTK.Resources.csproj" />
+  <Project Path="VLTK.Sprites.csproj" />
+  <Project Path="VLTK.Core.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="VLTK.Tests.PlayMode.csproj" />
 </Solution>

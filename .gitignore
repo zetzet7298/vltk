@@ -150,3 +150,15 @@ GoogleService-Info.plist
 # Packages/                 → Package manifest
 # docs/                     → Documentation
 # scripts/                  → Harness & tool scripts
+
+# ─────────────────────────────────────────────────
+# Agent tooling skill dirs (not VLTK project source)
+# ─────────────────────────────────────────────────
+.codex/
+.factory/
+
+# ─────────────────────────────────────────────────
+# Unity auto-recovery scene backup
+# ─────────────────────────────────────────────────
+Assets/_Recovery/
+Assets/_Recovery.meta

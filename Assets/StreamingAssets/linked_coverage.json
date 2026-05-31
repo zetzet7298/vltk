@@ -1,0 +1,3019 @@
+{
+  "version": 1,
+  "generatedAt": "2026-05-30T17:11:24Z",
+  "summary": {
+    "totalMaps": 231,
+    "available": 158,
+    "missing": 73,
+    "incomplete": 0,
+    "totalRegionFilesInCatalog": 64031,
+    "regionsWithObstacle": 57807,
+    "regionsWithGround": 61933,
+    "regionsWithTrap": 1257,
+    "regionsWithNpc": 1205,
+    "note": "Region files not yet linked to specific map IDs. expectedRegions from map settings only."
+  },
+  "maps": [
+    {
+      "mapId": 1,
+      "displayName": "Map_1",
+      "status": "available",
+      "regionWidthTiles": 73,
+      "regionHeightTiles": 51,
+      "expectedRegions": 3723,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 2,
+      "displayName": "Map_2",
+      "status": "available",
+      "regionWidthTiles": 84,
+      "regionHeightTiles": 42,
+      "expectedRegions": 3528,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 3,
+      "displayName": "Map_3",
+      "status": "available",
+      "regionWidthTiles": 69,
+      "regionHeightTiles": 47,
+      "expectedRegions": 3243,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 4,
+      "displayName": "Map_4",
+      "status": "available",
+      "regionWidthTiles": 62,
+      "regionHeightTiles": 51,
+      "expectedRegions": 3162,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 5,
+      "displayName": "Map_5",
+      "status": "available",
+      "regionWidthTiles": 66,
+      "regionHeightTiles": 43,
+      "expectedRegions": 2838,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 6,
+      "displayName": "Map_6",
+      "status": "available",
+      "regionWidthTiles": 66,
+      "regionHeightTiles": 43,
+      "expectedRegions": 2838,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 7,
+      "displayName": "Map_7",
+      "status": "available",
+      "regionWidthTiles": 55,
+      "regionHeightTiles": 47,
+      "expectedRegions": 2585,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 8,
+      "displayName": "nouse",
+      "status": "available",
+      "regionWidthTiles": 72,
+      "regionHeightTiles": 33,
+      "expectedRegions": 2376,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 9,
+      "displayName": "Map_9",
+      "status": "available",
+      "regionWidthTiles": 56,
+      "regionHeightTiles": 42,
+      "expectedRegions": 2352,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 10,
+      "displayName": "Map_10",
+      "status": "available",
+      "regionWidthTiles": 74,
+      "regionHeightTiles": 29,
+      "expectedRegions": 2146,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 11,
+      "displayName": "Map_11",
+      "status": "available",
+      "regionWidthTiles": 70,
+      "regionHeightTiles": 29,
+      "expectedRegions": 2030,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 12,
+      "displayName": "Map_12",
+      "status": "available",
+      "regionWidthTiles": 70,
+      "regionHeightTiles": 29,
+      "expectedRegions": 2030,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 13,
+      "displayName": "Map_13",
+      "status": "available",
+      "regionWidthTiles": 50,
+      "regionHeightTiles": 33,
+      "expectedRegions": 1650,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 14,
+      "displayName": "Map_14",
+      "status": "available",
+      "regionWidthTiles": 61,
+      "regionHeightTiles": 27,
+      "expectedRegions": 1647,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 15,
+      "displayName": "Map_15",
+      "status": "available",
+      "regionWidthTiles": 51,
+      "regionHeightTiles": 32,
+      "expectedRegions": 1632,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 16,
+      "displayName": "Map_16",
+      "status": "available",
+      "regionWidthTiles": 56,
+      "regionHeightTiles": 29,
+      "expectedRegions": 1624,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 17,
+      "displayName": "Map_17",
+      "status": "available",
+      "regionWidthTiles": 47,
+      "regionHeightTiles": 33,
+      "expectedRegions": 1551,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 18,
+      "displayName": "Map_18",
+      "status": "available",
+      "regionWidthTiles": 66,
+      "regionHeightTiles": 23,
+      "expectedRegions": 1518,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 19,
+      "displayName": "event117",
+      "status": "available",
+      "regionWidthTiles": 37,
+      "regionHeightTiles": 35,
+      "expectedRegions": 1295,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 20,
+      "displayName": "Map_20",
+      "status": "available",
+      "regionWidthTiles": 41,
+      "regionHeightTiles": 27,
+      "expectedRegions": 1107,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 21,
+      "displayName": "Map_21",
+      "status": "available",
+      "regionWidthTiles": 46,
+      "regionHeightTiles": 24,
+      "expectedRegions": 1104,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 22,
+      "displayName": "Map_22",
+      "status": "available",
+      "regionWidthTiles": 39,
+      "regionHeightTiles": 28,
+      "expectedRegions": 1092,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 23,
+      "displayName": "Map_23",
+      "status": "available",
+      "regionWidthTiles": 35,
+      "regionHeightTiles": 31,
+      "expectedRegions": 1085,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 24,
+      "displayName": "Map_24",
+      "status": "available",
+      "regionWidthTiles": 30,
+      "regionHeightTiles": 36,
+      "expectedRegions": 1080,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 25,
+      "displayName": "Map_25",
+      "status": "available",
+      "regionWidthTiles": 41,
+      "regionHeightTiles": 26,
+      "expectedRegions": 1066,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 26,
+      "displayName": "Map_26",
+      "status": "available",
+      "regionWidthTiles": 44,
+      "regionHeightTiles": 24,
+      "expectedRegions": 1056,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 27,
+      "displayName": "Map_27",
+      "status": "available",
+      "regionWidthTiles": 44,
+      "regionHeightTiles": 24,
+      "expectedRegions": 1056,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 28,
+      "displayName": "Map_28",
+      "status": "available",
+      "regionWidthTiles": 44,
+      "regionHeightTiles": 24,
+      "expectedRegions": 1056,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 29,
+      "displayName": "Map_29",
+      "status": "available",
+      "regionWidthTiles": 40,
+      "regionHeightTiles": 26,
+      "expectedRegions": 1040,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 30,
+      "displayName": "Map_30",
+      "status": "available",
+      "regionWidthTiles": 43,
+      "regionHeightTiles": 24,
+      "expectedRegions": 1032,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 31,
+      "displayName": "Map_31",
+      "status": "available",
+      "regionWidthTiles": 34,
+      "regionHeightTiles": 30,
+      "expectedRegions": 1020,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 32,
+      "displayName": "Map_32",
+      "status": "available",
+      "regionWidthTiles": 34,
+      "regionHeightTiles": 30,
+      "expectedRegions": 1020,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 33,
+      "displayName": "event098",
+      "status": "available",
+      "regionWidthTiles": 34,
+      "regionHeightTiles": 30,
+      "expectedRegions": 1020,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 34,
+      "displayName": "event0",
+      "status": "available",
+      "regionWidthTiles": 44,
+      "regionHeightTiles": 23,
+      "expectedRegions": 1012,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 35,
+      "displayName": "Map_35",
+      "status": "available",
+      "regionWidthTiles": 41,
+      "regionHeightTiles": 24,
+      "expectedRegions": 984,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 36,
+      "displayName": "Map_36",
+      "status": "available",
+      "regionWidthTiles": 41,
+      "regionHeightTiles": 24,
+      "expectedRegions": 984,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 37,
+      "displayName": "Map_37",
+      "status": "available",
+      "regionWidthTiles": 45,
+      "regionHeightTiles": 21,
+      "expectedRegions": 945,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 38,
+      "displayName": "Map_38",
+      "status": "available",
+      "regionWidthTiles": 40,
+      "regionHeightTiles": 23,
+      "expectedRegions": 920,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 39,
+      "displayName": "Map_39",
+      "status": "available",
+      "regionWidthTiles": 34,
+      "regionHeightTiles": 27,
+      "expectedRegions": 918,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 40,
+      "displayName": "Map_40",
+      "status": "available",
+      "regionWidthTiles": 35,
+      "regionHeightTiles": 26,
+      "expectedRegions": 910,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 41,
+      "displayName": "Map_41",
+      "status": "available",
+      "regionWidthTiles": 33,
+      "regionHeightTiles": 25,
+      "expectedRegions": 825,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 42,
+      "displayName": "Map_42",
+      "status": "available",
+      "regionWidthTiles": 43,
+      "regionHeightTiles": 19,
+      "expectedRegions": 817,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 43,
+      "displayName": "Map_43",
+      "status": "available",
+      "regionWidthTiles": 32,
+      "regionHeightTiles": 23,
+      "expectedRegions": 736,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 44,
+      "displayName": "Map_44",
+      "status": "available",
+      "regionWidthTiles": 32,
+      "regionHeightTiles": 23,
+      "expectedRegions": 736,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 45,
+      "displayName": "Map_45",
+      "status": "available",
+      "regionWidthTiles": 36,
+      "regionHeightTiles": 20,
+      "expectedRegions": 720,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 46,
+      "displayName": "Map_46",
+      "status": "available",
+      "regionWidthTiles": 33,
+      "regionHeightTiles": 20,
+      "expectedRegions": 660,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 47,
+      "displayName": "event002",
+      "status": "available",
+      "regionWidthTiles": 33,
+      "regionHeightTiles": 20,
+      "expectedRegions": 660,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 48,
+      "displayName": "Map_48",
+      "status": "available",
+      "regionWidthTiles": 32,
+      "regionHeightTiles": 20,
+      "expectedRegions": 640,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 49,
+      "displayName": "Map_49",
+      "status": "available",
+      "regionWidthTiles": 35,
+      "regionHeightTiles": 18,
+      "expectedRegions": 630,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 50,
+      "displayName": "Map_50",
+      "status": "available",
+      "regionWidthTiles": 35,
+      "regionHeightTiles": 18,
+      "expectedRegions": 630,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 51,
+      "displayName": "Map_51",
+      "status": "available",
+      "regionWidthTiles": 33,
+      "regionHeightTiles": 19,
+      "expectedRegions": 627,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 52,
+      "displayName": "Map_52",
+      "status": "available",
+      "regionWidthTiles": 26,
+      "regionHeightTiles": 24,
+      "expectedRegions": 624,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 53,
+      "displayName": "Map_53",
+      "status": "available",
+      "regionWidthTiles": 29,
+      "regionHeightTiles": 20,
+      "expectedRegions": 580,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 54,
+      "displayName": "event106",
+      "status": "available",
+      "regionWidthTiles": 20,
+      "regionHeightTiles": 26,
+      "expectedRegions": 520,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 55,
+      "displayName": "Map_55",
+      "status": "available",
+      "regionWidthTiles": 24,
+      "regionHeightTiles": 21,
+      "expectedRegions": 504,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 56,
+      "displayName": "Map_56",
+      "status": "available",
+      "regionWidthTiles": 31,
+      "regionHeightTiles": 16,
+      "expectedRegions": 496,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 57,
+      "displayName": "Map_57",
+      "status": "available",
+      "regionWidthTiles": 31,
+      "regionHeightTiles": 16,
+      "expectedRegions": 496,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 58,
+      "displayName": "Map_58",
+      "status": "available",
+      "regionWidthTiles": 27,
+      "regionHeightTiles": 18,
+      "expectedRegions": 486,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 59,
+      "displayName": "event082",
+      "status": "available",
+      "regionWidthTiles": 27,
+      "regionHeightTiles": 18,
+      "expectedRegions": 486,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 60,
+      "displayName": "Map_60",
+      "status": "available",
+      "regionWidthTiles": 24,
+      "regionHeightTiles": 20,
+      "expectedRegions": 480,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 61,
+      "displayName": "event098",
+      "status": "available",
+      "regionWidthTiles": 24,
+      "regionHeightTiles": 20,
+      "expectedRegions": 480,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 62,
+      "displayName": "Map_62",
+      "status": "available",
+      "regionWidthTiles": 30,
+      "regionHeightTiles": 16,
+      "expectedRegions": 480,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 63,
+      "displayName": "Map_63",
+      "status": "available",
+      "regionWidthTiles": 26,
+      "regionHeightTiles": 18,
+      "expectedRegions": 468,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 64,
+      "displayName": "event",
+      "status": "available",
+      "regionWidthTiles": 29,
+      "regionHeightTiles": 16,
+      "expectedRegions": 464,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 65,
+      "displayName": "Map_65",
+      "status": "available",
+      "regionWidthTiles": 23,
+      "regionHeightTiles": 19,
+      "expectedRegions": 437,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 66,
+      "displayName": "Map_66",
+      "status": "available",
+      "regionWidthTiles": 27,
+      "regionHeightTiles": 16,
+      "expectedRegions": 432,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 67,
+      "displayName": "Map_67",
+      "status": "available",
+      "regionWidthTiles": 25,
+      "regionHeightTiles": 16,
+      "expectedRegions": 400,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 68,
+      "displayName": "Map_68",
+      "status": "available",
+      "regionWidthTiles": 22,
+      "regionHeightTiles": 18,
+      "expectedRegions": 396,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 69,
+      "displayName": "Map_69",
+      "status": "available",
+      "regionWidthTiles": 26,
+      "regionHeightTiles": 15,
+      "expectedRegions": 390,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 70,
+      "displayName": "event",
+      "status": "available",
+      "regionWidthTiles": 27,
+      "regionHeightTiles": 14,
+      "expectedRegions": 378,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 71,
+      "displayName": "Map_71",
+      "status": "available",
+      "regionWidthTiles": 25,
+      "regionHeightTiles": 15,
+      "expectedRegions": 375,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 72,
+      "displayName": "Map_72",
+      "status": "available",
+      "regionWidthTiles": 17,
+      "regionHeightTiles": 22,
+      "expectedRegions": 374,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 73,
+      "displayName": "Map_73",
+      "status": "available",
+      "regionWidthTiles": 22,
+      "regionHeightTiles": 17,
+      "expectedRegions": 374,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 74,
+      "displayName": "Map_74",
+      "status": "available",
+      "regionWidthTiles": 26,
+      "regionHeightTiles": 14,
+      "expectedRegions": 364,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 75,
+      "displayName": "Map_75",
+      "status": "available",
+      "regionWidthTiles": 24,
+      "regionHeightTiles": 15,
+      "expectedRegions": 360,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 76,
+      "displayName": "Map_76",
+      "status": "available",
+      "regionWidthTiles": 20,
+      "regionHeightTiles": 18,
+      "expectedRegions": 360,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 77,
+      "displayName": "Map_77",
+      "status": "available",
+      "regionWidthTiles": 23,
+      "regionHeightTiles": 15,
+      "expectedRegions": 345,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 78,
+      "displayName": "Map_78",
+      "status": "available",
+      "regionWidthTiles": 22,
+      "regionHeightTiles": 15,
+      "expectedRegions": 330,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 79,
+      "displayName": "Map_79",
+      "status": "available",
+      "regionWidthTiles": 25,
+      "regionHeightTiles": 13,
+      "expectedRegions": 325,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 80,
+      "displayName": "Map_80",
+      "status": "available",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 17,
+      "expectedRegions": 323,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 81,
+      "displayName": "Map_81",
+      "status": "available",
+      "regionWidthTiles": 23,
+      "regionHeightTiles": 14,
+      "expectedRegions": 322,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 82,
+      "displayName": "event081",
+      "status": "available",
+      "regionWidthTiles": 23,
+      "regionHeightTiles": 14,
+      "expectedRegions": 322,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 83,
+      "displayName": "Map_83",
+      "status": "available",
+      "regionWidthTiles": 25,
+      "regionHeightTiles": 12,
+      "expectedRegions": 300,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 84,
+      "displayName": "Map_84",
+      "status": "available",
+      "regionWidthTiles": 24,
+      "regionHeightTiles": 12,
+      "expectedRegions": 288,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 85,
+      "displayName": "Map_85",
+      "status": "available",
+      "regionWidthTiles": 24,
+      "regionHeightTiles": 12,
+      "expectedRegions": 288,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 86,
+      "displayName": "Map_86",
+      "status": "available",
+      "regionWidthTiles": 22,
+      "regionHeightTiles": 13,
+      "expectedRegions": 286,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 87,
+      "displayName": "Map_87",
+      "status": "available",
+      "regionWidthTiles": 21,
+      "regionHeightTiles": 13,
+      "expectedRegions": 273,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 88,
+      "displayName": "Map_88",
+      "status": "available",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 14,
+      "expectedRegions": 266,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 89,
+      "displayName": "Map_89",
+      "status": "available",
+      "regionWidthTiles": 22,
+      "regionHeightTiles": 11,
+      "expectedRegions": 242,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 90,
+      "displayName": "Map_90",
+      "status": "available",
+      "regionWidthTiles": 22,
+      "regionHeightTiles": 11,
+      "expectedRegions": 242,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 91,
+      "displayName": "Map_91",
+      "status": "available",
+      "regionWidthTiles": 17,
+      "regionHeightTiles": 14,
+      "expectedRegions": 238,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 92,
+      "displayName": "Map_92",
+      "status": "available",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 12,
+      "expectedRegions": 228,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 93,
+      "displayName": "Map_93",
+      "status": "available",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 12,
+      "expectedRegions": 228,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 94,
+      "displayName": "Map_94",
+      "status": "available",
+      "regionWidthTiles": 18,
+      "regionHeightTiles": 12,
+      "expectedRegions": 216,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 95,
+      "displayName": "Map_95",
+      "status": "available",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 11,
+      "expectedRegions": 209,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 96,
+      "displayName": "Map_96",
+      "status": "available",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 11,
+      "expectedRegions": 209,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 97,
+      "displayName": "event101",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 13,
+      "expectedRegions": 208,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 98,
+      "displayName": "event119",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 13,
+      "expectedRegions": 208,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 99,
+      "displayName": "Map_99",
+      "status": "available",
+      "regionWidthTiles": 17,
+      "regionHeightTiles": 12,
+      "expectedRegions": 204,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 100,
+      "displayName": "Map_100",
+      "status": "available",
+      "regionWidthTiles": 17,
+      "regionHeightTiles": 12,
+      "expectedRegions": 204,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 101,
+      "displayName": "Map_101",
+      "status": "available",
+      "regionWidthTiles": 22,
+      "regionHeightTiles": 9,
+      "expectedRegions": 198,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 102,
+      "displayName": "event",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 13,
+      "expectedRegions": 182,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 103,
+      "displayName": "event002",
+      "status": "available",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 9,
+      "expectedRegions": 171,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 104,
+      "displayName": "Map_104",
+      "status": "available",
+      "regionWidthTiles": 17,
+      "regionHeightTiles": 10,
+      "expectedRegions": 170,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 105,
+      "displayName": "Map_105",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 10,
+      "expectedRegions": 160,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 106,
+      "displayName": "event118",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 10,
+      "expectedRegions": 160,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 107,
+      "displayName": "Map_107",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 10,
+      "expectedRegions": 160,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 108,
+      "displayName": "Map_108",
+      "status": "available",
+      "regionWidthTiles": 15,
+      "regionHeightTiles": 10,
+      "expectedRegions": 150,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 109,
+      "displayName": "Map_109",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 9,
+      "expectedRegions": 144,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 110,
+      "displayName": "Map_110",
+      "status": "available",
+      "regionWidthTiles": 18,
+      "regionHeightTiles": 8,
+      "expectedRegions": 144,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 111,
+      "displayName": "event098",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 9,
+      "expectedRegions": 144,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 112,
+      "displayName": "event098",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 9,
+      "expectedRegions": 144,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 113,
+      "displayName": "Map_113",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 10,
+      "expectedRegions": 140,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 114,
+      "displayName": "Map_114",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 10,
+      "expectedRegions": 140,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 115,
+      "displayName": "event",
+      "status": "available",
+      "regionWidthTiles": 15,
+      "regionHeightTiles": 9,
+      "expectedRegions": 135,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 116,
+      "displayName": "Map_116",
+      "status": "available",
+      "regionWidthTiles": 13,
+      "regionHeightTiles": 10,
+      "expectedRegions": 130,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 117,
+      "displayName": "Map_117",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 8,
+      "expectedRegions": 128,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 118,
+      "displayName": "Map_118",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 8,
+      "expectedRegions": 128,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 119,
+      "displayName": "event",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 9,
+      "expectedRegions": 126,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 120,
+      "displayName": "Map_120",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 9,
+      "expectedRegions": 126,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 121,
+      "displayName": "Map_121",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 9,
+      "expectedRegions": 126,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 122,
+      "displayName": "Map_122",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 9,
+      "expectedRegions": 126,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 123,
+      "displayName": "Map_123",
+      "status": "available",
+      "regionWidthTiles": 13,
+      "regionHeightTiles": 9,
+      "expectedRegions": 117,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 124,
+      "displayName": "Map_124",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 8,
+      "expectedRegions": 112,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 125,
+      "displayName": "event",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 8,
+      "expectedRegions": 112,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 126,
+      "displayName": "Map_126",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 8,
+      "expectedRegions": 112,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 127,
+      "displayName": "event",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 8,
+      "expectedRegions": 112,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 128,
+      "displayName": "Map_128",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 8,
+      "expectedRegions": 112,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 129,
+      "displayName": "Map_129",
+      "status": "available",
+      "regionWidthTiles": 12,
+      "regionHeightTiles": 9,
+      "expectedRegions": 108,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 130,
+      "displayName": "Map_130",
+      "status": "available",
+      "regionWidthTiles": 11,
+      "regionHeightTiles": 9,
+      "expectedRegions": 99,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 131,
+      "displayName": "Map_131",
+      "status": "available",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 7,
+      "expectedRegions": 98,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 132,
+      "displayName": "Map_132",
+      "status": "available",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 6,
+      "expectedRegions": 96,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 133,
+      "displayName": "Map_133",
+      "status": "available",
+      "regionWidthTiles": 13,
+      "regionHeightTiles": 7,
+      "expectedRegions": 91,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 134,
+      "displayName": "Map_134",
+      "status": "available",
+      "regionWidthTiles": 12,
+      "regionHeightTiles": 7,
+      "expectedRegions": 84,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 135,
+      "displayName": "Map_135",
+      "status": "available",
+      "regionWidthTiles": 12,
+      "regionHeightTiles": 7,
+      "expectedRegions": 84,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 136,
+      "displayName": "event098",
+      "status": "available",
+      "regionWidthTiles": 13,
+      "regionHeightTiles": 6,
+      "expectedRegions": 78,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 137,
+      "displayName": "Map_137",
+      "status": "available",
+      "regionWidthTiles": 13,
+      "regionHeightTiles": 6,
+      "expectedRegions": 78,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 138,
+      "displayName": "Map_138",
+      "status": "available",
+      "regionWidthTiles": 9,
+      "regionHeightTiles": 7,
+      "expectedRegions": 63,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 139,
+      "displayName": "Map_139",
+      "status": "available",
+      "regionWidthTiles": 7,
+      "regionHeightTiles": 5,
+      "expectedRegions": 35,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 140,
+      "displayName": "Map_140",
+      "status": "available",
+      "regionWidthTiles": 7,
+      "regionHeightTiles": 5,
+      "expectedRegions": 35,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 141,
+      "displayName": "event016",
+      "status": "available",
+      "regionWidthTiles": 8,
+      "regionHeightTiles": 4,
+      "expectedRegions": 32,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 142,
+      "displayName": "Map_142",
+      "status": "available",
+      "regionWidthTiles": 6,
+      "regionHeightTiles": 5,
+      "expectedRegions": 30,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 143,
+      "displayName": "Map_143",
+      "status": "available",
+      "regionWidthTiles": 5,
+      "regionHeightTiles": 4,
+      "expectedRegions": 20,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 144,
+      "displayName": "Map_144",
+      "status": "available",
+      "regionWidthTiles": 5,
+      "regionHeightTiles": 3,
+      "expectedRegions": 15,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 145,
+      "displayName": "Map_145",
+      "status": "available",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 146,
+      "displayName": "Map_146",
+      "status": "available",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 147,
+      "displayName": "Map_147",
+      "status": "available",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 148,
+      "displayName": "Map_148",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 3,
+      "expectedRegions": 9,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 149,
+      "displayName": "Map_149",
+      "status": "available",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 150,
+      "displayName": "Map_150",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 151,
+      "displayName": "Map_151",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 152,
+      "displayName": "Map_152",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 153,
+      "displayName": "Map_153",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 154,
+      "displayName": "Map_154",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 155,
+      "displayName": "Map_155",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 156,
+      "displayName": "Map_156",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 157,
+      "displayName": "Map_157",
+      "status": "available",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 158,
+      "displayName": "Map_158",
+      "status": "available",
+      "regionWidthTiles": 2,
+      "regionHeightTiles": 2,
+      "expectedRegions": 4,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": []
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 11,
+      "expectedRegions": 209,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 32,
+      "regionHeightTiles": 29,
+      "expectedRegions": 928,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 31,
+      "regionHeightTiles": 19,
+      "expectedRegions": 589,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "nouse",
+      "status": "missing",
+      "regionWidthTiles": 38,
+      "regionHeightTiles": 19,
+      "expectedRegions": 722,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 14,
+      "regionHeightTiles": 6,
+      "expectedRegions": 84,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 18,
+      "regionHeightTiles": 10,
+      "expectedRegions": 180,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 15,
+      "regionHeightTiles": 6,
+      "expectedRegions": 90,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 26,
+      "regionHeightTiles": 15,
+      "expectedRegions": 390,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 30,
+      "regionHeightTiles": 15,
+      "expectedRegions": 450,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 30,
+      "regionHeightTiles": 14,
+      "expectedRegions": 420,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 18,
+      "regionHeightTiles": 9,
+      "expectedRegions": 162,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "event",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 32,
+      "regionHeightTiles": 42,
+      "expectedRegions": 1344,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 7,
+      "regionHeightTiles": 4,
+      "expectedRegions": 28,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 18,
+      "regionHeightTiles": 11,
+      "expectedRegions": 198,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 19,
+      "regionHeightTiles": 13,
+      "expectedRegions": 247,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 36,
+      "regionHeightTiles": 34,
+      "expectedRegions": 1224,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 29,
+      "regionHeightTiles": 17,
+      "expectedRegions": 493,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 7,
+      "regionHeightTiles": 5,
+      "expectedRegions": 35,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 3,
+      "expectedRegions": 9,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 3,
+      "expectedRegions": 9,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 26,
+      "regionHeightTiles": 14,
+      "expectedRegions": 364,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 12,
+      "expectedRegions": 192,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 4,
+      "expectedRegions": 16,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 43,
+      "regionHeightTiles": 35,
+      "expectedRegions": 1505,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 5,
+      "regionHeightTiles": 2,
+      "expectedRegions": 10,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "event",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 10,
+      "regionHeightTiles": 6,
+      "expectedRegions": 60,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 36,
+      "regionHeightTiles": 35,
+      "expectedRegions": 1260,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 13,
+      "regionHeightTiles": 10,
+      "expectedRegions": 130,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "event",
+      "status": "missing",
+      "regionWidthTiles": 11,
+      "regionHeightTiles": 7,
+      "expectedRegions": 77,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 6,
+      "regionHeightTiles": 5,
+      "expectedRegions": 30,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 2,
+      "expectedRegions": 8,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 4,
+      "regionHeightTiles": 3,
+      "expectedRegions": 12,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 8,
+      "regionHeightTiles": 5,
+      "expectedRegions": 40,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 2,
+      "expectedRegions": 6,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 5,
+      "regionHeightTiles": 2,
+      "expectedRegions": 10,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 3,
+      "regionHeightTiles": 3,
+      "expectedRegions": 9,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 27,
+      "regionHeightTiles": 21,
+      "expectedRegions": 567,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 2,
+      "regionHeightTiles": 2,
+      "expectedRegions": 4,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 5,
+      "regionHeightTiles": 3,
+      "expectedRegions": 15,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 2,
+      "regionHeightTiles": 2,
+      "expectedRegions": 4,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 16,
+      "regionHeightTiles": 9,
+      "expectedRegions": 144,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "brightness is missing — using default 255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    },
+    {
+      "mapId": 0,
+      "displayName": "Map_0",
+      "status": "missing",
+      "regionWidthTiles": 0,
+      "regionHeightTiles": 0,
+      "expectedRegions": 0,
+      "regionsInCatalog": 0,
+      "regionsConverted": 0,
+      "regionsMissing": 0,
+      "conversionWarnings": [
+        "haveMap is False — no usable map data",
+        "rect is missing — all 4 bounds values absent",
+        "brightness is missing — using default 255",
+        "color is missing — using default 255,255,255,255"
+      ]
+    }
+  ]
+}
