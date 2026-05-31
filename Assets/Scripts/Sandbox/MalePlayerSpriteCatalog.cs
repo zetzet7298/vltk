@@ -1,3 +1,9 @@
+// -----------------------------------------------------------------------------
+// VLTK Mobile
+// Copyright (c) 2026 vltk. All rights reserved.
+// Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
+// -----------------------------------------------------------------------------
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;

@@ -1,0 +1,37 @@
+VLTK Mobile — Proprietary Software License
+Copyright (c) 2026 vltk. All rights reserved.
+
+1. OWNERSHIP
+   This software, including its source code, assets, build scripts, and
+   documentation (the "Software"), is the proprietary and confidential property
+   of vltk (the "Company"). The Software is licensed, not sold.
+
+2. RESTRICTIONS
+   No part of the Software may be copied, reproduced, modified, merged,
+   published, distributed, sublicensed, sold, reverse-engineered, decompiled,
+   or disassembled, in whole or in part, without the prior written permission
+   of the Company. Unauthorized use is strictly prohibited and may result in
+   civil and criminal penalties.
+
+3. THIRD-PARTY AND ORIGINAL GAME INTELLECTUAL PROPERTY
+   This project is a mobile port that references gameplay, art, and data
+   derived from "Võ Lâm Truyền Kỳ" / "剑侠情缘网络版叁" (JX Online 3),
+   whose intellectual property rights belong to their respective owners
+   (see NOTICE.md). The Company makes no claim of ownership over such
+   third-party intellectual property. Reference materials under
+   `jxwin-kinnox/` are retained for development reference only and are NOT
+   licensed for redistribution under this License.
+
+4. THIRD-PARTY SOFTWARE
+   The Software incorporates third-party components (e.g., the Unity engine
+   and packages) that remain subject to their own licenses. Nothing in this
+   License overrides those terms.
+
+5. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   COMPANY BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM,
+   OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+For licensing inquiries, contact: dev@vltk-mobile.local
