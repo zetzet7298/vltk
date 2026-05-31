@@ -96,7 +96,7 @@ namespace VLTK.Tests.Sprites
             var registry = new AssetRegistry();
             var sourceId = MakeSourceId("sprites/00002d56.spr", uid: 999);
 
-            var result = SprAtlasPacker.Pack(decoded, sourceId, registry);
+            var result = SprAtlasPacker.Pack(decoded, sourceId, entry => registry.Register(entry));
 
             Assert.IsTrue(result.success, $"Pack failed: {result.error}");
 
@@ -117,7 +117,7 @@ namespace VLTK.Tests.Sprites
             var registry = new AssetRegistry();
             var sourceId = MakeSourceId("sprites/00002d56.spr", uid: 42);
 
-            SprAtlasPacker.Pack(decoded, sourceId, registry);
+            SprAtlasPacker.Pack(decoded, sourceId, entry => registry.Register(entry));
 
             var entry = registry.Resolve(42);
             Assert.IsNotNull(entry, "Should resolve atlas by uid");
@@ -149,7 +149,7 @@ namespace VLTK.Tests.Sprites
             var registry = new AssetRegistry();
             var sourceId = MakeSourceId("sprites/test.spr", uid: 77);
 
-            var result = SprAtlasPacker.Pack(decoded, sourceId, registry);
+            var result = SprAtlasPacker.Pack(decoded, sourceId, entry => registry.Register(entry));
 
             Assert.IsTrue(result.success);
             Assert.AreEqual(result.atlasKey, result.clipDefinition.atlasRef);

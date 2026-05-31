@@ -3,7 +3,8 @@
     "rootNamespace": "VLTK.Sandbox",
     "references": [
         "VLTK.Core",
-        "VLTK.Model"
+        "VLTK.Model",
+        "VLTK.Sprites"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

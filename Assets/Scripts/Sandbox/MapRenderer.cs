@@ -4,6 +4,7 @@ using System.IO;
 using UnityEngine;
 using VLTK.Core;
 using VLTK.Model;
+using VLTK.Sprites;
 
 namespace VLTK.Sandbox
 {
@@ -12,15 +13,18 @@ namespace VLTK.Sandbox
         private ObstacleOverlayRenderer _obstacleOverlay;
         private Transform _mapRoot;
         private int _loadedMapId = -1;
+        private SprRuntimeService _sprService;
 
         public int LoadedMapId => _loadedMapId;
         public ObstacleOverlayRenderer ObstacleOverlay => _obstacleOverlay;
+        public SprRuntimeService SprService => _sprService;
 
         private void Awake()
         {
             _obstacleOverlay = gameObject.AddComponent<ObstacleOverlayRenderer>();
             _mapRoot = new GameObject("MapContent").transform;
             _mapRoot.SetParent(transform, false);
+            _sprService = new SprRuntimeService();
         }
 
         public void LoadMapRegions(MapDefinition mapDef)
@@ -35,8 +39,16 @@ namespace VLTK.Sandbox
                 $"Loading map {catalogEntry.displayNameNormalized} " +
                 $"({mapDef.regionCountX}x{mapDef.regionCountY} regions)");
 
+            // Preload available SPR sprites
+            int preloaded = _sprService.PreloadAll();
+            SubsystemLog.Info("MapRenderer", $"Preloaded {preloaded} SPR sprites");
+
             // Load sample region files from StreamingAssets
             LoadSampleRegions(mapDef);
+
+            // Log SPR resolution stats
+            SubsystemLog.Info("MapRenderer",
+                $"SPR stats: {_sprService.CacheCount} resolved, {_sprService.MissCount} missing");
         }
 
         public void Clear()
@@ -44,6 +56,7 @@ namespace VLTK.Sandbox
             _obstacleOverlay.Clear();
             for (int i = _mapRoot.childCount - 1; i >= 0; i--)
                 Destroy(_mapRoot.GetChild(i).gameObject);
+            _sprService?.ClearCache();
             _loadedMapId = -1;
         }
 
@@ -136,7 +149,7 @@ namespace VLTK.Sandbox
                 tileGo.transform.position = new Vector3(tx + 16f, ty + 16f, 0f);
 
                 var sr = tileGo.AddComponent<SpriteRenderer>();
-                sr.sprite = CreateProceduralTileSprite(tile.spriteName, 32, 32);
+                sr.sprite = _sprService.ResolveSpriteOrDefault(tile.spriteName, 32, 32);
                 sr.sortingOrder = -10;
             }
 
@@ -161,7 +174,7 @@ namespace VLTK.Sandbox
                 objGo.transform.position = new Vector3(ox, oy, -0.5f);
 
                 var sr = objGo.AddComponent<SpriteRenderer>();
-                sr.sprite = CreateProceduralTileSprite(obj.imageName, obj.width > 0 ? obj.width : 64, obj.height > 0 ? obj.height : 64);
+                sr.sprite = _sprService.ResolveSpriteOrDefault(obj.imageName, obj.width > 0 ? obj.width : 64, obj.height > 0 ? obj.height : 64);
                 sr.sortingOrder = obj.layer;
             }
         }
@@ -183,7 +196,7 @@ namespace VLTK.Sandbox
                 objGo.transform.position = new Vector3(ox, oy, -1f);
 
                 var sr = objGo.AddComponent<SpriteRenderer>();
-                sr.sprite = CreateProceduralTileSprite(obj.imageName, obj.imgWidth > 0 ? obj.imgWidth : 64, obj.imgHeight > 0 ? obj.imgHeight : 64);
+                sr.sprite = _sprService.ResolveSpriteOrDefault(obj.imageName, obj.imgWidth > 0 ? obj.imgWidth : 64, obj.imgHeight > 0 ? obj.imgHeight : 64);
                 sr.sortingOrder = obj.order != 65535 ? (int)obj.order : 0;
             }
         }

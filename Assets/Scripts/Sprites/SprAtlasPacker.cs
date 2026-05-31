@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using VLTK.Core;
 using VLTK.Model;
-using VLTK.Sandbox;
 
 namespace VLTK.Sprites
 {
     /// <summary>
     /// M0.8 AC#4 — SPR atlas packing pipeline.
-    /// Packs decoded SPR frames into a Texture2D atlas and registers the result
-    /// in the asset registry so frames can be loaded through the Asset Registry.
+    /// Packs decoded SPR frames into a Texture2D atlas and returns the result
+    /// for the caller to register in the asset registry.
     ///
     /// Design constraints (from spec):
     /// - Must NOT bake gameplay rules.
@@ -20,6 +19,12 @@ namespace VLTK.Sprites
     public static class SprAtlasPacker
     {
         public const int MAX_ATLAS_SIZE = 4096;
+
+        /// <summary>
+        /// Callback for registering an atlas entry in the asset registry.
+        /// Receives the atlasKey and a pre-built AssetRegistryEntry.
+        /// </summary>
+        public static Action<string, AssetRegistryEntry> RegisterCallback { get; set; }
 
         /// <summary>
         /// Result from packing one SPR file into an atlas.
@@ -37,12 +42,12 @@ namespace VLTK.Sprites
 
         /// <summary>
         /// Pack all frames of a decoded SPR into a single atlas Texture2D and
-        /// build a SpriteClipDefinition. Registers the result in the registry.
+        /// build a SpriteClipDefinition. Optionally registers the result via callback.
         /// </summary>
         public static AtlasPackResult Pack(
             SprDecodeResult decoded,
             SourceAssetId sourceId,
-            IAssetRegistry registry = null)
+            Action<AssetRegistryEntry> registerEntry = null)
         {
             var result = new AtlasPackResult();
 
@@ -163,8 +168,8 @@ namespace VLTK.Sprites
                 result.atlasKey = atlasKey;
                 result.success = true;
 
-                // M0.8 AC#4: Register in asset registry so frames can be loaded through it
-                if (registry != null && sourceId != null)
+                // M0.8 AC#4: Register via callback so caller can integrate with their registry
+                if (registerEntry != null && sourceId != null)
                 {
                     var entry = new AssetRegistryEntry
                     {
@@ -174,8 +179,21 @@ namespace VLTK.Sprites
                         loadMode = LoadMode.TestFixture,
                         status = AssetStatus.Available,
                     };
-                    registry.Register(entry);
-                    SubsystemLog.Info("SprAtlas", $"Registered atlas '{atlasKey}' in registry ({totalFrames} frames)");
+                    registerEntry(entry);
+                    SubsystemLog.Info("SprAtlas", $"Registered atlas '{atlasKey}' via callback ({totalFrames} frames)");
+                }
+                else if (RegisterCallback != null && sourceId != null)
+                {
+                    var entry = new AssetRegistryEntry
+                    {
+                        sourceId = sourceId,
+                        artifactType = ArtifactType.SpriteAtlas,
+                        unityAssetPath = atlasKey,
+                        loadMode = LoadMode.TestFixture,
+                        status = AssetStatus.Available,
+                    };
+                    RegisterCallback(atlasKey, entry);
+                    SubsystemLog.Info("SprAtlas", $"Registered atlas '{atlasKey}' via static callback ({totalFrames} frames)");
                 }
 
                 SubsystemLog.Info("SprAtlas",
