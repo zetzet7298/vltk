@@ -27,6 +27,21 @@ Dùng `gitnexus query --repo jxwin-kinnox "..."` để tra cứu logic game gố
 
 - `/var/www/vltktool/` — Bộ công cụ Python: SPR decoder, PAK unpacker, item runtime, CMS web
 
+### Port Map (đã giải quyết 99%)
+
+Để port BẤT KỲ map nào từ PC sang Unity (terrain + buildings + decor + art thật),
+dùng skill **`jx-map-port`** (`.kiro/skills/jx-map-port/`). Nó đóng gói toàn bộ pipeline
+đã mất nhiều session để tìm ra — quan trọng nhất là **hash `g_FileName2Id` dùng SIGNED
+byte** (không phải unsigned) để resolve path chữ Hán trong `maps.pak`/`spr.pak`.
+
+```bash
+python3 .kiro/skills/jx-map-port/scripts/list_maps.py <tên>        # tìm map + bounds
+python3 .kiro/skills/jx-map-port/scripts/jx_map_port.py \
+  --map-name '两湖区\巴陵县' --project-map-id 79 --unity-root /var/www/vltk-mobile
+```
+
+Đọc `references/pitfalls.md` trước khi thử cách khác — mọi ngõ cụt đã được ghi lại.
+
 <!-- HARNESS:BEGIN -->
 ## Harness
 

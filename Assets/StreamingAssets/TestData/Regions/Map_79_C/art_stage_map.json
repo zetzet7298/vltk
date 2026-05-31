@@ -1,0 +1,114 @@
+{
+  "91332ee4": {
+    "name": "\\system\\spr\\RegionTileDefault.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/System/spr/RegionTileDefault.spr"
+  },
+  "b28278a0": {
+    "name": "\\游戏资源\\室外地表\\中型地表图素\\清水.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型地表图素/清水.spr"
+  },
+  "db935a5a": {
+    "name": "\\游戏资源\\室外地表\\中型地表图素\\红土.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型地表图素/红土.spr"
+  },
+  "9def7b50": {
+    "name": "\\游戏资源\\室外地表\\中型地表图素\\红稀.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型地表图素/红稀.spr"
+  },
+  "cafcbb0a": {
+    "name": "\\游戏资源\\室外地表\\中型地表图素\\草原.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型地表图素/草原.spr"
+  },
+  "404af4dc": {
+    "name": "\\游戏资源\\室外地表\\中型地表图素\\黄土.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型地表图素/黄土.spr"
+  },
+  "346a2aa9": {
+    "name": "\\游戏资源\\室外地表\\中型拼接图素\\红土_清水.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型拼接图素/红土_清水.spr"
+  },
+  "dfa4f3df": {
+    "name": "\\游戏资源\\室外地表\\中型拼接图素\\红土_红稀.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型拼接图素/红土_红稀.spr"
+  },
+  "58b740a3": {
+    "name": "\\游戏资源\\室外地表\\中型拼接图素\\草原_黄土.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/室外地表/中型拼接图素/草原_黄土.spr"
+  },
+  "0704a7c4": {
+    "name": "\\游戏资源\\美术图素\\城市\\西南\\室外\\房屋\\tga\\house081\\tga.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/通用/室外/牌坊/building013/tga.spr"
+  },
+  "05607d99": {
+    "name": "\\游戏资源\\美术图素\\城市\\西南\\室外\\树木\\大橡树\\2.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/西南/室外/树木/大橡树/2.spr"
+  },
+  "8d644ccf": {
+    "name": "\\游戏资源\\美术图素\\城市\\西南\\室外\\树木\\杉树\\2.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/西南/室外/树木/杉树/2.spr"
+  },
+  "89b57c02": {
+    "name": "\\游戏资源\\美术图素\\城市\\西南\\室外\\树木\\杉树\\3.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/中原/室外/房屋/psd(fz)/house067_2/3.spr"
+  },
+  "b5566f62": {
+    "name": "\\游戏资源\\美术图素\\城市\\西南\\室外\\树木\\橡树\\1.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/西南/室外/树木/橡树/1.spr"
+  },
+  "fffd5f1d": {
+    "name": "\\游戏资源\\美术图素\\城市\\通用\\室外\\小石块.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/通用/室外/小石块.spr"
+  },
+  "d8cdfdce": {
+    "name": "\\游戏资源\\美术图素\\城市\\通用\\室外\\桥(fz)\\building048\\a1.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/衙门/室外/房子/house093-2/psd(fz)/a1.spr"
+  },
+  "aae7a065": {
+    "name": "\\游戏资源\\美术图素\\城市\\通用\\室外\\桥(fz)\\building048\\b.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/中原/室外/房屋/psd(fz)/house066-2/b.spr"
+  },
+  "33d5d0e1": {
+    "name": "\\游戏资源\\美术图素\\城市\\通用\\室外\\竹笼.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/通用/室外/竹笼.spr"
+  },
+  "da8f706d": {
+    "name": "\\游戏资源\\美术图素\\城市\\通用\\室外\\筛子.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/城市/通用/室外/筛子.spr"
+  },
+  "a660fb67": {
+    "name": "\\游戏资源\\美术图素\\野外\\小物件\\桶10_22.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/小物件/桶10_22.spr"
+  },
+  "d6c30993": {
+    "name": "\\游戏资源\\美术图素\\野外\\山石.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/山石.spr"
+  },
+  "eda2533d": {
+    "name": "\\游戏资源\\美术图素\\野外\\树桩(fz)\\树桩2.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/树桩(fz)/树桩2.spr"
+  },
+  "eb132341": {
+    "name": "\\游戏资源\\美术图素\\野外\\树桩(fz)\\树桩4.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/树桩(fz)/树桩4.spr"
+  },
+  "e08cb355": {
+    "name": "\\游戏资源\\美术图素\\野外\\树桩(fz)\\树桩6.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/树桩(fz)/树桩6.spr"
+  },
+  "8a762bf4": {
+    "name": "\\游戏资源\\美术图素\\野外\\竹子.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/竹子.spr"
+  },
+  "92f4bc76": {
+    "name": "\\游戏资源\\美术图素\\野外\\芦苇2.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/芦苇2.spr"
+  },
+  "3abd4152": {
+    "name": "\\游戏资源\\美术图素\\野外\\花花草草\\flower_1028_01.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/花花草草/flower_1028_01.spr"
+  },
+  "32a0db14": {
+    "name": "\\游戏资源\\美术图素\\野外\\花花草草\\flower_1028_03.spr",
+    "src": "loose:/mnt/jxwin/SourceNew/swrod3/Utility/Run/游戏资源/美术图素/野外/花花草草/flower_1028_03.spr"
+  }
+}

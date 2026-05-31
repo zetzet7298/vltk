@@ -107,6 +107,7 @@ namespace VLTK.Sandbox
                     if (MapManager.ActiveMap != null)
                     {
                         MapRenderer.LoadMapRegions(MapManager.ActiveMap);
+                        FrameCameraOnMap();
                     }
                 };
                 MapManager.OnMapUnloaded += (mapId) => {
@@ -122,6 +123,55 @@ namespace VLTK.Sandbox
                 $"at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
             OnBootComplete?.Invoke(BootReport);
+        }
+
+        /// <summary>
+        /// Frame the sandbox camera on the rendered map content. Switches the
+        /// camera to orthographic and centers/zooms it so the whole map is visible.
+        /// </summary>
+        public void FrameCameraOnMap()
+        {
+            if (MapRenderer == null || !MapRenderer.HasContent) return;
+
+            var cam = FindSandboxCamera();
+            if (cam == null)
+            {
+                SubsystemLog.Warn("Sandbox", "No camera found to frame map");
+                return;
+            }
+
+            var b = MapRenderer.ContentBounds;
+            cam.orthographic = true;
+            // Solid background so the skybox gradient doesn't bleed through the
+            // semi-transparent overlay.
+            cam.clearFlags = CameraClearFlags.SolidColor;
+            cam.backgroundColor = new Color(0.12f, 0.12f, 0.14f, 1f);
+
+            float aspect = cam.aspect > 0.01f ? cam.aspect : 0.5625f;
+            float halfH = b.size.y * 0.5f;
+            float halfW = (b.size.x * 0.5f) / aspect;
+            float size = Mathf.Max(halfH, halfW) * 1.05f; // 5% margin
+            cam.orthographicSize = Mathf.Max(size, 1f);
+
+            cam.nearClipPlane = 0.1f;
+            cam.farClipPlane = Mathf.Max(cam.farClipPlane, 5000f);
+
+            // Content sits on the XY plane; place the camera in front (-Z) looking +Z.
+            cam.transform.position = new Vector3(b.center.x, b.center.y, -100f);
+            cam.transform.rotation = Quaternion.identity;
+
+            SubsystemLog.Info("Sandbox",
+                $"Camera framed on map: center=({b.center.x:F0},{b.center.y:F0}) orthoSize={cam.orthographicSize:F0}");
+        }
+
+        private Camera FindSandboxCamera()
+        {
+            if (cameraRoot != null)
+            {
+                var c = cameraRoot.GetComponentInChildren<Camera>(true);
+                if (c != null) return c;
+            }
+            return Camera.main != null ? Camera.main : UnityEngine.Object.FindAnyObjectByType<Camera>();
         }
 
         private void InitSubsystem(SubsystemKind kind, string name, ref Transform root)

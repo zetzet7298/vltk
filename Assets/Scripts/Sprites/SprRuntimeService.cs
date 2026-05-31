@@ -22,6 +22,7 @@ namespace VLTK.Sprites
     {
         private readonly string _spritesRoot;
         private readonly Dictionary<string, Sprite> _cache = new();
+        private readonly Dictionary<string, Texture2D> _texCache = new();
         private readonly Dictionary<string, SprDiagnostic> _diagnostics = new();
         private readonly HashSet<string> _missCache = new();
 
@@ -72,6 +73,74 @@ namespace VLTK.Sprites
 
             _missCache.Add(key);
             return null;
+        }
+
+        /// <summary>
+        /// Resolve a sprite's decoded texture for a specific frame (cached). Returns null if
+        /// the SPR cannot be found or decoded. Unlike <see cref="ResolveSprite"/>, this exposes
+        /// the raw texture so callers can build sprites with their own pivot / pixelsPerUnit
+        /// (the map renderer works in 1px = 1 world-unit screen space).
+        /// </summary>
+        public Texture2D ResolveTexture(string spriteName, int frameIndex = 0)
+        {
+            if (string.IsNullOrEmpty(spriteName)) return null;
+
+            string baseKey = SanitizeKey(spriteName);
+            string texKey = frameIndex > 0 ? $"{baseKey}#{frameIndex}" : baseKey;
+            if (_texCache.TryGetValue(texKey, out var cachedTex))
+                return cachedTex;
+            if (_missCache.Contains(texKey))
+                return null;
+
+            byte[] sprData = FindSprData(baseKey, spriteName);
+            if (sprData == null)
+            {
+                _missCache.Add(texKey);
+                return null;
+            }
+
+            var result = SprDecoder.Decode(sprData);
+            if (!_diagnostics.ContainsKey(baseKey))
+                _diagnostics[baseKey] = SprValidator.Validate(sprData, baseKey);
+            if (!result.success || result.frames == null || result.frames.Length == 0)
+            {
+                _missCache.Add(texKey);
+                return null;
+            }
+
+            SprFrame frame = null;
+            if (frameIndex >= 0 && frameIndex < result.frames.Length &&
+                result.frames[frameIndex] != null &&
+                result.frames[frameIndex].width > 0 && result.frames[frameIndex].height > 0)
+            {
+                frame = result.frames[frameIndex];
+            }
+            else
+            {
+                for (int i = 0; i < result.frames.Length; i++)
+                {
+                    if (result.frames[i] != null && result.frames[i].width > 0 && result.frames[i].height > 0)
+                    {
+                        frame = result.frames[i];
+                        break;
+                    }
+                }
+            }
+            if (frame == null)
+            {
+                _missCache.Add(texKey);
+                return null;
+            }
+
+            var tex = SprDecoder.CreateTexture(frame);
+            if (tex == null)
+            {
+                _missCache.Add(texKey);
+                return null;
+            }
+            tex.name = $"SPRTEX_{texKey}";
+            _texCache[texKey] = tex;
+            return tex;
         }
 
         /// <summary>
@@ -147,7 +216,13 @@ namespace VLTK.Sprites
                 if (kvp.Value != null && kvp.Value.texture != null)
                     UnityEngine.Object.DestroyImmediate(kvp.Value.texture);
             }
+            foreach (var kvp in _texCache)
+            {
+                if (kvp.Value != null)
+                    UnityEngine.Object.DestroyImmediate(kvp.Value);
+            }
             _cache.Clear();
+            _texCache.Clear();
             _missCache.Clear();
             _diagnostics.Clear();
         }

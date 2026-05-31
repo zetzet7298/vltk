@@ -1983,6 +1983,8 @@ MonoBehaviour:
   worldRoot: {fileID: 757446985}
   debugRoot: {fileID: 1851502985}
   servicesRoot: {fileID: 1119100609}
+  defaultMapId: 79
+  loadDefaultMapOnBoot: 1
 --- !u!4 &992100489
 Transform:
   m_ObjectHideFlags: 0
@@ -2060,9 +2062,20 @@ MonoBehaviour:
   listContent: {fileID: 685786706}
   searchInput: {fileID: 1873073494}
   searchButton: {fileID: 0}
+  loadButton: {fileID: 0}
+  unloadButton: {fileID: 0}
   statusText: {fileID: 22429117}
   mapInfoText: {fileID: 1049605826}
+  errorText: {fileID: 0}
   obstacleToggle: {fileID: 36237790}
+  statusFilterDropdown: {fileID: 0}
+  randomMapButton: {fileID: 0}
+  batchAuditButton: {fileID: 0}
+  batchAuditLogText: {fileID: 0}
+  minimapToggle: {fileID: 0}
+  minimapImage: {fileID: 0}
+  minimapMarker: {fileID: 0}
+  minimapMissingText: {fileID: 0}
 --- !u!1 &1039480369
 GameObject:
   m_ObjectHideFlags: 0

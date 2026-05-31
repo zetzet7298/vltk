@@ -87,10 +87,11 @@ namespace VLTK.Sandbox
                 };
 
                 // szImage[128]
-                var nameBytes = new byte[128];
-                Array.Copy(sectionData, pos, nameBytes, 0, 128);
+                int nameEnd = pos;
+                int nameMax = pos + 128;
+                while (nameEnd < nameMax && sectionData[nameEnd] != 0) nameEnd++;
                 var gbk = Encoding.GetEncoding("GB2312");
-                obj.imageName = gbk.GetString(nameBytes).TrimEnd('\0');
+                obj.imageName = gbk.GetString(sectionData, pos, nameEnd - pos);
                 pos += 128;
 
                 obj.flipTime = ReadUInt32(sectionData, ref pos);

@@ -10,9 +10,9 @@ namespace VLTK.Sandbox
     {
         [Header("Settings")]
         public float cellWorldSize = 32f;
-        public Color blockedColor = new Color(1f, 0f, 0f, 0.4f);
-        public Color walkableColor = new Color(0f, 1f, 0f, 0.1f);
-        public bool showWalkable = false;
+        public Color blockedColor = new Color(0.85f, 0.12f, 0.12f, 0.75f);
+        public Color walkableColor = new Color(0.20f, 0.55f, 0.25f, 0.55f);
+        public bool showWalkable = true;
         public bool showBlocked = true;
 
         private GameObject _overlayRoot;
@@ -28,7 +28,9 @@ namespace VLTK.Sandbox
         {
             _overlayRoot = new GameObject("ObstacleOverlay");
             _overlayRoot.transform.SetParent(transform, false);
-            _overlayRoot.SetActive(false);
+            // Visible by default so the map shows on play.
+            _overlayRoot.SetActive(true);
+            _visible = true;
             CreateSharedResources();
         }
 
@@ -60,12 +62,18 @@ namespace VLTK.Sandbox
             RenderedCells = 0;
         }
 
-        public void RenderRegion(ObstacleGrid grid, int regionPixelX, int regionPixelY)
+        /// <summary>
+        /// Render one region's obstacle grid. <paramref name="regionWorldX"/> and
+        /// <paramref name="regionWorldY"/> are the region's bottom-left corner in
+        /// world units (already scaled — do not multiply by cellToWorldScale).
+        /// </summary>
+        public void RenderRegion(ObstacleGrid grid, float regionWorldX, float regionWorldY)
         {
-            if (grid == null || !showBlocked) return;
+            if (grid == null) return;
+            if (!showBlocked && !showWalkable) return;
 
-            float worldX = regionPixelX * grid.cellToWorldScale;
-            float worldY = regionPixelY * grid.cellToWorldScale;
+            float worldX = regionWorldX;
+            float worldY = regionWorldY;
             float z = -1f;
 
             var go = new GameObject($"Obstacle_{grid.regionX}_{grid.regionY}");
@@ -81,7 +89,8 @@ namespace VLTK.Sandbox
             {
                 for (int cx = 0; cx < grid.width; cx++)
                 {
-                    if (grid.GetRawFlags(cx, cy) != 0)
+                    bool blocked = grid.GetRawFlags(cx, cy) != 0;
+                    if ((blocked && showBlocked) || (!blocked && showWalkable))
                         cellCount++;
                 }
             }
@@ -106,6 +115,7 @@ namespace VLTK.Sandbox
                     byte flags = grid.GetRawFlags(cx, cy);
                     bool isBlocked = flags != 0;
 
+                    if (isBlocked && !showBlocked) continue;
                     if (!isBlocked && !showWalkable) continue;
 
                     float px = cx * cellSize;
