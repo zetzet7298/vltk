@@ -1,0 +1,70 @@
+{
+  "schema": "vltk-mobile/editmode-evidence@1",
+  "run": {
+    "mode": "EditMode",
+    "unity_version": "6000.4.7f1",
+    "platform": "LinuxEditor",
+    "job_id": "a4baafbcfced44b29935e07ff3e16f3f",
+    "started_unix_ms": 1780187265508,
+    "finished_unix_ms": 1780187274850,
+    "date": "2026-05-31"
+  },
+  "summary": {
+    "total": 386,
+    "passed": 386,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 5.4372874,
+    "resultState": "Passed"
+  },
+  "delta_from_previous": {
+    "previous_total": 345,
+    "added": 41,
+    "note": "Added Phase M6: Touch Controls (11), Mobile Asset Loading (11), Build Smoke (10), Production HUD Bridge (9)."
+  },
+  "stories_covered": [
+    {
+      "id": "US-M61-001",
+      "title": "M6.1 Touch Controls",
+      "suite": "VLTK.Tests.Sandbox.TouchInputServiceTests",
+      "acceptance": {
+        "AC1": "Tap_OnGround_RequestsMoveToWorld + Tap_OnUi_Consumed_NoMove",
+        "AC2": "Joystick_FullDeflection_ReturnsUnitDirection + Joystick_PartialDeflection_ScalesPastDeadZone + Joystick_InsideDeadZone_NoMove",
+        "AC3": "SkillButton_ProducesCastIntent",
+        "AC4": "PinchZoom_ClampsToRange + PinchZoom_PinchIn_IncreasesZoomValue",
+        "AC5": "TouchTarget_ScalesWithDpi + TouchTarget_NeverBelowMinimum"
+      }
+    },
+    {
+      "id": "US-M62-001",
+      "title": "M6.2 Mobile Asset Loading",
+      "suite": "VLTK.Tests.Sandbox.AssetLoadBudgetServiceTests",
+      "acceptance": {
+        "AC1": "RuntimeLoadMode_BundleAndAddressables_Preserved",
+        "AC2": "BeginLoad_TracksJobAsLoading + ReportProgress_UpdatesJob + CompleteLoad_MarksLoadedAndAddsBytes",
+        "AC3": "CompleteLoad_OverBudget_FlagsAndWarns + Unload_FreesBytes",
+        "AC4": "RuntimeLoadMode_EditorOrTestFixture_CollapsesToStreamingAssets"
+      }
+    },
+    {
+      "id": "US-M63-001",
+      "title": "M6.3 Android/iOS Build Smoke",
+      "suite": "VLTK.Tests.Sandbox.BuildConfigServiceTests",
+      "acceptance": {
+        "AC1": "Validate_Android_IL2CPP_WithSdkNdk_CanBuild + Validate_Android_IL2CPP_MissingNdk_Fails",
+        "AC2": "Validate_Ios_MissingPlatformModule_Reports + Validate_Ios_NoSigning_WarnsButCanBuild",
+        "AC3": "DevelopmentBuild_ExposesGm + ReleaseBuild_HidesGm"
+      }
+    },
+    {
+      "id": "US-M64-001",
+      "title": "M6.4 Production HUD Bridge",
+      "suite": "VLTK.Tests.Sandbox.HudDataBridgeTests",
+      "acceptance": {
+        "AC1": "BuildSnapshot_ReadsRuntimeState + BuildSnapshot_NoActiveMap_Invalid",
+        "AC2": "DevBuild_CanOpenGm + DevBuild_RunsDebugAction",
+        "AC3": "ReleaseBuild_HidesGm + ReleaseBuild_BlocksDebugAction"
+      }
+    }
+  ]
+}

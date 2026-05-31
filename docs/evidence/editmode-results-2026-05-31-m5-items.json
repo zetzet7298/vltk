@@ -1,0 +1,59 @@
+{
+  "schema": "vltk-mobile/editmode-evidence@1",
+  "run": {
+    "mode": "EditMode",
+    "unity_version": "6000.4.7f1",
+    "platform": "LinuxEditor",
+    "job_id": "24e1731cff5647509d80393fd9065829",
+    "started_unix_ms": 1780186895829,
+    "finished_unix_ms": 1780186904628,
+    "date": "2026-05-31"
+  },
+  "summary": {
+    "total": 345,
+    "passed": 345,
+    "failed": 0,
+    "skipped": 0,
+    "durationSeconds": 5.0215174,
+    "resultState": "Passed"
+  },
+  "delta_from_previous": {
+    "previous_total": 317,
+    "added": 28,
+    "note": "Added Phase M5: Item Contract Import (8), Inventory/Equipment (11), Set Bonus/Refine (9)."
+  },
+  "stories_covered": [
+    {
+      "id": "US-M51-001",
+      "title": "M5.1 Item Contract Import",
+      "suite": "VLTK.Tests.Sandbox.ItemContractImporterTests",
+      "pc_source_anchor": "vltktool generate_item_contract_bundle.py / generated/item_stat_contract.json, item_set_bonus_contract.json, item_refine_formula_contract.json",
+      "acceptance": {
+        "AC1": "Import_CreatesItems + Import_SecondTime_UpdatesExisting",
+        "AC2": "Import_TalliesRuleStatuses + ResolveIcons_MarksAvailableIcons",
+        "AC3": "Import_StrictMode_StubFailsGate + Import_NonStrict_StubWarnsButPasses"
+      }
+    },
+    {
+      "id": "US-M52-001",
+      "title": "M5.2 Inventory and Equipment Sandbox",
+      "suite": "VLTK.Tests.Sandbox.InventoryServiceTests",
+      "acceptance": {
+        "AC1": "Search_ByName_ReturnsMatches + Search_ById_ReturnsItem + Search_Empty_ReturnsAllSortedById",
+        "AC2": "AddItem_AppearsInInventory + AddItem_Stacks",
+        "AC3": "Equip_UpdatesStatPreview + Equip_ReplacesSlot + Unequip_RecomputesPreview",
+        "AC4": "MissingIconItems_ListsUnresolvedIcons"
+      }
+    },
+    {
+      "id": "US-M53-001",
+      "title": "M5.3 Set Bonus and Refine Rules",
+      "suite": "VLTK.Tests.Sandbox.SetBonusRefineServiceTests",
+      "acceptance": {
+        "AC1": "ReplayGolden_MatchingCase_Passes + ReplayGolden_Mismatch_ReportsDifference",
+        "AC2": "QualityGate_ReportsStubRules + QualityGate_NoStubs_Passes",
+        "AC3": "ComputeTotals_ChangingEquipment_Recalculates + ComputeTotals_ActivatesSetBonus_AtThreshold + ComputeTotals_AppliesRefinePerLevel"
+      }
+    }
+  ]
+}

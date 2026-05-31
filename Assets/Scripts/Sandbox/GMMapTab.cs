@@ -26,10 +26,17 @@ namespace VLTK.Sandbox
         // M1.10 AC#5: batch audit button + log text
         public Button batchAuditButton;
         public Text batchAuditLogText;
+        // M1.8: minimap preview wiring
+        public Toggle minimapToggle;
+        public RawImage minimapImage;
+        public RectTransform minimapMarker;
+        public Text minimapMissingText;
 
         private readonly List<MapCatalogEntry> _displayed = new();
         private int _selectedMapId = -1;
         private MapManager _mapManager;
+        // M1.8: minimap service
+        private MinimapService _minimapService;
         // M1.10 AC#5: batch audit state
         private bool _batchRunning;
         private int _batchIndex;
@@ -71,15 +78,101 @@ namespace VLTK.Sandbox
             if (batchAuditButton != null)
                 batchAuditButton.onClick.AddListener(StartBatchAudit);
 
+            // M1.8: minimap toggle
+            var registry = SandboxManager.Instance?.AssetRegistry;
+            if (registry != null)
+                _minimapService = new MinimapService(registry);
+            if (minimapToggle != null)
+                minimapToggle.onValueChanged.AddListener(OnMinimapToggleChanged);
+            SetMinimapVisible(false);
+
             // M0.10 AC#4: Subscribe to error events
             if (_mapManager != null)
             {
                 _mapManager.OnMapError += ShowError;
-                _mapManager.OnMapLoaded += _ => { ClearError(); RefreshList(); };
+                _mapManager.OnMapLoaded += _ => { ClearError(); RefreshList(); RefreshMinimap(); };
                 _mapManager.OnMapUnloaded += _ => RefreshList();
             }
 
             RefreshList();
+        }
+
+        // M1.8 AC#2/AC#4: toggle minimap preview, resolve artifact, show missing state.
+        private void OnMinimapToggleChanged(bool show)
+        {
+            SetMinimapVisible(show);
+            if (show) RefreshMinimap();
+        }
+
+        private void SetMinimapVisible(bool show)
+        {
+            if (minimapImage != null) minimapImage.gameObject.SetActive(show);
+            if (minimapMarker != null) minimapMarker.gameObject.SetActive(show);
+            if (minimapMissingText != null && !show) minimapMissingText.gameObject.SetActive(false);
+        }
+
+        /// <summary>
+        /// M1.8 AC#2/AC#3/AC#4: resolve the active map's minimap artifact, show the
+        /// preview when registered, and surface a missing state (with source id)
+        /// when absent.
+        /// </summary>
+        public void RefreshMinimap()
+        {
+            if (_minimapService == null || minimapToggle == null || !minimapToggle.isOn) return;
+            var map = SandboxManager.Instance?.MapManager?.ActiveMap;
+            if (map == null)
+            {
+                if (minimapMissingText != null)
+                {
+                    minimapMissingText.text = "Minimap: no map loaded";
+                    minimapMissingText.gameObject.SetActive(true);
+                }
+                return;
+            }
+
+            var minimap = _minimapService.ResolveArtifact(map);
+            bool missing = _minimapService.IsMissing(map);
+            if (minimapMissingText != null)
+            {
+                if (missing)
+                {
+                    var src = _minimapService.GetMissingSourceId(map)?.ToKey() ?? "<unknown>";
+                    minimapMissingText.text = $"Minimap missing (source: {src})";
+                    minimapMissingText.gameObject.SetActive(true);
+                }
+                else
+                {
+                    minimapMissingText.gameObject.SetActive(false);
+                }
+            }
+            if (minimapImage != null) minimapImage.enabled = !missing;
+            UpdateMinimapMarker(map);
+        }
+
+        /// <summary>M1.8 AC#3: position the player marker in correct minimap scale.</summary>
+        public void UpdateMinimapMarker(MapDefinition map)
+        {
+            if (_minimapService == null || minimapMarker == null || minimapImage == null) return;
+            var rt = minimapImage.rectTransform;
+            var size = rt.rect.size;
+            var pixel = _minimapService.WorldToMinimapPixel(map, MarkerWorldPosition(map), size);
+            // RawImage anchored top-left; marker uses top-left origin pixel.
+            minimapMarker.anchoredPosition = new Vector2(pixel.x, -pixel.y);
+        }
+
+        /// <summary>
+        /// World position used for the minimap marker. No player entity exists in
+        /// the sandbox yet, so this defaults to the map bounds center; assign
+        /// <see cref="markerWorldOverride"/> to drive it from a player/camera.
+        /// </summary>
+        public Vector2? markerWorldOverride;
+
+        private Vector2 MarkerWorldPosition(MapDefinition map)
+        {
+            if (markerWorldOverride.HasValue) return markerWorldOverride.Value;
+            var r = map?.sourceBoundsRect;
+            if (r == null) return Vector2.zero;
+            return new Vector2(r.x + r.width * 0.5f, r.y + r.height * 0.5f);
         }
 
         private void OnObstacleToggleChanged(bool show)
