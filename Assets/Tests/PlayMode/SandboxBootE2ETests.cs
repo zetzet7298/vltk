@@ -101,6 +101,17 @@ namespace VLTK.Tests.PlayMode
                 "Map catalog should be populated from StreamingAssets/MapCatalog.json");
         }
 
+        [UnityTest]
+        public IEnumerator E2E_DefaultMap_IsBaLangHuyen()
+        {
+            yield return BootSandbox();
+
+            var mgr = SandboxManager.Instance;
+            Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.defaultMapId);
+            Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.MapManager.ActiveMapId);
+            Assert.AreEqual("巴陵县", mgr.MapManager.ActiveMap.catalogEntry.displayNameRaw);
+        }
+
         // --- Map load / switch / unload lifecycle through the live runtime ---
 
         [UnityTest]

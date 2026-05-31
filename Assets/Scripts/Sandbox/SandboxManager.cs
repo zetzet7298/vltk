@@ -29,6 +29,8 @@ namespace VLTK.Sandbox
 
     public class SandboxManager : MonoBehaviour
     {
+        public const int BaLangHuyenMapId = 79;
+
         [Header("Roots")]
         public Transform gameRoot;
         public Transform cameraRoot;
@@ -36,6 +38,10 @@ namespace VLTK.Sandbox
         public Transform worldRoot;
         public Transform debugRoot;
         public Transform servicesRoot;
+
+        [Header("Boot")]
+        public int defaultMapId = BaLangHuyenMapId;
+        public bool loadDefaultMapOnBoot = true;
 
         public static SandboxManager Instance { get; private set; }
         public SandboxBootReport BootReport { get; private set; }
@@ -106,6 +112,9 @@ namespace VLTK.Sandbox
                 MapManager.OnMapUnloaded += (mapId) => {
                     MapRenderer.Clear();
                 };
+
+                if (loadDefaultMapOnBoot && MapManager.Catalog.ContainsKey(defaultMapId))
+                    MapManager.LoadMap(defaultMapId);
             }
 
             SubsystemLog.Info("Sandbox",

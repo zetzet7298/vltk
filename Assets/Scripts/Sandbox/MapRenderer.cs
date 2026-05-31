@@ -62,7 +62,10 @@ namespace VLTK.Sandbox
 
         private void LoadSampleRegions(MapDefinition mapDef)
         {
-            var regionsDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions");
+            var mapRegionsDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}");
+            var regionsDir = Directory.Exists(mapRegionsDir)
+                ? mapRegionsDir
+                : Path.Combine(Application.streamingAssetsPath, "TestData", "Regions");
             if (!Directory.Exists(regionsDir))
             {
                 SubsystemLog.Warn("MapRenderer", "No test region data available");

@@ -287,6 +287,12 @@ namespace VLTK.Tests.EditMode.Sprites
         }
 
         [Test]
+        public void ResolveSprite_SourcePathWithNullTerminator_DoesNotThrow()
+        {
+            Assert.DoesNotThrow(() => _service.ResolveSprite("\\游戏资源\\室外地表\\中型地表图素\\黄稀.spr\0"));
+        }
+
+        [Test]
         public void ResolveSprite_HexUID_ResolvesDirectly()
         {
             var sprData = MakeSprWithPixels();

@@ -156,6 +156,8 @@ namespace VLTK.Sprites
 
         private byte[] FindSprData(string sanitizedKey, string originalName)
         {
+            originalName = originalName?.TrimEnd('\0') ?? "";
+
             // Strategy 1: exact UID match (e.g. "00002d56")
             var directPath = Path.Combine(_spritesRoot, $"{sanitizedKey}.spr");
             if (File.Exists(directPath))
