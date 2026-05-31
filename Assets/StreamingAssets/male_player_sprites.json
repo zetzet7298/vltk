@@ -1,0 +1,456 @@
+{
+  "generatedAt": "2026-05-31T15:48:09.579269Z",
+  "source": "jxwin-kinnox/SourceNew/swrod3/Utility/Run/spr/npcres/man",
+  "count": 64,
+  "missing": [],
+  "sprites": [
+    {
+      "name": "MA_BD_019_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_ST01.spr",
+      "uid": "45488ea8",
+      "unityPath": "Assets/StreamingAssets/Sprites/45488ea8.spr",
+      "bytes": 212871
+    },
+    {
+      "name": "MA_BD_019_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_ST02.spr",
+      "uid": "46c6b52a",
+      "unityPath": "Assets/StreamingAssets/Sprites/46c6b52a.spr",
+      "bytes": 212970
+    },
+    {
+      "name": "MA_BD_019_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_ST03.spr",
+      "uid": "405cbbac",
+      "unityPath": "Assets/StreamingAssets/Sprites/405cbbac.spr",
+      "bytes": 157987
+    },
+    {
+      "name": "MA_BD_019_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_RN01.spr",
+      "uid": "181abc60",
+      "unityPath": "Assets/StreamingAssets/Sprites/181abc60.spr",
+      "bytes": 149431
+    },
+    {
+      "name": "MA_BD_019_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_RD01.spr",
+      "uid": "58468a8d",
+      "unityPath": "Assets/StreamingAssets/Sprites/58468a8d.spr",
+      "bytes": 188368
+    },
+    {
+      "name": "MA_BD_019_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_HW01.spr",
+      "uid": "e2280791",
+      "unityPath": "Assets/StreamingAssets/Sprites/e2280791.spr",
+      "bytes": 159651
+    },
+    {
+      "name": "MA_BD_019_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_HR01.spr",
+      "uid": "420a1dcd",
+      "unityPath": "Assets/StreamingAssets/Sprites/420a1dcd.spr",
+      "bytes": 132957
+    },
+    {
+      "name": "MA_BD_019_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_ZZ01.spr",
+      "uid": "506b879d",
+      "unityPath": "Assets/StreamingAssets/Sprites/506b879d.spr",
+      "bytes": 113974
+    },
+    {
+      "name": "MA_HD_019_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_ST01.spr",
+      "uid": "d9db213f",
+      "unityPath": "Assets/StreamingAssets/Sprites/d9db213f.spr",
+      "bytes": 28586
+    },
+    {
+      "name": "MA_HD_019_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_ST02.spr",
+      "uid": "db51d7b1",
+      "unityPath": "Assets/StreamingAssets/Sprites/db51d7b1.spr",
+      "bytes": 28347
+    },
+    {
+      "name": "MA_HD_019_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_ST03.spr",
+      "uid": "d4efda33",
+      "unityPath": "Assets/StreamingAssets/Sprites/d4efda33.spr",
+      "bytes": 20853
+    },
+    {
+      "name": "MA_HD_019_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_RN01.spr",
+      "uid": "6c95def7",
+      "unityPath": "Assets/StreamingAssets/Sprites/6c95def7.spr",
+      "bytes": 21193
+    },
+    {
+      "name": "MA_HD_019_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_RD01.spr",
+      "uid": "acd12d14",
+      "unityPath": "Assets/StreamingAssets/Sprites/acd12d14.spr",
+      "bytes": 26729
+    },
+    {
+      "name": "MA_HD_019_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_HW01.spr",
+      "uid": "f6ba7e8d",
+      "unityPath": "Assets/StreamingAssets/Sprites/f6ba7e8d.spr",
+      "bytes": 22960
+    },
+    {
+      "name": "MA_HD_019_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_HR01.spr",
+      "uid": "d6847504",
+      "unityPath": "Assets/StreamingAssets/Sprites/d6847504.spr",
+      "bytes": 19259
+    },
+    {
+      "name": "MA_HD_019_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_ZZ01.spr",
+      "uid": "a4e62624",
+      "unityPath": "Assets/StreamingAssets/Sprites/a4e62624.spr",
+      "bytes": 17591
+    },
+    {
+      "name": "MA_HR_019_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_ST01.spr",
+      "uid": "a54093f1",
+      "unityPath": "Assets/StreamingAssets/Sprites/a54093f1.spr",
+      "bytes": 39129
+    },
+    {
+      "name": "MA_HR_019_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_ST02.spr",
+      "uid": "a6de8673",
+      "unityPath": "Assets/StreamingAssets/Sprites/a6de8673.spr",
+      "bytes": 39189
+    },
+    {
+      "name": "MA_HR_019_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_ST03.spr",
+      "uid": "a0548cf5",
+      "unityPath": "Assets/StreamingAssets/Sprites/a0548cf5.spr",
+      "bytes": 29232
+    },
+    {
+      "name": "MA_HR_019_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_RN01.spr",
+      "uid": "78128323",
+      "unityPath": "Assets/StreamingAssets/Sprites/78128323.spr",
+      "bytes": 28717
+    },
+    {
+      "name": "MA_HR_019_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_RD01.spr",
+      "uid": "b85e9fd6",
+      "unityPath": "Assets/StreamingAssets/Sprites/b85e9fd6.spr",
+      "bytes": 36891
+    },
+    {
+      "name": "MA_HR_019_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_HW01.spr",
+      "uid": "42273cb4",
+      "unityPath": "Assets/StreamingAssets/Sprites/42273cb4.spr",
+      "bytes": 32034
+    },
+    {
+      "name": "MA_HR_019_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_HR01.spr",
+      "uid": "a20132e0",
+      "unityPath": "Assets/StreamingAssets/Sprites/a20132e0.spr",
+      "bytes": 25094
+    },
+    {
+      "name": "MA_HR_019_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_ZZ01.spr",
+      "uid": "b063e8e6",
+      "unityPath": "Assets/StreamingAssets/Sprites/b063e8e6.spr",
+      "bytes": 24064
+    },
+    {
+      "name": "MA_LH_019_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_ST01.spr",
+      "uid": "71aa0a0d",
+      "unityPath": "Assets/StreamingAssets/Sprites/71aa0a0d.spr",
+      "bytes": 47662
+    },
+    {
+      "name": "MA_LH_019_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_ST02.spr",
+      "uid": "7320308f",
+      "unityPath": "Assets/StreamingAssets/Sprites/7320308f.spr",
+      "bytes": 47654
+    },
+    {
+      "name": "MA_LH_019_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_ST03.spr",
+      "uid": "4cbe2701",
+      "unityPath": "Assets/StreamingAssets/Sprites/4cbe2701.spr",
+      "bytes": 31424
+    },
+    {
+      "name": "MA_LH_019_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_RN01.spr",
+      "uid": "84642c50",
+      "unityPath": "Assets/StreamingAssets/Sprites/84642c50.spr",
+      "bytes": 32756
+    },
+    {
+      "name": "MA_LH_019_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_RD01.spr",
+      "uid": "44a036e2",
+      "unityPath": "Assets/StreamingAssets/Sprites/44a036e2.spr",
+      "bytes": 43889
+    },
+    {
+      "name": "MA_LH_019_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_HW01.spr",
+      "uid": "ee0957c0",
+      "unityPath": "Assets/StreamingAssets/Sprites/ee0957c0.spr",
+      "bytes": 37579
+    },
+    {
+      "name": "MA_LH_019_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_HR01.spr",
+      "uid": "4e6aadfc",
+      "unityPath": "Assets/StreamingAssets/Sprites/4e6aadfc.spr",
+      "bytes": 28621
+    },
+    {
+      "name": "MA_LH_019_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_ZZ01.spr",
+      "uid": "5cb503f2",
+      "unityPath": "Assets/StreamingAssets/Sprites/5cb503f2.spr",
+      "bytes": 26302
+    },
+    {
+      "name": "MA_RH_019_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_ST01.spr",
+      "uid": "680d184c",
+      "unityPath": "Assets/StreamingAssets/Sprites/680d184c.spr",
+      "bytes": 45613
+    },
+    {
+      "name": "MA_RH_019_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_ST02.spr",
+      "uid": "659b0ece",
+      "unityPath": "Assets/StreamingAssets/Sprites/659b0ece.spr",
+      "bytes": 45689
+    },
+    {
+      "name": "MA_RH_019_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_ST03.spr",
+      "uid": "67113540",
+      "unityPath": "Assets/StreamingAssets/Sprites/67113540.spr",
+      "bytes": 26670
+    },
+    {
+      "name": "MA_RH_019_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_RN01.spr",
+      "uid": "3edf0904",
+      "unityPath": "Assets/StreamingAssets/Sprites/3edf0904.spr",
+      "bytes": 32323
+    },
+    {
+      "name": "MA_RH_019_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_RD01.spr",
+      "uid": "7f1b0421",
+      "unityPath": "Assets/StreamingAssets/Sprites/7f1b0421.spr",
+      "bytes": 42844
+    },
+    {
+      "name": "MA_RH_019_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_HW01.spr",
+      "uid": "80e3a24a",
+      "unityPath": "Assets/StreamingAssets/Sprites/80e3a24a.spr",
+      "bytes": 37273
+    },
+    {
+      "name": "MA_RH_019_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_HR01.spr",
+      "uid": "60cdb7eb",
+      "unityPath": "Assets/StreamingAssets/Sprites/60cdb7eb.spr",
+      "bytes": 29388
+    },
+    {
+      "name": "MA_RH_019_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_ZZ01.spr",
+      "uid": "77281131",
+      "unityPath": "Assets/StreamingAssets/Sprites/77281131.spr",
+      "bytes": 25504
+    },
+    {
+      "name": "MA_LW_000_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_ST01.spr",
+      "uid": "732c68a0",
+      "unityPath": "Assets/StreamingAssets/Sprites/732c68a0.spr",
+      "bytes": 12904
+    },
+    {
+      "name": "MA_LW_000_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_ST02.spr",
+      "uid": "4cba1f22",
+      "unityPath": "Assets/StreamingAssets/Sprites/4cba1f22.spr",
+      "bytes": 12827
+    },
+    {
+      "name": "MA_LW_000_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_ST03.spr",
+      "uid": "4e3005a4",
+      "unityPath": "Assets/StreamingAssets/Sprites/4e3005a4.spr",
+      "bytes": 10070
+    },
+    {
+      "name": "MA_LW_000_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_RN01.spr",
+      "uid": "81fe191d",
+      "unityPath": "Assets/StreamingAssets/Sprites/81fe191d.spr",
+      "bytes": 9426
+    },
+    {
+      "name": "MA_LW_000_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_RD01.spr",
+      "uid": "c63a143a",
+      "unityPath": "Assets/StreamingAssets/Sprites/c63a143a.spr",
+      "bytes": 11954
+    },
+    {
+      "name": "MA_LW_000_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_HW01.spr",
+      "uid": "eb82b263",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb82b263.spr",
+      "bytes": 10378
+    },
+    {
+      "name": "MA_LW_000_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_HR01.spr",
+      "uid": "cbecbc2a",
+      "unityPath": "Assets/StreamingAssets/Sprites/cbecbc2a.spr",
+      "bytes": 8602
+    },
+    {
+      "name": "MA_LW_000_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_ZZ01.spr",
+      "uid": "59ce2745",
+      "unityPath": "Assets/StreamingAssets/Sprites/59ce2745.spr",
+      "bytes": 8194
+    },
+    {
+      "name": "MA_RW_000_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_ST01.spr",
+      "uid": "135d0689",
+      "unityPath": "Assets/StreamingAssets/Sprites/135d0689.spr",
+      "bytes": 13055
+    },
+    {
+      "name": "MA_RW_000_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_ST02.spr",
+      "uid": "eceb0d0b",
+      "unityPath": "Assets/StreamingAssets/Sprites/eceb0d0b.spr",
+      "bytes": 13169
+    },
+    {
+      "name": "MA_RW_000_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_ST03.spr",
+      "uid": "ee61338d",
+      "unityPath": "Assets/StreamingAssets/Sprites/ee61338d.spr",
+      "bytes": 7940
+    },
+    {
+      "name": "MA_RW_000_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_RN01.spr",
+      "uid": "a62f36bb",
+      "unityPath": "Assets/StreamingAssets/Sprites/a62f36bb.spr",
+      "bytes": 9690
+    },
+    {
+      "name": "MA_RW_000_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_RD01.spr",
+      "uid": "e66b036e",
+      "unityPath": "Assets/StreamingAssets/Sprites/e66b036e.spr",
+      "bytes": 12320
+    },
+    {
+      "name": "MA_RW_000_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_HW01.spr",
+      "uid": "0833bfb1",
+      "unityPath": "Assets/StreamingAssets/Sprites/0833bfb1.spr",
+      "bytes": 10605
+    },
+    {
+      "name": "MA_RW_000_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_HR01.spr",
+      "uid": "e81db4a2",
+      "unityPath": "Assets/StreamingAssets/Sprites/e81db4a2.spr",
+      "bytes": 9113
+    },
+    {
+      "name": "MA_RW_000_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_ZZ01.spr",
+      "uid": "fe781c7e",
+      "unityPath": "Assets/StreamingAssets/Sprites/fe781c7e.spr",
+      "bytes": 8297
+    },
+    {
+      "name": "MA_YY_999_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_ST01.spr",
+      "uid": "1cbe2b38",
+      "unityPath": "Assets/StreamingAssets/Sprites/1cbe2b38.spr",
+      "bytes": 122855
+    },
+    {
+      "name": "MA_YY_999_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_ST02.spr",
+      "uid": "1e34d1ba",
+      "unityPath": "Assets/StreamingAssets/Sprites/1e34d1ba.spr",
+      "bytes": 123765
+    },
+    {
+      "name": "MA_YY_999_ST03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_ST03.spr",
+      "uid": "1b42c43c",
+      "unityPath": "Assets/StreamingAssets/Sprites/1b42c43c.spr",
+      "bytes": 102711
+    },
+    {
+      "name": "MA_YY_999_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_RN01.spr",
+      "uid": "d308d8f0",
+      "unityPath": "Assets/StreamingAssets/Sprites/d308d8f0.spr",
+      "bytes": 108971
+    },
+    {
+      "name": "MA_YY_999_RD01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_RD01.spr",
+      "uid": "13b4d71d",
+      "unityPath": "Assets/StreamingAssets/Sprites/13b4d71d.spr",
+      "bytes": 414987
+    },
+    {
+      "name": "MA_YY_999_HW01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_HW01.spr",
+      "uid": "351d7896",
+      "unityPath": "Assets/StreamingAssets/Sprites/351d7896.spr",
+      "bytes": 353750
+    },
+    {
+      "name": "MA_YY_999_HR01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_HR01.spr",
+      "uid": "157f7f0d",
+      "unityPath": "Assets/StreamingAssets/Sprites/157f7f0d.spr",
+      "bytes": 320228
+    },
+    {
+      "name": "MA_YY_999_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_ZZ01.spr",
+      "uid": "6b592168",
+      "unityPath": "Assets/StreamingAssets/Sprites/6b592168.spr",
+      "bytes": 82312
+    }
+  ]
+}
