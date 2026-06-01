@@ -98,6 +98,16 @@ namespace VLTK.Sandbox
             HasMoveTarget = false;
         }
 
+        public void ResetMovementState()
+        {
+            MoveInput = Vector2.zero;
+            LastMoveDelta = Vector2.zero;
+            MoveTarget = Vector2.zero;
+            HasMoveTarget = false;
+            if (joystick != null)
+                joystick.ResetInput(notify: false);
+        }
+
         public void SimulateMove(float deltaTime)
         {
             float dt = Mathf.Max(0f, deltaTime);
@@ -148,7 +158,7 @@ namespace VLTK.Sandbox
 
         public void PlaceAt(Vector2 worldPosition, bool snapCamera = true)
         {
-            HasMoveTarget = false;
+            ResetMovementState();
             transform.position = new Vector3(worldPosition.x, worldPosition.y, transform.position.z);
             EnsureVisual();
             if (visual != null)

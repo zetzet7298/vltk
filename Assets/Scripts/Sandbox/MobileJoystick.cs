@@ -127,5 +127,15 @@ public void OnDrag(PointerEventData eventData)
             if (handle != null)
                 handle.anchoredPosition = Vector2.zero;
         }
+
+        public void ResetInput(bool notify = false)
+        {
+            IsPressed = false;
+            rawInput = Vector2.zero;
+            moveInput = Vector2.zero;
+            CenterHandle();
+            if (notify)
+                onMove.Invoke(Vector2.zero);
+        }
     }
 }

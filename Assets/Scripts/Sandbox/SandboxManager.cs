@@ -54,11 +54,19 @@ namespace VLTK.Sandbox
         public SandboxPlayerController PlayerController { get; private set; }
         public MalePlayerVisual PlayerVisual { get; private set; }
         public MobileJoystick PlayerJoystick { get; private set; }
+        public BaLangEnemySpawnRuntime EnemyRuntime { get; private set; }
+        public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
         // M1.2: Region catalog and report
         public RegionCatalogFile RegionCatalog { get; private set; }
         public RegionConversionReport RegionReport { get; private set; }
 
         public event Action<SandboxBootReport> OnBootComplete;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticsForFastPlayMode()
+        {
+            Instance = null;
+        }
 
         private void Awake()
         {
@@ -115,12 +123,15 @@ namespace VLTK.Sandbox
                     {
                         MapRenderer.LoadMapRegions(MapManager.ActiveMap);
                         EnsurePlayerController();
+                        EnsureEnemyRuntime();
                         PlacePlayerOnActiveMap();
+                        SpawnEnemiesForActiveMap();
                         ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
                     }
                 };
                 MapManager.OnMapUnloaded += (mapId) => {
+                    EnemyRuntime?.Clear();
                     MapRenderer.Clear();
                 };
 
@@ -156,6 +167,25 @@ namespace VLTK.Sandbox
             cam.transform.rotation = Quaternion.identity;
         }
 
+        private void EnsureEnemyRuntime()
+        {
+            if (EnemyRuntime != null || worldRoot == null)
+                return;
+            var enemyGo = new GameObject("BaLangEnemyRuntime");
+            enemyGo.transform.SetParent(worldRoot, false);
+            EnemyRuntime = enemyGo.AddComponent<BaLangEnemySpawnRuntime>();
+            EnemyNameplateOverlay = enemyGo.AddComponent<BaLangEnemyNameplateOverlay>();
+        }
+
+        private void SpawnEnemiesForActiveMap()
+        {
+            if (EnemyRuntime == null || MapManager?.ActiveMap == null)
+                return;
+            // Region_S folder contains server-side NPC spawn data with real PC coordinates.
+            var regionSFolder = System.IO.Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{MapManager.ActiveMapId}");
+            EnemyRuntime.SpawnFromRegionS(regionSFolder);
+        }
+
         private void EnsurePlayerController()
         {
             if (PlayerController != null)
@@ -184,11 +214,32 @@ namespace VLTK.Sandbox
             if (MapRenderer != null && MapRenderer.HasContent)
                 spawn = new Vector2(MapRenderer.ContentBounds.center.x, MapRenderer.ContentBounds.center.y);
 
+            if (MapManager != null && MapManager.ActiveMapId == BaLangHuyenMapId)
+            {
+                var trainer = FindBaLangTrainerSpawn();
+                if (trainer.HasValue)
+                    spawn = trainer.Value;
+            }
+
+            PlayerController.ResetMovementState();
             PlayerController.PlaceAt(spawn, snapCamera: false);
+            SubsystemLog.Info("Sandbox", $"Default player spawn set to {spawn} on map {MapManager?.ActiveMapId}");
 
             var mapTab = FindObjectOfType<GMMapTab>(true);
             if (mapTab != null)
                 mapTab.markerWorldOverride = spawn;
+        }
+
+        private Vector2? FindBaLangTrainerSpawn()
+        {
+            var folder = System.IO.Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", "Map_79");
+            var spawns = BaLangEnemyRegionScanner.ScanRegionS(folder);
+            foreach (var sp in spawns)
+            {
+                if (sp.templateId == 311 && sp.nameRaw == "武师")
+                    return BaLangEnemyDatabase.MpsToWorld(sp.mpsX, sp.mpsY);
+            }
+            return null;
         }
 
         private MobileJoystick EnsureMobileJoystick()

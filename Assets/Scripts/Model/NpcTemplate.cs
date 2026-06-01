@@ -22,6 +22,16 @@ namespace VLTK.Model
         public int attack;
         public int defense;
 
+        // PC combat/AI identity from Settings/NpcS.txt.
+        public int kind;
+        public int series;
+        public int walkSpeed;
+        public int runSpeed;
+        public int visionRadius;
+        public int activeRadius;
+        public int aiMode;
+        public int[] aiParams;
+
         // Resource references (resolved through the asset registry).
         public SourceAssetId spriteSourceId;   // body sprite (.spr)
         public string spriteClipRef;           // atlas/clip key once decoded
