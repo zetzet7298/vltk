@@ -34,11 +34,39 @@ namespace VLTK.Model
         public int skillId;              // m_nId
         public string nameRaw;           // m_szName (GB2312)
         public string nameNormalized;
-        public int reqLevel;             // m_usReqLevel
-        public int cost;                 // m_nCost (mana/cost)
+        public int reqLevel;             // ReqLevel
+        public int maxLevel;             // MaxLevel
+        public int cost;                 // CostValue / magic_skill_cost_v
+        public int skillCostType;        // SkillCostType (PC NPCATTRIB, 0=mana)
+        public int timePerCast;          // TimePerCast / m_nMinTimePerCast
+        public int waitTime;             // WaitTime / m_nWaitTime
         public int attackRadius;         // m_nAttackRadius (range, source units)
         public bool isPhysical;          // m_bIsPhysical
+        public bool isMelee;             // IsMelee
+        public bool isAura;              // IsAura
+        public int stateSpecialId;       // StateSpecialId
+        public PcSkillStyle skillStyle;  // SkillStyle
+        public CombatFaction faction;    // CharClass
         public SkillMissileForm missileForm; // m_eMisslesForm
+
+        public int childSkillId;         // ChildSkillId
+        public int childSkillLevel;      // ChildSkillLevel (0 means current level in PC missile skills)
+        public int childSkillNum;        // ChildSkillNum
+        public bool baseSkill;           // BaseSkill
+        public int charAnimId;           // CharAnimId (PC client action id)
+        public bool targetOnly;          // TargetOnly
+        public bool targetEnemy;         // TargetEnemy
+        public bool targetAlly;          // TargetAlly
+        public bool targetSelf;          // TargetSelf
+        public bool targetObj;           // TargetObj
+        public bool byMissile;           // ByMissle
+        public bool isUseAttackRating;   // IsUseAR
+        public bool doHurt;              // DoHurt
+        public bool weaponSkill;         // WeaponSkill
+        public int equipLimit = -2;      // EqtLimit
+        public int horseLimit;           // HorseLimit
+        public int missilesGenerate;     // MslsGenerate
+        public int missilesGenerateData; // MslsGenerateData
 
         // Resource references (resolved through the asset registry).
         public SourceAssetId iconSourceId;       // m_szSkillIcon
@@ -48,8 +76,9 @@ namespace VLTK.Model
         public bool iconResolved;
         public bool effectResolved;
 
-        // Per-level damage data (m_DamageAttribs loaded per level).
+        // Per-level legacy damage summary (kept for M4.1 tests) and full PC magic data.
         public List<SkillDamageLevel> damageLevels = new();
+        public List<SkillLevelData> pcLevelData = new();
 
         public List<string> warnings = new();
 
@@ -58,6 +87,17 @@ namespace VLTK.Model
             !string.IsNullOrEmpty(nameRaw) ? nameRaw : $"Skill_{skillId}";
 
         public bool HasMissile => missileForm != SkillMissileForm.None;
+
+        public bool IsCaiBang => faction == CombatFaction.CaiBang;
+
+        public SkillLevelData GetPcLevelData(int level)
+        {
+            SkillLevelData best = null;
+            foreach (var d in pcLevelData)
+                if (d.level <= level && (best == null || d.level > best.level))
+                    best = d;
+            return best ?? (pcLevelData.Count > 0 ? pcLevelData[0] : null);
+        }
 
         public SkillDamageLevel GetLevel(int level)
         {

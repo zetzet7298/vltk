@@ -1,0 +1,36 @@
+Cái Bang skill icons in this folder are decoded from exact PC JX skill icon SPR paths, not hand-designed.
+
+PC source of truth:
+jxwin-kinnox/SourceNew/swrod3/bin/Client/Settings/Skills.txt lines 116-131
+jxwin-kinnox/SourceNew/swrod3/SwordOnline/Sources/Core/Src/KSkills.cpp KSkill::DrawSkillIcon
+jxwin-kinnox/SourceNew/swrod3/SwordOnline/Sources/Represent/Represent3/KRepresentShell3.cpp DrawSpriteAlpha
+
+Source PAK:
+/var/www/vhst/survivors/external-data/vltklinux/data/spr.pak
+
+Important hash detail:
+JX PAK lookup for Chinese paths requires signed-byte hashing. Unsigned-byte lookup failed; signed-byte hash matched the exact Skills.txt icon paths.
+
+Important orientation detail:
+PC DrawSkillIcon draws SPR frame 0 through screen-space DrawSpriteAlpha. Texture V coordinates go top-to-bottom (tv 0 -> tv fV2), so decoded Unity PNGs must be vertically flipped from the raw bottom-up row decode used by the generic SPR decoder. These exported PNGs are exact PC skill SPRs with that PC UI orientation correction applied.
+
+Exact mapping:
+115 丐帮棒法   Skills.txt icon \spr\Ui\技能图标\棍法.spr             UID 0xa474343f
+116 丐帮拳法   Skills.txt icon \spr\Ui\技能图标\暗器使用.spr         UID 0x0b77f98d
+117 投石问路   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_01.spr   UID 0x71795fb7
+118 孤木遁雷   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_02.spr   UID 0x72f74229
+119 沿门托钵   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_11.spr   UID 0x9f3251b4
+120 奔流到海   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_12.spr   UID 0x98484436
+121 妙手空空   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_13.spr   UID 0x95c64aa8
+122 见人伸手   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_21.spr   UID 0xa48b53b1
+123 奎木星照   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_22.spr   UID 0xa6014633
+124 打狗阵     Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_23.spr   UID 0xa39f4cb5
+125 天下无狗   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_31.spr   UID 0xf24c55be
+126 金乌映雪   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_32.spr   UID 0xcfda5830
+127 滑不留手   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_33.spr   UID 0xc9504eb2
+128 亢龙有悔   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_41.spr   UID 0x98055770
+129 化险为夷   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_42.spr   UID 0x95935df2
+130 醉蝶狂舞   Skills.txt icon \spr\Ui\技能图标\icon_sk_gb_43.spr   UID 0x97294074
+
+PC UI order / layout note:
+KUiFightSkill.UpdateData calls GDI_FIGHT_SKILLS; CoreShell forwards to KSkillList::GetSkillSortList, which iterates KSkillList insertion order. The sandbox Cái Bang open seeds the PC Cái Bang skill list in Skills.txt/faction order, laid into UiSkillsFightSub.ini slots Skill_0..Skill_24 row-major (5 columns). Level text uses UiSkillsFightSub.ini SkillText Offset=0,36 and is drawn only when Obj.DataW != 0. Current Unity overlay clears each 36x50 slot before redrawing PC icon + current level to prevent stale/baked screenshot text overlap.

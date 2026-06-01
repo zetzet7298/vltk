@@ -26,6 +26,7 @@ namespace VLTK.Sandbox
 
         private SandboxPlayerController Player => _player != null ? _player : (_player = FindObjectOfType<SandboxPlayerController>());
         private MapManager MapManager => SandboxManager.Instance != null ? SandboxManager.Instance.MapManager : null;
+        private PlayerProgressionState Progression => SandboxManager.Instance != null ? SandboxManager.Instance.PlayerProgression : null;
 
         public bool HasActiveMap => Player != null && MapManager?.ActiveMap != null;
         public int ActiveMapId => MapManager?.ActiveMapId ?? 0;
@@ -38,7 +39,7 @@ namespace VLTK.Sandbox
             ? (Vector2)Player.transform.position
             : Vector2.zero;
 
-        public int PlayerLevel => 1;
+        public int PlayerLevel => Progression?.level ?? 1;
         public int PlayerCurrentLife => 100;
         public int PlayerMaxLife => 100;
     }

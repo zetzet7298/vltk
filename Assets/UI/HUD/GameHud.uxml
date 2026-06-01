@@ -55,6 +55,13 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <!-- Cái Bang skill sheet: PC source UiSkillsSheet + UiSkillsFightSub layout. IMGUI overlay renders PC art/text/icons for visual parity. -->
+        <ui:VisualElement name="CaiBangSkillPanel" class="hud-cb-skill-panel hidden">
+            <ui:VisualElement name="CaiBangSkillClose" class="hud-cb-close"/>
+            <ui:Label name="CaiBangSkillSummary" text="200" class="hud-cb-summary"/>
+            <ui:ScrollView name="CaiBangSkillList" class="hud-cb-list"/>
+        </ui:VisualElement>
+
         <!-- Chat message area + input -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
             <ui:Label text="!! Hãy sử dụng hồi phục" class="hud-chat-warning"/>

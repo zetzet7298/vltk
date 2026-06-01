@@ -56,6 +56,9 @@ namespace VLTK.Sandbox
         public MobileJoystick PlayerJoystick { get; private set; }
         public BaLangEnemySpawnRuntime EnemyRuntime { get; private set; }
         public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
+        public SkillCatalog CombatSkillCatalog { get; private set; }
+        public CombatRuntimeService CombatRuntime { get; private set; }
+        public PlayerProgressionState PlayerProgression { get; private set; }
         // M1.2: Region catalog and report
         public RegionCatalogFile RegionCatalog { get; private set; }
         public RegionConversionReport RegionReport { get; private set; }
@@ -82,6 +85,12 @@ namespace VLTK.Sandbox
             InitializeSubsystems();
         }
 
+        public void BootstrapCombatForTests(AssetRegistry registry = null)
+        {
+            AssetRegistry = registry ?? new AssetRegistry();
+            BootstrapCombatRuntime();
+        }
+
         private void InitializeSubsystems()
         {
             InitSubsystem(SubsystemKind.Game, "Game", ref gameRoot);
@@ -97,6 +106,7 @@ namespace VLTK.Sandbox
 
             // M0.6: create shared registry, pass to all systems that need resource lookup
             AssetRegistry = new AssetRegistry();
+            BootstrapCombatRuntime();
 
             MapManager = new MapManager(AssetRegistry);
             MapManager.LoadCatalog();
@@ -148,6 +158,21 @@ namespace VLTK.Sandbox
             OnBootComplete?.Invoke(BootReport);
         }
 
+
+        private void BootstrapCombatRuntime()
+        {
+            CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog(AssetRegistry);
+            CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
+            PlayerProgression ??= new PlayerProgressionState();
+        }
+
+        public void GrantCaiBangSkillPanelProgression()
+        {
+            if (CombatSkillCatalog == null)
+                BootstrapCombatRuntime();
+            PlayerProgression ??= new PlayerProgressionState();
+            PlayerProgression.GrantCaiBangSkillPanelProgression(CombatSkillCatalog);
+        }
 
         private void EnsureSandboxCamera()
         {

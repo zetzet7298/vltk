@@ -27,8 +27,10 @@ namespace VLTK.UI
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
+        private VisualElement _caiBangSkillPanel, _caiBangSkillClose;
+        private ScrollView _caiBangSkillList;
         private Label _hpText, _mpText, _staminaText, _expText;
-        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords;
+        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _caiBangSkillSummary;
         private TextField _chatInput;
 
         private HudDataBridge _bridge;
@@ -141,6 +143,11 @@ namespace VLTK.UI
             _mapPreviewTitle = root.Q<Label>("MapPreviewTitle");
             _mapPreviewCoords = root.Q<Label>("MapPreviewCoords");
 
+            _caiBangSkillPanel = root.Q("CaiBangSkillPanel");
+            _caiBangSkillClose = root.Q("CaiBangSkillClose");
+            _caiBangSkillList = root.Q<ScrollView>("CaiBangSkillList");
+            _caiBangSkillSummary = root.Q<Label>("CaiBangSkillSummary");
+
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
@@ -159,6 +166,12 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "ToggleMapBtn");
             RegisterPreviewOpen(root, "WorldMapBtn");
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
+            RegisterClick(root, "CaiBangSkillClose", CloseCaiBangSkillPanel);
+
+            if (_caiBangSkillPanel != null)
+                _caiBangSkillPanel.pickingMode = PickingMode.Position;
+            if (_caiBangSkillList != null)
+                _caiBangSkillList.pickingMode = PickingMode.Position;
 
             if (_mapPreviewOverlay != null)
             {
@@ -222,6 +235,7 @@ namespace VLTK.UI
             LoadBarArt(_mpFill, artPath, "bar_mp_fill");
             LoadBarArt(_staminaFill, artPath, "bar_stamina_fill");
             LoadBarArt(_expFill, artPath, "bar_exp_fill");
+            LoadCaiBangPanelArt(artPath);
 
             var doc = GetComponent<UIDocument>();
             var root = doc.rootVisualElement.Q("GameHud");
@@ -282,6 +296,21 @@ namespace VLTK.UI
             }
         }
 
+        private void LoadCaiBangPanelArt(string artPath)
+        {
+            // Visual panel is rendered by PcHudVietnameseTextOverlay with PC art so it draws above nameplates.
+        }
+
+        private static void LoadElementImage(VisualElement el, string artPath, string name)
+        {
+            if (el == null) return;
+            var png = System.IO.Path.Combine(artPath, name + ".png");
+            if (!System.IO.File.Exists(png)) return;
+            var tex = LoadTexture(png);
+            if (tex != null)
+                el.style.backgroundImage = new StyleBackground(tex);
+        }
+
         private static Texture2D LoadTexture(string path)
         {
             var data = System.IO.File.ReadAllBytes(path);
@@ -308,6 +337,11 @@ namespace VLTK.UI
             {
                 _mapPreviewOverlay.style.width = w;
                 _mapPreviewOverlay.style.height = h;
+            }
+            if (_caiBangSkillPanel != null)
+            {
+                _caiBangSkillPanel.style.left = Mathf.Clamp(338f, 0f, Mathf.Max(0f, w - 205f));
+                _caiBangSkillPanel.style.top = Mathf.Clamp(110f, 0f, Mathf.Max(0f, h - 376f));
             }
         }
 
@@ -574,12 +608,134 @@ namespace VLTK.UI
             SubsystemLog.Info("HUD", $"Map preview move target {worldTarget} ({FormatPcScenePos(worldTarget)})");
         }
 
+        public bool IsCaiBangSkillPanelVisible => _caiBangSkillPanel != null && !_caiBangSkillPanel.ClassListContains("hidden");
+
+        public int CaiBangSkillPanelRowCount => _caiBangSkillList?.childCount ?? 0;
+
+        public CaiBangSkillPanelSnapshot CurrentCaiBangSkillSnapshot { get; private set; }
+
+        public int CurrentCaiBangSelectedSkillId { get; private set; }
+
+        public void OpenCaiBangSkillPanel()
+        {
+            var manager = SandboxManager.Instance;
+            SkillCatalog catalog = manager != null
+                ? manager.CombatSkillCatalog
+                : PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
+            if (manager != null)
+            {
+                manager.GrantCaiBangSkillPanelProgression();
+                progression = manager.PlayerProgression;
+            }
+            else
+            {
+                progression.GrantCaiBangSkillPanelProgression(catalog);
+            }
+
+            var snap = CaiBangSkillPanelService.Build(catalog, progression, CurrentCaiBangSelectedSkillId);
+            CurrentCaiBangSkillSnapshot = snap;
+            PopulateCaiBangSkillPanel(snap);
+            _caiBangSkillPanel?.RemoveFromClassList("hidden");
+            CloseMapPreview();
+            SubsystemLog.Info("HUD", $"Open Cái Bang Skills (level={snap.playerLevel}, points={snap.skillPoints}, skills={snap.rows.Count})");
+        }
+
+        public void CloseCaiBangSkillPanel()
+        {
+            _caiBangSkillPanel?.AddToClassList("hidden");
+        }
+
+        private void PopulateCaiBangSkillPanel(CaiBangSkillPanelSnapshot snap)
+        {
+            if (_caiBangSkillSummary != null)
+                _caiBangSkillSummary.text = snap.skillPoints.ToString();
+            if (_caiBangSkillList == null)
+                return;
+            _caiBangSkillList.Clear();
+            _caiBangSkillList.contentContainer.style.flexDirection = FlexDirection.Row;
+            _caiBangSkillList.contentContainer.style.flexWrap = Wrap.Wrap;
+            _caiBangSkillList.contentContainer.style.alignContent = Align.FlexStart;
+            foreach (var row in snap.rows)
+            {
+                var item = new VisualElement();
+                item.AddToClassList("hud-cb-grid-cell");
+                if (row.canUpgrade)
+                    item.AddToClassList("hud-cb-grid-cell-upgradable");
+                item.pickingMode = PickingMode.Position;
+
+                var slot = new VisualElement();
+                slot.AddToClassList("hud-cb-grid-slot");
+                LoadIcon(slot, System.IO.Path.Combine(Application.dataPath, artFolder, "Generated"), $"cai_bang_skill_{row.skillId}");
+                item.Add(slot);
+
+                var levelText = row.learnedLevel > 0 ? row.learnedLevel.ToString() : string.Empty;
+                var level = new Label(levelText);
+                level.AddToClassList("hud-cb-grid-level");
+                item.Add(level);
+
+                var add = new VisualElement();
+                add.AddToClassList("hud-cb-add-point");
+                item.Add(add);
+
+                var name = new Label(row.displayName);
+                name.AddToClassList("hud-cb-grid-name");
+                item.Add(name);
+
+                int skillId = row.skillId;
+                item.RegisterCallback<PointerDownEvent>(evt =>
+                {
+                    SelectCaiBangSkill(skillId);
+                    evt.StopPropagation();
+                });
+
+                _caiBangSkillList.Add(item);
+            }
+        }
+
+        public void SelectCaiBangSkill(int skillId)
+        {
+            CurrentCaiBangSelectedSkillId = CurrentCaiBangSelectedSkillId == skillId ? 0 : skillId;
+            var manager = SandboxManager.Instance;
+            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : null;
+            if (progression == null)
+                return;
+
+            CurrentCaiBangSkillSnapshot = CaiBangSkillPanelService.Build(catalog, progression, CurrentCaiBangSelectedSkillId);
+            PopulateCaiBangSkillPanel(CurrentCaiBangSkillSnapshot);
+            SubsystemLog.Info("HUD", CurrentCaiBangSelectedSkillId != 0 ? $"Select Cái Bang skill {skillId}" : $"Hide Cái Bang skill detail {skillId}");
+        }
+
+        public bool TryUpgradeCaiBangSelectedSkill()
+        {
+            return CurrentCaiBangSelectedSkillId != 0 && TryUpgradeCaiBangSkill(CurrentCaiBangSelectedSkillId);
+        }
+
+        public bool TryUpgradeCaiBangSkill(int skillId)
+        {
+            var manager = SandboxManager.Instance;
+            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : null;
+            if (progression == null)
+                return false;
+
+            bool upgraded = CaiBangSkillPanelService.TryUpgrade(progression, catalog, skillId);
+            if (upgraded)
+            {
+                CurrentCaiBangSkillSnapshot = CaiBangSkillPanelService.Build(catalog, progression, CurrentCaiBangSelectedSkillId);
+                PopulateCaiBangSkillPanel(CurrentCaiBangSkillSnapshot);
+            }
+            SubsystemLog.Info("HUD", upgraded ? $"Upgrade Cái Bang skill {skillId}" : $"Cannot upgrade Cái Bang skill {skillId}");
+            return upgraded;
+        }
+
         private void OnRunClick() => SubsystemLog.Info("HUD", "Toggle Run/Walk");
         private void OnSitClick() => SubsystemLog.Info("HUD", "Toggle Sit");
         private void OnHorseClick() => SubsystemLog.Info("HUD", "Toggle Horse");
         private void OnStatusClick() => SubsystemLog.Info("HUD", "Open Character Status");
         private void OnItemsClick() => SubsystemLog.Info("HUD", "Open Inventory");
-        private void OnSkillsClick() => SubsystemLog.Info("HUD", "Open Skills");
+        private void OnSkillsClick() => OpenCaiBangSkillPanel();
         private void OnTeamClick() => SubsystemLog.Info("HUD", "Open Team");
         private void OnFactionClick() => SubsystemLog.Info("HUD", "Open Faction");
         private void OnPKClick() => SubsystemLog.Info("HUD", "Toggle PK");
