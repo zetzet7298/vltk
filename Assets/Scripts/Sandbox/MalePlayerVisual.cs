@@ -156,6 +156,11 @@ namespace VLTK.Sandbox
             if (!force && _loadedAction == currentAction)
                 return;
 
+            // Disable ALL existing part children (including orphans from prior actions
+            // that are no longer tracked in _parts) to prevent ghost duplicates.
+            for (int i = transform.childCount - 1; i >= 0; i--)
+                transform.GetChild(i).gameObject.SetActive(false);
+
             foreach (var part in _parts.Values)
                 part.renderer.enabled = false;
 
@@ -169,10 +174,22 @@ namespace VLTK.Sandbox
                 runtime.clip = LoadClip(spec.sourcePath);
                 bool ok = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
                 runtime.renderer.enabled = ok;
+                runtime.renderer.gameObject.SetActive(ok);
                 if (ok)
                     LoadedPartCount++;
                 else if (spec.required)
                     HasAllRequiredParts = false;
+            }
+
+            // Destroy orphan children that are no longer tracked.
+            var tracked = new HashSet<GameObject>();
+            foreach (var part in _parts.Values)
+                if (part.renderer != null) tracked.Add(part.renderer.gameObject);
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                var go = transform.GetChild(i).gameObject;
+                if (!tracked.Contains(go))
+                    Destroy(go);
             }
 
             _loadedAction = currentAction;
@@ -218,13 +235,13 @@ namespace VLTK.Sandbox
             }
         }
 
-        // Map ground-cover/builtin objects clamp their sortingOrder to 32000, so the
-        // player must sit above that ceiling to stay visible in dense town centers.
-        // Screen-Y still orders the player among nearby objects up to the clamp.
+        // Actors sit just above the static map-art layer (MapRenderer.ObjectSortingOrder)
+        // so the player stays visible in dense town centers. Depth among nearby sprites is
+        // handled by the camera's CustomAxis world-Y sort, so no screen-Y encoding into the
+        // (int16) sortingOrder is needed -- that overflow is exactly what broke the map art.
         private int PlayerBaseSortingOrder()
         {
-            int screenOrder = Mathf.RoundToInt(-transform.position.y) * 2 + 2;
-            return Mathf.Clamp(Mathf.Max(screenOrder, 32200), 32200, 32700);
+            return MapRenderer.PlayerSortingOrder;
         }
 
         private void ApplySorting()

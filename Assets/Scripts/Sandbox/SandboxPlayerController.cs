@@ -27,7 +27,7 @@ namespace VLTK.Sandbox
         [Header("Camera Follow")]
         public Camera followCamera;
         public bool followCameraEnabled = true;
-        public float followOrthoSize = 240f;
+        public float followOrthoSize = 480f;  // wider view to see full map context
         public float followSmooth = 12f;
         public float cameraZ = -100f;
 

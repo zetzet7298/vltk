@@ -2,25 +2,30 @@
 name: jx-map-port
 description: >-
   Port any JX Online 1 / Võ Lâm Truyền Kỳ PC map (terrain, buildings, decor, NPCs)
-  into the VLTK-mobile Unity client with 99% visual fidelity by extracting the real
+  into the VLTK-mobile Unity client with 100% visual fidelity by extracting the real
   region geometry and SPR art straight from the game's maps.pak / spr.pak. Use this
   skill WHENEVER the user wants to port, render, extract, rebuild, or "make look like
   the original" ANY JX/VLTK map — e.g. "port map Tương Dương", "render 成都 in Unity",
   "lấy map X từ game gốc", "thêm map mới vào sandbox", "extract regions/sprites from
   maps.pak", or mentions a map name/mapId, a .wor file, Region_C.dat, 游戏资源 art, or
   the balang/巴陵县 workflow. Also trigger when terrain/buildings/trees are missing,
-  showing as gray/procedural placeholders, scattered, or "không giống map gốc".
-  This skill encodes the cracked g_FileName2Id hash and the full extraction pipeline
-  that took many sessions to discover — do not re-derive it, reuse this.
+  showing as gray/procedural placeholders, scattered, or "không giống map gốc". Also
+  trigger for rendering bugs: dark gaps through structures, grass on rooftops, duplicate
+  player visuals, objects at wrong heights, or "phân thân"/"khe tối"/"thiếu mảnh".
+  This skill encodes the cracked g_FileName2Id hash, the Z-projection formula, the
+  spatial-tree sorting model, and the full extraction pipeline that took many sessions
+  to discover — do not re-derive any of it, reuse this.
 ---
 
 # JX Online 1 / VLTK Map Porting
 
 Port a complete PC map (巴陵县/balang style) into the Unity mobile sandbox with the
 real game art, by extracting region geometry and SPR sprites directly from the
-client paks using the **correct** filename hash.
+client paks using the **correct** filename hash and the **correct** isometric projection.
 
-## The one thing that makes this work (read first)
+## The things that make this work (read first)
+
+### 1. Signed-byte path hash
 
 Every JX pak (`maps.pak`, `spr.pak`, `update*.pak`, …) keys its entries by a hash of
 the resource path, `g_FileName2Id` (exported from `engine.dll`). The hash treats each
@@ -47,11 +52,81 @@ With this hash, **every** region path and **every** referenced art name resolves
 > between the extractor and the runtime (extractor writes `{ComputePathUid}.spr`, C#
 > re-derives the same name from the imageName). It must NOT be used to look inside paks.
 
-## When to use which path
+### 2. The Z-projection formula (critical for tall structures)
+
+The original engine's `KRepresentShell3::CoordinateTransform` converts scene coords to
+screen coords with this exact formula (found at `Represent3/KRepresentShell3.cpp:2157`):
+
+```cpp
+void CoordinateTransform(int& nX, int& nY, int nZ)
+{
+    nX = nX - m_nLeft;
+    nY = nY / 2 - m_nTop - ((nZ * 887) >> 10);
+}
+```
+
+In Unity (no viewport offset): `screenY = sceneY/2 - sceneZ*(887/1024)`
+
+The `sceneZ * 0.866` term is **not optional**. Built-in objects (houses, trees, gates)
+have Z values of 0–630. Ignoring Z causes:
+- Gate crossbeams (Z=441-628) to render 380-544 pixels too low → dark gaps through structures
+- Tall buildings to appear squashed/misaligned with their bases
+- Multi-piece structures (like the 牌坊/paifang gate) to be completely broken
+
+The C# implementation in `MapRenderer.cs`:
+```csharp
+private const float ZScreenScale = 887f / 1024f; // ≈0.866
+float screenY = obj.imgY1 * 0.5f - obj.imgZ1 * ZScreenScale;
+```
+
+### 3. The sorting model (critical for correct layering)
+
+The original engine uses a **spatial binary tree** (`KIpoTree` / `KIpotBranch`) to order
+object rendering. Objects are inserted into the tree by their position relative to split
+lines, then the tree is traversed in-order (left=UP/far, then root, then right=DOWN/near)
+to produce correct back-to-front draw order. This is NOT simple Y-sorting.
+
+For the Unity port, the sorting system uses three mechanisms working together:
+
+**A. Layer separation by sortingOrder:**
+- Ground tiles: `sortingOrder = -1000` (always beneath everything)
+- Cover objects (grass, roads): `sortingOrder = 0` (flat ground decals)
+- Builtin objects (houses, trees, gates): `sortingOrder = 1000 + fileIndex` (monotonically
+  increasing counter preserving the original engine's spatial-tree draw order)
+- Player: `sortingOrder = 5000` (always above map art)
+
+**B. File-order counter for builtins (NOT Y-sort):**
+Within each region, builtin objects are stored in the same order as the KIpoTree's
+in-order traversal. A global counter (`_builtinSortCounter`) assigns each builtin a
+unique `sortingOrder` (1000, 1001, 1002, …). Regions are iterated col-by-row (back-to-front
+in the isometric view), so the counter naturally produces correct inter-region ordering.
+This preserves the authored draw order for complex multi-piece structures like the
+牌坊 gate where a crossbeam must draw behind the near pillar but in front of the far pillar
+— something pure Y-sorting cannot achieve.
+
+**C. CustomAxis world-Y sort as tiebreaker:**
+The camera uses `transparencySortMode = CustomAxis` with `transparencySortAxis = (0,1,0)`.
+This sorts sprites at the same `sortingOrder` by their world Y position (higher Y = drawn
+later = in front). This handles cover-vs-cover and provides a safety net, but the primary
+ordering is the file-order counter.
+
+### 4. Sprite pivots differ between object types
+
+- **Ground tiles**: pivot `(0, 1)` = top-left. Placed at world `(screenX, -screenY)`.
+  The sprite extends right and downward from the placement point.
+- **Cover objects** (KSPRCoverGroundObj): pivot `(0.5, 0)` = bottom-center. The `posX/posY`
+  is the base/foot position. Cover objects have NO Z coordinate (they are flat ground decals).
+- **Builtin objects** (KBuildinObj): pivot `(0, 1)` = top-left. `ImgPos1` is the quad's
+  top-left corner in scene space. The sprite extends right and downward to approximately
+  `ImgPos3` (bottom-right). Using bottom-center pivot for builtins causes them to shift
+  by half their width and their full height, leaving gaps.
+
+## When to use which reference
 
 - **Porting a new map, or fixing a broken/incomplete one** → run the pipeline below.
-- **Just understanding the render math / projection** → `references/projection.md`.
-- **Hitting a wall (0 matches, gray tiles, corrupt sprites, wrong positions)** →
+- **Projection math / coordinate systems** → `references/projection.md` (full details).
+- **Sorting / rendering bugs** → `references/sorting.md` (the complete sorting model).
+- **Hitting a wall** (0 matches, gray tiles, corrupt sprites, wrong positions) →
   `references/pitfalls.md` lists every dead-end already explored so you don't repeat them.
 
 ## Prerequisites
@@ -127,10 +202,28 @@ the original: stone plaza (青砖), Jiangnan houses, trees, water edges should a
 with real art. `manage_camera` screenshots only work **while in play mode** — a shot
 taken after stop shows only the skybox.
 
-### 4. Keep the tests green
+### 4. Visual verification checklist
 
-`unityMCP run_tests (mode=EditMode)` — the 406 EditMode tests must stay at 406/406.
-The extractor only writes data files, so they should be unaffected, but verify.
+After rendering, verify these specific things (each corresponds to a bug that took
+significant effort to diagnose and fix):
+
+- **No dark gaps through structures**: Gate crossbeams should connect to pillars, house
+  roofs should sit flush on walls. Dark gaps mean Z-projection is broken.
+- **No grass/road decals on top of buildings**: Cover objects (sortingOrder=0) must draw
+  below all builtin objects (sortingOrder≥1000). If you see grass on rooftops, the cover/
+  builtin layer separation is broken.
+- **Player renders as a single clean sprite**: If you see a "ghost" or duplicate character,
+  the `MalePlayerVisual.RefreshActionParts` orphan cleanup is broken — orphan GameObjects
+  from prior actions are still enabled.
+- **Multi-piece structures render correctly**: The 牌坊 gate (12 pieces from b013_v2_*.spr)
+  should show pillars behind crossbeams. If pieces overlap wrong, the file-order sorting
+  counter or builtin pivot is broken.
+
+### 5. Keep the tests green
+
+`unityMCP run_tests (mode=EditMode)` — the EditMode tests must all pass (410 as of the
+balang port). The extractor only writes data files, so they should be unaffected, but
+verify after any renderer changes.
 
 ## Output contract
 
@@ -142,3 +235,16 @@ Per ported map, under `Assets/StreamingAssets/`:
 
 The renderer, projection math, and SPR decoder are already in the project and map-agnostic;
 porting a new map is purely a data-extraction step once this skill's hash is used.
+
+## Key files in the project
+
+| File | Purpose |
+|------|---------|
+| `Assets/Scripts/Sandbox/MapRenderer.cs` | Rendering pipeline: ground, cover, builtin layers, Z-projection, sorting |
+| `Assets/Scripts/Sandbox/SandboxManager.cs` | Scene setup, camera CustomAxis sort config |
+| `Assets/Scripts/Sandbox/SandboxPlayerController.cs` | Player movement, camera follow, zoom level |
+| `Assets/Scripts/Sandbox/MalePlayerVisual.cs` | 8-direction SPR layered character rendering |
+| `Assets/Scripts/Sandbox/BuildinObjParser.cs` | Parses KBuildinObj with ImgPos1-4 (x,y,z quads) |
+| `Assets/Scripts/Sandbox/GroundLayerParser.cs` | Parses ground tiles + KSPRCoverGroundObj |
+| `Assets/Scripts/Sandbox/RegionParser.cs` | Region_C.dat section table dispatch |
+| `Assets/Scripts/Sandbox/CameraRigService.cs` | Pure C# camera rig (no MonoBehaviour) |

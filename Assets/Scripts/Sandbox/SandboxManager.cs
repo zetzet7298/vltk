@@ -287,6 +287,12 @@ namespace VLTK.Sandbox
 
             var b = MapRenderer.ContentBounds;
             cam.orthographic = true;
+            // Isometric depth sort: sortingOrder only separates coarse layers (ground/
+            // object/actor); within the object layer, draw order follows world-Y (an
+            // object lower on screen = closer = drawn on top). This avoids the int16
+            // sortingOrder ceiling that previously made dense town art occlude itself.
+            cam.transparencySortMode = TransparencySortMode.CustomAxis;
+            cam.transparencySortAxis = new Vector3(0f, 1f, 0f);
             // Solid background so the skybox gradient doesn't bleed through the
             // semi-transparent overlay.
             cam.clearFlags = CameraClearFlags.SolidColor;

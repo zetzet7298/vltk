@@ -61,12 +61,24 @@ namespace VLTK.Sandbox
                 if (t != null) Destroy(t);
             _proceduralTex.Clear();
             _spriteCache.Clear();
+            _builtinSortCounter = 0;
             _loadedMapId = -1;
         }
 
         // JX region scene constants (KScenePlaceRegionC): scene 512x1024, ground cell 32.
         private const int RegionSceneWidth = 512;
         private const int GroundCell = 32;
+
+        // sortingOrder is a 16-bit field (-32768..32767). The map spans screen-Y up to
+        // ~100000, so the old "screenY*2 clamped to ±32000" scheme overflowed AND
+        // saturated thousands of objects at the same ceiling value, leaving their relative
+        // draw order undefined (gate/house pieces occluded each other). Depth is now driven
+        // by the camera's CustomAxis transparency sort on world-Y (see SandboxManager.
+        // FrameCameraOnMap); these constants only separate the coarse layers.
+        public const int GroundSortingOrder = -1000;  // terrain, always beneath objects
+        public const int CoverSortingOrder = 0;       // flat ground decals (grass/road), Y-sorted
+        public const int BuiltinSortingOrder = 1000;  // base for structures/trees (above cover)
+        public const int PlayerSortingOrder = 5000;   // actors above static map art
 
         private void LoadSampleRegions(MapDefinition mapDef)
         {
@@ -232,7 +244,7 @@ namespace VLTK.Sandbox
                 go.transform.position = new Vector3(worldX, worldY, 0f);
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = sprite;
-                sr.sortingOrder = -100000; // ground always beneath objects
+                sr.sortingOrder = GroundSortingOrder; // ground always beneath objects
 
                 var tb = new Bounds(new Vector3(worldX + 32f, worldY - 32f, 0f), new Vector3(64f, 64f, 1f));
                 if (!fullInit) { fullBounds = tb; fullInit = true; }
@@ -259,11 +271,19 @@ namespace VLTK.Sandbox
                 go.transform.position = new Vector3(screenX, -screenY, 0f);
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = sprite;
-                sr.sortingOrder = Mathf.Clamp(Mathf.RoundToInt(screenY) * 2, -32000, 32000);
+                // Flat ground decals sit below structures (BuiltinSortingOrder); within
+                // this layer the camera's CustomAxis world-Y sort orders them by feet.
+                sr.sortingOrder = CoverSortingOrder;
             }
         }
 
-        // Builtin objects: ImgPos1 is a scene coord -> screen = (imgX1, imgY1/2).
+        // Builtin objects use the JX isometric projection:
+        //   screenX = sceneX,  screenY = sceneY/2 - sceneZ*(887/1024)
+        // (from KRepresentShell3::CoordinateTransform). Ignoring Z caused gate beams
+        // and tall structures to render at wrong heights, leaving dark gaps.
+        private const float ZScreenScale = 887f / 1024f; // ≈0.866
+        private int _builtinSortCounter;
+
         private void RenderBuiltinObjects(BuildinObjData builtin)
         {
             if (builtin.objects.Count == 0) return;
@@ -273,8 +293,8 @@ namespace VLTK.Sandbox
             foreach (var obj in builtin.objects)
             {
                 float screenX = obj.imgX1;
-                float screenY = obj.imgY1 * 0.5f;
-                var sprite = GetObjectSprite(obj.imageName, obj.frame);
+                float screenY = obj.imgY1 * 0.5f - obj.imgZ1 * ZScreenScale;
+                var sprite = GetBuiltinSprite(obj.imageName, obj.frame);
                 if (sprite == null) continue;
 
                 var go = new GameObject($"Builtin_{obj.imageName}");
@@ -282,8 +302,7 @@ namespace VLTK.Sandbox
                 go.transform.position = new Vector3(screenX, -screenY, 0f);
                 var sr = go.AddComponent<SpriteRenderer>();
                 sr.sprite = sprite;
-                // +1 so trees/structures draw above flat cover at the same screen row.
-                sr.sortingOrder = Mathf.Clamp(Mathf.RoundToInt(screenY) * 2 + 1, -32000, 32000);
+                sr.sortingOrder = BuiltinSortingOrder + (_builtinSortCounter++);
             }
         }
 
@@ -315,6 +334,21 @@ namespace VLTK.Sandbox
             var tex = _sprService.ResolveTexture(name, frame);
             Sprite sprite = tex != null
                 ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0f), 1f, 0, SpriteMeshType.FullRect)
+                : null;
+            _spriteCache[key] = sprite;
+            return sprite;
+        }
+
+        // Builtin objects use top-left pivot: ImgPos1 is the quad top-left anchor,
+        // the sprite extends right and downward to match ImgPos3.
+        private Sprite GetBuiltinSprite(string name, int frame)
+        {
+            string key = $"b|{name}|{frame}";
+            if (_spriteCache.TryGetValue(key, out var cached)) return cached;
+
+            var tex = _sprService.ResolveTexture(name, frame);
+            Sprite sprite = tex != null
+                ? Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0f, 1f), 1f, 0, SpriteMeshType.FullRect)
                 : null;
             _spriteCache[key] = sprite;
             return sprite;

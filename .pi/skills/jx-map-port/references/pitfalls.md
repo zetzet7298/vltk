@@ -1,7 +1,8 @@
 # Dead-ends already explored — do NOT repeat these
 
-Porting balang took many sessions mostly because of one wrong assumption about the hash.
-Everything below was tried and confirmed; the table saves you from re-walking it.
+Porting balang took many sessions. The hash was the first wall; the Z-projection, sorting,
+and pivots were the second. Everything below was tried and confirmed; the table saves you
+from re-walking it.
 
 ## The root cause of almost all "it doesn't work"
 
@@ -45,7 +46,107 @@ and the final `xor 0x12345678`. capstone/pefile do this in ~30 lines.
   placeholders (start `CD CD …`). Ignore them; the pak copy is the real one. The script
   prefers pak over loose for exactly this reason.
 
-## Rendering gotchas
+## Rendering gotchas (each took significant effort to diagnose)
+
+### Ignoring the Z coordinate in builtin projection
+
+**Symptom:** Dark vertical gaps through gate archways, house roofs detached from walls,
+multi-piece structures appearing broken/scattered.
+
+**Root cause:** `KBuildinObj` has 4 ImgPos corners each with (x, y, z). The Z coordinate
+represents height above ground. The engine's `CoordinateTransform` projects Z into screen-Y:
+`screenY = sceneY/2 - sceneZ*(887/1024)`. Ignoring Z makes tall objects (Z=100-630) render
+hundreds of pixels too low.
+
+**Fix:** `screenY = imgY1 * 0.5f - imgZ1 * (887f/1024f)` in `MapRenderer.RenderBuiltinObjects`.
+
+**Why it's tempting to skip Z:** Cover objects (KSPRCoverGroundObj) have NO Z field, and
+ground tiles don't either. It's easy to assume builtins are the same. But builtins are
+3D scene objects with full (x,y,z) positioning — the SPR art is mapped onto a 3D quad
+defined by ImgPos1-4.
+
+### Using int16 sortingOrder overflow (screenY * 2 encoding)
+
+**Symptom:** Map looks "99% complete" but structures in dense areas (town centers) have
+incorrect layering — pieces of different buildings draw in wrong order, gates look scattered.
+
+**Root cause:** Unity's `sortingOrder` is internally **int16** (range -32768..32767). The old
+approach encoded `sortingOrder = screenY * 2`, but screenY values for balang objects reach
+~50000. `Mathf.Clamp(±32000)` pinned 3580 objects at the same ceiling value → undefined
+draw order among them → random occlusion.
+
+**Fix:** Don't encode screenY into sortingOrder at all. Use CustomAxis world-Y sort
+(`transparencySortMode = CustomAxis`, `transparencySortAxis = (0,1,0)`) as the depth
+mechanism, and use sortingOrder only for coarse layer separation (ground=-1000, cover=0,
+builtin=1000+fileIndex, player=5000).
+
+### Wrong sprite pivot for builtin objects
+
+**Symptom:** Structures appear shifted — half a sprite width to one side, offset upward or
+downward from where they should be. Gaps between adjacent building pieces.
+
+**Root cause:** Using bottom-center pivot `(0.5, 0)` for builtins when the data positions
+them at ImgPos1 = top-left corner. Bottom-center shifts every sprite by half its width
+rightward and its full height downward.
+
+**Fix:** Builtin objects use top-left pivot `(0, 1)`. Cover objects use bottom-center
+`(0.5, 0)` — they position at the base/foot. Ground tiles also use `(0, 1)`. Each object
+type's pivot matches how the original engine positions the sprite relative to its anchor.
+
+### Using pure Y-sorting for multi-piece structures
+
+**Symptom:** Gate crossbeams draw in front of near pillars (should be behind), or complex
+structures like archways have pieces in wrong order despite being at similar Y positions.
+
+**Root cause:** The original engine uses a spatial binary tree (KIpoTree) that traverses
+in-order to produce correct draw order. Pure Y-sorting cannot handle interlocking pieces
+where a crossbeam must draw behind one pillar but in front of another at a similar Y.
+
+**Fix:** Use a monotonically-increasing file-order counter as sortingOrder for builtins.
+The data files already store objects in the KIpoTree's traversal order within each region.
+Regions are iterated col-by-row (back-to-front). This preserves the authored draw order
+without needing to reconstruct the spatial tree.
+
+### Cover objects drawing on top of buildings (grass on rooftops)
+
+**Symptom:** Green grass sprites appear on top of house roofs, road decals float above walls.
+
+**Root cause:** Cover and builtin objects had the same `sortingOrder` (or cover was higher).
+With CustomAxis Y-sort, a cover sprite at a lower Y (higher on screen) would draw on top
+of a building piece at a higher Y.
+
+**Fix:** Strict layer separation: cover at `sortingOrder=0`, builtin at `sortingOrder≥1000`.
+Cover objects are flat ground decals that must NEVER draw above any structure.
+
+### Player visual "ghost" / duplicate character
+
+**Symptom:** Player appears twice at the same position — one animated correctly, one frozen
+in idle pose.
+
+**Root cause:** `MalePlayerVisual.RefreshActionParts` disables old parts' renderers but
+doesn't destroy the underlying GameObjects. When switching from Idle to Move (or vice versa),
+`GetOrCreatePart` finds the dictionary entry for each `kind`, updates the runtime (new clip),
+but the OLD GameObject (created during the first action) is still a child with `enabled=True`.
+The dictionary only tracks one runtime per kind, so the old GameObject becomes an orphan
+that renders on top of the active one.
+
+**Fix:** Before loading new action parts, disable ALL children (including orphans). After
+loading, destroy any child GameObject not tracked in the `_parts` dictionary:
+```csharp
+// Disable all children first
+for (int i = transform.childCount - 1; i >= 0; i--)
+    transform.GetChild(i).gameObject.SetActive(false);
+// ... load new parts (reuses tracked GameObjects, re-enables them) ...
+// Destroy orphans
+var tracked = new HashSet<GameObject>();
+foreach (var part in _parts.Values)
+    if (part.renderer != null) tracked.Add(part.renderer.gameObject);
+for (int i = transform.childCount - 1; i >= 0; i--)
+    if (!tracked.Contains(transform.GetChild(i).gameObject))
+        Destroy(transform.GetChild(i).gameObject);
+```
+
+## General Unity/MCP gotchas
 
 - `manage_camera screenshot` only captures real content **while in play mode**. A shot
   after `manage_editor stop` shows just the skybox gradient. Always screenshot during play.
@@ -57,12 +158,19 @@ and the final `xor 0x12345678`. capstone/pefile do this in ~30 lines.
 - Unity's MCP bridge can drop/restart during long region loads (618 regions × many sprites).
   If `read_console`/screenshot returns "session not ready", wait ~10s and retry; re-enter
   play mode cleanly if the watchdog restarted.
+- `CameraRigService` and `SandboxPlayerController.FollowCamera` reassert camera position/zoom
+  every frame. To take custom-position screenshots, either execute code to reposition the
+  camera immediately before the screenshot call, or adjust `followOrthoSize` in
+  `SandboxPlayerController` (default=480 for a wide view).
 
 ## Verification quicklist
 
 1. `extracted regions: N` with N ≈ cells in the `.wor` rect (618 for balang's 33×20 minus gaps).
 2. `staged art: M/M failed=0`.
-3. Unity console: `Rendered N regions; SPR stats: 0 resolved, 0 missing` (the "0 resolved"
-   counter is cosmetic — it counts the unused `ResolveSprite` cache, not `ResolveTexture`).
-4. Play-mode screenshot shows real terrain + buildings + trees, not flat colors.
-5. `run_tests EditMode` stays 406/406.
+3. Unity console: `Rendered N regions; SPR stats: 0 missing`.
+4. Play-mode reflection check: `proceduralFallbackTiles=0`, `nullDecor=0`, real art sprites > 0.
+5. No dark gaps through structures (Z-projection working).
+6. No grass/roads on rooftops (cover < builtin layer separation).
+7. No duplicate player character (orphan cleanup working).
+8. Multi-piece structures (牌坊 gate) render with correct piece ordering.
+9. `run_tests EditMode` all pass (410 as of balang port).
