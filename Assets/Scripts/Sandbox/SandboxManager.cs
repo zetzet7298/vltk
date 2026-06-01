@@ -116,7 +116,7 @@ namespace VLTK.Sandbox
                         MapRenderer.LoadMapRegions(MapManager.ActiveMap);
                         EnsurePlayerController();
                         PlacePlayerOnActiveMap();
-                        FrameCameraOnMap();
+                        ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
                     }
                 };
@@ -271,48 +271,35 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
-        /// Frame the sandbox camera on the rendered map content. Switches the
-        /// camera to orthographic and centers/zooms it so the whole map is visible.
+        /// Configure the sandbox camera for PC-style isometric depth sorting. Player
+        /// follow owns the camera position/zoom after spawn so movement and minimap
+        /// navigation stay visible.
         /// </summary>
-        public void FrameCameraOnMap()
+        public void ConfigureCameraForMap()
         {
             if (MapRenderer == null || !MapRenderer.HasContent) return;
 
             var cam = FindSandboxCamera();
             if (cam == null)
             {
-                SubsystemLog.Warn("Sandbox", "No camera found to frame map");
+                SubsystemLog.Warn("Sandbox", "No camera found to configure map");
                 return;
             }
 
-            var b = MapRenderer.ContentBounds;
             cam.orthographic = true;
-            // Isometric depth sort: sortingOrder only separates coarse layers (ground/
-            // object/actor); within the object layer, draw order follows world-Y (an
-            // object lower on screen = closer = drawn on top). This avoids the int16
-            // sortingOrder ceiling that previously made dense town art occlude itself.
             cam.transparencySortMode = TransparencySortMode.CustomAxis;
             cam.transparencySortAxis = new Vector3(0f, 1f, 0f);
-            // Solid background so the skybox gradient doesn't bleed through the
-            // semi-transparent overlay.
             cam.clearFlags = CameraClearFlags.SolidColor;
             cam.backgroundColor = new Color(0.12f, 0.12f, 0.14f, 1f);
-
-            float aspect = cam.aspect > 0.01f ? cam.aspect : 0.5625f;
-            float halfH = b.size.y * 0.5f;
-            float halfW = (b.size.x * 0.5f) / aspect;
-            float size = Mathf.Max(halfH, halfW) * 1.05f; // 5% margin
-            cam.orthographicSize = Mathf.Max(size, 1f);
-
             cam.nearClipPlane = 0.1f;
             cam.farClipPlane = Mathf.Max(cam.farClipPlane, 5000f);
+            SubsystemLog.Info("Sandbox", "Camera configured for player-follow map view");
+        }
 
-            // Content sits on the XY plane; place the camera in front (-Z) looking +Z.
-            cam.transform.position = new Vector3(b.center.x, b.center.y, -100f);
-            cam.transform.rotation = Quaternion.identity;
-
-            SubsystemLog.Info("Sandbox",
-                $"Camera framed on map: center=({b.center.x:F0},{b.center.y:F0}) orthoSize={cam.orthographicSize:F0}");
+        public void FrameCameraOnMap()
+        {
+            ConfigureCameraForMap();
+            PlayerController?.SnapCamera();
         }
 
         private Camera FindSandboxCamera()

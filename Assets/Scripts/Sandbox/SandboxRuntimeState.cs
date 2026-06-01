@@ -5,7 +5,7 @@
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
-using VLTK.Sandbox;
+using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
@@ -24,12 +24,18 @@ namespace VLTK.Sandbox
             _player = FindObjectOfType<SandboxPlayerController>();
         }
 
-        public bool HasActiveMap => _player != null;
-        public int ActiveMapId => 0;
-        public string ActiveMapName => "Sandbox";
+        private SandboxPlayerController Player => _player != null ? _player : (_player = FindObjectOfType<SandboxPlayerController>());
+        private MapManager MapManager => SandboxManager.Instance != null ? SandboxManager.Instance.MapManager : null;
 
-        public Vector2 PlayerWorldPosition => _player != null
-            ? (Vector2)_player.transform.position
+        public bool HasActiveMap => Player != null && MapManager?.ActiveMap != null;
+        public int ActiveMapId => MapManager?.ActiveMapId ?? 0;
+        public string ActiveMapName => MapManager?.ActiveMap?.catalogEntry?.displayNameRaw
+            ?? MapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
+            ?? "Sandbox";
+        public MapDefinition ActiveMapDefinition => MapManager?.ActiveMap;
+
+        public Vector2 PlayerWorldPosition => Player != null
+            ? (Vector2)Player.transform.position
             : Vector2.zero;
 
         public int PlayerLevel => 1;

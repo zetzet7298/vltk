@@ -172,5 +172,27 @@ namespace VLTK.Tests.Sandbox
             var map = MakeMap(Bounds(0, 0, 0, 0), new MinimapRef());
             Assert.AreEqual(new Vector2(0.5f, 0.5f), svc.WorldToMinimapNormalized(map, new Vector2(123, 456)));
         }
+
+        [Test]
+        public void MinimapPixelToWorld_InvertsTopLeftPixelMapping()
+        {
+            var svc = new MinimapService(new AssetRegistry());
+            var map = MakeMap(Bounds(200, 100, 800, 400), new MinimapRef());
+            var size = new Vector2(400, 200);
+
+            Assert.AreEqual(new Vector2(200f, 500f), svc.MinimapPixelToWorld(map, new Vector2(0, 0), size));
+            Assert.AreEqual(new Vector2(1000f, 100f), svc.MinimapPixelToWorld(map, new Vector2(400, 200), size));
+            Assert.AreEqual(new Vector2(600f, 300f), svc.MinimapPixelToWorld(map, new Vector2(200, 100), size));
+        }
+
+        [Test]
+        public void MinimapNormalizedToWorld_InvertsTopLeftNormalizedClick()
+        {
+            var svc = new MinimapService(new AssetRegistry());
+            var map = MakeMap(Bounds(0, 0, 1000, 500), new MinimapRef());
+
+            Assert.AreEqual(new Vector2(250f, 375f), svc.MinimapNormalizedToWorld(map, new Vector2(0.25f, 0.25f)));
+            Assert.AreEqual(new Vector2(750f, 125f), svc.MinimapNormalizedToWorld(map, new Vector2(0.75f, 0.75f)));
+        }
     }
 }

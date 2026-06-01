@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using VLTK.Core;
+using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
@@ -14,6 +15,7 @@ namespace VLTK.Sandbox
         bool HasActiveMap { get; }
         int ActiveMapId { get; }
         string ActiveMapName { get; }
+        MapDefinition ActiveMapDefinition { get; }
         Vector2 PlayerWorldPosition { get; }
         int PlayerLevel { get; }
         int PlayerCurrentLife { get; }
@@ -26,6 +28,7 @@ namespace VLTK.Sandbox
         public bool valid;
         public int mapId;
         public string mapName;
+        public MapDefinition activeMap;
         public Vector2 playerPosition;
         public int level;
         public int currentLife;
@@ -67,6 +70,7 @@ namespace VLTK.Sandbox
                 valid = true,
                 mapId = _runtime.ActiveMapId,
                 mapName = _runtime.ActiveMapName,
+                activeMap = _runtime.ActiveMapDefinition,
                 playerPosition = _runtime.PlayerWorldPosition,
                 level = _runtime.PlayerLevel,
                 currentLife = curLife,

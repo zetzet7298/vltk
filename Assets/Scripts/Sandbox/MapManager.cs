@@ -113,22 +113,7 @@ namespace VLTK.Sandbox
 
             UnloadCurrentMap();
 
-            var def = new MapDefinition
-            {
-                catalogEntry = entry,
-                regionCountX = (int)(entry.rect?.width ?? 0),
-                regionCountY = (int)(entry.rect?.height ?? 0),
-                regionWidthPixels = 512,
-                regionHeightPixels = 1024,
-                cellWidth = 32,
-                cellHeight = 32,
-                environmentProfile = new EnvironmentProfile
-                {
-                    brightness = entry.defaultBrightness,
-                    tint = entry.defaultColor,
-                },
-                conversionStatus = ConversionStatus.NotStarted,
-            };
+            var def = BuildRuntimeDefinition(entry);
 
             _activeMapId = mapId;
             _activeMap = def;
@@ -161,6 +146,39 @@ namespace VLTK.Sandbox
 
             SubsystemLog.Info("MapManager", $"Loaded map: {entry.displayNameNormalized} (id={mapId})");
             OnMapLoaded?.Invoke(mapId);
+        }
+
+        private MapDefinition BuildRuntimeDefinition(MapCatalogEntry entry)
+        {
+            float sourceX = (entry.rect?.x ?? 0f) * 512f;
+            float sourceY = (entry.rect?.y ?? 0f) * 512f;
+            float sourceW = Mathf.Max(1f, (entry.rect?.width ?? 1f) * 512f);
+            float sourceH = Mathf.Max(1f, (entry.rect?.height ?? 1f) * 512f);
+
+            return new MapDefinition
+            {
+                catalogEntry = entry,
+                regionCountX = (int)(entry.rect?.width ?? 0),
+                regionCountY = (int)(entry.rect?.height ?? 0),
+                regionWidthPixels = 512,
+                regionHeightPixels = 1024,
+                cellWidth = 32,
+                cellHeight = 32,
+                sourceBoundsRect = new RectDef
+                {
+                    x = sourceX,
+                    y = -sourceY - sourceH,
+                    width = sourceW,
+                    height = sourceH,
+                },
+                mapLtRegionIndex = entry.mapLeftTopRegionIndex,
+                environmentProfile = new EnvironmentProfile
+                {
+                    brightness = entry.defaultBrightness,
+                    tint = entry.defaultColor,
+                },
+                conversionStatus = ConversionStatus.NotStarted,
+            };
         }
 
         public void UnloadCurrentMap()

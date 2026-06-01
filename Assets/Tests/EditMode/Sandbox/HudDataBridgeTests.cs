@@ -18,6 +18,7 @@ namespace VLTK.Tests.Sandbox
             public bool HasActiveMap { get; set; } = true;
             public int ActiveMapId { get; set; } = 5;
             public string ActiveMapName { get; set; } = "Test Map";
+            public VLTK.Model.MapDefinition ActiveMapDefinition { get; set; }
             public Vector2 PlayerWorldPosition { get; set; } = new Vector2(10, 20);
             public int PlayerLevel { get; set; } = 12;
             public int PlayerCurrentLife { get; set; } = 80;

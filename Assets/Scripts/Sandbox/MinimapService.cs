@@ -103,6 +103,37 @@ namespace VLTK.Sandbox
             return new Vector2(n.x * minimapSize.x, (1f - n.y) * minimapSize.y);
         }
 
+        /// <summary>
+        /// Convert a top-left-origin UI pixel inside the minimap/world-preview rect to
+        /// a clamped world coordinate. This is the inverse of WorldToMinimapPixel and
+        /// matches PC map UI hit-testing where y grows downward in the widget.
+        /// </summary>
+        public Vector2 MinimapPixelToWorld(MapDefinition map, Vector2 pixel, Vector2 minimapSize)
+        {
+            var rect = map?.sourceBoundsRect;
+            if (rect == null || rect.width <= 0f || rect.height <= 0f || minimapSize.x <= 0f || minimapSize.y <= 0f)
+                return Vector2.zero;
+
+            float u = Mathf.Clamp01(pixel.x / minimapSize.x);
+            float v = Mathf.Clamp01(1f - (pixel.y / minimapSize.y));
+            return new Vector2(rect.x + rect.width * u, rect.y + rect.height * v);
+        }
+
+        /// <summary>
+        /// Convert a normalized top-left-origin UI point (0..1) into world coords.
+        /// Useful for UI Toolkit pointer callbacks whose size is measured separately.
+        /// </summary>
+        public Vector2 MinimapNormalizedToWorld(MapDefinition map, Vector2 normalizedTopLeft)
+        {
+            var rect = map?.sourceBoundsRect;
+            if (rect == null || rect.width <= 0f || rect.height <= 0f)
+                return Vector2.zero;
+
+            float u = Mathf.Clamp01(normalizedTopLeft.x);
+            float v = Mathf.Clamp01(1f - normalizedTopLeft.y);
+            return new Vector2(rect.x + rect.width * u, rect.y + rect.height * v);
+        }
+
         /// <summary>AC#4 — true when the map's minimap artifact is absent.</summary>
         public bool IsMissing(MapDefinition map)
         {

@@ -33,6 +33,9 @@ namespace VLTK.Sandbox
 
         public Vector2 MoveInput { get; private set; }
         public Vector2 LastMoveDelta { get; private set; }
+        public Vector2 MoveTarget { get; private set; }
+        public bool HasMoveTarget { get; private set; }
+        public float targetArriveDistance = 8f;
 
         private void Awake()
         {
@@ -80,15 +83,58 @@ namespace VLTK.Sandbox
         public void SetMoveInput(Vector2 input)
         {
             MoveInput = Vector2.ClampMagnitude(input, 1f);
+            if (MoveInput.sqrMagnitude > 0.0001f)
+                HasMoveTarget = false;
+        }
+
+        public void MoveTo(Vector2 worldTarget)
+        {
+            MoveTarget = worldTarget;
+            HasMoveTarget = true;
+        }
+
+        public void ClearMoveTarget()
+        {
+            HasMoveTarget = false;
         }
 
         public void SimulateMove(float deltaTime)
         {
             float dt = Mathf.Max(0f, deltaTime);
             Vector2 input = Vector2.ClampMagnitude(MoveInput, 1f);
+            if (HasMoveTarget)
+            {
+                var pos = (Vector2)transform.position;
+                var toTarget = MoveTarget - pos;
+                float arrive = Mathf.Max(0.1f, targetArriveDistance);
+                if (toTarget.magnitude <= arrive)
+                {
+                    transform.position = new Vector3(MoveTarget.x, MoveTarget.y, transform.position.z);
+                    HasMoveTarget = false;
+                    input = Vector2.zero;
+                }
+                else
+                {
+                    input = toTarget.normalized;
+                }
+            }
+
             LastMoveDelta = input * (moveSpeed * dt);
             if (LastMoveDelta.sqrMagnitude > 0f)
-                transform.position += new Vector3(LastMoveDelta.x, LastMoveDelta.y, 0f);
+            {
+                var before = (Vector2)transform.position;
+                var next = before + LastMoveDelta;
+                if (HasMoveTarget)
+                {
+                    var toTarget = MoveTarget - before;
+                    if (LastMoveDelta.sqrMagnitude >= toTarget.sqrMagnitude)
+                    {
+                        next = MoveTarget;
+                        HasMoveTarget = false;
+                    }
+                }
+                transform.position = new Vector3(next.x, next.y, transform.position.z);
+            }
 
             EnsureVisual();
             if (visual != null)
@@ -102,6 +148,7 @@ namespace VLTK.Sandbox
 
         public void PlaceAt(Vector2 worldPosition, bool snapCamera = true)
         {
+            HasMoveTarget = false;
             transform.position = new Vector3(worldPosition.x, worldPosition.y, transform.position.z);
             EnsureVisual();
             if (visual != null)

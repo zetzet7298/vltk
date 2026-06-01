@@ -24,7 +24,9 @@
         <!-- Optional minimap kept compact for sandbox/debug -->
         <ui:VisualElement name="MinimapPanel" class="hud-minimap-panel">
             <ui:VisualElement name="MinimapFrame" class="hud-minimap-frame">
-                <ui:VisualElement name="MinimapContent" class="hud-minimap-content"/>
+                <ui:VisualElement name="MinimapContent" class="hud-minimap-content">
+                    <ui:VisualElement name="MiniMapTarget" class="hud-map-target-dot"/>
+                </ui:VisualElement>
                 <ui:VisualElement name="PlayerDot" class="hud-player-dot"/>
             </ui:VisualElement>
             <ui:Label name="SceneName" text="" class="hud-scene-name"/>
@@ -32,6 +34,24 @@
             <ui:VisualElement name="MinimapBtns" class="hud-minimap-btns">
                 <ui:VisualElement name="ToggleMapBtn" class="hud-minimap-btn"/>
                 <ui:VisualElement name="WorldMapBtn" class="hud-minimap-btn"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Mobile PC-style map preview. Open by tapping minimap; tap preview to move. -->
+        <ui:VisualElement name="MapPreviewOverlay" class="hud-map-preview-overlay hidden">
+            <ui:VisualElement name="MapPreviewWindow" class="hud-map-preview-window">
+                <ui:VisualElement name="MapPreviewHeader" class="hud-map-preview-header">
+                    <ui:Label name="MapPreviewTitle" text="Bản đồ" class="hud-map-preview-title"/>
+                    <ui:VisualElement name="MapPreviewClose" class="hud-map-preview-close"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="MapPreviewFrame" class="hud-map-preview-frame">
+                    <ui:VisualElement name="MapPreviewContent" class="hud-map-preview-content">
+                        <ui:VisualElement name="MapPreviewTarget" class="hud-map-target-dot"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="MapPreviewPlayerDot" class="hud-player-dot hud-preview-player-dot"/>
+                </ui:VisualElement>
+                <ui:Label name="MapPreviewCoords" text="" class="hud-map-preview-coords"/>
+                <ui:Label text="Chạm bản đồ để di chuyển" class="hud-map-preview-help"/>
             </ui:VisualElement>
         </ui:VisualElement>
 

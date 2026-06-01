@@ -217,8 +217,22 @@ namespace VLTK.Sandbox
                 HasContent = fullInit;
             }
 
+            ApplyFullMapBounds(mapDef);
+
             SubsystemLog.Info("MapRenderer",
                 $"Rendered {rendered} regions; focus center={ContentBounds.center} size={ContentBounds.size}");
+        }
+
+        private void ApplyFullMapBounds(MapDefinition mapDef)
+        {
+            var r = mapDef?.sourceBoundsRect;
+            if (r == null || r.width <= 0f || r.height <= 0f)
+                return;
+
+            ContentBounds = new Bounds(
+                new Vector3(r.x + r.width * 0.5f, r.y + r.height * 0.5f, 0f),
+                new Vector3(r.width, r.height, 1f));
+            HasContent = true;
         }
 
         // Ground tiles tile a 512x512 screen block: sprite 64x64 placed at (h*32, v*32),
