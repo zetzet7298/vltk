@@ -1,7 +1,7 @@
 # Agent Instructions
 
 ## Project Overview
-
+### User-facing phải là tiếng việt. nếu jx pc là tiếng trung thì phải việt hoá
 VLTK Mobile — Port game Võ Lâm Truyền Kỳ (JX Online 3) từ PC sang Unity Mobile.
 
 ### Cấu trúc Repo

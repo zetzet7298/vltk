@@ -7,4 +7,5 @@
   <Project Path="VLTK.Core.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="VLTK.Tests.PlayMode.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
 </Solution>

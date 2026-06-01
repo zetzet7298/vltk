@@ -1,0 +1,361 @@
+/* VLTK Mobile HUD — reference layout: top stat strip + bottom ornate bar */
+
+.hud-root {
+    width: 1280px;
+    height: 720px;
+    overflow: hidden;
+}
+
+/* TOP STATUS STRIP — PC: Ui/ui3/顶部控制条.ini + 新血条面板.spr
+   PC logic: Set2IntValue(cur,max), Set2IntText(cur/max), EXP uses percent. */
+.hud-top-status {
+    position: absolute;
+    left: 145px;
+    top: 0px;
+    width: 552px;
+    height: 30px;
+    background-color: transparent;
+}
+
+.hud-pc-bar-panel-bg {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 552px;
+    height: 17px;
+    background-image: url('project://database/Assets/UI/HUD/Art/bar_panel_bg.png');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.hud-level-box {
+    position: absolute;
+    left: 34px;
+    top: 1px;
+    width: 18px;
+    height: 14px;
+    font-size: 11px;
+    color: rgb(55,231,63);
+    -unity-text-align: middle-center;
+    background-color: transparent;
+    border-width: 0px;
+}
+
+.hud-top-bar {
+    position: absolute;
+    top: 4px;
+    width: 104px;
+    height: 9px;
+    background-color: transparent;
+    border-width: 0px;
+    overflow: hidden;
+}
+
+.hud-exp-track { left: 58px; }
+.hud-hp-track { left: 170px; }
+.hud-mp-track { left: 282px; }
+.hud-stamina-track { left: 394px; }
+
+.hud-top-fill {
+    width: 100%;
+    height: 9px;
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.hud-exp-track .hud-top-fill {
+    background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png');
+}
+.hud-hp-track .hud-top-fill {
+    background-image: url('project://database/Assets/UI/HUD/Art/bar_hp_fill.png');
+}
+.hud-mp-track .hud-top-fill {
+    background-image: url('project://database/Assets/UI/HUD/Art/bar_mp_fill.png');
+}
+.hud-stamina-track .hud-top-fill {
+    background-image: url('project://database/Assets/UI/HUD/Art/bar_stamina_fill.png');
+}
+
+.hud-vn-top-caption {
+    position: absolute;
+    top: -1px;
+    height: 10px;
+    font-size: 9px;
+    color: rgb(230,230,210);
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+}
+.hud-vn-level-caption { left: 4px; width: 30px; }
+.hud-vn-exp-caption { left: 58px; width: 104px; }
+.hud-vn-hp-caption { left: 170px; width: 104px; }
+.hud-vn-mp-caption { left: 282px; width: 104px; }
+.hud-vn-stamina-caption { left: 394px; width: 104px; }
+
+.hud-top-small-text {
+    position: absolute;
+    top: 17px;
+    width: 104px;
+    height: 12px;
+    font-size: 12px;
+    color: rgb(255,255,255);
+    -unity-text-align: middle-center;
+    background-color: transparent;
+}
+.hud-exp-text { left: 58px; }
+.hud-hp-text { left: 170px; }
+.hud-mp-text { left: 282px; }
+.hud-stamina-text { left: 394px; }
+
+/* MINIMAP: sandbox helper, top-right */
+.hud-minimap-panel {
+    position: absolute;
+    right: 6px;
+    top: 4px;
+    width: 136px;
+    height: 166px;
+    align-items: center;
+}
+
+.hud-minimap-frame {
+    width: 130px;
+    height: 130px;
+    border-width: 2px;
+    border-color: rgb(180,150,80);
+    border-radius: 2px;
+    background-color: rgba(5,10,5,0.92);
+    overflow: hidden;
+}
+
+.hud-minimap-content {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15,25,15,0.90);
+}
+
+.hud-player-dot {
+    position: absolute;
+    left: 60px;
+    top: 60px;
+    width: 10px;
+    height: 10px;
+    background-image: url('project://database/Assets/UI/HUD/Art/minimap_dot.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-scene-name,
+.hud-scene-pos {
+    width: 130px;
+    height: 11px;
+    font-size: 9px;
+    color: rgb(0,255,0);
+    -unity-text-align: middle-center;
+}
+
+.hud-minimap-btns {
+    position: absolute;
+    left: 100px;
+    top: 116px;
+    width: 32px;
+    height: 14px;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+.hud-minimap-btn {
+    width: 14px;
+    height: 14px;
+    margin-left: 1px;
+    margin-right: 1px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* CHAT AREA */
+.hud-chat-panel {
+    position: absolute;
+    left: 155px;
+    bottom: 78px;
+    width: 430px;
+    height: 70px;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.hud-chat-warning {
+    width: 430px;
+    height: 18px;
+    font-size: 15px;
+    color: rgb(255,40,30);
+    -unity-font-style: bold;
+    -unity-text-align: middle-left;
+}
+
+.hud-chat-input-row {
+    flex-direction: row;
+    align-items: center;
+    width: 430px;
+    height: 28px;
+    background-color: rgba(5,10,8,0.85);
+    border-width: 1px;
+    border-color: rgb(40,110,95);
+}
+
+.hud-chat-input {
+    flex-grow: 1;
+    height: 24px;
+    color: rgb(230,245,230);
+    font-size: 12px;
+    background-color: rgba(0,0,0,0.45);
+    border-width: 0px;
+}
+
+.hud-face-btn {
+    width: 30px;
+    height: 26px;
+    background-color: transparent;
+    border-width: 0px;
+}
+
+.hud-send-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 3px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* BOTTOM ORNATE STRIP */
+.hud-bottom-strip {
+    position: absolute;
+    left: 155px;
+    right: 0px;
+    bottom: 0px;
+    height: 82px;
+    flex-direction: row;
+    align-items: flex-end;
+    background-color: rgba(0,0,0,0.78);
+    border-top-width: 2px;
+    border-top-color: rgb(35,115,95);
+    padding-left: 0px;
+    padding-right: 8px;
+    padding-bottom: 6px;
+}
+
+.hud-left-tools {
+    position: absolute;
+    right: 8px;
+    bottom: 58px;
+    flex-direction: row;
+    width: 190px;
+    height: 48px;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.hud-round-btn {
+    width: 42px;
+    height: 42px;
+    margin-right: 4px;
+    border-width: 2px;
+    border-color: rgb(45,130,105);
+    border-radius: 21px;
+    background-color: rgba(5,22,20,0.95);
+    overflow: hidden;
+}
+
+.hud-hotkey-number {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 14px;
+    height: 14px;
+    color: rgb(210,210,190);
+    font-size: 9px;
+    -unity-text-align: middle-center;
+}
+
+.hud-btn-icon {
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-main-hotbar {
+    flex-direction: row;
+    width: 540px;
+    height: 58px;
+    align-items: center;
+    margin-left: 0px;
+    background-color: rgba(0,18,18,0.90);
+    border-width: 2px;
+    border-color: rgb(35,115,95);
+}
+
+.hud-hotbar-slot {
+    width: 58px;
+    height: 54px;
+    background-color: rgba(0,0,0,0.78);
+    border-width: 1px;
+    border-color: rgb(30,95,85);
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.hud-slot-number {
+    width: 100%;
+    height: 100%;
+    color: rgba(120,120,120,0.45);
+    font-size: 18px;
+    -unity-text-align: middle-center;
+}
+
+.hud-skill-panel {
+    flex-direction: row;
+    width: 120px;
+    height: 58px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    background-color: rgba(0,50,42,0.85);
+    border-width: 2px;
+    border-color: rgb(55,135,115);
+}
+
+.hud-skill-slot {
+    width: 48px;
+    height: 48px;
+    background-color: rgba(0,0,0,0.60);
+    border-width: 1px;
+    border-color: rgb(60,140,115);
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+.hud-skill-panel > .hud-skill-slot { }
+
+.hud-skill-keys {
+    display: none;
+}
+
+.hud-right-menu {
+    flex-direction: row;
+    height: 48px;
+    margin-left: auto;
+    align-items: center;
+}
+
+.hud-menu-btn {
+    width: 46px;
+    height: 46px;
+    margin-left: 4px;
+    border-width: 2px;
+    border-color: rgb(35,115,95);
+    background-color: rgba(5,22,20,0.95);
+    overflow: visible;
+}
+
+.hud-menu-label {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: -13px;
+    height: 12px;
+    font-size: 9px;
+    color: rgb(225,230,205);
+    -unity-text-align: middle-center;
+}
