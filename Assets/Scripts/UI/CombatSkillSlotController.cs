@@ -515,12 +515,13 @@ namespace VLTK.UI
                 manager.GrantCaiBangSkillPanelProgression();
 
             var progression = manager?.PlayerProgression;
-            int playerMana = 5000;
+            int playerLevel = progression?.level ?? 1;
+            int playerMana = PcMaxManaFormula.ComputeCaiBang(playerLevel, innerStrength: 0);
             var actor = new CombatActorState
             {
                 actorId = 1,
                 faction = CombatFaction.CaiBang,
-                level = progression?.level ?? 1,
+                level = playerLevel,
                 fightMode = true,
                 position = player.transform.position,
                 currentMana = playerMana,
