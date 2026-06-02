@@ -1,0 +1,507 @@
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+using VLTK.Core;
+using VLTK.Sandbox;
+using VLTK.Sprites;
+
+namespace VLTK.UI
+{
+    /// <summary>
+    /// World-space renderer for active skill effects.
+    /// Renders cast rings, missile projectiles with trails, and impact bursts
+    /// using LineRenderer + SpriteRenderer at the correct world positions.
+    ///
+    /// Scales automatically with the scene camera orthographicSize so VFX remains
+    /// proportional regardless of zoom level.
+    ///
+    /// This is a visible fallback when no PC SPR/prefab has been configured yet.
+    /// Future exact PC VFX: configure via SkillEffectVisualService preCastSprite / missileSprite.
+    /// </summary>
+    [DisallowMultipleComponent]
+    public sealed class SkillEffectWorldOverlay : MonoBehaviour
+    {
+        [Header("Sizing (fraction of visible screen height)")]
+        [Tooltip("PreCast ring min radius as fraction of visible world height (0..1).")]
+        public float preCastRadiusMinFrac = 0.06f;
+        [Tooltip("PreCast ring max radius as fraction of visible world height.")]
+        public float preCastRadiusMaxFrac = 0.18f;
+        [Tooltip("Impact burst max radius as fraction of visible world height.")]
+        public float impactRadiusMaxFrac = 0.22f;
+        [Tooltip("Missile dot diameter as fraction of visible world height.")]
+        public float missileDotFrac = 0.05f;
+        [Tooltip("Line width as fraction of visible world height.")]
+        public float lineWidthFrac = 0.018f;
+
+        [Header("Duration overrides (seconds)")]
+        public float minPreCastDuration = 0.3f;
+        public float minImpactDuration = 0.5f;
+
+        public int sortingOrder = 32000;
+
+        private readonly Dictionary<ActiveSkillEffect, RuntimeEffectVisual> _visuals = new();
+        private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
+        private Material _lineMaterial;
+        private Sprite _dotSprite;
+        private Camera _cam;
+        private float _cachedOrthoSize;
+        private float _worldHeight;
+        private float _scale; // world units per 1 fraction unit
+
+        private void EnsureResources()
+        {
+            FindCamera();
+            if (_cam == null) return;
+
+            // Recompute scale when camera zoom changes
+            if (Mathf.Abs(_cam.orthographicSize - _cachedOrthoSize) > 0.1f)
+            {
+                _cachedOrthoSize = _cam.orthographicSize;
+                _worldHeight = _cachedOrthoSize * 2f;
+                _scale = _worldHeight;
+            }
+
+            if (_lineMaterial == null)
+            {
+                var shader = Shader.Find("Sprites/Default")
+                    ?? Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default")
+                    ?? Shader.Find("Unlit/Color");
+                _lineMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+            }
+            if (_dotSprite == null)
+                _dotSprite = CreateDotSprite();
+        }
+
+        private void FindCamera()
+        {
+            if (_cam != null && _cam.isActiveAndEnabled) return;
+            // Tagged "MainCamera" is unreliable; find by Camera component instead.
+            _cam = null;
+            var cams = FindObjectsOfType<Camera>();
+            foreach (var c in cams)
+            {
+                if (c.orthographic && c.enabled)
+                {
+                    _cam = c;
+                    return;
+                }
+            }
+        }
+
+        private void LateUpdate()
+        {
+            EnsureResources();
+            if (_cam == null) return;
+
+            var service = SandboxManager.Instance?.SkillEffectVisual;
+            if (service == null) return;
+
+            var active = service.GetActiveEffects();
+            var stillActive = new HashSet<ActiveSkillEffect>(active);
+
+            foreach (var fx in active)
+            {
+                if (!_visuals.TryGetValue(fx, out var visual))
+                {
+                    visual = CreateVisual(fx);
+                    _visuals[fx] = visual;
+                }
+                UpdateVisual(fx, visual);
+            }
+
+            var toRemove = new List<ActiveSkillEffect>();
+            foreach (var kv in _visuals)
+                if (!stillActive.Contains(kv.Key) || kv.Key.phase == SkillEffectPhase.Finished)
+                    toRemove.Add(kv.Key);
+
+            foreach (var fx in toRemove)
+            {
+                if (_visuals.TryGetValue(fx, out var visual) && visual.root != null)
+                    Destroy(visual.root);
+                _visuals.Remove(fx);
+            }
+        }
+
+        // ── Factory ──────────────────────────────────────────────────────────
+
+        private RuntimeEffectVisual CreateVisual(ActiveSkillEffect fx)
+        {
+            var root = new GameObject($"SkillVFX_{fx.skillId}_{fx.skillName}");
+            root.transform.SetParent(SandboxManager.Instance?.worldRoot, false);
+
+            var ring = CreateLine(root.transform, "PreCastRing", loop: true);
+            var impact = CreateLine(root.transform, "ImpactRing", loop: true);
+            var trail = CreateLine(root.transform, "Trail", loop: false);
+
+            var missileGo = new GameObject("Missile");
+            missileGo.transform.SetParent(root.transform, false);
+            var sr = missileGo.AddComponent<SpriteRenderer>();
+            sr.sprite = fx.HasPcMissileSprite ? FirstValidPcSprite(fx.pcMissileSpriteKey) : _dotSprite;
+            sr.sortingOrder = sortingOrder + 2;
+            sr.color = Color.white;
+
+            var pcMissiles = new List<SpriteRenderer> { sr };
+            if (fx.HasPcMissileSprite && fx.missileCount > 1)
+            {
+                for (int i = 1; i < fx.missileCount; i++)
+                {
+                    var extra = new GameObject($"Missile_{i}");
+                    extra.transform.SetParent(root.transform, false);
+                    var extraSr = extra.AddComponent<SpriteRenderer>();
+                    extraSr.sprite = FirstValidPcSprite(fx.pcMissileSpriteKey);
+                    extraSr.sortingOrder = sortingOrder + 2;
+                    extraSr.color = Color.white;
+                    extraSr.enabled = false;
+                    pcMissiles.Add(extraSr);
+                }
+            }
+
+            var impactGo = new GameObject("PcImpact");
+            impactGo.transform.SetParent(root.transform, false);
+            var impactSr = impactGo.AddComponent<SpriteRenderer>();
+            impactSr.sprite = fx.HasPcImpactSprite ? FirstValidPcSprite(fx.pcImpactSpriteKey) : null;
+            impactSr.sortingOrder = sortingOrder + 3;
+            impactSr.color = Color.white;
+            impactSr.enabled = false;
+
+            return new RuntimeEffectVisual
+            {
+                root = root,
+                preCastRing = ring,
+                impactRing = impact,
+                trail = trail,
+                missileDot = sr,
+                pcMissiles = pcMissiles,
+                pcImpact = impactSr,
+            };
+        }
+
+        private LineRenderer CreateLine(Transform parent, string name, bool loop)
+        {
+            var go = new GameObject(name);
+            go.transform.SetParent(parent, false);
+            var line = go.AddComponent<LineRenderer>();
+            line.material = new Material(_lineMaterial); // instance per-line to avoid shared state
+            line.useWorldSpace = true;
+            line.loop = loop;
+            line.widthMultiplier = _scale * lineWidthFrac;
+            line.numCapVertices = 6;
+            line.numCornerVertices = 6;
+            line.positionCount = 0;
+            line.sortingOrder = sortingOrder + 1;
+            line.startColor = Color.white;
+            line.endColor = Color.white;
+            // LineRenderer uses its own generated mesh; ensure the material has a white texture.
+            line.material.mainTexture = Texture2D.whiteTexture;
+            return line;
+        }
+
+        // ── Per-frame update ─────────────────────────────────────────────────
+
+        private void UpdateVisual(ActiveSkillEffect fx, RuntimeEffectVisual v)
+        {
+            if (v.root == null) return;
+
+            // Keep line width synced with camera zoom
+            float lineW = _scale * lineWidthFrac;
+            float preCastRMin = _scale * preCastRadiusMinFrac;
+            float preCastRMax = _scale * preCastRadiusMaxFrac;
+            float impactRMax = _scale * impactRadiusMaxFrac;
+
+            switch (fx.phase)
+            {
+                case SkillEffectPhase.PreCast:
+                {
+                    if (fx.HasPcMissileSprite)
+                    {
+                        // PC skill 128 has PreCastSpr mag_tr_16_施魔法.spr; until that SPR is staged,
+                        // do not draw fake geometry. The visible PC missile starts at MS_DoFly.
+                        Hide(v.preCastRing);
+                    }
+                    else
+                    {
+                        float dur = Mathf.Max(fx.preCastDuration, minPreCastDuration);
+                        float t = Mathf.Clamp01(fx.elapsed / dur);
+                        var c = fx.color;
+                        c.a = Mathf.Lerp(1f, 0.3f, t);
+                        float r = Mathf.Lerp(preCastRMin, preCastRMax, t);
+                        DrawRing(v.preCastRing, fx.casterPos, r, c, lineW);
+                    }
+                    Hide(v.impactRing);
+                    Hide(v.trail);
+                    SetMissileVisible(v, false);
+                    SetImpactVisible(v, false);
+                    break;
+                }
+                case SkillEffectPhase.Missile:
+                {
+                    Hide(v.preCastRing);
+                    Hide(v.impactRing);
+                    SetImpactVisible(v, false);
+
+                    Vector2 p = fx.currentMissilePos;
+                    if (fx.missilePositions != null && fx.missilePositions.Length > 0)
+                        p = fx.missilePositions[0];
+                    if (p.sqrMagnitude < 0.01f)
+                        p = fx.casterPos;
+
+                    var c = fx.color;
+                    c.a = 0.9f;
+                    if (fx.HasPcMissileSprite)
+                        Hide(v.trail);
+                    else
+                        DrawLineSegment(v.trail, fx.casterPos, p, new Color(c.r, c.g, c.b, 0.5f), lineW);
+
+                    if (fx.HasPcMissileSprite && v.pcMissiles != null)
+                    {
+                        for (int i = 0; i < v.pcMissiles.Count; i++)
+                        {
+                            var renderer = v.pcMissiles[i];
+                            Vector2 mp = fx.missilePositions != null && i < fx.missilePositions.Length ? fx.missilePositions[i] : p;
+                            Vector2 mt = fx.missileTargets != null && i < fx.missileTargets.Length ? fx.missileTargets[i] : fx.targetPos;
+                            renderer.sprite = SelectPcMissileFrame(fx, mt);
+                            renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
+                            renderer.transform.localScale = Vector3.one; // SPR decoder already outputs PC-correct orientation.
+                            renderer.color = Color.white;
+                            renderer.enabled = true;
+                        }
+                    }
+                    else
+                    {
+                        v.missileDot.transform.position = new Vector3(p.x, p.y, 0f);
+                        float dotSize = _scale * missileDotFrac;
+                        v.missileDot.transform.localScale = Vector3.one * dotSize;
+                        v.missileDot.color = c;
+                        SetMissileVisible(v, true);
+                    }
+                    break;
+                }
+                case SkillEffectPhase.Impact:
+                {
+                    Hide(v.preCastRing);
+                    Hide(v.trail);
+                    SetMissileVisible(v, false);
+
+                    if (fx.HasPcImpactSprite)
+                    {
+                        Hide(v.impactRing);
+                        v.pcImpact.enabled = true;
+                        v.pcImpact.transform.position = new Vector3(fx.targetPos.x, fx.targetPos.y, 0f);
+                        v.pcImpact.transform.localScale = Vector3.one;
+                        v.pcImpact.sprite = SelectPcImpactFrame(fx);
+                        break;
+                    }
+                    if (fx.HasPcMissileSprite)
+                    {
+                        Hide(v.impactRing);
+                        break;
+                    }
+
+                    float dur = Mathf.Max(fx.impactDuration, minImpactDuration);
+                    float t = Mathf.Clamp01((fx.elapsed - fx.phaseStart) / dur);
+                    var c = fx.color;
+                    c.a = Mathf.Lerp(1f, 0f, t);
+                    float r = Mathf.Lerp(preCastRMin, impactRMax, t);
+                    DrawRing(v.impactRing, fx.targetPos, r, c, lineW * (1f + t));
+
+                    // Inner white flash
+                    if (t < 0.3f && v.impactFlash == null)
+                    {
+                        var flashGo = new GameObject("Flash");
+                        flashGo.transform.SetParent(v.root.transform, false);
+                        var fsr = flashGo.AddComponent<SpriteRenderer>();
+                        fsr.sprite = _dotSprite;
+                        fsr.sortingOrder = sortingOrder + 3;
+                        fsr.color = new Color(1f, 1f, 1f, 0.9f);
+                        flashGo.transform.position = new Vector3(fx.targetPos.x, fx.targetPos.y, 0f);
+                        v.impactFlash = fsr;
+                    }
+                    if (v.impactFlash != null)
+                    {
+                        float flashT = t / 0.3f;
+                        float flashSize = _scale * 0.06f * (1f + flashT * 2f);
+                        v.impactFlash.transform.localScale = Vector3.one * flashSize;
+                        var fc = v.impactFlash.color;
+                        fc.a = t < 0.3f ? Mathf.Lerp(0.9f, 0f, flashT) : 0f;
+                        v.impactFlash.color = fc;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // ── PC SPR playback ─────────────────────────────────────────────────
+
+        private Sprite FirstValidPcSprite(string key)
+        {
+            var sprites = LoadPcSprites(key);
+            if (sprites == null) return _dotSprite;
+            for (int i = 0; i < sprites.Length; i++)
+                if (sprites[i] != null) return sprites[i];
+            return _dotSprite;
+        }
+
+        private Sprite SelectPcMissileFrame(ActiveSkillEffect fx)
+        {
+            return SelectPcMissileFrame(fx, fx.targetPos);
+        }
+
+        private Sprite SelectPcMissileFrame(ActiveSkillEffect fx, Vector2 targetPos)
+        {
+            var sprites = LoadPcSprites(fx.pcMissileSpriteKey);
+            if (sprites == null || sprites.Length == 0) return _dotSprite;
+
+            // PC KMissleRes::Draw(MS_DoFly):
+            // nImageDir = rounded nDir from 64-dir space into nSprDir; nFramePerDir = totalFrames / nSprDir;
+            int dir = ComputePc16Dir(fx.casterPos, targetPos);
+            int framePerDir = Mathf.Max(1, fx.pcMissileTotalFrames / Mathf.Max(1, fx.pcMissileDirections));
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
+            int localFrame = (lifeTick / Mathf.Max(1, fx.pcMissileIntervalTicks)) % framePerDir;
+            int frameIndex = Mathf.Clamp(dir * framePerDir + localFrame, 0, sprites.Length - 1);
+            return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcMissileSpriteKey);
+        }
+
+        private Sprite SelectPcImpactFrame(ActiveSkillEffect fx)
+        {
+            var sprites = LoadPcSprites(fx.pcImpactSpriteKey);
+            if (sprites == null || sprites.Length == 0) return null;
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
+            int frameIndex = Mathf.Clamp(lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks), 0, sprites.Length - 1);
+            return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcImpactSpriteKey);
+        }
+
+        private Sprite[] LoadPcSprites(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+            if (_pcSpriteCache.TryGetValue(key, out var cached)) return cached;
+
+            string path = Path.Combine(Application.streamingAssetsPath, "Sprites", key.EndsWith(".spr") ? key : key + ".spr");
+            if (!File.Exists(path))
+            {
+                SubsystemLog.Warn("Combat", $"PC skill SPR missing: {path}");
+                _pcSpriteCache[key] = null;
+                return null;
+            }
+
+            var decoded = SprDecoder.Decode(File.ReadAllBytes(path));
+            if (!decoded.success || decoded.frames == null || decoded.frames.Length == 0)
+            {
+                SubsystemLog.Warn("Combat", $"PC skill SPR decode failed: {key} — {decoded.error}");
+                _pcSpriteCache[key] = null;
+                return null;
+            }
+
+            var sprites = new Sprite[decoded.frames.Length];
+            for (int i = 0; i < decoded.frames.Length; i++)
+            {
+                var frame = decoded.frames[i];
+                if (frame == null || frame.width == 0 || frame.height == 0) continue;
+                var tex = SprDecoder.CreateTexture(frame);
+                if (tex == null) continue;
+                tex.name = $"PCSPR_{key}_{i}";
+                // KSprite::DrawAlpha draws at (x - centerX + frame.OffsetX, y - centerY + frame.OffsetY).
+                // Preserve PC center as sprite pivot.
+                float pivotX = decoded.header.width > 0 ? decoded.header.centerX / (float)decoded.header.width : 0.5f;
+                float pivotY = decoded.header.height > 0 ? 1f - decoded.header.centerY / (float)decoded.header.height : 0.5f;
+                sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(pivotX, pivotY), 1f);
+                sprites[i].name = $"PCSPR_{key}_{i}";
+            }
+
+            _pcSpriteCache[key] = sprites;
+            return sprites;
+        }
+
+        private static int ComputePc16Dir(Vector2 from, Vector2 to)
+        {
+            Vector2 d = to - from;
+            if (d.sqrMagnitude < 0.001f) return 0;
+            // Mobile world uses +X east, +Y north. PC missile SPR frames are stored with image direction
+            // opposite to the movement vector bucket (observed mag_gb_05 dragon heads point back to caster
+            // without this PC 16-dir half-turn). Offset by 8 buckets = 180°.
+            float angle = Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg; // 0=N, +90=E
+            int dir = (Mathf.RoundToInt(angle / 22.5f) + 8) & 15;
+            return dir;
+        }
+
+        // ── Drawing primitives ───────────────────────────────────────────────
+
+        private static void SetMissileVisible(RuntimeEffectVisual v, bool visible)
+        {
+            if (v.missileDot != null) v.missileDot.enabled = visible;
+            if (v.pcMissiles != null)
+                for (int i = 0; i < v.pcMissiles.Count; i++)
+                    if (v.pcMissiles[i] != null) v.pcMissiles[i].enabled = visible;
+        }
+
+        private static void SetImpactVisible(RuntimeEffectVisual v, bool visible)
+        {
+            if (v.pcImpact != null) v.pcImpact.enabled = visible;
+        }
+
+        private static void Hide(LineRenderer line)
+        {
+            if (line != null) line.positionCount = 0;
+        }
+
+        private static void DrawLineSegment(LineRenderer line, Vector2 from, Vector2 to, Color color, float width)
+        {
+            if (line == null) return;
+            line.widthMultiplier = width;
+            line.startColor = color;
+            line.endColor = new Color(color.r, color.g, color.b, 0.1f);
+            line.positionCount = 2;
+            line.SetPosition(0, new Vector3(from.x, from.y, 0f));
+            line.SetPosition(1, new Vector3(to.x, to.y, 0f));
+        }
+
+        private static void DrawRing(LineRenderer line, Vector2 center, float radius, Color color, float width)
+        {
+            if (line == null) return;
+            const int segments = 48;
+            line.widthMultiplier = width;
+            line.startColor = color;
+            line.endColor = color;
+            line.positionCount = segments;
+            for (int i = 0; i < segments; i++)
+            {
+                float a = i * Mathf.PI * 2f / segments;
+                line.SetPosition(i, new Vector3(center.x + Mathf.Cos(a) * radius, center.y + Mathf.Sin(a) * radius, 0f));
+            }
+        }
+
+        private static Sprite CreateDotSprite()
+        {
+            const int size = 32;
+            var tex = new Texture2D(size, size, TextureFormat.RGBA32, false)
+            {
+                filterMode = FilterMode.Bilinear,
+                hideFlags = HideFlags.HideAndDontSave
+            };
+            var center = new Vector2((size - 1) * 0.5f, (size - 1) * 0.5f);
+            float r = (size - 1) * 0.5f;
+            for (int y = 0; y < size; y++)
+                for (int x = 0; x < size; x++)
+                {
+                    float d = Vector2.Distance(new Vector2(x, y), center) / r;
+                    float a = d <= 1f ? Mathf.Clamp01(1f - d * d) : 0f;
+                    tex.SetPixel(x, y, new Color(1f, 1f, 1f, a));
+                }
+            tex.Apply(false, false);
+            return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size, 0, SpriteMeshType.FullRect);
+        }
+
+        // ── Inner types ──────────────────────────────────────────────────────
+
+        private sealed class RuntimeEffectVisual
+        {
+            public GameObject root;
+            public LineRenderer preCastRing;
+            public LineRenderer impactRing;
+            public LineRenderer trail;
+            public SpriteRenderer missileDot;
+            public List<SpriteRenderer> pcMissiles;
+            public SpriteRenderer pcImpact;
+            public SpriteRenderer impactFlash;
+        }
+    }
+}

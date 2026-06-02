@@ -26,7 +26,7 @@ header. Copy the block for the matching language to the very top of the file.
 ## Rules
 
 - Keep the year as the file's creation year; do not churn it on every edit.
-- Do not add headers to generated files, third-party code, or `jxwin-kinnox/`
+- Do not add headers to generated files, third-party code, or `Assets/StreamingAssets/Reference/`
   reference material (that source belongs to the original rights holders — see
   `NOTICE.md`).
 - Place the header above `using` / `#include` / `import` statements.

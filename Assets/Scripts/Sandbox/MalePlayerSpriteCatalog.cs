@@ -1,7 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile
-// Copyright (c) 2026 vltk. All rights reserved.
-// Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
+// Copyright (c) 2026 vltk. All rights reserved. Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -12,8 +11,22 @@ namespace VLTK.Sandbox
 {
     public enum PlayerVisualAction
     {
-        Idle,
-        Move,
+        Idle,       // ST01 (fight-stand / 空手站立1)
+        Move,       // RN01/RN03 (run)
+        Magic,      // MG01/MG04 (magic cast)
+        Attack,     // AT04/AT05 (melee attack)
+    }
+
+    /// <summary>
+    /// PC weapon equip categories from 男主角未骑马关联表.txt.
+    /// Each category maps to different SPR action suffixes for the same cdo_* action.
+    /// </summary>
+    public enum PcWeaponType
+    {
+        EmptyHand = 0,     // 空手 → ST01, RN01, MG01
+        ShortWeapon = 1,   // 短武器 → ST04, RN02, MG02
+        LongWeapon = 2,    // 长武器(棍/枪) → ST05, RN03, MG04
+        DualWeapon = 3,    // 双武器 → ST06, RN04, MG05
     }
 
     public enum PlayerSpritePartKind
@@ -51,44 +64,46 @@ namespace VLTK.Sandbox
 
     /// <summary>
     /// Male player sprite catalog ported from PC Settings/NpcRes tables.
-    /// Uses the default male avatar set present in the JX source fixture:
-    /// armor/head variant 19, empty hand weapon variant 000, and YY_999 shadow.
-    /// Each referenced .spr has 8 directions; move uses RN01 (88 frames = 11 per direction).
+    /// Supports weapon-type-aware action selection matching PC KNpcRes::SetAction logic:
+    /// 男主角未骑马关联表.txt maps (weapon category × CLIENTACTION) → action name,
+    /// and each action has its own SPR file set per body part.
+    ///
+    /// Current defaults: armor variant 19, shadow variant 999.
+    /// Empty hand: right weapon variant 000, Long staff (长棍类1): variant 010.
     /// </summary>
     public static class MalePlayerSpriteCatalog
     {
         public const string SourceRoot = @"spr\npcres\man";
         public const int DirectionCount = 8;
         public const int ArmorVariant = 19;
-        public const int WeaponVariant = 0;
         public const int ShadowVariant = 999;
+        public const int EmptyWeaponVariant = 0;
+        public const int StaffWeaponVariant = 010; // 长棍类1 from 男主角右手武器.txt
 
-        private static readonly PlayerSpritePartSpec[] IdleParts =
+        // PC action suffixes per weapon type. From 男主角未骑马关联表.txt columns:
+        // cdo_fightstand maps to: 空手站立1=ST01, 短武器站立=ST04, 长武器站立=ST05, 双武器站立=ST06
+        // cdo_run maps to:        空手跑步=RN01, 短武器跑步=RN02, 长武器跑步=RN03, 双武器跑步=RN04
+        // cdo_magic maps to:      空手魔法=MG01, 短武器魔法=MG02, 长武器魔法=MG04, 双武器魔法=MG05
+        // cdo_attack (long staff) maps to: 长武器劈=AT05 (primary)
+        private static readonly string[,] ActionSuffix = new string[4, 4]
         {
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Shadow, "Shadow", SourceRoot + @"\MA_YY_999_ST01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Body, "Body", SourceRoot + @"\MA_BD_019_ST01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Head, "Head", SourceRoot + @"\MA_HD_019_ST01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Hair, "Hair", SourceRoot + @"\MA_HR_019_ST01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.LeftHand, "LeftHand", SourceRoot + @"\MA_LH_019_ST01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.RightHand, "RightHand", SourceRoot + @"\MA_RH_019_ST01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.LeftWeapon, "LeftWeaponEmpty", SourceRoot + @"\MA_LW_000_ST01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.RightWeapon, "RightWeaponEmpty", SourceRoot + @"\MA_RW_000_ST01.spr"),
+            // Idle,            Move,            Magic,            Attack
+            { "ST01",          "RN01",          "MG01",           "AT01" }, // EmptyHand
+            { "ST04",          "RN02",          "MG02",           "AT03" }, // ShortWeapon
+            { "ST05",          "RN03",          "MG04",           "AT05" }, // LongWeapon
+            { "ST06",          "RN04",          "MG05",           "AT07" }, // DualWeapon
         };
 
-        private static readonly PlayerSpritePartSpec[] MoveParts =
+        // Weapon right-hand SPR variant per weapon type (from 男主角右手武器.txt)
+        private static readonly int[] WeaponSprVariant = new int[4]
         {
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Shadow, "Shadow", SourceRoot + @"\MA_YY_999_RN01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Body, "Body", SourceRoot + @"\MA_BD_019_RN01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Head, "Head", SourceRoot + @"\MA_HD_019_RN01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.Hair, "Hair", SourceRoot + @"\MA_HR_019_RN01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.LeftHand, "LeftHand", SourceRoot + @"\MA_LH_019_RN01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.RightHand, "RightHand", SourceRoot + @"\MA_RH_019_RN01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.LeftWeapon, "LeftWeaponEmpty", SourceRoot + @"\MA_LW_000_RN01.spr"),
-            new PlayerSpritePartSpec(PlayerSpritePartKind.RightWeapon, "RightWeaponEmpty", SourceRoot + @"\MA_RW_000_RN01.spr"),
+            EmptyWeaponVariant,  // EmptyHand
+            001,                 // ShortWeapon (单手剑1 = RW_001)
+            StaffWeaponVariant,  // LongWeapon (长棍类1 = RW_010)
+            002,                 // DualWeapon (双剑类 = RW_002)
         };
 
         // PC draw-order table: Settings/NpcRes/男主角贴图顺序表.txt, Dir1..Dir8.
-        // Values are part ids in back-to-front draw order. -1 is the body shadow.
         private static readonly int[][] DrawOrderByDirection =
         {
             new[] { -1, 14, 13, 1, 4, 9, 7, 5, 6, 12, 8, 0 },
@@ -101,14 +116,59 @@ namespace VLTK.Sandbox
             new[] { -1, 14, 13, 4, 1, 8, 6, 5, 12, 0, 9, 7 },
         };
 
-        public static IReadOnlyList<PlayerSpritePartSpec> GetParts(PlayerVisualAction action)
+        /// <summary>
+        /// Build the SPR part spec list for a given action + weapon type, matching PC KNpcRes::SetAction.
+        /// </summary>
+        public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon)
         {
-            return action == PlayerVisualAction.Move ? MoveParts : IdleParts;
+            int wIdx = (int)weapon;
+            string suffix = ActionSuffix[wIdx, (int)action];
+            int rwVariant = WeaponSprVariant[wIdx];
+            // Long staff has no left weapon SPR — use empty hand for left
+            int lwVariant = (weapon == PcWeaponType.DualWeapon) ? WeaponSprVariant[(int)PcWeaponType.DualWeapon] : EmptyWeaponVariant;
+
+            // Long staff has no left weapon SPR — only right hand holds the staff.
+            // Dual weapons would have both. For other types, left weapon is empty (still has SPR).
+            bool leftWeaponRequired = weapon != PcWeaponType.LongWeapon;
+
+            return new PlayerSpritePartSpec[]
+            {
+                new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
+                new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", ArmorVariant, suffix)),
+                new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", ArmorVariant, suffix)),
+                new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", ArmorVariant, suffix)),
+                new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", ArmorVariant, suffix)),
+                new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", ArmorVariant, suffix)),
+                new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix), leftWeaponRequired),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, suffix)),
+            };
+        }
+
+        public static string BuildPath(string part, int variant, string action)
+        {
+            return SourceRoot + @"\MA_" + part + "_" + variant.ToString("D3") + "_" + action + ".spr";
         }
 
         public static string BuildSourcePath(string fileName)
         {
             return SourceRoot + @"\" + fileName;
+        }
+
+        /// <summary>
+        /// Map PC Skills.txt CharAnimId + current weapon type to a visual action.
+        /// PC KNpc.cpp: CharAnimId 11=cdo_magic → m_ClientDoing=cdo_magic → SetAction(cdo_magic).
+        /// For staff weapons, cdo_magic resolves through 未骑马关联表 to 长武器魔法.
+        /// CharAnimId 14=cdo_none means no character animation (passive/buff skills).
+        /// </summary>
+        public static PlayerVisualAction? ResolveAction(int charAnimId, PcWeaponType weapon)
+        {
+            // PC CLIENTACTION enum (KNpc.h): cdo_magic=11, cdo_none=14.
+            return charAnimId switch
+            {
+                11 => PlayerVisualAction.Magic,
+                14 => null,   // Passive/aura — no animation
+                _ => null,
+            };
         }
 
         public static int DirectionFromMove(Vector2 move)
@@ -119,8 +179,7 @@ namespace VLTK.Sandbox
             float angle = Mathf.Atan2(move.y, move.x) * Mathf.Rad2Deg;
             if (angle < 0f) angle += 360f;
 
-            // JX direction order used by the PC male SPRs:
-            // 0=S, 1=SW, 2=W, 3=NW, 4=N, 5=NE, 6=E, 7=SE.
+            // JX direction order: 0=S, 1=SW, 2=W, 3=NW, 4=N, 5=NE, 6=E, 7=SE.
             if (angle >= 337.5f || angle < 22.5f) return 6;
             if (angle < 67.5f) return 5;
             if (angle < 112.5f) return 4;
@@ -141,10 +200,7 @@ namespace VLTK.Sandbox
                 if (order[i] == part)
                     return i * 2;
             }
-
-            // Stable fallback for optional/missing table entries.
             return 100 + part;
         }
-
     }
 }

@@ -149,7 +149,7 @@ namespace VLTK.Tests.Sandbox
             int before = SourceEvidence.RecordCount;
             SourceEvidence.Record(
                 claim: "M4.3 damage pipeline: roll -> armor -> mana shield -> resist*(100-nRes)/100",
-                pcSourceAnchor: "jxwin-kinnox/SourceNew/swrod3/SwordOnline/Sources/Core/Src/KNpc.cpp:2125 CalcDamage",
+                pcSourceAnchor: "StreamingAssets/Reference/KNpc.cpp:2125 CalcDamage",
                 symbolOrFile: "KNpc::CalcDamage",
                 tool: DiscoveryTool.Manual,
                 resolvedValue: "MAX_RESIST=95; nDamage = nDamage*(100-nRes)/100",

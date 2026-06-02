@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -73,7 +76,32 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void SkillPanelSnapshot_ListsSixteenCaiBangSkillsInPcSlotOrder()
+        public void PcCombatCatalog_CaiBangRowsMatchAuthoritativePcSkillsTxt()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var pcRows = ReadPcCaiBangSkillRows();
+
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130 }, pcRows.Keys.ToArray());
+
+            foreach (var pair in pcRows)
+            {
+                var expected = pair.Value;
+                var actual = catalog.Resolve(pair.Key);
+                Assert.NotNull(actual, $"missing Cái Bang skill {pair.Key}");
+                Assert.AreEqual(expected.Name, actual.nameRaw, $"PC SkillName mismatch for {pair.Key}");
+                Assert.AreEqual(expected.ReqLevel, actual.reqLevel, $"PC ReqLevel mismatch for {pair.Key}");
+                Assert.AreEqual(expected.MaxLevel, actual.maxLevel, $"PC MaxLevel mismatch for {pair.Key}");
+                Assert.AreEqual(expected.SkillStyle, (int)actual.skillStyle, $"PC SkillStyle mismatch for {pair.Key}");
+                Assert.AreEqual(expected.CharClass, (int)actual.faction, $"PC CharClass mismatch for {pair.Key}");
+                Assert.AreEqual(expected.CharAnimId, actual.charAnimId, $"PC CharAnimId mismatch for {pair.Key}");
+                Assert.AreEqual(expected.IsPhysical != 0, actual.isPhysical, $"PC IsPhysical mismatch for {pair.Key}");
+                Assert.AreEqual(expected.IsMelee != 0, actual.isMelee, $"PC IsMelee mismatch for {pair.Key}");
+                Assert.AreEqual(expected.Icon, actual.iconSourceId.sourcePath, $"PC SkillIcon mismatch for {pair.Key}");
+            }
+        }
+
+        [Test]
+        public void SkillPanelSnapshot_ListsAllCaiBangSkillsInPcSlotOrder()
         {
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
             var progression = new PlayerProgressionState();
@@ -83,9 +111,11 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.CaiBang, snap.faction);
-            Assert.AreEqual(16, snap.rows.Count);
+            Assert.AreEqual(23, snap.rows.Count);
             Assert.AreEqual(115, snap.rows[0].skillId);
-            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130 }, snap.rows.Select(r => r.skillId).ToArray());
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
+            Assert.AreEqual(30, CaiBangSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 23-skill list.");
+            Assert.AreEqual(60, snap.rows.Single(r => r.skillId == 128).requiredLevel, "PC Skills.txt ReqLevel for 亢龙有悔 is 60.");
             Assert.AreEqual(0, snap.rows[0].learnedLevel);
             Assert.IsTrue(snap.rows[0].canUpgrade);
             StringAssert.Contains("Cái Bang", snap.rows[0].displayName);
@@ -119,9 +149,11 @@ namespace VLTK.Tests.Sandbox
                 hud.OpenCaiBangSkillPanel();
 
                 Assert.IsTrue(hud.IsCaiBangSkillPanelVisible);
-                Assert.AreEqual(16, hud.CaiBangSkillPanelRowCount);
+                Assert.AreEqual(30, hud.CaiBangSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
                 Assert.IsNotNull(hud.CurrentCaiBangSkillSnapshot);
-                Assert.AreEqual(16, hud.CurrentCaiBangSkillSnapshot.rows.Count);
+                Assert.AreEqual(23, hud.CurrentCaiBangSkillSnapshot.rows.Count, "Single scrollable page shows all 23 Cái Bang fight skills.");
+                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 1073, 1074 }, hud.CurrentCaiBangSkillSnapshot.rows.Select(r => r.skillId).ToArray());
+                Assert.That(hud.CurrentCaiBangSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
                 Assert.AreEqual("200", summary.text);
                 // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
                 Assert.IsNotNull(typeof(MalePlayerVisual));
@@ -176,16 +208,90 @@ namespace VLTK.Tests.Sandbox
             var root = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
             var source = System.IO.File.ReadAllText(System.IO.Path.Combine(root, "PC_SOURCE.txt"));
 
-            Assert.That(source, Does.Contain("signed-byte hash"));
+            Assert.That(source, Does.Contain("signed-byte FileNameHash"));
             Assert.That(source, Does.Contain("DrawSkillIcon"));
+            Assert.That(source, Does.Contain("decoded from exact JXWin PC SPR paths in Skills.txt"));
+            Assert.That(source, Does.Contain("MOD source of truth (Server+Client-001 Việt hóa)"));
+            Assert.That(source, Does.Contain("125 天下无狗 \\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));
             Assert.That(source, Does.Contain("\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));
-            for (int skillId = 115; skillId <= 130; skillId++)
+            int[] allSkillIds = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 1073, 1074 };
+            int missing = 0;
+            foreach (var skillId in allSkillIds)
             {
                 var png = System.IO.Path.Combine(root, $"cai_bang_skill_{skillId}.png");
-                Assert.That(System.IO.File.Exists(png), Is.True, $"missing {png}");
-                Assert.That(new System.IO.FileInfo(png).Length, Is.GreaterThan(100));
+                if (!System.IO.File.Exists(png) || new System.IO.FileInfo(png).Length <= 100)
+                    missing++;
             }
+            Assert.That(missing, Is.EqualTo(0), $"{missing} skill PNG files missing or too small");
         }
 
+        [Test]
+        public void RequestedPhiLongTaiThien_IsNotInCurrentAuthoritativeJxwinSkillData()
+        {
+            var path = Path.Combine(Application.streamingAssetsPath, "Reference/PcSkills.txt");
+            var text = File.ReadAllText(path, Encoding.GetEncoding(936));
+
+            Assert.That(text, Does.Not.Contain("飞龙在天"), "Current JXWin Skills.txt has no PC-backed Phi Long Tại Thiên row; adding it would be fabricated unless another authoritative PC file is supplied.");
+            Assert.That(text, Does.Contain("天下无狗"), "Thiên Hạ Vô Cẩu must remain present in PC-backed Cái Bang list.");
+        }
+
+        private static SortedDictionary<int, PcSkillRow> ReadPcCaiBangSkillRows()
+        {
+            var path = Path.Combine(Application.streamingAssetsPath, "Reference/PcSkills.txt");
+            var lines = File.ReadAllLines(path, Encoding.GetEncoding(936));
+            var header = lines[0].Split('\t');
+            var index = header.Select((name, i) => new { name, i }).ToDictionary(x => x.name, x => x.i);
+            var rows = new SortedDictionary<int, PcSkillRow>();
+
+            foreach (var line in lines.Skip(1))
+            {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+                var parts = line.Split('\t');
+                if (parts.Length <= index["SkillIcon"] || !int.TryParse(parts[index["SkillId"]], out var skillId))
+                    continue;
+                if (skillId < 115 || skillId > 130)
+                    continue;
+
+                rows.Add(skillId, new PcSkillRow(
+                    parts[index["SkillName"]],
+                    parts[index["SkillIcon"]],
+                    int.Parse(parts[index["SkillStyle"]]),
+                    int.Parse(parts[index["CharClass"]]),
+                    int.Parse(parts[index["CharAnimId"]]),
+                    int.Parse(parts[index["IsPhysical"]]),
+                    int.Parse(parts[index["IsMelee"]]),
+                    int.Parse(parts[index["ReqLevel"]]),
+                    int.Parse(parts[index["MaxLevel"]])));
+            }
+
+            return rows;
+        }
+
+        private readonly struct PcSkillRow
+        {
+            public readonly string Name;
+            public readonly string Icon;
+            public readonly int SkillStyle;
+            public readonly int CharClass;
+            public readonly int CharAnimId;
+            public readonly int IsPhysical;
+            public readonly int IsMelee;
+            public readonly int ReqLevel;
+            public readonly int MaxLevel;
+
+            public PcSkillRow(string name, string icon, int skillStyle, int charClass, int charAnimId, int isPhysical, int isMelee, int reqLevel, int maxLevel)
+            {
+                Name = name;
+                Icon = icon;
+                SkillStyle = skillStyle;
+                CharClass = charClass;
+                CharAnimId = charAnimId;
+                IsPhysical = isPhysical;
+                IsMelee = isMelee;
+                ReqLevel = reqLevel;
+                MaxLevel = maxLevel;
+            }
+        }
     }
 }

@@ -80,30 +80,49 @@ namespace VLTK.Sandbox
             if (skill == null) return Reject(report, CombatCastRejectReason.NoSkill, "skill missing from catalog");
             report.skill = skill;
 
-            if (!caster.knownSkills.Contains(skillId)) return Reject(report, CombatCastRejectReason.SkillNotKnown, "KSkillList::FindSame missing skill");
-            if (NextCastTime(caster.actorId, skillId) > CurrentTime) return Reject(report, CombatCastRejectReason.OnCooldown, "KSkillList::NextCastTime > current time");
-            if (skill.faction != CombatFaction.None && caster.faction != skill.faction) return Reject(report, CombatCastRejectReason.FactionMismatch, "CharClass faction mismatch");
-            if (caster.level < skill.reqLevel) return Reject(report, CombatCastRejectReason.InsufficientLevel, "ReqLevel not met");
-            if (skill.horseLimit == 1 && caster.rideHorse) return Reject(report, CombatCastRejectReason.HorseRestricted, "HorseLimit=1 forbids riding");
-            if (skill.horseLimit == 2 && !caster.rideHorse) return Reject(report, CombatCastRejectReason.HorseRestricted, "HorseLimit=2 requires riding");
-            if (skill.isPhysical && skill.weaponSkill && caster.currentWeaponSkillId != skill.skillId) return Reject(report, CombatCastRejectReason.WeaponSkillMismatch, "PC physical player skill must equal current weapon skill");
-            if (!ValidateTarget(skill, target, relation)) return Reject(report, CombatCastRejectReason.InvalidTarget, "target relation rejected by PC flags");
+            // --- KSkillList::CanCast gates ---
+            // PC: FindSame returns 0 if skill not in list
+            if (!caster.knownSkills.Contains(skillId)) return Reject(report, CombatCastRejectReason.SkillNotKnown, "KSkillList::FindSame: skill not in list");
+            // PC: CurrentSkillLevel <= 0 → cannot cast (skill must be at least level 1)
+            int skillLevel = ResolveLevel(caster, skill);
+            if (skillLevel <= 0) return Reject(report, CombatCastRejectReason.SkillNotKnown, "KSkillList::CanCast: CurrentSkillLevel <= 0");
+            // PC: NextCastTime > dwCurrentTime → on cooldown
+            if (NextCastTime(caster.actorId, skillId) > CurrentTime) return Reject(report, CombatCastRejectReason.OnCooldown, "KSkillList::CanCast: NextCastTime > CurrentTime");
 
+            // --- KSkill::CanCastSkill gates ---
+            // PC: targetSelf overrides target to self
+            // PC: targetOnly + param1 != -1 → reject (must have specific target)
+            // PC: targetEnemy/Ally/Self checks via NPC_RELATION
+            if (skill.faction != CombatFaction.None && caster.faction != skill.faction) return Reject(report, CombatCastRejectReason.FactionMismatch, "CharClass faction mismatch");
+            if (!ValidateTarget(skill, target, relation)) return Reject(report, CombatCastRejectReason.InvalidTarget, "KSkill::CanCastSkill: target relation rejected");
+            // PC: IsPhysical + weaponSkill → must match current weapon skill id
+            if (skill.isPhysical && skill.weaponSkill && caster.currentWeaponSkillId != skill.skillId) return Reject(report, CombatCastRejectReason.WeaponSkillMismatch, "KSkill::CanCastSkill: physical weapon skill mismatch");
+            // PC: EquipLimit check (skip for sandbox — no weapon system yet)
+            // PC: HorseLimit: 1=forbid riding, 2=require riding
+            if (skill.horseLimit == 1 && caster.rideHorse) return Reject(report, CombatCastRejectReason.HorseRestricted, "KSkill::CanCastSkill: HorseLimit=1 forbids riding");
+            if (skill.horseLimit == 2 && !caster.rideHorse) return Reject(report, CombatCastRejectReason.HorseRestricted, "KSkill::CanCastSkill: HorseLimit=2 requires riding");
+            // PC: targetOnly + no target → range check on NPC target
+
+            // --- KNpc::DoSkill range check ---
             var castPoint = target != null ? target.position : targetPoint;
             if (skill.targetSelf && !skill.targetEnemy && relation == CombatRelation.Self)
                 castPoint = caster.position;
             var dist = Vector2.Distance(caster.position, castPoint);
-            if (skill.attackRadius > 0 && dist > skill.attackRadius * RangeWorldPerPcUnit)
-                return Reject(report, CombatCastRejectReason.OutOfRange, $"{dist:F1}>{skill.attackRadius}");
+            int attackRadius = ResolveAttackRadius(skill, skillLevel);
+            if (attackRadius > 0 && dist > attackRadius * RangeWorldPerPcUnit)
+                return Reject(report, CombatCastRejectReason.OutOfRange, $"KNpc::DoSkill: distance {dist:F1} > AttackRadius {attackRadius}");
 
-            int level = ResolveLevel(caster, skill);
-            var levelData = skill.GetPcLevelData(level);
-            report.skillLevel = level;
-            report.levelData = levelData;
+            // --- KNpc::Cost gate ---
+            // PC: Cost(attrib_mana, GetSkillCost()) — checks & deducts mana
+            var levelData = skill.GetPcLevelData(skillLevel);
             report.manaCost = GetCost(skill, levelData, caster);
-            if (caster.currentMana < report.manaCost) return Reject(report, CombatCastRejectReason.InsufficientResource, "mana cost check failed");
+            if (caster.currentMana < report.manaCost) return Reject(report, CombatCastRejectReason.InsufficientResource, "KNpc::Cost: insufficient mana");
 
+            // PC: deduct mana (KNpc::Cost already checked above, now subtract)
+            report.skillLevel = skillLevel;
+            report.levelData = levelData;
             caster.currentMana -= report.manaCost;
+
             ApplyActionState(caster, skill, report);
             ApplyStates(caster, target, relation, levelData, report);
             ApplyDamage(caster, target, levelData, report);
@@ -127,14 +146,24 @@ namespace VLTK.Sandbox
 
         private int ResolveLevel(CombatActorState caster, SkillDefinition skill)
         {
-            if (caster.skillLevels.TryGetValue(skill.skillId, out var level)) return Mathf.Max(1, level);
-            return 1;
+            if (caster.skillLevels.TryGetValue(skill.skillId, out var level))
+                return level; // May be 0 = unlearned, matching PC CurrentSkillLevel
+            return 0; // Not in skillLevels dict = not learned = level 0
         }
 
         private int GetCost(SkillDefinition skill, SkillLevelData levelData, CombatActorState caster)
         {
+            if (PcKangLongYouHuiTuning.Applies(skill.skillId))
+                return Mathf.Max(0, PcKangLongYouHuiTuning.AtLevel(ResolveLevel(caster, skill)).manaCost);
             var cost = levelData?.First(MagicAttributeKind.SkillCostV)?.value1 ?? skill.cost;
             return Mathf.Max(0, cost);
+        }
+
+        private static int ResolveAttackRadius(SkillDefinition skill, int skillLevel)
+        {
+            if (PcKangLongYouHuiTuning.Applies(skill.skillId))
+                return PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
+            return skill.attackRadius;
         }
 
         private void ApplyActionState(CombatActorState caster, SkillDefinition skill, CombatCastReport report)
@@ -188,7 +217,14 @@ namespace VLTK.Sandbox
         private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report)
         {
             if (skill.skillStyle != PcSkillStyle.Missiles || skill.childSkillNum <= 0) return;
-            int count = Mathf.Max(1, skill.childSkillNum);
+            int skillLevel = ResolveLevel(caster, skill);
+            var kangLong = PcKangLongYouHuiTuning.Applies(skill.skillId) ? PcKangLongYouHuiTuning.AtLevel(skillLevel) : default;
+            var modTuning = PcCaiBangModTuning.Applies(skill.skillId) ? PcCaiBangModTuning.AtLevel(skill.skillId, skillLevel) : default;
+            bool useKangLong = PcKangLongYouHuiTuning.Applies(skill.skillId);
+            bool useMod = PcCaiBangModTuning.Applies(skill.skillId);
+            int count = useMod ? Mathf.Max(1, modTuning.missileCount) : (useKangLong ? Mathf.Max(1, kangLong.missileCount) : Mathf.Max(1, skill.childSkillNum));
+            SkillMissileForm form = useMod ? modTuning.missileForm : (useKangLong ? kangLong.missileForm : skill.missileForm);
+            int attackRadius = useMod ? modTuning.attackRadius : (useKangLong ? kangLong.attackRadius : skill.attackRadius);
             report.childProjectileCount = count;
             for (int i = 0; i < count; i++)
             {
@@ -196,8 +232,8 @@ namespace VLTK.Sandbox
                 {
                     skillId = skill.childSkillId != 0 ? skill.childSkillId : skill.skillId,
                     nameNormalized = skill.DisplayName + " child",
-                    attackRadius = skill.attackRadius,
-                    missileForm = skill.missileForm,
+                    attackRadius = attackRadius,
+                    missileForm = form,
                     effectResolved = skill.effectResolved,
                     effectSourceId = skill.effectSourceId,
                 };

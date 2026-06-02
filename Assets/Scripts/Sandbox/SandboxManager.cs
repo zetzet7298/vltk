@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using VLTK.Core;
+using VLTK.Sprites;
 
 namespace VLTK.Sandbox
 {
@@ -59,6 +60,7 @@ namespace VLTK.Sandbox
         public SkillCatalog CombatSkillCatalog { get; private set; }
         public CombatRuntimeService CombatRuntime { get; private set; }
         public PlayerProgressionState PlayerProgression { get; private set; }
+        private float _combatTickAccumulator;
         // M1.2: Region catalog and report
         public RegionCatalogFile RegionCatalog { get; private set; }
         public RegionConversionReport RegionReport { get; private set; }
@@ -159,11 +161,18 @@ namespace VLTK.Sandbox
         }
 
 
+        public SkillEffectVisualService SkillEffectVisual { get; private set; }
+
         private void BootstrapCombatRuntime()
         {
             CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog(AssetRegistry);
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
+            SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService());
+
+            // Auto-set all CaiBang skills to max level for testing.
+            // Matches PC GM command behavior. Runs on every boot / domain reload.
+            PlayerProgression.MaxAllSkillLevels(CombatSkillCatalog);
         }
 
         public void GrantCaiBangSkillPanelProgression()
@@ -222,6 +231,11 @@ namespace VLTK.Sandbox
             playerGo.transform.SetParent(worldRoot, false);
             PlayerController = playerGo.AddComponent<SandboxPlayerController>();
             PlayerController.followCamera = FindSandboxCamera();
+
+            // Equip Cái Bang Bổng Pháp staff weapon on boot for testing.
+            // PC: Cái Bang Bổng Pháp requires 长棍类 weapon to cast staff skills.
+            // 长棍类1 → PcWeaponType.LongWeapon → MA_RW_010_* SPRs.
+            PlayerController.EquipWeapon(PcWeaponType.LongWeapon);
 
             PlayerVisual = PlayerController.visual;
             PlayerJoystick = EnsureMobileJoystick();
@@ -413,6 +427,24 @@ namespace VLTK.Sandbox
         {
             if (Instance == this)
                 Instance = null;
+        }
+
+        private void Update()
+        {
+            SkillEffectVisual?.Update(Time.deltaTime);
+
+            // PC uses SubWorld.m_dwCurrentTime incremented every game tick (~18fps).
+            // Accumulate fractional ticks; at 60fps delta*18 < 1, direct int cast would stay 0 forever.
+            if (CombatRuntime != null)
+            {
+                _combatTickAccumulator += Time.deltaTime * 18f;
+                int ticks = Mathf.FloorToInt(_combatTickAccumulator);
+                if (ticks > 0)
+                {
+                    CombatRuntime.AdvanceTime(ticks);
+                    _combatTickAccumulator -= ticks;
+                }
+            }
         }
     }
 }

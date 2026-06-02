@@ -7,10 +7,11 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[1]
+# NOTE: jxwin-kinnox directory removed. If re-running, copy Region_S.dat
+# files to Assets/StreamingAssets/TestData/Regions/ first.
 PC_BLH_ROOT = (
     REPO
-    / "jxwin-kinnox"
-    / "SourceNew/swrod3/Utility/Run/maps/两湖区/巴陵县"
+    / "Assets/StreamingAssets/TestData/Regions"
 )
 OUT_ROOT = REPO / "Assets/StreamingAssets/TestData/Regions/Map_79"
 OUT_REPORT = REPO / "Assets/StreamingAssets/TestData/Regions/Map_79_coverage.json"

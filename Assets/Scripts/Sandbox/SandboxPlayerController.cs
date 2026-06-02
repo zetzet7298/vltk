@@ -37,6 +37,12 @@ namespace VLTK.Sandbox
         public bool HasMoveTarget { get; private set; }
         public float targetArriveDistance = 8f;
 
+        private PlayerVisualAction? _forcedVisualAction;
+        private float _forcedVisualUntil;
+        private PcWeaponType _equippedWeapon;
+
+        public PcWeaponType EquippedWeapon => _equippedWeapon;
+
         private void Awake()
         {
             EnsureVisual();
@@ -98,6 +104,43 @@ namespace VLTK.Sandbox
             HasMoveTarget = false;
         }
 
+        /// <summary>Set 8-way facing direction (0-7) for combat targeting.</summary>
+        public void SetFacing(int facing8Way)
+        {
+            if (visual != null)
+                visual.SetDirection(facing8Way);
+        }
+
+        /// <summary>
+        /// Equip a weapon type, switching the player visual to use the correct
+        /// PC action/weapon SPR set (e.g. LongWeapon for staff).
+        /// </summary>
+        public void EquipWeapon(PcWeaponType weapon)
+        {
+            _equippedWeapon = weapon;
+            EnsureVisual();
+            if (visual != null)
+                visual.SetWeapon(weapon);
+        }
+
+        /// <summary>
+        /// Trigger the PC client action selected by Skills.txt CharAnimId.
+        /// For Cái Bang Bổng Pháp (staff), this uses 长武器魔法 (MG04) action;
+        /// for Chưởng Pháp (empty hand), this uses 空手魔法 (MG01) action.
+        /// </summary>
+        public void PlayPcSkillAction(int charAnimId, float durationSeconds)
+        {
+            var action = MalePlayerSpriteCatalog.ResolveAction(charAnimId, _equippedWeapon);
+            if (action == null)
+                return;
+
+            EnsureVisual();
+            _forcedVisualAction = action.Value;
+            _forcedVisualUntil = Time.time + Mathf.Max(0.05f, durationSeconds);
+            if (visual != null)
+                visual.SetAction(action.Value);
+        }
+
         public void ResetMovementState()
         {
             MoveInput = Vector2.zero;
@@ -149,8 +192,17 @@ namespace VLTK.Sandbox
             EnsureVisual();
             if (visual != null)
             {
-                visual.SetMoveInput(input);
-                visual.Tick(dt);
+                if (_forcedVisualAction.HasValue && Time.time < _forcedVisualUntil)
+                {
+                    visual.SetAction(_forcedVisualAction.Value);
+                    visual.Tick(dt);
+                }
+                else
+                {
+                    _forcedVisualAction = null;
+                    visual.SetMoveInput(input);
+                    visual.Tick(dt);
+                }
             }
 
             FollowCamera(dt, immediate: false);

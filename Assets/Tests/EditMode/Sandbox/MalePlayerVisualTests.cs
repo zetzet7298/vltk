@@ -1,7 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile
-// Copyright (c) 2026 vltk. All rights reserved.
-// Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
+// Copyright (c) 2026 vltk. All rights reserved. Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
 // -----------------------------------------------------------------------------
 
 using System.Linq;
@@ -13,7 +12,7 @@ namespace VLTK.Tests.Sandbox
 {
     /// <summary>
     /// Male player port smoke tests: verifies the PC SPR part catalog, 8-way move
-    /// directions, staged StreamingAssets, and joystick-style continuous movement.
+    /// directions, staged StreamingAssets, weapon type switching, and staff equipment.
     /// </summary>
     public class MalePlayerVisualTests
     {
@@ -28,18 +27,59 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void Catalog_MoveAction_HasFullMaleLayerSet()
+        public void Catalog_EmptyHandMove_HasFullMaleLayerSet()
         {
-            var parts = MalePlayerSpriteCatalog.GetParts(PlayerVisualAction.Move).ToList();
-            Assert.AreEqual(8, parts.Count, "Move should include shadow, body, head, hair, hands, and both weapon layers.");
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Move, PcWeaponType.EmptyHand).ToList();
+            Assert.AreEqual(8, parts.Count);
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Body));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Head));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Hair));
-            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftHand));
-            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightHand));
-            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon));
-            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shadow));
+            // Empty hand uses RW_000
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon && p.sourcePath.Contains("RW_000")));
+        }
+
+        [Test]
+        public void Catalog_StaffMove_UsesLongWeaponSuffix()
+        {
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Move, PcWeaponType.LongWeapon).ToList();
+            Assert.AreEqual(8, parts.Count);
+            // Long staff uses RN03 suffix and RW_010 variant
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Body && p.sourcePath.Contains("RN03")));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon && p.sourcePath.Contains("RW_010")));
+        }
+
+        [Test]
+        public void Catalog_StaffMagic_UsesMG04Suffix()
+        {
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Magic, PcWeaponType.LongWeapon).ToList();
+            Assert.AreEqual(8, parts.Count);
+            Assert.IsTrue(parts.All(p => p.sourcePath.Contains("MG04")),
+                "Staff magic cast should use 长武器魔法 (MG04) SPR files for all parts.");
+        }
+
+        [Test]
+        public void Catalog_EmptyHandMagic_UsesMG01Suffix()
+        {
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Magic, PcWeaponType.EmptyHand).ToList();
+            Assert.AreEqual(8, parts.Count);
+            Assert.IsTrue(parts.All(p => p.sourcePath.Contains("MG01")),
+                "Empty hand magic should use 空手魔法 (MG01) SPR files for all parts.");
+        }
+
+        [Test]
+        public void ResolveAction_CharAnimId11_ReturnsMagic()
+        {
+            Assert.AreEqual(PlayerVisualAction.Magic,
+                MalePlayerSpriteCatalog.ResolveAction(11, PcWeaponType.LongWeapon));
+            Assert.AreEqual(PlayerVisualAction.Magic,
+                MalePlayerSpriteCatalog.ResolveAction(11, PcWeaponType.EmptyHand));
+        }
+
+        [Test]
+        public void ResolveAction_CharAnimId14_ReturnsNull()
+        {
+            Assert.IsNull(MalePlayerSpriteCatalog.ResolveAction(14, PcWeaponType.LongWeapon));
         }
 
         [Test]
@@ -56,7 +96,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void Visual_LoadsAllRequiredMoveParts_FromStagedSprFiles()
+        public void Visual_LoadsAllRequiredMoveParts_EmptyHand()
         {
             _go = new GameObject("MaleVisualTest");
             var visual = _go.AddComponent<MalePlayerVisual>();
@@ -65,11 +105,90 @@ namespace VLTK.Tests.Sandbox
 
             Assert.AreEqual(PlayerVisualAction.Move, visual.currentAction);
             Assert.AreEqual(6, visual.direction);
-            Assert.IsTrue(visual.HasAllRequiredParts, "All required male SPR layers should be staged in StreamingAssets/Sprites.");
+            Assert.IsTrue(visual.HasAllRequiredParts);
             Assert.AreEqual(8, visual.LoadedPartCount);
 
             visual.Tick(0.1f);
-            Assert.GreaterOrEqual(visual.CurrentFrameInDirection, 1, "Move animation should advance through RN01 frames.");
+            Assert.GreaterOrEqual(visual.CurrentFrameInDirection, 1);
+        }
+
+        [Test]
+        public void Visual_LoadsStaffIdleParts_FromStagedSprFiles()
+        {
+            _go = new GameObject("MaleStaffIdleTest");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.LongWeapon);
+
+            Assert.AreEqual(PcWeaponType.LongWeapon, visual.currentWeapon);
+            Assert.AreEqual(PlayerVisualAction.Idle, visual.currentAction);
+            // Staff idle uses ST05 suffix. Long staff has no left weapon SPR so only 7 parts load.
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                "All required staff idle SPR layers (ST05) should be staged.");
+            Assert.AreEqual(7, visual.LoadedPartCount, "Staff has no left weapon SPR — 7 of 8 parts load.");
+        }
+
+        [Test]
+        public void Visual_LoadsStaffMagicParts_FromStagedSprFiles()
+        {
+            _go = new GameObject("MaleStaffMagicTest");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.LongWeapon);
+            visual.SetAction(PlayerVisualAction.Magic);
+
+            Assert.AreEqual(PlayerVisualAction.Magic, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                "All required staff magic SPR layers (MG04) should be staged.");
+            Assert.AreEqual(7, visual.LoadedPartCount, "Staff has no left weapon SPR — 7 of 8 parts load.");
+
+            visual.Tick(0.1f);
+            Assert.GreaterOrEqual(visual.CurrentFrameInDirection, 1);
+        }
+
+        [Test]
+        public void Visual_LoadsEmptyHandMagicParts_FromStagedSprFiles()
+        {
+            _go = new GameObject("MaleMagicVisualTest");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetAction(PlayerVisualAction.Magic);
+
+            Assert.AreEqual(PlayerVisualAction.Magic, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts);
+            Assert.AreEqual(8, visual.LoadedPartCount);
+        }
+
+        [Test]
+        public void Controller_EquipStaff_SwitchesWeaponType()
+        {
+            _go = new GameObject("PlayerWeaponTest");
+            var controller = _go.AddComponent<SandboxPlayerController>();
+            controller.followCameraEnabled = false;
+            controller.allowKeyboardFallback = false;
+
+            Assert.AreEqual(PcWeaponType.EmptyHand, controller.EquippedWeapon);
+
+            controller.EquipWeapon(PcWeaponType.LongWeapon);
+            Assert.AreEqual(PcWeaponType.LongWeapon, controller.EquippedWeapon);
+            Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
+        }
+
+        [Test]
+        public void Controller_StaffSkillAction_LocksMagicAnimation()
+        {
+            _go = new GameObject("PlayerStaffMagicTest");
+            var controller = _go.AddComponent<SandboxPlayerController>();
+            controller.followCameraEnabled = false;
+            controller.allowKeyboardFallback = false;
+            controller.EquipWeapon(PcWeaponType.LongWeapon);
+
+            controller.SetMoveInput(Vector2.right);
+            controller.PlayPcSkillAction(11, 0.5f);
+            controller.SimulateMove(0.1f);
+
+            Assert.AreEqual(PlayerVisualAction.Magic, controller.visual.currentAction);
+            Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
         }
 
         [Test]

@@ -51,7 +51,7 @@ namespace VLTK.Sandbox
     /// Pure C# (no MonoBehaviour) so it is fully EditMode-testable. The random roll
     /// is injected so the formula is deterministic for fixtures and the GM preview.
     ///
-    /// PC source evidence (jxwin-kinnox/.../KNpc.cpp CalcDamage):
+    /// PC source evidence (StreamingAssets/Reference/KNpc.cpp CalcDamage):
     ///   nDamage   = nMin + rand(nMax - nMin)
     ///   armor:      armor -= nDamage; if armor<0 { nDamage = -armor } else nDamage = 0
     ///   manaShield: nManaDamage = nDamage * manaShield/100; absorbed up to currentMana
@@ -61,7 +61,7 @@ namespace VLTK.Sandbox
     {
         /// <summary>
         /// PC constant: maximum effective resistance percentage.
-        /// Source: jxwin-kinnox/.../Core/Src/GameDataDef.h:128 `#define MAX_RESIST 95`.
+        /// Source: PC GameDataDef.h:128 `#define MAX_RESIST 95`.
         /// </summary>
         public const int MaxResist = 95;
 

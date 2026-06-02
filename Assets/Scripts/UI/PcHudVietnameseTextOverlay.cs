@@ -120,7 +120,9 @@ namespace VLTK.UI
                 _skillPanelTargetTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/技能－战斗分页.png"));
             if (_addPointTexture == null)
                 _addPointTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/状态加点按钮改_01.png"));
-            for (int skillId = 115; skillId <= 130; skillId++)
+            var caiBangIconIds = new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
+                                        274, 277, 357, 359, 360, 1073, 1074 };
+            foreach (var skillId in caiBangIconIds)
             {
                 if (_caiBangIconTextures.ContainsKey(skillId) && _caiBangIconTextures[skillId] != null)
                     continue;
@@ -192,6 +194,9 @@ namespace VLTK.UI
                 GUI.DrawTexture(new Rect(345, 167, 191, 278), _skillPanelTargetTexture, ScaleMode.StretchToFill, true);
             var titleStyle = new GUIStyle(_skillLevel) { fontSize = 13, alignment = TextAnchor.MiddleCenter };
             Label(376, 116, 110, 18, "Kỹ năng võ công", titleStyle);
+            var pageOneRect = new Rect(345, 422, 67, 22);
+            var pageStyle = new GUIStyle(_skillLevel) { fontSize = 9, alignment = TextAnchor.MiddleCenter };
+            Label(345, 422, 67, 22, $"Tất cả ({snap?.rows?.Count ?? 0} skill)", pageStyle);
             if (snap?.rows == null)
                 return;
 

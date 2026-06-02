@@ -1,0 +1,6 @@
+{
+  "eval_id": 0,
+  "eval_name": "hud-mobile-ang-b-placeholder-thanh-hp-mp",
+  "prompt": "HUD mobile đang bị placeholder, thanh HP/MP/EXP không giống PC. Hãy đọc source PC và chỉnh Unity HUD cho giống visual PC, không tự chế art.",
+  "assertions": []
+}

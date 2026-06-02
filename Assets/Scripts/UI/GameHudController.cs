@@ -27,7 +27,7 @@ namespace VLTK.UI
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
-        private VisualElement _caiBangSkillPanel, _caiBangSkillClose;
+        private VisualElement _caiBangSkillPanel, _caiBangSkillClose, _caiBangSkillPageOne, _caiBangSkillPageTwo;
         private ScrollView _caiBangSkillList;
         private Label _hpText, _mpText, _staminaText, _expText;
         private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _caiBangSkillSummary;
@@ -41,6 +41,7 @@ namespace VLTK.UI
         private Texture2D _previewTexture;
         private int _minimapTextureMapId = -1;
         private int _previewTextureMapId = -1;
+        private int _caiBangSkillPageIndex;
         private Vector2 _lastMinimapCenter;
         private Vector2? _lastMoveTarget;
 
@@ -69,6 +70,26 @@ namespace VLTK.UI
             BindElements();
             LoadArt();
             SizeRootToScreen();
+            InitializeCombatSkillSlots();
+        }
+
+        private void InitializeCombatSkillSlots()
+        {
+            var slots = GetComponent<CombatSkillSlotController>();
+            if (slots == null)
+                slots = gameObject.AddComponent<CombatSkillSlotController>();
+
+            var manager = SandboxManager.Instance;
+            var catalog = manager != null ? manager.CombatSkillCatalog : null;
+            var progression = manager != null ? manager.PlayerProgression : null;
+            slots.Initialize(catalog, progression);
+
+            // Ensure skill effect overlays for rendering combat visuals.
+            // IMGUI overlay is kept for debug labels; world overlay makes VFX visible in camera/game view.
+            if (GetComponent<SkillEffectOverlay>() == null)
+                gameObject.AddComponent<SkillEffectOverlay>();
+            if (GetComponent<SkillEffectWorldOverlay>() == null)
+                gameObject.AddComponent<SkillEffectWorldOverlay>();
         }
 
         private void Update()
@@ -146,6 +167,8 @@ namespace VLTK.UI
             _caiBangSkillPanel = root.Q("CaiBangSkillPanel");
             _caiBangSkillClose = root.Q("CaiBangSkillClose");
             _caiBangSkillList = root.Q<ScrollView>("CaiBangSkillList");
+            _caiBangSkillPageOne = root.Q("CaiBangSkillPageOne");
+            _caiBangSkillPageTwo = root.Q("CaiBangSkillPageTwo");
             _caiBangSkillSummary = root.Q<Label>("CaiBangSkillSummary");
 
             RegisterClick(root, "BtnRun", OnRunClick);
@@ -167,6 +190,8 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "WorldMapBtn");
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
             RegisterClick(root, "CaiBangSkillClose", CloseCaiBangSkillPanel);
+            RegisterClick(root, "CaiBangSkillPageOne", () => SetCaiBangSkillPage(0));
+            RegisterClick(root, "CaiBangSkillPageTwo", () => SetCaiBangSkillPage(1));
 
             if (_caiBangSkillPanel != null)
                 _caiBangSkillPanel.pickingMode = PickingMode.Position;
@@ -294,6 +319,12 @@ namespace VLTK.UI
                 tex.filterMode = FilterMode.Point;
                 el.style.backgroundImage = new StyleBackground(tex);
             }
+        }
+
+        /// <summary>Static version for use by CombatSkillSlotController.</summary>
+        public static void LoadIconStatic(VisualElement el, string artPath, string name)
+        {
+            LoadIcon(el, artPath, name);
         }
 
         private void LoadCaiBangPanelArt(string artPath)
@@ -633,12 +664,37 @@ namespace VLTK.UI
                 progression.GrantCaiBangSkillPanelProgression(catalog);
             }
 
-            var snap = CaiBangSkillPanelService.Build(catalog, progression, CurrentCaiBangSelectedSkillId);
+            var snap = CaiBangSkillPanelService.BuildPage(catalog, progression, CurrentCaiBangSelectedSkillId, _caiBangSkillPageIndex);
             CurrentCaiBangSkillSnapshot = snap;
             PopulateCaiBangSkillPanel(snap);
             _caiBangSkillPanel?.RemoveFromClassList("hidden");
             CloseMapPreview();
-            SubsystemLog.Info("HUD", $"Open Cái Bang Skills (level={snap.playerLevel}, points={snap.skillPoints}, skills={snap.rows.Count})");
+            SubsystemLog.Info("HUD", $"Open Cái Bang Skills page {_caiBangSkillPageIndex + 1} (level={snap.playerLevel}, points={snap.skillPoints}, skills={snap.rows.Count})");
+        }
+
+        public int CurrentCaiBangSkillPageIndex => _caiBangSkillPageIndex;
+
+        public void SetCaiBangSkillPage(int pageIndex)
+        {
+            pageIndex = Mathf.Clamp(pageIndex, 0, CaiBangSkillPanelService.PcFightSkillPageCount - 1);
+            if (_caiBangSkillPageIndex == pageIndex && CurrentCaiBangSkillSnapshot != null)
+                return;
+            _caiBangSkillPageIndex = pageIndex;
+            var manager = SandboxManager.Instance;
+            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
+            if (manager != null)
+            {
+                manager.GrantCaiBangSkillPanelProgression();
+                progression = manager.PlayerProgression;
+            }
+            else
+            {
+                progression.GrantCaiBangSkillPanelProgression(catalog);
+            }
+            CurrentCaiBangSkillSnapshot = CaiBangSkillPanelService.BuildPage(catalog, progression, CurrentCaiBangSelectedSkillId, _caiBangSkillPageIndex);
+            PopulateCaiBangSkillPanel(CurrentCaiBangSkillSnapshot);
+            SubsystemLog.Info("HUD", $"Switch Cái Bang Skills to page {_caiBangSkillPageIndex + 1}");
         }
 
         public void CloseCaiBangSkillPanel()
@@ -653,41 +709,53 @@ namespace VLTK.UI
             if (_caiBangSkillList == null)
                 return;
             _caiBangSkillList.Clear();
+            _caiBangSkillPageOne?.EnableInClassList("hud-cb-page-tab-active", _caiBangSkillPageIndex == 0);
+            _caiBangSkillPageTwo?.EnableInClassList("hud-cb-page-tab-active", _caiBangSkillPageIndex == 1);
             _caiBangSkillList.contentContainer.style.flexDirection = FlexDirection.Row;
             _caiBangSkillList.contentContainer.style.flexWrap = Wrap.Wrap;
             _caiBangSkillList.contentContainer.style.alignContent = Align.FlexStart;
-            foreach (var row in snap.rows)
+            for (int slotIndex = 0; slotIndex < CaiBangSkillPanelService.PcFightSkillSlotsPerPage; slotIndex++)
             {
                 var item = new VisualElement();
                 item.AddToClassList("hud-cb-grid-cell");
-                if (row.canUpgrade)
-                    item.AddToClassList("hud-cb-grid-cell-upgradable");
                 item.pickingMode = PickingMode.Position;
 
                 var slot = new VisualElement();
                 slot.AddToClassList("hud-cb-grid-slot");
-                LoadIcon(slot, System.IO.Path.Combine(Application.dataPath, artFolder, "Generated"), $"cai_bang_skill_{row.skillId}");
                 item.Add(slot);
 
-                var levelText = row.learnedLevel > 0 ? row.learnedLevel.ToString() : string.Empty;
-                var level = new Label(levelText);
-                level.AddToClassList("hud-cb-grid-level");
-                item.Add(level);
-
-                var add = new VisualElement();
-                add.AddToClassList("hud-cb-add-point");
-                item.Add(add);
-
-                var name = new Label(row.displayName);
-                name.AddToClassList("hud-cb-grid-name");
-                item.Add(name);
-
-                int skillId = row.skillId;
-                item.RegisterCallback<PointerDownEvent>(evt =>
+                if (slotIndex < snap.rows.Count)
                 {
-                    SelectCaiBangSkill(skillId);
-                    evt.StopPropagation();
-                });
+                    var row = snap.rows[slotIndex];
+                    if (row.canUpgrade)
+                        item.AddToClassList("hud-cb-grid-cell-upgradable");
+                    LoadIcon(slot, System.IO.Path.Combine(Application.dataPath, artFolder, "Generated"), $"cai_bang_skill_{row.skillId}");
+
+                    var levelText = row.learnedLevel > 0 ? row.learnedLevel.ToString() : string.Empty;
+                    var level = new Label(levelText);
+                    level.AddToClassList("hud-cb-grid-level");
+                    item.Add(level);
+
+                    var add = new VisualElement();
+                    add.AddToClassList("hud-cb-add-point");
+                    item.Add(add);
+
+                    var name = new Label(row.displayName);
+                    name.AddToClassList("hud-cb-grid-name");
+                    item.Add(name);
+
+                    int skillId = row.skillId;
+                    item.RegisterCallback<PointerDownEvent>(evt =>
+                    {
+                        SelectCaiBangSkill(skillId);
+                        evt.StopPropagation();
+                    });
+                }
+                else
+                {
+                    item.AddToClassList("hud-cb-grid-cell-empty");
+                    slot.AddToClassList("hud-cb-grid-slot-empty");
+                }
 
                 _caiBangSkillList.Add(item);
             }
@@ -702,7 +770,7 @@ namespace VLTK.UI
             if (progression == null)
                 return;
 
-            CurrentCaiBangSkillSnapshot = CaiBangSkillPanelService.Build(catalog, progression, CurrentCaiBangSelectedSkillId);
+            CurrentCaiBangSkillSnapshot = CaiBangSkillPanelService.BuildPage(catalog, progression, CurrentCaiBangSelectedSkillId, _caiBangSkillPageIndex);
             PopulateCaiBangSkillPanel(CurrentCaiBangSkillSnapshot);
             SubsystemLog.Info("HUD", CurrentCaiBangSelectedSkillId != 0 ? $"Select Cái Bang skill {skillId}" : $"Hide Cái Bang skill detail {skillId}");
         }
@@ -723,7 +791,7 @@ namespace VLTK.UI
             bool upgraded = CaiBangSkillPanelService.TryUpgrade(progression, catalog, skillId);
             if (upgraded)
             {
-                CurrentCaiBangSkillSnapshot = CaiBangSkillPanelService.Build(catalog, progression, CurrentCaiBangSelectedSkillId);
+                CurrentCaiBangSkillSnapshot = CaiBangSkillPanelService.BuildPage(catalog, progression, CurrentCaiBangSelectedSkillId, _caiBangSkillPageIndex);
                 PopulateCaiBangSkillPanel(CurrentCaiBangSkillSnapshot);
             }
             SubsystemLog.Info("HUD", upgraded ? $"Upgrade Cái Bang skill {skillId}" : $"Cannot upgrade Cái Bang skill {skillId}");

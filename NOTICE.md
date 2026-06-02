@@ -20,7 +20,7 @@ their respective owners. This project makes **no claim of ownership** over any
 of that intellectual property and is **not affiliated with, endorsed by, or
 sponsored by** the original rights holders.
 
-Reference source material located under `jxwin-kinnox/` (C++ / Lua, original PC
+Reference source material located under `Assets/StreamingAssets/Reference/` (C++ / Lua, original PC
 client) is included **for development reference only**. It is excluded from
 version control of this repository and must **not** be redistributed.
 

@@ -23,10 +23,13 @@ namespace VLTK.Sandbox
     {
         [Header("Playback")]
         public PlayerVisualAction currentAction = PlayerVisualAction.Idle;
+        public PcWeaponType currentWeapon = PcWeaponType.EmptyHand;
         [Range(0, MalePlayerSpriteCatalog.DirectionCount - 1)]
         public int direction;
         public float idleFrameRate = 6f;
         public float moveFrameRate = 12f;
+        public float magicFrameRate = 14.4f; // PC cdo_magic: ~16 frames/dir over 20 ticks at 18 ticks/sec.
+        public float attackFrameRate = 14.4f;
         public bool playAutomatically = true;
 
         [Header("SPR Placement")]
@@ -40,6 +43,7 @@ namespace VLTK.Sandbox
 
         private readonly Dictionary<PlayerSpritePartKind, PartRuntime> _parts = new();
         private PlayerVisualAction _loadedAction = (PlayerVisualAction)(-1);
+        private PcWeaponType _loadedWeapon = (PcWeaponType)(-1);
         private float _time;
 
         public int LoadedPartCount { get; private set; }
@@ -101,6 +105,7 @@ namespace VLTK.Sandbox
         {
             idleFrameRate = Mathf.Max(0.1f, idleFrameRate);
             moveFrameRate = Mathf.Max(0.1f, moveFrameRate);
+            magicFrameRate = Mathf.Max(0.1f, magicFrameRate);
             pixelsPerUnit = Mathf.Max(0.01f, pixelsPerUnit);
             direction = Mathf.Clamp(direction, 0, MalePlayerSpriteCatalog.DirectionCount - 1);
         }
@@ -128,11 +133,21 @@ namespace VLTK.Sandbox
 
         public void SetAction(PlayerVisualAction action)
         {
-            if (currentAction == action && _loadedAction == action)
+            if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
 
             currentAction = action;
             _time = 0f;
+            RefreshActionParts(force: true);
+            ApplyFrame(0f);
+        }
+
+        public void SetWeapon(PcWeaponType weapon)
+        {
+            if (currentWeapon == weapon)
+                return;
+            currentWeapon = weapon;
+            _loadedAction = (PlayerVisualAction)(-1);
             RefreshActionParts(force: true);
             ApplyFrame(0f);
         }
@@ -153,7 +168,7 @@ namespace VLTK.Sandbox
 
         public void RefreshActionParts(bool force = false)
         {
-            if (!force && _loadedAction == currentAction)
+            if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon)
                 return;
 
             // Disable ALL existing part children (including orphans from prior actions
@@ -166,7 +181,7 @@ namespace VLTK.Sandbox
 
             LoadedPartCount = 0;
             HasAllRequiredParts = true;
-            var specs = MalePlayerSpriteCatalog.GetParts(currentAction);
+            var specs = MalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
             foreach (var spec in specs)
             {
                 var runtime = GetOrCreatePart(spec);
@@ -193,6 +208,7 @@ namespace VLTK.Sandbox
             }
 
             _loadedAction = currentAction;
+            _loadedWeapon = currentWeapon;
             ApplySorting();
         }
 
@@ -212,7 +228,13 @@ namespace VLTK.Sandbox
 
         private void ApplyFrame(float time)
         {
-            float rate = currentAction == PlayerVisualAction.Move ? moveFrameRate : idleFrameRate;
+            float rate = currentAction switch
+            {
+                PlayerVisualAction.Move => moveFrameRate,
+                PlayerVisualAction.Magic => magicFrameRate,
+                PlayerVisualAction.Attack => attackFrameRate,
+                _ => idleFrameRate,
+            };
             int baseOrder = PlayerBaseSortingOrder();
 
             foreach (var runtime in _parts.Values)

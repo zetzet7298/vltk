@@ -13,7 +13,7 @@ namespace VLTK.Sandbox
     /// PC-derived Ba Lăng huyện enemy templates from Region_S server data.
     /// Real PC spawns: 514 enemies (kind=0), 25 town NPCs (kind=3).
     /// Enemy types: 金猫(31), 梅花鹿(42), 白猪(43) + training dummies (413,414,415).
-    /// Source: jxwin-kinnox NpcS.txt templates + Region_S.dat spawn positions.
+    /// Source: StreamingAssets/Reference/PcNpcS.txt + Region_S.dat spawn positions.
     /// </summary>
     public static class BaLangEnemyDatabase
     {

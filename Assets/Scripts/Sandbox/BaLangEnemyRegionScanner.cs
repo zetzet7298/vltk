@@ -33,7 +33,7 @@ namespace VLTK.Sandbox
     /// <summary>
     /// Parses PC Region_S.dat binary files to extract NPC spawn data.
     /// Format: KCombinFileSection header + KNpcFileHead + KSPNpc variable-length records.
-    /// Reference: jxwin-kinnox SceneDataDef.h (KCombinFileSection, KNpcFileHead, KSPNpc).
+    /// Reference: SceneDataDef.h (KCombinFileSection, KNpcFileHead, KSPNpc) in StreamingAssets/Reference/.
     /// </summary>
     public static class BaLangEnemyRegionScanner
     {

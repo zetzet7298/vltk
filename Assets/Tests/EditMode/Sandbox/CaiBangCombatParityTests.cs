@@ -47,7 +47,7 @@ namespace VLTK.Tests.Sandbox
             for (int id = PcCombatCatalogFactory.CaiBangMinSkillId; id <= PcCombatCatalogFactory.CaiBangMaxSkillId; id++)
                 Assert.IsNotNull(cat.Resolve(id), $"missing Cai Bang skill {id}");
             Assert.IsNotNull(cat.Resolve(PcCombatCatalogFactory.CaiBangDogBeatingAuraChild));
-            Assert.AreEqual(22, cat.Count);
+            Assert.AreEqual(30, cat.Count);
         }
 
         [Test]
@@ -89,21 +89,21 @@ namespace VLTK.Tests.Sandbox
         {
             var cat = Catalog();
             var throwStone = cat.Resolve(117).GetPcLevelData(20);
-            Assert.AreEqual("PhysicsDamageV=6,0,24", throwStone.First(MagicAttributeKind.PhysicsDamageV).ToString());
-            Assert.AreEqual("FireDamageV=15,0,15", throwStone.First(MagicAttributeKind.FireDamageV).ToString());
-            Assert.AreEqual("SkillCostV=7,0,0", throwStone.First(MagicAttributeKind.SkillCostV).ToString());
+            Assert.AreEqual("PhysicsDamageV=88,0,248", throwStone.First(MagicAttributeKind.PhysicsDamageV).ToString());
+            Assert.AreEqual("FireDamageV=215,0,215", throwStone.First(MagicAttributeKind.FireDamageV).ToString());
+            Assert.AreEqual("SkillCostV=8,0,0", throwStone.First(MagicAttributeKind.SkillCostV).ToString());
 
             var dragon = cat.Resolve(128).GetPcLevelData(30);
-            Assert.AreEqual("PhysicsDamageV=76,0,215", dragon.First(MagicAttributeKind.PhysicsDamageV).ToString());
-            Assert.AreEqual("FireDamageV=80,0,80", dragon.First(MagicAttributeKind.FireDamageV).ToString());
-            Assert.AreEqual("SkillCostV=100,0,0", dragon.First(MagicAttributeKind.SkillCostV).ToString());
+            Assert.AreEqual("PhysicsDamageV=832,0,832", dragon.First(MagicAttributeKind.PhysicsDamageV).ToString());
+            Assert.AreEqual("FireDamageV=900,0,900", dragon.First(MagicAttributeKind.FireDamageV).ToString());
+            Assert.AreEqual("SkillCostV=70,0,0", dragon.First(MagicAttributeKind.SkillCostV).ToString());
         }
 
         [Test]
         public void CaiBang_ResistAndPassiveSkills_MatchLuaLevelFormulasIncludingBugs()
         {
             var cat = Catalog();
-            Assert.AreEqual("AddPhysicsDamageP=48,-1,2", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
+            Assert.AreEqual("AddPhysicsDamageP=215,-1,2", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
             Assert.AreEqual("DeadlyStrikeEnhanceP=25,-1,0", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.DeadlyStrikeEnhanceP).ToString());
             Assert.AreEqual("PhysicsResP=34,-1,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.PhysicsResP).ToString());
             Assert.AreEqual("ColdResP=52,25200,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.ColdResP).ToString());
@@ -121,7 +121,7 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(300, 0));
             var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
-            Assert.AreEqual(45, r.manaCost); // 25 + level 20
+            Assert.AreEqual(50, r.manaCost); // PC Lua 天下无狗: fixed 50
             Assert.AreEqual(16, r.childProjectileCount);
             Assert.AreEqual(16, r.projectiles.Count);
             Assert.Less(enemy.currentLife, 1000);

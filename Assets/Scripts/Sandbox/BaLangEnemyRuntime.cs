@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using VLTK.Core;
 using VLTK.Model;
+using VLTK.Sandbox;
 
 namespace VLTK.Sandbox
 {
@@ -241,6 +242,32 @@ namespace VLTK.Sandbox
             BuildSceneObjects();
             SubsystemLog.Info("BaLangEnemy",
                 $"Spawned {liveEnemyCount} enemies from {spawns.Count} Region_S entries (kind=0 only)");
+        }
+
+        /// <summary>
+        /// Collect active enemies for combat auto-targeting.
+        /// Returns enemy runtime info including position, HP, alive status.
+        /// </summary>
+        public List<EnemyRuntimeInfo> GetActiveEnemies()
+        {
+            var result = new List<EnemyRuntimeInfo>();
+            if (enemyRoot == null) return result;
+
+            foreach (var ai in enemyRoot.GetComponentsInChildren<BaLangEnemyAi>())
+            {
+                if (ai == null || ai.instance?.template == null) continue;
+                result.Add(new EnemyRuntimeInfo
+                {
+                    enemyId = ai.instance.instanceId,
+                    displayName = ai.instance.template?.DisplayName ?? "Kẻ địch",
+                    position = (Vector2)ai.transform.position,
+                    alive = ai.CurrentLife > 0,
+                    currentLife = ai.CurrentLife,
+                    maxLife = ai.MaxLife,
+                    enemyBehaviour = ai,
+                });
+            }
+            return result;
         }
 
         public void Clear()

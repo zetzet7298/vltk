@@ -60,6 +60,8 @@
             <ui:VisualElement name="CaiBangSkillClose" class="hud-cb-close"/>
             <ui:Label name="CaiBangSkillSummary" text="200" class="hud-cb-summary"/>
             <ui:ScrollView name="CaiBangSkillList" class="hud-cb-list"/>
+            <ui:VisualElement name="CaiBangSkillPageOne" class="hud-cb-page-tab hud-cb-page-one"><ui:Label text="Một" class="hud-cb-page-tab-label"/></ui:VisualElement>
+            <ui:VisualElement name="CaiBangSkillPageTwo" class="hud-cb-page-tab hud-cb-page-two"><ui:Label text="Hai" class="hud-cb-page-tab-label"/></ui:VisualElement>
         </ui:VisualElement>
 
         <!-- Chat message area + input -->
@@ -94,8 +96,14 @@
             </ui:VisualElement>
 
             <ui:VisualElement class="hud-skill-panel">
-                <ui:VisualElement name="LeftSkillSlot" class="hud-skill-slot"/>
-                <ui:VisualElement name="RightSkillSlot" class="hud-skill-slot"/>
+                <ui:VisualElement name="LeftSkillSlot" class="hud-skill-slot">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="+" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="RightSkillSlot" class="hud-skill-slot">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="+" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
                 <ui:VisualElement class="hud-skill-keys"><ui:Label text="T"/><ui:Label text="P"/></ui:VisualElement>
             </ui:VisualElement>
 
@@ -106,6 +114,16 @@
                 <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/><ui:Label text="Đội" class="hud-menu-label"/></ui:VisualElement>
                 <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/><ui:Label text="Bang" class="hud-menu-label"/></ui:VisualElement>
                 <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/><ui:Label text="PK" class="hud-menu-label"/></ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <!-- Skill picker overlay: tap skill slot to assign → shows list of learned skills -->
+        <ui:VisualElement name="SkillPickerOverlay" class="hud-skill-picker-overlay hidden">
+            <ui:VisualElement name="SkillPickerWindow" class="hud-skill-picker-window">
+                <ui:VisualElement name="SkillPickerHeader" class="hud-skill-picker-header">
+                    <ui:Label name="SkillPickerTitle" text="Chọn kỹ năng" class="hud-skill-picker-title"/>
+                    <ui:VisualElement name="SkillPickerClose" class="hud-skill-picker-close"/>
+                </ui:VisualElement>
+                <ui:ScrollView name="SkillPickerList" class="hud-skill-picker-list"/>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

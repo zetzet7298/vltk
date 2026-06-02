@@ -7,8 +7,8 @@ namespace VLTK.Sandbox
 {
     /// <summary>
     /// PC-parity seed catalog for novice attack skills and Cái Bang (Beggar Sect).
-    /// Values copied from jxwin-kinnox/SourceNew/swrod3/bin/Server/Settings/Skills.txt
-    /// and Lua level scripts under Utility/Run/Script/skill/{special,gaibang}.
+    /// Values copied from StreamingAssets/Reference/PcSkills.txt
+    /// and Lua level scripts under gaibang.lua / gaibang/*.lua.
     /// </summary>
     public static class PcCombatCatalogFactory
     {
@@ -19,6 +19,11 @@ namespace VLTK.Sandbox
         public const int NovicePoisonAttack = 199;
         public const int CaiBangMinSkillId = 115;
         public const int CaiBangMaxSkillId = 130;
+        // MOD Vietnam adds 7 extra Cái Bang player skills beyond the original 115-130 PC range. Skill 1539 is
+        // a boss/NPC variant of Thiên Hạ Vô Cẩu and is included for documentation but
+        // marked isNpcVariant=true so the UI can hide it if needed.
+        public const int CaiBangModMinSkillId = 274;
+        public const int CaiBangModMaxSkillId = 1539;
         public const int CaiBangDogBeatingAuraChild = 209;
 
         public static SkillCatalog CreateNoviceAndCaiBangCatalog(IAssetRegistry assets = null)
@@ -41,22 +46,69 @@ namespace VLTK.Sandbox
 
         public static List<SkillDefinition> CreateCaiBangSkills() => new()
         {
-            PassiveMastery(115, "丐帮棒法", "Cái Bang Bổng Pháp", 10, elementParam:2, icon:"\\spr\\Ui\\技能图标\\棍法.spr"),
-            PassiveMastery(116, "丐帮拳法", "Cái Bang Chưởng Pháp", 10, elementParam:9, icon:"\\spr\\Ui\\技能图标\\暗器使用.spr"),
-            DamageSkill(117, "投石问路", "Ném Đá Hỏi Đường", 10, 20, 280, 44, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(2+Floor(lv*0.2f),0,8+Floor(lv*0.8f)), (lv)=>Same(5+Floor(lv*0.5f)), (lv)=>Triple(3+Floor(lv/5f),0,0)),
+            PassiveMastery(115, "丐帮棒法", "Cái Bang Bổng Pháp", 10, addPhys:(lv)=>15+10*lv, elementParam:2, icon:"\\spr\\Ui\\技能图标\\棍法.spr"),
+            PassiveMastery(116, "丐帮拳法", "Cái Bang Chưởng Pháp", 10, addPhys:(lv)=>30+15*lv, elementParam:9, icon:"\\spr\\Ui\\技能图标\\暗器使用.spr"),
+            DamageSkill(117, "投石问路", "Ném Đá Hỏi Đường", 10, 20, 280, 44, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(8+4*lv,0,28+11*lv), (lv)=>Same(15+10*lv), (lv)=>Triple(8,0,0)),
             ResistBuff(118, "孤木遁雷", "Cô Mộc Độn Lôi", 10, MagicAttributeKind.LightingResP),
-            DamageSkill(119, "沿门托钵", "Duyên Môn Thác Bát", 20, 20, 240, 45, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(1+Floor(lv*0.2f),0,9+Floor(lv*1.1f)), (lv)=>Same(8+Floor(lv*0.8f)), (lv)=>Triple(5+Floor(lv/5f),0,0)),
+            DamageSkill(119, "沿门托钵", "Duyên Môn Thác Bát", 20, 20, 240, 45, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(16+5*lv,0,44+13*lv), (lv)=>Same(20+10*lv), (lv)=>Triple(15,0,0)),
             ResistBuff(120, "奔流到海", "Bôn Lưu Đáo Hải", 20, MagicAttributeKind.FireResP),
             UtilitySkill(121, "妙手空空", "Diệu Thủ Không Không", 20, 180, SkillMissileForm.Surround, targetEnemy:false, targetSelf:false, levelData:(lv)=>SkillOnly(MagicAttributeKind.SkillCostV, 10,0,0)),
-            DamageSkill(122, "见人伸手", "Kiến Nhân Thân Thủ", 30, 20, 300, 46, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(3+Floor(lv*0.5f),0,14+Floor(lv*2.1f)), (lv)=>Same(10+lv), (lv)=>Triple(10+Floor(lv/2f),0,0), horseLimit:1),
+            DamageSkill(122, "见人伸手", "Kiến Nhân Thân Thủ", 30, 20, 300, 46, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(23+6*lv,0,65+15*lv), (lv)=>Same(40+10*lv), (lv)=>Triple(25,0,0), horseLimit:1),
             ResistBuff(123, "奎木星照", "Khuê Mộc Tinh Chiếu", 30, MagicAttributeKind.PoisonResP),
             AuraSkill(124, "打狗阵", "Đả Cẩu Trận", 30, 180, 44, 209, (lv)=>Immediate(MagicAttributeKind.AddDefenseV, 30+10*lv,25,0)),
-            DamageSkill(125, "天下无狗", "Thiên Hạ Vô Cẩu", 40, 20, 400, 47, SkillMissileForm.Surround, 16, false, false, 11, (lv)=>Triple(10+Floor(lv*1.2f),0,27+lv*4), (lv)=>Same(10+Floor(lv*0.5f)), (lv)=>Triple(25+lv,0,0), extra:(lv)=>Damage(MagicAttributeKind.ConfuseP,0,0,0), horseLimit:1, missilesGenerateData:5),
+            DamageSkill(125, "天下无狗", "Thiên Hạ Vô Cẩu", 40, 20, 400, 47, SkillMissileForm.Surround, 16, false, false, 11, (lv)=>Triple(30+8*lv,0,87+17*lv), (lv)=>Same(60+10*lv), (lv)=>Triple(50,0,0), horseLimit:1, missilesGenerateData:5),
             ResistBuff(126, "金乌映雪", "Kim Ô Ánh Tuyết", 40, MagicAttributeKind.ColdResP, costBugReturnsResultTwice:true),
             PassiveResist(127, "滑不留手", "Hoạt Bất Lưu Thủ", 40, MagicAttributeKind.PhysicsResP),
-            DamageSkill(128, "亢龙有悔", "Kháng Long Hữu Hối", 60, 30, 360, 48, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(10+Floor(lv*2.2f),0,35+lv*6), (lv)=>Same(20+2*lv), (lv)=>Triple(40+2*lv,0,0), horseLimit:1),
+            // JXWin VM runtime data: \script\skill\gaibang.lua / kanglong_youhui.
+            // L20: Spread(form=2), 15 dragons, Param1=2, Speed=32, AttackRadius=512.
+            DamageSkill(128, "亢龙有悔", "Kháng Long Hữu Hối", 60, 30, 512, 48, SkillMissileForm.Fan, 15, false, false, 11, (lv)=>Triple(112+24*lv,0,112+24*lv), (lv)=>Same(150+25*lv), (lv)=>Triple(40+lv,0,0), horseLimit:1),
             ResistBuff(129, "化险为夷", "Hóa Hiểm Vi Di", 50, MagicAttributeKind.PhysicsResP, shortDuration:true, costBugUndefined:true),
             UtilitySkill(130, "醉蝶狂舞", "Túy Điệp Cuồng Vũ", 50, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:43, levelData:(lv)=>{ var d=new SkillLevelData{level=lv}; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Floor(Log10(lv+1)/2f*60), 600+120*lv,0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV,50,0,0)); return d; }),
+
+            // ===== MOD Vietnam Cái Bang additions =====
+            // 274 Giương Long Chưởng: passive combat-mastery support (Attrib 704, "hỗ trợ chiêu thức đấu-bị động").
+            // MOD Skills.txt: ReqLevel 30, MaxLevel 20, missileForm=0, AttackRadius=0, child=0, charAnim=14.
+            // Lua: gaibang.lua::xianglong_zhang (lifemax_p, manamax_p, addfiremagic_v/p, firedamage_v).
+            PassiveMastery(274, "降龙掌", "Giương Long Chưởng", 30, addPhys:(lv)=>20+8*lv, elementParam:2, icon:"\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr"),
+            // 277 Hoành Bách Lộ Thiên: chưởng hỗ trợ chiêu thức (Attrib 700, "Chưởng hỗ trợ chiêu thức").
+            // MOD Skills.txt: ReqLevel 40, MaxLevel 20, missileForm=2, AttackRadius=400, childSkillId=114, childSkillNum=1, charAnim=11, missilesGenerateData=57, stateSpecialId=3.
+            // Lua: gaibang.lua::huabu_liushou (fastwalkrun_p, addphysicsdamagep_v, manamax_p).
+            // Note: MagicAttributeKind doesn't expose fastwalkrun_p; use AddPhysicsDamageP as the
+            // primary buff (closest available analog). Lua formula is in gaibang.lua::huabu_liushou
+            // and can be ported later when MagicAttributeKind is extended.
+            UtilitySkill(277, "横拨留手", "Hoành Bách Lộ Thiên", 40, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, stateSpecialId:3, levelData:(lv)=>{ var d=new SkillLevelData{level=lv}; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, 25+8*lv, -1, 0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20+3*lv,0,0)); return d; }),
+            // 357 Phi Long Tại Thiên: công kích nội công (Attrib 702). Highest-tier Giáng Long skill in MOD.
+            // MOD Skills.txt: ReqLevel 80, MaxLevel 20, missileForm=0, AttackRadius=400, child=166, charAnim=11.
+            // Lua: gaibang.lua::feilong_zaitian (seriesdamage_p 20→60%, firedamage_v L1=10→L20=750, misslenum 1→4 at L20, missle_speed 20→24, attackradius 448→512, cost 10→65, addskilldamage1=1073 Thần Thủ Lệnh Long, addskilldamage2=1101, addskillexp1 stacks self, param1 0→32=range 2-shot, skill_eventskilllevel 1→20, skill_showevent 0→4, skill_collideevent=389 Long Chiến Ở Dư).
+            // Icon: \spr\Ui\skill\龙战在野.spr (NOT in MOD or PC gốc PAK - alias cai_bang_skill_128.png with note in PC_SOURCE.txt).
+            // PC: feilong_zaitian L1-10=Fan(1), L11+=Line(1→4, param1=32 spread)
+            DamageSkill(357, "飞龙在天", "Phi Long Tại Thiên", 80, 20, 400, 166, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(60+18*lv, 0, 180+50*lv), (lv)=>{ int n = lv < 11 ? 1 : (lv < 16 ? 2 : (lv < 20 ? 3 : 4)); return Same(10+45*lv/n); }, (lv)=>Triple(10+2*lv, 0, 0), horseLimit:1),
+            // 359 Thiên Hạ Vô Cẩu (player): công kích ngoại công (Attrib 701). Player version - distinct from 125 (PC gốc) and 1539 (NPC variant).
+            // MOD Skills.txt: ReqLevel 80, MaxLevel 20, missileForm=0, AttackRadius=400, child=168, charAnim=11.
+            // Icon: \spr\Ui\skill\天下无狗.spr - SAME filename as PC gốc 125 but different UID 0x31d018f1.
+            // Extracted from PC gốc PAK UID 0x31d018f1 (NOT aliased to 125 PNG; this is a distinct icon).
+            // PC: tianxia_wugou player skill_misslenum_v L1=1, L20=3 target-seeking (NOT 16 circle)
+            DamageSkill(359, "天下无狗", "Thiên Hạ Vô Cẩu (player)", 80, 20, 400, 168, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(70+20*lv, 0, 200+55*lv), (lv)=>Same(120+15*lv), (lv)=>Triple(80+3*lv, 0, 0), horseLimit:1),
+            // 360 Tiêu Dao Công: passive combat mastery (Attrib 700, "Chưởng hỗ trợ công kích").
+            // MOD Skills.txt: ReqLevel 60, MaxLevel 20, missileForm=0, AttackRadius=0, child=0, charAnim=14.
+            // Lua: gaibang.lua::xiaoyao_gong (attackspeed_v, castspeed_v, allskillanti, etc).
+            // Icon: \spr\Ui\skill\逍遥功.spr (NOT in MOD or PC gốc PAK - alias cai_bang_skill_130.png).
+            PassiveMastery(360, "逍遥功", "Tiêu Dao Công", 60, addPhys:(lv)=>40+12*lv, elementParam:2, icon:"\\spr\\Ui\\skill\\逍遥功.spr"),
+            // 1073 Thần Thủ Lệnh Long: công kích nội công (Attrib 702). 150-tier Cái Bang top skill.
+            // MOD Skills.txt: ReqLevel 150, MaxLevel 20, missileForm=0, AttackRadius=400, child=335, charAnim=11.
+            // Lua: gaibang.lua::gb_150_shichengjiulong_a (referenced in 357 addskilldamage1=1101; child 1103 z-Thần Thương Lệnh Long Hoàn, requires skill 1073).
+            // Icon: \spr\Ui\技能图标\150\icon_sk_150_gb_01.spr - extracted from MOD updatejx08.pak UID 0x9878076a.
+            // PC: MisslesForm=1 (single guided), ChildSkillId=335, 3-phase event chain
+            DamageSkill(1073, "神失令龙", "Thần Thủ Lệnh Long", 150, 20, 400, 335, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(180+40*lv, 0, 500+100*lv), (lv)=>Same(300+40*lv), (lv)=>Triple(150+5*lv, 0, 0), horseLimit:1),
+            // 1074 Bổng Hoành Lược Mã: công kích ngoại công (Attrib 701). 150-tier Cái Bang top skill.
+            // MOD Skills.txt: ReqLevel 150, MaxLevel 20, missileForm=0, AttackRadius=400, child=336, charAnim=11.
+            // Icon: \spr\Ui\技能图标\150\icon_sk_150_gb_02.spr - extracted from MOD updatejx08.pak UID 0x95215f74.
+            // PC: gungaibang150 skill_misslenum_v L1=1, L20=5 target-seeking (NOT surround)
+            DamageSkill(1074, "棒横掠马", "Bổng Hoành Lược Mã", 150, 20, 400, 336, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(200+45*lv, 0, 550+110*lv), (lv)=>Same(280+35*lv), (lv)=>Triple(160+5*lv, 0, 0), horseLimit:1),
+            // 1539 Thiên Hạ Vô Cẩu (NPC variant): boss/NPC version of 125/359.
+            // MOD Skills.txt: ReqLevel 1, MaxLevel 60, missileForm=0, AttackRadius=400, child=?, charAnim=11.
+            // Marked isNpcVariant=true - hidden from player skill panel but available for boss AI.
+            DamageSkill(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 400, 47, SkillMissileForm.Surround, 16, false, false, 11, (lv)=>Triple(50+15*lv, 0, 150+40*lv), (lv)=>Same(100+10*lv), (lv)=>Triple(80, 0, 0), horseLimit:1, missilesGenerateData:5),
         };
 
         public static SkillDefinition CaiBangDogBeatingAuraChildSkill()
@@ -85,10 +137,10 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        private static SkillDefinition PassiveMastery(int id, string raw, string vi, int req, int elementParam, string icon)
+        private static SkillDefinition PassiveMastery(int id, string raw, string vi, int req, Func<int,int> addPhys, int elementParam, string icon)
         {
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
-            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, 8+2*lv, -1, elementParam)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, 12+3*lv, -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, 5+lv, -1, 0)); return d; }); return s;
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addPhys(lv), -1, elementParam)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, 12+3*lv, -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, 5+lv, -1, 0)); return d; }); return s;
         }
 
         private static SkillDefinition PassiveResist(int id, string raw, string vi, int req, MagicAttributeKind kind)
@@ -114,7 +166,12 @@ namespace VLTK.Sandbox
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null)
         { var s = BaseSkill(id, raw, vi, req, 20, radius, form); s.skillStyle = PcSkillStyle.InitiativeNpcState; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
 
-        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = (id>=115 && id<=130) || id==209 ? CombatFaction.CaiBang : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
+        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
+
+        // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 1073, 1074, 1539 (NPC variant).
+        // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
+        // the player skill panel filters it out via isNpcVariant.
+        public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==359 || id==360 || id==1073 || id==1074 || id==1539;
         private static string IconPathForSkill(int id) => id switch
         {
             1 => "\\spr\\Ui\\技能图标\\icon_sk_ty_ap.spr",
@@ -130,12 +187,14 @@ namespace VLTK.Sandbox
             122 => "\\spr\\Ui\\技能图标\\icon_sk_gb_21.spr",
             123 => "\\spr\\Ui\\技能图标\\icon_sk_gb_22.spr",
             124 or 209 => "\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr",
-            125 => "\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr",
-            126 => "\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr",
-            127 => "\\spr\\Ui\\技能图标\\icon_sk_gb_33.spr",
-            128 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr",
+            125 or 359 or 1539 => "\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr", // 359/1539 share the same path family (天下无狗) but use distinct extracted UIDs; see PC_SOURCE.txt.
+            126 or 274 => "\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr", // 274 Giương Long Chưởng shares the GB_32 icon visually.
+            127 or 277 => "\\spr\\Ui\\技能图标\\icon_sk_gb_33.spr", // 277 Hoành Bách Lộ Thiên shares the GB_33 icon visually.
+            128 or 357 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 357 Phi Long Tại Thiên: same Long-family icon, real icon not in any PAK.
             129 => "\\spr\\Ui\\技能图标\\icon_sk_gb_42.spr",
-            130 => "\\spr\\Ui\\技能图标\\icon_sk_gb_43.spr",
+            130 or 360 => "\\spr\\Ui\\技能图标\\icon_sk_gb_43.spr", // 360 Tiêu Dao Công: alias to Túy Điệp Cuồng Vũ; real icon not in any PAK.
+            1073 => "\\spr\\Ui\\技能图标\\150\\icon_sk_150_gb_01.spr", // MOD 150-tier GB icon, extracted from updatejx08.pak.
+            1074 => "\\spr\\Ui\\技能图标\\150\\icon_sk_150_gb_02.spr", // MOD 150-tier GB icon, extracted from updatejx08.pak.
             _ => "\\spr\\Ui\\技能图标\\icon_sk_gb_01.spr",
         };
         private static void AddLevels(SkillDefinition s, Func<int,SkillLevelData> f) { int max=Mathf.Max(1, s.maxLevel == 0 ? 1 : s.maxLevel); for (int lv=1; lv<=max; lv++) { var data = f(lv) ?? new SkillLevelData(); data.level = lv; s.pcLevelData.Add(data); } var first=s.GetPcLevelData(1); if (first?.First(MagicAttributeKind.PhysicsDamageV) is SkillMagicAttribute a) s.damageLevels.Add(new SkillDamageLevel{level=1,baseDamage=a.value3,attackRatio=1f,isPhysical=s.isPhysical}); }

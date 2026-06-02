@@ -9,6 +9,9 @@ namespace VLTK.Sandbox
         public const int CaiBangSkillPanelLevel = 200;
         public const int CaiBangSkillPanelPoints = 200;
         public const int SkillUpgradePointCost = 1;
+        // 1539 = Thiên Hạ Vô Cẩu NPC variant (ReqLevel 1, MaxLevel 60). MOD-only boss skill
+        // registered in the catalog for boss AI, but NOT shown in the player skill panel.
+        public const int NpcVariantSkillId = 1539;
 
         public int level = 1;
         public int fightSkillPoints;
@@ -29,7 +32,10 @@ namespace VLTK.Sandbox
 
             foreach (var skill in catalog.All)
             {
-                if (!skill.IsCaiBang || skill.skillId < PcCombatCatalogFactory.CaiBangMinSkillId || skill.skillId > PcCombatCatalogFactory.CaiBangMaxSkillId)
+                if (!skill.IsCaiBang)
+                    continue;
+                // Hide the NPC/boss variant (1539) from the player panel.
+                if (skill.skillId == NpcVariantSkillId)
                     continue;
 
                 // PC faction join seeds faction skills into KSkillList at level 0; left-clicking a skill slot spends
@@ -38,6 +44,29 @@ namespace VLTK.Sandbox
                 knownSkills.Add(skill.skillId);
                 if (!skillLevels.ContainsKey(skill.skillId))
                     skillLevels[skill.skillId] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Set all known CaiBang skills to their maximum level for testing.
+        /// Mirrors PC GM command that sets all skills to max.
+        /// Called on every SandboxManager boot / domain reload.
+        /// </summary>
+        public void MaxAllSkillLevels(SkillCatalog catalog)
+        {
+            if (catalog == null) return;
+
+            // Ensure progression is granted first
+            GrantCaiBangSkillPanelProgression(catalog);
+
+            foreach (var skill in catalog.All)
+            {
+                if (!skill.IsCaiBang) continue;
+                if (skill.skillId == NpcVariantSkillId) continue;
+
+                int maxLv = skill.maxLevel > 0 ? skill.maxLevel : 1;
+                knownSkills.Add(skill.skillId);
+                skillLevels[skill.skillId] = maxLv;
             }
         }
 
