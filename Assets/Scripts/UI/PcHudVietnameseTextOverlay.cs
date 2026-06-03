@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace VLTK.UI
 {
@@ -142,12 +143,12 @@ namespace VLTK.UI
 
         // ── Live-data helpers (lấy từ HudDataBridge / SandboxManager) ──────────
 
-        private string GetLevelText()
+private string GetLevelText()
         {
             var hud = FindObjectOfType<GameHudController>();
             if (hud == null) return "1";
-            var label = hud.GetComponent<UnityEngine.UIElements.UIDocument>()
-                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("LevelText");
+            var label = hud.GetComponent<UIDocument>()
+                ?.rootVisualElement?.Q<Label>("LevelText");
             return label?.text ?? "1";
         }
 
