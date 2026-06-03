@@ -97,6 +97,10 @@ Assets/AssetBundles/
 Assets/Resources/Extracted/
 Assets/Resources/Converted/
 unpacked/
+bak/
+*.rar
+*.zip
+*.7z
 
 # ─────────────────────────────────────────────────
 # Python tool cache (vltktool)

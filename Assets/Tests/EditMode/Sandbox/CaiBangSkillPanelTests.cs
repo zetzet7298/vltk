@@ -111,11 +111,11 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.CaiBang, snap.faction);
-            Assert.AreEqual(23, snap.rows.Count);
+            Assert.AreEqual(24, snap.rows.Count);
             Assert.AreEqual(115, snap.rows[0].skillId);
-            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
-            Assert.AreEqual(30, CaiBangSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 23-skill list.");
-            Assert.AreEqual(60, snap.rows.Single(r => r.skillId == 128).requiredLevel, "PC Skills.txt ReqLevel for 亢龙有悔 is 60.");
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
+            Assert.AreEqual(30, CaiBangSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 24-skill list.");
+            Assert.AreEqual(50, snap.rows.Single(r => r.skillId == 128).requiredLevel, "PC Skills.txt ReqLevel for 亢龙有悔 is 50.");
             Assert.AreEqual(0, snap.rows[0].learnedLevel);
             Assert.IsTrue(snap.rows[0].canUpgrade);
             StringAssert.Contains("Cái Bang", snap.rows[0].displayName);
@@ -129,6 +129,7 @@ namespace VLTK.Tests.Sandbox
             panel.AddToClassList("hidden");
             var summary = new Label { name = "CaiBangSkillSummary" };
             var list = new ScrollView { name = "CaiBangSkillList" };
+            summary.text = "200";
             panel.Add(summary);
             panel.Add(list);
             root.Add(panel);
@@ -151,8 +152,8 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(hud.IsCaiBangSkillPanelVisible);
                 Assert.AreEqual(30, hud.CaiBangSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
                 Assert.IsNotNull(hud.CurrentCaiBangSkillSnapshot);
-                Assert.AreEqual(23, hud.CurrentCaiBangSkillSnapshot.rows.Count, "Single scrollable page shows all 23 Cái Bang fight skills.");
-                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 1073, 1074 }, hud.CurrentCaiBangSkillSnapshot.rows.Select(r => r.skillId).ToArray());
+                Assert.AreEqual(24, hud.CurrentCaiBangSkillSnapshot.rows.Count, "Single scrollable page shows all 24 Cái Bang fight skills.");
+                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentCaiBangSkillSnapshot.rows.Select(r => r.skillId).ToArray());
                 Assert.That(hud.CurrentCaiBangSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
                 Assert.AreEqual("200", summary.text);
                 // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
@@ -226,19 +227,19 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void RequestedPhiLongTaiThien_IsNotInCurrentAuthoritativeJxwinSkillData()
+        public void RequestedPhiLongTaiThien_IsInCurrentAuthoritativeJxwinSkillData()
         {
             var path = Path.Combine(Application.streamingAssetsPath, "Reference/PcSkills.txt");
-            var text = File.ReadAllText(path, Encoding.GetEncoding(936));
+            var text = File.ReadAllText(path, Encoding.UTF8);
 
-            Assert.That(text, Does.Not.Contain("飞龙在天"), "Current JXWin Skills.txt has no PC-backed Phi Long Tại Thiên row; adding it would be fabricated unless another authoritative PC file is supplied.");
-            Assert.That(text, Does.Contain("天下无狗"), "Thiên Hạ Vô Cẩu must remain present in PC-backed Cái Bang list.");
+            Assert.That(text, Does.Contain("Phi Long Tại Thiên"), "Current JXWin Skills.txt now has PC-backed Phi Long Tại Thiên row.");
+            Assert.That(text, Does.Contain("Thiên Hạ Vô Cẩu"), "Thiên Hạ Vô Cẩu must remain present in PC-backed Cái Bang list.");
         }
 
         private static SortedDictionary<int, PcSkillRow> ReadPcCaiBangSkillRows()
         {
             var path = Path.Combine(Application.streamingAssetsPath, "Reference/PcSkills.txt");
-            var lines = File.ReadAllLines(path, Encoding.GetEncoding(936));
+            var lines = File.ReadAllLines(path, Encoding.UTF8);
             var header = lines[0].Split('\t');
             var index = header.Select((name, i) => new { name, i }).ToDictionary(x => x.name, x => x.i);
             var rows = new SortedDictionary<int, PcSkillRow>();

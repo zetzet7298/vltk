@@ -164,6 +164,14 @@ namespace VLTK.UI
             impactSr.color = Color.white;
             impactSr.enabled = false;
 
+            var preCastGo = new GameObject("PcPreCast");
+            preCastGo.transform.SetParent(root.transform, false);
+            var preCastSr = preCastGo.AddComponent<SpriteRenderer>();
+            preCastSr.sprite = fx.HasPcPreCastSprite ? FirstValidPcSprite(fx.pcPreCastSpriteKey) : null;
+            preCastSr.sortingOrder = sortingOrder + 3;
+            preCastSr.color = Color.white;
+            preCastSr.enabled = false;
+
             return new RuntimeEffectVisual
             {
                 root = root,
@@ -173,6 +181,7 @@ namespace VLTK.UI
                 missileDot = sr,
                 pcMissiles = pcMissiles,
                 pcImpact = impactSr,
+                pcPreCast = preCastSr,
             };
         }
 
@@ -212,7 +221,15 @@ namespace VLTK.UI
             {
                 case SkillEffectPhase.PreCast:
                 {
-                    if (fx.HasPcMissileSprite)
+                    if (fx.HasPcPreCastSprite)
+                    {
+                        Hide(v.preCastRing);
+                        v.pcPreCast.enabled = true;
+                        v.pcPreCast.transform.position = new Vector3(fx.casterPos.x, fx.casterPos.y, 0f);
+                        v.pcPreCast.transform.localScale = Vector3.one;
+                        v.pcPreCast.sprite = SelectPcPreCastFrame(fx);
+                    }
+                    else if (fx.HasPcMissileSprite)
                     {
                         // PC skill 128 has PreCastSpr mag_tr_16_施魔法.spr; until that SPR is staged,
                         // do not draw fake geometry. The visible PC missile starts at MS_DoFly.
@@ -236,6 +253,7 @@ namespace VLTK.UI
                 case SkillEffectPhase.Missile:
                 {
                     Hide(v.preCastRing);
+                    SetPreCastVisible(v, false);
                     Hide(v.impactRing);
                     SetImpactVisible(v, false);
 
@@ -254,12 +272,14 @@ namespace VLTK.UI
 
                     if (fx.HasPcMissileSprite && v.pcMissiles != null)
                     {
+                        Vector2 liveTarget = fx.getCurrentTargetPos != null ? fx.getCurrentTargetPos() : fx.targetPos;
                         for (int i = 0; i < v.pcMissiles.Count; i++)
                         {
                             var renderer = v.pcMissiles[i];
                             Vector2 mp = fx.missilePositions != null && i < fx.missilePositions.Length ? fx.missilePositions[i] : p;
-                            Vector2 mt = fx.missileTargets != null && i < fx.missileTargets.Length ? fx.missileTargets[i] : fx.targetPos;
-                            renderer.sprite = SelectPcMissileFrame(fx, mt);
+                            // Homing: face the live target from the missile's current position
+                            // so the dragon SPR rotates as it curves toward a moving enemy.
+                            renderer.sprite = SelectPcMissileFrame(fx, mp, liveTarget);
                             renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
                             renderer.transform.localScale = Vector3.one; // SPR decoder already outputs PC-correct orientation.
                             renderer.color = Color.white;
@@ -274,11 +294,16 @@ namespace VLTK.UI
                         v.missileDot.color = c;
                         SetMissileVisible(v, true);
                     }
+
+                    // Sâu xé: render proximity rend flashes per-missile
+                    RenderRendFlashes(fx, v);
+
                     break;
                 }
                 case SkillEffectPhase.Impact:
                 {
                     Hide(v.preCastRing);
+                    SetPreCastVisible(v, false);
                     Hide(v.trail);
                     SetMissileVisible(v, false);
 
@@ -348,12 +373,19 @@ namespace VLTK.UI
 
         private Sprite SelectPcMissileFrame(ActiveSkillEffect fx, Vector2 targetPos)
         {
+            return SelectPcMissileFrame(fx, fx.casterPos, targetPos);
+        }
+
+        private Sprite SelectPcMissileFrame(ActiveSkillEffect fx, Vector2 fromPos, Vector2 targetPos)
+        {
             var sprites = LoadPcSprites(fx.pcMissileSpriteKey);
             if (sprites == null || sprites.Length == 0) return _dotSprite;
 
             // PC KMissleRes::Draw(MS_DoFly):
             // nImageDir = rounded nDir from 64-dir space into nSprDir; nFramePerDir = totalFrames / nSprDir;
-            int dir = ComputePc16Dir(fx.casterPos, targetPos);
+            // For homing missiles (MoveKind=5 in missles.txt), the dir must update each tick
+            // to face the current target — dragon SPR rotates as it chases a moving enemy.
+            int dir = ComputePc16Dir(fromPos, targetPos);
             int framePerDir = Mathf.Max(1, fx.pcMissileTotalFrames / Mathf.Max(1, fx.pcMissileDirections));
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
             int localFrame = (lifeTick / Mathf.Max(1, fx.pcMissileIntervalTicks)) % framePerDir;
@@ -370,10 +402,18 @@ namespace VLTK.UI
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcImpactSpriteKey);
         }
 
+        private Sprite SelectPcPreCastFrame(ActiveSkillEffect fx)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || sprites.Length == 0) return null;
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
+            int frameIndex = Mathf.Clamp(lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks), 0, sprites.Length - 1);
+            return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcPreCastSpriteKey);
+        }
+
         private Sprite[] LoadPcSprites(string key)
         {
             if (string.IsNullOrEmpty(key)) return null;
-            if (_pcSpriteCache.TryGetValue(key, out var cached)) return cached;
 
             string path = Path.Combine(Application.streamingAssetsPath, "Sprites", key.EndsWith(".spr") ? key : key + ".spr");
             if (!File.Exists(path))
@@ -383,11 +423,15 @@ namespace VLTK.UI
                 return null;
             }
 
+            var fileInfo = new FileInfo(path);
+            string cacheKey = $"{key}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
+            if (_pcSpriteCache.TryGetValue(cacheKey, out var cached)) return cached;
+
             var decoded = SprDecoder.Decode(File.ReadAllBytes(path));
             if (!decoded.success || decoded.frames == null || decoded.frames.Length == 0)
             {
                 SubsystemLog.Warn("Combat", $"PC skill SPR decode failed: {key} — {decoded.error}");
-                _pcSpriteCache[key] = null;
+                _pcSpriteCache[cacheKey] = null;
                 return null;
             }
 
@@ -407,7 +451,7 @@ namespace VLTK.UI
                 sprites[i].name = $"PCSPR_{key}_{i}";
             }
 
-            _pcSpriteCache[key] = sprites;
+            _pcSpriteCache[cacheKey] = sprites;
             return sprites;
         }
 
@@ -423,6 +467,60 @@ namespace VLTK.UI
             return dir;
         }
 
+        private void RenderRendFlashes(ActiveSkillEffect fx, RuntimeEffectVisual v)
+        {
+            if (fx.rendPositions == null) return;
+            int flashIdx = 0;
+            foreach (var rp in fx.rendPositions)
+            {
+                SpriteRenderer sr;
+                if (flashIdx < v.rendFlash.Count && v.rendFlash[flashIdx] != null)
+                {
+                    sr = v.rendFlash[flashIdx];
+                }
+                else
+                {
+                    var rendGo = new GameObject("RendFlash");
+                    rendGo.transform.SetParent(v.root.transform, false);
+                    sr = rendGo.AddComponent<SpriteRenderer>();
+                    sr.sprite = _dotSprite;
+                    sr.sortingOrder = sortingOrder + 4;
+                    v.rendFlash.Add(sr);
+                }
+                sr.transform.position = new Vector3(rp.x, rp.y, 0f);
+                sr.enabled = true;
+
+                // PC sâu xé: each dragon bite is a brief, violent flash that expands fast then fades.
+                // Use a per-rend age (newest first) to drive scale and alpha.
+                float ageIdx = v.rendFlashAges.Count > flashIdx ? v.rendFlashAges[flashIdx] : 0f;
+                if (ageIdx < 0f) ageIdx = 0f;
+                ageIdx += Time.deltaTime;
+                if (v.rendFlashAges.Count <= flashIdx)
+                    v.rendFlashAges.Add(ageIdx);
+                else
+                    v.rendFlashAges[flashIdx] = ageIdx;
+
+                float life = Mathf.Clamp01(ageIdx / 0.35f);
+                float scale = _scale * 0.07f * (1f + life * 3f);
+                sr.transform.localScale = Vector3.one * scale;
+
+                // Sâu xé color: blend from hot white-yellow to fiery red as it dies out.
+                var hot = new Color(1f, 0.95f, 0.7f);
+                var fire = new Color(1f, 0.35f, 0.1f);
+                var c = Color.Lerp(hot, fire, life);
+                c.a = Mathf.Lerp(1f, 0f, life);
+                sr.color = c;
+
+                flashIdx++;
+            }
+            // Hide unused flashes
+            for (int i = flashIdx; i < v.rendFlash.Count; i++)
+            {
+                if (v.rendFlash[i] != null)
+                    v.rendFlash[i].enabled = false;
+            }
+        }
+
         // ── Drawing primitives ───────────────────────────────────────────────
 
         private static void SetMissileVisible(RuntimeEffectVisual v, bool visible)
@@ -436,6 +534,11 @@ namespace VLTK.UI
         private static void SetImpactVisible(RuntimeEffectVisual v, bool visible)
         {
             if (v.pcImpact != null) v.pcImpact.enabled = visible;
+        }
+
+        private static void SetPreCastVisible(RuntimeEffectVisual v, bool visible)
+        {
+            if (v.pcPreCast != null) v.pcPreCast.enabled = visible;
         }
 
         private static void Hide(LineRenderer line)
@@ -501,7 +604,10 @@ namespace VLTK.UI
             public SpriteRenderer missileDot;
             public List<SpriteRenderer> pcMissiles;
             public SpriteRenderer pcImpact;
+            public SpriteRenderer pcPreCast;
             public SpriteRenderer impactFlash;
+            public List<SpriteRenderer> rendFlash = new();
+            public List<float> rendFlashAges = new();
         }
     }
 }

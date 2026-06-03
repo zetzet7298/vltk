@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Cai Bang combat parity**: added PC-sourced tuning for MOD/Cai Bang skills,
+  including level-scaled formulas, missile counts, costs, damage, and 150-tier
+  skill visuals sourced from `/var/www/vltksource_new/vl_update_27`.
+- PC SPR playback for 150-tier Cai Bang pre-cast visuals, including
+  `Thần Thủ Lệnh Long` and `Bổng Hoành Lược Mã` source-backed SPR assets.
+- `jx-pc-port-rule` skill and `/port` command so PC-to-Unity porting tasks load
+  the scoped PC source-of-truth rule plus Unity MCP orchestration.
 - **Male player port** (US-M21-002): layered 8-part SPR avatar
   (shadow, body, head, hair, left/right hand, left/right empty-hand weapon)
   rendered as individual `SpriteRenderer`s, matching the original JX Online 3
@@ -25,6 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   source copyright headers, and this changelog.
 
 ### Fixed
+- Cai Bang missile behavior now follows PC movement forms more closely, including
+  homing MoveKind=5 tracking, parallel spread handling, collide sub-effects, and
+  cache invalidation when staged PC SPR files are replaced.
 - Player rendered **under** the map in dense town centers — player base
   `sortingOrder` now clamps above the map ceiling (32000) so the avatar always
   draws on top.

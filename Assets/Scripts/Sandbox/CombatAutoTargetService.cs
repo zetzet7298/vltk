@@ -27,9 +27,13 @@ namespace VLTK.Sandbox
             if (skill == null || enemies == null || enemies.Count == 0)
                 return null;
 
-            int attackRadius = PcKangLongYouHuiTuning.Applies(skill.skillId) && skillLevel > 0
-                ? PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius
-                : skill.attackRadius;
+            int attackRadius;
+            if (PcKangLongYouHuiTuning.Applies(skill.skillId) && skillLevel > 0)
+                attackRadius = PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
+            else if (PcCaiBangSkillTuning.Applies(skill.skillId) && skillLevel > 0)
+                attackRadius = PcCaiBangSkillTuning.AtLevel(skill.skillId, skillLevel).attackRadius;
+            else
+                attackRadius = skill.attackRadius;
             float maxRange = attackRadius * RangeWorldPerPcUnit;
             if (maxRange <= 0) maxRange = 500f; // PC default melee range fallback
 

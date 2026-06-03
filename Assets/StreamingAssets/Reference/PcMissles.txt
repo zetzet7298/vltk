@@ -1,107 +1,442 @@
-MissleId	MissleName	MoveKind	FollowKind	ColFollowTarget	MissleHeight	CollidRange	IsRangeDmg	DmgRange	DmgInterval	LifeTime	Speed	Zspeed	Zacc	LoopPlay	SubLoop	SubStart	SubStop	ResponseSkill	CanDestroy	ColVanish	CanSlow	CanColFriend	AutoExplode	Param1	Param2	Param3	MultiShow	AnimFile1	AnimFileInfo1	SndFile1	AnimFile2	AnimFileInfo2	SndFile2	AnimFile3	AnimFileInfo3	SndFile3	AnimFile4	AnimFileInfo4	SndFile4	AnimFileB1	AnimFileInfoB1	SndFileB1	AnimFileB2	AnimFileInfoB2	SndFileB2	AnimFileB3	AnimFileInfoB3	SndFileB3	AnimFileB4	AnimFileInfoB4	SndFileB4	RedLum	GreenLum	BlueLum	LightRadius
-1	����ͬ��	1	0	1	18	2	1	2	14	15	12	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\����\mag_em_02_����ͬ��.spr	64,16,1	\sound\skill\sound_k029.wav				\spr\skill\����\mag_bz_bin2_��ըЧ��.spr	6,1,2	\sound\skill\����.wav													156	211	255	90
-2	һҶ֪��	1	0	1	10	1	0	1	0	24	20	0	0	1	0	0	0	0	1	1	1	0	0	0	1	0	0				\spr\skill\����\mag_em_03_һҶ֪��.spr	64,16,1	\sound\skill\sound_k029.wav				\spr\skill\����\mag_bz_bin1_��ըЧ��.spr	14,1,1	\sound\skill\sound_k041.wav													156	211	255	90
-3	���𲻾�	1	0	1	10	1	0	1	0	16	20	0	0	1	0	0	0	0	1	1	0	0	0	1	1	0	0				\spr\skill\����\mag_em_04_���𲻾�.spr	64,16,1	\sound\skill\���𲻾�.wav				\spr\skill\����\mag_em_bin4_��ըЧ��.spr	6,1,1	\sound\skill\����������.wav													156	211	255	90
-4	�������	0	0	1	10	1	1	7	6	7	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\����\mag_em_05_�������.spr	8,1,2					\spr\skill\����\mag_bz_bin1_��ըЧ��.spr	7,1,2	\sound\skill\sound_k045.wav													156	211	255	90
-5	�Ⱥ��ն�	0	0	0	10	1	1	10	20	19	10	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\����\mag_em_12_�Ⱥ��ն�.spr	20,1,1					\spr\skill\����\mag_bz_bin5_��ըЧ��.spr	18,1,2	\sound\skill\sound_k041.wav													156	166	247	90
-6	����ͻ��	1	0	1	10	1	0	1	0	20	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_cy_01_����ͻ��.spr	48,16,1	\sound\skill\�绨ѩ��.wav				\spr\skill\����\mag_bz_bin2_��ըЧ��.spr	6,1,2	\sound\skill\����.wav													156	211	255	90
-7	�����ѩ	1	0	0	5	3	0	1	4	24	15	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	1				\spr\skill\����\mag_cy_02_�����ѩ_a.spr	7,1,1	\sound\skill\�����ѩ.wav										\spr\skill\����\mag_cy_02_�����ѩ_b.spr	7,1,1								156	211	255	90
-8	����滨	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0				\spr\skill\����\mag_cy_03_����滨.spr	5,1,1		\spr\skill\����\mag_bz_bin4_��ըЧ��.spr	16,1,2		\spr\skill\����\mag_bz_bin3_��ըЧ��.spr	19,1,2	\sound\skill\sound_k041.wav													156	211	255	90
-9	��Ұ����a	1	0	0	600	1	1	3	0	35	0	0	1024	1	0	0	0	0	1	1	0	0	1	0	0	0	0				\spr\skill\����\mag_cy_04_��Ұ����.spr	5,1,1		\spr\skill\����\mag_bz_bin5_��ըЧ��.spr	18,1,2		\spr\skill\����\mag_bz_bin5_��ըЧ��.spr	18,1,2	\sound\skill\sound_k041.wav													156	211	255	90
-10	�̺�����a	0	0	0	10	1	1	3	0	5	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\����\mag_cy_05_�̺�����_a.spr	6,1,1	\sound\skill\�̺�����.wav																			156	211	255	90
-11	�̺�����b	1	0	0	10	1	0	0	0	30	16	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0				\spr\skill\����\mag_cy_05_�̺�����_b.spr	48,16,1					\spr\skill\����\mag_bz_bin1_��ըЧ��.spr	14,1,1														156	211	255	90
-12	����ɢѩ	0	0	1	80	1	1	7	15	15	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\����\mag_cy_10_����ɢѩ.spr	16,1,1	\sound\skill\����ɢѩ.wav																			156	166	247	90
-13	������	0	0	1	10	1	0	1	10	16	1	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\����\mag_cy_11_��Ѫ��.spr	20,1,1	\sound\skill\������.wav																			189	134	82	90
-14	������	1	1	1	10	1	0	1	0	15	20	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0				\spr\skill\����\kl_01_���編.spr	15,1,1	\sound\skill\������.wav				\spr\skill\����\Bz_dian3_��ը.spr	8,1,1														255	219	214	90
-15	Ѹ����	1	0	1	10	1	0	1	0	12	30	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	1				\spr\skill\����\kl_02_���編a.spr	160,16,1	\sound\skill\Ѹ����.wav				\spr\skill\����\Bz_dian3_��ը.spr	8,1,1	\sound\skill\sound_k040.wav				\spr\skill\����\kl_02_���編b.spr	160,16,1								255	255	239	90
-16	������	1	0	1	10	1	1	5	4	40	16	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\����\kl_03_������.spr	20,1,1	\sound\skill\������.wav				\spr\skill\����\Bz_dian3_��ը.spr	8,1,1														255	255	239	90
-17	�������	0	0	1	60	1	1	3	4	4	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\����\KL_04_�������.spr	5,1,2					\spr\skill\����\Bz_dian3_��ը.spr	8,1,1														255	255	239	90
-18	��������	0	0	1	50	1	0	1	4	4	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\����\kl_05_��������.spr	5,1,2					\spr\skill\����\Bz_dian3_��ը.spr	8,1,1														255	255	239	90
-19	����	0	0	0	20	1	1	5	0	2	1	0	0	0	0	0	0	0	0	1	0	1	1	0	0	0	0							\spr\skill\����\kl_11_����.spr	40,1,1		\spr\skill\����\kl_12_ ���.spr	40,1,1														255	219	99	90
-20	���	0	0	0	20	1	1	7	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0							\spr\skill\����\kl_12_ ���.spr	40,1,1		\spr\skill\����\kl_12_ ���.spr	40,1,1														255	219	99	90
-21	һ�������	0	0	0	20	1	0	1	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0										\spr\skill\����\kl_13_������շ�.spr	20,1,1														255	219	99	90
-22	���ķ�	0	0	0	20	1	1	5	0	2	1	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0										\spr\skill\����\kl_14_���ķ�.spr	20,1,1														255	219	99	90
-23	���������	0	0	0	20	1	1	7	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0										\spr\skill\����\kl_15_���������.spr	20,1,1														255	219	99	90
-24	ŭ��ָ	1	0	1	10	1	0	1	0	20	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\�䵱\wd_01_ŭ��ָ.spr	160,16,1	\sound\skill\ŭ��ָ.wav				\spr\skill\�䵱\Bz_dian1_��ը.spr	8,1,1	\sound\skill\sound_k040.wav													239	231	189	90
-25	�׺�����	1	0	1	10	1	0	1	0	24	20	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0				\spr\skill\�䵱\wd_02_�׺�����.spr	8,1,1	\sound\skill\�׺�����.wav				\spr\skill\�䵱\Bz_dian1_��ը.spr	8,1,1														189	239	239	90
-26	��ʾ���	0	0	1	10	1	1	5	17	16	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\�䵱\wd_03_��ʾ���.spr	17,1,1	\sound\skill\���ɾ���.wav				\spr\skill\����\Bz_dian3_��ը.spr	8,1,1														255	255	231	90
-27	��һ����	1	0	1	15	1	0	1	0	10	30	0	0	0	0	0	0	0	1	1	0	0	0	0	0	0	0										\spr\skill\�䵱\wd_04_��һ����.spr	8,1,1	\sound\skill\��һ����.wav													255	255	231	90
-28	��������	0	0	1	15	1	1	7	12	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\�䵱\wd_05_��������.spr	12,1,1	\sound\skill\��������.wav																			255	255	231	90
-29	�����޽�	1	0	1	10	1	0	1	0	18	20	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0				\spr\skill\�䵱\wd_10_�����޽�.spr	96,16,1																				255	255	231	90
-30	��ɰ��	1	0	1	10	1	0	1	0	32	15	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\�嶾��\bz_du1_��ը.spr	13,1,1														107	255	123	90
-31	Ѫ�ֶ�ɱ	1	0	1	10	1	0	1	0	30	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\�嶾��\wdu_02_����ӡ.spr	10,1,1	\sound\skill\Ѫ�ֶ�ɱ.wav				\spr\skill\�嶾��\bz_du1_��ը.spr	13,1,1														140	207	156	90
-32	����ը��	1	0	1	10	1	1	3	0	30	12	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\�嶾��\wdu_03_����ը��.spr	80,16,1	\sound\skill\��ڤ����.wav				\spr\skill\�嶾��\bz_du2_��ը.spr	6,1,1	\sound\skill\��ͨ��ը.wav													140	207	156	90
-33	�����׹�ץ	0	0	0	20	1	0	5	6	7	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\�嶾��\wdu_04_�����׹�ץ.spr	8,1,1		\spr\skill\�嶾��\wdu_04_�����׹�ץ����.spr	13,1,4																	140	207	156	90
-34	��󡹦	1	0	1	10	1	1	5	0	30	12	0	0	1	0	0	0	0	0	1	1	0	0	0	0	0	0				\spr\skill\�嶾��\wdu_05_��󡹦.spr	160,16,1	\sound\skill\�����ڤ.wav				\spr\skill\�嶾��\bz_du2_��ը.spr	6,1,1														140	207	156	90
-35	������	7	0	1	10	3	1	3	0	60	16	10240	5120	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\tm_03_������.spr	10,1,1	\sound\skill\������.wav				\spr\skill\����\mag_bz_huo1_��ըЧ��.spr	6,1,2														132	125	107	90
-36	�����	1	0	1	10	1	0	1	0	25	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\tm_04_����.spr	8,1,1	\sound\skill\�����.wav																			255	251	214	90
-37	׷�ļ�	1	0	1	10	1	0	1	0	12	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\tm_05_�����.spr	160,16,1	\sound\skill\׷�ļ�.wav																			148	219	255	90
-38	���컨��	0	0	1	20	1	1	7	40	39	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0				\spr\skill\����\tm_06_���컨��.spr	40,1,3																				255	219	214	90
-39	����	0	0	1	10	1	0	1	0	28	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\����\tm_09_����.spr	28,4,1																				140	140	140	90
-40	�����	1	0	1	10	1	0	1	0	30	16	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0				\spr\skill\����\tm_10_�����.spr	160,16,1																				255	255	90	90
-41	�����	1	0	1	10	1	0	1	0	30	20	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\����\tm_11_�����.spr	160,16,1																				255	255	239	90
-42	������	1	0	1	10	1	0	1	0	30	15	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\����\tm_12_������.spr	96,16,1																				156	207	231	90
-43	������	1	0	1	10	1	1	3	0	30	12	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\����\TM_13_������.spr	160,16,1																				90	255	90	90
-44	Ͷʯ��·	7	0	1	10	1	0	1	0	40	14	10240	2048	1	0	0	0	0	1	1	1	0	1	0	0	0	0				\spr\skill\ؤ��\mag_gb_01_Ͷʯ��·.spr	1,1,1	\sound\skill\Ͷʯ��·.wav	\spr\skill\ؤ��\mag_bz_tu1_��ըЧ��.spr	16,1,2		\spr\skill\ؤ��\mag_bz_tu1.spr	16,1,2	\sound\skill\sound_k044.wav													123	113	107	90
-45	�����в�	1	0	1	10	1	0	1	0	15	16	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_02_�����в�.spr	64,16,1	\sound\skill\�����в�.wav				\spr\skill\����\mag_tr_bz1_��ըЧ��.spr	8,1,2														255	174	60	90
-46	��������	1	0	1	10	1	0	1	0	15	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_03_��������.spr	64,16,1	\sound\skill\��������.wav				\spr\skill\����\mag_tr_bz1_��ըЧ��.spr	8,1,2														255	174	60	90
-47	�����޹�	1	0	1	10	1	0	1	0	34	12	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_04_�����޹�.spr	64,16,1	\sound\skill\�����޹�.wav				\spr\skill\����\mag_bz_huo3_��ըЧ��.spr	18,1,2														255	174	60	90
-48	�����л�	1	0	1	10	1	1	3	0	20	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_05_�����л�.spr	80,16,1	\sound\skill\�����޻�.wav				\spr\skill\ؤ��\mag_gb_bz5_��ըЧ��.spr	6,1,2	\sound\skill\sound_k037.wav													255	174	60	90
-49	��ľ����	0	0	0	20	1	0	1	0	12	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_06_��ľ����.spr	13,1,2																				255	255	214	90
-50	��������	0	0	0	20	1	0	1	0	14	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_09_��������.spr	15,1,2																				165	170	255	90
-51	��ľ����	0	0	0	20	1	0	1	0	14	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_08_��ľ����.spr	15,1,2																				123	255	189	90
-52	����ӳѩ	0	0	0	10	1	0	1	0	19	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_07_����ӳѩ.spr	20,1,2																				247	154	41	90
-53	����Ϊ��	0	0	0	20	1	0	1	0	14	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ؤ��\mag_gb_10_����Ϊ��.spr	15,1,2																				247	154	41	90
-54	������Ѫ	1	0	0	10	1	0	1	0	18	15	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_tr_01_������ѩ.spr	48,16,1	\sound\skill\sound_k028.wav				\spr\skill\����\mag_bz_huo1_��ըЧ��.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
-55	��ɽ�	0	0	0	20	2	0	2	4	120	0	0	0	1	1	20	30	0	0	0	0	0	0	0	0	0	1				\spr\skill\����\mag_tr_02_��ɽ�_a1.spr	31,1,2	\sound\skill\��ɽ�.wav	\spr\skill\����\mag_tr_02_��ɽ�_a2.spr	10,1,2				\sound\skill\sound_k038.wav				\spr\skill\����\mag_tr_02_��ɽ�_b1.spr	31,1,2	\sound\skill\sound_k036.wav	\spr\skill\����\mag_tr_02_��ɽ�_b2.spr	10,1,2					239	146	82	90
-56	�һ�����	1	0	1	10	1	0	1	0	28	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_tr_01_������ѩ.spr	48,16,1	\sound\skill\�һ�����.wav				\spr\skill\����\mag_bz_huo1_��ըЧ��.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
-57	��ָ����	1	0	1	10	1	1	3	0	20	25	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_tr_04_��ָ����.spr	48,16,1	\sound\skill\sound_k028.wav				\spr\skill\����\mag_bz_huo3_��ըЧ��.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
-58	������ȭ	1	0	0	450	1	1	5	0	100	0	0	4096	1	0	0	0	0	0	1	0	0	1	0	0	0	0				\spr\skill\����\mag_tr_05_����ȭ.spr	4,1,1		\spr\skill\����\mag_bz_huo4_��ըЧ��.spr	16,1,2		\spr\skill\����\mag_bz_huo3_��ըЧ��.spr	6,1,2		\spr\skill\����\mag_bz_huo4_��ըЧ��.spr	16,1,2											239	146	82	90
-59	��	1	0	0	10	1	0	1	0	30	20	0	0	1	0	0	0	0	1	1	0	1	0	0	0	0	0				\spr\skill\����\bz_bo1_��.spr	320,32,1																				231	227	107	90
-60	�첨	1	0	0	10	1	0	1	0	40	16	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\����\bz_bo2_�첨.spr	320,32,1																				222	101	74	90
-61	Ħڭ����	1	0	0	10	1	0	1	0	10	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\sl_01_Ħڭ����.spr	80,16,1																				231	227	107	90
-62	ʨ�Ӻ�	1	0	1	10	1	0	1	0	10	16	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\����\bz_bo2_�첨.spr	320,32,1																				222	101	74	90
-63	�̱���������	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0										\spr\skill\����\������ը.spr	4,1,1	\sound\skill\����������.wav										\spr\skill\����\������ը.spr	4,1,1		181	203	255	0
-64	������������	1	0	1	10	1	0	1	6	6	20	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0										\spr\skill\����\������ը.spr	4,1,1	\sound\skill\ǹ������.wav													181	203	255	0
-65	Զ����������	1	0	1	10	1	0	1	0	20	16	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\Զ�̹���.spr	16,16,5					\spr\skill\����\������ը.spr	4,1,1	\sound\skill\sound_k032.wav													231	227	107	10
-66	��������	0	0	1	5	1	1	4	10	15	20	0	0	1	0	0	0	0	0	1	0	0	1	0	0	0	0				\spr\skill\����\sl_03_��������.spr	15,1,1	\sound\skill\��������.wav																			231	227	107	90
-67	С��ɵ�	1	0	1	10	1	0	1	0	40	24	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\tm_07_С��ɵ�.spr	16,1,1	\sound\skill\sound_k031.wav																			227	247	198	90
-68	Ʈѩ����	1	0	1	10	1	0	1	0	24	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_em_01_Ʈѩ����.spr	64,16,1	\sound\skill\Ʈѩ����.wav				\spr\skill\����\mag_bz_bin1_��ըЧ��.spr	14,1,1														115	219	255	90
-69	͵�컻��	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\����\mag_tr_07_͵�컻��.spr	15,1,2	\sound\skill\sound_k032.wav													255	113	114	90
-70	��������	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\����\mag_tr_09_��������.spr	15,1,2	\sound\skill\sound_k032.wav													255	255	123	90
-71	���Ǵ�	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\����\mag_tr_08_���Ǵ�.spr	15,1,2	\sound\skill\sound_k032.wav													115	166	255	90
-72	���ƾ�	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\����\mag_bz_bin1_��ըЧ��.spr	7,1,2	\sound\skill\sound_k041.wav													173	235	255	90
-73	����ն	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\�䵱\Bz_dian1_��ը.spr	8,1,1	\sound\skill\sound_k040.wav													239	239	214	90
-74	ն����	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\����\mag_bz_huo1_��ըЧ��.spr	6,1,2	\sound\skill\sound_k036.wav													247	154	33	90
-75	��ɨ�����˺�	0	0	0	2	1	0	1	0	1	0	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0						\sound\skill\sound_k023.wav																			255	255	255	0
-76	����ȫ����Χ�����ӵ�	0	0	0	2	1	1	16	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0																									255	255	255	0
-77	����ȫ����Χ�з��ӵ�	0	0	0	2	1	1	16	2	2	0	0	0	0	0	0	0	0	1	1	1	0	1	0	0	0	0																									255	255	255	0
-78	����	1	0	0	2	1	0	1	0	20	24	0	0	0	0	0	0	0	1	1	0	1	0	0	0	0	0				\spr\skill\����\mag_spe_bo_��.spr	320,32,1																				148	174	239	90
-79	�첨	1	0	0	2	1	0	1	0	20	24	0	0	1	0	0	0	0	1	1	1	1	0	0	0	0	0				\spr\skill\����\bz_bo2_�첨.spr	320,32,1																				222	101	74	90
-80	�̲�	1	0	0	2	1	1	1	0	20	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_spe_bo_��.spr	320,32,1																				132	227	82	90
-81	�ײ�	1	0	0	2	1	0	1	0	20	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_spe_bo_��.spr	320,32,1																				140	142	165	90
-82	������ȭ�˺�	0	0	0	2	1	0	1	0	1	0	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0																									255	255	255	90
-83	���ɾ����˺�	0	0	0	2	1	0	1	0	1	0	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0																									255	255	255	90
-84	�粨	1	0	0	2	1	0	1	0	20	25	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_spe_bo_��.spr	160,16,1																				255	255	255	90
-85	���޵����ɵ�	2	2	0	20	1	0	1	0	15	16	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\tm_04_����.spr	8,1,1																				255	255	255	90
-86	��ɨ����	0	0	0	2	1	1	3	0	1	0	0	0	0	0	0	0	0	1	1	1	0	1	0	0	0	0										\spr\skill\����\������ը.spr	4,1,20														255	255	255	0
-87	ʯͷ	7	0	1	10	2	0	2	0	100	24	5120	10240	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_ʯͷ.spr	9,1,1																				148	113	66	90
-88	ë	1	0	1	10	1	0	1	0	40	24	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_��ë.spr	64,16,20																				148	113	66	90
-89	һ��ë	1	0	1	10	1	0	1	0	20	24	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_��ë.spr	64,16,20																				214	231	132	90
-90	��ˮ	1	0	1	10	1	0	1	0	15	24	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_��ˮ.spr	64,16,1																				214	231	132	90
-91	��Һ	1	0	0	10	1	0	1	0	15	20	0	0	0	0	0	0		1	1	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_��ˮ.spr	64,16,1		\spr\skill\NPC\mag_npc_��ˮ��ʧ.spr	30,1,2																	107	32	115	90
-92	�Ѻù⻷�����ӵ�	0	0	0	2	1	1	16	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0																									255	255	255	0
-93	���	1	0	0	10	1	0	1	0	15	20	0	0	0	0	0	0		1	1	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_��.spr	16,16,1																				255	247	214	90
-94	�˺���̹⻷�����ӵ�	0	0	0	2	1	0	4	0	2	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0										\spr\skill\�嶾��\bz_du1_��ը.spr	6,1,1														255	255	255	0
-95	�˽���һ	0	0	1	20	1	0	1	0	10	0	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0				\spr\skill\�䵱\wd_09_�˽���һ��.spr	11,1,1					\spr\skill\�䵱\Bz_dian1_��ը.spr	8,1,1														255	255	255	90
-97	��������	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0										\spr\skill\����\������ը.spr	4,1,2	\sound\skill\����������.wav										\spr\skill\����\������ը.spr	4,1,1		181	203	255	0
-98	˫������	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0										\spr\skill\����\BZ_�1.spr	6,1,1	\sound\skill\����������.wav										\spr\skill\����\������ը.spr	4,1,1		181	203	255	0
-99	���ֹ���	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0										\spr\skill\����\������ը.spr	4,1,1	\sound\skill\����������.wav										\spr\skill\����\������ը.spr	4,1,1		181	203	255	0
-100	˫������	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0										\spr\skill\����\������ը.spr	4,1,1	\sound\skill\����������.wav										\spr\skill\����\������ը.spr	4,1,1		181	203	255	0
-101	����ͬ������	0	0	1	18	1	1	2	5	1	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0										\spr\skill\����\mag_bz_bin5_��ըЧ��.spr	18,1,2														156	211	255	90
-102	Ħڭ����npc	1	0	0	10	3	1	3	0	15	30	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\����\sl_01_Ħڭ����.spr	80,16,1																				231	227	107	90
-103	���𲻾�npc	1	0	1	10	3	1	3	0	30	30	0	0	1	0	0	0	0	1	1	0	0	0	1	1	0	0				\spr\skill\����\mag_em_04_���𲻾�.spr	64,16,1	\sound\skill\���𲻾�.wav				\spr\skill\����\mag_em_bin4_��ըЧ��.spr	6,1,1	\sound\skill\����������.wav													156	211	255	90
-104	��ָ����npc	1	0	1	10	3	1	3	0	20	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\mag_tr_04_��ָ����.spr	48,16,1	\sound\skill\sound_k028.wav				\spr\skill\����\mag_bz_huo3_��ըЧ��.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
-105	���޵���npc	1	0	1	10	3	0	3	0	40	30	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0				\spr\skill\����\tm_07_С��ɵ�.spr	16,1,1	\sound\skill\sound_k031.wav																			227	247	198	90
-106	С��ɵ�	0	0	1	10	1	0	1	0	1	0	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0										\spr\skill\����\�ɱ걬ը.spr	4,1,1														227	247	198	90
-107	С��ɵ���	1	1	1	10	1	0	1	0	40	32	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0						\sound\skill\sound_k031.wav																			227	247	198	90
+MissleId	MissleName	MoveKind	FollowKind	ColFollowTarget	MissleHeight	CollidRange	IsRangeDmg	DmgRange	DmgInterval	LifeTime	Speed	Zspeed	Zacc	LoopPlay	SubLoop	SubStart	SubStop	ResponseSkill	CanDestroy	ColVanish	CanSlow	CanColFriend	AutoExplode	MissRate	Param1	Param2	Param3	MultiShow	AnimFile1	AnimFileInfo1	SndFile1	AnimFile2	AnimFileInfo2	SndFile2	AnimFile3	AnimFileInfo3	SndFile3	AnimFile4	AnimFileInfo4	SndFile4	AnimFileB1	AnimFileInfoB1	SndFileB1	AnimFileB2	AnimFileInfoB2	SndFileB2	AnimFileB3	AnimFileInfoB3	SndFileB3	AnimFileB4	AnimFileInfoB4	SndFileB4	RedLum	GreenLum	BlueLum	LightRadius
+1	Tứ Tượng Đồng Quy	1	0	1	18	2	1	2	14	16	12	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ảởỏề\mag_em_02_ậÄẽúÍơạộ.spr	64,16,1	\sound\skill\sound_k029.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+2	Nhất Diệp Tri Thu	1	0	1	10	1	0	1	0	32	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	1	0	0				\spr\skill\ảởỏề\mag_em_03_ềằềảệêầù.spr	64,16,1	\sound\skill\sound_k029.wav				\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1	\sound\skill\sound_k041.wav													156	211	255	90
+3	Bất Diệt Bất Tuyệt	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	0	0	0	0	1	1	0	0				\spr\skill\ảởỏề\mag_em_04_²ằÃð²ằắứ.spr	64,16,1	\sound\skill\²ằÃð²ằắứ.wav				\spr\skill\ảởỏề\mag_em_bin4_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													156	211	255	90
+4	Phật Quang Phổ Chiếu	0	0	1	10	4	1	4	13	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ảởỏề\mag_em_05_ãðạõặếếế.spr	8,1,2					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	7,1,2	\sound\skill\sound_k045.wav													156	211	255	90
+5	Từ Hàng Phổ D	0	0	0	10	5	1	5	20	19	10	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ảởỏề\mag_em_12_´ẩºẵặếảẫ.spr	20,1,1					\spr\skill\ảởỏề\mag_bz_bin5_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k041.wav													156	166	247	90
+6	Phong Vân Đột Khởi 	1	0	1	10	1	0	1	0	20	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_01_ãỗễặÍằặð.spr	48,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+7	Phong Quyển Tàn Tuyết	1	0	0	5	2	1	2	4	16	26	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	1						\sound\skill\ãỗắớ²éẹâ.wav																			156	211	255	90
+8	Vũ Đả Lê Hoa	1	0	1	450	2	1	2	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_03_ểờ´ũÀổằă.spr	5,1,1		\spr\skill\ảởỏề\mag_bz_bin4_±ơếăéĐạỷ.spr	16,1,2		\spr\skill\ảởỏề\mag_bz_bin3_±ơếăéĐạỷ.spr	19,1,2	\sound\skill\sound_k041.wav													156	211	255	90
+9	Mục Dã Lưu Tinh a	0	0	0	320	2	1	2	0	24	0	-40960	40960	1	0	0	0	0	1	1	0	0	1	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_04_ÄÁề°Áữéầ.spr	5,1,1		\spr\skill\ảởỏề\mag_bz_bin5_±ơếăéĐạỷ.spr	18,1,2		\spr\skill\ảởỏề\mag_bz_bin5_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k041.wav													156	211	255	90
+10	Bích Hải Triều Sinh a	0	0	0	10	8	1	8	5	5	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_05_±èºÊ³±ẫỳ_a.spr	6,1,1	\sound\skill\±èºÊ³±ẫỳ.wav																			156	211	255	90
+11	Bích Hải Triều Sinhb	1	0	0	10	1	0	1	0	30	24	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_05_±èºÊ³±ẫỳ_b.spr	48,16,1					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1														156	211	255	90
+12	Phù Vân Tán Tuyết	0	0	1	15	3	1	3	15	15	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_10_ạÛềụẫÂẹâ.spr	16,1,1	\sound\skill\áĂễặẫÂẹâ.wav																			156	166	247	90
+13	Trị liệu thuật	0	0	1	10	1	0	1	10	16	1	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_11_²ạẹêấừ.spr	20,1,1	\sound\skill\ệẻÁặấừ.wav																			189	134	82	90
+14	Tật Phong Chú 	1	1	1	10	1	0	1	0	15	20	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0				\spr\skill\ÀƠÂỉ\kl_01_ºụãỗãă.spr	15,1,1	\sound\skill\ẳ²ãỗệọ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	219	214	90
+15	Tấn Lôi Chú 	1	0	1	10	1	0	1	0	16	30	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	1						\sound\skill\ẹáÀìệọ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav				\spr\skill\ÀƠÂỉ\kl_02_ẳ²àỗãăb.spr	160,16,1								255	255	239	90
+16	Cuồng Phong Sậu Điện	1	0	1	10	2	1	2	4	16	31	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ÀƠÂỉ\kl_03_¿ủãỗệốàỗ.spr	20,1,1	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+17	Cuồng Lôi Chấn Địa 	0	0	1	15	2	1	2	4	4	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ÀƠÂỉ\KL_04_¿ủÀìếðàỉ.spr	5,1,2					\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+18	Ngũ Lôi Chánh Pháp	0	0	1	18	2	1	2	4	4	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\ÀƠÂỉ\kl_05_ẻồÀìếýãă.spr	5,1,2					\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+19	Thanh Phong phù 	0	0	0	18	3	1	3	0	2	1	0	0	0	0	0	0	0	0	1	0	1	1	0	0	0	0	0										\spr\skill\ÀƠÂỉ\kl_11_ầồãỗãỷ.spr	40,1,1														255	219	99	90
+20	Ki Bán phù 	0	0	0	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0																									255	219	99	90
+21	Nhất Khí Tam Thanh Phù 	0	0	0	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	1	0	1	1	0	0	0	0	0										\spr\skill\ÀƠÂỉ\kl_13_´úÁƯẵðáếãỷ.spr	20,1,1														255	219	99	90
+22	Khí Tâm phù 	0	0	0	18	3	1	3	0	2	1	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ÀƠÂỉ\kl_14_ặỳéÄãỷ.spr	20,1,1														255	219	99	90
+23	Tuế Nguyệt Vô Tình phù 	0	0	0	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ÀƠÂỉ\kl_15_ậờễÂẻịầộãỷ.spr	20,1,1														255	219	99	90
+24	Nộ Lôi Chỉ 	1	0	1	10	1	0	1	0	16	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_01_ÅưÀìệá.spr	160,16,1	\sound\skill\ÅưÀìệá.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+25	Thương Hải Minh Nguyệt	1	0	1	10	1	0	1	4	16	20	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_02_²ìºÊÃữễÂ.spr	8,1,1	\sound\skill\²ìºÊÃữễÂ.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1														189	239	239	90
+26	Thiên Tế Tấn Lôi 	0	0	1	10	3	1	3	17	16	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_03_èỡẳấắêÀì.spr	17,1,1	\sound\skill\ẵÊãẫắêèỡ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	231	90
+27	Huyền Nhất Vô Tượng	0	0	1	15	1	0	1	10	10	0	0	0	0	0	0	0	0	1	1	0	0	1	0	0	0	0	0										\spr\skill\ẻọà±\wd_04_éỵềằẻịẽú.spr	8,1,1	\sound\skill\éỵềằẻịẽú.wav													255	255	231	90
+28	Bác Cấp Nhi Phục	0	0	1	15	4	1	4	13	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_05_°ỵẳ°ảứá´.spr	12,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+29	Vô Ngã Vô Kiếm  	1	0	1	10	1	0	1	0	16	20	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_10_ẻịẻềẻịẵÊ.spr	96,16,1																				255	255	231	90
+30	Độc Sa chưởng	1	0	1	10	1	0	1	0	16	15	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\wu\éỵÚÔẻỹéầ.spr	128,16,1	\sound\skill\ểÄÚÔữẳữÃ.wav				\spr\skill\ẻồảắẵè\bz_du1_±ơếă.spr	13,1,1														107	255	123	90
+31	Huyết Đao Độc Sát	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_02_´úấệểĂ.spr	10,1,1	\sound\skill\ẹêấệảắẫ±.wav				\spr\skill\ẻồảắẵè\bz_du1_±ơếă.spr	13,1,1														140	207	156	90
+32	Khô Lâu Tạc Đạn 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_03_ữẳữÃếăà¯.spr	80,16,1	\sound\skill\ểÄÚÔữẳữÃ.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													140	207	156	90
+33	Cửu Âm Bạch Cốt Trảo 	0	0	0	20	3	0	3	6	6	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠ.spr	8,1,1		\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠẽỷÍử.spr	13,1,4																	140	207	156	90
+34	Cáp Mô công	1	0	1	10	2	1	2	0	16	31	0	0	1	0	0	0	0	0	1	1	0	0	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_05_áũúĂạƯ.spr	160,16,1	\sound\skill\ệỡáũầàÚÔ.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1														140	207	156	90
+35	Tích Lịch đơn	7	0	1	10	3	1	3	0	60	16	10240	5120	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_03_Åựửăà¯.spr	10,1,1	\sound\skill\Åựửăà¯.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	6,1,2														132	125	107	90
+36	Thiên La Địa Võng	1	0	1	10	1	0	1	0	25	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_ễƯãẫàả.spr	128,16,1	\sound\skill\ảỏằờùÚ.wav																			255	251	214	90
+37	Truy Tâm Tiễn	1	0	1	10	1	0	1	0	16	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_05_ảàẽũẳý.spr	160,16,1	\sound\skill\ìãéÄẳý.wav																			148	219	255	90
+38	Mạn Thiên Hoa Vũ 	0	0	1	20	3	1	3	40	39	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\èặÃÅ\tm_06_Âỵèỡằăểờ.spr	40,1,3																				255	219	214	90
+39	Giáp Tử 	0	0	1	10	1	0	1	0	28	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_09_ẳéìể.spr	28,4,1																				140	140	140	90
+40	Hỏa Địa Lôi 	1	0	1	10	1	0	1	0	30	16	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_10_ằðàỉÀì.spr	160,16,1																				255	255	90	90
+41	Điện Địa Lôi 	1	0	1	10	1	0	1	0	30	20	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_11_àỗàỉÀì.spr	160,16,1																				255	255	239	90
+42	Băng Địa Lôi 	1	0	1	10	1	0	1	0	30	15	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_12_±ựàỉÀì.spr	96,16,1																				156	207	231	90
+43	Độc Địa Lôi 	1	0	1	10	3	1	3	0	30	12	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\TM_13_ảắàỉÀì.spr	160,16,1																				90	255	90	90
+44	Đầu Thạch Vấn Lộ 	7	0	1	10	2	1	2	0	40	14	10240	2048	1	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_01_Íảấ¯ẻấÂã.spr	1,1,1	\sound\skill\Íảấ¯ẻấÂã.wav	\spr\skill\ỉÔ°ù\mag_bz_tu1_±ơếăéĐạỷ.spr	16,1,2		\spr\skill\ỉÔ°ù\mag_bz_tu1.spr	16,1,2	\sound\skill\sound_k044.wav													123	113	107	90
+45	Diên Môn Thác Bát	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_02_ẹỉÃÅÍé²Đ.spr	64,16,1	\sound\skill\ẹỉÃÅÍé²Đ.wav				\spr\skill\èỡẩè\mag_tr_bz1_±ơếăéĐạỷ.spr	8,1,2														255	174	60	90
+46	Kiến Nhân Thần Thủ 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_03_ẳỷẩậẫỡấệ.spr	64,16,1	\sound\skill\ẳỷẩậẫỡấệ.wav				\spr\skill\èỡẩè\mag_tr_bz1_±ơếăéĐạỷ.spr	8,1,2														255	174	60	90
+47	Bổng Đả ác Cẩu	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_04_èỡẽÂẻịạã.spr	64,16,1	\sound\skill\èỡẽÂẻịạã.wav				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2														255	174	60	90
+48	Kháng Long Hữu Hối	1	0	1	10	1	0	1	0	16	10	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_05_¿ºÁỳểéằÚ.spr	80,16,1	\sound\skill\¿ºÁỳẻịằÚ.wav				\spr\skill\ỉÔ°ù\mag_gb_bz5_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\sound_k037.wav													255	174	60	90
+49	Cô Mộc Độn Lôi 	0	0	0	20	1	0	1	0	12	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_06_ạÂÄắảíÀì.spr	13,1,2																				255	255	214	90
+50	Bôn Lưu Đáo Hải	0	0	0	20	1	0	1	0	14	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_09_±ẳÁữàẵºÊ.spr	15,1,2																				165	170	255	90
+51	Khuê Mộc Tinh Chiếu	0	0	0	20	1	0	1	0	14	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_08_¿ỹÄắéầếế.spr	15,1,2																				123	255	189	90
+52	Kim Ô ánh Tuyết	0	0	0	10	1	0	1	0	19	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_07_ẵðẻÚể³ẹâ.spr	20,1,2																				247	154	41	90
+53	Hóa Hiểm Vi Di	0	0	0	20	1	0	1	0	14	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_10_ằ¯ẽếẻêềÄ.spr	15,1,2																				247	154	41	90
+54	Tàn Dương Như Huyết	1	0	0	10	1	0	1	0	16	15	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\sound_k028.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+55	Thôi sơn  Điền Hải	0	0	0	20	2	1	2	12	120	0	0	0	1	1	20	30	0	0	0	0	0	0	0	0	0	0	1				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a1.spr	31,1,2	\sound\skill\ÍặẫẵèợºÊ.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a2.spr	10,1,2				\sound\skill\sound_k038.wav				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b1.spr	31,1,2	\sound\skill\sound_k036.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b2.spr	10,1,2					239	146	82	90
+56	Liệt Hỏa Tình Thiên 	1	0	1	10	1	0	1	0	16	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+57	Đơn Chỉ Liệt Diệm	1	0	1	10	3	1	3	0	16	25	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_04_à¯ệáÁềẹổ.spr	48,16,1	\sound\skill\sound_k028.wav				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+58	Thất Thương Thần Quyền 	0	0	1	10	4	1	4	5	1	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	255	90
+59	Kim Ba 	1	0	0	10	1	0	1	0	30	20	0	0	1	0	0	0	0	1	1	0	1	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1																				231	227	107	90
+60	Hồng Ba 	1	0	0	10	1	0	1	0	40	16	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo2_ºỡ²ă.spr	320,32,1																				222	101	74	90
+61	Ma Ha Vô Lượng	1	0	0	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_01_ÄƯÚưẻịÁ¿.spr	80,16,1																				231	227	107	90
+62	Sư Tử Hống 	1	0	1	10	1	0	1	0	10	16	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo2_ºỡ²ă.spr	320,32,1																				222	101	74	90
+63	Công kích vật lý 	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+64	Công kích vật lý  	1	0	1	10	1	0	1	6	6	20	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1	\sound\skill\ầạ´èệéẫự.wav													181	203	255	0
+65	Công kích vật lý gần 	1	0	1	10	1	0	1	0	20	16	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\ễả³èạƠằữ.spr	16,16,5					\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1	\sound\skill\sound_k032.wav													231	227	107	10
+66	Hàng Long Bất Vũ  	0	0	1	5	4	1	4	10	15	20	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_03_ééÁỳ²ằểờ.spr	15,1,1	\sound\skill\ééÁỳ²ằểờ.wav																			231	227	107	90
+67	Thiên La Địa võng 	5	0	1	10	1	0	1	0	36	16	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_ễƯãẫàả.spr	128,16,1	\sound\skill\sound_k031.wav																			227	247	198	90
+68	Phiêu Tuyết Xuyên Vân 	1	0	1	10	1	0	1	1	16	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ảởỏề\mag_em_01_ặđẹâ´âễặ.spr	64,16,1	\sound\skill\ặđẹâ´âễặ.wav				\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1														115	219	255	90
+69	Thâu Thiên Hoán Nhật	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0										\spr\skill\èỡẩè\mag_tr_07_Íàèỡằằẩế.spr	15,1,2	\sound\skill\sound_k032.wav													255	113	114	90
+70	Tá Lực Đả Lực	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0										\spr\skill\èỡẩè\mag_tr_09_ẵốÁƯ´ũÁƯ.spr	15,1,2	\sound\skill\sound_k032.wav													255	255	123	90
+71	Hấp Tinh Đại Pháp	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0										\spr\skill\èỡẩè\mag_tr_08_ẻỹéầ´úãă.spr	15,1,2	\sound\skill\sound_k032.wav													115	166	255	90
+72	Hàng Vân Quyết 	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0										\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	7,1,2	\sound\skill\sound_k041.wav													173	235	255	90
+73	Kinh Lôi Trảm 	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0										\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													239	239	214	90
+74	Trảm Long Quyết  	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0										\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\sound_k036.wav													247	154	33	90
+75	Hoành Tảo Lục Hợp 	0	0	0	2	1	0	1	0	1	0	0	0	0	0	0	0	0	1	1	1	0	1	0	0	0	0	0						\sound\skill\sound_k023.wav	\spr\skill\²ạ³ọ\ạữ°ụ±ơếă.spr	4,1,1																	255	255	255	0
+76	Định vị đồng đội trong khu vực 	0	0	0	2	10	1	10	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0	0																									255	255	255	0
+77	Định vị đối phương trong khu vực	0	0	1	10	12	1	12	7	6	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	255	0
+78	Lam Ba 	1	0	0	2	1	0	1	0	20	24	0	0	0	0	0	0	0	1	1	0	1	0	0	0	0	0	0				\spr\skill\²ạ³ọ\mag_spe_bo_Àả.spr	320,32,1																				148	174	239	90
+79	Hồng Ba 	1	0	0	2	1	0	1	0	20	24	0	0	1	0	0	0	0	1	1	1	1	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo2_ºỡ²ă.spr	320,32,1																				222	101	74	90
+80	Lục Ba 	1	0	0	2	1	1	1	0	20	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\mag_spe_bo_Âè.spr	320,32,1																				132	227	82	90
+81	Bạch Ba 	1	0	0	2	1	0	1	0	20	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\mag_spe_bo_°ì.spr	320,32,1																				140	142	165	90
+82	Thất Thương Thần Quyền 	1	0	1	10	0	0	0	0	24	2	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_bz_huo4_±ơếăéĐạỷ.spr	16,1,2					\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,2														239	146	82	90
+83	Kiếm Phi Kinh Thiên 	0	0	0	2	1	0	1	0	1	0	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0																									255	255	255	90
+84	Điện ba	1	0	0	2	1	0	1	0	20	25	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\mag_spe_bo_àỗ.spr	160,16,1																				255	255	255	90
+85	Thiên La Địa VõngPhi Đao	2	2	0	20	1	0	1	0	15	16	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_04_ảỏằờẳý.spr	8,1,1																				255	255	255	90
+86	Hoành Tảo Lục Hợp	0	0	0	2	4	1	4	0	1	0	0	0	0	0	0	0	0	1	1	1	0	1	0	0	0	0	0										\spr\skill\²ạ³ọ\ạữ°ụ±ơếă.spr	4,1,1														255	255	255	0
+87	Đá 	7	0	1	10	2	0	2	0	100	24	5120	10240	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_ấ¯Íã.spr	9,1,1																				148	113	66	90
+88	Lông  	1	0	1	10	1	0	1	0	40	24	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_ảèÃô.spr	64,16,20																				148	113	66	90
+89	1 dúm lông 	1	0	1	10	1	0	1	0	20	24	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_ẳõÃô.spr	64,16,20																				214	231	132	90
+90	Nước miếng 	1	0	1	10	1	0	1	0	15	24	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_¿Úậđ.spr	64,16,1																				214	231	132	90
+91	Nước độc 	1	0	0	10	1	0	1	0	15	20	0	0	0	0	0	0		1	1	0	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_ảắậđ.spr	64,16,1		\spr\skill\NPC\mag_npc_ảắậđẽỷấĐ.spr	30,1,2																	107	32	115	90
+92	Vòng tròn hỗ trợ đồng đội	0	0	0	2	10	1	10	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0	0																									255	255	255	0
+93	Bắn tên 	1	0	0	10	1	0	1	0	15	20	0	0	0	0	0	0		1	1	0	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_ẳý.spr	16,16,1																				255	247	214	90
+94	Vòng tròn gây sát thương 	0	0	0	2	8	0	8	0	2	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0										\spr\skill\ẻồảắẵè\bz_du1_±ơếă.spr	6,1,1														255	255	255	0
+95	Nhân Kiếm Hợp Nhất 11	0	0	1	20	1	0	1	0	10	0	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_09_ẩậẵÊºẽềằẵÊ.spr	11,1,1					\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1														255	255	255	90
+96	Bạo Vũ Lê Hoa	0	0	1	15	1	0	1	17	90	0	0	0	1	1	1	16	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\èặÃÅ\tm_07_éĂÀợãẫàả.spr	90,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+97	Công kích Côn bổng 	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\ạữ°ụ±ơếă.spr	4,1,2	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+98	Công kích Song chùy 	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\BZ_ộÂ1.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+99	Công kích tay không	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+100	Song đaocông kích 	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+101	Tứ Tượng Đồng Quy (trung tâm) 	0	0	1	18	2	1	2	5	1	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ảởỏề\mag_bz_bin5_±ơếăéĐạỷ.spr	18,1,2														156	211	255	90
+102	Ma Ha Vô Lượng npc	1	0	0	10	3	1	3	0	15	30	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_01_ÄƯÚưẻịÁ¿.spr	80,16,1																				231	227	107	90
+103	Bất Diệt Bất Tuyệt npc	1	0	1	10	3	1	3	0	30	30	0	0	1	0	0	0	0	1	1	0	0	0	0	1	1	0	0				\spr\skill\ảởỏề\mag_em_04_²ằÃð²ằắứ.spr	64,16,1	\sound\skill\²ằÃð²ằắứ.wav				\spr\skill\ảởỏề\mag_em_bin4_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													156	211	255	90
+104	Đơn Chỉ Liệt Diệm npc	1	0	1	10	3	1	3	0	20	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_04_à¯ệáÁềẹổ.spr	48,16,1	\sound\skill\sound_k028.wav				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+105	Thiên la Địa võng  npc	1	0	1	10	3	0	3	0	40	30	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_07_éĂÀợãẫàả.spr	16,1,1	\sound\skill\sound_k031.wav																			227	247	198	90
+106	Tiểu Lý Phi Đao	0	0	1	10	2	0	2	0	1	0	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\ãẫ±ờ±ơếă.spr	4,1,1														227	247	198	90
+107	Tiểu Lý Phi Đao 	1	1	1	10	1	0	1	0	40	32	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0						\sound\skill\sound_k031.wav																			227	247	198	90
+108	Pháo Hoa	0	0	0	10	0	0	0	0	24	0	0	0	0	0	0	0		0	0	0	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\ẹèằă.spr	24,1,3																				255	255	255	100
+109	Sư Tử Hống 	0	0	1	10	8	1	8	7	6	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	255	0
+110	Tam Hoàn Thao Nguyệt 	1	0	1	10	1	0	1	0	4	32	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_04_éỵềằẻịẽú.spr	8,1,1					\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\ẻọà±\wd_04_éỵềằẻịẽú.spr	8,1,1		181	203	255	0
+111	Băng Tâm Trái ảnh	0	0	1	10	1	0	1	10	16	1	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_11_²ạẹêấừ.spr	20,1,1	\sound\skill\ệẻÁặấừ.wav																			189	134	82	90
+112	Đạp Tuyết Vô Ngân 	0	0	0	18	3	1	3	0	2	1	0	0	0	0	0	0	0	0	1	0	1	1	0	0	0	0	0							\spr\skill\´ọẹè\mag_cy_09.spr	16,1,1		\spr\skill\´ọẹè\mag_cy_09.spr	16,1,1														255	219	99	90
+113	Long Trảo Hổ Trảo 	1	0	1	10	1	0	1	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0							\spr\skill\²ạ³ọ\BZ_ộÂ.spr	6,1,1		\spr\skill\²ạ³ọ\BZ_ộÂ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\ẻọà±\wd_04_éỵềằẻịẽú.spr	8,1,1		181	203	255	0
+114	Hoạt Bất Lưu Thủ  	0	0	0	18	3	1	3	0	2	1	0	0	0	0	0	0	0	0	1	0	1	1	0	0	0	0	0							\spr\skill\ỉÔ°ù\mag_gb_07_ẵðẻÚể³ẹâ.spr	20,1,1																	255	219	99	90
+115	Thanh Âm Phạn Xướng 	0	0	0	10	6	1	6	44	40	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ảởỏề\em_±ựéÄốúềụ.spr	40,1,1					\spr\skill\ảởỏề\mag_bz_bin5_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k041.wav													156	166	247	90
+116	Đoạt Hồn Tiêu	1	0	1	10	1	0	1	0	25	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_07_éĂÀợãẫàả.spr	16,1,1	\sound\skill\ảỏằờùÚ.wav																			255	251	214	90
+117	Kháng Long Hữu Hối 	0	0	0	20	2	0	2	16	16	0	0	0	1	1	20	30	0	0	0	0	0	0	0	0	0	0	1				\spr\skill\ỉÔ°ù\mag_gb_03_ẳỷẩậẫỡấệ.spr	64,16,1	\sound\skill\ÍặẫẵèợºÊ.wav	\spr\skill\ỉÔ°ù\mag_gb_03_ẳỷẩậẫỡấệ.spr	64,16,1				\sound\skill\sound_k038.wav				\spr\skill\ỉÔ°ù\mag_gb_03_ẳỷẩậẫỡấệ.spr	64,16,1	\sound\skill\sound_k036.wav	\spr\skill\ỉÔ°ù\mag_gb_03_ẳỷẩậẫỡấệ.spr	64,16,1					239	146	82	90
+118	Hoa hồng 1	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\Ãàạồ01.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ01.spr	50,1,1								156	211	255	90
+119	Hoa hồng 2	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1			\sound\skill\ãỗằăẹâễÂ.wav	\spr\skill\²ạ³ọ\Ãàạồ03.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ02.spr	50,1,1								156	211	255	90
+120	Hoa hồng 3	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\Ãàạồ02.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ04.spr	50,1,1								156	211	255	90
+121	Hoa hồng 4	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\Ãàạồ05.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ03.spr	50,1,1								156	211	255	90
+122	Hoa hồng 5	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\Ãàạồ04.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ01.spr	50,1,1								156	211	255	90
+123	Hoa hồng 6	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\Ãàạồ06.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ05.spr	50,1,1								156	211	255	90
+124	Hoa Hồng trên mặt đất 	0	0	1	15	0	0	0	0	32	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ÃàạồàỉÃổ03.spr	16,1,1											\spr\skill\²ạ³ọ\ÃàạồàỉÃổ01.spr	1,1,1								255	255	231	90
+125	Vòng tròn hỗ trợ đồng đội 	0	0	0	2	8	1	8	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0	0																									255	255	255	0
+126	Bạo Vũ Lê Hoa 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\ễả³èạƠằữ.spr	16,16,1	\sound\skill\sound_k031.wav				\spr\skill\ẻồảắẵè\bz_du1_±ơếă.spr	13,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													239	231	189	90
+127	Độc Thích Cốt 	0	0	1	15	2	1	2	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_08_ẽíắđ.spr	1080,1,1																				255	255	231	90
+128	Độc Thích Cốt  	0	0	0	20	2	1	2	6	16	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	1				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1				\sound\skill\sound_k038.wav				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1					239	146	82	90
+129	Đầu Thạch đan (Vật lý) 	7	0	1	10	8	1	8	0	40	20	20480	1024	1	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\npc\Íảấ¯ặế.spr	20,1,1		\spr\skill\npc\Íảấ¯ặế±ơếă.spr	27,1,1	\sound\skill\²ạ³ọ\Íảấ¯±ơếă.wav	\spr\skill\npc\Íảấ¯ặế±ơếă.spr	27,1,1	\sound\skill\²ạ³ọ\Íảấ¯±ơếă.wav													123	113	107	90
+130	Đạn công thành	1	0	1	10	2	1	2	12	12	30	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\BZ_ộÂ.spr	6,1,1	\sound\skill\ầạ´èệéẫự.wav													181	203	255	0
+131	Đầu Thạch đan (Hỏa) 	7	0	1	10	8	1	8	0	40	20	20480	1024	1	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\npc\Íảấ¯ằð.spr	20,1,1		\spr\skill\npc\Íảấ¯ằð±ơếă.spr	27,1,1	\sound\skill\²ạ³ọ\Íảấ¯±ơếă.wav	\spr\skill\npc\Íảấ¯ằð±ơếă.spr	27,1,1														156	211	255	90
+132	Đầu Thạch đan (Băng) 	7	0	1	10	8	1	8	0	40	20	20480	1024	1	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\npc\Íảấ¯±ự.spr	20,1,1		\spr\skill\npc\Íảấ¯±ự±ơếă.spr	27,1,1	\sound\skill\²ạ³ọ\Íảấ¯±ơếă.wav	\spr\skill\npc\Íảấ¯±ự±ơếă.spr	27,1,1														115	219	255	90
+133	Đầu Thạch đan (Độc ) 	7	0	1	10	8	1	8	0	40	20	20480	1024	1	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\npc\Íảấ¯ảắ.spr	20,1,1		\spr\skill\npc\Íảấ¯ảắ±ơếă.spr	27,1,1	\sound\skill\²ạ³ọ\Íảấ¯±ơếă.wav	\spr\skill\npc\Íảấ¯ảắ±ơếă.spr	27,1,1														90	255	90	90
+134	Kim Phật Xuất Kích	1	0	1	10	1	0	1	0	4	24	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_01_´ùÄƯảẫẵư.spr	160,16,1					\spr\skill\sl\ẵðÁỳèẵìƯ.spr	6,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+135	Hoành Tảo Thiên Quân	0	0	1	10	6	1	6	5	5	0	0	0	1	0	0	0	0	1	0	1	0	1	0	0	0	0	0				\spr\skill\sl\bz_ºỏẫăầĐắỹ.spr	8,1,1					\spr\skill\sl\ẵðÁỳèẵìƯ.spr	6,1,1	\sound\skill\sound_k017.wav				\spr\skill\sl\bz_ºỏẫăầĐắỹ.spr	8,1,1	\sound\skill\sound_k017.wav						\sound\skill\sound_k014.wav	239	231	189	90
+136	Vô Tướng Trảm 	1	0	1	10	1	0	1	1	16	40	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\sl\ẻịẽũếả.spr	128,16,1					\spr\skill\ẫÙÁệ\sl_04_ằÛẹÛệọ.spr	20,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													239	231	189	90
+137	Vòng tròn hỗ trợ đồng đội 	0	0	0	2	14	1	14	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0	0																									255	255	255	0
+138	Phá Thiên Trảm 	1	0	1	10	1	0	1	0	3	24	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0										\spr\skill\tw\ìããỗắử.spr	8,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+139	Truy Tinh Trục Nguyệt 	1	0	1	10	1	0	1	0	4	24	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\mag_npc_ảèÃô.spr	64,16,1					\spr\skill\sl\ẵðÁỳèẵìƯ.spr	4,1,1	\sound\skill\àảẵÊ´èệéẫự.wav				\spr\skill\²ạ³ọ\mag_npc_ảèÃô.spr	64,16,1					\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+140	Thừa Long Quyết 	1	0	1	10	1	0	1	0	3	24	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1					\spr\skill\²ạ³ọ\BZ_ộÂ1.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1					\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+141	Truy Phong Quyết 	1	0	1	10	1	0	1	0	3	24	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1					\spr\skill\²ạ³ọ\BZ_ộÂ1.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1					\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+142	Tam Nga Tề Tuyết Phi Kiếm 	1	0	1	10	1	0	1	0	16	32	0	0	1	0	0	0	0	1	0	0	0	0	0	1	1	0	0				\spr\skill\ảởỏề\mag_em_04_²ằÃð²ằắứ.spr	64,16,1	\sound\skill\²ằÃð²ằắứ.wav				\spr\skill\ảởỏề\mag_em_bin4_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													156	211	255	90
+143	Tam Nga Tề Tuyết #Thân 	0	0	1	10	3	1	3	13	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ảởỏề\mag_em_05_ãðạõặếếế.spr	8,1,2					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	7,1,2	\sound\skill\sound_k045.wav													156	211	255	90
+144	Kim Đỉnh Phật Quang 	5	0	1	10	1	0	1	0	35	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ảởỏề\mag_em_01_ặđẹâ´âễặ.spr	64,16,1	\sound\skill\ặđẹâ´âễặ.wav				\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1														115	219	255	90
+145	Thiên Phật Thiên Diệp 	1	0	1	10	1	0	1	0	16	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\mag_spe_bo_Àả.spr	320,32,1	\sound\skill\ặđẹâ´âễặ.wav				\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1														115	219	255	90
+146	Băng Tung Vô ảnh 	1	0	1	10	1	0	1	0	24	32	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_01_ãỗễặÍằặð.spr	48,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+147	Băng Tâm Tiên Tử  	1	0	1	10	1	0	1	0	16	30	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\cy\ãỗẹâ±ựèỡ.spr	128,16,1	\sound\skill\ặđẹâ´âễặ.wav				\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1														115	219	255	90
+148	Phong Tuyết Băng Thiên 	0	0	1	15	3	1	3	15	15	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\cy\xx_ãỗẹâ±ựèỡ.spr	40,1,1	\sound\skill\áĂễặẫÂẹâ.wav																			156	166	247	90
+149	Nhiếp Hồn Nguyệt ảnh	1	0	1	10	1	0	1	0	16	32	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\tm\ềứàảẫọễÂ_02.spr	18,1,1	\sound\skill\ìãéÄẳý.wav																			148	219	255	90
+150	Ngân Đao Xạ Nguyệt 	0	0	1	20	3	1	3	8	16	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\tm\bz_ềứàảẫọễÂ.spr	16,1,1																				255	219	214	90
+151	Tán Hoa Tiêu 	100	0	1	10	1	0	1	0	32	30	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\tm\ẩèếòùÚ.spr	15,1,1	\sound\skill\sound_k040.wav				\spr\skill\tm\ẩèếòùÚ.spr	15,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+152	Cửu Cung Phi Tinh	100	0	1	10	1	0	1	0	32	32	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\tm\ắÅạơãẫéầ.spr	8,1,1	\sound\skill\sound_k040.wav				\spr\skill\tm\ắÅạơãẫéầ.spr	8,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+153	Xuyên Tâm Thích 	0	0	1	15	2	1	2	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_´âéÄ´è.spr	1080,1,1																				255	255	231	90
+154	Xuyên Tâm Thích 	0	0	0	20	2	1	2	6	27	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\´âéÄ´è.spr	27,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\tm\´âéÄ´è.spr	27,1,1	\sound\skill\Åựửăà¯.wav			\sound\skill\sound_k038.wav				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1					239	146	82	90
+155	Hàn Băng Thích 	0	0	1	15	2	1	2	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_ºđ±ự´è.spr	1080,1,1																				255	255	231	90
+156	Hàn Băng Thích 	0	0	0	20	2	1	2	6	27	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\bz_ºđ±ự´è.spr	27,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\tm\bz_ºđ±ự´è.spr	27,1,1	\sound\skill\Åựửăà¯.wav			\sound\skill\sound_k038.wav				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1					239	146	82	90
+157	Địa Diệm Hỏa 	0	0	1	15	2	1	2	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_àỉẹổằð.01.spr	1080,1,1																				255	255	231	90
+158	Địa Diệm Hỏa 	0	0	0	20	2	1	2	6	27	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\àỉẹổằð.spr	27,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\tm\àỉẹổằð.spr	27,1,1	\sound\skill\Åựửăà¯.wav			\sound\skill\sound_k038.wav				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1					239	146	82	90
+159	Lôi Kích Thuật 	0	0	1	15	2	1	2	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_Àìằữấừ.spr	1080,1,1																				255	255	231	90
+160	Lôi Kích Thuật 	0	0	0	20	2	1	2	6	27	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\Àìằữấừ.spr	27,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\tm\Àìằữấừ.spr	27,1,1	\sound\skill\Åựửăà¯.wav			\sound\skill\sound_k038.wav				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1					239	146	82	90
+161	Loạn Hoàn Kích	0	0	1	15	2	1	2	13	1080	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_ìẽẫôẽíÚồ.spr	1080,1,1																				255	255	231	90
+162	Loạn Hoàn Kích 	0	0	0	20	2	1	2	6	27	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1				\sound\skill\sound_k038.wav													239	146	82	90
+163	Âm Phong Thực Cốt 	0	0	0	20	3	1	3	12	13	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\wu\ềừãỗấ´ạầ.spr	20,1,1																				140	207	156	90
+164	Thiên Cương Độc Thủ 	0	0	0	20	3	1	3	6	6	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠ.spr	8,1,1		\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠẽỷÍử.spr	13,1,4																	140	207	156	90
+165	Huyền Âm Trảm 	1	0	1	10	1	0	1	0	16	40	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\wu\éỵÚÔẻỹéầ.spr	128,16,1	\sound\skill\ểÄÚÔữẳữÃ.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													140	207	156	90
+166	Phi Long Tại Thiên 	5	0	1	10	1	0	1	0	24	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_05_¿ºÁỳểéằÚ.spr	80,16,1	\sound\skill\¿ºÁỳẻịằÚ.wav				\spr\skill\ỉÔ°ù\mag_gb_bz5_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\sound_k037.wav													255	174	60	90
+167	Long Chiến Ư Dã 	0	0	1	10	3	0	3	15	15	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\gb\ÁỳếẵểÚề°.spr	15,1,1	\sound\skill\sound_k044.wav																			239	146	82	90
+168	Thiên Hạ Vô Cẩu 	5	0	1	10	1	0	1	0	32	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_04_èỡẽÂẻịạã.spr	64,16,1	\sound\skill\èỡẽÂẻịạã.wav				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2														255	174	60	90
+169	Vân Long Kích	1	0	1	10	1	0	1	0	6	32	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ÀƠÂỉ\kl_02_ẳ²àỗãăa.spr	160,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\tr\ễặÁỳằữ.spr	6,1,1	\sound\skill\sound_k037.wav													239	146	82	90
+170	Nghiệp Hỏa Phàn Thành 	1	0	1	10	4	1	4	6	54	2	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tr\ềàằðãÙ³ầ.spr	"""35,1,1"""																				239	146	82	90
+171	Thiên Ngoại Lưu Tinh	0	0	0	320	1	0	1	10	14	0	-81920	1024	1	0	0	0	0	1	1	0	0	1	0	0	0	0	0				\spr\skill\tr\zd_ềàằðãÙ³ầ.spr	18,1,1		\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1		\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\sound_k037.wav													156	211	255	90
+172	Thiên Địa Vô Cực 	1	0	1	10	1	0	1	0	10	32	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_10_ẻịẻềẻịẵÊ.spr	96,16,1																				255	255	231	90
+173	Thiên Địa Vô Cực  	0	0	1	15	4	1	4	4	20	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\wd\èỡàỉẻịẳô.spr	20,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+174	Thiên Địa Vô Cực  	0	0	1	15	4	1	4	12	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_05_°ỵẳ°ảứá´.spr	12,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+175	Nhân Kiếm Hợp Nhất  	1	0	1	10	1	0	1	0	6	32	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_11_àỗàỉÀì.spr	160,16,1	\sound\skill\²ìºÊÃữễÂ.wav																			239	231	189	90
+176	Thái Cực Kiếm ý 	0	0	0	2	2	1	2	11	9	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_09_ẩậẵÊºẽềằẵÊ.spr	11,1,1					\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													255	255	255	90
+177	Nhân Kiếm Hợp Nhất 	1	0	0	2	1	0	1	0	11	0	0	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_03_èỡẳấắêÀì.spr	17,1,1	\sound\skill\ẵÊãẫắêèỡ.wav																			255	255	255	90
+178	Ngạo Tuyết Tiêu Phong 	1	0	1	10	1	1	4	4	16	31	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ÀƠÂỉ\kl_03_¿ủãỗệốàỗ.spr	20,1,1	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+179	Khiếu Phong Tam Liên Kích	0	0	1	15	2	0	2	5	15	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\kl\°Áẹâẽụãỗ.spr	54,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+180	Triền Tự Quyết 	0	0	1	10	2	1	2	20	20	0	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ÀƠÂỉ\Bz_dian4_±ơếă.spr	15,1,1	\sound\skill\ÅưÀìệá.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+181	Lôi động Cửu Thiên 	0	0	1	18	2	0	2	10	12	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\kl\Àìả¯ắÅèỡ.spr	6,1,2					\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+182	Thiên Địa Vô Cực Nộ Lôi Chỉ 	1	0	1	10	1	0	1	0	40	10	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_01_ÅưÀìệá.spr	160,16,1	\sound\skill\ÅưÀìệá.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+183	Minh Nguyệt Vô Tâm 	1	0	1	10	1	0	1	0	3	20	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_02_²ìºÊÃữễÂ.spr	8,1,1	\sound\skill\²ìºÊÃữễÂ.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1														189	239	239	90
+184	Vân Long Kích  	1	0	1	10	1	0	1	0	6	10	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+185	Ma Viêm Tại Thiên  	1	0	1	10	2	1	2	7	28	4	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a1.spr	31,1,2	\sound\skill\ÍặẫẵèợºÊ.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a2.spr	10,1,2				\sound\skill\sound_k038.wav				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b1.spr	31,1,2	\sound\skill\sound_k036.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b2.spr	10,1,2					239	146	82	90
+186	Phong Sương Toái ảnh 	0	0	1	10	3	1	3	13	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\em\em_±ựéÄốúềụ.spr	40,1,1					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	7,1,2	\sound\skill\sound_k045.wav													156	211	255	90
+187	Băng Tâm Ngọc Lăng 	0	0	1	10	2	1	2	13	12	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\cy\±ựéÄẹâÁô01.spr	20,1,1					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	7,1,2	\sound\skill\sound_k045.wav													156	211	255	90
+188	Băng Tâm Tuyết Liên 	0	0	1	10	3	1	3	13	22	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\cy\±ựéÄẹâÁô±ơếă.spr	22,1,1					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	7,1,2	\sound\skill\sound_k045.wav													156	211	255	90
+189	Tam Tinh Liệt 	1	0	1	10	1	1	1	0	16	20	0	0	1	0	0	0	0	1	1	1	0	0	0	1	0	200	0				\spr\skill\ẻồảắẵè\wdu_02_´úấệểĂ.spr	10,1,1	\sound\skill\ểÄÚÔữẳữÃ.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													140	207	156	90
+190	Bách Độc Xuyên Tâm 	3	0	1	10	3	1	3	0	24	20	0	0	1	0	0	0	0	1	0	1	0	0	0	1	0	64	0				\spr\skill\ẻồảắẵè\wdu_02_´úấệểĂ.spr	10,1,1	\sound\skill\ểÄÚÔữẳữÃ.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													140	207	156	90
+191	Thôi Song Vọng Nguyệt	1	0	1	10	1	0	1	0	16	32	0	0	1	0	0	0	0	1	1	0	0	0	0	1	1	0	0				\spr\skill\em\em_ãỗậêậộể°_ặẵãẫ.spr	96,16,1	\sound\skill\²ằÃð²ằắứ.wav				\spr\skill\ảởỏề\mag_em_bin4_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													156	211	255	90
+192	Ngự Phong thuật	3	0	1	10	3	1	3	4	160	31	0	0	1	0	0	0	0	0	0	0	0	0	0	1	0	64	0				\spr\skill\ÀƠÂỉ\kl_01_ºụãỗãă.spr	15,1,1	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+193	Bình Địa Hám Lôi 	0	0	1	18	2	1	2	4	12	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\Àìằữấừ.spr	27,1,1					\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+194	Truy Phong Độc Cát 	1	0	1	10	1	0	1	0	3	32	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\mag_spe_bo_Âè.spr	320,32,1	\sound\skill\ểÄÚÔữẳữÃ.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													140	207	156	90
+195	Tiềm Long Tại Uyên	0	0	1	10	3	0	3	15	15	0	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\sound_k044.wav																			239	146	82	90
+196	Phong Quyển Tàn Tuyết (ảnh động) 	1	0	0	5	3	0	3	4	20	26	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	1				\spr\skill\´ọẹè\mag_cy_02_ãỗắớ²éẹâ_a.spr	7,1,1	\sound\skill\ãỗắớ²éẹâ.wav										\spr\skill\´ọẹè\mag_cy_02_ãỗắớ²éẹâ_b.spr	7,1,1								156	211	255	90
+197	Tấn Lôi Chú 	1	0	1	10	1	0	1	0	16	30	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	1				\spr\skill\ÀƠÂỉ\kl_02_ẳ²àỗãăa.spr	160,16,1	\sound\skill\ẹáÀìệọ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav				\spr\skill\ÀƠÂỉ\kl_02_ẳ²àỗãăb.spr	160,16,1								255	255	239	90
+198	NPC đánh xa (Kim) 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1	\sound\skill\ÅưÀìệá.wav				\spr\skill\ỉÔ°ù\mag_gb_bz5_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\sound_k037.wav													239	231	189	90
+199	NPC đánh xa (Kim) 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_ễƯãẫàả.spr	128,16,1	\sound\skill\ảỏằờùÚ.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													239	231	189	90
+200	NPC đánh xa (thủy) 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_01_ãỗễặÍằặð.spr	48,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\´ọẹè\mag_bz_bin6_±ơếăéĐạỷ.spr	16,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+201	NPC đánh xa (hỏa) 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_04_à¯ệáÁềẹổ.spr	48,16,1	\sound\skill\ÅưÀìệá.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\sound_k037.wav													239	231	189	90
+202	NPC đánh xa (thổ) 	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_01_ÅưÀìệá.spr	160,16,1	\sound\skill\ÅưÀìệá.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+203	npc chiến đấu	1	0	1	10	1	0	1	0	3	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0																									255	113	114	90
+204	Độc Thích Cốt  	0	0	0	20	2	0	2	15	16	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	1				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1				\sound\skill\sound_k038.wav				\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1					239	146	82	90
+205	Hôn mê toàn bộ 	0	0	1	15	16	1	16	13	12	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0										\spr\skill\ẻọà±\wd_05_°ỵẳ°ảứá´.spr	12,1,1	\sound\skill\ẹáÀìệọ.wav													255	255	231	90
+206	đóng băng toàn bộ 	0	0	1	15	16	1	16	13	12	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\tm\bz_ºđ±ự´è.spr	27,1,1	\sound\skill\±ự±ơ.wav													255	255	231	90
+207	trúng độc toàn bộ 	0	0	1	15	16	1	16	13	12	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\wu\ềừãỗấ´ạầ.spr	20,1,1	\sound\skill\ẹêấệảắẫ±.wav													255	255	231	90
+208	giảm tốc toàn bộ 	0	0	1	15	16	1	16	13	12	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ÀƠÂỉ\kl_12_ ợ¿°ớãỷ.spr	16,1,1	\sound\skill\sound_k029.wav													255	255	231	90
+209	Ngân Câu Thiết Hoạch 	1	0	1	10	1	0	1	5	4	30	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0										\spr\skill\sl\ẵðÁỳèẵìƯ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													181	203	255	0
+210	Hải Thiên Nhất Tuyến 	1	0	1	10	1	0	1	0	6	30	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_01_ÄƯÚưẻịÁ¿.spr	80,16,1					\spr\skill\sl\ẵðÁỳèẵìƯ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													181	203	255	0
+211	Phá Không Trảm ảnh 	1	0	1	10	1	0	1	7	6	20	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1					\spr\skill\sl\ẵðÁỳèẵìƯ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													181	203	255	0
+212	Bất Diệt Sát ý 	0	0	1	10	3	1	3	10	12	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_03_ééÁỳ²ằểờ.spr	15,1,1	\sound\skill\ééÁỳ²ằểờ.wav				\spr\skill\sl\ẵðÁỳèẵìƯ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													181	203	255	0
+213	Hắc Sát Thần Sa 	1	0	1	10	1	0	1	12	11	30	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_10_ằðàỉÀì.spr	160,16,1					\spr\skill\ẻồảắẵè\bz_du1_±ơếă.spr	13,1,1	\sound\skill\Åựửăà¯.wav													148	219	255	0
+214	Thiên Thù Vạn Độc  	100	0	1	10	1	0	1	0	30	21	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_01_ảắẫ°ếặ.spr	160,16,1					\spr\skill\ẻồảắẵè\bz_du1_±ơếă.spr	13,1,1	\sound\skill\Åựửăà¯.wav													148	219	255	0
+215	Bi Ma Huyết Quang 	1	0	1	10	2	0	3	34	20	18	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_05_ảàẽũẳý.spr	160,16,1					\spr\skill\ẻồảắẵè\wdu_02_´úấệểĂ.spr	10,1,1	\sound\skill\Åựửăà¯.wav													148	219	255	0
+216	Cô Yên Trục Vân 	1	0	1	10	3	1	4	21	20	18	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\éĂÀợãẫàả.spr	64,16,1					\spr\skill\èặÃÅ\bz_du3_±ơếă.spr	16,1,1	\sound\skill\Åựửăà¯.wav													148	219	255	0
+217	Triều Khởi Nguyệt Doanh 	1	0	1	10	1	0	1	0	15	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ảởỏề\mag_em_02_ậÄẽúÍơạộ.spr	64,16,1					\spr\skill\´ọẹè\mag_bz_bin7_±ơếăéĐạỷ.spr	18,1,1	\sound\skill\±ự±ơ.wav													148	219	255	0
+218	Vạn Liễu Phiêu Phong  	0	0	1	10	1	0	1	2	1	0	0	0	1	0	0	0	0	1	0	1	0	1	0	0	0	0	0										\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\±ự±ơ.wav													148	219	255	0
+219	Tuyết ánh Hồng Trần  	1	0	1	300	4	1	4	31	30	0	0	2048	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\em\em_ãỗậêậộể°_ẽÂÂọ.spr	16,1,1					\spr\skill\ảởỏề\mag_bz_bin3_±ơếăéĐạỷ.spr	19,1,2	\sound\skill\±ự±ơ.wav													148	219	255	0
+220	Sương Dã Tiên Tung 	0	0	1	10	1	0	1	0	16	15	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0					128,16,1					\spr\skill\ảởỏề\mag_bz_bin3_±ơếăéĐạỷ.spr	19,1,1	\sound\skill\±ự±ơ.wav													148	219	255	0
+221	Viêm Long Chi Bào  	1	0	1	10	1	0	1	0	12	15	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_05_¿ºÁỳểéằÚ.spr	80,16,1					\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\sound_k037.wav													148	219	255	0
+222	Triều Dương Liệt Diệm	1	0	1	10	1	0	1	0	14	20	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_04_à¯ệáÁềẹổ.spr	48,16,1					\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\sound_k037.wav													148	219	255	0
+223	Như Nhật Trung Thiên 	0	0	0	20	2	1	2	31	30	0	0	0	1	1	20	30	0	0	0	0	0	0	0	0	0	0	1				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a1.spr	31,1,2	\sound\skill\ÍặẫẵèợºÊ.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a2.spr	10,1,2		\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\sound_k037.wav				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b1.spr	31,1,2	\sound\skill\sound_k036.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b2.spr	10,1,2					148	219	255	0
+224	Xí Không Hỏa Vũ 	5	0	1	10	2	1	2	16	15	20	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_02_ẹỉÃÅÍé²Đ.spr	64,16,1					\spr\skill\èỡẩè\mag_bz_huo4_±ơếăéĐạỷ.spr	16,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+225	Hỗn Nguyên Càn Khôn 	0	0	1	10	1	0	1	13	12	0	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_05_°ỵẳ°ảứá´.spr	12,1,1	\sound\skill\°ỵẳôảứá´.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+226	Trường Hà Lạc Nhật 	0	0	1	10	2	1	3	17	16	0	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_03_èỡẳấắêÀì.spr	17,1,1	\sound\skill\ẵÊãẫắêèỡ.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+227	Tật Phong Tấn Lôi 	0	0	1	10	1	0	1	0	20	18	0	0	0	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\kl\Àìả¯ắÅèỡ.spr	6,1,2	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\ÀƠÂỉ\kl_01_ºụãỗãă.spr	15,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+228	Vô ảnh Kiếm Quyết 	1	0	1	10	1	0	1	0	15	22	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_10_ẻịẻềẻịẵÊ.spr	96,16,1	\sound\skill\ẵÊãẫắêèỡ.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+229	Hoa Khí Điệp Vũ 	0	0	0	18	1	0	1	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\²ạ³ọ\mag_spe_àầÂẵ.spr	20,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+230	Lưu Quang Phi Vũ 	0	0	0	18	1	0	1	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\²ạ³ọ\mag_spe_àầÂẳ.spr	20,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+231	Hoàn Bỉ Chi Thân	0	0	0	18	1	0	1	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\gb\ÁỳếẵểÚề°.spr	15,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+232	Đảo Hành Nghịch Thi	0	0	0	18	1	0	1	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\Spr\skill\´ọẹè\mag_bz_bin6_±ơếăéĐạỷ.spr	16,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+233	Đồng hành Chú thuật Hỏa	0	0	1	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+234	Đồng hành Chú thuật Thủy	0	0	1	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ảởỏề\mag_bz_bin3_±ơếăéĐạỷ.spr	19,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+235	Đồng hành Chú thuật Thổ 	0	0	1	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+236	An Phủ Chi Ngữ 	0	0	0	18	1	0	1	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									148	219	255	0
+237	Nữu Chuyển Càn Khôn 	0	0	0	18	1	0	1	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0												\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+238	Vạn Liễu Phiêu Phong  	1	0	1	10	2	0	2	0	16	15	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_05_±èºÊ³±ẫỳ_b.spr	48,16,1					\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\±ự±ơ.wav													148	219	255	0
+239	Sương Dã Tiên Tung  	1	0	1	10	3	1	3	0	16	15	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\cy\ãỗẹâ±ựèỡ.spr	128,16,1					\spr\skill\ảởỏề\mag_bz_bin3_±ơếăéĐạỷ.spr	19,1,1	\sound\skill\±ự±ơ.wav													148	219	255	0
+240	Nam Minh Tam Đoạn Kích 	1	0	1	10	1	0	1	0	15	15	0	0	0	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\NPC\Íảấ¯ặế.spr	20,1,1					\spr\skill\ỉÔ°ù\mag_bz_tu2_±ơếăéĐạỷ.spr	16,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+241	Tật Phong Tấn Lôi 	100	0	1	10	3	1	3	0	16	16	0	0	1	0	0	0	0	1	0	1	0	1	0	0	0	0	0				\spr\skill\kl\Àìả¯ắÅèỡ.spr	6,1,2	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\ÀƠÂỉ\kl_01_ºụãỗãă.spr	15,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+242	Đồng hành Chú thuật Kim 	0	0	1	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ỉÔ°ù\mag_bz_tu1_±ơếăéĐạỷ.spr	19,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+243	Đồng hành Chú thuật Mộc 	0	0	1	18	3	1	3	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													148	219	255	0
+244	Bẫy choáng (Giáng Sinh) 	0	0	1	15	2	1	2	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_Àìằữấừ.spr	1080,1,1					\spr\skill\tm\Àìằữấừ.spr	27,1,1														255	255	231	90
+245	Bẫy làm chậm (Noel) 	0	0	1	15	2	1	2	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_ºđ±ự´è.spr	1080,1,1					\spr\skill\tm\bz_ºđ±ự´è.spr	27,1,1														255	255	231	90
+246	Bẫy choáng (Noel) 	0	0	1	15	7	1	7	13	12	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0										\spr\skill\ẻọà±\wd_05_°ỵẳ°ảứá´.spr	12,1,1	\sound\skill\ẹáÀìệọ.wav													255	255	231	90
+247	Bẫy làm chậm (Noel) 	0	0	1	15	7	1	7	13	12	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\tm\bz_ºđ±ự´è.spr	27,1,1	\sound\skill\±ự±ơ.wav													255	255	231	90
+248	Hoa hồng 2	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1			\sound\skill\ãỗằăẹâễÂ.wav	\spr\skill\²ạ³ọ\ÀảÃàạồ03.spr	50,1,1											\spr\skill\²ạ³ọ\ÀảÃàạồ02.spr	50,1,1								156	211	255	90
+249	Hoa hồng 3	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ÀảÃàạồ02.spr	50,1,1											\spr\skill\²ạ³ọ\ÀảÃàạồ04.spr	50,1,1								156	211	255	90
+250	Hoa hồng 4	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ÀảÃàạồ05.spr	50,1,1											\spr\skill\²ạ³ọ\ÀảÃàạồ03.spr	50,1,1								156	211	255	90
+251	Hoa hồng 5	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ÀảÃàạồ04.spr	50,1,1											\spr\skill\²ạ³ọ\ÀảÃàạồ01.spr	50,1,1								156	211	255	90
+252	Hoa hồng 6	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ÀảÃàạồ06.spr	50,1,1											\spr\skill\²ạ³ọ\ÀảÃàạồ05.spr	50,1,1								156	211	255	90
+253	Hoa hồng trên đất	0	0	1	15	0	0	0	0	32	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ÀảÃàạồàỉÃổ03.spr	16,1,1											\spr\skill\²ạ³ọ\ÀảÃàạồàỉÃổ01.spr	1,1,1								255	255	231	90
+254	Hoa Tuyết 2	1	0	1	450	1	1	3	0	240	0	0	128	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1			\sound\skill\ãỗằăẹâễÂ.wav	\spr\skill\²ạ³ọ\ẹâằă03.spr	50,1,1											\spr\skill\²ạ³ọ\ẹâằă02.spr	50,1,1								156	211	255	90
+255	Hoa Tuyết 3	1	0	1	450	1	1	3	0	240	0	0	128	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ẹâằă02.spr	50,1,1											\spr\skill\²ạ³ọ\ẹâằă04.spr	50,1,1								156	211	255	90
+256	Hoa Tuyết 4	1	0	1	450	1	1	3	0	240	0	0	128	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ẹâằă05.spr	50,1,1											\spr\skill\²ạ³ọ\ẹâằă03.spr	50,1,1								156	211	255	90
+257	Hoa Tuyết 5	1	0	1	450	1	1	3	0	240	0	0	128	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ẹâằă04.spr	50,1,1											\spr\skill\²ạ³ọ\ẹâằă01.spr	50,1,1								156	211	255	90
+258	Hoa Tuyết 6	1	0	1	450	1	1	3	0	240	0	0	128	1	0	0	0	0	0	1	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ẹâằă06.spr	50,1,1											\spr\skill\²ạ³ọ\ẹâằă05.spr	50,1,1								156	211	255	90
+259	Hoa tuyết trên đất	0	0	1	15	0	0	0	0	32	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	1				\spr\skill\²ạ³ọ\ẹâằăàỉÃổ03.spr	16,1,1											\spr\skill\²ạ³ọ\ẹâằăàỉÃổ01.spr	1,1,1								255	255	231	90
+260	Hoa	0	0	0	10	0	0	0	0	264	0	0	0	1	0	0	0		0	0	0	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\ẹèằă.spr	24,1,3																				255	255	255	100
+261	bên trái	4	0	1	50	1	1	3	0	3000	10	0	0	1	0	0	0	0	0	0	0	0	1	0	1	1	0	0				\spr\skill\special\skill_heart.spr	20,1,1																				156	211	255	90
+262	bên phải	4	0	1	50	1	1	3	0	3000	10	0	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0				\spr\skill\special\skill_heart.spr	20,1,1																				156	211	255	90
+263	Hoa hồng rơi rụng	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0			\sound\skill\ãỗằăẹâễÂ.wav	\spr\skill\²ạ³ọ\ÀảÃàạồ03.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ02.spr	50,1,1								156	211	255	90
+264	Hoa hồng xanh rơi rụng	0	0	1	15	0	0	0	0	200	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\²ạ³ọ\ÀảÃàạồàỉÃổ03.spr	16,1,1																				255	255	231	90
+265	Hoa hồng đỏ rơi rụng	1	0	1	450	1	1	3	0	30	0	0	1024	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0			\sound\skill\ãỗằăẹâễÂ.wav	\spr\skill\²ạ³ọ\Ãàạồ03.spr	50,1,1											\spr\skill\²ạ³ọ\Ãàạồ02.spr	50,1,1								156	211	255	90
+266	Hoa hồng đỏ rơi rụng	0	0	1	15	0	0	0	0	200	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\²ạ³ọ\ÃàạồàỉÃổ03.spr	16,1,1																				255	255	231	90
+267	noview	0	0	1	15	0	0	0	0	3000	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	231	90
+268	Pháo	7	0	1	20	3	1	3	0	60	16	10240	5120	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\others\firecracker.spr	64,8,1	\sound\skill\Åựửăà¯.wav				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\ặếÍă±ơếă.wav													132	125	107	90
+269	Pháo Trung Thiên	1	0	1	20	2	1	2	0	12	25	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\others\firecracker.spr	64,8,1	\sound\skill\Åựửăà¯.wav				\spr\skill\èỡẩè\mag_bz_huo4_±ơếăéĐạỷ.spr	16,1,1	\sound\skill\ặếÍă±ơếă.wav													255	174	60	90
+270	chuột	5	0	1	20	2	1	2	0	32	24	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\others\firecracker.spr	64,8,1	\sound\skill\Åựửăà¯.wav				\spr\skill\ỉÔ°ù\mag_gb_bz5_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\ặếÍă±ơếă.wav													255	174	60	90
+271	Vật phẩm trong những ngày xuân	0	0	1	15	2	1	14	13	540	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_´âéÄ´è.spr	1080,1,1					\spr\skill\tm\´âéÄ´è.spr	27,1,1														255	255	231	90
+272	Ném trùng đỏ	1	0	1	10	1	0	1	0	16	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_10_ằðàỉÀì.spr	160,16,1	\sound\skill\ÅưÀìệá.wav				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k040.wav													239	231	189	90
+273	Khu vực đối phương	0	0	0	2	7	1	7	0	1	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0																									255	255	231	90
+274	Khu vực đồng đội	0	0	0	2	10	1	10	0	1	0	0	0	0	0	0	0	0	0	1	0	1	1	0	0	0	0	0																									255	255	231	90
+275	 một viên	0	0	0	18	1	0	1	0	5	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0																									255	219	99	90
+276	Kỹ năng phụ - Sư Tử Hống	1	0	0	10	1	0	1	0	20	20	0	0	1	0	0	0	0	1	0	0	1	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1																				231	227	107	90
+277	Quả cầu tuyết	1	0	1	10	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\others\ẹâầũ.spr	88,8,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\others\ẹâầũ±ơếă.spr	11,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+278	Pháo hoa Tết	0	0	1	10	12	1	12	5401	5400	0	0	0	1	1	6	22	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\²ạ³ọ\ẹèằă.spr	24,1,3																				255	255	255	100
+279	Chữ pháo hoa Tết 1a	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\others\éÂÄờ¿ỡÀệ1.spr	30,1,2																				156	211	255	90
+280	Chữ pháo hoa Tết 1b	0	0	1	10	1	0	1	5371	5370	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\others\éÂÄờ¿ỡÀệ2.spr	10,1,2																				156	211	255	90
+281	Chữ pháo hoa Tết 2a	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\others\ạĐẽ²ãÂ²ặ1.spr	30,1,2																				156	211	255	90
+282	Chữ pháo hoa Tết 2b	0	0	1	10	1	0	1	5371	5370	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\others\ạĐẽ²ãÂ²ặ2.spr	10,1,2																				156	211	255	90
+283	Pháo nổ	0	0	0	15	0	1	4	55	54	0	0	0	1	0	0	0	0	0	1	0	0	1	0	0	0	0	0				\spr\skill\others\±ịÅÚ.spr	5,1,1		\spr\skill\others\±ịÅÚ1.spr	7,1,1		\spr\skill\others\±ịÅÚ1.spr	7,1,1														255	255	231	90
+284	Đoạn Hồn Thích 	1	0	1	10	2	1	2	0	3	30	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+285	ệéầù²ấàỷàặ	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\mid_autumn\caidiedeng.spr	7,1,5																				255	255	231	90
+286	ệéầùẵừẽẳàặ	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\mid_autumn\jinxiadeng.spr	7,1,5																				255	255	231	
+287	ệéầùể¯ễÂàặ	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\mid_autumn\yingyuedeng.spr	7,1,5																				255	255	231	
+288	ệéầù³¯Âảàặ	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\mid_autumn\zhaoludeng.spr	7,1,5																				255	255	231	
+289	ệéầù³¯Âảàặ	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\item\vietnam\midautumn06\lantern_3.spr	7,1,5																				255	255	231	
+290	Thúc Phược Chú 	0	0	0	18	4	1	4	0	2	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0																									255	219	99	90
+291	Kỹ năng Xuân Ngưu	1	0	1	10	1	0	1	0	54	5	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+292	´ºÅÊẳẳÄĩìểẳẳÄĩ	1	0	1	10	1	0	1	0	16	40	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+293	Đại Xuân Ngưu Tất Sát Kỹ	4	0	1	10	1	0	1	0	108	10	0	0	1	0	0	0	0	1	0	1	0	0	0	0	1	0	0				\spr\skill\èặÃÅ\tm_07_éĂÀợãẫàả.spr	16,1,1	\sound\skill\°ỵẳôảứá´.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													239	146	82	90
+294	´ú´ºÅÊ±ỉẫ±ẳẳìểẳẳÄĩ	1	0	1	10	1	0	1	0	16	40	0	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\tm\ẩèếòùÚ.spr	15,1,1	\sound\skill\sound_k040.wav				\spr\skill\tm\ẩèếòùÚ.spr	15,1,1	\sound\skill\sound_k040.wav													239	146	82	90
+295	Thái Ngưu Tất Sát Kỹ	3	0	1	10	1	0	1	0	108	20	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\npc\Íảấ¯±ự.spr	20,1,1		\spr\skill\npc\Íảấ¯±ự±ơếă.spr	27,1,1	\sound\skill\²ạ³ọ\Íảấ¯±ơếă.wav	\spr\skill\npc\Íảấ¯±ự±ơếă.spr	27,1,1														239	146	82	90
+296	ảủềõạõằã´ôàíìểà¯15ắàÀở	0	0	0	2	15	1	15	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	255	0
+297	GM±ỉẫ±ẳẳẳẳÄĩ	1	0	1	10	1	0	1	0	54	5	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\npc\Íảấ¯ằð.spr	20,1,1		\spr\skill\npc\Íảấ¯ằð±ơếă.spr	27,1,1	\sound\skill\²ạ³ọ\Íảấ¯±ơếă.wav	\spr\skill\npc\Íảấ¯ằð±ơếă.spr	27,1,1	\sound\skill\sound_k037.wav													156	211	255	90
+298	GM±ỉẫ±ẳẳìểẳẳÄĩ	1	0	1	10	1	0	1	0	16	40	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+299	GMằự´ĂẳẳÄĩ	1	0	1	10	1	0	1	0	36	25	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_05_ảàẽũẳý.spr	160,16,1	\sound\skill\ìãéÄẳý.wav																			148	219	255	90
+300	GMéĂãảẻĐẳẳÄĩ	0	0	1	15	6	1	6	13	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_05_°ỵẳ°ảứá´.spr	12,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+301	ạưặùẳẳÄĩ	5	0	0	10	1	0	1	0	25	40	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_01_ÄƯÚưẻịÁ¿.spr	80,16,1	\sound\skill\Åựửăà¯.wav																			231	227	107	90
+302	ạư±ứẳẳÄĩ	5	0	0	10	3	0	3	0	25	40	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\NPC\mag_npc_ảèÃô.spr	64,16,20	\sound\skill\±ự±ơ.wav																			148	113	66	90
+303	tianchi3²óìểà¯	4	0	1	10	1	0	1	0	108	10	0	0	1	0	0	0	0	1	0	1	0	0	0	0	1	0	0				\spr\skill\´ọẹè\mag_cy_01_ãỗễặÍằặð.spr	48,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+304	tianchi3²óìểẳẳÄĩìểà¯	1	0	1	10	1	0	1	0	12	40	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_01_ãỗễặÍằặð.spr	48,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+305	ằỳạỉẳẳÄĩ	1	0	1	10	1	0	1	0	54	10	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+306	èỡ³ỉẽíÚồạõằãìểà¯	0	0	0	2	14	1	14	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	255	0
+307	Àọ±ựìểà¯	1	0	1	10	1	0	1	0	90	5	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_01_ãỗễặÍằặð.spr	48,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													239	146	82	90
+308	Àọ±ự±ựầẵìểà¯	0	0	1	10	3	0	3	12	36	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_08_±ựầẵ_b.spr	7,1,150	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+309	ÁỳắÅèỡẵÊặứ	1	0	1	10	1	0	1	0	72	5	0	0	1	0	0	0	0	1	0	0	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_10_ẻịẻềẻịẵÊ.spr	96,16,1																				255	255	231	90
+310	ÁỳắÅèỡẵÊặứÂọẵÊ	0	0	1	10	3	0	3	0	270	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_09_ẩậẵÊºẽềằẵÊ.spr	11,1,1					\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													255	255	255	90
+311	±ựãõầĐÀù	0	0	0	20	2	1	2	12	120	0	0	0	1	1	1	7	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_08_±ựầẵ_b.spr	7,1,150	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+312	±ựằãìểà¯	0	0	1	10	3	0	3	12	54	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_08_±ựầẵ_b.spr	7,1,150	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+313	ạÅắứẫ±ảắấệ	0	0	0	20	3	1	3	181	180	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠ.spr	8,1,1		\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠẽỷÍử.spr	13,1,4																	140	207	156	90
+314	23ºÅẻịéẻạặìểà¯	0	0	0	2	21	1	21	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	255	0
+315	ẵÊặứìúéýìê	4	0	1	50	1	1	3	0	3000	10	0	0	1	0	0	0	0	0	0	0	0	1	0	1	1	0	0				\spr\skill\ẻọà±\wd_10_ẻịẻềẻịẵÊ.spr	96,16,1	\sound\skill\ẵÊãẫắêèỡ.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+316	ẵÊặứểềéýìê	4	0	1	50	1	1	3	0	3000	10	0	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0				\spr\skill\ẻọà±\wd_10_ẻịẻềẻịẵÊ.spr	96,16,1	\sound\skill\ẵÊãẫắêèỡ.wav				\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+317	Long Thừa Bát Nhã	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0					\spr\skill\150\sl\sl_150_longchenbannuo_c.spr	128,16,1					\spr\skill\150\sl\sl_150_longchenbannuo_d.spr	14,1,1																	
+318	Diệt Tội Độ Sanh	0	0	1	10	6	1	6	10	10	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\sl\sl_150_gunshao_xz.spr	10,1,1					\spr\skill\sl\ẵðÁỳèẵìƯ.spr	6,1,1	\sound\skill\sound_k017.wav				\spr\skill\sl\bz_ºỏẫăầĐắỹ.spr	8,1,1	\sound\skill\sound_k017.wav						\sound\skill\sound_k014.wav	239	231	189	90
+319	Vạn Đế Quy Nhất	1	0	1	10	1	0	1	1	12	40	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\1502\sl\sl_150_daoshao_zd.spr	32,16,1					\spr\skill\1502\sl\sl_150_daoshao_bz.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													239	231	189	90
+320	ºÀéÛếảìểà¯	1	0	1	10	1	0	1	1	8	40	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\1502\tw\sl_150_daotian_zd.spr	16,16,1					\spr\skill\1502\tw\tw_150_daotian_bz.spr	3,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													239	231	189	90
+321	Tung Hoành Bát Hoang	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0					\spr\skill\150\tw\tw_150_zonghengbahuang_c.spr	128,16,1																							
+322	Bá Vương Tạm Kim	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0											\spr\skill\150\tw\tw_150_bawangzanjin_d.spr	16,1,1																	
+323	Lưu Phong Hồi Tuyết	1	0	1	10	1	0	1	0	16	32	0	0	1	0	0	0	0	1	0	0	0	0	0	1	1	0	0				\spr\skill\1502\em\em_150_jiane_zd.spr	16,16,1	\sound\skill\²ằÃð²ằắứ.wav				\spr\skill\150\em\em_150_luifenghuixue_d.spr	14,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													156	211	255	90
+324	Tử Vi Băng Hoa	0	0	1	10	3	1	3	13	36	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\em\em_150_zhange_zd.spr	10,1,1																				156	211	255	90
+325	ÁữãỗằỉẹâàÚảỵấẵ	1	0	1	10	1	0	1	0	3	32	0	0	1	0	0	0	0	0	0	0	0	0	0	1	1	0	0				\spr\skill\1502\em\em_150_jiane_zd.spr	16,16,1	\sound\skill\²ằÃð²ằắứ.wav				\spr\skill\150\em\em_150_luifenghuixue_d.spr	14,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													156	211	255	90
+326	Băng Tước Loạn Tuyết	1	0	1	15	1	0	1	0	24	32	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\1502\cy\cy_150_daocui_zd.spr	16,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\1502\cy\cy_150_daocui_bz.spr	10,1,1	\sound\skill\±ự±ơ.wav													156	211	255	90
+327	Lãnh Nguyệt Lạc Mai	1	0	1	10	1	0	1	0	24	24	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\cy\cy_150_neicui_xz.spr	16,16,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\150\cy\cy_150_bingqueluanxue_d.spr	8,1,1	\sound\skill\±ự±ơ.wav													156	211	255	90
+328	Hình Tiêu Cốt Lập	0	0	0	10	3	1	3	12	13	0	0	0	1	5	18	1	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\wu\wd_xingxiaoguli_c.spr	30,1,1					\spr\skill\150\wu\wd_xingxiaoguli_d.spr	10,1,1														140	207	156	90
+329	U Hồn Phệ ảnh	5	0	1	10	1	0	1	0	18	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\150\wu\wd_youhunshiying_c.spr	128,16,1	\sound\skill\ểÄÚÔữẳữÃ.wav						\sound\skill\ặếÍă±ơếă.wav													140	207	156	90
+330	Hào Hùng Trảm Địa Liệt	0	0	1	10	1	0	1	1	6	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\tw\tw_150_daotian_dl.spr	7,1,1																				239	231	189	90
+331	Truy Tâm Tỏa Mệnh	1	0	1	10	1	0	1	0	13	40	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\1502\tm\tm_150_daotang_zd.spr	16,16,1	\sound\skill\ìãéÄẳý.wav																			148	219	255	90
+332	Tản Hoa Thiên Nữ 	0	0	1	15	1	0	1	12	36	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\tm\tm_150_sanhuatiannv_c_b.spr	10,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+333	Càn Khôn Nhất Trịch	1	0	1	10	1	0	1	0	16	32	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\1502\tm\tm_150_biaotang_zd.spr	8,1,1	\sound\skill\sound_k040.wav				\spr\skill\150\tm\tm_150_qiankunyizhi_d.spr	16,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+334	ấ±³ậÁựÁỳ±ơếă	0	0	1	10	1	0	1	5	10	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\150\gb\gb_150_shishengliulong_d.spr	11,1,1	\sound\skill\sound_k037.wav																			239	146	82	90
+335	Thời Thặng Lục Long	1	0	1	10	3	1	3	3	16	30	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\gb\gb_150_zhanggai_zd.spr	16,16,1	\sound\skill\¿ºÁỳẻịằÚ.wav																			255	174	60	90
+336	Thục Khuyển Phệ Nhật	5	0	1	10	1	0	1	0	24	28	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\1502\gb\gb_150_gungai_zd.spr	16,16,1	\sound\skill\èỡẽÂẻịạã.wav				\spr\skill\1502\gb\gb_150_gungai_bz.spr	15,1,1														255	174	60	90
+337	Giang Hải Nộ Lan	1	0	1	10	1	0	1	0	6	36	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\150\tr\tr_150_jianghainvlan_c.spr	64,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\tr\ễặÁỳằữ.spr	6,1,1	\sound\skill\sound_k037.wav													239	146	82	90
+338	Tật Hỏa Liệu Nguyên	0	0	0	320	1	0	1	10	14	0	-61480	1024	0	0	0	0	0	1	1	0	0	1	0	0	0	0	0				\spr\skill\150\tr\tr_150_jihuoliaoyuan_c.spr	13,1,1		\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1		\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\sound_k037.wav													156	211	255	90
+339	ÃðìùảẫẫỳàỉÁẹ	0	0	1	1	8	1	8	10	10	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\sl\sl_150_gunshao_dl.spr	10,1,1																				239	231	189	90
+340	Tạo Hóa Thái Thanh	0	0	1	15	5	1	5	4	30	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\wd\wd_150_zaohuataiqing_c.spr	35,1,1	\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+341	Kiếm Thùy Tinh Hà Lạc	0	0	0	2	4	1	4	8	9	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_09_ẩậẵÊºẽềằẵÊ.spr	11,1,1																				255	255	255	90
+342	Phong Minh Ngọc Toái	1	0	1	10	1	1	4	4	16	31	0	0	1	0	0	0	0	0	0	1	0	1	0	0	0	0	0				\spr\skill\150\kl\kl_150_fengmingyusui_c.spr	21,1,1	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\150\kl\kl_150_fengmingyusui_d.spr	21,1,1														255	255	239	90
+343	Lôi Điện Cửu Khiếu	0	0	1	10	4	0	4	7	30	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\150\kl\kl_150_leidianjiuxiao_c.spr	60,1,1					\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+344	Thời Thặng Lục Long Hỏa	0	0	1	10	1	0	1	1	12	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\gb\gb_150_zhanggai_huo.spr	6,1,2																							
+345	Long Thừa Bát Nhã Thủ	1	0	1	10	1	1	3	0	8	25	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\150\sl\sl_150_longchenbannuo_c.spr	128,16,1					\spr\skill\150\sl\sl_150_longchenbannuo_d.spr	14,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+346	Ãðìùảẫẫỳd	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0																													
+347	ÍũÚéạộềằd	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0																													
+348	ºÀéÛếảẫÂ¿ê	1	0	1	10	1	0	1	0	6	24	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\tw\sl_150_daotian_zd1.spr	16,16,1					\spr\skill\1502\tw\tw_150_daotian_bz.spr	3,1,1	\sound\skill\àảẵÊ´èệéẫự.wav										\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+349	ìíºỏ°ậằÄìểà¯	1	0	1	10	1	0	1	0	3	24	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\150\tw\tw_150_zonghengbahuang_c.spr	128,16,1					\spr\skill\1502\tw\tw_150_chuitian_bz.spr	8,1,1	\sound\skill\àảẵÊ´èệéẫự.wav				\spr\skill\ẫÙÁệ\bz_bo1_ẵð²ă.spr	320,32,1					\spr\skill\²ạ³ọ\àảẵÊ±ơếă.spr	4,1,1		181	203	255	0
+350	°ễÍừửẫẵðìểà¯	1	0	1	10	1	0	1	0	3	36	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\tw\tw_150_qiangtian_zd.spr	32,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\1502\tw\tw_150_qiangtian_bz.spr	4,1,1	\sound\skill\sound_k037.wav													239	146	82	90
+351	Áữãỗằỉẹâd	0	0	1	10	3	1	3	13	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\em\em_150_luifenghuixue_a.spr	19,1,1					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	7,1,2	\sound\skill\sound_k045.wav													156	211	255	90
+352	ìẽẻÂ±ựằêd	5	0	1	10	1	0	1	0	35	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0						\sound\skill\ặđẹâ´âễặ.wav				\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1														115	219	255	90
+353	Áữãỗằỉẹâ±ựệự	0	0	1	10	3	0	1	17	18	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\em\em_150_jiane_ice.spr	10,1,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+354	±ựẩáÂềẹâẫÂ¿ê	1	0	1	10	1	0	1	0	32	12	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\cy\cy_150_daocui_2.spr	5,1,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\150\cy\cy_150_bingqueluanxue_d.spr	8,1,1	\sound\skill\±ự±ơ.wav													156	211	255	90
+355	ÀọễÂÂọÃãàÚảỵấẵ	0	0	1	15	2	1	2	13	12	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\cy\cy_150_neicui_zd.spr	7,1,1	\sound\skill\áĂễặẫÂẹâ.wav																			156	166	247	90
+356	éẻẽỳạầÁÂ1	0	0	0	10	3	1	3	12	13	0	0	0	1	5	18	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\wu\wd_xingxiaoguli_c.spr	30,1,1					\spr\skill\150\wu\wd_xingxiaoguli_d.spr	10,1,1														140	207	156	90
+357	ểÄằờấẫể°àÚảỵấẵ	0	0	0	20	2	0	2	18	19	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	1				\spr\skill\150\wu\wd_youhunshiying_d.spr	19,1,1	\sound\skill\Åựửăà¯.wav						\sound\skill\sound_k038.wav						\sound\skill\Åựửăà¯.wav							239	146	82	90
+358	éẻẽỳạầÁÂ2	0	0	0	10	3	1	3	12	13	0	0	0	1	5	18	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\wu\wd_xingxiaoguli_c.spr	30,1,1					\spr\skill\150\wu\wd_xingxiaoguli_d.spr	10,1,1														140	207	156	90
+359	ìãéÄậứÃỹàÚảỵấẵ	0	0	1	20	3	1	3	8	31	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\tm\tm_150_daotang_bz.spr	19,1,1																				255	219	214	90
+360	ẫÂằăèỡÅđằă°ờ	1	0	1	10	1	0	1	11	12	32	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\150\tm\tm_150_sanhuatiannv_c_a.spr	16,16,1	\sound\skill\sound_k031.wav				\spr\skill\ẻồảắẵè\bz_du1_±ơếă.spr	13,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													239	231	189	90
+361	ầơÀÔềằệÂd	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0																													
+362	ÀọễÂÂọÃãáẵấụ	1	0	1	10	1	0	1	0	24	24	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0																									156	211	255	90
+363	ấ±³ậÁựÁỳáẵấụ	1	0	1	10	1	0	1	0	16	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_03_ẳỷẩậẫỡấệ.spr	64,16,1					\spr\skill\èỡẩè\mag_tr_bz1_±ơếăéĐạỷ.spr	8,1,2														255	174	60	90
+364	ấủẩđãÍẩếd	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0																													
+365	ẵưºÊÅưÀẵd	4	0	1	50	1	1	3	0	3000	10	0	1	0	0	0	0	0	0	0	0	1	0	0	1	0	0																													
+366	ẳ²ằðÁầễưìểà¯	0	0	1	10	5	1	5	18	37	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\tr\tr_150_moren_zd.spr	10,1,1																				239	146	82	90
+367	ẵÊ´ạéầºể±ơ	0	0	1	10	1	0	1	10	10	0	0	0	0	0	0	0	0	1	1	0	0	1	0	0	0	0	0				\spr\skill\150\wd\wd_150_jianchuixinghe_d.spr	21,1,1	\sound\skill\sound_k040.wav																			255	255	231	90
+368	ễỡằ¯èôầồd	0	0	0	2	2	1	2	11	9	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_09_ẩậẵÊºẽềằẵÊ.spr	11,1,1					\spr\skill\ẻọà±\Bz_dian1_±ơếă.spr	8,1,1	\sound\skill\sound_k040.wav													255	255	255	90
+369	ẵÊ´ạéầºểặð	0	0	0	2	4	1	4	28	27	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0				\spr\skill\150\wd\wd_150_jianchuixinghe_a.spr	36,1,1																				255	255	255	90
+370	ãỗÃựểủậộễưàỉ	0	0	1	15	2	0	2	5	20	0	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0	0						\sound\skill\°ỵẳôảứá´.wav																			255	255	231	90
+371	ÀìàỗắÅéƠd	0	0	1	18	2	1	2	4	12	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\Àìằữấừ.spr	27,1,1					\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	239	90
+372	ÀìàỗắÅéƠãỷ	0	0	0	10	2	1	2	10	20	1	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\kl\kl_150_jiankun_fu.spr	20,1,1																				255	219	99	90
+373	ẵÊ´ạéầºểd2	0	0	1	15	1	0	1	10	10	0	0	0	0	0	0	0	0	1	1	0	0	1	0	0	0	0	0										\spr\skill\150\wd\wd_150_jianchuixinghe_d.spr	21,1,1	\sound\skill\éỵềằẻịẽú.wav													255	255	231	90
+374	ẽíÚồ150	7	0	1	10	3	1	3	0	60	16	10240	5120	1	0	0	0	0	1	1	1	0	1	0	0	0	0	0				\spr\skill\èặÃÅ\tm_03_Åựửăà¯.spr	10,1,1	\sound\skill\Åựửăà¯.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	6,1,2														132	125	107	90
+375	áăệỳảởÃẳ150	0	0	1	15	3	1	3	19	19	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\em\em_150_fue_zd.spr	10,1,1	\sound\skill\áĂễặẫÂẹâ.wav																			255	255	231	90
+376	áăệỳảởÃẳ150ảỵ	0	0	0	10	5	1	5	20	19	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									239	231	189	90
+377	ẩôặÁéĂẫÁàỗ	1	0	1	10	2	0	2	10	30	10	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\kl\Àìả¯ắÅèỡ.spr	6,1,2		\spr\skill\npc\Íảấ¯±ự±ơếă.spr			\spr\skill\npc\Íảấ¯±ự±ơếă.spr	8,1,1														255	255	239	90
+378	ằỉÁƯãẫùÚ	100	0	1	10	2	0	1	0	30	10	0	0	1	0	0	0	0	1	0	1	0	0	0	0	1	0	0				\spr\skill\èặÃÅ\tm_07_éĂÀợãẫàả.spr	16,1,1	\sound\skill\°ỵẳôảứá´.wav				\spr\skill\ẻồảắẵè\bz_du2_±ơếă.spr	6,1,1	\sound\skill\ặếÍă±ơếă.wav													239	146	82	90
+379	ằỉéýéýãỗìểà¯	4	0	1	10	3	1	4	4	120	36	0	0	1	0	0	0	0	0	0	1	0	0	0	0	1	0	0				\spr\skill\150\kl\kl_150_fengmingyusui_c.spr	21,1,1	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\150\kl\kl_150_fengmingyusui_d.spr	21,1,1														255	255	239	90
+380	ảăàóãẫùÚìểà¯	0	0	0	20	2	1	2	12	120	0	0	0	1	1	1	16	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_07_éĂÀợãẫàả.spr	16,1,1	\sound\skill\ảỏằờùÚ.wav																			255	251	214	90
+381	ằỉÁƯéĂẫÁàỗ	100	0	1	10	3	1	3	0	32	16	0	0	1	0	0	0	0	1	0	1	0	1	0	0	0	0	0				\spr\skill\kl\Àìả¯ắÅèỡ.spr	6,1,2	\sound\skill\¿ủãỗệốàỗ.wav				\spr\skill\ÀƠÂỉ\kl_01_ºụãỗãă.spr	15,1,1	\sound\skill\sound_k040.wav													148	219	255	0
+382	ệ±ẽò±ựÀõạõ	1	0	1	10	1	0	1	0	18	32	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0	0				\spr\skill\èặÃÅ\tm_11_àỗàỉÀì.spr	160,16,1	\sound\skill\²ìºÊÃữễÂ.wav																			239	231	189	90
+383	ệ±ẽò±ựÀõìểà¯	0	0	1	10	3	0	1	10	12	0	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\1502\em\em_150_jiane_ice.spr	10,1,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+384	ệĩẫớ±ựìểà¯	0	0	0	20	2	1	2	6	120	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\1502\em\em_150_jiane_ice.spr	10,1,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\ảởỏề\mag_bz_bin2_±ơếăéĐạỷ.spr	6,1,2	\sound\skill\±ự±ơ.wav													156	211	255	90
+385	éÄéÍẹèằă	0	0	0	10	0	0	0	0	24	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\special\texiao201.spr	40,1,1																				255	255	255	100
+386	2012ẹèằă1	0	0	0	10	3	1	3	12	31	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\others\2012yanhua1.spr	31,1,2																				140	207	156	90
+387	2012ẹèằă2	0	0	0	10	3	1	3	12	36	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\others\vngxinniankuaile.spr	36,1,2																				140	207	156	90
+388	2012ẹèằă3	0	0	0	10	3	1	3	12	31	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\others\2012yanhua3.spr	31,1,2																				140	207	156	90
+389	Vòng tròn hỗ trợ đồng đội 	0	0	0	2	8	1	8	0	2	0	0	0	0	0	0	0	0	0	0	0	1	1	0	0	0	0	0																									255	255	255	0
+390	éĂãảẻĐẫậºƯạõằãìểà¯	0	0	0	2	8	1	8	0	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									255	255	255	0
+391	Hàn Băng Thích 	0	0	1	15	2	1	2	19	18	0	0	0	1	1	1	30	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_ºđ±ự´è.spr	1080,1,1																				255	255	231	90
+392	Lôi Kích Thuật 	0	0	1	15	2	1	2	19	18	0	0	0	1	1	1	30	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_Àìằữấừ.spr	1080,1,1																				255	255	231	90
+393	Địa Diệm Hỏa 	0	0	1	15	2	1	2	19	18	0	0	0	1	1	1	30	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_àỉẹổằð.01.spr	1080,1,1																				255	255	231	90
+394	Loạn Hoàn Kích	0	0	1	15	2	1	2	19	18	0	0	0	1	1	1	30	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_ìẽẫôẽíÚồ.spr	1080,1,1																				255	255	231	90
+395	Trang Sức Địa Lôi Bạo Tạc	0	0	0	20	2	1	2	19	18	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1		\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1				\sound\skill\sound_k038.wav													239	146	82	90
+396	ầĐệỉÂƠÅÚà¯(1-7ẳả)	1	0	1	20	2	1	2	0	90	32	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\others\qianchonglou\bullet.spr	80,16,1		\spr\skill\others\qianchonglou\down.spr	30,1,1				\sound\skill\sound_k037.wav													156	211	255	90
+397	ầĐệỉÂƠÅÚà¯Êă´úếé)	1	0	1	10	2	1	2	0	90	32	0	0	1	0	0	0	0	1	0	0	0	0	0	0	0	0	0				\spr\skill\others\qianchonglou\bullet.spr	80,16,1		\spr\skill\others\qianchonglou\down.spr	30,1,1	\sound\skill\Åựửăà¯.wav																156	211	255	90
+398	ÅÚà¯±ơếă	0	0	1	20	4	1	4	32	31	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\others\qianchonglou\blast.spr	30,1,1	\sound\skill\Åựửăà¯.wav																			239	146	82	90
+399	ằðầẵấỉẻÀìểà¯	0	0	0	20	2	1	2	12	72	0	0	0	1	1	20	30	0	0	0	0	0	0	0	0	0	0	1				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a1.spr	31,1,2	\sound\skill\ÍặẫẵèợºÊ.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_a2.spr	10,1,2				\sound\skill\sound_k038.wav				\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b1.spr	31,1,2	\sound\skill\sound_k036.wav	\spr\skill\èỡẩè\mag_tr_02_ÍặẫẵèợºÊ_b2.spr	10,1,2					239	146	82	90
+400	ềừ²ĩàỉìƯ°ẳẽí	0	0	0	10	3	1	3	200	18	0	0	0	1	1	2	6	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\wu\wd_xingxiaoguli_c.spr	30,1,2																				140	207	156	90
+401	ềừ²ĩàỉìƯìƯìể	0	0	0	10	4	1	4	12	36	0	0	0	1	1	20	30	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\150\wu\wd_xingxiaoguli_c.spr	30,1,1					\spr\skill\150\wu\wd_xingxiaoguli_d.spr	10,1,1														140	207	156	90
+402	Quả cầu tuyết	1	0	1	4	1	0	1	0	16	31	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\others\ẹâầũ.spr	88,8,1	\sound\skill\ãỗằăẹâễÂ.wav				\spr\skill\others\ẹâầũ±ơếă.spr	11,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+403	Äắẩậẽù´úếăà¯ìểà¯	0	0	0	320	1	1	2	10	36	0	-61480	1024	0	0	0	0	0	1	1	0	0	1	0	0	0	0	0				\spr\skill\150\tr\tr_150_jihuoliaoyuan_c.spr	13,1,1		\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1		\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\sound_k037.wav													156	211	255	90
+404	àụầđ	0	0	0	30	0	0	0	0	24	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\obj\money\obj_money_05_fall.spr	15,1,3																				255	255	255	100
+405	³ơẳảÂềằãằữ	0	0	1	15	3	1	3	13	1080	0	0	0	1	1	1	30	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\tm\xj_ìẽẫôẽíÚồ.spr	1080,1,1																				255	255	231	90
+406	³ơẳảÂềằãằữ±ơếă	0	0	0	20	3	1	3	6	27	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1				\sound\skill\sound_k038.wav													239	146	82	90
+407	ẩ±ấĐếẳẻằ1	0	0	0	20	3	1	3	6	27	0	0	0	0	1	1	60	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1	\sound\skill\Åựửăà¯.wav	\spr\skill\tm\bz_ìẽẫôẽíÚồ.spr	27,1,1				\sound\skill\sound_k038.wav													239	146	82	90
+408	³ơẳảẵÊãẫắêèỡẫậºƯ	0	0	0	2	5	0	5	0	1	0	0	0	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0																									255	255	255	90
+409	BOSSểÃễưàỉàéãẵãảẻĐ	0	0	0	2	14	1	14	0	1	0	0	0	0	0	0	0	0	0	1	0	0	1	0	0	0	0	0																									255	255	231	90
+410	³ơẳảặỳéÄãỷ	0	0	0	18	8	1	8	0	3	1	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0										\spr\skill\ÀƠÂỉ\kl_14_ặỳéÄãỷ.spr	20,1,1														255	219	99	90
+411	³ơẳảẵÊãẫắêèỡìểà¯	0	0	1	10	5	1	5	17	16	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0				\spr\skill\ẻọà±\wd_03_èỡẳấắêÀì.spr	17,1,1	\sound\skill\ẵÊãẫắêèỡ.wav				\spr\skill\ÀƠÂỉ\Bz_dian3_±ơếă.spr	8,1,1														255	255	231	90
+412	Bạch Hồng Quán Nhật	1	0	1	10	1	0	1	0	20	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	1	0	0				\spr\skill\ằêẫẵ\hs_°ìºỗạỏẩế_ìểà¯.spr	80,16,2	\sound\skill\sound_k029.wav				\spr\skill\ằêẫẵ\hs_°ìºỗạỏẩế_±ằằữ.spr	16,1,1	\sound\skill\sound_k041.wav													156	211	255	90
+413	Kim Nhạn Hoành Không	1	0	1	10	1	1	1	0	15	32	0	0	1	0	0	0	0	1	0	1	0	0	0	0	1	0	0				\spr\skill\ằêẫẵ\ẵðẹàºỏ¿ếìểà¯.spr	80,16,1	\sound\skill\sound_k029.wav				\spr\skill\ằêẫẵ\ẵðẹóºỏ¿ế±ằằữ.spr	11,1,1	\sound\skill\sound_k041.wav													156	211	255	90
+414	Thiên Thân Đảo Huyền	0	0	1	18	2	1	2	10	39	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\èỡẫðàạéỹ.spr	39,1,1																				156	211	255	90
+415	²ễậẫểư¿Í1	1	0	1	10	1	0	1	10	15	32	0	0	1	0	0	0	0	1	0	1	0	0	0	1	1	0	0				\spr\skill\ằêẫẵ\hs_²ễậẫểư¿Í_ìểà¯Àả.spr	80,16,2					\spr\skill\ằêẫẵ\hs_²ễậẫểư¿Í_±ằằữ.spr	80,16,2														156	211	255	90
+416	²ễậẫểư¿Í2	1	0	1	10	1	0	1	10	15	32	0	0	1	0	0	0	0	1	0	1	0	0	0	1	1	0	0				\spr\skill\ằêẫẵ\hs_²ễậẫểư¿Í_ìểà¯Âè.spr	80,16,2					\spr\skill\ằêẫẵ\hs_²ễậẫểư¿Í_±ằằữ.spr	80,16,2														156	211	255	90
+417	²ễậẫểư¿Í3	1	0	1	10	1	0	1	10	15	32	0	0	1	0	0	0	0	1	0	1	0	0	0	1	1	0	0				\spr\skill\ằêẫẵ\hs_²ễậẫểư¿Í_ìểà¯ầà.spr	80,16,2					\spr\skill\ằêẫẵ\hs_²ễậẫểư¿Í_±ằằữ.spr	80,16,2														156	211	255	90
+418	Đoạt Mệnh Liên Hoàn Tam Tiên Kiếm	5	0	1	10	1	0	1	0	24	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\ảỏÃỹÁơằãẩýẽẫẵÊìểà¯.spr	80,16,1	\sound\skill\àảẵÊ´èệéẫự.wav				\spr\skill\ằêẫẵ\ảỏÃỹÁơằãẩýẽẫẵÊ±ằằữ.spr	27,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													239	231	189	90
+419	Kiếm Khí Vô Cấp	0	0	1	15	5	1	5	10	360	0	0	0	1	1	1	34	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\hs_ẻịẳôặứắÂ_ặứ³Ă.spr	34,1,1																				255	255	231	90
+420	ẻịẳôẵÊặứ±ơếă	0	0	1	20	5	1	5	7	28	0	0	0	0	1	1	28	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\hs_ẻịẳôặứắÂ_±ằằữ.spr	28,1,1	\sound\skill\¿ủãỗệốàỗ.wav						\sound\skill\¿ủãỗệốàỗ.wav													239	146	82	90
+421	Long Huyền Kiếm Khí	0	0	1	15	5	1	5	10	360	0	0	0	1	1	1	34	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\hs_ÁỳéýặứắÂ_ặứ³Ă.spr	34,1,1																				255	255	231	90
+422	ÁỳéýẵÊặứ±ơếă	0	0	1	20	5	1	5	7	28	0	0	0	0	1	1	23	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\hs_ÁỳéýặứắÂ_±ằằữ.spr	23,1,1	\sound\skill\¿ủãỗệốàỗ.wav						\sound\skill\¿ủãỗệốàỗ.wav													239	146	82	90
+423	Ma Vân Kiếm Khí	0	0	1	15	5	1	5	10	360	0	0	0	1	1	1	34	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\hs_ÄƯễặặứắÂ_ặứ³Ă.spr	34,1,1																				255	255	231	90
+424	ÄƯễặẵÊặứ±ơếă	0	0	1	20	5	1	5	7	28	0	0	0	0	1	1	27	0	0	0	0	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\hs_ÄƯễặặứắÂ_±ằằữ.spr	27,1,1	\sound\skill\¿ủãỗệốàỗ.wav						\sound\skill\¿ủãỗệốàỗ.wav													239	146	82	90
+425	Thần Quang Toàn Nhiễu	0	0	0	10	1	1	1	1	2	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0																									140	207	156	90
+426	Phách Thạch Phá Ngọc	5	0	1	10	1	1	3	9	15	25	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ằêẫẵ\hs_Åỹấ¯ặặểủ_ìểà¯.spr	128,16,1					\spr\skill\ằêẫẵ\ẵðẹóºỏ¿ế±ằằữ.spr	20,1,1	\sound\skill\±ự±ơ.wav													156	211	255	90
+427	Thanh Vân Tống Sảng	1	0	1	10	1	0	1	0	20	20	0	0	1	0	0	0	0	1	1	1	0	0	0	0	1	0	0				\spr\skill\ằêẫẵ\hs_Åỹấ¯ặặểủ_ìểà¯.spr	128,16,1					\spr\skill\ằêẫẵ\ẵðẹóºỏ¿ế±ằằữ.spr	20,1,1	\sound\skill\±ự±ơ.wav													156	211	255	90
+428	¿ếìểà¯ẻịẳôẵÊặứ	0	0	1	15	5	1	5	10	360	0	0	0	1	1	1	34	0	0	0	0	0	0	0	0	0	0	0																									255	255	231	90
+429	éộẳÙìểà¯	0	0	1	15	1	0	1	1	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0																									255	255	231	90
+430	Pháo	0	0	0	10	0	0	0	0	24	0	0	0	0	0	0	0		0	0	0	0	0	0	0	0	0	0				\spr\item\newyear2010\éÂÄờÅÚệủ±ơếăéĐạỷ.spr	40,1,1																				255	255	255	100
+431	²ấÁôềýÂãàặ	0	0	1	10	1	0	1	5401	5400	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0				\spr\npcres\event\npc050111011\npc050111011_st.spr	10,1,3																				255	255	231	90
+432	ÄƯÚưẻịÁ¿boss	1	0	0	10	1	0	1	0	32	0	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ẫÙÁệ\sl_01_ÄƯÚưẻịÁ¿.spr	80,16,1																				231	227	107	90
+433	ắÅạơãẫéầboss	100	0	1	10	1	0	1	0	32	0	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\tm\ắÅạơãẫéầ.spr	8,1,1	\sound\skill\sound_k040.wav				\spr\skill\tm\ắÅạơãẫéầ.spr	8,1,1	\sound\skill\sound_k040.wav													239	231	189	90
+434	ắÅềừ°ìạầìƠboss	1	0	1	10	1	0	1	0	32	0	0	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠ.spr	8,1,1		\spr\skill\ẻồảắẵè\wdu_04_ắÅềừ°ìạầìƠẽỷÍử.spr	13,1,4																	239	146	82	90
+435	²ằÃð²ằắứboss	1	0	1	10	1	0	1	0	32	0	0	0	1	0	0	0	0	1	1	0	0	0	0	1	1	0	0				\spr\skill\ảởỏề\mag_em_04_²ằÃð²ằắứ.spr	64,16,1	\sound\skill\²ằÃð²ằắứ.wav				\spr\skill\ảởỏề\mag_em_bin4_±ơếăéĐạỷ.spr	6,1,1	\sound\skill\àảẵÊ´èệéẫự.wav													156	211	255	90
+436	±èºÊ³±ẫỳboss	1	0	0	10	1	0	1	0	32	0	0	0	1	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\´ọẹè\mag_cy_05_±èºÊ³±ẫỳ_b.spr	48,16,1					\spr\skill\ảởỏề\mag_bz_bin1_±ơếăéĐạỷ.spr	14,1,1														156	211	255	90
+437	°ụ´ũảủạãboss	1	0	1	10	1	0	1	0	32	0	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\ỉÔ°ù\mag_gb_04_èỡẽÂẻịạã.spr	64,16,1	\sound\skill\èỡẽÂẻịạã.wav				\spr\skill\èỡẩè\mag_bz_huo3_±ơếăéĐạỷ.spr	18,1,2														255	174	60	90
+438	Áềằðầộèỡboss	1	0	1	10	1	0	1	0	32	0	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\èỡẩè\mag_tr_01_²éẹụẩỗẹâ.spr	48,16,1	\sound\skill\Áềằðầộèỡ.wav				\spr\skill\èỡẩè\mag_bz_huo1_±ơếăéĐạỷ.spr	18,1,2	\sound\skill\sound_k037.wav													239	146	82	90
+439	ẻịẻềẻịẵÊboss	1	0	1	10	1	0	1	0	32	0	0	0	1	0	0	0	0	1	1	0	0	0	0	0	0	0	0				\spr\skill\ẻọà±\wd_10_ẻịẻềẻịẵÊ.spr	96,16,1																				255	255	231	90
+440	ẻồÀìếýãăboss	1	0	1	10	1	0	1	0	32	0	0	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0				\spr\skill\ÀƠÂỉ\kl_05_ẻồÀìếýãă.spr	5,1,2																				239	146	82	90
+441	ểÄằờấẫể°boss	1	0	1	10	1	0	1	0	32	30	0	0	1	0	0	0	0	1	1	1	0	0	0	0	0	0	0				\spr\skill\150\wu\wd_youhunshiying_c.spr	128,16,1	\sound\skill\ểÄÚÔữẳữÃ.wav						\sound\skill\ặếÍă±ơếă.wav													140	207	156	90

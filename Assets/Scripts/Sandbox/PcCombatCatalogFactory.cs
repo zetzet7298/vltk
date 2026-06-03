@@ -46,70 +46,220 @@ namespace VLTK.Sandbox
 
         public static List<SkillDefinition> CreateCaiBangSkills() => new()
         {
-            PassiveMastery(115, "丐帮棒法", "Cái Bang Bổng Pháp", 10, addPhys:(lv)=>15+10*lv, elementParam:2, icon:"\\spr\\Ui\\技能图标\\棍法.spr"),
-            PassiveMastery(116, "丐帮拳法", "Cái Bang Chưởng Pháp", 10, addPhys:(lv)=>30+15*lv, elementParam:9, icon:"\\spr\\Ui\\技能图标\\暗器使用.spr"),
-            DamageSkill(117, "投石问路", "Ném Đá Hỏi Đường", 10, 20, 280, 44, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(8+4*lv,0,28+11*lv), (lv)=>Same(15+10*lv), (lv)=>Triple(8,0,0)),
-            ResistBuff(118, "孤木遁雷", "Cô Mộc Độn Lôi", 10, MagicAttributeKind.LightingResP),
-            DamageSkill(119, "沿门托钵", "Duyên Môn Thác Bát", 20, 20, 240, 45, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(16+5*lv,0,44+13*lv), (lv)=>Same(20+10*lv), (lv)=>Triple(15,0,0)),
-            ResistBuff(120, "奔流到海", "Bôn Lưu Đáo Hải", 20, MagicAttributeKind.FireResP),
-            UtilitySkill(121, "妙手空空", "Diệu Thủ Không Không", 20, 180, SkillMissileForm.Surround, targetEnemy:false, targetSelf:false, levelData:(lv)=>SkillOnly(MagicAttributeKind.SkillCostV, 10,0,0)),
-            DamageSkill(122, "见人伸手", "Kiến Nhân Thân Thủ", 30, 20, 300, 46, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(23+6*lv,0,65+15*lv), (lv)=>Same(40+10*lv), (lv)=>Triple(25,0,0), horseLimit:1),
-            ResistBuff(123, "奎木星照", "Khuê Mộc Tinh Chiếu", 30, MagicAttributeKind.PoisonResP),
-            AuraSkill(124, "打狗阵", "Đả Cẩu Trận", 30, 180, 44, 209, (lv)=>Immediate(MagicAttributeKind.AddDefenseV, 30+10*lv,25,0)),
-            DamageSkill(125, "天下无狗", "Thiên Hạ Vô Cẩu", 40, 20, 400, 47, SkillMissileForm.Surround, 16, false, false, 11, (lv)=>Triple(30+8*lv,0,87+17*lv), (lv)=>Same(60+10*lv), (lv)=>Triple(50,0,0), horseLimit:1, missilesGenerateData:5),
-            ResistBuff(126, "金乌映雪", "Kim Ô Ánh Tuyết", 40, MagicAttributeKind.ColdResP, costBugReturnsResultTwice:true),
-            PassiveResist(127, "滑不留手", "Hoạt Bất Lưu Thủ", 40, MagicAttributeKind.PhysicsResP),
-            // JXWin VM runtime data: \script\skill\gaibang.lua / kanglong_youhui.
-            // L20: Spread(form=2), 15 dragons, Param1=2, Speed=32, AttackRadius=512.
-            DamageSkill(128, "亢龙有悔", "Kháng Long Hữu Hối", 60, 30, 512, 48, SkillMissileForm.Fan, 15, false, false, 11, (lv)=>Triple(112+24*lv,0,112+24*lv), (lv)=>Same(150+25*lv), (lv)=>Triple(40+lv,0,0), horseLimit:1),
-            ResistBuff(129, "化险为夷", "Hóa Hiểm Vi Di", 50, MagicAttributeKind.PhysicsResP, shortDuration:true, costBugUndefined:true),
-            UtilitySkill(130, "醉蝶狂舞", "Túy Điệp Cuồng Vũ", 50, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:43, levelData:(lv)=>{ var d=new SkillLevelData{level=lv}; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Floor(Log10(lv+1)/2f*60), 600+120*lv,0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV,50,0,0)); return d; }),
+            // 115 Cái Bang Bổng Pháp: passive (gaibang_bangfa)
+            PassiveMasteryWithDeadly(115, "Cái Bang Bổng pháp", "Cái Bang Bổng Pháp", 10,
+                addPhys: (lv) => Link(lv, (1, 10, ""), (20, 150, "")),
+                deadly: (lv) => Link(lv, (1, 2, ""), (20, 25, "Conic")),
+                elementParam: 2, icon: "\\spr\\Ui\\技能图标\\icon_sk_gb_gf.spr"),
+
+            // 116 Cái Bang Chưởng Pháp: passive (gaibang_zhangfa)
+            PassiveMasteryChuong(116, "Cái Bang Chưởng Pháp", "Cái Bang Chưởng Pháp", 10,
+                addFire: (lv) => Link(lv, (1, 25, ""), (20, 275, "")),
+                elementParam: 9, icon: "\\spr\\Ui\\技能图标\\icon_sk_gb_aq.spr"),
+
+            // 117 Ném Đá Hỏi Đường: damage (yanmen_tuobo) [PC radius L20=384]
+            DamageSkillNew(117, "Đầu Thạch Vấn Lộ ", "Ném Đá Hỏi Đường", 10, 20, 384, 44, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => Link(lv, (1, 10, ""), (20, 55, "")),
+                fire: (lv) => (Link(lv, (1, 10, ""), (20, 100, "")), 0, Link(lv, (1, 10, ""), (20, 150, ""))),
+                cost: (lv) => (10, 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 1, ""), (20, 10, "")), -1, 0)),
+
+            // 118 Cô Mộc Độn Lôi: buff
+            ResistBuff(118, "Cô Mộc Độn Lôi ", "Cô Mộc Độn Lôi", 10, MagicAttributeKind.LightingResP),
+
+            // 119 Duyên Môn Thác Bát: damage (yanmen_tuobo) [PC radius L20=384]
+            DamageSkillNew(119, "Diên Môn Thác Bát", "Duyên Môn Thác Bát", 10, 20, 384, 45, SkillMissileForm.Single, 1, true, false, 11,
+                phys: (lv) => Link(lv, (1, 10, ""), (20, 55, "")),
+                fire: (lv) => (Link(lv, (1, 10, ""), (20, 100, "")), 0, Link(lv, (1, 10, ""), (20, 150, ""))),
+                cost: (lv) => (10, 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 1, ""), (20, 10, "")), -1, 0)),
+
+            // 120 Bôn Lưu Đáo Hải: buff
+            ResistBuff(120, "Bôn Lưu Đáo Hải", "Bôn Lưu Đáo Hải", 20, MagicAttributeKind.FireResP),
+
+            // 121 Diệu Thủ Không Không: utility
+            UtilitySkill(121, "Diệu Thủ Không Không", "Diệu Thủ Không Không", 20, 180, SkillMissileForm.Surround, targetEnemy:false, targetSelf:false, levelData:(lv)=>SkillOnly(MagicAttributeKind.SkillCostV, 10,0,0)),
+
+            // 122 Kiến Nhân Thân Thủ: damage (jianren_shenshou) [PC radius L20=384, fire L20[3]=215]
+            DamageSkillNew(122, "Kiến Nhân Thần Thủ ", "Kiến Nhân Thân Thủ", 10, 20, 384, 46, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 15, ""), (20, 75, "")), 0, Link(lv, (1, 15, ""), (20, 215, ""))),
+                cost: (lv) => (25, 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 1, ""), (20, 10, "")), -1, 0),
+                horseLimit: 1),
+
+            // 123 Khuê Mộc Tinh Chiếu: buff
+            ResistBuff(123, "Khuê Mộc Tinh Chiếu", "Khuê Mộc Tinh Chiếu", 30, MagicAttributeKind.PoisonResP),
+
+            // 124 Đả Cẩu Trận: passive
+            PassiveMastery(124, "Đả Cẩu bổng", "Đả Cẩu Trận", 30, addPhys:(lv)=>Link(lv, (1, 10, ""), (20, 175, "")), elementParam:2, icon:"\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr", charAnim:11),
+
+            // 125 Thiên Hạ Vô Cẩu: damage (bangda_egou) [PC radius L20=512]
+            DamageSkillNew(125, "Bổng Đả ác Cẩu", "Thiên Hạ Vô Cẩu", 50, 20, 512, 47, SkillMissileForm.Surround, 16, true, false, 11,
+                phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
+                fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
+                cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
+                horseLimit: 1, missilesGenerateData: 5),
+
+            // 126 Kim Ô Ánh Tuyết: buff
+            ResistBuff(126, "Kim Ô ánh Tuyết", "Kim Ô Ánh Tuyết", 40, MagicAttributeKind.ColdResP, costBugReturnsResultTwice:true),
+
+            // 127 Hoạt Bất Lưu Thủ: utility buff
+            UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, levelData:(lv)=>{
+                var d = new SkillLevelData { level = lv };
+                int pct = Link(lv, (1, 9, ""), (20, 66, ""));
+                int dur = 18 * Link(lv, (1, 120, ""), (20, 180, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, pct, dur, 0));
+                int cost = Link(lv, (1, 24, ""), (20, 50, ""));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
+                return d;
+            }, skillStyle: PcSkillStyle.Missiles),
+
+            // 128 Kháng Long Hữu Hối: damage (kanglong_youhui)
+            DamageSkillNew(128, "Kháng Long Hữu Hối", "Kháng Long Hữu Hối", 50, 20, 512, 48, SkillMissileForm.Fan, 15, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 10, ""), (20, 536, "")), 0, Link(lv, (1, 10, ""), (20, 536, ""))),
+                cost: (lv) => (Link(lv, (1, 10, ""), (20, 50, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
+                horseLimit: 1),
+
+            // 129 Hóa Hiểm Vi Di: buff
+            UtilitySkill(129, "Hóa Hiểm Vi Di", "Hóa Hiểm Vi Di", 20, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, levelData:(lv)=>{
+                var d = new SkillLevelData { level = lv };
+                int ret = Link(lv, (1, 4, ""), (20, 46, ""));
+                int def = Link(lv, (1, 48, ""), (20, 800, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, ret, -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, def, -1, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            }, skillStyle: PcSkillStyle.PassivityNpcState),
+
+            // 130 Túy Điệp Cuồng Vũ: buff (zuidie_kuangwu)
+            UtilitySkill(130, "Túy Điệp Cuồng Vũ ", "Túy Điệp Cuồng Vũ", 60, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:43, levelData:(lv)=>{
+                var d = new SkillLevelData{level=lv};
+                int dur = 18 * Link(lv, (1, 120, ""), (30, 180, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 1, ""), (30, 30, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (20, 30, "Conic")), dur, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 50, ""), (20, 100, "")), 0, 0));
+                return d;
+            }, maxLevel: 30),
 
             // ===== MOD Vietnam Cái Bang additions =====
-            // 274 Giương Long Chưởng: passive combat-mastery support (Attrib 704, "hỗ trợ chiêu thức đấu-bị động").
-            // MOD Skills.txt: ReqLevel 30, MaxLevel 20, missileForm=0, AttackRadius=0, child=0, charAnim=14.
-            // Lua: gaibang.lua::xianglong_zhang (lifemax_p, manamax_p, addfiremagic_v/p, firedamage_v).
-            PassiveMastery(274, "降龙掌", "Giương Long Chưởng", 30, addPhys:(lv)=>20+8*lv, elementParam:2, icon:"\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr"),
-            // 277 Hoành Bách Lộ Thiên: chưởng hỗ trợ chiêu thức (Attrib 700, "Chưởng hỗ trợ chiêu thức").
-            // MOD Skills.txt: ReqLevel 40, MaxLevel 20, missileForm=2, AttackRadius=400, childSkillId=114, childSkillNum=1, charAnim=11, missilesGenerateData=57, stateSpecialId=3.
-            // Lua: gaibang.lua::huabu_liushou (fastwalkrun_p, addphysicsdamagep_v, manamax_p).
-            // Note: MagicAttributeKind doesn't expose fastwalkrun_p; use AddPhysicsDamageP as the
-            // primary buff (closest available analog). Lua formula is in gaibang.lua::huabu_liushou
-            // and can be ported later when MagicAttributeKind is extended.
-            UtilitySkill(277, "横拨留手", "Hoành Bách Lộ Thiên", 40, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, stateSpecialId:3, levelData:(lv)=>{ var d=new SkillLevelData{level=lv}; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, 25+8*lv, -1, 0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20+3*lv,0,0)); return d; }),
-            // 357 Phi Long Tại Thiên: công kích nội công (Attrib 702). Highest-tier Giáng Long skill in MOD.
-            // MOD Skills.txt: ReqLevel 80, MaxLevel 20, missileForm=0, AttackRadius=400, child=166, charAnim=11.
-            // Lua: gaibang.lua::feilong_zaitian (seriesdamage_p 20→60%, firedamage_v L1=10→L20=750, misslenum 1→4 at L20, missle_speed 20→24, attackradius 448→512, cost 10→65, addskilldamage1=1073 Thần Thủ Lệnh Long, addskilldamage2=1101, addskillexp1 stacks self, param1 0→32=range 2-shot, skill_eventskilllevel 1→20, skill_showevent 0→4, skill_collideevent=389 Long Chiến Ở Dư).
-            // Icon: \spr\Ui\skill\龙战在野.spr (NOT in MOD or PC gốc PAK - alias cai_bang_skill_128.png with note in PC_SOURCE.txt).
-            // PC: feilong_zaitian L1-10=Fan(1), L11+=Line(1→4, param1=32 spread)
-            DamageSkill(357, "飞龙在天", "Phi Long Tại Thiên", 80, 20, 400, 166, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(60+18*lv, 0, 180+50*lv), (lv)=>{ int n = lv < 11 ? 1 : (lv < 16 ? 2 : (lv < 20 ? 3 : 4)); return Same(10+45*lv/n); }, (lv)=>Triple(10+2*lv, 0, 0), horseLimit:1),
-            // 359 Thiên Hạ Vô Cẩu (player): công kích ngoại công (Attrib 701). Player version - distinct from 125 (PC gốc) and 1539 (NPC variant).
-            // MOD Skills.txt: ReqLevel 80, MaxLevel 20, missileForm=0, AttackRadius=400, child=168, charAnim=11.
-            // Icon: \spr\Ui\skill\天下无狗.spr - SAME filename as PC gốc 125 but different UID 0x31d018f1.
-            // Extracted from PC gốc PAK UID 0x31d018f1 (NOT aliased to 125 PNG; this is a distinct icon).
-            // PC: tianxia_wugou player skill_misslenum_v L1=1, L20=3 target-seeking (NOT 16 circle)
-            DamageSkill(359, "天下无狗", "Thiên Hạ Vô Cẩu (player)", 80, 20, 400, 168, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(70+20*lv, 0, 200+55*lv), (lv)=>Same(120+15*lv), (lv)=>Triple(80+3*lv, 0, 0), horseLimit:1),
-            // 360 Tiêu Dao Công: passive combat mastery (Attrib 700, "Chưởng hỗ trợ công kích").
-            // MOD Skills.txt: ReqLevel 60, MaxLevel 20, missileForm=0, AttackRadius=0, child=0, charAnim=14.
-            // Lua: gaibang.lua::xiaoyao_gong (attackspeed_v, castspeed_v, allskillanti, etc).
-            // Icon: \spr\Ui\skill\逍遥功.spr (NOT in MOD or PC gốc PAK - alias cai_bang_skill_130.png).
-            PassiveMastery(360, "逍遥功", "Tiêu Dao Công", 60, addPhys:(lv)=>40+12*lv, elementParam:2, icon:"\\spr\\Ui\\skill\\逍遥功.spr"),
-            // 1073 Thần Thủ Lệnh Long: công kích nội công (Attrib 702). 150-tier Cái Bang top skill.
-            // MOD Skills.txt: ReqLevel 150, MaxLevel 20, missileForm=0, AttackRadius=400, child=335, charAnim=11.
-            // Lua: gaibang.lua::gb_150_shichengjiulong_a (referenced in 357 addskilldamage1=1101; child 1103 z-Thần Thương Lệnh Long Hoàn, requires skill 1073).
-            // Icon: \spr\Ui\技能图标\150\icon_sk_150_gb_01.spr - extracted from MOD updatejx08.pak UID 0x9878076a.
-            // PC: MisslesForm=1 (single guided), ChildSkillId=335, 3-phase event chain
-            DamageSkill(1073, "神失令龙", "Thần Thủ Lệnh Long", 150, 20, 400, 335, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(180+40*lv, 0, 500+100*lv), (lv)=>Same(300+40*lv), (lv)=>Triple(150+5*lv, 0, 0), horseLimit:1),
-            // 1074 Bổng Hoành Lược Mã: công kích ngoại công (Attrib 701). 150-tier Cái Bang top skill.
-            // MOD Skills.txt: ReqLevel 150, MaxLevel 20, missileForm=0, AttackRadius=400, child=336, charAnim=11.
-            // Icon: \spr\Ui\技能图标\150\icon_sk_150_gb_02.spr - extracted from MOD updatejx08.pak UID 0x95215f74.
-            // PC: gungaibang150 skill_misslenum_v L1=1, L20=5 target-seeking (NOT surround)
-            DamageSkill(1074, "棒横掠马", "Bổng Hoành Lược Mã", 150, 20, 400, 336, SkillMissileForm.Single, 1, false, false, 11, (lv)=>Triple(200+45*lv, 0, 550+110*lv), (lv)=>Same(280+35*lv), (lv)=>Triple(160+5*lv, 0, 0), horseLimit:1),
-            // 1539 Thiên Hạ Vô Cẩu (NPC variant): boss/NPC version of 125/359.
-            // MOD Skills.txt: ReqLevel 1, MaxLevel 60, missileForm=0, AttackRadius=400, child=?, charAnim=11.
-            // Marked isNpcVariant=true - hidden from player skill panel but available for boss AI.
-            DamageSkill(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 400, 47, SkillMissileForm.Surround, 16, false, false, 11, (lv)=>Triple(50+15*lv, 0, 150+40*lv), (lv)=>Same(100+10*lv), (lv)=>Triple(80, 0, 0), horseLimit:1, missilesGenerateData:5),
+            PassiveMasteryLong(274, "Giáng Long Chưởng ", "Giương Long Chưởng", 30,
+                lifemax: (lv) => Link(lv, (1, -1, ""), (20, -25, "")),
+                manamax: (lv) => Link(lv, (1, 12, ""), (20, 50, "")),
+                addfire: (lv) => Link(lv, (1, 35, ""), (20, 750, "")),
+                elementParam: 9, icon: "\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr"),
+
+            UtilitySkill(277, "Hoạt Bất Lưu Thủ ", "Hoành Bách Lộ Thiên", 40, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, stateSpecialId:3, levelData:(lv)=>{
+                var d = new SkillLevelData { level = lv };
+                int pct = Link(lv, (1, 9, ""), (20, 66, ""));
+                int dur = 18 * Link(lv, (1, 120, ""), (20, 180, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, pct, dur, 0));
+                int cost = Link(lv, (1, 24, ""), (20, 50, ""));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
+                return d;
+            }),
+
+            DamageSkillNew(357, "Phi Long Tại Thiên ", "Phi Long Tại Thiên", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, "")), 0, Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, ""))),
+                cost: (lv) => (Link(lv, (1, 10, ""), (20, 65, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
+                horseLimit: 1),
+
+            DamageSkillNew(359, "Thiên Hạ Vô Cẩu ", "Thiên Hạ Vô Cẩu (player)", 80, 20, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),
+                fire: (lv) => (Link(lv, (1, 70, ""), (15, 150, ""), (20, 285, "")), 0, Link(lv, (1, 70, ""), (15, 200, ""), (20, 432, ""))),
+                cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
+                horseLimit: 1),
+
+            PassiveMasteryDao(360, "Tiêu Diêu Công ", "Tiêu Dao Công", 60,
+                attackSpeed: (lv) => Link(lv, (1, 6, ""), (20, 65, "")),
+                castSpeed: (lv) => Link(lv, (1, 6, ""), (20, 65, "")),
+                elementParam: 2, icon: "\\spr\\Ui\\skill\\逍遥功.spr", charAnim:11),
+
+            UtilitySkill(714, "Hỗn Thiên Khí Công", "Hỗn Thiên Khí Công", 120, 180, SkillMissileForm.None, targetEnemy:false, targetSelf:true, levelData:(lv)=>{
+                var d = new SkillLevelData { level = lv };
+                int pct = Link(lv, (1, 1, ""), (20, 6, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, pct, 0, 0));
+                return d;
+            }),
+
+            UtilitySkill(720, "Hỗn Thiên Khí Công_Quyết Chú", "Hỗn Thiên Khí Công Quyết Chí", 120, 440, SkillMissileForm.Surround, targetEnemy:true, targetSelf:false, levelData:(lv)=>{
+                var d = new SkillLevelData { level = lv };
+                int dur = 18 * Link(lv, (1, 3, ""), (20, 9, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, Link(lv, (1, -2, ""), (20, -10, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResP, Link(lv, (1, -3, ""), (20, -15, "")), dur, 0));
+                return d;
+            }),
+
+            DamageSkillNew(1073, "Thời Thặng Lục Long", "Thần Thủ Lệnh Long", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
+                // PC gaibang.lua zhanggaibang150: skill_cost_v={{{1,12},{20,78},{23,98}}}
+                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                horseLimit: 1),
+
+            DamageSkillNew(1074, "Bổng Huýnh Lược Địa", "Bổng Hoành Lược Mã", 150, 20, 512, 336, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => Link(lv, (1, 10, ""), (15, 80, ""), (20, 165, "")),
+                fire: (lv) => (Link(lv, (1, 60, ""), (15, 120, ""), (20, 230, "")), 0, Link(lv, (1, 60, ""), (15, 160, ""), (20, 345, ""))),
+                cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                horseLimit: 1),
+
+            DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 512, 47, SkillMissileForm.Surround, 16, false, false, 11,
+                phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
+                fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
+                cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
+                horseLimit: 1, missilesGenerateData: 5),
+
+            LongChienUYuyeSkill(),
+            NguDieuCanKhonSkill(),
         };
+
+        public static SkillDefinition LongChienUYuyeSkill()
+        {
+            var s = BaseSkill(389, "Long Chiến Ư Dã ", "Long Chiến Ư Dã", 80, 20, 570, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 195; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 11; s.targetEnemy = true;
+            s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
+            s.missileSpriteId = Sprite("\\spr\\skill\\天\\mag_bz_huo3_爆炸效果.spr");
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 17, ""), (20, 371, "")), 0, Link(lv, (1, 17, ""), (20, 371, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        /// <summary>
+        /// PC zhanggaibang150 (skill 1073) CollideEvent[3] sub-skill. L10+ 335 missile impact spawns
+        /// skill 1072, which fires its child 334 (stationary flash) for 10 ticks.
+        /// PC missles.txt missile 334: MoveKind=0, LifeTime=10, Speed=0, DmgInterval=5.
+        /// </summary>
+        public static SkillDefinition NguDieuCanKhonSkill()
+        {
+            var s = BaseSkill(1072, "Ngũ Diệu Càn Khôn ", "Ngũ Diệu Càn Khôn", 150, 20, 512, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 334; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 11; s.targetEnemy = true;
+            s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
+            s.missileSpriteId = Sprite("\\spr\\skill\\150\\gb\\gb_150_shishengliulong_d.spr");
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 20, ""), (20, 450, ""), (23, 585, ""), (26, 653, "")), 0, Link(lv, (1, 20, ""), (20, 450, ""), (23, 585, ""), (26, 653, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
 
         public static SkillDefinition CaiBangDogBeatingAuraChildSkill()
         {
@@ -137,10 +287,79 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        private static SkillDefinition PassiveMastery(int id, string raw, string vi, int req, Func<int,int> addPhys, int elementParam, string icon)
+        private static SkillDefinition PassiveMastery(int id, string raw, string vi, int req, Func<int,int> addPhys, int elementParam, string icon, int charAnim = 14)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = charAnim; s.targetOnly = false; s.iconSourceId = Sprite(icon);
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addPhys(lv), -1, elementParam)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, 12+3*lv, -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, 5+lv, -1, 0)); return d; }); return s;
+        }
+
+        private static SkillDefinition PassiveMasteryWithDeadly(int id, string raw, string vi, int req, Func<int,int> addPhys, Func<int,int> deadly, int elementParam, string icon)
         {
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
-            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addPhys(lv), -1, elementParam)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, 12+3*lv, -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, 5+lv, -1, 0)); return d; }); return s;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addPhys(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, deadly(lv), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition PassiveMasteryChuong(int id, string raw, string vi, int req, Func<int,int> addFire, int elementParam, string icon)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addFire(lv), -1, elementParam));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition PassiveMasteryLong(int id, string raw, string vi, int req, Func<int,int> lifemax, Func<int,int> manamax, Func<int,int> addfire, int elementParam, string icon)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addfire(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, lifemax(lv), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, manamax(lv), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition PassiveMasteryDao(int id, string raw, string vi, int req, Func<int,int> attackSpeed, Func<int,int> castSpeed, int elementParam, string icon, int charAnim = 14)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = charAnim; s.targetOnly = false; s.iconSourceId = Sprite(icon);
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, attackSpeed(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, castSpeed(lv), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition DamageSkillNew(int id, string raw, string vi, int req, int max, int radius, int child, SkillMissileForm form, int childNum, bool isPhysical, bool targetOnly, int charAnim, Func<int,int> phys, Func<int,(int,int,int)> fire, Func<int,(int,int,int)> cost, Func<int,SkillLevelData> extra=null, int horseLimit=0, int missilesGenerateData=0)
+        {
+            var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData;
+            s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, phys(lv), 0, 0));
+                var f = fire(lv);
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, f.Item1, f.Item2, f.Item3));
+                var c = cost(lv);
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, c.Item1, c.Item2, c.Item3));
+                if (extra != null)
+                {
+                    var ext = extra(lv);
+                    foreach (var state in ext.state) d.state.Add(state);
+                }
+                return d;
+            });
+            return s;
         }
 
         private static SkillDefinition PassiveResist(int id, string raw, string vi, int req, MagicAttributeKind kind)
@@ -163,22 +382,22 @@ namespace VLTK.Sandbox
         private static SkillDefinition AuraSkill(int id, string raw, string vi, int req, int radius, int stateId, int child, Func<int,SkillLevelData> levelData)
         { var s = BaseSkill(id, raw, vi, req, 20, radius, SkillMissileForm.None); s.skillStyle = PcSkillStyle.InitiativeNpcState; s.isAura = true; s.stateSpecialId = stateId; s.childSkillId = child; s.childSkillLevel = 1; s.childSkillNum = 1; s.targetSelf = true; s.charAnimId = 14; AddLevels(s, levelData); return s; }
 
-        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null)
-        { var s = BaseSkill(id, raw, vi, req, 20, radius, form); s.skillStyle = PcSkillStyle.InitiativeNpcState; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
+        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
+        { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
 
         private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
 
-        // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 1073, 1074, 1539 (NPC variant).
+        // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
         // the player skill panel filters it out via isNpcVariant.
-        public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==359 || id==360 || id==1073 || id==1074 || id==1539;
+        public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1539 || id==389;
         private static string IconPathForSkill(int id) => id switch
         {
             1 => "\\spr\\Ui\\技能图标\\icon_sk_ty_ap.spr",
             2 => "\\spr\\Ui\\技能图标\\icon_sk_ty_at.spr",
             53 => "\\spr\\Ui\\技能图标\\icon_sk_ty_as.spr",
-            115 => "\\spr\\Ui\\技能图标\\棍法.spr",
-            116 => "\\spr\\Ui\\技能图标\\暗器使用.spr",
+            115 => "\\spr\\Ui\\技能图标\\icon_sk_gb_gf.spr",
+            116 => "\\spr\\Ui\\技能图标\\icon_sk_gb_aq.spr",
             117 or 196 or 197 or 198 or 199 or 200 or 201 => "\\spr\\Ui\\技能图标\\icon_sk_gb_01.spr",
             118 => "\\spr\\Ui\\技能图标\\icon_sk_gb_02.spr",
             119 => "\\spr\\Ui\\技能图标\\icon_sk_gb_11.spr",
@@ -193,6 +412,8 @@ namespace VLTK.Sandbox
             128 or 357 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 357 Phi Long Tại Thiên: same Long-family icon, real icon not in any PAK.
             129 => "\\spr\\Ui\\技能图标\\icon_sk_gb_42.spr",
             130 or 360 => "\\spr\\Ui\\技能图标\\icon_sk_gb_43.spr", // 360 Tiêu Dao Công: alias to Túy Điệp Cuồng Vũ; real icon not in any PAK.
+            714 => "\\spr\\Ui\\技能图标\\icon_sk_gb_120.spr",
+            720 => "\\spr\\Ui\\技能图标\\icon_sk_sl_01.spr",
             1073 => "\\spr\\Ui\\技能图标\\150\\icon_sk_150_gb_01.spr", // MOD 150-tier GB icon, extracted from updatejx08.pak.
             1074 => "\\spr\\Ui\\技能图标\\150\\icon_sk_150_gb_02.spr", // MOD 150-tier GB icon, extracted from updatejx08.pak.
             _ => "\\spr\\Ui\\技能图标\\icon_sk_gb_01.spr",
@@ -207,5 +428,42 @@ namespace VLTK.Sandbox
         private static SkillLevelData State(MagicAttributeKind k,int a,int b,int c){var d=new SkillLevelData(); d.state.Add(new SkillMagicAttribute(k,a,b,c)); return d;}
         private static SkillLevelData Immediate(MagicAttributeKind k,int a,int b,int c){var d=new SkillLevelData(); d.immediate.Add(new SkillMagicAttribute(k,a,b,c)); return d;}
         private static SkillLevelData SkillOnly(MagicAttributeKind k,int a,int b,int c){var d=new SkillLevelData(); d.skill.Add(new SkillMagicAttribute(k,a,b,c)); return d;}
+
+        private static int Link(int lv, params (int lvMark, int val, string func)[] points)
+        {
+            if (points == null || points.Length == 0) return 0;
+            if (points.Length == 1 || lv <= points[0].lvMark) return points[0].val;
+            if (lv >= points[points.Length - 1].lvMark)
+            {
+                var last = points[points.Length - 1];
+                var prev = points[points.Length - 2];
+                if (last.func == "Conic")
+                    return Conic(lv, prev.lvMark, prev.val, last.lvMark, last.val);
+                return last.val;
+            }
+            for (int i = 1; i < points.Length; i++)
+            {
+                if (lv <= points[i].lvMark)
+                {
+                    var p0 = points[i - 1];
+                    var p1 = points[i];
+                    if (p1.func == "Conic")
+                        return Conic(lv, p0.lvMark, p0.val, p1.lvMark, p1.val);
+                    float ratio = (float)(lv - p0.lvMark) / (p1.lvMark - p0.lvMark);
+                    return Mathf.FloorToInt(p0.val + ratio * (p1.val - p0.val));
+                }
+            }
+            return points[points.Length - 1].val;
+        }
+
+        private static int Conic(int lv, int x1, int y1, int x2, int y2)
+        {
+            if (x1 < 0 || x2 < 0) return 0;
+            if (x2 == x1) return y2;
+            float denom = x2 * x2 - x1 * x1;
+            float term1 = (y2 - y1) * lv * lv / denom;
+            float term2 = (y2 - y1) * x1 * x1 / denom;
+            return Mathf.FloorToInt(term1 - term2 + y1);
+        }
     }
 }

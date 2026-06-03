@@ -168,7 +168,7 @@ namespace VLTK.Sandbox
             CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog(AssetRegistry);
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
-            SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService());
+            SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
 
             // Auto-set all CaiBang skills to max level for testing.
             // Matches PC GM command behavior. Runs on every boot / domain reload.

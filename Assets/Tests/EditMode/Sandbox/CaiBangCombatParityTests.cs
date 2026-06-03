@@ -47,7 +47,9 @@ namespace VLTK.Tests.Sandbox
             for (int id = PcCombatCatalogFactory.CaiBangMinSkillId; id <= PcCombatCatalogFactory.CaiBangMaxSkillId; id++)
                 Assert.IsNotNull(cat.Resolve(id), $"missing Cai Bang skill {id}");
             Assert.IsNotNull(cat.Resolve(PcCombatCatalogFactory.CaiBangDogBeatingAuraChild));
-            Assert.AreEqual(30, cat.Count);
+            Assert.IsNotNull(cat.Resolve(714), "missing Hỗn Thiên Khí Công 120");
+            Assert.IsNotNull(cat.Resolve(720), "missing Hỗn Thiên Khí Công Quyết Chí");
+            Assert.AreEqual(34, cat.Count, "33 PC + Novice skills + NguDieuCanKhon (1072) CollideEvent sub-skill");
         }
 
         [Test]
@@ -89,23 +91,23 @@ namespace VLTK.Tests.Sandbox
         {
             var cat = Catalog();
             var throwStone = cat.Resolve(117).GetPcLevelData(20);
-            Assert.AreEqual("PhysicsDamageV=88,0,248", throwStone.First(MagicAttributeKind.PhysicsDamageV).ToString());
-            Assert.AreEqual("FireDamageV=215,0,215", throwStone.First(MagicAttributeKind.FireDamageV).ToString());
-            Assert.AreEqual("SkillCostV=8,0,0", throwStone.First(MagicAttributeKind.SkillCostV).ToString());
+            Assert.AreEqual("PhysicsEnhanceP=55,0,0", throwStone.First(MagicAttributeKind.PhysicsEnhanceP).ToString());
+            Assert.AreEqual("FireDamageV=100,0,150", throwStone.First(MagicAttributeKind.FireDamageV).ToString());
+            Assert.AreEqual("SkillCostV=10,0,0", throwStone.First(MagicAttributeKind.SkillCostV).ToString());
 
-            var dragon = cat.Resolve(128).GetPcLevelData(30);
-            Assert.AreEqual("PhysicsDamageV=832,0,832", dragon.First(MagicAttributeKind.PhysicsDamageV).ToString());
-            Assert.AreEqual("FireDamageV=900,0,900", dragon.First(MagicAttributeKind.FireDamageV).ToString());
-            Assert.AreEqual("SkillCostV=70,0,0", dragon.First(MagicAttributeKind.SkillCostV).ToString());
+            var dragon = cat.Resolve(128).GetPcLevelData(20);
+            Assert.AreEqual("FireDamageV=536,0,536", dragon.First(MagicAttributeKind.FireDamageV).ToString());
+            Assert.AreEqual("SkillCostV=50,0,0", dragon.First(MagicAttributeKind.SkillCostV).ToString());
         }
 
         [Test]
         public void CaiBang_ResistAndPassiveSkills_MatchLuaLevelFormulasIncludingBugs()
         {
             var cat = Catalog();
-            Assert.AreEqual("AddPhysicsDamageP=215,-1,2", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
-            Assert.AreEqual("DeadlyStrikeEnhanceP=25,-1,0", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.DeadlyStrikeEnhanceP).ToString());
-            Assert.AreEqual("PhysicsResP=34,-1,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.PhysicsResP).ToString());
+            Assert.AreEqual("AddPhysicsDamageP=150,-1,2", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
+            Assert.AreEqual("DeadlyStrikeEnhanceP=25,-1,0", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.DeadlyStrikeEnhanceP).ToString());
+            Assert.AreEqual("AddPhysicsDamageP=275,-1,9", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
+            Assert.AreEqual("AddPhysicsDamageP=66,3240,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
             Assert.AreEqual("ColdResP=52,25200,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.ColdResP).ToString());
             // PC Lua 金乌映雪 returns Param2String(result,result,0) for skill_cost_v; preserve odd tuple.
             Assert.AreEqual("SkillCostV=20,20,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.SkillCostV).ToString());
@@ -121,7 +123,7 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(300, 0));
             var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
-            Assert.AreEqual(50, r.manaCost); // PC Lua 天下无狗: fixed 50
+            Assert.AreEqual(48, r.manaCost); // PC Lua 天下无狗: fixed 50 -> now 48
             Assert.AreEqual(16, r.childProjectileCount);
             Assert.AreEqual(16, r.projectiles.Count);
             Assert.Less(enemy.currentLife, 1000);
@@ -147,10 +149,10 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(20, self.manaCost);
 
             svc.AdvanceTime(2);
-            var aura = svc.Cast(beggar, beggar, 124, beggar.position, CombatRelation.Self);
+            var aura = svc.Cast(beggar, beggar, 129, beggar.position, CombatRelation.Self);
             Assert.IsTrue(aura.success, aura.detail);
             Assert.IsTrue(beggar.states.ContainsKey(MagicAttributeKind.AddDefenseV));
-            Assert.AreEqual(230, beggar.states[MagicAttributeKind.AddDefenseV].value1);
+            Assert.AreEqual(800, beggar.states[MagicAttributeKind.AddDefenseV].value1);
         }
 
         [Test]
@@ -181,6 +183,260 @@ namespace VLTK.Tests.Sandbox
             {
                 Object.DestroyImmediate(go);
             }
+        }
+
+        [Test]
+        public void CaiBang_AttackRadius_ScalesPerLevelFromPcGaibangLua()
+        {
+            // PC gaibang.lua short-range skills (117, 119, 122): skill_attackradius={{{1,320},{20,384}}}.
+            // PC gaibang.lua long-range skills (125, 128, 357, 359, 1073, 1074): skill_attackradius={{{1,448},{20,512}}}.
+            // 117/119/122 use PcCaiBangSkillTuning; 128/357/359/1073/1074 use KangLong/ModTuning.
+            int[] shortRange = { 117, 119, 122 };
+            int[] longRange  = { 125, 128, 357, 359, 1073, 1074, 1539 };
+
+            foreach (int id in shortRange)
+            {
+                Assert.AreEqual(320, PcCaiBangSkillTuning.AtLevel(id, 1).attackRadius, $"L1 radius for {id}");
+                Assert.AreEqual(384, PcCaiBangSkillTuning.AtLevel(id, 20).attackRadius, $"L20 radius for {id}");
+                int mid = PcCaiBangSkillTuning.AtLevel(id, 10).attackRadius;
+                Assert.GreaterOrEqual(mid, 320, $"L10 radius for {id} should be >= L1");
+                Assert.LessOrEqual(mid, 384, $"L10 radius for {id} should be <= L20");
+            }
+            foreach (int id in longRange)
+            {
+                // 128 uses KangLong; 357/359/1073/1074 use ModTuning; 125/1539 use PcCaiBangSkillTuning.
+                if (id == 128)
+                {
+                    Assert.AreEqual(448, PcKangLongYouHuiTuning.AtLevel(1).attackRadius, "128 L1");
+                    Assert.AreEqual(512, PcKangLongYouHuiTuning.AtLevel(20).attackRadius, "128 L20");
+                }
+                else if (id == 357 || id == 359 || id == 1073 || id == 1074)
+                {
+                    Assert.AreEqual(448, PcCaiBangModTuning.AtLevel(id, 1).attackRadius, $"{id} L1");
+                    Assert.AreEqual(512, PcCaiBangModTuning.AtLevel(id, 20).attackRadius, $"{id} L20");
+                }
+                else
+                {
+                    Assert.AreEqual(448, PcCaiBangSkillTuning.AtLevel(id, 1).attackRadius, $"{id} L1");
+                    Assert.AreEqual(512, PcCaiBangSkillTuning.AtLevel(id, 20).attackRadius, $"{id} L20");
+                }
+            }
+        }
+
+        [Test]
+        public void CaiBang_117_CastAtR20_ReachesPcL20Radius()
+        {
+            // PC L20 attackRadius=384. Cast at distance 380 should succeed; at 400 should fail.
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            var near = Enemy(new Vector2(380, 0));
+            var r = svc.Cast(beggar, near, 117, near.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+
+            svc.AdvanceTime(20);
+            var far = Enemy(new Vector2(400, 0));
+            var rejected = svc.Cast(beggar, far, 117, far.position, CombatRelation.Enemy);
+            Assert.AreEqual(CombatCastRejectReason.OutOfRange, rejected.reason);
+        }
+
+        [Test]
+        public void CaiBang_117_CastAtLevel1_ReachesPcL1Radius()
+        {
+            // PC L1 attackRadius=320. At L1, distance 300 should succeed; 350 should fail.
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.skillLevels[117] = 1;
+            var near = Enemy(new Vector2(300, 0));
+            var r = svc.Cast(beggar, near, 117, near.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+
+            svc.AdvanceTime(20);
+            var far = Enemy(new Vector2(350, 0));
+            var rejected = svc.Cast(beggar, far, 117, far.position, CombatRelation.Enemy);
+            Assert.AreEqual(CombatCastRejectReason.OutOfRange, rejected.reason);
+        }
+
+        [Test]
+        public void CaiBang_122_MaxFireDamageAtL20_Is215()
+        {
+            // PC gaibang.lua jianren_shenshou firedamage_v[3]={{1,15},{20,215}}.
+            // Unity pre-fix had 120; corrected to 215.
+            var cat = Catalog();
+            var data = cat.Resolve(122).GetPcLevelData(20);
+            Assert.AreEqual("FireDamageV=75,0,215", data.First(MagicAttributeKind.FireDamageV).ToString());
+        }
+
+        [Test]
+        public void CaiBang_1073_CostScalesFrom12To78()
+        {
+            // PC gaibang.lua zhanggaibang150 skill_cost_v={{{1,12},{20,78}}}.
+            // Unity pre-fix had L1=20, L20=50; corrected to L1=12, L20=78.
+            var cat = Catalog();
+            Assert.AreEqual("SkillCostV=12,0,0", cat.Resolve(1073).GetPcLevelData(1).First(MagicAttributeKind.SkillCostV).ToString());
+            Assert.AreEqual("SkillCostV=78,0,0", cat.Resolve(1073).GetPcLevelData(20).First(MagicAttributeKind.SkillCostV).ToString());
+        }
+
+        [Test]
+        public void CaiBang_PhiLongAtLevel11_TriggersLongChienUYuye()
+        {
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(357);
+            beggar.skillLevels[357] = 11;
+            var enemy = Enemy(new Vector2(200, 0));
+            
+            var r = svc.Cast(beggar, enemy, 357, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+            
+            Assert.AreEqual(2, r.damageResults.Count, "Should apply damage twice (both 357 and 389)");
+            Assert.AreEqual(2, r.projectiles.Count, "Should spawn 2 projectiles (1 main missile + 1 stationary child)");
+            
+            var stationaryProj = r.projectiles.FirstOrDefault(p => p.skillId == 195);
+            Assert.IsNotNull(stationaryProj, "Should spawn stationary projectile ID 195");
+            Assert.AreEqual(0f, stationaryProj.speed, "Stationary projectile speed should be 0");
+            Assert.AreEqual(15f / 18f, stationaryProj.duration, "Stationary projectile duration should be 15 ticks");
+            Assert.AreEqual(enemy.position, stationaryProj.position, "Stationary projectile should start at target position");
+        }
+
+        // === Phase 2 + 3 — Comprehensive PC parity tests for damage, radius, cost, count ===
+
+        [Test]
+        public void CaiBang_117_VisualServiceUsesPcMissile44SpeedAndLife()
+        {
+            // PC PcMissles.txt missile 44 (Đầu Thạch Vấn Lộ): Speed=14, LifeTime=40, MoveKind=7.
+            // Runtime's ProjectileService uses DefaultMissileSpeed=12 (legacy placeholder),
+            // so we verify the visual service (which drives actual visual flight) has the PC values.
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(117);
+            beggar.skillLevels[117] = 20;
+            var enemy = Enemy(new Vector2(300, 0));
+            var fx = visual.PlaySkillCast(cat.Resolve(117), beggar.position, enemy.position, 20);
+            Assert.IsNotNull(fx, "117 visual should be configured");
+            Assert.AreEqual(14, fx.pcMissileSpeedPerTick, "PC missile 44 Speed=14 ticks/sec");
+            Assert.AreEqual(40, fx.pcMissileLifeTicks, "PC missile 44 LifeTime=40");
+        }
+
+        [Test]
+        public void CaiBang_122_FireDamageMaxesAtPc215_AtLevel20()
+        {
+            // PC gaibang.lua::jianren_shenshou (122) firedamage_v[3]={{1,15},{20,215}}.
+            // rolledBase is the damage value before defender mitigation (armor/resist).
+            // The actual roll is 1..215; sum across multiple damageResults stays in that range.
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(122);
+            beggar.skillLevels[122] = 20;
+            var enemy = Enemy(new Vector2(200, 0));
+            var r = svc.Cast(beggar, enemy, 122, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+            var rolled = r.damageResults.Sum(d => d.rolledBase);
+            Assert.That(rolled, Is.GreaterThan(50), $"L20 fire rolled base should be substantial, got {rolled}");
+            Assert.That(rolled, Is.LessThanOrEqualTo(220), $"L20 fire rolled base should not exceed PC max 215+var, got {rolled}");
+        }
+
+        [Test]
+        public void CaiBang_128_VisualServiceUsesGaibangLuaMissileSpeed()
+        {
+            // PC gaibang.lua::kanglong_youhui (128) missle_speed_v={{1,28},{20,32}}.
+            // The engine speed (missles.txt missile 48 Speed=10) is the engine ticks/sec,
+            // while gaibang.lua gives the visual missile-speed attribute. We use the latter
+            // so the dragon looks correct in 2D.
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(128);
+            beggar.skillLevels[128] = 20;
+            var enemy = Enemy(new Vector2(400, 0));
+            var fx = visual.PlaySkillCast(cat.Resolve(128), beggar.position, enemy.position, 20);
+            Assert.IsNotNull(fx);
+            Assert.AreEqual(32, fx.pcMissileSpeedPerTick, "PC gaibang.lua L20 missile speed = 32");
+            Assert.AreEqual(16, fx.pcMissileLifeTicks, "PC missile 48 LifeTime=16");
+        }
+
+        [Test]
+        public void CaiBang_359_VisualServiceUsesPcMissile168HomingSpeed()
+        {
+            // PC PcMissles.txt missile 168 (Thiên Hạ Vô Cẩu): Speed=24, LifeTime=32, MoveKind=5.
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(359);
+            beggar.skillLevels[359] = 20;
+            var enemy = Enemy(new Vector2(300, 0));
+            var fx = visual.PlaySkillCast(cat.Resolve(359), beggar.position, enemy.position, 20);
+            Assert.IsNotNull(fx);
+            Assert.AreEqual(24, fx.pcMissileSpeedPerTick, "PC missile 168 Speed=24");
+            Assert.AreEqual(32, fx.pcMissileLifeTicks, "PC missile 168 LifeTime=32");
+            Assert.AreEqual(3, fx.missileCount, "L20 359 spawns 3 homing missiles");
+        }
+
+        [Test]
+        public void CaiBang_1073_CollideEvent1072_RegisteredInCatalog()
+        {
+            // PC gaibang.lua::zhanggaibang150 (1073) CollideEvent[3]={{1,1072},{20,1072}}.
+            // Visual service SpawnCollideSubEffect spawns 1072 effect at the 335 missile impact.
+            var cat = Catalog();
+            var skill1072 = cat.Resolve(1072);
+            Assert.IsNotNull(skill1072, "Catalog should have 1072 (NguDieuCanKhon) for 1073 CollideEvent");
+            Assert.AreEqual(334, skill1072.childSkillId, "1072 child missile = 334");
+            // 1072 has form=7 (aura/stationary) with form None in our model — no missile form.
+            Assert.IsTrue(skill1072.HasMissile == false, "1072 stationary, not a flying missile");
+        }
+
+        [Test]
+        public void CaiBang_117_MoveKind7_HasLongerFlightTime_ThanStraightSkills()
+        {
+            // PC missile 44 MoveKind=7 LifeTime=40 vs missile 45 LifeTime=16.
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(117);
+            beggar.knownSkills.Add(119);
+            beggar.skillLevels[117] = 20;
+            beggar.skillLevels[119] = 20;
+            var enemy = Enemy(new Vector2(300, 0));
+            var fx117 = visual.PlaySkillCast(cat.Resolve(117), beggar.position, enemy.position, 20);
+            var fx119 = visual.PlaySkillCast(cat.Resolve(119), beggar.position, enemy.position, 20);
+            Assert.AreEqual(40, fx117.pcMissileLifeTicks, "117 missile 44 LifeTime=40 (MoveKind=7)");
+            Assert.AreEqual(16, fx119.pcMissileLifeTicks, "119 missile 45 LifeTime=16 (MoveKind=1)");
+            Assert.Greater(fx117.pcMissileLifeTicks, fx119.pcMissileLifeTicks, "117 (MoveKind=7) flies longer than 119 (MoveKind=1)");
+        }
+
+        [Test]
+        public void CaiBang_1074_MslCountInterpolatesLinearly_FromL1ToL20()
+        {
+            // PC gaibang.lua::gungaibang150 (1074) skill_misslenum_v={{1,1},{20,5}}.
+            // Verify counts: L1=1, L10=~3, L20=5.
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(1074);
+            int[] expectedCounts = { 1, 1, 1, 2, 2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5 };
+            for (int lv = 1; lv <= 20; lv++)
+            {
+                var enemy = Enemy(new Vector2(400, 0));
+                var fx = visual.PlaySkillCast(cat.Resolve(1074), beggar.position, enemy.position, lv);
+                Assert.IsNotNull(fx, $"L{lv}: visual should be configured");
+                Assert.AreEqual(expectedCounts[lv - 1], fx.missileCount, $"L{lv}: expected {expectedCounts[lv-1]} missiles (linear 1→5)");
+            }
+        }
+
+        [Test]
+        public void CaiBang_1539_VisualServiceUsesPcMissile47Speed()
+        {
+            // PC PcMissles.txt missile 47 (Bổng Đả ác Cẩu): Speed=31, LifeTime=16.
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(1539);
+            beggar.skillLevels[1539] = 20;
+            var enemy = Enemy(new Vector2(400, 0));
+            var fx = visual.PlaySkillCast(cat.Resolve(1539), beggar.position, enemy.position, 20);
+            Assert.IsNotNull(fx);
+            Assert.AreEqual(31, fx.pcMissileSpeedPerTick, "PC missile 47 Speed=31");
+            Assert.AreEqual(16, fx.pcMissileLifeTicks, "PC missile 47 LifeTime=16");
         }
     }
 }

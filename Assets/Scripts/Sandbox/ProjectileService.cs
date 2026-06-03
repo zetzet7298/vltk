@@ -37,11 +37,25 @@ namespace VLTK.Sandbox
         public bool effectResolved;
         public Vector2 position;        // current world position
         public bool alive = true;
+        public float duration;
+        public float elapsed;
 
         /// <summary>Advance the projectile; marks it done when it reaches the target.</summary>
         public bool Step(float deltaTime)
         {
             if (!alive) return false;
+
+            if (duration > 0f)
+            {
+                elapsed += deltaTime;
+                if (elapsed >= duration)
+                {
+                    alive = false;
+                    return true; // elapsed this step
+                }
+                return false;
+            }
+
             var to = target - position;
             float dist = to.magnitude;
             float step = speed * Mathf.Max(0f, deltaTime);
@@ -122,7 +136,8 @@ namespace VLTK.Sandbox
                 skillId = skill.skillId,
                 origin = origin,
                 target = target,
-                speed = DefaultMissileSpeed,
+                speed = skill.skillId == 195 ? 0f : DefaultMissileSpeed,
+                duration = skill.skillId == 195 ? (15f / 18f) : 0f,
                 effectClipRef = effectResolved ? skill.effectSourceId.ToKey() : null,
                 effectResolved = effectResolved,
                 position = origin,

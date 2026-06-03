@@ -39,6 +39,7 @@ namespace VLTK.UI
         private int _activeSlot = -1; // 0=left, 1=right
         private int _pressedSlot = -1;
         private int _pressedPointerId = -1;
+        private Vector2 _startPointerPos;
         private bool _slotPointerDown;
         private bool _longPressOpened;
         private bool _initialized;
@@ -90,6 +91,7 @@ namespace VLTK.UI
                 _leftSkillLabel = _leftSlot.Q<Label>("SlotLabel");
                 _leftSlot.pickingMode = PickingMode.Position;
                 _leftSlot.RegisterCallback<PointerDownEvent>(OnLeftSlotDown);
+                _leftSlot.RegisterCallback<PointerMoveEvent>(OnSlotMove);
                 _leftSlot.RegisterCallback<PointerUpEvent>(OnSlotUp);
                 _leftSlot.RegisterCallback<PointerCancelEvent>(OnSlotCancel);
             }
@@ -100,6 +102,7 @@ namespace VLTK.UI
                 _rightSkillLabel = _rightSlot.Q<Label>("SlotLabel");
                 _rightSlot.pickingMode = PickingMode.Position;
                 _rightSlot.RegisterCallback<PointerDownEvent>(OnRightSlotDown);
+                _rightSlot.RegisterCallback<PointerMoveEvent>(OnSlotMove);
                 _rightSlot.RegisterCallback<PointerUpEvent>(OnSlotUp);
                 _rightSlot.RegisterCallback<PointerCancelEvent>(OnSlotCancel);
             }
@@ -173,20 +176,21 @@ namespace VLTK.UI
 
         private void OnLeftSlotDown(PointerDownEvent evt)
         {
-            BeginSlotPress(0, evt.pointerId);
+            BeginSlotPress(0, evt.pointerId, evt.position);
             evt.StopPropagation();
         }
 
         private void OnRightSlotDown(PointerDownEvent evt)
         {
-            BeginSlotPress(1, evt.pointerId);
+            BeginSlotPress(1, evt.pointerId, evt.position);
             evt.StopPropagation();
         }
 
-        private void BeginSlotPress(int slot, int pointerId)
+        private void BeginSlotPress(int slot, int pointerId, Vector2 screenPos)
         {
             _pressedSlot = slot;
             _pressedPointerId = pointerId;
+            _startPointerPos = screenPos;
             _slotPointerDown = true;
             _longPressOpened = false;
             (slot == 0 ? _leftSlot : _rightSlot)?.CapturePointer(pointerId);
@@ -199,6 +203,11 @@ namespace VLTK.UI
             if (!_slotPointerDown || _pressedSlot != slot || _pressedPointerId != pointerId) yield break;
             _longPressOpened = true;
             OpenSkillPicker(slot);
+        }
+
+        private void OnSlotMove(PointerMoveEvent evt)
+        {
+            evt.StopPropagation();
         }
 
         private void OnSlotUp(PointerUpEvent evt)
@@ -222,13 +231,21 @@ namespace VLTK.UI
 
         private void OnSlotCancel(PointerCancelEvent evt)
         {
+            CancelSlotPress();
+            evt.StopPropagation();
+        }
+
+        private void CancelSlotPress()
+        {
             int slot = _pressedSlot;
-            (slot == 0 ? _leftSlot : _rightSlot)?.ReleasePointer(evt.pointerId);
+            if (slot >= 0)
+            {
+                (slot == 0 ? _leftSlot : _rightSlot)?.ReleasePointer(_pressedPointerId);
+            }
             _slotPointerDown = false;
             _pressedSlot = -1;
             _pressedPointerId = -1;
             _longPressOpened = false;
-            evt.StopPropagation();
         }
 
         /// <summary>Open the skill picker overlay for a specific slot.</summary>
@@ -432,9 +449,16 @@ namespace VLTK.UI
                         // Play skill visual effect first. PC applies damage when missile/skill resolves,
                         // so mirror HP to the live BaLangEnemyAi when the visual reaches impact.
                         var effectService = manager.SkillEffectVisual;
-                        var fx = effectService?.PlaySkillCast(skill, casterPos, target.position, report.skillLevel);
+                        // PC missiles track the enemy NPC's current position each tick.
+                        // Capture a callback that returns the live target's transform position so
+                        // the visual effect chases the enemy as it moves (homing).
+                        BaLangEnemyAi liveTarget = target.enemyBehaviour;
+                        System.Func<Vector2> currentTargetPos = liveTarget != null
+                            ? (System.Func<Vector2>)(() => (Vector2)liveTarget.transform.position)
+                            : null;
+                        var fx = effectService?.PlaySkillCast(skill, casterPos, target.position, report.skillLevel, currentTargetPos);
                         if (target.enemyBehaviour != null)
-                            StartCoroutine(ApplyLiveEnemyHpAtImpact(target.enemyBehaviour, targetActor.currentLife, fx));
+                            StartCoroutine(ApplyLiveEnemyHpAtImpact(target, targetActor.currentLife, skillId, report.skillLevel, report, fx));
 
                         SubsystemLog.Info("Combat",
                             $"Cast {skill.DisplayName} → {target.name} " +
@@ -464,20 +488,53 @@ namespace VLTK.UI
             return 20f / 18f;
         }
 
-        private IEnumerator ApplyLiveEnemyHpAtImpact(BaLangEnemyAi enemy, int hp, ActiveSkillEffect fx)
+        private IEnumerator ApplyLiveEnemyHpAtImpact(CombatTargetInfo target, int hp, int skillId, int skillLevel, CombatCastReport report, ActiveSkillEffect fx)
         {
-            if (enemy == null) yield break;
+            if (target?.enemyBehaviour == null) yield break;
             if (fx == null)
             {
-                enemy.SetLife(hp);
+                target.enemyBehaviour.SetLife(hp);
                 yield break;
             }
 
             while (fx.phase != SkillEffectPhase.Impact && fx.phase != SkillEffectPhase.Finished)
                 yield return null;
 
-            if (enemy != null)
-                enemy.SetLife(hp);
+            if (target.enemyBehaviour != null)
+            {
+                target.enemyBehaviour.SetLife(hp);
+
+                if (skillId == 357 && skillLevel >= 11)
+                {
+                    var manager = SandboxManager.Instance;
+                    if (manager != null)
+                    {
+                        var subSkill = manager.CombatSkillCatalog?.Resolve(389);
+                        if (subSkill != null)
+                        {
+                            manager.SkillEffectVisual?.PlaySkillCast(subSkill, target.position, target.position, skillLevel);
+                        }
+                    }
+
+                    if (report.damageResults.Count > 1)
+                    {
+                        int aoeDamage = report.damageResults[1].finalDamage;
+                        var allEnemies = CollectEnemies();
+                        foreach (var enemy in allEnemies)
+                        {
+                            if (enemy.enemyBehaviour != null && enemy.enemyBehaviour != target.enemyBehaviour && enemy.alive)
+                            {
+                                float dist = Vector2.Distance(target.position, enemy.position);
+                                if (dist <= 3.0f)
+                                {
+                                    int newLife = Mathf.Max(0, enemy.currentLife - aoeDamage);
+                                    enemy.enemyBehaviour.SetLife(newLife);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private List<EnemyRuntimeInfo> CollectEnemies()

@@ -52,14 +52,14 @@ namespace VLTK.UI
         public const int PcFightSkillSlotsPerPage = 30;
         public const int PcFightSkillPageCount = 1;
 
-        // All 23 Cái Bang player skills in PC display order. MOD-only additions appended.
+        // All 24 Cái Bang player skills in PC display order. MOD-only additions appended.
         public static readonly int[] PcCaiBangSkillOrder =
         {
             115, 116, 117, 118, 119,
             120, 121, 122, 123, 124,
             125, 126, 127, 128, 129,
             130, 274, 277, 357, 359,
-            360, 1073, 1074,
+            360, 714, 1073, 1074,
         };
 
         // 1539 = Thiên Hạ Vô Cẩu NPC variant (ReqLevel 1, MaxLevel 60). MOD-only boss skill

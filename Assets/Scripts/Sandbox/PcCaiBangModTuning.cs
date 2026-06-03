@@ -24,7 +24,7 @@ namespace VLTK.Sandbox
         {
             return new PcModSkillSpec
             {
-                missileForm = (SkillMissileForm)InterpolateInt(lv, new[] { (1,1), (10,1), (11,0), (20,0) }),
+                missileForm = SkillMissileForm.Single,
                 missileCount = InterpolateInt(lv, new[] { (1,1), (11,1), (12,2), (15,2), (16,3), (20,4) }),
                 param1 = InterpolateInt(lv, new[] { (1,0), (10,0), (11,32), (20,32) }),
                 missileSpeed = InterpolateInt(lv, new[] { (1,20), (20,24) }),
