@@ -1,5 +1,13 @@
 # Agent Instructions
 
+
+## Tools RULES:
+
+- Always use `srcwalk` skill: for best codebase/files/dirs exploration, discover, searching.
+- Always prefer `srcwalk` CLI over read/glob/grep tool.
+- Prefer `fd` over `find`.
+- Prefer `rg` over `grep`.
+
 ## Project Overview
 
 ### User-facing phải là tiếng việt. nếu jx pc là tiếng trung thì phải việt hoá
@@ -36,3 +44,5 @@ stable repo-local entrypoint `scripts/harness`, which uses the prebuilt Rust
 binary at `scripts/bin/harness-cli` in installed projects.
 
 <!-- HARNESS:END -->
+
+### Không tự ý tạo các tài liệu markdown trừ khi human cho phép

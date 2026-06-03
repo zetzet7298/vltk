@@ -13,7 +13,7 @@ leading 'spr\\npcres\\...' backslash form.
 
 Example:
     python3 stage_player_spr.py \
-      --src jxwin-kinnox/SourceNew/swrod3/Utility/Run/spr/npcres/man \
+      --src Assets/StreamingAssets/Reference/ \
       --source-prefix 'spr\\npcres\\man' \
       --unity-root /var/www/vltk-mobile \
       --manifest Assets/StreamingAssets/woman_player_sprites.json \

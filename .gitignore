@@ -9,7 +9,8 @@
 harness.db
 harness.db-wal
 harness.db-shm
-
+bmad
+harness
 # Rust build output for harness tooling.
 target/
 dist/
@@ -159,6 +160,10 @@ GoogleService-Info.plist
 # ─────────────────────────────────────────────────
 .codex/
 .factory/
+.agents/
+.understand-anything/
+.kiro/
+.pi/
 
 # ─────────────────────────────────────────────────
 # Unity auto-recovery scene backup

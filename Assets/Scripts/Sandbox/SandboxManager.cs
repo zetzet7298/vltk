@@ -57,6 +57,7 @@ namespace VLTK.Sandbox
         public MobileJoystick PlayerJoystick { get; private set; }
         public BaLangEnemySpawnRuntime EnemyRuntime { get; private set; }
         public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
+        public TrainingNpcSpawner TrainingSpawner { get; private set; }
         public SkillCatalog CombatSkillCatalog { get; private set; }
         public CombatRuntimeService CombatRuntime { get; private set; }
         public PlayerProgressionState PlayerProgression { get; private set; }
@@ -138,6 +139,7 @@ namespace VLTK.Sandbox
                         EnsureEnemyRuntime();
                         PlacePlayerOnActiveMap();
                         SpawnEnemiesForActiveMap();
+                        SpawnTrainingNpcs();
                         ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
                     }
@@ -148,6 +150,10 @@ namespace VLTK.Sandbox
                 };
 
                 EnsurePlayerController();
+
+                // Place player at training pentagon center immediately so it never
+                // appears at (0,0) before the map finishes loading.
+                PlacePlayerAtDefaultSpawn();
 
                 if (loadDefaultMapOnBoot && MapManager.Catalog.ContainsKey(defaultMapId))
                     MapManager.LoadMap(defaultMapId);
@@ -209,6 +215,7 @@ namespace VLTK.Sandbox
             enemyGo.transform.SetParent(worldRoot, false);
             EnemyRuntime = enemyGo.AddComponent<BaLangEnemySpawnRuntime>();
             EnemyNameplateOverlay = enemyGo.AddComponent<BaLangEnemyNameplateOverlay>();
+            TrainingSpawner = enemyGo.AddComponent<TrainingNpcSpawner>();
         }
 
         private void SpawnEnemiesForActiveMap()
@@ -218,6 +225,12 @@ namespace VLTK.Sandbox
             // Region_S folder contains server-side NPC spawn data with real PC coordinates.
             var regionSFolder = System.IO.Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{MapManager.ActiveMapId}");
             EnemyRuntime.SpawnFromRegionS(regionSFolder);
+        }
+
+        private void SpawnTrainingNpcs()
+        {
+            if (TrainingSpawner == null) return;
+            TrainingSpawner.Spawn();
         }
 
         private void EnsurePlayerController()
@@ -241,7 +254,26 @@ namespace VLTK.Sandbox
             PlayerJoystick = EnsureMobileJoystick();
             PlayerController.BindJoystick(PlayerJoystick);
 
+            // Add position debug for testing spawn coordinates
+            playerGo.AddComponent<PlayerPositionDebug>();
+
             SubsystemLog.Info("Sandbox", "Male player controller ready (8-way SPR parts + joystick)");
+        }
+
+        /// <summary>
+        /// Immediately place player at the fixed training pentagon center (53493, 95313).
+        /// PC source: Vo Su (tid=311) position from Region_S 104_093.
+        /// Called before map load so player never starts at (0,0).
+        /// </summary>
+        private void PlacePlayerAtDefaultSpawn()
+        {
+            if (PlayerController == null) return;
+            // Training area center from PC Region_S data, verified in-game.
+            // World (53246, -52041) = MPS (53246, 104082)
+            Vector2 spawn = new Vector2(53246f, -52041f);
+            PlayerController.ResetMovementState();
+            PlayerController.PlaceAt(spawn, snapCamera: false);
+            SubsystemLog.Info("Sandbox", $"Player pre-placed at {spawn} (MPS 53493,95313) before map load");
         }
 
         private void PlacePlayerOnActiveMap()
@@ -249,20 +281,12 @@ namespace VLTK.Sandbox
             if (PlayerController == null)
                 return;
 
-            Vector2 spawn = Vector2.zero;
-            if (MapRenderer != null && MapRenderer.HasContent)
-                spawn = new Vector2(MapRenderer.ContentBounds.center.x, MapRenderer.ContentBounds.center.y);
-
-            if (MapManager != null && MapManager.ActiveMapId == BaLangHuyenMapId)
-            {
-                var trainer = FindBaLangTrainerSpawn();
-                if (trainer.HasValue)
-                    spawn = trainer.Value;
-            }
+            // Training area center: world (53246, -52041)
+            Vector2 spawn = new Vector2(53246f, -52041f);
 
             PlayerController.ResetMovementState();
             PlayerController.PlaceAt(spawn, snapCamera: false);
-            SubsystemLog.Info("Sandbox", $"Default player spawn set to {spawn} on map {MapManager?.ActiveMapId}");
+            SubsystemLog.Info("Sandbox", $"Default player spawn set to {spawn} (training center) on map {MapManager?.ActiveMapId}");
 
             var mapTab = FindObjectOfType<GMMapTab>(true);
             if (mapTab != null)

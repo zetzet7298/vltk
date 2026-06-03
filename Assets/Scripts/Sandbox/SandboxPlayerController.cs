@@ -31,6 +31,13 @@ namespace VLTK.Sandbox
         public float followSmooth = 12f;
         public float cameraZ = -100f;
 
+        [Header("Map Bounds Clamp")]
+        public bool clampToMapBounds = true;
+        // Map 79 bounds: regions 94-113 (col) x 91-103 (row)
+        // world X: col*512, world Y: -(row+1)*512 to -(row*512)
+        public Vector2 mapBoundsMin = new Vector2(48128f, -53248f);
+        public Vector2 mapBoundsMax = new Vector2(58368f, -46592f);
+
         public Vector2 MoveInput { get; private set; }
         public Vector2 LastMoveDelta { get; private set; }
         public Vector2 MoveTarget { get; private set; }
@@ -187,6 +194,16 @@ namespace VLTK.Sandbox
                     }
                 }
                 transform.position = new Vector3(next.x, next.y, transform.position.z);
+
+                // Clamp player inside map bounds
+                if (clampToMapBounds)
+                {
+                    var clamped = new Vector3(
+                        Mathf.Clamp(transform.position.x, mapBoundsMin.x, mapBoundsMax.x),
+                        Mathf.Clamp(transform.position.y, mapBoundsMin.y, mapBoundsMax.y),
+                        transform.position.z);
+                    transform.position = clamped;
+                }
             }
 
             EnsureVisual();
@@ -211,7 +228,12 @@ namespace VLTK.Sandbox
         public void PlaceAt(Vector2 worldPosition, bool snapCamera = true)
         {
             ResetMovementState();
-            transform.position = new Vector3(worldPosition.x, worldPosition.y, transform.position.z);
+            Vector2 pos = worldPosition;
+            if (clampToMapBounds)
+                pos = new Vector2(
+                    Mathf.Clamp(pos.x, mapBoundsMin.x, mapBoundsMax.x),
+                    Mathf.Clamp(pos.y, mapBoundsMin.y, mapBoundsMax.y));
+            transform.position = new Vector3(pos.x, pos.y, transform.position.z);
             EnsureVisual();
             if (visual != null)
                 visual.Tick(0f);
@@ -259,7 +281,21 @@ namespace VLTK.Sandbox
             cam.orthographicSize = Mathf.Max(1f, followOrthoSize);
             cam.transform.rotation = Quaternion.identity;
 
-            var target = new Vector3(transform.position.x, transform.position.y, cameraZ);
+            // Clamp camera so viewport never shows beyond map bounds
+            // halfW/halfH = half the visible area in world units
+            float halfH = cam.orthographicSize;
+            float halfW = halfH * cam.aspect;
+
+            float camX = transform.position.x;
+            float camY = transform.position.y;
+
+            if (clampToMapBounds)
+            {
+                camX = Mathf.Clamp(camX, mapBoundsMin.x + halfW, mapBoundsMax.x - halfW);
+                camY = Mathf.Clamp(camY, mapBoundsMin.y + halfH, mapBoundsMax.y - halfH);
+            }
+
+            var target = new Vector3(camX, camY, cameraZ);
             if (immediate || deltaTime <= 0f || followSmooth <= 0f)
                 cam.transform.position = target;
             else

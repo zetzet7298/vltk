@@ -4,6 +4,7 @@
 // Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
 // -----------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using UnityEngine;
 using VLTK.Core;
 using VLTK.Model;
@@ -18,9 +19,9 @@ namespace VLTK.Sandbox
     /// </summary>
     public sealed class TrainingNpcSpawner : MonoBehaviour
     {
-        [Header("Center position (MPS coordinates)")]
-        public int centerMpsX = 6665;
-        public int centerMpsY = 6509;
+        [Header("Center position (world coordinates)")]
+        public float centerX = 53246f;
+        public float centerY = -52041f;
 
         [Header("Pentagon radius in world units")]
         public float radius = 300f;
@@ -44,7 +45,7 @@ namespace VLTK.Sandbox
             _npcRoot = new GameObject("TrainingNpcs").transform;
             _npcRoot.SetParent(transform, false);
 
-            Vector2 center = usePlayerPosition ? GetPlayerCenter() : BaLangEnemyDatabase.MpsToWorld(centerMpsX, centerMpsY);
+            Vector2 center = usePlayerPosition ? GetPlayerCenter() : new Vector2(centerX, centerY);
 
             // Pentagon: 5 vertices, start from top (angle = 90°), evenly spaced 72° apart
             // Order: Bao cát, Cọc gỗ, Mộc nhân, Cọc gỗ, Bao cát
@@ -77,7 +78,7 @@ namespace VLTK.Sandbox
             var mgr = SandboxManager.Instance;
             if (mgr != null && mgr.PlayerController != null)
                 return mgr.PlayerController.transform.position;
-            return BaLangEnemyDatabase.MpsToWorld(centerMpsX, centerMpsY);
+            return new Vector2(centerX, centerY);
         }
 
         private void SpawnSingleNpc(int index, int templateId, string vietnameseName, Color bodyColor, Vector2 worldPos)
@@ -86,11 +87,11 @@ namespace VLTK.Sandbox
             go.transform.SetParent(_npcRoot, false);
             go.transform.position = new Vector3(worldPos.x, worldPos.y, 0f);
 
-            // Body visual (colored square placeholder until real SPRs are staged)
+            // Body visual — shaped sprite per NPC type (PC training objects have no SPRs)
             var bodyGo = new GameObject("Body");
             bodyGo.transform.SetParent(go.transform, false);
             var sr = bodyGo.AddComponent<SpriteRenderer>();
-            sr.sprite = MakeColoredSprite(128, bodyColor);
+            sr.sprite = LoadTrainingSprite(templateId);
             sr.sortingOrder = MapRenderer.PlayerSortingOrder - 10;
 
             // Shadow below body
@@ -195,6 +196,35 @@ namespace VLTK.Sandbox
             return sr;
         }
 
+        private static readonly Dictionary<int, Sprite> SpriteCache = new Dictionary<int, Sprite>();
+
+        private static Sprite LoadTrainingSprite(int templateId)
+        {
+            if (SpriteCache.TryGetValue(templateId, out var cached))
+                return cached;
+
+            string filename = templateId switch
+            {
+                TEMPLATE_COC_GOC => "coc_go",
+                TEMPLATE_MOC_NHAN => "moc_nhan",
+                TEMPLATE_BAO_CAT => "bao_cat",
+                _ => null
+            };
+
+            if (filename == null)
+                return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
+
+            string path = System.IO.Path.Combine(Application.streamingAssetsPath, "TrainingSprites", filename + ".png");
+            if (!System.IO.File.Exists(path))
+                return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
+
+            var data = System.IO.File.ReadAllBytes(path);
+            var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
+            tex.LoadImage(data);
+            var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1f, 0, SpriteMeshType.FullRect);
+            SpriteCache[templateId] = sprite;
+            return sprite;
+        }
         private static Sprite MakeColoredSprite(int size, Color color)
         {
             var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);

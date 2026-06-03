@@ -1,26 +1,26 @@
 ---
 name: jx-map-port
 description: >-
-  Port any JX Online 1 / Võ Lâm Truyền Kỳ PC map (terrain, buildings, decor, NPCs)
-  into the VLTK-mobile Unity client with 99% visual fidelity by extracting the real
-  region geometry and SPR art straight from the game's maps.pak / spr.pak. Use this
-  skill WHENEVER the user wants to port, render, extract, rebuild, or "make look like
-  the original" ANY JX/VLTK map — e.g. "port map Tương Dương", "render 成都 in Unity",
-  "lấy map X từ game gốc", "thêm map mới vào sandbox", "extract regions/sprites from
-  maps.pak", or mentions a map name/mapId, a .wor file, Region_C.dat, 游戏资源 art, or
-  the balang/巴陵县 workflow. Also trigger when terrain/buildings/trees are missing,
-  showing as gray/procedural placeholders, scattered, or "không giống map gốc".
-  This skill encodes the cracked g_FileName2Id hash and the full extraction pipeline
-  that took many sessions to discover — do not re-derive it, reuse this.
+  Port any JX Online 1 / Võ Lâm Truyền Kỳ PC map into the VLTK-mobile Unity client
+  with real PC region geometry and SPR art from maps.pak/spr.pak. Use whenever the
+  user wants to port/render/extract/rebuild a JX/VLTK map, mentions mapId/.wor/
+  Region_C.dat/巴陵县, or reports map fidelity bugs (gray placeholders, missing terrain,
+  dark gaps, grass on rooftops, wrong heights, duplicate/hidden player). Also use for
+  minimap parity bugs: gray/not zoomed minimap, preview missing, wrong coordinates,
+  player dot not following movement, minimap/preview click-to-move broken, Chinese map
+  names, or preview not closing outside. Encodes signed-byte hash, Z-projection,
+  spatial-tree sorting, active-map minimap capture, PC coordinate labels, click-to-move.
 ---
 
 # JX Online 1 / VLTK Map Porting
 
 Port a complete PC map (巴陵县/balang style) into the Unity mobile sandbox with the
 real game art, by extracting region geometry and SPR sprites directly from the
-client paks using the **correct** filename hash.
+client paks using the **correct** filename hash and the **correct** isometric projection.
 
-## The one thing that makes this work (read first)
+## The things that make this work (read first)
+
+### 1. Signed-byte path hash
 
 Every JX pak (`maps.pak`, `spr.pak`, `update*.pak`, …) keys its entries by a hash of
 the resource path, `g_FileName2Id` (exported from `engine.dll`). The hash treats each
@@ -47,11 +47,112 @@ With this hash, **every** region path and **every** referenced art name resolves
 > between the extractor and the runtime (extractor writes `{ComputePathUid}.spr`, C#
 > re-derives the same name from the imageName). It must NOT be used to look inside paks.
 
-## When to use which path
+### 2. The Z-projection formula (critical for tall structures)
+
+The original engine's `KRepresentShell3::CoordinateTransform` converts scene coords to
+screen coords with this exact formula (found at `Represent3/KRepresentShell3.cpp:2157`):
+
+```cpp
+void CoordinateTransform(int& nX, int& nY, int nZ)
+{
+    nX = nX - m_nLeft;
+    nY = nY / 2 - m_nTop - ((nZ * 887) >> 10);
+}
+```
+
+In Unity (no viewport offset): `screenY = sceneY/2 - sceneZ*(887/1024)`
+
+The `sceneZ * 0.866` term is **not optional**. Built-in objects (houses, trees, gates)
+have Z values of 0–630. Ignoring Z causes:
+- Gate crossbeams (Z=441-628) to render 380-544 pixels too low → dark gaps through structures
+- Tall buildings to appear squashed/misaligned with their bases
+- Multi-piece structures (like the 牌坊/paifang gate) to be completely broken
+
+The C# implementation in `MapRenderer.cs`:
+```csharp
+private const float ZScreenScale = 887f / 1024f; // ≈0.866
+float screenY = obj.imgY1 * 0.5f - obj.imgZ1 * ZScreenScale;
+```
+
+### 3. The sorting model (critical for correct layering)
+
+The original engine uses a **spatial binary tree** (`KIpoTree` / `KIpotBranch`) to order
+object rendering. Objects are inserted into the tree by their position relative to split
+lines, then the tree is traversed in-order (left=UP/far, then root, then right=DOWN/near)
+to produce correct back-to-front draw order. This is NOT simple Y-sorting.
+
+For the Unity port, the sorting system uses three mechanisms working together:
+
+**A. Layer separation by sortingOrder:**
+- Ground tiles: `sortingOrder = -1000` (always beneath everything)
+- Cover objects (grass, roads): `sortingOrder = 0` (flat ground decals)
+- Builtin objects (houses, trees, gates): `sortingOrder = 1000 + fileIndex` (monotonically
+  increasing counter preserving the original engine's spatial-tree draw order)
+- Player: `sortingOrder = 5000` (always above map art)
+
+**B. File-order counter for builtins (NOT Y-sort):**
+Within each region, builtin objects are stored in the same order as the KIpoTree's
+in-order traversal. A global counter (`_builtinSortCounter`) assigns each builtin a
+unique `sortingOrder` (1000, 1001, 1002, …). Regions are iterated col-by-row (back-to-front
+in the isometric view), so the counter naturally produces correct inter-region ordering.
+This preserves the authored draw order for complex multi-piece structures like the
+牌坊 gate where a crossbeam must draw behind the near pillar but in front of the far pillar
+— something pure Y-sorting cannot achieve.
+
+**C. CustomAxis world-Y sort as tiebreaker:**
+The camera uses `transparencySortMode = CustomAxis` with `transparencySortAxis = (0,1,0)`.
+This sorts sprites at the same `sortingOrder` by their world Y position (higher Y = drawn
+later = in front). This handles cover-vs-cover and provides a safety net, but the primary
+ordering is the file-order counter.
+
+### 4. Sprite pivots differ between object types
+
+- **Ground tiles**: pivot `(0, 1)` = top-left. Placed at world `(screenX, -screenY)`.
+  The sprite extends right and downward from the placement point.
+- **Cover objects** (KSPRCoverGroundObj): pivot `(0.5, 0)` = bottom-center. The `posX/posY`
+  is the base/foot position. Cover objects have NO Z coordinate (they are flat ground decals).
+- **Builtin objects** (KBuildinObj): pivot `(0, 1)` = top-left. `ImgPos1` is the quad's
+  top-left corner in scene space. The sprite extends right and downward to approximately
+  `ImgPos3` (bottom-right). Using bottom-center pivot for builtins causes them to shift
+  by half their width and their full height, leaving gaps.
+
+### 5. Minimap/HUD parity is part of map porting
+
+A ported map is not complete until the HUD minimap and preview behave like PC enough for
+navigation. The hard-won Unity implementation lives across:
+
+| File | Minimap responsibility |
+|------|------------------------|
+| `Assets/Scripts/Sandbox/MinimapService.cs` | bidirectional world ↔ minimap coordinate transforms |
+| `Assets/Scripts/Sandbox/MapManager.cs` | builds `MapDefinition.sourceBoundsRect` in Unity world coords |
+| `Assets/Scripts/Sandbox/MapRenderer.cs` | exposes full active-map `ContentBounds` for minimap capture |
+| `Assets/Scripts/Sandbox/SandboxRuntimeState.cs` | live active map + player position for HUD |
+| `Assets/Scripts/UI/GameHudController.cs` | minimap texture, preview overlay, click-to-move |
+| `Assets/Scripts/UI/PcHudVietnameseTextOverlay.cs` | Vietnamese map name + coordinate labels over UI |
+| `Assets/UI/HUD/GameHud.uxml/.uss` | small minimap, preview frame, dots, close button |
+
+Important behavior:
+
+- Small minimap is **zoomed around the player**, not full-map-scaled. Full-map scale makes
+  player movement invisible and looks like a gray/flat placeholder.
+- Large preview uses the **full active map texture**. It opens when the user taps the
+  minimap itself (mobile usability), not only the PC magnifier/world-map button.
+- Tapping inside preview converts UI top-left pixel → normalized map → Unity world target
+  and calls `SandboxPlayerController.MoveTo(target)`. Do not teleport unless debugging.
+- Tapping outside the preview map frame closes the preview.
+- Player dot follows `SandboxPlayerController.transform.position` every frame.
+- Coordinate text mirrors PC `UiMiniMap.cpp`: PC displays `nScenePos0 / 8` and
+  `nScenePos1 / 8`. In Unity world, because map Y is negative screen-space, display:
+  `floor(world.x / 8) / floor(-world.y / 8)`.
+- User-facing map names must be Vietnamese. Known mapping: `巴陵县` / `Map_79` →
+  `Ba Lăng huyện`. Add more names as maps are ported.
+
+## When to use which reference
 
 - **Porting a new map, or fixing a broken/incomplete one** → run the pipeline below.
-- **Just understanding the render math / projection** → `references/projection.md`.
-- **Hitting a wall (0 matches, gray tiles, corrupt sprites, wrong positions)** →
+- **Projection math / coordinate systems** → `references/projection.md` (full details).
+- **Sorting / rendering bugs** → `references/sorting.md` (the complete sorting model).
+- **Hitting a wall** (0 matches, gray tiles, corrupt sprites, wrong positions) →
   `references/pitfalls.md` lists every dead-end already explored so you don't repeat them.
 
 ## Prerequisites
@@ -127,10 +228,106 @@ the original: stone plaza (青砖), Jiangnan houses, trees, water edges should a
 with real art. `manage_camera` screenshots only work **while in play mode** — a shot
 taken after stop shows only the skybox.
 
-### 4. Keep the tests green
+### 4. Visual verification checklist
 
-`unityMCP run_tests (mode=EditMode)` — the 406 EditMode tests must stay at 406/406.
-The extractor only writes data files, so they should be unaffected, but verify.
+After rendering, verify these specific things (each corresponds to a bug that took
+significant effort to diagnose and fix):
+
+- **No dark gaps through structures**: Gate crossbeams should connect to pillars, house
+  roofs should sit flush on walls. Dark gaps mean Z-projection is broken.
+- **No grass/road decals on top of buildings**: Cover objects (sortingOrder=0) must draw
+  below all builtin objects (sortingOrder≥1000). If you see grass on rooftops, the cover/
+  builtin layer separation is broken.
+- **Player renders as a single clean sprite**: If you see a "ghost" or duplicate character,
+  the `MalePlayerVisual.RefreshActionParts` orphan cleanup is broken — orphan GameObjects
+  from prior actions are still enabled.
+- **Multi-piece structures render correctly**: The 牌坊 gate (12 pieces from b013_v2_*.spr)
+  should show pillars behind crossbeams. If pieces overlap wrong, the file-order sorting
+  counter or builtin pivot is broken.
+
+### 5. Keep the tests green
+
+`unityMCP run_tests (mode=EditMode)` — the EditMode tests must all pass (410 as of the
+balang port). The extractor only writes data files, so they should be unaffected, but
+verify after any renderer changes.
+
+### 6. Minimap / preview / click-to-move verification
+
+After porting or changing a map, validate the HUD map surface too. This catches subtle
+coordinate bugs that normal map screenshots miss.
+
+PC references:
+
+- `jxwin-kinnox/SourceNew/swrod3/Utility/Run/Ui/ui3/小地图_小.ini`
+  - `[MiniMap] Left=670 Top=0 Width=130 Height=130`
+  - `[MapRect] Left=1 Top=1 Width=128 Height=128`
+  - `[SwitchBtn] Left=101 Top=115 Width=14 Height=14`
+  - `[WorldMapBtn] Left=115 Top=115 Width=14 Height=14`
+- `jxwin-kinnox/.../UiCase/UiMiniMap.cpp`
+  - left-click on minimap forwards to game space (`Wnd_TransmitInputToGameSpace`)
+  - PC scene label uses `Set2IntText(nScenePos0 / 8, nScenePos1 / 8, '/')`
+  - world map button switches to `MINIMAP_M_WORLD_MAP`
+- `jxwin-kinnox/.../UiCase/UiWorldMap.cpp`
+  - PC world map closes on click/key; mobile keeps click-inside for move, click-outside for close.
+
+Unity implementation rules:
+
+1. **Active bounds source**
+   - `MapManager.BuildRuntimeDefinition()` should set `sourceBoundsRect` in Unity world coords:
+     - `x = rectLeft * 512`
+     - `y = -(rectTop * 512) - (regionHeight * 512)`
+     - `width = regionWidth * 512`
+     - `height = regionHeight * 512`
+   - `MapRenderer.ApplyFullMapBounds()` should expose full active-map bounds, not only the town
+     focus crop, so full preview coordinate mapping is stable.
+
+2. **Bidirectional conversion**
+   - `MinimapService.WorldToMinimapPixel(map, world, size)` returns top-left-origin pixel for dots.
+   - `MinimapService.MinimapPixelToWorld(map, pixel, size)` is exact inverse for click-to-move.
+   - `MinimapService.MinimapNormalizedToWorld(map, normalizedTopLeft)` is useful for tests/probes.
+   - Unit tests must cover offset bounds, clamping, y flip, and inverse pixel → world.
+
+3. **Small minimap texture**
+   - Render a **zoomed square** around player. Current proven span: `2048` world units.
+   - Clamp zoom window inside active map bounds.
+   - Re-render small minimap when player moves enough (current threshold: `128` world units) or map changes.
+   - Dot mapping for small minimap must use the same zoomed bounds, not full map bounds.
+
+4. **Preview texture**
+   - Render full active map once per map using an offscreen camera / `RenderTexture`.
+   - Use an explicit orthographic projection matching map aspect:
+     `Matrix4x4.Ortho(-bounds.size.x/2, bounds.size.x/2, -bounds.size.y/2, bounds.size.y/2, near, far)`.
+     Do not rely on `Camera.orthographicSize` alone for square render targets or the preview will crop/letterbox wrong.
+
+5. **Opening/closing interaction**
+   - Register preview-open on `MinimapPanel`, `MinimapFrame`, `MinimapContent`, `PlayerDot`, and both minimap buttons.
+     This avoids “sometimes tap does nothing” caused by child elements catching events.
+   - Use `StopImmediatePropagation()` when opening.
+   - Overlay should close on pointer down when `!MapPreviewFrame.worldBound.Contains(evt.position)`.
+   - Pointer inside `MapPreviewFrame` should move player and close preview after target is set.
+
+6. **Coordinate/name labels**
+   - UI Toolkit labels may not render reliably in this project; `PcHudVietnameseTextOverlay.cs` draws IMGUI text over the HUD.
+   - Small minimap label positions in 1280x720 reference coords:
+     - map name: `(1144, 4, 112, 14)`
+     - coords: `(1146, 18, 112, 14)`
+   - Preview labels:
+     - header: `(394, 82, 492, 20)`
+     - footer: `(394, 596, 492, 20)`
+   - Convert Chinese/raw names to Vietnamese before display. Known mapping:
+     - `巴陵县` / `Map_79` → `Ba Lăng huyện`
+
+7. **Proof checklist**
+   - Unity compile: console errors `0`.
+   - EditMode targeted tests: `VLTK.Tests.Sandbox.MinimapTests`, `VLTK.Tests.Sandbox.HudDataBridgeTests`.
+   - PlayMode probe should show:
+     - Vietnamese `SceneName` / overlay map name
+     - minimap background texture present
+     - preview background texture present
+     - preview opens from minimap tap path
+     - outside-preview click closes overlay
+     - target movement changes player position + coordinate readout
+   - Screenshot evidence: include small minimap zoom, preview map, visible coordinates, and joystick not blocked.
 
 ## Output contract
 
@@ -142,3 +339,22 @@ Per ported map, under `Assets/StreamingAssets/`:
 
 The renderer, projection math, and SPR decoder are already in the project and map-agnostic;
 porting a new map is purely a data-extraction step once this skill's hash is used.
+
+## Key files in the project
+
+| File | Purpose |
+|------|---------|
+| `Assets/Scripts/Sandbox/MapRenderer.cs` | Rendering pipeline: ground, cover, builtin layers, Z-projection, sorting, full-map bounds for preview |
+| `Assets/Scripts/Sandbox/MapManager.cs` | Runtime map definition + `sourceBoundsRect` used by minimap transforms |
+| `Assets/Scripts/Sandbox/MinimapService.cs` | world↔minimap coordinate conversion and preview click target math |
+| `Assets/Scripts/Sandbox/SandboxManager.cs` | Scene setup, camera CustomAxis sort config |
+| `Assets/Scripts/Sandbox/SandboxPlayerController.cs` | Player movement, camera follow, zoom level, preview target movement |
+| `Assets/Scripts/Sandbox/MalePlayerVisual.cs` | 8-direction SPR layered character rendering |
+| `Assets/Scripts/Sandbox/BuildinObjParser.cs` | Parses KBuildinObj with ImgPos1-4 (x,y,z quads) |
+| `Assets/Scripts/Sandbox/GroundLayerParser.cs` | Parses ground tiles + KSPRCoverGroundObj |
+| `Assets/Scripts/Sandbox/RegionParser.cs` | Region_C.dat section table dispatch |
+| `Assets/Scripts/Sandbox/CameraRigService.cs` | Pure C# camera rig (no MonoBehaviour) |
+| `Assets/Scripts/UI/GameHudController.cs` | HUD minimap, map preview, active-map render texture, click-to-move |
+| `Assets/Scripts/UI/PcHudVietnameseTextOverlay.cs` | Vietnamese minimap/preview name + coordinate overlays |
+| `Assets/UI/HUD/GameHud.uxml/.uss` | Minimap and map preview visual tree/style |
+| `Assets/Tests/EditMode/Sandbox/MinimapTests.cs` | Coordinate transform and inverse click mapping tests |
