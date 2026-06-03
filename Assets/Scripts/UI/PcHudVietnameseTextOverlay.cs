@@ -140,6 +140,55 @@ namespace VLTK.UI
             return tex.LoadImage(bytes) ? tex : null;
         }
 
+        // ── Live-data helpers (lấy từ HudDataBridge / SandboxManager) ──────────
+
+        private string GetLevelText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            if (hud == null) return "1";
+            var label = hud.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("LevelText");
+            return label?.text ?? "1";
+        }
+
+        private string GetHpText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("HpText");
+            return label?.text ?? "100/100";
+        }
+
+        private string GetMpText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("MpText");
+            return label?.text ?? "50/50";
+        }
+
+        private string GetStaminaText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("StaminaText");
+            return label?.text ?? "100/100";
+        }
+
+        private string GetExpText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("ExpText");
+            return label?.text ?? "0%";
+        }
+
+        private string GetRankText()
+        {
+            // PC WorldSort: thứ hạng giang hồ — hiện tại sandbox chưa có, hiển thị mặc định
+            return "1";
+        }
+
         private void OnGUI()
         {
             EnsureStyles();
@@ -149,18 +198,33 @@ namespace VLTK.UI
             int oldDepth = GUI.depth;
             GUI.depth = -10000;
 
-            // Top PC bar Vietnamese captions/values. Positions mirror GameHud.uss.
-            Label(150, 2, 34, 10, "Cấp", _topCaption);
-            Label(179, 2, 18, 14, "1", _topValue);
-            Label(203, 2, 104, 10, "Kinh nghiệm", _topCaption);
-            Label(315, 2, 104, 10, "Sinh lực", _topCaption);
-            Label(427, 2, 104, 10, "Nội lực", _topCaption);
-            Label(539, 2, 104, 10, "Thể lực", _topCaption);
+            // Top PC bar captions+values — theo 顶部控制条.ini (Ui800)
+            // PC Main.Left=218 → 1280-space: 218×1.6=348. Bar offsets scaled ×1.6.
+            // Stamina=87→139, Life=182→291, Mana=277→443, Exp=372→595, Level=53→85, WorldSort=499→798
+            const float C = 0f;   // container offset is 0 because bars use absolute 1280-space coords
+            const float BW = 166f; // bar width: PC 104 × 1.6
 
-            Label(203, 19, 104, 12, "0%", _topValue);
-            Label(315, 19, 104, 12, "100/100", _topValue);
-            Label(427, 19, 104, 12, "50/50", _topValue);
-            Label(539, 19, 104, 12, "100/100", _topValue);
+            // "+ Cấp X" — PC format, màu xanh lá
+            var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 11,
+                normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
+            Label(348f + 85f, 0f, 80f, 20f, "+ Cấp " + GetLevelText(), lvlStyle);
+
+            // Captions (row 0)
+            Label(348f + 139f, 0f, BW, 14f, "Thể lực",    _topCaption);
+            Label(348f + 291f, 0f, BW, 14f, "Sinh lực",   _topCaption);
+            Label(348f + 443f, 0f, BW, 14f, "Nội lực",    _topCaption);
+            Label(348f + 595f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
+
+            // Values (below bar tracks, top=27)
+            Label(348f + 139f, 20f, BW, 15f, GetStaminaText(), _topValue);
+            Label(348f + 291f, 20f, BW, 15f, GetHpText(),      _topValue);
+            Label(348f + 443f, 20f, BW, 15f, GetMpText(),      _topValue);
+            Label(348f + 595f, 20f, BW, 15f, GetExpText(),     _topValue);
+
+            // "Hạng N" — WorldSort scaled
+            var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 10,
+                normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
+            Label(348f + 798f, 0f, 80f, 20f, "Hạng " + GetRankText(), rankStyle);
 
             // Chat/system hint, like Vietnamese PC client.
             Label(155, 642, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
@@ -277,7 +341,9 @@ namespace VLTK.UI
             if (player == null) return;
 
             var pos = (Vector2)player.transform.position;
-            var coord = $"{Mathf.FloorToInt(pos.x / 8f)}/{Mathf.FloorToInt(-pos.y / 8f)}";
+            // Display PC MPS coordinates (same format as PC client minimap)
+            VLTK.Sandbox.BaLangEnemyDatabase.WorldToMps(pos.x, pos.y, out int mpsX, out int mpsY);
+            var coord = $"{mpsX}/{mpsY}";
             var rawMapName = VLTK.Sandbox.SandboxManager.Instance?.MapManager?.ActiveMap?.catalogEntry?.displayNameRaw
                 ?? VLTK.Sandbox.SandboxManager.Instance?.MapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
                 ?? "Bản đồ";
