@@ -187,9 +187,9 @@
 
 .hud-minimap-btns {
     position: absolute;
-    left: 100px;
-    top: 116px;
-    width: 32px;
+    left: 80px;
+    top: 136px;
+    width: 50px;
     height: 14px;
     flex-direction: row;
     justify-content: flex-end;
@@ -446,7 +446,7 @@
     height: 28px;
     background-color: rgba(5,10,8,0.85);
     border-width: 1px;
-    border-color: rgb(40,110,95);
+    border-color: rgb(70,70,70);
 }
 
 .hud-chat-input {
@@ -492,7 +492,7 @@
 .hud-left-tools {
     position: absolute;
     right: 8px;
-    bottom: 58px;
+    bottom: 84px;
     flex-direction: row;
     width: 190px;
     height: 48px;
@@ -523,6 +523,9 @@
 }
 
 .hud-btn-icon {
+    position: absolute;
+    left: 0px;
+    top: 0px;
     width: 100%;
     height: 100%;
     -unity-background-scale-mode: scale-to-fit;
@@ -534,27 +537,29 @@
     height: 58px;
     align-items: center;
     margin-left: 0px;
-    background-color: rgba(0,18,18,0.90);
-    border-width: 2px;
-    border-color: rgb(35,115,95);
+    background-color: transparent;
+    border-width: 0px;
 }
 
 .hud-hotbar-slot {
     width: 58px;
     height: 54px;
-    background-color: rgba(0,0,0,0.78);
+    background-color: rgba(5,5,5,0.85);
     border-width: 1px;
-    border-color: rgb(30,95,85);
-    margin-left: 1px;
-    margin-right: 1px;
+    border-color: rgb(70,70,70);
+    margin-left: 2px;
+    margin-right: 2px;
 }
 
 .hud-slot-number {
-    width: 100%;
-    height: 100%;
-    color: rgba(120,120,120,0.45);
-    font-size: 18px;
-    -unity-text-align: middle-center;
+    position: absolute;
+    left: 3px;
+    top: 1px;
+    width: 12px;
+    height: 12px;
+    color: rgb(150,150,150);
+    font-size: 9px;
+    -unity-text-align: upper-left;
 }
 
 .hud-skill-panel {
@@ -564,9 +569,8 @@
     align-items: center;
     justify-content: center;
     margin-left: 8px;
-    background-color: rgba(0,50,42,0.85);
-    border-width: 2px;
-    border-color: rgb(55,135,115);
+    background-color: transparent;
+    border-width: 0px;
 }
 
 .hud-skill-slot {
@@ -582,10 +586,10 @@
 .hud-skill-panel > .hud-skill-slot {
     width: 56px;
     height: 56px;
-    border-width: 2px;
-    border-color: rgb(120,180,140);
-    background-color: rgba(10,30,25,0.92);
-    border-radius: 6px;
+    border-width: 1px;
+    border-color: rgb(100,100,100);
+    background-color: rgba(5,5,5,0.85);
+    border-radius: 0px;
     justify-content: center;
     align-items: center;
     overflow: hidden;
@@ -717,9 +721,11 @@
 }
 
 .hud-right-menu {
+    position: absolute;
+    right: 84px;
+    bottom: 0px;
     flex-direction: row;
     height: 48px;
-    margin-left: auto;
     align-items: center;
 }
 
@@ -727,9 +733,8 @@
     width: 46px;
     height: 46px;
     margin-left: 4px;
-    border-width: 2px;
-    border-color: rgb(35,115,95);
-    background-color: rgba(5,22,20,0.95);
+    border-width: 0px;
+    background-color: transparent;
     overflow: visible;
 }
 
@@ -742,4 +747,16 @@
     font-size: 9px;
     color: rgb(225,230,205);
     -unity-text-align: middle-center;
+}
+
+.hud-baovat-btn {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    width: 72px;
+    height: 72px;
+    border-radius: 36px;
+    border-width: 3px;
+    border-color: rgb(230, 180, 50);
+    background-color: rgb(110, 20, 10);
 }

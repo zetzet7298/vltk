@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VLTK.Core;
+using VLTK.UI;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -181,6 +182,7 @@ namespace VLTK.UI
             RegisterClick(root, "BtnFaction", OnFactionClick);
             RegisterClick(root, "BtnPK", OnPKClick);
             RegisterClick(root, "BtnExchange", OnExchangeClick);
+            RegisterClick(root, "BtnTreasure", OnTreasureClick);
 
             RegisterPreviewOpen(root, "MinimapPanel");
             RegisterPreviewOpen(root, "MinimapFrame");
@@ -309,15 +311,28 @@ namespace VLTK.UI
 
         private static void LoadIcon(VisualElement el, string artPath, string name)
         {
-            if (el == null) return;
+            if (el == null)
+            {
+                UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: element for {name} is null");
+                return;
+            }
             var png = System.IO.Path.Combine(artPath, name + ".png");
-            if (!System.IO.File.Exists(png)) return;
+            if (!System.IO.File.Exists(png))
+            {
+                UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: file not found {png}");
+                return;
+            }
 
             var tex = LoadTexture(png);
             if (tex != null)
             {
                 tex.filterMode = FilterMode.Point;
                 el.style.backgroundImage = new StyleBackground(tex);
+                UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: failed to load texture {name}");
             }
         }
 
@@ -390,7 +405,7 @@ namespace VLTK.UI
                 SetBar(_hpFill, _hpText, 100, 100);
                 SetBar(_mpFill, _mpText, 50, 50);
                 SetBar(_staminaFill, _staminaText, 100, 100);
-                SetBar(_expFill, _expText, 0, 100);
+                SetBar(_expFill, _expText, 0, 100, true);
                 return;
             }
 
@@ -398,7 +413,7 @@ namespace VLTK.UI
             SetBar(_hpFill, _hpText, snap.currentLife, snap.maxLife);
             SetBar(_mpFill, _mpText, 50, 50);
             SetBar(_staminaFill, _staminaText, 100, 100);
-            SetBar(_expFill, _expText, 0, 100);
+            SetBar(_expFill, _expText, 0, 100, true);
 
             var viMapName = ToVietnameseMapName(snap.mapName);
             if (_sceneName != null) _sceneName.text = viMapName;
@@ -576,7 +591,7 @@ namespace VLTK.UI
             if (_levelText != null) _levelText.text = level.ToString();
         }
 
-        private static void SetBar(VisualElement fill, Label text, int cur, int max)
+        private static void SetBar(VisualElement fill, Label text, int cur, int max, bool isExp = false)
         {
             if (fill != null)
             {
@@ -584,7 +599,17 @@ namespace VLTK.UI
                 fill.style.width = Length.Percent(frac * 100f);
             }
             if (text != null)
-                text.text = $"{cur}/{max}";
+            {
+                if (isExp)
+                {
+                    float pct = max > 0 ? ((float)cur / max) * 100f : 0f;
+                    text.text = $"{Mathf.RoundToInt(pct)}%";
+                }
+                else
+                {
+                    text.text = $"{cur}/{max}";
+                }
+            }
         }
 
         private void OpenMapPreview()
@@ -808,5 +833,6 @@ namespace VLTK.UI
         private void OnFactionClick() => SubsystemLog.Info("HUD", "Open Faction");
         private void OnPKClick() => SubsystemLog.Info("HUD", "Toggle PK");
         private void OnExchangeClick() => SubsystemLog.Info("HUD", "Open Exchange");
+        private void OnTreasureClick() => SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
     }
 }

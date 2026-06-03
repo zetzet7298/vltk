@@ -45,8 +45,8 @@ namespace VLTK.UI
             _topValue = new GUIStyle(GUI.skin.label)
             {
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = 12,
-                fontStyle = FontStyle.Bold,
+                fontSize = 11,
+                fontStyle = FontStyle.Normal,
                 normal = { textColor = Color.white }
             };
             _chatWarn = new GUIStyle(GUI.skin.label)
@@ -102,6 +102,8 @@ namespace VLTK.UI
             // Domain reload off can leave nested GUIStyleState references null after script reload.
             _topCaption.normal.textColor = new Color(0.92f, 0.92f, 0.82f, 1f);
             _topValue.normal.textColor = Color.white;
+            _topValue.fontStyle = FontStyle.Normal;
+            _topValue.fontSize = 11;
             _chatWarn.normal.textColor = new Color(1f, 0.08f, 0.04f, 1f);
             _menu.normal.textColor = new Color(0.88f, 0.92f, 0.82f, 1f);
             _minimap.normal.textColor = new Color(0f, 1f, 0f, 1f);
@@ -186,8 +188,8 @@ private string GetLevelText()
 
         private string GetRankText()
         {
-            // PC WorldSort: thứ hạng giang hồ — hiện tại sandbox chưa có, hiển thị mặc định
-            return "1";
+            // PC WorldSort: thứ hạng giang hồ — hiển thị '?' khớp với PC screenshot
+            return "?";
         }
 
         private void OnGUI()
@@ -207,36 +209,65 @@ private string GetLevelText()
 
             // "+ Cấp X" — PC format, màu xanh lá
             var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 11,
-                normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
+                fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
             Label(348f + 85f, 0f, 80f, 20f, "+ Cấp " + GetLevelText(), lvlStyle);
 
-            // Captions (row 0)
-            Label(348f + 139f, 0f, BW, 14f, "Thể lực",    _topCaption);
-            Label(348f + 291f, 0f, BW, 14f, "Sinh lực",   _topCaption);
-            Label(348f + 443f, 0f, BW, 14f, "Nội lực",    _topCaption);
-            Label(348f + 595f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
+            // Captions (row 0) - Bỏ theo PC HUD (PC không vẽ tên bar đè lên)
+            // Label(348f + 139f, 0f, BW, 14f, "Thể lực",    _topCaption);
+            // Label(348f + 291f, 0f, BW, 14f, "Sinh lực",   _topCaption);
+            // Label(348f + 443f, 0f, BW, 14f, "Nội lực",    _topCaption);
+            // Label(348f + 595f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
 
-            // Values (below bar tracks, top=27)
-            Label(348f + 139f, 20f, BW, 15f, GetStaminaText(), _topValue);
-            Label(348f + 291f, 20f, BW, 15f, GetHpText(),      _topValue);
-            Label(348f + 443f, 20f, BW, 15f, GetMpText(),      _topValue);
-            Label(348f + 595f, 20f, BW, 15f, GetExpText(),     _topValue);
+            // Values (below bar tracks, top=19, Left shifted by 8px according to PC INI alignment)
+            Label(348f + 131f, 19f, BW, 15f, GetStaminaText(), _topValue);
+            Label(348f + 283f, 19f, BW, 15f, GetHpText(),      _topValue);
+            Label(348f + 435f, 19f, BW, 15f, GetMpText(),      _topValue);
+            Label(348f + 587f, 19f, BW, 15f, GetExpText(),     _topValue);
 
             // "Hạng N" — WorldSort scaled
             var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 10,
-                normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
+                fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
             Label(348f + 798f, 0f, 80f, 20f, "Hạng " + GetRankText(), rankStyle);
+
+            // Chat tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) giống PC
+            var tabStyleNormal = new GUIStyle(_menu) {
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 11,
+                normal = { textColor = new Color(0f, 210/255f, 255/255f) }
+            };
+            var tabStyleYellow = new GUIStyle(_menu) {
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 11,
+                normal = { textColor = new Color(255/255f, 220/255f, 0f) }
+            };
+            float tabX = 155f;
+            Label(tabX, 592f, 50f, 18f, "Tất cả", tabStyleNormal);
+            Label(tabX + 60f, 592f, 40f, 18f, "Mật", tabStyleNormal);
+            Label(tabX + 105f, 592f, 50f, 18f, "Phòng", tabStyleNormal);
+            Label(tabX + 155f, 592f, 60f, 18f, "Bang hội", tabStyleNormal);
+            Label(tabX + 220f, 592f, 60f, 18f, "Môn phái", tabStyleNormal);
+            Label(tabX + 290f, 592f, 50f, 18f, "Khác", tabStyleYellow);
 
             // Chat/system hint, like Vietnamese PC client.
             Label(155, 642, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
 
             DrawMinimapCoordinates();
 
-            // Bottom menu labels.
+            // Bottom menu labels - shifted left by 76px because right-menu was shifted to accommodate Treasure button.
             string[] labels = { "Nhân", "Túi", "Võ", "Đội", "Bang", "PK" };
-            float startX = 975f;
+            float startX = 899f;
             for (int i = 0; i < labels.Length; i++)
                 Label(startX + i * 50f, 706, 46, 12, labels[i], _menu);
+
+            // Bảo Vật button text
+            var baovatStyle = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 11,
+                fontStyle = FontStyle.Bold,
+                normal = { textColor = new Color(255/255f, 215/255f, 0f) }
+            };
+            Label(1200f, 640f, 72f, 72f, "Bảo\nVật", baovatStyle);
 
             DrawCaiBangSkillPanelText();
 
@@ -350,10 +381,9 @@ private string GetLevelText()
                 ?? "Bản đồ";
             var mapName = ToVietnameseMapName(rawMapName);
 
-            // PC small minimap shows scene name + coord above/on minimap. UI Toolkit text can be unreliable,
-            // so draw IMGUI on top at exact HUD coords.
-            Label(1144, 4, 112, 14, mapName, _minimap);
-            Label(1146, 18, 112, 14, coord, _minimap);
+            // PC small minimap shows scene name + coord on minimap frame matching PC layout.
+            Label(1140, 6, 120, 14, mapName, new GUIStyle(_minimap) { alignment = TextAnchor.UpperRight });
+            Label(1140, 138, 80, 14, coord + "  Tìm", new GUIStyle(_minimap) { alignment = TextAnchor.MiddleLeft });
 
             // Large preview window coordinate readout, visible while preview is open.
             var hud = FindObjectOfType<GameHudController>();

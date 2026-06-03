@@ -118,6 +118,7 @@
                 <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/><ui:Label text="Bang" class="hud-menu-label"/></ui:VisualElement>
                 <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/><ui:Label text="PK" class="hud-menu-label"/></ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
         </ui:VisualElement>
         <!-- Skill picker overlay: tap skill slot to assign → shows list of learned skills -->
         <ui:VisualElement name="SkillPickerOverlay" class="hud-skill-picker-overlay hidden">
