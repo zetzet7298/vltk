@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using UnityEngine;
 using VLTK.Model;
 
 namespace VLTK.Sandbox
@@ -96,12 +97,32 @@ namespace VLTK.Sandbox
             return false;
         }
 
-        public static UnityEngine.Vector2 MpsToWorld(int mpsX, int mpsY)
+        /// <summary>
+        /// Convert PC MPS (global pixel) coordinates to Unity world coordinates.
+        /// PC region math: regionRow = mpsY / 1024 (integer), regionCol = mpsX / 1024.
+        /// Unity: worldX = mpsX, worldY = -(mpsY - regionRow * 512).
+        /// Matches MapRenderer region placement (col*512, row*512 in Unity space).
+        /// </summary>
+public static UnityEngine.Vector2 MpsToWorld(int mpsX, int mpsY)
         {
             int regionRow = mpsY / 1024;
             float worldX = mpsX;
-            float worldY = -(mpsY - regionRow * 512);
+            float worldY = -(mpsY - regionRow * 512f);
             return new UnityEngine.Vector2(worldX, worldY);
+        }
+
+        /// <summary>
+        /// Inverse of MpsToWorld. Converts Unity world position back to PC MPS coords.
+        /// worldY = -(mpsY - regionRow*512) => mpsY = regionRow*512 - worldY.
+        /// regionRow is estimated from worldY: regionRow = floor((mpsY)/1024).
+        /// Approximation: mpsY ~ -worldY / 0.5 for initial estimate.
+        /// </summary>
+public static void WorldToMps(float worldX, float worldY, out int mpsX, out int mpsY)
+        {
+            mpsX = Mathf.RoundToInt(worldX);
+            int approx = Mathf.RoundToInt(-worldY * 2f);
+            int regionRow = approx / 1024;
+            mpsY = Mathf.RoundToInt(regionRow * 512f - worldY);
         }
 
         public static string BuildNpcSprPath(string resType, string action)

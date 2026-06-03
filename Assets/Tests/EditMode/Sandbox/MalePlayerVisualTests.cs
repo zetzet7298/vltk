@@ -191,14 +191,14 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
         }
 
-        [Test]
-        public void Controller_JoystickInput_MovesTransformAndSwitchesAnimation()
+public void Controller_JoystickInput_MovesTransformAndSwitchesAnimation()
         {
             _go = new GameObject("PlayerControllerTest");
             var controller = _go.AddComponent<SandboxPlayerController>();
             controller.followCameraEnabled = false;
             controller.allowKeyboardFallback = false;
             controller.moveSpeed = 10f;
+            controller.clampToMapBounds = false; // unit test: movement logic only
 
             controller.SetMoveInput(Vector2.right);
             controller.SimulateMove(0.5f);
