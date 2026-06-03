@@ -12,6 +12,12 @@ namespace VLTK.Model
         TianWang = 2,
         TangMen = 3,
         CaiBang = 4,
+        WuDu = 5,
+        TianRen = 6,
+        EMei = 7,
+        CuiYan = 8,
+        WuDang = 9,
+        KunLun = 10,
     }
 
     /// <summary>PC skill style (SkillStyle column): missile/melee/initiative/passive/etc.</summary>
@@ -46,6 +52,8 @@ namespace VLTK.Model
         AddDefenseV,
         ConfuseP,
         SkillCostV,
+        MeleeDamageReturnP,
+        RangeDamageReturnP,
     }
 
     [Serializable]

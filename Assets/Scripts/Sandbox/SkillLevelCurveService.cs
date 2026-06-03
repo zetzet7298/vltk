@@ -74,7 +74,7 @@ namespace VLTK.Sandbox
 
         // ── Private ────────────────────────────────────────────────────────
 
-        private static SkillSectCatalog.SectSkillEntry FindSkillEntry(int skillId, int factionId)
+        private static SectSkillEntry FindSkillEntry(int skillId, int factionId)
         {
             var skills = SkillSectCatalog.GetSkills(factionId);
             foreach (var s in skills)
@@ -89,38 +89,38 @@ namespace VLTK.Sandbox
             return default;
         }
 
-        private static int EstimateCost(SkillSectCatalog.SectSkillEntry entry, int lv)
+        private static int EstimateCost(SectSkillEntry entry, int lv)
         {
-            if (entry.tier == SkillSectCatalog.SkillTier.Passive) return 0;
+            if (entry.tier == SkillTier.Passive) return 0;
             int baseCost = entry.tier switch
             {
-                SkillSectCatalog.SkillTier.Active  => 10,
-                SkillSectCatalog.SkillTier.Ultimate => 50,
-                SkillSectCatalog.SkillTier.Buff     => 20,
+                SkillTier.Active  => 10,
+                SkillTier.Ultimate => 50,
+                SkillTier.Buff     => 20,
                 _ => 10,
             };
             return baseCost + (lv - 1) * 2;
         }
 
-        private static int EstimateRadius(SkillSectCatalog.SectSkillEntry entry, int lv)
+        private static int EstimateRadius(SectSkillEntry entry, int lv)
         {
             return entry.tier switch
             {
-                SkillSectCatalog.SkillTier.Passive  => 0,
-                SkillSectCatalog.SkillTier.Active   => 180 + lv * 10,
-                SkillSectCatalog.SkillTier.Ultimate => 400 + lv * 5,
-                SkillSectCatalog.SkillTier.Buff     => 400,
+                SkillTier.Passive  => 0,
+                SkillTier.Active   => 180 + lv * 10,
+                SkillTier.Ultimate => 400 + lv * 5,
+                SkillTier.Buff     => 400,
                 _ => 180,
             };
         }
 
-        private static int EstimateDamage(SkillSectCatalog.SectSkillEntry entry, int lv)
+        private static int EstimateDamage(SectSkillEntry entry, int lv)
         {
             return entry.tier switch
             {
-                SkillSectCatalog.SkillTier.Passive  => 0,
-                SkillSectCatalog.SkillTier.Active   => 10 + lv * 8,
-                SkillSectCatalog.SkillTier.Ultimate => 50 + lv * 15,
+                SkillTier.Passive  => 0,
+                SkillTier.Active   => 10 + lv * 8,
+                SkillTier.Ultimate => 50 + lv * 15,
                 _ => 0,
             };
         }

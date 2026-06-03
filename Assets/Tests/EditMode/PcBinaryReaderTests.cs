@@ -5,7 +5,7 @@
 using NUnit.Framework;
 using VLTK.Core;
 
-namespace VLTK.Tests.EditMode
+namespace VLTK.Tests.Sandbox
 {
     public class PcBinaryReaderTests
     {

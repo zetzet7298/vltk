@@ -33,6 +33,7 @@ namespace VLTK.Sandbox
     public class SandboxManager : MonoBehaviour
     {
         public const int BaLangHuyenMapId = 79;
+        public const int PlayerActorId = 1;
 
         [Header("Roots")]
         public Transform gameRoot;

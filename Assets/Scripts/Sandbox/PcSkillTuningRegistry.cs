@@ -179,8 +179,8 @@ namespace VLTK.Sandbox
         {
             if (PcCaiBangSkillTuning.Applies(skillId)) return true;
             if (RadiusCurves.TryGetValue(factionId, out var fc) && fc.ContainsKey(skillId)) return true;
-            foreach (var fc in RadiusCurves.Values)
-                if (fc.ContainsKey(skillId)) return true;
+            foreach (var curveDict in RadiusCurves.Values)
+                if (curveDict.ContainsKey(skillId)) return true;
             return false;
         }
     }

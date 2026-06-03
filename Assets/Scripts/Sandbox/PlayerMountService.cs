@@ -85,7 +85,7 @@ namespace VLTK.Sandbox
                 speedMultiplier = SpeedMultiplier,
             });
 
-            SubsystemLog.Log("Mount", $"Mounting horse type {horseType}");
+            SubsystemLog.Info("Mount", $"Mounting horse type {horseType}");
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace VLTK.Sandbox
                 speedMultiplier = 1.0f,
             });
 
-            SubsystemLog.Log("Mount", "Dismounting");
+            SubsystemLog.Info("Mount", "Dismounting");
         }
 
         /// <summary>

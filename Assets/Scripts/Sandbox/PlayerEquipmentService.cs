@@ -16,7 +16,7 @@ namespace VLTK.Sandbox
     /// Equipment slot types cho player.
     /// Mỗi slot map tới SPR variant trong MalePlayerSpriteCatalog hoặc FemalePlayerSpriteCatalog.
     /// </summary>
-    public enum EquipSlot
+    public enum PlayerEquipSlot
     {
         Body,       // Giáp body → BD variant
         Head,       // Mũ/helmet → HD variant
@@ -31,7 +31,7 @@ namespace VLTK.Sandbox
     /// </summary>
     public struct EquipChangeEvent
     {
-        public EquipSlot slot;
+        public PlayerEquipSlot slot;
         public int oldVariant;
         public int newVariant;
         public int itemId;
@@ -44,13 +44,13 @@ namespace VLTK.Sandbox
     /// </summary>
     public class PlayerEquipmentService
     {
-        private readonly Dictionary<EquipSlot, int> _equipped = new();
+        private readonly Dictionary<PlayerEquipSlot, int> _equipped = new();
 
         /// <summary>Event fired khi equipment thay đổi.</summary>
         public event Action<EquipChangeEvent> OnEquipChanged;
 
         /// <summary>Get current variant cho một slot.</summary>
-        public int GetVariant(EquipSlot slot)
+        public int GetVariant(PlayerEquipSlot slot)
         {
             return _equipped.TryGetValue(slot, out int v) ? v : DefaultVariant(slot);
         }
@@ -59,7 +59,7 @@ namespace VLTK.Sandbox
         /// Trang bị một item vào slot. Triggers visual refresh.
         /// Source: PC equipment → SPR path mapping từ NpcRes tables.
         /// </summary>
-        public void Equip(EquipSlot slot, int variant, int itemId = 0)
+        public void Equip(PlayerEquipSlot slot, int variant, int itemId = 0)
         {
             int old = GetVariant(slot);
             if (old == variant) return;
@@ -74,12 +74,12 @@ namespace VLTK.Sandbox
                 itemId = itemId,
             });
 
-            SubsystemLog.Log("Equipment",
+            SubsystemLog.Info("Equipment",
                 $"Equipped slot {slot}: variant {old} → {variant} (item={itemId})");
         }
 
         /// <summary>Gỡ trang bị một slot về default.</summary>
-        public void Unequip(EquipSlot slot)
+        public void Unequip(PlayerEquipSlot slot)
         {
             Equip(slot, DefaultVariant(slot));
         }
@@ -87,7 +87,7 @@ namespace VLTK.Sandbox
         /// <summary>Map weapon type từ equipment.</summary>
         public PcWeaponType GetCurrentWeaponType()
         {
-            int weaponVariant = GetVariant(EquipSlot.Weapon);
+            int weaponVariant = GetVariant(PlayerEquipSlot.Weapon);
             return weaponVariant switch
             {
                 0 => PcWeaponType.EmptyHand,
@@ -102,24 +102,24 @@ namespace VLTK.Sandbox
         /// Get armor variant (body) cho current equipment.
         /// PC armor variants: 0-99 body types from NpcRes tables.
         /// </summary>
-        public int GetArmorVariant() => GetVariant(EquipSlot.Body);
+        public int GetArmorVariant() => GetVariant(PlayerEquipSlot.Body);
 
         /// <summary>
         /// Get helmet variant (head) cho current equipment.
         /// PC helmet variants mapped from ItemDefinition.
         /// </summary>
-        public int GetHelmetVariant() => GetVariant(EquipSlot.Head);
+        public int GetHelmetVariant() => GetVariant(PlayerEquipSlot.Head);
 
         // ── Defaults ───────────────────────────────────────────────────────
 
-        private static int DefaultVariant(EquipSlot slot) => slot switch
+        private static int DefaultVariant(PlayerEquipSlot slot) => slot switch
         {
-            EquipSlot.Body     => 19,   // Default armor variant (same as MalePlayerSpriteCatalog.ArmorVariant)
-            EquipSlot.Head     => 19,   // Default head variant
-            EquipSlot.Hair     => 19,   // Default hair variant
-            EquipSlot.Weapon   => 0,    // Empty hand
-            EquipSlot.Offhand  => 0,    // No offhand
-            EquipSlot.Mount    => 0,    // No mount
+            PlayerEquipSlot.Body     => 19,   // Default armor variant (same as MalePlayerSpriteCatalog.ArmorVariant)
+            PlayerEquipSlot.Head     => 19,   // Default head variant
+            PlayerEquipSlot.Hair     => 19,   // Default hair variant
+            PlayerEquipSlot.Weapon   => 0,    // Empty hand
+            PlayerEquipSlot.Offhand  => 0,    // No offhand
+            PlayerEquipSlot.Mount    => 0,    // No mount
             _ => 0,
         };
 

@@ -87,7 +87,7 @@ namespace VLTK.Core
             if (File.Exists(skillFile))
             {
                 manifest.skills = ParseSkills(skillFile);
-                SubsystemLog.Log("PcConfig", $"Parsed {manifest.skills.Count} skills from PcSkills.txt");
+                SubsystemLog.Info("PcConfig", $"Parsed {manifest.skills.Count} skills from PcSkills.txt");
             }
             else
             {
@@ -99,7 +99,7 @@ namespace VLTK.Core
             if (File.Exists(npcFile))
             {
                 manifest.npcTemplates = ParseNpcTemplates(npcFile);
-                SubsystemLog.Log("PcConfig", $"Parsed {manifest.npcTemplates.Count} NPC templates from PcNpcS.txt");
+                SubsystemLog.Info("PcConfig", $"Parsed {manifest.npcTemplates.Count} NPC templates from PcNpcS.txt");
             }
             else
             {
@@ -111,7 +111,7 @@ namespace VLTK.Core
             if (File.Exists(missileFile))
             {
                 manifest.missiles = ParseMissiles(missileFile);
-                SubsystemLog.Log("PcConfig", $"Parsed {manifest.missiles.Count} missiles from PcMissles.txt");
+                SubsystemLog.Info("PcConfig", $"Parsed {manifest.missiles.Count} missiles from PcMissles.txt");
             }
             else
             {
@@ -219,7 +219,21 @@ namespace VLTK.Core
                 skill.weaponSkill = IntColSafe(cols, 57) != 0;       // 57 WeaponSkill
 
                 // Faction from CharClass
-                skill.faction = CharClassToFaction(charClass);
+                string scriptPath = ColSafe(cols, 70);
+                int factionId = CombatFactionExt.FactionFromLuaScript(scriptPath);
+                if (factionId == CombatFactionExt.NoneId)
+                {
+                    factionId = charClass switch
+                    {
+                        1 => CombatFactionExt.ShaolinId,
+                        2 => CombatFactionExt.EMeiId,
+                        3 => CombatFactionExt.TangMenId,
+                        4 => CombatFactionExt.CaiBangId,
+                        5 => CombatFactionExt.WuDangId,
+                        _ => CombatFactionExt.NoneId
+                    };
+                }
+                skill.faction = (CombatFaction)factionId;
 
                 // Vietnamese name: PcSkills.txt names are already Vietnamese-ized
                 skill.nameNormalized = skill.nameRaw?.Trim();
@@ -232,7 +246,7 @@ namespace VLTK.Core
                 if (!string.IsNullOrEmpty(iconPath) && iconPath.StartsWith("\\"))
                     iconPath = iconPath.TrimStart('\\');
                 if (!string.IsNullOrEmpty(iconPath))
-                    skill.iconSourceId = new SourceAssetId { bundle = "spr", asset = iconPath };
+                    skill.iconSourceId = new SourceAssetId { sourcePath = iconPath };
 
                 result.Add(skill);
             }
@@ -387,18 +401,8 @@ namespace VLTK.Core
             return 0;
         }
 
-        /// <summary>Map PC CharClass column value to CombatFaction enum.</summary>
-        private static CombatFaction CharClassToFaction(int charClass)
-        {
-            return charClass switch
-            {
-                1 => CombatFaction.Shaolin,
-                2 => CombatFaction.TianWang,
-                3 => CombatFaction.TangMen,
-                4 => CombatFaction.CaiBang,
-                _ => CombatFaction.None,
-            };
-        }
+
+
 
         /// <summary>
         /// Parse LvlSetting1..20 / LvlData1..20 columns into SkillLevelData.

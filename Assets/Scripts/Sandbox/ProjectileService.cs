@@ -96,6 +96,14 @@ namespace VLTK.Sandbox
             _obstacles = obstacles;
         }
 
+        public void Add(ProjectileInstance projectile)
+        {
+            if (projectile != null)
+            {
+                _live.Add(projectile);
+            }
+        }
+
         /// <summary>
         /// AC#1/AC#2/AC#3 — attempt to cast a skill from origin toward target.
         /// Rejects when out of range or the target cell is blocked; otherwise spawns

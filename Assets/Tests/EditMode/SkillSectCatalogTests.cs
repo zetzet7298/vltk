@@ -7,7 +7,7 @@ using NUnit.Framework;
 using VLTK.Model;
 using VLTK.Sandbox;
 
-namespace VLTK.Tests.EditMode
+namespace VLTK.Tests.Sandbox
 {
     public class SkillSectCatalogTests
     {
@@ -134,7 +134,7 @@ namespace VLTK.Tests.EditMode
                 var skills = SkillSectCatalog.GetSkills(fid);
                 foreach (var s in skills)
                 {
-                    if (s.tier == SkillSectCatalog.SkillTier.Passive)
+                    if (s.tier == SkillTier.Passive)
                     {
                         var stats = SkillLevelCurveService.GetStats(s.skillId, 1, fid);
                         Assert.AreEqual(0, stats.skillCost,
