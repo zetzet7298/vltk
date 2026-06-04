@@ -156,17 +156,15 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Map PC Skills.txt CharAnimId + current weapon type to a visual action.
-        /// PC KNpc.cpp: CharAnimId 11=cdo_magic → m_ClientDoing=cdo_magic → SetAction(cdo_magic).
-        /// For staff weapons, cdo_magic resolves through 未骑马关联表 to 长武器魔法.
-        /// CharAnimId 14=cdo_none means no character animation (passive/buff skills).
+        /// PC KNpc.cpp đổi CharAnimId thành CLIENTACTION rồi KNpcRes::SetAction chọn suffix theo vũ khí.
         /// </summary>
         public static PlayerVisualAction? ResolveAction(int charAnimId, PcWeaponType weapon)
         {
-            // PC CLIENTACTION enum (KNpc.h): cdo_magic=11, cdo_none=14.
             return charAnimId switch
             {
-                11 => PlayerVisualAction.Magic,
-                14 => null,   // Passive/aura — no animation
+                7 or 8 => PlayerVisualAction.Attack,
+                9 or 10 or 11 => PlayerVisualAction.Magic,
+                14 => null,   // Passive/aura — không chạy animation nhân vật
                 _ => null,
             };
         }
