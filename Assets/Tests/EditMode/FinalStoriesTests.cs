@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
+using VLTK.Model;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox

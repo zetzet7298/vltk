@@ -61,6 +61,7 @@ namespace VLTK.Sandbox
         public TrainingNpcSpawner TrainingSpawner { get; private set; }
         public SkillCatalog CombatSkillCatalog { get; private set; }
         public CombatRuntimeService CombatRuntime { get; private set; }
+        public GameplayLoopService GameplayLoop { get; private set; }
         public PlayerProgressionState PlayerProgression { get; private set; }
         private float _combatTickAccumulator;
         // M1.2: Region catalog and report
@@ -177,9 +178,30 @@ namespace VLTK.Sandbox
             PlayerProgression ??= new PlayerProgressionState();
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
 
+            // Gameplay Loop: wire all subsystems together
+            GameplayLoop = new GameplayLoopService(CombatSkillCatalog);
+            var gp = GameplayLoop.RegisterPlayer(PlayerActorId, "Cái Bang Đệ Tử", PlayerProgression.level, Vector2.zero);
+            gp.combat.knownSkills = PlayerProgression.knownSkills;
+            gp.combat.skillLevels = PlayerProgression.skillLevels;
+
             // Auto-set all CaiBang skills to max level for testing.
             // Matches PC GM command behavior. Runs on every boot / domain reload.
             PlayerProgression.MaxAllSkillLevels(CombatSkillCatalog);
+            gp.combat.knownSkills = PlayerProgression.knownSkills;
+            gp.combat.skillLevels = PlayerProgression.skillLevels;
+
+            // Wire gameplay events to logs
+            GameplayLoop.OnDeath += e =>
+            {
+                if (e.isPlayer)
+                    SubsystemLog.Info("Gameplay", $"Player chết! Respawn sau 5s.");
+                else
+                    SubsystemLog.Info("Gameplay", $"{e.victimNameVi} bị giết. +{e.expReward}EXP +{e.silverReward}Bạc");
+            };
+            GameplayLoop.OnLevelUp += e =>
+                SubsystemLog.Info("Gameplay", $"LEVEL UP! {e.oldLevel} → {e.newLevel}");
+            // GameplayLoop.OnDamage += e =>
+            //     SubsystemLog.Info("Gameplay", $"DMG: {e.attackerId}→{e.targetId} -{e.damage} ({e.type})");
         }
 
         public void GrantCaiBangSkillPanelProgression()
@@ -470,6 +492,9 @@ namespace VLTK.Sandbox
                     _combatTickAccumulator -= ticks;
                 }
             }
+
+            // Gameplay loop tick: mana regen, enemy AI, respawn timers
+            GameplayLoop?.Tick(Time.deltaTime);
         }
     }
 }
