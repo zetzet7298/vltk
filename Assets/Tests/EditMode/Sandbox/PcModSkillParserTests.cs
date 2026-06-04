@@ -63,6 +63,49 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(PcSkillStyle.InitiativeNpcState, aura.skillStyle);
             Assert.AreEqual(SkillMissileForm.None, aura.missileForm);
         }
+
+
+        [Test]
+        public void ToSkillDefinition_ResolvesModMissileSpriteFromChildSkillId()
+        {
+            PcMissileRegistry.ClearAndInitialize(Path.Combine(Directory.GetCurrentDirectory(), "Assets/StreamingAssets"));
+            var rows = PcModSkillParser.ParseFile(ModSkillsPath);
+            var row = rows.Find(r => r.skillId == 1216); // PC ModSkills child missile 400
+
+            Assert.IsNotNull(row);
+            Assert.AreEqual(400, row.childSkillId);
+
+            var skill = PcModSkillParser.ToSkillDefinition(row);
+
+            Assert.AreEqual(SkillMissileForm.Surround, skill.missileForm);
+            Assert.IsNotNull(skill.missileSpriteId);
+            Assert.AreEqual("\\spr\\skill\\150\\wu\\wd_xingxiaoguli_c.spr", skill.missileSpriteId.sourcePath);
+            Assert.AreEqual(ResourceKind.Sprite, skill.missileSpriteId.resourceKind);
+        }
+
+        [Test]
+        public void ToSkillDefinition_MapsPcCharClassToFaction()
+        {
+            var rows = PcModSkillParser.ParseFile(ModSkillsPath);
+            var caiBangRow = rows.Find(r => r.charClass == 4);
+            var tianWangRow = rows.Find(r => r.charClass == 2);
+            var tangMenRow = rows.Find(r => r.charClass == 3);
+            var shaolinRow = rows.Find(r => r.charClass == 1);
+            var wuDuRow = rows.Find(r => r.charClass == 5);
+
+            Assert.IsNotNull(caiBangRow, "PC ModSkills.txt includes Cái Bang CharClass=4 rows.");
+            Assert.IsNotNull(tianWangRow, "PC ModSkills.txt includes Thiên Vương CharClass=2 rows.");
+            Assert.IsNotNull(tangMenRow, "PC ModSkills.txt includes Đường Môn CharClass=3 rows.");
+            Assert.IsNotNull(shaolinRow, "PC ModSkills.txt includes Thiếu Lâm CharClass=1 rows.");
+            Assert.IsNotNull(wuDuRow, "PC ModSkills.txt includes Ngũ Độc CharClass=5 rows.");
+
+            Assert.AreEqual(CombatFaction.CaiBang, PcModSkillParser.ToSkillDefinition(caiBangRow).faction);
+            Assert.AreEqual(CombatFaction.TianWang, PcModSkillParser.ToSkillDefinition(tianWangRow).faction);
+            Assert.AreEqual(CombatFaction.TangMen, PcModSkillParser.ToSkillDefinition(tangMenRow).faction);
+            Assert.AreEqual(CombatFaction.Shaolin, PcModSkillParser.ToSkillDefinition(shaolinRow).faction);
+            Assert.AreEqual(CombatFaction.WuDu, PcModSkillParser.ToSkillDefinition(wuDuRow).faction);
+        }
+
         [Test]
         public void PcCombatCatalogFactory_CanMergeBaseAndModSkillCatalogs()
         {

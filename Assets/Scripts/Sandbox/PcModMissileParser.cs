@@ -127,7 +127,7 @@ namespace VLTK.Sandbox
 
             if (File.Exists(modFile))
             {
-                var list = PcConfigParser.ParseMissiles(modFile);
+                var list = PcModMissileParser.ToMissileEntries(PcModMissileParser.ParseFile(modFile));
                 foreach (var m in list) _missiles[m.missileId] = m;
             }
 

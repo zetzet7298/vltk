@@ -220,7 +220,7 @@ namespace VLTK.Sandbox
                 isAura = row.isAura || row.skillStyle == 14,
                 stateSpecialId = row.stateSpecialId,
                 skillStyle = ToSkillStyle(row.skillStyle),
-                faction = CombatFaction.None,
+                faction = ToFaction(row.charClass),
                 missileForm = ToMissileForm(row.missilesForm),
                 childSkillId = row.childSkillId,
                 childSkillLevel = row.childSkillLevel,
@@ -244,6 +244,8 @@ namespace VLTK.Sandbox
                 effectSourceId = Sprite(row.preCastSpr),
             };
 
+            AttachMissileSpriteFromPcRegistry(skill);
+
             var level = new SkillLevelData { level = 1 };
             if (row.costValue != 0)
                 level.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, row.costValue, 0, 0));
@@ -258,6 +260,15 @@ namespace VLTK.Sandbox
             if (level.First(MagicAttributeKind.PhysicsDamageV) is SkillMagicAttribute dmg)
                 skill.damageLevels.Add(new SkillDamageLevel { level = 1, baseDamage = dmg.value3, attackRatio = 1f, isPhysical = row.isPhysical });
             return skill;
+        }
+
+        private static void AttachMissileSpriteFromPcRegistry(SkillDefinition skill)
+        {
+            if (skill == null || skill.missileForm == SkillMissileForm.None || skill.childSkillId <= 0)
+                return;
+
+            if (PcMissileRegistry.TryGet(skill.childSkillId, out var missile) && !string.IsNullOrWhiteSpace(missile.sprFile))
+                skill.missileSpriteId = Sprite(missile.sprFile);
         }
 
         private static void AddMappedAttribute(SkillLevelData level, MagicAttributeKind kind, int style, string data)
@@ -276,6 +287,21 @@ namespace VLTK.Sandbox
             else
                 level.immediate.Add(attr);
         }
+
+        private static CombatFaction ToFaction(int charClass) => charClass switch
+        {
+            1 => CombatFaction.Shaolin,
+            2 => CombatFaction.TianWang,
+            3 => CombatFaction.TangMen,
+            4 => CombatFaction.CaiBang,
+            5 => CombatFaction.WuDu,
+            6 => CombatFaction.TianRen,
+            7 => CombatFaction.EMei,
+            8 => CombatFaction.CuiYan,
+            9 => CombatFaction.WuDang,
+            10 => CombatFaction.KunLun,
+            _ => CombatFaction.None,
+        };
 
         private static PcSkillStyle ToSkillStyle(int style) => style switch
         {

@@ -232,7 +232,15 @@ namespace VLTK.Sandbox
 
         private void BootstrapCombatRuntime()
         {
-            CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog(AssetRegistry);
+            string modSkillsPath = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/ModSkills.txt");
+            if (System.IO.File.Exists(modSkillsPath))
+            {
+                CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceCoreSectAndModCatalog(modSkillsPath, AssetRegistry);
+            }
+            else
+            {
+                CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog(AssetRegistry);
+            }
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
