@@ -71,6 +71,14 @@ namespace VLTK.Model
         BadStatusTimeReduceV,
         AddPoisonDamageV,
         AddColdDamageV,
+        AddFireDamageV,
+        AddLightingDamageV,
+        StealLifeP,
+        LifeReplenishV,
+        StealStaminaP,
+        LifeMaxP,
+        FireEnhanceP,
+        FastWalkRunP,
     }
 
     [Serializable]

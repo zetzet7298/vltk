@@ -30,51 +30,63 @@ namespace VLTK.Sandbox
             rect.sizeDelta = new Vector2(400, 600);
 
             // Button 1: Cái Bang
-            CreateGMButton(containerGo.transform, "Gia nhập Cái Bang (Hỏa)", new Vector2(0, 220), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Cái Bang (Hỏa)", new Vector2(0, 240), () =>
             {
                 SwitchToFaction(CombatFaction.CaiBang);
             });
  
             // Button 2: Võ Đang
-            CreateGMButton(containerGo.transform, "Gia nhập Võ Đang (Lôi)", new Vector2(0, 170), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Võ Đang (Lôi)", new Vector2(0, 200), () =>
             {
                 SwitchToFaction(CombatFaction.WuDang);
             });
 
             // Button 2.5: Thiếu Lâm
-            CreateGMButton(containerGo.transform, "Gia nhập Thiếu Lâm (Kim)", new Vector2(0, 120), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Thiếu Lâm (Kim)", new Vector2(0, 160), () =>
             {
                 SwitchToFaction(CombatFaction.Shaolin);
             });
 
             // Button 2.6: Thiên Vương
-            CreateGMButton(containerGo.transform, "Gia nhập Thiên Vương (Kim)", new Vector2(0, 70), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Thiên Vương (Kim)", new Vector2(0, 120), () =>
             {
                 SwitchToFaction(CombatFaction.TianWang);
             });
 
             // Button 2.6.5: Ngũ Độc
-            CreateGMButton(containerGo.transform, "Gia nhập Ngũ Độc (Mộc)", new Vector2(0, 20), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Ngũ Độc (Mộc)", new Vector2(0, 80), () =>
             {
                 SwitchToFaction(CombatFaction.WuDu);
             });
 
             // Button 2.6.7: Thúy Yên
-            CreateGMButton(containerGo.transform, "Gia nhập Thúy Yên (Thủy)", new Vector2(0, -30), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Thúy Yên (Thủy)", new Vector2(0, 40), () =>
             {
                 SwitchToFaction(CombatFaction.CuiYan);
             });
 
             // Button 2.7: Đường Môn
-            CreateGMButton(containerGo.transform, "Gia nhập Đường Môn (Mộc)", new Vector2(0, -80), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Đường Môn (Mộc)", new Vector2(0, 0), () =>
             {
                 SwitchToFaction(CombatFaction.TangMen);
             });
 
             // Button 2.9: Nga My
-            CreateGMButton(containerGo.transform, "Gia nhập Nga My (Thủy)", new Vector2(0, -130), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Nga My (Thủy)", new Vector2(0, -40), () =>
             {
                 SwitchToFaction(CombatFaction.EMei);
+            });
+
+            // Button 2.9.5: Thiên Nhẫn
+            CreateGMButton(containerGo.transform, "Gia nhập Thiên Nhẫn (Hỏa)", new Vector2(0, -80), () =>
+            {
+                SwitchToFaction(CombatFaction.TianRen);
+            });
+
+            // Button 2.9.7: Côn Lôn
+            CreateGMButton(containerGo.transform, "Gia nhập Côn Lôn (Thổ)", new Vector2(0, -120), () =>
+            {
+                SwitchToFaction(CombatFaction.KunLun);
             });
  
             // Button 3: Max Level & Kỹ năng
@@ -195,6 +207,16 @@ namespace VLTK.Sandbox
                         {
                             assignMethod.Invoke(slotsObj, new object[] { 0, 99 });
                             assignMethod.Invoke(slotsObj, new object[] { 1, 105 });
+                        }
+                        else if (faction == CombatFaction.TianRen)
+                        {
+                            assignMethod.Invoke(slotsObj, new object[] { 0, 142 });
+                            assignMethod.Invoke(slotsObj, new object[] { 1, 148 });
+                        }
+                        else if (faction == CombatFaction.KunLun)
+                        {
+                            assignMethod.Invoke(slotsObj, new object[] { 0, 172 });
+                            assignMethod.Invoke(slotsObj, new object[] { 1, 182 });
                         }
                     }
                 }

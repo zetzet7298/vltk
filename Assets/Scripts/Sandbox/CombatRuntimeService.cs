@@ -176,8 +176,8 @@ namespace VLTK.Sandbox
         {
             if (PcKangLongYouHuiTuning.Applies(skill.skillId))
                 return PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
-            if (PcCaiBangSkillTuning.Applies(skill.skillId))
-                return PcCaiBangSkillTuning.AtLevel(skill.skillId, skillLevel).attackRadius;
+            if (PcSkillTuningRegistry.HasTuning(skill.skillId, (int)skill.faction))
+                return PcSkillTuningRegistry.GetSkillSpec(skill.skillId, skillLevel, (int)skill.faction).attackRadius;
             return skill.attackRadius;
         }
 

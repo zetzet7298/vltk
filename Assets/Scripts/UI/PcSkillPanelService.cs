@@ -95,6 +95,16 @@ namespace VLTK.UI
             95, 97, 99, 100, 101, 102, 103, 105, 108, 109, 111, 113, 114
         };
 
+        public static readonly int[] PcTianRenSkillOrder =
+        {
+            131, 132, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150
+        };
+
+        public static readonly int[] PcKunLunSkillOrder =
+        {
+            167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184
+        };
+
         public const int NpcVariantSkillId = 1539;
 
         public static IReadOnlyList<int> GetPcSkillOrder(CombatFaction faction)
@@ -113,6 +123,10 @@ namespace VLTK.UI
                 return PcWuDuSkillOrder;
             if (faction == CombatFaction.CuiYan)
                 return PcCuiYanSkillOrder;
+            if (faction == CombatFaction.TianRen)
+                return PcTianRenSkillOrder;
+            if (faction == CombatFaction.KunLun)
+                return PcKunLunSkillOrder;
             return PcCaiBangSkillOrder;
         }
 
