@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.Networking;
 using VLTK.Core;
 using VLTK.UI;
 using VLTK.Model;
@@ -15,6 +16,66 @@ using VLTK.Sprites;
 
 namespace VLTK.UI
 {
+    /// <summary>Resolves HUD art paths from the StreamingAssets root so Editor and player builds use the same source.</summary>
+    public static class HudArtPathResolver
+    {
+        public const string GeneratedFolderName = "Generated";
+
+        public static string ResolveArtRoot(string artFolder)
+            => ResolveUnderStreamingAssets(Application.streamingAssetsPath, artFolder);
+
+        public static string ResolveGeneratedArtRoot(string artFolder)
+            => CombineStreamingPath(ResolveArtRoot(artFolder), GeneratedFolderName);
+
+        public static string ResolveUnderStreamingAssets(string streamingAssetsPath, string relativeFolder)
+        {
+            var root = streamingAssetsPath ?? string.Empty;
+            var normalizedFolder = NormalizeRelativeFolder(relativeFolder);
+            return string.IsNullOrEmpty(normalizedFolder)
+                ? root
+                : CombineStreamingPath(root, normalizedFolder);
+        }
+
+        public static string ResolvePngPath(string artRoot, string iconName)
+            => CombineStreamingPath(artRoot, iconName + ".png");
+
+        public static bool CanCheckDirectory(string path)
+            => !string.IsNullOrEmpty(path) && !RequiresUnityWebRequest(path);
+
+        public static bool RequiresUnityWebRequest(string path)
+            => !string.IsNullOrEmpty(path)
+               && (path.Contains("://") || path.StartsWith("jar:", System.StringComparison.OrdinalIgnoreCase));
+
+        public static string ToUnityWebRequestUri(string path)
+        {
+            if (RequiresUnityWebRequest(path))
+                return path;
+
+            var fullPath = System.IO.Path.GetFullPath(path).Replace('\\', '/');
+            return "file://" + (fullPath.StartsWith("/", System.StringComparison.Ordinal) ? fullPath : "/" + fullPath);
+        }
+
+        private static string NormalizeRelativeFolder(string folder)
+            => (folder ?? string.Empty).Trim().Trim('/', '\\');
+
+        private static string CombineStreamingPath(string root, string relative)
+        {
+            if (string.IsNullOrEmpty(root))
+                return NormalizeRelativeFolder(relative).Replace('\\', '/');
+
+            var normalizedRelative = NormalizeRelativeFolder(relative).Replace('\\', '/');
+            if (string.IsNullOrEmpty(normalizedRelative))
+                return root;
+
+            if (root.EndsWith("/", System.StringComparison.Ordinal) || root.EndsWith("\\", System.StringComparison.Ordinal))
+                return root + normalizedRelative;
+
+            return RequiresUnityWebRequest(root)
+                ? root + "/" + normalizedRelative
+                : System.IO.Path.Combine(root, normalizedRelative);
+        }
+    }
+
     [RequireComponent(typeof(UIDocument))]
     public sealed class GameHudController : MonoBehaviour
     {
@@ -329,8 +390,8 @@ namespace VLTK.UI
 
         private void LoadArt()
         {
-            var artPath = System.IO.Path.Combine(Application.dataPath, artFolder);
-            if (!System.IO.Directory.Exists(artPath))
+            var artPath = HudArtPathResolver.ResolveArtRoot(artFolder);
+            if (HudArtPathResolver.CanCheckDirectory(artPath) && !System.IO.Directory.Exists(artPath))
             {
                 SubsystemLog.Warn("HUD", $"Art folder not found: {artPath}");
                 return;
@@ -372,52 +433,58 @@ namespace VLTK.UI
             }
         }
 
-        private static void LoadBarArt(VisualElement fill, string artPath, string name)
+        private void LoadBarArt(VisualElement fill, string artPath, string name)
         {
             if (fill == null) return;
-            var png = System.IO.Path.Combine(artPath, name + ".png");
-            if (!System.IO.File.Exists(png)) return;
-
-            var tex = LoadTexture(png);
-            if (tex != null)
+            var png = HudArtPathResolver.ResolvePngPath(artPath, name);
+            LoadTextureIntoElement(this, png, name, tex =>
             {
-                tex.filterMode = FilterMode.Point;
                 fill.style.backgroundImage = new StyleBackground(tex);
                 fill.style.backgroundSize = new BackgroundSize(104, 9);
-            }
+            });
         }
 
-        private static void LoadIcon(VisualElement el, string artPath, string name)
+        private void LoadIcon(VisualElement el, string artPath, string name)
+        {
+            LoadIcon(this, el, artPath, name);
+        }
+
+        private static void LoadIcon(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name)
         {
             if (el == null)
             {
                 UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: element for {name} is null");
                 return;
             }
-            var png = System.IO.Path.Combine(artPath, name + ".png");
-            if (!System.IO.File.Exists(png))
+
+            var png = HudArtPathResolver.ResolvePngPath(artPath, name);
+            if (coroutineHost != null)
             {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: file not found {png}");
+                LoadTextureIntoElement(coroutineHost, png, name, tex =>
+                {
+                    el.style.backgroundImage = new StyleBackground(tex);
+                    UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
+                });
                 return;
             }
 
-            var tex = LoadTexture(png);
-            if (tex != null)
+            LoadTextureIntoElement(null, png, name, tex =>
             {
-                tex.filterMode = FilterMode.Point;
                 el.style.backgroundImage = new StyleBackground(tex);
                 UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
-            }
-            else
-            {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: failed to load texture {name}");
-            }
+            });
         }
 
         /// <summary>Static version for use by CombatSkillSlotController.</summary>
+        public static void LoadIconStatic(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name)
+        {
+            LoadIcon(coroutineHost, el, artPath, name);
+        }
+
+        /// <summary>Legacy synchronous entry point. Prefer passing a MonoBehaviour for StreamingAssets/mobile paths.</summary>
         public static void LoadIconStatic(VisualElement el, string artPath, string name)
         {
-            LoadIcon(el, artPath, name);
+            LoadIcon(null, el, artPath, name);
         }
 
         private void LoadPanelArt(string artPath)
@@ -425,18 +492,58 @@ namespace VLTK.UI
             // Visual panel is rendered by PcHudVietnameseTextOverlay with PC art so it draws above nameplates.
         }
 
-        private static void LoadElementImage(VisualElement el, string artPath, string name)
+        private void LoadElementImage(VisualElement el, string artPath, string name)
         {
             if (el == null) return;
-            var png = System.IO.Path.Combine(artPath, name + ".png");
-            if (!System.IO.File.Exists(png)) return;
-            var tex = LoadTexture(png);
-            if (tex != null)
-                el.style.backgroundImage = new StyleBackground(tex);
+            var png = HudArtPathResolver.ResolvePngPath(artPath, name);
+            LoadTextureIntoElement(this, png, name, tex => el.style.backgroundImage = new StyleBackground(tex));
         }
 
-        private static Texture2D LoadTexture(string path)
+        private static void LoadTextureIntoElement(MonoBehaviour coroutineHost, string path, string name, System.Action<Texture2D> apply)
         {
+            if (HudArtPathResolver.RequiresUnityWebRequest(path))
+            {
+                if (coroutineHost == null)
+                {
+                    UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: {name} requires UnityWebRequest but no coroutine host was provided: {path}");
+                    return;
+                }
+
+                coroutineHost.StartCoroutine(LoadTextureIntoElementAsync(path, name, apply));
+                return;
+            }
+
+            var tex = LoadTextureFromLocalFile(path);
+            if (tex != null)
+                apply(tex);
+        }
+
+        private static System.Collections.IEnumerator LoadTextureIntoElementAsync(string path, string name, System.Action<Texture2D> apply)
+        {
+            using var request = UnityWebRequestTexture.GetTexture(HudArtPathResolver.ToUnityWebRequestUri(path));
+            yield return request.SendWebRequest();
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: failed to load {name} from {path}: {request.error}");
+                yield break;
+            }
+
+            var downloaded = DownloadHandlerTexture.GetContent(request);
+            if (downloaded != null)
+            {
+                downloaded.filterMode = FilterMode.Point;
+                apply(downloaded);
+            }
+        }
+
+        private static Texture2D LoadTextureFromLocalFile(string path)
+        {
+            if (!System.IO.File.Exists(path))
+            {
+                UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: file not found {path}");
+                return null;
+            }
+
             var data = System.IO.File.ReadAllBytes(path);
             var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             tex.filterMode = FilterMode.Point;
@@ -875,7 +982,7 @@ namespace VLTK.UI
                     var row = snap.rows[slotIndex];
                     if (row.canUpgrade)
                         item.AddToClassList("hud-cb-grid-cell-upgradable");
-                    LoadIcon(slot, System.IO.Path.Combine(Application.dataPath, artFolder, "Generated"), $"cai_bang_skill_{row.skillId}");
+                    LoadIcon(slot, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{row.skillId}");
 
                     var levelText = row.learnedLevel > 0 ? row.learnedLevel.ToString() : string.Empty;
                     var level = new Label(levelText);
@@ -1060,7 +1167,7 @@ namespace VLTK.UI
                 icon.AddToClassList("hud-buff-icon");
                 icon.AddToClassList(b.isDebuff ? "hud-buff-border-orange" : "hud-buff-border-green");
                 
-                LoadIcon(icon, System.IO.Path.Combine(Application.dataPath, artFolder, "Generated"), $"cai_bang_skill_{b.skillId}");
+                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{b.skillId}");
                 cell.Add(icon);
                 
                 var timer = new Label(FormatTimer(b.durationRemaining));
@@ -1149,7 +1256,7 @@ namespace VLTK.UI
                 var fact = HudDataService.Instance.GetFaction(m.faction);
                 int placeholderSkillId = fact != null ? fact.placeholderSkillId : 124;
 
-                LoadIcon(icon, System.IO.Path.Combine(Application.dataPath, artFolder, "Generated"), $"cai_bang_skill_{placeholderSkillId}");
+                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{placeholderSkillId}");
                 item.Add(icon);
                 
                 var info = new VisualElement();
