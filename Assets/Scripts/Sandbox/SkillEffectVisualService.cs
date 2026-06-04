@@ -685,19 +685,44 @@ namespace VLTK.Sandbox
                 // skills we haven't fully tuned. PC skill with missile form gets a basic
                 // outward missile; non-missile (None) gets no visual.
                 default:
-                    if (skill.missileForm == SkillMissileForm.Surround)
+                    if (skill.missileForm != SkillMissileForm.None && PcMissileRegistry.TryGet(skill.childSkillId, out var mEntry))
                     {
-                        SetupPcMissile(fx, "04e27976", 64, 16, 1, 12, 30, "b91ab706", 16, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                        SetupSurroundMissiles(fx, System.Math.Max(1, skill.childSkillNum));
+                        string sprHash = SprRuntimeService.ComputePathUidHex(mEntry.sprFile);
+                        if (string.IsNullOrEmpty(sprHash))
+                        {
+                            sprHash = skill.missileForm switch
+                            {
+                                SkillMissileForm.Surround => "04e27976",
+                                SkillMissileForm.Fan => "a31b9f04",
+                                _ => "883bff8c"
+                            };
+                        }
+                        SetupPcMissile(fx, sprHash, 1, 1, 1, mEntry.speed, mEntry.lifetime, "2ed0ae8f", 12, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
+                        if (skill.missileForm == SkillMissileForm.Surround)
+                        {
+                            SetupPcCircleOutwardMissiles(fx, System.Math.Max(1, skill.childSkillNum));
+                        }
+                        else if (skill.missileForm == SkillMissileForm.Fan)
+                        {
+                            SetupPcKangLongSpread(fx, System.Math.Max(1, skill.childSkillNum), 2, 1);
+                        }
                     }
-                    else if (skill.missileForm == SkillMissileForm.Fan)
+                    else
                     {
-                        SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 16, 22, "c33e96c2", 7, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                        SetupPcKangLongSpread(fx, System.Math.Max(1, skill.childSkillNum), 2, 1);
-                    }
-                    else if (skill.missileForm == SkillMissileForm.Single)
-                    {
-                        SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
+                        if (skill.missileForm == SkillMissileForm.Surround)
+                        {
+                            SetupPcMissile(fx, "04e27976", 64, 16, 1, 12, 30, "b91ab706", 16, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
+                            SetupSurroundMissiles(fx, System.Math.Max(1, skill.childSkillNum));
+                        }
+                        else if (skill.missileForm == SkillMissileForm.Fan)
+                        {
+                            SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 16, 22, "c33e96c2", 7, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
+                            SetupPcKangLongSpread(fx, System.Math.Max(1, skill.childSkillNum), 2, 1);
+                        }
+                        else if (skill.missileForm == SkillMissileForm.Single)
+                        {
+                            SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
+                        }
                     }
                     break;
             }

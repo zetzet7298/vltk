@@ -137,6 +137,66 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(startSp + 1, levelService.SkillPoints, "Skill point granted at chain 10");
         }
 
+        [Test]
+        public void DaTau_LoadsRealConfigsAndGeneratesDynamicTasks()
+        {
+            var taskFlags = new TaskFlagService();
+            var levelService = new PlayerLevelService(25); // level 25
+            var daTau = new DaTauTaskChainService(taskFlags, levelService);
+
+            // Verify config loading
+            var mainLinksField = typeof(DaTauTaskChainService).GetField("_mainLinks", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Assert.IsNotNull(mainLinksField);
+            var mainLinks = (System.Collections.IList)mainLinksField.GetValue(daTau);
+            Assert.Greater(mainLinks.Count, 0, "tasklink_mainlink.txt should be parsed and loaded");
+
+            // Bypass unit test flag using reflection
+            var isUnitTestField = typeof(DaTauTaskChainService).GetField("_isUnitTest", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Assert.IsNotNull(isUnitTestField);
+            isUnitTestField.SetValue(daTau, false);
+
+            // Generate next task
+            var task = daTau.AcceptNextTask();
+            Assert.IsNotNull(task);
+            Assert.GreaterOrEqual(task.taskId, 10000);
+            
+            // Check that the task description is in Vietnamese as loaded from files
+            Assert.IsFalse(string.IsNullOrEmpty(task.descriptionVi));
+            UnityEngine.Debug.Log($"Generated dynamic task: {task.descriptionVi}");
+        }
+
+        [Test]
+        public void DaTau_DynamicAwardLinkRewards()
+        {
+            var taskFlags = new TaskFlagService();
+            var levelService = new PlayerLevelService(35);
+            var daTau = new DaTauTaskChainService(taskFlags, levelService);
+
+            // Bypass unit test flag using reflection
+            var isUnitTestField = typeof(DaTauTaskChainService).GetField("_isUnitTest", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            Assert.IsNotNull(isUnitTestField);
+            isUnitTestField.SetValue(daTau, false);
+
+            // Complete 9 tasks to reach the 10th task turn in (chainIndex = 9)
+            for (int i = 0; i < 9; i++)
+            {
+                var task = daTau.AcceptNextTask();
+                task.currentProgress = task.targetCount;
+                daTau.TurnInTask();
+            }
+
+            // Accept 10th task (chainIndex = 9)
+            var tenthTask = daTau.AcceptNextTask();
+            tenthTask.currentProgress = tenthTask.targetCount;
+            var reward = daTau.TurnInTask();
+
+            Assert.IsNotNull(reward);
+            // In award_link.txt, the 10th milestone (num = 10) usually gives some reward.
+            // Let's check if the bonusItemNameVi is resolved
+            Assert.IsFalse(string.IsNullOrEmpty(reward.bonusItemNameVi));
+            UnityEngine.Debug.Log($"10th Task Reward Item: {reward.bonusItemNameVi}");
+        }
+
         // ── Station Travel Tests ───────────────────────────────────────────
 
         [Test]

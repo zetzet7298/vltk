@@ -118,6 +118,19 @@ namespace VLTK.Core
                 SubsystemLog.Warn("PcConfig", $"PcMissles.txt not found at {missileFile}");
             }
 
+            // ModMissles.txt
+            string modMissileFile = Path.Combine(refPath, "ModMissles.txt");
+            if (File.Exists(modMissileFile))
+            {
+                var modMissiles = ParseMissiles(modMissileFile);
+                manifest.missiles.AddRange(modMissiles);
+                SubsystemLog.Info("PcConfig", $"Parsed {modMissiles.Count} mod missiles from ModMissles.txt");
+            }
+            else
+            {
+                SubsystemLog.Warn("PcConfig", $"ModMissles.txt not found at {modMissileFile}");
+            }
+
             manifest.BuildLookups();
             return manifest;
         }
@@ -346,23 +359,29 @@ namespace VLTK.Core
                 if (string.IsNullOrEmpty(line)) continue;
 
                 string[] cols = line.Split(SEP);
-                if (cols.Length < 5) continue;
+                if (cols.Length < 12) continue;
 
                 var missile = new PcMissileEntry();
-                int ci = 0;
 
-                missile.missileId = IntCol(cols, ref ci);               // 0 Id
-                missile.nameRaw = Col(cols, ref ci);                    // 1 Name
+                missile.missileId = IntColSafe(cols, 0);
+                missile.nameRaw = ColSafe(cols, 1);
                 missile.nameNormalized = missile.nameRaw?.Trim();
-                ci++; // skip
-                missile.speed = IntColSafe(cols, ci); ci++;             // Speed
-                missile.lifetime = IntColSafe(cols, ci); ci++;          // LifeTime
-                missile.count = IntColSafe(cols, ci); ci++;             // Count
+                missile.lifetime = IntColSafe(cols, 10);
+                missile.speed = IntColSafe(cols, 11);
+                missile.count = IntColSafe(cols, 14); // LoopPlay
 
-                if (cols.Length > ci) missile.minRadius = IntColSafe(cols, ci); ci++;
-                if (cols.Length > ci) missile.maxRadius = IntColSafe(cols, ci); ci++;
+                missile.minRadius = IntColSafe(cols, 6);
+                missile.maxRadius = IntColSafe(cols, 8);
 
-                missile.sprFile = ColSafe(cols, ci); ci++;
+                string spr = ColSafe(cols, 29);
+                if (string.IsNullOrEmpty(spr)) spr = ColSafe(cols, 32);
+                if (string.IsNullOrEmpty(spr)) spr = ColSafe(cols, 35);
+                if (string.IsNullOrEmpty(spr)) spr = ColSafe(cols, 38);
+                missile.sprFile = spr;
+
+                if (cols.Length > 18) missile.flyEventId = IntColSafe(cols, 18);
+                if (cols.Length > 20) missile.collideEventId = IntColSafe(cols, 20);
+                if (cols.Length > 21) missile.vanishEventId = IntColSafe(cols, 21);
 
                 result.Add(missile);
             }
