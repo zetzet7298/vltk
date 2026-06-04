@@ -467,6 +467,17 @@ namespace VLTK.Core
                 "physicsdamage_v" => MagicAttributeKind.PhysicsDamageV,
                 "firedamage_v" => MagicAttributeKind.FireDamageV,
                 "poisondamage_v" => MagicAttributeKind.PoisonDamageV,
+                "lightingdamage_v" => MagicAttributeKind.LightingDamageV,
+                "seriesdamage_p" => MagicAttributeKind.SeriesDamageP,
+                "manashield_p" => MagicAttributeKind.ManaShieldP,
+                "manamax_p" => MagicAttributeKind.ManaMaxP,
+                "manareplenish_v" => MagicAttributeKind.ManaReplenishV,
+                "lightingenhance_p" => MagicAttributeKind.LightingEnhanceP,
+                "attackspeed_v" => MagicAttributeKind.AttackSpeedV,
+                "castspeed_v" => MagicAttributeKind.CastSpeedV,
+                "stealmana_p" => MagicAttributeKind.StealManaP,
+                "deadlystrike_p" => MagicAttributeKind.DeadlyStrikeP,
+                "stun_p" => MagicAttributeKind.StunP,
                 _ => (MagicAttributeKind?)null,
             };
 

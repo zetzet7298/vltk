@@ -142,8 +142,9 @@ namespace VLTK.Sandbox
             effect.missileDuration = effect.missileDistance / Mathf.Max(0.1f, effect.missileSpeed);
             effect.currentMissilePos = casterPos;
 
-            // CaiBang-specific visual parameters from PC Skills.txt/Missles.txt
+            // PC-specific visual parameters from Skills.txt/Missles.txt.
             ConfigureCaiBangVisuals(skill, effect, skillLevel);
+            ConfigureWuDangVisuals(skill, effect, skillLevel);
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
@@ -334,6 +335,41 @@ namespace VLTK.Sandbox
             string missileKey = $"missile_{skill.childSkillId}";
             return _sprService?.ResolveSprite(missileKey, 32, 32);
         }
+
+        private void ConfigureWuDangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/missles.txt
+            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/skills.txt
+            // Keys are PC path hashes used by StreamingAssets/Sprites/{uid}.spr when extracted.
+            switch (skill.skillId)
+            {
+                case 153: // 怒雷指, missile 24: Speed=20, LifeTime=16, AnimFile2 wd_01_怒雷指
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "5698379e", 64, 16, 1, 20, 16, "55542141", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
+                    break;
+                case 155: // 沧海明月, missile 25: Speed=20, LifeTime=16, AnimFile2 wd_02_沧海明月
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "55542141", 64, 16, 1, 20, 16, "8de48699", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
+                    break;
+                case 158: // 剑飞惊天, missile 26: Speed=0, LifeTime=16, stationary area thunder
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcStationaryEffect(fx, "7bcefae7", 16, 1, 1, new Color(156f/255f, 211f/255f, 255f/255f));
+                    break;
+                case 159: // 七星阵, child missile 211: Speed=20, LifeTime=6
+                    SetupPcMissile(fx, "8de48699", 8, 1, 2, 20, 6, "8de48699", 8, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
+                    break;
+                case 164: // 搏击二复, missile 28: Speed=0, LifeTime=12, stationary range damage
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(156f/255f, 211f/255f, 255f/255f));
+                    break;
+                case 165: // 无我无剑, missile 29: Speed=20, LifeTime=16, ChildSkillNum=16 fan/surround burst
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "7bcefae7", 64, 16, 1, 20, 16, "8de48699", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
+                    SetupPcCircleOutwardMissiles(fx, Math.Max(1, skill.childSkillNum));
+                    break;
+            }
+        }
+
 
         private void ConfigureCaiBangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
         {

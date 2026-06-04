@@ -5,7 +5,7 @@ using VLTK.Sandbox;
 
 namespace VLTK.UI
 {
-    public readonly struct CaiBangSkillPanelRow
+    public readonly struct PcSkillPanelRow
     {
         public readonly int skillId;
         public readonly string displayName;
@@ -18,7 +18,7 @@ namespace VLTK.UI
         public readonly string nextLevelSummary;
         public readonly string upgradeStatus;
 
-        public CaiBangSkillPanelRow(int skillId, string displayName, int requiredLevel, int maxLevel, int learnedLevel, int levelCap, bool canUpgrade, string summary, string nextLevelSummary, string upgradeStatus)
+        public PcSkillPanelRow(int skillId, string displayName, int requiredLevel, int maxLevel, int learnedLevel, int levelCap, bool canUpgrade, string summary, string nextLevelSummary, string upgradeStatus)
         {
             this.skillId = skillId;
             this.displayName = displayName;
@@ -33,26 +33,21 @@ namespace VLTK.UI
         }
     }
 
-    public sealed class CaiBangSkillPanelSnapshot
+    public sealed class PcSkillPanelSnapshot
     {
         public int playerLevel;
         public int skillPoints;
         public CombatFaction faction;
         public int selectedSkillId;
-        public CaiBangSkillPanelRow? selectedRow;
-        public IReadOnlyList<CaiBangSkillPanelRow> rows;
+        public PcSkillPanelRow? selectedRow;
+        public IReadOnlyList<PcSkillPanelRow> rows;
     }
 
-    /// <summary>Builds the Cái Bang skill panel from the same PC-derived combat catalog used by runtime combat.</summary>
-    public static class CaiBangSkillPanelService
+    public static class PcSkillPanelService
     {
-        // PC UI: ui3/战斗技能细分页.ini defines 25 skill slots per combat subpage (5x5).
-        // Mobile: use one scrollable list of all 23 Cái Bang player skills (16 PC gốc + 7 MOD).
-        // The 25-slot grid wraps rows so the ScrollView shows everything via vertical scroll.
         public const int PcFightSkillSlotsPerPage = 30;
         public const int PcFightSkillPageCount = 1;
 
-        // All 24 Cái Bang player skills in PC display order. MOD-only additions appended.
         public static readonly int[] PcCaiBangSkillOrder =
         {
             115, 116, 117, 118, 119,
@@ -62,35 +57,42 @@ namespace VLTK.UI
             360, 714, 1073, 1074,
         };
 
-        // 1539 = Thiên Hạ Vô Cẩu NPC variant (ReqLevel 1, MaxLevel 60). MOD-only boss skill
-        // registered in the catalog for boss AI, but NOT shown in the player skill panel.
+        public static readonly int[] PcWuDangSkillOrder =
+        {
+            151, 152, 153, 154, 155,
+            156, 157, 158, 159, 160,
+            161, 162, 163, 164, 165,
+            166,
+        };
+
         public const int NpcVariantSkillId = 1539;
 
-        public static IReadOnlyList<int> GetPcCaiBangSkillOrderForPage(int pageIndex)
+        public static IReadOnlyList<int> GetPcSkillOrder(CombatFaction faction)
         {
-            return PcCaiBangSkillOrder;
+            return faction == CombatFaction.WuDang ? PcWuDangSkillOrder : PcCaiBangSkillOrder;
         }
 
-        public static CaiBangSkillPanelSnapshot Build(SkillCatalog catalog, PlayerProgressionState progression, int selectedSkillId = 0)
+        public static PcSkillPanelSnapshot Build(SkillCatalog catalog, PlayerProgressionState progression, int selectedSkillId = 0)
         {
-            return BuildForOrder(catalog, progression, selectedSkillId, PcCaiBangSkillOrder);
+            var skillOrder = GetPcSkillOrder(progression.faction);
+            return BuildForOrder(catalog, progression, selectedSkillId, skillOrder);
         }
 
-        public static CaiBangSkillPanelSnapshot BuildPage(SkillCatalog catalog, PlayerProgressionState progression, int selectedSkillId, int pageIndex)
+        public static PcSkillPanelSnapshot BuildPage(SkillCatalog catalog, PlayerProgressionState progression, int selectedSkillId, int pageIndex)
         {
-            return BuildForOrder(catalog, progression, selectedSkillId, PcCaiBangSkillOrder);
+            var skillOrder = GetPcSkillOrder(progression.faction);
+            return BuildForOrder(catalog, progression, selectedSkillId, skillOrder);
         }
 
-        private static CaiBangSkillPanelSnapshot BuildForOrder(SkillCatalog catalog, PlayerProgressionState progression, int selectedSkillId, IReadOnlyList<int> skillOrder)
+        private static PcSkillPanelSnapshot BuildForOrder(SkillCatalog catalog, PlayerProgressionState progression, int selectedSkillId, IReadOnlyList<int> skillOrder)
         {
             progression ??= new PlayerProgressionState();
-            CaiBangSkillPanelRow? selected = null;
-            var rows = new List<CaiBangSkillPanelRow>();
+            PcSkillPanelRow? selected = null;
+            var rows = new List<PcSkillPanelRow>();
             if (catalog != null)
             {
                 foreach (var skillId in skillOrder)
                 {
-                    // Skip NPC/boss variant - registered in catalog for boss AI but not for player panel.
                     if (skillId == NpcVariantSkillId)
                         continue;
                     var skill = catalog.Resolve(skillId);
@@ -99,7 +101,7 @@ namespace VLTK.UI
                     int learned = progression.GetSkillLevel(skill.skillId);
                     int cap = progression.GetLevelCap(skill);
                     bool canUpgrade = progression.CanUpgradeSkill(skill);
-                    var row = new CaiBangSkillPanelRow(
+                    var row = new PcSkillPanelRow(
                         skill.skillId,
                         skill.DisplayName,
                         skill.reqLevel,
@@ -115,7 +117,7 @@ namespace VLTK.UI
                         selected = row;
                 }
             }
-            return new CaiBangSkillPanelSnapshot
+            return new PcSkillPanelSnapshot
             {
                 playerLevel = progression.level,
                 skillPoints = progression.fightSkillPoints,

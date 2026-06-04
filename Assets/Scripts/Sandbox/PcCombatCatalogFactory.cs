@@ -25,13 +25,21 @@ namespace VLTK.Sandbox
         public const int CaiBangModMinSkillId = 274;
         public const int CaiBangModMaxSkillId = 1539;
         public const int CaiBangDogBeatingAuraChild = 209;
+        public const int WuDangMinSkillId = 151;
+        public const int WuDangMaxSkillId = 166;
 
         public static SkillCatalog CreateNoviceAndCaiBangCatalog(IAssetRegistry assets = null)
+        {
+            return CreateNoviceAndCoreSectCatalog(assets, includeWuDang: false);
+        }
+
+        public static SkillCatalog CreateNoviceAndCoreSectCatalog(IAssetRegistry assets = null, bool includeWuDang = true)
         {
             var catalog = new SkillCatalog(assets);
             foreach (var s in CreateNoviceSkills()) catalog.Register(s);
             foreach (var s in CreateCaiBangSkills()) catalog.Register(s);
             catalog.Register(CaiBangDogBeatingAuraChildSkill());
+            if (includeWuDang) foreach (var s in CreateWuDangSkills()) catalog.Register(s);
             return catalog;
         }
 
@@ -223,6 +231,52 @@ namespace VLTK.Sandbox
             NguDieuCanKhonSkill(),
         };
 
+
+        public static List<SkillDefinition> CreateWuDangSkills() => new()
+        {
+            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/script/skill2/wudang.lua
+            WuDangPassiveJianFa(),
+            WuDangPassiveQuanFa(),
+            WuDangYinYangQi(),
+            WuDangLightningDamage(153, "怒雷指", "Nộ Lôi Chỉ", 10, 400, 24, 1, 11,
+                light1: lv => Link(lv, (1, 1, ""), (20, 5, "")),
+                light3: lv => Link(lv, (1, 1, ""), (20, 75, "")),
+                series: lv => Link(lv, (1, 1, ""), (20, 10, "")),
+                cost: lv => Link(lv, (1, 15, ""), (20, 20, ""))),
+            WuDangLightningDamage(155, "沧海明月", "Thương Hải Minh Nguyệt", 10, 480, 25, 1, 11,
+                physics: lv => Link(lv, (1, 5, ""), (20, 75, "")),
+                light1: lv => Link(lv, (1, 6, ""), (20, 12, "")),
+                light3: lv => Link(lv, (1, 6, ""), (20, 115, "")),
+                series: lv => Link(lv, (1, 1, ""), (20, 10, "")),
+                cost: lv => Link(lv, (1, 10, ""), (20, 15, ""))),
+            WuDangChunYangXinFa(),
+            WuDangManaShield(),
+            WuDangLightningDamage(158, "剑飞惊天", "Kiếm Phi Kinh Thiên", 30, 400, 26, 1, 11,
+                physics: lv => Link(lv, (1, 20, ""), (20, 115, "")),
+                light1: lv => Link(lv, (1, 10, ""), (20, 24, "")),
+                light3: lv => Link(lv, (1, 10, ""), (20, 225, "")),
+                series: lv => Link(lv, (1, 5, ""), (20, 30, "")),
+                cost: lv => Link(lv, (1, 10, ""), (20, 25, ""))),
+            WuDangQiXingZhen(),
+            WuDangRunPassive(),
+            WuDangLiangYiXinFa(),
+            WuDangXuanYiWuXiang(),
+            WuDangRenJianHeYi(),
+            WuDangLightningDamage(164, "搏击二复", "Bác Cấp Nhi Phục", 50, 470, 28, 1, 11,
+                light1: lv => Link(lv, (1, 5, ""), (20, 8, "")),
+                light3: lv => Link(lv, (1, 5, ""), (20, 175, "")),
+                series: lv => Link(lv, (1, 5, ""), (20, 30, "")),
+                cost: lv => Link(lv, (1, 60, ""), (20, 70, "")),
+                stun: lv => (Link(lv, (1, 20, ""), (20, 55, "")), Link(lv, (1, 1, ""), (20, 20, "")), 0)),
+            WuDangLightningDamage(165, "无我无剑", "Vô Ngã Vô Kiếm", 50, 400, 29, 16, 11,
+                light1: lv => Link(lv, (1, 1, ""), (20, 5, "")),
+                light3: lv => Link(lv, (1, 5, ""), (20, 752, "")),
+                series: lv => Link(lv, (1, 10, ""), (20, 50, "")),
+                cost: lv => Link(lv, (1, 70, ""), (20, 130, "")),
+                stun: lv => (Link(lv, (1, 5, ""), (20, 20, "")), Link(lv, (1, 1, ""), (20, 10, "")), 0)),
+            WuDangTaiJiShenGong(),
+        };
+
         public static SkillDefinition LongChienUYuyeSkill()
         {
             var s = BaseSkill(389, "Long Chiến Ư Dã ", "Long Chiến Ư Dã", 80, 20, 570, SkillMissileForm.None);
@@ -269,6 +323,92 @@ namespace VLTK.Sandbox
             AddLevels(s, lv => Immediate(MagicAttributeKind.AddDefenseV, 30 + 10 * lv, 25, 0));
             return s;
         }
+
+
+        private static SkillDefinition WuDangPassiveJianFa()
+        {
+            var s = BaseSkill(151, "武当剑法", "Võ Đang Kiếm Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 25, ""), (20, 215, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 15, ""), (20, 72, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 25, "Conic")), -1, 0)); return d; }); return s;
+        }
+
+        private static SkillDefinition WuDangPassiveQuanFa()
+        {
+            var s = BaseSkill(152, "武当拳法", "Võ Đang Quyền Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaShieldP, Link(lv, (1, -5, ""), (15, -15, ""), (20, -25, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 20, ""), (15, 250, ""), (20, 915, "")), -1, 0)); return d; }); return s;
+        }
+
+        private static SkillDefinition WuDangLightningDamage(int id, string raw, string vi, int req, int radius, int child, int childNum, int charAnim, Func<int,int> light1, Func<int,int> light3, Func<int,int> series, Func<int,int> cost, Func<int,int> physics = null, Func<int,(int,int,int)> stun = null)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, radius, SkillMissileForm.Single); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr"); s.missileSpriteId = Sprite(WuDangMissilePath(child));
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; if (physics != null) d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, physics(lv), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, light1(lv), 0, light3(lv))); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, series(lv), 0, 0)); if (stun != null) { var st = stun(lv); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, st.Item1, st.Item2, st.Item3)); } d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost(lv), 0, 0)); return d; }); return s;
+        }
+
+        private static SkillDefinition WuDangYinYangQi()
+        {
+            var s = BaseSkill(154, "阴阳气", "Âm Dương Khí", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => State(MagicAttributeKind.LightingResP, 10 + Floor(1.5f * lv), -1, 0)); return s;
+        }
+
+        private static SkillDefinition WuDangChunYangXinFa()
+        {
+            var s = BaseSkill(156, "纯阳心法", "Thuần Dương Tâm Pháp", 20, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => State(MagicAttributeKind.ManaMaxP, 25 + 11 * lv, -1, 0)); return s;
+        }
+
+        private static SkillDefinition WuDangLiangYiXinFa()
+        {
+            var s = BaseSkill(161, "两仪心法", "Lưỡng Nghi Tâm Pháp", 40, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => State(MagicAttributeKind.CastSpeedV, Floor(Log10(lv + 1) * 80f), -1, 0)); return s;
+        }
+
+        private static SkillDefinition WuDangXuanYiWuXiang()
+        {
+            var s = BaseSkill(162, "玄一无象", "Huyền Nhất Vô Tượng", 50, 20, 520, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 27; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr"); s.missileSpriteId = Sprite("\\spr\\skill\\武当\\wd_04_玄一无象.spr");
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, 4 + lv * 7, 0, 296 + lv * 59)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20 + lv * 3, 0, 0)); return d; }); return s;
+        }
+
+        private static SkillDefinition WuDangRenJianHeYi()
+        {
+            var s = BaseSkill(163, "人剑合一", "Nhân Kiếm Hợp Nhất", 50, 20, 90, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 215; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr");
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 8, ""), (15, 80, ""), (20, 194, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 12, ""), (20, 35, "")), 0, Link(lv, (1, 12, ""), (15, 100, ""), (20, 268, "")))); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingP, Link(lv, (1, 65, ""), (20, 345, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.StealManaP, Link(lv, (1, 1, ""), (20, 5, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeP, Link(lv, (1, 16, ""), (20, 25, "")), 0, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 1, ""), (20, 10, "")), Link(lv, (1, 1, ""), (20, 10, "")), 0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 35, ""), (20, 60, "")), 0, 0)); return d; }); return s;
+        }
+
+
+        private static SkillDefinition WuDangManaShield()
+        {
+            var s = BaseSkill(157, "坐忘无我", "Tọa Vọng Vô Ngã", 50, 20, 400, SkillMissileForm.None); s.skillStyle = PcSkillStyle.InitiativeNpcState; s.targetSelf = true; s.charAnimId = 11;
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaShieldP, Link(lv, (1, 25, ""), (5, 75, ""), (20, 99, "")), Link(lv, (1, 18*120, ""), (20, 18*180, "")), 0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 60, ""), (20, 160, "")), 0, 0)); return d; }); return s;
+        }
+
+        private static SkillDefinition WuDangQiXingZhen()
+        {
+            var s = BaseSkill(159, "七星阵", "Thất Tinh Trận", 20, 20, 180, SkillMissileForm.None); s.skillStyle = PcSkillStyle.InitiativeNpcState; s.childSkillId = 211; s.childSkillNum = 1; s.targetSelf = true; s.charAnimId = 14; s.missileSpriteId = Sprite(WuDangMissilePath(211));
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, 20 + lv * 4, 18, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, 60 + lv * 37, 18, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, 30 + lv * 6, 18, 0)); return d; }); return s;
+        }
+
+        private static SkillDefinition WuDangRunPassive()
+        {
+            var s = BaseSkill(160, "梯云纵", "Thế Vân Tung", 40, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => State(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 18, ""), (20, 60, "")), -1, 0)); return s;
+        }
+
+        private static SkillDefinition WuDangTaiJiShenGong()
+        {
+            var s = BaseSkill(166, "太极神功", "Thái Cực Thần Công", 60, 30, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 21, ""), (30, 65, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, 21, ""), (30, 65, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 20, ""), (20, 275, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaMaxP, Link(lv, (1, 35, ""), (30, 245, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaReplenishV, Link(lv, (1, 1, ""), (30, 12, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (30, 25, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LightingEnhanceP, Link(lv, (1, 16, ""), (30, 100, "")), -1, 0)); return d; }); return s;
+        }
+
+        private static string WuDangMissilePath(int missileId) => missileId switch
+        {
+            24 => "\\spr\\skill\\武当\\wd_01_怒雷指.spr",
+            25 => "\\spr\\skill\\武当\\wd_02_沧海明月.spr",
+            26 => "\\spr\\skill\\武当\\wd_03_天际惊雷.spr",
+            28 => "\\spr\\skill\\武当\\wd_05_剥及而复.spr",
+            29 => "\\spr\\skill\\武当\\wd_10_无我无剑.spr",
+            211 => "\\spr\\skill\\少林\\bz_bo1_金波.spr",
+            _ => "",
+        };
+
 
         private static SkillDefinition PhysicalAttack(int id, string raw, string vi, int radius, int child, int charAnim = 9, int timePerCast = 0, bool isMelee = true)
         {
@@ -385,12 +525,13 @@ namespace VLTK.Sandbox
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
 
-        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
+        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
 
         // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
         // the player skill panel filters it out via isNpcVariant.
         public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1539 || id==389;
+        public static bool IsWuDangSkill(int id) => id >= WuDangMinSkillId && id <= WuDangMaxSkillId;
         private static string IconPathForSkill(int id) => id switch
         {
             1 => "\\spr\\Ui\\技能图标\\icon_sk_ty_ap.spr",
@@ -412,6 +553,17 @@ namespace VLTK.Sandbox
             128 or 357 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 357 Phi Long Tại Thiên: same Long-family icon, real icon not in any PAK.
             129 => "\\spr\\Ui\\技能图标\\icon_sk_gb_42.spr",
             130 or 360 => "\\spr\\Ui\\技能图标\\icon_sk_gb_43.spr", // 360 Tiêu Dao Công: alias to Túy Điệp Cuồng Vũ; real icon not in any PAK.
+            151 => "\\spr\\Ui\\技能图标\\icon_sk_wd_jf.spr",
+            152 => "\\spr\\Ui\\技能图标\\icon_sk_wd_qf.spr",
+            153 => "\\spr\\Ui\\技能图标\\icon_sk_wa_01.spr",
+            155 => "\\spr\\Ui\\技能图标\\icon_sk_wa_13.spr",
+            157 => "\\spr\\Ui\\技能图标\\icon_sk_wa_12.spr",
+            158 => "\\spr\\Ui\\技能图标\\icon_sk_wa_22.spr",
+            159 => "\\spr\\Ui\\技能图标\\icon_sk_wa_23.spr",
+            160 => "\\spr\\Ui\\技能图标\\icon_sk_wa_21.spr",
+            164 => "\\spr\\Ui\\技能图标\\icon_sk_wa_42.spr",
+            165 => "\\spr\\Ui\\技能图标\\icon_sk_wa_43.spr",
+            166 => "\\spr\\Ui\\技能图标\\icon_sk_wa_41.spr",
             714 => "\\spr\\Ui\\技能图标\\icon_sk_gb_120.spr",
             720 => "\\spr\\Ui\\技能图标\\icon_sk_sl_01.spr",
             1073 => "\\spr\\Ui\\技能图标\\150\\icon_sk_150_gb_01.spr", // MOD 150-tier GB icon, extracted from updatejx08.pak.

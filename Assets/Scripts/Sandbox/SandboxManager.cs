@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using VLTK.Core;
 using VLTK.Sprites;
+using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
@@ -174,7 +175,7 @@ namespace VLTK.Sandbox
 
         private void BootstrapCombatRuntime()
         {
-            CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog(AssetRegistry);
+            CombatSkillCatalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog(AssetRegistry);
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
@@ -211,14 +212,18 @@ namespace VLTK.Sandbox
             //     SubsystemLog.Info("Gameplay", $"DMG: {e.attackerId}→{e.targetId} -{e.damage} ({e.type})");
         }
 
-        public void GrantCaiBangSkillPanelProgression()
+        public void GrantFactionSkillPanelProgression(CombatFaction targetFaction)
         {
             if (CombatSkillCatalog == null)
                 BootstrapCombatRuntime();
             PlayerProgression ??= new PlayerProgressionState();
-            PlayerProgression.GrantCaiBangSkillPanelProgression(CombatSkillCatalog);
+            PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, targetFaction);
         }
 
+        public void GrantCaiBangSkillPanelProgression()
+        {
+            GrantFactionSkillPanelProgression(CombatFaction.CaiBang);
+        }
         private void EnsureSandboxCamera()
         {
             if (FindSandboxCamera() != null)

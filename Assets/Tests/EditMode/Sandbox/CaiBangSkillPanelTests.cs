@@ -36,7 +36,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
-            Assert.IsTrue(CaiBangSkillPanelService.TryUpgrade(progression, catalog, 117));
+            Assert.IsTrue(PcSkillPanelService.TryUpgrade(progression, catalog, 117));
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
             Assert.AreEqual(1, progression.skillLevels[117]);
@@ -50,7 +50,7 @@ namespace VLTK.Tests.Sandbox
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
-            Assert.IsTrue(CaiBangSkillPanelService.TryUpgrade(progression, catalog, 128));
+            Assert.IsTrue(PcSkillPanelService.TryUpgrade(progression, catalog, 128));
             Assert.AreEqual(1, progression.skillLevels[128]);
             Assert.AreEqual(199, progression.fightSkillPoints);
 
@@ -107,14 +107,14 @@ namespace VLTK.Tests.Sandbox
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
-            var snap = CaiBangSkillPanelService.Build(catalog, progression);
+            var snap = PcSkillPanelService.Build(catalog, progression);
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.CaiBang, snap.faction);
             Assert.AreEqual(24, snap.rows.Count);
             Assert.AreEqual(115, snap.rows[0].skillId);
             CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
-            Assert.AreEqual(30, CaiBangSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 24-skill list.");
+            Assert.AreEqual(30, PcSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 24-skill list.");
             Assert.AreEqual(50, snap.rows.Single(r => r.skillId == 128).requiredLevel, "PC Skills.txt ReqLevel for 亢龙有悔 is 50.");
             Assert.AreEqual(0, snap.rows[0].learnedLevel);
             Assert.IsTrue(snap.rows[0].canUpgrade);
@@ -150,7 +150,7 @@ namespace VLTK.Tests.Sandbox
                 hud.OpenCaiBangSkillPanel();
 
                 Assert.IsTrue(hud.IsCaiBangSkillPanelVisible);
-                Assert.AreEqual(30, hud.CaiBangSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
+                Assert.AreEqual(30, hud.PcSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
                 Assert.IsNotNull(hud.CurrentCaiBangSkillSnapshot);
                 Assert.AreEqual(24, hud.CurrentCaiBangSkillSnapshot.rows.Count, "Single scrollable page shows all 24 Cái Bang fight skills.");
                 CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentCaiBangSkillSnapshot.rows.Select(r => r.skillId).ToArray());
@@ -172,7 +172,7 @@ namespace VLTK.Tests.Sandbox
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
-            var snap = CaiBangSkillPanelService.Build(catalog, progression, 125);
+            var snap = PcSkillPanelService.Build(catalog, progression, 125);
 
             Assert.That(snap.selectedSkillId, Is.EqualTo(125));
             Assert.That(snap.selectedRow.HasValue, Is.True);
@@ -190,7 +190,7 @@ namespace VLTK.Tests.Sandbox
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
-            var snap = CaiBangSkillPanelService.Build(catalog, progression);
+            var snap = PcSkillPanelService.Build(catalog, progression);
             var dogAura = snap.rows.Single(r => r.skillId == 124);
             var noDog = snap.rows.Single(r => r.skillId == 125);
             var dragon = snap.rows.Single(r => r.skillId == 128);

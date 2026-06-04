@@ -54,6 +54,17 @@ namespace VLTK.Model
         SkillCostV,
         MeleeDamageReturnP,
         RangeDamageReturnP,
+        LightingDamageV,
+        SeriesDamageP,
+        ManaShieldP,
+        ManaMaxP,
+        ManaReplenishV,
+        LightingEnhanceP,
+        AttackSpeedV,
+        CastSpeedV,
+        StealManaP,
+        DeadlyStrikeP,
+        StunP,
     }
 
     [Serializable]
