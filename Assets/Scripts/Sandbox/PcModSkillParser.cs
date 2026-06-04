@@ -220,7 +220,7 @@ namespace VLTK.Sandbox
                 isAura = row.isAura || row.skillStyle == 14,
                 stateSpecialId = row.stateSpecialId,
                 skillStyle = ToSkillStyle(row.skillStyle),
-                faction = ToFaction(row.charClass),
+                faction = ToFaction(row.charClass, row.levelSetScript),
                 missileForm = ToMissileForm(row.missilesForm),
                 childSkillId = row.childSkillId,
                 childSkillLevel = row.childSkillLevel,
@@ -288,20 +288,22 @@ namespace VLTK.Sandbox
                 level.immediate.Add(attr);
         }
 
-        private static CombatFaction ToFaction(int charClass) => charClass switch
+        private static CombatFaction ToFaction(int charClass, string levelSetScript)
         {
-            1 => CombatFaction.Shaolin,
-            2 => CombatFaction.TianWang,
-            3 => CombatFaction.TangMen,
-            4 => CombatFaction.CaiBang,
-            5 => CombatFaction.WuDu,
-            6 => CombatFaction.TianRen,
-            7 => CombatFaction.EMei,
-            8 => CombatFaction.CuiYan,
-            9 => CombatFaction.WuDang,
-            10 => CombatFaction.KunLun,
-            _ => CombatFaction.None,
-        };
+            int factionId = CombatFactionExt.FactionFromLuaScript(levelSetScript);
+            if (factionId != CombatFactionExt.NoneId)
+                return (CombatFaction)factionId;
+
+            return charClass switch
+            {
+                1 => CombatFaction.Shaolin,
+                2 => CombatFaction.EMei,
+                3 => CombatFaction.TangMen,
+                4 => CombatFaction.CaiBang,
+                5 => CombatFaction.WuDang,
+                _ => CombatFaction.None,
+            };
+        }
 
         private static PcSkillStyle ToSkillStyle(int style) => style switch
         {
