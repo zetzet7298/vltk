@@ -178,6 +178,30 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void SkillEffectVisual_SingleMissileDoesNotImpactBeforeArrival()
+        {
+            var service = new SkillEffectVisualService(null);
+            var skill = new SkillDefinition
+            {
+                skillId = 117,
+                nameNormalized = "Ném Đá Hỏi Đường",
+                attackRadius = 280,
+                missileForm = SkillMissileForm.Single,
+                timePerCast = 2,
+            };
+
+            var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
+
+            service.Update(1f);
+            Assert.AreEqual(SkillEffectPhase.Missile, fx.phase);
+
+            service.Update(0.05f);
+            Assert.AreEqual(SkillEffectPhase.Missile, fx.phase, "Single missiles should remain in-flight until their position reaches the target");
+            Assert.Less(Vector2.Distance(fx.currentMissilePos, fx.targetPos), 100f);
+            Assert.Greater(Vector2.Distance(fx.currentMissilePos, fx.targetPos), fx.arrivalRadius);
+        }
+
+        [Test]
         public void SkillEffectVisual_MissileAdvancesToImpact()
         {
             var service = new SkillEffectVisualService(null);

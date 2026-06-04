@@ -191,21 +191,21 @@ namespace VLTK.Sandbox
                     case SkillEffectPhase.Missile:
                         UpdateMultiMissile(fx, dt);
 
-                        bool allArrived = fx.missilePositions == null || fx.missilePositions.Length == 0;
-                        if (!allArrived)
+                        bool allArrived;
+                        if (fx.missilePositions != null && fx.missilePositions.Length > 0)
                         {
                             allArrived = true;
                             for (int mi = 0; mi < fx.missilePositions.Length; mi++)
                             {
-                                Vector2 targetPos = mi < fx.missileTargets.Length ? fx.missileTargets[mi] : fx.targetPos;
+                                Vector2 targetPos = ResolveMissileTarget(fx, mi);
                                 if (Vector2.Distance(fx.missilePositions[mi], targetPos) > fx.arrivalRadius)
                                     allArrived = false;
                             }
                         }
                         else
                         {
-                            // Single missile: use casterPos→targetPos
-                            allArrived = Vector2.Distance(fx.currentMissilePos, fx.targetPos) <= fx.arrivalRadius;
+                            // Single missile: keep flying until it actually reaches the target.
+                            allArrived = Vector2.Distance(fx.currentMissilePos, ResolveMissileTarget(fx, -1)) <= fx.arrivalRadius;
                         }
 
                         bool timeout = (fx.elapsed - fx.phaseStart) >= fx.missileDuration * 1.5f;
@@ -218,7 +218,7 @@ namespace VLTK.Sandbox
                         for (int si = 0; si < (fx.missileArrived?.Length ?? 0); si++)
                         {
                             if (fx.missileArrived[si]) continue;
-                            Vector2 targetPos = si < fx.missileTargets.Length ? fx.missileTargets[si] : fx.targetPos;
+                            Vector2 targetPos = ResolveMissileTarget(fx, si);
                             Vector2 mp = si < fx.missilePositions.Length ? fx.missilePositions[si] : fx.currentMissilePos;
                             if (Vector2.Distance(mp, targetPos) <= fx.rendRadius)
                             {
@@ -256,35 +256,50 @@ namespace VLTK.Sandbox
                 float dist = dir.magnitude;
                 if (dist > fx.arrivalRadius)
                 {
-                    dir /= dist;
-                    fx.currentMissilePos += dir * fx.missileSpeed * dt;
+                    float step = fx.missileSpeed * dt;
+                    fx.currentMissilePos = step >= dist ? liveTarget : fx.currentMissilePos + (dir / dist) * step;
                 }
                 else
                 {
-                    fx.currentMissilePos = liveTarget;
+                    fx.currentMissilePos = ResolveMissileTarget(fx, -1);
                 }
                 return;
             }
 
-            // Get the live target position (PC missiles track the enemy NPC each tick).
-            Vector2 currentTarget = fx.getCurrentTargetPos != null ? fx.getCurrentTargetPos() : fx.targetPos;
-
             for (int i = 0; i < fx.missilePositions.Length; i++)
             {
                 Vector2 pos = fx.missilePositions[i];
-                Vector2 dir = currentTarget - pos;
+                Vector2 target = ResolveMissileTarget(fx, i);
+                Vector2 dir = target - pos;
                 float dist = dir.magnitude;
 
                 if (dist <= fx.arrivalRadius)
                 {
-                    fx.missilePositions[i] = currentTarget;
+                    fx.missilePositions[i] = target;
                 }
                 else
                 {
-                    dir /= dist;
-                    fx.missilePositions[i] = pos + dir * fx.missileSpeed * dt;
+                    float step = fx.missileSpeed * dt;
+                    fx.missilePositions[i] = step >= dist ? target : pos + (dir / dist) * step;
                 }
             }
+        }
+
+        private static Vector2 ResolveMissileTarget(ActiveSkillEffect fx, int index)
+        {
+            bool hasLiveTarget = fx.getCurrentTargetPos != null;
+            Vector2 target = hasLiveTarget ? fx.getCurrentTargetPos() : fx.targetPos;
+
+            if (index >= 0)
+            {
+                if (hasLiveTarget && fx.missileTargetOffsets != null && index < fx.missileTargetOffsets.Length)
+                    return target + fx.missileTargetOffsets[index];
+
+                if (!hasLiveTarget && fx.missileTargets != null && index < fx.missileTargets.Length)
+                    return fx.missileTargets[index];
+            }
+
+            return target;
         }
 
         private void TriggerSauXe(ActiveSkillEffect fx, Vector2 position)
@@ -814,6 +829,7 @@ namespace VLTK.Sandbox
             fx.missilePositions = new Vector2[count];
             fx.missileOrigins = new Vector2[count];
             fx.missileTargets = new Vector2[count];
+            fx.missileTargetOffsets = new Vector2[count];
             fx.missileArrived = new bool[count];
 
             Vector2 baseDir = fx.targetPos - fx.casterPos;
@@ -833,6 +849,7 @@ namespace VLTK.Sandbox
                 Vector2 perp = perpDir * offset;
                 fx.missileOrigins[i] = fx.casterPos + perp;
                 fx.missilePositions[i] = fx.casterPos + perp;
+                fx.missileTargetOffsets[i] = perp;
                 fx.missileTargets[i] = fx.casterPos + baseDir * distance + perp;
             }
         }
@@ -1077,6 +1094,7 @@ namespace VLTK.Sandbox
         public Vector2[] missilePositions;
         public Vector2[] missileOrigins;
         public Vector2[] missileTargets;
+        public Vector2[] missileTargetOffsets;
         public bool[] missileArrived;
         public float arrivalRadius = 1f;
         public float rendRadius = 4f;

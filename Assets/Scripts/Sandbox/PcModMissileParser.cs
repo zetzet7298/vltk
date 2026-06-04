@@ -128,7 +128,17 @@ namespace VLTK.Sandbox
             if (File.Exists(modFile))
             {
                 var list = PcModMissileParser.ToMissileEntries(PcModMissileParser.ParseFile(modFile));
-                foreach (var m in list) _missiles[m.missileId] = m;
+                foreach (var m in list)
+                {
+                    if (_missiles.TryGetValue(m.missileId, out var existing))
+                    {
+                        if (string.IsNullOrEmpty(existing.sprFile) && !string.IsNullOrEmpty(m.sprFile))
+                            existing.sprFile = m.sprFile;
+                        continue;
+                    }
+
+                    _missiles[m.missileId] = m;
+                }
             }
 
             _initialized = true;

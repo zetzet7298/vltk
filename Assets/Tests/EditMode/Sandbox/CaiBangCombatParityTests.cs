@@ -405,6 +405,31 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_357_HomingSpreadKeepsPerMissileOffsetsForLiveTarget()
+        {
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var liveTarget = new Vector2(200, 0);
+            var fx = visual.PlaySkillCast(cat.Resolve(357), Vector2.zero, new Vector2(100, 0), 20, () => liveTarget);
+
+            Assert.IsNotNull(fx);
+            Assert.AreEqual(4, fx.missileCount, "Phi Long level 20 should spawn 4 parallel homing missiles");
+            Assert.IsNotNull(fx.missileTargetOffsets, "Parallel homing missiles need stable per-missile target offsets");
+
+            fx.phase = SkillEffectPhase.Missile;
+            fx.phaseStart = fx.elapsed;
+            var originalY = fx.missilePositions.Select(p => p.y).ToArray();
+
+            visual.Update(0.01f);
+
+            for (int i = 0; i < fx.missilePositions.Length; i++)
+            {
+                Assert.AreEqual(originalY[i], fx.missilePositions[i].y, 0.001f, $"Missile {i} should chase live target plus its own offset, not collapse into center target");
+                Assert.Greater(fx.missilePositions[i].x, 0f, $"Missile {i} should advance toward the live target");
+            }
+        }
+
+        [Test]
         public void CaiBang_1074_MslCountInterpolatesLinearly_FromL1ToL20()
         {
             // PC gaibang.lua::gungaibang150 (1074) skill_misslenum_v={{1,1},{20,5}}.

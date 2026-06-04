@@ -1,5 +1,6 @@
 using System.IO;
 using NUnit.Framework;
+using VLTK.Core;
 using VLTK.Model;
 using VLTK.Sandbox;
 
@@ -75,6 +76,32 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, e.flyEventId);
             Assert.AreEqual(2, e.collideEventId);
             Assert.AreEqual(3, e.vanishEventId);
+        }
+
+        [Test]
+        public void MergeMissilesWithoutOverwriting_PreservesBaseRowsAndAddsNewIds()
+        {
+            var baseRows = new System.Collections.Generic.List<PcMissileEntry>
+            {
+                new PcMissileEntry { missileId = 1, nameRaw = "Tứ Tượng Đồng Quy", sprFile = "\\spr\\pc.spr", speed = 12 },
+                new PcMissileEntry { missileId = 2, nameRaw = "Thiếu Sprite", sprFile = string.Empty, speed = 20 },
+            };
+            var fallbackRows = new System.Collections.Generic.List<PcMissileEntry>
+            {
+                new PcMissileEntry { missileId = 1, nameRaw = "Mojibake", sprFile = "\\spr\\mod-overwrite.spr", speed = 99 },
+                new PcMissileEntry { missileId = 2, nameRaw = "Fallback Sprite", sprFile = "\\spr\\mod-fill.spr", speed = 21 },
+                new PcMissileEntry { missileId = 500, nameRaw = "Missile mới", sprFile = "\\spr\\mod-new.spr", speed = 30 },
+            };
+
+            int added = PcConfigParser.MergeMissilesWithoutOverwriting(baseRows, fallbackRows);
+
+            Assert.AreEqual(1, added, "Only truly new missile ids should be appended");
+            Assert.AreEqual(3, baseRows.Count);
+            Assert.AreEqual("Tứ Tượng Đồng Quy", baseRows[0].nameRaw, "Fallback must not overwrite localized base row names");
+            Assert.AreEqual("\\spr\\pc.spr", baseRows[0].sprFile, "Fallback must not overwrite non-empty PC sprite paths");
+            Assert.AreEqual(12, baseRows[0].speed, "Fallback must not overwrite PC gameplay values");
+            Assert.AreEqual("\\spr\\mod-fill.spr", baseRows[1].sprFile, "Fallback may fill missing sprite paths");
+            Assert.AreEqual(500, baseRows[2].missileId);
         }
 
         [Test]

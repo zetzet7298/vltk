@@ -118,13 +118,14 @@ namespace VLTK.Core
                 SubsystemLog.Warn("PcConfig", $"PcMissles.txt not found at {missileFile}");
             }
 
-            // ModMissles.txt
+            // ModMissles.txt is a fallback/expansion source. Do not let it overwrite
+            // already-localized PC missile rows that share the same ids.
             string modMissileFile = Path.Combine(refPath, "ModMissles.txt");
             if (File.Exists(modMissileFile))
             {
                 var modMissiles = ParseMissiles(modMissileFile);
-                manifest.missiles.AddRange(modMissiles);
-                SubsystemLog.Info("PcConfig", $"Parsed {modMissiles.Count} mod missiles from ModMissles.txt");
+                int added = MergeMissilesWithoutOverwriting(manifest.missiles, modMissiles);
+                SubsystemLog.Info("PcConfig", $"Parsed {modMissiles.Count} mod missiles from ModMissles.txt ({added} new ids merged)");
             }
             else
             {
@@ -133,6 +134,43 @@ namespace VLTK.Core
 
             manifest.BuildLookups();
             return manifest;
+        }
+
+        /// <summary>
+        /// Merge fallback missile rows without replacing already parsed PC rows.
+        /// Existing rows keep their localized name/path data; fallback rows only fill an
+        /// empty sprite path or add truly new ids.
+        /// </summary>
+        public static int MergeMissilesWithoutOverwriting(List<PcMissileEntry> target, IEnumerable<PcMissileEntry> fallback)
+        {
+            if (target == null || fallback == null) return 0;
+
+            var byId = new Dictionary<int, PcMissileEntry>();
+            foreach (var missile in target)
+            {
+                if (missile != null) byId[missile.missileId] = missile;
+            }
+
+            int added = 0;
+            foreach (var missile in fallback)
+            {
+                if (missile == null) continue;
+
+                if (byId.TryGetValue(missile.missileId, out var existing))
+                {
+                    if (string.IsNullOrEmpty(existing.sprFile) && !string.IsNullOrEmpty(missile.sprFile))
+                    {
+                        existing.sprFile = missile.sprFile;
+                    }
+                    continue;
+                }
+
+                target.Add(missile);
+                byId[missile.missileId] = missile;
+                added++;
+            }
+
+            return added;
         }
 
         // ── PcSkills.txt parser ──────────────────────────────────────────────
