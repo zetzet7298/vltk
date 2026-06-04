@@ -114,7 +114,7 @@ namespace VLTK.Tests.PlayMode
         [UnityTest]
         public IEnumerator StationTravel_PayGold_TeleportToDestination()
         {
-            var travel = new StationTravelService();
+            var travel = new StationTravelService(new PlayerLevelService(initialLevel: 10));
             int silver = 1000;
             int mapId = 79;
             Vector2 pos = Vector2.zero;

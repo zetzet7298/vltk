@@ -83,6 +83,15 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ResolveAction_AttackCharAnimIds_ReturnAttack()
+        {
+            Assert.AreEqual(PlayerVisualAction.Attack,
+                MalePlayerSpriteCatalog.ResolveAction(7, PcWeaponType.LongWeapon));
+            Assert.AreEqual(PlayerVisualAction.Attack,
+                MalePlayerSpriteCatalog.ResolveAction(8, PcWeaponType.EmptyHand));
+        }
+
+        [Test]
         public void DirectionFromMove_MapsEightWayJoystickDirections()
         {
             Assert.AreEqual(6, MalePlayerSpriteCatalog.DirectionFromMove(Vector2.right));
@@ -160,6 +169,35 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void Visual_LoadsStaffAttackParts_FromStagedSprFiles()
+        {
+            _go = new GameObject("MaleStaffAttackTest");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.LongWeapon);
+            visual.SetAction(PlayerVisualAction.Attack);
+
+            Assert.AreEqual(PlayerVisualAction.Attack, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(7, visual.LoadedPartCount, "Staff attack AT05 has no left weapon SPR — 7 of 8 parts load.");
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
+        }
+
+        [Test]
+        public void Visual_EmptyHandAttack_ReportsMissingRequiredParts_WhenNotStaged()
+        {
+            _go = new GameObject("MaleEmptyHandAttackMissingTest");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetAction(PlayerVisualAction.Attack);
+
+            Assert.AreEqual(PlayerVisualAction.Attack, visual.currentAction);
+            Assert.IsFalse(visual.HasAllRequiredParts);
+            Assert.Greater(visual.MissingRequiredPartCount, 0);
+            Assert.IsTrue(visual.LastMissingRequiredParts.Any(p => p.Contains("AT01")));
+        }
+
+        [Test]
         public void Controller_EquipStaff_SwitchesWeaponType()
         {
             _go = new GameObject("PlayerWeaponTest");
@@ -191,7 +229,25 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
         }
 
-public void Controller_JoystickInput_MovesTransformAndSwitchesAnimation()
+        [Test]
+        public void Controller_StaffAttackSkillAction_LocksAttackAnimation()
+        {
+            _go = new GameObject("PlayerStaffAttackTest");
+            var controller = _go.AddComponent<SandboxPlayerController>();
+            controller.followCameraEnabled = false;
+            controller.allowKeyboardFallback = false;
+            controller.EquipWeapon(PcWeaponType.LongWeapon);
+
+            controller.SetMoveInput(Vector2.right);
+            controller.PlayPcSkillAction(8, 0.5f);
+            controller.SimulateMove(0.1f);
+
+            Assert.AreEqual(PlayerVisualAction.Attack, controller.visual.currentAction);
+            Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
+        }
+
+        [Test]
+        public void Controller_JoystickInput_MovesTransformAndSwitchesAnimation()
         {
             _go = new GameObject("PlayerControllerTest");
             var controller = _go.AddComponent<SandboxPlayerController>();

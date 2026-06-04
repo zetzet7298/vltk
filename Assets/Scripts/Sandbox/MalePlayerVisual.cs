@@ -44,11 +44,14 @@ namespace VLTK.Sandbox
         private readonly Dictionary<PlayerSpritePartKind, PartRuntime> _parts = new();
         private PlayerVisualAction _loadedAction = (PlayerVisualAction)(-1);
         private PcWeaponType _loadedWeapon = (PcWeaponType)(-1);
+        private readonly List<string> _lastMissingRequiredParts = new();
         private float _time;
 
         public int LoadedPartCount { get; private set; }
         public int CurrentFrameInDirection { get; private set; }
         public bool HasAllRequiredParts { get; private set; }
+        public int MissingRequiredPartCount => LastMissingRequiredParts.Count;
+        public IReadOnlyList<string> LastMissingRequiredParts => _lastMissingRequiredParts;
         public Vector2 LastMoveInput { get; private set; }
 
         private sealed class PartRuntime
@@ -181,6 +184,7 @@ namespace VLTK.Sandbox
 
             LoadedPartCount = 0;
             HasAllRequiredParts = true;
+            _lastMissingRequiredParts.Clear();
             var specs = MalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
             foreach (var spec in specs)
             {
@@ -193,7 +197,10 @@ namespace VLTK.Sandbox
                 if (ok)
                     LoadedPartCount++;
                 else if (spec.required)
+                {
                     HasAllRequiredParts = false;
+                    _lastMissingRequiredParts.Add(spec.sourcePath);
+                }
             }
 
             // Destroy orphan children that are no longer tracked.
