@@ -9,9 +9,9 @@ using UnityEngine;
 namespace VLTK.Sandbox
 {
     /// <summary>
-    /// Runtime player driver for the sandbox/mobile client. Joystick input is applied
-    /// as continuous world movement and forwarded to <see cref="MalePlayerVisual"/>
-    /// so the correct 8-way run animation plays while moving.
+    /// Runtime player driver cho sandbox/mobile client. Joystick input applied
+    /// as continuous world movement và forwarded đến <see cref="IPlayerVisual"/>
+    /// (MalePlayerVisual hoặc FemalePlayerVisual) để chạy đúng 8-way animation.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class SandboxPlayerController : MonoBehaviour
@@ -20,8 +20,12 @@ namespace VLTK.Sandbox
         public float moveSpeed = 900f; // TEMP: 5x normal (180) for movement testing
         public bool allowKeyboardFallback = true;
 
+        [Header("Player Gender")]
+        [Tooltip("True = female (FM_*), false = male (MA_*). Set trước Awake.")]
+        public bool isFemale;
+
         [Header("Wiring")]
-        public MalePlayerVisual visual;
+        public IPlayerVisual visual;
         public MobileJoystick joystick;
         public HorseVisual horse;
 
@@ -152,7 +156,7 @@ namespace VLTK.Sandbox
         /// </summary>
         public void PlayPcSkillAction(int charAnimId, float durationSeconds)
         {
-            var action = MalePlayerSpriteCatalog.ResolveAction(charAnimId, _equippedWeapon);
+            var action = ResolveAction(charAnimId, _equippedWeapon);
             if (action == null)
                 return;
 
@@ -271,17 +275,57 @@ namespace VLTK.Sandbox
             if (visual != null)
                 return;
 
-            visual = GetComponentInChildren<MalePlayerVisual>(true);
+            // Try find existing visual in children
+            var maleV = GetComponentInChildren<MalePlayerVisual>(true);
+            var femaleV = GetComponentInChildren<FemalePlayerVisual>(true);
+
+            if (isFemale && femaleV != null)
+                visual = femaleV;
+            else if (!isFemale && maleV != null)
+                visual = maleV;
+            else if (maleV != null)
+                visual = maleV;
+            else if (femaleV != null)
+                visual = femaleV;
+
             if (visual != null)
             {
                 visual.playAutomatically = false;
                 return;
             }
 
-            var visualGo = new GameObject("MalePlayerVisual");
-            visualGo.transform.SetParent(transform, false);
-            visual = visualGo.AddComponent<MalePlayerVisual>();
-            visual.playAutomatically = false;
+            // Create new visual based on gender
+            if (isFemale)
+            {
+                var go = new GameObject("FemalePlayerVisual");
+                go.transform.SetParent(transform, false);
+                var fv = go.AddComponent<FemalePlayerVisual>();
+                fv.playAutomatically = false;
+                visual = fv;
+            }
+            else
+            {
+                var go = new GameObject("MalePlayerVisual");
+                go.transform.SetParent(transform, false);
+                var mv = go.AddComponent<MalePlayerVisual>();
+                mv.playAutomatically = false;
+                visual = mv;
+            }
+        }
+
+        /// <summary>
+        /// Resolve CharAnimId → PlayerVisualAction. Works cho cả male và female
+        /// vì cả hai dùng chung action mapping từ PC source.
+        /// </summary>
+        public static PlayerVisualAction? ResolveAction(int charAnimId, PcWeaponType weapon)
+        {
+            return charAnimId switch
+            {
+                7 or 8 => PlayerVisualAction.Attack,
+                9 or 10 or 11 => PlayerVisualAction.Magic,
+                14 => null,
+                _ => null,
+            };
         }
 
         private void EnsureHorse()

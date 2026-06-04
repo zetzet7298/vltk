@@ -244,5 +244,42 @@ namespace VLTK.Tests.Sandbox
             // Each active damage skill uses a distinct PC missile SPR.
             Assert.AreEqual(activeSkills.Length, spriteKeys.Count, "Each active skill should have a unique PC missile sprite");
         }
+        [Test]
+        public void VisualService_PlayHitFlash_CreatesImpactOnlyEffectAndExpires()
+        {
+            var service = new SkillEffectVisualService(null);
+            var fx = service.PlayHitFlash(new Vector2(10, 20), Color.red, 0.2f);
+
+            Assert.IsNotNull(fx);
+            Assert.IsTrue(fx.isHitFlash);
+            Assert.AreEqual(SkillEffectPhase.Impact, fx.phase);
+            Assert.AreEqual(new Vector2(10, 20), fx.targetPos);
+            Assert.AreEqual(1, service.ActiveEffectCount);
+
+            service.Update(0.25f);
+            Assert.AreEqual(0, service.ActiveEffectCount);
+        }
+
+        [Test]
+        public void VisualService_PlayBuffAura_CreatesAuraAndExpiresWithoutImpact()
+        {
+            var service = new SkillEffectVisualService(null);
+            var fx = service.PlayBuffAura(new Vector2(5, 6), Color.cyan, 0.3f, 72f, "Hộ Thể");
+
+            Assert.IsNotNull(fx);
+            Assert.IsTrue(fx.isAura);
+            Assert.AreEqual("Hộ Thể", fx.skillName);
+            Assert.AreEqual(SkillEffectPhase.PreCast, fx.phase);
+            Assert.AreEqual(72f, fx.auraRadius);
+            Assert.AreEqual(1, service.ActiveEffectCount);
+
+            service.Update(0.15f);
+            Assert.AreEqual(1, service.ActiveEffectCount);
+            Assert.AreEqual(SkillEffectPhase.PreCast, fx.phase);
+
+            service.Update(0.2f);
+            Assert.AreEqual(0, service.ActiveEffectCount);
+        }
+
     }
 }

@@ -22,19 +22,18 @@ namespace VLTK.Sandbox
     /// npcres/woman không có file cho các phần đó.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class FemalePlayerVisual : MonoBehaviour
+    public sealed class FemalePlayerVisual : MonoBehaviour, IPlayerVisual
     {
         [Header("Playback")]
-        public PlayerVisualAction currentAction = PlayerVisualAction.Idle;
-        public PcWeaponType currentWeapon = PcWeaponType.EmptyHand;
-        public bool isMounted;
-        [Range(0, FemalePlayerSpriteCatalog.DirectionCount - 1)]
-        public int direction;
+        public PlayerVisualAction currentAction { get; set; } = PlayerVisualAction.Idle;
+        public PcWeaponType currentWeapon { get; set; } = PcWeaponType.EmptyHand;
+        public bool isMounted { get; set; }
+        public int direction { get; set; }
         public float idleFrameRate = 6f;
         public float moveFrameRate = 12f;
         public float magicFrameRate = 14.4f;
         public float attackFrameRate = 14.4f;
-        public bool playAutomatically = true;
+        public bool playAutomatically { get; set; } = true;
 
         [Header("SPR Placement")]
         public Vector2 referencePixel = new Vector2(160f, 200f);

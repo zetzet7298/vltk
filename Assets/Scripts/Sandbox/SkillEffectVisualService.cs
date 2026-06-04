@@ -29,6 +29,57 @@ namespace VLTK.Sandbox
         public int ActiveEffectCount => _activeEffects.Count;
 
         /// <summary>
+        /// Spawn immediate target hit flash. Used by melee hits, missile impacts,
+        /// and combat feedback when no PC impact SPR exists yet.
+        /// </summary>
+        public ActiveSkillEffect PlayHitFlash(Vector2 targetPos, Color color, float durationSeconds = 0.35f)
+        {
+            var effect = new ActiveSkillEffect
+            {
+                skillId = -1,
+                skillName = "HitFlash",
+                targetPos = targetPos,
+                casterPos = targetPos,
+                startTime = Time.time,
+                elapsed = 0f,
+                phase = SkillEffectPhase.Impact,
+                phaseStart = 0f,
+                impactDuration = Mathf.Max(0.05f, durationSeconds),
+                color = color,
+                isHitFlash = true,
+            };
+            _activeEffects.Add(effect);
+            return effect;
+        }
+
+        /// <summary>
+        /// Spawn buff/aura pulse at world position. Intended for passive buffs,
+        /// stance skills, and temporary self effects. No fake art: clean fallback ring.
+        /// </summary>
+        public ActiveSkillEffect PlayBuffAura(Vector2 centerPos, Color color, float durationSeconds = 1.2f, float radius = 48f, string label = "BuffAura")
+        {
+            var effect = new ActiveSkillEffect
+            {
+                skillId = -2,
+                skillName = label,
+                casterPos = centerPos,
+                targetPos = centerPos,
+                startTime = Time.time,
+                elapsed = 0f,
+                phase = SkillEffectPhase.PreCast,
+                phaseStart = 0f,
+                preCastDuration = Mathf.Max(0.05f, durationSeconds),
+                impactDuration = 0f,
+                color = color,
+                isAura = true,
+                auraDuration = Mathf.Max(0.05f, durationSeconds),
+                auraRadius = Mathf.Max(1f, radius),
+            };
+            _activeEffects.Add(effect);
+            return effect;
+        }
+
+        /// <summary>
         /// Play the full visual sequence for a skill cast:
         /// 1) PreCast effect on caster (SPR animation)
         /// 2) Missile/projectile from caster to target
@@ -108,6 +159,17 @@ namespace VLTK.Sandbox
             {
                 var fx = _activeEffects[i];
                 fx.elapsed += dt;
+
+                if (fx.isAura)
+                {
+                    if (fx.elapsed >= fx.auraDuration)
+                        fx.phase = SkillEffectPhase.Finished;
+                    if (fx.phase == SkillEffectPhase.Finished)
+                    {
+                        _activeEffects.RemoveAt(i);
+                    }
+                    continue;
+                }
 
                 switch (fx.phase)
                 {
@@ -714,6 +776,10 @@ namespace VLTK.Sandbox
         public Color color = Color.white;
         public bool trailEnabled;
         public bool isAura;
+        public bool isHitFlash;
+        public float auraDuration = 1.2f;
+        public float auraRadius = 48f;
+        public float auraPulseRate = 4f;
 
         // PC missile SPR metadata from Missles.txt. Used for exact JXWin sprite playback.
         public string pcMissileSpriteKey;

@@ -171,6 +171,120 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(5, visual.LoadedPartCount);
         }
 
+        // ── Weapon type tests ──────────────────────────────────────────────
+
+        [Test]
+        public void Catalog_ShortWeaponIdle_UsesST04Suffix()
+        {
+            var parts = FemalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Idle, PcWeaponType.ShortWeapon).ToList();
+            Assert.IsTrue(parts.Where(p => p.required).All(p => p.sourcePath.Contains("ST04")),
+                "Female short-weapon idle uses ST04.");
+        }
+
+        [Test]
+        public void Catalog_ShortWeaponAttack_UsesAT03Suffix()
+        {
+            var parts = FemalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Attack, PcWeaponType.ShortWeapon).ToList();
+            Assert.IsTrue(parts.Where(p => p.required).All(p => p.sourcePath.Contains("AT03")),
+                "Female short-weapon attack uses AT03.");
+        }
+
+        [Test]
+        public void Catalog_LongWeaponMove_UsesRN03Suffix()
+        {
+            var parts = FemalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Move, PcWeaponType.LongWeapon).ToList();
+            Assert.IsTrue(parts.Where(p => p.required).All(p => p.sourcePath.Contains("RN03")),
+                "Female long-weapon move uses RN03.");
+        }
+
+        [Test]
+        public void Catalog_LongWeaponMagic_UsesMG04Suffix()
+        {
+            var parts = FemalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Magic, PcWeaponType.LongWeapon).ToList();
+            Assert.IsTrue(parts.Where(p => p.required).All(p => p.sourcePath.Contains("MG04")),
+                "Female long-weapon magic uses MG04.");
+        }
+
+        [Test]
+        public void Catalog_DualWeaponAttack_UsesAT07Suffix()
+        {
+            var parts = FemalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Attack, PcWeaponType.DualWeapon).ToList();
+            Assert.IsTrue(parts.Where(p => p.required).All(p => p.sourcePath.Contains("AT07")),
+                "Female dual-weapon attack uses AT07.");
+        }
+
+        [TestCase(PlayerVisualAction.Idle)]
+        [TestCase(PlayerVisualAction.Move)]
+        [TestCase(PlayerVisualAction.Magic)]
+        [TestCase(PlayerVisualAction.Attack)]
+        public void Visual_LoadsShortWeaponParts_FromStagedSprFiles(PlayerVisualAction action)
+        {
+            _go = new GameObject($"FemaleShortWeapon{action}Test");
+            var visual = _go.AddComponent<FemalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.ShortWeapon);
+            visual.SetAction(action);
+            Assert.AreEqual(PcWeaponType.ShortWeapon, visual.currentWeapon);
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                $"All required female ShortWeapon {action} SPR layers must load. Missing: {string.Join(", ", visual.LastMissingRequiredParts)}");
+            Assert.AreEqual(5, visual.LoadedPartCount);
+        }
+
+        [TestCase(PlayerVisualAction.Idle)]
+        [TestCase(PlayerVisualAction.Move)]
+        [TestCase(PlayerVisualAction.Magic)]
+        [TestCase(PlayerVisualAction.Attack)]
+        public void Visual_LoadsLongWeaponParts_FromStagedSprFiles(PlayerVisualAction action)
+        {
+            _go = new GameObject($"FemaleLongWeapon{action}Test");
+            var visual = _go.AddComponent<FemalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.LongWeapon);
+            visual.SetAction(action);
+            Assert.AreEqual(PcWeaponType.LongWeapon, visual.currentWeapon);
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                $"All required female LongWeapon {action} SPR layers must load. Missing: {string.Join(", ", visual.LastMissingRequiredParts)}");
+            Assert.AreEqual(5, visual.LoadedPartCount);
+        }
+
+        [TestCase(PlayerVisualAction.Idle)]
+        [TestCase(PlayerVisualAction.Move)]
+        [TestCase(PlayerVisualAction.Magic)]
+        [TestCase(PlayerVisualAction.Attack)]
+        public void Visual_LoadsDualWeaponParts_FromStagedSprFiles(PlayerVisualAction action)
+        {
+            _go = new GameObject($"FemaleDualWeapon{action}Test");
+            var visual = _go.AddComponent<FemalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.DualWeapon);
+            visual.SetAction(action);
+            Assert.AreEqual(PcWeaponType.DualWeapon, visual.currentWeapon);
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                $"All required female DualWeapon {action} SPR layers must load. Missing: {string.Join(", ", visual.LastMissingRequiredParts)}");
+            Assert.AreEqual(5, visual.LoadedPartCount);
+        }
+
+        [Test]
+        public void Visual_WeaponSwitch_ReloadsAllParts()
+        {
+            _go = new GameObject("FemaleWeaponSwitchTest");
+            var visual = _go.AddComponent<FemalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.EmptyHand);
+            visual.SetAction(PlayerVisualAction.Idle);
+            Assert.IsTrue(visual.HasAllRequiredParts);
+            visual.SetWeapon(PcWeaponType.LongWeapon);
+            Assert.AreEqual(PcWeaponType.LongWeapon, visual.currentWeapon);
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                $"LongWeapon parts must load. Missing: {string.Join(", ", visual.LastMissingRequiredParts)}");
+            visual.SetWeapon(PcWeaponType.ShortWeapon);
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                $"ShortWeapon parts must load. Missing: {string.Join(", ", visual.LastMissingRequiredParts)}");
+            visual.SetWeapon(PcWeaponType.DualWeapon);
+            Assert.IsTrue(visual.HasAllRequiredParts,
+                $"DualWeapon parts must load. Missing: {string.Join(", ", visual.LastMissingRequiredParts)}");
+        }
+
         [Test]
         public void SortingOffset_ShadowAndHead_DifferByDirection()
         {

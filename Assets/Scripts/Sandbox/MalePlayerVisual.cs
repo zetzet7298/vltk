@@ -19,19 +19,18 @@ namespace VLTK.Sandbox
     /// JX client: shadow, body, head, hair, hands, and empty-hand weapon layers.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class MalePlayerVisual : MonoBehaviour
+    public sealed class MalePlayerVisual : MonoBehaviour, IPlayerVisual
     {
         [Header("Playback")]
-        public PlayerVisualAction currentAction = PlayerVisualAction.Idle;
-        public PcWeaponType currentWeapon = PcWeaponType.EmptyHand;
-        public bool isMounted;
-        [Range(0, MalePlayerSpriteCatalog.DirectionCount - 1)]
-        public int direction;
+        public PlayerVisualAction currentAction { get; set; } = PlayerVisualAction.Idle;
+        public PcWeaponType currentWeapon { get; set; } = PcWeaponType.EmptyHand;
+        public bool isMounted { get; set; }
+        public int direction { get; set; }
         public float idleFrameRate = 6f;
         public float moveFrameRate = 12f;
         public float magicFrameRate = 14.4f; // PC cdo_magic: ~16 frames/dir over 20 ticks at 18 ticks/sec.
         public float attackFrameRate = 14.4f;
-        public bool playAutomatically = true;
+        public bool playAutomatically { get; set; } = true;
 
         [Header("SPR Placement")]
         [Tooltip("SPR canvas reference point that should sit on the player's feet/world position.")]

@@ -221,6 +221,23 @@ namespace VLTK.UI
             {
                 case SkillEffectPhase.PreCast:
                 {
+                    if (fx.isAura)
+                    {
+                        float dur = Mathf.Max(0.05f, fx.auraDuration);
+                        float t = Mathf.Clamp01(fx.elapsed / dur);
+                        float pulse = 0.5f + 0.5f * Mathf.Sin(fx.elapsed * fx.auraPulseRate * Mathf.PI * 2f);
+                        var c = fx.color;
+                        c.a = Mathf.Lerp(0.85f, 0.15f, t) * Mathf.Lerp(0.55f, 1f, pulse);
+                        float r = Mathf.Max(1f, fx.auraRadius) * Mathf.Lerp(0.85f, 1.15f, pulse);
+                        DrawRing(v.preCastRing, fx.casterPos, r, c, lineW * 1.25f);
+                        Hide(v.impactRing);
+                        Hide(v.trail);
+                        SetMissileVisible(v, false);
+                        SetImpactVisible(v, false);
+                        SetPreCastVisible(v, false);
+                        break;
+                    }
+
                     if (fx.HasPcPreCastSprite)
                     {
                         Hide(v.preCastRing);
@@ -329,8 +346,9 @@ namespace VLTK.UI
                     float r = Mathf.Lerp(preCastRMin, impactRMax, t);
                     DrawRing(v.impactRing, fx.targetPos, r, c, lineW * (1f + t));
 
-                    // Inner white flash
-                    if (t < 0.3f && v.impactFlash == null)
+                    // Inner white flash / target hit feedback
+                    float flashWindow = fx.isHitFlash ? 1f : 0.3f;
+                    if (t < flashWindow && v.impactFlash == null)
                     {
                         var flashGo = new GameObject("Flash");
                         flashGo.transform.SetParent(v.root.transform, false);
@@ -343,11 +361,12 @@ namespace VLTK.UI
                     }
                     if (v.impactFlash != null)
                     {
-                        float flashT = t / 0.3f;
-                        float flashSize = _scale * 0.06f * (1f + flashT * 2f);
+                        float flashT = Mathf.Clamp01(t / flashWindow);
+                        float baseSize = fx.isHitFlash ? 0.09f : 0.06f;
+                        float flashSize = _scale * baseSize * (1f + flashT * (fx.isHitFlash ? 3f : 2f));
                         v.impactFlash.transform.localScale = Vector3.one * flashSize;
-                        var fc = v.impactFlash.color;
-                        fc.a = t < 0.3f ? Mathf.Lerp(0.9f, 0f, flashT) : 0f;
+                        var fc = fx.isHitFlash ? fx.color : v.impactFlash.color;
+                        fc.a = t < flashWindow ? Mathf.Lerp(0.95f, 0f, flashT) : 0f;
                         v.impactFlash.color = fc;
                     }
                     break;

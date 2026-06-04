@@ -285,7 +285,7 @@ namespace VLTK.Sandbox
             int horseId = PlayerProgression?.horseId ?? 0;
             if (horseId > 0) PlayerController.SetHorseId(horseId);
 
-            PlayerVisual = PlayerController.visual;
+            PlayerVisual = PlayerController.visual as MalePlayerVisual;
             PlayerJoystick = EnsureMobileJoystick();
             PlayerController.BindJoystick(PlayerJoystick);
 
@@ -426,15 +426,11 @@ namespace VLTK.Sandbox
             joystick.inputRadius = 55f;
             joystick.deadZone = 0.08f;
             joystick.sensitivity = 1.35f;
-            EnsureMountToggleButton(canvasGo.transform);
+            EnsureMountToggleButton(canvasGo.GetComponent<RectTransform>());
             return joystick;
         }
 
         private void EnsureMountToggleButton(RectTransform canvasTransform)
-        {
-            if (canvasTransform == null) return;
-            var existing = canvasTransform.Find("MountToggleButton");
-            if (existing != null) return;
         {
             if (canvasTransform == null) return;
             var existing = canvasTransform.Find("MountToggleButton");
