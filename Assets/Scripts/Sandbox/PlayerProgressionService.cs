@@ -120,7 +120,8 @@ namespace VLTK.Sandbox
         public void MaxAllSkillLevels(SkillCatalog catalog)
         {
             if (catalog == null) return;
-            faction = CombatFaction.CaiBang; // Default for test suite compatibility
+            if (faction == CombatFaction.None)
+                faction = CombatFaction.CaiBang; // Default for test suite compatibility
             level = CaiBangSkillPanelLevel;
             fightSkillPoints = CaiBangSkillPanelPoints;
             foreach (var skill in catalog.All)

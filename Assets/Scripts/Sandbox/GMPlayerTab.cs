@@ -259,6 +259,7 @@ namespace VLTK.Sandbox
                 {
                     var player = loop.Player;
                     player.combat.level = progression.level;
+                    player.combat.faction = progression.faction;
                     player.combat.knownSkills.Clear();
                     foreach (var id in progression.knownSkills)
                         player.combat.knownSkills.Add(id);
