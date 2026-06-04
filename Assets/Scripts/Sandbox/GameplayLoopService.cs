@@ -64,6 +64,7 @@ namespace VLTK.Sandbox
         public bool isPlayer;
         public long expReward;
         public int silverReward;
+        public int? victimTemplateId;
     }
 
     public struct GameplayRespawnEvent
@@ -453,6 +454,7 @@ namespace VLTK.Sandbox
                 isPlayer = isPlayer,
                 expReward = expReward,
                 silverReward = silverReward,
+                victimTemplateId = isPlayer ? null : (int?)victim.npcTemplateId,
             });
 
             SubsystemLog.Info("Gameplay", $"{victim.nameVi} bị giết bởi {killer?.nameVi ?? "???"} +{expReward}EXP +{silverReward}Bạc");

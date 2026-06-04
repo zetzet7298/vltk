@@ -47,15 +47,15 @@ namespace VLTK.Sandbox
         public static readonly IReadOnlyDictionary<int, MapPortEntry> Entries = new Dictionary<int, MapPortEntry>
         {
             [BaLangHuyenId] = new(BaLangHuyenId, "Ba Lăng Huyện", "巴陵县", MapPortStatus.Ported),
-            [GiangTanThonId] = new(GiangTanThonId, "Giang Tân Thôn", "江津村", MapPortStatus.NotPorted),
-            [DaoHoaDaoId] = new(DaoHoaDaoId, "Đào Hoa Đảo", "桃花岛", MapPortStatus.NotPorted),
-            [TuongDuongId] = new(TuongDuongId, "Tương Dương", "襄阳", MapPortStatus.NotPorted),
-            [ThanhDoId] = new(ThanhDoId, "Thành Đô", "成都", MapPortStatus.NotPorted),
-            [DaiLyId] = new(DaiLyId, "Đại Lý", "大理", MapPortStatus.NotPorted),
-            [BienKinhId] = new(BienKinhId, "Biện Kinh", "汴京", MapPortStatus.NotPorted),
-            [LamAnId] = new(LamAnId, "Lâm An", "临安", MapPortStatus.NotPorted),
-            [QuangChauId] = new(QuangChauId, "Quảng Châu", "广州", MapPortStatus.NotPorted),
-            [PhuongTuongId] = new(PhuongTuongId, "Phượng Tường", "凤翔", MapPortStatus.NotPorted),
+            [GiangTanThonId] = new(GiangTanThonId, "Giang Tân Thôn", "江津村", MapPortStatus.Ported),
+            [DaoHoaDaoId] = new(DaoHoaDaoId, "Đào Hoa Đảo", "桃花岛", MapPortStatus.Ported),
+            [TuongDuongId] = new(TuongDuongId, "Tương Dương", "襄阳", MapPortStatus.Ported),
+            [ThanhDoId] = new(ThanhDoId, "Thành Đô", "成都", MapPortStatus.Ported),
+            [DaiLyId] = new(DaiLyId, "Đại Lý", "大理", MapPortStatus.Ported),
+            [BienKinhId] = new(BienKinhId, "Biện Kinh", "汴京", MapPortStatus.Ported),
+            [LamAnId] = new(LamAnId, "Lâm An", "临安", MapPortStatus.Ported),
+            [QuangChauId] = new(QuangChauId, "Quảng Châu", "广州", MapPortStatus.Ported),
+            [PhuongTuongId] = new(PhuongTuongId, "Phượng Tường", "凤翔", MapPortStatus.Ported),
         };
 
         public static bool TryGet(int mapId, out MapPortEntry entry) => Entries.TryGetValue(mapId, out entry);

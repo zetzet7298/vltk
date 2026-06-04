@@ -359,7 +359,7 @@ namespace VLTK.Sandbox
             }
         }
 
-        private static EnemyHealthBar CreateNameplate(Transform parent, string displayName, int maxLife)
+        public static EnemyHealthBar CreateNameplate(Transform parent, string displayName, int maxLife)
         {
             var root = new GameObject("Nameplate");
             root.transform.SetParent(parent, false);

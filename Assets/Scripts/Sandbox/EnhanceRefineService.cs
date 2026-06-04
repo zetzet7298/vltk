@@ -34,7 +34,7 @@ namespace VLTK.Sandbox
     }
 
     [Serializable]
-    public class QuestReward
+    public class EnhanceQuestReward
     {
         public long exp;
         public int silver;
@@ -127,9 +127,9 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>Tạo phần thưởng nhiệm vụ dựa trên difficulty và playerLevel.</summary>
-        public static QuestReward GenerateQuestReward(int questDifficulty, int playerLevel)
+        public static EnhanceQuestReward GenerateQuestReward(int questDifficulty, int playerLevel)
         {
-            var reward = new QuestReward
+            var reward = new EnhanceQuestReward
             {
                 exp = questDifficulty * playerLevel * 50L,
                 silver = questDifficulty * playerLevel * 5,

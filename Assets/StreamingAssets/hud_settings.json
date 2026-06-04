@@ -1,0 +1,226 @@
+{
+  "map_colors": [
+    {
+      "key": "SelfColor",
+      "value": "255,255,0"
+    },
+    {
+      "key": "TeammateColor",
+      "value": "0,255,0"
+    },
+    {
+      "key": "PlayerColor",
+      "value": "255,72,0"
+    },
+    {
+      "key": "FightNpcColor",
+      "value": "165,48,255"
+    },
+    {
+      "key": "NormalNpcColor",
+      "value": "165,48,255"
+    },
+    {
+      "key": "SelfPartnerColor",
+      "value": "180,230,0"
+    },
+    {
+      "key": "OtherPartnerColor",
+      "value": "255,128,0"
+    },
+    {
+      "key": "OtherPlayerColor",
+      "value": "255,0,0"
+    },
+    {
+      "key": "OtherNpcColor",
+      "value": "255,155,155"
+    },
+    {
+      "key": "SelfNpcColor",
+      "value": "155,255,155"
+    },
+    {
+      "key": "SelfPlayerColor",
+      "value": "0,255,0"
+    }
+  ],
+  "info_strings": [
+    {
+      "key": "1",
+      "value": "Hiện đang kết nối với máy chủ"
+    },
+    {
+      "key": "2",
+      "value": "Kết nối máy chủ thất bại. Xin kiểm tra lại đường truyền."
+    },
+    {
+      "key": "3",
+      "value": "Tài khoản hoặc Mật khẩu không đúng!"
+    },
+    {
+      "key": "4",
+      "value": "Quá thời gian kết nối với máy chủ, không nhận được trả lời!"
+    },
+    {
+      "key": "5",
+      "value": "Tài khoản hoặc Mật khẩu không đúng!"
+    },
+    {
+      "key": "6",
+      "value": "Tài khoản này hiện đang được sử dụng. Xin xác nhận đá tài khoản này?"
+    },
+    {
+      "key": "7",
+      "value": "Tên Nhân vật đã có hoặc không đúng quy tắc!"
+    },
+    {
+      "key": "8",
+      "value": "Đang tạo nhân vật mới, xin chờ giây lát!"
+    },
+    {
+      "key": "9",
+      "value": "Đang xóa nhân vật, xin chờ giây lát!"
+    },
+    {
+      "key": "10",
+      "value": "Đang lấy thông tin nhân vật"
+    },
+    {
+      "key": "11",
+      "value": "Đang đãng nhập vào trò chơi"
+    },
+    {
+      "key": "12",
+      "value": "Máy chủ đã đầy hoặc đang được bảo trì!"
+    },
+    {
+      "key": "13",
+      "value": "Mời nhập vào mật mã bảo vệ cấp hai để xóa nhân vật"
+    },
+    {
+      "key": "14",
+      "value": "Đã có bản nâng cấp mới, chạy AutoUpdate.exe để cập nhật!"
+    },
+    {
+      "key": "15",
+      "value": "Xin nhập vào Tài khoản và Mật khẩu."
+    },
+    {
+      "key": "16",
+      "value": "Xin nhập vào Mật khẩu của Tài khoản này."
+    },
+    {
+      "key": "17",
+      "value": "Tên Nhân vật không thể có khoảng trống, phải là ký tự!"
+    },
+    {
+      "key": "18",
+      "value": "Độ dài tên nhân vật chỉ cho phép từ 6 đến 16 kí tự"
+    },
+    {
+      "key": "19",
+      "value": "Xin hãy nạp tài khoản rồi mới vào trò chơi!"
+    },
+    {
+      "key": "20",
+      "value": "Rất tiếc, bạn nhập mật mã không chính xác."
+    },
+    {
+      "key": "21",
+      "value": "Bạn đã bị rớt mạng, hệ thống tự động kết nối lại."
+    },
+    {
+      "key": "22",
+      "value": "Ban muon thoat  khoi Vo Lam Truyen Ky?"
+    },
+    {
+      "key": "23",
+      "value": "Vo Lam Truyen Ky"
+    },
+    {
+      "key": "24",
+      "value": "Hệ thống tự động giúp bạn gán võ công mới học vào võ công phím phải chuột."
+    },
+    {
+      "key": "25",
+      "value": "Tài khoản này còn dư thời gian:"
+    },
+    {
+      "key": "26",
+      "value": "Ngày"
+    },
+    {
+      "key": "27",
+      "value": "giờ"
+    },
+    {
+      "key": "28",
+      "value": "phút"
+    },
+    {
+      "key": "29",
+      "value": "giây"
+    },
+    {
+      "key": "30",
+      "value": "Tài khoản này đã bị khóa!"
+    },
+    {
+      "key": "31",
+      "value": "Nhân vật bang chủ không thể bị xóa trực tiếp!"
+    },
+    {
+      "key": "32",
+      "value": "Hạn sử dụng:"
+    },
+    {
+      "key": "33",
+      "value": "Thời gian:"
+    },
+    {
+      "key": "34",
+      "value": "Tài khoản này đã bị khóa bởi người dùng, xin hãy mở khóa trước khi đãng nhập."
+    },
+    {
+      "key": "35",
+      "value": "Tài khoản chưa kích hoạt! Bạn hãy vào trang chủ http://www.volam.com.vn để kích hoạt tài khoản này sau đó đãng nhập trò chơi."
+    },
+    {
+      "key": "36",
+      "value": "Chú ý! Cần đệ trình xin chuyển phục vụ tại trạm mạng, mới có thể thực thi thao tác này."
+    },
+    {
+      "key": "37",
+      "value": "Đang mở khóa tài khoản..."
+    },
+    {
+      "key": "38",
+      "value": "Không thể mở khóa, xin thử lại sau 5 phút."
+    },
+    {
+      "key": "39",
+      "value": "Quá thời gian mở tài khoản, xin thử lại sau 5 phút."
+    },
+    {
+      "key": "40",
+      "value": "Tài khoản bạn sử dụng tạm thời bị khóa, xin đãng nhập khi khác."
+    },
+    {
+      "key": "41",
+      "value": "Hình ảnh bản đang lưu hiện chưa được lưu lại, bạn có thể nhấn Ctrl+S để lưu hình ảnh lại xong thoát ra."
+    },
+    {
+      "key": "42",
+      "value": "Hiện vẫn đang phát các hình ảnh. Xin dừng lại rồi mới thoát ra!"
+    },
+    {
+      "key": "43",
+      "value": "ổ đĩa đã đầy không thể lưu thêm!"
+    },
+    {
+      "key": "44",
+      "value": "Mật mã cần phải có ít nhất 3 ký tự được nhập từ bàn phím ảo!"
+    }
+  ]
+}

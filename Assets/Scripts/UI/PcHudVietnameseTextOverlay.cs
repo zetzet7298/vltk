@@ -7,6 +7,8 @@
 
 using UnityEngine;
 using UnityEngine.UIElements;
+using VLTK.Sandbox;
+using VLTK.Model;
 
 namespace VLTK.UI
 {
@@ -197,7 +199,36 @@ private string GetLevelText()
 
         private string GetRankText()
         {
-            // PC WorldSort: thứ hạng giang hồ — hiển thị '?' khớp với PC screenshot
+            var manager = SandboxManager.Instance;
+            var progression = manager != null ? manager.PlayerProgression : null;
+            if (progression != null)
+            {
+                int lvl = progression.level;
+                if (lvl >= 200)
+                {
+                    var r = HudDataService.Instance.GetRankingTitle(10287); // Thập đại cao thủ thế giới
+                    if (r != null) return r.name;
+                }
+                else if (lvl >= 100)
+                {
+                    int titleId = 10287;
+                    switch (progression.faction)
+                    {
+                        case CombatFaction.Shaolin: titleId = 10277; break;
+                        case CombatFaction.TianWang: titleId = 10278; break;
+                        case CombatFaction.TangMen: titleId = 10279; break;
+                        case CombatFaction.WuDu: titleId = 10280; break;
+                        case CombatFaction.EMei: titleId = 10281; break;
+                        case CombatFaction.CuiYan: titleId = 10282; break;
+                        case CombatFaction.CaiBang: titleId = 10283; break;
+                        case CombatFaction.TianRen: titleId = 10284; break;
+                        case CombatFaction.WuDang: titleId = 10285; break;
+                        case CombatFaction.KunLun: titleId = 10286; break;
+                    }
+                    var r = HudDataService.Instance.GetRankingTitle(titleId);
+                    if (r != null) return r.name;
+                }
+            }
             return "?";
         }
 
@@ -278,19 +309,19 @@ private string GetLevelText()
             };
             Label(1200f, 640f, 72f, 72f, "Bảo\nVật", baovatStyle);
 
-            DrawCaiBangSkillPanelText();
+            DrawSkillPanelText();
 
             GUI.depth = oldDepth;
             GUI.matrix = Matrix4x4.identity;
         }
 
-        private void DrawCaiBangSkillPanelText()
+        private void DrawSkillPanelText()
         {
             var hud = FindObjectOfType<GameHudController>();
-            if (hud == null || !hud.IsCaiBangSkillPanelVisible)
+            if (hud == null || !hud.IsSkillPanelVisible)
                 return;
 
-            var snap = hud.CurrentCaiBangSkillSnapshot;
+            var snap = hud.CurrentSkillSnapshot;
             int points = snap != null ? snap.skillPoints : 200;
             Rect panel = new Rect(338, 110, 205, 376);
             if (_skillPanelTexture != null)
@@ -332,7 +363,7 @@ private string GetLevelText()
                     GUI.DrawTexture(addRect, _addPointTexture, ScaleMode.StretchToFill, true);
                     if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && addRect.Contains(Event.current.mousePosition))
                     {
-                        hud.TryUpgradeCaiBangSkill(row.skillId);
+                        hud.TryUpgradeSkill(row.skillId);
                         Event.current.Use();
                     }
                 }

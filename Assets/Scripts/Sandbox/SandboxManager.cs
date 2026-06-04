@@ -57,7 +57,7 @@ namespace VLTK.Sandbox
         public SandboxPlayerController PlayerController { get; private set; }
         public MalePlayerVisual PlayerVisual { get; private set; }
         public MobileJoystick PlayerJoystick { get; private set; }
-        public BaLangEnemySpawnRuntime EnemyRuntime { get; private set; }
+        public MapEnemySpawnRuntime EnemyRuntime { get; private set; }
         public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
         public TrainingNpcSpawner TrainingSpawner { get; private set; }
         public FemalePlayerVisual FemalePlayerVisual { get; private set; }
@@ -65,6 +65,14 @@ namespace VLTK.Sandbox
         public CombatRuntimeService CombatRuntime { get; private set; }
         public GameplayLoopService GameplayLoop { get; private set; }
         public PlayerProgressionState PlayerProgression { get; private set; }
+        public QuestService QuestService { get; private set; }
+        public ItemDatabase ItemDb { get; private set; }
+        public LootDropService LootService { get; private set; }
+        public AudioService AudioService { get; private set; }
+        public QuestTrackerPanel QuestPanel { get; private set; }
+        public InventoryPanel InventoryPanel { get; private set; }
+        public MapSelectPanel MapSelectPanel { get; private set; }
+        private InventoryService _inventoryService;
         private float _combatTickAccumulator;
         // M1.2: Region catalog and report
         public RegionCatalogFile RegionCatalog { get; private set; }
@@ -154,6 +162,27 @@ namespace VLTK.Sandbox
                 };
 
                 EnsurePlayerController();
+
+                // ── New Subsystems ──────────────────────────────────
+                QuestService = new QuestService();
+                ItemDb = new ItemDatabase();
+                LootService = new LootDropService(ItemDb);
+                AudioService = new AudioService();
+                AudioService.Initialize(servicesRoot);
+
+                // Wire quest events to combat loot
+                GameplayLoop.OnDeath += e =>
+                {
+                    if (!e.isPlayer && e.victimTemplateId != null)
+                        QuestService?.UpdateKillObjective(e.victimTemplateId.Value);
+                };
+
+                // Initialize item inventory
+                var itemImporter = new ItemContractImporter();
+                _inventoryService = new InventoryService(itemImporter, null);
+
+                // Build mobile UI panels
+                EnsureMobileUiPanels();
 
                 // Place player at training pentagon center immediately so it never
                 // appears at (0,0) before the map finishes loading.
@@ -246,9 +275,9 @@ namespace VLTK.Sandbox
         {
             if (EnemyRuntime != null || worldRoot == null)
                 return;
-            var enemyGo = new GameObject("BaLangEnemyRuntime");
+            var enemyGo = new GameObject("MapEnemyRuntime");
             enemyGo.transform.SetParent(worldRoot, false);
-            EnemyRuntime = enemyGo.AddComponent<BaLangEnemySpawnRuntime>();
+            EnemyRuntime = enemyGo.AddComponent<MapEnemySpawnRuntime>();
             EnemyNameplateOverlay = enemyGo.AddComponent<BaLangEnemyNameplateOverlay>();
             TrainingSpawner = enemyGo.AddComponent<TrainingNpcSpawner>();
         }
@@ -259,7 +288,7 @@ namespace VLTK.Sandbox
                 return;
             // Region_S folder contains server-side NPC spawn data with real PC coordinates.
             var regionSFolder = System.IO.Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{MapManager.ActiveMapId}");
-            EnemyRuntime.SpawnFromRegionS(regionSFolder);
+            EnemyRuntime.SpawnForMap(MapManager.ActiveMapId, regionSFolder);
         }
 
         private void SpawnTrainingNpcs()
@@ -332,12 +361,12 @@ namespace VLTK.Sandbox
         private void PlacePlayerAtDefaultSpawn()
         {
             if (PlayerController == null) return;
-            // Training area center from PC Region_S data, verified in-game.
-            // World (53246, -52041) = MPS (53246, 104082)
-            Vector2 spawn = new Vector2(53246f, -52041f);
+            // Map-specific spawn point
+            int mapId = defaultMapId;
+            Vector2 spawn = MapEnemyDatabase.GetDefaultSpawnPoint(mapId);
             PlayerController.ResetMovementState();
             PlayerController.PlaceAt(spawn, snapCamera: false);
-            SubsystemLog.Info("Sandbox", $"Player pre-placed at {spawn} (MPS 53493,95313) before map load");
+            SubsystemLog.Info("Sandbox", $"Player pre-placed at {spawn} for map {mapId}");
         }
 
         private void PlacePlayerOnActiveMap()
@@ -345,12 +374,13 @@ namespace VLTK.Sandbox
             if (PlayerController == null)
                 return;
 
-            // Training area center: world (53246, -52041)
-            Vector2 spawn = new Vector2(53246f, -52041f);
+            // Map-specific spawn point
+            int mapId = MapManager?.ActiveMapId ?? defaultMapId;
+            Vector2 spawn = MapEnemyDatabase.GetDefaultSpawnPoint(mapId);
 
             PlayerController.ResetMovementState();
             PlayerController.PlaceAt(spawn, snapCamera: false);
-            SubsystemLog.Info("Sandbox", $"Default player spawn set to {spawn} (training center) on map {MapManager?.ActiveMapId}");
+            SubsystemLog.Info("Sandbox", $"Player spawn set to {spawn} on map {mapId}");
 
             var mapTab = FindObjectOfType<GMMapTab>(true);
             if (mapTab != null)
@@ -490,6 +520,163 @@ namespace VLTK.Sandbox
             }
             tex.Apply();
             return Sprite.Create(tex, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), size, 0, SpriteMeshType.FullRect);
+        }
+
+        /// <summary>
+        /// Build mobile UI panels (Quest, Inventory, Map Select) if not already present.
+        /// Panels are children of the UI root canvas.
+        /// </summary>
+        private void EnsureMobileUiPanels()
+        {
+            if (uiRoot == null) return;
+
+            // Find or create the overlay canvas for panels
+            var panelCanvas = uiRoot.Find("PanelCanvas");
+            Canvas canvas;
+            if (panelCanvas != null)
+            {
+                canvas = panelCanvas.GetComponent<Canvas>();
+            }
+            else
+            {
+                var canvasGo = new GameObject("PanelCanvas");
+                canvasGo.transform.SetParent(uiRoot, false);
+                canvas = canvasGo.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvas.sortingOrder = 200;
+                var scaler = canvasGo.AddComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = new Vector2(1280f, 720f);
+                canvasGo.AddComponent<GraphicRaycaster>();
+                panelCanvas = canvasGo.transform;
+            }
+
+            // Quest Tracker Panel
+            if (QuestPanel == null)
+            {
+                var qpGo = new GameObject("QuestTrackerPanel");
+                qpGo.transform.SetParent(panelCanvas, false);
+                QuestPanel = qpGo.AddComponent<QuestTrackerPanel>();
+                QuestPanel.Initialize(QuestService);
+            }
+
+            // Inventory Panel
+            if (InventoryPanel == null)
+            {
+                var ipGo = new GameObject("InventoryPanel");
+                ipGo.transform.SetParent(panelCanvas, false);
+                InventoryPanel = ipGo.AddComponent<InventoryPanel>();
+                InventoryPanel.Initialize(ItemDb, _inventoryService);
+            }
+
+            // Map Select Panel
+            if (MapSelectPanel == null)
+            {
+                var mpGo = new GameObject("MapSelectPanel");
+                mpGo.transform.SetParent(panelCanvas, false);
+                MapSelectPanel = mpGo.AddComponent<MapSelectPanel>();
+                MapSelectPanel.Initialize(MapManager, SwitchMap);
+            }
+
+            // Add HUD buttons for panels (on the joystick canvas)
+            EnsureHudButtons();
+        }
+
+        /// <summary>
+        /// Switch to a different map. Unloads current, loads new map, re-spawns enemies.
+        /// </summary>
+        public void SwitchMap(int mapId)
+        {
+            if (MapManager == null) return;
+
+            SubsystemLog.Info("Sandbox", $"Switching to map {mapId}...");
+
+            // Update manifest status
+            if (MapPortManifest.TryGet(mapId, out var entry))
+            {
+                SubsystemLog.Info("Sandbox", $"Loading: {entry.nameVi} (PC: {entry.pcNameHint})");
+            }
+
+            // If map not in catalog, add placeholder
+            if (!MapManager.Catalog.ContainsKey(mapId))
+            {
+                SubsystemLog.Info("Sandbox", $"Map {mapId} not in catalog — using placeholder");
+            }
+
+            defaultMapId = mapId;
+            MapManager.LoadMap(mapId);
+
+            // Play BGM for map
+            string bgmId = mapId switch
+            {
+                MapPortManifest.BaLangHuyenId => "bgm_balang",
+                MapPortManifest.GiangTanThonId => "bgm_giangtan",
+                MapPortManifest.TuongDuongId => "bgm_tuongduong",
+                MapPortManifest.ThanhDoId => "bgm_thanhdo",
+                MapPortManifest.DaiLyId => "bgm_daily",
+                MapPortManifest.BienKinhId => "bgm_bienkinh",
+                _ => "bgm_balang",
+            };
+            AudioService?.PlayBGM(bgmId);
+        }
+
+        /// <summary>
+        /// Add HUD buttons for Quest, Inventory, and Map Select panels.
+        /// Placed on the right side of the screen above the mount button.
+        /// </summary>
+        private void EnsureHudButtons()
+        {
+            var joystickCanvas = uiRoot?.GetComponentInChildren<Canvas>();
+            if (joystickCanvas == null) return;
+            var canvasTransform = joystickCanvas.GetComponent<RectTransform>();
+
+            // Quest button
+            EnsurePanelButton(canvasTransform, "QuestBtn", "Nhiệm Vụ",
+                new Vector2(-32f, 620f), new Color(0.6f, 0.4f, 0.1f, 0.85f),
+                () => QuestPanel?.Toggle());
+
+            // Inventory button
+            EnsurePanelButton(canvasTransform, "InventoryBtn", "Túi Đồ",
+                new Vector2(-32f, 520f), new Color(0.1f, 0.4f, 0.6f, 0.85f),
+                () => InventoryPanel?.Toggle());
+
+            // Map select button
+            EnsurePanelButton(canvasTransform, "MapSelectBtn", "Bản Đồ",
+                new Vector2(-32f, 420f), new Color(0.4f, 0.1f, 0.6f, 0.85f),
+                () => MapSelectPanel?.Toggle());
+        }
+
+        private void EnsurePanelButton(RectTransform parent, string name, string label,
+            Vector2 position, Color color, Action onClick)
+        {
+            if (parent.Find(name) != null) return;
+
+            var btnGo = new GameObject(name);
+            btnGo.transform.SetParent(parent, false);
+            var rt = btnGo.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(1f, 0f);
+            rt.anchorMax = new Vector2(1f, 0f);
+            rt.pivot = new Vector2(1f, 0f);
+            rt.anchoredPosition = position;
+            rt.sizeDelta = new Vector2(150f, 60f);
+            var img = btnGo.AddComponent<Image>();
+            img.color = color;
+            var btn = btnGo.AddComponent<Button>();
+            btn.targetGraphic = img;
+            btn.onClick.AddListener(() => onClick());
+
+            var lblGo = new GameObject("Label");
+            lblGo.transform.SetParent(btnGo.transform, false);
+            var lrt = lblGo.AddComponent<RectTransform>();
+            lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
+            lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
+            var txt = lblGo.AddComponent<Text>();
+            txt.text = label;
+            txt.alignment = TextAnchor.MiddleCenter;
+            txt.color = Color.white;
+            txt.fontSize = 24;
+            txt.fontStyle = FontStyle.Bold;
+            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         }
 
         /// <summary>

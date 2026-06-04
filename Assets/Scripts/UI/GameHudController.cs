@@ -607,6 +607,28 @@ namespace VLTK.UI
             if (snap.activeMap == null || _minimapService == null)
                 return;
 
+            // Override dot colors from settings config
+            if (_playerDot != null)
+            {
+                Color playerColor = HudDataService.Instance.GetMapColor("SelfPlayerColor", Color.yellow);
+                _playerDot.style.unityBackgroundImageTintColor = playerColor;
+            }
+            if (_mapPreviewPlayerDot != null)
+            {
+                Color playerColor = HudDataService.Instance.GetMapColor("SelfPlayerColor", Color.yellow);
+                _mapPreviewPlayerDot.style.unityBackgroundImageTintColor = playerColor;
+            }
+            if (_miniMapTarget != null)
+            {
+                Color targetColor = HudDataService.Instance.GetMapColor("SelfColor", new Color(1f, 0.9f, 0.15f));
+                _miniMapTarget.style.backgroundColor = targetColor;
+            }
+            if (_mapPreviewTarget != null)
+            {
+                Color targetColor = HudDataService.Instance.GetMapColor("SelfColor", new Color(1f, 0.9f, 0.15f));
+                _mapPreviewTarget.style.backgroundColor = targetColor;
+            }
+
             SetZoomedDotFromWorld(_playerDot, snap.activeMap, snap.playerPosition, snap.playerPosition, new Vector2(128f, 128f), 10f);
             SetDotFromWorld(_mapPreviewPlayerDot, snap.activeMap, snap.playerPosition, PreviewSize(), 14f);
 
@@ -1023,10 +1045,10 @@ namespace VLTK.UI
             
             if (buffsToShow.Count == 0)
             {
-                buffsToShow.Add(new BuffSnapshot { skillId = 15, nameVi = "Bất Động Minh Vương", isDebuff = false, durationRemaining = 24.5f });
-                buffsToShow.Add(new BuffSnapshot { skillId = 42, nameVi = "Kim Chung Trào", isDebuff = false, durationRemaining = 45.2f });
-                buffsToShow.Add(new BuffSnapshot { skillId = 157, nameVi = "Tọa Vong Vô Ngã", isDebuff = false, durationRemaining = 12.8f });
-                buffsToShow.Add(new BuffSnapshot { skillId = 73, nameVi = "Vạn Cổ Thực Tâm", isDebuff = true, durationRemaining = 5.4f });
+                buffsToShow.Add(new BuffSnapshot { skillId = 15, nameVi = GetSkillName(15), isDebuff = false, durationRemaining = 24.5f });
+                buffsToShow.Add(new BuffSnapshot { skillId = 42, nameVi = GetSkillName(42), isDebuff = false, durationRemaining = 45.2f });
+                buffsToShow.Add(new BuffSnapshot { skillId = 157, nameVi = GetSkillName(157), isDebuff = false, durationRemaining = 12.8f });
+                buffsToShow.Add(new BuffSnapshot { skillId = 73, nameVi = GetSkillName(73), isDebuff = true, durationRemaining = 5.4f });
             }
             
             foreach (var b in buffsToShow)
@@ -1065,6 +1087,9 @@ namespace VLTK.UI
         
         private string GetSkillName(int skillId)
         {
+            var buff = HudDataService.Instance.GetBuff(skillId);
+            if (buff != null) return buff.name;
+
             return skillId switch
             {
                 15 => "Bất Động Minh Vương",
@@ -1120,13 +1145,10 @@ namespace VLTK.UI
                 
                 var icon = new VisualElement();
                 icon.AddToClassList("hud-team-faction-icon");
-                // Load faction skill icons as faction icons since we don't have separate raw icon_zd files
-                int placeholderSkillId = m.faction switch
-                {
-                    "tm" => 48,
-                    "em" => 93,
-                    _ => 124
-                };
+                
+                var fact = HudDataService.Instance.GetFaction(m.faction);
+                int placeholderSkillId = fact != null ? fact.placeholderSkillId : 124;
+
                 LoadIcon(icon, System.IO.Path.Combine(Application.dataPath, artFolder, "Generated"), $"cai_bang_skill_{placeholderSkillId}");
                 item.Add(icon);
                 
@@ -1195,25 +1217,22 @@ namespace VLTK.UI
         {
             if (_facePickerList == null) return;
             _facePickerList.Clear();
-            
-            string[] emotes = new[]
-            {
-                ":)", ":D", ":o", ":(", ":L", ":B", ":@", ":0", ":P", ";)", ":$", ":%", ":Q", ":T", ":U", ":V", ":W", ":X", ":Y", ":Z",
-                "😊", "😂", "😮", "😢", "😭", "😴", "😡", "😲", "😜", "😉", "😳", "😷", "👿", "🤢", "😎", "🤔", "🙄", "🤐", "😐", "😑",
-                "👍", "👎", "👊", "✌", "👌", "👏", "🙌", "🙏", "🤝", "💪", "🔥", "✨", "🎉", "💖", "💔", "⭐", "💤", "💬"
-            };
-            
+
+            var emotes = HudDataService.Instance.GetEmoteList();
+
             foreach (var emote in emotes)
             {
                 var cell = new VisualElement();
                 cell.AddToClassList("hud-face-item");
                 cell.pickingMode = PickingMode.Position;
-                
-                var label = new Label(emote);
+
+                var label = new Label(emote.text);
                 label.AddToClassList("hud-face-item-text");
                 cell.Add(label);
-                
-                string symbol = emote;
+
+                cell.tooltip = emote.tip;
+
+                string symbol = emote.text;
                 cell.RegisterCallback<PointerDownEvent>(evt =>
                 {
                     if (_chatInput != null)
