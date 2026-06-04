@@ -145,6 +145,7 @@ namespace VLTK.Sandbox
             // PC-specific visual parameters from Skills.txt/Missles.txt.
             ConfigureCaiBangVisuals(skill, effect, skillLevel);
             ConfigureWuDangVisuals(skill, effect, skillLevel);
+            ConfigureShaolinVisuals(skill, effect, skillLevel);
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
@@ -366,6 +367,56 @@ namespace VLTK.Sandbox
                     SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
                     SetupPcMissile(fx, "7bcefae7", 64, 16, 1, 20, 16, "8de48699", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
                     SetupPcCircleOutwardMissiles(fx, Math.Max(1, skill.childSkillNum));
+                    break;
+            }
+        }
+
+        private void ConfigureShaolinVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            if (!PcCombatCatalogFactory.IsShaolinSkill(skill.skillId)) return;
+
+            switch (skill.skillId)
+            {
+                case 10: // Kim Cang Phục Ma
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 20, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 11: // Hoành Tảo Lục Hợp
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 13: // Lập Địa Thành Phật
+                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 14: // Hàng Long Bất Vũ
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 15: // Bất Động Minh Vương
+                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 16: // La Hán Trận
+                    fx.color = new Color(255f/255f, 215f/255f, 0f);
+                    fx.isAura = true;
+                    break;
+                case 17: // Long Trảo Hổ Trảo
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 26, 20, "8a1df06d", 8, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 18: // Huệ Nhãn Chú
+                    SetupPcStationaryEffect(fx, "ea9d621d", 15, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 19: // Ma Ha Vô Lượng
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 28, 20, "c33e96c2", 6, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    SetupPcCircleOutwardMissiles(fx, 2);
+                    break;
+                case 20: // Sư Tử Hống
+                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                default:
+                    fx.preCastDuration = 0;
+                    fx.phase = SkillEffectPhase.Finished;
                     break;
             }
         }

@@ -65,11 +65,20 @@ namespace VLTK.UI
             166,
         };
 
+        public static readonly int[] PcShaolinSkillOrder =
+        {
+            3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
+        };
+
         public const int NpcVariantSkillId = 1539;
 
         public static IReadOnlyList<int> GetPcSkillOrder(CombatFaction faction)
         {
-            return faction == CombatFaction.WuDang ? PcWuDangSkillOrder : PcCaiBangSkillOrder;
+            if (faction == CombatFaction.WuDang)
+                return PcWuDangSkillOrder;
+            if (faction == CombatFaction.Shaolin)
+                return PcShaolinSkillOrder;
+            return PcCaiBangSkillOrder;
         }
 
         public static PcSkillPanelSnapshot Build(SkillCatalog catalog, PlayerProgressionState progression, int selectedSkillId = 0)

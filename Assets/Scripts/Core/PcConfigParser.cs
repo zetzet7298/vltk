@@ -478,6 +478,10 @@ namespace VLTK.Core
                 "stealmana_p" => MagicAttributeKind.StealManaP,
                 "deadlystrike_p" => MagicAttributeKind.DeadlyStrikeP,
                 "stun_p" => MagicAttributeKind.StunP,
+                "staminamax_p" => MagicAttributeKind.StaminaMaxP,
+                "colddamage_v" => MagicAttributeKind.ColdDamageV,
+                "ignoredefense_p" => MagicAttributeKind.IgnoreDefenseP,
+                "badstatustimereduce_v" => MagicAttributeKind.BadStatusTimeReduceV,
                 _ => (MagicAttributeKind?)null,
             };
 

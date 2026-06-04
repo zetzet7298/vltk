@@ -65,6 +65,10 @@ namespace VLTK.Model
         StealManaP,
         DeadlyStrikeP,
         StunP,
+        StaminaMaxP,
+        ColdDamageV,
+        IgnoreDefenseP,
+        BadStatusTimeReduceV,
     }
 
     [Serializable]

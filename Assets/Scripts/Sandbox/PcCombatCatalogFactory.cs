@@ -27,19 +27,22 @@ namespace VLTK.Sandbox
         public const int CaiBangDogBeatingAuraChild = 209;
         public const int WuDangMinSkillId = 151;
         public const int WuDangMaxSkillId = 166;
+        public const int ShaolinMinSkillId = 3;
+        public const int ShaolinMaxSkillId = 21;
 
         public static SkillCatalog CreateNoviceAndCaiBangCatalog(IAssetRegistry assets = null)
         {
-            return CreateNoviceAndCoreSectCatalog(assets, includeWuDang: false);
+            return CreateNoviceAndCoreSectCatalog(assets, includeWuDang: false, includeShaolin: false);
         }
 
-        public static SkillCatalog CreateNoviceAndCoreSectCatalog(IAssetRegistry assets = null, bool includeWuDang = true)
+        public static SkillCatalog CreateNoviceAndCoreSectCatalog(IAssetRegistry assets = null, bool includeWuDang = true, bool includeShaolin = true)
         {
             var catalog = new SkillCatalog(assets);
             foreach (var s in CreateNoviceSkills()) catalog.Register(s);
             foreach (var s in CreateCaiBangSkills()) catalog.Register(s);
             catalog.Register(CaiBangDogBeatingAuraChildSkill());
             if (includeWuDang) foreach (var s in CreateWuDangSkills()) catalog.Register(s);
+            if (includeShaolin) foreach (var s in CreateShaolinSkills()) catalog.Register(s);
             return catalog;
         }
 
@@ -525,13 +528,14 @@ namespace VLTK.Sandbox
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
 
-        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
+        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : IsShaolinSkill(id) ? CombatFaction.Shaolin : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
 
         // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
         // the player skill panel filters it out via isNpcVariant.
         public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1539 || id==389;
         public static bool IsWuDangSkill(int id) => id >= WuDangMinSkillId && id <= WuDangMaxSkillId;
+        public static bool IsShaolinSkill(int id) => id >= ShaolinMinSkillId && id <= ShaolinMaxSkillId && id != 5 && id != 7;
         private static string IconPathForSkill(int id) => id switch
         {
             1 => "\\spr\\Ui\\技能图标\\icon_sk_ty_ap.spr",
@@ -568,6 +572,23 @@ namespace VLTK.Sandbox
             720 => "\\spr\\Ui\\技能图标\\icon_sk_sl_01.spr",
             1073 => "\\spr\\Ui\\技能图标\\150\\icon_sk_150_gb_01.spr", // MOD 150-tier GB icon, extracted from updatejx08.pak.
             1074 => "\\spr\\Ui\\技能图标\\150\\icon_sk_150_gb_02.spr", // MOD 150-tier GB icon, extracted from updatejx08.pak.
+            3 => "\\spr\\Ui\\技能图标\\icon_sk_sl_jf.spr",
+            4 => "\\spr\\Ui\\技能图标\\icon_sk_sl_gf.spr",
+            6 => "\\spr\\Ui\\技能图标\\icon_sk_sl_df.spr",
+            8 => "\\spr\\Ui\\技能图标\\icon_sk_sl_qf.spr",
+            9 => "\\spr\\Ui\\技能图标\\icon_sk_sl_01.spr",
+            10 => "\\spr\\Ui\\技能图标\\icon_sk_sl_02.spr",
+            11 => "\\spr\\Ui\\技能图标\\icon_sk_sl_12.spr",
+            12 => "\\spr\\Ui\\技能图标\\icon_sk_sl_11.spr",
+            13 => "\\spr\\Ui\\技能图标\\icon_sk_sl_13.spr",
+            14 => "\\spr\\Ui\\技能图标\\icon_sk_sl_21.spr",
+            15 => "\\spr\\Ui\\技能图标\\icon_sk_sl_22.spr",
+            16 => "\\spr\\Ui\\技能图标\\icon_sk_sl_23.spr",
+            17 => "\\spr\\Ui\\技能图标\\icon_sk_sl_31.spr",
+            18 => "\\spr\\Ui\\技能图标\\icon_sk_sl_32.spr",
+            19 => "\\spr\\Ui\\技能图标\\icon_sk_sl_41.spr",
+            20 => "\\spr\\Ui\\技能图标\\icon_sk_sl_42.spr",
+            21 => "\\spr\\Ui\\技能图标\\icon_sk_sl_43.spr",
             _ => "\\spr\\Ui\\技能图标\\icon_sk_gb_01.spr",
         };
         private static void AddLevels(SkillDefinition s, Func<int,SkillLevelData> f) { int max=Mathf.Max(1, s.maxLevel == 0 ? 1 : s.maxLevel); for (int lv=1; lv<=max; lv++) { var data = f(lv) ?? new SkillLevelData(); data.level = lv; s.pcLevelData.Add(data); } var first=s.GetPcLevelData(1); if (first?.First(MagicAttributeKind.PhysicsDamageV) is SkillMagicAttribute a) s.damageLevels.Add(new SkillDamageLevel{level=1,baseDamage=a.value3,attackRatio=1f,isPhysical=s.isPhysical}); }
@@ -616,6 +637,265 @@ namespace VLTK.Sandbox
             float term1 = (y2 - y1) * lv * lv / denom;
             float term2 = (y2 - y1) * x1 * x1 / denom;
             return Mathf.FloorToInt(term1 - term2 + y1);
+        }
+
+        public static List<SkillDefinition> CreateShaolinSkills() => new()
+        {
+            ShaolinPassiveJianFa(),
+            ShaolinPassiveGunFa(),
+            ShaolinPassiveDaoFa(),
+            ShaolinPassiveQuanFa(),
+            ShaolinHunyuanYiqi(),
+            ShaolinJingangFumo(),
+            ShaolinHengsaoLiuhe(),
+            ShaolinJingangHuti(),
+            ShaolinLadiChengfo(),
+            ShaolinHanglongBayu(),
+            ShaolinBudongMingwang(),
+            ShaolinLuohanZhen(),
+            ShaolinLongzhaoHuzhua(),
+            ShaolinHuiyanZhou(),
+            ShaolinMoheWuliang(),
+            ShaolinShiziHou(),
+            ShaolinYijinJing(),
+        };
+
+        private static SkillDefinition ShaolinPassiveJianFa()
+        {
+            var s = BaseSkill(3, "少林剑法", "Thiếu Lâm Kiếm Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 25, ""), (20, 215, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 15, ""), (20, 72, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 25, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinPassiveGunFa()
+        {
+            var s = BaseSkill(4, "少林棍法", "Thiếu Lâm Côn Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 25, ""), (20, 100, "")), -1, 2));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 35, ""), (20, 275, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 45, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinPassiveDaoFa()
+        {
+            var s = BaseSkill(6, "少林刀法", "Thiếu Lâm Đao Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 25, ""), (20, 215, "")), -1, 1));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (20, 15, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinPassiveQuanFa()
+        {
+            var s = BaseSkill(8, "少林拳法", "Thiếu Lâm Quyền Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 25, ""), (20, 415, "")), -1, 9));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 25, ""), (20, 215, "")), -1, 9));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 35, ""), (20, 275, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 45, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinHunyuanYiqi()
+        {
+            var s = BaseSkill(9, "混元一气功", "Hỗn Nguyên Nhất Khí Công", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => State(MagicAttributeKind.StaminaMaxP, 20 + 10 * lv, -1, 0)); return s;
+        }
+
+        private static SkillDefinition ShaolinJingangFumo()
+        {
+            var s = BaseSkill(10, "金刚伏魔", "Kim Cang Phục Ma", 30, 20, 400, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 1056; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 11; s.targetEnemy = true;
+            s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 15, ""), (20, 55, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 2, ""), (20, 6, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinHengsaoLiuhe()
+        {
+            var s = BaseSkill(11, "横扫六合", "Hoành Tảo Lục Hợp", 10, 20, 96, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 319; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 11; s.targetEnemy = true;
+            s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 71, ""), (20, 417, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 10, ""), (20, 56, "")), 0, Link(lv, (1, 10, ""), (20, 56, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingP, Link(lv, (1, 12, ""), (20, 50, "")), 0, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeP, Link(lv, (1, 10, ""), (20, 30, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 8, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinJingangHuti()
+        {
+            var s = BaseSkill(12, "金刚护体", "Kim Cang Hộ Thể", 20, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => State(MagicAttributeKind.AddDefenseV, 22 + 8 * lv, -1, 0)); return s;
+        }
+
+        private static SkillDefinition ShaolinLadiChengfo()
+        {
+            var s = BaseSkill(13, "立地成佛", "Lập Địa Thành Phật", 30, 20, 400, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.targetSelf = true; s.targetAlly = true; s.charAnimId = 11;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.BadStatusTimeReduceV, 2 + lv, -1, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 5 + Floor(lv / 10f), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinHanglongBayu()
+        {
+            var s = BaseSkill(14, "行龙不雨", "Hàng Long Bất Vũ", 10, 20, 90, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 66; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 11; s.targetEnemy = true;
+            s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 60, ""), (20, 445, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsDamageV, Link(lv, (1, 20, ""), (20, 220, "")), 0, Link(lv, (1, 20, ""), (20, 220, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeP, Link(lv, (1, 5, ""), (20, 20, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 2, ""), (20, 10, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinBudongMingwang()
+        {
+            var s = BaseSkill(15, "不动明王", "Bất Động Minh Vương", 20, 20, 400, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.targetSelf = true; s.targetAlly = true; s.charAnimId = 11;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                int dur = Link(lv, (1, 18 * 120, ""), (20, 18 * 180, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 28, ""), (20, 275, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 15, ""), (20, 250, "")), dur, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 10, ""), (20, 40, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinLuohanZhen()
+        {
+            var s = BaseSkill(16, "罗汉阵", "La Hán Trận", 30, 20, 180, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.isAura = true; s.stateSpecialId = 45; s.childSkillId = 202; s.childSkillLevel = 1; s.childSkillNum = 1; s.targetSelf = true; s.targetAlly = true; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 11, ""), (20, 135, "")), 18, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.MeleeDamageReturnP, Link(lv, (1, 1, ""), (20, 20, ""), (25, 25, "")), 18, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, Link(lv, (1, 1, ""), (20, 20, ""), (25, 25, "")), 18, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 40, ""), (20, 800, "")), 18, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinLongzhaoHuzhua()
+        {
+            var s = BaseSkill(17, "龙爪虎抓", "Long Trảo Hổ Trảo", 40, 20, 78, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 218; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 10; s.targetEnemy = true; s.horseLimit = 1;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 120, ""), (20, 1242, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 10, ""), (20, 56, "")), 0, Link(lv, (1, 10, ""), (20, 56, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.IgnoreDefenseP, Link(lv, (1, 9, ""), (20, 85, "")), 0, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 1, ""), (20, 5, "")), Link(lv, (1, 1, ""), (20, 5, "")), 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeP, Link(lv, (1, 5, ""), (20, 40, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 1, ""), (20, 16, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinHuiyanZhou()
+        {
+            var s = BaseSkill(18, "慧眼咒", "Huệ Nhãn Chú", 40, 20, 400, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.targetSelf = true; s.targetAlly = true; s.charAnimId = 11;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                int dur = 960 + lv * 960;
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, 38 + Floor(lv * 10.5f), dur, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 40 + lv, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinMoheWuliang()
+        {
+            var s = BaseSkill(19, "摩诃无量", "Ma Ha Vô Lượng", 50, 20, 512, SkillMissileForm.Fan);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 61; s.childSkillNum = 2; s.baseSkill = true;
+            s.charAnimId = 11; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 52, ""), (20, 372, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 10, ""), (20, 56, "")), 0, Link(lv, (1, 10, ""), (20, 56, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 15, ""), (20, 35, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinShiziHou()
+        {
+            var s = BaseSkill(20, "狮子吼", "Sư Tử Hống", 40, 20, 90, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 77; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 11; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsDamageV, Link(lv, (1, 45, ""), (20, 140, "")), 0, Link(lv, (1, 45, ""), (20, 140, ""))));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 15, ""), (20, 65, "")), Link(lv, (1, 5, ""), (20, 27, "")), 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 10, ""), (20, 60, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition ShaolinYijinJing()
+        {
+            var s = BaseSkill(21, "易筋经", "Dịch Cân Kinh", 60, 20, 0, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 1, ""), (20, 20, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.MeleeDamageReturnP, Link(lv, (1, 1, ""), (20, 20, ""), (25, 25, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, Link(lv, (1, 1, ""), (20, 20, ""), (25, 25, "")), -1, 0));
+                return d;
+            });
+            return s;
         }
     }
 }
