@@ -155,6 +155,25 @@ namespace VLTK.Tests.Sandbox
             Assert.GreaterOrEqual(visual.CurrentFrameInDirection, 1);
         }
 
+        [TestCase(PlayerVisualAction.Idle)]
+        [TestCase(PlayerVisualAction.Move)]
+        [TestCase(PlayerVisualAction.Magic)]
+        [TestCase(PlayerVisualAction.Attack)]
+        public void Visual_LoadsShortWeaponParts_FromPakStagedSprFiles(PlayerVisualAction action)
+        {
+            _go = new GameObject($"MaleShortWeapon{action}Test");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.ShortWeapon);
+            visual.SetAction(action);
+
+            Assert.AreEqual(PcWeaponType.ShortWeapon, visual.currentWeapon);
+            Assert.AreEqual(action, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(8, visual.LoadedPartCount);
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
+        }
+
         [Test]
         public void Visual_LoadsEmptyHandMagicParts_FromStagedSprFiles()
         {

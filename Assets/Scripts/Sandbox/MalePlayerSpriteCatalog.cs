@@ -123,6 +123,9 @@ namespace VLTK.Sandbox
         {
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
+            string rightWeaponSuffix = (weapon == PcWeaponType.ShortWeapon && action == PlayerVisualAction.Magic)
+                ? "MG03" // PC 男主角右手武器.txt: MeleeWMagic uses MA_RW_001_MG03.spr.
+                : suffix;
             int rwVariant = WeaponSprVariant[wIdx];
             // Long staff has no left weapon SPR — use empty hand for left
             int lwVariant = (weapon == PcWeaponType.DualWeapon) ? WeaponSprVariant[(int)PcWeaponType.DualWeapon] : EmptyWeaponVariant;
@@ -140,7 +143,7 @@ namespace VLTK.Sandbox
                 new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix), leftWeaponRequired),
-                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, suffix)),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, rightWeaponSuffix)),
             };
         }
 
