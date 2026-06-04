@@ -104,25 +104,30 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ToSkillDefinition_MapsPcCharClassToFaction()
         {
-            var rows = PcModSkillParser.ParseFile(ModSkillsPath);
-            var caiBangRow = rows.Find(r => r.charClass == 4);
-            var tianWangRow = rows.Find(r => r.charClass == 2);
-            var tangMenRow = rows.Find(r => r.charClass == 3);
-            var shaolinRow = rows.Find(r => r.charClass == 1);
-            var wuDuRow = rows.Find(r => r.charClass == 5);
-
-            Assert.IsNotNull(caiBangRow, "PC ModSkills.txt includes Cái Bang CharClass=4 rows.");
-            Assert.IsNotNull(tianWangRow, "PC ModSkills.txt includes Thiên Vương CharClass=2 rows.");
-            Assert.IsNotNull(tangMenRow, "PC ModSkills.txt includes Đường Môn CharClass=3 rows.");
-            Assert.IsNotNull(shaolinRow, "PC ModSkills.txt includes Thiếu Lâm CharClass=1 rows.");
-            Assert.IsNotNull(wuDuRow, "PC ModSkills.txt includes Ngũ Độc CharClass=5 rows.");
-
-            Assert.AreEqual(CombatFaction.CaiBang, PcModSkillParser.ToSkillDefinition(caiBangRow).faction);
-            Assert.AreEqual(CombatFaction.TianWang, PcModSkillParser.ToSkillDefinition(tianWangRow).faction);
-            Assert.AreEqual(CombatFaction.TangMen, PcModSkillParser.ToSkillDefinition(tangMenRow).faction);
-            Assert.AreEqual(CombatFaction.Shaolin, PcModSkillParser.ToSkillDefinition(shaolinRow).faction);
-            Assert.AreEqual(CombatFaction.WuDu, PcModSkillParser.ToSkillDefinition(wuDuRow).faction);
+            Assert.AreEqual(CombatFaction.Shaolin, PcModSkillParser.ToSkillDefinition(RowWithFaction(1, string.Empty)).faction);
+            Assert.AreEqual(CombatFaction.EMei, PcModSkillParser.ToSkillDefinition(RowWithFaction(2, string.Empty)).faction);
+            Assert.AreEqual(CombatFaction.TangMen, PcModSkillParser.ToSkillDefinition(RowWithFaction(3, string.Empty)).faction);
+            Assert.AreEqual(CombatFaction.CaiBang, PcModSkillParser.ToSkillDefinition(RowWithFaction(4, string.Empty)).faction);
+            Assert.AreEqual(CombatFaction.WuDang, PcModSkillParser.ToSkillDefinition(RowWithFaction(5, string.Empty)).faction);
         }
+
+        [Test]
+        public void ToSkillDefinition_PrefersLevelSetScriptFactionOverPcCharClassGroup()
+        {
+            Assert.AreEqual(CombatFaction.WuDu, PcModSkillParser.ToSkillDefinition(RowWithFaction(5, @"\script\skill\wudu.lua")).faction);
+            Assert.AreEqual(CombatFaction.TianRen, PcModSkillParser.ToSkillDefinition(RowWithFaction(1, @"\script\skill\tianren.lua")).faction);
+            Assert.AreEqual(CombatFaction.KunLun, PcModSkillParser.ToSkillDefinition(RowWithFaction(3, @"\script\skill\kunlun.lua")).faction);
+            Assert.AreEqual(CombatFaction.CuiYan, PcModSkillParser.ToSkillDefinition(RowWithFaction(4, @"\script\skill\cuiyan.lua")).faction);
+        }
+
+        private static PcModSkillRow RowWithFaction(int charClass, string levelSetScript) => new PcModSkillRow
+        {
+            skillName = "Test Skill",
+            skillId = 2000,
+            charClass = charClass,
+            levelSetScript = levelSetScript,
+            maxLevel = 1,
+        };
 
         [Test]
         public void PcCombatCatalogFactory_CanMergeBaseAndModSkillCatalogs()
