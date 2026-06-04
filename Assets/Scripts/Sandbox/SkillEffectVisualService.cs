@@ -146,6 +146,7 @@ namespace VLTK.Sandbox
             ConfigureCaiBangVisuals(skill, effect, skillLevel);
             ConfigureWuDangVisuals(skill, effect, skillLevel);
             ConfigureShaolinVisuals(skill, effect, skillLevel);
+            ConfigureTangMenVisuals(skill, effect, skillLevel);
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
@@ -413,6 +414,45 @@ namespace VLTK.Sandbox
                     break;
                 case 20: // Sư Tử Hống
                     SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                default:
+                    fx.preCastDuration = 0;
+                    fx.phase = SkillEffectPhase.Finished;
+                    break;
+            }
+        }
+
+        private void ConfigureTangMenVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            if (!PcCombatCatalogFactory.IsTangMenSkill(skill.skillId)) return;
+
+            switch (skill.skillId)
+            {
+                case 45: // Tích Lịch Đơn
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
+                    break;
+                case 47: // Đoạt Hồn Tiêu
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 24, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
+                    break;
+                case 50: // Truy Tâm Tiễn
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 24, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
+                    if (skill.childSkillNum > 1)
+                        SetupPcCircleOutwardMissiles(fx, skill.childSkillNum);
+                    break;
+                case 54: // Mạn Thiên Hoa Vũ
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
+                    break;
+                case 55: // Thối Độc Thuật
+                case 57: // Băng Phách Hàn Quang
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(133f/255f, 222f/255f, 96f/255f));
+                    break;
+                case 58: // Thiên La Địa Võng
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 26, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
                     break;
                 default:
                     fx.preCastDuration = 0;

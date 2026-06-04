@@ -482,6 +482,8 @@ namespace VLTK.Core
                 "colddamage_v" => MagicAttributeKind.ColdDamageV,
                 "ignoredefense_p" => MagicAttributeKind.IgnoreDefenseP,
                 "badstatustimereduce_v" => MagicAttributeKind.BadStatusTimeReduceV,
+                "addpoisondamage_v" => MagicAttributeKind.AddPoisonDamageV,
+                "addcolddamage_v" => MagicAttributeKind.AddColdDamageV,
                 _ => (MagicAttributeKind?)null,
             };
 

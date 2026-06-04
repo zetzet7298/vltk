@@ -69,6 +69,8 @@ namespace VLTK.Model
         ColdDamageV,
         IgnoreDefenseP,
         BadStatusTimeReduceV,
+        AddPoisonDamageV,
+        AddColdDamageV,
     }
 
     [Serializable]

@@ -30,25 +30,31 @@ namespace VLTK.Sandbox
             rect.sizeDelta = new Vector2(400, 300);
 
             // Button 1: Cái Bang
-            CreateGMButton(containerGo.transform, "Gia nhập Cái Bang (Hỏa)", new Vector2(0, 100), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Cái Bang (Hỏa)", new Vector2(0, 120), () =>
             {
                 SwitchToFaction(CombatFaction.CaiBang);
             });
  
             // Button 2: Võ Đang
-            CreateGMButton(containerGo.transform, "Gia nhập Võ Đang (Lôi)", new Vector2(0, 50), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Võ Đang (Lôi)", new Vector2(0, 70), () =>
             {
                 SwitchToFaction(CombatFaction.WuDang);
             });
 
             // Button 2.5: Thiếu Lâm
-            CreateGMButton(containerGo.transform, "Gia nhập Thiếu Lâm (Kim)", new Vector2(0, 0), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Thiếu Lâm (Kim)", new Vector2(0, 20), () =>
             {
                 SwitchToFaction(CombatFaction.Shaolin);
             });
+
+            // Button 2.7: Đường Môn
+            CreateGMButton(containerGo.transform, "Gia nhập Đường Môn (Mộc)", new Vector2(0, -30), () =>
+            {
+                SwitchToFaction(CombatFaction.TangMen);
+            });
  
             // Button 3: Max Level & Kỹ năng
-            CreateGMButton(containerGo.transform, "Tối đa cấp độ & kĩ năng", new Vector2(0, -50), () =>
+            CreateGMButton(containerGo.transform, "Tối đa cấp độ & kĩ năng", new Vector2(0, -80), () =>
             {
                 MaxAllStats();
             });
@@ -140,6 +146,11 @@ namespace VLTK.Sandbox
                         {
                             assignMethod.Invoke(slotsObj, new object[] { 0, 10 });
                             assignMethod.Invoke(slotsObj, new object[] { 1, 11 });
+                        }
+                        else if (faction == CombatFaction.TangMen)
+                        {
+                            assignMethod.Invoke(slotsObj, new object[] { 0, 47 });
+                            assignMethod.Invoke(slotsObj, new object[] { 1, 58 });
                         }
                     }
                 }

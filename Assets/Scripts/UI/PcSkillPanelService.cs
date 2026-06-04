@@ -70,6 +70,11 @@ namespace VLTK.UI
             3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
         };
 
+        public static readonly int[] PcTangMenSkillOrder =
+        {
+            43, 45, 47, 48, 50, 51, 54, 55, 57, 58
+        };
+
         public const int NpcVariantSkillId = 1539;
 
         public static IReadOnlyList<int> GetPcSkillOrder(CombatFaction faction)
@@ -78,6 +83,8 @@ namespace VLTK.UI
                 return PcWuDangSkillOrder;
             if (faction == CombatFaction.Shaolin)
                 return PcShaolinSkillOrder;
+            if (faction == CombatFaction.TangMen)
+                return PcTangMenSkillOrder;
             return PcCaiBangSkillOrder;
         }
 
