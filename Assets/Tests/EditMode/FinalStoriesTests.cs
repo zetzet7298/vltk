@@ -42,6 +42,34 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PkMode_Team_SameTeamCannotAttack()
+        {
+            var pk = new PkCombatService(factionId: 5);
+            pk.SetPkMode(PkMode.Team);
+
+            var attacker = new CombatActorState { actorId = 1, currentLife = 100, partyId = 12 };
+            var target = new CombatActorState { actorId = 2, currentLife = 100, partyId = 12 };
+
+            var result = pk.CanAttack(attacker, target);
+            Assert.IsFalse(result.canAttack);
+            Assert.AreEqual("Cùng tổ đội", result.reasonVi);
+        }
+
+        [Test]
+        public void PkMode_Team_DifferentTeamCanAttack()
+        {
+            var pk = new PkCombatService(factionId: 5);
+            pk.SetPkMode(PkMode.Team);
+
+            var attacker = new CombatActorState { actorId = 1, currentLife = 100, partyId = 12 };
+            var target = new CombatActorState { actorId = 2, currentLife = 100, partyId = 34 };
+
+            var result = pk.CanAttack(attacker, target);
+            Assert.IsTrue(result.canAttack);
+            Assert.AreEqual(PkPenaltyType.KarmaIncrease, result.penalty);
+        }
+
+        [Test]
         public void PkMode_Faction_SameFactionCannotAttack()
         {
             var pk = new PkCombatService(factionId: 5);

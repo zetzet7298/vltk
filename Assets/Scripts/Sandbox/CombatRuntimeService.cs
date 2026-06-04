@@ -10,6 +10,7 @@ namespace VLTK.Sandbox
         public int actorId;
         public CombatFaction faction;
         public int level = 1;
+        public int partyId = 0;
         public bool fightMode = true;
         public bool rideHorse;
         public int currentMana = 100;

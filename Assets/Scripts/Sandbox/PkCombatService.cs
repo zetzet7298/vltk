@@ -104,10 +104,10 @@ namespace VLTK.Sandbox
                     break;
 
                 case PkMode.Team:
-                    // TODO: Check team membership
-                    result.canAttack = true;
-                    result.penalty = PkPenaltyType.KarmaIncrease;
-                    result.karmaChange = 5;
+                    result.canAttack = attacker.partyId == 0 || attacker.partyId != target.partyId;
+                    result.reasonVi = result.canAttack ? "" : "Cùng tổ đội";
+                    result.penalty = result.canAttack ? PkPenaltyType.KarmaIncrease : PkPenaltyType.None;
+                    result.karmaChange = result.canAttack ? 5 : 0;
                     break;
 
                 case PkMode.Faction:

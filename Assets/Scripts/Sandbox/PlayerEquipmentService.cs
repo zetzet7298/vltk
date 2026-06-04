@@ -138,8 +138,19 @@ namespace VLTK.Sandbox
         /// </summary>
         public static int ItemToBodyVariant(int itemId)
         {
-            // TODO: Full mapping from item DB when item contract is ready
-            return 19; // Default
+            // Built-in test armors in sandbox:
+            if (itemId >= 2001 && itemId <= 2004)
+            {
+                return 19; // Default staged armor variant
+            }
+
+            // PC items (0-based row index from armor.txt):
+            return itemId switch
+            {
+                >= 0 and <= 279 => 8,
+                >= 280 and <= 289 => 13,
+                _ => 19, // Default
+            };
         }
 
         public static int ItemToWeaponVariant(int itemId)
@@ -163,8 +174,26 @@ namespace VLTK.Sandbox
 
         public static int ItemToHelmetVariant(int itemId)
         {
-            // TODO: Full mapping from helmet item DB
-            return 19; // Default
+            // Built-in test helmets in sandbox:
+            if (itemId >= 3001 && itemId <= 3003)
+            {
+                return 19; // Default staged helmet variant
+            }
+
+            // PC items (0-based row index from helm.txt):
+            return itemId switch
+            {
+                10 or 11 or
+                (>= 40 and <= 49) or
+                (>= 80 and <= 89) or
+                94 or 95 or 96 or
+                104 or 105 or 106 or
+                117 or 118 or 119 or
+                (>= 124 and <= 129) or
+                (>= 134 and <= 139) => 10,
+                >= 0 and <= 139 => 9,
+                _ => 19, // Default
+            };
         }
     }
 }
