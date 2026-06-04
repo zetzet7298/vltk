@@ -40,6 +40,24 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, skill.pcLevelData.Count);
         }
 
+        [TestCase(1216, "Đăng Điệp Đại Chiêu Âm Tào Địa Trảo")]
+        [TestCase(1262, "Càn Khôn Vô Lượng")]
+        [TestCase(1322, "Hư Nhược Vô Lực")]
+        [TestCase(1539, "Thiên Hạ Vô Cẩu")]
+        public void ToSkillDefinition_NormalizesRepresentativeModSkillNamesForVietnameseUi(int skillId, string expectedName)
+        {
+            var rows = PcModSkillParser.ParseFile(ModSkillsPath);
+            var row = rows.Find(r => r.skillId == skillId);
+
+            Assert.IsNotNull(row, $"Missing PC ModSkills row {skillId}.");
+
+            var skill = PcModSkillParser.ToSkillDefinition(row);
+
+            Assert.AreEqual(expectedName, skill.nameNormalized);
+            Assert.IsFalse(skill.nameNormalized.Contains("�"), $"Skill {skillId} must not expose Unicode replacement characters in UI.");
+            Assert.IsFalse(ContainsCjk(skill.nameNormalized), $"Skill {skillId} must be Vietnamese, not CJK, in UI.");
+        }
+
         [Test]
         public void CreateCatalogFromFile_RegistersAllExpansionModSkills()
         {
@@ -116,6 +134,19 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(catalog.Resolve(1216)); // expansion ModSkills
             Assert.IsNotNull(catalog.Resolve(1539)); // expansion Thiên Hạ Vô Cẩu
             Assert.GreaterOrEqual(catalog.Count, 510);
+        }
+
+        private static bool ContainsCjk(string text)
+        {
+            foreach (var ch in text)
+            {
+                if ((ch >= '\u3400' && ch <= '\u4dbf')
+                    || (ch >= '\u4e00' && ch <= '\u9fff')
+                    || (ch >= '\uf900' && ch <= '\ufaff'))
+                    return true;
+            }
+
+            return false;
         }
     }
 }
