@@ -2346,14 +2346,14 @@ namespace VLTK.Sandbox
             s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.targetSelf = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                int dur = Link(lv, (1, 18 * 120), (30, 18 * 360));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 75), (30, 850)), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 65), (30, 600)), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 20), (30, 315)), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireEnhanceP, Link(lv, (1, 31), (30, 100)), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 26), (30, 102)), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, 26), (30, 81)), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, Link(lv, (1, 21), (30, 20)), Link(lv, (1, 18 * 45), (30, 18 * 180)), 0));
+                int dur = Link(lv, (1, 18 * 120, ""), (30, 18 * 360, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 75, ""), (30, 850, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 65, ""), (30, 600, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 20, ""), (30, 315, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireEnhanceP, Link(lv, (1, 31, ""), (30, 100, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 26, ""), (30, 102, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, 26, ""), (30, 81, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, Link(lv, (1, 21, ""), (30, 20, "")), Link(lv, (1, 18 * 45, ""), (30, 18 * 180, "")), 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 100, 0, 0));
                 return d;
             });
@@ -2483,7 +2483,7 @@ namespace VLTK.Sandbox
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 20; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, Link(lv, (1, -22, ""), (20, -52, "")), Link(lv, (1, 360), (20, 1620)), 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, Link(lv, (1, -22, ""), (20, -52, "")), Link(lv, (1, 360, ""), (20, 1620, "")), 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 60, 0, 0));
                 return d;
             });
@@ -2496,7 +2496,7 @@ namespace VLTK.Sandbox
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 20; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, -6, ""), (20, -39, "")), Link(lv, (1, 810), (20, 2160)), 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, -6, ""), (20, -39, "")), Link(lv, (1, 810, ""), (20, 2160, "")), 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 30, ""), (20, 40, "")), 0, 0));
                 return d;
             });
@@ -2511,7 +2511,7 @@ namespace VLTK.Sandbox
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 55, ""), (20, 386, "")), 0, 0));
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 45, ""), (20, 532, "")), 0, Link(lv, (1, 45, ""), (20, 532, ""))));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 5, ""), (20, 15, "")), Link(lv, (1, 1), (20, 20)), 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 5, ""), (20, 15, "")), Link(lv, (1, 1, ""), (20, 20, "")), 0));
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 25, 0, 0));
                 return d;
@@ -2582,7 +2582,7 @@ namespace VLTK.Sandbox
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 22; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 16, ""), (20, 35, "")), Link(lv, (1, 5), (20, 36)), 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 16, ""), (20, 35, "")), Link(lv, (1, 5, ""), (20, 36, "")), 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 100, 0, 0));
                 return d;
             });

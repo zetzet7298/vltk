@@ -227,6 +227,40 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void AllTenFactionsIconPngs_ArePresentAndNonEmpty()
+        {
+            var root = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
+            var allSkillIds = new List<int>();
+            allSkillIds.AddRange(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }); // Cái Bang
+            allSkillIds.AddRange(new[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166 }); // Võ Đang
+            allSkillIds.AddRange(new[] { 3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 }); // Thiếu Lâm
+            allSkillIds.AddRange(new[] { 43, 45, 47, 48, 50, 51, 54, 55, 57, 58 }); // Đường Môn
+            allSkillIds.AddRange(new[] { 77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93 }); // Nga My
+            allSkillIds.AddRange(new[] { 23, 24, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 40, 41, 42 }); // Thiên Vương
+            allSkillIds.AddRange(new[] { 60, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76 }); // Ngũ Độc
+            allSkillIds.AddRange(new[] { 95, 97, 99, 100, 101, 102, 103, 105, 108, 109, 111, 113, 114 }); // Thúy Yên
+            allSkillIds.AddRange(new[] { 131, 132, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150 }); // Thiên Nhẫn
+            allSkillIds.AddRange(new[] { 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184 }); // Côn Lôn
+
+            int missing = 0;
+            foreach (var skillId in allSkillIds)
+            {
+                var png = System.IO.Path.Combine(root, $"cai_bang_skill_{skillId}.png");
+                if (!System.IO.File.Exists(png))
+                {
+                    Debug.LogError($"Skill PNG missing: {png}");
+                    missing++;
+                }
+                else if (new System.IO.FileInfo(png).Length <= 100)
+                {
+                    Debug.LogError($"Skill PNG too small: {png}");
+                    missing++;
+                }
+            }
+            Assert.AreEqual(0, missing, $"{missing} skill PNG files missing or too small in Generated folder.");
+        }
+
+        [Test]
         public void RequestedPhiLongTaiThien_IsInCurrentAuthoritativeJxwinSkillData()
         {
             var path = Path.Combine(Application.streamingAssetsPath, "Reference/PcSkills.txt");
