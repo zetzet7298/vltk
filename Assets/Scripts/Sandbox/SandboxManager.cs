@@ -72,6 +72,14 @@ namespace VLTK.Sandbox
         public QuestTrackerPanel QuestPanel { get; private set; }
         public InventoryPanel InventoryPanel { get; private set; }
         public MapSelectPanel MapSelectPanel { get; private set; }
+        public MinimapPanel MinimapPanel { get; private set; }
+        public ChatService ChatService { get; private set; }
+        public ChatPanel ChatPanel { get; private set; }
+        public PartyService PartyService { get; private set; }
+        public PartyPanel PartyPanel { get; private set; }
+        public FactionPanel FactionPanel { get; private set; }
+        public ShopService ShopService { get; private set; }
+        public ShopPanel ShopPanel { get; private set; }
         private InventoryService _inventoryService;
         private float _combatTickAccumulator;
         // M1.2: Region catalog and report
@@ -168,18 +176,38 @@ namespace VLTK.Sandbox
                 ItemDb = new ItemDatabase();
                 LootService = new LootDropService(ItemDb);
                 AudioService = new AudioService();
-                AudioService.Initialize(servicesRoot);
+                if (servicesRoot != null)
+                    AudioService.Initialize(servicesRoot);
 
                 // Wire quest events to combat loot
-                GameplayLoop.OnDeath += e =>
-                {
-                    if (!e.isPlayer && e.victimTemplateId != null)
-                        QuestService?.UpdateKillObjective(e.victimTemplateId.Value);
-                };
+                if (GameplayLoop != null)
+                    GameplayLoop.OnDeath += e =>
+                    {
+                        if (!e.isPlayer && e.victimTemplateId != null)
+                            QuestService?.UpdateKillObjective(e.victimTemplateId.Value);
+                    };
 
                 // Initialize item inventory
                 var itemImporter = new ItemContractImporter();
                 _inventoryService = new InventoryService(itemImporter, null);
+
+                // Initialize Chat system
+                ChatService = new ChatService();
+                ChatService.PostSystemMessage("Chào mừng đến Võ Lâm Truyền Kỳ Mobile!");
+
+                // Initialize Party system
+                PartyService = new PartyService();
+
+                // Initialize Shop system
+                ShopService = new ShopService(ItemDb, initialSilver: 5000);
+
+                // Wire combat events to chat log
+                if (GameplayLoop != null)
+                    GameplayLoop.OnDeath += e =>
+                    {
+                        if (!e.isPlayer)
+                            ChatService?.PostCombatLog($"{e.victimNameVi} bị giết. +{e.expReward}EXP");
+                    };
 
                 // Build mobile UI panels
                 EnsureMobileUiPanels();
@@ -500,7 +528,7 @@ namespace VLTK.Sandbox
             txt.color = new Color(1f, 1f, 1f, 1f);
             txt.fontSize = 36;
             txt.fontStyle = FontStyle.Bold;
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
         }
 
         private static Sprite CreateUiDiscSprite(Color fill, Color ring)
@@ -527,6 +555,20 @@ namespace VLTK.Sandbox
         /// Panels are children of the UI root canvas.
         /// </summary>
         private void EnsureMobileUiPanels()
+        {
+            if (uiRoot == null) return;
+
+            try
+            {
+                EnsureMobileUiPanelsInternal();
+            }
+            catch (Exception ex)
+            {
+                SubsystemLog.Warn("Sandbox", $"UI panel creation failed (non-critical): {ex.Message}");
+            }
+        }
+
+        private void EnsureMobileUiPanelsInternal()
         {
             if (uiRoot == null) return;
 
@@ -576,6 +618,59 @@ namespace VLTK.Sandbox
                 mpGo.transform.SetParent(panelCanvas, false);
                 MapSelectPanel = mpGo.AddComponent<MapSelectPanel>();
                 MapSelectPanel.Initialize(MapManager, SwitchMap);
+            }
+
+            // Chat Panel
+            if (ChatPanel == null && ChatService != null)
+            {
+                var cpGo = new GameObject("ChatPanel");
+                cpGo.transform.SetParent(panelCanvas, false);
+                ChatPanel = cpGo.AddComponent<ChatPanel>();
+                ChatPanel.Initialize(ChatService);
+            }
+
+            // Party Panel
+            if (PartyPanel == null && PartyService != null)
+            {
+                var ppGo = new GameObject("PartyPanel");
+                ppGo.transform.SetParent(panelCanvas, false);
+                PartyPanel = ppGo.AddComponent<PartyPanel>();
+                PartyPanel.Initialize(PartyService);
+            }
+
+            // Faction Panel
+            if (FactionPanel == null)
+            {
+                var fpGo = new GameObject("FactionPanel");
+                fpGo.transform.SetParent(panelCanvas, false);
+                FactionPanel = fpGo.AddComponent<FactionPanel>();
+                FactionPanel.Initialize();
+            }
+
+            // Shop Panel
+            if (ShopPanel == null && ShopService != null)
+            {
+                var spGo = new GameObject("ShopPanel");
+                spGo.transform.SetParent(panelCanvas, false);
+                ShopPanel = spGo.AddComponent<ShopPanel>();
+                ShopPanel.Initialize(ShopService, _inventoryService, ItemDb);
+            }
+
+            // Minimap Panel (separate canvas since it uses a different layout)
+            if (MinimapPanel == null && uiRoot != null)
+            {
+                var minimapCanvas = new GameObject("MinimapCanvas");
+                minimapCanvas.transform.SetParent(uiRoot, false);
+                var mc = minimapCanvas.AddComponent<Canvas>();
+                mc.renderMode = RenderMode.ScreenSpaceOverlay;
+                mc.sortingOrder = 150; // below panels, above joystick
+                var msc = minimapCanvas.AddComponent<CanvasScaler>();
+                msc.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                msc.referenceResolution = new Vector2(1280f, 720f);
+                minimapCanvas.AddComponent<GraphicRaycaster>();
+                MinimapPanel = minimapCanvas.AddComponent<MinimapPanel>();
+                if (PlayerController != null)
+                    MinimapPanel.Initialize(MapManager, PlayerController, EnemyRuntime);
             }
 
             // Add HUD buttons for panels (on the joystick canvas)
@@ -630,6 +725,7 @@ namespace VLTK.Sandbox
             if (joystickCanvas == null) return;
             var canvasTransform = joystickCanvas.GetComponent<RectTransform>();
 
+            // Column of buttons on right side
             // Quest button
             EnsurePanelButton(canvasTransform, "QuestBtn", "Nhiệm Vụ",
                 new Vector2(-32f, 620f), new Color(0.6f, 0.4f, 0.1f, 0.85f),
@@ -637,13 +733,33 @@ namespace VLTK.Sandbox
 
             // Inventory button
             EnsurePanelButton(canvasTransform, "InventoryBtn", "Túi Đồ",
-                new Vector2(-32f, 520f), new Color(0.1f, 0.4f, 0.6f, 0.85f),
+                new Vector2(-32f, 540f), new Color(0.1f, 0.4f, 0.6f, 0.85f),
                 () => InventoryPanel?.Toggle());
 
             // Map select button
             EnsurePanelButton(canvasTransform, "MapSelectBtn", "Bản Đồ",
-                new Vector2(-32f, 420f), new Color(0.4f, 0.1f, 0.6f, 0.85f),
+                new Vector2(-32f, 460f), new Color(0.4f, 0.1f, 0.6f, 0.85f),
                 () => MapSelectPanel?.Toggle());
+
+            // Chat toggle button
+            EnsurePanelButton(canvasTransform, "ChatBtn", "Chat",
+                new Vector2(-32f, 380f), new Color(0.2f, 0.4f, 0.3f, 0.85f),
+                () => ChatPanel?.Toggle());
+
+            // Party button
+            EnsurePanelButton(canvasTransform, "PartyBtn", "Đội",
+                new Vector2(-32f, 300f), new Color(0.2f, 0.3f, 0.5f, 0.85f),
+                () => PartyPanel?.Toggle());
+
+            // Faction button
+            EnsurePanelButton(canvasTransform, "FactionBtn", "Môn Phái",
+                new Vector2(-175f, 620f), new Color(0.5f, 0.3f, 0.1f, 0.85f),
+                () => FactionPanel?.Toggle());
+
+            // Shop button
+            EnsurePanelButton(canvasTransform, "ShopBtn", "Cửa Hàng",
+                new Vector2(-175f, 540f), new Color(0.1f, 0.3f, 0.1f, 0.85f),
+                () => ShopPanel?.Toggle());
         }
 
         private void EnsurePanelButton(RectTransform parent, string name, string label,
@@ -676,7 +792,7 @@ namespace VLTK.Sandbox
             txt.color = Color.white;
             txt.fontSize = 24;
             txt.fontStyle = FontStyle.Bold;
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
         }
 
         /// <summary>

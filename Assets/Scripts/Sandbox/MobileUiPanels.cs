@@ -31,7 +31,7 @@ namespace VLTK.Sandbox
         public void Initialize(QuestService questService)
         {
             _questService = questService;
-            _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
             BuildUI();
         }
 
@@ -205,7 +205,7 @@ namespace VLTK.Sandbox
         {
             _itemDb = itemDb;
             _inventory = inventory;
-            _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
             BuildUI();
         }
 
@@ -377,7 +377,7 @@ namespace VLTK.Sandbox
         {
             _mapManager = mapManager;
             _onMapSelected = onMapSelected;
-            _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            _font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
             BuildUI();
         }
 
