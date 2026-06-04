@@ -6,7 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 using VLTK.Core;
 
 namespace VLTK.Sandbox
@@ -42,6 +45,9 @@ namespace VLTK.Sandbox
     public class AudioService
     {
         private readonly Dictionary<string, AudioDef> _defs = new();
+        private readonly Dictionary<string, AudioClip> _clipCache = new();
+        private readonly Dictionary<string, Task<AudioClip>> _clipLoadTasks = new();
+        private readonly HashSet<string> _missingClipWarnings = new();
         private readonly Dictionary<AudioCategory, float> _categoryVolume = new()
         {
             [AudioCategory.BGM] = 0.6f,
@@ -89,7 +95,14 @@ namespace VLTK.Sandbox
 
         // ── Playback ────────────────────────────────────────────────────
 
+        private string _requestedBgmId;
+
         public void PlayBGM(string id)
+        {
+            _ = PlayBGMAsync(id);
+        }
+
+        public async Task PlayBGMAsync(string id)
         {
             if (!BgmEnabled || _bgmSource == null) return;
 
@@ -99,25 +112,26 @@ namespace VLTK.Sandbox
                 return;
             }
 
-            // Same track already playing — skip
+            // Same track already playing or already requested — skip duplicate loads.
+            if (_requestedBgmId == id && _bgmSource.clip != null)
+                return;
             if (_bgmSource.isPlaying && _bgmSource.clip != null && _bgmSource.clip.name == id)
                 return;
 
+            _requestedBgmId = id;
+            var clip = await LoadClipAsync(def.resourcePath);
+            if (clip == null) return;
+
+            // A newer PlayBGM request won while this load was in flight.
+            if (_requestedBgmId != id || !BgmEnabled || _bgmSource == null)
+                return;
+
+            clip.name = id;
             _bgmSource.volume = def.volume * GetCategoryVolume(AudioCategory.BGM);
             _bgmSource.loop = def.loop;
-
-            // Try to load from StreamingAssets
-            var clip = LoadClip(def.resourcePath);
-            if (clip != null)
-            {
-                _bgmSource.clip = clip;
-                _bgmSource.Play();
-                SubsystemLog.Info("Audio", $"BGM: {id}");
-            }
-            else
-            {
-                SubsystemLog.Warn("Audio", $"BGM clip not found: {def.resourcePath}");
-            }
+            _bgmSource.clip = clip;
+            _bgmSource.Play();
+            SubsystemLog.Info("Audio", $"BGM: {id}");
         }
 
         public void StopBGM()
@@ -128,6 +142,11 @@ namespace VLTK.Sandbox
 
         public void PlaySFX(string id, float volumeScale = 1f)
         {
+            _ = PlaySFXAsync(id, volumeScale);
+        }
+
+        public async Task PlaySFXAsync(string id, float volumeScale = 1f)
+        {
             if (!SfxEnabled) return;
 
             if (!_defs.TryGetValue(id, out var def))
@@ -136,17 +155,15 @@ namespace VLTK.Sandbox
                 return;
             }
 
+            var clip = await LoadClipAsync(def.resourcePath);
+            if (clip == null || !SfxEnabled) return;
+
             var src = GetNextSfxSource();
             if (src == null) return;
 
             src.volume = def.volume * GetCategoryVolume(def.category) * volumeScale;
             src.loop = false;
-
-            var clip = LoadClip(def.resourcePath);
-            if (clip != null)
-            {
-                src.PlayOneShot(clip, src.volume);
-            }
+            src.PlayOneShot(clip, src.volume);
         }
 
         public void PlayCombatSFX(string action)
@@ -183,16 +200,141 @@ namespace VLTK.Sandbox
             return src;
         }
 
-        private AudioClip LoadClip(string path)
+        public bool TryGetCachedClip(string resourcePath, out AudioClip clip)
         {
-            if (string.IsNullOrEmpty(path)) return null;
-            // Try StreamingAssets first
-            var fullPath = System.IO.Path.Combine(Application.streamingAssetsPath, path);
-            if (!System.IO.File.Exists(fullPath)) return null;
+            return _clipCache.TryGetValue(NormalizeCacheKey(resourcePath), out clip);
+        }
 
-            // Use UnityWebRequest for audio loading
-            // For now return null — actual audio loading requires async
-            return null;
+        public bool TryResolveResourcePath(string resourcePath, out string resourcesPath)
+        {
+            resourcesPath = ToResourcesPath(resourcePath);
+            return !string.IsNullOrEmpty(resourcesPath);
+        }
+
+        public string ResolveStreamingAssetsUri(string resourcePath)
+        {
+            if (string.IsNullOrWhiteSpace(resourcePath)) return null;
+            if (resourcePath.Contains("://")) return resourcePath;
+
+            var fullPath = Path.Combine(Application.streamingAssetsPath, resourcePath);
+            return fullPath.Contains("://") ? fullPath : $"file://{fullPath}";
+        }
+
+        public Task<AudioClip> LoadClip(string resourcePath)
+        {
+            return LoadClipAsync(resourcePath);
+        }
+
+        public Task<AudioClip> LoadClipAsync(string resourcePath)
+        {
+            var key = NormalizeCacheKey(resourcePath);
+            if (string.IsNullOrEmpty(key)) return Task.FromResult<AudioClip>(null);
+            if (_clipCache.TryGetValue(key, out var cached)) return Task.FromResult(cached);
+            if (_clipLoadTasks.TryGetValue(key, out var pending)) return pending;
+
+            var task = LoadClipInternalAsync(resourcePath, key);
+            _clipLoadTasks[key] = task;
+            return task;
+        }
+
+        private async Task<AudioClip> LoadClipInternalAsync(string resourcePath, string key)
+        {
+            try
+            {
+                var resourcesPath = ToResourcesPath(resourcePath);
+                var resourcesClip = Resources.Load<AudioClip>(resourcesPath);
+                if (resourcesClip != null)
+                {
+                    _clipCache[key] = resourcesClip;
+                    return resourcesClip;
+                }
+
+                var uri = ResolveStreamingAssetsUri(resourcePath);
+                if (uri == null)
+                {
+                    WarnMissingClipOnce(key, resourcePath, "empty path");
+                    return null;
+                }
+
+                if (uri.StartsWith("file://", StringComparison.OrdinalIgnoreCase))
+                {
+                    var localPath = uri.Substring("file://".Length);
+                    if (!File.Exists(localPath))
+                    {
+                        WarnMissingClipOnce(key, resourcePath, $"not found in Resources/{resourcesPath} or StreamingAssets ({localPath})");
+                        return null;
+                    }
+                }
+
+                using var request = UnityWebRequestMultimedia.GetAudioClip(uri, InferAudioType(resourcePath));
+                var op = request.SendWebRequest();
+                while (!op.isDone) await Task.Yield();
+
+                if (request.result != UnityWebRequest.Result.Success)
+                {
+                    WarnMissingClipOnce(key, resourcePath, $"not found/readable at {uri}: {request.error}");
+                    return null;
+                }
+
+                var clip = DownloadHandlerAudioClip.GetContent(request);
+                if (clip == null)
+                {
+                    WarnMissingClipOnce(key, resourcePath, $"decoded clip is null at {uri}");
+                    return null;
+                }
+
+                _clipCache[key] = clip;
+                return clip;
+            }
+            finally
+            {
+                _clipLoadTasks.Remove(key);
+            }
+        }
+
+        private void WarnMissingClipOnce(string key, string resourcePath, string reason)
+        {
+            if (_missingClipWarnings.Add(key))
+                SubsystemLog.Warn("Audio", $"Audio clip missing: '{resourcePath}' ({reason})");
+        }
+
+        private static string NormalizeCacheKey(string resourcePath)
+        {
+            return string.IsNullOrWhiteSpace(resourcePath)
+                ? string.Empty
+                : resourcePath.Replace('\\', '/').Trim().TrimStart('/');
+        }
+
+        private static string ToResourcesPath(string resourcePath)
+        {
+            var normalized = NormalizeCacheKey(resourcePath);
+            if (string.IsNullOrEmpty(normalized)) return string.Empty;
+
+            const string resourcesMarker = "/Resources/";
+            var markerIndex = normalized.IndexOf(resourcesMarker, StringComparison.OrdinalIgnoreCase);
+            if (markerIndex >= 0)
+                normalized = normalized.Substring(markerIndex + resourcesMarker.Length);
+            else if (normalized.StartsWith("Resources/", StringComparison.OrdinalIgnoreCase))
+                normalized = normalized.Substring("Resources/".Length);
+
+            return Path.ChangeExtension(normalized, null);
+        }
+
+        private static AudioType InferAudioType(string resourcePath)
+        {
+            var ext = Path.GetExtension(resourcePath)?.ToLowerInvariant();
+            return ext switch
+            {
+                ".aif" or ".aiff" => AudioType.AIFF,
+                ".it" => AudioType.IT,
+                ".mod" => AudioType.MOD,
+                ".mp3" => AudioType.MPEG,
+                ".ogg" => AudioType.OGGVORBIS,
+                ".s3m" => AudioType.S3M,
+                ".wav" or ".wave" => AudioType.WAV,
+                ".xm" => AudioType.XM,
+                _ => AudioType.UNKNOWN,
+            };
         }
 
         private void LoadDefaultAudioDefs()
