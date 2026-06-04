@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using VLTK.Core;
 using VLTK.Model;
@@ -105,15 +106,7 @@ namespace VLTK.Sandbox
 
         private Vector2 WorldToMinimap(MapDefinition mapDef, Vector2 worldPos)
         {
-            var rect = mapDef.sourceBoundsRect;
-            if (rect == null || rect.width <= 0 || rect.height <= 0)
-                return new Vector2(0.5f, 0.5f);
-
-            float nx = (worldPos.x - rect.x) / rect.width;
-            float ny = 1f - ((worldPos.y - rect.y) / rect.height); // flip Y
-            return new Vector2(
-                Mathf.Clamp01(nx),
-                Mathf.Clamp01(ny));
+            return MinimapCoordinateMapper.WorldToMinimapNormalized(mapDef, worldPos);
         }
 
         private void BuildUI()
@@ -187,26 +180,49 @@ namespace VLTK.Sandbox
             btnRt.anchorMax = Vector2.one;
             var btnImg = btnGo.AddComponent<Image>();
             btnImg.color = Color.clear;
-            var btn = btnGo.AddComponent<Button>();
-            btn.targetGraphic = btnImg;
-            btn.onClick.AddListener(OnMinimapClick);
+            btnImg.raycastTarget = true;
+            var clickForwarder = btnGo.AddComponent<MinimapClickForwarder>();
+            clickForwarder.Initialize(this, btnRt);
         }
 
-        private void OnMinimapClick()
+        private void OnMinimapClick(PointerEventData eventData, RectTransform minimapRect)
         {
-            // Move player toward map center on minimap click
-            if (_mapManager?.ActiveMap == null || _player == null) return;
+            if (_mapManager?.ActiveMap == null || _player == null || minimapRect == null || eventData == null)
+                return;
 
-            var mapDef = _mapManager.ActiveMap;
-            var rect = mapDef.sourceBoundsRect;
-            if (rect == null || rect.width <= 0) return;
+            var eventCamera = eventData.pressEventCamera ?? eventData.enterEventCamera;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                    minimapRect,
+                    eventData.position,
+                    eventCamera,
+                    out var localPointer))
+                return;
 
-            // Move player toward map center
-            Vector2 center = new Vector2(
-                rect.x + rect.width * 0.5f,
-                rect.y + rect.height * 0.5f);
-            _player.PlaceAt(center);
-            SubsystemLog.Info("Minimap", $"Click-to-move → map center {center}");
+            var activeMap = _mapManager.ActiveMap;
+            var sourceRect = activeMap.sourceBoundsRect;
+            if (sourceRect == null || sourceRect.width <= 0f || sourceRect.height <= 0f)
+                return;
+
+            var target = MinimapCoordinateMapper.MinimapLocalToWorld(activeMap, localPointer, minimapRect.rect);
+            _player.MoveTo(target);
+            SubsystemLog.Info("Minimap", $"Click-to-move → target {target}");
+        }
+
+        private sealed class MinimapClickForwarder : MonoBehaviour, IPointerClickHandler
+        {
+            private MinimapPanel _panel;
+            private RectTransform _minimapRect;
+
+            public void Initialize(MinimapPanel panel, RectTransform minimapRect)
+            {
+                _panel = panel;
+                _minimapRect = minimapRect;
+            }
+
+            public void OnPointerClick(PointerEventData eventData)
+            {
+                _panel?.OnMinimapClick(eventData, _minimapRect);
+            }
         }
     }
 }
