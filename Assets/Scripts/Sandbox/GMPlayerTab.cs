@@ -27,46 +27,58 @@ namespace VLTK.Sandbox
             rect.anchorMax = new Vector2(0.5f, 0.5f);
             rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = new Vector2(0, -60);
-            rect.sizeDelta = new Vector2(400, 400);
+            rect.sizeDelta = new Vector2(400, 600);
 
             // Button 1: Cái Bang
-            CreateGMButton(containerGo.transform, "Gia nhập Cái Bang (Hỏa)", new Vector2(0, 150), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Cái Bang (Hỏa)", new Vector2(0, 220), () =>
             {
                 SwitchToFaction(CombatFaction.CaiBang);
             });
  
             // Button 2: Võ Đang
-            CreateGMButton(containerGo.transform, "Gia nhập Võ Đang (Lôi)", new Vector2(0, 100), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Võ Đang (Lôi)", new Vector2(0, 170), () =>
             {
                 SwitchToFaction(CombatFaction.WuDang);
             });
 
             // Button 2.5: Thiếu Lâm
-            CreateGMButton(containerGo.transform, "Gia nhập Thiếu Lâm (Kim)", new Vector2(0, 50), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Thiếu Lâm (Kim)", new Vector2(0, 120), () =>
             {
                 SwitchToFaction(CombatFaction.Shaolin);
             });
 
             // Button 2.6: Thiên Vương
-            CreateGMButton(containerGo.transform, "Gia nhập Thiên Vương (Kim)", new Vector2(0, 0), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Thiên Vương (Kim)", new Vector2(0, 70), () =>
             {
                 SwitchToFaction(CombatFaction.TianWang);
             });
 
+            // Button 2.6.5: Ngũ Độc
+            CreateGMButton(containerGo.transform, "Gia nhập Ngũ Độc (Mộc)", new Vector2(0, 20), () =>
+            {
+                SwitchToFaction(CombatFaction.WuDu);
+            });
+
+            // Button 2.6.7: Thúy Yên
+            CreateGMButton(containerGo.transform, "Gia nhập Thúy Yên (Thủy)", new Vector2(0, -30), () =>
+            {
+                SwitchToFaction(CombatFaction.CuiYan);
+            });
+
             // Button 2.7: Đường Môn
-            CreateGMButton(containerGo.transform, "Gia nhập Đường Môn (Mộc)", new Vector2(0, -50), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Đường Môn (Mộc)", new Vector2(0, -80), () =>
             {
                 SwitchToFaction(CombatFaction.TangMen);
             });
 
             // Button 2.9: Nga My
-            CreateGMButton(containerGo.transform, "Gia nhập Nga My (Thủy)", new Vector2(0, -100), () =>
+            CreateGMButton(containerGo.transform, "Gia nhập Nga My (Thủy)", new Vector2(0, -130), () =>
             {
                 SwitchToFaction(CombatFaction.EMei);
             });
  
             // Button 3: Max Level & Kỹ năng
-            CreateGMButton(containerGo.transform, "Tối đa cấp độ & kĩ năng", new Vector2(0, -150), () =>
+            CreateGMButton(containerGo.transform, "Tối đa cấp độ & kĩ năng", new Vector2(0, -180), () =>
             {
                 MaxAllStats();
             });
@@ -173,6 +185,16 @@ namespace VLTK.Sandbox
                         {
                             assignMethod.Invoke(slotsObj, new object[] { 0, 40 });
                             assignMethod.Invoke(slotsObj, new object[] { 1, 41 });
+                        }
+                        else if (faction == CombatFaction.WuDu)
+                        {
+                            assignMethod.Invoke(slotsObj, new object[] { 0, 63 });
+                            assignMethod.Invoke(slotsObj, new object[] { 1, 65 });
+                        }
+                        else if (faction == CombatFaction.CuiYan)
+                        {
+                            assignMethod.Invoke(slotsObj, new object[] { 0, 99 });
+                            assignMethod.Invoke(slotsObj, new object[] { 1, 105 });
                         }
                     }
                 }

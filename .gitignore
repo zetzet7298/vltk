@@ -10,7 +10,7 @@ harness.db
 harness.db-wal
 harness.db-shm
 bmad
-harness
+harness/harness.db
 # Rust build output for harness tooling.
 target/
 dist/

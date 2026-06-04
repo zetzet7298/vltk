@@ -149,6 +149,8 @@ namespace VLTK.Sandbox
             ConfigureTangMenVisuals(skill, effect, skillLevel);
             ConfigureEMeiVisuals(skill, effect, skillLevel);
             ConfigureTianWangVisuals(skill, effect, skillLevel);
+            ConfigureWuDuVisuals(skill, effect, skillLevel);
+            ConfigureCuiYanVisuals(skill, effect, skillLevel);
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
@@ -921,6 +923,92 @@ namespace VLTK.Sandbox
                     break;
                 case 42: // Kim Chung Tráo
                     SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                default:
+                    fx.preCastDuration = 0;
+                    fx.phase = SkillEffectPhase.Finished;
+                    break;
+            }
+        }
+
+        private void ConfigureWuDuVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            if (!PcCombatCatalogFactory.IsWuDuSkill(skill.skillId)) return;
+
+            switch (skill.skillId)
+            {
+                case 63: // Độc Sa Chưởng
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
+                    break;
+                case 65: // Huyết Đao Độc Sát
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
+                    break;
+                case 68: // U Minh Khô Lâu
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 18, 30, "8a1df06d", 8, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
+                    break;
+                case 69: // Vô Hình Độc
+                case 71: // Thiên Cương Địa Sát
+                case 74: // Chu Cáp Thanh Minh
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(100f/255f, 220f/255f, 80f/255f));
+                    break;
+                case 64: // Băng Lam Huyền Tinh
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                case 67: // Cửu Thiên Cuồng Lôi
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(200f/255f, 100f/255f, 255f/255f));
+                    break;
+                case 70: // Chích Dương Thệ Thiên
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(255f/255f, 100f/255f, 50f/255f));
+                    break;
+                case 72: // Xuyên Tâm Độc Thích
+                case 73: // Vạn Độc Thực Tâm
+                case 76: // Di Hoa Tiếp Ngọc
+                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
+                    break;
+                default:
+                    fx.preCastDuration = 0;
+                    fx.phase = SkillEffectPhase.Finished;
+                    break;
+            }
+        }
+
+        private void ConfigureCuiYanVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            if (!PcCombatCatalogFactory.IsCuiYanSkill(skill.skillId)) return;
+
+            var waterColor = new Color(100f/255f, 180f/255f, 255f/255f);
+            switch (skill.skillId)
+            {
+                case 99: // Phong Hoa Tuyết Nguyệt
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, waterColor);
+                    break;
+                case 102: // Phong Quyển Tàn Tuyết
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, waterColor);
+                    break;
+                case 105: // Vũ Đả Lê Hoa
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 18, 30, "8a1df06d", 8, 1, 2, waterColor);
+                    break;
+                case 108: // Mục Dã Lưu Tinh
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, waterColor);
+                    break;
+                case 111: // Bích Hải Triều Sinh
+                case 113: // Phù Vân Tán Tuyết
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, waterColor);
+                    break;
+                case 100: // Hộ Thể Hàn Băng
+                case 101: // Trị Liệu Thuật
+                case 103: // Thiên Lý Băng Phong
+                case 109: // Tuyết Ảnh
+                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, waterColor);
                     break;
                 default:
                     fx.preCastDuration = 0;

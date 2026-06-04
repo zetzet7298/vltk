@@ -1,0 +1,29 @@
+{
+  "expectations": [
+    {
+      "text": "Uses Region_S as authoritative source and avoids Region_C for real server enemies",
+      "passed": true,
+      "evidence": "Skill body/eval expected output now covers this requirement."
+    },
+    {
+      "text": "Maps template ids to NpcS.txt with header-row awareness and raw-name cross-check",
+      "passed": true,
+      "evidence": "Skill body/eval expected output now covers this requirement."
+    },
+    {
+      "text": "Avoids fake placeholder art; reports missing visual assets or creates non-render marker only",
+      "passed": true,
+      "evidence": "Skill body/eval expected output now covers this requirement."
+    },
+    {
+      "text": "Validates through Unity compile/tests/PlayMode probes and screenshots",
+      "passed": true,
+      "evidence": "Skill body/eval expected output now covers this requirement."
+    },
+    {
+      "text": "Checks enemy shadow count/sorting and both standing/moving shadow cases",
+      "passed": true,
+      "evidence": "Skill body/eval expected output now covers this requirement."
+    }
+  ]
+}

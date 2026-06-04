@@ -35,13 +35,17 @@ namespace VLTK.Sandbox
         public const int EMeiMaxSkillId = 93;
         public const int TianWangMinSkillId = 23;
         public const int TianWangMaxSkillId = 42;
+        public const int WuDuMinSkillId = 60;
+        public const int WuDuMaxSkillId = 76;
+        public const int CuiYanMinSkillId = 95;
+        public const int CuiYanMaxSkillId = 114;
 
         public static SkillCatalog CreateNoviceAndCaiBangCatalog(IAssetRegistry assets = null)
         {
-            return CreateNoviceAndCoreSectCatalog(assets, includeWuDang: false, includeShaolin: false, includeTangMen: false, includeEMei: false, includeTianWang: false);
+            return CreateNoviceAndCoreSectCatalog(assets, includeWuDang: false, includeShaolin: false, includeTangMen: false, includeEMei: false, includeTianWang: false, includeWuDu: false, includeCuiYan: false);
         }
 
-        public static SkillCatalog CreateNoviceAndCoreSectCatalog(IAssetRegistry assets = null, bool includeWuDang = true, bool includeShaolin = true, bool includeTangMen = true, bool includeEMei = true, bool includeTianWang = true)
+        public static SkillCatalog CreateNoviceAndCoreSectCatalog(IAssetRegistry assets = null, bool includeWuDang = true, bool includeShaolin = true, bool includeTangMen = true, bool includeEMei = true, bool includeTianWang = true, bool includeWuDu = true, bool includeCuiYan = true)
         {
             var catalog = new SkillCatalog(assets);
             foreach (var s in CreateNoviceSkills()) catalog.Register(s);
@@ -52,6 +56,8 @@ namespace VLTK.Sandbox
             if (includeTangMen) foreach (var s in CreateTangMenSkills()) catalog.Register(s);
             if (includeEMei) foreach (var s in CreateEMeiSkills()) catalog.Register(s);
             if (includeTianWang) foreach (var s in CreateTianWangSkills()) catalog.Register(s);
+            if (includeWuDu) foreach (var s in CreateWuDuSkills()) catalog.Register(s);
+            if (includeCuiYan) foreach (var s in CreateCuiYanSkills()) catalog.Register(s);
             return catalog;
         }
 
@@ -537,7 +543,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
 
-        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : IsShaolinSkill(id) ? CombatFaction.Shaolin : IsTangMenSkill(id) ? CombatFaction.TangMen : IsEMeiSkill(id) ? CombatFaction.EMei : IsTianWangSkill(id) ? CombatFaction.TianWang : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
+        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : IsShaolinSkill(id) ? CombatFaction.Shaolin : IsTangMenSkill(id) ? CombatFaction.TangMen : IsEMeiSkill(id) ? CombatFaction.EMei : IsTianWangSkill(id) ? CombatFaction.TianWang : IsWuDuSkill(id) ? CombatFaction.WuDu : IsCuiYanSkill(id) ? CombatFaction.CuiYan : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
 
         // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
@@ -548,6 +554,8 @@ namespace VLTK.Sandbox
         public static bool IsTangMenSkill(int id) => id >= TangMenMinSkillId && id <= TangMenMaxSkillId && id != 53 && id != 44 && id != 46 && id != 49 && id != 52 && id != 56;
         public static bool IsEMeiSkill(int id) => id >= EMeiMinSkillId && id <= EMeiMaxSkillId && id != 78;
         public static bool IsTianWangSkill(int id) => id >= TianWangMinSkillId && id <= TianWangMaxSkillId && id != 25 && id != 27 && id != 28 && id != 38 && id != 39;
+        public static bool IsWuDuSkill(int id) => id >= WuDuMinSkillId && id <= WuDuMaxSkillId && id != 61;
+        public static bool IsCuiYanSkill(int id) => id >= CuiYanMinSkillId && id <= CuiYanMaxSkillId && id != 96 && id != 98 && id != 104 && id != 106 && id != 107 && id != 110 && id != 112;
         private static string IconPathForSkill(int id) => id switch
         {
             1 => "\\spr\\Ui\\技能图标\\icon_sk_ty_ap.spr",
@@ -642,6 +650,35 @@ namespace VLTK.Sandbox
             40 => "\\spr\\Ui\\技能图标\\icon_sk_tw_41.spr",
             41 => "\\spr\\Ui\\技能图标\\icon_sk_tw_64.spr",
             42 => "\\spr\\Ui\\技能图标\\icon_sk_tw_43.spr",
+            60 => "\\spr\\Ui\\技能图标\\icon_sk_wd_df.spr",
+            62 => "\\spr\\Ui\\技能图标\\icon_sk_wd_zf.spr",
+            63 => "\\spr\\Ui\\技能图标\\icon_sk_wd_01.spr",
+            64 => "\\spr\\Ui\\技能图标\\icon_sk_wd_02.spr",
+            65 => "\\spr\\Ui\\skill\\ẹêàảảắẫ±.spr",
+            66 => "\\spr\\Ui\\技能图标\\icon_sk_wd_12.spr",
+            67 => "\\spr\\Ui\\技能图标\\icon_sk_wd_13.spr",
+            68 => "\\spr\\Ui\\技能图标\\icon_sk_wd_21.spr",
+            69 => "\\spr\\Ui\\技能图标\\icon_sk_wd_22.spr",
+            70 => "\\spr\\Ui\\技能图标\\icon_sk_wd_23.spr",
+            71 => "\\spr\\Ui\\技能图标\\icon_sk_wd_31.spr",
+            72 => "\\spr\\Ui\\技能图标\\icon_sk_wd_32.spr",
+            73 => "\\spr\\Ui\\技能图标\\icon_sk_wd_33.spr",
+            74 => "\\spr\\Ui\\技能图标\\icon_sk_wd_41.spr",
+            75 => "\\spr\\Ui\\技能图标\\icon_sk_wd_42.spr",
+            76 => "\\spr\\Ui\\技能图标\\icon_sk_wd_43.spr",
+            95 => "\\spr\\Ui\\技能图标\\icon_sk_cy_df.spr",
+            97 => "\\spr\\Ui\\技能图标\\icon_sk_cy_df.spr",
+            99 => "\\spr\\Ui\\技能图标\\icon_sk_cy_01.spr",
+            100 => "\\spr\\Ui\\技能图标\\icon_sk_cy_02.spr",
+            101 => "\\spr\\Ui\\技能图标\\icon_sk_cy_03.spr",
+            102 => "\\spr\\Ui\\技能图标\\icon_sk_cy_11.spr",
+            103 => "\\spr\\Ui\\技能图标\\icon_sk_cy_12.spr",
+            105 => "\\spr\\Ui\\技能图标\\icon_sk_cy_21.spr",
+            108 => "\\spr\\Ui\\技能图标\\icon_sk_cy_31.spr",
+            109 => "\\spr\\Ui\\技能图标\\icon_sk_cy_32.spr",
+            111 => "\\spr\\Ui\\技能图标\\icon_sk_cy_41.spr",
+            113 => "\\spr\\Ui\\技能图标\\icon_sk_cy_42.spr",
+            114 => "\\spr\\Ui\\技能图标\\icon_sk_cy_43.spr",
             _ => "\\spr\\Ui\\技能图标\\icon_sk_gb_01.spr",
         };
         private static void AddLevels(SkillDefinition s, Func<int,SkillLevelData> f) { int max=Mathf.Max(1, s.maxLevel == 0 ? 1 : s.maxLevel); for (int lv=1; lv<=max; lv++) { var data = f(lv) ?? new SkillLevelData(); data.level = lv; s.pcLevelData.Add(data); } var first=s.GetPcLevelData(1); if (first?.First(MagicAttributeKind.PhysicsDamageV) is SkillMagicAttribute a) s.damageLevels.Add(new SkillDamageLevel{level=1,baseDamage=a.value3,attackRatio=1f,isPhysical=s.isPhysical}); }
@@ -1577,6 +1614,431 @@ namespace VLTK.Sandbox
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 30, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        public static List<SkillDefinition> CreateWuDuSkills() => new()
+        {
+            WuDuPassiveDaoFa(),
+            WuDuPassiveZhangFa(),
+            WuDuDocSaChuong(),
+            WuDuBangLamHuyenTinh(),
+            WuDuHuyetDaoDocSat(),
+            WuDuTapNanDuocKinh(),
+            WuDuCuuThienCuongLoi(),
+            WuDuUMinhKhoLau(),
+            WuDuVoHinhDoc(),
+            WuDuChichDuongTheThien(),
+            WuDuThienCuongDiaSat(),
+            WuDuXuyenTamDocThich(),
+            WuDuVanDocThucTam(),
+            WuDuChuCapThanhMinh(),
+            WuDuNguDocKyKinh(),
+            WuDuDiHoaTiepNgoc(),
+        };
+
+        private static SkillDefinition WuDuPassiveDaoFa()
+        {
+            var s = BaseSkill(60, "五毒刀法", "Ngũ Độc Đao Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 15, ""), (20, 215, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 25, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuPassiveZhangFa()
+        {
+            var s = BaseSkill(62, "五毒掌法", "Ngũ Độc Chưởng Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPoisonDamageV, Link(lv, (1, 15, ""), (20, 515, "")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuDocSaChuong()
+        {
+            var s = BaseSkill(63, "毒砂掌", "Độc Sa Chưởng", 10, 20, 180, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 15, ""), (20, 150, "")), 0, Link(lv, (1, 15, ""), (20, 150, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 10, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuBangLamHuyenTinh()
+        {
+            var s = BaseSkill(64, "冰蓝玄晶", "Băng Lam Huyền Tinh", 10, 20, 440, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ColdResP, Link(lv, (1, -5, ""), (20, -25, "")), 600 + 600 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuHuyetDaoDocSat()
+        {
+            var s = BaseSkill(65, "血刀毒杀", "Huyết Đao Độc Sát", 10, 20, 400, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 10, ""), (20, 100, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 15, ""), (20, 150, "")), 0, Link(lv, (1, 15, ""), (20, 150, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 10, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuTapNanDuocKinh()
+        {
+            var s = BaseSkill(66, "杂难药经", "Tạp Nan Dược Kinh", 20, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, 10, ""), (20, 60, "")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuCuuThienCuongLoi()
+        {
+            var s = BaseSkill(67, "九天狂雷", "Cửu Thiên Cuồng Lôi", 20, 20, 440, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LightingResP, Link(lv, (1, -5, ""), (20, -25, "")), 600 + 600 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuUMinhKhoLau()
+        {
+            var s = BaseSkill(68, "幽冥骷髅", "U Minh Khô Lâu", 30, 20, 400, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 30, ""), (20, 250, "")), 0, Link(lv, (1, 30, ""), (20, 250, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 15, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuVoHinhDoc()
+        {
+            var s = BaseSkill(69, "无形蛊", "Vô Hình Độc", 30, 20, 400, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 25, ""), (20, 220, "")), 0, Link(lv, (1, 25, ""), (20, 220, ""))));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 5, ""), (20, 30, "")), 600 + 600 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 15, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuChichDuongTheThien()
+        {
+            var s = BaseSkill(70, "赤焰蚀天", "Chích Dương Thệ Thiên", 30, 20, 440, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResP, Link(lv, (1, -5, ""), (20, -25, "")), 600 + 600 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuThienCuongDiaSat()
+        {
+            var s = BaseSkill(71, "天罡地煞", "Thiên Cương Địa Sát", 60, 20, 420, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 50, ""), (20, 385, "")), 0, Link(lv, (1, 50, ""), (20, 385, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 20, ""), (20, 40, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuXuyenTamDocThich()
+        {
+            var s = BaseSkill(72, "穿心毒刺", "Xuyên Tâm Độc Thích", 20, 20, 440, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, -5, ""), (20, -25, "")), 600 + 600 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuVanDocThucTam()
+        {
+            var s = BaseSkill(73, "万毒蚀心", "Vạn Độc Thực Tâm", 20, 20, 440, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, -10, ""), (20, -40, "")), 600 + 600 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuChuCapThanhMinh()
+        {
+            var s = BaseSkill(74, "朱蛤清鸣", "Chu Cáp Thanh Minh", 60, 20, 400, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 80, ""), (20, 385, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 50, ""), (20, 385, "")), 0, Link(lv, (1, 50, ""), (20, 385, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 25, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuNguDocKyKinh()
+        {
+            var s = BaseSkill(75, "五毒奇经", "Ngũ Độc Kỳ Kinh", 60, 30, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPoisonDamageV, Link(lv, (1, 20, ""), (30, 200, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, 5, ""), (30, 30, "")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition WuDuDiHoaTiepNgoc()
+        {
+            var s = BaseSkill(76, "移花接木", "Di Hoa Tiếp Ngọc", 50, 20, 400, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, Link(lv, (1, 10, ""), (20, 50, "")), 1200 + 1200 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 30, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        public static List<SkillDefinition> CreateCuiYanSkills() => new()
+        {
+            CuiYanPassiveDaoFa(),
+            CuiYanPassiveShuangDao(),
+            CuiYanPhongHoaTuyetNguyet(),
+            CuiYanHoTheHanBang(),
+            CuiYanTriLieuThuat(),
+            CuiYanPhongQuyenTanTuyet(),
+            CuiYanThienLyBangPhong(),
+            CuiYanVuDaLeHoa(),
+            CuiYanMucDaLuuTinh(),
+            CuiYanTuyetAnh(),
+            CuiYanBichHaiTrieuSinh(),
+            CuiYanPhuVanTanTuyet(),
+            CuiYanBangCotTuyetTam(),
+        };
+
+        private static SkillDefinition CuiYanPassiveDaoFa()
+        {
+            var s = BaseSkill(95, "翠烟刀法", "Thúy Yên Đao Pháp", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 15, ""), (20, 215, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 25, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanPassiveShuangDao()
+        {
+            var s = BaseSkill(97, "翠烟双刀", "Thúy Yên Song Đao", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 15, ""), (20, 215, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 25, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanPhongHoaTuyetNguyet()
+        {
+            var s = BaseSkill(99, "风花雪月", "Phong Hoa Tuyết Nguyệt", 10, 20, 360, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 70; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsDamageV, Link(lv, (1, 10, ""), (20, 120, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 15, ""), (20, 275, "")), 0, Link(lv, (1, 25, ""), (20, 415, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 10, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanHoTheHanBang()
+        {
+            var s = BaseSkill(100, "护体寒冰", "Hộ Thể Hàn Băng", 40, 20, 400, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ColdResP, Link(lv, (1, 10, ""), (20, 50, "")), 1200 + 1200 * lv, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 50, ""), (20, 450, "")), 1200 + 1200 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanTriLieuThuat()
+        {
+            var s = BaseSkill(101, "治疗术", "Trị Liệu Thuật", 10, 20, 400, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetSelf = true; s.targetAlly = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.immediate.Add(new SkillMagicAttribute(MagicAttributeKind.ManaReplenishV, Link(lv, (1, 100, ""), (20, 450, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 50, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanPhongQuyenTanTuyet()
+        {
+            var s = BaseSkill(102, "风卷残雪", "Phong Quyển Tàn Tuyết", 10, 20, 360, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 71; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 30, ""), (20, 300, "")), 0, Link(lv, (1, 40, ""), (20, 400, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 15, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanThienLyBangPhong()
+        {
+            var s = BaseSkill(103, "千里冰封", "Thiên Lý Băng Phong", 20, 20, 400, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ColdResP, Link(lv, (1, 15, ""), (20, 75, "")), 1200 + 1200 * lv, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 25, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanVuDaLeHoa()
+        {
+            var s = BaseSkill(105, "雨打梨花", "Vũ Đả Lê Hoa", 30, 20, 300, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 72; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 10, ""), (20, 100, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 30, ""), (20, 250, "")), 0, Link(lv, (1, 30, ""), (20, 250, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 1, ""), (20, 10, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanMucDaLuuTinh()
+        {
+            var s = BaseSkill(108, "牧野流星", "Mục Dã Lưu Tinh", 60, 20, 420, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 73; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 50, ""), (20, 385, "")), 0, Link(lv, (1, 50, ""), (20, 385, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 20, ""), (20, 40, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanTuyetAnh()
+        {
+            var s = BaseSkill(109, "雪影", "Tuyết Ảnh", 50, 20, 400, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 50, ""), (20, 350, "")), 1200 + 1200 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 30, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanBichHaiTrieuSinh()
+        {
+            var s = BaseSkill(111, "碧海潮生", "Bích Hải Triều Sinh", 60, 20, 72, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 74; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 40, ""), (20, 350, "")), 0, Link(lv, (1, 40, ""), (20, 350, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 25, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanPhuVanTanTuyet()
+        {
+            var s = BaseSkill(113, "浮云散雪", "Phù Vân Tán Tuyết", 30, 20, 400, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 75; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 40, ""), (20, 200, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 20, ""), (20, 200, "")), 0, Link(lv, (1, 20, ""), (20, 200, ""))));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 5, ""), (20, 25, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition CuiYanBangCotTuyetTam()
+        {
+            var s = BaseSkill(114, "冰骨雪心", "Băng Cốt Tuyết Tâm", 60, 30, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddColdDamageV, Link(lv, (1, 20, ""), (30, 200, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, 5, ""), (30, 30, "")), -1, 0));
                 return d;
             });
             return s;
