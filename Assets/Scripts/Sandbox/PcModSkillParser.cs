@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using VLTK.Core;
 using VLTK.Model;
 
@@ -97,7 +98,7 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
                 return new List<PcModSkillRow>();
-            return ParseLines(File.ReadAllLines(absolutePath), minSkillId);
+            return ParseLines(ReadPcTextLines(absolutePath), minSkillId);
         }
 
         public static List<PcModSkillRow> ParseLines(IEnumerable<string> lines, int minSkillId = ExpansionMinSkillId)
@@ -207,7 +208,7 @@ namespace VLTK.Sandbox
             {
                 skillId = row.skillId,
                 nameRaw = row.skillName,
-                nameNormalized = NormalizeVietnamese(row.skillName),
+                nameNormalized = NormalizeModSkillName(row.skillId, row.skillName),
                 reqLevel = Math.Max(0, row.reqLevel),
                 maxLevel = maxLevel,
                 cost = row.costValue,
@@ -355,15 +356,97 @@ namespace VLTK.Sandbox
             return new SourceAssetId { sourcePath = path, resourceKind = ResourceKind.Sprite, uid = path.GetHashCode(), discoveryTool = DiscoveryTool.Runtime, evidenceNote = "ModSkills.txt" };
         }
 
-        private static string NormalizeVietnamese(string raw)
+        private static readonly Dictionary<int, string> AuditedVietnameseSkillNames = new()
+        {
+            // Source PC row is GBK Chinese bytes embedded in the legacy Vietnamese file:
+            // "灯蝶大招阴曹地爪". Keep an explicit Vietnamese UI name instead of
+            // exposing CJK or byte mojibake to mobile players.
+            [1216] = "Đăng Điệp Đại Chiêu Âm Tào Địa Trảo",
+        };
+
+        private static readonly Dictionary<char, char> Tcvn3ToUnicode = new()
+        {
+            ['µ'] = 'à', ['¸'] = 'á', ['¶'] = 'ả', ['·'] = 'ã', ['¹'] = 'ạ',
+            ['¨'] = 'ă', ['¾'] = 'ắ', ['»'] = 'ằ', ['¼'] = 'ẳ', ['½'] = 'ẵ', ['Æ'] = 'ặ',
+            ['©'] = 'â', ['Ê'] = 'ấ', ['Ç'] = 'ầ', ['È'] = 'ẩ', ['É'] = 'ẫ', ['Ë'] = 'ậ',
+            ['®'] = 'đ',
+            ['Ì'] = 'è', ['Ð'] = 'é', ['Î'] = 'ẻ', ['Ï'] = 'ẽ', ['Ñ'] = 'ẹ',
+            ['ª'] = 'ê', ['Õ'] = 'ế', ['Ò'] = 'ề', ['Ó'] = 'ể', ['Ô'] = 'ễ', ['Ö'] = 'ệ',
+            ['×'] = 'ì', ['Ý'] = 'í', ['Ø'] = 'ỉ', ['Ü'] = 'ĩ', ['Þ'] = 'ị',
+            ['ß'] = 'ò', ['ã'] = 'ó', ['á'] = 'ỏ', ['â'] = 'õ', ['ä'] = 'ọ',
+            ['«'] = 'ô', ['è'] = 'ố', ['å'] = 'ồ', ['æ'] = 'ổ', ['ç'] = 'ỗ', ['é'] = 'ộ',
+            ['¬'] = 'ơ', ['í'] = 'ớ', ['ê'] = 'ờ', ['ë'] = 'ở', ['ì'] = 'ỡ', ['î'] = 'ợ',
+            ['ï'] = 'ù', ['ó'] = 'ú', ['ñ'] = 'ủ', ['ò'] = 'ũ', ['ô'] = 'ụ',
+            ['­'] = 'ư', ['ø'] = 'ứ', ['õ'] = 'ừ', ['ö'] = 'ử', ['÷'] = 'ữ', ['ù'] = 'ự',
+            ['ú'] = 'ỳ', ['ý'] = 'ý', ['û'] = 'ỷ', ['ü'] = 'ỹ', ['þ'] = 'ỵ',
+            ['¡'] = 'Ă', ['¢'] = 'Â', ['§'] = 'Đ', ['£'] = 'Ê', ['¤'] = 'Ô', ['¥'] = 'Ơ', ['¦'] = 'Ư',
+        };
+
+        private static string[] ReadPcTextLines(string absolutePath)
+        {
+            // ModSkills.txt is a mixed legacy PC export: Vietnamese fields are stored
+            // as TCVN3 byte values, while a few mod rows keep GBK Chinese names.
+            // Decode bytes one-to-one first so no Unicode replacement character is
+            // introduced; NormalizeModSkillName then performs the audited UI pass.
+            var bytes = File.ReadAllBytes(absolutePath);
+            var builder = new StringBuilder(bytes.Length);
+            foreach (var b in bytes)
+                builder.Append((char)b);
+
+            var text = builder.ToString();
+            if (text.Length > 0 && text[0] == '\ufeff')
+                text = text.Substring(1);
+            return text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+        }
+
+        private static string NormalizeModSkillName(int skillId, string raw)
         {
             if (string.IsNullOrWhiteSpace(raw)) return raw;
-            // Keep already-Vietnamese strings. Mojibake/CJK rows remain raw for audit.
-            return raw.Replace("C�n Kh�n", "Càn Khôn")
-                      .Replace("Kim Quy�n", "Kim Quyền")
-                      .Replace("Thi�n", "Thiên")
-                      .Replace("Sinh l�c", "Sinh lực")
-                      .Replace("N�i l�c", "Nội lực");
+            if (AuditedVietnameseSkillNames.TryGetValue(skillId, out var audited))
+                return audited;
+
+            var normalized = ConvertTcvn3ToUnicode(raw);
+            return ContainsUnsafeUiText(normalized) || ContainsLegacyMojibakeMarkers(normalized)
+                ? $"Kỹ năng Mod {skillId}"
+                : normalized;
+        }
+
+        private static string ConvertTcvn3ToUnicode(string raw)
+        {
+            var builder = new StringBuilder(raw.Length);
+            foreach (var ch in raw)
+                builder.Append(Tcvn3ToUnicode.TryGetValue(ch, out var mapped) ? mapped : ch);
+            return builder.ToString();
+        }
+
+        private static bool ContainsUnsafeUiText(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            foreach (var ch in text)
+            {
+                if (ch == '\ufffd' || IsCjk(ch))
+                    return true;
+            }
+            return false;
+        }
+
+
+        private static bool ContainsLegacyMojibakeMarkers(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return false;
+            foreach (var ch in text)
+            {
+                if (ch == '´' || ch == '²' || ch == '³' || ch == '¤' || ch == '¥' || ch == '¦' || ch == '¨')
+                    return true;
+            }
+            return false;
+        }
+
+        private static bool IsCjk(char ch)
+        {
+            return (ch >= '\u3400' && ch <= '\u4dbf')
+                || (ch >= '\u4e00' && ch <= '\u9fff')
+                || (ch >= '\uf900' && ch <= '\ufaff');
         }
 
         private static string Str(string[] c, int i) => i >= 0 && i < c.Length ? (c[i] ?? string.Empty).Trim() : string.Empty;
