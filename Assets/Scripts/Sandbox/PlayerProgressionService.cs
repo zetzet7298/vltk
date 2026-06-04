@@ -92,6 +92,11 @@ namespace VLTK.Sandbox
             GrantFactionSkillPanelProgression(catalog, CombatFaction.EMei);
         }
 
+        public void GrantTianWangSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.TianWang);
+        }
+
         public void MaxAllSkillLevels(SkillCatalog catalog)
         {
             if (catalog == null) return;
@@ -100,7 +105,7 @@ namespace VLTK.Sandbox
             fightSkillPoints = CaiBangSkillPanelPoints;
             foreach (var skill in catalog.All)
             {
-                if (skill.faction != CombatFaction.CaiBang && skill.faction != CombatFaction.WuDang && skill.faction != CombatFaction.Shaolin && skill.faction != CombatFaction.TangMen && skill.faction != CombatFaction.EMei) continue;
+                if (skill.faction != CombatFaction.CaiBang && skill.faction != CombatFaction.WuDang && skill.faction != CombatFaction.Shaolin && skill.faction != CombatFaction.TangMen && skill.faction != CombatFaction.EMei && skill.faction != CombatFaction.TianWang) continue;
                 if (skill.skillId == NpcVariantSkillId) continue;
                 int maxLv = skill.maxLevel > 0 ? skill.maxLevel : 1;
                 knownSkills.Add(skill.skillId);

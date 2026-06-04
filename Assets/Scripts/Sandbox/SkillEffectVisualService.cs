@@ -148,6 +148,7 @@ namespace VLTK.Sandbox
             ConfigureShaolinVisuals(skill, effect, skillLevel);
             ConfigureTangMenVisuals(skill, effect, skillLevel);
             ConfigureEMeiVisuals(skill, effect, skillLevel);
+            ConfigureTianWangVisuals(skill, effect, skillLevel);
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
@@ -882,6 +883,44 @@ namespace VLTK.Sandbox
                 case 92: // Phật Tâm Từ Hữu (buff/aura)
                 case 93: // Từ Hàng Phổ Độ (buff/aura)
                     SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                default:
+                    fx.preCastDuration = 0;
+                    fx.phase = SkillEffectPhase.Finished;
+                    break;
+            }
+        }
+
+        private void ConfigureTianWangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            if (!PcCombatCatalogFactory.IsTianWangSkill(skill.skillId)) return;
+
+            switch (skill.skillId)
+            {
+                case 32: // Vô Tâm Trảm
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 34: // Kinh Lôi Trảm
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 40: // Đoạn Hồn Thích
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 28, 20, "8a1df06d", 8, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 30: // Hồi Phong Lạc Nhạn
+                case 37: // Bát Phong Trảm
+                case 41: // Huyết Chiến Bát Phương
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 29: // Trảm Long Quyết
+                case 35: // Dương Quan Tam Điệp
+                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(255f/255f, 215f/255f, 0f));
+                    break;
+                case 42: // Kim Chung Tráo
+                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
                     break;
                 default:
                     fx.preCastDuration = 0;
