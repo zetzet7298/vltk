@@ -59,6 +59,7 @@ namespace VLTK.Sandbox
         public BaLangEnemySpawnRuntime EnemyRuntime { get; private set; }
         public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
         public TrainingNpcSpawner TrainingSpawner { get; private set; }
+        public FemalePlayerVisual FemalePlayerVisual { get; private set; }
         public SkillCatalog CombatSkillCatalog { get; private set; }
         public CombatRuntimeService CombatRuntime { get; private set; }
         public GameplayLoopService GameplayLoop { get; private set; }
@@ -190,6 +191,12 @@ namespace VLTK.Sandbox
             gp.combat.knownSkills = PlayerProgression.knownSkills;
             gp.combat.skillLevels = PlayerProgression.skillLevels;
 
+            // Auto-grant horse at level 30+ per PC horseres.txt progression.
+            // Sandbox default: player joins at level 30 (CaiBang quest complete),
+            // so unlock basic horse (id=1 = blue). Override here for sandbox demos.
+            PlayerProgression.horseId = PlayerProgressionState.HorseIdForLevel(PlayerProgression.level);
+            if (PlayerProgression.horseId <= 0) PlayerProgression.horseId = 1; // sandbox: always at least blue
+
             // Wire gameplay events to logs
             GameplayLoop.OnDeath += e =>
             {
@@ -273,6 +280,11 @@ namespace VLTK.Sandbox
             // 长棍类1 → PcWeaponType.LongWeapon → MA_RW_010_* SPRs.
             PlayerController.EquipWeapon(PcWeaponType.LongWeapon);
 
+            // Auto-equip horse from PlayerProgression. PC source: level 30+ unlocks horse
+            // (see horseres.txt). Sandbox defaults: level 200 = red horse (id=5).
+            int horseId = PlayerProgression?.horseId ?? 0;
+            if (horseId > 0) PlayerController.SetHorseId(horseId);
+
             PlayerVisual = PlayerController.visual;
             PlayerJoystick = EnsureMobileJoystick();
             PlayerController.BindJoystick(PlayerJoystick);
@@ -281,6 +293,30 @@ namespace VLTK.Sandbox
             playerGo.AddComponent<PlayerPositionDebug>();
 
             SubsystemLog.Info("Sandbox", "Male player controller ready (8-way SPR parts + joystick)");
+        }
+
+        /// <summary>
+        /// Spawn a female player visual at the same spawn point as the male one
+        /// (training pentagon center). Used for ST-02.1 female visual parity tests.
+        /// Idempotent: if a FemalePlayerVisual already exists, the existing one is kept.
+        /// </summary>
+        public FemalePlayerVisual SpawnFemaleVisual()
+        {
+            if (FemalePlayerVisual != null) return FemalePlayerVisual;
+            if (worldRoot == null)
+            {
+                SubsystemLog.Warn("Sandbox", "Cannot spawn female visual: worldRoot is null");
+                return null;
+            }
+
+            Vector2 spawn = new Vector2(53246f, -52041f);
+            var femaleGo = new GameObject("FemalePlayer");
+            femaleGo.transform.SetParent(worldRoot, false);
+            femaleGo.transform.position = new Vector3(spawn.x + 40f, spawn.y, 0f);
+            FemalePlayerVisual = femaleGo.AddComponent<FemalePlayerVisual>();
+            FemalePlayerVisual.SetWeapon(PcWeaponType.EmptyHand);
+            SubsystemLog.Info("Sandbox", $"Female player visual spawned at {spawn} (offset 40 units east of male)");
+            return FemalePlayerVisual;
         }
 
         /// <summary>
@@ -335,7 +371,12 @@ namespace VLTK.Sandbox
 
             var existing = uiRoot.GetComponentInChildren<MobileJoystick>(true);
             if (existing != null)
+            {
+                // MobileJoystick already in scene (e.g. from Sandbox.unity) — still ensure the
+                // mount toggle button is wired so testers can mount/dismount from the HUD.
+                EnsureMountToggleButton(existing.transform.parent as RectTransform);
                 return existing;
+            }
 
             if (FindObjectOfType<EventSystem>() == null)
             {
@@ -385,7 +426,50 @@ namespace VLTK.Sandbox
             joystick.inputRadius = 55f;
             joystick.deadZone = 0.08f;
             joystick.sensitivity = 1.35f;
+            EnsureMountToggleButton(canvasGo.transform);
             return joystick;
+        }
+
+        private void EnsureMountToggleButton(RectTransform canvasTransform)
+        {
+            if (canvasTransform == null) return;
+            var existing = canvasTransform.Find("MountToggleButton");
+            if (existing != null) return;
+        {
+            if (canvasTransform == null) return;
+            var existing = canvasTransform.Find("MountToggleButton");
+            if (existing != null) return;
+
+            var buttonGo = new GameObject("MountToggleButton");
+            buttonGo.transform.SetParent(canvasTransform, false);
+            var rt = buttonGo.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(1f, 0f);
+            rt.anchorMax = new Vector2(1f, 0f);
+            rt.pivot = new Vector2(1f, 0f);
+            rt.anchoredPosition = new Vector2(-32f, 220f);
+            rt.sizeDelta = new Vector2(220f, 86f);
+            var img = buttonGo.AddComponent<Image>();
+            img.sprite = CreateUiDiscSprite(new Color(0.18f, 0.42f, 0.75f, 0.85f), new Color(0.85f, 0.95f, 1f, 0.95f));
+            var btn = buttonGo.AddComponent<Button>();
+            btn.targetGraphic = img;
+            btn.onClick.AddListener(() =>
+            {
+                if (PlayerController != null) PlayerController.ToggleMount();
+            });
+
+            // Label
+            var labelGo = new GameObject("Label");
+            labelGo.transform.SetParent(buttonGo.transform, false);
+            var lrt = labelGo.AddComponent<RectTransform>();
+            lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
+            lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
+            var txt = labelGo.AddComponent<Text>();
+            txt.text = "Ngựa";
+            txt.alignment = TextAnchor.MiddleCenter;
+            txt.color = new Color(1f, 1f, 1f, 1f);
+            txt.fontSize = 36;
+            txt.fontStyle = FontStyle.Bold;
+            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
         }
 
         private static Sprite CreateUiDiscSprite(Color fill, Color ring)

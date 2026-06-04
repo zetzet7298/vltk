@@ -23,6 +23,15 @@ namespace VLTK.Sandbox
         [Header("Wiring")]
         public MalePlayerVisual visual;
         public MobileJoystick joystick;
+        public HorseVisual horse;
+
+        [Header("Mount")]
+        [Tooltip("PC horse id (1/3/5/7/9). 0 = no horse / cannot mount. SandboxManager overrides this from PlayerProgression on boot.")]
+        public int defaultHorseId = 5;
+        [Tooltip("True while mounted (horse GO is active and visual.SetMounted(true) was applied).")]
+        public bool startMounted = true;
+        public float mountedSpeedMultiplier = 1.8f; // PC: horse RunSpeed / player RunSpeed ≈ 1.8
+        public PlayerMountService Mount { get; } = new PlayerMountService();
 
         [Header("Camera Follow")]
         public Camera followCamera;
@@ -53,6 +62,12 @@ namespace VLTK.Sandbox
         private void Awake()
         {
             EnsureVisual();
+            EnsureHorse();
+            Mount.OnMountChanged += OnMountChanged;
+            if (startMounted && defaultHorseId > 0 && visual != null && !visual.IsMounted)
+            {
+                Mount.Mount(defaultHorseId);
+            }
         }
 
         private void OnEnable()
@@ -179,7 +194,12 @@ namespace VLTK.Sandbox
                 }
             }
 
-            LastMoveDelta = input * (moveSpeed * dt);
+            LastMoveDelta = Vector2.zero;
+
+            EnsureVisual();
+            Mount.Tick(dt);
+            float speed = Mount.IsMounted ? moveSpeed * mountedSpeedMultiplier : moveSpeed;
+            LastMoveDelta = input * (speed * dt);
             if (LastMoveDelta.sqrMagnitude > 0f)
             {
                 var before = (Vector2)transform.position;
@@ -200,8 +220,7 @@ namespace VLTK.Sandbox
                 {
                     var clamped = new Vector3(
                         Mathf.Clamp(transform.position.x, mapBoundsMin.x, mapBoundsMax.x),
-                        Mathf.Clamp(transform.position.y, mapBoundsMin.y, mapBoundsMax.y),
-                        transform.position.z);
+                        Mathf.Clamp(transform.position.y, mapBoundsMin.y, mapBoundsMax.y));
                     transform.position = clamped;
                 }
             }
@@ -220,6 +239,7 @@ namespace VLTK.Sandbox
                     visual.SetMoveInput(input);
                     visual.Tick(dt);
                 }
+                SyncHorseDirectionAndSorting();
             }
 
             FollowCamera(dt, immediate: false);
@@ -262,6 +282,83 @@ namespace VLTK.Sandbox
             visualGo.transform.SetParent(transform, false);
             visual = visualGo.AddComponent<MalePlayerVisual>();
             visual.playAutomatically = false;
+        }
+
+        private void EnsureHorse()
+        {
+            if (horse != null)
+                return;
+
+            horse = GetComponentInChildren<HorseVisual>(true);
+            if (horse != null)
+            {
+                if (defaultHorseId > 0) horse.SetHorseId(defaultHorseId);
+                horse.gameObject.SetActive(false);
+                return;
+            }
+
+            var horseGo = new GameObject("HorseVisual");
+            horseGo.transform.SetParent(transform, false);
+            horse = horseGo.AddComponent<HorseVisual>();
+            horse.anchorOffset = new Vector3(0f, -28f, 0f);
+            if (defaultHorseId > 0) horse.SetHorseId(defaultHorseId);
+            horseGo.SetActive(false);
+        }
+
+        private void OnMountChanged(MountChangeEvent evt)
+        {
+            bool mounted = evt.newState == MountState.Mounted;
+            if (visual != null)
+                visual.SetMounted(mounted);
+            if (horse != null)
+            {
+                if (evt.horseType > 0) horse.SetHorseId(evt.horseType);
+                horse.gameObject.SetActive(mounted);
+                if (mounted) SyncHorseDirectionAndSorting();
+            }
+        }
+
+        /// <summary>
+        /// Player-facing toggle. Mount uses <see cref="defaultHorseId"/> if not yet mounted;
+        /// Dismount if already mounted. PC source: press 'mount' key on PC client.
+        /// </summary>
+        public void ToggleMount()
+        {
+            if (Mount.IsMounted)
+                Mount.Dismount();
+            else if (defaultHorseId > 0)
+                Mount.Mount(defaultHorseId);
+        }
+
+        public void SetHorseId(int newHorseId)
+        {
+            defaultHorseId = newHorseId;
+            if (horse != null) horse.SetHorseId(newHorseId);
+            if (Mount.IsMounted) Mount.Mount(newHorseId);
+        }
+
+        private int _lastSyncDirection = -1;
+        private int _lastSyncSortingOrder = int.MinValue;
+        private void SyncHorseDirectionAndSorting()
+        {
+            if (horse == null || !horse.gameObject.activeSelf) return;
+            int dir = visual != null ? visual.GetCurrentDirection() : 0;
+            if (dir != _lastSyncDirection)
+            {
+                horse.SetDirection(dir);
+                _lastSyncDirection = dir;
+            }
+            // Mounted rider uses sortOrder 5000..5022; horse sits 100 below so it sorts behind.
+            if (visual != null)
+            {
+                int riderOrder = visual.GetRiderSortingOrder();
+                int horseOrder = riderOrder - 100;
+                if (horseOrder != _lastSyncSortingOrder)
+                {
+                    horse.SetSortingOrder(horseOrder);
+                    _lastSyncSortingOrder = horseOrder;
+                }
+            }
         }
 
         private void FollowCamera(float deltaTime, bool immediate)

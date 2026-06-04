@@ -19,6 +19,29 @@ namespace VLTK.Sandbox
         public HashSet<int> knownSkills = new();
         public Dictionary<int, int> skillLevels = new();
 
+        // Horse unlock: PC source vltksource_new/vl_update_27/Client 6.0/settings/item/000/horseres.txt
+        // Sandbox default: player joins at level 30 (CaiBang quest complete) and unlocks
+        // a basic horse. SandboxBoot overrides to red (id=5) so testers see the 5-color mount.
+        public const int MinHorseLevel = 30;
+        public int horseId = 1; // 0 = no horse, 1/3/5/7/9 = blue/yellow/red/white/black
+
+        public bool HasHorse => horseId > 0;
+
+        public static readonly int[] AvailableHorseIds = { 1, 3, 5, 7, 9 };
+
+        /// <summary>
+        /// Compute unlocked horse id from level (PC tiering). 1-29 = none,
+        /// 30-49 = 1 (blue), 50-69 = 3, 70-89 = 5, 90-109 = 7, 110+ = 9.
+        /// </summary>
+        public static int HorseIdForLevel(int playerLevel)
+        {
+            if (playerLevel < MinHorseLevel) return 0;
+            int tier = (playerLevel - MinHorseLevel) / 20;
+            if (tier < 0) tier = 0;
+            if (tier >= AvailableHorseIds.Length) tier = AvailableHorseIds.Length - 1;
+            return AvailableHorseIds[tier];
+        }
+
         public void GrantCaiBangSkillPanelProgression(SkillCatalog catalog)
         {
             bool firstGrant = faction != CombatFaction.CaiBang || knownSkills.Count == 0;

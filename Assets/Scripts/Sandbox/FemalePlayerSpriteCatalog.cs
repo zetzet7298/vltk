@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — ST-02.1 Female Player Sprite Catalog
-// Mirror of MalePlayerSpriteCatalog for WO_* SPR parts.
+// Mirror of MalePlayerSpriteCatalog for FM_* SPR parts.
 // Source: PC Settings/NpcRes/woman, 女主角贴图顺序表.txt
 // -----------------------------------------------------------------------------
 
@@ -11,18 +11,29 @@ namespace VLTK.Sandbox
 {
     /// <summary>
     /// Female player sprite catalog ported from PC Settings/NpcRes tables.
-    /// Uses WO_* prefix for body parts (WO_BD, WO_HD, WO_HR, WO_LH, WO_RH, WO_LW, WO_RW).
+    /// Uses FM_* prefix for body parts (FM_BD, FM_HD, FM_HR, FM_LH, FM_RH).
     /// Same weapon-type-aware action selection as male, same 8-direction system.
     /// Source: spr\npcres\woman
+    ///
+    /// PC differences vs male:
+    ///   - Prefix is FM_ (not MA_/WO_); variant 050 is base female outfit.
+    ///   - No separate shadow SPR (FM_YY_* not present in source). Shadow slot
+    ///     is built but marked not required; runtime simply leaves it unloaded.
+    ///   - No separate weapon SPRs (FM_LW_*/FM_RW_* not present). LH/RH hands
+    ///     already encode the weapon pose for each action, so LW/RW slots are
+    ///     built but marked not required.
     /// </summary>
     public static class FemalePlayerSpriteCatalog
     {
         public const string SourceRoot = @"spr\npcres\woman";
         public const int DirectionCount = 8;
-        public const int ArmorVariant = 19;
+        public const int ArmorVariant = 50;
+        public const int MountArmorVariant = 050;
+        public const int MountAltArmorVariant = 072;
         public const int ShadowVariant = 999;
         public const int EmptyWeaponVariant = 0;
         public const int StaffWeaponVariant = 010;
+        public const string MountActionSuffix = "HM01";
 
         // PC action suffixes per weapon type. Same logic as male.
         private static readonly string[,] ActionSuffix = new string[4, 4]
@@ -34,6 +45,9 @@ namespace VLTK.Sandbox
             { "ST06",          "RN04",          "MG05",           "AT07" }, // DualWeapon
         };
 
+        // Weapon right-hand SPR variant per weapon type.
+        // Female has no separate weapon SPRs, so these are placeholders only —
+        // LW/RW slots are built but marked not required (see BuildParts).
         private static readonly int[] WeaponSprVariant = new int[4]
         {
             EmptyWeaponVariant,  // EmptyHand
@@ -43,7 +57,7 @@ namespace VLTK.Sandbox
         };
 
         // PC draw-order table for female: 女主角贴图顺序表.txt
-        // Same structure as male but female-specific order.
+        // Dir1..Dir8 identical to male per PC source. Reuse works as-is.
         private static readonly int[][] DrawOrderByDirection =
         {
             new[] { -1, 14, 13, 1, 4, 9, 7, 5, 6, 12, 8, 0 },
@@ -57,33 +71,58 @@ namespace VLTK.Sandbox
         };
 
         /// <summary>
-        /// Build the SPR part spec list cho female player.
-        /// Same structure as MalePlayerSpriteCatalog.BuildParts nhưng dùng WO_ prefix.
+        /// Build the SPR part spec list for the female player.
+        /// Same shape as MalePlayerSpriteCatalog.BuildParts, but uses FM_ prefix
+        /// and marks Shadow/LW/RW as not required (no female SPRs for them).
         /// </summary>
         public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon)
         {
+            if (action == PlayerVisualAction.Ride)
+                return BuildMountedParts(MountArmorVariant);
+
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
             int rwVariant = WeaponSprVariant[wIdx];
             int lwVariant = (weapon == PcWeaponType.DualWeapon) ? WeaponSprVariant[(int)PcWeaponType.DualWeapon] : EmptyWeaponVariant;
-            bool leftWeaponRequired = weapon != PcWeaponType.LongWeapon;
+
+            // Female has no separate weapon SPRs — LW/RW are not required.
+            const bool leftWeaponRequired = false;
+            const bool rightWeaponRequired = false;
+            // Female has no shadow SPR — Shadow is not required.
+            const bool shadowRequired = false;
 
             return new PlayerSpritePartSpec[]
             {
-                new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
+                new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix),          shadowRequired),
                 new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix), leftWeaponRequired),
-                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, suffix)),
+                new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix),             leftWeaponRequired),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, suffix),             rightWeaponRequired),
+            };
+        }
+
+        /// <summary>
+        /// Mounted female rider (BD/HD/HR/LH/RH) with HM01 action suffix.
+        /// PC npcres/woman mounts never ship Shadow or LW/RW for HM01.
+        /// </summary>
+        public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant)
+        {
+            return new PlayerSpritePartSpec[]
+            {
+                new(PlayerSpritePartKind.Body,         "MountBody",    BuildPath("BD", bodyVariant, MountActionSuffix)),
+                new(PlayerSpritePartKind.Head,         "MountHead",    BuildPath("HD", bodyVariant, MountActionSuffix)),
+                new(PlayerSpritePartKind.Hair,         "MountHair",    BuildPath("HR", bodyVariant, MountActionSuffix)),
+                new(PlayerSpritePartKind.LeftHand,     "MountLHand",   BuildPath("LH", bodyVariant, MountActionSuffix)),
+                new(PlayerSpritePartKind.RightHand,    "MountRHand",   BuildPath("RH", bodyVariant, MountActionSuffix)),
             };
         }
 
         public static string BuildPath(string part, int variant, string action)
         {
-            return SourceRoot + @"\WO_" + part + "_" + variant.ToString("D3") + "_" + action + ".spr";
+            return SourceRoot + @"\FM_" + part + "_" + variant.ToString("D3") + "_" + action + ".spr";
         }
 
         public static int DirectionFromMove(Vector2 move)

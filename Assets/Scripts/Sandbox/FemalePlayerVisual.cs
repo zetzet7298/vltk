@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — ST-02.1 Female Player Visual
-// Mirror of MalePlayerVisual for WO_* SPR parts.
+// Mirror of MalePlayerVisual for FM_* SPR parts.
 // Same layered SPR system, 8-direction animation, sorting.
-// Source: PC npcres/woman SPR set.
+// Source: PC npcres/woman SPR set (FM_BD/H/HR/LH/RH, variant 050).
 // -----------------------------------------------------------------------------
 
 using System;
@@ -16,8 +16,10 @@ namespace VLTK.Sandbox
 {
     /// <summary>
     /// Runtime renderer cho female player SPR set.
-    /// Mirror of MalePlayerVisual với WO_* body parts.
-    /// Tầng layer: shadow, body, head, hair, hands, weapon — giống hệt male.
+    /// Mirror of MalePlayerVisual với FM_* body parts (variant 050).
+    /// Tầng layer: shadow, body, head, hair, hands, weapon — giống male.
+    /// Shadow và LW/RW weapon slots luôn build nhưng mark not-required vì PC
+    /// npcres/woman không có file cho các phần đó.
     /// </summary>
     [DisallowMultipleComponent]
     public sealed class FemalePlayerVisual : MonoBehaviour
@@ -25,6 +27,7 @@ namespace VLTK.Sandbox
         [Header("Playback")]
         public PlayerVisualAction currentAction = PlayerVisualAction.Idle;
         public PcWeaponType currentWeapon = PcWeaponType.EmptyHand;
+        public bool isMounted;
         [Range(0, FemalePlayerSpriteCatalog.DirectionCount - 1)]
         public int direction;
         public float idleFrameRate = 6f;
@@ -44,12 +47,19 @@ namespace VLTK.Sandbox
         private readonly Dictionary<PlayerSpritePartKind, PartRuntime> _parts = new();
         private PlayerVisualAction _loadedAction = (PlayerVisualAction)(-1);
         private PcWeaponType _loadedWeapon = (PcWeaponType)(-1);
+        private readonly List<string> _lastMissingRequiredParts = new();
         private float _time;
 
         public int LoadedPartCount { get; private set; }
         public int CurrentFrameInDirection { get; private set; }
         public bool HasAllRequiredParts { get; private set; }
+        public int MissingRequiredPartCount => LastMissingRequiredParts.Count;
+        public IReadOnlyList<string> LastMissingRequiredParts => _lastMissingRequiredParts;
         public Vector2 LastMoveInput { get; private set; }
+        public bool IsMounted => isMounted;
+
+        public int GetCurrentDirection() => direction;
+        public int GetRiderSortingOrder() => MapRenderer.PlayerSortingOrder + FemalePlayerSpriteCatalog.SortingOffset(PlayerSpritePartKind.Body, direction);
 
         private sealed class PartRuntime
         {
@@ -122,9 +132,28 @@ namespace VLTK.Sandbox
 
         public void SetAction(PlayerVisualAction action)
         {
+            if (isMounted) action = PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
             currentAction = action;
+            _time = 0f;
+            RefreshActionParts(force: true);
+            ApplyFrame(0f);
+        }
+
+        public void SetMounted(bool mounted)
+        {
+            if (isMounted == mounted) return;
+            isMounted = mounted;
+            _loadedAction = (PlayerVisualAction)(-1);
+            if (isMounted)
+            {
+                currentAction = PlayerVisualAction.Ride;
+            }
+            else
+            {
+                currentAction = LastMoveInput.sqrMagnitude < 0.0001f ? PlayerVisualAction.Idle : PlayerVisualAction.Move;
+            }
             _time = 0f;
             RefreshActionParts(force: true);
             ApplyFrame(0f);
@@ -166,6 +195,7 @@ namespace VLTK.Sandbox
 
             LoadedPartCount = 0;
             HasAllRequiredParts = true;
+            _lastMissingRequiredParts.Clear();
             var specs = FemalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
             foreach (var spec in specs)
             {
@@ -175,8 +205,13 @@ namespace VLTK.Sandbox
                 bool ok = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
                 runtime.renderer.enabled = ok;
                 runtime.renderer.gameObject.SetActive(ok);
-                if (ok) LoadedPartCount++;
-                else if (spec.required) HasAllRequiredParts = false;
+                if (ok)
+                    LoadedPartCount++;
+                else if (spec.required)
+                {
+                    HasAllRequiredParts = false;
+                    _lastMissingRequiredParts.Add(spec.sourcePath);
+                }
             }
 
             var tracked = new HashSet<GameObject>();

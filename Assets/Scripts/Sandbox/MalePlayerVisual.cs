@@ -24,6 +24,7 @@ namespace VLTK.Sandbox
         [Header("Playback")]
         public PlayerVisualAction currentAction = PlayerVisualAction.Idle;
         public PcWeaponType currentWeapon = PcWeaponType.EmptyHand;
+        public bool isMounted;
         [Range(0, MalePlayerSpriteCatalog.DirectionCount - 1)]
         public int direction;
         public float idleFrameRate = 6f;
@@ -53,6 +54,10 @@ namespace VLTK.Sandbox
         public int MissingRequiredPartCount => LastMissingRequiredParts.Count;
         public IReadOnlyList<string> LastMissingRequiredParts => _lastMissingRequiredParts;
         public Vector2 LastMoveInput { get; private set; }
+        public bool IsMounted => isMounted;
+
+        public int GetCurrentDirection() => direction;
+        public int GetRiderSortingOrder() => MapRenderer.PlayerSortingOrder + MalePlayerSpriteCatalog.SortingOffset(PlayerSpritePartKind.Body, direction);
 
         private sealed class PartRuntime
         {
@@ -136,10 +141,34 @@ namespace VLTK.Sandbox
 
         public void SetAction(PlayerVisualAction action)
         {
+            if (isMounted) action = PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
 
             currentAction = action;
+            _time = 0f;
+            RefreshActionParts(force: true);
+            ApplyFrame(0f);
+        }
+
+        /// <summary>
+        /// Toggle mounted state. When mounted, the rider renders the HM01 layered
+        /// set (BD/HD/HB) and a separate HorseVisual drives the horse body sprite.
+        /// On dismount the visual returns to the on-foot action previously used.
+        /// </summary>
+        public void SetMounted(bool mounted)
+        {
+            if (isMounted == mounted) return;
+            isMounted = mounted;
+            _loadedAction = (PlayerVisualAction)(-1);
+            if (isMounted)
+            {
+                currentAction = PlayerVisualAction.Ride;
+            }
+            else
+            {
+                currentAction = Vector2.zero == LastMoveInput ? PlayerVisualAction.Idle : PlayerVisualAction.Move;
+            }
             _time = 0f;
             RefreshActionParts(force: true);
             ApplyFrame(0f);

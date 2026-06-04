@@ -1,0 +1,78 @@
+{
+  "generatedAt": "2026-06-04T05:18:33.097100Z",
+  "source": "/var/www/vltksource_new/vl_update_27/Client 6.0/spr/npcres/woman",
+  "count": 10,
+  "missing": [],
+  "sprites": [
+    {
+      "name": "FM_BD_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HM01.spr",
+      "uid": "ad68c286",
+      "unityPath": "Assets/StreamingAssets/Sprites/ad68c286.spr",
+      "bytes": 153876
+    },
+    {
+      "name": "FM_BD_072_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_072_HM01.spr",
+      "uid": "002c978e",
+      "unityPath": "Assets/StreamingAssets/Sprites/002c978e.spr",
+      "bytes": 165833
+    },
+    {
+      "name": "FM_HD_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HM01.spr",
+      "uid": "ec945648",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec945648.spr",
+      "bytes": 29823
+    },
+    {
+      "name": "FM_HD_072_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_072_HM01.spr",
+      "uid": "42655cd4",
+      "unityPath": "Assets/StreamingAssets/Sprites/42655cd4.spr",
+      "bytes": 27959
+    },
+    {
+      "name": "FM_HR_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HM01.spr",
+      "uid": "d37e297e",
+      "unityPath": "Assets/StreamingAssets/Sprites/d37e297e.spr",
+      "bytes": 21974
+    },
+    {
+      "name": "FM_HR_072_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_072_HM01.spr",
+      "uid": "8123f681",
+      "unityPath": "Assets/StreamingAssets/Sprites/8123f681.spr",
+      "bytes": 66395
+    },
+    {
+      "name": "FM_LH_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HM01.spr",
+      "uid": "1b751296",
+      "unityPath": "Assets/StreamingAssets/Sprites/1b751296.spr",
+      "bytes": 72687
+    },
+    {
+      "name": "FM_LH_072_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_072_HM01.spr",
+      "uid": "48256622",
+      "unityPath": "Assets/StreamingAssets/Sprites/48256622.spr",
+      "bytes": 53884
+    },
+    {
+      "name": "FM_RH_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HM01.spr",
+      "uid": "54ad168c",
+      "unityPath": "Assets/StreamingAssets/Sprites/54ad168c.spr",
+      "bytes": 64136
+    },
+    {
+      "name": "FM_RH_072_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_072_HM01.spr",
+      "uid": "8b72f8a4",
+      "unityPath": "Assets/StreamingAssets/Sprites/8b72f8a4.spr",
+      "bytes": 68364
+    }
+  ]
+}
