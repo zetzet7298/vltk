@@ -78,6 +78,7 @@ namespace VLTK.Sandbox
         public const int ArmorVariant = 19;
         public const int ShadowVariant = 999;
         public const int EmptyWeaponVariant = 0;
+        public const int ShortWeaponVariant = 001; // 单手剑1 from 男主角右手武器.txt
         public const int StaffWeaponVariant = 010; // 长棍类1 from 男主角右手武器.txt
 
         // PC action suffixes per weapon type. From 男主角未骑马关联表.txt columns:
@@ -98,7 +99,7 @@ namespace VLTK.Sandbox
         private static readonly int[] WeaponSprVariant = new int[4]
         {
             EmptyWeaponVariant,  // EmptyHand
-            001,                 // ShortWeapon (单手剑1 = RW_001)
+            ShortWeaponVariant,  // ShortWeapon (单手剑1 = RW_001)
             StaffWeaponVariant,  // LongWeapon (长棍类1 = RW_010)
             002,                 // DualWeapon (双剑类 = RW_002)
         };

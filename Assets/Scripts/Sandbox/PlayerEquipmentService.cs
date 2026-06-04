@@ -87,7 +87,11 @@ namespace VLTK.Sandbox
         /// <summary>Map weapon type từ equipment.</summary>
         public PcWeaponType GetCurrentWeaponType()
         {
-            int weaponVariant = GetVariant(PlayerEquipSlot.Weapon);
+            return WeaponVariantToType(GetVariant(PlayerEquipSlot.Weapon));
+        }
+
+        public static PcWeaponType WeaponVariantToType(int weaponVariant)
+        {
             return weaponVariant switch
             {
                 0 => PcWeaponType.EmptyHand,
@@ -139,8 +143,19 @@ namespace VLTK.Sandbox
 
         public static int ItemToWeaponVariant(int itemId)
         {
-            // TODO: Full mapping from weapon item DB
-            return 0; // Default empty hand
+            // PC Client 6.0/settings/item/meleeweapon.txt uses implicit row ids:
+            // 1-21 sword/blade (short weapon), 22-41 staff/spear (long weapon).
+            return itemId switch
+            {
+                >= 1 and <= 21 => MalePlayerSpriteCatalog.ShortWeaponVariant,
+                >= 22 and <= 41 => MalePlayerSpriteCatalog.StaffWeaponVariant,
+                _ => MalePlayerSpriteCatalog.EmptyWeaponVariant,
+            };
+        }
+
+        public static PcWeaponType ItemToWeaponType(int itemId)
+        {
+            return WeaponVariantToType(ItemToWeaponVariant(itemId));
         }
 
         public static int ItemToHelmetVariant(int itemId)

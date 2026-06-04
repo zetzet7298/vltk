@@ -35,10 +35,14 @@ namespace VLTK.Sandbox
         private readonly ItemContractImporter _db;
         private readonly List<InventoryEntry> _inventory = new();
         private readonly Dictionary<EquipSlot, ItemDefinition> _equipped = new();
+        private readonly PlayerEquipmentService _equipment;
 
-        public InventoryService(ItemContractImporter db)
+        public event Action<PcWeaponType> OnWeaponTypeChanged;
+
+        public InventoryService(ItemContractImporter db, PlayerEquipmentService equipment = null)
         {
             _db = db;
+            _equipment = equipment;
         }
 
         public IReadOnlyList<InventoryEntry> Inventory => _inventory;
@@ -93,12 +97,23 @@ namespace VLTK.Sandbox
                 return StatPreview();
             }
             _equipped[slot] = item;
+            if (slot == EquipSlot.Weapon)
+            {
+                int variant = PlayerEquipmentService.ItemToWeaponVariant(itemId);
+                _equipment?.Equip(PlayerEquipSlot.Weapon, variant, itemId);
+                OnWeaponTypeChanged?.Invoke(PlayerEquipmentService.WeaponVariantToType(variant));
+            }
             return StatPreview();
         }
 
         public Dictionary<int, int> Unequip(EquipSlot slot)
         {
             _equipped.Remove(slot);
+            if (slot == EquipSlot.Weapon)
+            {
+                _equipment?.Unequip(PlayerEquipSlot.Weapon);
+                OnWeaponTypeChanged?.Invoke(PcWeaponType.EmptyHand);
+            }
             return StatPreview();
         }
 
