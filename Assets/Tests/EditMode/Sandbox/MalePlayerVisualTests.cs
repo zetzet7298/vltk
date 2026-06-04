@@ -184,17 +184,17 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void Visual_EmptyHandAttack_ReportsMissingRequiredParts_WhenNotStaged()
+        public void Visual_LoadsEmptyHandAttackParts_FromPakStagedSprFiles()
         {
-            _go = new GameObject("MaleEmptyHandAttackMissingTest");
+            _go = new GameObject("MaleEmptyHandAttackTest");
             var visual = _go.AddComponent<MalePlayerVisual>();
             visual.playAutomatically = false;
             visual.SetAction(PlayerVisualAction.Attack);
 
             Assert.AreEqual(PlayerVisualAction.Attack, visual.currentAction);
-            Assert.IsFalse(visual.HasAllRequiredParts);
-            Assert.Greater(visual.MissingRequiredPartCount, 0);
-            Assert.IsTrue(visual.LastMissingRequiredParts.Any(p => p.Contains("AT01")));
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(8, visual.LoadedPartCount);
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
         }
 
         [Test]

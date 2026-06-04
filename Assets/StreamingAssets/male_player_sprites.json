@@ -1,7 +1,7 @@
 {
   "generatedAt": "2026-05-31T15:48:09.579269Z",
   "source": "StreamingAssets/Reference/ (original: jxwin-kinnox/SourceNew/swrod3/Utility/Run/spr/npcres/man)",
-  "count": 114,
+  "count": 122,
   "missing": [],
   "sprites": [
     {
@@ -801,6 +801,62 @@
       "uid": "ebbc3118",
       "unityPath": "Assets/StreamingAssets/Sprites/ebbc3118.spr",
       "bytes": 88120
+    },
+    {
+      "name": "MA_BD_019_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_019_AT01.spr",
+      "uid": "6c8ad97d",
+      "unityPath": "Assets/StreamingAssets/Sprites/6c8ad97d.spr",
+      "bytes": 240615
+    },
+    {
+      "name": "MA_HD_019_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_019_AT01.spr",
+      "uid": "e10430b4",
+      "unityPath": "Assets/StreamingAssets/Sprites/e10430b4.spr",
+      "bytes": 32032
+    },
+    {
+      "name": "MA_HR_019_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_019_AT01.spr",
+      "uid": "cc81f190",
+      "unityPath": "Assets/StreamingAssets/Sprites/cc81f190.spr",
+      "bytes": 44109
+    },
+    {
+      "name": "MA_LH_019_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_019_AT01.spr",
+      "uid": "98eb1632",
+      "unityPath": "Assets/StreamingAssets/Sprites/98eb1632.spr",
+      "bytes": 45860
+    },
+    {
+      "name": "MA_RH_019_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_019_AT01.spr",
+      "uid": "b34e6471",
+      "unityPath": "Assets/StreamingAssets/Sprites/b34e6471.spr",
+      "bytes": 45854
+    },
+    {
+      "name": "MA_LW_000_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LW_000_AT01.spr",
+      "uid": "9a6d774f",
+      "unityPath": "Assets/StreamingAssets/Sprites/9a6d774f.spr",
+      "bytes": 14657
+    },
+    {
+      "name": "MA_RW_000_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RW_000_AT01.spr",
+      "uid": "3a9e6528",
+      "unityPath": "Assets/StreamingAssets/Sprites/3a9e6528.spr",
+      "bytes": 13818
+    },
+    {
+      "name": "MA_YY_999_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_YY_999_AT01.spr",
+      "uid": "a7ff3bf8",
+      "unityPath": "Assets/StreamingAssets/Sprites/a7ff3bf8.spr",
+      "bytes": 133729
     }
   ]
 }
