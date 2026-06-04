@@ -174,6 +174,33 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, visual.MissingRequiredPartCount);
         }
 
+        [TestCase(PlayerVisualAction.Idle)]
+        [TestCase(PlayerVisualAction.Move)]
+        [TestCase(PlayerVisualAction.Magic)]
+        [TestCase(PlayerVisualAction.Attack)]
+        public void Visual_LoadsDualWeaponParts_FromPakStagedSprFiles(PlayerVisualAction action)
+        {
+            _go = new GameObject($"MaleDualWeapon{action}Test");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.DualWeapon);
+            visual.SetAction(action);
+
+            Assert.AreEqual(PcWeaponType.DualWeapon, visual.currentWeapon);
+            Assert.AreEqual(action, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(8, visual.LoadedPartCount);
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
+        }
+
+        [Test]
+        public void Catalog_DualWeapon_UsesBothSongKiem013Layers()
+        {
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Move, PcWeaponType.DualWeapon).ToList();
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon && p.sourcePath.Contains("LW_013_RN04")));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon && p.sourcePath.Contains("RW_013_RN04")));
+        }
+
         [Test]
         public void Visual_LoadsEmptyHandMagicParts_FromStagedSprFiles()
         {

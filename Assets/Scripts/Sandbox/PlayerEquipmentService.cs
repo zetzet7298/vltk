@@ -96,6 +96,7 @@ namespace VLTK.Sandbox
             {
                 0 => PcWeaponType.EmptyHand,
                 >= 1 and <= 9 => PcWeaponType.ShortWeapon,
+                MalePlayerSpriteCatalog.DualWeaponVariant => PcWeaponType.DualWeapon,
                 >= 10 and <= 19 => PcWeaponType.LongWeapon,
                 >= 20 => PcWeaponType.DualWeapon,
                 _ => PcWeaponType.EmptyHand,
@@ -144,11 +145,13 @@ namespace VLTK.Sandbox
         public static int ItemToWeaponVariant(int itemId)
         {
             // PC Client 6.0/settings/item/meleeweapon.txt uses implicit row ids:
-            // 1-21 sword/blade (short weapon), 22-41 staff/spear (long weapon).
+            // 1-21 sword/blade (short weapon), 22-41 staff/spear (long weapon),
+            // 42-71 dual/paired weapons (dual weapon).
             return itemId switch
             {
                 >= 1 and <= 21 => MalePlayerSpriteCatalog.ShortWeaponVariant,
                 >= 22 and <= 41 => MalePlayerSpriteCatalog.StaffWeaponVariant,
+                >= 42 and <= 71 => MalePlayerSpriteCatalog.DualWeaponVariant,
                 _ => MalePlayerSpriteCatalog.EmptyWeaponVariant,
             };
         }

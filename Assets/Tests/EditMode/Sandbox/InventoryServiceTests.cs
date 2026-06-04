@@ -150,13 +150,15 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(MalePlayerSpriteCatalog.ShortWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(21));
             Assert.AreEqual(MalePlayerSpriteCatalog.StaffWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(22));
             Assert.AreEqual(MalePlayerSpriteCatalog.StaffWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(41));
+            Assert.AreEqual(MalePlayerSpriteCatalog.DualWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(42));
+            Assert.AreEqual(MalePlayerSpriteCatalog.DualWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(71));
             Assert.AreEqual(MalePlayerSpriteCatalog.EmptyWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(999));
         }
 
         [Test]
         public void InventoryEquipWeapon_UpdatesEquipmentServiceAndControllerVisual()
         {
-            var db = DbWith(Item(1, "Kiếm ngắn", 28, 10), Item(22, "Côn dài", 28, 20));
+            var db = DbWith(Item(1, "Kiếm ngắn", 28, 10), Item(22, "Côn dài", 28, 20), Item(42, "Song kiếm", 28, 30));
             var equipment = new PlayerEquipmentService();
             var svc = new InventoryService(db, equipment);
             var go = new GameObject("InventoryVisualBridgeTest");
@@ -177,6 +179,12 @@ namespace VLTK.Tests.Sandbox
                 Assert.AreEqual(PcWeaponType.LongWeapon, equipment.GetCurrentWeaponType());
                 Assert.AreEqual(PcWeaponType.LongWeapon, controller.EquippedWeapon);
                 Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
+                Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
+
+                svc.Equip(EquipSlot.Weapon, 42);
+                Assert.AreEqual(PcWeaponType.DualWeapon, equipment.GetCurrentWeaponType());
+                Assert.AreEqual(PcWeaponType.DualWeapon, controller.EquippedWeapon);
+                Assert.AreEqual(PcWeaponType.DualWeapon, controller.visual.currentWeapon);
                 Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
 
                 svc.Unequip(EquipSlot.Weapon);

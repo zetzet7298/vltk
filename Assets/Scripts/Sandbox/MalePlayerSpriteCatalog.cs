@@ -80,6 +80,7 @@ namespace VLTK.Sandbox
         public const int EmptyWeaponVariant = 0;
         public const int ShortWeaponVariant = 001; // 单手剑1 from 男主角右手武器.txt
         public const int StaffWeaponVariant = 010; // 长棍类1 from 男主角右手武器.txt
+        public const int DualWeaponVariant = 013; // 双武器/双剑类1 from 男主角左右手武器.txt
 
         // PC action suffixes per weapon type. From 男主角未骑马关联表.txt columns:
         // cdo_fightstand maps to: 空手站立1=ST01, 短武器站立=ST04, 长武器站立=ST05, 双武器站立=ST06
@@ -101,7 +102,7 @@ namespace VLTK.Sandbox
             EmptyWeaponVariant,  // EmptyHand
             ShortWeaponVariant,  // ShortWeapon (单手剑1 = RW_001)
             StaffWeaponVariant,  // LongWeapon (长棍类1 = RW_010)
-            002,                 // DualWeapon (双剑类 = RW_002)
+            DualWeaponVariant,   // DualWeapon (双剑类1 = LW/RW_013)
         };
 
         // PC draw-order table: Settings/NpcRes/男主角贴图顺序表.txt, Dir1..Dir8.
