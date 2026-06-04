@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using VLTK.Model;
 using VLTK.Sandbox;
+using VLTK.UI;
 
 namespace VLTK.Tests.Sandbox
 {
@@ -281,5 +282,83 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, service.ActiveEffectCount);
         }
 
+        [Test]
+        public void GetDefaultSkillsForFaction_ReturnsCorrectSkillsForAllFactions()
+        {
+            var go = new GameObject("Test");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                var method = typeof(CombatSkillSlotController).GetMethod("GetDefaultSkillsForFaction", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                Assert.IsNotNull(method);
+
+                var factions = new[]
+                {
+                    new { faction = CombatFaction.CaiBang, left = 357, right = 359 },
+                    new { faction = CombatFaction.WuDang, left = 153, right = 155 },
+                    new { faction = CombatFaction.Shaolin, left = 10, right = 11 },
+                    new { faction = CombatFaction.TangMen, left = 47, right = 58 },
+                    new { faction = CombatFaction.EMei, left = 80, right = 91 },
+                    new { faction = CombatFaction.TianWang, left = 40, right = 41 },
+                    new { faction = CombatFaction.WuDu, left = 63, right = 65 },
+                    new { faction = CombatFaction.CuiYan, left = 99, right = 105 },
+                    new { faction = CombatFaction.TianRen, left = 142, right = 148 },
+                    new { faction = CombatFaction.KunLun, left = 172, right = 182 }
+                };
+
+                foreach (var f in factions)
+                {
+                    var args = new object[] { f.faction, 0, 0 };
+                    method.Invoke(controller, args);
+                    Assert.AreEqual(f.left, (int)args[1], $"Left skill mismatch for {f.faction}");
+                    Assert.AreEqual(f.right, (int)args[2], $"Right skill mismatch for {f.faction}");
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void CreateCombatActor_UsesPlayerFactionAndComputesCorrectMana()
+        {
+            var go = new GameObject("Test");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            
+            var progression = new PlayerProgressionState();
+            progression.faction = CombatFaction.WuDang;
+            progression.level = 100;
+            progression.knownSkills.Add(153);
+            progression.skillLevels[153] = 10;
+
+            typeof(CombatSkillSlotController).GetField("_progression", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(controller, progression);
+            
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            typeof(CombatSkillSlotController).GetField("_catalog", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(controller, catalog);
+
+            var skill = catalog.Resolve(153);
+            var playerGo = new GameObject("Player");
+            var playerController = playerGo.AddComponent<SandboxPlayerController>();
+
+            try
+            {
+                var method = typeof(CombatSkillSlotController).GetMethod("CreateCombatActor", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                Assert.IsNotNull(method);
+
+                var actor = method.Invoke(controller, new object[] { playerController, skill }) as CombatActorState;
+                Assert.IsNotNull(actor);
+                Assert.AreEqual(CombatFaction.WuDang, actor.faction);
+                Assert.AreEqual(100, actor.level);
+                Assert.AreEqual(PcMaxManaFormula.Compute(100, 0, CombatFaction.WuDang), actor.currentMana);
+                Assert.IsTrue(actor.knownSkills.Contains(153));
+                Assert.AreEqual(10, actor.skillLevels[153]);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+                Object.DestroyImmediate(playerGo);
+            }
+        }
     }
 }

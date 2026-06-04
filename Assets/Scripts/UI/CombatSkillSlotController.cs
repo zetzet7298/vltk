@@ -69,8 +69,9 @@ namespace VLTK.UI
                 if (manager != null && manager.PlayerProgression != null)
                 {
                     var prog = manager.PlayerProgression;
-                    if (prog.knownSkills.Contains(357)) leftSlotSkillId = 357;
-                    if (prog.knownSkills.Contains(359)) rightSlotSkillId = 359;
+                    GetDefaultSkillsForFaction(prog.faction, out int defaultLeft, out int defaultRight);
+                    if (prog.knownSkills.Contains(defaultLeft)) leftSlotSkillId = defaultLeft;
+                    if (prog.knownSkills.Contains(defaultRight)) rightSlotSkillId = defaultRight;
                 }
             }
 
@@ -157,6 +158,57 @@ namespace VLTK.UI
             _catalog = catalog;
             _progression = progression;
             BindElements();
+        }
+
+        private void GetDefaultSkillsForFaction(CombatFaction faction, out int leftSkill, out int rightSkill)
+        {
+            switch (faction)
+            {
+                case CombatFaction.CaiBang:
+                    leftSkill = 357;
+                    rightSkill = 359;
+                    break;
+                case CombatFaction.WuDang:
+                    leftSkill = 153;
+                    rightSkill = 155;
+                    break;
+                case CombatFaction.Shaolin:
+                    leftSkill = 10;
+                    rightSkill = 11;
+                    break;
+                case CombatFaction.TangMen:
+                    leftSkill = 47;
+                    rightSkill = 58;
+                    break;
+                case CombatFaction.EMei:
+                    leftSkill = 80;
+                    rightSkill = 91;
+                    break;
+                case CombatFaction.TianWang:
+                    leftSkill = 40;
+                    rightSkill = 41;
+                    break;
+                case CombatFaction.WuDu:
+                    leftSkill = 63;
+                    rightSkill = 65;
+                    break;
+                case CombatFaction.CuiYan:
+                    leftSkill = 99;
+                    rightSkill = 105;
+                    break;
+                case CombatFaction.TianRen:
+                    leftSkill = 142;
+                    rightSkill = 148;
+                    break;
+                case CombatFaction.KunLun:
+                    leftSkill = 172;
+                    rightSkill = 182;
+                    break;
+                default:
+                    leftSkill = 0;
+                    rightSkill = 0;
+                    break;
+            }
         }
 
         /// <summary>Assign a skill to a specific slot.</summary>
@@ -288,14 +340,26 @@ namespace VLTK.UI
             var progression = _progression ?? SandboxManager.Instance?.PlayerProgression;
             string artPath = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
 
-            // Show all Cái Bang active damage skills (not passives) in picker.
-            // 16 PC gốc (115-130) + 7 MOD additions (274, 277, 357, 359, 360, 1073, 1074).
-            // Passives (115, 116, 118, 120, 123, 126, 129, 274, 360) filtered out by damage flag.
-            var activeSkillIds = new System.Collections.Generic.List<int>
+            CombatFaction playerFaction = progression?.faction ?? CombatFaction.CaiBang;
+            var factionSkillOrder = PcSkillPanelService.GetPcSkillOrder(playerFaction);
+
+            var activeSkillIds = new System.Collections.Generic.List<int>();
+            foreach (var skillId in factionSkillOrder)
             {
-                117, 119, 121, 122, 124, 125, 127, 128, 130,
-                277, 357, 359, 1073, 1074
-            };
+                if (skillId == PcSkillPanelService.NpcVariantSkillId)
+                    continue;
+
+                var skill = catalog.Resolve(skillId);
+                if (skill == null) continue;
+
+                if (skill.skillStyle == PcSkillStyle.PassivityNpcState)
+                    continue;
+
+                int learnedLevel = progression?.GetSkillLevel(skill.skillId) ?? 0;
+                if (learnedLevel <= 0) continue;
+
+                activeSkillIds.Add(skillId);
+            }
 
             foreach (var skillId in activeSkillIds)
             {
@@ -567,17 +631,20 @@ namespace VLTK.UI
         private CombatActorState CreateCombatActor(SandboxPlayerController player, SkillDefinition skill)
         {
             var manager = SandboxManager.Instance;
+            var progression = _progression ?? manager?.PlayerProgression ?? new PlayerProgressionState();
+
             // Ensure progression has been granted so level/skills are populated.
             if (manager != null)
-                manager.GrantCaiBangSkillPanelProgression();
+            {
+                manager.GrantFactionSkillPanelProgression(progression.faction);
+            }
 
-            var progression = manager?.PlayerProgression;
-            int playerLevel = progression?.level ?? 1;
-            int playerMana = PcMaxManaFormula.ComputeCaiBang(playerLevel, innerStrength: 0);
+            int playerLevel = progression.level;
+            int playerMana = PcMaxManaFormula.Compute(playerLevel, 0, progression.faction);
             var actor = new CombatActorState
             {
                 actorId = 1,
-                faction = CombatFaction.CaiBang,
+                faction = progression.faction,
                 level = playerLevel,
                 fightMode = true,
                 position = player.transform.position,
@@ -586,20 +653,11 @@ namespace VLTK.UI
                 maxLife = 100,
             };
 
-            // Copy known skills and levels from progression (populated by GrantCaiBangSkillPanelProgression).
-            if (progression != null)
-            {
-                foreach (var id in progression.knownSkills)
-                    actor.knownSkills.Add(id);
-                foreach (var kv in progression.skillLevels)
-                    actor.skillLevels[kv.Key] = kv.Value > 0 ? kv.Value : 1;
-            }
-            else
-            {
-                // Fallback: grant all CaiBang skills
-                for (int id = 115; id <= 130; id++)
-                    actor.knownSkills.Add(id);
-            }
+            // Copy known skills and levels from progression (populated by GrantFactionSkillPanelProgression).
+            foreach (var id in progression.knownSkills)
+                actor.knownSkills.Add(id);
+            foreach (var kv in progression.skillLevels)
+                actor.skillLevels[kv.Key] = kv.Value > 0 ? kv.Value : 1;
 
             // Ensure the active skill has at least level 1
             if (!actor.skillLevels.ContainsKey(skill.skillId) || actor.skillLevels[skill.skillId] <= 0)

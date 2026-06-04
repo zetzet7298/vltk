@@ -120,6 +120,48 @@
             </ui:VisualElement>
             <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
         </ui:VisualElement>
+        <!-- Buff / Debuff panel: PC MiniSkill.ini / SkillState.ini -->
+        <ui:VisualElement name="BuffPanel" class="hud-buff-panel">
+            <!-- Dynamically populated in C# -->
+        </ui:VisualElement>
+
+        <!-- Team Preview: PC 队伍一览信息.ini -->
+        <ui:VisualElement name="TeamPreview" class="hud-team-preview hidden">
+            <!-- Dynamically populated in C# -->
+        </ui:VisualElement>
+
+        <!-- Trade Info Panel: PC TradeInfo.ini -->
+        <ui:VisualElement name="TradeInfoPanel" class="hud-trade-panel hidden">
+            <ui:VisualElement name="TradeInfoClose" class="hud-trade-close"/>
+            <ui:Label name="TradeTitle" text="Thông tin Giao dịch" class="hud-trade-title"/>
+            <ui:VisualElement name="TradeInfoRows" class="hud-trade-rows">
+                <ui:Label name="TradePartnerName" text="     + Tên: --" class="hud-trade-label"/>
+                <ui:Label name="TradePartnerLevel" text="     + Cấp: --" class="hud-trade-label"/>
+                <ui:Label name="TradePartnerFaction" text="     + Phái: --" class="hud-trade-label"/>
+                <ui:Label name="TradePartnerGuild" text="     + Bang: --" class="hud-trade-label"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Stall Currency Selector: PC UiStallCurrency.ini -->
+        <ui:VisualElement name="StallCurrencySelector" class="hud-stall-currency hidden">
+            <ui:Label text="Lựa chọn tiền tệ" class="hud-stall-currency-title"/>
+            <ui:VisualElement name="StallCurrencyBtns" class="hud-stall-btns-row">
+                <ui:Button name="StallMoneyBtn" text="Bạch Ngân" class="hud-stall-btn hud-stall-money-btn"/>
+                <ui:Button name="StallCoinBtn" text="Đồng Xu" class="hud-stall-btn hud-stall-coin-btn"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Emote Picker Overlay: opened by tapping face button -->
+        <ui:VisualElement name="FacePickerOverlay" class="hud-face-picker-overlay hidden">
+            <ui:VisualElement name="FacePickerWindow" class="hud-face-picker-window">
+                <ui:VisualElement name="FacePickerHeader" class="hud-face-picker-header">
+                    <ui:Label text="Biểu cảm" class="hud-face-picker-title"/>
+                    <ui:VisualElement name="FacePickerClose" class="hud-face-picker-close"/>
+                </ui:VisualElement>
+                <ui:ScrollView name="FacePickerList" class="hud-face-picker-list"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <!-- Skill picker overlay: tap skill slot to assign → shows list of learned skills -->
         <ui:VisualElement name="SkillPickerOverlay" class="hud-skill-picker-overlay hidden">
             <ui:VisualElement name="SkillPickerWindow" class="hud-skill-picker-window">

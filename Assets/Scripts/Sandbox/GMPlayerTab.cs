@@ -229,11 +229,11 @@ namespace VLTK.Sandbox
                 var hudObj = Object.FindAnyObjectByType(hudType);
                 if (hudObj != null)
                 {
-                    var isVisibleProp = hudType.GetProperty("IsCaiBangSkillPanelVisible");
+                    var isVisibleProp = hudType.GetProperty("IsSkillPanelVisible");
                     bool isVisible = isVisibleProp != null && (bool)isVisibleProp.GetValue(hudObj, null);
                     if (isVisible)
                     {
-                        var openMethod = hudType.GetMethod("OpenCaiBangSkillPanel");
+                        var openMethod = hudType.GetMethod("OpenSkillPanel");
                         if (openMethod != null) openMethod.Invoke(hudObj, null);
                     }
                 }
@@ -294,11 +294,11 @@ namespace VLTK.Sandbox
                     var hudObj = Object.FindAnyObjectByType(hudType);
                     if (hudObj != null)
                     {
-                        var isVisibleProp = hudType.GetProperty("IsCaiBangSkillPanelVisible");
+                        var isVisibleProp = hudType.GetProperty("IsSkillPanelVisible");
                         bool isVisible = isVisibleProp != null && (bool)isVisibleProp.GetValue(hudObj, null);
                         if (isVisible)
                         {
-                            var openMethod = hudType.GetMethod("OpenCaiBangSkillPanel");
+                            var openMethod = hudType.GetMethod("OpenSkillPanel");
                             if (openMethod != null) openMethod.Invoke(hudObj, null);
                         }
                     }

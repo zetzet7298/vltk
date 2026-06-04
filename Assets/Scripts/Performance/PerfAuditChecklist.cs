@@ -5,6 +5,7 @@
 
 using UnityEngine;
 using UnityEngine.Profiling;
+using Unity.Profiling;
 using VLTK.Core;
 
 namespace VLTK.Sandbox
@@ -20,6 +21,8 @@ namespace VLTK.Sandbox
         public const int MaxTriangles = 500_000;
         public const long MaxRuntimeMemoryMb = 200;
         public const long MaxGcAllocBytesPerFrame = 16 * 1024;
+
+        private static readonly ProfilerRecorder _gcAllocRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated Bytes");
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoAudit()
@@ -69,7 +72,8 @@ namespace VLTK.Sandbox
 
         public static bool AuditGcAlloc()
         {
-            return AuditGcAlloc(Profiler.GetMonoUsedSizeLong());
+            long gcAlloc = _gcAllocRecorder.Valid ? _gcAllocRecorder.LastValue : 0;
+            return AuditGcAlloc(gcAlloc);
         }
     }
 }

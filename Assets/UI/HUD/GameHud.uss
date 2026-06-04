@@ -760,3 +760,287 @@
     border-color: rgb(230, 180, 50);
     background-color: rgb(110, 20, 10);
 }
+
+/* ──────────────────────────────────────────────────────────────────────────
+   NEW HUD PANELS STYLING
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Buff / Debuff Panel */
+.hud-buff-panel {
+    position: absolute;
+    left: 120px;
+    top: 52px;
+    width: 240px;
+    height: 72px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: transparent;
+}
+
+.hud-buff-cell {
+    width: 32px;
+    height: 38px;
+    margin: 2px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.hud-buff-icon {
+    width: 24px;
+    height: 24px;
+    border-width: 1px;
+    border-radius: 2px;
+    background-color: rgb(10, 20, 15);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-buff-border-green {
+    border-color: rgb(55, 231, 63);
+}
+
+.hud-buff-border-orange {
+    border-color: rgb(255, 140, 0);
+}
+
+.hud-buff-timer {
+    font-size: 8px;
+    color: rgb(55, 231, 63);
+    -unity-text-align: middle-center;
+    height: 11px;
+    margin-top: 1px;
+    -unity-font-style: bold;
+}
+
+.hud-debuff-timer {
+    color: rgb(255, 140, 0);
+}
+
+/* Team Preview Overlay */
+.hud-team-preview {
+    position: absolute;
+    left: 10px;
+    top: 88px;
+    width: 170px;
+    flex-direction: column;
+}
+
+.hud-team-member {
+    position: relative;
+    height: 50px;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(5, 10, 8, 0.85);
+    border-width: 1px;
+    border-color: rgb(45, 130, 105);
+    border-radius: 4px;
+    margin-bottom: 4px;
+    padding: 2px 4px;
+}
+
+.hud-team-leader-flag {
+    position: absolute;
+    left: 17px;
+    top: -5px;
+    width: 12px;
+    height: 12px;
+    background-image: url('project://database/Assets/UI/HUD/Art/队长移交_00.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-team-faction-icon {
+    width: 26px;
+    height: 26px;
+    margin-right: 6px;
+    background-color: rgba(0,0,0,0.5);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-team-member-info {
+    flex-grow: 1;
+    flex-direction: column;
+}
+
+.hud-team-member-name {
+    font-size: 10px;
+    color: rgb(165, 255, 203);
+    -unity-font-style: bold;
+    margin-bottom: 2px;
+    max-width: 120px;
+    overflow: hidden;
+}
+
+.hud-team-bar-track {
+    height: 5px;
+    width: 73px;
+    background-color: rgba(0, 0, 0, 0.6);
+    margin-bottom: 1px;
+    overflow: hidden;
+}
+
+.hud-team-bar-fill-hp {
+    height: 100%;
+    background-color: rgb(220, 50, 40);
+}
+
+.hud-team-bar-fill-mp {
+    height: 100%;
+    background-color: rgb(40, 120, 220);
+}
+
+/* Trade Info Panel */
+.hud-trade-panel {
+    position: absolute;
+    left: 15px;
+    top: 170px;
+    width: 182px;
+    height: 110px;
+    background-color: rgba(5, 12, 10, 0.95);
+    border-width: 2px;
+    border-color: rgb(180, 150, 80);
+    border-radius: 4px;
+    padding: 6px;
+}
+
+.hud-trade-close {
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    background-color: rgba(180, 50, 40, 0.85);
+    border-radius: 7px;
+    border-width: 1px;
+    border-color: rgb(220, 220, 220);
+}
+
+.hud-trade-title {
+    font-size: 11px;
+    color: rgb(255, 220, 90);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 6px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(80, 80, 80);
+}
+
+.hud-trade-rows {
+    flex-direction: column;
+}
+
+.hud-trade-label {
+    font-size: 10px;
+    color: rgb(230, 230, 210);
+    margin-bottom: 2px;
+}
+
+/* Stall Currency Selector */
+.hud-stall-currency {
+    position: absolute;
+    left: 460px;
+    top: 150px;
+    width: 180px;
+    height: 80px;
+    background-color: rgba(5, 12, 10, 0.95);
+    border-width: 2px;
+    border-color: rgb(180, 150, 80);
+    border-radius: 4px;
+    padding: 8px;
+    align-items: center;
+}
+
+.hud-stall-currency-title {
+    font-size: 11px;
+    color: rgb(230, 230, 210);
+    margin-bottom: 8px;
+    -unity-font-style: bold;
+}
+
+.hud-stall-btns-row {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.hud-stall-btn {
+    font-size: 10px;
+    background-color: rgb(35, 115, 95);
+    border-color: rgb(55, 185, 150);
+    color: white;
+    width: 75px;
+    height: 24px;
+    border-radius: 4px;
+}
+
+/* Emote / Face Picker Overlay */
+.hud-face-picker-overlay {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.35);
+    align-items: center;
+    justify-content: center;
+}
+
+.hud-face-picker-window {
+    width: 320px;
+    max-height: 240px;
+    background-color: rgba(15, 35, 28, 0.97);
+    border-width: 2px;
+    border-color: rgb(80, 160, 120);
+    border-radius: 8px;
+    position: absolute;
+    left: 155px;
+    bottom: 150px;
+}
+
+.hud-face-picker-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 10px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgb(50, 100, 80);
+}
+
+.hud-face-picker-title {
+    font-size: 12px;
+    color: rgb(220, 235, 210);
+    -unity-font-style: bold;
+}
+
+.hud-face-picker-close {
+    width: 20px;
+    height: 20px;
+    background-color: rgba(180, 60, 60, 0.85);
+    border-radius: 10px;
+}
+
+.hud-face-picker-list {
+    max-height: 190px;
+}
+
+.hud-face-picker-list .unity-scroll-view__content-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 4px;
+}
+
+.hud-face-item {
+    width: 28px;
+    height: 28px;
+    margin: 2px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(20, 50, 40, 0.8);
+    border-width: 1px;
+    border-color: rgb(50, 100, 80);
+    border-radius: 4px;
+}
+
+.hud-face-item-text {
+    font-size: 14px;
+    -unity-text-align: middle-center;
+}
+

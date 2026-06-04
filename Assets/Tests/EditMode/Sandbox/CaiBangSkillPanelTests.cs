@@ -143,18 +143,18 @@ namespace VLTK.Tests.Sandbox
                 var hud = go.AddComponent<GameHudController>();
                 // Use reflection-free public path by invoking the panel population through real open method;
                 // no SandboxManager exists here, so it uses the PC-derived fallback catalog and progression.
-                typeof(GameHudController).GetField("_caiBangSkillPanel", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, panel);
-                typeof(GameHudController).GetField("_caiBangSkillSummary", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, summary);
-                typeof(GameHudController).GetField("_caiBangSkillList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, list);
+                typeof(GameHudController).GetField("_skillPanel", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, panel);
+                typeof(GameHudController).GetField("_skillSummary", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, summary);
+                typeof(GameHudController).GetField("_skillList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, list);
 
-                hud.OpenCaiBangSkillPanel();
+                hud.OpenSkillPanel();
 
-                Assert.IsTrue(hud.IsCaiBangSkillPanelVisible);
+                Assert.IsTrue(hud.IsSkillPanelVisible);
                 Assert.AreEqual(30, hud.PcSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
-                Assert.IsNotNull(hud.CurrentCaiBangSkillSnapshot);
-                Assert.AreEqual(24, hud.CurrentCaiBangSkillSnapshot.rows.Count, "Single scrollable page shows all 24 Cái Bang fight skills.");
-                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentCaiBangSkillSnapshot.rows.Select(r => r.skillId).ToArray());
-                Assert.That(hud.CurrentCaiBangSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
+                Assert.IsNotNull(hud.CurrentSkillSnapshot);
+                Assert.AreEqual(24, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 24 Cái Bang fight skills.");
+                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
+                Assert.That(hud.CurrentSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
                 Assert.AreEqual("200", summary.text);
                 // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
                 Assert.IsNotNull(typeof(MalePlayerVisual));
