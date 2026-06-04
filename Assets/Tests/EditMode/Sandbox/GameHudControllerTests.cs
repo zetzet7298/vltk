@@ -221,5 +221,30 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(timerLabel.ClassListContains("hud-buff-timer") || timerLabel.ClassListContains("hud-debuff-timer"));
             }
         }
+
+        [Test]
+        public void HudArtPathResolver_UsesStreamingAssetsRootInEditor()
+        {
+            var expected = System.IO.Path.Combine(Application.streamingAssetsPath, "UI/HUD/Art");
+            var legacyDataPath = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art");
+
+            Assert.AreEqual(expected, HudArtPathResolver.ResolveArtRoot("UI/HUD/Art"));
+            Assert.AreNotEqual(legacyDataPath, HudArtPathResolver.ResolveArtRoot("UI/HUD/Art"));
+        }
+
+        [Test]
+        public void HudArtPathResolver_PreservesStreamingAssetsRootForMobileArchivePaths()
+        {
+            const string androidStreamingRoot = "jar:file:///data/app/vltk/base.apk!/assets";
+
+            var artRoot = HudArtPathResolver.ResolveUnderStreamingAssets(androidStreamingRoot, "/UI/HUD/Art/");
+            var generatedRoot = HudArtPathResolver.ResolveUnderStreamingAssets(androidStreamingRoot, "UI/HUD/Art/Generated");
+
+            Assert.AreEqual("jar:file:///data/app/vltk/base.apk!/assets/UI/HUD/Art", artRoot);
+            Assert.AreEqual("jar:file:///data/app/vltk/base.apk!/assets/UI/HUD/Art/Generated", generatedRoot);
+            Assert.IsTrue(HudArtPathResolver.RequiresUnityWebRequest(generatedRoot));
+            Assert.IsFalse(HudArtPathResolver.CanCheckDirectory(generatedRoot));
+        }
+
     }
 }

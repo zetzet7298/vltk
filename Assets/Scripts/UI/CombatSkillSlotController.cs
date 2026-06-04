@@ -338,7 +338,7 @@ namespace VLTK.UI
             if (catalog == null) return;
 
             var progression = _progression ?? SandboxManager.Instance?.PlayerProgression;
-            string artPath = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
+            string artPath = HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art");
 
             CombatFaction playerFaction = progression?.faction ?? CombatFaction.CaiBang;
             var factionSkillOrder = PcSkillPanelService.GetPcSkillOrder(playerFaction);
@@ -375,7 +375,7 @@ namespace VLTK.UI
 
                 var icon = new VisualElement();
                 icon.AddToClassList("skill-picker-icon");
-                GameHudController.LoadIconStatic(icon, artPath, $"cai_bang_skill_{skillId}");
+                GameHudController.LoadIconStatic(this, icon, artPath, $"cai_bang_skill_{skillId}");
                 item.Add(icon);
 
                 var info = new VisualElement();
@@ -415,13 +415,13 @@ namespace VLTK.UI
 
         private void RefreshSlotVisuals()
         {
-            string artPath = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
+            string artPath = HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art");
 
             if (_leftSkillIcon != null)
             {
                 if (leftSlotSkillId > 0)
                 {
-                    GameHudController.LoadIconStatic(_leftSkillIcon, artPath, $"cai_bang_skill_{leftSlotSkillId}");
+                    GameHudController.LoadIconStatic(this, _leftSkillIcon, artPath, $"cai_bang_skill_{leftSlotSkillId}");
                     _leftSkillIcon.RemoveFromClassList("empty");
                 }
                 else
@@ -435,7 +435,7 @@ namespace VLTK.UI
             {
                 if (rightSlotSkillId > 0)
                 {
-                    GameHudController.LoadIconStatic(_rightSkillIcon, artPath, $"cai_bang_skill_{rightSlotSkillId}");
+                    GameHudController.LoadIconStatic(this, _rightSkillIcon, artPath, $"cai_bang_skill_{rightSlotSkillId}");
                     _rightSkillIcon.RemoveFromClassList("empty");
                 }
                 else
