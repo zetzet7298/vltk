@@ -147,6 +147,7 @@ namespace VLTK.Sandbox
             ConfigureWuDangVisuals(skill, effect, skillLevel);
             ConfigureShaolinVisuals(skill, effect, skillLevel);
             ConfigureTangMenVisuals(skill, effect, skillLevel);
+            ConfigureEMeiVisuals(skill, effect, skillLevel);
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
@@ -843,6 +844,49 @@ namespace VLTK.Sandbox
                 var offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
                 fx.missilePositions[i] = fx.casterPos;
                 fx.missileTargets[i] = fx.casterPos + offset;
+            }
+        }
+
+        private void ConfigureEMeiVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            if (!PcCombatCatalogFactory.IsEMeiSkill(skill.skillId)) return;
+
+            switch (skill.skillId)
+            {
+                case 80: // Phiêu Tuyết Xuyên Vân (峨嵋-飞雪) - single guided water missile
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                case 82: // Tứ Tượng Đồng Quy - single water missile
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                case 85: // Nhất Diệp Tri Thu
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                case 88: // Bất Diệt Bất Tuyệt
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 20, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                case 91: // Phật Quang Phổ Chiếu
+                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
+                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 22, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                case 81: // Thu Phong Diệp (buff/aura)
+                case 83: // Vọng Nguyệt (buff/aura)
+                case 84: // Phong Vũ Phiêu Hương (buff/aura)
+                case 86: // Lưu Thủy (buff/aura)
+                case 89: // Mộng Điệp (buff/aura)
+                case 90: // Mê Tung Ảo Ảnh (buff/aura)
+                case 92: // Phật Tâm Từ Hữu (buff/aura)
+                case 93: // Từ Hàng Phổ Độ (buff/aura)
+                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
+                    break;
+                default:
+                    fx.preCastDuration = 0;
+                    fx.phase = SkillEffectPhase.Finished;
+                    break;
             }
         }
     }

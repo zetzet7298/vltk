@@ -52,9 +52,15 @@ namespace VLTK.Sandbox
             {
                 SwitchToFaction(CombatFaction.TangMen);
             });
+
+            // Button 2.9: Nga My
+            CreateGMButton(containerGo.transform, "Gia nhập Nga My (Thủy)", new Vector2(0, -80), () =>
+            {
+                SwitchToFaction(CombatFaction.EMei);
+            });
  
             // Button 3: Max Level & Kỹ năng
-            CreateGMButton(containerGo.transform, "Tối đa cấp độ & kĩ năng", new Vector2(0, -80), () =>
+            CreateGMButton(containerGo.transform, "Tối đa cấp độ & kĩ năng", new Vector2(0, -130), () =>
             {
                 MaxAllStats();
             });
@@ -151,6 +157,11 @@ namespace VLTK.Sandbox
                         {
                             assignMethod.Invoke(slotsObj, new object[] { 0, 47 });
                             assignMethod.Invoke(slotsObj, new object[] { 1, 58 });
+                        }
+                        else if (faction == CombatFaction.EMei)
+                        {
+                            assignMethod.Invoke(slotsObj, new object[] { 0, 80 });
+                            assignMethod.Invoke(slotsObj, new object[] { 1, 91 });
                         }
                     }
                 }
