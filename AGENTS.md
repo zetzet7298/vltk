@@ -1,6 +1,5 @@
 # Agent Instructions
 
-
 ## Tools RULES:
 
 - Always use `srcwalk` skill: for best codebase/files/dirs exploration, discover, searching.
@@ -26,23 +25,12 @@ Reference files gốc từ PC được lưu trong `Assets/StreamingAssets/Refere
 
 - `/var/www/vltktool/` — Bộ công cụ Python: SPR decoder, PAK unpacker, item runtime, CMS web
 
-<!-- HARNESS:BEGIN -->
+## Harness DB Rule
 
-## Harness
+- Chỉ dùng một durable Harness DB: `/var/www/vltk-mobile/harness/harness.db`.
+- Chạy Harness CLI từ `/var/www/vltk-mobile/harness` bằng `scripts/harness ...`.
+- Không `init`, `migrate`, `intake`, `story`, `trace` hoặc `query` vào `/var/www/vltk-mobile/harness.db` ở repo root.
+- Nếu đang đứng ở `/var/www/vltk-mobile`, dùng `HARNESS_DB=/var/www/vltk-mobile/harness/harness.db scripts/harness ...` hoặc chuyển `workdir` sang `/var/www/vltk-mobile/harness`.
 
-This repo uses Harness. Before work, read:
-
-- `README.md`
-- `docs/HARNESS.md`
-- `docs/FEATURE_INTAKE.md`
-- `docs/ARCHITECTURE.md`
-- `docs/CONTEXT_RULES.md`
-- `scripts/harness query matrix`
-
-Use the Rust Harness CLI as the main operational tool. Run it through the
-stable repo-local entrypoint `scripts/harness`, which uses the prebuilt Rust
-binary at `scripts/bin/harness-cli` in installed projects.
-
-<!-- HARNESS:END -->
 
 ### Không tự ý tạo các tài liệu markdown trừ khi human cho phép
