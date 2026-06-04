@@ -63,6 +63,25 @@ namespace VLTK.Sandbox
             return catalog;
         }
 
+        public static SkillCatalog CreateNoviceCoreSectAndModCatalog(string modSkillsPath, IAssetRegistry assets = null, bool includeWuDang = true, bool includeShaolin = true, bool includeTangMen = true, bool includeEMei = true, bool includeTianWang = true, bool includeWuDu = true, bool includeCuiYan = true, bool includeTianRen = true, bool includeKunLun = true)
+        {
+            var catalog = CreateNoviceAndCoreSectCatalog(assets, includeWuDang, includeShaolin, includeTangMen, includeEMei, includeTianWang, includeWuDu, includeCuiYan, includeTianRen, includeKunLun);
+            RegisterModSkills(catalog, modSkillsPath);
+            return catalog;
+        }
+
+        public static int RegisterModSkills(SkillCatalog catalog, string modSkillsPath, int minSkillId = PcModSkillParser.ExpansionMinSkillId)
+        {
+            if (catalog == null) return 0;
+            int count = 0;
+            foreach (var row in PcModSkillParser.ParseFile(modSkillsPath, minSkillId))
+            {
+                catalog.Register(PcModSkillParser.ToSkillDefinition(row));
+                count++;
+            }
+            return count;
+        }
+
         public static List<SkillDefinition> CreateNoviceSkills() => new()
         {
             PhysicalAttack(1, "长兵物理攻击", "Đòn dài", 100, child:64),
