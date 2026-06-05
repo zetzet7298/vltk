@@ -149,7 +149,7 @@ namespace VLTK.Sandbox
             AddBuiltin(2003, "Giáp Sắt", "Giáp sắt", EquipSlot.Armor, setId: 4,
                 (ATTR_DEFENSE, 30), (ATTR_VITALITY, 8), (ATTR_STRENGTH, 3));
             AddBuiltin(2004, "Giáp Bạc", "Giáp bạc", EquipSlot.Armor, setId: 5,
-                (ATTR_DEFENSE, 45), (ATTR_VITALITY, 12), (ATTR_STRENGTH, 5), (ATTR_DEFENSE, 5));
+                (ATTR_DEFENSE, 45), (ATTR_VITALITY, 12), (ATTR_STRENGTH, 5), (ATTR_HIT_RATE, 5));
 
             // Helmets
             AddBuiltin(3001, "Mũ Vải", "Mũ vải", EquipSlot.Helmet, setId: 0,

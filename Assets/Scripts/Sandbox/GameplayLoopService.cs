@@ -26,6 +26,10 @@ namespace VLTK.Sandbox
         public int level;
         public float deathTimestamp = -1f; // Khi nào chết
         public float respawnDelay = 5f;
+        // Enemy attack cooldown: AI tick chỉ được phép đánh khi gameTime >= nextAttackTime.
+        // PC melee cadence ~1 hit/sec; dùng 1.0s cho enemy AI loop mặc định.
+        public float attackCooldown = 1.0f;
+        public float nextAttackTime = 0f;
         public bool isDead => combat != null && combat.currentLife <= 0;
 
         public GameplayActor(int id, string name, bool player = false)
@@ -189,6 +193,9 @@ namespace VLTK.Sandbox
             _player.combat.faction = CombatFaction.CaiBang;
             _player.combat.currentLife = CalculateMaxLife(level);
             _player.combat.maxLife = _player.combat.currentLife;
+            // maxMana lay tu PC formula (PcMaxManaFormula) de regen khong bi cap
+            // nham qua maxLife va de cap level cao khong bi tran.
+            _player.combat.maxMana = PcMaxManaFormula.Compute(level, 0, CombatFaction.CaiBang);
             _player.combat.currentMana = 100;
             _player.combat.position = pos;
 
@@ -255,6 +262,8 @@ namespace VLTK.Sandbox
         public void EnemyAttackPlayer(GameplayActor enemy)
         {
             if (_player == null || _player.isDead || enemy.isDead) return;
+            // Caller (Tick) is expected to gate via nextAttackTime; reset on hit for safety.
+            enemy.nextAttackTime = _gameTime + enemy.attackCooldown;
 
             // Simple melee damage
             int damage = UnityEngine.Random.Range(enemy.combat.minDamage, enemy.combat.maxDamage + 1);
@@ -338,7 +347,8 @@ namespace VLTK.Sandbox
             {
                 _manaRegenAccumulator -= 0.5f;
                 if (_player != null && !_player.isDead)
-                    _player.combat.currentMana = Mathf.Min(_player.combat.maxLife, _player.combat.currentMana + 1);
+                    // Mana regen cap dung maxMana (khong phai maxLife - copy-paste bug).
+                    _player.combat.currentMana = Mathf.Min(_player.combat.maxMana, _player.combat.currentMana + 1);
             }
 
             // Enemy AI: attack player if in range
@@ -350,6 +360,8 @@ namespace VLTK.Sandbox
                 float dist = Vector2.Distance(enemy.worldPos, _player.worldPos);
                 if (dist < 64f) // PC attack range
                 {
+                    if (_gameTime < enemy.nextAttackTime) continue;
+                    enemy.nextAttackTime = _gameTime + enemy.attackCooldown;
                     EnemyAttackPlayer(enemy);
                 }
             }
@@ -464,7 +476,7 @@ namespace VLTK.Sandbox
         {
             actor.deathTimestamp = -1f;
             actor.combat.currentLife = actor.combat.maxLife;
-            actor.combat.currentMana = 100;
+            actor.combat.currentMana = actor.combat.maxMana;
 
             OnRespawn?.Invoke(new GameplayRespawnEvent
             {

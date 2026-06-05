@@ -2,6 +2,7 @@
 // VLTK Mobile — Parser tests for Area Script registries (14.x GBK map areas).
 // -----------------------------------------------------------------------------
 
+using System.IO;
 using NUnit.Framework;
 using VLTK.Sandbox;
 
@@ -68,5 +69,25 @@ namespace VLTK.Tests.Sandbox
             var result = reg.GetByType(0);
             Assert.NotNull(result);
         }
+
+        [Test]
+        public void PcGbkMapScriptParser_BuildRegistry_ScansSubdirectories()
+        {
+            string root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string nested = Path.Combine(root, "nested");
+            Directory.CreateDirectory(nested);
+            try
+            {
+                File.WriteAllText(Path.Combine(nested, "gbkscripts_test.txt"), "ScriptId\tAreaId\tMapId\tScriptFile\tTriggerType\tFunctionName\tDescription\n501\t7\t1001\tmap.lua\t2\tOnEnter\tBa Lang\n");
+                var reg = PcGbkMapScriptParser.BuildRegistry(root);
+                Assert.IsNotNull(reg.Get(501));
+                Assert.AreEqual(1001, reg.Get(501).mapId);
+            }
+            finally
+            {
+                if (Directory.Exists(root)) Directory.Delete(root, true);
+            }
+        }
+
     }
 }

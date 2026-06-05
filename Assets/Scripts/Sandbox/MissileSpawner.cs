@@ -18,6 +18,11 @@ namespace VLTK.Sandbox
     public class MissileSpawner
     {
         private readonly ProjectileService _projectileService;
+        // Monotonic counter guarantees unique instance IDs even when many
+        // projectiles spawn in the same frame (Fan / Surround forms). Random
+        // 1000..9999 would collide; ProjectileService also uses its own
+        // _nextId, but MissileSpawner writes the field directly so we own it.
+        private int _nextMissileId = 1;
 
         /// <summary>Event kích hoạt khi đạn bắn trúng đích.</summary>
         public event Action<ProjectileInstance, CombatActorState> OnMissileHit;
@@ -135,7 +140,7 @@ namespace VLTK.Sandbox
         {
             return new ProjectileInstance
             {
-                instanceId = UnityEngine.Random.Range(1000, 9999),
+                instanceId = _nextMissileId++,
                 skillId = skillId,
                 origin = origin,
                 target = target,

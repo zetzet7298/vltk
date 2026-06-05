@@ -284,6 +284,14 @@ namespace VLTK.Sandbox
             trainerMarkerCount = 0;
             _entries.Clear();
             _registry = null;
+            // Drop static sprite cache so a re-Build sau domain reload/Play stop tạo texture mới
+            // thay vì trỏ vào native object đã destroy.
+            if (_whiteSprite != null)
+            {
+                var cachedTex = _whiteSprite.texture;
+                _whiteSprite = null;
+                if (cachedTex != null) Destroy(cachedTex);
+            }
         }
 
         private void SpawnTrainerMarkers(List<RegionSSpawnEntry> spawns)
@@ -443,7 +451,11 @@ namespace VLTK.Sandbox
         private static Sprite _whiteSprite;
         private static Sprite WhiteSprite()
         {
-            if (_whiteSprite != null) return _whiteSprite;
+            // Unity có thể destroy underlying texture sau domain reload nhưng managed
+            // reference vẫn non-null; check cả sprite lẫn texture để tránh
+            // MissingReferenceException giữa các play session.
+            if (_whiteSprite != null && _whiteSprite.texture != null) return _whiteSprite;
+            _whiteSprite = null;
             var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
             tex.SetPixel(0, 0, Color.white);
             tex.Apply();

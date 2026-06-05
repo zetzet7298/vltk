@@ -321,7 +321,11 @@ namespace VLTK.Sandbox
                 aiMode = row.aiMode,
                 aiParams = (int[])row.aiParams.Clone(),
                 spriteClipRef = row.npcResType,
-                scriptRef = string.IsNullOrEmpty(row.actionScript) ? row.levelScript : row.actionScript,
+                // Preserve both PC scripts: action/AI goes in scriptRef, the
+                // level-up event script lives in levelScriptRef so neither is
+                // silently dropped when both are populated.
+                scriptRef = string.IsNullOrEmpty(row.actionScript) ? null : row.actionScript,
+                levelScriptRef = string.IsNullOrEmpty(row.levelScript) ? null : row.levelScript,
                 warnings = new List<string>(row.warnings),
             };
         }
