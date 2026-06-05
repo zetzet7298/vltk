@@ -878,6 +878,7 @@ end
 				SetTask(TSK_TASKLINK_SEANSONPOINT, 0);
 			end
 		else
+			local szName = format("item_g%d_d%d_p%d", myGenre, myDetail, myParticular)
 			WriteLog(" [Ghi nhí nhËn phÇn th­ëng]"..date(" [%y n¨m %m th¸ng %d ngµy  %H giê %M phót]").." [mËt m·:"..GetAccount().."] [nh©n vËt:"..GetName().."]".."NhËn ®­îc 1 "..szName);
 		end
 	else
