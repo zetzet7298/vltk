@@ -132,9 +132,7 @@ namespace VLTK.Tests.Sandbox
             {
                 var template = BaLangEnemyDatabase.CreateTemplates().First(t => t.templateId == 31);
                 root.AddComponent<BaLangEnemySpawnRuntime>();
-                var method = typeof(BaLangEnemySpawnRuntime).GetMethod("CreateNameplate",
-                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-                var plate = (EnemyHealthBar)method.Invoke(null, new object[] { root.transform, "Vô hệ Mèo vàng", 100 });
+                var plate = BaLangEnemySpawnRuntime.CreateNameplate(root.transform, "Vô hệ Mèo vàng", 100);
                 Assert.IsTrue(plate.HasThreeLayers);
                 plate.SetLife(58);
                 Assert.AreEqual("58/100", plate.hpText.text);

@@ -83,6 +83,15 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ResolveAction_AttackCharAnimIds_ReturnAttack()
+        {
+            Assert.AreEqual(PlayerVisualAction.Attack,
+                MalePlayerSpriteCatalog.ResolveAction(7, PcWeaponType.LongWeapon));
+            Assert.AreEqual(PlayerVisualAction.Attack,
+                MalePlayerSpriteCatalog.ResolveAction(8, PcWeaponType.EmptyHand));
+        }
+
+        [Test]
         public void DirectionFromMove_MapsEightWayJoystickDirections()
         {
             Assert.AreEqual(6, MalePlayerSpriteCatalog.DirectionFromMove(Vector2.right));
@@ -146,6 +155,52 @@ namespace VLTK.Tests.Sandbox
             Assert.GreaterOrEqual(visual.CurrentFrameInDirection, 1);
         }
 
+        [TestCase(PlayerVisualAction.Idle)]
+        [TestCase(PlayerVisualAction.Move)]
+        [TestCase(PlayerVisualAction.Magic)]
+        [TestCase(PlayerVisualAction.Attack)]
+        public void Visual_LoadsShortWeaponParts_FromPakStagedSprFiles(PlayerVisualAction action)
+        {
+            _go = new GameObject($"MaleShortWeapon{action}Test");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.ShortWeapon);
+            visual.SetAction(action);
+
+            Assert.AreEqual(PcWeaponType.ShortWeapon, visual.currentWeapon);
+            Assert.AreEqual(action, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(8, visual.LoadedPartCount);
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
+        }
+
+        [TestCase(PlayerVisualAction.Idle)]
+        [TestCase(PlayerVisualAction.Move)]
+        [TestCase(PlayerVisualAction.Magic)]
+        [TestCase(PlayerVisualAction.Attack)]
+        public void Visual_LoadsDualWeaponParts_FromPakStagedSprFiles(PlayerVisualAction action)
+        {
+            _go = new GameObject($"MaleDualWeapon{action}Test");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.DualWeapon);
+            visual.SetAction(action);
+
+            Assert.AreEqual(PcWeaponType.DualWeapon, visual.currentWeapon);
+            Assert.AreEqual(action, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(8, visual.LoadedPartCount);
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
+        }
+
+        [Test]
+        public void Catalog_DualWeapon_UsesBothSongKiem013Layers()
+        {
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Move, PcWeaponType.DualWeapon).ToList();
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon && p.sourcePath.Contains("LW_013_RN04")));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon && p.sourcePath.Contains("RW_013_RN04")));
+        }
+
         [Test]
         public void Visual_LoadsEmptyHandMagicParts_FromStagedSprFiles()
         {
@@ -157,6 +212,35 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(PlayerVisualAction.Magic, visual.currentAction);
             Assert.IsTrue(visual.HasAllRequiredParts);
             Assert.AreEqual(8, visual.LoadedPartCount);
+        }
+
+        [Test]
+        public void Visual_LoadsStaffAttackParts_FromStagedSprFiles()
+        {
+            _go = new GameObject("MaleStaffAttackTest");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetWeapon(PcWeaponType.LongWeapon);
+            visual.SetAction(PlayerVisualAction.Attack);
+
+            Assert.AreEqual(PlayerVisualAction.Attack, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(7, visual.LoadedPartCount, "Staff attack AT05 has no left weapon SPR — 7 of 8 parts load.");
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
+        }
+
+        [Test]
+        public void Visual_LoadsEmptyHandAttackParts_FromPakStagedSprFiles()
+        {
+            _go = new GameObject("MaleEmptyHandAttackTest");
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.playAutomatically = false;
+            visual.SetAction(PlayerVisualAction.Attack);
+
+            Assert.AreEqual(PlayerVisualAction.Attack, visual.currentAction);
+            Assert.IsTrue(visual.HasAllRequiredParts, string.Join("\n", visual.LastMissingRequiredParts));
+            Assert.AreEqual(8, visual.LoadedPartCount);
+            Assert.AreEqual(0, visual.MissingRequiredPartCount);
         }
 
         [Test]
@@ -192,6 +276,23 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void Controller_StaffAttackSkillAction_LocksAttackAnimation()
+        {
+            _go = new GameObject("PlayerStaffAttackTest");
+            var controller = _go.AddComponent<SandboxPlayerController>();
+            controller.followCameraEnabled = false;
+            controller.allowKeyboardFallback = false;
+            controller.EquipWeapon(PcWeaponType.LongWeapon);
+
+            controller.SetMoveInput(Vector2.right);
+            controller.PlayPcSkillAction(8, 0.5f);
+            controller.SimulateMove(0.1f);
+
+            Assert.AreEqual(PlayerVisualAction.Attack, controller.visual.currentAction);
+            Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
+        }
+
+        [Test]
         public void Controller_JoystickInput_MovesTransformAndSwitchesAnimation()
         {
             _go = new GameObject("PlayerControllerTest");
@@ -199,6 +300,7 @@ namespace VLTK.Tests.Sandbox
             controller.followCameraEnabled = false;
             controller.allowKeyboardFallback = false;
             controller.moveSpeed = 10f;
+            controller.clampToMapBounds = false; // unit test: movement logic only
 
             controller.SetMoveInput(Vector2.right);
             controller.SimulateMove(0.5f);
