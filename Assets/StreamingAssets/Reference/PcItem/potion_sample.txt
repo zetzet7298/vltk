@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	药品属性1	属性1数值	属性1时间(游戏循环数）	药品属性2	属性2数值	属性2时间	药品属性3	属性3数值	属性3时间	药品属性4	属性4数值	属性4时间	药品属性5	属性5数值	属性5时间
+Kim S竛g Dc (ti觰) 	1	0	0	\spr\item\medecine\obj-potion01.spr	18	1	1	H錳 ph鬰 ch髏 輙 khhuy誸		50	1	0	153	10	100												
+Kim S竛g Dc (trung) 	1	0	0	\spr\item\medecine\obj-potion01.spr	18	1	1	H錳 ph鬰 khhuy誸 tng i nhanh.		100	2	0	153	25	100												
+Kim S竛g Dc (i) 	1	0	0	\spr\item\medecine\obj-potion02.spr	307	1	1	H錳 ph鬰 khhuy誸 c鵦 nhanh.		250	3	0	153	25	200												
+H錳 Thi猲 產n	1	0	0	\spr\item\medecine\obj-potion02.spr	307	1	1	Th莕 dc ch鱝 thng, c秈 tho祅 sinh		500	4	0	153	50	200												
+C鰑 Chuy觧 Ho祅 H錸 產n	1	0	0	\spr\item\medecine\obj-potion03.spr	310	1	1	L藀 t鴆 h錳 ph鬰 5000 甶觤 sinh l鵦		2000	5	0	153	500	100												

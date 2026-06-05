@@ -1,0 +1,6 @@
+Name	PhysicalDamageBase	PhysicalMagic	PoisonDamageBase	PoisonMagic	ColdDamageBase	ColdMagic	FireDamageBase	FireMagic	LightingDamageBase	LightingMagic	AuraSkillName	AuraSkillLevel	PasstSkillName	PasstSkillLevel
+Trương Tông Chính	0|0	0	0|0	1	0|0	1	0|0	1	0|1000	1	Thất Tinh Trận	0|30	Miễn dịch băng	0|60
+Huyền Không	2|40	0	7|-400	1	7|-200	1	20|-900	1	20|-700	1	La Hán Trận	1|-40	Thi Vân Tung	1|-40
+Diêu Nhi	0|535	0	0|0	1	0|3100	1	0|0	1	0|0	1	Lưu Thủy	0|20	Miễn dịch băng	0|60
+Lữ Nguyên Khánh	2|40	0	7|-400	1	7|-200	1	20|-900	1	20|-700	1	Thất Tinh Trận	1|-40	Thi Vân Tung	1|-40
+Bình Liên Ân	2|40	0	7|-400	1	7|-200	1	20|-900	1	20|-700	1	Thất Tinh Trận	1|-40	Thi Vân Tung	1|-40

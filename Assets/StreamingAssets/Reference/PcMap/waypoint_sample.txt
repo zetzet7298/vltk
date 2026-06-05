@@ -1,0 +1,11 @@
+ID	DESC	SECT	FightState
+1	Hoa Son   	2, 2288, 4091	1
+2	Kiem Coc Thuc Dao	3, 1159, 3715	1
+3	Long Tan Thuy Hoang	7, 2235, 2847	1
+4	Kim Quang Dong	4, 1596, 3282	1
+5	Kinh Hoang Dong	5, 1802, 3412	2
+6	Kinh Hoang Dong	5, 1599, 3215	2
+7	Kinh Hoang Dong	5, 1694, 3345	1
+8	Kim Quang Dong	3, 932, 4076	1
+9	Thap Van Dong	6, 1660, 3314	1
+10	Kim Quang Dong	4, 1476, 2980	3

@@ -16,6 +16,7 @@ Read to classify the request, find the affected surface, and choose a lane.
 | --- | --- | --- | --- |
 | `AGENTS.md` | Must | Must | Must |
 | `docs/FEATURE_INTAKE.md` | Must | Must | Must |
+| `docs/PORT_STATUS.md` | Must | Must | Must |
 | `scripts/harness query matrix` | Must | Must | Must |
 | `README.md` | Should | Must | Must |
 | `docs/HARNESS.md` | Should | Must | Must |
@@ -95,6 +96,8 @@ Read to leave useful evidence for the next agent and for benchmark scoring.
 | Task changes Harness policy, source hierarchy, risk classification, or validation requirements | Read `docs/HARNESS.md`, `docs/FEATURE_INTAKE.md`, `docs/ARCHITECTURE.md`, and `docs/decisions/*`; pause if direction is ambiguous. |
 | Task discovers repeated confusion, stale docs, or missing proof | Read `docs/HARNESS_BACKLOG.md`, record `harness_friction`, and add a backlog item when the fix is out of scope. |
 | Task makes a maturity, observability, trace quality, or benchmark claim | Read `docs/HARNESS_COMPONENTS.md`, `docs/HARNESS_MATURITY.md`, and `docs/TRACE_SPEC.md`. |
+| Task involves porting any PC feature to mobile | **Must** read `docs/PORT_STATUS.md` first. Check relevant section (maps/factions/skills/NPCs/items/missions/events/battles/guild/systems). Identify ☐ items, update to 🔄 during work, ✅ when verified with tests. After implementation, update PORT_STATUS.md. |
+| Task starts a new story or continues port work | Read `docs/PORT_STATUS.md` + the story's `port-docs:` notes (referenced PC docs in `/var/www/vltksource_new/docs/port_docs/`). Cross-check what PC requires vs what mobile has. |
 | Task is normal or high-risk and spans multiple iterations | Create or update a story/progress file under `docs/stories/` and keep it current. |
 | Final response is being prepared | Re-read the validation evidence, `git status --short`, and `docs/TRACE_SPEC.md` before recording the final trace. |
 
@@ -127,6 +130,7 @@ Before implementation:
 - Lane is chosen from `docs/FEATURE_INTAKE.md`.
 - Relevant product docs or story packets are identified.
 - Any high-risk trigger has been handled.
+- `docs/PORT_STATUS.md` has been read and relevant ☐ items identified (for port tasks).
 
 Before final response:
 
@@ -134,3 +138,4 @@ Before final response:
 - `docs/TRACE_SPEC.md` has been read for normal/high-risk tasks.
 - The final trace includes files read, files changed, outcome, and friction
   when applicable.
+- `docs/PORT_STATUS.md` has been updated if any port status changed (for port tasks).
