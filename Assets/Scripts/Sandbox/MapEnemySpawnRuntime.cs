@@ -298,14 +298,45 @@ namespace VLTK.Sandbox
         }
 
         private static Sprite _whiteSprite;
+        private static Texture2D _whiteTexture;
         private static Sprite WhiteSprite()
         {
-            if (_whiteSprite != null) return _whiteSprite;
-            var tex = new Texture2D(1, 1, TextureFormat.RGBA32, false);
-            tex.SetPixel(0, 0, Color.white);
-            tex.Apply();
-            _whiteSprite = Sprite.Create(tex, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
+            // Validity check protects against the static surviving a destroyed
+            // underlying Texture2D across editor play sessions (Domain Reload
+            // disabled) — Unity overrides == for UnityEngine.Object.
+            if (_whiteSprite != null && _whiteTexture != null) return _whiteSprite;
+            _whiteSprite = null;
+            _whiteTexture = new Texture2D(1, 1, TextureFormat.RGBA32, false);
+            _whiteTexture.SetPixel(0, 0, Color.white);
+            _whiteTexture.Apply();
+            _whiteSprite = Sprite.Create(_whiteTexture, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f), 1f);
             return _whiteSprite;
+        }
+
+        /// <summary>
+        /// Release the shared white sprite + texture. Safe to call multiple
+        /// times. Call this when the runtime is torn down to avoid leaking the
+        /// static Texture2D across editor play sessions.
+        /// </summary>
+        public static void ReleaseWhiteSprite()
+        {
+            if (_whiteSprite != null)
+            {
+                if (Application.isPlaying) Destroy(_whiteSprite); else DestroyImmediate(_whiteSprite);
+                _whiteSprite = null;
+            }
+            if (_whiteTexture != null)
+            {
+                if (Application.isPlaying) Destroy(_whiteTexture); else DestroyImmediate(_whiteTexture);
+                _whiteTexture = null;
+            }
+        }
+
+        private void OnDestroy()
+        {
+            // Don't release the shared sprite here — other MapEnemySpawnRuntime
+            // instances may still be alive in the same scene. Use the explicit
+            // ReleaseWhiteSprite() entry point when fully tearing down.
         }
     }
 }

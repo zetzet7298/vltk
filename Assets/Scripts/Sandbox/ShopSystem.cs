@@ -84,8 +84,8 @@ namespace VLTK.Sandbox
 
             if (entry.stock > 0)
             {
+                if (entry.stock < count) { return false; }
                 entry.stock -= count;
-                if (entry.stock < 0) { entry.stock = 0; return false; }
             }
 
             _playerSilver -= totalCost;

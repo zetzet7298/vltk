@@ -73,30 +73,88 @@ namespace VLTK.Sandbox
         {
             expr = expr.Replace(" ", "");
 
-            if (expr.Contains("^"))
+            // PC SkillExpFunc uses only +, *, ^. Precedence: ^ binds tightest,
+            // then *, then +. We support any combination of those, with no
+            // parentheses. Subtraction / division fall through to the warning
+            // at the bottom so misparses are surfaced instead of silently
+            // returning 0.
+
+            // Sum of additive terms: a + b + c
+            if (expr.Contains("+"))
             {
-                string[] parts = expr.Split('^');
-                if (parts.Length == 2 && double.TryParse(parts[0], out double baseVal) && double.TryParse(parts[1], out double expVal))
+                double sum = 0;
+                foreach (var addPart in expr.Split('+'))
                 {
-                    return Math.Pow(baseVal, expVal);
+                    if (addPart.Length == 0) continue;
+                    if (!TryParseTerm(addPart, out double term)) continue;
+                    sum += term;
                 }
+                return sum;
             }
 
-            if (expr.Contains("*"))
-            {
-                string[] parts = expr.Split('*');
-                double mult = 1.0;
-                foreach (var p in parts)
-                {
-                    if (double.TryParse(p, out double v)) mult *= v;
-                }
-                return mult;
-            }
+            // Single additive term: a*b*c or a^b or a^b*c or a*b^c.
+            if (TryParseTerm(expr, out double single))
+                return single;
 
-            if (double.TryParse(expr, out double result))
-                return result;
-
+            // Fallback: log so the caller can spot a misparse.
+            SubsystemLog.Warn("LuaFormula", $"EvaluateSimpleMath: unsupported expression '{expr}'");
             return 0;
+        }
+
+        /// <summary>
+        /// Parse a single additive term: optional product of factors, where
+        /// any single factor may itself be a^b.
+        /// </summary>
+        private static bool TryParseTerm(string term, out double value)
+        {
+            value = 0;
+            if (term.Length == 0) return false;
+
+            // Single literal?
+            if (double.TryParse(term, out value)) return true;
+
+            // Product of factors separated by *. Each factor can be a literal
+            // or a^b. We allow any number of factors; the first ^ found in
+            // the term determines the exponent pair.
+            if (term.Contains("*"))
+            {
+                double product = 1;
+                bool any = false;
+                foreach (var factor in term.Split('*'))
+                {
+                    if (factor.Length == 0) return false;
+                    if (!TryParseFactor(factor, out double v)) return false;
+                    product *= v;
+                    any = true;
+                }
+                if (!any) return false;
+                value = product;
+                return true;
+            }
+
+            // Single factor with ^ (handled by TryParseFactor).
+            return TryParseFactor(term, out value);
+        }
+
+        private static bool TryParseFactor(string factor, out double value)
+        {
+            value = 0;
+            if (factor.Length == 0) return false;
+
+            if (factor.Contains("^"))
+            {
+                int powIdx = factor.IndexOf('^');
+                string left = factor.Substring(0, powIdx);
+                string right = factor.Substring(powIdx + 1);
+                if (double.TryParse(left, out double baseVal) && double.TryParse(right, out double expVal))
+                {
+                    value = Math.Pow(baseVal, expVal);
+                    return true;
+                }
+                return false;
+            }
+
+            return double.TryParse(factor, out value);
         }
     }
 }

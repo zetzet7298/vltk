@@ -63,12 +63,14 @@ namespace VLTK.Sandbox
 
         private void UpdateEnemyDots()
         {
-            // Clear old dots
-            foreach (var dot in _enemyDots)
+            // Pool reuse: surplus dots are SetActive(false) instead of being
+            // Destroyed each frame. With 50 enemies at 60 fps this avoids
+            // 3,000 allocations/sec on mobile.
+            for (int i = 0; i < _enemyDots.Count; i++)
             {
-                if (dot != null) Destroy(dot);
+                if (_enemyDots[i] != null)
+                    _enemyDots[i].SetActive(false);
             }
-            _enemyDots.Clear();
 
             if (_enemyRuntime == null || _mapManager?.ActiveMap == null) return;
 
@@ -76,23 +78,57 @@ namespace VLTK.Sandbox
             var mapDef = _mapManager.ActiveMap;
 
             int maxDots = Mathf.Min(enemies.Count, 50); // limit for perf
+            int written = 0;
             for (int i = 0; i < maxDots; i++)
             {
                 var enemy = enemies[i];
                 if (!enemy.alive) continue;
 
                 var normalized = WorldToMinimap(mapDef, enemy.position);
-                var dotGo = new GameObject($"EnemyDot_{i}");
-                dotGo.transform.SetParent(_dotRoot.transform, false);
-                var dotRt = dotGo.AddComponent<RectTransform>();
+                GameObject dotGo;
+                if (written < _enemyDots.Count)
+                {
+                    dotGo = _enemyDots[written];
+                    if (dotGo == null)
+                    {
+                        dotGo = CreateEnemyDot(written);
+                        _enemyDots[written] = dotGo;
+                    }
+                    else
+                    {
+                        dotGo.SetActive(true);
+                    }
+                }
+                else
+                {
+                    dotGo = CreateEnemyDot(written);
+                    _enemyDots.Add(dotGo);
+                }
+
+                var dotRt = dotGo.GetComponent<RectTransform>();
                 dotRt.anchorMin = new Vector2(normalized.x, normalized.y);
                 dotRt.anchorMax = new Vector2(normalized.x, normalized.y);
-                dotRt.sizeDelta = new Vector2(4f, 4f);
                 dotRt.anchoredPosition = Vector2.zero;
-                var dotImg = dotGo.AddComponent<Image>();
-                dotImg.color = new Color(1f, 0.3f, 0.2f, 0.8f);
-                _enemyDots.Add(dotGo);
+                written++;
             }
+
+            // Trim surplus dots (keep them disabled, do not destroy).
+            for (int i = written; i < _enemyDots.Count; i++)
+            {
+                if (_enemyDots[i] != null)
+                    _enemyDots[i].SetActive(false);
+            }
+        }
+
+        private GameObject CreateEnemyDot(int index)
+        {
+            var dotGo = new GameObject($"EnemyDot_{index}");
+            dotGo.transform.SetParent(_dotRoot.transform, false);
+            var dotRt = dotGo.AddComponent<RectTransform>();
+            dotRt.sizeDelta = new Vector2(4f, 4f);
+            var dotImg = dotGo.AddComponent<Image>();
+            dotImg.color = new Color(1f, 0.3f, 0.2f, 0.8f);
+            return dotGo;
         }
 
         private void UpdateMapName()

@@ -160,13 +160,25 @@ namespace VLTK.Sandbox
 
             // Auto-assign default slots in CombatSkillSlotController
             var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, Assembly-CSharp");
-            if (slotsType != null)
+            if (slotsType == null)
+            {
+                // Reflection silently failing here is a common breakage after
+                // a rename or namespace move. Log so the GM panel surfaces it.
+                SubsystemLog.Warn("GMPlayerTab",
+                    "CombatSkillSlotController type not found; auto-assign skipped");
+            }
+            else
             {
                 var slotsObj = Object.FindAnyObjectByType(slotsType);
                 if (slotsObj != null)
                 {
                     var assignMethod = slotsType.GetMethod("AssignSkill");
-                    if (assignMethod != null)
+                    if (assignMethod == null)
+                    {
+                        SubsystemLog.Warn("GMPlayerTab",
+                            "CombatSkillSlotController.AssignSkill method missing; skill auto-assign skipped");
+                    }
+                    else
                     {
                         if (faction == CombatFaction.CaiBang)
                         {
@@ -224,7 +236,12 @@ namespace VLTK.Sandbox
 
             // Refresh UI GameHudController
             var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
-            if (hudType != null)
+            if (hudType == null)
+            {
+                SubsystemLog.Warn("GMPlayerTab",
+                    "GameHudController type not found; HUD refresh skipped");
+            }
+            else
             {
                 var hudObj = Object.FindAnyObjectByType(hudType);
                 if (hudObj != null)
@@ -300,7 +317,15 @@ namespace VLTK.Sandbox
                         if (isVisible)
                         {
                             var openMethod = hudType.GetMethod("OpenSkillPanel");
-                            if (openMethod != null) openMethod.Invoke(hudObj, null);
+                            if (openMethod == null)
+                            {
+                                SubsystemLog.Warn("GMPlayerTab",
+                                    "GameHudController.OpenSkillPanel method missing; cannot refresh visible panel");
+                            }
+                            else
+                            {
+                                openMethod.Invoke(hudObj, null);
+                            }
                         }
                     }
                 }
