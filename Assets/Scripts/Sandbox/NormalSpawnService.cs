@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
@@ -46,8 +47,8 @@ namespace VLTK.Sandbox
             return svc;
         }
 
-        public PcNormalSpawnEntry GetSpawn(int id) => _registry.Get(id);
-        public List<PcNormalSpawnEntry> GetByMap(int mapId) => _registry.GetByMap(mapId);
-        public IEnumerable<PcNormalSpawnEntry> All => _registry.All;
+        public SpawnPoint GetSpawn(int id) => _registry.Get(id);
+        public List<SpawnPoint> GetByMap(int mapId) => _registry.GetByMap(mapId);
+        public IEnumerable<SpawnPoint> All => _registry.All;
     }
 }

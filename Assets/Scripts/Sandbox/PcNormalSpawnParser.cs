@@ -1,88 +1,143 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC settings/normal.txt (Quái vật thường spawn) parser
-// Source: normal.txt (NPC spawn data, GB2312).
-//   Col 0:  NpcId
-//   Col 1..4:  NpcTemplateId, MapId, PosX, PosY
-//   Col 5:  Count
-//   Col 6:  RespawnSec
-//   Col 7..67:  Magic attribs (5 slots * 12 cols)
-// We keep spawn + map + position for runtime monster spawn lookup.
+// VLTK Mobile — PC settings/normal.txt compatibility parser.
+//
+// The checked-in PC normal.txt sample is item equipment data, not monster-spawn
+// data. To keep tests and the runtime MapSpawnRegistry on one contract, this
+// parser emits VLTK.Model.SpawnPoint records keyed by template/item id while
+// leaving absent map/spawn fields at 0 and attaching a warning per row.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
 using System.IO;
+using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
     [System.Serializable]
-    public class PcNormalSpawnEntry
+    public class PcNormalSpawnEntry : SpawnPoint
     {
-        public int npcId;             // Mã NPC
-        public int npcTemplateId;     // Mã template NPC
-        public int mapId;             // Bản đồ spawn
-        public int posX;              // Tọa độ X
-        public int posY;              // Tọa độ Y
-        public int count;             // Số lượng spawn
-        public int respawnSec;        // Thời gian tái sinh (giây)
+        public int npcId
+        {
+            get => npcTemplateId;
+            set => npcTemplateId = value;
+        }
+
+        public int posX
+        {
+            get => x;
+            set => x = value;
+        }
+
+        public int posY
+        {
+            get => y;
+            set => y = value;
+        }
     }
 
     public sealed class PcNormalSpawnRegistry
     {
-        private readonly Dictionary<int, PcNormalSpawnEntry> _byId = new();
-        private readonly Dictionary<int, List<PcNormalSpawnEntry>> _byMap = new();
-        public int Count => _byId.Count;
+        private readonly Dictionary<int, List<SpawnPoint>> _byTemplate = new();
+        private readonly Dictionary<int, List<SpawnPoint>> _byMap = new();
+        private readonly List<SpawnPoint> _all = new();
 
-        public void Register(PcNormalSpawnEntry e)
+        public int Count => _all.Count;
+
+        public void Register(SpawnPoint e)
         {
             if (e == null) return;
-            _byId[e.npcId] = e;
-            if (!_byMap.TryGetValue(e.mapId, out var ml)) { ml = new(); _byMap[e.mapId] = ml; }
+
+            _all.Add(e);
+
+            if (!_byTemplate.TryGetValue(e.npcTemplateId, out var tl))
+            {
+                tl = new List<SpawnPoint>();
+                _byTemplate[e.npcTemplateId] = tl;
+            }
+            tl.Add(e);
+
+            if (!_byMap.TryGetValue(e.mapId, out var ml))
+            {
+                ml = new List<SpawnPoint>();
+                _byMap[e.mapId] = ml;
+            }
             ml.Add(e);
         }
 
-        public PcNormalSpawnEntry Get(int id)
-            => _byId.TryGetValue(id, out var v) ? v : null;
+        public SpawnPoint Get(int id)
+        {
+            if (_byTemplate.TryGetValue(id, out var v) && v.Count > 0) return v[0];
+            return null;
+        }
 
-        public List<PcNormalSpawnEntry> GetByMap(int mapId)
-            => _byMap.TryGetValue(mapId, out var v) ? v : new List<PcNormalSpawnEntry>();
+        public List<SpawnPoint> GetByMap(int mapId)
+            => _byMap.TryGetValue(mapId, out var v) ? v : new List<SpawnPoint>();
 
-        public IEnumerable<PcNormalSpawnEntry> All => _byId.Values;
+        public IEnumerable<SpawnPoint> All => _all;
     }
 
     public static class PcNormalSpawnParser
     {
+        public const int NameCol = 0;
         public const int NpcTemplateIdCol = 1;
-        public const int MapIdCol = 2;
-        public const int PosXCol = 3;
-        public const int PosYCol = 4;
-        public const int CountCol = 5;
-        public const int RespawnCol = 6;
+        public const int LevelCol = 7;
+        public const int MinItemEquipmentColumns = 8;
+        private const string ItemEquipmentWarning = "normal.txt is item equipment data; map/spawn fields are absent and default to 0";
 
-        public static List<PcNormalSpawnEntry> ParseFile(string path)
+        public static List<SpawnPoint> ParseFile(string path)
         {
-            var rows = new List<PcNormalSpawnEntry>();
-            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return new List<SpawnPoint>();
             var lines = PcItemCommon.ReadServerLines(path);
+            return ParseLines(lines, "normal.txt");
+        }
+
+        public static List<SpawnPoint> ParseLines(IEnumerable<string> lines, string sourceFile = "normal.txt")
+        {
+            var rows = new List<SpawnPoint>();
+            if (lines == null) return rows;
+
             bool headerSkipped = false;
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                if (!headerSkipped) { headerSkipped = true; continue; }
-                var cols = line.Split('\t');
-                if (cols.Length < 7) continue;
-                rows.Add(new PcNormalSpawnEntry
+
+                if (!headerSkipped)
                 {
-                    npcId = PcItemCommon.Int(cols, 0),
+                    headerSkipped = true;
+                    continue;
+                }
+
+                var cols = line.Split('\t');
+                if (cols.Length < MinItemEquipmentColumns) continue;
+
+                var point = new SpawnPoint
+                {
+                    nameRaw = PcItemCommon.Str(cols, NameCol),
                     npcTemplateId = PcItemCommon.Int(cols, NpcTemplateIdCol),
-                    mapId = PcItemCommon.Int(cols, MapIdCol),
-                    posX = PcItemCommon.Int(cols, PosXCol),
-                    posY = PcItemCommon.Int(cols, PosYCol),
-                    count = PcItemCommon.Int(cols, CountCol),
-                    respawnSec = PcItemCommon.Int(cols, RespawnCol),
-                });
+                    level = PcItemCommon.Int(cols, LevelCol),
+                    mapId = 0,
+                    x = 0,
+                    y = 0,
+                    direction = 0,
+                    count = 0,
+                    respawnSec = 0,
+                    aiMode = 0,
+                    groupId = 0,
+                    sourceFile = string.IsNullOrWhiteSpace(sourceFile) ? "normal.txt" : sourceFile,
+                    rowIndex = rows.Count,
+                };
+
+                if (IsNormalSource(point.sourceFile))
+                    point.warnings.Add(ItemEquipmentWarning);
+
+                rows.Add(point);
             }
+
             return rows;
         }
+
+        public static bool IsReplacementCharPresent(string s)
+            => PcItemCommon.ContainsReplacementChar(s);
 
         public static PcNormalSpawnRegistry BuildRegistry(string dir)
         {
@@ -91,6 +146,12 @@ namespace VLTK.Sandbox
             foreach (var f in Directory.GetFiles(dir, "normal*.txt"))
                 foreach (var e in ParseFile(f)) reg.Register(e);
             return reg;
+        }
+
+        private static bool IsNormalSource(string sourceFile)
+        {
+            if (string.IsNullOrWhiteSpace(sourceFile)) return true;
+            return Path.GetFileName(sourceFile) == "normal.txt";
         }
     }
 }
