@@ -190,7 +190,6 @@ namespace VLTK.Sandbox
         public RankingService RankingService { get; private set; }
         public FriendService FriendService { get; private set; }
         public PetService PetService { get; private set; }
-        public ShopConfigService ShopConfigService { get; private set; }
         public MissileEffectService MissileEffectService { get; private set; }
         public HudArtCatalogService HudArtCatalogService { get; private set; }
         public FactionMapRuntimeService FactionMapRuntimeService { get; private set; }
@@ -392,8 +391,6 @@ namespace VLTK.Sandbox
             InitSubsystem(SubsystemKind.Debug, "Debug", ref debugRoot);
             InitSubsystem(SubsystemKind.Services, "Services", ref servicesRoot);
 
-            IsInitialized = true;
-
             EnsureSandboxCamera();
 
             // M0.6: create shared registry, pass to all systems that need resource lookup
@@ -497,7 +494,7 @@ namespace VLTK.Sandbox
                 CityWarService = CityWarService.LoadFromStreamingAssets();
                 AuctionService = AuctionService.LoadFromStreamingAssets();
                 GoodsCatalogService = GoodsCatalogService.LoadFromStreamingAssets();
-                ShopConfigService = ShopConfigService.LoadFromStreamingAssets();
+                // ShopConfigService được wire qua Batch 8 bên dưới bằng LoadOptionalStreamingService
 
                 // ── Batch 2: Battlefield, Instance, Special skills, NPC scripts, etc. ─
                 BattlefieldService = LoadOptionalStreamingService(nameof(BattlefieldService), () => BattlefieldService.LoadFromStreamingAssets());
@@ -749,6 +746,10 @@ namespace VLTK.Sandbox
             SubsystemLog.Info("Sandbox",
                 $"Initialized v{SandboxVersion.Version} ({SandboxVersion.Codename}) " +
                 $"at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
+
+            // Mark as initialized only when full subsystem construction completed.
+            // Avoids races where listeners see IsInitialized=true before services exist.
+            IsInitialized = true;
 
             OnBootComplete?.Invoke(BootReport);
         }
