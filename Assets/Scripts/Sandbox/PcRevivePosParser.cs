@@ -1,9 +1,6 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC revivepos.ini parser
-// Source: settings/revivepos.ini (camp-based revive points). Each [mapId]
-// section declares `region=start,end` and rows `regionIndex=x,y`. We emit one
-// RevivePos per row, joined to the mapId. camp is derived from a best-effort
-// lookup against the parsed maplist (City/Field → 0, Cave → 1, Tong → 2, else 0).
+// VLTK Mobile — PC revivepos.txt parser (vị trí hồi sinh)
+// Source: settings/revivepos.txt (GB2312).
 // -----------------------------------------------------------------------------
 
 using System;
@@ -11,106 +8,62 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using VLTK.Core;
-using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
+    public class PcRevivePosEntry
+    {
+        public int ReviveId { get; set; }
+        public int MapId { get; set; }
+        public int PosX { get; set; }
+        public int PosY { get; set; }
+        public string Name { get; set; } = string.Empty;
+        public int RequiredLevel { get; set; }
+    }
+
+    public sealed class PcRevivePosRegistry
+    {
+        private readonly Dictionary<int, PcRevivePosEntry> _byId = new Dictionary<int, PcRevivePosEntry>();
+        public int Count => _byId.Count;
+        public PcRevivePosEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
+        public IEnumerable<PcRevivePosEntry> All => _byId.Values;
+        public IEnumerable<PcRevivePosEntry> GetByMap(int mapId)
+        {
+            foreach (var e in _byId.Values) if (e.MapId == mapId) yield return e;
+        }
+        public void Add(PcRevivePosEntry e) { if (e != null) _byId[e.ReviveId] = e; }
+    }
+
     public static class PcRevivePosParser
     {
-        public static List<RevivePos> ParseFile(string absolutePath, IReadOnlyList<MapEntry> mapList = null)
+        public static PcRevivePosRegistry BuildRegistry(string absoluteDir)
         {
-            if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
-                return new List<RevivePos>();
-            return ParseLines(File.ReadAllLines(absolutePath), mapList);
-        }
-
-        public static List<RevivePos> ParseLines(IEnumerable<string> lines, IReadOnlyList<MapEntry> mapList = null)
-        {
-            var rows = new List<RevivePos>();
-            if (lines == null) return rows;
-
-            var mapTypeById = new Dictionary<int, string>();
-            if (mapList != null)
-            {
-                foreach (var m in mapList)
-                {
-                    if (m == null) continue;
-                    mapTypeById[m.mapId] = m.mapType;
-                }
-            }
-
-            int currentMapId = 0;
-            int regionStart = 0, regionEnd = 0;
-
+            var reg = new PcRevivePosRegistry();
+            if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
+            var path = Path.Combine(absoluteDir, "revivepos.txt");
+            if (!File.Exists(path)) return reg;
+            var lines = PcMapListParser.ReadLines(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
                 var line = raw.Trim();
-                if (line.Length == 0) continue;
-                if (line[0] == ';' || line[0] == '#') continue;
-                if (line[0] == '[' && line[line.Length - 1] == ']')
+                if (line.Length == 0 || line[0] == ';' || line[0] == '#') continue;
+                var cols = line.Split('\t');
+                if (cols.Length < 4) cols = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (cols.Length < 4) continue;
+                if (!int.TryParse(cols[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
+                var e = new PcRevivePosEntry
                 {
-                    var body = line.Substring(1, line.Length - 2).Trim();
-                    if (int.TryParse(body, NumberStyles.Integer, CultureInfo.InvariantCulture, out int mapId))
-                    {
-                        currentMapId = mapId;
-                        regionStart = 0;
-                        regionEnd = 0;
-                    }
-                    continue;
-                }
-                if (currentMapId <= 0) continue;
-                int eq = line.IndexOf('=');
-                if (eq <= 0) continue;
-                var key = line.Substring(0, eq).Trim();
-                var value = line.Substring(eq + 1).Trim();
-                if (string.Equals(key, "region", StringComparison.OrdinalIgnoreCase))
-                {
-                    var parts = value.Split(',');
-                    if (parts.Length >= 1) int.TryParse(parts[0].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out regionStart);
-                    if (parts.Length >= 2) int.TryParse(parts[1].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out regionEnd);
-                    continue;
-                }
-                if (!int.TryParse(key, NumberStyles.Integer, CultureInfo.InvariantCulture, out int regionIndex))
-                    continue;
-                var xy = value.Split(',');
-                if (xy.Length < 2) continue;
-                int x = 0, y = 0;
-                int.TryParse(xy[0].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out x);
-                int.TryParse(xy[1].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out y);
-
-                rows.Add(new RevivePos
-                {
-                    mapId = currentMapId,
-                    regionStart = regionStart,
-                    regionEnd = regionEnd,
-                    regionIndex = regionIndex,
-                    x = x,
-                    y = y,
-                    camp = CampFromMapType(mapTypeById, currentMapId),
-                });
+                    ReviveId = id,
+                    MapId = cols.Length > 1 && int.TryParse(cols[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int m) ? m : 0,
+                    PosX = cols.Length > 2 && int.TryParse(cols[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int x) ? x : 0,
+                    PosY = cols.Length > 3 && int.TryParse(cols[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int y) ? y : 0,
+                    Name = cols.Length > 4 ? cols[4] : string.Empty,
+                    RequiredLevel = cols.Length > 5 && int.TryParse(cols[5], NumberStyles.Integer, CultureInfo.InvariantCulture, out int r) ? r : 0
+                };
+                reg.Add(e);
             }
-
-            rows.Sort((a, b) =>
-            {
-                int c = a.mapId.CompareTo(b.mapId);
-                if (c != 0) return c;
-                return a.regionIndex.CompareTo(b.regionIndex);
-            });
-            SubsystemLog.Info("PcRevivePos", $"Parsed {rows.Count} revive positions");
-            return rows;
-        }
-
-        private static int CampFromMapType(Dictionary<int, string> mapTypeById, int mapId)
-        {
-            if (mapTypeById == null) return 0;
-            if (!mapTypeById.TryGetValue(mapId, out var type) || string.IsNullOrEmpty(type))
-                return 0;
-            if (string.Equals(type, "Cave", StringComparison.OrdinalIgnoreCase)) return 1;
-            if (string.Equals(type, "Tong", StringComparison.OrdinalIgnoreCase)) return 2;
-            if (string.Equals(type, "Battle", StringComparison.OrdinalIgnoreCase)) return 3;
-            if (string.Equals(type, "Mission", StringComparison.OrdinalIgnoreCase)) return 4;
-            return 0;
+            return reg;
         }
     }
 }

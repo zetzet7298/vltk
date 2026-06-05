@@ -83,6 +83,153 @@ namespace VLTK.Sandbox
         public ShopService ShopService { get; private set; }
         public ShopPanel ShopPanel { get; private set; }
         private InventoryService _inventoryService;
+
+        // PC-parity runtime services (meridian, partner, title, lottery, recipe, etc.)
+        public MeridianService MeridianService { get; private set; }
+        public PartnerService PartnerService { get; private set; }
+        public PetSkillService PetSkillService { get; private set; }
+        public TitleService TitleService { get; private set; }
+        public LotteryService LotteryService { get; private set; }
+        public CompoundRecipeService CompoundRecipeService { get; private set; }
+        public QuestItemService QuestItemService { get; private set; }
+        public AdventureService AdventureService { get; private set; }
+        public GuildService GuildService { get; private set; }
+        public AttribConstService AttribConstService { get; private set; }
+        public MissleCatalogService MissleCatalogService { get; private set; }
+        public EventBonusService EventBonusService { get; private set; }
+        public CityWarService CityWarService { get; private set; }
+        public AuctionService AuctionService { get; private set; }
+        public GoodsCatalogService GoodsCatalogService { get; private set; }
+        public ShopConfigService ShopConfigService { get; private set; }
+        // PC-parity runtime services batch 2 (battlefield, instance, skills, etc.)
+        public BattlefieldService BattlefieldService { get; private set; }
+        public InstanceMapService InstanceMapService { get; private set; }
+        public HongbaoService HongbaoService { get; private set; }
+        public ItemExchangeService ItemExchangeService { get; private set; }
+        public SpecialSkillService SpecialSkillService { get; private set; }
+        public NpcSkillService NpcSkillService { get; private set; }
+        public TranslifeSkillService TranslifeSkillService { get; private set; }
+        public SkillTemplateService SkillTemplateService { get; private set; }
+        public NpcLevelScriptService NpcLevelScriptService { get; private set; }
+        public NpcDeathScriptService NpcDeathScriptService { get; private set; }
+        public DailyTaskService DailyTaskService { get; private set; }
+        public BossMissionService BossMissionService { get; private set; }
+        // PC-parity runtime services batch 3 (events, weather, music, tasks)
+        public ServerEventService ServerEventService { get; private set; }
+        public VngEventService VngEventService { get; private set; }
+        public BattleScriptService BattleScriptService { get; private set; }
+        public WeatherService WeatherService { get; private set; }
+        public MusicService MusicService { get; private set; }
+        public GuildWorkshopService GuildWorkshopService { get; private set; }
+        public HuoYueDuService HuoYueDuService { get; private set; }
+        public CityDefenceService CityDefenceService { get; private set; }
+        public ActivityService ActivityService { get; private set; }
+        public RandomTaskService RandomTaskService { get; private set; }
+        public PartnerTaskService PartnerTaskService { get; private set; }
+        public MetempsychosisTaskService MetempsychosisTaskService { get; private set; }
+        public ArenaService ArenaService { get; private set; }
+        public TripService TripService { get; private set; }
+        public BonusOnlineService BonusOnlineService { get; private set; }
+        // PC-parity runtime services batch 4 (guild extras, misc systems)
+        public GuildRankService GuildRankService { get; private set; }
+        public GuildStuntService GuildStuntService { get; private set; }
+        public GuildTaskService GuildTaskService { get; private set; }
+        public HonorService HonorService { get; private set; }
+        public ShituService ShituService { get; private set; }
+        public FoundryService FoundryService { get; private set; }
+        public WorldRankService WorldRankService { get; private set; }
+        public NewPlayerGuideService NewPlayerGuideService { get; private set; }
+        public ChangeFeatureService ChangeFeatureService { get; private set; }
+        public StallService StallService { get; private set; }
+        public FlipCardService FlipCardService { get; private set; }
+        public BaoRuongThanBiService BaoRuongThanBiService { get; private set; }
+        public SeasonalEventService SeasonalEventService { get; private set; }
+        public CompensationService CompensationService { get; private set; }
+        // PC-parity runtime services batch 5 (final client systems)
+        public FactionMapService FactionMapService { get; private set; }
+        public BattleAwardService BattleAwardService { get; private set; }
+        public DoubleExpService DoubleExpService { get; private set; }
+        public SimCityPluginService SimCityPluginService { get; private set; }
+        public ClientSkillScriptService ClientSkillScriptService { get; private set; }
+        // Battle systems batch 7 (Tống Kim, Công Thành Chiến, Boss Hoàng Kim, Task Flag)
+        public TongJinBattleService TongJinBattleService { get; private set; }
+        public BangChienService BangChienService { get; private set; }
+        public BossHoangKimService BossHoangKimService { get; private set; }
+        public TaskFlagService TaskFlagService { get; private set; }
+        // Batch 8: Save/Load, Mail, Mount, Ranking, Friend, Pet, ShopConfig, Missile, HudArt, FactionMapRuntime, BattleScript, TaskFlagRegistry
+        public SaveSlotService SaveSlotService { get; private set; }
+        public MailService MailService { get; private set; }
+        public MountService MountService { get; private set; }
+        public RankingService RankingService { get; private set; }
+        public FriendService FriendService { get; private set; }
+        public PetService PetService { get; private set; }
+        public ShopConfigService ShopConfigService { get; private set; }
+        public MissileEffectService MissileEffectService { get; private set; }
+        public HudArtCatalogService HudArtCatalogService { get; private set; }
+        public FactionMapRuntimeService FactionMapRuntimeService { get; private set; }
+        public BattleScriptRuntimeService BattleScriptRuntimeService { get; private set; }
+        public TaskFlagRegistryService TaskFlagRegistryService { get; private set; }
+        // Batch 9: Map data, Skill data, World boss, Achievement, Mall, Fashion, Sign-in, Treasure, Encounter, Friend gift, Text resource, Animation bank
+        public MapListFullService MapListFullService { get; private set; }
+        public MapElementService MapElementService { get; private set; }
+        public MapRespawnService MapRespawnService { get; private set; }
+        public MapBlockService MapBlockService { get; private set; }
+        public MapNpcRespawnService MapNpcRespawnService { get; private set; }
+        public MapMusicService MapMusicService { get; private set; }
+        public SkillLevelDataService SkillLevelDataService { get; private set; }
+        public SkillUpgradeService SkillUpgradeService { get; private set; }
+        public SkillBookService SkillBookService { get; private set; }
+        public SkillComboService SkillComboService { get; private set; }
+        public SkillStateService SkillStateService { get; private set; }
+        public SkillMasteryService SkillMasteryService { get; private set; }
+        public WorldBossService WorldBossService { get; private set; }
+        public AchievementService AchievementService { get; private set; }
+        public DailyRewardService DailyRewardService { get; private set; }
+        public MallService MallService { get; private set; }
+        public FashionService FashionService { get; private set; }
+        public SignInService SignInService { get; private set; }
+        public TreasureHuntService TreasureHuntService { get; private set; }
+        public EncounterService EncounterService { get; private set; }
+        public FriendGiftService FriendGiftService { get; private set; }
+        public TextResourceService TextResourceService { get; private set; }
+        public AnimationBankService AnimationBankService { get; private set; }
+        // PC-parity runtime services batch 6 (client settings + items + maps)
+        public PortraitService PortraitService { get; private set; }
+        public SoundListService SoundListService { get; private set; }
+        public KillerService KillerService { get; private set; }
+        public ItemDetailService ItemDetailService { get; private set; }
+        public ItemTypeService ItemTypeService { get; private set; }
+        public MapTrafficService MapTrafficService { get; private set; }
+        public MapTypeService MapTypeService { get; private set; }
+        public AdjustColorService AdjustColorService { get; private set; }
+        public ClientWeaponSkillService ClientWeaponSkillService { get; private set; }
+        public GoldEquipService GoldEquipService { get; private set; }
+        public PlatinaEquipService PlatinaEquipService { get; private set; }
+        public HorseService HorseService { get; private set; }
+        public PotionService PotionService { get; private set; }
+        public MagicScriptService MagicScriptService { get; private set; }
+        public MagicAttribService MagicAttribService { get; private set; }
+        public ScrollService ScrollService { get; private set; }
+        public CaveListFullService CaveListFullService { get; private set; }
+        public GoldBossService GoldBossService { get; private set; }
+        public ChangeFeatureDataService ChangeFeatureDataService { get; private set; }
+        public GlobalConfigService GlobalConfigService { get; private set; }
+        public NormalSpawnService NormalSpawnService { get; private set; }
+        public RareSpawnService RareSpawnService { get; private set; }
+        public WharfService WharfService { get; private set; }
+        public WaypointService WaypointService { get; private set; }
+        public AutoPathRouteService AutoPathRouteService { get; private set; }
+        public RevivePosService RevivePosService { get; private set; }
+        public FactionConfigService FactionConfigService { get; private set; }
+        public NpcResService NpcResService { get; private set; }
+        public NpcSFullService NpcSFullService { get; private set; }
+        public TongStuntService TongStuntService { get; private set; }
+        public TongSettingService TongSettingService { get; private set; }
+        public TongNpcPosService TongNpcPosService { get; private set; }
+        public MapListService MapListService { get; private set; }
+        public MapDescService MapDescService { get; private set; }
+        public BossSpawnService BossSpawnService { get; private set; }
+        public DropRateConfigService DropRateConfigService { get; private set; }
         private float _combatTickAccumulator;
         // M1.2: Region catalog and report
         public RegionCatalogFile RegionCatalog { get; private set; }
@@ -209,6 +356,157 @@ namespace VLTK.Sandbox
 
                 // Initialize Shop system
                 ShopService = new ShopService(ItemDb, initialSilver: 5000);
+
+                // ── PC-parity runtime services (meridian, partner, title, …) ────────
+                MeridianService = MeridianService.LoadFromStreamingAssets();
+                PartnerService = PartnerService.LoadFromStreamingAssets();
+                PetSkillService = PetSkillService.LoadFromStreamingAssets();
+                TitleService = TitleService.LoadFromStreamingAssets();
+                LotteryService = LotteryService.LoadFromStreamingAssets();
+                CompoundRecipeService = CompoundRecipeService.LoadFromStreamingAssets();
+                QuestItemService = QuestItemService.LoadFromStreamingAssets();
+                AdventureService = AdventureService.LoadFromStreamingAssets();
+                GuildService = GuildService.LoadFromStreamingAssets();
+                AttribConstService = AttribConstService.LoadFromStreamingAssets();
+                MissleCatalogService = MissleCatalogService.LoadFromStreamingAssets();
+                EventBonusService = EventBonusService.LoadFromStreamingAssets();
+                CityWarService = CityWarService.LoadFromStreamingAssets();
+                AuctionService = AuctionService.LoadFromStreamingAssets();
+                GoodsCatalogService = GoodsCatalogService.LoadFromStreamingAssets();
+                ShopConfigService = ShopConfigService.LoadFromStreamingAssets();
+
+                // ── Batch 2: Battlefield, Instance, Special skills, NPC scripts, etc. ─
+                try { BattlefieldService = BattlefieldService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattlefieldService: " + e.Message); }
+                try { InstanceMapService = InstanceMapService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "InstanceMapService: " + e.Message); }
+                try { HongbaoService = HongbaoService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "HongbaoService: " + e.Message); }
+                try { ItemExchangeService = ItemExchangeService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ItemExchangeService: " + e.Message); }
+                try { SpecialSkillService = SpecialSkillService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SpecialSkillService: " + e.Message); }
+                try { NpcSkillService = NpcSkillService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NpcSkillService: " + e.Message); }
+                try { TranslifeSkillService = TranslifeSkillService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TranslifeSkillService: " + e.Message); }
+                try { SkillTemplateService = SkillTemplateService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillTemplateService: " + e.Message); }
+                try { NpcLevelScriptService = NpcLevelScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NpcLevelScriptService: " + e.Message); }
+                try { NpcDeathScriptService = NpcDeathScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NpcDeathScriptService: " + e.Message); }
+                try { DailyTaskService = DailyTaskService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "DailyTaskService: " + e.Message); }
+                try { BossMissionService = BossMissionService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BossMissionService: " + e.Message); }
+
+                // ── Batch 3: Events, weather, music, tasks, arena, trip, bonus ───────
+                try { ServerEventService = ServerEventService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ServerEventService: " + e.Message); }
+                try { VngEventService = VngEventService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "VngEventService: " + e.Message); }
+                try { BattleScriptService = BattleScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattleScriptService: " + e.Message); }
+                try { WeatherService = WeatherService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "WeatherService: " + e.Message); }
+                try { MusicService = MusicService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MusicService: " + e.Message); }
+                try { GuildWorkshopService = GuildWorkshopService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GuildWorkshopService: " + e.Message); }
+                try { HuoYueDuService = HuoYueDuService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "HuoYueDuService: " + e.Message); }
+                try { CityDefenceService = CityDefenceService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "CityDefenceService: " + e.Message); }
+                try { ActivityService = ActivityService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ActivityService: " + e.Message); }
+                try { RandomTaskService = RandomTaskService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "RandomTaskService: " + e.Message); }
+                try { PartnerTaskService = PartnerTaskService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "PartnerTaskService: " + e.Message); }
+                try { MetempsychosisTaskService = MetempsychosisTaskService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MetempsychosisTaskService: " + e.Message); }
+                try { ArenaService = ArenaService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ArenaService: " + e.Message); }
+                try { TripService = TripService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TripService: " + e.Message); }
+                try { BonusOnlineService = BonusOnlineService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BonusOnlineService: " + e.Message); }
+
+                // ── Batch 4: Guild extras, honor, shitu, foundry, world rank, misc ──
+                try { GuildRankService = GuildRankService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GuildRankService: " + e.Message); }
+                try { GuildStuntService = GuildStuntService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GuildStuntService: " + e.Message); }
+                try { GuildTaskService = GuildTaskService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GuildTaskService: " + e.Message); }
+                try { HonorService = HonorService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "HonorService: " + e.Message); }
+                try { ShituService = ShituService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ShituService: " + e.Message); }
+                try { FoundryService = FoundryService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FoundryService: " + e.Message); }
+                try { WorldRankService = WorldRankService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "WorldRankService: " + e.Message); }
+                try { NewPlayerGuideService = NewPlayerGuideService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NewPlayerGuideService: " + e.Message); }
+                try { ChangeFeatureService = ChangeFeatureService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ChangeFeatureService: " + e.Message); }
+                try { StallService = StallService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "StallService: " + e.Message); }
+                try { FlipCardService = FlipCardService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FlipCardService: " + e.Message); }
+                try { BaoRuongThanBiService = BaoRuongThanBiService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BaoRuongThanBiService: " + e.Message); }
+                try { SeasonalEventService = SeasonalEventService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SeasonalEventService: " + e.Message); }
+                try { CompensationService = CompensationService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "CompensationService: " + e.Message); }
+
+                // ── Batch 5: Final client systems (faction maps, awards, double exp, sim city, client skill scripts) ─
+                try { FactionMapService = FactionMapService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FactionMapService: " + e.Message); }
+                try { BattleAwardService = BattleAwardService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattleAwardService: " + e.Message); }
+                try { DoubleExpService = DoubleExpService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "DoubleExpService: " + e.Message); }
+                try { SimCityPluginService = SimCityPluginService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SimCityPluginService: " + e.Message); }
+                try { ClientSkillScriptService = ClientSkillScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ClientSkillScriptService: " + e.Message); }
+                try { TongJinBattleService = TongJinBattleService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TongJinBattleService: " + e.Message); }
+                try { BangChienService = BangChienService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BangChienService: " + e.Message); }
+                try { BossHoangKimService = BossHoangKimService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BossHoangKimService: " + e.Message); }
+                TaskFlagService = new TaskFlagService();
+                // ── Batch 8: Save/Load + Mail + Mount + Ranking + Friend + Pet + Shop + Missile + HudArt + FactionRuntime + BattleScript + TaskFlagRegistry ───────────
+                try { SaveSlotService = SaveSlotService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SaveSlotService: " + e.Message); }
+                try { MailService = MailService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MailService: " + e.Message); }
+                try { MountService = MountService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MountService: " + e.Message); }
+                try { RankingService = RankingService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "RankingService: " + e.Message); }
+                try { FriendService = FriendService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FriendService: " + e.Message); }
+                try { PetService = PetService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "PetService: " + e.Message); }
+                try { ShopConfigService = ShopConfigService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ShopConfigService: " + e.Message); }
+                try { MissileEffectService = MissileEffectService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MissileEffectService: " + e.Message); }
+                try { HudArtCatalogService = HudArtCatalogService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "HudArtCatalogService: " + e.Message); }
+                FactionMapRuntimeService = FactionMapRuntimeService != null ? FactionMapRuntimeService : new FactionMapRuntimeService(FactionMapService);
+                BattleScriptRuntimeService = BattleScriptRuntimeService != null ? BattleScriptRuntimeService : new BattleScriptRuntimeService(BattleScriptService);
+                try { TaskFlagRegistryService = TaskFlagRegistryService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TaskFlagRegistryService: " + e.Message); }
+                // ── Batch 9: Map data + Skill data + World boss + Achievement + Mall + Fashion + Sign-in + Treasure + Encounter + Friend gift + Text + Animation ───────────
+                try { MapListFullService = MapListFullService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapListFullService: " + e.Message); }
+                try { MapElementService = MapElementService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapElementService: " + e.Message); }
+                try { MapRespawnService = MapRespawnService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapRespawnService: " + e.Message); }
+                try { MapBlockService = MapBlockService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapBlockService: " + e.Message); }
+                try { MapNpcRespawnService = MapNpcRespawnService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapNpcRespawnService: " + e.Message); }
+                try { MapMusicService = MapMusicService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapMusicService: " + e.Message); }
+                try { SkillLevelDataService = SkillLevelDataService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillLevelDataService: " + e.Message); }
+                try { SkillUpgradeService = SkillUpgradeService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillUpgradeService: " + e.Message); }
+                try { SkillBookService = SkillBookService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillBookService: " + e.Message); }
+                try { SkillComboService = SkillComboService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillComboService: " + e.Message); }
+                try { SkillStateService = SkillStateService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillStateService: " + e.Message); }
+                try { SkillMasteryService = SkillMasteryService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillMasteryService: " + e.Message); }
+                try { WorldBossService = WorldBossService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "WorldBossService: " + e.Message); }
+                try { AchievementService = AchievementService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "AchievementService: " + e.Message); }
+                try { DailyRewardService = DailyRewardService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "DailyRewardService: " + e.Message); }
+                try { MallService = MallService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MallService: " + e.Message); }
+                try { FashionService = FashionService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FashionService: " + e.Message); }
+                try { SignInService = SignInService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SignInService: " + e.Message); }
+                try { TreasureHuntService = TreasureHuntService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TreasureHuntService: " + e.Message); }
+                try { EncounterService = EncounterService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "EncounterService: " + e.Message); }
+                try { FriendGiftService = FriendGiftService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FriendGiftService: " + e.Message); }
+                try { TextResourceService = TextResourceService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TextResourceService: " + e.Message); }
+                try { AnimationBankService = AnimationBankService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "AnimationBankService: " + e.Message); }
+
+                // ── Batch 6: Client settings, items, maps (37 more services) ───────────
+                try { PortraitService = PortraitService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "PortraitService: " + e.Message); }
+                try { SoundListService = SoundListService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SoundListService: " + e.Message); }
+                try { KillerService = KillerService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "KillerService: " + e.Message); }
+                try { ItemDetailService = ItemDetailService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ItemDetailService: " + e.Message); }
+                try { ItemTypeService = ItemTypeService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ItemTypeService: " + e.Message); }
+                try { MapTrafficService = MapTrafficService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapTrafficService: " + e.Message); }
+                try { MapTypeService = MapTypeService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapTypeService: " + e.Message); }
+                try { AdjustColorService = AdjustColorService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "AdjustColorService: " + e.Message); }
+                try { ClientWeaponSkillService = ClientWeaponSkillService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ClientWeaponSkillService: " + e.Message); }
+                try { GoldEquipService = GoldEquipService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GoldEquipService: " + e.Message); }
+                try { PlatinaEquipService = PlatinaEquipService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "PlatinaEquipService: " + e.Message); }
+                try { HorseService = HorseService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "HorseService: " + e.Message); }
+                try { PotionService = PotionService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "PotionService: " + e.Message); }
+                try { MagicScriptService = MagicScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MagicScriptService: " + e.Message); }
+                try { MagicAttribService = MagicAttribService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MagicAttribService: " + e.Message); }
+                try { ScrollService = ScrollService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ScrollService: " + e.Message); }
+                try { CaveListFullService = CaveListFullService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "CaveListFullService: " + e.Message); }
+                try { GoldBossService = GoldBossService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GoldBossService: " + e.Message); }
+                try { ChangeFeatureDataService = ChangeFeatureDataService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ChangeFeatureDataService: " + e.Message); }
+                try { GlobalConfigService = GlobalConfigService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GlobalConfigService: " + e.Message); }
+                try { NormalSpawnService = NormalSpawnService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NormalSpawnService: " + e.Message); }
+                try { RareSpawnService = RareSpawnService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "RareSpawnService: " + e.Message); }
+                try { WharfService = WharfService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "WharfService: " + e.Message); }
+                try { WaypointService = WaypointService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "WaypointService: " + e.Message); }
+                try { AutoPathRouteService = AutoPathRouteService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "AutoPathRouteService: " + e.Message); }
+                try { RevivePosService = RevivePosService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "RevivePosService: " + e.Message); }
+                try { FactionConfigService = FactionConfigService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FactionConfigService: " + e.Message); }
+                try { NpcResService = NpcResService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NpcResService: " + e.Message); }
+                try { NpcSFullService = NpcSFullService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NpcSFullService: " + e.Message); }
+                try { TongStuntService = TongStuntService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TongStuntService: " + e.Message); }
+                try { TongSettingService = TongSettingService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TongSettingService: " + e.Message); }
+                try { TongNpcPosService = TongNpcPosService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TongNpcPosService: " + e.Message); }
+                try { MapListService = MapListService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapListService: " + e.Message); }
+                try { MapDescService = MapDescService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapDescService: " + e.Message); }
+                try { BossSpawnService = BossSpawnService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BossSpawnService: " + e.Message); }
+                try { DropRateConfigService = DropRateConfigService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "DropRateConfigService: " + e.Message); }
 
                 // Wire combat events to chat log
                 if (GameplayLoop != null)

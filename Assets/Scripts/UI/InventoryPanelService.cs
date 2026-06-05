@@ -1,0 +1,144 @@
+// -----------------------------------------------------------------------------
+// VLTK Mobile — Inventory Panel Service (Túi đồ)
+// UI service: dựng snapshot các ô vật phẩm trong túi đồ nhân vật.
+// PC reference: 30 default slots, gold/silver, khóa, trang bị, tiêu hao.
+// -----------------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Linq;
+using VLTK.Sandbox;
+
+namespace VLTK.UI
+{
+    /// <summary>Một dòng trong panel túi đồ.</summary>
+    public readonly struct InventoryPanelRow
+    {
+        public readonly int slotIdx;
+        public readonly int itemId;
+        public readonly int count;
+        public readonly int itemGenre;   // 0=Trang bị, 1=Tiêu hao, 2=Nhiệm vụ, 3=Nguyên liệu
+        public readonly int itemDetail;
+        public readonly int itemParticular;
+        public readonly bool isLocked;
+        public readonly bool isEquipped;
+        public readonly string itemName;
+        public readonly int itemQuality; // 0=trắng, 1=xanh, 2=lam, 3=tím, 4=vàng
+
+        public InventoryPanelRow(int slotIdx, int itemId, int count, int itemGenre, int itemDetail, int itemParticular, bool isLocked, bool isEquipped, string itemName, int itemQuality)
+        {
+            this.slotIdx = slotIdx;
+            this.itemId = itemId;
+            this.count = count;
+            this.itemGenre = itemGenre;
+            this.itemDetail = itemDetail;
+            this.itemParticular = itemParticular;
+            this.isLocked = isLocked;
+            this.isEquipped = isEquipped;
+            this.itemName = itemName ?? string.Empty;
+            this.itemQuality = itemQuality;
+        }
+    }
+
+    /// <summary>Snapshot toàn bộ panel túi đồ.</summary>
+    public sealed class InventoryPanelSnapshot
+    {
+        public int playerId;
+        public int totalSlots;
+        public int usedSlots;
+        public int gold;
+        public int silver;
+        public IReadOnlyList<InventoryPanelRow> rows;
+    }
+
+    /// <summary>Dịch vụ UI: panel túi đồ nhân vật.</summary>
+    public static class InventoryPanelService
+    {
+        public const string Title = "Túi Đồ";
+        public const string LabelItem = "Vật phẩm";
+        public const string LabelEquip = "Trang bị";
+        public const string LabelConsumable = "Tiêu hao";
+        public const string LabelQuest = "Nhiệm vụ";
+        public const string LabelLocked = "Khóa";
+        public const string LabelSort = "Sắp xếp";
+        public const int DefaultSlotCount = 30;
+
+        private static readonly int[] _defaultSlotOrder = Enumerable.Range(0, DefaultSlotCount).ToArray();
+
+        /// <summary>Thứ tự ô mặc định 30 slot.</summary>
+        public static IReadOnlyList<int> GetPcInventoryOrder() => _defaultSlotOrder;
+
+        /// <summary>Dựng snapshot dựa trên ItemDatabase và danh sách vật phẩm của player.</summary>
+        public static InventoryPanelSnapshot BuildSnapshot(ItemDatabase db, int playerId, int pageIndex = 0)
+        {
+            var rows = new List<InventoryPanelRow>();
+            for (int i = 0; i < DefaultSlotCount; i++)
+            {
+                rows.Add(new InventoryPanelRow(
+                    slotIdx: i + pageIndex * DefaultSlotCount,
+                    itemId: 0,
+                    count: 0,
+                    itemGenre: 0,
+                    itemDetail: 0,
+                    itemParticular: 0,
+                    isLocked: false,
+                    isEquipped: false,
+                    itemName: string.Empty,
+                    itemQuality: 0));
+            }
+            return new InventoryPanelSnapshot
+            {
+                playerId = playerId,
+                totalSlots = DefaultSlotCount,
+                usedSlots = 0,
+                gold = 0,
+                silver = 0,
+                rows = rows,
+            };
+        }
+
+        /// <summary>Lấy tên vật phẩm từ database.</summary>
+        public static string GetItemName(ItemDatabase db, int itemId)
+        {
+            if (db == null) return string.Empty;
+            var def = db.Resolve(itemId);
+            return def != null ? (def.DisplayName ?? def.nameRaw ?? string.Empty) : string.Empty;
+        }
+
+        /// <summary>Sử dụng vật phẩm: luôn trả về false ở runtime stub (cần kết nối gameplay state).</summary>
+        public static bool TryUseItem(int playerId, int slot, int count)
+        {
+            if (playerId <= 0 || slot < 0 || count <= 0) return false;
+            return false;
+        }
+
+        /// <summary>Vứt vật phẩm ra đất.</summary>
+        public static bool TryDropItem(int playerId, int slot, int count)
+        {
+            if (playerId <= 0 || slot < 0 || count <= 0) return false;
+            return false;
+        }
+
+        /// <summary>Mặc vật phẩm vào ô trang bị.</summary>
+        public static bool TryEquipItem(int playerId, int slot)
+        {
+            if (playerId <= 0 || slot < 0) return false;
+            return false;
+        }
+
+        /// <summary>Tháo vật phẩm khỏi ô trang bị về túi.</summary>
+        public static bool TryUnequipItem(int playerId, int slot)
+        {
+            if (playerId <= 0 || slot < 0) return false;
+            return false;
+        }
+
+        /// <summary>Sắp xếp vật phẩm trong túi theo chất lượng (cao→thấp), rồi theo tên.</summary>
+        public static IReadOnlyList<InventoryPanelRow> SortItems(IReadOnlyList<InventoryPanelRow> rows)
+        {
+            if (rows == null) return System.Array.Empty<InventoryPanelRow>();
+            return rows.OrderByDescending(r => r.itemQuality)
+                       .ThenBy(r => r.itemName, System.StringComparer.Ordinal)
+                       .ToList();
+        }
+    }
+}

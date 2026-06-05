@@ -1,99 +1,99 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC scroll.txt parser
-// Source: settings/scroll.txt (id/value table, GB2312). First non-empty row is
-// the header label "品阶" (grade); subsequent rows are `id<TAB>value`. Optional
-// 4-column form `id<TAB>desc<TAB>sect<TAB>fightState` is also accepted for
-// parity with waypoint.txt when present.
+// VLTK Mobile — PC settings/scroll.txt (Cuộn dịch chuyển) parser
+// Source: scroll.txt (2,600 entries, GB2312).
+//   Cols 0:  ScrollId
+//   Col  1:  Name
+//   Col  2:  FromMapId
+//   Col  3:  ToMapId
+//   Col  4:  RequiredLevel
+//   Col  5:  Cost
 // -----------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
-using VLTK.Core;
-using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
-    public static class PcScrollParser
+    [System.Serializable]
+    public class PcScrollEntry
     {
-        public const int MinColumns = 2;
+        public int scrollId;
+        public string name;
+        public int fromMapId;
+        public int toMapId;
+        public int requiredLevel;
+        public int cost;
+    }
 
-        public static List<ScrollEntry> ParseFile(string absolutePath)
+    public sealed class PcScrollRegistry
+    {
+        private readonly Dictionary<int, PcScrollEntry> _byId = new();
+        private readonly Dictionary<int, List<PcScrollEntry>> _byFrom = new();
+        private readonly Dictionary<int, List<PcScrollEntry>> _byTo = new();
+        public int Count => _byId.Count;
+
+        public void Register(PcScrollEntry e)
         {
-            if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
-                return new List<ScrollEntry>();
-            return ParseLines(ReadLines(absolutePath));
+            if (e == null) return;
+            _byId[e.scrollId] = e;
+            if (!_byFrom.TryGetValue(e.fromMapId, out var fl)) { fl = new(); _byFrom[e.fromMapId] = fl; }
+            fl.Add(e);
+            if (!_byTo.TryGetValue(e.toMapId, out var tl)) { tl = new(); _byTo[e.toMapId] = tl; }
+            tl.Add(e);
         }
 
-        public static List<ScrollEntry> ParseLines(IEnumerable<string> lines)
-        {
-            var rows = new List<ScrollEntry>();
-            if (lines == null) return rows;
-            bool headerSkipped = false;
-            foreach (var raw in lines)
-            {
-                if (string.IsNullOrWhiteSpace(raw)) continue;
-                var line = raw.TrimEnd('\r', '\n');
-                if (line.Length == 0) continue;
-                var cols = line.Split('\t');
-                if (cols.Length < MinColumns) continue;
-                if (!headerSkipped)
-                {
-                    headerSkipped = true;
-                    if (!int.TryParse(Str(cols, 0), NumberStyles.Integer, CultureInfo.InvariantCulture, out _))
-                        continue;
-                }
-                if (!int.TryParse(Str(cols, 0), NumberStyles.Integer, CultureInfo.InvariantCulture, out int id) || id <= 0)
-                    continue;
-                int value = 0;
-                int.TryParse(Str(cols, 1), NumberStyles.Integer, CultureInfo.InvariantCulture, out value);
-                string name = string.Empty;
-                int mapId = 0;
-                int fightState = 0;
-                if (cols.Length >= 4)
-                {
-                    name = Str(cols, 1);
-                    PcWaypointParser.ParseSect(Str(cols, 2), out mapId, out _, out _);
-                    int.TryParse(Str(cols, 3), NumberStyles.Integer, CultureInfo.InvariantCulture, out fightState);
-                }
+        public PcScrollEntry Get(int id)
+            => _byId.TryGetValue(id, out var v) ? v : null;
 
-                rows.Add(new ScrollEntry
+        public List<PcScrollEntry> GetByFromMap(int mapId)
+            => _byFrom.TryGetValue(mapId, out var v) ? v : new List<PcScrollEntry>();
+
+        public List<PcScrollEntry> GetByToMap(int mapId)
+            => _byTo.TryGetValue(mapId, out var v) ? v : new List<PcScrollEntry>();
+
+        public IEnumerable<PcScrollEntry> All => _byId.Values;
+    }
+
+    public static class PcScrollParser
+    {
+        public const int NameCol = 1;
+        public const int FromMapCol = 2;
+        public const int ToMapCol = 3;
+        public const int ReqLevelCol = 4;
+        public const int CostCol = 5;
+
+        public static List<PcScrollEntry> ParseFile(string path)
+        {
+            var rows = new List<PcScrollEntry>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var lines = PcItemCommon.ReadServerLines(path);
+            bool headerSkipped = false;
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                if (!headerSkipped) { headerSkipped = true; continue; }
+                var cols = line.Split('\t');
+                if (cols.Length < 6) continue;
+                rows.Add(new PcScrollEntry
                 {
-                    scrollId = id,
-                    nameRaw = name,
-                    nameNormalized = name.Trim(),
-                    mapId = mapId,
-                    value = value,
-                    fightState = fightState,
+                    scrollId = PcItemCommon.Int(cols, 0),
+                    name = PcItemCommon.Str(cols, NameCol),
+                    fromMapId = PcItemCommon.Int(cols, FromMapCol),
+                    toMapId = PcItemCommon.Int(cols, ToMapCol),
+                    requiredLevel = PcItemCommon.Int(cols, ReqLevelCol),
+                    cost = PcItemCommon.Int(cols, CostCol),
                 });
             }
-
-            rows.Sort((a, b) => a.scrollId.CompareTo(b.scrollId));
-            SubsystemLog.Info("PcScroll", $"Parsed {rows.Count} scroll rows");
             return rows;
         }
 
-        private static string Str(string[] cols, int i)
+        public static PcScrollRegistry BuildRegistry(string dir)
         {
-            return i >= 0 && i < cols.Length ? (cols[i] ?? string.Empty).Trim() : string.Empty;
-        }
-
-        public static string[] ReadLines(string absolutePath)
-        {
-            var bytes = File.ReadAllBytes(absolutePath);
-            string text;
-            try
-            {
-                text = Encoding.GetEncoding("GB2312").GetString(bytes);
-            }
-            catch
-            {
-                text = Encoding.UTF8.GetString(bytes);
-            }
-            if (text.Length > 0 && text[0] == '\ufeff') text = text.Substring(1);
-            return text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+            var reg = new PcScrollRegistry();
+            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
+            foreach (var f in Directory.GetFiles(dir, "scroll*.txt"))
+                foreach (var e in ParseFile(f)) reg.Register(e);
+            return reg;
         }
     }
 }

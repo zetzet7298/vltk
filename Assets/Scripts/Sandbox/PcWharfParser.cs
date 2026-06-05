@@ -1,102 +1,73 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC wharf.txt parser
-// Source: settings/wharf.txt (boat/wharf stations, tab-separated, GB2312).
-// Header: ID  DESC  COUNT  SECT1  SECT2  SECT3  SECT4. SECTn is "mapId, x, y".
-// We use the first SECT as the primary position; additional SECTs are kept as
-// the sectCount for multi-stop routes.
+// VLTK Mobile — PC wharflist.txt parser (bến tàu - 11 entries)
+// Source: settings/wharflist.txt (GB2312). Cột phẳng.
 // -----------------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Text;
 using VLTK.Core;
-using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
+    public class PcWharfEntry
+    {
+        public int WharfId { get; set; }
+        public int FromMapId { get; set; }
+        public int ToMapId { get; set; }
+        public int BoatId { get; set; }
+        public int CostSilver { get; set; }
+        public int RequiredLevel { get; set; }
+    }
+
+    public sealed class PcWharfRegistry
+    {
+        private readonly Dictionary<int, PcWharfEntry> _byId = new Dictionary<int, PcWharfEntry>();
+        public int Count => _byId.Count;
+        public PcWharfEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
+        public IEnumerable<PcWharfEntry> All => _byId.Values;
+        public IEnumerable<PcWharfEntry> GetByFromMap(int mapId)
+        {
+            foreach (var e in _byId.Values) if (e.FromMapId == mapId) yield return e;
+        }
+        public IEnumerable<PcWharfEntry> GetByToMap(int mapId)
+        {
+            foreach (var e in _byId.Values) if (e.ToMapId == mapId) yield return e;
+        }
+        public void Add(PcWharfEntry e) { if (e != null) _byId[e.WharfId] = e; }
+    }
+
     public static class PcWharfParser
     {
-        public const int MinColumns = 4;
-
-        public static List<WharfEntry> ParseFile(string absolutePath)
+        public static PcWharfRegistry BuildRegistry(string absoluteDir)
         {
-            if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
-                return new List<WharfEntry>();
-            return ParseLines(ReadLines(absolutePath));
-        }
-
-        public static List<WharfEntry> ParseLines(IEnumerable<string> lines)
-        {
-            var rows = new List<WharfEntry>();
-            if (lines == null) return rows;
-
-            bool headerSkipped = false;
+            var reg = new PcWharfRegistry();
+            if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
+            var path = Path.Combine(absoluteDir, "wharflist.txt");
+            if (!File.Exists(path)) return reg;
+            var lines = PcMapListParser.ReadLines(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
-                var line = raw.TrimEnd('\r', '\n');
-                if (line.Length == 0) continue;
+                var line = raw.Trim();
+                if (line.Length == 0 || line[0] == ';' || line[0] == '#') continue;
                 var cols = line.Split('\t');
-                if (cols.Length < MinColumns) continue;
-                if (!headerSkipped)
+                if (cols.Length < 4) cols = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                if (cols.Length < 4) continue;
+                if (!int.TryParse(cols[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
+                var e = new PcWharfEntry
                 {
-                    headerSkipped = true;
-                    continue;
-                }
-                if (!int.TryParse(Str(cols, 0), NumberStyles.Integer, CultureInfo.InvariantCulture, out int id) || id <= 0)
-                    continue;
-                string desc = Str(cols, 1);
-                if (string.IsNullOrEmpty(desc)) continue;
-                int count = 0;
-                int.TryParse(Str(cols, 2), NumberStyles.Integer, CultureInfo.InvariantCulture, out count);
-                int mapId = 0, posX = 0, posY = 0;
-                int sectCols = cols.Length - 3;
-                int sectCount = sectCols < count ? sectCols : count;
-                if (sectCount < 0) sectCount = 0;
-                if (sectCount > 0)
-                {
-                    PcWaypointParser.ParseSect(Str(cols, 3), out mapId, out posX, out posY);
-                }
-
-                rows.Add(new WharfEntry
-                {
-                    wharfId = id,
-                    nameRaw = desc,
-                    nameNormalized = desc.Trim(),
-                    mapId = mapId,
-                    posX = posX,
-                    posY = posY,
-                    price = 0,
-                    sectCount = sectCount,
-                });
+                    WharfId = id,
+                    FromMapId = cols.Length > 1 && int.TryParse(cols[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int f) ? f : 0,
+                    ToMapId = cols.Length > 2 && int.TryParse(cols[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int t) ? t : 0,
+                    BoatId = cols.Length > 3 && int.TryParse(cols[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int b) ? b : 0,
+                    CostSilver = cols.Length > 4 && int.TryParse(cols[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int c) ? c : 0,
+                    RequiredLevel = cols.Length > 5 && int.TryParse(cols[5], NumberStyles.Integer, CultureInfo.InvariantCulture, out int r) ? r : 0
+                };
+                reg.Add(e);
             }
-
-            rows.Sort((a, b) => a.wharfId.CompareTo(b.wharfId));
-            SubsystemLog.Info("PcWharf", $"Parsed {rows.Count} wharf rows");
-            return rows;
-        }
-
-        private static string Str(string[] cols, int i)
-        {
-            return i >= 0 && i < cols.Length ? (cols[i] ?? string.Empty).Trim() : string.Empty;
-        }
-
-        public static string[] ReadLines(string absolutePath)
-        {
-            var bytes = File.ReadAllBytes(absolutePath);
-            string text;
-            try
-            {
-                text = Encoding.GetEncoding("GB2312").GetString(bytes);
-            }
-            catch
-            {
-                text = Encoding.UTF8.GetString(bytes);
-            }
-            if (text.Length > 0 && text[0] == '\ufeff') text = text.Substring(1);
-            return text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+            return reg;
         }
     }
 }

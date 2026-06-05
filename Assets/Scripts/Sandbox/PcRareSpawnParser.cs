@@ -1,82 +1,92 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC rare.txt port
-// Source: server settings/rare.txt (GB2312). Header is ASCII (NAME, MAGIC_ID,
-// MAG_P1_MIN..MAX, SWORD..CROSSBOW weapon columns, ARMOR..PENDANT armor
-// columns, METAL..EARTH element columns, then 11). Body rows describe
-// rare equipment-enhancement rate tiers; the schema has no map/x/y columns
-// so the spawn-table fields (mapId, positionX/Y, respawnSec) stay at default
-// and the magic tier id is exposed as npcTemplateId for cross-referencing.
+// VLTK Mobile — PC settings/rare.txt (Quái vật hiếm spawn) parser
+// Source: rare.txt (rare NPC spawn data, GB2312).
+//   Same format as normal.txt but with Probability column appended.
 // -----------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
-using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
-    public static class PcRareSpawnParser
+    [System.Serializable]
+    public class PcRareSpawnEntry
     {
-        public const int MinColumns = 4;
+        public int npcId;
+        public int npcTemplateId;
+        public int mapId;
+        public int posX;
+        public int posY;
+        public int respawnSec;
+        public float probability;  // Xác suất spawn (0.0 - 1.0)
+    }
 
-        public static List<RareSpawnEntry> ParseFile(string absolutePath, Encoding encoding = null)
+    public sealed class PcRareSpawnRegistry
+    {
+        private readonly Dictionary<int, PcRareSpawnEntry> _byId = new();
+        private readonly Dictionary<int, List<PcRareSpawnEntry>> _byMap = new();
+        public int Count => _byId.Count;
+
+        public void Register(PcRareSpawnEntry e)
         {
-            if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
-                return new List<RareSpawnEntry>();
-            return ParseLines(PcText.ReadLines(absolutePath, encoding));
+            if (e == null) return;
+            _byId[e.npcId] = e;
+            if (!_byMap.TryGetValue(e.mapId, out var ml)) { ml = new(); _byMap[e.mapId] = ml; }
+            ml.Add(e);
         }
 
-        public static List<RareSpawnEntry> ParseLines(IEnumerable<string> lines)
+        public PcRareSpawnEntry Get(int id)
+            => _byId.TryGetValue(id, out var v) ? v : null;
+
+        public List<PcRareSpawnEntry> GetByMap(int mapId)
+            => _byMap.TryGetValue(mapId, out var v) ? v : new List<PcRareSpawnEntry>();
+
+        public IEnumerable<PcRareSpawnEntry> All => _byId.Values;
+    }
+
+    public static class PcRareSpawnParser
+    {
+        public const int NpcTemplateIdCol = 1;
+        public const int MapIdCol = 2;
+        public const int PosXCol = 3;
+        public const int PosYCol = 4;
+        public const int RespawnCol = 5;
+        public const int ProbabilityCol = 6;
+
+        public static List<PcRareSpawnEntry> ParseFile(string path)
         {
-            var result = new List<RareSpawnEntry>();
-            if (lines == null) return result;
+            var rows = new List<PcRareSpawnEntry>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var lines = PcItemCommon.ReadServerLines(path);
             bool headerSkipped = false;
-            int rowIndex = 0;
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
-                if (cols.Length < MinColumns) { rowIndex++; continue; }
-                result.Add(BuildEntry(rowIndex, cols));
-                rowIndex++;
+                if (cols.Length < 7) continue;
+                int prob = PcItemCommon.Int(cols, ProbabilityCol);
+                rows.Add(new PcRareSpawnEntry
+                {
+                    npcId = PcItemCommon.Int(cols, 0),
+                    npcTemplateId = PcItemCommon.Int(cols, NpcTemplateIdCol),
+                    mapId = PcItemCommon.Int(cols, MapIdCol),
+                    posX = PcItemCommon.Int(cols, PosXCol),
+                    posY = PcItemCommon.Int(cols, PosYCol),
+                    respawnSec = PcItemCommon.Int(cols, RespawnCol),
+                    probability = prob > 100 ? prob / 10000f : prob / 100f,
+                });
             }
-            return result;
+            return rows;
         }
 
-        public static RareSpawnEntry ParseRow(string[] cols)
+        public static PcRareSpawnRegistry BuildRegistry(string dir)
         {
-            return BuildEntry(0, cols);
-        }
-
-        private static RareSpawnEntry BuildEntry(int entryId, string[] cols)
-        {
-            var name = Str(cols, 0);
-            var magicId = Int(cols, 1);
-            var levelMin = Int(cols, 2);
-            var levelMax = Int(cols, 3);
-            return new RareSpawnEntry
-            {
-                entryId = entryId,
-                nameRaw = name,
-                nameNormalized = name.Trim(),
-                npcTemplateId = magicId,
-                levelMin = levelMin,
-                levelMax = levelMax,
-                respawnSec = levelMax > 0 ? levelMax : 0,
-                dropRateFile = "rare.txt",
-            };
-        }
-
-        private static string Str(string[] c, int i) => i >= 0 && i < c.Length ? (c[i] ?? string.Empty).Trim() : string.Empty;
-        private static int Int(string[] c, int i)
-        {
-            var s = Str(c, i);
-            if (int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out int v))
-                return v;
-            return 0;
+            var reg = new PcRareSpawnRegistry();
+            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
+            foreach (var f in Directory.GetFiles(dir, "rare*.txt"))
+                foreach (var e in ParseFile(f)) reg.Register(e);
+            return reg;
         }
     }
 }

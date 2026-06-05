@@ -1,100 +1,91 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC goldboss.txt port
-// Source: server settings/goldboss.txt (GB2312). Header is ASCII (Name,
-// PhysicalDamageBase..LightingMagic, AuraSkillName, AuraSkillLevel,
-// PasstSkillName, PasstSkillLevel). Body rows hold Vietnamese TCVN3 boss
-// names and damage-base formulas in the "rate|value" notation. The PC
-// schema has no map/coord/drop-rate columns, so those fields default to
-// 0/null on every row.
+// VLTK Mobile — PC settings/goldboss.txt (Boss Hoàng Kim) parser
+// Source: goldboss.txt (boss spawn data, GB2312).
+//   Col 0:  Name
+//   Col 1:  PhysicalDamageBase (format "a|b")
+//   Col 2:  PhysicalMagic
+//   Col 3:  PoisonDamageBase
+//   ...
+//   Col 13: AuraSkillName
+//   Col 14: AuraSkillLevel
+// We keep name + skill name/level for runtime boss info.
 // -----------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
-using System.Text;
-using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
-    public static class PcGoldBossParser
+    [System.Serializable]
+    public class PcGoldBossEntry
     {
-        public const int MinColumns = 4;
+        public int bossId;
+        public string name;
+        public string auraSkillName;     // Tên kỹ năng nội
+        public int auraSkillLevel;       // Cấp kỹ năng nội
+        public string passiveSkillName;   // Tên kỹ năng bị động
+        public int passiveSkillLevel;    // Cấp kỹ năng bị động
+    }
 
-        public static List<GoldBossEntry> ParseFile(string absolutePath, Encoding encoding = null)
+    public sealed class PcGoldBossRegistry
+    {
+        private readonly Dictionary<int, PcGoldBossEntry> _byId = new();
+        public int Count => _byId.Count;
+
+        public void Register(PcGoldBossEntry e)
         {
-            if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
-                return new List<GoldBossEntry>();
-            return ParseLines(PcText.ReadLines(absolutePath, encoding));
+            if (e == null) return;
+            _byId[e.bossId] = e;
         }
 
-        public static List<GoldBossEntry> ParseLines(IEnumerable<string> lines)
+        public PcGoldBossEntry Get(int id)
+            => _byId.TryGetValue(id, out var v) ? v : null;
+
+        public IEnumerable<PcGoldBossEntry> All => _byId.Values;
+    }
+
+    public static class PcGoldBossParser
+    {
+        public const int NameCol = 0;
+        public const int AuraSkillNameCol = 11;
+        public const int AuraSkillLevelCol = 12;
+        public const int PassiveSkillNameCol = 13;
+        public const int PassiveSkillLevelCol = 14;
+
+        public static List<PcGoldBossEntry> ParseFile(string path)
         {
-            var result = new List<GoldBossEntry>();
-            if (lines == null) return result;
+            var rows = new List<PcGoldBossEntry>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var lines = PcItemCommon.ReadServerLines(path);
             bool headerSkipped = false;
-            int rowIndex = 0;
+            int autoId = 0;
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
-                if (cols.Length < MinColumns) { rowIndex++; continue; }
-                result.Add(BuildEntry(rowIndex, cols));
-                rowIndex++;
+                if (cols.Length < 4) continue;
+                autoId++;
+                rows.Add(new PcGoldBossEntry
+                {
+                    bossId = autoId,
+                    name = PcItemCommon.Str(cols, NameCol),
+                    auraSkillName = cols.Length > AuraSkillNameCol ? PcItemCommon.Str(cols, AuraSkillNameCol) : "",
+                    auraSkillLevel = cols.Length > AuraSkillLevelCol ? PcItemCommon.Int(cols, AuraSkillLevelCol) : 0,
+                    passiveSkillName = cols.Length > PassiveSkillNameCol ? PcItemCommon.Str(cols, PassiveSkillNameCol) : "",
+                    passiveSkillLevel = cols.Length > PassiveSkillLevelCol ? PcItemCommon.Int(cols, PassiveSkillLevelCol) : 0,
+                });
             }
-            return result;
+            return rows;
         }
 
-        public static GoldBossEntry ParseRow(string[] cols)
+        public static PcGoldBossRegistry BuildRegistry(string dir)
         {
-            return BuildEntry(0, cols);
-        }
-
-        private static GoldBossEntry BuildEntry(int bossTemplateId, string[] cols)
-        {
-            var name = Str(cols, 0);
-            return new GoldBossEntry
-            {
-                bossTemplateId = bossTemplateId,
-                nameRaw = name,
-                nameNormalized = name.Trim(),
-                level = 0,
-                physicalDamageBase = ParseRate(Str(cols, 1)),
-                poisonDamageBase = ParseRate(Str(cols, 3)),
-                coldDamageBase = ParseRate(Str(cols, 5)),
-                fireDamageBase = ParseRate(Str(cols, 7)),
-                lightingDamageBase = ParseRate(Str(cols, 9)),
-                auraSkillName = Str(cols, 11),
-                auraSkillLevel = Int(cols, 12),
-                passiveSkillName = Str(cols, 13),
-                passiveSkillLevel = cols.Length > 14 ? Int(cols, 14) : 0,
-            };
-        }
-
-        private static int ParseRate(string token)
-        {
-            if (string.IsNullOrEmpty(token)) return 0;
-            var pipe = token.IndexOf('|');
-            if (pipe < 0)
-            {
-                if (int.TryParse(token, NumberStyles.Integer, CultureInfo.InvariantCulture, out var v))
-                    return v;
-                return 0;
-            }
-            var rateStr = token.Substring(0, pipe);
-            if (int.TryParse(rateStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out var rate))
-                return rate;
-            return 0;
-        }
-
-        private static string Str(string[] c, int i) => i >= 0 && i < c.Length ? (c[i] ?? string.Empty).Trim() : string.Empty;
-        private static int Int(string[] c, int i)
-        {
-            var s = Str(c, i);
-            if (int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out int v))
-                return v;
-            return 0;
+            var reg = new PcGoldBossRegistry();
+            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
+            foreach (var f in Directory.GetFiles(dir, "goldboss*.txt"))
+                foreach (var e in ParseFile(f)) reg.Register(e);
+            return reg;
         }
     }
 }
