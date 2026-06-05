@@ -1,0 +1,2240 @@
+{
+  "artRoot": "Assets/StreamingAssets/UI/HUD/Art",
+  "totalChineseNamedPng": 279,
+  "reviewedOn": "2026-06-05",
+  "rule": "User-facing HUD art with baked Chinese text must have a Vietnamese asset under vi/ or a localization key in HudUserFacingArtCatalog.",
+  "entries": [
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/QQ主界面向上按钮_00.png",
+      "name": "QQ主界面向上按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/QQ主界面向上按钮_01.png",
+      "name": "QQ主界面向上按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/QQ主界面向上按钮_02.png",
+      "name": "QQ主界面向上按钮_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/QQ主界面向下按钮_00.png",
+      "name": "QQ主界面向下按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/QQ主界面向下按钮_01.png",
+      "name": "QQ主界面向下按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/QQ主界面向下按钮_02.png",
+      "name": "QQ主界面向下按钮_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-GM频道选择.png",
+      "name": "主界面按钮-GM频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "GM",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-世界频道选择.png",
+      "name": "主界面按钮-世界频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Thế giới",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-城市频道选择.png",
+      "name": "主界面按钮-城市频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Thành",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-好友频道选择.png",
+      "name": "主界面按钮-好友频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Bạn",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-密人频道选择.png",
+      "name": "主界面按钮-密人频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mật",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-门派频道选择.png",
+      "name": "主界面按钮-门派频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Môn phái",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-队伍频道选择.png",
+      "name": "主界面按钮-队伍频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đội",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/主界面按钮-附近频道选择.png",
+      "name": "主界面按钮-附近频道选择",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Gần",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/关闭_00.png",
+      "name": "关闭_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/关闭_01.png",
+      "name": "关闭_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/关闭_02.png",
+      "name": "关闭_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/刷新列表_00.png",
+      "name": "刷新列表_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Làm mới",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/刷新列表_01.png",
+      "name": "刷新列表_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Làm mới",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/刷新列表_02.png",
+      "name": "刷新列表_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Làm mới",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/刷新列表_03.png",
+      "name": "刷新列表_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Làm mới",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_00.png",
+      "name": "叶子飘过_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_01.png",
+      "name": "叶子飘过_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_02.png",
+      "name": "叶子飘过_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_03.png",
+      "name": "叶子飘过_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_04.png",
+      "name": "叶子飘过_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_05.png",
+      "name": "叶子飘过_05",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_06.png",
+      "name": "叶子飘过_06",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_07.png",
+      "name": "叶子飘过_07",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_08.png",
+      "name": "叶子飘过_08",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_09.png",
+      "name": "叶子飘过_09",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_10.png",
+      "name": "叶子飘过_10",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_11.png",
+      "name": "叶子飘过_11",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_12.png",
+      "name": "叶子飘过_12",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_13.png",
+      "name": "叶子飘过_13",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_14.png",
+      "name": "叶子飘过_14",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/叶子飘过_15.png",
+      "name": "叶子飘过_15",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/坐标点_01.png",
+      "name": "坐标点_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/坐标点_02.png",
+      "name": "坐标点_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友QQ－上部分.png",
+      "name": "好友QQ－上部分",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友QQ－下部分.png",
+      "name": "好友QQ－下部分",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友QQ－中部分.png",
+      "name": "好友QQ－中部分",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友QQ－组按钮_00.png",
+      "name": "好友QQ－组按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友QQ－组按钮_01.png",
+      "name": "好友QQ－组按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友－关闭_00.png",
+      "name": "好友－关闭_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友－关闭_01.png",
+      "name": "好友－关闭_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友－关闭_02.png",
+      "name": "好友－关闭_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友－查找_00.png",
+      "name": "好友－查找_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Tìm",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友－查找_01.png",
+      "name": "好友－查找_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Tìm",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/好友－查找_02.png",
+      "name": "好友－查找_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Tìm",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/小地图－世界大地图按钮_01.png",
+      "name": "小地图－世界大地图按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/小地图－世界大地图按钮_02.png",
+      "name": "小地图－世界大地图按钮_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/帮派－关闭_00.png",
+      "name": "帮派－关闭_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/帮派－关闭_01.png",
+      "name": "帮派－关闭_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/帮派－关闭_02.png",
+      "name": "帮派－关闭_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能.png",
+      "name": "技能",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Kỹ năng võ công",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－关闭_00.png",
+      "name": "技能－关闭_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－关闭_01.png",
+      "name": "技能－关闭_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－关闭_02.png",
+      "name": "技能－关闭_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đóng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－战斗分页.png",
+      "name": "技能－战斗分页",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Chiến đấu",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－战斗分页－一页_00.png",
+      "name": "技能－战斗分页－一页_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Trang 1",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－战斗分页－一页_01.png",
+      "name": "技能－战斗分页－一页_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Trang 1",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－战斗分页－二页_00.png",
+      "name": "技能－战斗分页－二页_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Trang 2",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－战斗分页－二页_01.png",
+      "name": "技能－战斗分页－二页_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Trang 2",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－战斗技能按钮_00.png",
+      "name": "技能－战斗技能按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Chiến đấu",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－战斗技能按钮_01.png",
+      "name": "技能－战斗技能按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Chiến đấu",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－生活技能按钮_00.png",
+      "name": "技能－生活技能按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Sinh hoạt",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/技能－生活技能按钮_01.png",
+      "name": "技能－生活技能按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Sinh hoạt",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－上_00.png",
+      "name": "提示信息窗－上_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－上_01.png",
+      "name": "提示信息窗－上_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－上_02.png",
+      "name": "提示信息窗－上_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－下_00.png",
+      "name": "提示信息窗－下_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－下_01.png",
+      "name": "提示信息窗－下_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－下_02.png",
+      "name": "提示信息窗－下_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－开关_00.png",
+      "name": "提示信息窗－开关_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/提示信息窗－开关_01.png",
+      "name": "提示信息窗－开关_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新手进入指南－初级玩家_00.png",
+      "name": "新手进入指南－初级玩家_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新手进入指南－初级玩家_01.png",
+      "name": "新手进入指南－初级玩家_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新手进入指南－高级玩家_00.png",
+      "name": "新手进入指南－高级玩家_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新手进入指南－高级玩家_01.png",
+      "name": "新手进入指南－高级玩家_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_00.png",
+      "name": "新登陆招牌_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_01.png",
+      "name": "新登陆招牌_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_02.png",
+      "name": "新登陆招牌_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_03.png",
+      "name": "新登陆招牌_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_04.png",
+      "name": "新登陆招牌_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_05.png",
+      "name": "新登陆招牌_05",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_06.png",
+      "name": "新登陆招牌_06",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_07.png",
+      "name": "新登陆招牌_07",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_08.png",
+      "name": "新登陆招牌_08",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_09.png",
+      "name": "新登陆招牌_09",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_10.png",
+      "name": "新登陆招牌_10",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_11.png",
+      "name": "新登陆招牌_11",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_12.png",
+      "name": "新登陆招牌_12",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_13.png",
+      "name": "新登陆招牌_13",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_14.png",
+      "name": "新登陆招牌_14",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_15.png",
+      "name": "新登陆招牌_15",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_16.png",
+      "name": "新登陆招牌_16",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_17.png",
+      "name": "新登陆招牌_17",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_18.png",
+      "name": "新登陆招牌_18",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆招牌_19.png",
+      "name": "新登陆招牌_19",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_00.png",
+      "name": "新登陆破布01_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_01.png",
+      "name": "新登陆破布01_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_02.png",
+      "name": "新登陆破布01_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_03.png",
+      "name": "新登陆破布01_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_04.png",
+      "name": "新登陆破布01_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_05.png",
+      "name": "新登陆破布01_05",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_06.png",
+      "name": "新登陆破布01_06",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_07.png",
+      "name": "新登陆破布01_07",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_08.png",
+      "name": "新登陆破布01_08",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_09.png",
+      "name": "新登陆破布01_09",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_10.png",
+      "name": "新登陆破布01_10",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_11.png",
+      "name": "新登陆破布01_11",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_12.png",
+      "name": "新登陆破布01_12",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/新登陆破布01_13.png",
+      "name": "新登陆破布01_13",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/灯笼_00.png",
+      "name": "灯笼_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/灯笼_01.png",
+      "name": "灯笼_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/灯笼_02.png",
+      "name": "灯笼_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/灯笼_03.png",
+      "name": "灯笼_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/灯笼_04.png",
+      "name": "灯笼_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/状态加点按钮改_00.png",
+      "name": "状态加点按钮改_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/状态加点按钮改_01.png",
+      "name": "状态加点按钮改_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/状态加点按钮改_02.png",
+      "name": "状态加点按钮改_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-取消按钮_00.png",
+      "name": "登入-填账号-取消按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-取消按钮_01.png",
+      "name": "登入-填账号-取消按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-取消按钮_02.png",
+      "name": "登入-填账号-取消按钮_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-确定按钮_00.png",
+      "name": "登入-填账号-确定按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-确定按钮_01.png",
+      "name": "登入-填账号-确定按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-确定按钮_02.png",
+      "name": "登入-填账号-确定按钮_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-记账号按钮_00.png",
+      "name": "登入-填账号-记账号按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-填账号-记账号按钮_01.png",
+      "name": "登入-填账号-记账号按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－制作成员_00.png",
+      "name": "登入-开始游戏－制作成员_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－制作成员_01.png",
+      "name": "登入-开始游戏－制作成员_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－制作成员_02.png",
+      "name": "登入-开始游戏－制作成员_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－开始游戏_00.png",
+      "name": "登入-开始游戏－开始游戏_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－开始游戏_01.png",
+      "name": "登入-开始游戏－开始游戏_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－开始游戏_02.png",
+      "name": "登入-开始游戏－开始游戏_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－系统选项_00.png",
+      "name": "登入-开始游戏－系统选项_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－系统选项_01.png",
+      "name": "登入-开始游戏－系统选项_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－系统选项_02.png",
+      "name": "登入-开始游戏－系统选项_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－退出游戏_00.png",
+      "name": "登入-开始游戏－退出游戏_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－退出游戏_01.png",
+      "name": "登入-开始游戏－退出游戏_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-开始游戏－退出游戏_02.png",
+      "name": "登入-开始游戏－退出游戏_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色2.png",
+      "name": "登入-新建角色2",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－土_00.png",
+      "name": "登入-新建角色－土_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－土_01.png",
+      "name": "登入-新建角色－土_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－木_00.png",
+      "name": "登入-新建角色－木_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－木_01.png",
+      "name": "登入-新建角色－木_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－水_00.png",
+      "name": "登入-新建角色－水_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－水_01.png",
+      "name": "登入-新建角色－水_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－火_00.png",
+      "name": "登入-新建角色－火_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-新建角色－火_01.png",
+      "name": "登入-新建角色－火_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-登入-填账号2.png",
+      "name": "登入-登入-填账号2",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-登入过程提示-删除角色要密码.png",
+      "name": "登入-登入过程提示-删除角色要密码",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-登入过程提示.png",
+      "name": "登入-登入过程提示",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－删除_00.png",
+      "name": "登入-选存档角色－删除_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－删除_01.png",
+      "name": "登入-选存档角色－删除_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－删除_02.png",
+      "name": "登入-选存档角色－删除_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－取消_00.png",
+      "name": "登入-选存档角色－取消_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－取消_01.png",
+      "name": "登入-选存档角色－取消_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－取消_02.png",
+      "name": "登入-选存档角色－取消_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－新建_00.png",
+      "name": "登入-选存档角色－新建_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－新建_01.png",
+      "name": "登入-选存档角色－新建_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－新建_02.png",
+      "name": "登入-选存档角色－新建_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－确定_00.png",
+      "name": "登入-选存档角色－确定_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－确定_01.png",
+      "name": "登入-选存档角色－确定_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选存档角色－确定_02.png",
+      "name": "登入-选存档角色－确定_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选新手村.png",
+      "name": "登入-选新手村",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选服务器.png",
+      "name": "登入-选服务器",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选服务器－取消2_00.png",
+      "name": "登入-选服务器－取消2_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选服务器－取消2_01.png",
+      "name": "登入-选服务器－取消2_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选服务器－取消2_02.png",
+      "name": "登入-选服务器－取消2_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选服务器－确定2_00.png",
+      "name": "登入-选服务器－确定2_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选服务器－确定2_01.png",
+      "name": "登入-选服务器－确定2_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/登入-选服务器－确定2_02.png",
+      "name": "登入-选服务器－确定2_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/离开队伍_00.png",
+      "name": "离开队伍_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Rời đội",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/离开队伍_01.png",
+      "name": "离开队伍_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Rời đội",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/离开队伍_02.png",
+      "name": "离开队伍_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Rời đội",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/离开队伍_03.png",
+      "name": "离开队伍_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Rời đội",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－帮助_00.png",
+      "name": "系统－帮助_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－帮助_01.png",
+      "name": "系统－帮助_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－帮助_02.png",
+      "name": "系统－帮助_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－返回_00.png",
+      "name": "系统－返回_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－返回_01.png",
+      "name": "系统－返回_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－返回_02.png",
+      "name": "系统－返回_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－退出_00.png",
+      "name": "系统－退出_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－退出_01.png",
+      "name": "系统－退出_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－退出_02.png",
+      "name": "系统－退出_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－选项_00.png",
+      "name": "系统－选项_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－选项_01.png",
+      "name": "系统－选项_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/系统－选项_02.png",
+      "name": "系统－选项_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/组队开关_00.png",
+      "name": "组队开关_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/组队开关_01.png",
+      "name": "组队开关_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/组队开关_02.png",
+      "name": "组队开关_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天条阴影按钮.png",
+      "name": "聊天条阴影按钮",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－GM频道.png",
+      "name": "聊天频道图示－GM频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "GM",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－世界频道.png",
+      "name": "聊天频道图示－世界频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Thế giới",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－城市频道.png",
+      "name": "聊天频道图示－城市频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Thành",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－好友频道.png",
+      "name": "聊天频道图示－好友频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Bạn",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－密人频道.png",
+      "name": "聊天频道图示－密人频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mật",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－自己说.png",
+      "name": "聊天频道图示－自己说",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Tôi",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－门派频道.png",
+      "name": "聊天频道图示－门派频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Môn phái",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－队伍频道.png",
+      "name": "聊天频道图示－队伍频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đội",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/聊天频道图示－附近频道.png",
+      "name": "聊天频道图示－附近频道",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Gần",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/表情符号扩展_00.png",
+      "name": "表情符号扩展_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/表情符号扩展_01.png",
+      "name": "表情符号扩展_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/表情符号扩展_02.png",
+      "name": "表情符号扩展_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/装备和属性－物品_00.png",
+      "name": "装备和属性－物品_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/装备和属性－物品_01.png",
+      "name": "装备和属性－物品_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/装备和属性－物品_02.png",
+      "name": "装备和属性－物品_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_00.png",
+      "name": "角色_木_男_0_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_01.png",
+      "name": "角色_木_男_0_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_02.png",
+      "name": "角色_木_男_0_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_03.png",
+      "name": "角色_木_男_0_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_04.png",
+      "name": "角色_木_男_0_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_05.png",
+      "name": "角色_木_男_0_05",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_06.png",
+      "name": "角色_木_男_0_06",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_07.png",
+      "name": "角色_木_男_0_07",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_08.png",
+      "name": "角色_木_男_0_08",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_09.png",
+      "name": "角色_木_男_0_09",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_0_10.png",
+      "name": "角色_木_男_0_10",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_00.png",
+      "name": "角色_木_男_2_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_01.png",
+      "name": "角色_木_男_2_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_02.png",
+      "name": "角色_木_男_2_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_03.png",
+      "name": "角色_木_男_2_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_04.png",
+      "name": "角色_木_男_2_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_05.png",
+      "name": "角色_木_男_2_05",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_06.png",
+      "name": "角色_木_男_2_06",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_07.png",
+      "name": "角色_木_男_2_07",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_08.png",
+      "name": "角色_木_男_2_08",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_09.png",
+      "name": "角色_木_男_2_09",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_木_男_2_10.png",
+      "name": "角色_木_男_2_10",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_00.png",
+      "name": "角色_金_男_0_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_01.png",
+      "name": "角色_金_男_0_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_02.png",
+      "name": "角色_金_男_0_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_03.png",
+      "name": "角色_金_男_0_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_04.png",
+      "name": "角色_金_男_0_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_05.png",
+      "name": "角色_金_男_0_05",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_06.png",
+      "name": "角色_金_男_0_06",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_07.png",
+      "name": "角色_金_男_0_07",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_08.png",
+      "name": "角色_金_男_0_08",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_09.png",
+      "name": "角色_金_男_0_09",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_0_10.png",
+      "name": "角色_金_男_0_10",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_00.png",
+      "name": "角色_金_男_2_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_01.png",
+      "name": "角色_金_男_2_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_02.png",
+      "name": "角色_金_男_2_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_03.png",
+      "name": "角色_金_男_2_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_04.png",
+      "name": "角色_金_男_2_04",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_05.png",
+      "name": "角色_金_男_2_05",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_06.png",
+      "name": "角色_金_男_2_06",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_07.png",
+      "name": "角色_金_男_2_07",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_08.png",
+      "name": "角色_金_男_2_08",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_09.png",
+      "name": "角色_金_男_2_09",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/角色_金_男_2_10.png",
+      "name": "角色_金_男_2_10",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/订阅打勾按钮_00.png",
+      "name": "订阅打勾按钮_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/订阅打勾按钮_01.png",
+      "name": "订阅打勾按钮_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/订阅打勾按钮_02.png",
+      "name": "订阅打勾按钮_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/超简单帮助.png",
+      "name": "超简单帮助",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/踢出队伍_00.png",
+      "name": "踢出队伍_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời ra",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/踢出队伍_01.png",
+      "name": "踢出队伍_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời ra",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/踢出队伍_02.png",
+      "name": "踢出队伍_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời ra",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/踢出队伍_03.png",
+      "name": "踢出队伍_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời ra",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/选项3.png",
+      "name": "选项3",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/通用拖动条-横.png",
+      "name": "通用拖动条-横",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/道具面板2.png",
+      "name": "道具面板2",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/道具－存钱_00.png",
+      "name": "道具－存钱_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/道具－存钱_01.png",
+      "name": "道具－存钱_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/道具－存钱_02.png",
+      "name": "道具－存钱_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/道具－装备_00.png",
+      "name": "道具－装备_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/道具－装备_01.png",
+      "name": "道具－装备_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/道具－装备_02.png",
+      "name": "道具－装备_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/邀请加入_00.png",
+      "name": "邀请加入_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/邀请加入_01.png",
+      "name": "邀请加入_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/邀请加入_02.png",
+      "name": "邀请加入_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/邀请加入_03.png",
+      "name": "邀请加入_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Mời",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/队长移交_00.png",
+      "name": "队长移交_00",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đội trưởng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/队长移交_01.png",
+      "name": "队长移交_01",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đội trưởng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/队长移交_02.png",
+      "name": "队长移交_02",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đội trưởng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/队长移交_03.png",
+      "name": "队长移交_03",
+      "containsCjkPath": true,
+      "userFacingBakedText": true,
+      "vietnameseTextOrKey": "Đội trưởng",
+      "status": "localized_or_text_overlay"
+    },
+    {
+      "path": "Assets/StreamingAssets/UI/HUD/Art/频道开与关b.png",
+      "name": "频道开与关b",
+      "containsCjkPath": true,
+      "userFacingBakedText": false,
+      "vietnameseTextOrKey": "",
+      "status": "decorative_or_non_user_facing_reviewed"
+    }
+  ]
+}
