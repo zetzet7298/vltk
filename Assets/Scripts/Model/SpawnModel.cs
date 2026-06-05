@@ -115,4 +115,84 @@ namespace VLTK.Model
         public int missingSprites;
         public ConversionStatus status;
     }
+
+    /// <summary>
+    /// Rare spawn entry (PC rare.txt). The PC source uses this file as a magic
+    /// enhancement rate table; the data fields below are a best-effort mapping
+    /// to the spawn-table model so a registry can index it by template id.
+    /// When the source lacks coordinate/drop-rate columns, those fields stay 0/null.
+    /// </summary>
+    [Serializable]
+    public class RareSpawnEntry
+    {
+        public int entryId;
+        public string nameRaw;
+        public string nameNormalized;
+        public int mapId;
+        public int npcTemplateId;
+        public int positionX;
+        public int positionY;
+        public int respawnSec;
+        public string dropRateFile;
+        public int magicId;
+        public int levelMin;
+        public int levelMax;
+        public List<string> warnings = new();
+    }
+
+    /// <summary>
+    /// Gold boss entry (PC goldboss.txt). The PC source uses this file to describe
+    /// boss damage bases, aura skills, and passive skills; coordinates/drop files
+    /// are not part of the source and remain default values.
+    /// </summary>
+    [Serializable]
+    public class GoldBossEntry
+    {
+        public int bossTemplateId;
+        public string nameRaw;
+        public string nameNormalized;
+        public int level;
+        public int mapId;
+        public int positionX;
+        public int positionY;
+        public string dropRateFile;
+        public int respawnHours;
+        public int physicalDamageBase;
+        public int poisonDamageBase;
+        public int coldDamageBase;
+        public int fireDamageBase;
+        public int lightingDamageBase;
+        public string auraSkillName;
+        public int auraSkillLevel;
+        public string passiveSkillName;
+        public int passiveSkillLevel;
+        public List<string> warnings = new();
+    }
+
+    /// <summary>
+    /// Generalized PC spawn-point record. The model carries the monster-spawn
+    /// fields (mapId, x/y, direction, count, respawn, ai, group) plus optional
+    /// template identity and level. When the PC source file does not provide
+    /// some of these columns (e.g. settings/normal.txt is an item equipment
+    /// table that has no map/x/y fields), the parser leaves the spawn fields
+    /// at their default 0 values and records the gap in `warnings`.
+    /// </summary>
+    [Serializable]
+    public class SpawnPoint
+    {
+        public int mapId;
+        public int npcTemplateId;
+        public int x;
+        public int y;
+        public int direction;
+        public int count;
+        public int level;
+        public int respawnSec;
+        public int aiMode;
+        public int groupId;
+        public string nameRaw;
+        public string sourceFile;
+        public int rowIndex;
+        public List<string> warnings = new();
+    }
 }

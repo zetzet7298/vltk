@@ -1,4 +1,12 @@
 {
+    "dotnet.defaultSolution": "vltk-mobile.slnx",
+    "dotrush.msbuildProperties": {
+        "DefineConstants": "UNITY_EDITOR"
+    },
+    "dotrush.roslyn.projectOrSolutionFiles": [
+        "/var/www/vltk-mobile/vltk-mobile.sln"
+    ],
+    "dotrush.roslyn.restoreProjectsBeforeLoading": false,
     "files.exclude": {
         "**/.DS_Store": true,
         "**/.git": true,
@@ -55,18 +63,5 @@
         "UserSettings/": true,
         "temp/": true,
         "Temp/": true
-    },
-    "files.associations": {
-        "*.asset": "yaml",
-        "*.meta": "yaml",
-        "*.prefab": "yaml",
-        "*.unity": "yaml",
-    },
-    "explorer.fileNesting.enabled": true,
-    "explorer.fileNesting.patterns": {
-        "*.sln": "*.csproj",
-        "*.slnx": "*.csproj"
-    },
-    "dotnet.defaultSolution": "vltk-mobile.slnx",
-    "dotnet.enableWorkspaceBasedDevelopment": false
+    }
 }

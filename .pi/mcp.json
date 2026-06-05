@@ -10,7 +10,7 @@
       "args": [
         "mcp"
       ],
-      "directTools": true
+      "directTools": false
     },
     "stitch": {
       "type": "http",
@@ -28,7 +28,7 @@
         "semble[mcp]",
         "semble"
       ],
-      "directTools": true
+      "directTools": false
     }
   }
 }
