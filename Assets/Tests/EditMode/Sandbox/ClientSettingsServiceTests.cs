@@ -15,13 +15,9 @@ namespace VLTK.Tests.Sandbox
     {
         // ── Portrait ─────────────────────────────────────────────────────────
         [Test]
-        public void PortraitService_LoadFromStreamingAssets_DoesNotThrow()
+        public void PortraitService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = PortraitService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => PortraitService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -41,13 +37,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SoundList ────────────────────────────────────────────────────────
         [Test]
-        public void SoundListService_LoadFromStreamingAssets_DoesNotThrow()
+        public void SoundListService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = SoundListService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SoundListService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -66,13 +58,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── Killer ───────────────────────────────────────────────────────────
         [Test]
-        public void KillerService_LoadFromStreamingAssets_DoesNotThrow()
+        public void KillerService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = KillerService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => KillerService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -88,13 +76,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── ItemDetail ───────────────────────────────────────────────────────
         [Test]
-        public void ItemDetailService_LoadFromStreamingAssets_DoesNotThrow()
+        public void ItemDetailService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ItemDetailService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ItemDetailService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -113,13 +97,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── ItemType ─────────────────────────────────────────────────────────
         [Test]
-        public void ItemTypeService_LoadFromStreamingAssets_DoesNotThrow()
+        public void ItemTypeService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ItemTypeService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ItemTypeService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -136,13 +116,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── MapTraffic ───────────────────────────────────────────────────────
         [Test]
-        public void MapTrafficService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapTrafficService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = MapTrafficService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapTrafficService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -158,13 +134,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── MapType ──────────────────────────────────────────────────────────
         [Test]
-        public void MapTypeService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapTypeService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = MapTypeService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapTypeService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -179,13 +151,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── AdjustColor ──────────────────────────────────────────────────────
         [Test]
-        public void AdjustColorService_LoadFromStreamingAssets_DoesNotThrow()
+        public void AdjustColorService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = AdjustColorService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => AdjustColorService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -200,13 +168,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── ClientWeaponSkill ────────────────────────────────────────────────
         [Test]
-        public void ClientWeaponSkillService_LoadFromStreamingAssets_DoesNotThrow()
+        public void ClientWeaponSkillService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ClientWeaponSkillService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ClientWeaponSkillService.LoadFromStreamingAssets());
         }
 
         [Test]

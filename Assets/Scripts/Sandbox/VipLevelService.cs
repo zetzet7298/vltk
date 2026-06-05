@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class VipLevelService
     {
+        public const string DefaultStreamingDir = "Reference/PcVip";
         public const string LogTag = "VipLevel";
 
         private readonly PcVipLevelRegistry _registry;
@@ -24,7 +25,7 @@ namespace VLTK.Sandbox
 
         public static VipLevelService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcVip");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcVipLevelParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} cấp VIP");
             return new VipLevelService(reg);

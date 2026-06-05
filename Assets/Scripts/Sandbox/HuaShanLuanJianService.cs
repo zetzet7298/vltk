@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class HuaShanLuanJianService
     {
+        public const string DefaultStreamingDir = "Reference/PcEvent";
         public const string LogTag = "HuaShan";
 
         private readonly PcHuaShanLuanJianRegistry _registry;
@@ -24,7 +25,7 @@ namespace VLTK.Sandbox
 
         public static HuaShanLuanJianService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcEvent");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcHuaShanLuanJianParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} vòng Hoa Sơn Luận Kiếm");
             return new HuaShanLuanJianService(reg);

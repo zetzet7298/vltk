@@ -11,9 +11,9 @@ namespace VLTK.Tests.Sandbox
     public class MapDataServiceTests
     {
         [Test]
-        public void MapListFullService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapListFullService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapListFullService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapListFullService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -73,9 +73,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MapElementService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapElementService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapElementService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapElementService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -117,9 +117,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MapRespawnService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapRespawnService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapRespawnService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapRespawnService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -139,9 +139,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MapBlockService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapBlockService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapBlockService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapBlockService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -168,9 +168,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MapNpcRespawnService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapNpcRespawnService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapNpcRespawnService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapNpcRespawnService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -190,9 +190,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MapMusicService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapMusicService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapMusicService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapMusicService.LoadFromStreamingAssets());
         }
 
         [Test]

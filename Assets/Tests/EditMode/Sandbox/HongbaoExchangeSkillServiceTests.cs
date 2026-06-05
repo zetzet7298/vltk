@@ -16,14 +16,10 @@ namespace VLTK.Tests.Sandbox
     public class HongbaoServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             // Phải chạy được kể cả khi thư mục không tồn tại
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = HongbaoService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => HongbaoService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -78,13 +74,9 @@ namespace VLTK.Tests.Sandbox
     public class ItemExchangeServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ItemExchangeService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ItemExchangeService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -164,13 +156,9 @@ namespace VLTK.Tests.Sandbox
     public class SpecialSkillServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = SpecialSkillService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SpecialSkillService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -203,13 +191,9 @@ namespace VLTK.Tests.Sandbox
     public class NpcSkillServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = NpcSkillService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NpcSkillService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -241,13 +225,9 @@ namespace VLTK.Tests.Sandbox
     public class TranslifeSkillServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = TranslifeSkillService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TranslifeSkillService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -280,13 +260,9 @@ namespace VLTK.Tests.Sandbox
     public class SkillTemplateServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = SkillTemplateService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillTemplateService.LoadFromStreamingAssets());
         }
 
         [Test]

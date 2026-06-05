@@ -13,13 +13,9 @@ namespace VLTK.Tests.Sandbox
     public class NewPlayerGuideServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = NewPlayerGuideService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            }, "NewPlayerGuideService phải khởi tạo được ngay cả khi thư mục rỗng");
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NewPlayerGuideService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -48,13 +44,9 @@ namespace VLTK.Tests.Sandbox
     public class ChangeFeatureServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ChangeFeatureService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ChangeFeatureService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -68,13 +60,9 @@ namespace VLTK.Tests.Sandbox
     public class StallServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = StallService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => StallService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -88,13 +76,9 @@ namespace VLTK.Tests.Sandbox
     public class FlipCardServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = FlipCardService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FlipCardService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -121,13 +105,9 @@ namespace VLTK.Tests.Sandbox
     public class BaoRuongThanBiServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = BaoRuongThanBiService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BaoRuongThanBiService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -151,13 +131,9 @@ namespace VLTK.Tests.Sandbox
     public class SeasonalEventServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = SeasonalEventService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SeasonalEventService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -184,13 +160,9 @@ namespace VLTK.Tests.Sandbox
     public class CompensationServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = CompensationService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => CompensationService.LoadFromStreamingAssets());
         }
 
         [Test]

@@ -12,11 +12,11 @@ namespace VLTK.Tests.Sandbox
     public class NpcLevelScriptServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             // Phải tạo được service (kể cả khi folder không tồn tại)
             NpcLevelScriptService svc = null;
-            Assert.DoesNotThrow(() => svc = NpcLevelScriptService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NpcLevelScriptService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
         }
 
@@ -40,10 +40,10 @@ namespace VLTK.Tests.Sandbox
     public class NpcDeathScriptServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             NpcDeathScriptService svc = null;
-            Assert.DoesNotThrow(() => svc = NpcDeathScriptService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NpcDeathScriptService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
         }
 
@@ -66,10 +66,10 @@ namespace VLTK.Tests.Sandbox
     public class DailyTaskServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             DailyTaskService svc = null;
-            Assert.DoesNotThrow(() => svc = DailyTaskService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => DailyTaskService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
         }
 
@@ -135,10 +135,10 @@ namespace VLTK.Tests.Sandbox
     public class BossMissionServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             BossMissionService svc = null;
-            Assert.DoesNotThrow(() => svc = BossMissionService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BossMissionService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
         }
 

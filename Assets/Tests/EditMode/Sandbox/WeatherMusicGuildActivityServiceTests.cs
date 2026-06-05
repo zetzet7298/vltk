@@ -13,13 +13,9 @@ namespace VLTK.Tests.Sandbox
     public class WeatherServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = WeatherService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            }, "WeatherService phải load được dù thư mục data có/không");
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => WeatherService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -70,13 +66,9 @@ namespace VLTK.Tests.Sandbox
     public class MusicServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = MusicService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MusicService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -97,13 +89,9 @@ namespace VLTK.Tests.Sandbox
     public class GuildWorkshopServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = GuildWorkshopService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GuildWorkshopService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -123,13 +111,9 @@ namespace VLTK.Tests.Sandbox
     public class HuoYueDuServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = HuoYueDuService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => HuoYueDuService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -149,13 +133,9 @@ namespace VLTK.Tests.Sandbox
     public class CityDefenceServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = CityDefenceService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => CityDefenceService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -181,13 +161,9 @@ namespace VLTK.Tests.Sandbox
     public class ActivityServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ActivityService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ActivityService.LoadFromStreamingAssets());
         }
 
         [Test]

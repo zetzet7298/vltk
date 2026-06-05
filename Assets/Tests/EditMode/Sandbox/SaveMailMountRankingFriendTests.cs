@@ -12,7 +12,7 @@ namespace VLTK.Tests.Sandbox
         // ========== SaveSlotService ==========
 
         [Test]
-        public void SaveSlot_LoadFromStreamingAssets_DoesNotThrow()
+        public void SaveSlot_LoadFromStreamingAssets_MatchesCommittedData()
         {
             var svc = PcSaveSlotService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
@@ -73,7 +73,7 @@ namespace VLTK.Tests.Sandbox
         // ========== MailService ==========
 
         [Test]
-        public void Mail_LoadFromStreamingAssets_DoesNotThrow()
+        public void Mail_LoadFromStreamingAssets_MatchesCommittedData()
         {
             var svc = MailService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
@@ -150,7 +150,7 @@ namespace VLTK.Tests.Sandbox
         // ========== MountService ==========
 
         [Test]
-        public void Mount_LoadFromStreamingAssets_DoesNotThrow()
+        public void Mount_LoadFromStreamingAssets_MatchesCommittedData()
         {
             var svc = MountService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
@@ -205,7 +205,7 @@ namespace VLTK.Tests.Sandbox
         // ========== RankingService ==========
 
         [Test]
-        public void Ranking_LoadFromStreamingAssets_DoesNotThrow()
+        public void Ranking_LoadFromStreamingAssets_MatchesCommittedData()
         {
             var svc = RankingService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
@@ -249,7 +249,7 @@ namespace VLTK.Tests.Sandbox
         // ========== FriendService ==========
 
         [Test]
-        public void Friend_LoadFromStreamingAssets_DoesNotThrow()
+        public void Friend_LoadFromStreamingAssets_MatchesCommittedData()
         {
             var svc = FriendService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);

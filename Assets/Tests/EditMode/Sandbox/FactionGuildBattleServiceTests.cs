@@ -13,9 +13,9 @@ namespace VLTK.Tests.Sandbox
     public class FactionSkillTreeServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => FactionSkillTreeService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FactionSkillTreeService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -54,9 +54,9 @@ namespace VLTK.Tests.Sandbox
     public class FactionBonusServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => FactionBonusService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FactionBonusService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -80,9 +80,9 @@ namespace VLTK.Tests.Sandbox
     public class FactionRelationServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => FactionRelationService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FactionRelationService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -115,9 +115,9 @@ namespace VLTK.Tests.Sandbox
     public class GuildScriptServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => GuildScriptService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GuildScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -167,9 +167,9 @@ namespace VLTK.Tests.Sandbox
     public class BattleMapConfigServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BattleMapConfigService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BattleMapConfigService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -206,9 +206,9 @@ namespace VLTK.Tests.Sandbox
     public class BattleRewardConfigServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BattleRewardConfigService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BattleRewardConfigService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -239,9 +239,9 @@ namespace VLTK.Tests.Sandbox
     public class BattleHonorServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BattleHonorService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BattleHonorService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -269,9 +269,9 @@ namespace VLTK.Tests.Sandbox
     public class SjBattleServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => SjBattleService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SjBattleService.LoadFromStreamingAssets());
         }
 
         [Test]

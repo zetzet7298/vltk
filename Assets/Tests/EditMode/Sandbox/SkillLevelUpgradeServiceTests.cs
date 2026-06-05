@@ -13,9 +13,9 @@ namespace VLTK.Tests.Sandbox
     {
         // ── SkillLevelDataService ──────────────────────────────────────────
         [Test]
-        public void SkillLevelDataService_LoadFromStreamingAssets_DoesNotThrow()
+        public void SkillLevelDataService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => SkillLevelDataService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillLevelDataService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -51,9 +51,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SkillUpgradeService ───────────────────────────────────────────
         [Test]
-        public void SkillUpgradeService_LoadFromStreamingAssets_DoesNotThrow()
+        public void SkillUpgradeService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => SkillUpgradeService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillUpgradeService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -93,9 +93,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SkillBookService ──────────────────────────────────────────────
         [Test]
-        public void SkillBookService_LoadFromStreamingAssets_DoesNotThrow()
+        public void SkillBookService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => SkillBookService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillBookService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -143,9 +143,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SkillComboService ─────────────────────────────────────────────
         [Test]
-        public void SkillComboService_LoadFromStreamingAssets_DoesNotThrow()
+        public void SkillComboService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => SkillComboService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillComboService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -181,9 +181,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SkillStateService ─────────────────────────────────────────────
         [Test]
-        public void SkillStateService_LoadFromStreamingAssets_DoesNotThrow()
+        public void SkillStateService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => SkillStateService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillStateService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -230,9 +230,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SkillMasteryService ───────────────────────────────────────────
         [Test]
-        public void SkillMasteryService_LoadFromStreamingAssets_DoesNotThrow()
+        public void SkillMasteryService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => SkillMasteryService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillMasteryService.LoadFromStreamingAssets());
         }
 
         [Test]

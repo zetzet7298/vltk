@@ -13,10 +13,10 @@ namespace VLTK.Tests.Sandbox
     public class BattlefieldServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             // Không throw ngay cả khi không có file (trả về registry rỗng)
-            Assert.DoesNotThrow(() => BattlefieldService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BattlefieldService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -115,9 +115,9 @@ namespace VLTK.Tests.Sandbox
     public class InstanceMapServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => InstanceMapService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => InstanceMapService.LoadFromStreamingAssets());
         }
 
         [Test]

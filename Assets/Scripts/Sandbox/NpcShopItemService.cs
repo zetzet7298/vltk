@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class NpcShopItemService
     {
+        public const string DefaultStreamingDir = "Reference/PcShop";
         public const string LogTag = "NpcShop";
 
         private readonly PcNpcShopItemRegistry _registry;
@@ -24,7 +25,7 @@ namespace VLTK.Sandbox
 
         public static NpcShopItemService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcShop");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcNpcShopItemParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} vật phẩm shop");
             return new NpcShopItemService(reg);

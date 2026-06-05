@@ -14,10 +14,10 @@ namespace VLTK.Tests.Sandbox
     public class GuildRankServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             // Phải load an toàn kể cả khi file không tồn tại.
-            Assert.DoesNotThrow(() => GuildRankService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GuildRankService.LoadFromStreamingAssets());
             var svc = GuildRankService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -46,9 +46,9 @@ namespace VLTK.Tests.Sandbox
     public class GuildStuntServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => GuildStuntService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GuildStuntService.LoadFromStreamingAssets());
             var svc = GuildStuntService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -74,9 +74,9 @@ namespace VLTK.Tests.Sandbox
     public class GuildTaskServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => GuildTaskService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GuildTaskService.LoadFromStreamingAssets());
             var svc = GuildTaskService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -99,9 +99,9 @@ namespace VLTK.Tests.Sandbox
     public class HonorServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => HonorService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => HonorService.LoadFromStreamingAssets());
             var svc = HonorService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -134,9 +134,9 @@ namespace VLTK.Tests.Sandbox
     public class ShituServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => ShituService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ShituService.LoadFromStreamingAssets());
             var svc = ShituService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -173,9 +173,9 @@ namespace VLTK.Tests.Sandbox
     public class FoundryServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => FoundryService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FoundryService.LoadFromStreamingAssets());
             var svc = FoundryService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -195,9 +195,9 @@ namespace VLTK.Tests.Sandbox
     public class WorldRankServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => WorldRankService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => WorldRankService.LoadFromStreamingAssets());
             var svc = WorldRankService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
