@@ -8,6 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Cai Bang combat parity**: added PC-sourced tuning for MOD/Cai Bang skills,
+  including level-scaled formulas, missile counts, costs, damage, and 150-tier
+  skill visuals sourced from `/var/www/vltksource_new/vl_update_27`.
+- PC SPR playback for 150-tier Cai Bang pre-cast visuals, including
+  `Thần Thủ Lệnh Long` and `Bổng Hoành Lược Mã` source-backed SPR assets.
+- `jx-pc-port-rule` skill and `/port` command so PC-to-Unity porting tasks load
+  the scoped PC source-of-truth rule plus Unity MCP orchestration.
 - **Male player port** (US-M21-002): layered 8-part SPR avatar
   (shadow, body, head, hair, left/right hand, left/right empty-hand weapon)
   rendered as individual `SpriteRenderer`s, matching the original JX Online 3
@@ -21,10 +28,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 64 staged male SPR frames + `male_player_sprites.json` manifest in
   `StreamingAssets`, resolved at runtime via the GB2312 signed-byte path-hash UID.
 - EditMode tests `MalePlayerVisualTests` (catalog, direction map, SPR load, move).
+- **Female player port** (ST-02.1.1): parallel `FemalePlayerVisual` /
+  `FemalePlayerSpriteCatalog` mirroring the male system with FM_*_050 SPR parts
+  (BD/HD/HR/LH/RH) sourced from PC `npcres/woman`. Shadow and LW/RW weapon
+  slots are built but marked not-required because PC `npcres/woman` ships no
+  SPR files for them.
+- 220 staged female SPR frames + `female_player_sprites.json` manifest in
+  `StreamingAssets`, resolved at runtime via the same GB2312 signed-byte
+  path-hash UID used for the male set.
+- `SandboxManager.SpawnFemaleVisual()` runtime helper for parity testing,
+  drops the female avatar 40 units east of the male one at the training
+  pentagon center.
+- EditMode tests `FemalePlayerVisualTests` (14 cases: catalog, 8-direction
+  map, action-suffix mapping, SPR load, sorting offset).
+- **Mount cycle** (ST-02.1.3): `PlayerVisualAction.Ride` + `IsMounted` flag
+  on `MalePlayerVisual` / `FemalePlayerVisual`. Mounted rider uses
+  PC `*_HM01.spr` layered set: male `BD/HD/HB` (3 parts), female
+  `BD/HD/HR/LH/RH` (5 parts). Shadow, Hair (male), Hands (male), and
+  weapons are stripped because PC `npcres/{man,woman}` has no HM01 SPRs
+  for them. A new `HorseVisual` component renders the horse body from
+  `spr\item\equip\horse\horse001.spr` (single 50x76 frame, 8-way sprite
+  flip). 18 mounted SPRs staged: 6 male (`male_mount_sprites.json`),
+  10 female (`female_mount_sprites.json`), 2 horse (`horse_sprites.json`).
+- EditMode tests `MountVisualTests` (9 cases: catalog HM01 mapping,
+  runtime mount cycle, HorseVisual load + fallback, 8-way direction).
+- Visual confirm in Play mode: 8-direction mounted female renders 5-part
+  rider + horse body, dismount cleanly restores the on-foot 5-part set.
+- **5-color horse palette** (ST-02.1.4): `HorseVisual.horseId` API + `SetHorseId(int)`
+  picks one of the 5 PC horse models (1/3/5/7/9 → blue/yellow/red/white/black
+  per `horseres.txt`). All 5 SPRs (horse001/003/005/007/009) staged.
+  `SourcePathForHorseId` snaps arbitrary ids to the nearest palette slot.
+  PC limitation documented: all 45 `horse*.spr` files are single-frame
+  single-direction (50x76), so 8-direction is simulated via horizontal
+  flip rather than true walk animation.
 - Project legal files: `LICENSE` (proprietary), `NOTICE.md` (IP attribution),
   source copyright headers, and this changelog.
 
 ### Fixed
+- Cai Bang missile behavior now follows PC movement forms more closely, including
+  homing MoveKind=5 tracking, parallel spread handling, collide sub-effects, and
+  cache invalidation when staged PC SPR files are replaced.
 - Player rendered **under** the map in dense town centers — player base
   `sortingOrder` now clamps above the map ceiling (32000) so the avatar always
   draws on top.

@@ -22,37 +22,7 @@ namespace VLTK.Sandbox
         public const long MaxRuntimeMemoryMb = 200;
         public const long MaxGcAllocBytesPerFrame = 16 * 1024;
 
-        // ProfilerRecorder.StartNew chạy ở static init sẽ grab native handle trước khi
-        // Unity profiler backend sẵn sàng và không bao giờ Dispose. Khởi tạo lazy lúc audit
-        // đầu tiên và reset khi Application quitting để giải phóng native handle.
-        private static ProfilerRecorder _gcAllocRecorder;
-        private static bool _gcAllocRecorderStarted;
-        private static readonly object _gcAllocLock = new();
-
-        private static ProfilerRecorder GetGcAllocRecorder()
-        {
-            if (_gcAllocRecorderStarted) return _gcAllocRecorder;
-            lock (_gcAllocLock)
-            {
-                if (_gcAllocRecorderStarted) return _gcAllocRecorder;
-                _gcAllocRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated Bytes");
-                _gcAllocRecorderStarted = true;
-                Application.quitting -= ResetGcAllocRecorder;
-                Application.quitting += ResetGcAllocRecorder;
-            }
-            return _gcAllocRecorder;
-        }
-
-        public static void ResetGcAllocRecorder()
-        {
-            if (!_gcAllocRecorderStarted) return;
-            lock (_gcAllocLock)
-            {
-                if (!_gcAllocRecorderStarted) return;
-                if (_gcAllocRecorder.Valid) _gcAllocRecorder.Dispose();
-                _gcAllocRecorderStarted = false;
-            }
-        }
+        private static readonly ProfilerRecorder _gcAllocRecorder = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated Bytes");
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void AutoAudit()
@@ -102,8 +72,7 @@ namespace VLTK.Sandbox
 
         public static bool AuditGcAlloc()
         {
-            var rec = GetGcAllocRecorder();
-            long gcAlloc = rec.Valid ? rec.LastValue : 0;
+            long gcAlloc = _gcAllocRecorder.Valid ? _gcAllocRecorder.LastValue : 0;
             return AuditGcAlloc(gcAlloc);
         }
     }

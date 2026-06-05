@@ -88,9 +88,6 @@ namespace VLTK.Tests.PlayMode
         }
 
 
-        // NOTE: These helpers use reflection to access private fields (_defs, _bgmSource).
-        // If the field names change, these tests will fail at runtime instead of compile time.
-        // Consider [assembly: InternalsVisibleTo("Tests")] + internal accessors in a future refactor.
         private static Dictionary<string, AudioDef> GetAudioDefs(AudioService service)
         {
             var field = typeof(AudioService).GetField("_defs", BindingFlags.Instance | BindingFlags.NonPublic);

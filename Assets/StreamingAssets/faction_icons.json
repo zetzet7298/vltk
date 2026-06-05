@@ -1,0 +1,84 @@
+{
+  "factions": [
+    {
+      "id": "shaolin",
+      "abbrev": "sl",
+      "nameVi": "Thiếu Lâm",
+      "element": "Kim",
+      "color": "#E6C229",
+      "placeholderSkillId": 3
+    },
+    {
+      "id": "tianwang",
+      "abbrev": "tv",
+      "nameVi": "Thiên Vương",
+      "element": "Kim",
+      "color": "#E6C229",
+      "placeholderSkillId": 23
+    },
+    {
+      "id": "tangmen",
+      "abbrev": "tm",
+      "nameVi": "Đường Môn",
+      "element": "Mộc",
+      "color": "#1F8A70",
+      "placeholderSkillId": 48
+    },
+    {
+      "id": "wudu",
+      "abbrev": "wd",
+      "nameVi": "Ngũ Độc",
+      "element": "Mộc",
+      "color": "#1F8A70",
+      "placeholderSkillId": 60
+    },
+    {
+      "id": "emei",
+      "abbrev": "em",
+      "nameVi": "Nga My",
+      "element": "Thủy",
+      "color": "#00A8CC",
+      "placeholderSkillId": 93
+    },
+    {
+      "id": "cuiyan",
+      "abbrev": "cy",
+      "nameVi": "Thúy Yên",
+      "element": "Thủy",
+      "color": "#00A8CC",
+      "placeholderSkillId": 95
+    },
+    {
+      "id": "caibang",
+      "abbrev": "cb",
+      "nameVi": "Cái Bang",
+      "element": "Hỏa",
+      "color": "#FF6B6B",
+      "placeholderSkillId": 124
+    },
+    {
+      "id": "tianren",
+      "abbrev": "tr",
+      "nameVi": "Thiên Nhẫn",
+      "element": "Hỏa",
+      "color": "#FF6B6B",
+      "placeholderSkillId": 131
+    },
+    {
+      "id": "wudang",
+      "abbrev": "vd",
+      "nameVi": "Võ Đang",
+      "element": "Thổ",
+      "color": "#A27B5C",
+      "placeholderSkillId": 151
+    },
+    {
+      "id": "kunlun",
+      "abbrev": "cl",
+      "nameVi": "Côn Lôn",
+      "element": "Thổ",
+      "color": "#A27B5C",
+      "placeholderSkillId": 167
+    }
+  ]
+}

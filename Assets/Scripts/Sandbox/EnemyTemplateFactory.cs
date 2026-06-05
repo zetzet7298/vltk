@@ -26,36 +26,16 @@ namespace VLTK.Sandbox
             _manifest = manifest;
         }
 
-        /// <summary>True if a non-null manifest with at least one template is loaded.</summary>
-        public static bool HasManifest => _manifest != null && _manifest.npcTemplates != null && _manifest.npcTemplates.Count > 0;
-
-        /// <summary>Active manifest instance (may be null when running with hardcoded fallback).</summary>
-        public static PcConfigManifest ActiveManifest => _manifest;
-
-        /// <summary>
-        /// Reset the cached manifest reference. Call this at editor play-mode
-        /// boundaries (e.g. before re-loading PC config) so a stale manifest
-        /// does not survive Domain Reload being disabled.
-        /// </summary>
-        public static void ResetManifest()
-        {
-            _manifest = null;
-        }
-
         /// <summary>
         /// Tạo toàn bộ enemy templates. Nếu có manifest → đọc từ PcNpcS.txt.
         /// Nếu không → fallback sang BaLangEnemyDatabase hardcoded data.
         /// </summary>
         public static IEnumerable<NpcTemplate> CreateAllTemplates()
         {
-            // Validate the manifest before using it: when Domain Reload is
-            // disabled in the editor, a stale reference can persist with
-            // templates pointing at destroyed ScriptableObjects.
-            if (HasManifest)
+            if (_manifest != null && _manifest.npcTemplates.Count > 0)
             {
                 foreach (var npc in _manifest.npcTemplates)
                 {
-                    if (npc == null) continue; // skip torn-down entries
                     if (npc.kind == 0) // kind=0 = enemy/quái
                         yield return npc;
                 }

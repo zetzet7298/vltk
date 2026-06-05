@@ -1,0 +1,1126 @@
+{
+  "buffs": [
+    {
+      "id": 0,
+      "name": "Hành quân đơn",
+      "image": "\\spr\\item\\questkey\\003.spr",
+      "desc": "Hồi phục sinh mệnh liên tục, mỗi nửa giây hồi phục 100 điểm"
+    },
+    {
+      "id": 15,
+      "name": "Bất động Minh Vương",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\²ằả¯ÃữÍừ.spr",
+      "desc": "Tăng phòng ngự"
+    },
+    {
+      "id": 20,
+      "name": "Sư Tử Hống",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ấăìểºð.spr",
+      "desc": "Choáng"
+    },
+    {
+      "id": 33,
+      "name": "Tĩnh Tâm Quyết",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắ²éÄắữ.spr",
+      "desc": "Tăng chính xác"
+    },
+    {
+      "id": 42,
+      "name": "Kim Chung Tráo",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẵðệểếệ.spr",
+      "desc": "Tăng phòng ngự"
+    },
+    {
+      "id": 64,
+      "name": "Băng Lam Huyền Tinh",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\±ựÀảéỵắĐ.spr",
+      "desc": "Giảm kháng băng"
+    },
+    {
+      "id": 67,
+      "name": "Cửu Thiên Cuồng Lôi",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắÅèỡ¿ủÀì.spr",
+      "desc": "Giảm kháng lôi"
+    },
+    {
+      "id": 69,
+      "name": "Vô Hình Độc",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẻịéẻạặ.spr",
+      "desc": "Giảm tốc độ đối với địch nhân xung quanh"
+    },
+    {
+      "id": 70,
+      "name": "Xích Diệm Thực Thiên",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\³àẹìấ´èỡ.spr",
+      "desc": "Giảm kháng hỏa"
+    },
+    {
+      "id": 72,
+      "name": "Xuyên Tâm Độc Thích",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\´âéÄảắ´è.spr",
+      "desc": "Giảm kháng độc"
+    },
+    {
+      "id": 73,
+      "name": "Vạn Độc Thực Tâm",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\Íũạặấ´éÄ.spr",
+      "desc": "Tăng thời gian trúng độc"
+    },
+    {
+      "id": 90,
+      "name": "Mê Tung ảo ảnh",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ÃễìÙằÃể°.spr",
+      "desc": "Giảm năng lực hành động"
+    },
+    {
+      "id": 93,
+      "name": "Từ Hàng Phổ D",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\´ẩºẵặếảẫ.spr",
+      "desc": "Hồi phục sinh mệnh"
+    },
+    {
+      "id": 100,
+      "name": "Hộ Thể Hàn Băng",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ằÔèồºđ±ự.spr",
+      "desc": "Khai thông phản đòn"
+    },
+    {
+      "id": 109,
+      "name": "Tuyết ảnh",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẹâể°.spr",
+      "desc": "Tăng tốc độ chạy tăng tốc độ xuất chiêu"
+    },
+    {
+      "id": 130,
+      "name": "Túy Điệp Cuồng Vũũ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ìớàỷ¿ủẻố.spr",
+      "desc": "Tăng lực chiến đấu"
+    },
+    {
+      "id": 136,
+      "name": "Hỏa Liên Phần Hoa",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ằðÁôãÙằê.spr",
+      "desc": "Giảm lực phản đòn cận chiến"
+    },
+    {
+      "id": 137,
+      "name": "ảo ảnh Phi Hồ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ằÃể°ãẫºỹ.spr",
+      "desc": "Giảm chính xác"
+    },
+    {
+      "id": 140,
+      "name": "Phi Hồng Vô Tích",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ãẫºốẻịẳÊ.spr",
+      "desc": "Giảm né tránh"
+    },
+    {
+      "id": 143,
+      "name": "Lịch Ma Đoạt Hồn",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ÀữÄĐảỏằờ.spr",
+      "desc": "Giảm sát thương ngoại công"
+    },
+    {
+      "id": 150,
+      "name": "Thiên Ma Giải Thể",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\èỡÄĐẵõèồ.spr",
+      "desc": "Tăng năng lực chiến đấu"
+    },
+    {
+      "id": 157,
+      "name": "Tọa Vọng Vô Ngã",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ìứÍỹẻịẻề.spr",
+      "desc": "Triệt tiêu sát thương"
+    },
+    {
+      "id": 171,
+      "name": "Thanh Phong phù",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ầồãỗãỷ.spr",
+      "desc": "Tăng tốc độ chạy"
+    },
+    {
+      "id": 174,
+      "name": "Ki Bán phù",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ợ¿°ớãỷ.spr",
+      "desc": "Giảm tốc độ di chuyển"
+    },
+    {
+      "id": 175,
+      "name": "Khi Hàn Ngạo Tuyết",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ặÛºđ°Áẹâ.spr",
+      "desc": "Giảm xuất chiêu nội công"
+    },
+    {
+      "id": 181,
+      "name": "Khí Tâm phù",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ặỳéÄãỷ.spr",
+      "desc": "Choáng"
+    },
+    {
+      "id": 202,
+      "name": "La Hán Trận",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\Âịººếú.spr",
+      "desc": "Khai thông phản đòn"
+    },
+    {
+      "id": 203,
+      "name": "Vô Hình Độc",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẻịéẻạặ.spr",
+      "desc": "Chịu giảm tốc của Sâu Vô Hình"
+    },
+    {
+      "id": 206,
+      "name": "Lưu Thủy",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\Áữậđ.spr",
+      "desc": "Tăng tốc độ di chuyển"
+    },
+    {
+      "id": 207,
+      "name": "Mộng Điệp",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\Ãẻàỷ.spr",
+      "desc": "Liên tục hồi phục sinh mệnh nội lực"
+    },
+    {
+      "id": 208,
+      "name": "Phật Tâm Từ Hữu",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ãðéÄ´ẩểể.spr",
+      "desc": "Nâng cao giới hạn sinh mệnh"
+    },
+    {
+      "id": 211,
+      "name": "Thất Tinh Trận",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ặòéầếú.spr",
+      "desc": "Tăng chính xác lực sát thương"
+    },
+    {
+      "id": 256,
+      "name": "Trường Mệnh hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Giới hạn sinh mệnh tăng 500 điểm"
+    },
+    {
+      "id": 257,
+      "name": "Gia Bào hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng nhanh tốc độ di chuyển 20%"
+    },
+    {
+      "id": 258,
+      "name": "Đại Lực hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng công kích vật lý 100 điểm"
+    },
+    {
+      "id": 259,
+      "name": "Cao Thiểm hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng tỉ lệ né tránh 500 điểm"
+    },
+    {
+      "id": 260,
+      "name": "Cao Trung hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng tỉ lệ chính xác 500 điểm"
+    },
+    {
+      "id": 261,
+      "name": "Phi Tốc hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng tốc độ công kích 50"
+    },
+    {
+      "id": 262,
+      "name": "Băng Phòng hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng phòng băng 50%"
+    },
+    {
+      "id": 263,
+      "name": "Lôi Phòng hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng phòng lôi 50%"
+    },
+    {
+      "id": 264,
+      "name": "Hỏa Phòng hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng phòng hỏa 50%"
+    },
+    {
+      "id": 265,
+      "name": "Độc Phòng hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Tăng phòng độc 50%"
+    },
+    {
+      "id": 269,
+      "name": "Băng Tâm Trái ảnh",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\±ựéÄÙằể°.spr",
+      "desc": "Hồi phục sinh mệnh"
+    },
+    {
+      "id": 273,
+      "name": "Như Lai Thiên Diệp",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẩỗÀ´ầĐềả.spr",
+      "desc": "Tăng kỹ năng"
+    },
+    {
+      "id": 277,
+      "name": "Hoạt Bất Lưu Thủ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ằơ²ằÁùấệ.spr",
+      "desc": "Tăng năng lực hành động"
+    },
+    {
+      "id": 281,
+      "name": "Thanh Âm Phạn Xướng",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ầồềụốú³ê.spr",
+      "desc": "Giảm thời gian bị thương"
+    },
+    {
+      "id": 313,
+      "name": "Long Châu",
+      "image": "\\spr\\item\\script\\zhongqiu_jieri\\longzhu2.spr",
+      "desc": "Tăng Kháng T?nh"
+    },
+    {
+      "id": 333,
+      "name": "Phổ Độ Chúng Sinh",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ặếảẫệÚẫỳ.spr",
+      "desc": "Nâng cao năng lực phục hồi"
+    },
+    {
+      "id": 349,
+      "name": "Lôi Kích Thuật",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\Àìằữấừ.spr",
+      "desc": "Hôn mê"
+    },
+    {
+      "id": 351,
+      "name": "Loạn Hoàn Kích",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\Âềằãằữ.spr",
+      "desc": "Hôn mê"
+    },
+    {
+      "id": 356,
+      "name": "Xuyên Y Phá Giáp",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\´âềÂặặẳì.spr",
+      "desc": "Giảm kháng tính cơ bản"
+    },
+    {
+      "id": 364,
+      "name": "Bi Tô Thanh Phong",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\±¯ậệầồãỗ.spr",
+      "desc": "Tăng thời gian chịu sát thương"
+    },
+    {
+      "id": 390,
+      "name": "Đoạn Cân Hủ Cốt",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ảẽẵợá¯ạầ.spr",
+      "desc": "Giảm năng lực phòng ngự"
+    },
+    {
+      "id": 391,
+      "name": "Nhiếp Hồn Loạn Tâm",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẫồằờÂềéÄ.spr",
+      "desc": "Giảm năng lực chiến đấu"
+    },
+    {
+      "id": 392,
+      "name": "Thúc Phược Chú",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ấứá¿ệọ.spr",
+      "desc": "Giảm lực phản đòn tầm xa"
+    },
+    {
+      "id": 393,
+      "name": "Bắc Minh Đáo Hải",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\±±ÚÔàẵºÊ.spr",
+      "desc": "Tiêu hao sinh mệnh, nội lực"
+    },
+    {
+      "id": 394,
+      "name": "Túy Tiên Tá Cốt",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ìớẽẫ´ớạầ.spr",
+      "desc": "Giảm năng lực chiến đấu"
+    },
+    {
+      "id": 440,
+      "name": "Tiên Thảo Lộ",
+      "image": "\\spr\\item\\medecine\\xiancaolu_sp.spr",
+      "desc": "Tăng kinh nghiệm khi đánh quái luyện cấp"
+    },
+    {
+      "id": 441,
+      "name": "Thiên sơn bảo lộ",
+      "image": "\\spr\\item\\medecine\\tianshanyulu.spr",
+      "desc": "Tăng may mắn"
+    },
+    {
+      "id": 442,
+      "name": "Bách quả lộ",
+      "image": "\\spr\\item\\medecine\\baiguolu.spr",
+      "desc": "Tăng phòng thủ"
+    },
+    {
+      "id": 450,
+      "name": "Quế hoa tửu",
+      "image": "\\spr\\item\\medecine\\zq_icon_004.spr",
+      "desc": "Tăng may mắn"
+    },
+    {
+      "id": 477,
+      "name": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "\\spr\\item\\medecine\\obj-potion15.spr"
+    },
+    {
+      "id": 479,
+      "name": "Nội Phổ Hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nội Phổ Hoàn"
+    },
+    {
+      "id": 480,
+      "name": "Nội độc Hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nội độc Hoàn"
+    },
+    {
+      "id": 481,
+      "name": "Nội Băng hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nội Băng hoàn"
+    },
+    {
+      "id": 482,
+      "name": "Nội Hỏa hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nội Hỏa hoàn"
+    },
+    {
+      "id": 483,
+      "name": "Nội Lôi hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nội Lôi hoàn"
+    },
+    {
+      "id": 486,
+      "name": "Ngoại Băng Hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Ngoại Băng Hoàn"
+    },
+    {
+      "id": 487,
+      "name": "Ngoại Phổ Hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Ngoại Phổ Hoàn"
+    },
+    {
+      "id": 488,
+      "name": "Trường Mệnh hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Trường Mệnh hoàn"
+    },
+    {
+      "id": 491,
+      "name": "Chiên Cổ",
+      "image": "\\spr\\item\\songjin\\wardrum.spr",
+      "desc": "Chiên Cổ"
+    },
+    {
+      "id": 492,
+      "name": "Lệnh Bài",
+      "image": "\\spr\\item\\songjin\\token.spr",
+      "desc": "Lệnh Bài"
+    },
+    {
+      "id": 493,
+      "name": "Gia Bào hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Gia Bào hoàn"
+    },
+    {
+      "id": 494,
+      "name": "Cao Thiểm hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Cao Thiểm hoàn"
+    },
+    {
+      "id": 495,
+      "name": "Cao Trung hoàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Cao Trung hoàn"
+    },
+    {
+      "id": 496,
+      "name": "tống kim Phi tốc",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "tống kim Phi tốc"
+    },
+    {
+      "id": 713,
+      "name": "Ngự Tuyết ẩn",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ểựẹâềỵ.spr",
+      "desc": "Nhận được trạng thái ẩn thân"
+    },
+    {
+      "id": 715,
+      "name": "Ma Âm Phệ Phách",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ÄĐềụấẫặầ.spr",
+      "desc": "Sau khi tử vong tạo thành hiệu quả hỗn loạn đối với người xung quanh"
+    },
+    {
+      "id": 718,
+      "name": "Bế Nguyệt Phất Trần",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\±ếễÂãữ³ắ.spr",
+      "desc": "Tăng năng lực toàn diện"
+    },
+    {
+      "id": 719,
+      "name": "Hấp Tinh Yểm",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẻỹéầữấ.spr",
+      "desc": "Chịu tổn thất nội lực"
+    },
+    {
+      "id": 720,
+      "name": "Hỗn Thiên Khí Công",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ằỡèỡặứạƯ.spr",
+      "desc": "Bị bỏng"
+    },
+    {
+      "id": 722,
+      "name": "Lưỡng Nghi Chân Khí",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\Áẵềầếổặứ.spr",
+      "desc": "Chống lại lực sát thương, tăng tốc độ di chuyển"
+    },
+    {
+      "id": 723,
+      "name": "Ma Âm Phệ Phách",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ÄĐềụấẫặầ.spr",
+      "desc": "Loạn"
+    },
+    {
+      "id": 738,
+      "name": "Xuất ứ Bất Nhiễm",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\³ửểÙ²ằẩắ.spr",
+      "desc": "Thanh trừ hiệu quả phản diện"
+    },
+    {
+      "id": 966,
+      "name": "Nhất Kỹ",
+      "image": "\\spr\\item\\script\\zhongqiu_jieri\\gongxuanlingpai.spr",
+      "desc": "+ Kỹ Năng"
+    },
+    {
+      "id": 977,
+      "name": "Tăng tốc độ di chuyển",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ầồãỗãỷ.spr",
+      "desc": "Nâng cao tốc độ chạy của bản thân"
+    },
+    {
+      "id": 980,
+      "name": "+ Kỹ Năng",
+      "image": "\\spr\\item\\leaguematch\\qiankunshuangjuepei.spr",
+      "desc": "+ Kỹ Năng"
+    },
+    {
+      "id": 981,
+      "name": "nến hạnh phúc",
+      "image": "\\spr\\item\\script\\zhongqiu_jieri\\xianwulazhu.spr",
+      "desc": "hưởng ké toàn đội"
+    },
+    {
+      "id": 982,
+      "name": "nến Hạnh Phức",
+      "image": "\\spr\\item\\script\\zhongqiu_jieri\\xianwulazhu.spr",
+      "desc": "x2 exp cho toàn đội"
+    },
+    {
+      "id": 987,
+      "name": "Truường Hiệu Ngọc Lộ Hoàn ( đại )",
+      "image": "\\spr\\item\\medecine\\obj-potion14.spr",
+      "desc": "Mỗi nửa giây hồi phục sinh mệnh nội lực 60 điểm"
+    },
+    {
+      "id": 990,
+      "name": "Sinh lực tối đa tăng",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shengming_4th.spr",
+      "desc": "Sinh lực tối đa nhận được tăng thêm"
+    },
+    {
+      "id": 1205,
+      "name": "Hợp thành kĩ năng công kích",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắÅẵÊºẽềằ.spr",
+      "desc": "Nhận được hiệu quả tăng kỹ năng công kích"
+    },
+    {
+      "id": 1214,
+      "name": "Túi Y Tế Tân Thủ",
+      "image": "\\spr\\item\\medecine\\tuiyte.spr",
+      "desc": "Nhận trạng thái hồi phục sinh lực và nội lực liên tục."
+    },
+    {
+      "id": 1215,
+      "name": "Triệu Mãnh",
+      "image": "\\spr\\item\\pifeng\\éầểủễưấ¯.spr",
+      "desc": "Triệu Mãnh"
+    },
+    {
+      "id": 1216,
+      "name": "huyết dục",
+      "image": "spr\\item\\pifeng\\éầ³ẵấ¯-ằð.spr",
+      "desc": "huyết dục"
+    },
+    {
+      "id": 1230,
+      "name": "Kim Quyên La Hán",
+      "image": "\\spr\\skill\\hotro\\icon\\thieulam.spr",
+      "desc": "Tăng Phản Đòn"
+    },
+    {
+      "id": 1231,
+      "name": "Chinh Chiến Bát Phương",
+      "image": "\\spr\\skill\\hotro\\icon\\thienvuong.spr",
+      "desc": "Xóa Trạng Thái Bất Lợi"
+    },
+    {
+      "id": 1233,
+      "name": "Hấp Tinh trận",
+      "image": "\\spr\\skill\\hotro\\icon\\duongmon.spr",
+      "desc": "Xác Suất Hóa Giải Sát Thương"
+    },
+    {
+      "id": 1234,
+      "name": "Ba La Tâm Kinh",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\´ẩºẵặếảẫ.spr",
+      "desc": "Hồi Phục Sinh Lực"
+    },
+    {
+      "id": 1235,
+      "name": "Huyền Băng Vô Tức",
+      "image": "\\spr\\skill\\hotro\\icon\\thuyyen.spr",
+      "desc": "Tàng Hình 1 Giây"
+    },
+    {
+      "id": 1237,
+      "name": "Ô Y Quyết",
+      "image": "\\spr\\skill\\hotro\\icon\\caibang.spr",
+      "desc": "Bỏ Qua Kháng Đối Phương"
+    },
+    {
+      "id": 1238,
+      "name": "Âm Dương Khí Quyết",
+      "image": "\\spr\\skill\\hotro\\icon\\vodang.spr",
+      "desc": "Chuyển Hóa Sát Thương Thành Nội Lực"
+    },
+    {
+      "id": 1239,
+      "name": "Thiên Cương Khất Kính",
+      "image": "\\spr\\skill\\hotro\\icon\\conlon.spr",
+      "desc": "Bỏ Qua Kháng Lôi Đối Phương"
+    },
+    {
+      "id": 1250,
+      "name": "ºÚẫủ-¿ứềỵ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "ẵỷệạấạểÃẳẳÄĩ"
+    },
+    {
+      "id": 1252,
+      "name": "ºÚẫủ-éọềỵ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "ẵỷệạấạểÃềâẻù"
+    },
+    {
+      "id": 1254,
+      "name": "ºÚẫủ-ẳìềỵ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "Tăng kháng hoàn toàn"
+    },
+    {
+      "id": 1256,
+      "name": "ºÚẫủ-ÂÄềỵ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "ÅĩậÙễửẳể"
+    },
+    {
+      "id": 1258,
+      "name": "ºÚẫủ-´ứềỵ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "ềỵẫớÊơ²ÂầềệỉằữáÅÂấèỏáò100%Êơ³ệéứ4Ãở"
+    },
+    {
+      "id": 1281,
+      "name": "ÍÀÀầáòấệÊăạƠÊâ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\neili_4th.spr",
+      "desc": "Hợp thành kĩ năng công kích"
+    },
+    {
+      "id": 1282,
+      "name": "ÍÀÀầáòấệÊăãÀÊâ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shengming_4th.spr",
+      "desc": "Thêm giới hạn lượng máu"
+    },
+    {
+      "id": 1293,
+      "name": "éÂÄờìÊáÊÊăạƠÊâ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\neili_4th.spr",
+      "desc": "Hợp thành kĩ năng công kích"
+    },
+    {
+      "id": 1294,
+      "name": "éÂÄờìÊáÊÊăãÀÊâ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shengming_4th.spr",
+      "desc": "Thêm giới hạn lượng máu"
+    },
+    {
+      "id": 1297,
+      "name": "Tự hào ý chí chiến đấu",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shengming_4th.spr",
+      "desc": "Thêm rất nhiều sinh lực, tốc độ chạy, kĩ năng công kích hợp thành"
+    },
+    {
+      "id": 1298,
+      "name": "Tăng lượng máu",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao giới hạn lượng máu của bản thân (dương)"
+    },
+    {
+      "id": 1299,
+      "name": "Tăng nội lực",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao giới hạn nội lực của bản thân (dương)"
+    },
+    {
+      "id": 1300,
+      "name": "Giảm thọ thương",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Giảm thiểu động tác bị thương của bản thân (dương)"
+    },
+    {
+      "id": 1301,
+      "name": "Giảm trúng độc",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Giảm thiểu thời gian trúng độc của bản thân"
+    },
+    {
+      "id": 1302,
+      "name": "Giảm trì hoãn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Giảm thiểu thời gian trì hoãn của bản thân"
+    },
+    {
+      "id": 1303,
+      "name": "Giảm choáng",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Giảm thiểu thời gian choáng của bản thân"
+    },
+    {
+      "id": 1304,
+      "name": "Thêm khoáng hoàn toàn",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao kháng tính toàn thuộc tính của bản thân"
+    },
+    {
+      "id": 1305,
+      "name": "Tăng máu trong",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao giới hạn máu trong của bản thân"
+    },
+    {
+      "id": 1306,
+      "name": "Tăng tốc độ di chuyển",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao tốc độ chạy của bản thân"
+    },
+    {
+      "id": 1307,
+      "name": "Tăng né tránh",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao né tránh bản thân"
+    },
+    {
+      "id": 1309,
+      "name": "Tăng tốc độ công kích",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao tốc độ công kích của bản thân"
+    },
+    {
+      "id": 1310,
+      "name": "Hợp thành kĩ năng công kích",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao kĩ năng công kích hợp thành"
+    },
+    {
+      "id": 1311,
+      "name": "Thêm trọng kích",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao tỉ lệ trọng kích của bản thân"
+    },
+    {
+      "id": 1312,
+      "name": "Thêm kháng trọng kích",
+      "image": "\\spr\\item\\medecine\\obj-potion15.spr",
+      "desc": "Nâng cao tỉ lệ kháng trọng kích của bản thân"
+    },
+    {
+      "id": 1317,
+      "name": "Sát khí quyết",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\neili_4th.spr",
+      "desc": "Hợp thành kĩ năng công kích"
+    },
+    {
+      "id": 1318,
+      "name": "Trường sinh quyết",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shengming_4th.spr",
+      "desc": "Thêm giới hạn lượng máu"
+    },
+    {
+      "id": 1358,
+      "name": "Huyễn Nhãn Vân Yên",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ằÃẹÛễặọẻ.spr",
+      "desc": "Kỹ năng chính phái phái Hoa Sơn, gia tăng năng lực chiến đấu."
+    },
+    {
+      "id": 1364,
+      "name": "Đoạt Mệnh Liên Hoàn Tam Tiên Kiếm",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ảỏÃỹÁơằãẩýẽẫẵÊ.spr",
+      "desc": "Kỹ năng tiếp xúc với tỷ lệ nhất định Thái Nhạc Tam Thanh Phong."
+    },
+    {
+      "id": 1369,
+      "name": "Cửu kiếm hợp nhất",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắÅẵÊºẽềằ.spr",
+      "desc": "Kỹ năng tiếp xúc với tỷ lệ nhất định Độc Cô Cửu Kiếm."
+    },
+    {
+      "id": 1423,
+      "name": "Đánh quái nhận 4 lần kinh nghiệm",
+      "image": "\\spr\\item\\script\\zhenpailingyao.spr",
+      "desc": "Chỉ có tác dụng trong bản đồ Thiên Phư Sơn, Bàn Long Sơn, Địa Mẫu Sơn, Uyển Phụng Sơn"
+    },
+    {
+      "id": 1430,
+      "name": "Tật Phong Đơn  (nội)",
+      "image": "\\spr\\item\\script\\jifengdannei.spr",
+      "desc": "Tăng tốc độ công kích nội công 10%"
+    },
+    {
+      "id": 1432,
+      "name": "Tụ Nguyên Tán (nội)",
+      "image": "\\spr\\item\\script\\juyuansannei.spr",
+      "desc": "Tăng lực công kích nội công 1000"
+    },
+    {
+      "id": 1434,
+      "name": "Hộ Thần Đơn",
+      "image": "\\spr\\item\\script\\hushendan.spr",
+      "desc": "Kháng tất cả (dương) tăng 20%"
+    },
+    {
+      "id": 1435,
+      "name": "Hộ Tâm Đơn",
+      "image": "\\spr\\item\\script\\huxindan.spr",
+      "desc": "Giới hạn sinh lực (dương) tăng 500"
+    },
+    {
+      "id": 1436,
+      "name": "Hành Khí Tán",
+      "image": "\\spr\\item\\script\\xingqisan.spr",
+      "desc": "Giới hạn nội lực (dương) tăng 500"
+    },
+    {
+      "id": 1437,
+      "name": "Hộ Khí Đơn",
+      "image": "\\spr\\item\\script\\huqidan.spr",
+      "desc": "Né tránh tăng 500"
+    },
+    {
+      "id": 1438,
+      "name": "Lưu Vân Tán",
+      "image": "\\spr\\item\\script\\liuyunsan.spr",
+      "desc": "Tốc độ di chuyển tăng 20%"
+    },
+    {
+      "id": 1439,
+      "name": "Hộ Giáp Đơn",
+      "image": "\\spr\\item\\script\\hujiadan.spr",
+      "desc": "Tỷ lệ hóa giải sát thương tăng 2%"
+    },
+    {
+      "id": 1440,
+      "name": "Ngưng Thần Tán",
+      "image": "\\spr\\item\\script\\ningshensan.spr",
+      "desc": "Triệt tiêu sát thương (dương) tăng 50"
+    },
+    {
+      "id": 1501,
+      "name": "Khí Doanh Đơn Điền - Kim",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắưÂử\\ặứể¯àÔèù.spr",
+      "desc": "Sát thương lên hệ Mộc tăng 15%, sát thương từ hệ Mộc giảm 15%"
+    },
+    {
+      "id": 1502,
+      "name": "Khí Doanh Đơn Điền - Mộc",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắưÂử\\ặứể¯àÔèù.spr",
+      "desc": "Sát thương lên hệ Thổ tăng 15%, sát thương từ hệ Thổ giảm 15%"
+    },
+    {
+      "id": 1503,
+      "name": "Khí Doanh Đơn Điền - Thủy",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắưÂử\\ặứể¯àÔèù.spr",
+      "desc": "Sát thương lên hệ Hỏa tăng 15%, sát thương từ hệ Hỏa giảm 15%"
+    },
+    {
+      "id": 1504,
+      "name": "Khí Doanh Đơn Điền - Hỏa",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắưÂử\\ặứể¯àÔèù.spr",
+      "desc": "Sát thương lên hệ Kim tăng 15%, sát thương từ hệ Kim giảm 15%"
+    },
+    {
+      "id": 1505,
+      "name": "Khí Doanh Đơn Điền - Thổ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ắưÂử\\ặứể¯àÔèù.spr",
+      "desc": "Sát thương lên hệ Thủy tăng 15%, sát thương từ hệ Thủy giảm 15%"
+    },
+    {
+      "id": 1511,
+      "name": "Chú Thuật-Kim Cang Nộ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ẵðáế.spr",
+      "desc": "Giảm hiệu suất hồi phục sinh lực và nội lực"
+    },
+    {
+      "id": 1512,
+      "name": "Chú Thuật-Bích Mộc Nộ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\±èÄắ.spr",
+      "desc": "Tăng thời gian trúng độc"
+    },
+    {
+      "id": 1513,
+      "name": "Chú Thuật-Hàn Băng Nộ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ºđ±ự.spr",
+      "desc": "Tăng thời gian trì hoãn"
+    },
+    {
+      "id": 1514,
+      "name": "Chú Thuật-Viêm Dương Nộ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ẹìẹụ.spr",
+      "desc": "Giảm tỉ lệ hóa giải"
+    },
+    {
+      "id": 1515,
+      "name": "Chú Thuật-Lôi Đình Nộ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\Àìửê.spr",
+      "desc": "Tăng tỉ lệ choáng"
+    },
+    {
+      "id": 1516,
+      "name": "Kim Cang Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "Kim Cang hộ thể, giảm sát thương gây ra bởi hệ Mộc"
+    },
+    {
+      "id": 1517,
+      "name": "Bích Mộc Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "Bích Mộc hộ thể, giảm sát thương gây ra bởi hệ Thổ"
+    },
+    {
+      "id": 1518,
+      "name": "Hàn Băng Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "Băng Hàn hộ thể, giảm sát thương gây ra bởi hệ Hỏa"
+    },
+    {
+      "id": 1519,
+      "name": "Viêm Dương Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "Viêm Dương hộ thể, giảm sát thương gây ra bởi hệ Kim"
+    },
+    {
+      "id": 1520,
+      "name": "Lôi Đình Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\shenfa_4th_0.spr",
+      "desc": "Lôi Đình hộ thể, giảm sát thương gây ra bởi hệ Thủy"
+    },
+    {
+      "id": 1551,
+      "name": "Triệu Mãnh",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẹêếẵạƯẹô\\ếìÃÍ.spr",
+      "desc": "Nhận được danh hiệu Triệu Mãnh"
+    },
+    {
+      "id": 1561,
+      "name": "Kim Cang Chi Nộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ẵðáế.spr",
+      "desc": "Cản Trở Huyết Khí.."
+    },
+    {
+      "id": 1562,
+      "name": "Bích Mộc Chi Nộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\±èÄắ.spr",
+      "desc": "Độc Khí Công Tâm."
+    },
+    {
+      "id": 1563,
+      "name": "Hàn Băng Chi Nộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ºđ±ự.spr",
+      "desc": "Mạch Máu Đóng Băng."
+    },
+    {
+      "id": 1564,
+      "name": "Viêm Dương Chi Nộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ẹìẹụ.spr",
+      "desc": "Phá Trản Bách Xuất."
+    },
+    {
+      "id": 1565,
+      "name": "Lôi Đình Chi Nộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\Àìửê.spr",
+      "desc": "Xương Cốt Tê Liệt."
+    },
+    {
+      "id": 1566,
+      "name": "Kim Cang Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ẵðáế.spr",
+      "desc": "Chân Khí Hộ Thể hóa giải sát thương hệ Mộc."
+    },
+    {
+      "id": 1567,
+      "name": "Bích Mộc Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\±èÄắ.spr",
+      "desc": "Chân Khí Hộ Thể hóa giải sát thương hệ Thổ."
+    },
+    {
+      "id": 1568,
+      "name": "Hàn Băng Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ºđ±ự.spr",
+      "desc": "Chân Khí Hộ Thể hóa giải sát thương hệ Hỏa."
+    },
+    {
+      "id": 1569,
+      "name": "Viêm Dương Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\ẹìẹụ.spr",
+      "desc": "Chân Khí Hộ Thể hóa giải sát thương hệ Kim."
+    },
+    {
+      "id": 1570,
+      "name": "Lôi Đình Chi Hộ.",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\190\\Àìửê.spr",
+      "desc": "Chân Khí Hộ Thể hóa giải sát thương hệ Thủy."
+    },
+    {
+      "id": 1605,
+      "name": "Diệt Hồn Phần Thiên",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\°ùằỏá±±ắ\\ÃðằờãÙèỡ.spr",
+      "desc": "Nhận được khả năng Miệt Hồn Phần Thiên, kỹ năng tăng 100%"
+    },
+    {
+      "id": 1606,
+      "name": "Đồng Tường Thiết Bích",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\°ùằỏá±±ắ\\Íưầẵèỳ±Ú.spr",
+      "desc": "Nhận được khả năng Đồng Tường Thiết Bích"
+    },
+    {
+      "id": 1607,
+      "name": "Cuồng Bạo Chiến Đấu",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\°ùằỏá±±ắ\\¿ủ±âếẵảã.spr",
+      "desc": "Nhận được khả năng Cuồng Bạo Chiến Đấu"
+    },
+    {
+      "id": 1608,
+      "name": "Ngũ Hành Tý Hộ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\°ùằỏá±±ắ\\ẻồéé±ểằÔ.spr",
+      "desc": "Nhận được khả năng Ngũ Hành Tý Hộ"
+    },
+    {
+      "id": 1609,
+      "name": "Bào Hao Trùng Kích",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\°ùằỏá±±ắ\\Åỉẽứệỉằữ.spr",
+      "desc": "Nhận được khả năng Bào Hao Trùng Kích"
+    },
+    {
+      "id": 1610,
+      "name": "Phục Cừu Đả Kích",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\°ùằỏá±±ắ\\á´³ð´ũằữ.spr",
+      "desc": "Nhận được khả năng Phục Cừu Đả Kích"
+    },
+    {
+      "id": 1611,
+      "name": "Dũ Hợp Tư Dưỡng",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\°ùằỏá±±ắ\\ểỳºẽìèẹứ.spr",
+      "desc": "Nhận được khả năng Dũ Hợp Tư Dưỡng."
+    },
+    {
+      "id": 1612,
+      "name": "Huyết Dục",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẹêếẵạƯẹô\\ẹêễĂ.spr",
+      "desc": "Nhận được danh hiệu Huyết Dục"
+    },
+    {
+      "id": 1613,
+      "name": "Chiến Thiên",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẹêếẵạƯẹô\\ếẵèỡ.spr",
+      "desc": "Nhận được danh hiệu Chiến Thiên"
+    },
+    {
+      "id": 1614,
+      "name": "Thương Hồng",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẹêếẵạƯẹô\\²ễºố.spr",
+      "desc": "Nhận được danh hiệu Thương Hồng"
+    },
+    {
+      "id": 1615,
+      "name": "Lang Hạo",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ẹêếẵạƯẹô\\Àầờằ.spr",
+      "desc": "Nhận được danh hiệu Lang Hạo"
+    },
+    {
+      "id": 1678,
+      "name": "bỏ qua hóa giải sát thương",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\ảỏÃỹÁơằãẩýẽẫẵÊ.spr",
+      "desc": "Tỷ lệ bỏ qua hóa giải sát thương nâng lên"
+    },
+    {
+      "id": 1721,
+      "name": "Truy Tung Thuật",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\zzs.spr",
+      "desc": "Giảm tốc độ và tất cả kháng tính"
+    },
+    {
+      "id": 1722,
+      "name": "Hiểm Trung Cầu Sinh-Kim",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\xzqs.spr",
+      "desc": "Tăng tốc độ, sát thương từ hệ hỏa"
+    },
+    {
+      "id": 1723,
+      "name": "Hiểm Trung Cầu Sinh-Mộc",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\xzqs.spr",
+      "desc": "Tăng tốc độ, sát thương từ hệ kim"
+    },
+    {
+      "id": 1724,
+      "name": "Hiểm Trung Cầu Sinh-Thổ",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\xzqs.spr",
+      "desc": "Tăng tốc độ, sát thương từ hệ mộc"
+    },
+    {
+      "id": 1725,
+      "name": "Hiểm Trung Cầu Sinh-Thủy",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\xzqs.spr",
+      "desc": "Tăng tốc độ, sát thương từ hệ thổ"
+    },
+    {
+      "id": 1726,
+      "name": "Hiểm Trung Cầu Sinh-Hỏa",
+      "image": "\\spr\\Ui\\ì´èơÍẳ±ờ\\xzqs.spr",
+      "desc": "Tăng tốc độ, sát thương từ hệ thủy"
+    },
+    {
+      "id": 1884,
+      "name": "túi y tế",
+      "image": "\\spr\\item\\event\\jiefang_jieri\\200904\\yiyaobao.spr",
+      "desc": "túi y tế"
+    }
+  ]
+}

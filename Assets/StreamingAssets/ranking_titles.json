@@ -1,0 +1,220 @@
+{
+  "titles": [
+    {
+      "index": 0,
+      "name": "Thập đại cao thủ thế giới",
+      "id": 10287,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 1,
+      "name": "Thập đại phú hào thế giới",
+      "id": 10288,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 2,
+      "name": "Thập đại cao thủ môn phái",
+      "id": 0,
+      "class": 0,
+      "flag": 0,
+      "unit": ""
+    },
+    {
+      "index": 3,
+      "name": "Thiếu Lâm Phái",
+      "id": 10277,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 4,
+      "name": "Thiên Vương Bang",
+      "id": 10278,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 5,
+      "name": "Đường Môn",
+      "id": 10279,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 6,
+      "name": "Ngũ Độc Giáo",
+      "id": 10280,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 7,
+      "name": "Nga Mi Phái",
+      "id": 10281,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 8,
+      "name": "Thúy Yên Môn",
+      "id": 10282,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 9,
+      "name": "Cái Bang",
+      "id": 10283,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 10,
+      "name": "Thiên Nhẫn Giáo",
+      "id": 10284,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 11,
+      "name": "Võ Đang Phái",
+      "id": 10285,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 12,
+      "name": "Côn Lôn Phái",
+      "id": 10286,
+      "class": 1,
+      "flag": 1,
+      "unit": ""
+    },
+    {
+      "index": 13,
+      "name": "Thập đại phú hào môn phái",
+      "id": 0,
+      "class": 0,
+      "flag": 0,
+      "unit": ""
+    },
+    {
+      "index": 14,
+      "name": "Thiếu Lâm Phái",
+      "id": 10270,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 15,
+      "name": "Thiên Vương Bang",
+      "id": 10269,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 16,
+      "name": "Đường Môn",
+      "id": 10267,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 17,
+      "name": "Ngũ Độc Giáo",
+      "id": 10268,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 18,
+      "name": "Nga Mi Phái",
+      "id": 10266,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 19,
+      "name": "Thúy Yên Môn",
+      "id": 10265,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 20,
+      "name": "Cái Bang",
+      "id": 10274,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 21,
+      "name": "Thiên Nhẫn Giáo",
+      "id": 10273,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 22,
+      "name": "Võ Đang Phái",
+      "id": 10271,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 23,
+      "name": "Côn Lôn Phái",
+      "id": 10272,
+      "class": 1,
+      "flag": 0,
+      "unit": "ÙvạnÙlượng"
+    },
+    {
+      "index": 24,
+      "name": "Thập đại bang hội",
+      "id": -1,
+      "class": -1,
+      "flag": 0,
+      "unit": ""
+    },
+    {
+      "index": 25,
+      "name": "Thành viên",
+      "id": 50,
+      "class": 1,
+      "flag": 0,
+      "unit": "Ùngười"
+    },
+    {
+      "index": 26,
+      "name": "Đẳng cấp",
+      "id": 51,
+      "class": 1,
+      "flag": 0,
+      "unit": "Ùcấp"
+    }
+  ]
+}

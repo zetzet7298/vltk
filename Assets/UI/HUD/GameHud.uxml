@@ -1,24 +1,27 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
+        <!-- Full-width PC top frame art background (main_hud_bg scaled 1280px) -->
+        <ui:VisualElement name="TopFrameBg" class="hud-top-frame-bg"/>
 
-        <!-- Top PC-style full status bar -->
+        <!-- Top PC-style full status bar: PC 顶部控制条.ini layout -->
+        <!-- Stamina Left=87, Life Left=182, Mana Left=277, Exp Left=372, Level Left=53, WorldSort Left=499 -->
         <ui:VisualElement name="TopLeftPanel" class="hud-top-status">
             <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
             <ui:Label name="LevelText" text="1" class="hud-level-box"/>
-            <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"/></ui:VisualElement>
+            <ui:VisualElement name="StaminaBarTrack" class="hud-top-bar hud-stamina-track"><ui:VisualElement name="StaminaBarFill" class="hud-top-fill"/></ui:VisualElement>
             <ui:VisualElement name="HpBarTrack" class="hud-top-bar hud-hp-track"><ui:VisualElement name="HpBarFill" class="hud-top-fill"/></ui:VisualElement>
             <ui:VisualElement name="MpBarTrack" class="hud-top-bar hud-mp-track"><ui:VisualElement name="MpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="StaminaBarTrack" class="hud-top-bar hud-stamina-track"><ui:VisualElement name="StaminaBarFill" class="hud-top-fill"/></ui:VisualElement>
+            <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"/></ui:VisualElement>
             <ui:Label text="Cấp" class="hud-vn-top-caption hud-vn-level-caption"/>
-            <ui:Label text="Kinh nghiệm" class="hud-vn-top-caption hud-vn-exp-caption"/>
+            <ui:Label text="Thể lực" class="hud-vn-top-caption hud-vn-stamina-caption"/>
             <ui:Label text="Sinh lực" class="hud-vn-top-caption hud-vn-hp-caption"/>
             <ui:Label text="Nội lực" class="hud-vn-top-caption hud-vn-mp-caption"/>
-            <ui:Label text="Thể lực" class="hud-vn-top-caption hud-vn-stamina-caption"/>
+            <ui:Label text="Kinh nghiệm" class="hud-vn-top-caption hud-vn-exp-caption"/>
+            <ui:Label name="StaminaText" text="100/100" class="hud-top-small-text hud-stamina-text"/>
+            <ui:Label name="HpText" text="100/100" class="hud-top-small-text hud-hp-text"/>
+            <ui:Label name="MpText" text="50/50" class="hud-top-small-text hud-mp-text"/>
             <ui:Label name="ExpText" text="0%" class="hud-top-small-text hud-exp-text"/>
-            <ui:Label name="HpText" text="103/103" class="hud-top-small-text hud-hp-text"/>
-            <ui:Label name="MpText" text="77/77" class="hud-top-small-text hud-mp-text"/>
-            <ui:Label name="StaminaText" text="0%" class="hud-top-small-text hud-stamina-text"/>
         </ui:VisualElement>
 
         <!-- Optional minimap kept compact for sandbox/debug -->
@@ -115,7 +118,50 @@
                 <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/><ui:Label text="Bang" class="hud-menu-label"/></ui:VisualElement>
                 <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/><ui:Label text="PK" class="hud-menu-label"/></ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
         </ui:VisualElement>
+        <!-- Buff / Debuff panel: PC MiniSkill.ini / SkillState.ini -->
+        <ui:VisualElement name="BuffPanel" class="hud-buff-panel">
+            <!-- Dynamically populated in C# -->
+        </ui:VisualElement>
+
+        <!-- Team Preview: PC 队伍一览信息.ini -->
+        <ui:VisualElement name="TeamPreview" class="hud-team-preview hidden">
+            <!-- Dynamically populated in C# -->
+        </ui:VisualElement>
+
+        <!-- Trade Info Panel: PC TradeInfo.ini -->
+        <ui:VisualElement name="TradeInfoPanel" class="hud-trade-panel hidden">
+            <ui:VisualElement name="TradeInfoClose" class="hud-trade-close"/>
+            <ui:Label name="TradeTitle" text="Thông tin Giao dịch" class="hud-trade-title"/>
+            <ui:VisualElement name="TradeInfoRows" class="hud-trade-rows">
+                <ui:Label name="TradePartnerName" text="     + Tên: --" class="hud-trade-label"/>
+                <ui:Label name="TradePartnerLevel" text="     + Cấp: --" class="hud-trade-label"/>
+                <ui:Label name="TradePartnerFaction" text="     + Phái: --" class="hud-trade-label"/>
+                <ui:Label name="TradePartnerGuild" text="     + Bang: --" class="hud-trade-label"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Stall Currency Selector: PC UiStallCurrency.ini -->
+        <ui:VisualElement name="StallCurrencySelector" class="hud-stall-currency hidden">
+            <ui:Label text="Lựa chọn tiền tệ" class="hud-stall-currency-title"/>
+            <ui:VisualElement name="StallCurrencyBtns" class="hud-stall-btns-row">
+                <ui:Button name="StallMoneyBtn" text="Bạch Ngân" class="hud-stall-btn hud-stall-money-btn"/>
+                <ui:Button name="StallCoinBtn" text="Đồng Xu" class="hud-stall-btn hud-stall-coin-btn"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- Emote Picker Overlay: opened by tapping face button -->
+        <ui:VisualElement name="FacePickerOverlay" class="hud-face-picker-overlay hidden">
+            <ui:VisualElement name="FacePickerWindow" class="hud-face-picker-window">
+                <ui:VisualElement name="FacePickerHeader" class="hud-face-picker-header">
+                    <ui:Label text="Biểu cảm" class="hud-face-picker-title"/>
+                    <ui:VisualElement name="FacePickerClose" class="hud-face-picker-close"/>
+                </ui:VisualElement>
+                <ui:ScrollView name="FacePickerList" class="hud-face-picker-list"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <!-- Skill picker overlay: tap skill slot to assign → shows list of learned skills -->
         <ui:VisualElement name="SkillPickerOverlay" class="hud-skill-picker-overlay hidden">
             <ui:VisualElement name="SkillPickerWindow" class="hud-skill-picker-window">

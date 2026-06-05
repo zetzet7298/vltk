@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-06-04T05:45:40.287593Z",
+  "source": "/var/www/vltksource_new/vl_update_27/Client 6.0/spr800/item/equip/horse",
+  "count": 5,
+  "missing": [],
+  "sprites": [
+    {
+      "name": "horse001.spr",
+      "sourcePath": "spr\\item\\equip\\horse\\horse001.spr",
+      "uid": "aa100ee6",
+      "unityPath": "Assets/StreamingAssets/Sprites/aa100ee6.spr",
+      "bytes": 4002
+    },
+    {
+      "name": "horse003.spr",
+      "sourcePath": "spr\\item\\equip\\horse\\horse003.spr",
+      "uid": "a1243bda",
+      "unityPath": "Assets/StreamingAssets/Sprites/a1243bda.spr",
+      "bytes": 4407
+    },
+    {
+      "name": "horse005.spr",
+      "sourcePath": "spr\\item\\equip\\horse\\horse005.spr",
+      "uid": "bfc8d4de",
+      "unityPath": "Assets/StreamingAssets/Sprites/bfc8d4de.spr",
+      "bytes": 4208
+    },
+    {
+      "name": "horse007.spr",
+      "sourcePath": "spr\\item\\equip\\horse\\horse007.spr",
+      "uid": "badcc1d2",
+      "unityPath": "Assets/StreamingAssets/Sprites/badcc1d2.spr",
+      "bytes": 3700
+    },
+    {
+      "name": "horse009.spr",
+      "sourcePath": "spr\\item\\equip\\horse\\horse009.spr",
+      "uid": "b1e0fad6",
+      "unityPath": "Assets/StreamingAssets/Sprites/b1e0fad6.spr",
+      "bytes": 3824
+    }
+  ]
+}

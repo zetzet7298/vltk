@@ -1,0 +1,1548 @@
+{
+  "generatedAt": "2026-06-04T04:50:24.851871Z",
+  "source": "/var/www/vltksource_new/vl_update_27/Client 6.0/spr/npcres/woman",
+  "count": 220,
+  "missing": [],
+  "sprites": [
+    {
+      "name": "FM_BD_050_AT01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_AT01.spr",
+      "uid": "687ed2c4",
+      "unityPath": "Assets/StreamingAssets/Sprites/687ed2c4.spr",
+      "bytes": 176193
+    },
+    {
+      "name": "FM_BD_050_AT02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_AT02.spr",
+      "uid": "65a16ce4",
+      "unityPath": "Assets/StreamingAssets/Sprites/65a16ce4.spr",
+      "bytes": 185938
+    },
+    {
+      "name": "FM_BD_050_AT03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_AT03.spr",
+      "uid": "66eba604",
+      "unityPath": "Assets/StreamingAssets/Sprites/66eba604.spr",
+      "bytes": 189014
+    },
+    {
+      "name": "FM_BD_050_AT04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_AT04.spr",
+      "uid": "601ef024",
+      "unityPath": "Assets/StreamingAssets/Sprites/601ef024.spr",
+      "bytes": 190321
+    },
+    {
+      "name": "FM_BD_050_AT05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_AT05.spr",
+      "uid": "7d410a44",
+      "unityPath": "Assets/StreamingAssets/Sprites/7d410a44.spr",
+      "bytes": 174767
+    },
+    {
+      "name": "FM_BD_050_AT06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_AT06.spr",
+      "uid": "7ef44464",
+      "unityPath": "Assets/StreamingAssets/Sprites/7ef44464.spr",
+      "bytes": 241568
+    },
+    {
+      "name": "FM_BD_050_AT07.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_AT07.spr",
+      "uid": "783e9184",
+      "unityPath": "Assets/StreamingAssets/Sprites/783e9184.spr",
+      "bytes": 172538
+    },
+    {
+      "name": "FM_BD_050_DE01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_DE01.spr",
+      "uid": "d7c6ee77",
+      "unityPath": "Assets/StreamingAssets/Sprites/d7c6ee77.spr",
+      "bytes": 184329
+    },
+    {
+      "name": "FM_BD_050_DE02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_DE02.spr",
+      "uid": "d1093b97",
+      "unityPath": "Assets/StreamingAssets/Sprites/d1093b97.spr",
+      "bytes": 196253
+    },
+    {
+      "name": "FM_BD_050_DE03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_DE03.spr",
+      "uid": "d2bc75b7",
+      "unityPath": "Assets/StreamingAssets/Sprites/d2bc75b7.spr",
+      "bytes": 136830
+    },
+    {
+      "name": "FM_BD_050_DE04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_DE04.spr",
+      "uid": "afe68fd7",
+      "unityPath": "Assets/StreamingAssets/Sprites/afe68fd7.spr",
+      "bytes": 130538
+    },
+    {
+      "name": "FM_BD_050_HA01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HA01.spr",
+      "uid": "36726d9e",
+      "unityPath": "Assets/StreamingAssets/Sprites/36726d9e.spr",
+      "bytes": 149159
+    },
+    {
+      "name": "FM_BD_050_HA02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HA02.spr",
+      "uid": "33a4a7be",
+      "unityPath": "Assets/StreamingAssets/Sprites/33a4a7be.spr",
+      "bytes": 178559
+    },
+    {
+      "name": "FM_BD_050_HD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HD01.spr",
+      "uid": "193f849f",
+      "unityPath": "Assets/StreamingAssets/Sprites/193f849f.spr",
+      "bytes": 171318
+    },
+    {
+      "name": "FM_BD_050_HI01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HI01.spr",
+      "uid": "a46174c9",
+      "unityPath": "Assets/StreamingAssets/Sprites/a46174c9.spr",
+      "bytes": 76774
+    },
+    {
+      "name": "FM_BD_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HM01.spr",
+      "uid": "ad68c286",
+      "unityPath": "Assets/StreamingAssets/Sprites/ad68c286.spr",
+      "bytes": 153876
+    },
+    {
+      "name": "FM_BD_050_HR01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HR01.spr",
+      "uid": "7891b2b0",
+      "unityPath": "Assets/StreamingAssets/Sprites/7891b2b0.spr",
+      "bytes": 128778
+    },
+    {
+      "name": "FM_BD_050_HW01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_HW01.spr",
+      "uid": "87db6335",
+      "unityPath": "Assets/StreamingAssets/Sprites/87db6335.spr",
+      "bytes": 156127
+    },
+    {
+      "name": "FM_BD_050_IJ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_IJ01.spr",
+      "uid": "e059fa92",
+      "unityPath": "Assets/StreamingAssets/Sprites/e059fa92.spr",
+      "bytes": 118991
+    },
+    {
+      "name": "FM_BD_050_IJ02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_IJ02.spr",
+      "uid": "fd8c34b2",
+      "unityPath": "Assets/StreamingAssets/Sprites/fd8c34b2.spr",
+      "bytes": 116905
+    },
+    {
+      "name": "FM_BD_050_IJ03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_IJ03.spr",
+      "uid": "ff374ed2",
+      "unityPath": "Assets/StreamingAssets/Sprites/ff374ed2.spr",
+      "bytes": 88907
+    },
+    {
+      "name": "FM_BD_050_IJ04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_IJ04.spr",
+      "uid": "f87998f2",
+      "unityPath": "Assets/StreamingAssets/Sprites/f87998f2.spr",
+      "bytes": 86239
+    },
+    {
+      "name": "FM_BD_050_JP01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_JP01.spr",
+      "uid": "4bfbc2b6",
+      "unityPath": "Assets/StreamingAssets/Sprites/4bfbc2b6.spr",
+      "bytes": 185208
+    },
+    {
+      "name": "FM_BD_050_MG01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_MG01.spr",
+      "uid": "61375bfb",
+      "unityPath": "Assets/StreamingAssets/Sprites/61375bfb.spr",
+      "bytes": 174342
+    },
+    {
+      "name": "FM_BD_050_MG02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_MG02.spr",
+      "uid": "6279951b",
+      "unityPath": "Assets/StreamingAssets/Sprites/6279951b.spr",
+      "bytes": 184128
+    },
+    {
+      "name": "FM_BD_050_MG03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_MG03.spr",
+      "uid": "7fac2f3b",
+      "unityPath": "Assets/StreamingAssets/Sprites/7fac2f3b.spr",
+      "bytes": 139477
+    },
+    {
+      "name": "FM_BD_050_MG04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_MG04.spr",
+      "uid": "78d7795b",
+      "unityPath": "Assets/StreamingAssets/Sprites/78d7795b.spr",
+      "bytes": 178351
+    },
+    {
+      "name": "FM_BD_050_MG05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_MG05.spr",
+      "uid": "7a19b37b",
+      "unityPath": "Assets/StreamingAssets/Sprites/7a19b37b.spr",
+      "bytes": 147153
+    },
+    {
+      "name": "FM_BD_050_RD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_RD01.spr",
+      "uid": "9f5b4a36",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f5b4a36.spr",
+      "bytes": 174468
+    },
+    {
+      "name": "FM_BD_050_RN01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_RN01.spr",
+      "uid": "7635f90f",
+      "unityPath": "Assets/StreamingAssets/Sprites/7635f90f.spr",
+      "bytes": 167897
+    },
+    {
+      "name": "FM_BD_050_RN02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_RN02.spr",
+      "uid": "7378332f",
+      "unityPath": "Assets/StreamingAssets/Sprites/7378332f.spr",
+      "bytes": 166989
+    },
+    {
+      "name": "FM_BD_050_RN03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_RN03.spr",
+      "uid": "4ca34d4f",
+      "unityPath": "Assets/StreamingAssets/Sprites/4ca34d4f.spr",
+      "bytes": 167022
+    },
+    {
+      "name": "FM_BD_050_RN04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_RN04.spr",
+      "uid": "49d5876f",
+      "unityPath": "Assets/StreamingAssets/Sprites/49d5876f.spr",
+      "bytes": 167382
+    },
+    {
+      "name": "FM_BD_050_ST01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_ST01.spr",
+      "uid": "5957f5be",
+      "unityPath": "Assets/StreamingAssets/Sprites/5957f5be.spr",
+      "bytes": 138714
+    },
+    {
+      "name": "FM_BD_050_ST02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_ST02.spr",
+      "uid": "5a9a0fde",
+      "unityPath": "Assets/StreamingAssets/Sprites/5a9a0fde.spr",
+      "bytes": 111095
+    },
+    {
+      "name": "FM_BD_050_ST03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_ST03.spr",
+      "uid": "57cd59fe",
+      "unityPath": "Assets/StreamingAssets/Sprites/57cd59fe.spr",
+      "bytes": 118358
+    },
+    {
+      "name": "FM_BD_050_ST04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_ST04.spr",
+      "uid": "5177931e",
+      "unityPath": "Assets/StreamingAssets/Sprites/5177931e.spr",
+      "bytes": 170188
+    },
+    {
+      "name": "FM_BD_050_ST05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_ST05.spr",
+      "uid": "52ba2d3e",
+      "unityPath": "Assets/StreamingAssets/Sprites/52ba2d3e.spr",
+      "bytes": 118636
+    },
+    {
+      "name": "FM_BD_050_ST06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_ST06.spr",
+      "uid": "2fed675e",
+      "unityPath": "Assets/StreamingAssets/Sprites/2fed675e.spr",
+      "bytes": 117534
+    },
+    {
+      "name": "FM_BD_050_WK01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_WK01.spr",
+      "uid": "ec59e885",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec59e885.spr",
+      "bytes": 164458
+    },
+    {
+      "name": "FM_BD_050_WK02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_WK02.spr",
+      "uid": "e98c22a5",
+      "unityPath": "Assets/StreamingAssets/Sprites/e98c22a5.spr",
+      "bytes": 165448
+    },
+    {
+      "name": "FM_BD_050_WK03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_WK03.spr",
+      "uid": "eb377cc5",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb377cc5.spr",
+      "bytes": 165586
+    },
+    {
+      "name": "FM_BD_050_WK04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_WK04.spr",
+      "uid": "e479b6e5",
+      "unityPath": "Assets/StreamingAssets/Sprites/e479b6e5.spr",
+      "bytes": 165540
+    },
+    {
+      "name": "FM_BD_050_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_BD_050_ZZ01.spr",
+      "uid": "dff9bce5",
+      "unityPath": "Assets/StreamingAssets/Sprites/dff9bce5.spr",
+      "bytes": 135385
+    },
+    {
+      "name": "FM_HD_050_AT01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_AT01.spr",
+      "uid": "abb9ade6",
+      "unityPath": "Assets/StreamingAssets/Sprites/abb9ade6.spr",
+      "bytes": 30609
+    },
+    {
+      "name": "FM_HD_050_AT02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_AT02.spr",
+      "uid": "a4ece706",
+      "unityPath": "Assets/StreamingAssets/Sprites/a4ece706.spr",
+      "bytes": 32738
+    },
+    {
+      "name": "FM_HD_050_AT03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_AT03.spr",
+      "uid": "a6173126",
+      "unityPath": "Assets/StreamingAssets/Sprites/a6173126.spr",
+      "bytes": 33105
+    },
+    {
+      "name": "FM_HD_050_AT04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_AT04.spr",
+      "uid": "a35a4b46",
+      "unityPath": "Assets/StreamingAssets/Sprites/a35a4b46.spr",
+      "bytes": 32722
+    },
+    {
+      "name": "FM_HD_050_AT05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_AT05.spr",
+      "uid": "bc8c8566",
+      "unityPath": "Assets/StreamingAssets/Sprites/bc8c8566.spr",
+      "bytes": 29984
+    },
+    {
+      "name": "FM_HD_050_AT06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_AT06.spr",
+      "uid": "be37de86",
+      "unityPath": "Assets/StreamingAssets/Sprites/be37de86.spr",
+      "bytes": 39984
+    },
+    {
+      "name": "FM_HD_050_AT07.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_AT07.spr",
+      "uid": "bb7a68a6",
+      "unityPath": "Assets/StreamingAssets/Sprites/bb7a68a6.spr",
+      "bytes": 30063
+    },
+    {
+      "name": "FM_HD_050_DE01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_DE01.spr",
+      "uid": "17027889",
+      "unityPath": "Assets/StreamingAssets/Sprites/17027889.spr",
+      "bytes": 35380
+    },
+    {
+      "name": "FM_HD_050_DE02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_DE02.spr",
+      "uid": "10b4b2a9",
+      "unityPath": "Assets/StreamingAssets/Sprites/10b4b2a9.spr",
+      "bytes": 36237
+    },
+    {
+      "name": "FM_HD_050_DE03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_DE03.spr",
+      "uid": "edffccc9",
+      "unityPath": "Assets/StreamingAssets/Sprites/edffccc9.spr",
+      "bytes": 24578
+    },
+    {
+      "name": "FM_HD_050_DE04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_DE04.spr",
+      "uid": "ef2206e9",
+      "unityPath": "Assets/StreamingAssets/Sprites/ef2206e9.spr",
+      "bytes": 24388
+    },
+    {
+      "name": "FM_HD_050_HA01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HA01.spr",
+      "uid": "71bdf160",
+      "unityPath": "Assets/StreamingAssets/Sprites/71bdf160.spr",
+      "bytes": 30396
+    },
+    {
+      "name": "FM_HD_050_HA02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HA02.spr",
+      "uid": "72e00a80",
+      "unityPath": "Assets/StreamingAssets/Sprites/72e00a80.spr",
+      "bytes": 35524
+    },
+    {
+      "name": "FM_HD_050_HD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HD01.spr",
+      "uid": "587b6adb",
+      "unityPath": "Assets/StreamingAssets/Sprites/587b6adb.spr",
+      "bytes": 34082
+    },
+    {
+      "name": "FM_HD_050_HI01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HI01.spr",
+      "uid": "67acdb50",
+      "unityPath": "Assets/StreamingAssets/Sprites/67acdb50.spr",
+      "bytes": 15468
+    },
+    {
+      "name": "FM_HD_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HM01.spr",
+      "uid": "ec945648",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec945648.spr",
+      "bytes": 29823
+    },
+    {
+      "name": "FM_HD_050_HR01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HR01.spr",
+      "uid": "3bdd0a1d",
+      "unityPath": "Assets/StreamingAssets/Sprites/3bdd0a1d.spr",
+      "bytes": 26205
+    },
+    {
+      "name": "FM_HD_050_HW01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_HW01.spr",
+      "uid": "c706fa57",
+      "unityPath": "Assets/StreamingAssets/Sprites/c706fa57.spr",
+      "bytes": 29969
+    },
+    {
+      "name": "FM_HD_050_IJ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_IJ01.spr",
+      "uid": "238575b4",
+      "unityPath": "Assets/StreamingAssets/Sprites/238575b4.spr",
+      "bytes": 20090
+    },
+    {
+      "name": "FM_HD_050_IJ02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_IJ02.spr",
+      "uid": "3ccf8fd4",
+      "unityPath": "Assets/StreamingAssets/Sprites/3ccf8fd4.spr",
+      "bytes": 20409
+    },
+    {
+      "name": "FM_HD_050_IJ03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_IJ03.spr",
+      "uid": "3e72d9f4",
+      "unityPath": "Assets/StreamingAssets/Sprites/3e72d9f4.spr",
+      "bytes": 15343
+    },
+    {
+      "name": "FM_HD_050_IJ04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_IJ04.spr",
+      "uid": "3ba51314",
+      "unityPath": "Assets/StreamingAssets/Sprites/3ba51314.spr",
+      "bytes": 15698
+    },
+    {
+      "name": "FM_HD_050_JP01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_JP01.spr",
+      "uid": "8b275dc8",
+      "unityPath": "Assets/StreamingAssets/Sprites/8b275dc8.spr",
+      "bytes": 35847
+    },
+    {
+      "name": "FM_HD_050_MG01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_MG01.spr",
+      "uid": "a072d21d",
+      "unityPath": "Assets/StreamingAssets/Sprites/a072d21d.spr",
+      "bytes": 30160
+    },
+    {
+      "name": "FM_HD_050_MG02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_MG02.spr",
+      "uid": "bda56c3d",
+      "unityPath": "Assets/StreamingAssets/Sprites/bda56c3d.spr",
+      "bytes": 30044
+    },
+    {
+      "name": "FM_HD_050_MG03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_MG03.spr",
+      "uid": "beefa65d",
+      "unityPath": "Assets/StreamingAssets/Sprites/beefa65d.spr",
+      "bytes": 24841
+    },
+    {
+      "name": "FM_HD_050_MG04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_MG04.spr",
+      "uid": "b812f07d",
+      "unityPath": "Assets/StreamingAssets/Sprites/b812f07d.spr",
+      "bytes": 29852
+    },
+    {
+      "name": "FM_HD_050_MG05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_MG05.spr",
+      "uid": "b5450d9d",
+      "unityPath": "Assets/StreamingAssets/Sprites/b5450d9d.spr",
+      "bytes": 25388
+    },
+    {
+      "name": "FM_HD_050_RD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_RD01.spr",
+      "uid": "5e86c593",
+      "unityPath": "Assets/StreamingAssets/Sprites/5e86c593.spr",
+      "bytes": 34658
+    },
+    {
+      "name": "FM_HD_050_RN01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_RN01.spr",
+      "uid": "b1716507",
+      "unityPath": "Assets/StreamingAssets/Sprites/b1716507.spr",
+      "bytes": 30831
+    },
+    {
+      "name": "FM_HD_050_RN02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_RN02.spr",
+      "uid": "b2bbbf27",
+      "unityPath": "Assets/StreamingAssets/Sprites/b2bbbf27.spr",
+      "bytes": 30749
+    },
+    {
+      "name": "FM_HD_050_RN03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_RN03.spr",
+      "uid": "8feec947",
+      "unityPath": "Assets/StreamingAssets/Sprites/8feec947.spr",
+      "bytes": 30749
+    },
+    {
+      "name": "FM_HD_050_RN04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_RN04.spr",
+      "uid": "89110367",
+      "unityPath": "Assets/StreamingAssets/Sprites/89110367.spr",
+      "bytes": 30699
+    },
+    {
+      "name": "FM_HD_050_ST01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_ST01.spr",
+      "uid": "98934cd0",
+      "unityPath": "Assets/StreamingAssets/Sprites/98934cd0.spr",
+      "bytes": 24916
+    },
+    {
+      "name": "FM_HD_050_ST02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_ST02.spr",
+      "uid": "95c586f0",
+      "unityPath": "Assets/StreamingAssets/Sprites/95c586f0.spr",
+      "bytes": 20109
+    },
+    {
+      "name": "FM_HD_050_ST03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_ST03.spr",
+      "uid": "9708d010",
+      "unityPath": "Assets/StreamingAssets/Sprites/9708d010.spr",
+      "bytes": 20178
+    },
+    {
+      "name": "FM_HD_050_ST04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_ST04.spr",
+      "uid": "90b36a30",
+      "unityPath": "Assets/StreamingAssets/Sprites/90b36a30.spr",
+      "bytes": 30217
+    },
+    {
+      "name": "FM_HD_050_ST05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_ST05.spr",
+      "uid": "6de5a450",
+      "unityPath": "Assets/StreamingAssets/Sprites/6de5a450.spr",
+      "bytes": 20146
+    },
+    {
+      "name": "FM_HD_050_ST06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_ST06.spr",
+      "uid": "6f28fe70",
+      "unityPath": "Assets/StreamingAssets/Sprites/6f28fe70.spr",
+      "bytes": 20014
+    },
+    {
+      "name": "FM_HD_050_WK01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_WK01.spr",
+      "uid": "2f8563a7",
+      "unityPath": "Assets/StreamingAssets/Sprites/2f8563a7.spr",
+      "bytes": 30009
+    },
+    {
+      "name": "FM_HD_050_WK02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_WK02.spr",
+      "uid": "28cfbdc7",
+      "unityPath": "Assets/StreamingAssets/Sprites/28cfbdc7.spr",
+      "bytes": 30049
+    },
+    {
+      "name": "FM_HD_050_WK03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_WK03.spr",
+      "uid": "2a72f7e7",
+      "unityPath": "Assets/StreamingAssets/Sprites/2a72f7e7.spr",
+      "bytes": 30097
+    },
+    {
+      "name": "FM_HD_050_WK04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_WK04.spr",
+      "uid": "27a50107",
+      "unityPath": "Assets/StreamingAssets/Sprites/27a50107.spr",
+      "bytes": 30086
+    },
+    {
+      "name": "FM_HD_050_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HD_050_ZZ01.spr",
+      "uid": "9f2536bc",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f2536bc.spr",
+      "bytes": 30240
+    },
+    {
+      "name": "FM_HR_050_AT01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_AT01.spr",
+      "uid": "ee0d1bf7",
+      "unityPath": "Assets/StreamingAssets/Sprites/ee0d1bf7.spr",
+      "bytes": 19580
+    },
+    {
+      "name": "FM_HR_050_AT02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_AT02.spr",
+      "uid": "ebb05517",
+      "unityPath": "Assets/StreamingAssets/Sprites/ebb05517.spr",
+      "bytes": 21692
+    },
+    {
+      "name": "FM_HR_050_AT03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_AT03.spr",
+      "uid": "e4faef37",
+      "unityPath": "Assets/StreamingAssets/Sprites/e4faef37.spr",
+      "bytes": 21575
+    },
+    {
+      "name": "FM_HR_050_AT04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_AT04.spr",
+      "uid": "e62d3957",
+      "unityPath": "Assets/StreamingAssets/Sprites/e62d3957.spr",
+      "bytes": 22439
+    },
+    {
+      "name": "FM_HR_050_AT05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_AT05.spr",
+      "uid": "e3507377",
+      "unityPath": "Assets/StreamingAssets/Sprites/e3507377.spr",
+      "bytes": 20481
+    },
+    {
+      "name": "FM_HR_050_AT06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_AT06.spr",
+      "uid": "fc9a8c97",
+      "unityPath": "Assets/StreamingAssets/Sprites/fc9a8c97.spr",
+      "bytes": 27903
+    },
+    {
+      "name": "FM_HR_050_AT07.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_AT07.spr",
+      "uid": "f9cdc6b7",
+      "unityPath": "Assets/StreamingAssets/Sprites/f9cdc6b7.spr",
+      "bytes": 20620
+    },
+    {
+      "name": "FM_HR_050_DE01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_DE01.spr",
+      "uid": "55d5d420",
+      "unityPath": "Assets/StreamingAssets/Sprites/55d5d420.spr",
+      "bytes": 22288
+    },
+    {
+      "name": "FM_HR_050_DE02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_DE02.spr",
+      "uid": "57186e40",
+      "unityPath": "Assets/StreamingAssets/Sprites/57186e40.spr",
+      "bytes": 24860
+    },
+    {
+      "name": "FM_HR_050_DE03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_DE03.spr",
+      "uid": "5042b860",
+      "unityPath": "Assets/StreamingAssets/Sprites/5042b860.spr",
+      "bytes": 16997
+    },
+    {
+      "name": "FM_HR_050_DE04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_DE04.spr",
+      "uid": "2df5f580",
+      "unityPath": "Assets/StreamingAssets/Sprites/2df5f580.spr",
+      "bytes": 16428
+    },
+    {
+      "name": "FM_HR_050_HA01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HA01.spr",
+      "uid": "3400656c",
+      "unityPath": "Assets/StreamingAssets/Sprites/3400656c.spr",
+      "bytes": 20069
+    },
+    {
+      "name": "FM_HR_050_HA02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HA02.spr",
+      "uid": "314abe8c",
+      "unityPath": "Assets/StreamingAssets/Sprites/314abe8c.spr",
+      "bytes": 23039
+    },
+    {
+      "name": "FM_HR_050_HD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HD01.spr",
+      "uid": "1ecd9ee7",
+      "unityPath": "Assets/StreamingAssets/Sprites/1ecd9ee7.spr",
+      "bytes": 22702
+    },
+    {
+      "name": "FM_HR_050_HI01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HI01.spr",
+      "uid": "aa775ac1",
+      "unityPath": "Assets/StreamingAssets/Sprites/aa775ac1.spr",
+      "bytes": 10751
+    },
+    {
+      "name": "FM_HR_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HM01.spr",
+      "uid": "d37e297e",
+      "unityPath": "Assets/StreamingAssets/Sprites/d37e297e.spr",
+      "bytes": 21974
+    },
+    {
+      "name": "FM_HR_050_HR01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HR01.spr",
+      "uid": "7ea798a8",
+      "unityPath": "Assets/StreamingAssets/Sprites/7ea798a8.spr",
+      "bytes": 15714
+    },
+    {
+      "name": "FM_HR_050_HW01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_HW01.spr",
+      "uid": "05e948e2",
+      "unityPath": "Assets/StreamingAssets/Sprites/05e948e2.spr",
+      "bytes": 20806
+    },
+    {
+      "name": "FM_HR_050_IJ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_IJ01.spr",
+      "uid": "666fe6fb",
+      "unityPath": "Assets/StreamingAssets/Sprites/666fe6fb.spr",
+      "bytes": 15110
+    },
+    {
+      "name": "FM_HR_050_IJ02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_IJ02.spr",
+      "uid": "6392301b",
+      "unityPath": "Assets/StreamingAssets/Sprites/6392301b.spr",
+      "bytes": 14989
+    },
+    {
+      "name": "FM_HR_050_IJ03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_IJ03.spr",
+      "uid": "7cc54a3b",
+      "unityPath": "Assets/StreamingAssets/Sprites/7cc54a3b.spr",
+      "bytes": 11437
+    },
+    {
+      "name": "FM_HR_050_IJ04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_IJ04.spr",
+      "uid": "7e0f845b",
+      "unityPath": "Assets/StreamingAssets/Sprites/7e0f845b.spr",
+      "bytes": 10355
+    },
+    {
+      "name": "FM_HR_050_JP01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_JP01.spr",
+      "uid": "4989c1d4",
+      "unityPath": "Assets/StreamingAssets/Sprites/4989c1d4.spr",
+      "bytes": 22132
+    },
+    {
+      "name": "FM_HR_050_MG01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_MG01.spr",
+      "uid": "e6c4ae3e",
+      "unityPath": "Assets/StreamingAssets/Sprites/e6c4ae3e.spr",
+      "bytes": 19781
+    },
+    {
+      "name": "FM_HR_050_MG02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_MG02.spr",
+      "uid": "e00ff85e",
+      "unityPath": "Assets/StreamingAssets/Sprites/e00ff85e.spr",
+      "bytes": 21152
+    },
+    {
+      "name": "FM_HR_050_MG03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_MG03.spr",
+      "uid": "fdb2327e",
+      "unityPath": "Assets/StreamingAssets/Sprites/fdb2327e.spr",
+      "bytes": 17781
+    },
+    {
+      "name": "FM_HR_050_MG04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_MG04.spr",
+      "uid": "fee54f9e",
+      "unityPath": "Assets/StreamingAssets/Sprites/fee54f9e.spr",
+      "bytes": 21767
+    },
+    {
+      "name": "FM_HR_050_MG05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_MG05.spr",
+      "uid": "f82f99be",
+      "unityPath": "Assets/StreamingAssets/Sprites/f82f99be.spr",
+      "bytes": 18376
+    },
+    {
+      "name": "FM_HR_050_RD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_RD01.spr",
+      "uid": "9d69502e",
+      "unityPath": "Assets/StreamingAssets/Sprites/9d69502e.spr",
+      "bytes": 24145
+    },
+    {
+      "name": "FM_HR_050_RN01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_RN01.spr",
+      "uid": "77dbf0dd",
+      "unityPath": "Assets/StreamingAssets/Sprites/77dbf0dd.spr",
+      "bytes": 19017
+    },
+    {
+      "name": "FM_HR_050_RN02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_RN02.spr",
+      "uid": "710e0afd",
+      "unityPath": "Assets/StreamingAssets/Sprites/710e0afd.spr",
+      "bytes": 19661
+    },
+    {
+      "name": "FM_HR_050_RN03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_RN03.spr",
+      "uid": "72b1441d",
+      "unityPath": "Assets/StreamingAssets/Sprites/72b1441d.spr",
+      "bytes": 19661
+    },
+    {
+      "name": "FM_HR_050_RN04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_RN04.spr",
+      "uid": "4ffb9e3d",
+      "unityPath": "Assets/StreamingAssets/Sprites/4ffb9e3d.spr",
+      "bytes": 19742
+    },
+    {
+      "name": "FM_HR_050_ST01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_ST01.spr",
+      "uid": "df65db6b",
+      "unityPath": "Assets/StreamingAssets/Sprites/df65db6b.spr",
+      "bytes": 18300
+    },
+    {
+      "name": "FM_HR_050_ST02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_ST02.spr",
+      "uid": "d8a8148b",
+      "unityPath": "Assets/StreamingAssets/Sprites/d8a8148b.spr",
+      "bytes": 14867
+    },
+    {
+      "name": "FM_HR_050_ST03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_ST03.spr",
+      "uid": "d5d2aeab",
+      "unityPath": "Assets/StreamingAssets/Sprites/d5d2aeab.spr",
+      "bytes": 14552
+    },
+    {
+      "name": "FM_HR_050_ST04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_ST04.spr",
+      "uid": "d705f8cb",
+      "unityPath": "Assets/StreamingAssets/Sprites/d705f8cb.spr",
+      "bytes": 21556
+    },
+    {
+      "name": "FM_HR_050_ST05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_ST05.spr",
+      "uid": "d04832eb",
+      "unityPath": "Assets/StreamingAssets/Sprites/d04832eb.spr",
+      "bytes": 14624
+    },
+    {
+      "name": "FM_HR_050_ST06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_ST06.spr",
+      "uid": "adf34c0b",
+      "unityPath": "Assets/StreamingAssets/Sprites/adf34c0b.spr",
+      "bytes": 14521
+    },
+    {
+      "name": "FM_HR_050_WK01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_WK01.spr",
+      "uid": "926f9758",
+      "unityPath": "Assets/StreamingAssets/Sprites/926f9758.spr",
+      "bytes": 21224
+    },
+    {
+      "name": "FM_HR_050_WK02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_WK02.spr",
+      "uid": "6f922178",
+      "unityPath": "Assets/StreamingAssets/Sprites/6f922178.spr",
+      "bytes": 20999
+    },
+    {
+      "name": "FM_HR_050_WK03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_WK03.spr",
+      "uid": "68c57a98",
+      "unityPath": "Assets/StreamingAssets/Sprites/68c57a98.spr",
+      "bytes": 21036
+    },
+    {
+      "name": "FM_HR_050_WK04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_WK04.spr",
+      "uid": "6a0fb4b8",
+      "unityPath": "Assets/StreamingAssets/Sprites/6a0fb4b8.spr",
+      "bytes": 20662
+    },
+    {
+      "name": "FM_HR_050_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_HR_050_ZZ01.spr",
+      "uid": "dd8f82dd",
+      "unityPath": "Assets/StreamingAssets/Sprites/dd8f82dd.spr",
+      "bytes": 20332
+    },
+    {
+      "name": "FM_LH_050_AT01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_AT01.spr",
+      "uid": "d61b1624",
+      "unityPath": "Assets/StreamingAssets/Sprites/d61b1624.spr",
+      "bytes": 69150
+    },
+    {
+      "name": "FM_LH_050_AT02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_AT02.spr",
+      "uid": "d34da044",
+      "unityPath": "Assets/StreamingAssets/Sprites/d34da044.spr",
+      "bytes": 73116
+    },
+    {
+      "name": "FM_LH_050_AT03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_AT03.spr",
+      "uid": "acf0fa64",
+      "unityPath": "Assets/StreamingAssets/Sprites/acf0fa64.spr",
+      "bytes": 70441
+    },
+    {
+      "name": "FM_LH_050_AT04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_AT04.spr",
+      "uid": "ae3b3784",
+      "unityPath": "Assets/StreamingAssets/Sprites/ae3b3784.spr",
+      "bytes": 72227
+    },
+    {
+      "name": "FM_LH_050_AT05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_AT05.spr",
+      "uid": "ab6e41a4",
+      "unityPath": "Assets/StreamingAssets/Sprites/ab6e41a4.spr",
+      "bytes": 64658
+    },
+    {
+      "name": "FM_LH_050_AT06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_AT06.spr",
+      "uid": "a4909bc4",
+      "unityPath": "Assets/StreamingAssets/Sprites/a4909bc4.spr",
+      "bytes": 83739
+    },
+    {
+      "name": "FM_LH_050_AT07.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_AT07.spr",
+      "uid": "a1dbd5e4",
+      "unityPath": "Assets/StreamingAssets/Sprites/a1dbd5e4.spr",
+      "bytes": 69123
+    },
+    {
+      "name": "FM_LH_050_DE01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_DE01.spr",
+      "uid": "9de32212",
+      "unityPath": "Assets/StreamingAssets/Sprites/9de32212.spr",
+      "bytes": 73758
+    },
+    {
+      "name": "FM_LH_050_DE02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_DE02.spr",
+      "uid": "9f167c32",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f167c32.spr",
+      "bytes": 77253
+    },
+    {
+      "name": "FM_LH_050_DE03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_DE03.spr",
+      "uid": "9858b652",
+      "unityPath": "Assets/StreamingAssets/Sprites/9858b652.spr",
+      "bytes": 51572
+    },
+    {
+      "name": "FM_LH_050_DE04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_DE04.spr",
+      "uid": "9583c072",
+      "unityPath": "Assets/StreamingAssets/Sprites/9583c072.spr",
+      "bytes": 49912
+    },
+    {
+      "name": "FM_LH_050_HA01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HA01.spr",
+      "uid": "7c1ebdae",
+      "unityPath": "Assets/StreamingAssets/Sprites/7c1ebdae.spr",
+      "bytes": 65025
+    },
+    {
+      "name": "FM_LH_050_HA02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HA02.spr",
+      "uid": "7941f7ce",
+      "unityPath": "Assets/StreamingAssets/Sprites/7941f7ce.spr",
+      "bytes": 75159
+    },
+    {
+      "name": "FM_LH_050_HD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HD01.spr",
+      "uid": "46c4d719",
+      "unityPath": "Assets/StreamingAssets/Sprites/46c4d719.spr",
+      "bytes": 73675
+    },
+    {
+      "name": "FM_LH_050_HI01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HI01.spr",
+      "uid": "120d8753",
+      "unityPath": "Assets/StreamingAssets/Sprites/120d8753.spr",
+      "bytes": 34504
+    },
+    {
+      "name": "FM_LH_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HM01.spr",
+      "uid": "1b751296",
+      "unityPath": "Assets/StreamingAssets/Sprites/1b751296.spr",
+      "bytes": 72687
+    },
+    {
+      "name": "FM_LH_050_HR01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HR01.spr",
+      "uid": "a6bec2c0",
+      "unityPath": "Assets/StreamingAssets/Sprites/a6bec2c0.spr",
+      "bytes": 57062
+    },
+    {
+      "name": "FM_LH_050_HW01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_HW01.spr",
+      "uid": "4de7a64a",
+      "unityPath": "Assets/StreamingAssets/Sprites/4de7a64a.spr",
+      "bytes": 71441
+    },
+    {
+      "name": "FM_LH_050_IJ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_IJ01.spr",
+      "uid": "ae663f3d",
+      "unityPath": "Assets/StreamingAssets/Sprites/ae663f3d.spr",
+      "bytes": 47450
+    },
+    {
+      "name": "FM_LH_050_IJ02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_IJ02.spr",
+      "uid": "aba9495d",
+      "unityPath": "Assets/StreamingAssets/Sprites/aba9495d.spr",
+      "bytes": 48280
+    },
+    {
+      "name": "FM_LH_050_IJ03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_IJ03.spr",
+      "uid": "a4d3837d",
+      "unityPath": "Assets/StreamingAssets/Sprites/a4d3837d.spr",
+      "bytes": 31930
+    },
+    {
+      "name": "FM_LH_050_IJ04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_IJ04.spr",
+      "uid": "a606dc9d",
+      "unityPath": "Assets/StreamingAssets/Sprites/a606dc9d.spr",
+      "bytes": 33678
+    },
+    {
+      "name": "FM_LH_050_JP01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_JP01.spr",
+      "uid": "b1800616",
+      "unityPath": "Assets/StreamingAssets/Sprites/b1800616.spr",
+      "bytes": 78399
+    },
+    {
+      "name": "FM_LH_050_MG01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_MG01.spr",
+      "uid": "aed39f5b",
+      "unityPath": "Assets/StreamingAssets/Sprites/aed39f5b.spr",
+      "bytes": 68112
+    },
+    {
+      "name": "FM_LH_050_MG02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_MG02.spr",
+      "uid": "a806297b",
+      "unityPath": "Assets/StreamingAssets/Sprites/a806297b.spr",
+      "bytes": 68638
+    },
+    {
+      "name": "FM_LH_050_MG03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_MG03.spr",
+      "uid": "a549629b",
+      "unityPath": "Assets/StreamingAssets/Sprites/a549629b.spr",
+      "bytes": 51338
+    },
+    {
+      "name": "FM_LH_050_MG04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_MG04.spr",
+      "uid": "a6f3bcbb",
+      "unityPath": "Assets/StreamingAssets/Sprites/a6f3bcbb.spr",
+      "bytes": 65997
+    },
+    {
+      "name": "FM_LH_050_MG05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_MG05.spr",
+      "uid": "a026f6db",
+      "unityPath": "Assets/StreamingAssets/Sprites/a026f6db.spr",
+      "bytes": 55288
+    },
+    {
+      "name": "FM_LH_050_RD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_RD01.spr",
+      "uid": "c5678196",
+      "unityPath": "Assets/StreamingAssets/Sprites/c5678196.spr",
+      "bytes": 85635
+    },
+    {
+      "name": "FM_LH_050_RN01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_RN01.spr",
+      "uid": "bfd22e45",
+      "unityPath": "Assets/StreamingAssets/Sprites/bfd22e45.spr",
+      "bytes": 65305
+    },
+    {
+      "name": "FM_LH_050_RN02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_RN02.spr",
+      "uid": "b9057865",
+      "unityPath": "Assets/StreamingAssets/Sprites/b9057865.spr",
+      "bytes": 65943
+    },
+    {
+      "name": "FM_LH_050_RN03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_RN03.spr",
+      "uid": "ba4fb585",
+      "unityPath": "Assets/StreamingAssets/Sprites/ba4fb585.spr",
+      "bytes": 67142
+    },
+    {
+      "name": "FM_LH_050_RN04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_RN04.spr",
+      "uid": "b7f2cfa5",
+      "unityPath": "Assets/StreamingAssets/Sprites/b7f2cfa5.spr",
+      "bytes": 68725
+    },
+    {
+      "name": "FM_LH_050_ST01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_ST01.spr",
+      "uid": "077c08d3",
+      "unityPath": "Assets/StreamingAssets/Sprites/077c08d3.spr",
+      "bytes": 63182
+    },
+    {
+      "name": "FM_LH_050_ST02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_ST02.spr",
+      "uid": "00a742f3",
+      "unityPath": "Assets/StreamingAssets/Sprites/00a742f3.spr",
+      "bytes": 50005
+    },
+    {
+      "name": "FM_LH_050_ST03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_ST03.spr",
+      "uid": "1de99c13",
+      "unityPath": "Assets/StreamingAssets/Sprites/1de99c13.spr",
+      "bytes": 49499
+    },
+    {
+      "name": "FM_LH_050_ST04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_ST04.spr",
+      "uid": "1f1cd633",
+      "unityPath": "Assets/StreamingAssets/Sprites/1f1cd633.spr",
+      "bytes": 75021
+    },
+    {
+      "name": "FM_LH_050_ST05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_ST05.spr",
+      "uid": "18476053",
+      "unityPath": "Assets/StreamingAssets/Sprites/18476053.spr",
+      "bytes": 47214
+    },
+    {
+      "name": "FM_LH_050_ST06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_ST06.spr",
+      "uid": "1589ba73",
+      "unityPath": "Assets/StreamingAssets/Sprites/1589ba73.spr",
+      "bytes": 47116
+    },
+    {
+      "name": "FM_LH_050_WK01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_WK01.spr",
+      "uid": "5a66d035",
+      "unityPath": "Assets/StreamingAssets/Sprites/5a66d035.spr",
+      "bytes": 72942
+    },
+    {
+      "name": "FM_LH_050_WK02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_WK02.spr",
+      "uid": "57a96a55",
+      "unityPath": "Assets/StreamingAssets/Sprites/57a96a55.spr",
+      "bytes": 71911
+    },
+    {
+      "name": "FM_LH_050_WK03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_WK03.spr",
+      "uid": "50d3a475",
+      "unityPath": "Assets/StreamingAssets/Sprites/50d3a475.spr",
+      "bytes": 67769
+    },
+    {
+      "name": "FM_LH_050_WK04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_WK04.spr",
+      "uid": "5206f195",
+      "unityPath": "Assets/StreamingAssets/Sprites/5206f195.spr",
+      "bytes": 72016
+    },
+    {
+      "name": "FM_LH_050_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_LH_050_ZZ01.spr",
+      "uid": "0586f045",
+      "unityPath": "Assets/StreamingAssets/Sprites/0586f045.spr",
+      "bytes": 69657
+    },
+    {
+      "name": "FM_RH_050_AT01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_AT01.spr",
+      "uid": "13b37944",
+      "unityPath": "Assets/StreamingAssets/Sprites/13b37944.spr",
+      "bytes": 66833
+    },
+    {
+      "name": "FM_RH_050_AT02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_AT02.spr",
+      "uid": "ece5b364",
+      "unityPath": "Assets/StreamingAssets/Sprites/ece5b364.spr",
+      "bytes": 70647
+    },
+    {
+      "name": "FM_RH_050_AT03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_AT03.spr",
+      "uid": "ee28cc84",
+      "unityPath": "Assets/StreamingAssets/Sprites/ee28cc84.spr",
+      "bytes": 70651
+    },
+    {
+      "name": "FM_RH_050_AT04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_AT04.spr",
+      "uid": "eb5306a4",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb5306a4.spr",
+      "bytes": 72115
+    },
+    {
+      "name": "FM_RH_050_AT05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_AT05.spr",
+      "uid": "e48650c4",
+      "unityPath": "Assets/StreamingAssets/Sprites/e48650c4.spr",
+      "bytes": 65265
+    },
+    {
+      "name": "FM_RH_050_AT06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_AT06.spr",
+      "uid": "e1c8eae4",
+      "unityPath": "Assets/StreamingAssets/Sprites/e1c8eae4.spr",
+      "bytes": 86251
+    },
+    {
+      "name": "FM_RH_050_AT07.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_AT07.spr",
+      "uid": "e3732404",
+      "unityPath": "Assets/StreamingAssets/Sprites/e3732404.spr",
+      "bytes": 64997
+    },
+    {
+      "name": "FM_RH_050_DE01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_DE01.spr",
+      "uid": "5f1b2aa3",
+      "unityPath": "Assets/StreamingAssets/Sprites/5f1b2aa3.spr",
+      "bytes": 76218
+    },
+    {
+      "name": "FM_RH_050_DE02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_DE02.spr",
+      "uid": "584e64c3",
+      "unityPath": "Assets/StreamingAssets/Sprites/584e64c3.spr",
+      "bytes": 76239
+    },
+    {
+      "name": "FM_RH_050_DE03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_DE03.spr",
+      "uid": "55f0bee3",
+      "unityPath": "Assets/StreamingAssets/Sprites/55f0bee3.spr",
+      "bytes": 51575
+    },
+    {
+      "name": "FM_RH_050_DE04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_DE04.spr",
+      "uid": "573bc803",
+      "unityPath": "Assets/StreamingAssets/Sprites/573bc803.spr",
+      "bytes": 49004
+    },
+    {
+      "name": "FM_RH_050_HA01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HA01.spr",
+      "uid": "b9b6b1a4",
+      "unityPath": "Assets/StreamingAssets/Sprites/b9b6b1a4.spr",
+      "bytes": 68629
+    },
+    {
+      "name": "FM_RH_050_HA02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HA02.spr",
+      "uid": "baf9cbc4",
+      "unityPath": "Assets/StreamingAssets/Sprites/baf9cbc4.spr",
+      "bytes": 77807
+    },
+    {
+      "name": "FM_RH_050_HD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HD01.spr",
+      "uid": "807c2b1f",
+      "unityPath": "Assets/StreamingAssets/Sprites/807c2b1f.spr",
+      "bytes": 70766
+    },
+    {
+      "name": "FM_RH_050_HI01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HI01.spr",
+      "uid": "2fa59b49",
+      "unityPath": "Assets/StreamingAssets/Sprites/2fa59b49.spr",
+      "bytes": 31775
+    },
+    {
+      "name": "FM_RH_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HM01.spr",
+      "uid": "54ad168c",
+      "unityPath": "Assets/StreamingAssets/Sprites/54ad168c.spr",
+      "bytes": 64136
+    },
+    {
+      "name": "FM_RH_050_HR01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HR01.spr",
+      "uid": "e3d6c6c6",
+      "unityPath": "Assets/StreamingAssets/Sprites/e3d6c6c6.spr",
+      "bytes": 55526
+    },
+    {
+      "name": "FM_RH_050_HW01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_HW01.spr",
+      "uid": "0f1f89b5",
+      "unityPath": "Assets/StreamingAssets/Sprites/0f1f89b5.spr",
+      "bytes": 67158
+    },
+    {
+      "name": "FM_RH_050_IJ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_IJ01.spr",
+      "uid": "6b9e32e8",
+      "unityPath": "Assets/StreamingAssets/Sprites/6b9e32e8.spr",
+      "bytes": 46327
+    },
+    {
+      "name": "FM_RH_050_IJ02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_IJ02.spr",
+      "uid": "64c14c08",
+      "unityPath": "Assets/StreamingAssets/Sprites/64c14c08.spr",
+      "bytes": 47206
+    },
+    {
+      "name": "FM_RH_050_IJ03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_IJ03.spr",
+      "uid": "660b8628",
+      "unityPath": "Assets/StreamingAssets/Sprites/660b8628.spr",
+      "bytes": 35359
+    },
+    {
+      "name": "FM_RH_050_IJ04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_IJ04.spr",
+      "uid": "63bed048",
+      "unityPath": "Assets/StreamingAssets/Sprites/63bed048.spr",
+      "bytes": 34103
+    },
+    {
+      "name": "FM_RH_050_JP01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_JP01.spr",
+      "uid": "f3380e5c",
+      "unityPath": "Assets/StreamingAssets/Sprites/f3380e5c.spr",
+      "bytes": 77924
+    },
+    {
+      "name": "FM_RH_050_MG01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_MG01.spr",
+      "uid": "e80bef01",
+      "unityPath": "Assets/StreamingAssets/Sprites/e80bef01.spr",
+      "bytes": 56045
+    },
+    {
+      "name": "FM_RH_050_MG02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_MG02.spr",
+      "uid": "e5be3921",
+      "unityPath": "Assets/StreamingAssets/Sprites/e5be3921.spr",
+      "bytes": 68132
+    },
+    {
+      "name": "FM_RH_050_MG03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_MG03.spr",
+      "uid": "e6e17341",
+      "unityPath": "Assets/StreamingAssets/Sprites/e6e17341.spr",
+      "bytes": 53551
+    },
+    {
+      "name": "FM_RH_050_MG04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_MG04.spr",
+      "uid": "e02b8d61",
+      "unityPath": "Assets/StreamingAssets/Sprites/e02b8d61.spr",
+      "bytes": 68869
+    },
+    {
+      "name": "FM_RH_050_MG05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_MG05.spr",
+      "uid": "fd5ec681",
+      "unityPath": "Assets/StreamingAssets/Sprites/fd5ec681.spr",
+      "bytes": 54927
+    },
+    {
+      "name": "FM_RH_050_RD01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_RD01.spr",
+      "uid": "869f82d7",
+      "unityPath": "Assets/StreamingAssets/Sprites/869f82d7.spr",
+      "bytes": 84525
+    },
+    {
+      "name": "FM_RH_050_RN01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_RN01.spr",
+      "uid": "f90a223b",
+      "unityPath": "Assets/StreamingAssets/Sprites/f90a223b.spr",
+      "bytes": 68288
+    },
+    {
+      "name": "FM_RH_050_RN02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_RN02.spr",
+      "uid": "fabd7c5b",
+      "unityPath": "Assets/StreamingAssets/Sprites/fabd7c5b.spr",
+      "bytes": 70163
+    },
+    {
+      "name": "FM_RH_050_RN03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_RN03.spr",
+      "uid": "f7e7b67b",
+      "unityPath": "Assets/StreamingAssets/Sprites/f7e7b67b.spr",
+      "bytes": 70264
+    },
+    {
+      "name": "FM_RH_050_RN04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_RN04.spr",
+      "uid": "f12ac39b",
+      "unityPath": "Assets/StreamingAssets/Sprites/f12ac39b.spr",
+      "bytes": 68159
+    },
+    {
+      "name": "FM_RH_050_ST01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_ST01.spr",
+      "uid": "c0940d14",
+      "unityPath": "Assets/StreamingAssets/Sprites/c0940d14.spr",
+      "bytes": 60674
+    },
+    {
+      "name": "FM_RH_050_ST02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_ST02.spr",
+      "uid": "dddf4734",
+      "unityPath": "Assets/StreamingAssets/Sprites/dddf4734.spr",
+      "bytes": 48537
+    },
+    {
+      "name": "FM_RH_050_ST03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_ST03.spr",
+      "uid": "df019154",
+      "unityPath": "Assets/StreamingAssets/Sprites/df019154.spr",
+      "bytes": 46232
+    },
+    {
+      "name": "FM_RH_050_ST04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_ST04.spr",
+      "uid": "d8b42b74",
+      "unityPath": "Assets/StreamingAssets/Sprites/d8b42b74.spr",
+      "bytes": 70204
+    },
+    {
+      "name": "FM_RH_050_ST05.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_ST05.spr",
+      "uid": "d5ff6494",
+      "unityPath": "Assets/StreamingAssets/Sprites/d5ff6494.spr",
+      "bytes": 47885
+    },
+    {
+      "name": "FM_RH_050_ST06.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_ST06.spr",
+      "uid": "d721beb4",
+      "unityPath": "Assets/StreamingAssets/Sprites/d721beb4.spr",
+      "bytes": 46764
+    },
+    {
+      "name": "FM_RH_050_WK01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_WK01.spr",
+      "uid": "979ed42b",
+      "unityPath": "Assets/StreamingAssets/Sprites/979ed42b.spr",
+      "bytes": 73384
+    },
+    {
+      "name": "FM_RH_050_WK02.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_WK02.spr",
+      "uid": "90c16e4b",
+      "unityPath": "Assets/StreamingAssets/Sprites/90c16e4b.spr",
+      "bytes": 72796
+    },
+    {
+      "name": "FM_RH_050_WK03.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_WK03.spr",
+      "uid": "920bb86b",
+      "unityPath": "Assets/StreamingAssets/Sprites/920bb86b.spr",
+      "bytes": 69148
+    },
+    {
+      "name": "FM_RH_050_WK04.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_WK04.spr",
+      "uid": "6fbef58b",
+      "unityPath": "Assets/StreamingAssets/Sprites/6fbef58b.spr",
+      "bytes": 71654
+    },
+    {
+      "name": "FM_RH_050_ZZ01.spr",
+      "sourcePath": "spr\\npcres\\woman\\FM_RH_050_ZZ01.spr",
+      "uid": "473ec365",
+      "unityPath": "Assets/StreamingAssets/Sprites/473ec365.spr",
+      "bytes": 69173
+    }
+  ]
+}

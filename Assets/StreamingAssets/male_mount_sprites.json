@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-06-04T05:18:30.506470Z",
+  "source": "/var/www/vltksource_new/vl_update_27/Client 6.0/spr/npcres/man",
+  "count": 6,
+  "missing": [],
+  "sprites": [
+    {
+      "name": "MA_BD_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_050_HM01.spr",
+      "uid": "6098f272",
+      "unityPath": "Assets/StreamingAssets/Sprites/6098f272.spr",
+      "bytes": 236514
+    },
+    {
+      "name": "MA_BD_072_HM01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_072_HM01.spr",
+      "uid": "f9f13bbf",
+      "unityPath": "Assets/StreamingAssets/Sprites/f9f13bbf.spr",
+      "bytes": 259200
+    },
+    {
+      "name": "MA_HB_016_HM01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HB_016_HM01.spr",
+      "uid": "ad5372e0",
+      "unityPath": "Assets/StreamingAssets/Sprites/ad5372e0.spr",
+      "bytes": 104698
+    },
+    {
+      "name": "MA_HB_018_HM01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HB_018_HM01.spr",
+      "uid": "934d44ad",
+      "unityPath": "Assets/StreamingAssets/Sprites/934d44ad.spr",
+      "bytes": 110311
+    },
+    {
+      "name": "MA_HD_050_HM01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_050_HM01.spr",
+      "uid": "7acfb2c4",
+      "unityPath": "Assets/StreamingAssets/Sprites/7acfb2c4.spr",
+      "bytes": 45028
+    },
+    {
+      "name": "MA_HD_072_HM01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_072_HM01.spr",
+      "uid": "73123c5c",
+      "unityPath": "Assets/StreamingAssets/Sprites/73123c5c.spr",
+      "bytes": 48119
+    }
+  ]
+}

@@ -1,0 +1,916 @@
+{
+  "emotes": [
+    {
+      "id": 1,
+      "tip": "Mỉm cười",
+      "text": ":)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\01.spr"
+    },
+    {
+      "id": 2,
+      "tip": "cười lớn",
+      "text": ":D",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\02.spr"
+    },
+    {
+      "id": 3,
+      "tip": "Giật mình",
+      "text": ":o",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\03.spr"
+    },
+    {
+      "id": 4,
+      "tip": "Khó xử",
+      "text": ":(",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\04.spr"
+    },
+    {
+      "id": 5,
+      "tip": "Khóc la",
+      "text": ":L",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\05.spr"
+    },
+    {
+      "id": 6,
+      "tip": "Bẽn lẽn",
+      "text": ":B",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\06.spr"
+    },
+    {
+      "id": 7,
+      "tip": "Thịnh nộ",
+      "text": ":@",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\07.spr"
+    },
+    {
+      "id": 8,
+      "tip": "Mỹ nữ",
+      "text": ":0",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\08.spr"
+    },
+    {
+      "id": 9,
+      "tip": "Giật mình",
+      "text": ":$",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\09.spr"
+    },
+    {
+      "id": 10,
+      "tip": "Hôn mê",
+      "text": "@@",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\10.spr"
+    },
+    {
+      "id": 11,
+      "tip": "lạnh...",
+      "text": ":H",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\11.spr"
+    },
+    {
+      "id": 12,
+      "tip": "Mồ hôi",
+      "text": "^^",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\12.spr"
+    },
+    {
+      "id": 13,
+      "tip": "Nhăn mặt",
+      "text": ":P",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\13.spr"
+    },
+    {
+      "id": 14,
+      "tip": "U sầu",
+      "text": ":M",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\14.spr"
+    },
+    {
+      "id": 15,
+      "tip": "im lặng",
+      "text": ":S",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\15.spr"
+    },
+    {
+      "id": 16,
+      "tip": "Khinh miệt",
+      "text": ":T",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\16.spr"
+    },
+    {
+      "id": 17,
+      "tip": "Cân nhắc",
+      "text": ":Z",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\17.spr"
+    },
+    {
+      "id": 18,
+      "tip": "Hăm dọa",
+      "text": ":F",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\18.spr"
+    },
+    {
+      "id": 19,
+      "tip": "Phiền muộn",
+      "text": ":<",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\19.spr"
+    },
+    {
+      "id": 20,
+      "tip": "bị bạn đánh bại",
+      "text": ":\\",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\20.spr"
+    },
+    {
+      "id": 21,
+      "tip": "Cười xấu xí",
+      "text": ":E",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\21.spr"
+    },
+    {
+      "id": 22,
+      "tip": "Bảo mật",
+      "text": ":!",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\22.spr"
+    },
+    {
+      "id": 23,
+      "tip": "nghe tôi nói",
+      "text": ":I",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\23.spr"
+    },
+    {
+      "id": 24,
+      "tip": "hey hey",
+      "text": "^m^",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\24.spr"
+    },
+    {
+      "id": 25,
+      "tip": "Thân mật 1",
+      "text": "^0^",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\25.spr"
+    },
+    {
+      "id": 26,
+      "tip": "Thân mật 2",
+      "text": "^o^",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\26.spr"
+    },
+    {
+      "id": 27,
+      "tip": "Nước miếng",
+      "text": ":U",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\27.spr"
+    },
+    {
+      "id": 28,
+      "tip": "Ngủ",
+      "text": ":-",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\28.spr"
+    },
+    {
+      "id": 29,
+      "tip": "Rất",
+      "text": ":K",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\29.spr"
+    },
+    {
+      "id": 30,
+      "tip": "Bị đánh",
+      "text": ":W",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\30.spr"
+    },
+    {
+      "id": 31,
+      "tip": "Trái dứa",
+      "text": "(bl)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\31.spr"
+    },
+    {
+      "id": 32,
+      "tip": "Túi",
+      "text": "(bz)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\32.spr"
+    },
+    {
+      "id": 33,
+      "tip": "Lạnh~",
+      "text": "(hz)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\33.spr"
+    },
+    {
+      "id": 34,
+      "tip": "Sọ người",
+      "text": "(kl)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\34.spr"
+    },
+    {
+      "id": 35,
+      "tip": "Trái táo",
+      "text": "(pg)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\35.spr"
+    },
+    {
+      "id": 36,
+      "tip": "Mặt trời",
+      "text": "(tl)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\36.spr"
+    },
+    {
+      "id": 37,
+      "tip": "Thắng lợi",
+      "text": "(sl)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\37.spr"
+    },
+    {
+      "id": 38,
+      "tip": "Trái dưa",
+      "text": "(xg)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\38.spr"
+    },
+    {
+      "id": 39,
+      "tip": "Trái chuối",
+      "text": "(xj)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\39.spr"
+    },
+    {
+      "id": 40,
+      "tip": "Một đống túi",
+      "text": "(db)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\40.spr"
+    },
+    {
+      "id": 41,
+      "tip": "Anh đào",
+      "text": "(yt)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\41.spr"
+    },
+    {
+      "id": 42,
+      "tip": "ánh trăng",
+      "text": "(yl)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\42.spr"
+    },
+    {
+      "id": 43,
+      "tip": "Đầu heo",
+      "text": "(zt)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\43.spr"
+    },
+    {
+      "id": 44,
+      "tip": "Mưa rơi",
+      "text": "(xy)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\44.spr"
+    },
+    {
+      "id": 45,
+      "tip": "Hỏi",
+      "text": "(wh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\45.spr"
+    },
+    {
+      "id": 46,
+      "tip": "thiểm điện",
+      "text": "(sd)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\46.spr"
+    },
+    {
+      "id": 47,
+      "tip": "Kêu lên",
+      "text": "(gt)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\47.spr"
+    },
+    {
+      "id": 48,
+      "tip": "Nắm đấm",
+      "text": "(qt)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\48.spr"
+    },
+    {
+      "id": 49,
+      "tip": "Ngón cái",
+      "text": "(dm)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\49.spr"
+    },
+    {
+      "id": 50,
+      "tip": "Hồng tâm",
+      "text": "(hx)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\55.spr"
+    },
+    {
+      "id": 51,
+      "tip": "Cống hoàn 1",
+      "text": "(gw1)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\50.spr"
+    },
+    {
+      "id": 52,
+      "tip": "Cống hoàn 2",
+      "text": "(gw2)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\51.spr"
+    },
+    {
+      "id": 53,
+      "tip": "Cống hoàn 3",
+      "text": "(gw3)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\52.spr"
+    },
+    {
+      "id": 54,
+      "tip": "Cống hoàn 4",
+      "text": "(gw4)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\53.spr"
+    },
+    {
+      "id": 55,
+      "tip": "Cống hoàn 5",
+      "text": "(gw5)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\54.spr"
+    },
+    {
+      "id": 56,
+      "tip": "Tĩnh rượu",
+      "text": "(jt)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\56.spr"
+    },
+    {
+      "id": 57,
+      "tip": "Ngón tay nhỏ",
+      "text": "(xm)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\57.spr"
+    },
+    {
+      "id": 58,
+      "tip": "Hoa tươi",
+      "text": "(xh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\58.spr"
+    },
+    {
+      "id": 59,
+      "tip": "Khôi hài",
+      "text": "(!hx)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\59.spr"
+    },
+    {
+      "id": 60,
+      "tip": "Mỉm cười",
+      "text": "(zyx)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\60.spr"
+    },
+    {
+      "id": 61,
+      "tip": "Cười lớn",
+      "text": "(lhh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\61.spr"
+    },
+    {
+      "id": 62,
+      "tip": "Khóc la",
+      "text": "(sww)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\62.spr"
+    },
+    {
+      "id": 63,
+      "tip": "Hey hey",
+      "text": "(nwx)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\63.spr"
+    },
+    {
+      "id": 64,
+      "tip": "Cười xấu xí",
+      "text": "(shx)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\64.spr"
+    },
+    {
+      "id": 65,
+      "tip": "Bẽn lẽn",
+      "text": "(tp)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\65.spr"
+    },
+    {
+      "id": 66,
+      "tip": "Khốn...",
+      "text": "|-)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\66.spr"
+    },
+    {
+      "id": 67,
+      "tip": "Nước bọt",
+      "text": "(lh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\67.spr"
+    },
+    {
+      "id": 68,
+      "tip": "Khinh miệt",
+      "text": "(am)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\68.spr"
+    },
+    {
+      "id": 69,
+      "tip": "Giật mình",
+      "text": "(cj)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\69.spr"
+    },
+    {
+      "id": 70,
+      "tip": "La mắng",
+      "text": "(!dm)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\70.spr"
+    },
+    {
+      "id": 71,
+      "tip": "ngủ",
+      "text": "(shui)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\71.spr"
+    },
+    {
+      "id": 72,
+      "tip": "nôn mửa",
+      "text": "(otu)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\72.spr"
+    },
+    {
+      "id": 73,
+      "tip": "Hăm dọa",
+      "text": "(zh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\73.spr"
+    },
+    {
+      "id": 74,
+      "tip": "Hôn mê",
+      "text": "(yun)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\74.spr"
+    },
+    {
+      "id": 75,
+      "tip": "Tia sét",
+      "text": "(lj)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\75.spr"
+    },
+    {
+      "id": 76,
+      "tip": "Chợt rét",
+      "text": "(bh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\76.spr"
+    },
+    {
+      "id": 77,
+      "tip": "Đắc ý",
+      "text": "!8-)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\77.spr"
+    },
+    {
+      "id": 78,
+      "tip": "cười lớn",
+      "text": "!:D",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\78.spr"
+    },
+    {
+      "id": 79,
+      "tip": "Giật mình",
+      "text": "!:o",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\79.spr"
+    },
+    {
+      "id": 80,
+      "tip": "Khó xử",
+      "text": "!:(",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\80.spr"
+    },
+    {
+      "id": 81,
+      "tip": "Bẽn lẽn",
+      "text": "!:B",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\81.spr"
+    },
+    {
+      "id": 82,
+      "tip": "Thịnh nộ",
+      "text": "!:@",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\82.spr"
+    },
+    {
+      "id": 83,
+      "tip": "Mỹ nữ",
+      "text": "!:0",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\83.spr"
+    },
+    {
+      "id": 84,
+      "tip": "Bịt miệng",
+      "text": "!:#",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\84.spr"
+    },
+    {
+      "id": 85,
+      "tip": "Hôn mê",
+      "text": "!@@",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\85.spr"
+    },
+    {
+      "id": 86,
+      "tip": "lạnh...",
+      "text": "!:H",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\86.spr"
+    },
+    {
+      "id": 87,
+      "tip": "Mồ hôi",
+      "text": "!^^",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\87.spr"
+    },
+    {
+      "id": 88,
+      "tip": "(thẩn thờ)",
+      "text": "!:|",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\88.spr"
+    },
+    {
+      "id": 89,
+      "tip": "Rớt kính",
+      "text": "!:S",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\89.spr"
+    },
+    {
+      "id": 90,
+      "tip": "Khinh miệt",
+      "text": "!:T",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\90.spr"
+    },
+    {
+      "id": 91,
+      "tip": "Cân nhắc",
+      "text": "!:Z",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\91.spr"
+    },
+    {
+      "id": 92,
+      "tip": "Sinh khí",
+      "text": "!:<",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\92.spr"
+    },
+    {
+      "id": 93,
+      "tip": "Khóc to",
+      "text": "!:L",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\93.spr"
+    },
+    {
+      "id": 94,
+      "tip": "Nham hiểm",
+      "text": "!:F",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\94.spr"
+    },
+    {
+      "id": 95,
+      "tip": "Bảo mật",
+      "text": "!:!",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\95.spr"
+    },
+    {
+      "id": 96,
+      "tip": "Đánh...",
+      "text": "(!pk)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\96.spr"
+    },
+    {
+      "id": 97,
+      "tip": "lè lưỡi",
+      "text": "!:Q",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\97.spr"
+    },
+    {
+      "id": 98,
+      "tip": "Vỗ tay",
+      "text": "(gz!)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\98.spr"
+    },
+    {
+      "id": 99,
+      "tip": "Hoan hô",
+      "text": "(!hh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\99.spr"
+    },
+    {
+      "id": 100,
+      "tip": "Nước miếng",
+      "text": "!:U",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\100.spr"
+    },
+    {
+      "id": 101,
+      "tip": "Ngủ",
+      "text": "!:-",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\101.spr"
+    },
+    {
+      "id": 102,
+      "tip": "Rất",
+      "text": "!:K",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\102.spr"
+    },
+    {
+      "id": 103,
+      "tip": "nôn mửa",
+      "text": "(!otu)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\103.spr"
+    },
+    {
+      "id": 104,
+      "tip": "Phất tay",
+      "text": "(!hs)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\104.spr"
+    },
+    {
+      "id": 105,
+      "tip": "Nhe răng",
+      "text": "(!cy)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\105.spr"
+    },
+    {
+      "id": 106,
+      "tip": "Bị khùng",
+      "text": "(!fs)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\106.spr"
+    },
+    {
+      "id": 107,
+      "tip": "Khốn...",
+      "text": "!|-)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\107.spr"
+    },
+    {
+      "id": 108,
+      "tip": "Xin lỗi",
+      "text": "(!rc)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\108.spr"
+    },
+    {
+      "id": 109,
+      "tip": "Cười lén",
+      "text": "(!tx)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\109.spr"
+    },
+    {
+      "id": 110,
+      "tip": "Vô tội",
+      "text": "(w!g)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\110.spr"
+    },
+    {
+      "id": 111,
+      "tip": "Tìm kiếm",
+      "text": "(!xz)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\111.spr"
+    },
+    {
+      "id": 112,
+      "tip": "Lắc đầu",
+      "text": "(!head)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\112.spr"
+    },
+    {
+      "id": 113,
+      "tip": "Im lặng",
+      "text": "!:~",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\113.spr"
+    },
+    {
+      "id": 114,
+      "tip": "nước dãi",
+      "text": "(ice)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\114.spr"
+    },
+    {
+      "id": 115,
+      "tip": "Tách trà",
+      "text": "(cup)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\115.spr"
+    },
+    {
+      "id": 116,
+      "tip": "Bóng đèn",
+      "text": "(!)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\116.spr"
+    },
+    {
+      "id": 117,
+      "tip": "Tặng phẩm",
+      "text": "(gift)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\117.spr"
+    },
+    {
+      "id": 118,
+      "tip": "Điện thoại",
+      "text": "(phone)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\118.spr"
+    },
+    {
+      "id": 119,
+      "tip": "Hoa tươi",
+      "text": "(!xh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\119.spr"
+    },
+    {
+      "id": 120,
+      "tip": "Bia",
+      "text": "(bear)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\120.spr"
+    },
+    {
+      "id": 121,
+      "tip": "Tiền",
+      "text": "($)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\121.spr"
+    },
+    {
+      "id": 122,
+      "tip": "Hôn",
+      "text": "(kiss)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\122.spr"
+    },
+    {
+      "id": 123,
+      "tip": "Đầu heo",
+      "text": "(pig)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\123.spr"
+    },
+    {
+      "id": 124,
+      "tip": "Cây dao",
+      "text": "(dz)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\124.spr"
+    },
+    {
+      "id": 125,
+      "tip": "Chấn động",
+      "text": "(dd)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\125.spr"
+    },
+    {
+      "id": 126,
+      "tip": "Vỗ tay to",
+      "text": "(gz)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\126.spr"
+    },
+    {
+      "id": 127,
+      "tip": "Đánh gõ",
+      "text": "(qd)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\127.spr"
+    },
+    {
+      "id": 128,
+      "tip": "Người nhấp nháy",
+      "text": "(sr)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\128.spr"
+    },
+    {
+      "id": 129,
+      "tip": "Đau khổ",
+      "text": "(sx)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\129.spr"
+    },
+    {
+      "id": 130,
+      "tip": "Ngủ ngon",
+      "text": "(hs)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\130.spr"
+    },
+    {
+      "id": 131,
+      "tip": "Phun",
+      "text": "(tu)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\131.spr"
+    },
+    {
+      "id": 132,
+      "tip": "Nắm tay",
+      "text": "(ws)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\132.spr"
+    },
+    {
+      "id": 133,
+      "tip": "88",
+      "text": "(bye)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\133.spr"
+    },
+    {
+      "id": 134,
+      "tip": "Điện thoại",
+      "text": "(dh)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\134.spr"
+    },
+    {
+      "id": 135,
+      "tip": "Thơm một cái.",
+      "text": "(K)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\135.spr"
+    },
+    {
+      "id": 136,
+      "tip": "Đèn xanh",
+      "text": "(lvd)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\136.spr"
+    },
+    {
+      "id": 137,
+      "tip": "(Đèn vàng)",
+      "text": "(chd)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\137.spr"
+    },
+    {
+      "id": 138,
+      "tip": "Đèn đỏ",
+      "text": "(hod)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\138.spr"
+    },
+    {
+      "id": 139,
+      "tip": "chạm tường",
+      "text": "(zhq)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\139.spr"
+    },
+    {
+      "id": 140,
+      "tip": "",
+      "text": "",
+      "spr": "\\Spr\\Ui3\\°ùằỏẵỗÃổ\\°ùằỏ°ùệỳ°´ÅƠ.spr"
+    },
+    {
+      "id": 141,
+      "tip": "Bầu",
+      "text": "(bau)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\minibau.spr"
+    },
+    {
+      "id": 142,
+      "tip": "Cua",
+      "text": "(cua)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\minicua.spr"
+    },
+    {
+      "id": 143,
+      "tip": "Tôm",
+      "text": "(tom)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\minitom.spr"
+    },
+    {
+      "id": 144,
+      "tip": "Cá",
+      "text": "(ca)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\minica.spr"
+    },
+    {
+      "id": 145,
+      "tip": "Gà",
+      "text": "(ga)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\miniga.spr"
+    },
+    {
+      "id": 146,
+      "tip": "Nai",
+      "text": "(nai)",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\mininai.spr"
+    },
+    {
+      "id": 147,
+      "tip": "Bầu",
+      "text": "",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\bau.spr"
+    },
+    {
+      "id": 148,
+      "tip": "Cua",
+      "text": "",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\cua.spr"
+    },
+    {
+      "id": 149,
+      "tip": "Tôm",
+      "text": "",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\tom.spr"
+    },
+    {
+      "id": 150,
+      "tip": "Cá",
+      "text": "",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\ca.spr"
+    },
+    {
+      "id": 151,
+      "tip": "Gà",
+      "text": "",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\ga.spr"
+    },
+    {
+      "id": 152,
+      "tip": "Nai",
+      "text": "",
+      "spr": "\\Spr\\Ui3\\±ớầộ\\nai.spr"
+    }
+  ]
+}

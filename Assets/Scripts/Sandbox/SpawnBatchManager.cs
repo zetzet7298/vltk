@@ -22,10 +22,6 @@ namespace VLTK.Sandbox
         private readonly List<BatchEnemyEntry> _enemies = new();
         private readonly Queue<int> _activationQueue = new();
         private readonly HashSet<int> _activeSet = new();
-        // Tracks indices already enqueued in the current flush so the same
-        // enemy is not pushed onto _activationQueue every frame it stays in
-        // activation range. Mirrors _activeSet but covers "pending" state.
-        private readonly HashSet<int> _pendingSet = new();
 
         private int _batchSize;
         private float _deactivateDistance;
@@ -67,7 +63,6 @@ namespace VLTK.Sandbox
             _enemies.Clear();
             _activationQueue.Clear();
             _activeSet.Clear();
-            _pendingSet.Clear();
             _currentBatchIndex = 0;
         }
 
@@ -100,10 +95,8 @@ namespace VLTK.Sandbox
                 }
                 else if (!e.isActive && distSq < actDistSq)
                 {
-                    // Queue for activation (dedupe: don't push the same index
-                    // twice while it is still pending activation).
-                    if (_pendingSet.Add(i))
-                        _activationQueue.Enqueue(i);
+                    // Queue for activation
+                    _activationQueue.Enqueue(i);
                 }
             }
 
@@ -112,7 +105,6 @@ namespace VLTK.Sandbox
             while (_activationQueue.Count > 0 && activated < _batchSize)
             {
                 int idx = _activationQueue.Dequeue();
-                _pendingSet.Remove(idx);
                 var e = _enemies[idx];
                 if (!e.isActive)
                 {

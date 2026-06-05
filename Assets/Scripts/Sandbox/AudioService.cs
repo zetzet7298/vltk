@@ -197,13 +197,9 @@ namespace VLTK.Sandbox
 
         public void SetCategoryVolume(AudioCategory category, float volume)
         {
-            // Phai ap dung gia tri da clamp cho ca dict lan AudioSource, neu khong
-            // gia tri raw (vd 1.5) se luu 1.0 trong dict nhung AudioSource.volume
-            // lai nhan 1.5 - runtime BGM lech khoi GetCategoryVolume() bao cao.
-            float clamped = Mathf.Clamp01(volume);
-            _categoryVolume[category] = clamped;
+            _categoryVolume[category] = Mathf.Clamp01(volume);
             if (category == AudioCategory.BGM && _bgmSource != null)
-                _bgmSource.volume = clamped;
+                _bgmSource.volume = volume;
         }
 
         // ── Internal ────────────────────────────────────────────────────

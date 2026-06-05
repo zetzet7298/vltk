@@ -28,13 +28,6 @@ namespace VLTK.UI
         private Texture2D _skillPanelTargetTexture;
         private Texture2D _addPointTexture;
         private readonly System.Collections.Generic.Dictionary<int, Texture2D> _caiBangIconTextures = new();
-        // PR17#5: cache the controller lookup so OnGUI does not call FindObjectOfType per helper.
-        private GameHudController _cachedHud;
-        private GameHudController GetHud()
-        {
-            if (_cachedHud == null) _cachedHud = FindObjectOfType<GameHudController>();
-            return _cachedHud;
-        }
 
         private void EnsureStyles()
         {
@@ -164,9 +157,9 @@ namespace VLTK.UI
 
         // ── Live-data helpers (lấy từ HudDataBridge / SandboxManager) ──────────
 
-        private string GetLevelText()
+private string GetLevelText()
         {
-            var hud = GetHud();
+            var hud = FindObjectOfType<GameHudController>();
             if (hud == null) return "1";
             var label = hud.GetComponent<UIDocument>()
                 ?.rootVisualElement?.Q<Label>("LevelText");
@@ -175,7 +168,7 @@ namespace VLTK.UI
 
         private string GetHpText()
         {
-            var hud = GetHud();
+            var hud = FindObjectOfType<GameHudController>();
             var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
                 ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("HpText");
             return label?.text ?? "100/100";
@@ -183,7 +176,7 @@ namespace VLTK.UI
 
         private string GetMpText()
         {
-            var hud = GetHud();
+            var hud = FindObjectOfType<GameHudController>();
             var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
                 ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("MpText");
             return label?.text ?? "50/50";
@@ -191,7 +184,7 @@ namespace VLTK.UI
 
         private string GetStaminaText()
         {
-            var hud = GetHud();
+            var hud = FindObjectOfType<GameHudController>();
             var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
                 ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("StaminaText");
             return label?.text ?? "100/100";
@@ -199,7 +192,7 @@ namespace VLTK.UI
 
         private string GetExpText()
         {
-            var hud = GetHud();
+            var hud = FindObjectOfType<GameHudController>();
             var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
                 ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("ExpText");
             return label?.text ?? "0%";
@@ -325,7 +318,7 @@ namespace VLTK.UI
 
         private void DrawSkillPanelText()
         {
-            var hud = GetHud();
+            var hud = FindObjectOfType<GameHudController>();
             if (hud == null || !hud.IsSkillPanelVisible)
                 return;
 
@@ -434,7 +427,7 @@ namespace VLTK.UI
             Label(1140, 138, 80, 14, coord + "  Tìm", new GUIStyle(_minimap) { alignment = TextAnchor.MiddleLeft });
 
             // Large preview window coordinate readout, visible while preview is open.
-            var hud = GetHud();
+            var hud = FindObjectOfType<GameHudController>();
             var doc = hud != null ? hud.GetComponent<UnityEngine.UIElements.UIDocument>() : null;
             var root = doc != null ? FindElement(doc.rootVisualElement, "GameHud") : null;
             var overlay = root != null ? FindElement(root, "MapPreviewOverlay") : null;
