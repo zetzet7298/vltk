@@ -4,10 +4,12 @@
 // service null; sử dụng Stopwatch với timeout hợp lý cho mobile.
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
 using NUnit.Framework;
+using UnityEngine;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
@@ -15,7 +17,13 @@ namespace VLTK.Tests.Sandbox
     [TestFixture]
     public class PerformanceBenchmarkTests
     {
-        private static readonly Stopwatch _sw = new Stopwatch();
+        private Stopwatch _sw;
+
+        [SetUp]
+        public void Setup()
+        {
+            _sw = new Stopwatch();
+        }
 
         // ─── Load benchmark ────────────────────────────────────────────────
         [Test]
@@ -24,16 +32,16 @@ namespace VLTK.Tests.Sandbox
             _sw.Restart();
             // Tạo registry cho từng service chính
             int created = 0;
-            try { _ = AdventureService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = GuildService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = TitleService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = BattlefieldService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = AuctionService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = LotteryService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = MapListFullService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = ItemDetailService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = AchievementService.LoadFromStreamingAssets(); created++; } catch { }
-            try { _ = MallService.LoadFromStreamingAssets(); created++; } catch { }
+            try { _ = AdventureService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = GuildService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = TitleService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = BattlefieldService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = AuctionService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = LotteryService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = MapListFullService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = ItemDetailService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = AchievementService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
+            try { _ = MallService.LoadFromStreamingAssets(); created++; } catch (Exception ex) { UnityEngine.Debug.LogWarning($"Service load failed: {ex.Message}"); }
             _sw.Stop();
             Assert.Greater(created, 0, "Phải instantiate được ít nhất 1 service");
             Assert.Less(_sw.ElapsedMilliseconds, 2000, $"Load {created} services trong <2s (mất {_sw.ElapsedMilliseconds}ms)");

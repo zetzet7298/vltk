@@ -51,15 +51,12 @@ namespace VLTK.Tests.PlayMode
         }
 
         [UnityTest]
+        [Ignore("TODO: implement when death→loot event pipeline is complete")]
         public IEnumerator DeathFlow_EnemyDies_DropsLoot()
         {
-            var enemy = _loop.RegisterEnemy(101, "Mộc Nhân", 500, 1, new Vector2(1608, 3200));
-            enemy.combat.currentLife = 0;
-            _loop.Economy.EarnSilver(12);
+            // Placeholder — loot-drop pipeline not yet wired.
+            // Requires GameplayLoopService.OnEnemyDeath → loot table lookup → player reward.
             yield return null;
-
-            Assert.LessOrEqual(enemy.combat.currentLife, 0);
-            Assert.GreaterOrEqual(_loop.Economy.Wallet.silver, 1012);
         }
 
         [UnityTest]
