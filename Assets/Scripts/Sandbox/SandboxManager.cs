@@ -202,6 +202,32 @@ namespace VLTK.Sandbox
         public BattleRewardConfigService BattleRewardConfigService { get; private set; }
         public BattleHonorService BattleHonorService { get; private set; }
         public SjBattleService SjBattleService { get; private set; }
+        // Batch 11: Hoa Sơn Luận Kiếm, Sprite asset, Sound effect, Map connection, NPC shop item, Reputation, Title effect, VIP level
+        public HuaShanLuanJianService HuaShanLuanJianService { get; private set; }
+        public SpriteAssetService SpriteAssetService { get; private set; }
+        public SoundEffectService SoundEffectService { get; private set; }
+        public MapConnectionService MapConnectionService { get; private set; }
+        public NpcShopItemService NpcShopItemService { get; private set; }
+        public ReputationService ReputationService { get; private set; }
+        public TitleEffectService TitleEffectService { get; private set; }
+        public VipLevelService VipLevelService { get; private set; }
+        // Batch 12: Guild city war + Script registries (mission, skill, item, event, task, global, library)
+        public GuildCityWarService GuildCityWarService { get; private set; }
+        public GuildCityWarLogService GuildCityWarLogService { get; private set; }
+        public MissionScriptService MissionScriptService { get; private set; }
+        public SkillScriptService SkillScriptService { get; private set; }
+        public ItemScriptService ItemScriptService { get; private set; }
+        public EventScriptService EventScriptService { get; private set; }
+        public TaskScriptService TaskScriptService { get; private set; }
+        public GlobalScriptService GlobalScriptService { get; private set; }
+        public LibraryScriptService LibraryScriptService { get; private set; }
+        // Batch 13: Area script registries (14.x GBK areas, faction quest, town, gbk trigger, tong battle)
+        public AreaScriptService AreaScriptService { get; private set; }
+        public GbkMapScriptService GbkMapScriptService { get; private set; }
+        public FactionQuestAreaService FactionQuestAreaService { get; private set; }
+        public TownScriptService TownScriptService { get; private set; }
+        public GbkTriggerService GbkTriggerService { get; private set; }
+        public TongBattleScriptService TongBattleScriptService { get; private set; }
         // PC-parity runtime services batch 6 (client settings + items + maps)
         public PortraitService PortraitService { get; private set; }
         public SoundListService SoundListService { get; private set; }
@@ -487,6 +513,32 @@ namespace VLTK.Sandbox
                 try { BattleRewardConfigService = BattleRewardConfigService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattleRewardConfigService: " + e.Message); }
                 try { BattleHonorService = BattleHonorService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattleHonorService: " + e.Message); }
                 try { SjBattleService = SjBattleService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SjBattleService: " + e.Message); }
+                // ── Batch 11: Hoa Sơn + Sprite asset + Sound effect + Map connection + NPC shop item + Reputation + Title effect + VIP level ───────────
+                try { HuaShanLuanJianService = HuaShanLuanJianService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "HuaShanLuanJianService: " + e.Message); }
+                try { SpriteAssetService = SpriteAssetService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SpriteAssetService: " + e.Message); }
+                try { SoundEffectService = SoundEffectService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SoundEffectService: " + e.Message); }
+                try { MapConnectionService = MapConnectionService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MapConnectionService: " + e.Message); }
+                try { NpcShopItemService = NpcShopItemService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "NpcShopItemService: " + e.Message); }
+                try { ReputationService = ReputationService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ReputationService: " + e.Message); }
+                try { TitleEffectService = TitleEffectService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TitleEffectService: " + e.Message); }
+                try { VipLevelService = VipLevelService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "VipLevelService: " + e.Message); }
+                // ── Batch 12: Guild city war + Script registries (mission 985, skill 2,486, item 635, event 455, task 316, global 579, library 44) ───────────
+                GuildCityWarService = new GuildCityWarService(CityWarService);
+                try { GuildCityWarLogService = GuildCityWarLogService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GuildCityWarLogService: " + e.Message); }
+                try { MissionScriptService = MissionScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "MissionScriptService: " + e.Message); }
+                try { SkillScriptService = SkillScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SkillScriptService: " + e.Message); }
+                try { ItemScriptService = ItemScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "ItemScriptService: " + e.Message); }
+                try { EventScriptService = EventScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "EventScriptService: " + e.Message); }
+                try { TaskScriptService = TaskScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TaskScriptService: " + e.Message); }
+                try { GlobalScriptService = GlobalScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GlobalScriptService: " + e.Message); }
+                try { LibraryScriptService = LibraryScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "LibraryScriptService: " + e.Message); }
+                // ── Batch 13: Area script registries (14.x GBK areas, faction quest, town, gbk trigger, tong battle) ───────────
+                try { AreaScriptService = AreaScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "AreaScriptService: " + e.Message); }
+                try { GbkMapScriptService = GbkMapScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GbkMapScriptService: " + e.Message); }
+                try { FactionQuestAreaService = FactionQuestAreaService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FactionQuestAreaService: " + e.Message); }
+                try { TownScriptService = TownScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TownScriptService: " + e.Message); }
+                try { GbkTriggerService = GbkTriggerService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GbkTriggerService: " + e.Message); }
+                try { TongBattleScriptService = TongBattleScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TongBattleScriptService: " + e.Message); }
 
                 // ── Batch 6: Client settings, items, maps (37 more services) ───────────
                 try { PortraitService = PortraitService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "PortraitService: " + e.Message); }
