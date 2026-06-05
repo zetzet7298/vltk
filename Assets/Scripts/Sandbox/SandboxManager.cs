@@ -938,8 +938,7 @@ namespace VLTK.Sandbox
             var cam = cameraGo.AddComponent<Camera>();
             cam.orthographic = true;
             cam.orthographicSize = 240f;
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.12f, 0.12f, 0.14f, 1f);
+            cam.clearFlags = CameraClearFlags.Skybox;
             cam.transform.position = new Vector3(0f, 0f, -100f);
             cam.transform.rotation = Quaternion.identity;
         }
@@ -1459,8 +1458,7 @@ namespace VLTK.Sandbox
             cam.orthographic = true;
             cam.transparencySortMode = TransparencySortMode.CustomAxis;
             cam.transparencySortAxis = new Vector3(0f, 1f, 0f);
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.12f, 0.12f, 0.14f, 1f);
+            cam.clearFlags = CameraClearFlags.Skybox;
             cam.nearClipPlane = 0.1f;
             cam.farClipPlane = Mathf.Max(cam.farClipPlane, 5000f);
             SubsystemLog.Info("Sandbox", "Camera configured for player-follow map view");

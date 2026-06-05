@@ -418,8 +418,7 @@ namespace VLTK.Sandbox
             cam.orthographic = true;
             cam.nearClipPlane = 0.1f;
             cam.farClipPlane = Mathf.Max(cam.farClipPlane, 5000f);
-            cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(0.12f, 0.12f, 0.14f, 1f);
+            cam.clearFlags = CameraClearFlags.Skybox;
             cam.orthographicSize = Mathf.Max(1f, followOrthoSize);
             cam.transform.rotation = Quaternion.identity;
 

@@ -19,6 +19,9 @@ namespace VLTK.Sandbox
         [Header("Panel")]
         public GameObject panelRoot;
 
+        private UnityEngine.UI.Image _backgroundImage;
+        private GameObject _gmPanelGameObject;
+
         [Header("Tab Buttons")]
         public GMTabBarController tabBar;
 
@@ -38,8 +41,10 @@ namespace VLTK.Sandbox
 
         private void Awake()
         {
-            if (panelRoot != null)
-                panelRoot.SetActive(false);
+            _backgroundImage = GetComponent<UnityEngine.UI.Image>();
+            _gmPanelGameObject = gameObject;
+            // Start with entire GMPanel hidden
+            _gmPanelGameObject.SetActive(false);
         }
 
         private void Update()
@@ -84,10 +89,12 @@ namespace VLTK.Sandbox
 
         private void SetOpen(bool open)
         {
-            if (panelRoot == null) return;
-            panelRoot.SetActive(open);
+            if (_gmPanelGameObject == null) return;
+            _gmPanelGameObject.SetActive(open);
             if (open)
             {
+                if (panelRoot != null) panelRoot.SetActive(true);
+                if (_backgroundImage != null) _backgroundImage.enabled = true;
                 UpdateTabPanels();
                 SubsystemLog.Info("GM", "Panel opened");
             }

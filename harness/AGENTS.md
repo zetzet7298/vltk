@@ -8,6 +8,38 @@
 - Prefer `fd` over `find`.
 - Prefer `rg` over `grep`.
 
+## Skill Matrix
+
+### 🔴 Bắt buộc — Dùng trước & trong mọi port task
+
+| Skill | Khi nào dùng | Tóm tắt |
+|-------|-------------|--------|
+| `jx-pc-port-rule` | **TRƯỚC MỌI PORT TASK** — không ngoại lệ | Ép inspect PC source trước, port 100% từ PC. Không đoán, không tự chế. |
+| `srcwalk` | Code navigation, tìm symbol/file/flow | Repo map, symbol search, callers/callees, deps. Ưu tiên hơn grep/read. |
+| `unity-mcp-orchestrator` | Tạo/sửa GameObject, scene, script, test trong Unity Editor | Điều khiển Unity Editor qua MCP — CRUD scene, script, component, test. |
+
+### 🟡 Theo task — Port cụ thể
+
+| Skill | Khi nào dùng | Tóm tắt |
+|-------|-------------|--------|
+| `jx-map-port` | Port map, Region_C.dat, terrain, minimap, click-to-move | Port map PC→Unity: geometry, SPR terrain, minimap, toạ độ PC. |
+| `jx-enemy-port` | Port enemy/mob/NPC spawn, NpcS.txt, Region_S, võ sư/cọc gỗ | Spawn enemy từ PC data, SPR visuals, 8-way anim, HP/nameplate. |
+| `jx-hud-port` | Port HUD/UI khớp PC — bars, minimap, hotbar, icons | HP/MP/EXP/stamina bars, minimap, chat, hotbar, Ui3 SPR art. |
+| `jx-player-visual` | Player avatar — layered SPR, giáp/vũ khí/cưỡi ngựa | Body/head/hair/hand/weapon layers, 8-way direction, sprite catalog. |
+
+### 🟢 Hỗ trợ — Khi cần
+
+| Skill | Khi nào dùng | Tóm tắt |
+|-------|-------------|--------|
+| `diagnose` | Bug khó, regression, crash | Reproduce → minimise → hypothesise → instrument → fix → regression-test. |
+| `tdd` | Viết feature/fix có test | Red-green-refactor loop. Test trước, code sau. |
+| `review` | Review code branch/PR | 2 trục: Standards (coding std) + Spec (đúng yêu cầu issue/PRD). |
+| `understand-explain` | Cần giải thích deep file/function/module | Deep-dive explanation cụ thể. |
+| `understand-chat` | Hỏi đáp kiến trúc/flow qua knowledge graph | Q&A về codebase. |
+| `handoff` | Compact context cho agent tiếp theo | Tóm tắt conversation → handoff document. |
+| `pi-subagents` | Delegate task cho sub-agent, chain, parallel | Fan-out công việc, review song song, pipeline. |
+| `prototype` | Test nhanh ý tưởng UI/logic trước khi commit | Prototype throwaway — UI variations hoặc terminal state app. |
+
 ## Project Overview
 
 ### User-facing phải là tiếng việt. nếu jx pc là tiếng trung thì phải việt hoá
