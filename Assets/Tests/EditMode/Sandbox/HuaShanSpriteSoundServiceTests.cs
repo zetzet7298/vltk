@@ -12,13 +12,9 @@ namespace VLTK.Tests.Sandbox
     {
         // ── HuaShanLuanJianService ────────────────────────────────────
         [Test]
-        public void HuaShan_LoadFromStreamingAssets_DoesNotThrow()
+        public void HuaShan_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = HuaShanLuanJianService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => HuaShanLuanJianService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -56,13 +52,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SpriteAssetService ────────────────────────────────────────
         [Test]
-        public void SpriteAsset_LoadFromStreamingAssets_DoesNotThrow()
+        public void SpriteAsset_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = SpriteAssetService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SpriteAssetService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -85,13 +77,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── SoundEffectService ────────────────────────────────────────
         [Test]
-        public void SoundEffect_LoadFromStreamingAssets_DoesNotThrow()
+        public void SoundEffect_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = SoundEffectService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SoundEffectService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -123,13 +111,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── MapConnectionService ──────────────────────────────────────
         [Test]
-        public void MapConn_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapConn_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = MapConnectionService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapConnectionService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -174,13 +158,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── NpcShopItemService ────────────────────────────────────────
         [Test]
-        public void NpcShop_LoadFromStreamingAssets_DoesNotThrow()
+        public void NpcShop_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = NpcShopItemService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NpcShopItemService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -208,13 +188,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── ReputationService ────────────────────────────────────────
         [Test]
-        public void Reputation_LoadFromStreamingAssets_DoesNotThrow()
+        public void Reputation_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ReputationService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ReputationService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -244,13 +220,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── TitleEffectService ────────────────────────────────────────
         [Test]
-        public void TitleEffect_LoadFromStreamingAssets_DoesNotThrow()
+        public void TitleEffect_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = TitleEffectService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TitleEffectService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -287,13 +259,9 @@ namespace VLTK.Tests.Sandbox
 
         // ── VipLevelService ───────────────────────────────────────────
         [Test]
-        public void VipLevel_LoadFromStreamingAssets_DoesNotThrow()
+        public void VipLevel_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = VipLevelService.LoadFromStreamingAssets();
-                Assert.IsNotNull(svc);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => VipLevelService.LoadFromStreamingAssets());
         }
 
         [Test]

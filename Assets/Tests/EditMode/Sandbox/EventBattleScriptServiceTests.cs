@@ -12,10 +12,10 @@ namespace VLTK.Tests.Sandbox
     public class ServerEventServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             // Có thể trả về registry rỗng (data thật chưa được ship) nhưng không crash
-            Assert.DoesNotThrow(() => ServerEventService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ServerEventService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -65,9 +65,9 @@ namespace VLTK.Tests.Sandbox
     public class VngEventServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => VngEventService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => VngEventService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -125,9 +125,9 @@ namespace VLTK.Tests.Sandbox
     public class BattleScriptServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BattleScriptService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BattleScriptService.LoadFromStreamingAssets());
         }
 
         [Test]

@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class MapConnectionService
     {
+        public const string DefaultStreamingDir = "Reference/PcMap";
         public const string LogTag = "MapConn";
 
         private readonly PcMapConnectionRegistry _registry;
@@ -24,7 +25,7 @@ namespace VLTK.Sandbox
 
         public static MapConnectionService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcMap");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcMapConnectionParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} kết nối bản đồ");
             return new MapConnectionService(reg);

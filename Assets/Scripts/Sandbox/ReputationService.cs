@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class ReputationService
     {
+        public const string DefaultStreamingDir = "Reference/PcReputation";
         public const string LogTag = "Reputation";
 
         private readonly PcReputationRegistry _registry;
@@ -24,7 +25,7 @@ namespace VLTK.Sandbox
 
         public static ReputationService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcReputation");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcReputationParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} danh tiếng");
             return new ReputationService(reg);

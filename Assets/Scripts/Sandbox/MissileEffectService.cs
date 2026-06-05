@@ -19,7 +19,7 @@ namespace VLTK.Sandbox
     public class MissileEffectService
     {
         public const string LogTag = "MissileEffect";
-        public const string DefaultStreamingDir = "Reference/PcMissle";
+        public const string DefaultStreamingDir = "Reference/PcAttrib";
 
         private PcMissileEffectRegistry _registry;
         private readonly Dictionary<int, GameObject> _liveInstances = new();

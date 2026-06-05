@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class SpriteAssetService
     {
+        public const string DefaultStreamingDir = "Reference/PcSprite";
         public const string LogTag = "SpriteAsset";
 
         private readonly PcSpriteAssetRegistry _registry;
@@ -24,7 +25,7 @@ namespace VLTK.Sandbox
 
         public static SpriteAssetService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcSprite");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcSpriteAssetParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} sprite asset");
             return new SpriteAssetService(reg);

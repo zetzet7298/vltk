@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class SoundEffectService
     {
+        public const string DefaultStreamingDir = "Reference/PcSound";
         public const string LogTag = "SoundEffect";
 
         private readonly PcSoundEffectRegistry _registry;
@@ -27,7 +28,7 @@ namespace VLTK.Sandbox
 
         public static SoundEffectService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcSound");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcSoundEffectParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} sound effect");
             return new SoundEffectService(reg);

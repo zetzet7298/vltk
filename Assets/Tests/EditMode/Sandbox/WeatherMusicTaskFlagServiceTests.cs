@@ -11,9 +11,9 @@ namespace VLTK.Tests.Sandbox
     public class WeatherServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => WeatherService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => WeatherService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -34,9 +34,9 @@ namespace VLTK.Tests.Sandbox
     public class MusicServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MusicService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MusicService.LoadFromStreamingAssets());
         }
 
         [Test]

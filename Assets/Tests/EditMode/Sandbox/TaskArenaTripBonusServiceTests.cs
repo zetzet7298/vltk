@@ -13,9 +13,9 @@ namespace VLTK.Tests.Sandbox
     public class RandomTaskServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => RandomTaskService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => RandomTaskService.LoadFromStreamingAssets());
             var svc = RandomTaskService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0, "Service khởi tạo OK ngay cả khi data rỗng");
@@ -48,9 +48,9 @@ namespace VLTK.Tests.Sandbox
     public class PartnerTaskServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => PartnerTaskService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => PartnerTaskService.LoadFromStreamingAssets());
             var svc = PartnerTaskService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -77,9 +77,9 @@ namespace VLTK.Tests.Sandbox
     public class MetempsychosisTaskServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MetempsychosisTaskService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MetempsychosisTaskService.LoadFromStreamingAssets());
             var svc = MetempsychosisTaskService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -109,9 +109,9 @@ namespace VLTK.Tests.Sandbox
     public class ArenaServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => ArenaService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ArenaService.LoadFromStreamingAssets());
             var svc = ArenaService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -141,9 +141,9 @@ namespace VLTK.Tests.Sandbox
     public class TripServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => TripService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TripService.LoadFromStreamingAssets());
             var svc = TripService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -170,9 +170,9 @@ namespace VLTK.Tests.Sandbox
     public class BonusOnlineServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BonusOnlineService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BonusOnlineService.LoadFromStreamingAssets());
             var svc = BonusOnlineService.LoadFromStreamingAssets();
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);

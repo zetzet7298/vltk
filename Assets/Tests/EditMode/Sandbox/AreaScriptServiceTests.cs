@@ -9,8 +9,8 @@ namespace VLTK.Tests.Sandbox
 {
     public class AreaScriptServiceTests
     {
-        [Test] public void AreaScriptService_LoadFromStreamingAssets_DoesNotThrow() {
-            Assert.DoesNotThrow(() => AreaScriptService.LoadFromStreamingAssets());
+        [Test] public void AreaScriptService_LoadFromStreamingAssets_MatchesCommittedData() {
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => AreaScriptService.LoadFromStreamingAssets());
         }
         [Test] public void AreaScriptService_GetByCategory_FiltersCorrectly() {
             var svc = AreaScriptService.LoadFromStreamingAssets();
@@ -40,8 +40,8 @@ namespace VLTK.Tests.Sandbox
             Assert.DoesNotThrow(() => svc.GetAreaName(999999));
         }
 
-        [Test] public void GbkMapScriptService_LoadFromStreamingAssets_DoesNotThrow() {
-            Assert.DoesNotThrow(() => GbkMapScriptService.LoadFromStreamingAssets());
+        [Test] public void GbkMapScriptService_LoadFromStreamingAssets_MatchesCommittedData() {
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GbkMapScriptService.LoadFromStreamingAssets());
         }
         [Test] public void GbkMapScriptService_GetByArea_FiltersCorrectly() {
             var svc = GbkMapScriptService.LoadFromStreamingAssets();
@@ -68,8 +68,8 @@ namespace VLTK.Tests.Sandbox
             Assert.DoesNotThrow(() => svc.GetFunctionName(0));
         }
 
-        [Test] public void FactionQuestAreaService_LoadFromStreamingAssets_DoesNotThrow() {
-            Assert.DoesNotThrow(() => FactionQuestAreaService.LoadFromStreamingAssets());
+        [Test] public void FactionQuestAreaService_LoadFromStreamingAssets_MatchesCommittedData() {
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FactionQuestAreaService.LoadFromStreamingAssets());
         }
         [Test] public void FactionQuestAreaService_GetByFaction_FiltersCorrectly() {
             var svc = FactionQuestAreaService.LoadFromStreamingAssets();
@@ -92,8 +92,8 @@ namespace VLTK.Tests.Sandbox
             Assert.NotNull(result);
         }
 
-        [Test] public void TownScriptService_LoadFromStreamingAssets_DoesNotThrow() {
-            Assert.DoesNotThrow(() => TownScriptService.LoadFromStreamingAssets());
+        [Test] public void TownScriptService_LoadFromStreamingAssets_MatchesCommittedData() {
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TownScriptService.LoadFromStreamingAssets());
         }
         [Test] public void TownScriptService_GetByTown_FiltersCorrectly() {
             var svc = TownScriptService.LoadFromStreamingAssets();
@@ -116,8 +116,8 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotEmpty(name);
         }
 
-        [Test] public void GbkTriggerService_LoadFromStreamingAssets_DoesNotThrow() {
-            Assert.DoesNotThrow(() => GbkTriggerService.LoadFromStreamingAssets());
+        [Test] public void GbkTriggerService_LoadFromStreamingAssets_MatchesCommittedData() {
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GbkTriggerService.LoadFromStreamingAssets());
         }
         [Test] public void GbkTriggerService_GetByMap_FiltersCorrectly() {
             var svc = GbkTriggerService.LoadFromStreamingAssets();
@@ -146,8 +146,8 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(svc.CanFire(0, -1, 12));
         }
 
-        [Test] public void TongBattleScriptService_LoadFromStreamingAssets_DoesNotThrow() {
-            Assert.DoesNotThrow(() => TongBattleScriptService.LoadFromStreamingAssets());
+        [Test] public void TongBattleScriptService_LoadFromStreamingAssets_MatchesCommittedData() {
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TongBattleScriptService.LoadFromStreamingAssets());
         }
         [Test] public void TongBattleScriptService_GetByType_FiltersCorrectly() {
             var svc = TongBattleScriptService.LoadFromStreamingAssets();

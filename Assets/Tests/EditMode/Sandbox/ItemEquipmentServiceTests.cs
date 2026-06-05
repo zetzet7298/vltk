@@ -24,14 +24,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- GoldEquipService -----
         [Test]
-        public void GoldEquipService_LoadFromStreamingAssets_DoesNotThrow()
+        public void GoldEquipService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcGoldEquipParser.BuildRegistry(FullDir);
-                var svc = new GoldEquipService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GoldEquipService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -46,14 +41,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- PlatinaEquipService -----
         [Test]
-        public void PlatinaEquipService_LoadFromStreamingAssets_DoesNotThrow()
+        public void PlatinaEquipService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcPlatinaEquipParser.BuildRegistry(FullDir);
-                var svc = new PlatinaEquipService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => PlatinaEquipService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -68,14 +58,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- HorseService -----
         [Test]
-        public void HorseService_LoadFromStreamingAssets_DoesNotThrow()
+        public void HorseService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcHorseParser.BuildRegistry(FullDir);
-                var svc = new HorseService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => HorseService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -90,14 +75,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- PotionService -----
         [Test]
-        public void PotionService_LoadFromStreamingAssets_DoesNotThrow()
+        public void PotionService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcPotionParser.BuildRegistry(FullDir);
-                var svc = new PotionService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => PotionService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -112,14 +92,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- MagicScriptService -----
         [Test]
-        public void MagicScriptService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MagicScriptService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcMagicScriptParser.BuildRegistry(FullDir);
-                var svc = new MagicScriptService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MagicScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -134,14 +109,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- MagicAttribService -----
         [Test]
-        public void MagicAttribService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MagicAttribService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcMagicAttribParser.BuildRegistry(FullDir);
-                var svc = new MagicAttribService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MagicAttribService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -156,14 +126,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- ScrollService -----
         [Test]
-        public void ScrollService_LoadFromStreamingAssets_DoesNotThrow()
+        public void ScrollService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcScrollParser.BuildRegistry(MapDir);
-                var svc = new ScrollService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ScrollService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -178,14 +143,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- CaveListEntryService -----
         [Test]
-        public void CaveListEntryService_LoadFromStreamingAssets_DoesNotThrow()
+        public void CaveListEntryService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcCaveListEntryParser.BuildRegistry(MapDir);
-                var svc = new CaveListEntryService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => CaveListFullService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -200,14 +160,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- GoldBossService -----
         [Test]
-        public void GoldBossService_LoadFromStreamingAssets_DoesNotThrow()
+        public void GoldBossService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcGoldBossParser.BuildRegistry(NpcDir);
-                var svc = new GoldBossService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GoldBossService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -222,14 +177,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- ChangeFeatureDataService -----
         [Test]
-        public void ChangeFeatureDataService_LoadFromStreamingAssets_DoesNotThrow()
+        public void ChangeFeatureDataService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcChangeFeatureDataParser.BuildRegistry(FullDir);
-                var svc = new ChangeFeatureDataService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ChangeFeatureDataService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -244,14 +194,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- GlobalConfigService -----
         [Test]
-        public void GlobalConfigService_LoadFromStreamingAssets_DoesNotThrow()
+        public void GlobalConfigService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcGlobalConfigParser.BuildRegistry(AttribDir);
-                var svc = new GlobalConfigService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GlobalConfigService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -266,14 +211,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- NormalSpawnService -----
         [Test]
-        public void NormalSpawnService_LoadFromStreamingAssets_DoesNotThrow()
+        public void NormalSpawnService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcNormalSpawnParser.BuildRegistry(NpcDir);
-                var svc = new NormalSpawnService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NormalSpawnService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -288,14 +228,9 @@ namespace VLTK.Tests.Sandbox
 
         // ----- RareSpawnService -----
         [Test]
-        public void RareSpawnService_LoadFromStreamingAssets_DoesNotThrow()
+        public void RareSpawnService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var reg = PcRareSpawnParser.BuildRegistry(NpcDir);
-                var svc = new RareSpawnService();
-                svc.AttachRegistry(reg);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => RareSpawnService.LoadFromStreamingAssets());
         }
 
         [Test]

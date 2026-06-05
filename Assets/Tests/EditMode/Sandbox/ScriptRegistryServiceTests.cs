@@ -75,13 +75,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- GuildCityWarLogService ---
         [Test]
-        public void GuildCityWarLog_LoadFromStreamingAssets_DoesNotThrow()
+        public void GuildCityWarLog_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = GuildCityWarLogService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GuildCityWarLogService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -101,13 +97,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- MissionScriptService ---
         [Test]
-        public void MissionScript_LoadFromStreamingAssets_DoesNotThrow()
+        public void MissionScript_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = MissionScriptService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MissionScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -142,13 +134,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- SkillScriptService ---
         [Test]
-        public void SkillScript_LoadFromStreamingAssets_DoesNotThrow()
+        public void SkillScript_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = SkillScriptService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SkillScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -177,13 +165,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- ItemScriptService ---
         [Test]
-        public void ItemScript_LoadFromStreamingAssets_DoesNotThrow()
+        public void ItemScript_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = ItemScriptService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ItemScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -203,13 +187,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- EventScriptService ---
         [Test]
-        public void EventScript_LoadFromStreamingAssets_DoesNotThrow()
+        public void EventScript_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = EventScriptService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => EventScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -230,13 +210,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- TaskScriptService ---
         [Test]
-        public void TaskScript_LoadFromStreamingAssets_DoesNotThrow()
+        public void TaskScript_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = TaskScriptService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TaskScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -257,13 +233,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- GlobalScriptService ---
         [Test]
-        public void GlobalScript_LoadFromStreamingAssets_DoesNotThrow()
+        public void GlobalScript_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = GlobalScriptService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => GlobalScriptService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -283,13 +255,9 @@ namespace VLTK.Tests.Sandbox
 
         // --- LibraryScriptService ---
         [Test]
-        public void LibraryScript_LoadFromStreamingAssets_DoesNotThrow()
+        public void LibraryScript_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() =>
-            {
-                var svc = LibraryScriptService.LoadFromStreamingAssets();
-                Assert.GreaterOrEqual(svc.Count, 0);
-            });
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => LibraryScriptService.LoadFromStreamingAssets());
         }
 
         [Test]

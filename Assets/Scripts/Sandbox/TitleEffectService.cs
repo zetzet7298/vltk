@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
 {
     public class TitleEffectService
     {
+        public const string DefaultStreamingDir = "Reference/PcTitle";
         public const string LogTag = "TitleEffect";
 
         private readonly PcTitleEffectRegistry _registry;
@@ -24,7 +25,7 @@ namespace VLTK.Sandbox
 
         public static TitleEffectService LoadFromStreamingAssets()
         {
-            string dir = Path.Combine(Application.streamingAssetsPath, "Reference/PcTitle");
+            string dir = Path.Combine(Application.streamingAssetsPath, DefaultStreamingDir);
             var reg = PcTitleEffectParser.BuildRegistry(dir);
             SubsystemLog.Info(LogTag, $"Đã tải {reg.Count} hiệu ứng danh hiệu");
             return new TitleEffectService(reg);

@@ -16,9 +16,9 @@ namespace VLTK.Tests.Sandbox
         private const string DropDir = "Reference/PcDropRate";
 
         [Test]
-        public void CaveListFullService_LoadFromStreamingAssets_DoesNotThrow()
+        public void CaveListFullService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => CaveListFullService.LoadFromStreamingAssets(MapDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => CaveListFullService.LoadFromStreamingAssets(MapDir));
         }
 
         [Test]
@@ -30,9 +30,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void WharfService_LoadFromStreamingAssets_DoesNotThrow()
+        public void WharfService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => WharfService.LoadFromStreamingAssets(MapDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => WharfService.LoadFromStreamingAssets(MapDir));
         }
 
         [Test]
@@ -44,9 +44,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void WaypointService_LoadFromStreamingAssets_DoesNotThrow()
+        public void WaypointService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => WaypointService.LoadFromStreamingAssets(MapDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => WaypointService.LoadFromStreamingAssets(MapDir));
         }
 
         [Test]
@@ -58,9 +58,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void AutoPathRouteService_LoadFromStreamingAssets_DoesNotThrow()
+        public void AutoPathRouteService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => AutoPathRouteService.LoadFromStreamingAssets(MapDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => AutoPathRouteService.LoadFromStreamingAssets(MapDir));
         }
 
         [Test]
@@ -72,9 +72,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void RevivePosService_LoadFromStreamingAssets_DoesNotThrow()
+        public void RevivePosService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => RevivePosService.LoadFromStreamingAssets(MapDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => RevivePosService.LoadFromStreamingAssets(MapDir));
         }
 
         [Test]
@@ -86,9 +86,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void FactionConfigService_LoadFromStreamingAssets_DoesNotThrow()
+        public void FactionConfigService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => FactionConfigService.LoadFromStreamingAssets(TongDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FactionConfigService.LoadFromStreamingAssets(TongDir));
         }
 
         [Test]
@@ -100,9 +100,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void NpcResService_LoadFromStreamingAssets_DoesNotThrow()
+        public void NpcResService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => NpcResService.LoadFromStreamingAssets(NpcDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NpcResService.LoadFromStreamingAssets(NpcDir));
         }
 
         [Test]
@@ -114,9 +114,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void NpcSFullService_LoadFromStreamingAssets_DoesNotThrow()
+        public void NpcSFullService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => NpcSFullService.LoadFromStreamingAssets(NpcDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => NpcSFullService.LoadFromStreamingAssets(NpcDir));
         }
 
         [Test]
@@ -128,9 +128,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void TongStuntService_LoadFromStreamingAssets_DoesNotThrow()
+        public void TongStuntService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => TongStuntService.LoadFromStreamingAssets(TongDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TongStuntService.LoadFromStreamingAssets(TongDir));
         }
 
         [Test]
@@ -142,9 +142,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void TongSettingService_LoadFromStreamingAssets_DoesNotThrow()
+        public void TongSettingService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => TongSettingService.LoadFromStreamingAssets(TongDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TongSettingService.LoadFromStreamingAssets(TongDir));
         }
 
         [Test]
@@ -155,9 +155,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void TongNpcPosService_LoadFromStreamingAssets_DoesNotThrow()
+        public void TongNpcPosService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => TongNpcPosService.LoadFromStreamingAssets(TongDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TongNpcPosService.LoadFromStreamingAssets(TongDir));
         }
 
         [Test]
@@ -171,9 +171,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MapListService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapListService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapListService.LoadFromStreamingAssets(MapDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapListService.LoadFromStreamingAssets(MapDir));
         }
 
         [Test]
@@ -185,9 +185,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MapDescService_LoadFromStreamingAssets_DoesNotThrow()
+        public void MapDescService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => MapDescService.LoadFromStreamingAssets(MapDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => MapDescService.LoadFromStreamingAssets(MapDir));
         }
 
         [Test]
@@ -198,9 +198,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void BossSpawnService_LoadFromStreamingAssets_DoesNotThrow()
+        public void BossSpawnService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BossSpawnService.LoadFromStreamingAssets(SpawnDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BossSpawnService.LoadFromStreamingAssets(SpawnDir));
         }
 
         [Test]
@@ -212,9 +212,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void DropRateConfigService_LoadFromStreamingAssets_DoesNotThrow()
+        public void DropRateConfigService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => DropRateConfigService.LoadFromStreamingAssets(DropDir));
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => DropRateConfigService.LoadFromStreamingAssets(DropDir));
         }
 
         [Test]

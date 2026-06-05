@@ -13,10 +13,10 @@ namespace VLTK.Tests.Sandbox
     public class FactionMapServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             FactionMapService svc = null;
-            Assert.DoesNotThrow(() => svc = FactionMapService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => FactionMapService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
             // Count có thể = 0 nếu file faction_map.txt không tồn tại trong data mẫu
             Assert.GreaterOrEqual(svc.Count, 0);
@@ -37,10 +37,10 @@ namespace VLTK.Tests.Sandbox
     public class BattleAwardServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             BattleAwardService svc = null;
-            Assert.DoesNotThrow(() => svc = BattleAwardService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BattleAwardService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
         }
@@ -80,10 +80,10 @@ namespace VLTK.Tests.Sandbox
     public class DoubleExpServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             DoubleExpService svc = null;
-            Assert.DoesNotThrow(() => svc = DoubleExpService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => DoubleExpService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
         }
@@ -112,10 +112,10 @@ namespace VLTK.Tests.Sandbox
     public class SimCityPluginServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             SimCityPluginService svc = null;
-            Assert.DoesNotThrow(() => svc = SimCityPluginService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => SimCityPluginService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
         }
@@ -139,10 +139,10 @@ namespace VLTK.Tests.Sandbox
     public class ClientSkillScriptServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
             ClientSkillScriptService svc = null;
-            Assert.DoesNotThrow(() => svc = ClientSkillScriptService.LoadFromStreamingAssets());
+            svc = ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => ClientSkillScriptService.LoadFromStreamingAssets());
             Assert.IsNotNull(svc);
             Assert.GreaterOrEqual(svc.Count, 0);
         }

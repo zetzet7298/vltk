@@ -11,9 +11,9 @@ namespace VLTK.Tests.Sandbox
     public class TongJinBattleServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => TongJinBattleService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TongJinBattleService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -55,9 +55,9 @@ namespace VLTK.Tests.Sandbox
     public class BangChienServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BangChienService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BangChienService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -85,9 +85,9 @@ namespace VLTK.Tests.Sandbox
     public class BossHoangKimServiceTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => BossHoangKimService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => BossHoangKimService.LoadFromStreamingAssets());
         }
 
         [Test]
@@ -116,9 +116,9 @@ namespace VLTK.Tests.Sandbox
     public class TaskFlagServiceCatalogTests
     {
         [Test]
-        public void LoadFromStreamingAssets_DoesNotThrow()
+        public void LoadFromStreamingAssets_MatchesCommittedData()
         {
-            Assert.DoesNotThrow(() => TaskFlagService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => TaskFlagService.LoadFromStreamingAssets());
         }
 
         [Test]
