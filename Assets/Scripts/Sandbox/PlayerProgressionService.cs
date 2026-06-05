@@ -8,6 +8,10 @@ namespace VLTK.Sandbox
     {
         public const int CaiBangSkillPanelLevel = 200;
         public const int CaiBangSkillPanelPoints = 200;
+        // Sandbox default baseline (PC parity chua co cho cac mon phai khac).
+        // Moi mon phai deu dung gia tri nay cho den khi co PC data rieng.
+        public const int SandboxDefaultSkillPanelLevel = 200;
+        public const int SandboxDefaultSkillPanelPoints = 200;
         public const int SkillUpgradePointCost = 1;
         // 1539 = Thiên Hạ Vô Cẩu NPC variant (ReqLevel 1, MaxLevel 60). MOD-only boss skill
         // registered in the catalog for boss AI, but NOT shown in the player skill panel.
@@ -45,9 +49,11 @@ namespace VLTK.Sandbox
         public void GrantFactionSkillPanelProgression(SkillCatalog catalog, CombatFaction targetFaction)
         {
             bool firstGrant = faction != targetFaction || knownSkills.Count == 0;
-            level = CaiBangSkillPanelLevel;
+            // Lay baseline theo mon phai (khong con hard-code CaiBang).
+            var baseline = GetFactionSkillPanelBaseline(targetFaction);
+            level = baseline.level;
             if (firstGrant)
-                fightSkillPoints = CaiBangSkillPanelPoints;
+                fightSkillPoints = baseline.points;
             faction = targetFaction;
 
             if (catalog == null)
@@ -64,6 +70,25 @@ namespace VLTK.Sandbox
                 knownSkills.Add(skill.skillId);
                 if (!skillLevels.ContainsKey(skill.skillId))
                     skillLevels[skill.skillId] = 0;
+            }
+        }
+
+        /// <summary>
+        /// Tra ve (level, points) baseline cho skill panel theo mon phai. PC parity
+        /// cho moi mon phai chua co, nen mac dinh tat ca dung sandbox baseline 200/200.
+        /// </summary>
+        public static (int level, int points) GetFactionSkillPanelBaseline(CombatFaction targetFaction)
+        {
+            switch (targetFaction)
+            {
+                case CombatFaction.CaiBang:
+                    return (CaiBangSkillPanelLevel, CaiBangSkillPanelPoints);
+                case CombatFaction.Shaolin:
+                case CombatFaction.TianWang:
+                case CombatFaction.TangMen:
+                case CombatFaction.None:
+                default:
+                    return (SandboxDefaultSkillPanelLevel, SandboxDefaultSkillPanelPoints);
             }
         }
 
@@ -122,8 +147,10 @@ namespace VLTK.Sandbox
             if (catalog == null) return;
             if (faction == CombatFaction.None)
                 faction = CombatFaction.CaiBang; // Default for test suite compatibility
-            level = CaiBangSkillPanelLevel;
-            fightSkillPoints = CaiBangSkillPanelPoints;
+            // Dung helper theo mon phai thay vi hard-code CaiBang.
+            var baseline = GetFactionSkillPanelBaseline(faction);
+            level = baseline.level;
+            fightSkillPoints = baseline.points;
             foreach (var skill in catalog.All)
             {
                 if (skill.faction != CombatFaction.CaiBang && skill.faction != CombatFaction.WuDang && skill.faction != CombatFaction.Shaolin && skill.faction != CombatFaction.TangMen && skill.faction != CombatFaction.EMei && skill.faction != CombatFaction.TianWang && skill.faction != CombatFaction.WuDu && skill.faction != CombatFaction.CuiYan && skill.faction != CombatFaction.TianRen && skill.faction != CombatFaction.KunLun) continue;

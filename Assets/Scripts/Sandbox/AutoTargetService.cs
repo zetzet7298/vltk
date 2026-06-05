@@ -25,7 +25,10 @@ namespace VLTK.Sandbox
             if (actors == null) return null;
 
             CombatActorState bestTarget = null;
-            float bestDistanceSq = maxRange * maxRange;
+            // Range gate: squared max range là hằng số, KHÔNG dùng lại cho tiebreak.
+            float maxRangeSq = maxRange * maxRange;
+            // Tiebreak cùng máu: khoảng cách tới target tốt nhất hiện tại.
+            float bestDistanceSq = maxRangeSq;
             int lowestHp = int.MaxValue;
 
             foreach (var actor in actors)
@@ -34,9 +37,11 @@ namespace VLTK.Sandbox
                 if (actor.actorId == SandboxManager.PlayerActorId || actor.currentLife <= 0)
                     continue;
 
-                // Kiểm tra khoảng cách
+                // Kiểm tra khoảng cách — dùng maxRangeSq cố định, KHÔNG dùng
+                // bestDistanceSq (đang co lại theo từng target tốt hơn) để tránh
+                // bỏ sót target ít máu hơn nhưng xa hơn vẫn nằm trong tầm.
                 float distSq = (actor.position - playerPos).sqrMagnitude;
-                if (distSq > bestDistanceSq)
+                if (distSq > maxRangeSq)
                     continue;
 
                 // Kiểm tra vật cản nếu có ObstacleGrid

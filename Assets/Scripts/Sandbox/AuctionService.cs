@@ -93,7 +93,10 @@ namespace VLTK.Sandbox
             int startingBid, int buyoutPrice, long durationSec)
         {
             if (listingId <= 0) return null;
-            // Cho phép duration âm (đã expired sẵn) để test inject edge case
+            // Reject duration <= 0: artifact test cũ cho phép duration âm để inject
+            // edge case "expired sẵn", nhưng không còn test nào dùng và production
+            // không bao giờ nên tạo listing đã hết hạn.
+            if (durationSec <= 0) return null;
             long expireMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
                 + durationSec * 1000L;
             var listing = new AuctionListing

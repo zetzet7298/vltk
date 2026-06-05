@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
         public bool fightMode = true;
         public bool rideHorse;
         public int currentMana = 100;
+        public int maxMana = 100; // Mana cap; regen uses this (not maxLife). PC parity: derive from PcMaxManaFormula when level/faction known.
         public int currentLife = 100;
         public int maxLife = 100;
         public int minDamage = 1;
@@ -132,11 +133,17 @@ namespace VLTK.Sandbox
             if (skillId == 357 && skillLevel >= 11)
             {
                 var subSkill = _catalog.Resolve(389);
+                // Sub-skill có thể thiếu trong catalog; GetPcLevelData cũng có thể trả
+                // null khi skill 389 không có dữ liệu cho level này. Guard cả hai
+                // trước khi ApplyDamage/SpawnProjectiles để tránh NullReferenceException.
                 if (subSkill != null)
                 {
                     var subLevelData = subSkill.GetPcLevelData(skillLevel);
-                    ApplyDamage(caster, target, subLevelData, report);
-                    SpawnProjectiles(subSkill, caster, castPoint, grid, report);
+                    if (subLevelData != null)
+                    {
+                        ApplyDamage(caster, target, subLevelData, report);
+                        SpawnProjectiles(subSkill, caster, castPoint, grid, report);
+                    }
                 }
             }
 
@@ -178,7 +185,14 @@ namespace VLTK.Sandbox
             if (PcKangLongYouHuiTuning.Applies(skill.skillId))
                 return PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
             if (PcSkillTuningRegistry.HasTuning(skill.skillId, (int)skill.faction))
-                return PcSkillTuningRegistry.GetSkillSpec(skill.skillId, skillLevel, (int)skill.faction).attackRadius;
+            {
+                // HasTuning xác nhận cặp skill/faction tồn tại nhưng KHÔNG đảm bảo
+                // spec cho skillLevel cụ thể cũng tồn tại. Guard null trước khi
+                // dereference .attackRadius; nếu thiếu → rơi xuống default radius.
+                var spec = PcSkillTuningRegistry.GetSkillSpec(skill.skillId, skillLevel, (int)skill.faction);
+                if (spec != null)
+                    return spec.attackRadius;
+            }
             return skill.attackRadius;
         }
 
