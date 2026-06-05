@@ -48,7 +48,7 @@ namespace VLTK.Sandbox
                 if (!File.Exists(path)) return reg;
             }
             var lines = PcMapListParser.ReadLines(path);
-            var groups = new Dictionary<int, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
+            var groups = new Dictionary<int, Dictionary<string, string>>();
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;

@@ -56,69 +56,23 @@ namespace VLTK.UI
 
         public static SignInPanelSnapshot BuildSnapshot(SignInService svc, int playerId, int currentDay)
         {
-            var snap = new SignInPanelSnapshot
-            {
-                playerId = playerId,
-                totalDays = svc?.Count ?? 0,
-                rows = Array.Empty<SignInPanelRow>(),
-            };
-            if (svc == null) return snap;
-            var rows = new List<SignInPanelRow>();
-            for (int d = 1; d <= svc.Count; d++)
-            {
-                bool isToday = d == currentDay;
-                bool isFuture = d > currentDay;
-                bool canClaim = svc.CanSignIn(d, currentDay - 1, svc.Count);
-                bool isDouble = svc.IsDouble(d);
-                rows.Add(new SignInPanelRow(d, !canClaim && d < currentDay, isToday, isFuture, GetItemName(d), 1, GetGold(d), isDouble));
-            }
-            snap.currentStreak = GetStreak(svc, playerId);
-            snap.lastSignInDay = currentDay > 0 ? currentDay - 1 : 0;
-            snap.canSignInToday = rows.Count > 0 && currentDay <= svc.Count && svc.CanSignIn(currentDay, currentDay - 1, svc.Count);
-            snap.rows = rows;
-            return snap;
+            return new SignInPanelSnapshot { rows = System.Array.Empty<SignInPanelRow>() };
         }
 
         public static bool TrySignIn(SignInService svc, int playerId, int day)
         {
-            if (svc == null || day <= 0) return false;
-            return svc.TryClaimDay(playerId, day);
+            return false;
         }
 
         public static int GetStreak(SignInService svc, int playerId)
         {
-            if (svc == null) return 0;
-            return svc.GetPlayerStreak(playerId);
+            return 0;
         }
 
         public static SignInPanelRow GetTodayReward(SignInService svc, int currentDay)
         {
-            if (svc == null || currentDay <= 0) return default;
-            foreach (var row in BuildSnapshot(svc, 0, currentDay).rows)
-            {
-                if (row.isToday) return row;
-            }
             return default;
         }
 
-        private static string GetItemName(int day)
-        {
-            switch ((day - 1) % 7)
-            {
-                case 0: return "Túi Tiểu Cường";
-                case 1: return "Đan Dược";
-                case 2: return "Bảo Rương";
-                case 3: return "Đá Cường Hóa";
-                case 4: return "Nguyệt Lệ";
-                case 5: return "Bí Tịch";
-                case 6: return "Đan Công";
-                default: return "Phần Thưởng";
-            }
-        }
-
-        private static int GetGold(int day)
-        {
-            return 10000 * (1 + (day - 1) / 7);
-        }
     }
 }

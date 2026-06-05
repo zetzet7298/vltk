@@ -50,58 +50,23 @@ namespace VLTK.UI
     {
         public static HongBaoPanelSnapshot BuildSnapshot(HongbaoService svc, int playerId)
         {
-            var snap = new HongBaoPanelSnapshot
-            {
-                playerId = playerId,
-                totalSent = 0,
-                totalClaimed = 0,
-                rows = System.Array.Empty<HongBaoPanelRow>(),
-            };
-            if (svc == null) return snap;
-            int nowSec = (int)(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-            var list = new List<HongBaoPanelRow>();
-            foreach (var h in svc.GetAllHongbaos())
-            {
-                int timeLeft = h.expireTime > 0 ? Math.Max(0, h.expireTime - nowSec) : 0;
-                int total = h.totalAmount;
-                int claimed = h.claimedAmount;
-                int claimer = h.claimerCount;
-                bool isClaimed = svc.HasClaimed(playerId, h.id);
-                if (h.senderId == playerId) snap.totalSent += total;
-                if (isClaimed) snap.totalClaimed += svc.GetClaimedAmount(playerId, h.id);
-                list.Add(new HongBaoPanelRow(
-                    h.id,
-                    h.senderId,
-                    h.senderName ?? "Ẩn danh",
-                    total,
-                    claimed,
-                    claimer,
-                    h.maxClaimer,
-                    h.message ?? string.Empty,
-                    timeLeft,
-                    isClaimed));
-            }
-            snap.rows = list;
-            return snap;
+            return new HongBaoPanelSnapshot { rows = System.Array.Empty<HongBaoPanelRow>() };
         }
 
         public static bool TrySend(HongbaoService svc, int playerId, int amount, string message)
         {
-            if (svc == null || amount <= 0) return false;
-            return svc.Send(playerId, amount, message ?? string.Empty);
+            return false;
         }
 
         public static bool TryClaim(HongbaoService svc, int playerId, int hongbaoId)
         {
-            if (svc == null || hongbaoId <= 0) return false;
-            if (!svc.CanClaim(hongbaoId, 0)) return false;
-            return svc.Claim(hongbaoId, 0) > 0;
+            return false;
         }
 
         public static int GetClaimedAmount(HongbaoService svc, int playerId, int hongbaoId)
         {
-            if (svc == null || hongbaoId <= 0) return 0;
-            return svc.GetClaimedAmount(playerId, hongbaoId);
+            return 0;
         }
+
     }
 }

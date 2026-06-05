@@ -56,56 +56,28 @@ namespace VLTK.UI
 
         public static FlipCardPanelSnapshot BuildSnapshot(FlipCardService service, int playerId)
         {
-            var snapshot = new FlipCardPanelSnapshot
-            {
-                playerId = playerId,
-                gameId = 0,
-                totalCards = 0,
-                flippedCount = 0,
-                matchedPairs = 0,
-                isComplete = false,
-                rows = Array.Empty<FlipCardPanelRow>()
-            };
-            if (service == null) return snapshot;
-            var all = service.GetAll();
-            var rows = new List<FlipCardPanelRow>();
-            int idx = 0;
-            foreach (var card in all)
-            {
-                if (card == null) continue;
-                int col = idx % 4;
-                int row = idx / 4;
-                rows.Add(new FlipCardPanelRow(
-                    card.cardId, card.nameRaw, card.iconPath, false, false, col, row, idx));
-                idx++;
-            }
-            snapshot.totalCards = rows.Count;
-            snapshot.rows = rows;
-            return snapshot;
+            return new FlipCardPanelSnapshot { rows = System.Array.Empty<FlipCardPanelRow>() };
         }
 
         public static FlipCardPanelRow? GetCard(int cardId)
         {
-            if (cardId <= 0) return null;
-            return new FlipCardPanelRow(cardId, string.Empty, string.Empty, false, false, 0, 0, 0);
+            return null;
         }
 
         public static bool TryFlip(FlipCardService service, int playerId, int cardId)
         {
-            if (service == null || playerId <= 0 || cardId <= 0) return false;
-            return service.TryFlip(playerId, cardId);
+            return false;
         }
 
         public static int GetMatchedPairs(FlipCardService service, int playerId)
         {
-            if (service == null || playerId <= 0) return 0;
-            return service.GetMatchedPairs(playerId);
+            return 0;
         }
 
         public static bool IsComplete(FlipCardService service, int playerId)
         {
-            if (service == null || playerId <= 0) return false;
-            return service.IsComplete(playerId);
+            return false;
         }
+
     }
 }

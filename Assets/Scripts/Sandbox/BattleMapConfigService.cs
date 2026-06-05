@@ -15,7 +15,7 @@ namespace VLTK.Sandbox
     /// <summary>
     /// Loại chiến trường.
     /// </summary>
-    public static class BattleType
+    public static class BattleMapType
     {
         public const int SongJin = 0;       // Tống Kim
         public const int NationalWar = 1;   // Quốc Chiến
@@ -100,6 +100,6 @@ namespace VLTK.Sandbox
             return true;
         }
 
-        public string GetBattleTypeName(int type) => BattleType.GetName(type);
+        public string GetBattleTypeName(int type) => BattleMapType.GetName(type);
     }
 }

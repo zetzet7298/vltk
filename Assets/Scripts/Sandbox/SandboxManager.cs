@@ -190,7 +190,6 @@ namespace VLTK.Sandbox
         public RankingService RankingService { get; private set; }
         public FriendService FriendService { get; private set; }
         public PetService PetService { get; private set; }
-        public ShopConfigService ShopConfigService { get; private set; }
         public MissileEffectService MissileEffectService { get; private set; }
         public HudArtCatalogService HudArtCatalogService { get; private set; }
         public FactionMapRuntimeService FactionMapRuntimeService { get; private set; }

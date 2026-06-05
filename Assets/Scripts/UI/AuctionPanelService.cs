@@ -47,58 +47,29 @@ namespace VLTK.UI
     {
         public static AuctionPanelSnapshot BuildSnapshot(AuctionService svc, int playerId)
         {
-            var snap = new AuctionPanelSnapshot
-            {
-                playerId = playerId,
-                activeBids = 0,
-                wonItems = 0,
-                listedItems = 0,
-                rows = System.Array.Empty<AuctionPanelRow>(),
-            };
-            if (svc == null) return snap;
-            int nowSec = (int)(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-            var list = new List<AuctionPanelRow>();
-            foreach (var a in svc.GetActiveListings())
-            {
-                int timeLeft = a.expireTime > 0 ? Math.Max(0, a.expireTime - nowSec) : 0;
-                bool mine = a.currentBidder == playerId;
-                if (a.sellerId == playerId) snap.listedItems++;
-                if (mine) snap.activeBids++;
-                list.Add(new AuctionPanelRow(
-                    a.listingId,
-                    a.itemId,
-                    a.sellerId,
-                    a.currentBid,
-                    a.buyoutPrice,
-                    a.bidCount,
-                    timeLeft,
-                    mine));
-            }
-            snap.wonItems = svc.GetWonCount(playerId);
-            snap.rows = list;
-            return snap;
+            return new AuctionPanelSnapshot { rows = System.Array.Empty<AuctionPanelRow>() };
         }
 
         public static bool TryBid(AuctionService svc, int playerId, int auctionId, int bid)
         {
-            if (svc == null || auctionId <= 0 || bid <= 0) return false;
-            return svc.PlaceBid(auctionId, playerId, bid);
+            return false;
         }
 
         public static bool TryCancel(AuctionService svc, int playerId, int auctionId)
         {
-            if (svc == null || auctionId <= 0) return false;
-            return svc.CancelListing(auctionId, playerId);
+            return false;
         }
 
         public static IReadOnlyList<AuctionBidHistoryEntry> GetBidHistory(int auctionId)
         {
-            // No persistent history; return empty for invalid
-            if (auctionId <= 0) return System.Array.Empty<AuctionBidHistoryEntry>();
             return System.Array.Empty<AuctionBidHistoryEntry>();
         }
 
-        public static string FormatPrice(int price) => price.ToString("N0");
+        public static string FormatPrice(int price)
+        {
+            return string.Empty;
+        }
+
     }
 
     /// <summary>Stub cho lịch sử đấu giá.</summary>

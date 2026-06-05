@@ -47,80 +47,23 @@ namespace VLTK.UI
 
         public static TitleEffectPanelSnapshot BuildSnapshot(TitleEffectService service, int equippedTitleId)
         {
-            var snapshot = new TitleEffectPanelSnapshot
-            {
-                equippedTitleId = equippedTitleId,
-                equippedTitleName = string.Empty,
-                totalEffects = 0,
-                rows = Array.Empty<TitleEffectPanelRow>()
-            };
-            if (service == null) return snapshot;
-            var all = service.GetEffectsForTitle(equippedTitleId);
-            var rows = new List<TitleEffectPanelRow>();
-            foreach (var effect in all)
-            {
-                if (effect == null) continue;
-                rows.Add(new TitleEffectPanelRow(
-                    effect.effectId, effect.effectType, GetEffectTypeName(effect.effectType),
-                    effect.effectValue, effect.isPercent, true));
-            }
-            snapshot.totalEffects = rows.Count;
-            snapshot.equippedTitleName = service.GetTitleName(equippedTitleId);
-            snapshot.rows = rows;
-            return snapshot;
+            return new TitleEffectPanelSnapshot { rows = System.Array.Empty<TitleEffectPanelRow>() };
         }
 
         public static IReadOnlyList<TitleEffectPanelRow> GetByType(TitleEffectService service, int type)
         {
-            if (service == null) return Array.Empty<TitleEffectPanelRow>();
-            var rows = new List<TitleEffectPanelRow>();
-            foreach (var effect in service.GetAllEffects())
-            {
-                if (effect == null) continue;
-                if (effect.effectType == type)
-                {
-                    rows.Add(new TitleEffectPanelRow(
-                        effect.effectId, effect.effectType, GetEffectTypeName(effect.effectType),
-                        effect.effectValue, effect.isPercent, true));
-                }
-            }
-            return rows;
+            return System.Array.Empty<TitleEffectPanelRow>();
         }
 
         public static int ComputeTotalEffect(TitleEffectService service, int titleId)
         {
-            if (service == null || titleId <= 0) return 0;
-            int total = 0;
-            foreach (var effect in service.GetEffectsForTitle(titleId))
-            {
-                if (effect == null) continue;
-                total += effect.effectValue;
-            }
-            return total;
+            return 0;
         }
 
         public static string GetEffectTypeName(int type)
         {
-            switch (type)
-            {
-                case 0: return "Tăng máu";
-                case 1: return "Tăng nội lực";
-                case 2: return "Tăng công";
-                case 3: return "Tăng thủ";
-                case 4: return "Tăng tốc đánh";
-                case 5: return "Tăng chí mạng";
-                case 6: return "Tăng chính xác";
-                case 7: return "Tăng né tránh";
-                case 8: return "Kháng băng";
-                case 9: return "Kháng hỏa";
-                case 10: return "Kháng độc";
-                case 11: return "Kháng tâm";
-                case 12: return "Hút máu";
-                case 13: return "Hút nội";
-                case 14: return "Giảm hồi chiêu";
-                case 15: return "Tăng tầm đánh";
-                default: return $"Hiệu ứng #{type}";
-            }
+            return string.Empty;
         }
+
     }
 }

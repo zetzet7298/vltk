@@ -21,7 +21,9 @@
         "nunit.framework.dll"
     ],
     "autoReferenced": false,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "VLTK_ENABLE_TESTS"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

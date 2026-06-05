@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using VLTK.Core;
+using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
@@ -42,6 +43,39 @@ namespace VLTK.Sandbox
 
     public static class PcNpcSFullParser
     {
+        public static List<NpcTemplate> ParseFile(string path)
+        {
+            var rows = new List<NpcTemplate>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var dir = Path.GetDirectoryName(path);
+            var registry = BuildRegistry(dir);
+            foreach (var e in registry.All)
+            {
+                rows.Add(new NpcTemplate
+                {
+                    templateId = e.NpcTemplateId > 0 ? e.NpcTemplateId : e.NpcId,
+                    nameRaw = e.Name,
+                    nameNormalized = e.Name,
+                    level = e.Level,
+                    series = e.Series,
+                    aiMode = e.AIType,
+                });
+            }
+            return rows;
+        }
+
+        public static int ImportIntoRegistry(string path, NpcTemplateRegistry registry)
+        {
+            if (registry == null) return 0;
+            int count = 0;
+            foreach (var template in ParseFile(path))
+            {
+                registry.Register(template);
+                count++;
+            }
+            return count;
+        }
+
         public static PcNpcSFullRegistry BuildRegistry(string absoluteDir)
         {
             var reg = new PcNpcSFullRegistry();

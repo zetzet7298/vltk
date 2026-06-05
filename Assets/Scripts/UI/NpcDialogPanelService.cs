@@ -69,53 +69,23 @@ namespace VLTK.UI
         /// <summary>Dựng snapshot hộp thoại bắt đầu với NPC.</summary>
         public static NpcDialogSnapshot BuildSnapshot(NpcSpawnService svc, int npcId, int startDialogId = 0)
         {
-            string name = "NPC";
-            if (svc != null)
-            {
-                var npc = svc.GetNpc(npcId);
-                if (npc != null) name = npc.nameRaw ?? name;
-            }
-            int dialogId = startDialogId > 0 ? startDialogId : 1;
-            var rows = new List<NpcDialogRow>
-            {
-                new NpcDialogRow(dialogId, npcId, "Chào mừng hiệp khách.", dialogId + 1, false, 0),
-            };
-            return new NpcDialogSnapshot
-            {
-                npcId = npcId,
-                npcName = name,
-                currentDialogId = dialogId,
-                currentText = "Chào mừng hiệp khách.",
-                options = System.Array.Empty<NpcDialogOption>(),
-                rows = rows,
-            };
+            return new NpcDialogSnapshot { options = System.Array.Empty<NpcDialogOption>(), rows = System.Array.Empty<NpcDialogRow>() };
         }
 
-        /// <summary>Lấy dòng thoại kế tiếp.</summary>
         public static NpcDialogRow? GetNext(int currentDialogId)
         {
-            if (currentDialogId <= 0) return null;
-            return new NpcDialogRow(
-                dialogId: currentDialogId + 1,
-                npcId: 0,
-                textVi: $"Tiếp tục câu chuyện…",
-                nextDialogId: currentDialogId + 2,
-                hasOptions: false,
-                optionCount: 0);
+            return null;
         }
 
-        /// <summary>Kiểm tra dialog có dẫn tới nhận nhiệm vụ không (heuristic: dialogId % 7 == 0).</summary>
         public static bool HasQuest(int dialogId)
         {
-            if (dialogId <= 0) return false;
-            return (dialogId % 7) == 0;
+            return false;
         }
 
-        /// <summary>Kiểm tra dialog có mở shop không (heuristic: dialogId % 11 == 0).</summary>
         public static bool HasShop(int dialogId)
         {
-            if (dialogId <= 0) return false;
-            return (dialogId % 11) == 0;
+            return false;
         }
+
     }
 }

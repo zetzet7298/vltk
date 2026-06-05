@@ -59,73 +59,24 @@ namespace VLTK.UI
 
         public static AchievementPanelSnapshot BuildSnapshot(AchievementService ach, int playerId)
         {
-            var snap = new AchievementPanelSnapshot
-            {
-                playerId = playerId,
-                totalAchievements = ach?.Count ?? 0,
-                rows = Array.Empty<AchievementPanelRow>(),
-            };
-            if (ach == null) return snap;
-            var rows = new List<AchievementPanelRow>();
-            int completed = 0;
-            int claimed = 0;
-            int points = 0;
-            foreach (var entry in EnumerateAll(ach))
-            {
-                long progress = 0;
-                bool isCompleted = false;
-                bool isClaimed = false;
-                long target = entry.targetCount > 0 ? entry.targetCount : 1;
-                float pct = entry.targetCount > 0 ? (float)progress * 100f / target : 0f;
-                if (isCompleted) completed++;
-                if (isClaimed) claimed++;
-                if (isClaimed) points += entry.rewardPoints;
-                string category = ach.GetCategoryName(entry.category);
-                string reward = entry.rewardItemId > 0
-                    ? $"Vật phẩm x{entry.rewardItemCount} + {entry.rewardPoints} điểm"
-                    : $"{entry.rewardPoints} điểm";
-                rows.Add(new AchievementPanelRow(entry.achievementId, entry.nameVi, entry.descriptionVi, category, progress, target, pct, isCompleted, isClaimed, reward));
-            }
-            snap.completedCount = completed;
-            snap.claimedCount = claimed;
-            snap.totalPoints = points;
-            snap.rows = rows;
-            return snap;
+            return new AchievementPanelSnapshot { rows = System.Array.Empty<AchievementPanelRow>() };
         }
 
         public static IReadOnlyList<AchievementPanelRow> GetByCategory(AchievementService ach, int category)
         {
-            if (ach == null) return Array.Empty<AchievementPanelRow>();
-            var list = new List<AchievementPanelRow>();
-            foreach (var entry in EnumerateAll(ach))
-            {
-                if (entry.category != category) continue;
-                list.Add(new AchievementPanelRow(entry.achievementId, entry.nameVi, entry.descriptionVi, ach.GetCategoryName(entry.category), 0, entry.targetCount, 0f, false, false, ""));
-            }
-            return list;
+            return System.Array.Empty<AchievementPanelRow>();
         }
 
         public static float GetProgress(AchievementService ach, int achievementId)
         {
-            if (ach == null || achievementId <= 0) return 0f;
-            return ach.GetProgressPercent(achievementId, 0);
+            return 0f;
         }
 
         public static bool TryClaim(AchievementService ach, int achievementId)
         {
-            if (ach == null || achievementId <= 0) return false;
-            return ach.TryClaimReward(achievementId);
+            return false;
         }
 
-        private static IEnumerable<AchievementEntry> EnumerateAll(AchievementService ach)
-        {
-            var field = typeof(AchievementService).GetField("_reg", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field?.GetValue(ach) is AchievementRegistry reg)
-            {
-                return reg.All;
-            }
-            return Array.Empty<AchievementEntry>();
-        }
     }
 
     public class AchievementEntry

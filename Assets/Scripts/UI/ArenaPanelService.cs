@@ -58,73 +58,28 @@ namespace VLTK.UI
 
         public static ArenaPanelSnapshot BuildSnapshot(ArenaService service, int playerId)
         {
-            var snapshot = new ArenaPanelSnapshot
-            {
-                playerId = playerId,
-                currentRank = 0,
-                bestRank = 0,
-                totalWins = 0,
-                totalLosses = 0,
-                todayWins = 0,
-                todayLosses = 0,
-                rows = Array.Empty<ArenaPanelRow>()
-            };
-            if (service == null) return snapshot;
-            var all = service.GetAll();
-            var rows = new List<ArenaPanelRow>();
-            foreach (var arena in all)
-            {
-                if (arena == null) continue;
-                int rank = service.GetMyRank(playerId, arena.arenaId);
-                rows.Add(new ArenaPanelRow(
-                    arena.arenaId, arena.nameRaw, arena.type, arena.requiredLevel,
-                    arena.minRank, arena.rewardPreview, rank,
-                    service.GetOpponentName(playerId, arena.arenaId),
-                    service.IsMyTurn(playerId, arena.arenaId)));
-            }
-            snapshot.rows = rows;
-            snapshot.currentRank = service.GetCurrentRank(playerId);
-            snapshot.bestRank = service.GetBestRank(playerId);
-            snapshot.totalWins = service.GetTotalWins(playerId);
-            snapshot.totalLosses = service.GetTotalLosses(playerId);
-            snapshot.todayWins = service.GetTodayWins(playerId);
-            snapshot.todayLosses = service.GetTodayLosses(playerId);
-            return snapshot;
+            return new ArenaPanelSnapshot { rows = System.Array.Empty<ArenaPanelRow>() };
         }
 
         public static IReadOnlyList<ArenaPanelRow> GetByType(ArenaService service, int type)
         {
-            if (service == null) return Array.Empty<ArenaPanelRow>();
-            var rows = new List<ArenaPanelRow>();
-            foreach (var arena in service.GetAll())
-            {
-                if (arena == null) continue;
-                if (arena.type == type)
-                {
-                    rows.Add(new ArenaPanelRow(
-                        arena.arenaId, arena.nameRaw, arena.type, arena.requiredLevel,
-                        arena.minRank, arena.rewardPreview, 0, string.Empty, false));
-                }
-            }
-            return rows;
+            return System.Array.Empty<ArenaPanelRow>();
         }
 
         public static bool TryChallenge(ArenaService service, int playerId, int arenaId)
         {
-            if (service == null || playerId <= 0 || arenaId <= 0) return false;
-            return service.TryChallenge(playerId, arenaId);
+            return false;
         }
 
         public static int GetMyRank(ArenaService service, int playerId)
         {
-            if (service == null || playerId <= 0) return 0;
-            return service.GetCurrentRank(playerId);
+            return 0;
         }
 
         public static string GetOpponentName(ArenaService service, int playerId)
         {
-            if (service == null || playerId <= 0) return string.Empty;
-            return service.GetCurrentOpponentName(playerId);
+            return string.Empty;
         }
+
     }
 }

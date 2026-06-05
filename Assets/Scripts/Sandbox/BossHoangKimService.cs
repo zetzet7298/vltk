@@ -18,13 +18,22 @@ namespace VLTK.Sandbox
         public const string DefaultStreamingDir = "Reference/PcBoss";
 
         private PcBossHoangKimRegistry _registry;
+        private readonly List<BossHoangKimSpawn> _legacyBosses = new();
+        private readonly Dictionary<int, float> _respawnTimers = new();
 
         public event Action OnBossLoaded;
+        public event Action<BossHoangKimSpawn> OnBossSpawned;
+        public event Action<BossHoangKimSpawn, int> OnBossKilled;
 
         public int Count => _registry != null ? _registry.Count : 0;
+        public IReadOnlyList<BossHoangKimSpawn> RegisteredBosses => _legacyBosses;
 
-        public BossHoangKimService() { }
-        public BossHoangKimService(PcBossHoangKimRegistry registry) { AttachRegistry(registry); }
+        public BossHoangKimService() { RegisterDefaultBosses(); }
+        public BossHoangKimService(PcBossHoangKimRegistry registry)
+        {
+            RegisterDefaultBosses();
+            AttachRegistry(registry);
+        }
 
         public void AttachRegistry(PcBossHoangKimRegistry registry)
         {
@@ -38,6 +47,42 @@ namespace VLTK.Sandbox
 
         public IReadOnlyList<PcBossHoangKimEntry> GetByMap(int mapId)
             => _registry != null ? _registry.GetByMap(mapId) : Array.Empty<PcBossHoangKimEntry>();
+
+        public void RegisterBoss(BossHoangKimSpawn boss)
+        {
+            if (boss != null) _legacyBosses.Add(boss);
+        }
+
+        /// <summary>Boss bị giết — trigger reward + respawn timer.</summary>
+        public void OnBossDeath(int bossTemplateId, int killerActorId)
+        {
+            var boss = _legacyBosses.Find(b => b.bossTemplateId == bossTemplateId);
+            if (boss == null) return;
+            _respawnTimers[bossTemplateId] = boss.respawnMinutes * 60f;
+            OnBossKilled?.Invoke(boss, killerActorId);
+            SubsystemLog.Info(LogTag, $"Boss {boss.nameVi} bị giết bởi actor {killerActorId}. Respawn sau {boss.respawnMinutes} phút.");
+        }
+
+        public void Tick(float deltaTime)
+        {
+            var keys = new List<int>(_respawnTimers.Keys);
+            foreach (var id in keys)
+            {
+                _respawnTimers[id] -= deltaTime;
+                if (_respawnTimers[id] <= 0)
+                {
+                    _respawnTimers.Remove(id);
+                    var boss = _legacyBosses.Find(b => b.bossTemplateId == id);
+                    if (boss != null)
+                    {
+                        OnBossSpawned?.Invoke(boss);
+                        SubsystemLog.Info(LogTag, $"Boss {boss.nameVi} đã hồi sinh!");
+                    }
+                }
+            }
+        }
+
+        public bool IsBossAlive(int bossTemplateId) => !_respawnTimers.ContainsKey(bossTemplateId);
 
         /// <summary>Tính thời điểm hồi sinh kế tiếp cho boss. Trả về now + respawnSec.</summary>
         public DateTime ComputeRespawnTime(int bossId, DateTime? killedAt = null)
@@ -64,6 +109,30 @@ namespace VLTK.Sandbox
                 list.Add(b);
             }
             return list;
+        }
+
+
+        private void RegisterDefaultBosses()
+        {
+            if (_legacyBosses.Count > 0) return;
+            _legacyBosses.Add(new BossHoangKimSpawn
+            {
+                bossTemplateId = 600, nameVi = "Bạch Vân Phi", mapId = 200,
+                spawnX = 500, spawnY = 1000, level = 50, hp = 50000,
+                killRewardExp = 10000, killRewardSilver = 5000, respawnMinutes = 60,
+            });
+            _legacyBosses.Add(new BossHoangKimSpawn
+            {
+                bossTemplateId = 601, nameVi = "Xích Diệm Ma Vương", mapId = 203,
+                spawnX = 300, spawnY = 800, level = 70, hp = 100000,
+                killRewardExp = 25000, killRewardSilver = 10000, respawnMinutes = 120,
+            });
+            _legacyBosses.Add(new BossHoangKimSpawn
+            {
+                bossTemplateId = 602, nameVi = "Kim Luân Pháp Vương", mapId = 204,
+                spawnX = 700, spawnY = 1500, level = 90, hp = 200000,
+                killRewardExp = 50000, killRewardSilver = 20000, respawnMinutes = 180,
+            });
         }
 
         public static BossHoangKimService LoadFromStreamingAssets(string subdir = null)

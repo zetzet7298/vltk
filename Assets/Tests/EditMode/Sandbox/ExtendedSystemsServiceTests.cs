@@ -38,7 +38,7 @@ namespace VLTK.Tests.Sandbox
         }
     }
 
-    public class ShopConfigServiceTests
+    public class ExtendedShopConfigServiceTests
     {
         [Test]
         public void LoadFromStreamingAssets_MatchesCommittedData()
