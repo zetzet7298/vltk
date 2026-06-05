@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+уng H筺g Li猲	0	4	0	\spr\item\equip\nick\obj_neck01.spr	36	2	1	D﹜ chuy襫 b籲g уng,  v藅 g箃 trcon		150	1	0																						36	1	38	1								
+Ng﹏ H筺g Li猲	0	4	0	\spr\item\equip\nick\obj_neck02.spr	36	2	1	D﹜ chuy襫 B筩, i v韎 ngi ngh蘯 c騨g lthqugi		600	2	0																						36	7	38	1								
+Kim H筺g Li猲	0	4	0	\spr\item\equip\nick\obj_neck03.spr	36	2	1	D﹜ chuy襫 V祅g, phgia qutthng hay mang		1350	3	0																						36	14	38	1								
+B筩h Kim H筺g Li猲	0	4	0	\spr\item\equip\nick\obj_neck04.spr	36	2	1	B筩h kim cht竎, tr猲 phhi誱 mth蕐 頲		2400	4	0																						36	20	38	1								
+Ng鋍 Ch﹗ H筺g Li猲	0	4	0	\spr\item\equip\nick\obj_neck05.spr	36	2	1	Do ng鋍 th筩h m礽 chmth祅h, gitrc鵦 qu 		3750	5	0																						36	27	38	1								

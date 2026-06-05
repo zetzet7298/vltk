@@ -2,21 +2,22 @@
 --¾ßÌå·½·¨£º
 --¸ù¾Ý1¼¶ÊìÁ·¶È£¬Éý¼¶¼ÓËÙ¶È£¬¼¶Êý£¬ÖØ¸´ÉËº¦´ÎÊý£¬·¶Î§£¬¼ÆËã³öÏàÓ¦µÈ¼¶ÊìÁ·¶È
 -- SkillExp(i) = Exp1*a^(i-1)*time*range
-EXP_PER = 60
+
 function SkillExpFunc(Exp0,a,Level,Time,Range)
 	return floor(Exp0*(a^(Level-1))*Time*Range/2)
 end
 
+
 SKILLS={
 	--Ø¤°ï
-	gaibang_bangfa={ --Cai Bang bong phap
+	gaibang_bangfa={ --Ø¤°ï°ô·¨
 		addphysicsdamage_p={{{1,10},{20,150}},{{1,-1},{2,-1}},{{1,2},{2,2}}},
 		deadlystrikeenhance_p={{{1,2},{20,25,Conic}},{{1,-1},{2,-1}}}
 	},
-	gaibang_zhangfa={ --Cai Bang chuong phap
+	gaibang_zhangfa={ --Ø¤°ïÕÆ·¨
 		addfiremagic_v={{{1,25},{20,275}},{{1,-1},{2,-1}}}
 	},
-	yanmen_tuobo={ --Dien mon thac bat
+	yanmen_tuobo={ --ÑØÃÅÍÐ²§
 		seriesdamage_p={{{1,1},{20,10}}},
 		physicsenhance_p={{{1,10},{20,55}}},
 		firedamage_v={
@@ -39,7 +40,7 @@ SKILLS={
 		skill_attackradius={{{1,320},{20,384}}},
 		skill_cost_v={{{1,10},{20,10}}}
 	},
-	jianren_shenshou={ --Kien Nhan than thu
+	jianren_shenshou={ --¼ûÈËÉìÊÖ
 		seriesdamage_p={{{1,1},{20,10}}},
 		firedamage_v={
 			[1]={{1,15},{20,75}},
@@ -65,20 +66,20 @@ SKILLS={
 		skill_attackradius={{{1,320},{20,384}}},
 		skill_cost_v={{{1,25},{20,25}}}
 	},
-	huabu_liushou={ --Hoat bat luu thu
+	huabu_liushou={ --»¬²»ÁôÊÖ
 		fastwalkrun_p={{{1,9},{20,66}},{{1,18*120},{20,18*180}}},
 		skill_cost_v={{{1,24},{20,50}}}
 	},
-	dagou_zhen={ --Da Cau bong phap
+	dagou_zhen={ --´ò¹·Õó
 		addphysicsdamage_p={{{1,10},{20,175}},{{1,-1},{30,-1}},{{1,2},{2,2}}},
 		--skill_cost_v={{{1,24},{20,50}}}
 	},
-	xianglong_zhang={ --Giang Long Thap Bat Chuong
-		lifemax_p={{{1,-1},{20,-25}},{{1,-1},{2,-1}}},
+	xianglong_zhang={ --½µÁúÕÆ
+		lifemax_p={{{1,-1},{20,-25},{25,-25},{26,-25}},{{1,-1},{2,-1}}},
 		manamax_p={{{1,12},{20,50}},{{1,-1},{2,-1}}},
 		addfiremagic_v={{{1,35},{15,250},{20,750}},{{1,-1},{2,-1}}},
 	},
-	bangda_egou={ --Bong Da Ac Cau
+	bangda_egou={ --°ô´ò¶ñ¹·
 		physicsenhance_p={{{1,10},{20,179}}},
 		seriesdamage_p={{{1,10},{20,50},{21,52}}},
 		firedamage_v={
@@ -97,14 +98,15 @@ SKILLS={
 		skill_attackradius={{{1,448},{20,512}}},
 		skill_cost_v={{{1,28},{20,48}}}
 	},
-	zuidie_kuangwu={ --Tuy diep cuong vu
+	zuidie_kuangwu={ --×íµú¿ñÎè
 		allres_p={{{1,1},{30,30}},{{1,18*120},{30,18*180}}},
 		addfiremagic_v={{{1,10},{30,215}},{{1,18*120},{30,18*180}}},
 		addfiredamage_v={{{1,10},{30,175}},{{1,18*120},{30,18*180}}},
 		deadlystrikeenhance_p={{{1,5},{20,30,Conic}},{{1,18*120},{30,18*180}}},
+		lifemax_yan_p={{{1,21},{35,20},{36,20}},{{1,-1},{30,-1}}},
 		skill_cost_v={{{1,50},{20,100}}}
 	},
-	kanglong_youhui={ --Khang Long Huu hoi
+	kanglong_youhui={ --¿ºÁúÓÐ»Ú//Î´Íê£¬´ýÐø
 		seriesdamage_p={{{1,10},{20,50},{21,52}}},
 		firedamage_v={
 			[1]={{1,10},{20,536}},
@@ -122,22 +124,22 @@ SKILLS={
 			[1]={{1,1101},{2,1101}},
 			[3]={{1,1},{20,45}}
 		},
-		skill_misslesform_v={{{1,1},{10,1},{10,2},{20,2}}},--plus
+		skill_misslesform_v={{{1,1},{10,1},{10,2},{20,2}}},
 		skill_misslenum_v={{{1,1},{10,1},{20,15},{25,18},{26,18}}},
-		skill_param1_v={{{1,0},{10,0},{10,2},{20,2},{21,2}}},--khoang cach 2 tia
+		skill_param1_v={{{1,0},{10,0},{10,2},{20,2},{21,2}}},
 		missle_speed_v={{{1,28},{20,32}}},
 		skill_attackradius={{{1,448},{20,512}}},
 		skill_cost_v={{{1,10},{20,50}}}
 	},
-	huaxian_weiyi={ --Hoa hiem vi di
+	huaxian_weiyi={ --»¯ÏÕÎªÒÄ
 		meleedamagereturn_p={{{1,4},{20,46}},{{1,-1},{20,-1}}},
 		adddefense_v={{{1,48},{20,800}},{{1,-1},{20,-1}}},
 	},
-	xiaoyao_gong={ --Tieu dieu cong
-		attackspeed_v={{{1,6},{20,65}},{{1,-1},{20,-1}}},
-		castspeed_v={{{1,6},{20,65}},{{1,-1},{2,-1}}},
+	xiaoyao_gong={ --åÐÒ£¹¦
+		attackspeed_v={{{1,6},{20,65},{25,90},{31,108},{32,118},{33,121}},{{1,-1},{20,-1}}},
+		castspeed_v={{{1,6},{20,65},{25,90},{31,108},{32,118},{33,121}},{{1,-1},{2,-1}}},
 	},
-	feilong_zaitian={ --Phi Long Tai Thien
+	feilong_zaitian={ --·ÉÁúÔÚÌì
 		seriesdamage_p={{{1,20},{15,20},{20,60},{21,62}}},
 		firedamage_v={
 			[1]={{1,10},{15,300},{20,750}},
@@ -157,7 +159,6 @@ SKILLS={
 		skill_attackradius={{{1,448},{20,512},{21,512}}},
 		skill_cost_v={{{1,10},{20,65}}},
 		skill_eventskilllevel={{{1,1},{20,20}}},
-		skill_param1_v={{{1,0},{11,0},{11,32},{20,32},{21,32}}},--khoang cach 2 tia plus
 --		skill_flyevent={
 --			[1]={{1,0},{10,0},{10,1},{20,1}},
 --			[2]={{1,4},{2,4}},
@@ -168,7 +169,7 @@ SKILLS={
 			[3]={{1,389},{20,389}}
 		},
 		skill_showevent={{{1,0},{10,0},{10,4},{20,4}}},
-		addskillexp1={{{1,357},{2,357}},{{1,EXP_PER},{20,EXP_PER}},{{1,0},{2,0}}},
+		addskillexp1={{{1,0},{2,0}},{{1,1},{20,1}},{{1,0},{2,0}}},
 		skill_skillexp_v={{	{1,SkillExpFunc(8600,1.15,1,1,1)},
 							{2,SkillExpFunc(8600,1.15,2,1,1)},
 							{3,SkillExpFunc(8600,1.16,3,1,1)},
@@ -191,6 +192,49 @@ SKILLS={
 							{20,SkillExpFunc(8600,1.15,20,4,1)},
 						}},
 	},
+	zhanggaibang150={ --ÕÆØ¤°ï150
+		seriesdamage_p={{{1,40},{15,40},{20,80},{21,82}}},
+		firedamage_v={
+			[1]={{1,24},{15,720},{20,1800},{23,3096},{26,3744}},
+			[3]={{1,24},{15,720},{20,1800},{23,3096},{26,3744}}
+		},
+		missle_speed_v={{{1,24},{20,40},{21,40}}},
+		skill_misslenum_v={{{1,1},{11,1},{12,2},{15,2},{16,2},{20,3},{21,3}}},
+		skill_attackradius={{{1,448},{20,512},{21,512}}},
+		skill_cost_v={{{1,12},{20,78},{23,98}}},
+		skill_eventskilllevel={{{1,1},{20,20}}},
+--		skill_flyevent={
+--			[1]={{1,0},{10,0},{10,1},{20,1}},
+--			[2]={{1,4},{2,4}},
+--			[3]={{1,389},{20,389}}
+--		},
+		skill_collideevent={
+			[1]={{1,0},{10,0},{10,1},{20,1}},
+			[3]={{1,1072},{20,1072}}
+		},
+		skill_showevent={{{1,0},{10,0},{10,4},{20,4}}},
+		skill_skillexp_v={{	{1,300},
+												{2,600},
+												{3,1000},
+												{4,1500},
+												{5,2100},
+												{6,2800},
+												{7,3600},
+												{8,4500},
+												{9,5500},
+												{10,6600},
+												{11,7800},
+												{12,9100},
+												{13,10500},
+												{14,12000},
+												{15,13600},
+												{16,15300},
+												{17,17100},
+												{18,19000},
+												{19,21400},
+												{20,24000},
+												}},	
+	},
 --	qianlong_zaiyuan={ --Ç±ÁúÔÚÔ¨
 --		seriesdamage_p={{{1,20},{20,60}}},
 --		firedamage_v={
@@ -198,7 +242,7 @@ SKILLS={
 --			[3]={{1,17},{20,171}}
 --		},
 --	},
-	longzhan_yuye={ --Long Chien U Da
+	longzhan_yuye={ --ÁúÕ½ÓÚÒ°
 		seriesdamage_p={{{1,20},{20,60},{21,62}}},
 		firedamage_v={
 			[1]={{1,17},{20,371}},
@@ -211,7 +255,20 @@ SKILLS={
 --		},
 --		skill_showevent={{{1,0},{15,0},{15,4},{20,4}}},
 	},
-	tianxia_wugou={ --Thien Ha Vo Cau
+	zhanggaibang150_2={ --ÕÆØ¤°ï150µÚ2Ê½
+		seriesdamage_p={{{1,40},{20,80},{21,82}}},
+		firedamage_v={
+			[1]={{1,20},{20,450},{23,585},{26,653}},
+			[3]={{1,20},{20,450},{23,585},{26,653}}
+		},
+--		skill_eventskilllevel={{{1,1},{20,20}}},
+--		skill_collideevent={
+--			[1]={{1,0},{15,0},{15,1},{20,1}},
+--			[3]={{1,358},{20,358}}
+--		},
+--		skill_showevent={{{1,0},{15,0},{15,4},{20,4}}},
+	},
+	tianxia_wugou={ --ÌìÏÂÎÞ¹·
 		seriesdamage_p={{{1,20},{15,20},{20,60},{21,62}}},
 		skill_misslenum_v={{{1,1},{20,3},{21,3}}},
 		physicsenhance_p={{{1,12},{15,100},{20,206}}},
@@ -226,7 +283,7 @@ SKILLS={
 		missle_speed_v={{{1,20},{20,24},{21,24}}},
 		skill_attackradius={{{1,448},{20,512},{21,512}}},
 		skill_cost_v={{{1,20},{20,50}}},
-		addskillexp1={{{1,359},{2,359}},{{1,EXP_PER},{20,EXP_PER}},{{1,0},{2,0}}},
+		addskillexp1={{{1,0},{2,0}},{{1,1},{20,1}},{{1,0},{2,0}}},
 		skill_skillexp_v={{	{1,SkillExpFunc(7000,1.15,1,1,1)},
 							{2,SkillExpFunc(7000,1.15,2,1,1)},
 							{3,SkillExpFunc(7000,1.16,3,1,1)},
@@ -249,17 +306,50 @@ SKILLS={
 							{20,SkillExpFunc(7000,1.15,20,3,1)},
 						}},
 	},
-	gaibang120={ --Hon Thien Khi cong 120
+	gungaibang150={ --¹÷Ø¤°ï150
+		seriesdamage_p={{{1,40},{15,40},{20,80},{21,82}}},
+		skill_misslenum_v={{{1,1},{20,5},{21,5}}},
+		physicsenhance_p={{{1,10},{15,80},{20,165},{23,267},{26,318}}},
+		firedamage_v={
+			[1]={{1,60},{15,120},{20,230},{23,362},{26,428}},
+			[3]={{1,60},{15,160},{20,345},{23,567},{26,678}}
+		},
+		missle_speed_v={{{1,24},{20,24},{21,24}}},
+		skill_attackradius={{{1,448},{20,512},{21,512}}},
+		skill_cost_v={{{1,20},{20,50},{23,59}}},
+		skill_skillexp_v={{	{1,300},
+												{2,600},
+												{3,1000},
+												{4,1500},
+												{5,2100},
+												{6,2800},
+												{7,3600},
+												{8,4500},
+												{9,5500},
+												{10,6600},
+												{11,7800},
+												{12,9100},
+												{13,10500},
+												{14,12000},
+												{15,13600},
+												{16,15300},
+												{17,17100},
+												{18,19000},
+												{19,21400},
+												{20,24000},
+												}},	
+	},
+	gaibang120={ --Ø¤°ï120¼¶¼¼ÄÜ
 		autoattackskill={{{1,720*256 + 1},{20,720*256 + 20},{21,720*256 + 21}},{{1,-1},{20,-1}},{{1,12*18*256 + 1},{15,12*18*256 + 5},{20,12*18*256 + 6},{21,12*18*256 + 6}}},
 		skill_desc=
 			function(level)
 				return "X¸c suÊt <color=orange>"..floor(Link(level,SKILLS.gaibang120.autoattackskill[3]) - 12*18*256).."%<color> g©y ho¹i th­¬ng \n"..
 				"Ho¹i th­¬ng lµm gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.physicsres_p[1]))..
 				"%<color> PTVL, gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.fireres_p[1]))..
-				"%<color> KH,\n ®ång thêi lµm gi¶m gi¸ trÞ PTVL lín nhÊt <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.physicsresmax_p[1]))..
-				"%<color>, gi¶m gi¸ trÞ KH lín nhÊt <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.fireresmax_p[1]))..
-				"%<color>\n ®ång thêi ph¶n ®ßn khi bÞ tÊn c«ng tÇm xa gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.rangedamagereturn_p[1]))..
-				"%<color> trong <color=orange>"..floor(Link(level,SKILLS.gaibang120zuzhou.physicsres_p[2]) / 18).." gi©y<color>\n"..
+				"%<color>,\n ®ång thêi lµm gi¶m gi¸ trÞ phßng thñ vËt lý lín nhÊt <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.physicsresmax_p[1]))..
+				"%<color>,gi¶m gi¸ trÞ phßng háa lín nhÊt <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.fireresmax_p[1]))..
+				"%<color> kh¸ng háa \n ®ång thêi ph¶n ®ßn khi bÞ tÊn c«ng tÇm xa gi¶m <color=orange>"..floor(-Link(level,SKILLS.gaibang120zuzhou.rangedamagereturn_p[1]))..
+				"%<color> tèc ®é di chuyÓn trong <color=orange>"..floor(Link(level,SKILLS.gaibang120zuzhou.physicsres_p[2]) / 18).." gi©y<color>\n"..
 				"Trong vßng <color=orange>"..floor((Link(level,SKILLS.gaibang120.autoattackskill[3]) / (18*256))).." gi©y<color> sau míi cã thÓ thi triÓn tiÕp"
 			end,
 		skill_skillexp_v={{	{1,17851239},
@@ -284,106 +374,13 @@ SKILLS={
 							{20,620738181},
 							}},	
 	},
-	gaibang120zuzhou={ --Quyet chu' 120
+	gaibang120zuzhou={ --Ø¤°ï120¼¶¼¼ÄÜ×çÖä
 		physicsres_p={{{1,-2},{15,-8},{20,-10},{21,-10}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
 		fireres_p={{{1,-3},{15,-12},{20,-15},{21,-15}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
-		physicsresmax_p={{{1,-1},{15,-1},{20,-6},{21,-6}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
-		fireresmax_p={{{1,-1},{15,-2},{20,-12},{21,-12}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
+		physicsresmax_p={{{1,-1},{15,-1},{20,-4},{21,-4}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
+		fireresmax_p={{{1,-1},{15,-2},{20,-6},{21,-6}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
 		--meleedamagereturn_p={{{1,-4},{15,-16},{20,-20},{21,-20}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
 		rangedamagereturn_p={{{1,-4},{15,-25},{20,-30},{21,-30}},{{1,3*18},{15,8*18},{20,9*18},{21,9*18}}},
-	},
-	zhanggaibang150={ --Thoi Thua Luc Long-150
-		seriesdamage_p={{{1,40},{15,40},{20,80},{21,82}}},
-		firedamage_v={
-			[1]={{1,24},{15,720},{20,1800},{23,3096},{26,3744}},
-			[3]={{1,24},{15,720},{20,1800},{23,3096},{26,3744}}
-		},
-		missle_speed_v={{{1,24},{20,40},{21,40}}},
-		--skill_misslenum_v={{{1,1},{11,1},{12,2},{15,2},{16,2},{20,3},{21,3}}},
-		skill_attackradius={{{1,448},{20,512},{21,512}}},
-		skill_cost_v={{{1,12},{20,78},{23,98}}},
-		skill_eventskilllevel={{{1,1},{20,20}}},
-		--startevent: 1101 same zhanggaibang150
-		--flyevent: 1103 (no damage)
---		skill_flyevent={
---			[1]={{1,0},{10,0},{10,1},{20,1}},
---			[2]={{1,4},{2,4}},
---			[3]={{1,389},{20,389}}
---		},
-		skill_collideevent={
-			[1]={{1,0},{10,0},{10,1},{20,1}},
-			[3]={{1,1072},{20,1072}}
-		},
-		skill_showevent={{{1,0},{10,0},{10,4},{20,4}}},
-		addskillexp1={{{1,1073},{2,1073}},{{1,EXP_PER},{20,EXP_PER}},{{1,0},{2,0}}},
-		skill_skillexp_v={{	{1,10500},
-							{2,12180},
-							{3,14373},
-							{4,17251},
-							{5,21056},
-							{6,26127},
-							{7,32953},
-							{8,42238},
-							{9,55008},
-							{10,72775},
-							{11,97788},
-							{12,133433},
-							{13,184856},
-							{14,259967},
-							{15,371060},
-							{16,537451},
-							{17,789823},
-							{18,1177459},
-							{19,1780405},
-							{20,2730112},
-						}},
-	},
-	zhanggaibang150_2={ --Ngu Dieu Can Khon-150 tang 2
-		seriesdamage_p={{{1,40},{20,80},{21,82}}},
-		firedamage_v={
-			[1]={{1,20},{20,450},{23,585},{26,653}},
-			[3]={{1,20},{20,450},{23,585},{26,653}}
-		},
---		skill_eventskilllevel={{{1,1},{20,20}}},
---		skill_collideevent={
---			[1]={{1,0},{15,0},{15,1},{20,1}},
---			[3]={{1,358},{20,358}}
---		},
---		skill_showevent={{{1,0},{15,0},{15,4},{20,4}}},
-	},
-	gungaibang150={ --Bong Huynh Luoc Dia-150
-		seriesdamage_p={{{1,40},{15,40},{20,80},{21,82}}},
-		skill_misslenum_v={{{1,1},{20,5},{21,5}}},
-		physicsenhance_p={{{1,10},{15,80},{20,165},{23,267},{26,318}}},
-		firedamage_v={
-			[1]={{1,60},{15,120},{20,230},{23,362},{26,428}},
-			[3]={{1,60},{15,160},{20,345},{23,567},{26,678}}
-		},
-		missle_speed_v={{{1,24},{20,24},{21,24}}},
-		skill_attackradius={{{1,448},{20,512},{21,512}}},
-		skill_cost_v={{{1,20},{20,50},{23,59}}},
-		addskillexp1={{{1,1074},{2,1074}},{{1,EXP_PER},{20,EXP_PER}},{{1,0},{2,0}}},
-		skill_skillexp_v={{	{1,10500},
-							{2,12180},
-							{3,14373},
-							{4,17251},
-							{5,21056},
-							{6,26127},
-							{7,32953},
-							{8,42238},
-							{9,55008},
-							{10,72775},
-							{11,97788},
-							{12,133433},
-							{13,184856},
-							{14,259967},
-							{15,371060},
-							{16,537451},
-							{17,789823},
-							{18,1177459},
-							{19,1780405},
-							{20,2730112},
-						}},
 	},
 }
 -----------------------------------------------
@@ -437,7 +434,7 @@ function Extrac(x,x1,y1,x2,y2)
 	if(x2==x1) then
 		return y2
 	end
-	return (y2-y1)*(x-x1)/(x2-x1)+y1
+	return (y2-y1)*(sqrt(x) - sqrt(x1))/(sqrt(x2) - sqrt(x1)) + y1
 end
 
 -----------------------------------------------

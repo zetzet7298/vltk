@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+Thanh уng ThTr筩	0	8	0	\spr\item\equip\bangle\obj-bangle01.spr	35	1	2	"Lo筰 v遪g 頲 tinh chtуng, khn╪g ph遪g ngr蕋 t鑤. "		50	1	0	30	13	13	31																		36	1	32	0	33	0			38	1		
+Luy謓 уng ThTr筩	0	8	0	\spr\item\equip\bangle\obj-bangle02.spr	35	1	2	"Lo筰 v遪g 頲 tinh chtуng, khn╪g ph遪g ngr蕋 t鑤. "		150	2	0	30	22	22	31																		36	8	32	20	33	0			38	1		
+T蕁 Thi誸 HUy觧	0	8	0	\spr\item\equip\bangle\obj-bangle03.spr	35	1	2	"Lo筰 hgi竝 頲 tinh chtth衟 gi ph遪g ngr蕋 t鑤"		300	3	0	30	33	33	31																		36	14	32	27	33	0			38	1		
+Ng﹏ TTr筩	0	8	0	\spr\item\equip\bangle\obj-bangle04.spr	35	1	2	"Lo筰 v遪g b籲g b筩 nh cthd飊g  trang s鴆. "		500	4	0	30	45	45	31																		36	20	32	35	33	0			38	1		
+Kim TTr筩	0	8	0	\spr\item\equip\bangle\obj-bangle05.spr	35	1	2	"Lo筰 v遪g b籲gv祅g nh cthd飊g  trang s鴆. "		900	5	0	30	56	56	31																		36	27	32	42	33	0			38	1		
