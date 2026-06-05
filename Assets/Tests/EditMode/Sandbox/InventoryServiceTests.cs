@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using UnityEngine;
 using VLTK.Model;
 using VLTK.Sandbox;
 
@@ -140,6 +141,61 @@ namespace VLTK.Tests.Sandbox
             svc.Equip(EquipSlot.Weapon, 1);
             var preview = svc.Equip(EquipSlot.Weapon, 2); // same slot
             Assert.AreEqual(25, preview[28]); // replaced, not summed
+        }
+
+        [Test]
+        public void PlayerEquipmentService_ItemToWeaponVariant_MapsPcMeleeRows()
+        {
+            Assert.AreEqual(MalePlayerSpriteCatalog.ShortWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(1));
+            Assert.AreEqual(MalePlayerSpriteCatalog.ShortWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(21));
+            Assert.AreEqual(MalePlayerSpriteCatalog.StaffWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(22));
+            Assert.AreEqual(MalePlayerSpriteCatalog.StaffWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(41));
+            Assert.AreEqual(MalePlayerSpriteCatalog.DualWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(42));
+            Assert.AreEqual(MalePlayerSpriteCatalog.DualWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(71));
+            Assert.AreEqual(MalePlayerSpriteCatalog.EmptyWeaponVariant, PlayerEquipmentService.ItemToWeaponVariant(999));
+        }
+
+        [Test]
+        public void InventoryEquipWeapon_UpdatesEquipmentServiceAndControllerVisual()
+        {
+            var db = DbWith(Item(1, "Kiếm ngắn", 28, 10), Item(22, "Côn dài", 28, 20), Item(42, "Song kiếm", 28, 30));
+            var equipment = new PlayerEquipmentService();
+            var svc = new InventoryService(db, equipment);
+            var go = new GameObject("InventoryVisualBridgeTest");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.followCameraEnabled = false;
+                controller.allowKeyboardFallback = false;
+                svc.OnWeaponTypeChanged += controller.EquipWeapon;
+
+                svc.Equip(EquipSlot.Weapon, 1);
+                Assert.AreEqual(PcWeaponType.ShortWeapon, equipment.GetCurrentWeaponType());
+                Assert.AreEqual(PcWeaponType.ShortWeapon, controller.EquippedWeapon);
+                Assert.AreEqual(PcWeaponType.ShortWeapon, controller.visual.currentWeapon);
+                Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
+
+                svc.Equip(EquipSlot.Weapon, 22);
+                Assert.AreEqual(PcWeaponType.LongWeapon, equipment.GetCurrentWeaponType());
+                Assert.AreEqual(PcWeaponType.LongWeapon, controller.EquippedWeapon);
+                Assert.AreEqual(PcWeaponType.LongWeapon, controller.visual.currentWeapon);
+                Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
+
+                svc.Equip(EquipSlot.Weapon, 42);
+                Assert.AreEqual(PcWeaponType.DualWeapon, equipment.GetCurrentWeaponType());
+                Assert.AreEqual(PcWeaponType.DualWeapon, controller.EquippedWeapon);
+                Assert.AreEqual(PcWeaponType.DualWeapon, controller.visual.currentWeapon);
+                Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
+
+                svc.Unequip(EquipSlot.Weapon);
+                Assert.AreEqual(PcWeaponType.EmptyHand, equipment.GetCurrentWeaponType());
+                Assert.AreEqual(PcWeaponType.EmptyHand, controller.EquippedWeapon);
+                Assert.AreEqual(PcWeaponType.EmptyHand, controller.visual.currentWeapon);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
         }
 
         // --- AC#4: missing icon diagnostic ---
