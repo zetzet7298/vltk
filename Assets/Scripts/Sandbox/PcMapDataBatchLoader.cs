@@ -89,5 +89,47 @@ namespace VLTK.Sandbox
         {
             return batch?.maps ?? new List<MapEntry>();
         }
+
+        public static List<MapCatalogEntry> BuildRuntimeCatalog(PcMapDataBatchResult batch)
+        {
+            var result = new List<MapCatalogEntry>();
+            if (batch?.maps == null) return result;
+            foreach (var m in batch.maps)
+            {
+                if (m == null || m.mapId <= 0) continue;
+                result.Add(ToRuntimeEntry(m));
+            }
+            return result;
+        }
+
+        public static MapCatalogEntry ToRuntimeEntry(MapEntry m)
+        {
+            if (m == null) return null;
+            return new MapCatalogEntry
+            {
+                mapId = m.mapId,
+                displayNameRaw = m.nameRaw,
+                displayNameNormalized = string.IsNullOrEmpty(m.nameNormalized) ? m.nameRaw : m.nameNormalized,
+                sourceMapPath = m.sourceMapPath,
+                worldSetMembership = m.mapType,
+                rect = new RectDef { x = m.mapPosX, y = m.mapPosY, width = 0, height = 0 },
+                mapLeftTopRegionIndex = 0,
+                isIndoor = !string.IsNullOrEmpty(m.mapType) &&
+                    (m.mapType.ToLowerInvariant().Contains("cave") || m.mapType.ToLowerInvariant().Contains("indoor")),
+                defaultBrightness = 1f,
+                defaultColor = UnityEngine.Color.white,
+                weatherProfileId = null,
+                lightProfileId = null,
+                conversionStatus = ConversionStatus.Partial,
+                settingSourceId = new SourceAssetId
+                {
+                    sourcePath = "settings/maplist.ini",
+                    resourceKind = ResourceKind.Config,
+                    uid = m.mapId,
+                    discoveryTool = DiscoveryTool.Manual,
+                    evidenceNote = "pc_maplist_full",
+                }
+            };
+        }
     }
 }

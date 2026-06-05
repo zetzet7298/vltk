@@ -34,6 +34,24 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void Load_BuildsRuntimeCatalogFromFullPcMapList()
+        {
+            var batch = PcMapDataBatchLoader.Load(PcMapDir, PcMapDir);
+            var catalog = PcMapDataBatchLoader.BuildRuntimeCatalog(batch);
+            Assert.GreaterOrEqual(catalog.Count, 1000, "full maplist should expose PC map catalog entries");
+            Assert.IsTrue(catalog.TrueForAll(m => m.mapId > 0));
+            Assert.IsTrue(catalog.TrueForAll(m => !string.IsNullOrEmpty(m.displayNameRaw)));
+        }
+
+        [Test]
+        public void MapManager_LoadCatalog_MergesPcMapData()
+        {
+            var manager = new MapManager();
+            manager.LoadCatalog();
+            Assert.GreaterOrEqual(manager.Catalog.Count, 1000, "MapManager should merge full PC maplist runtime catalog");
+        }
+
+        [Test]
         public void Load_TongsFilterFromMapListTongEntries()
         {
             var batch = PcMapDataBatchLoader.Load(PcMapDir, PcMapDir);

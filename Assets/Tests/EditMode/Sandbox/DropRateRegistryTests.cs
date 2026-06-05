@@ -48,6 +48,17 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void LoadDirectory_IndexesFullPcDroprateTable()
+        {
+            var reg = new DropRateRegistry();
+            reg.LoadDirectory(SampleDir);
+            Assert.GreaterOrEqual(reg.TableCount, 20, "Full PC droprate should expose at least 20 level-banded/special tables");
+            Assert.IsTrue(reg.TryGetTable("npcdroprate10", out _));
+            Assert.IsTrue(reg.TryGetTable("npcdroprate50", out _));
+            Assert.IsTrue(reg.TryGetTable("npcdroprate70", out _));
+        }
+
+        [Test]
         public void SpecialTable_ResolvesByNameOnly()
         {
             var reg = new DropRateRegistry();

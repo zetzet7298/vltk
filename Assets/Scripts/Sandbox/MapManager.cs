@@ -22,6 +22,7 @@ namespace VLTK.Sandbox
         public int ActiveMapId => _activeMapId;
         public MapDefinition ActiveMap => _activeMap;
         public IReadOnlyDictionary<int, MapCatalogEntry> Catalog => _catalog;
+        public PcMapRuntimeDataRegistry TravelData { get; private set; }
         /// <summary>Discovery report from the map catalog tool (AC4). Null when using placeholder catalog.</summary>
         public MapDiscoveryReport DiscoveryReport { get; private set; }
 
@@ -46,7 +47,8 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
-        /// Load map catalog. Tries StreamingAssets/MapCatalog.json first;
+        /// Load map catalog. Tries StreamingAssets/MapCatalog.json first,
+        /// then merges full PC settings/maplist.ini data when present;
         /// falls back to built-in placeholders for development.
         /// </summary>
         public void LoadCatalog()
@@ -69,6 +71,13 @@ namespace VLTK.Sandbox
                 }
 
                 SubsystemLog.Info("MapManager", $"Real catalog loaded: {_catalog.Count} maps");
+            }
+
+            // Merge full PC map settings (maplist/cavelist/tong/waypoint/scroll/wharf/revivepos).
+            MergePcMapData();
+            if (_catalog.Count > 0)
+            {
+                SubsystemLog.Info("MapManager", $"Catalog ready: {_catalog.Count} maps");
                 return;
             }
 
@@ -94,6 +103,28 @@ namespace VLTK.Sandbox
 
         /// <summary>Kept for backward compat — delegates to LoadCatalog.</summary>
         public void LoadPlaceholderCatalog() => LoadCatalog();
+
+        private void MergePcMapData()
+        {
+            var pcMapDir = Path.Combine(Application.streamingAssetsPath, "Reference/PcMap");
+            if (!Directory.Exists(pcMapDir)) return;
+
+            var batch = PcMapDataBatchLoader.Load(pcMapDir, pcMapDir);
+            TravelData = PcMapRuntimeDataRegistry.FromBatch(batch);
+            var runtimeEntries = PcMapDataBatchLoader.BuildRuntimeCatalog(batch);
+            int added = 0;
+            foreach (var entry in runtimeEntries)
+            {
+                if (entry == null || entry.mapId <= 0) continue;
+                if (_catalog.ContainsKey(entry.mapId)) continue;
+                _catalog[entry.mapId] = entry;
+                added++;
+            }
+
+            SubsystemLog.Info("MapManager",
+                $"PC map data merged: +{added} maps, caves={batch.caves.Count}, tongs={batch.tongs.Count}, " +
+                $"waypoints={batch.waypoints.Count}, scrolls={batch.scrolls.Count}, wharves={batch.wharves.Count}, revive={batch.revivePositions.Count}");
+        }
 
         public void LoadMap(int mapId)
         {

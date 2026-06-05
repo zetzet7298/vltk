@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using VLTK.Core;
 using VLTK.Sprites;
 using VLTK.Model;
+using VLTK.Sandbox.ItemData;
 
 namespace VLTK.Sandbox
 {
@@ -66,6 +67,7 @@ namespace VLTK.Sandbox
         public GameplayLoopService GameplayLoop { get; private set; }
         public PlayerProgressionState PlayerProgression { get; private set; }
         public QuestService QuestService { get; private set; }
+        public PcSkillRegistry PcSkillsFull { get; private set; }
         public ItemDatabase ItemDb { get; private set; }
         public LootDropService LootService { get; private set; }
         public AudioService AudioService { get; private set; }
@@ -173,8 +175,15 @@ namespace VLTK.Sandbox
 
                 // ── New Subsystems ──────────────────────────────────
                 QuestService = new QuestService();
-                ItemDb = new ItemDatabase();
+                // Load PC item data via batch loader (14 categories, ~10k+ items)
+                var importer = PcItemBatchLoader.ImportInto(
+                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItem"));
+                ItemDb = new ItemDatabase(importer);
                 LootService = new LootDropService(ItemDb);
+                var dropRegistry = new DropRateRegistry();
+                dropRegistry.LoadDirectory(System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
+                LootService.AttachRegistry(dropRegistry);
+                PcSkillsFull = PcSkillRegistry.LoadFromDirectory(System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
                 AudioService = new AudioService();
                 if (servicesRoot != null)
                     AudioService.Initialize(servicesRoot);

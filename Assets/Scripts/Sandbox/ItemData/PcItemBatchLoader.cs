@@ -38,6 +38,8 @@ namespace VLTK.Sandbox.ItemData
         public const string RangeWeaponFile = "rangeweapon.txt";
         public const string HorseFile = "horse.txt";
         public const string PotionFile = "potion.txt";
+        public const string GoldEquipFile = "goldequip.txt";
+        public const string PlatinaEquipFile = "platinaequip.txt";
 
         private static readonly (string key, string stem)[] CategoryStems =
         {
@@ -53,6 +55,8 @@ namespace VLTK.Sandbox.ItemData
             ("rangeweapon", "rangeweapon"),
             ("horse", "horse"),
             ("potion", "potion"),
+            ("goldequip", "goldequip"),
+            ("platinaequip", "platinaequip"),
         };
 
         public static PcItemBatchResult LoadAll(string itemDir)
@@ -108,6 +112,8 @@ namespace VLTK.Sandbox.ItemData
                 case "rangeweapon": return PcRangeWeaponParser.ParseFile(path);
                 case "horse": return PcHorseParser.ParseFile(path);
                 case "potion": return PcPotionParser.ParseFile(path);
+                case "goldequip": return PcGoldEquipParser.ParseFile(path);
+                case "platinaequip": return PcPlatinaEquipParser.ParseFile(path);
                 default: return new List<ItemDefinition>();
             }
         }
