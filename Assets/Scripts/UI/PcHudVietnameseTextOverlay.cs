@@ -6,6 +6,9 @@
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
+using UnityEngine.UIElements;
+using VLTK.Sandbox;
+using VLTK.Model;
 
 namespace VLTK.UI
 {
@@ -44,8 +47,8 @@ namespace VLTK.UI
             _topValue = new GUIStyle(GUI.skin.label)
             {
                 alignment = TextAnchor.MiddleCenter,
-                fontSize = 12,
-                fontStyle = FontStyle.Bold,
+                fontSize = 11,
+                fontStyle = FontStyle.Normal,
                 normal = { textColor = Color.white }
             };
             _chatWarn = new GUIStyle(GUI.skin.label)
@@ -101,6 +104,8 @@ namespace VLTK.UI
             // Domain reload off can leave nested GUIStyleState references null after script reload.
             _topCaption.normal.textColor = new Color(0.92f, 0.92f, 0.82f, 1f);
             _topValue.normal.textColor = Color.white;
+            _topValue.fontStyle = FontStyle.Normal;
+            _topValue.fontSize = 11;
             _chatWarn.normal.textColor = new Color(1f, 0.08f, 0.04f, 1f);
             _menu.normal.textColor = new Color(0.88f, 0.92f, 0.82f, 1f);
             _minimap.normal.textColor = new Color(0f, 1f, 0f, 1f);
@@ -114,19 +119,29 @@ namespace VLTK.UI
 
         private void EnsureSkillTextures()
         {
+            var artRoot = HudArtPathResolver.ResolveArtRoot("UI/HUD/Art");
             if (_skillPanelTexture == null)
-                _skillPanelTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/技能.png"));
+                _skillPanelTexture = LoadTexture(HudArtPathResolver.ResolveUserFacingPngPath(artRoot, "技能"));
             if (_skillPanelTargetTexture == null)
-                _skillPanelTargetTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/技能－战斗分页.png"));
+                _skillPanelTargetTexture = LoadTexture(HudArtPathResolver.ResolveUserFacingPngPath(artRoot, "技能－战斗分页"));
             if (_addPointTexture == null)
-                _addPointTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/状态加点按钮改_01.png"));
+                _addPointTexture = LoadTexture(HudArtPathResolver.ResolvePngPath(artRoot, "状态加点按钮改_01"));
             var caiBangIconIds = new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
-                                        274, 277, 357, 359, 360, 1073, 1074 };
+                                        274, 277, 357, 359, 360, 714, 1073, 1074,
+                                        151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166,
+                                        3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                                        43, 45, 47, 48, 50, 51, 54, 55, 57, 58,
+                                         77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93,
+                                         23, 24, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 40, 41, 42,
+                                         60, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76,
+                                         95, 97, 99, 100, 101, 102, 103, 105, 108, 109, 111, 113, 114,
+                                         131, 132, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150,
+                                         167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184 };
             foreach (var skillId in caiBangIconIds)
             {
                 if (_caiBangIconTextures.ContainsKey(skillId) && _caiBangIconTextures[skillId] != null)
                     continue;
-                _caiBangIconTextures[skillId] = LoadTexture(System.IO.Path.Combine(Application.dataPath, $"UI/HUD/Art/Generated/cai_bang_skill_{skillId}.png"));
+                _caiBangIconTextures[skillId] = LoadTexture(HudArtPathResolver.ResolvePngPath(HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art"), $"cai_bang_skill_{skillId}"));
             }
         }
 
@@ -140,6 +155,84 @@ namespace VLTK.UI
             return tex.LoadImage(bytes) ? tex : null;
         }
 
+        // ── Live-data helpers (lấy từ HudDataBridge / SandboxManager) ──────────
+
+private string GetLevelText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            if (hud == null) return "1";
+            var label = hud.GetComponent<UIDocument>()
+                ?.rootVisualElement?.Q<Label>("LevelText");
+            return label?.text ?? "1";
+        }
+
+        private string GetHpText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("HpText");
+            return label?.text ?? "100/100";
+        }
+
+        private string GetMpText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("MpText");
+            return label?.text ?? "50/50";
+        }
+
+        private string GetStaminaText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("StaminaText");
+            return label?.text ?? "100/100";
+        }
+
+        private string GetExpText()
+        {
+            var hud = FindObjectOfType<GameHudController>();
+            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
+                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("ExpText");
+            return label?.text ?? "0%";
+        }
+
+        private string GetRankText()
+        {
+            var manager = SandboxManager.Instance;
+            var progression = manager != null ? manager.PlayerProgression : null;
+            if (progression != null)
+            {
+                int lvl = progression.level;
+                if (lvl >= 200)
+                {
+                    var r = HudDataService.Instance.GetRankingTitle(10287); // Thập đại cao thủ thế giới
+                    if (r != null) return r.name;
+                }
+                else if (lvl >= 100)
+                {
+                    int titleId = 10287;
+                    switch (progression.faction)
+                    {
+                        case CombatFaction.Shaolin: titleId = 10277; break;
+                        case CombatFaction.TianWang: titleId = 10278; break;
+                        case CombatFaction.TangMen: titleId = 10279; break;
+                        case CombatFaction.WuDu: titleId = 10280; break;
+                        case CombatFaction.EMei: titleId = 10281; break;
+                        case CombatFaction.CuiYan: titleId = 10282; break;
+                        case CombatFaction.CaiBang: titleId = 10283; break;
+                        case CombatFaction.TianRen: titleId = 10284; break;
+                        case CombatFaction.WuDang: titleId = 10285; break;
+                        case CombatFaction.KunLun: titleId = 10286; break;
+                    }
+                    var r = HudDataService.Instance.GetRankingTitle(titleId);
+                    if (r != null) return r.name;
+                }
+            }
+            return "?";
+        }
+
         private void OnGUI()
         {
             EnsureStyles();
@@ -149,43 +242,87 @@ namespace VLTK.UI
             int oldDepth = GUI.depth;
             GUI.depth = -10000;
 
-            // Top PC bar Vietnamese captions/values. Positions mirror GameHud.uss.
-            Label(150, 2, 34, 10, "Cấp", _topCaption);
-            Label(179, 2, 18, 14, "1", _topValue);
-            Label(203, 2, 104, 10, "Kinh nghiệm", _topCaption);
-            Label(315, 2, 104, 10, "Sinh lực", _topCaption);
-            Label(427, 2, 104, 10, "Nội lực", _topCaption);
-            Label(539, 2, 104, 10, "Thể lực", _topCaption);
+            // Top PC bar captions+values — theo 顶部控制条.ini (Ui800)
+            // PC Main.Left=218 → 1280-space: 218×1.6=348. Bar offsets scaled ×1.6.
+            // Stamina=87→139, Life=182→291, Mana=277→443, Exp=372→595, Level=53→85, WorldSort=499→798
+            const float C = 0f;   // container offset is 0 because bars use absolute 1280-space coords
+            const float BW = 166f; // bar width: PC 104 × 1.6
 
-            Label(203, 19, 104, 12, "0%", _topValue);
-            Label(315, 19, 104, 12, "100/100", _topValue);
-            Label(427, 19, 104, 12, "50/50", _topValue);
-            Label(539, 19, 104, 12, "100/100", _topValue);
+            // "+ Cấp X" — PC format, màu xanh lá
+            var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 11,
+                fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
+            Label(348f + 85f, 0f, 80f, 20f, "+ Cấp " + GetLevelText(), lvlStyle);
+
+            // Captions (row 0) - Bỏ theo PC HUD (PC không vẽ tên bar đè lên)
+            // Label(348f + 139f, 0f, BW, 14f, "Thể lực",    _topCaption);
+            // Label(348f + 291f, 0f, BW, 14f, "Sinh lực",   _topCaption);
+            // Label(348f + 443f, 0f, BW, 14f, "Nội lực",    _topCaption);
+            // Label(348f + 595f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
+
+            // Values (below bar tracks, top=19, Left shifted by 8px according to PC INI alignment)
+            Label(348f + 131f, 19f, BW, 15f, GetStaminaText(), _topValue);
+            Label(348f + 283f, 19f, BW, 15f, GetHpText(),      _topValue);
+            Label(348f + 435f, 19f, BW, 15f, GetMpText(),      _topValue);
+            Label(348f + 587f, 19f, BW, 15f, GetExpText(),     _topValue);
+
+            // "Hạng N" — WorldSort scaled
+            var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 10,
+                fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
+            Label(348f + 798f, 0f, 80f, 20f, "Hạng " + GetRankText(), rankStyle);
+
+            // Chat tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) giống PC
+            var tabStyleNormal = new GUIStyle(_menu) {
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 11,
+                normal = { textColor = new Color(0f, 210/255f, 255/255f) }
+            };
+            var tabStyleYellow = new GUIStyle(_menu) {
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 11,
+                normal = { textColor = new Color(255/255f, 220/255f, 0f) }
+            };
+            float tabX = 155f;
+            Label(tabX, 592f, 50f, 18f, "Tất cả", tabStyleNormal);
+            Label(tabX + 60f, 592f, 40f, 18f, "Mật", tabStyleNormal);
+            Label(tabX + 105f, 592f, 50f, 18f, "Phòng", tabStyleNormal);
+            Label(tabX + 155f, 592f, 60f, 18f, "Bang hội", tabStyleNormal);
+            Label(tabX + 220f, 592f, 60f, 18f, "Môn phái", tabStyleNormal);
+            Label(tabX + 290f, 592f, 50f, 18f, "Khác", tabStyleYellow);
 
             // Chat/system hint, like Vietnamese PC client.
             Label(155, 642, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
 
             DrawMinimapCoordinates();
 
-            // Bottom menu labels.
+            // Bottom menu labels - shifted left by 76px because right-menu was shifted to accommodate Treasure button.
             string[] labels = { "Nhân", "Túi", "Võ", "Đội", "Bang", "PK" };
-            float startX = 975f;
+            float startX = 899f;
             for (int i = 0; i < labels.Length; i++)
                 Label(startX + i * 50f, 706, 46, 12, labels[i], _menu);
 
-            DrawCaiBangSkillPanelText();
+            // Bảo Vật button text
+            var baovatStyle = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 11,
+                fontStyle = FontStyle.Bold,
+                normal = { textColor = new Color(255/255f, 215/255f, 0f) }
+            };
+            Label(1200f, 640f, 72f, 72f, "Bảo\nVật", baovatStyle);
+
+            DrawSkillPanelText();
 
             GUI.depth = oldDepth;
             GUI.matrix = Matrix4x4.identity;
         }
 
-        private void DrawCaiBangSkillPanelText()
+        private void DrawSkillPanelText()
         {
             var hud = FindObjectOfType<GameHudController>();
-            if (hud == null || !hud.IsCaiBangSkillPanelVisible)
+            if (hud == null || !hud.IsSkillPanelVisible)
                 return;
 
-            var snap = hud.CurrentCaiBangSkillSnapshot;
+            var snap = hud.CurrentSkillSnapshot;
             int points = snap != null ? snap.skillPoints : 200;
             Rect panel = new Rect(338, 110, 205, 376);
             if (_skillPanelTexture != null)
@@ -227,7 +364,7 @@ namespace VLTK.UI
                     GUI.DrawTexture(addRect, _addPointTexture, ScaleMode.StretchToFill, true);
                     if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && addRect.Contains(Event.current.mousePosition))
                     {
-                        hud.TryUpgradeCaiBangSkill(row.skillId);
+                        hud.TryUpgradeSkill(row.skillId);
                         Event.current.Use();
                     }
                 }
@@ -277,16 +414,17 @@ namespace VLTK.UI
             if (player == null) return;
 
             var pos = (Vector2)player.transform.position;
-            var coord = $"{Mathf.FloorToInt(pos.x / 8f)}/{Mathf.FloorToInt(-pos.y / 8f)}";
+            // Display PC MPS coordinates (same format as PC client minimap)
+            VLTK.Sandbox.BaLangEnemyDatabase.WorldToMps(pos.x, pos.y, out int mpsX, out int mpsY);
+            var coord = $"{mpsX}/{mpsY}";
             var rawMapName = VLTK.Sandbox.SandboxManager.Instance?.MapManager?.ActiveMap?.catalogEntry?.displayNameRaw
                 ?? VLTK.Sandbox.SandboxManager.Instance?.MapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
                 ?? "Bản đồ";
             var mapName = ToVietnameseMapName(rawMapName);
 
-            // PC small minimap shows scene name + coord above/on minimap. UI Toolkit text can be unreliable,
-            // so draw IMGUI on top at exact HUD coords.
-            Label(1144, 4, 112, 14, mapName, _minimap);
-            Label(1146, 18, 112, 14, coord, _minimap);
+            // PC small minimap shows scene name + coord on minimap frame matching PC layout.
+            Label(1140, 6, 120, 14, mapName, new GUIStyle(_minimap) { alignment = TextAnchor.UpperRight });
+            Label(1140, 138, 80, 14, coord + "  Tìm", new GUIStyle(_minimap) { alignment = TextAnchor.MiddleLeft });
 
             // Large preview window coordinate readout, visible while preview is open.
             var hud = FindObjectOfType<GameHudController>();
