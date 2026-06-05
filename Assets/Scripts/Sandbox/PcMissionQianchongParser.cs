@@ -94,7 +94,7 @@ namespace VLTK.Sandbox
                 reg.Add(new PcMissionQianchongEntry
                 {
                     TrackId = trackId,
-                    PlayerPos = playerPos,
+                    PlayerPos = playerPos == null ? null : new QianchongPos { X = playerPos.X, Y = playerPos.Y },
                     Positions = ParseMultiPos(trackPath)
                 });
             }

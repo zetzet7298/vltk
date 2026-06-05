@@ -1,6 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC nativeplacelist.ini parser (danh sách quê hương)
 // Source: settings/nativeplacelist.ini
+// INI format: [0], [1], ... sections with Id=, Name=, Img=, Frame=, Desc=
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -14,9 +15,9 @@ namespace VLTK.Sandbox
     {
         public int PlaceId { get; set; }
         public string PlaceName { get; set; }
-        public int MapId { get; set; }
-        public int X { get; set; }
-        public int Y { get; set; }
+        public string Img { get; set; }
+        public int Frame { get; set; }
+        public string Desc { get; set; }
     }
 
     public sealed class PcNativePlaceRegistry
@@ -37,41 +38,50 @@ namespace VLTK.Sandbox
             var path = Path.Combine(absoluteDir, "nativeplacelist.ini");
             if (!File.Exists(path)) return reg;
             var lines = PcMapListParser.ReadLines(path);
-            // INI format: [List] section with Count=, then Id=/Name=/Img= entries
-            // Also may have tab-separated format
+
+            // INI: sections like [0], [1], ... each containing Id=, Name=, Img=, Frame=, Desc=
+            var current = new Dictionary<string, string>();
+
             foreach (var raw in lines)
             {
                 var line = raw.Trim();
-                if (string.IsNullOrEmpty(line) || line.StartsWith(";") || line.StartsWith("[")) continue;
+                if (string.IsNullOrEmpty(line) || line.StartsWith(";") || line.StartsWith("#")) continue;
+
+                // Section header — flush previous section
+                if (line.StartsWith("[") && line.EndsWith("]"))
+                {
+                    FlushSection(reg, current);
+                    current = new Dictionary<string, string>();
+                    continue;
+                }
+
                 var eqIdx = line.IndexOf('=');
                 if (eqIdx > 0)
                 {
                     var key = line.Substring(0, eqIdx).Trim();
                     var val = line.Substring(eqIdx + 1).Trim();
-                    // Parse Id= entries
-                    if (key.StartsWith("Id") && int.TryParse(val, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id))
-                    {
-                        reg.Add(new PcNativePlaceEntry { PlaceId = id, PlaceName = $"Place_{id}" });
-                    }
-                }
-                else
-                {
-                    // Tab-separated fallback: PlaceId, PlaceName, MapId, X, Y
-                    var cols = line.Split('\t');
-                    if (cols.Length >= 2 && int.TryParse(cols[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int pid))
-                    {
-                        reg.Add(new PcNativePlaceEntry
-                        {
-                            PlaceId = pid,
-                            PlaceName = cols.Length > 1 ? cols[1].Trim() : $"Place_{pid}",
-                            MapId = cols.Length > 2 && int.TryParse(cols[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int m) ? m : 0,
-                            X = cols.Length > 3 && int.TryParse(cols[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int x) ? x : 0,
-                            Y = cols.Length > 4 && int.TryParse(cols[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int y) ? y : 0
-                        });
-                    }
+                    current[key] = val;
                 }
             }
+            // Flush last section
+            FlushSection(reg, current);
             return reg;
+        }
+
+        private static void FlushSection(PcNativePlaceRegistry reg, Dictionary<string, string> kv)
+        {
+            if (kv.Count == 0) return;
+            if (!kv.TryGetValue("Id", out var idStr)) return;
+            if (!int.TryParse(idStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) return;
+
+            reg.Add(new PcNativePlaceEntry
+            {
+                PlaceId = id,
+                PlaceName = kv.TryGetValue("Name", out var name) ? name : $"Place_{id}",
+                Img = kv.TryGetValue("Img", out var img) ? img : "",
+                Frame = kv.TryGetValue("Frame", out var frameStr) && int.TryParse(frameStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out int f) ? f : 0,
+                Desc = kv.TryGetValue("Desc", out var desc) ? desc : ""
+            });
         }
     }
 }

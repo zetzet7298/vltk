@@ -13,8 +13,8 @@ namespace VLTK.Sandbox
 {
     public class PcForbitHeartEntry
     {
-        public int ItemId { get; set; }
-        public string ItemName { get; set; }
+        public int MapId { get; set; }
+        public string MapDesc { get; set; }
     }
 
     public sealed class PcForbitHeartRegistry
@@ -23,7 +23,7 @@ namespace VLTK.Sandbox
         public int Count => _byId.Count;
         public PcForbitHeartEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
         public IEnumerable<PcForbitHeartEntry> All => _byId.Values;
-        public void Add(PcForbitHeartEntry e) { if (e != null) _byId[e.ItemId] = e; }
+        public void Add(PcForbitHeartEntry e) { if (e != null) _byId[e.MapId] = e; }
     }
 
     public static class PcForbitHeartParser
@@ -45,8 +45,8 @@ namespace VLTK.Sandbox
                 if (!int.TryParse(cols[0].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
                 var e = new PcForbitHeartEntry
                 {
-                    ItemId = id,
-                    ItemName = cols.Length > 1 ? cols[1].Trim() : string.Empty
+                    MapId = id,
+                    MapDesc = cols.Length > 1 ? cols[1].Trim() : string.Empty
                 };
                 reg.Add(e);
             }

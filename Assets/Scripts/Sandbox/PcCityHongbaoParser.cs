@@ -55,7 +55,7 @@ namespace VLTK.Sandbox
                     if (line.StartsWith("Name", StringComparison.OrdinalIgnoreCase)) continue;
                 }
                 var cols = line.Split('\t');
-                if (cols.Length < 2) continue;
+                if (cols.Length < 15) continue;
                 seqId++;
                 int.TryParse(cols[1].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int type);
                 int.TryParse(cols[2].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int genre);
