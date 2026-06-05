@@ -26,14 +26,14 @@ PC: 1,005 maps
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
 | 1.1 | Map Region Renderer | 1,005 | 1,006 | ✅ | MapCatalog.json + PC maplist.ini merged → 1,006 map runtime entries (MapManager.LoadCatalog). MapRenderer + RegionStreamingService hoạt động |
-| 1.2 | Thành phố (City) | 5 | 5 | 🔄 | Framework + MapListFullService (1,005 map) + tests |
-| 1.3 | Thủ đô (Capital) | 2 | 2 | 🔄 | MapListFullService runtime + parser + tests |
-| 1.4 | Vùng (Country) | 10 | 10 | 🔄 | MapListFullService runtime + tests |
-| 1.5 | Đồng/Ngoại ô (Field) | 24 | 24 | 🔄 | MapListFullService runtime + tests |
+| 1.2 | Thành phố (City) | 5 | 5 | ✅ | Framework + MapListFullService (1,005 map) + StationService + tests |
+| 1.3 | Thủ đô (Capital) | 2 | 2 | ✅ | MapListFullService + StationPriceService + tests |
+| 1.4 | Vùng (Country) | 10 | 10 | ✅ | MapListFullService + StationPriceService + tests |
+| 1.5 | Đồng/Ngoại ô (Field) | 24 | 24 | ✅ | MapListFullService + WaypointPriceService + tests |
 | 1.6 | Hang động/Me cung (Cave) | 48 | 369 | ✅ | PcCaveListParser + PcMapDataBatchLoader merged via MapManager runtime |
 | 1.7 | Bang phái (Tong) | 33 | 33 | ✅ | PcTongListParser merged via PcMapDataBatchLoader → MapManager runtime |
-| 1.8 | Chiến trường (Battlefield) | 80 | 80 | 🔄 | BattlefieldService runtime + PcBattlefieldParser + tests, sandbox wired |
-| 1.9 | Mission/Instance Maps | 802 | 802 | 🔄 | InstanceMapService runtime + PcInstanceMapParser + tests, sandbox wired |
+| 1.8 | Chiến trường (Battlefield) | 80 | 80 | ✅ | BattlefieldService + MissionBattleConfigService (combo+scores) + tests |
+| 1.9 | Mission/Instance Maps | 802 | 802 | ✅ | InstanceMapService + MissionMazeConfigService + MissionQianchongService + tests |
 | 1.10 | Waypoint System | 225 | 224 | ✅ | PcWaypointParser merged via PcMapRuntimeDataRegistry (MapManager.TravelData.GetWaypointsForMap) |
 | 1.11 | Bến tàu (Wharf) | 11 | 10 | ✅ | PcWharfParser merged via PcMapRuntimeDataRegistry |
 | 1.12 | Cuộn dịch chuyển (Scroll) | 2,600 | 2,600 | ✅ | PcScrollParser merged via PcMapRuntimeDataRegistry (ScrollCount) |
@@ -54,8 +54,8 @@ PC: 10 factions
 | 2.2 | Faction Selection UI | Yes | ✅ | ✅ | FactionScreen |
 | 2.3 | Ngũ Hành (5 elements) | 5 | ✅ | ✅ | CombatFactionExt + SkillSectCatalog |
 | 2.4 | Chính/Tà/Trung Lập | 3 | ✅ | ✅ | CombatDefinition |
-| 2.5 | Faction Titles (81) | 81 | 81 | 🔄 | TitleService runtime + FactionTitleParser merged |
-| 2.6 | Faction Maps (33) | 33 | 33 | 🔄 | FactionMapService runtime + parser + tests, sandbox wired |
+| 2.5 | Faction Titles (81) | 81 | 81 | ✅ | TitleService + TitleEffectService + TitlePanelService + FactionTitleParser merged |
+| 2.6 | Faction Maps (33) | 33 | 33 | ✅ | FactionMapService + FactionMapRuntimeService + FactionSkillTreeService + FactionBonusService + FactionRelationService + tests |
 
 ## 3. Kỹ Năng (03_skills.md)
 
@@ -64,20 +64,20 @@ PC: 1,216 base + 1,712 extended + 219 templates = ~3,183
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
 | 3.1 | Base Skills (1,216) | 1,216 | 1,216 | ✅ | PcSkillFullParser + PcSkillRegistry runtime via SandboxManager.PcSkillsFull |
-| 3.2 | Extended/Mod Skills | 1,712 | 1,712+ | 🔄 | ModSkills.txt + PcModSkillParser + SkillLevelDataService + SkillUpgradeService + SkillBookService |
-| 3.3 | Skill Templates (219) | 219 | 219 | 🔄 | SkillTemplateService runtime + parser + tests, sandbox wired |
+| 3.2 | Extended/Mod Skills | 1,712 | 1,712+ | ✅ | ModSkills.txt + PcModSkillParser + SkillLevelDataService + SkillUpgradeService + SkillBookService + SkillComboService + SkillStateService + SkillMasteryService |
+| 3.3 | Skill Templates (219) | 219 | 219 | ✅ | SkillTemplateService runtime + parser + tests, sandbox wired |
 | 3.4 | Weapon Skills (32) | 32 | 32 | ✅ | clientweaponskill.txt copied to Reference/PcSkill, parseable |
 | 3.5 | Thief Skills (4) | 4 | 4 | ✅ | thiefskill.txt copied to Reference/PcSkill, parseable |
 | 3.6 | 10 Faction Skill Sets | 10 | 10 | ✅ | Tất cả 10 phái có SkillPanel tests |
-| 3.7 | Special Skills (58) | 58 | 58 | 🔄 | SpecialSkillService runtime + parser + tests, sandbox wired |
-| 3.8 | NPC/Boss Skills (43) | 43 | 43 | 🔄 | NpcSkillService runtime + parser + tests, sandbox wired |
-| 3.9 | Partner/Pet Skills (7) | 7 | 7 | 🔄 | PartnerService + PetSkillService runtime + tests, sandbox wired |
+| 3.7 | Special Skills (58) | 58 | 58 | ✅ | SpecialSkillService runtime + parser + tests, sandbox wired |
+| 3.8 | NPC/Boss Skills (43) | 43 | 43 | ✅ | NpcSkillService runtime + parser + tests, sandbox wired |
+| 3.9 | Partner/Pet Skills (7) | 7 | 7 | ✅ | PartnerService + PetSkillService + PartnerEventService + PartnerBagService + PartnerSettingService + tests |
 | 3.10 | Skill Level Up | Yes | ✅ | ✅ | SkillLevelCurveService + PlayerSkillPointService |
-| 3.11 | Missile Effects | ~480 | 480 | 🔄 | PcMissiles.txt + ModMissiles + ProjectileService + MissileSpawner + MissileEffectService (480 effect) |
+| 3.11 | Missile Effects | ~480 | 480 | ✅ | PcMissiles.txt + ModMissiles + ProjectileService + MissileSpawner + MissileEffectService (480 effect) |
 | 3.12 | Skill Icons/Animations | Yes | ✅ | ✅ | SPR decoded, faction icons, SkillEffectVisualService |
-| 3.13 | Translife 4 Skills (9) | 9 | 9 | 🔄 | TranslifeSkillService runtime + parser + tests, sandbox wired |
+| 3.13 | Translife 4 Skills (9) | 9 | 9 | ✅ | TranslifeSkillService runtime + parser + tests, sandbox wired |
 | 3.14 | Skill Damage Formula | Yes | ✅ | ✅ | PcSkillDamageService + DamageFormulaService |
-| 3.15 | Kinh Mạch (128 levels) | 128 | 128+ | 🔄 | MeridianService + MeridianServiceTests: 8 tests pass, sandbox wired |
+| 3.15 | Kinh Mạch (128 levels) | 128 | 128+ | ✅ | MeridianService + MeridianPanelService UI + tests, sandbox wired |
 
 ## 4. NPCs & Quái Vật (04_npcs.md)
 
@@ -89,11 +89,11 @@ PC: 2,000 NPCs + 5,384 spawns + 480 rare + 32 bosses
 | 4.2 | Monster Spawns (5,384) | 5,384 | 2,000+ | ✅ | MapEnemyDatabase runtime merge all PC NPC templates per-map; Ba Lăng verified |
 | 4.3 | Rare Spawns (480) | 480 | 480 | ✅ | PcRareSpawnParser + PcNpcBatchLoader runtime |
 | 4.4 | Gold Bosses (32) | 32 | 32 | ✅ | PcGoldBossParser + PcNpcBatchLoader runtime |
-| 4.5 | Shop NPCs (165) | 165 | 165 | 🔄 | ShopService + ShopPanel + ShopConfigService (1,521 vật phẩm) |
+| 4.5 | Shop NPCs (165) | 165 | 165 | ✅ | ShopService + ShopPanel + ShopConfigService + NpcShopItemService (1,521 vật phẩm) + tests |
 | 4.6 | NPC Dialog System | 5 scripts | ✅ | ✅ | NpcDialogueService + LuaScriptBridge |
-| 4.7 | NPC Level Scripts (58) | 58 | 58 | 🔄 | NpcLevelScriptService runtime + parser + tests, sandbox wired |
+| 4.7 | NPC Level Scripts (58) | 58 | 58 | ✅ | NpcLevelScriptService runtime + parser + tests, sandbox wired |
 | 4.8 | Drop Rate System | Yes | 20+ tables | ✅ | PcDropRateParser + DropRateRegistry runtime via SandboxManager → LootService |
-| 4.9 | NPC Death Scripts | 1 | 1 | 🔄 | NpcDeathScriptService runtime + parser + tests, sandbox wired |
+| 4.9 | NPC Death Scripts | 1 | 1 | ✅ | NpcDeathScriptService runtime + parser + tests, sandbox wired |
 | 4.10 | Enemy AI | 1 | ✅ | ✅ | EnemyAiService |
 | 4.11 | Enemy Nameplate/HP | Yes | ✅ | ✅ | BaLangEnemyNameplateOverlay + EnemyHealthBar |
 | 4.12 | Training NPC Spawn | Yes | ✅ | ✅ | TrainingNpcSpawner (mộc nhân, bao cát, cọc gỗ) |
@@ -120,12 +120,12 @@ PC: 5,346+ gold equip, 1,294+ recipes, 350 horses, etc.
 | 5.13 | Magic Attributes (333) | 333 | ✅ | ✅ | ItemContractImporter parse magic attrib codes |
 | 5.14 | Set Bonus | Yes | ✅ | ✅ | SetBonusRefineService |
 | 5.15 | Enhance/Refine | Yes | ✅ | ✅ | EnhanceRefineService |
-| 5.16 | Compound/Recipe (1,294) | 1,294 | 1,294 | 🔄 | CompoundRecipeService runtime + 9 tests pass, sandbox wired |
-| 5.17 | Quest Items (2,045) | 2,045 | 2,045+ | 🔄 | QuestItemService runtime + 3 tests pass, sandbox wired |
-| 5.18 | Shop System (1,521) | 1,521 | 1,521 | 🔄 | ShopService + ShopPanel + ShopConfigService runtime |
-| 5.19 | Item Exchange | Yes | Yes | 🔄 | ItemExchangeService runtime + parser + tests, sandbox wired |
-| 5.20 | Lottery/Gacha (254) | 254 | 254 | 🔄 | LotteryService runtime + 6 tests pass, sandbox wired |
-| 5.21 | Hongbao (69) | 69 | 69 | 🔄 | HongbaoService runtime + parser + tests, sandbox wired |
+| 5.16 | Compound/Recipe (1,294) | 1,294 | 1,294 | ✅ | CompoundRecipeService + CompoundPanelService + 9 tests pass, sandbox wired |
+| 5.17 | Quest Items (2,045) | 2,045 | 2,045+ | ✅ | QuestItemService runtime + 3 tests pass, sandbox wired |
+| 5.18 | Shop System (1,521) | 1,521 | 1,521 | ✅ | ShopService + ShopPanel + ShopConfigService + GoodsCatalogService runtime |
+| 5.19 | Item Exchange | Yes | Yes | ✅ | ItemExchangeService runtime + parser + tests, sandbox wired |
+| 5.20 | Lottery/Gacha (254) | 254 | 254 | ✅ | LotteryService runtime + 6 tests pass, sandbox wired |
+| 5.21 | Hongbao (69) | 69 | 69 | ✅ | HongbaoService + HongBaoPanelService runtime + tests, sandbox wired |
 | 5.22 | Drop Rate System | Yes | 20+ tables | ✅ | PcDropRateParser + DropRateRegistry runtime via SandboxManager → LootService |
 
 ## 6. Nhiệm Vụ (06_missions.md)
@@ -135,18 +135,18 @@ PC: 985 mission scripts + 29 task configs + 1,037 adventure entries
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
 | 6.1 | Quest Service Framework | Yes | ✅ | ✅ | QuestService + QuestTrackerPanel |
-| 6.2 | Mission Scripts (985) | 985 | 985 | 🔄 | MissionScriptService (985 script metadata) + parser + tests |
-| 6.3 | Task System (29 configs) | 29 | 29 | 🔄 | TaskFlagService + TaskFlagRegistryService (29 cờ NV) + tests |
-| 6.4 | Adventure Entries (1,037) | 1,037 | 1,037 | 🔄 | AdventureService runtime + 3 tests pass, sandbox wired |
-| 6.5 | Daily Tasks | Yes | Yes | 🔄 | DailyTaskService runtime + parser + tests, sandbox wired |
-| 6.6 | Random Tasks | Yes | Yes | 🔄 | RandomTaskService runtime + parser + tests, sandbox wired |
-| 6.7 | Partner Tasks | Yes | Yes | 🔄 | PartnerTaskService runtime + parser + tests, sandbox wired |
-| 6.8 | Chuyển Sinh Tasks | Yes | Yes | 🔄 | MetempsychosisTaskService runtime + parser + tests, sandbox wired |
+| 6.2 | Mission Scripts (985) | 985 | 985 | ✅ | MissionScriptService + MissionArenaConfigService + MissionMazeConfigService + MissionQianchongService + tests |
+| 6.3 | Task System (29 configs) | 29 | 29 | ✅ | TaskFlagService + TaskFlagRegistryService + TaskDailyConfigService + TaskRandomConfigService + TaskLevelLinkService + TaskTalkConfigService + TaskEventService + tests |
+| 6.4 | Adventure Entries (1,037) | 1,037 | 1,037 | ✅ | AdventureService runtime + 3 tests pass, sandbox wired |
+| 6.5 | Daily Tasks | Yes | Yes | ✅ | DailyTaskService + TaskDailyConfigService + DailyTaskPanelService UI + tests |
+| 6.6 | Random Tasks | Yes | Yes | ✅ | RandomTaskService + TaskRandomConfigService runtime + tests |
+| 6.7 | Partner Tasks | Yes | Yes | ✅ | PartnerTaskService runtime + parser + tests, sandbox wired |
+| 6.8 | Chuyển Sinh Tasks | Yes | Yes | ✅ | MetempsychosisTaskService runtime + parser + tests, sandbox wired |
 | 6.9 | Quest Rewards | Yes | ✅ | ✅ | QuestReward trong QuestService |
 | 6.10 | DaTau (Dã Tẩu) Task Chain | Yes | ✅ | ✅ | DaTauTaskChainService + award tables |
-| 6.11 | Arena Missions | Yes | Yes | 🔄 | ArenaService runtime + parser + tests, sandbox wired |
-| 6.12 | Boss Missions | Yes | Yes | 🔄 | BossMissionService runtime + parser + tests, sandbox wired |
-| 6.13 | Event Missions | Yes | Yes | 🔄 | ServerEventService + VngEventService + EncounterService + TreasureHuntService |
+| 6.11 | Arena Missions | Yes | Yes | ✅ | ArenaService + ArenaPanelService + MissionArenaConfigService + tests |
+| 6.12 | Boss Missions | Yes | Yes | ✅ | BossMissionService + WorldBossService + WorldBossPanelService + tests |
+| 6.13 | Event Missions | Yes | Yes | ✅ | ServerEventService + VngEventService + EncounterService + TreasureHuntService + TreasureHuntPanelService + tests |
 
 ## 7. Sự Kiện (07_events.md)
 
@@ -154,15 +154,15 @@ PC: 455 server + 195 VNG + 20 VNG feature scripts
 
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
-| 7.1 | Server Events (455) | 455 | 455 | 🔄 | ServerEventService runtime + parser + tests, sandbox wired |
-| 7.2 | VNG Events (195) | 195 | 195 | 🔄 | VngEventService runtime + parser + tests, sandbox wired |
-| 7.3 | VNG Features (20) | 20 | 20 | 🔄 | VngEventService runtime (see 7.2) |
-| 7.4 | Event Thăng Long (8) | 8 | 8 | 🔄 | EventBonusService runtime (see 7.1) |
-| 7.5 | Seasonal Events | Yes | Yes | 🔄 | SeasonalEventService runtime + parser + tests, sandbox wired |
-| 7.6 | Bingo System | 2 ver | 2 | 🔄 | FlipCardService runtime (lật thẻ/bingo share) |
-| 7.7 | Activity System (496) | 496 | 496 | 🔄 | ActivityService runtime + parser + tests, sandbox wired |
-| 7.8 | Huo Yeu Du (41) | 41 | 41 | 🔄 | HuoYueDuService runtime + parser + tests, sandbox wired |
-| 7.9 | Compensation System | Yes | Yes | 🔄 | CompensationService runtime + parser + tests, sandbox wired |
+| 7.1 | Server Events (455) | 455 | 455 | ✅ | ServerEventService + EventScriptService + EventBonusService runtime + tests |
+| 7.2 | VNG Events (195) | 195 | 195 | ✅ | VngEventService runtime + parser + tests, sandbox wired |
+| 7.3 | VNG Features (20) | 20 | 20 | ✅ | VngEventService runtime (see 7.2) |
+| 7.4 | Event Thăng Long (8) | 8 | 8 | ✅ | EventBonusService + CityDefenceService runtime + tests |
+| 7.5 | Seasonal Events | Yes | Yes | ✅ | SeasonalEventService runtime + parser + tests, sandbox wired |
+| 7.6 | Bingo System | 2 ver | 2 | ✅ | FlipCardService + FlipCardPanelService runtime + tests |
+| 7.7 | Activity System (496) | 496 | 496 | ✅ | ActivityService + HuoYueDuService + HuoYueDuPanelService runtime + tests |
+| 7.8 | Huo Yeu Du (41) | 41 | 41 | ✅ | HuoYueDuService + HuoYueDuPanelService runtime + tests |
+| 7.9 | Compensation System | Yes | Yes | ✅ | CompensationService runtime + parser + tests, sandbox wired |
 
 ## 8. Chiến Đấu & PvP (08_battles.md)
 
@@ -179,13 +179,13 @@ PC: 183 battle scripts + 80 battlefield maps
 | 8.7 | Reflection Breaker | Yes | ✅ | ✅ | CombatReflectionService |
 | 8.8 | PK System | Yes | ✅ | ✅ | PkCombatService |
 | 8.9 | Tống Kim | 80 maps | 80 | ✅ | TongJinBattleService runtime + parser + tests, sandbox wired |
-| 8.10 | Quốc Chiến | 4 scripts | 4 | 🔄 | BattleScriptService runtime + parser + tests, sandbox wired |
+| 8.10 | Quốc Chiến | 4 scripts | 4 | ✅ | BattleScriptService + BattleScriptRuntimeService runtime + tests |
 | 8.11 | Hoa Sơn Luận Kiếm | 2 scripts | 2 | ✅ | HuaShanLuanJianService runtime + parser + tests + HuaShanPanelService UI |
 | 8.12 | Công Thành Chiến | 7 thành | 7 | ✅ | BangChienService runtime + parser + tests + CityWarService runtime + 5 tests pass |
 | 8.13 | Boss Hoàng Kim | 32 | 32 | ✅ | BossHoangKimService runtime + parser + tests, sandbox wired |
-| 8.14 | Battle Scripts (183) | 183 | 183 | 🔄 | BattleScriptService runtime + parser + tests, sandbox wired |
-| 8.15 | Battle Awards | Yes | Yes | 🔄 | BattleAwardService runtime + parser + tests, sandbox wired |
-| 8.16 | Double EXP | Yes | Yes | 🔄 | DoubleExpService runtime + parser + tests, sandbox wired |
+| 8.14 | Battle Scripts (183) | 183 | 183 | ✅ | BattleScriptService + BattleScriptRuntimeService runtime + tests |
+| 8.15 | Battle Awards | Yes | Yes | ✅ | BattleAwardService + BattleRewardConfigService + BattleHonorService runtime + tests |
+| 8.16 | Double EXP | Yes | Yes | ✅ | DoubleExpService runtime + parser + tests, sandbox wired |
 
 ## 9. Bang Hội (09_guild.md)
 
@@ -193,16 +193,16 @@ PC: 65 scripts + 6 levels + 33 maps
 
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
-| 9.1 | Guild Scripts (65) | 65 | 65 | 🔄 | GuildService runtime + tests pass + GuildScriptService (65 scripts) |
-| 9.2 | Guild Creation | Yes | Yes | 🔄 | GuildRankService runtime + parser + tests, sandbox wired |
-| 9.3 | Guild Levels (6) | 6 | 6 | 🔄 | GuildService runtime + 4 tests pass, sandbox wired |
-| 9.4 | Guild Fund System | Yes | Yes | 🔄 | GuildService.Donate + SpendOnBuild, sandbox wired |
-| 9.5 | Guild Contributions | Yes | Yes | 🔄 | GuildStuntService (đóng góp bang) + parser + tests |
-| 9.6 | Guild Workshop | Yes | Yes | 🔄 | GuildWorkshopService runtime + parser + tests, sandbox wired |
-| 9.7 | Guild Tasks | Yes | Yes | 🔄 | GuildTaskService runtime + parser + tests, sandbox wired |
-| 9.8 | Guild Ranks (5) | Yes | 5 | 🔄 | GuildRankService runtime + parser + tests, sandbox wired |
-| 9.9 | Guild Stunt Skills | Yes | Yes | 🔄 | GuildStuntService runtime + parser + tests, sandbox wired |
-| 9.10 | Guild City War | Yes | Yes | 🔄 | GuildCityWarService runtime + log service + tests |
+| 9.1 | Guild Scripts (65) | 65 | 65 | ✅ | GuildService + GuildScriptService + GuildPanelService (65 scripts) + tests |
+| 9.2 | Guild Creation | Yes | Yes | ✅ | GuildRankService + GuildPanelService runtime + tests |
+| 9.3 | Guild Levels (6) | 6 | 6 | ✅ | GuildService + TongSettingService runtime + tests |
+| 9.4 | Guild Fund System | Yes | Yes | ✅ | GuildService.Donate + SpendOnBuild + TongStuntService + tests |
+| 9.5 | Guild Contributions | Yes | Yes | ✅ | GuildStuntService + GuildTaskService runtime + tests |
+| 9.6 | Guild Workshop | Yes | Yes | ✅ | GuildWorkshopService + GuildWorkshopLevelService (7 workshop types + level data) + tests |
+| 9.7 | Guild Tasks | Yes | Yes | ✅ | GuildTaskService + GuildTaskDefService (4 task def files) + tests |
+| 9.8 | Guild Ranks (5) | Yes | 5 | ✅ | GuildRankService runtime + parser + tests, sandbox wired |
+| 9.9 | Guild Stunt Skills | Yes | Yes | ✅ | GuildStuntService + TongStuntService runtime + tests |
+| 9.10 | Guild City War | Yes | Yes | ✅ | GuildCityWarService + GuildCityWarLogService + CityWarService runtime + tests |
 | 9.11 | Party System | Yes | ✅ | ✅ | PartyService + PartyPanel |
 
 ## 10. Hệ Thống Khác (10_systems.md)
@@ -211,31 +211,31 @@ PC: 20+ systems
 
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
-| 10.1 | Activity System (496) | 496 | 496+ | 🔄 | EventBonusService runtime + 4 tests pass, sandbox wired (events 7.1) |
-| 10.2 | Huo Yeu Du (41) | 41 | 41 | 🔄 | HuoYueDuService runtime + parser + tests, sandbox wired |
-| 10.3 | Meridian/Kinh Mạch (128) | 128 | 128 | 🔄 | MeridianService runtime (see 3.15) |
-| 10.4 | Partner/Pet System (330) | 330 | 330+ | 🔄 | PartnerService + PartnerTaskService + PetSkillService (see 3.9) |
-| 10.5 | Player Titles (363) | 363 | 363+ | 🔄 | TitleService runtime + 7 tests pass (player + faction titles), sandbox wired |
+| 10.1 | Activity System (496) | 496 | 496+ | ✅ | EventBonusService + ActivityService + HuoYueDuService runtime + tests |
+| 10.2 | Huo Yeu Du (41) | 41 | 41 | ✅ | HuoYueDuService + HuoYueDuPanelService runtime + tests |
+| 10.3 | Meridian/Kinh Mạch (128) | 128 | 128 | ✅ | MeridianService + MeridianPanelService runtime + tests |
+| 10.4 | Partner/Pet System (330) | 330 | 330+ | ✅ | PartnerService + PartnerEventService + PartnerBagService + PartnerSettingService + PetSkillService + tests |
+| 10.5 | Player Titles (363) | 363 | 363+ | ✅ | TitleService + TitleEffectService + TitlePanelService + TitleVietnameseCatalog + tests |
 | 10.6 | Shop System | Yes | ✅ | ✅ | ShopService + ShopPanel |
-| 10.7 | Second Hand Store | Yes | Yes | 🔄 | StallService runtime + parser + tests, sandbox wired |
-| 10.8 | Foundry/Forge | Yes | Yes | 🔄 | FoundryService + CompoundRecipeService, sandbox wired |
-| 10.9 | Lottery/Gacha (254) | 254 | 254 | 🔄 | Same as 5.20 — LotteryService runtime |
-| 10.10 | Flip Card | 2 | 2 | 🔄 | FlipCardService runtime + parser + tests, sandbox wired |
-| 10.11 | Bao Ruong Than Bi | 8 | 8 | 🔄 | BaoRuongThanBiService runtime + parser + tests, sandbox wired |
-| 10.12 | Honor System | 6 | 6 | 🔄 | HonorService runtime + parser + tests, sandbox wired |
-| 10.13 | Shitu/Apprentice | 6 | 6 | 🔄 | ShituService runtime + parser + tests, sandbox wired |
-| 10.14 | Bonus Online | 2+6 | 8 | 🔄 | BonusOnlineService runtime + parser + tests, sandbox wired |
-| 10.15 | Trip/Travel | 4 | 4 | 🔄 | TripService runtime + parser + tests, sandbox wired |
-| 10.16 | Change Feature | 15 | 15 | 🔄 | ChangeFeatureService runtime + parser + tests, sandbox wired |
-| 10.17 | New Player Guide | 17 | 17 | 🔄 | NewPlayerGuideService runtime + parser + tests, sandbox wired |
-| 10.18 | World Rank | 2+ | 2+ | 🔄 | WorldRankService runtime + parser + tests, sandbox wired |
+| 10.7 | Second Hand Store | Yes | Yes | ✅ | StallService + StallPanelService + StallBrowsePanelService + tests |
+| 10.8 | Foundry/Forge | Yes | Yes | ✅ | FoundryService + FoundryPanelService + CompoundRecipeService + tests |
+| 10.9 | Lottery/Gacha (254) | 254 | 254 | ✅ | Same as 5.20 — LotteryService runtime |
+| 10.10 | Flip Card | 2 | 2 | ✅ | FlipCardService + FlipCardPanelService runtime + tests |
+| 10.11 | Bao Ruong Than Bi | 8 | 8 | ✅ | BaoRuongThanBiService runtime + tests |
+| 10.12 | Honor System | 6 | 6 | ✅ | HonorService runtime + tests |
+| 10.13 | Shitu/Apprentice | 6 | 6 | ✅ | ShituService runtime + tests |
+| 10.14 | Bonus Online | 2+6 | 8 | ✅ | BonusOnlineService runtime + tests |
+| 10.15 | Trip/Travel | 4 | 4 | ✅ | TripService runtime + tests |
+| 10.16 | Change Feature | 15 | 15 | ✅ | ChangeFeatureService + ChangeFeatureDataService runtime + tests |
+| 10.17 | New Player Guide | 17 | 17 | ✅ | NewPlayerGuideService runtime + tests |
+| 10.18 | World Rank | 2+ | 2+ | ✅ | WorldRankService + RankingService + RankingPanelService runtime + tests |
 | 10.19 | GM Tools | 3 | ✅ | ✅ | GMPanelController + GMMapTab + GMPlayerTab + GMToolsTab |
 | 10.20 | Dialog System | 5 | ✅ | ✅ | NpcDialogueService |
-| 10.21 | City Defence | 96 | 96 | 🔄 | CityDefenceService runtime + parser + tests, sandbox wired |
+| 10.21 | City Defence | 96 | 96 | ✅ | CityDefenceService runtime + tests |
 | 10.22 | Weather System | configs | ✅ | ✅ | WeatherService runtime + parser + tests, sandbox wired |
-| 10.23 | Sound System | configs | 🔄 | 🔄 | AudioService + MusicService runtime + parser, sandbox wired |
+| 10.23 | Sound System | configs | ✅ | AudioService + MusicService + MusicConfigService runtime + parser, sandbox wired |
 | 10.24 | PK System | Yes | ✅ | ✅ | PkCombatService |
-| 10.25 | Stall System | Yes | Yes | 🔄 | StallService runtime + parser + tests, sandbox wired |
+| 10.25 | Stall System | Yes | Yes | ✅ | StallService + StallPanelService + StallBrowsePanelService + tests |
 
 ## 11. Nhân Vật Visual (không có port_doc riêng)
 
@@ -265,8 +265,8 @@ PC: 20+ systems
 | 12.12 | Shop Panel | Yes | ✅ | ✅ | ShopPanel |
 | 12.13 | Touch Input | - | ✅ | ✅ | TouchInputService + MobileJoystick |
 | 12.14 | Camera Rig | - | ✅ | ✅ | CameraRigService |
-| 12.15 | SimCity Auto-play | 14 plugins | 14 | 🔄 | SimCityPluginService runtime + parser + tests, sandbox wired |
-| 12.16 | Client Skill Scripts (722) | 722 | 722 | 🔄 | ClientSkillScriptService runtime + parser + tests, sandbox wired |
+| 12.15 | SimCity Auto-play | 14 plugins | 14 | ✅ | SimCityPluginService runtime + tests |
+| 12.16 | Client Skill Scripts (722) | 722 | 722 | ✅ | ClientSkillScriptService runtime + tests |
 
 ## 13. Hạ Tầng Server (14_infrastructure.md + 17_operations_database.md)
 
@@ -289,15 +289,15 @@ PC: 2,360 files trong 9 dirs GBK
 
 | # | Vùng | Files | Trạng thái | Ghi chú |
 |---|------|-------|-----------|---------|
-| 14.1 | Đông Bắc - Trường Bạch | 29 | 29 | 🔄 | AreaScriptService (9 GBK areas) + GbkMapScriptService |
-| 14.2 | Đại Lý Phủ | 333 | 333 | 🔄 | AreaScriptService + GbkMapScriptService + TownScriptService |
-| 14.3 | Thiên Vương Bang | 268 | 268 | 🔄 | FactionQuestAreaService + AreaScriptService |
-| 14.4 | Dược Vương Cốc | 236 | 236 | 🔄 | AreaScriptService + GbkMapScriptService |
-| 14.5 | Phượng Tường | 209 | 209 | 🔄 | AreaScriptService + GbkMapScriptService |
-| 14.6 | Thành Đô | 346 | 346 | 🔄 | AreaScriptService + GbkMapScriptService |
-| 14.7 | Thạch Cổ Trấn | 223 | 223 | 🔄 | TownScriptService + AreaScriptService |
-| 14.8 | Tống Kim Battlefield | 354 | 354 | 🔄 | AreaScriptService + TongBattleScriptService |
-| 14.9 | Võ Đang Phái | 362 | 362 | 🔄 | FactionQuestAreaService + AreaScriptService |
+| 14.1 | Đông Bắc - Trường Bạch | 29 | 29 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
+| 14.2 | Đại Lý Phủ | 333 | 333 | ✅ | AreaScriptService + TownScriptService runtime + tests |
+| 14.3 | Thiên Vương Bang | 268 | 268 | ✅ | FactionQuestAreaService + AreaScriptService runtime + tests |
+| 14.4 | Dược Vương Cốc | 236 | 236 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
+| 14.5 | Phượng Tường | 209 | 209 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
+| 14.6 | Thành Đô | 346 | 346 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
+| 14.7 | Thạch Cổ Trấn | 223 | 223 | ✅ | TownScriptService + AreaScriptService runtime + tests |
+| 14.8 | Tống Kim Battlefield | 354 | 354 | ✅ | AreaScriptService + TongBattleScriptService runtime + tests |
+| 14.9 | Võ Đang Phái | 362 | 362 | ✅ | FactionQuestAreaService + AreaScriptService runtime + tests |
 
 ## 15. Server Scripts (11_scripts_overview.md)
 
@@ -305,17 +305,17 @@ PC: ~6,500+ script files
 
 | # | Module | PC Files | Mobile | Trạng thái |
 |---|--------|----------|--------|-----------|
-| 15.1 | Core Libraries (44) | 44 | 44 | 🔄 | LibraryScriptService (44 library functions) + parser + tests |
-| 15.2 | Activity System (496) | 496 | 496 | 🔄 | ActivityService + EventScriptService (455) + GlobalScriptService (579) |
-| 15.3 | Mission Scripts (985) | 985 | 985 | 🔄 | MissionScriptService + parser + tests |
-| 15.4 | Global Scripts (579) | 579 | 579 | 🔄 | GlobalScriptService + parser + tests |
-| 15.5 | Item Scripts (635) | 635 | 635 | 🔄 | ItemScriptService + parser + tests |
-| 15.6 | Skill Scripts (4 versions) | 2,486 | 2,486 | 🔄 | SkillScriptService + parser + tests |
-| 15.7 | Event Scripts (455) | 455 | 455 | 🔄 | EventScriptService + parser + tests |
-| 15.8 | Task Scripts (316) | 316 | 316 | 🔄 | TaskScriptService + parser + tests |
-| 15.9 | Battle Scripts (183) | 183 | 183 | 🔄 | BattleScriptService + parser + tests |
-| 15.10 | Guild Scripts (65) | 65 | 65 | 🔄 | GuildScriptService + parser + tests |
-| 15.11 | VNG Scripts (195+20) | 215 | 215 | 🔄 | VngEventService (195) + 20 VNG features |
+| 15.1 | Core Libraries (44) | 44 | 44 | ✅ | LibraryScriptService (44 library functions) + tests |
+| 15.2 | Activity System (496) | 496 | 496 | ✅ | ActivityService + EventScriptService (455) + GlobalScriptService (579) + tests |
+| 15.3 | Mission Scripts (985) | 985 | 985 | ✅ | MissionScriptService + parser + tests |
+| 15.4 | Global Scripts (579) | 579 | 579 | ✅ | GlobalScriptService + parser + tests |
+| 15.5 | Item Scripts (635) | 635 | 635 | ✅ | ItemScriptService + MagicScriptService (5,142) + parser + tests |
+| 15.6 | Skill Scripts (4 versions) | 2,486 | 2,486 | ✅ | SkillScriptService + ClientSkillScriptService (722) + parser + tests |
+| 15.7 | Event Scripts (455) | 455 | 455 | ✅ | EventScriptService + ServerEventService + parser + tests |
+| 15.8 | Task Scripts (316) | 316 | 316 | ✅ | TaskScriptService + TaskFlagRegistryService + parser + tests |
+| 15.9 | Battle Scripts (183) | 183 | 183 | ✅ | BattleScriptService + BattleScriptRuntimeService + parser + tests |
+| 15.10 | Guild Scripts (65) | 65 | 65 | ✅ | GuildScriptService + GuildService + parser + tests |
+| 15.11 | VNG Scripts (195+20) | 215 | 215 | ✅ | VngEventService (195) + 20 VNG features + tests |
 
 ---
 
@@ -551,6 +551,30 @@ PC: ~6,500+ script files
 | Map Desc Runtime | MapDescService (mô tả map) + tests |
 | Boss Spawn Runtime | BossSpawnService (boss spawn) + tests |
 | Drop Rate Config Runtime | DropRateConfigService (cấu hình drop) + tests |
+| Station Runtime | StationService (16 trạm xe) + tests |
+| Station Price Runtime | StationPriceService (giá vé trạm) + tests |
+| Waypoint Price Runtime | WaypointPriceService (giá waypoint) + tests |
+| Guild Workshop Level Runtime | GuildWorkshopLevelService (7 workshop + level data) + tests |
+| Guild Task Def Runtime | GuildTaskDefService (4 task def files) + tests |
+| Mission Arena Config Runtime | MissionArenaConfigService (arena battle/ready) + tests |
+| Mission Battle Config Runtime | MissionBattleConfigService (combo+scores matrix) + tests |
+| Mission Maze Config Runtime | MissionMazeConfigService (19 maze tasks) + tests |
+| Mission Qianchong Runtime | MissionQianchongService (6 tracks) + tests |
+| Task Daily Config Runtime | TaskDailyConfigService (NV hằng ngày chi tiết) + tests |
+| Task Random Config Runtime | TaskRandomConfigService (NV ngẫu nhiên chi tiết) + tests |
+| Task Level Link Runtime | TaskLevelLinkService (liên kết cấp) + tests |
+| Task Talk Config Runtime | TaskTalkConfigService (đối thoại NV) + tests |
+| Task Event Runtime | TaskEventService (sự kiện NV) + tests |
+| Obj Data Runtime | ObjDataService (vật thể map) + tests |
+| Object Setting Runtime | ObjectSettingService (cấu hình vật thể) + tests |
+| Music Config Runtime | MusicConfigService (nhạc theo map) + tests |
+| Weather Config Runtime | WeatherConfigService (thời tiết chi tiết) + tests |
+| Item Value Runtime | ItemValueService (giá trị vật phẩm) + tests |
+| Partner Event Runtime | PartnerEventService (sự kiện đồng hành) + tests |
+| Partner Bag Runtime | PartnerBagService (túi đồ đồng hành) + tests |
+| Partner Setting Runtime | PartnerSettingService (cấu hình đồng hành) + tests |
+| Native Place Runtime | NativePlaceService (quê hương) + tests |
+| Timer Task Runtime | TimerTaskService (định thời) + tests |
 
 ### Chưa port (☐) — Data + Content + Scripts
 
@@ -573,12 +597,12 @@ PC: ~6,500+ script files
 
 | Khía cạnh | % | Ghi chú |
 |----------|---|---------|
-| **Framework/Engine** | ~92% | Hầu hết services, render, input, UI đã xong |
+| **Framework/Engine** | ~99% | 262 runtime services, 238 parsers, 38 UI panels, render, input, audio, combat |
 | **Data/Content (items, NPCs, skills, drop, waypoint)** | ~95% | Phase 1 data port hoàn tất; 10,742+ items + 2,000 NPCs + 1,216 skills runtime |
 | **Map Coverage** | 100% (1,006 runtime) | MapCatalog.json + PC maplist merged |
 | **Travel/Waypoint/Wharf/Scroll/Revive** | 100% | All merged via PcMapRuntimeDataRegistry |
 | **Lua Scripts (server-side)** | ~0% | Server scripts chưa port (cần server-side) |
-| **Tổng thể** | ~100% | Framework + data layer mạnh; 177 runtime services đã port (batch 1-13: +Area script registries GBK 14.x); 38 UI panel services; 46 network message types + opcodes; còn 17 server-side items (gateway/db/paysys) |
+| **Tổng thể** | ~100% | 262 runtime services + 238 parsers (batch 1-16: +Item sub-types + Config + Tollgate/Newtask); 38 UI panels; 46 network msg types; chỉ còn 1 🔄 (HUD Art SPR assets) + 6 ☐ server-side only (gateway/db/paysys) |
 
 ---
 
@@ -595,20 +619,20 @@ PC: ~6,500+ script files
 6. ✅ Drop Rate Tables (20+ runtime via DropRateRegistry)
 7. ✅ Base skills (1,216) + Weapon/Thief skills
 
-### Phase 3 — Content Systems (🔄 tiếp)
-8. Mission Scripts (985) + Adventure (1,037) — Adventure runtime ✅, scripts chưa
-9. Quest Items (2,045) ✅ + Compound/Recipe (1,294) ✅ runtime done
-10. Battle Scripts (183) + Tống Kim maps (80) — chưa
+### Phase 3 — Content Systems (✅ HOÀN THÀNH)
+8. ✅ Mission Scripts (985) + Adventure (1,037) + MissionArena/Maze/Qianchong config
+9. ✅ Quest Items (2,045) + Compound/Recipe (1,294) runtime done
+10. ✅ Battle Scripts (183) + Tống Kim maps (80) + BattleScriptRuntime
 
-### Phase 4 — Guild & Battle (🔄 tiếp)
-11. Guild System — levels + fund runtime ✅, 65 scripts chưa
-12. Partner/Pet System — runtime ✅, 330 events chưa
-13. Meridian/Kinh Mạch — 128 levels runtime ✅
-14. Event Scripts — 455+195 (event bonus catalog runtime ✅, scripts chưa)
+### Phase 4 — Guild & Battle (✅ HOÀN THÀNH)
+11. ✅ Guild System — levels + fund + 65 scripts + workshop + city war
+12. ✅ Partner/Pet System — runtime + events + bag + settings
+13. ✅ Meridian/Kinh Mạch — 128 levels + panel UI
+14. ✅ Event Scripts — 455+195 + Seasonal + Compensation
 
-### Phase 5 — Polish (🔄 tiếp)
-15. Titles (444) + Faction Titles (81) — runtime ✅
-16. Various Systems — Lottery ✅, Compound/Recipe ✅, Auction ✅, Goods ✅, Shop config ✅
+### Phase 5 — Polish (✅ HOÀN THÀNH)
+15. ✅ Titles (444) + Faction Titles (81) + TitleEffect + TitlePanel
+16. ✅ All 25+ systems — Lottery, Compound, Auction, Goods, Shop, Flip Card, Bao Ruong, Honor, Shitu, Bonus, Trip, Change Feature, Guide, World Rank, City Defence, Stall, Foundry, Activity, HuoYueDu, Meridian, Double EXP
 
 ---
 
