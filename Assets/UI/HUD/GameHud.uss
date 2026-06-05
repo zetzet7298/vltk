@@ -319,7 +319,7 @@
     top: 342px;
     width: 97px;
     height: 29px;
-    background-image: url('project://database/Assets/UI/HUD/Art/技能－关闭_02.png');
+    background-image: url('project://database/Assets/StreamingAssets/UI/HUD/Art/vi/btn_close_skill_02_vi.png');
     -unity-background-scale-mode: stretch-to-fill;
 }
 

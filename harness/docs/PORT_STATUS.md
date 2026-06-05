@@ -252,7 +252,7 @@ PC: 20+ systems
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
 | 12.1 | Mobile HUD | Yes | ✅ | ✅ | GameHudController + HudDataService + MobileJoystick |
-| 12.2 | HUD Art (PC SPR) | 1,851 SPR | ~410 | 🔄 | StreamingAssets/UI/HUD/Art/ có ~410 PNG + HudArtCatalogService runtime |
+| 12.2 | HUD Art (PC SPR) | 1,851 SPR | ~410 | 🔄 | StreamingAssets/UI/HUD/Art/ có ~410 PNG + HudArtCatalogService runtime; HUD user-facing baked Chinese audit có 279 PNG CJK, catalog Việt hóa + tests chặn close/refresh/chat/skill/friend/guild/team text Trung |
 | 12.3 | Vietnamese Text Overlay | - | ✅ | ✅ | PcHudVietnameseTextOverlay |
 | 12.4 | Skill Panel | Yes | ✅ | ✅ | PcSkillPanelService + CombatSkillSlotController |
 | 12.5 | Minimap Panel | Yes | ✅ | ✅ | MinimapPanel |

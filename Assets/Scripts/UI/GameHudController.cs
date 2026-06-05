@@ -39,6 +39,9 @@ namespace VLTK.UI
         public static string ResolvePngPath(string artRoot, string iconName)
             => CombineStreamingPath(artRoot, iconName + ".png");
 
+        public static string ResolveUserFacingPngPath(string artRoot, string iconName)
+            => ResolvePngPath(artRoot, HudUserFacingArtCatalog.ResolveVietnameseArtName(iconName));
+
         public static bool CanCheckDirectory(string path)
             => !string.IsNullOrEmpty(path) && !RequiresUnityWebRequest(path);
 
@@ -457,7 +460,7 @@ namespace VLTK.UI
                 return;
             }
 
-            var png = HudArtPathResolver.ResolvePngPath(artPath, name);
+            var png = HudArtPathResolver.ResolveUserFacingPngPath(artPath, name);
             if (coroutineHost != null)
             {
                 LoadTextureIntoElement(coroutineHost, png, name, tex =>
@@ -495,7 +498,7 @@ namespace VLTK.UI
         private void LoadElementImage(VisualElement el, string artPath, string name)
         {
             if (el == null) return;
-            var png = HudArtPathResolver.ResolvePngPath(artPath, name);
+            var png = HudArtPathResolver.ResolveUserFacingPngPath(artPath, name);
             LoadTextureIntoElement(this, png, name, tex => el.style.backgroundImage = new StyleBackground(tex));
         }
 
