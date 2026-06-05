@@ -119,12 +119,13 @@ namespace VLTK.UI
 
         private void EnsureSkillTextures()
         {
+            var artRoot = HudArtPathResolver.ResolveArtRoot("UI/HUD/Art");
             if (_skillPanelTexture == null)
-                _skillPanelTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/技能.png"));
+                _skillPanelTexture = LoadTexture(HudArtPathResolver.ResolveUserFacingPngPath(artRoot, "技能"));
             if (_skillPanelTargetTexture == null)
-                _skillPanelTargetTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/技能－战斗分页.png"));
+                _skillPanelTargetTexture = LoadTexture(HudArtPathResolver.ResolveUserFacingPngPath(artRoot, "技能－战斗分页"));
             if (_addPointTexture == null)
-                _addPointTexture = LoadTexture(System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/状态加点按钮改_01.png"));
+                _addPointTexture = LoadTexture(HudArtPathResolver.ResolvePngPath(artRoot, "状态加点按钮改_01"));
             var caiBangIconIds = new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
                                         274, 277, 357, 359, 360, 714, 1073, 1074,
                                         151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166,
@@ -140,7 +141,7 @@ namespace VLTK.UI
             {
                 if (_caiBangIconTextures.ContainsKey(skillId) && _caiBangIconTextures[skillId] != null)
                     continue;
-                _caiBangIconTextures[skillId] = LoadTexture(System.IO.Path.Combine(Application.dataPath, $"UI/HUD/Art/Generated/cai_bang_skill_{skillId}.png"));
+                _caiBangIconTextures[skillId] = LoadTexture(HudArtPathResolver.ResolvePngPath(HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art"), $"cai_bang_skill_{skillId}"));
             }
         }
 

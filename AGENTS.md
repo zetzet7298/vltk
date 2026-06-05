@@ -33,4 +33,11 @@ Reference files gốc từ PC được lưu trong `Assets/StreamingAssets/Refere
 - Nếu đang đứng ở `/var/www/vltk-mobile`, dùng `HARNESS_DB=/var/www/vltk-mobile/harness/harness.db scripts/harness ...` hoặc chuyển `workdir` sang `/var/www/vltk-mobile/harness`.
 
 
+## Port Status Rule
+
+- **Trước mỗi port task**: đọc `/var/www/vltk-mobile/harness/docs/PORT_STATUS.md` — checklist trạng thái port PC→Mobile.
+- PC reference docs: `/var/www/vltksource_new/docs/port_docs/` (00–17).
+- Sau khi implement port, update PORT_STATUS.md: ☐ → 🔄 → ✅ (chỉ ✅ khi có tests pass).
+- Mỗi story trong harness DB có `port-docs:` reference đến PC docs liên quan.
+
 ### Không tự ý tạo các tài liệu markdown trừ khi human cho phép

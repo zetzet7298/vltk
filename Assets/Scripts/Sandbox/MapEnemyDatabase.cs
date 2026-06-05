@@ -16,6 +16,24 @@ namespace VLTK.Sandbox
     /// </summary>
     public static class MapEnemyDatabase
     {
+        private static bool _pcNpcsLoaded;
+
+        /// <summary>Load full PC NPC catalog from StreamingAssets if not already loaded.</summary>
+        public static void EnsurePcNpcsLoaded()
+        {
+            if (_pcNpcsLoaded) return;
+            _pcNpcsLoaded = true;
+            var npcDir = System.IO.Path.Combine(
+                UnityEngine.Application.streamingAssetsPath, "Reference/PcNpc");
+            if (!System.IO.Directory.Exists(npcDir)) return;
+            var templates = PcNpcSFullParser.ParseFile(
+                System.IO.Path.Combine(npcDir, "npcs.txt"));
+            foreach (var t in templates)
+            {
+                if (t != null && t.templateId > 0)
+                    _templateLookup[t.templateId] = t;
+            }
+        }
         // Common enemy templates shared across outdoor maps.
         // Templates derived from PC NpcS.txt + KNpc.cpp.
         private static readonly NpcTemplate[] SharedTemplates = new[]
@@ -117,6 +135,7 @@ namespace VLTK.Sandbox
         public static void RegisterAllForMap(int mapId, NpcTemplateRegistry registry)
         {
             if (registry == null) return;
+            EnsurePcNpcsLoaded();
             // Always register Ba Lăng templates as base
             BaLangEnemyDatabase.RegisterAll(registry);
             // Register map-specific templates
@@ -127,6 +146,12 @@ namespace VLTK.Sandbox
                     var t = Resolve(id);
                     if (t != null) registry.Register(t);
                 }
+            }
+            // Register all PC NPCs that match this map's templates
+            foreach (var kvp in _templateLookup)
+            {
+                if (!registry.Contains(kvp.Key))
+                    registry.Register(kvp.Value);
             }
         }
 

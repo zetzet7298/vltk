@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using VLTK.Core;
 
@@ -138,6 +139,47 @@ namespace VLTK.Sandbox
         private class TaskSaveWrapper
         {
             public List<TaskData> tasks;
+        }
+
+        // ─── Task flag catalog loader (PC source: settings/task/taskflag.txt) ───
+        public const string LogTag = "TaskFlag";
+        public const string DefaultStreamingDir = "Reference/PcTask";
+
+        private PcTaskFlagRegistry _catalog;
+
+        public int CatalogCount => _catalog != null ? _catalog.Count : 0;
+
+        public void AttachCatalog(PcTaskFlagRegistry reg)
+        {
+            _catalog = reg ?? new PcTaskFlagRegistry();
+            SubsystemLog.Info(LogTag, $"Đã tải {_catalog.Count} cờ nhiệm vụ");
+        }
+
+        public PcTaskFlagEntry GetFlagMeta(int flagId)
+            => _catalog != null ? _catalog.Get(flagId) : null;
+
+        public IReadOnlyList<PcTaskFlagEntry> GetFlagsByType(int taskType)
+            => _catalog != null ? _catalog.GetByType(taskType) : Array.Empty<PcTaskFlagEntry>();
+
+        public IReadOnlyList<PcTaskFlagEntry> GetFlagsByCategory(int categoryId)
+            => _catalog != null ? _catalog.GetByCategory(categoryId) : Array.Empty<PcTaskFlagEntry>();
+
+        public static TaskFlagService LoadFromStreamingAssets(string subdir = null)
+        {
+            string dir = Path.Combine(
+                Application.streamingAssetsPath,
+                string.IsNullOrEmpty(subdir) ? DefaultStreamingDir : subdir);
+            var svc = new TaskFlagService();
+            if (Directory.Exists(dir))
+            {
+                var reg = PcTaskFlagParser.BuildRegistry(dir);
+                svc.AttachCatalog(reg);
+            }
+            else
+            {
+                SubsystemLog.Warn(LogTag, $"Task flag catalog: directory không tồn tại {dir}");
+            }
+            return svc;
         }
     }
 }

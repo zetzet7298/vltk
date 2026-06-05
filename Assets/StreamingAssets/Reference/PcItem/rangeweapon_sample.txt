@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+Kim Ti襫 ti猽	0	1	0	\spr\item\equip\rangeweapon\obj-adart01.spr	15	1	1	Lo筰 phi ti猽 b籲g ng th玭g thng. 		10	1	1	28	4	4	29	9	9	167	0	0	31												36	0	32	0	33	30						
+Thi誹 L﹎ T竜 Nh﹏ Ti猽	0	1	0	\spr\item\equip\rangeweapon\obj-adart01.spr	15	1	1	"竚 khb籲g ng, nhnhh箃 t竜. "		15	2	1	28	7	7	29	18	18	167	0	0	31												36	9	32	10	33	45						
+Y課 tTi猽	0	1	0	\spr\item\equip\rangeweapon\obj-adart01.spr	15	1	1	"Lo筰 phi ti猽 nh畊玦 chim y課, bay kh玭g nghe ti課g k猽, hthch輓h x竎. "		20	3	1	28	12	12	29	28	28	167	0	0	31												36	18	32	15	33	60						
+Th藀 tti猽	0	1	0	\spr\item\equip\rangeweapon\obj-adart02.spr	15	1	1	"Lo筰 phi ti猽 c竎 nh蒼 giNh藅 B秐 thng th輈h sd鬾g, nh璶g ti課g k猽 r蕋 to. "		30	4	1	28	15	15	29	36	36	167	0	0	31												36	27	32	20	33	75						
+Li評 Di謕 ti猽	0	1	0	\spr\item\equip\rangeweapon\obj-adart02.spr	15	1	1	"M醤g nhlli評, kthu藅 ph秈 th藅 甶猽 luy謓 m韎 cthph鉵g tr髇g. "		40	5	1	28	19	19	29	44	44	167	0	0	31												36	36	32	30	33	90						

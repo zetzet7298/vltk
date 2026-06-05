@@ -109,4 +109,100 @@ namespace VLTK.Model
         // M1.8 AC#1: minimap / world-map overview artifact reference (spec 4.5)
         public MinimapRef minimapRef;
     }
+
+    // ─── PC JX map config port models (maplist / cavelist / tong / waypoint / scroll / wharf / revivepos) ─────
+
+    [Serializable]
+    public class MapEntry
+    {
+        public int mapId;
+        public string nameRaw;
+        public string nameNormalized;
+        public string mapType;
+        public int mapPosX;
+        public int mapPosY;
+        public int levelMin;
+        public int levelMax;
+        public int autoGoldenNpc;
+        public int goldenType;
+        public string goldenDropRate;
+        public string normalDropRate;
+        public string sourceMapPath;
+    }
+
+    [Serializable]
+    public class CaveEntry
+    {
+        public int caveId;
+        public int mapId;
+        public string nameRaw;
+        public string nameNormalized;
+        public int mapPosX;
+        public int mapPosY;
+        public int levelMin;
+        public int levelMax;
+        public int bossTemplateId;
+        public string sourceMapPath;
+    }
+
+    [Serializable]
+    public class TongMapEntry
+    {
+        public int tongId;
+        public int mapId;
+        public string nameRaw;
+        public string nameNormalized;
+        public int levelMin;
+        public int levelMax;
+        public string tongWarConfig;
+        public string sourceMapPath;
+    }
+
+    [Serializable]
+    public class WaypointEntry
+    {
+        public int waypointId;
+        public string nameRaw;
+        public string nameNormalized;
+        public int mapId;
+        public int posX;
+        public int posY;
+        public int fightState;
+    }
+
+    [Serializable]
+    public class ScrollEntry
+    {
+        public int scrollId;
+        public string nameRaw;
+        public string nameNormalized;
+        public int mapId;
+        public int value;
+        public int fightState;
+    }
+
+    [Serializable]
+    public class WharfEntry
+    {
+        public int wharfId;
+        public string nameRaw;
+        public string nameNormalized;
+        public int mapId;
+        public int posX;
+        public int posY;
+        public int price;
+        public int sectCount;
+    }
+
+    [Serializable]
+    public class RevivePos
+    {
+        public int mapId;
+        public int regionStart;
+        public int regionEnd;
+        public int regionIndex;
+        public int x;
+        public int y;
+        public int camp;
+    }
 }

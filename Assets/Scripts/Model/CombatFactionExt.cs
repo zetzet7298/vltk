@@ -26,8 +26,8 @@ namespace VLTK.Model
         public const int ShaolinId  = 1;
         public const int TianWangId = 2;
         public const int TangMenId  = 3;
-        public const int WuDuId     = 4;
-        public const int CaiBangId  = 5;
+        public const int WuDuId     = 5;
+        public const int CaiBangId  = 4;
         public const int TianRenId  = 6;
         public const int EMeiId     = 7;
         public const int CuiYanId   = 8;

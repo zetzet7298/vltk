@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+Sa Di Gi韎 C	0	7	0	\spr\item\equip\cap\obj-ma-cap01-1.spr	28	2	2	i c馻 c竎 ti觰 Sa Di thng 甧o. 		50	1	0	30	25	25	31																		36	1	32	30	33	0			38	0		
+T╪g Gi韎 C	0	7	0	\spr\item\equip\cap\obj-ma-cap01-1.spr	28	2	2	i c馻 c竎 ti觰 Sa Di thng 甧o. 		125	2	0	30	50	50	31																		36	7	32	50	33	0			38	0		
+Ph藅 蕁 Gi韎 C	0	7	0	\spr\item\equip\cap\obj-ma-cap01-1.spr	28	2	2	i tr猲  c蕁 c馻 Ph藅 m玭. 		250	3	0	30	75	75	31																		36	13	32	70	33	0			38	0		
+T╪g GiGi韎 C	0	7	0	\spr\item\equip\cap\obj-ma-cap01-1.spr	28	2	2	i c馻 c竎 ti觰 Sa Di thng 甧o. 		400	4	0	30	100	100	31																		36	19	32	90	33	0			38	0		
+Kh玭 L閏 m穙	0	7	0	\spr\item\equip\cap\obj-ma-cap02-1.spr	28	2	2	Mi b籲g b玭g thng h筺g. 		600	5	0	30	125	125	31																		36	26	32	110	33	0			38	0		

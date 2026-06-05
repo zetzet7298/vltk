@@ -37,7 +37,18 @@ This repo uses Harness. Before work, read:
 - `docs/FEATURE_INTAKE.md`
 - `docs/ARCHITECTURE.md`
 - `docs/CONTEXT_RULES.md`
+- `docs/PORT_STATUS.md` — **BẮT BUỘC** — Checklist trạng thái port PC→Mobile, luôn đọc trước khi bắt story mới để biết gì đã làm/g chưa làm.
 - `scripts/harness query matrix`
+
+### Port Source-of-Truth Rule
+
+`docs/PORT_STATUS.md` là bảng chân trị (source of truth) cho tiến độ port.
+
+- **Trước mỗi story**: đọc `docs/PORT_STATUS.md`, xác nhận section liên quan, check ✅/🔄/☐.
+- **Sau khi implement**: update status trong PORT_STATUS.md (☐ → 🔄 → ✅).
+- **Không đánh dấu ✅** nếu thiếu tests hoặc chưa verify.
+- PC reference docs: `/var/www/vltksource_new/docs/port_docs/` (00–17).
+- Mỗi story trong harness DB có field `notes` với `port-docs:` reference đến các file port_docs liên quan.
 
 Use the Rust Harness CLI as the main operational tool. Run it through the
 stable repo-local entrypoint `scripts/harness`, which uses the prebuilt Rust

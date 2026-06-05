@@ -1,0 +1,6 @@
+ID	DESC	COUNT	SECT1	SECT2	SECT3	SECT4
+1	Phuong Tuong Pho	1	1, 1528, 2733
+2	Giang Tan Than	1	20, 3364, 6277
+3	Bien Kinh Pho	1	37, 1938, 2459
+4	Tuong Duong Pho	1	78, 1299, 3483
+5	Ba Lang huyen	2	53, 1519, 2894	53, 1803, 3148
