@@ -5,6 +5,7 @@
 
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.IO;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
@@ -185,5 +186,43 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(e);
             Assert.AreEqual(20, e.dayMusicId);
         }
+        [Test]
+        public void PcMapListFullParser_BuildRegistry_ScansSubdirectories()
+        {
+            string root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string nested = Path.Combine(root, "nested");
+            Directory.CreateDirectory(nested);
+            try
+            {
+                File.WriteAllText(Path.Combine(nested, "maplist_test.ini"), "MapId\tName\tType\n1001\tBa Lang\t3\n");
+                var reg = PcMapListFullParser.BuildRegistry(root);
+                Assert.IsNotNull(reg.Get(1001));
+                Assert.AreEqual(PcMapListFullParser.TypeField, reg.Get(1001).type);
+            }
+            finally
+            {
+                if (Directory.Exists(root)) Directory.Delete(root, true);
+            }
+        }
+
+        [Test]
+        public void PcMapBlockParser_BuildRegistry_ScansSubdirectories()
+        {
+            string root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string nested = Path.Combine(root, "nested");
+            Directory.CreateDirectory(nested);
+            try
+            {
+                File.WriteAllText(Path.Combine(nested, "mapblock_test.txt"), "MapId\tBlockX\tBlockY\tWidth\tHeight\tBlockType\tPassable\n1001\t1\t2\t3\t4\t3\t1\n");
+                var reg = PcMapBlockParser.BuildRegistry(root);
+                Assert.AreEqual(1, reg.GetByMap(1001).Count);
+                Assert.IsTrue(reg.GetByMap(1001)[0].passable);
+            }
+            finally
+            {
+                if (Directory.Exists(root)) Directory.Delete(root, true);
+            }
+        }
+
     }
 }

@@ -53,7 +53,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
             // Use the explicit file-name family to avoid sweeping unrelated
             // .txt/.ini files in the directory tree.
-            foreach (var f in Directory.GetFiles(dir, "gbkscripts*.txt"))
+            foreach (var f in Directory.GetFiles(dir, "gbkscripts*.txt", SearchOption.AllDirectories))
                 foreach (var s in ParseFile(f)) reg.Register(s);
             return reg;
         }

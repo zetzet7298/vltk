@@ -186,5 +186,40 @@ namespace VLTK.Tests.Sandbox
                 foreach (var s in list) Assert.LessOrEqual(s.requiredLevel, lv);
             }
         }
+
+        [Test]
+        public void ReferenceConfigFiles_DoNotContainConflictMarkers()
+        {
+            string root = Path.Combine(Directory.GetCurrentDirectory(), "Assets/StreamingAssets/Reference");
+            foreach (var relative in new[] { "autoupdate.ini", "forbititem.ini" })
+            {
+                string text = File.ReadAllText(Path.Combine(root, relative));
+                Assert.IsFalse(text.Contains("<<<<<<<"), relative);
+                Assert.IsFalse(text.Contains("======="), relative);
+                Assert.IsFalse(text.Contains(">>>>>>>"), relative);
+            }
+        }
+
+        [Test]
+        public void ReferenceConfigFiles_ParseResolvedSections()
+        {
+            string root = Path.Combine(Directory.GetCurrentDirectory(), "Assets/StreamingAssets/Reference");
+            var autoUpdate = PcAutoUpdateParser.BuildRegistry(root);
+            Assert.AreEqual("http://jx.xoyo.com/", autoUpdate.Get("main").KeyValues["web"]);
+
+            var forbitItem = PcForbitItemParser.BuildRegistry(root);
+            Assert.IsNotNull(forbitItem.Get("Item_87"));
+            Assert.IsNotNull(forbitItem.Get("Item_88"));
+        }
+
+        [Test]
+        public void GaiBangExtrac_UsesPcLinearInterpolation()
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "Assets/StreamingAssets/Reference/gaibang.lua");
+            string text = File.ReadAllText(path);
+            Assert.IsTrue(text.Contains("return (y2-y1)*(x-x1)/(x2-x1)+y1"));
+            Assert.IsFalse(text.Contains("return (y2-y1)*(sqrt(x)"));
+        }
+
     }
 }

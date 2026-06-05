@@ -434,7 +434,7 @@ function Extrac(x,x1,y1,x2,y2)
 	if(x2==x1) then
 		return y2
 	end
-	return (y2-y1)*(sqrt(x) - sqrt(x1))/(sqrt(x2) - sqrt(x1)) + y1
+	return (y2-y1)*(x-x1)/(x2-x1)+y1
 end
 
 -----------------------------------------------

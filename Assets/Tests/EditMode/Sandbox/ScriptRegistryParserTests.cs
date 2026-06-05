@@ -3,6 +3,7 @@
 // Bao gồm 8 registry classes
 // -----------------------------------------------------------------------------
 
+using System.IO;
 using NUnit.Framework;
 using VLTK.Sandbox;
 
@@ -122,5 +123,25 @@ namespace VLTK.Tests.Sandbox
             var reg = new PcLibraryScriptRegistry();
             Assert.AreEqual(0, reg.GetByLibrary("test").Count);
         }
+
+        [Test]
+        public void PcTaskScriptParser_BuildRegistry_ScansSubdirectories()
+        {
+            string root = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string nested = Path.Combine(root, "nested");
+            Directory.CreateDirectory(nested);
+            try
+            {
+                File.WriteAllText(Path.Combine(nested, "taskscripts_test.txt"), "ScriptId\tTaskId\tTrigger\tFunctionName\tParamsCount\tDescription\n701\t88\t2\tOnDone\t1\tQuest\n");
+                var reg = PcTaskScriptParser.BuildRegistry(root);
+                Assert.IsNotNull(reg.Get(701));
+                Assert.AreEqual(88, reg.Get(701).taskId);
+            }
+            finally
+            {
+                if (Directory.Exists(root)) Directory.Delete(root, true);
+            }
+        }
+
     }
 }

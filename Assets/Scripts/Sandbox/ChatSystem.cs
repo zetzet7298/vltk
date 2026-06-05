@@ -317,7 +317,7 @@ namespace VLTK.Sandbox
             ifText.alignment = TextAnchor.MiddleLeft;
             _inputField.textComponent = ifText;
             _inputField.placeholder = CreatePlaceholder(inputField.transform, "Nhập tin nhắn...");
-            _inputField.onEndEdit.AddListener(text => SendInput());
+            _inputField.onEndEdit.AddListener(text => { if (Input.GetKeyDown(KeyCode.Return)) SendInput(); });
 
             // Send button
             var sendBtn = new GameObject("SendBtn");
