@@ -193,6 +193,15 @@ namespace VLTK.Sandbox
         public FriendGiftService FriendGiftService { get; private set; }
         public TextResourceService TextResourceService { get; private set; }
         public AnimationBankService AnimationBankService { get; private set; }
+        // Batch 10: Faction systems, Guild scripts, Battle maps/rewards/honors, Sơ/Trung/Cao Jin
+        public FactionSkillTreeService FactionSkillTreeService { get; private set; }
+        public FactionBonusService FactionBonusService { get; private set; }
+        public FactionRelationService FactionRelationService { get; private set; }
+        public GuildScriptService GuildScriptService { get; private set; }
+        public BattleMapConfigService BattleMapConfigService { get; private set; }
+        public BattleRewardConfigService BattleRewardConfigService { get; private set; }
+        public BattleHonorService BattleHonorService { get; private set; }
+        public SjBattleService SjBattleService { get; private set; }
         // PC-parity runtime services batch 6 (client settings + items + maps)
         public PortraitService PortraitService { get; private set; }
         public SoundListService SoundListService { get; private set; }
@@ -469,6 +478,15 @@ namespace VLTK.Sandbox
                 try { FriendGiftService = FriendGiftService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FriendGiftService: " + e.Message); }
                 try { TextResourceService = TextResourceService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "TextResourceService: " + e.Message); }
                 try { AnimationBankService = AnimationBankService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "AnimationBankService: " + e.Message); }
+                // ── Batch 10: Faction skill tree + bonus + relation + Guild scripts + Battle map config + reward config + honor + Sơ/Trung/Cao Jin ───────────
+                try { FactionSkillTreeService = FactionSkillTreeService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FactionSkillTreeService: " + e.Message); }
+                try { FactionBonusService = FactionBonusService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FactionBonusService: " + e.Message); }
+                try { FactionRelationService = FactionRelationService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "FactionRelationService: " + e.Message); }
+                try { GuildScriptService = GuildScriptService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "GuildScriptService: " + e.Message); }
+                try { BattleMapConfigService = BattleMapConfigService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattleMapConfigService: " + e.Message); }
+                try { BattleRewardConfigService = BattleRewardConfigService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattleRewardConfigService: " + e.Message); }
+                try { BattleHonorService = BattleHonorService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "BattleHonorService: " + e.Message); }
+                try { SjBattleService = SjBattleService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "SjBattleService: " + e.Message); }
 
                 // ── Batch 6: Client settings, items, maps (37 more services) ───────────
                 try { PortraitService = PortraitService.LoadFromStreamingAssets(); } catch (Exception e) { SubsystemLog.Warn("Sandbox", "PortraitService: " + e.Message); }

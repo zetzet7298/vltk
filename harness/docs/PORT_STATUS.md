@@ -4,7 +4,7 @@
 > **Nguồn tham chiếu**: `/var/www/vltksource_new/docs/port_docs/`
 > **Codebase mobile**: `/var/www/vltk-mobile/`
 > **Harness DB**: ST-00.1 → ST-06.2 (tất cả implemented)
-> **Tests**: 1452/1452 EditMode ✅ (added 738 tests cho batch 1-9) | 25/25 PlayMode ✅
+> **Tests**: 1559/1559 EditMode ✅ (added 845 tests cho batch 1-10) | 25/25 PlayMode ✅
 
 ## Chú thích
 
@@ -193,7 +193,7 @@ PC: 65 scripts + 6 levels + 33 maps
 
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
-| 9.1 | Guild Scripts (65) | 65 | 0 | 🔄 | GuildService runtime + tests pass, scripts chưa port |
+| 9.1 | Guild Scripts (65) | 65 | 65 | 🔄 | GuildService runtime + tests pass + GuildScriptService (65 scripts) |
 | 9.2 | Guild Creation | Yes | Yes | 🔄 | GuildRankService runtime + parser + tests, sandbox wired |
 | 9.3 | Guild Levels (6) | 6 | 6 | 🔄 | GuildService runtime + 4 tests pass, sandbox wired |
 | 9.4 | Guild Fund System | Yes | Yes | 🔄 | GuildService.Donate + SpendOnBuild, sandbox wired |
@@ -456,6 +456,27 @@ PC: ~6,500+ script files
 | Friend Gift Runtime | FriendGiftService (quà bạn bè) + parser + tests |
 | Text Resource Runtime | TextResourceService (1,000+ text tiếng Việt) + parser + tests |
 | Animation Bank Runtime | AnimationBankService (animation sprite) + parser + tests |
+| Faction Skill Tree Runtime | FactionSkillTreeService (cây kỹ năng môn phái) + parser + tests |
+| Faction Bonus Runtime | FactionBonusService (bonus cấp môn phái) + parser + tests |
+| Faction Relation Runtime | FactionRelationService (chính/tà/trung lập) + parser + tests |
+| Guild Script Runtime | GuildScriptService (65 lua-like guild scripts) + parser + tests |
+| Battle Map Config Runtime | BattleMapConfigService (80 battlefields config) + parser + tests |
+| Battle Reward Config Runtime | BattleRewardConfigService (phần thưởng trận) + parser + tests |
+| Battle Honor Runtime | BattleHonorService (vinh danh) + parser + tests |
+| Sơ/Trung/Cao Jin Runtime | SjBattleService (3 cấp Tống Kim) + parser + tests |
+| Mail Panel UI | MailPanelService (Hòm thư) + tests |
+| Ranking Panel UI | RankingPanelService (Xếp hạng) + tests |
+| Achievement Panel UI | AchievementPanelService (Thành tựu) + tests |
+| Sign-In Panel UI | SignInPanelService (Điểm danh) + tests |
+| Fashion Panel UI | FashionPanelService (Thời trang) + tests |
+| Mall Panel UI | MallPanelService (Cửa hàng VIP) + tests |
+| Treasure Hunt Panel UI | TreasureHuntPanelService (Săn kho báu) + tests |
+| Mount Panel UI | MountPanelService (Cưỡi ngựa) + tests |
+| Performance Benchmark Tests | PerformanceBenchmarkTests (10 benchmarks) |
+| Integration Tests | IntegrationTests (10 cross-service workflows) |
+| Coverage Smoke Tests | CoverageSmokeTests (auto-discovery of all services) |
+| Service Self-Check Tests | ServiceSelfCheckTests (verify minimum API) |
+| Vietnamese Localization Tests | VietnameseLocalizationTests (6 diacritics checks) |
 | Portrait Runtime | PortraitService (chân dung) + tests |
 | Sound List Runtime | SoundListService (danh sách âm thanh) + tests |
 | Killer Runtime | KillerService (quy tắc PK) + tests |
@@ -519,7 +540,7 @@ PC: ~6,500+ script files
 | **Map Coverage** | 100% (1,006 runtime) | MapCatalog.json + PC maplist merged |
 | **Travel/Waypoint/Wharf/Scroll/Revive** | 100% | All merged via PcMapRuntimeDataRegistry |
 | **Lua Scripts (server-side)** | ~0% | Server scripts chưa port (cần server-side) |
-| **Tổng thể** | ~100% | Framework + data layer mạnh; 146 runtime services đã port (batch 1-9: +map data + skill data + world boss + achievement + mall + fashion + sign-in + treasure + encounter + friend gift + text resource + animation bank); 15 UI panel services; 46 network message types + opcodes; còn server lua scripts (14.x, 15.x) |
+| **Tổng thể** | ~100% | Framework + data layer mạnh; 154 runtime services đã port (batch 1-10: +faction skill tree + bonus + relation + guild scripts + battle map config + reward config + honor + Sơ/Trung/Cao Jin); 23 UI panel services; 46 network message types + opcodes; còn server lua scripts (14.x, 15.x) |
 
 ---
 
