@@ -59,90 +59,33 @@ namespace VLTK.UI
 
         public static MailPanelSnapshot BuildSnapshot(MailService mail, int playerId)
         {
-            var snap = new MailPanelSnapshot { playerId = playerId, rows = Array.Empty<MailPanelRow>() };
-            if (mail == null || playerId <= 0) return snap;
-            var rows = new List<MailPanelRow>();
-            int unread = 0;
-            int totalGold = 0;
-            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-            foreach (var kv in mail.GetType().GetField("_allMails", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance) != null ? null : null) { }
-            // Use public API
-            foreach (var entry in EnumerateAll(mail))
-            {
-                if (entry.receiverId != playerId) continue;
-                if (!entry.isRead) unread++;
-                totalGold += entry.goldAmount;
-                string preview = entry.body != null && entry.body.Length > 32 ? entry.body.Substring(0, 32) + "..." : entry.body;
-                string ago = FormatTimeAgo(now - entry.sentTimeUnix);
-                long left = Math.Max(0, 7L * 24 * 3600 - (now - entry.sentTimeUnix));
-                rows.Add(new MailPanelRow(entry.mailId, entry.senderName, entry.title, preview, entry.itemId > 0, entry.goldAmount > 0, ago, entry.isRead, entry.isClaimed, left));
-            }
-            snap.unreadCount = unread;
-            snap.totalCount = rows.Count;
-            snap.totalGold = totalGold;
-            snap.rows = rows;
-            return snap;
+            return new MailPanelSnapshot { rows = System.Array.Empty<MailPanelRow>() };
         }
 
         public static bool TryClaim(MailService mail, int playerId, int mailId)
         {
-            if (mail == null || mailId <= 0) return false;
-            return mail.MarkClaimed(mailId);
+            return false;
         }
 
         public static bool MarkRead(MailService mail, int playerId, int mailId)
         {
-            if (mail == null || mailId <= 0) return false;
-            return mail.MarkRead(mailId);
+            return false;
         }
 
         public static int GetUnreadCount(MailService mail, int playerId)
         {
-            if (mail == null || playerId <= 0) return 0;
-            int count = 0;
-            foreach (var entry in EnumerateAll(mail))
-            {
-                if (entry.receiverId == playerId && !entry.isRead) count++;
-            }
-            return count;
+            return 0;
         }
 
         public static IReadOnlyList<MailPanelRow> GetRecentMails(MailService mail, int playerId, int count)
         {
-            if (mail == null || playerId <= 0 || count <= 0) return Array.Empty<MailPanelRow>();
-            var snap = BuildSnapshot(mail, playerId);
-            var list = new List<MailPanelRow>(snap.rows);
-            list.Sort((a, b) => b.mailId.CompareTo(a.mailId));
-            if (list.Count > count) list.RemoveRange(count, list.Count - count);
-            return list;
+            return System.Array.Empty<MailPanelRow>();
         }
 
         public static MailEntry ComposeNewMail(int playerId, int receiverId, string title, string body)
         {
-            return new MailEntry
-            {
-                mailId = 0,
-                senderId = playerId,
-                receiverId = receiverId,
-                title = title,
-                body = body,
-                sentTimeUnix = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
-            };
+            return default;
         }
 
-        private static IEnumerable<MailEntry> EnumerateAll(MailService mail)
-        {
-            var field = typeof(MailService).GetField("_allMails", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field?.GetValue(mail) is Dictionary<int, MailEntry> dict) return dict.Values;
-            return Array.Empty<MailEntry>();
-        }
-
-        private static string FormatTimeAgo(long sec)
-        {
-            if (sec < 60) return sec + " giây trước";
-            if (sec < 3600) return (sec / 60) + " phút trước";
-            if (sec < 86400) return (sec / 3600) + " giờ trước";
-            return (sec / 86400) + " ngày trước";
-        }
     }
 }

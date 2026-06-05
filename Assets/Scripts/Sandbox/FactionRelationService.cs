@@ -92,7 +92,9 @@ namespace VLTK.Sandbox
         {
             if (f1 == f2) return false;
             var allies1 = GetAllies(f1);
-            return allies1.Contains(f2);
+            foreach (var ally in allies1)
+                if (ally == f2) return true;
+            return false;
         }
 
         /// <summary>Phái này có phải thù địch với phái kia không.</summary>
@@ -100,7 +102,9 @@ namespace VLTK.Sandbox
         {
             if (f1 == f2) return false;
             var enemies1 = GetEnemies(f1);
-            return enemies1.Contains(f2);
+            foreach (var enemy in enemies1)
+                if (enemy == f2) return true;
+            return false;
         }
 
         /// <summary>Lấy hệ phái (0=chính, 1=tà, 2=trung lập).</summary>

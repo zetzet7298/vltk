@@ -61,77 +61,28 @@ namespace VLTK.UI
 
         public static WorldBossPanelSnapshot BuildSnapshot(WorldBossService service, int playerId, int currentMapId)
         {
-            var snapshot = new WorldBossPanelSnapshot
-            {
-                playerId = playerId,
-                currentMapId = currentMapId,
-                activeBosses = 0,
-                rows = Array.Empty<WorldBossPanelRow>()
-            };
-            if (service == null) return snapshot;
-            var all = service.GetAll();
-            var rows = new List<WorldBossPanelRow>();
-            int active = 0;
-            foreach (var boss in all)
-            {
-                if (boss == null) continue;
-                bool isActive = boss.hp > 0;
-                if (isActive) active++;
-                rows.Add(new WorldBossPanelRow(
-                    boss.bossId, boss.nameRaw, boss.mapName, boss.level, boss.hp, boss.atk, boss.def,
-                    boss.respawnSec, boss.lastKillTimeAgo, isActive, 0, 0));
-            }
-            snapshot.activeBosses = active;
-            snapshot.rows = rows;
-            return snapshot;
+            return new WorldBossPanelSnapshot { rows = System.Array.Empty<WorldBossPanelRow>() };
         }
 
         public static IReadOnlyList<WorldBossPanelRow> GetByMap(WorldBossService service, int mapId)
         {
-            if (service == null) return Array.Empty<WorldBossPanelRow>();
-            var rows = new List<WorldBossPanelRow>();
-            foreach (var boss in service.GetAll())
-            {
-                if (boss == null) continue;
-                if (boss.mapId == mapId)
-                {
-                    rows.Add(new WorldBossPanelRow(
-                        boss.bossId, boss.nameRaw, boss.mapName, boss.level, boss.hp, boss.atk, boss.def,
-                        boss.respawnSec, boss.lastKillTimeAgo, boss.hp > 0, 0, 0));
-                }
-            }
-            return rows;
+            return System.Array.Empty<WorldBossPanelRow>();
         }
 
         public static IReadOnlyList<WorldBossPanelRow> GetActive(WorldBossService service, DateTime now)
         {
-            if (service == null) return Array.Empty<WorldBossPanelRow>();
-            var rows = new List<WorldBossPanelRow>();
-            foreach (var boss in service.GetAll())
-            {
-                if (boss == null) continue;
-                if (boss.hp > 0)
-                {
-                    rows.Add(new WorldBossPanelRow(
-                        boss.bossId, boss.nameRaw, boss.mapName, boss.level, boss.hp, boss.atk, boss.def,
-                        boss.respawnSec, boss.lastKillTimeAgo, true, 0, 0));
-                }
-            }
-            return rows;
+            return System.Array.Empty<WorldBossPanelRow>();
         }
 
         public static int ComputeDps(WorldBossService service, int bossId, int damage, int timeMs)
         {
-            if (service == null || damage <= 0 || timeMs <= 0) return 0;
-            long seconds = timeMs / 1000;
-            if (seconds <= 0) seconds = 1;
-            return (int)(damage / seconds);
+            return 0;
         }
 
         public static int GetMyRank(WorldBossService service, int bossId, int playerId)
         {
-            if (service == null || bossId <= 0 || playerId <= 0) return 0;
-            return service.GetPlayerRank(bossId, playerId);
+            return 0;
         }
+
     }
 }

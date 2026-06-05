@@ -8,7 +8,7 @@ using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
-    public class WeatherServiceTests
+    public class TaskFlagWeatherServiceTests
     {
         [Test]
         public void LoadFromStreamingAssets_MatchesCommittedData()
@@ -31,7 +31,7 @@ namespace VLTK.Tests.Sandbox
         }
     }
 
-    public class MusicServiceTests
+    public class TaskFlagMusicServiceTests
     {
         [Test]
         public void LoadFromStreamingAssets_MatchesCommittedData()

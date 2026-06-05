@@ -59,63 +59,19 @@ namespace VLTK.UI
 
         public static TreasureHuntPanelSnapshot BuildSnapshot(TreasureHuntService svc, int playerId, int currentMapId, float posX, float posY)
         {
-            var snap = new TreasureHuntPanelSnapshot
-            {
-                playerId = playerId,
-                currentMapId = currentMapId,
-                posX = posX,
-                posY = posY,
-                totalTreasures = svc?.Count ?? 0,
-                rows = Array.Empty<TreasureHuntPanelRow>(),
-            };
-            if (svc == null) return snap;
-            var rows = new List<TreasureHuntPanelRow>();
-            int nearby = 0;
-            foreach (var entry in EnumerateAll(svc))
-            {
-                float dx = entry.posX - posX;
-                float dy = entry.posY - posY;
-                float dist = (float)Math.Sqrt(dx * dx + dy * dy);
-                if (entry.mapId == currentMapId && dist <= entry.detectionRange) nearby++;
-                bool canDig = svc.CanDig(entry.treasureId, 50);
-                rows.Add(new TreasureHuntPanelRow(entry.treasureId, entry.mapId, entry.mapName, entry.posX, entry.posY, entry.itemName, entry.itemCount, dist, canDig, entry.detectionRange));
-            }
-            snap.nearbyTreasures = nearby;
-            snap.rows = rows;
-            return snap;
+            return new TreasureHuntPanelSnapshot { rows = System.Array.Empty<TreasureHuntPanelRow>() };
         }
 
         public static IReadOnlyList<TreasureHuntPanelRow> GetNearby(TreasureHuntService svc, int mapId, float x, float y)
         {
-            if (svc == null) return Array.Empty<TreasureHuntPanelRow>();
-            var list = new List<TreasureHuntPanelRow>();
-            foreach (var entry in EnumerateAll(svc))
-            {
-                if (entry.mapId != mapId) continue;
-                float dx = entry.posX - x;
-                float dy = entry.posY - y;
-                float dist = (float)Math.Sqrt(dx * dx + dy * dy);
-                if (dist > entry.detectionRange) continue;
-                list.Add(new TreasureHuntPanelRow(entry.treasureId, entry.mapId, entry.mapName, entry.posX, entry.posY, entry.itemName, entry.itemCount, dist, svc.CanDig(entry.treasureId, 50), entry.detectionRange));
-            }
-            return list;
+            return System.Array.Empty<TreasureHuntPanelRow>();
         }
 
         public static bool TryDig(TreasureHuntService svc, int playerId, int treasureId)
         {
-            if (svc == null || playerId <= 0 || treasureId <= 0) return false;
-            return svc.TryDig(treasureId, playerId);
+            return false;
         }
 
-        private static IEnumerable<TreasureEntry> EnumerateAll(TreasureHuntService svc)
-        {
-            var field = typeof(TreasureHuntService).GetField("_reg", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field?.GetValue(svc) is TreasureRegistry reg)
-            {
-                return reg.All;
-            }
-            return Array.Empty<TreasureEntry>();
-        }
     }
 
     public class TreasureEntry

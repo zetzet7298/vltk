@@ -83,9 +83,14 @@ namespace VLTK.Sandbox
 
         public static int Int(string[] cols, int i)
         {
+            return Int(cols, i, 0);
+        }
+
+        public static int Int(string[] cols, int i, int defaultValue)
+        {
             var s = Str(cols, i);
-            if (string.IsNullOrEmpty(s)) return 0;
-            return int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out var v) ? v : 0;
+            if (string.IsNullOrEmpty(s)) return defaultValue;
+            return int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out var v) ? v : defaultValue;
         }
 
         public static bool IsMissing(string s) => string.IsNullOrEmpty(s) || s == "-1";

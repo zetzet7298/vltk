@@ -38,7 +38,7 @@ namespace VLTK.Sandbox
             var result = new Dictionary<string, int>();
             if (!File.Exists(path)) return result;
             var lines = PcMapListParser.ReadLines(path);
-            if (lines.Count == 0) return result;
+            if (lines.Length == 0) return result;
             // Parse header: "Killer\Dead\tSoldier\tCaptain\tCommand\tLieutenant\tGeneral"
             var headerLine = lines[0].Trim();
             var headerCols = headerLine.Split('\t');
@@ -48,7 +48,7 @@ namespace VLTK.Sandbox
             for (int i = 1; i < headerCols.Length; i++)
                 colNames.Add(headerCols[i].Trim());
 
-            for (int li = 1; li < lines.Count; li++)
+            for (int li = 1; li < lines.Length; li++)
             {
                 var raw = lines[li];
                 if (string.IsNullOrWhiteSpace(raw)) continue;

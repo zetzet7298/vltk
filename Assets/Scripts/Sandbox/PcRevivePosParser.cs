@@ -36,6 +36,24 @@ namespace VLTK.Sandbox
 
     public static class PcRevivePosParser
     {
+        public static List<VLTK.Model.RevivePos> ParseFile(string path, IReadOnlyList<VLTK.Model.MapEntry> maps = null)
+        {
+            var rows = new List<VLTK.Model.RevivePos>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var registry = BuildRegistry(Path.GetDirectoryName(path));
+            foreach (var e in registry.All)
+            {
+                rows.Add(new VLTK.Model.RevivePos
+                {
+                    mapId = e.MapId,
+                    x = e.PosX,
+                    y = e.PosY,
+                    regionIndex = e.ReviveId,
+                });
+            }
+            return rows;
+        }
+
         public static PcRevivePosRegistry BuildRegistry(string absoluteDir)
         {
             var reg = new PcRevivePosRegistry();

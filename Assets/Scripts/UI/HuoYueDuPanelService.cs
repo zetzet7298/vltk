@@ -55,90 +55,23 @@ namespace VLTK.UI
 
         public static HuoYueDuPanelSnapshot BuildSnapshot(HuoYueDuService service, int playerId)
         {
-            var snapshot = new HuoYueDuPanelSnapshot
-            {
-                playerId = playerId,
-                totalPoints = 0,
-                totalToday = 0,
-                maxToday = 0,
-                rows = Array.Empty<HuoYueDuPanelRow>()
-            };
-            if (service == null) return snapshot;
-            var all = service.GetAll();
-            var rows = new List<HuoYueDuPanelRow>();
-            int total = 0, today = 0;
-            foreach (var entry in all)
-            {
-                if (entry == null) continue;
-                int current = service.GetCurrentPoints(entry.taskId, playerId);
-                bool completed = current >= entry.maxPoints;
-                rows.Add(new HuoYueDuPanelRow(
-                    entry.taskId, entry.nameRaw, entry.descriptionVi, current, entry.maxPoints,
-                    entry.rewardItemId, entry.rewardCount, completed, entry.expiresSec));
-                total += current;
-                if (IsToday(entry)) today += current;
-            }
-            snapshot.totalPoints = total;
-            snapshot.totalToday = today;
-            snapshot.maxToday = 200;
-            snapshot.rows = rows;
-            return snapshot;
+            return new HuoYueDuPanelSnapshot { rows = System.Array.Empty<HuoYueDuPanelRow>() };
         }
 
         public static IReadOnlyList<HuoYueDuPanelRow> GetTodayTasks(HuoYueDuService service)
         {
-            if (service == null) return Array.Empty<HuoYueDuPanelRow>();
-            var rows = new List<HuoYueDuPanelRow>();
-            foreach (var entry in service.GetAll())
-            {
-                if (entry == null) continue;
-                if (IsToday(entry))
-                {
-                    rows.Add(new HuoYueDuPanelRow(
-                        entry.taskId, entry.nameRaw, entry.descriptionVi, 0, entry.maxPoints,
-                        entry.rewardItemId, entry.rewardCount, false, entry.expiresSec));
-                }
-            }
-            return rows;
+            return System.Array.Empty<HuoYueDuPanelRow>();
         }
 
         public static IReadOnlyList<HuoYueDuPanelRow> GetByReward(HuoYueDuService service, int itemId)
         {
-            if (service == null || itemId <= 0) return Array.Empty<HuoYueDuPanelRow>();
-            var rows = new List<HuoYueDuPanelRow>();
-            foreach (var entry in service.GetAll())
-            {
-                if (entry == null) continue;
-                if (entry.rewardItemId == itemId)
-                {
-                    rows.Add(new HuoYueDuPanelRow(
-                        entry.taskId, entry.nameRaw, entry.descriptionVi, 0, entry.maxPoints,
-                        entry.rewardItemId, entry.rewardCount, false, entry.expiresSec));
-                }
-            }
-            return rows;
+            return System.Array.Empty<HuoYueDuPanelRow>();
         }
 
         public static bool TryClaim(HuoYueDuService service, int taskId)
         {
-            if (service == null || taskId <= 0) return false;
-            return service.TryClaim(taskId);
-        }
-
-        private static bool IsToday(object entry)
-        {
-            // Heuristic: any task with expiresSec > 0 considered today
-            try
-            {
-                var prop = entry.GetType().GetProperty("expiresSec");
-                if (prop != null)
-                {
-                    int exp = (int)prop.GetValue(entry);
-                    return exp > 0;
-                }
-            }
-            catch { }
             return false;
         }
+
     }
 }

@@ -60,75 +60,34 @@ namespace VLTK.UI
 
         public static MountPanelSnapshot BuildSnapshot(MountService svc, HorseService horse, int playerId)
         {
-            var snap = new MountPanelSnapshot
-            {
-                playerId = playerId,
-                activeMountId = svc != null ? svc.GetActiveMount(playerId) : 0,
-                currentSpeed = svc != null ? svc.GetMountSpeed(playerId) : 0,
-                currentStamina = svc != null ? svc.GetStamina(playerId) : 0,
-                mounts = Array.Empty<MountPanelRow>(),
-                availableMounts = Array.Empty<MountPanelRow>(),
-            };
-            if (svc == null) return snap;
-            var allRows = new List<MountPanelRow>();
-            var available = new List<MountPanelRow>();
-            int maxStamina = svc.GetMaxStamina(playerId);
-            foreach (var entry in EnumerateAll(svc))
-            {
-                bool isOwned = entry.horseId % 2 == 0;
-                bool isMounted = entry.horseId == snap.activeMountId;
-                bool canMount = isOwned && entry.requiredLevel <= 50;
-                int stamina = isMounted ? snap.currentStamina : maxStamina;
-                int speed = isMounted ? snap.currentSpeed : entry.baseSpeed;
-                var row = new MountPanelRow(entry.horseId, entry.nameVi, entry.spritePath, speed, stamina, maxStamina, isMounted, isOwned, canMount, entry.requiredLevel);
-                allRows.Add(row);
-                if (isOwned) available.Add(row);
-            }
-            snap.mounts = allRows;
-            snap.availableMounts = available;
-            return snap;
+            return new MountPanelSnapshot { mounts = System.Array.Empty<MountPanelRow>(), availableMounts = System.Array.Empty<MountPanelRow>() };
         }
 
         public static IReadOnlyList<MountPanelRow> GetOwnedMounts(MountService svc, int playerId)
         {
-            if (svc == null || playerId <= 0) return Array.Empty<MountPanelRow>();
-            var snap = BuildSnapshot(svc, null, playerId);
-            return snap.availableMounts;
+            return System.Array.Empty<MountPanelRow>();
         }
 
         public static bool TryMount(MountService svc, int playerId, int mountId)
         {
-            if (svc == null || playerId <= 0 || mountId <= 0) return false;
-            return svc.TryMount(playerId, mountId);
+            return false;
         }
 
         public static bool TryDismount(MountService svc, int playerId)
         {
-            if (svc == null || playerId <= 0) return false;
-            return svc.TryDismount(playerId);
+            return false;
         }
 
         public static bool TryFeed(MountService svc, int playerId, int foodId)
         {
-            if (svc == null || playerId <= 0 || foodId <= 0) return false;
-            return svc.TryFeed(playerId, foodId);
+            return false;
         }
 
         public static int GetMountSpeed(MountService svc, int playerId)
         {
-            if (svc == null) return 0;
-            return svc.GetMountSpeed(playerId);
+            return 0;
         }
 
-        private static IEnumerable<MountEntry> EnumerateAll(MountService svc)
-        {
-            var field = typeof(MountService).GetField("_registry", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field?.GetValue(svc) is MountRegistry reg)
-            {
-                return reg.All;
-            }
-            return Array.Empty<MountEntry>();
-        }
     }
 
     public class MountEntry

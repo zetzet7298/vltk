@@ -59,80 +59,29 @@ namespace VLTK.UI
 
         public static FashionPanelSnapshot BuildSnapshot(FashionService svc, int playerId)
         {
-            var snap = new FashionPanelSnapshot
-            {
-                playerId = playerId,
-                totalFashions = svc?.Count ?? 0,
-                bySlot = new Dictionary<int, IReadOnlyList<FashionPanelRow>>(),
-                rows = Array.Empty<FashionPanelRow>(),
-            };
-            if (svc == null) return snap;
-            var rows = new List<FashionPanelRow>();
-            var bySlot = new Dictionary<int, List<FashionPanelRow>>();
-            int owned = 0;
-            int equipped = 0;
-            foreach (var entry in EnumerateAll(svc))
-            {
-                bool isOwned = entry.fashionId % 2 == 0;
-                bool isEquipped = entry.fashionId % 7 == 0;
-                bool canEquip = svc.CanEquip(entry.fashionId, 50, 0, 3);
-                string slotName = svc.GetSlotName(entry.slot);
-                rows.Add(new FashionPanelRow(entry.fashionId, entry.nameVi, slotName, entry.spritePath, entry.requiredLevel, entry.requiredVipLevel, isOwned, isEquipped, canEquip, entry.previewPath));
-                if (isOwned) owned++;
-                if (isEquipped) equipped++;
-                if (!bySlot.TryGetValue(entry.slot, out var list))
-                {
-                    list = new List<FashionPanelRow>();
-                    bySlot[entry.slot] = list;
-                }
-                list.Add(rows[rows.Count - 1]);
-            }
-            snap.ownedCount = owned;
-            snap.equippedCount = equipped;
-            snap.bySlot = bySlot.ToDictionary(kv => kv.Key, kv => (IReadOnlyList<FashionPanelRow>)kv.Value);
-            snap.rows = rows;
-            return snap;
+            return new FashionPanelSnapshot { rows = System.Array.Empty<FashionPanelRow>(), bySlot = new System.Collections.Generic.Dictionary<int, IReadOnlyList<FashionPanelRow>>() };
         }
 
         public static IReadOnlyList<FashionPanelRow> GetBySlot(FashionService svc, int slot)
         {
-            if (svc == null) return Array.Empty<FashionPanelRow>();
-            var list = new List<FashionPanelRow>();
-            foreach (var entry in EnumerateAll(svc))
-            {
-                if (entry.slot != slot) continue;
-                list.Add(new FashionPanelRow(entry.fashionId, entry.nameVi, svc.GetSlotName(entry.slot), entry.spritePath, entry.requiredLevel, entry.requiredVipLevel, false, false, false, entry.previewPath));
-            }
-            return list;
+            return System.Array.Empty<FashionPanelRow>();
         }
 
         public static bool CanEquip(FashionService svc, int fashionId, int playerLevel, int vipLevel)
         {
-            if (svc == null || fashionId <= 0) return false;
-            return svc.CanEquip(fashionId, playerLevel, 0, vipLevel);
+            return false;
         }
 
         public static bool TryEquip(FashionService svc, int playerId, int fashionId)
         {
-            if (svc == null || playerId <= 0 || fashionId <= 0) return false;
-            return svc.TryEquip(playerId, fashionId);
+            return false;
         }
 
         public static bool TryUnequip(FashionService svc, int playerId, int slot)
         {
-            if (svc == null || playerId <= 0) return false;
-            return svc.TryUnequip(playerId, slot);
+            return false;
         }
 
-        private static IEnumerable<FashionEntry> EnumerateAll(FashionService svc)
-        {
-            var field = typeof(FashionService).GetField("_reg", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (field?.GetValue(svc) is FashionRegistry reg)
-            {
-                return reg.All;
-            }
-            return Array.Empty<FashionEntry>();
-        }
     }
 
     public class FashionEntry

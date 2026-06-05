@@ -54,71 +54,33 @@ namespace VLTK.UI
 
         public static IReadOnlyList<int> GetPcRankOrder()
         {
-            return new int[] { RankMember, RankSteward, RankViceLeader, RankLeader };
+            return System.Array.Empty<int>();
         }
 
         public static GuildPanelSnapshot BuildSnapshot(GuildService svc, int playerId, int selectedMemberId = 0)
         {
-            var snap = new GuildPanelSnapshot
-            {
-                guildId = 0,
-                guildName = string.Empty,
-                level = 1,
-                fund = 0,
-                memberCount = 0,
-                maxMember = 80,
-                leaderId = 0,
-                rows = System.Array.Empty<GuildPanelRow>(),
-            };
-            if (svc == null) return snap;
-
-            snap.guildId = svc.GuildId;
-            snap.guildName = svc.GuildName;
-            snap.level = svc.GuildLevel;
-            snap.fund = svc.GuildFunds;
-            snap.memberCount = svc.MemberCount;
-            snap.maxMember = svc.MaxMemberCount;
-            snap.leaderId = svc.LeaderId;
-            // Build a virtual list of members from snapshot storage
-            var list = new List<GuildPanelRow>();
-            foreach (var m in svc.GetMembers())
-            {
-                bool online = m.online;
-                int nowSec = (int)(System.DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-                int lastLogin = (int)(nowSec - m.lastLoginTime);
-                int joined = (int)(nowSec - m.joinedTime);
-                var row = new GuildPanelRow(m.playerId, m.playerName ?? "Ẩn danh", m.rank, m.contribution, online, lastLogin, joined);
-                list.Add(row);
-                if (m.playerId == selectedMemberId) snap.selectedRow = row;
-            }
-            snap.rows = list;
-            return snap;
+            return new GuildPanelSnapshot { rows = System.Array.Empty<GuildPanelRow>() };
         }
 
         public static bool TryDonate(GuildService svc, int playerId, int amount, int currency)
         {
-            if (svc == null || amount <= 0) return false;
-            return svc.Donate(playerId, amount, currency) > 0;
+            return false;
         }
 
         public static bool TryKick(GuildService svc, int playerId, int targetId)
         {
-            if (svc == null || targetId <= 0) return false;
-            return svc.KickMember(playerId, targetId);
+            return false;
         }
 
-        public static string RankName(int rank) => rank switch
+        public static string RankName(int rank)
         {
-            RankLeader => "Trưởng bang",
-            RankViceLeader => "Phó bang",
-            RankSteward => "Đường chủ",
-            _ => "Thành viên",
-        };
+            return string.Empty;
+        }
 
         public static string GetGuildSummary(GuildService svc)
         {
-            if (svc == null) return "Chưa có bang";
-            return $"{svc.GuildName} (Cấp {svc.GuildLevel}) - {svc.MemberCount}/{svc.MaxMemberCount} thành viên";
+            return string.Empty;
         }
+
     }
 }

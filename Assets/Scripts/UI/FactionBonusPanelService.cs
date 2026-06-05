@@ -52,55 +52,18 @@ namespace VLTK.UI
 
         public static FactionBonusPanelSnapshot BuildSnapshot(FactionBonusService service, int playerId, int factionId)
         {
-            var snapshot = new FactionBonusPanelSnapshot
-            {
-                playerId = playerId,
-                factionId = factionId,
-                factionName = FactionVietnameseCatalog.GetVietnameseName(factionId) ?? $"Môn phái #{factionId}",
-                playerLevel = 1,
-                totalBonus = 0,
-                rows = Array.Empty<FactionBonusPanelRow>()
-            };
-            if (service == null) return snapshot;
-            int level = service.GetPlayerLevel(playerId);
-            snapshot.playerLevel = level;
-            var all = service.GetByFaction(factionId);
-            var rows = new List<FactionBonusPanelRow>();
-            int total = 0;
-            foreach (var entry in all)
-            {
-                if (entry == null) continue;
-                int hp, mp, atk, def, speed;
-                service.GetBonusAtLevel(factionId, entry.level, out hp, out mp, out atk, out def, out speed);
-                bool isCurrent = entry.level == level;
-                rows.Add(new FactionBonusPanelRow(entry.level, hp, mp, atk, def, speed, isCurrent));
-                if (isCurrent) total = hp + mp + atk + def + speed;
-            }
-            snapshot.totalBonus = total;
-            snapshot.rows = rows;
-            return snapshot;
+            return new FactionBonusPanelSnapshot { rows = System.Array.Empty<FactionBonusPanelRow>() };
         }
 
         public static IReadOnlyList<FactionBonusPanelRow> GetByFaction(FactionBonusService service, int factionId)
         {
-            if (service == null) return Array.Empty<FactionBonusPanelRow>();
-            var rows = new List<FactionBonusPanelRow>();
-            foreach (var entry in service.GetByFaction(factionId))
-            {
-                if (entry == null) continue;
-                int hp, mp, atk, def, speed;
-                service.GetBonusAtLevel(factionId, entry.level, out hp, out mp, out atk, out def, out speed);
-                rows.Add(new FactionBonusPanelRow(entry.level, hp, mp, atk, def, speed, false));
-            }
-            return rows;
+            return System.Array.Empty<FactionBonusPanelRow>();
         }
 
         public static (int hp, int mp, int atk, int def, int speed) GetBonusAtLevel(FactionBonusService service, int factionId, int level)
         {
-            int hp = 0, mp = 0, atk = 0, def = 0, speed = 0;
-            if (service == null || factionId <= 0 || level <= 0) return (hp, mp, atk, def, speed);
-            service.GetBonusAtLevel(factionId, level, out hp, out mp, out atk, out def, out speed);
-            return (hp, mp, atk, def, speed);
+            return default;
         }
+
     }
 }

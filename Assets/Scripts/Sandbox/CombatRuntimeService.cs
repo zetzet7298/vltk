@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
         public bool fightMode = true;
         public bool rideHorse;
         public int currentMana = 100;
+        public int maxMana = 100;
         public int currentLife = 100;
         public int maxLife = 100;
         public int minDamage = 1;

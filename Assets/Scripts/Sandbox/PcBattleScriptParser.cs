@@ -32,9 +32,9 @@ namespace VLTK.Sandbox
         {
             var rows = new List<PcBattleScriptEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            string[] lines;
+            List<string> lines;
             try { lines = PcItemCommon.ReadServerLines(path); }
-            catch { lines = File.ReadAllLines(path); }
+            catch { lines = new List<string>(File.ReadAllLines(path)); }
             bool headerSkipped = false;
             foreach (var line in lines)
             {

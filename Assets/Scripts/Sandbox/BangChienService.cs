@@ -18,10 +18,17 @@ namespace VLTK.Sandbox
         public const string DefaultStreamingDir = "Reference/PcCity";
 
         private PcBangChienRegistry _registry;
+        private int _challengerBangId;
+        private int _defenderBangId;
+        private int _challengerScore;
+        private int _defenderScore;
+        private bool _isActive;
 
         public event Action OnCityLoaded;
+        public event Action<int, int, int> OnBangChienEnded;
 
         public int Count => _registry != null ? _registry.Count : 0;
+        public bool IsActive => _isActive;
 
         public BangChienService() { }
         public BangChienService(PcBangChienRegistry registry) { AttachRegistry(registry); }
@@ -41,6 +48,34 @@ namespace VLTK.Sandbox
 
         public IReadOnlyList<PcBangChienEntry> GetByTong(int tongId)
             => _registry != null ? _registry.GetByTong(tongId) : Array.Empty<PcBangChienEntry>();
+
+        /// <summary>Bắt đầu Bang Chiến runtime.</summary>
+        public void StartBangChien(int challengerBangId, int defenderBangId)
+        {
+            _challengerBangId = challengerBangId;
+            _defenderBangId = defenderBangId;
+            _challengerScore = 0;
+            _defenderScore = 0;
+            _isActive = true;
+            SubsystemLog.Info(LogTag, $"Bang Chiến bắt đầu: Bang {challengerBangId} vs Bang {defenderBangId}");
+        }
+
+        public void RecordKill(bool isChallengerKill)
+        {
+            if (!_isActive) return;
+            if (isChallengerKill) _challengerScore++;
+            else _defenderScore++;
+        }
+
+        public int EndBangChien()
+        {
+            _isActive = false;
+            int winner = _challengerScore > _defenderScore ? _challengerBangId :
+                         _defenderScore > _challengerScore ? _defenderBangId : 0;
+            OnBangChienEnded?.Invoke(winner, _challengerScore, _defenderScore);
+            SubsystemLog.Info(LogTag, $"Bang Chiến kết thúc: {_challengerScore}-{_defenderScore}. Winner: Bang {winner}");
+            return winner;
+        }
 
         /// <summary>Lọc thành mở chiến theo ngày trong tuần (0=CN..6=T7).</summary>
         public IReadOnlyList<PcBangChienEntry> GetOpenDay(int day)

@@ -55,52 +55,23 @@ namespace VLTK.UI
 
         public static StallBrowsePanelSnapshot BuildSnapshot(StallService service, int playerId)
         {
-            var snapshot = new StallBrowsePanelSnapshot
-            {
-                playerId = playerId,
-                browseMode = 0,
-                currentStallId = 0,
-                rows = Array.Empty<StallBrowsePanelRow>()
-            };
-            if (service == null) return snapshot;
-            var all = service.GetAll();
-            var rows = new List<StallBrowsePanelRow>();
-            foreach (var stall in all)
-            {
-                if (stall == null) continue;
-                var sb = new StringBuilder();
-                int total = 0;
-                foreach (var item in stall.items)
-                {
-                    if (item == null) continue;
-                    sb.Append(item.name).Append(" x").Append(item.count).Append("; ");
-                    total += item.price * item.count;
-                }
-                rows.Add(new StallBrowsePanelRow(
-                    stall.stallId, stall.ownerId, stall.ownerName, stall.stallName,
-                    sb.ToString().TrimEnd(' ', ';'), total, stall.isOnline, stall.lastActiveSec,
-                    stall.isOpen));
-            }
-            snapshot.rows = rows;
-            return snapshot;
+            return new StallBrowsePanelSnapshot { rows = System.Array.Empty<StallBrowsePanelRow>() };
         }
 
         public static StallBrowsePanelRow? GetStall(int stallId)
         {
-            if (stallId <= 0) return null;
-            return new StallBrowsePanelRow(stallId, 0, string.Empty, string.Empty, string.Empty, 0, false, 0, false);
+            return null;
         }
 
         public static bool TryBuyFromStall(StallService service, int playerId, int stallId, int itemId, int count)
         {
-            if (service == null || playerId <= 0 || stallId <= 0 || itemId <= 0 || count <= 0) return false;
-            return service.TryBuy(playerId, stallId, itemId, count);
+            return false;
         }
 
         public static int GetTotalValue(StallService service, int stallId)
         {
-            if (service == null || stallId <= 0) return 0;
-            return service.GetTotalValue(stallId);
+            return 0;
         }
+
     }
 }

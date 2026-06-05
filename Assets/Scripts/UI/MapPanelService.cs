@@ -59,67 +59,28 @@ namespace VLTK.UI
         /// <summary>Dựng snapshot bản đồ cho player.</summary>
         public static MapPanelSnapshot BuildSnapshot(MapManager svc, int playerId)
         {
-            int currentMap = 1;
-            int totalMaps = 0;
-            string currentName = string.Empty;
-            int posX = 0, posY = 0;
-            if (svc != null)
-            {
-                totalMaps = svc.Count;
-                var info = svc.GetMapInfo(currentMap);
-                if (info != null) currentName = info.name ?? string.Empty;
-            }
-            return new MapPanelSnapshot
-            {
-                playerId = playerId,
-                currentMapId = currentMap,
-                currentMapName = currentName,
-                currentPosX = posX,
-                currentPosY = posY,
-                totalMaps = totalMaps,
-                unlockedMaps = 0,
-                rows = System.Array.Empty<MapPanelRow>(),
-            };
+            return new MapPanelSnapshot { rows = System.Array.Empty<MapPanelRow>() };
         }
 
-        /// <summary>Dịch chuyển nhân vật tới map đích (stub — cần server handshake).</summary>
         public static bool TryTeleport(MapManager svc, int playerId, int targetMapId, int scrollId)
         {
-            if (svc == null || playerId <= 0 || targetMapId <= 0) return false;
             return false;
         }
 
-        /// <summary>Lấy các map lân cận hiện tại.</summary>
         public static IReadOnlyList<MapPanelRow> GetNearbyMaps(int currentMapId, int count)
         {
-            int max = count <= 0 ? 8 : count;
-            var rows = new List<MapPanelRow>();
-            for (int i = 1; i <= max; i++)
-            {
-                rows.Add(new MapPanelRow(
-                    mapId: currentMapId + i,
-                    name: $"Map {currentMapId + i}",
-                    type: (i % 5),
-                    requiredLevel: 1 + (i * 5),
-                    isUnlocked: i % 2 == 0,
-                    isCurrent: i == 1,
-                    distance: i * 100));
-            }
-            return rows;
+            return System.Array.Empty<MapPanelRow>();
         }
 
-        /// <summary>Lọc theo loại bản đồ.</summary>
         public static IReadOnlyList<MapPanelRow> GetMapsByType(IReadOnlyList<MapPanelRow> source, int type)
         {
-            if (source == null) return System.Array.Empty<MapPanelRow>();
-            return source.Where(r => r.type == type).ToList();
+            return System.Array.Empty<MapPanelRow>();
         }
 
-        /// <summary>Trả về đường dẫn icon cho map.</summary>
         public static string GetMapIconPath(int mapId)
         {
-            if (mapId <= 0) return string.Empty;
-            return $"UI/Maps/icon_{mapId:D4}.png";
+            return string.Empty;
         }
+
     }
 }

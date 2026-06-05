@@ -63,7 +63,7 @@ namespace VLTK.Sandbox
             if (waypointPath != null)
                 result.waypoints = PcWaypointParser.ParseFile(waypointPath);
             if (scrollPath != null)
-                result.scrolls = PcScrollParser.ParseFile(scrollPath);
+                result.scrolls = ConvertScrolls(PcScrollParser.ParseFile(scrollPath));
             if (wharfPath != null)
                 result.wharves = PcWharfParser.ParseFile(wharfPath);
             if (revivePosPath != null)
@@ -74,6 +74,25 @@ namespace VLTK.Sandbox
                 $"maps={result.maps.Count} caves={result.caves.Count} tongs={result.tongs.Count} " +
                 $"waypoints={result.waypoints.Count} scrolls={result.scrolls.Count} " +
                 $"wharves={result.wharves.Count} revive={result.revivePositions.Count}");
+            return result;
+        }
+
+        private static List<ScrollEntry> ConvertScrolls(List<PcScrollEntry> rows)
+        {
+            var result = new List<ScrollEntry>();
+            if (rows == null) return result;
+            foreach (var e in rows)
+            {
+                if (e == null) continue;
+                result.Add(new ScrollEntry
+                {
+                    scrollId = e.scrollId,
+                    nameRaw = e.name,
+                    nameNormalized = e.name,
+                    mapId = e.toMapId,
+                    value = e.cost,
+                });
+            }
             return result;
         }
 

@@ -40,6 +40,27 @@ namespace VLTK.Sandbox
 
     public static class PcWharfParser
     {
+        public static List<VLTK.Model.WharfEntry> ParseFile(string path)
+        {
+            var rows = new List<VLTK.Model.WharfEntry>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var registry = BuildRegistry(Path.GetDirectoryName(path));
+            foreach (var e in registry.All)
+            {
+                rows.Add(new VLTK.Model.WharfEntry
+                {
+                    wharfId = e.WharfId,
+                    mapId = e.FromMapId,
+                    posX = e.ToMapId,
+                    posY = e.BoatId,
+                    price = e.CostSilver,
+                    nameRaw = e.WharfId.ToString(),
+                    nameNormalized = e.WharfId.ToString(),
+                });
+            }
+            return rows;
+        }
+
         public static PcWharfRegistry BuildRegistry(string absoluteDir)
         {
             var reg = new PcWharfRegistry();

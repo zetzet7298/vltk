@@ -224,7 +224,8 @@ namespace VLTK.Sandbox
                 {
                     var clamped = new Vector3(
                         Mathf.Clamp(transform.position.x, mapBoundsMin.x, mapBoundsMax.x),
-                        Mathf.Clamp(transform.position.y, mapBoundsMin.y, mapBoundsMax.y));
+                        Mathf.Clamp(transform.position.y, mapBoundsMin.y, mapBoundsMax.y),
+                        transform.position.z);
                     transform.position = clamped;
                 }
             }

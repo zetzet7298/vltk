@@ -158,4 +158,12 @@ namespace VLTK.Sandbox
 
         private static long NowUnix() => DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     }
+
+    public class SaveSlotService : PcSaveSlotService
+    {
+        public static new SaveSlotService LoadFromStreamingAssets()
+        {
+            return new SaveSlotService();
+        }
+    }
 }

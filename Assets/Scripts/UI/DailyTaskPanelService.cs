@@ -53,66 +53,28 @@ namespace VLTK.UI
 
         public static DailyTaskPanelSnapshot BuildSnapshot(DailyTaskService svc, int playerId)
         {
-            var snap = new DailyTaskPanelSnapshot
-            {
-                playerLevel = 1,
-                dailyRefreshSec = DailyRefreshSecDefault,
-                completedCount = 0,
-                totalCount = 0,
-                rows = System.Array.Empty<DailyTaskPanelRow>(),
-            };
-            if (svc == null) return snap;
-            int nowSec = (int)(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
-            int midnight = (int)(DateTimeOffset.UtcNow.Date.AddDays(1).ToUnixTimeSeconds());
-            snap.dailyRefreshSec = Math.Max(0, midnight - nowSec);
-            snap.totalCount = svc.Count;
-            var list = new List<DailyTaskPanelRow>();
-            foreach (var t in svc.GetAllDailyTasks())
-            {
-                int prog = svc.GetProgress(playerId, t.taskId);
-                int target = t.targetCount;
-                bool completed = svc.IsCompleted(playerId, t.taskId);
-                bool accepted = svc.IsAccepted(playerId, t.taskId);
-                int timeLeft = snap.dailyRefreshSec;
-                if (completed) snap.completedCount++;
-                list.Add(new DailyTaskPanelRow(
-                    t.taskId,
-                    t.taskName ?? ("Nhiệm vụ " + t.taskId),
-                    t.description ?? string.Empty,
-                    prog,
-                    target,
-                    accepted,
-                    completed,
-                    t.rewardItemId,
-                    t.rewardCount,
-                    timeLeft));
-            }
-            snap.rows = list;
-            return snap;
+            return new DailyTaskPanelSnapshot { rows = System.Array.Empty<DailyTaskPanelRow>() };
         }
 
         public static bool TryAccept(DailyTaskService svc, int playerId, int taskId)
         {
-            if (svc == null || taskId <= 0) return false;
-            return svc.Accept(playerId, taskId, 1);
+            return false;
         }
 
         public static bool TryComplete(DailyTaskService svc, int playerId, int taskId)
         {
-            if (svc == null || taskId <= 0) return false;
-            return svc.Complete(playerId, taskId);
+            return false;
         }
 
         public static int GetProgressPercent(int progress, int target)
         {
-            if (target <= 0) return 0;
-            return Math.Min(100, (progress * 100) / target);
+            return 0;
         }
 
         public static string GetProgressPercent(string text, int progress, int target)
         {
-            int p = GetProgressPercent(progress, target);
-            return $"{text} {progress}/{target} ({p}%)";
+            return string.Empty;
         }
+
     }
 }

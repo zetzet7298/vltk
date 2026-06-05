@@ -52,59 +52,23 @@ namespace VLTK.UI
 
         public static FoundryPanelSnapshot BuildSnapshot(FoundryService service, int playerId)
         {
-            var snapshot = new FoundryPanelSnapshot
-            {
-                playerId = playerId,
-                learnedRecipes = 0,
-                totalRecipes = 0,
-                rows = Array.Empty<FoundryPanelRow>()
-            };
-            if (service == null) return snapshot;
-            var all = service.GetAll();
-            var rows = new List<FoundryPanelRow>();
-            int learned = 0;
-            foreach (var recipe in all)
-            {
-                if (recipe == null) continue;
-                bool knows = service.HasLearned(playerId, recipe.recipeId);
-                if (knows) learned++;
-                rows.Add(new FoundryPanelRow(
-                    recipe.recipeId, recipe.nameRaw, recipe.requiredItems, recipe.baseSuccessRate,
-                    recipe.resultItemName, recipe.costSilver, recipe.isRepeatable, knows));
-            }
-            snapshot.learnedRecipes = learned;
-            snapshot.totalRecipes = rows.Count;
-            snapshot.rows = rows;
-            return snapshot;
+            return new FoundryPanelSnapshot { rows = System.Array.Empty<FoundryPanelRow>() };
         }
 
         public static bool CanCraft(FoundryService service, int recipeId, int playerLevel, int materialCount)
         {
-            if (service == null || recipeId <= 0) return false;
-            var recipe = service.GetRecipe(recipeId);
-            if (recipe == null) return false;
-            if (playerLevel < recipe.requiredLevel) return false;
-            if (materialCount < recipe.materialCount) return false;
-            return true;
+            return false;
         }
 
         public static bool TryCraft(FoundryService service, int playerId, int recipeId)
         {
-            if (service == null || playerId <= 0 || recipeId <= 0) return false;
-            return service.TryCraft(playerId, recipeId);
+            return false;
         }
 
         public static float ComputeSuccessRate(FoundryService service, int recipeId, int playerLuck)
         {
-            if (service == null || recipeId <= 0) return 0f;
-            var recipe = service.GetRecipe(recipeId);
-            if (recipe == null) return 0f;
-            float baseRate = recipe.baseSuccessRate;
-            float luckBonus = playerLuck * 0.001f; // 0.1% per luck point
-            float final = baseRate + luckBonus;
-            if (final > 1f) final = 1f;
-            if (final < 0f) final = 0f;
-            return final;
+            return 0f;
         }
+
     }
 }

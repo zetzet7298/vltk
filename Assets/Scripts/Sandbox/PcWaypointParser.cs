@@ -36,6 +36,26 @@ namespace VLTK.Sandbox
 
     public static class PcWaypointParser
     {
+        public static List<VLTK.Model.WaypointEntry> ParseFile(string path)
+        {
+            var rows = new List<VLTK.Model.WaypointEntry>();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            var registry = BuildRegistry(Path.GetDirectoryName(path));
+            foreach (var e in registry.All)
+            {
+                rows.Add(new VLTK.Model.WaypointEntry
+                {
+                    waypointId = e.WaypointId,
+                    mapId = e.MapId,
+                    posX = e.PosX,
+                    posY = e.PosY,
+                    nameRaw = e.Name,
+                    nameNormalized = e.Name,
+                });
+            }
+            return rows;
+        }
+
         public static PcWaypointRegistry BuildRegistry(string absoluteDir)
         {
             var reg = new PcWaypointRegistry();
