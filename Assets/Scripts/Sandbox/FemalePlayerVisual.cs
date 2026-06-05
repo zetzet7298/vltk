@@ -1,7 +1,8 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile
-// Copyright (c) 2026 vltk. All rights reserved.
-// Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
+// VLTK Mobile — ST-02.1 Female Player Visual
+// Mirror of MalePlayerVisual for FM_* SPR parts.
+// Same layered SPR system, 8-direction animation, sorting.
+// Source: PC npcres/woman SPR set (FM_BD/H/HR/LH/RH, variant 050).
 // -----------------------------------------------------------------------------
 
 using System;
@@ -14,12 +15,14 @@ using VLTK.Sprites;
 namespace VLTK.Sandbox
 {
     /// <summary>
-    /// Runtime renderer for the PC male player SPR set. It keeps every visible body
-    /// part as its own SpriteRenderer so the avatar matches the original layered
-    /// JX client: shadow, body, head, hair, hands, and empty-hand weapon layers.
+    /// Runtime renderer cho female player SPR set.
+    /// Mirror of MalePlayerVisual với FM_* body parts (variant 050).
+    /// Tầng layer: shadow, body, head, hair, hands, weapon — giống male.
+    /// Shadow và LW/RW weapon slots luôn build nhưng mark not-required vì PC
+    /// npcres/woman không có file cho các phần đó.
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class MalePlayerVisual : MonoBehaviour, IPlayerVisual
+    public sealed class FemalePlayerVisual : MonoBehaviour, IPlayerVisual
     {
         [Header("Playback")]
         public PlayerVisualAction currentAction { get; set; } = PlayerVisualAction.Idle;
@@ -28,12 +31,11 @@ namespace VLTK.Sandbox
         public int direction { get; set; }
         public float idleFrameRate = 6f;
         public float moveFrameRate = 12f;
-        public float magicFrameRate = 14.4f; // PC cdo_magic: ~16 frames/dir over 20 ticks at 18 ticks/sec.
+        public float magicFrameRate = 14.4f;
         public float attackFrameRate = 14.4f;
         public bool playAutomatically { get; set; } = true;
 
         [Header("SPR Placement")]
-        [Tooltip("SPR canvas reference point that should sit on the player's feet/world position.")]
         public Vector2 referencePixel = new Vector2(160f, 200f);
         public float pixelsPerUnit = 1f;
         public string spritesRootOverride;
@@ -56,7 +58,7 @@ namespace VLTK.Sandbox
         public bool IsMounted => isMounted;
 
         public int GetCurrentDirection() => direction;
-        public int GetRiderSortingOrder() => MapRenderer.PlayerSortingOrder + MalePlayerSpriteCatalog.SortingOffset(PlayerSpritePartKind.Body, direction);
+        public int GetRiderSortingOrder() => MapRenderer.PlayerSortingOrder + FemalePlayerSpriteCatalog.SortingOffset(PlayerSpritePartKind.Body, direction);
 
         private sealed class PartRuntime
         {
@@ -78,11 +80,6 @@ namespace VLTK.Sandbox
         private static readonly Dictionary<string, ClipRuntime> ClipCache = new();
         private static readonly HashSet<string> MissingLogCache = new();
 
-        // Runtime Sprites/Textures created in LoadClip are destroyed when play mode stops.
-        // With Domain Reload disabled (fast enter play mode) the static caches would survive
-        // and hand out destroyed (fake-null) sprites on the next play, making the player
-        // invisible. SubsystemRegistration runs on every play start regardless of the
-        // domain-reload setting, so clearing here guarantees a fresh decode each session.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStaticCaches()
         {
@@ -92,13 +89,9 @@ namespace VLTK.Sandbox
 
         private static bool IsClipAlive(ClipRuntime clip)
         {
-            if (clip == null || clip.sprites == null)
-                return false;
+            if (clip == null || clip.sprites == null) return false;
             for (int i = 0; i < clip.sprites.Length; i++)
-            {
-                if (clip.sprites[i] != null)
-                    return true;
-            }
+                if (clip.sprites[i] != null) return true;
             return false;
         }
 
@@ -112,21 +105,19 @@ namespace VLTK.Sandbox
         {
             idleFrameRate = Mathf.Max(0.1f, idleFrameRate);
             moveFrameRate = Mathf.Max(0.1f, moveFrameRate);
-            magicFrameRate = Mathf.Max(0.1f, magicFrameRate);
             pixelsPerUnit = Mathf.Max(0.01f, pixelsPerUnit);
-            direction = Mathf.Clamp(direction, 0, MalePlayerSpriteCatalog.DirectionCount - 1);
+            direction = Mathf.Clamp(direction, 0, FemalePlayerSpriteCatalog.DirectionCount - 1);
         }
 
         private void Update()
         {
-            if (playAutomatically)
-                Tick(Time.deltaTime);
+            if (playAutomatically) Tick(Time.deltaTime);
         }
 
         public void SetMoveInput(Vector2 input)
         {
             LastMoveInput = Vector2.ClampMagnitude(input, 1f);
-            int nextDirection = MalePlayerSpriteCatalog.DirectionFromMove(LastMoveInput);
+            int nextDirection = FemalePlayerSpriteCatalog.DirectionFromMove(LastMoveInput);
             if (nextDirection >= 0)
             {
                 direction = nextDirection;
@@ -143,18 +134,12 @@ namespace VLTK.Sandbox
             if (isMounted) action = PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
-
             currentAction = action;
             _time = 0f;
             RefreshActionParts(force: true);
             ApplyFrame(0f);
         }
 
-        /// <summary>
-        /// Toggle mounted state. When mounted, the rider renders the HM01 layered
-        /// set (BD/HD/HB) and a separate HorseVisual drives the horse body sprite.
-        /// On dismount the visual returns to the on-foot action previously used.
-        /// </summary>
         public void SetMounted(bool mounted)
         {
             if (isMounted == mounted) return;
@@ -166,7 +151,7 @@ namespace VLTK.Sandbox
             }
             else
             {
-                currentAction = Vector2.zero == LastMoveInput ? PlayerVisualAction.Idle : PlayerVisualAction.Move;
+                currentAction = LastMoveInput.sqrMagnitude < 0.0001f ? PlayerVisualAction.Idle : PlayerVisualAction.Move;
             }
             _time = 0f;
             RefreshActionParts(force: true);
@@ -175,8 +160,7 @@ namespace VLTK.Sandbox
 
         public void SetWeapon(PcWeaponType weapon)
         {
-            if (currentWeapon == weapon)
-                return;
+            if (currentWeapon == weapon) return;
             currentWeapon = weapon;
             _loadedAction = (PlayerVisualAction)(-1);
             RefreshActionParts(force: true);
@@ -185,8 +169,8 @@ namespace VLTK.Sandbox
 
         public void SetDirection(int nextDirection)
         {
-            direction = ((nextDirection % MalePlayerSpriteCatalog.DirectionCount) + MalePlayerSpriteCatalog.DirectionCount)
-                        % MalePlayerSpriteCatalog.DirectionCount;
+            direction = ((nextDirection % FemalePlayerSpriteCatalog.DirectionCount) + FemalePlayerSpriteCatalog.DirectionCount)
+                        % FemalePlayerSpriteCatalog.DirectionCount;
             ApplySorting();
         }
 
@@ -202,8 +186,6 @@ namespace VLTK.Sandbox
             if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon)
                 return;
 
-            // Disable ALL existing part children (including orphans from prior actions
-            // that are no longer tracked in _parts) to prevent ghost duplicates.
             for (int i = transform.childCount - 1; i >= 0; i--)
                 transform.GetChild(i).gameObject.SetActive(false);
 
@@ -213,7 +195,7 @@ namespace VLTK.Sandbox
             LoadedPartCount = 0;
             HasAllRequiredParts = true;
             _lastMissingRequiredParts.Clear();
-            var specs = MalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
+            var specs = FemalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
             foreach (var spec in specs)
             {
                 var runtime = GetOrCreatePart(spec);
@@ -231,15 +213,13 @@ namespace VLTK.Sandbox
                 }
             }
 
-            // Destroy orphan children that are no longer tracked.
             var tracked = new HashSet<GameObject>();
             foreach (var part in _parts.Values)
                 if (part.renderer != null) tracked.Add(part.renderer.gameObject);
             for (int i = transform.childCount - 1; i >= 0; i--)
             {
                 var go = transform.GetChild(i).gameObject;
-                if (!tracked.Contains(go))
-                    Destroy(go);
+                if (!tracked.Contains(go)) Destroy(go);
             }
 
             _loadedAction = currentAction;
@@ -249,9 +229,7 @@ namespace VLTK.Sandbox
 
         private PartRuntime GetOrCreatePart(PlayerSpritePartSpec spec)
         {
-            if (_parts.TryGetValue(spec.kind, out var runtime))
-                return runtime;
-
+            if (_parts.TryGetValue(spec.kind, out var runtime)) return runtime;
             var child = new GameObject($"Part_{(int)spec.kind}_{spec.name}");
             child.transform.SetParent(transform, false);
             var renderer = child.AddComponent<SpriteRenderer>();
@@ -270,7 +248,7 @@ namespace VLTK.Sandbox
                 PlayerVisualAction.Attack => attackFrameRate,
                 _ => idleFrameRate,
             };
-            int baseOrder = PlayerBaseSortingOrder();
+            int baseOrder = MapRenderer.PlayerSortingOrder;
 
             foreach (var runtime in _parts.Values)
             {
@@ -288,32 +266,20 @@ namespace VLTK.Sandbox
 
                 runtime.renderer.sprite = clip.sprites[frameIndex];
                 runtime.renderer.transform.localPosition = clip.offsets[frameIndex];
-                runtime.renderer.sortingOrder = baseOrder + MalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
+                runtime.renderer.sortingOrder = baseOrder + FemalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
             }
-        }
-
-        // Actors sit just above the static map-art layer (MapRenderer.ObjectSortingOrder)
-        // so the player stays visible in dense town centers. Depth among nearby sprites is
-        // handled by the camera's CustomAxis world-Y sort, so no screen-Y encoding into the
-        // (int16) sortingOrder is needed -- that overflow is exactly what broke the map art.
-        private int PlayerBaseSortingOrder()
-        {
-            return MapRenderer.PlayerSortingOrder;
         }
 
         private void ApplySorting()
         {
-            int baseOrder = PlayerBaseSortingOrder();
+            int baseOrder = MapRenderer.PlayerSortingOrder;
             foreach (var runtime in _parts.Values)
-            {
-                runtime.renderer.sortingOrder = baseOrder + MalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
-            }
+                runtime.renderer.sortingOrder = baseOrder + FemalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
         }
 
         private ClipRuntime LoadClip(string sourcePath)
         {
-            if (string.IsNullOrEmpty(sourcePath))
-                return null;
+            if (string.IsNullOrEmpty(sourcePath)) return null;
 
             string root = string.IsNullOrEmpty(spritesRootOverride)
                 ? Path.Combine(Application.streamingAssetsPath, "Sprites")
@@ -321,16 +287,14 @@ namespace VLTK.Sandbox
             string cacheKey = $"{root}|{sourcePath}|ppu={pixelsPerUnit:F3}|ref={referencePixel.x:F1},{referencePixel.y:F1}";
             if (ClipCache.TryGetValue(cacheKey, out var cached))
             {
-                if (IsClipAlive(cached))
-                    return cached;
-                // Cached clip's sprites were destroyed on a previous stop -> re-decode.
+                if (IsClipAlive(cached)) return cached;
                 ClipCache.Remove(cacheKey);
             }
 
             byte[] data = ReadSprData(root, sourcePath);
             if (data == null)
             {
-                LogMissing(sourcePath, "SPR file not staged in StreamingAssets/Sprites");
+                LogMissing(sourcePath, "SPR file not staged");
                 return null;
             }
 
@@ -344,8 +308,7 @@ namespace VLTK.Sandbox
             int directions = Mathf.Max(1, decoded.header.directions);
             int totalFrames = decoded.frames.Length;
             int framesPerDirection = Mathf.Max(1, totalFrames / directions);
-            if (totalFrames % directions != 0)
-                directions = 1;
+            if (totalFrames % directions != 0) directions = 1;
 
             var clip = new ClipRuntime
             {
@@ -360,69 +323,49 @@ namespace VLTK.Sandbox
             for (int i = 0; i < totalFrames; i++)
             {
                 var frame = decoded.frames[i];
-                if (frame == null || frame.width == 0 || frame.height == 0)
-                    continue;
-
+                if (frame == null || frame.width == 0 || frame.height == 0) continue;
                 var tex = SprDecoder.CreateTexture(frame);
-                if (tex == null)
-                    continue;
-
-                tex.name = $"MalePlayer_{Path.GetFileNameWithoutExtension(sourcePath)}_{i:000}";
-                clip.sprites[i] = Sprite.Create(
-                    tex,
-                    new Rect(0, 0, tex.width, tex.height),
-                    new Vector2(0f, 1f),
-                    pixelsPerUnit,
-                    0,
-                    SpriteMeshType.FullRect);
+                if (tex == null) continue;
+                tex.name = $"FemalePlayer_{Path.GetFileNameWithoutExtension(sourcePath)}_{i:000}";
+                clip.sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height),
+                    new Vector2(0f, 1f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
                 clip.sprites[i].name = tex.name;
-
                 clip.offsets[i] = new Vector2(
                     (frame.offsetX - referencePixel.x) / pixelsPerUnit,
                     (referencePixel.y - frame.offsetY) / pixelsPerUnit);
             }
 
             ClipCache[cacheKey] = clip;
-            SubsystemLog.Info("MalePlayer", $"Loaded {sourcePath}: {totalFrames} frames, {directions} dirs");
+            SubsystemLog.Info("FemalePlayer", $"Loaded {sourcePath}: {totalFrames} frames, {directions} dirs");
             return clip;
         }
 
         private static byte[] ReadSprData(string spritesRoot, string sourcePath)
         {
-            if (string.IsNullOrEmpty(spritesRoot) || string.IsNullOrEmpty(sourcePath))
-                return null;
-
+            if (string.IsNullOrEmpty(spritesRoot) || string.IsNullOrEmpty(sourcePath)) return null;
             string uid = SprRuntimeService.ComputePathUidHex(sourcePath);
             if (!string.IsNullOrEmpty(uid))
             {
                 string hashedPath = Path.Combine(spritesRoot, uid + ".spr");
-                if (File.Exists(hashedPath))
-                    return File.ReadAllBytes(hashedPath);
+                if (File.Exists(hashedPath)) return File.ReadAllBytes(hashedPath);
             }
-
             string fileName = Path.GetFileName(sourcePath.Replace('\\', Path.DirectorySeparatorChar));
             if (!string.IsNullOrEmpty(fileName))
             {
                 string directPath = Path.Combine(spritesRoot, fileName);
-                if (File.Exists(directPath))
-                    return File.ReadAllBytes(directPath);
-
+                if (File.Exists(directPath)) return File.ReadAllBytes(directPath);
                 string lowerPath = Path.Combine(spritesRoot, fileName.ToLowerInvariant());
-                if (File.Exists(lowerPath))
-                    return File.ReadAllBytes(lowerPath);
+                if (File.Exists(lowerPath)) return File.ReadAllBytes(lowerPath);
             }
-
             return null;
         }
 
         private void LogMissing(string sourcePath, string reason)
         {
-            if (!logMissingParts)
-                return;
+            if (!logMissingParts) return;
             string key = sourcePath + "|" + reason;
-            if (!MissingLogCache.Add(key))
-                return;
-            SubsystemLog.Warn("MalePlayer", $"{reason}: {sourcePath}");
+            if (!MissingLogCache.Add(key)) return;
+            SubsystemLog.Warn("FemalePlayer", $"{reason}: {sourcePath}");
         }
     }
 }

@@ -15,6 +15,7 @@ namespace VLTK.Sandbox
         Move,       // RN01/RN03 (run)
         Magic,      // MG01/MG04 (magic cast)
         Attack,     // AT04/AT05 (melee attack)
+        Ride,       // HM01 (mounted: rider SPRs + separate horse body)
     }
 
     /// <summary>
@@ -40,6 +41,7 @@ namespace VLTK.Sandbox
         RightHand = 7,
         LeftWeapon = 8,
         RightWeapon = 9,
+        Saddle = 11,    // Mounted-only: MA_HB_*_HM01 (horse body / saddle region).
         HorseFront = 12,
         HorseMiddle = 13,
         HorseRear = 14,
@@ -76,9 +78,16 @@ namespace VLTK.Sandbox
         public const string SourceRoot = @"spr\npcres\man";
         public const int DirectionCount = 8;
         public const int ArmorVariant = 19;
+        public const int MountArmorVariant = 050;  // MA_*_050_HM01 — default mount outfit.
+        public const int MountAltArmorVariant = 072; // MA_*_072_HM01 — alt mount outfit.
+        public const int MountHelmetVariant = 016;   // MA_HB_016_HM01 — horse-body / saddle region.
+        public const int MountAltHelmetVariant = 018; // MA_HB_018_HM01 — alt horse-body region.
         public const int ShadowVariant = 999;
+        public const string MountActionSuffix = "HM01"; // PC 男主角骑马关联表.txt: cdo_fightstand/cdo_run share HM01 when mounted.
         public const int EmptyWeaponVariant = 0;
+        public const int ShortWeaponVariant = 001; // 单手剑1 from 男主角右手武器.txt
         public const int StaffWeaponVariant = 010; // 长棍类1 from 男主角右手武器.txt
+        public const int DualWeaponVariant = 013; // 双武器/双剑类1 from 男主角左右手武器.txt
 
         // PC action suffixes per weapon type. From 男主角未骑马关联表.txt columns:
         // cdo_fightstand maps to: 空手站立1=ST01, 短武器站立=ST04, 长武器站立=ST05, 双武器站立=ST06
@@ -98,9 +107,9 @@ namespace VLTK.Sandbox
         private static readonly int[] WeaponSprVariant = new int[4]
         {
             EmptyWeaponVariant,  // EmptyHand
-            001,                 // ShortWeapon (单手剑1 = RW_001)
+            ShortWeaponVariant,  // ShortWeapon (单手剑1 = RW_001)
             StaffWeaponVariant,  // LongWeapon (长棍类1 = RW_010)
-            002,                 // DualWeapon (双剑类 = RW_002)
+            DualWeaponVariant,   // DualWeapon (双剑类1 = LW/RW_013)
         };
 
         // PC draw-order table: Settings/NpcRes/男主角贴图顺序表.txt, Dir1..Dir8.
@@ -118,11 +127,20 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Build the SPR part spec list for a given action + weapon type, matching PC KNpcRes::SetAction.
+        /// When action is <see cref="PlayerVisualAction.Ride"/>, returns the mounted rider
+        /// (BD/HD/HB) layered set with HM01 suffix; weapons and shadow are skipped because
+        /// PC npcres/man has no mounted Shadow/LW/RW/Hair/LHand/RHand SPRs.
         /// </summary>
         public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon)
         {
+            if (action == PlayerVisualAction.Ride)
+                return BuildMountedParts(MountArmorVariant, MountHelmetVariant);
+
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
+            string rightWeaponSuffix = (weapon == PcWeaponType.ShortWeapon && action == PlayerVisualAction.Magic)
+                ? "MG03" // PC 男主角右手武器.txt: MeleeWMagic uses MA_RW_001_MG03.spr.
+                : suffix;
             int rwVariant = WeaponSprVariant[wIdx];
             // Long staff has no left weapon SPR — use empty hand for left
             int lwVariant = (weapon == PcWeaponType.DualWeapon) ? WeaponSprVariant[(int)PcWeaponType.DualWeapon] : EmptyWeaponVariant;
@@ -140,7 +158,23 @@ namespace VLTK.Sandbox
                 new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", ArmorVariant, suffix)),
                 new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix), leftWeaponRequired),
-                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, suffix)),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, rightWeaponSuffix)),
+            };
+        }
+
+        /// <summary>
+        /// Build the mounted rider parts (BD/HD/HB) with HM01 action suffix.
+        /// PC npcres/man mounts never ship Shadow, Hair, LeftHand, RightHand,
+        /// or Weapon SPRs for HM01 — the rider on a horse is a single layered
+        /// set with the horse body coming from a separate horse*.spr model.
+        /// </summary>
+        public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant, int helmetVariant)
+        {
+            return new PlayerSpritePartSpec[]
+            {
+                new(PlayerSpritePartKind.Body,         "MountBody",    BuildPath("BD", bodyVariant, MountActionSuffix)),
+                new(PlayerSpritePartKind.Head,         "MountHead",    BuildPath("HD", bodyVariant, MountActionSuffix)),
+                new(PlayerSpritePartKind.Saddle,       "MountSaddle",  BuildPath("HB", helmetVariant, MountActionSuffix)),
             };
         }
 
@@ -156,17 +190,15 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Map PC Skills.txt CharAnimId + current weapon type to a visual action.
-        /// PC KNpc.cpp: CharAnimId 11=cdo_magic → m_ClientDoing=cdo_magic → SetAction(cdo_magic).
-        /// For staff weapons, cdo_magic resolves through 未骑马关联表 to 长武器魔法.
-        /// CharAnimId 14=cdo_none means no character animation (passive/buff skills).
+        /// PC KNpc.cpp đổi CharAnimId thành CLIENTACTION rồi KNpcRes::SetAction chọn suffix theo vũ khí.
         /// </summary>
         public static PlayerVisualAction? ResolveAction(int charAnimId, PcWeaponType weapon)
         {
-            // PC CLIENTACTION enum (KNpc.h): cdo_magic=11, cdo_none=14.
             return charAnimId switch
             {
-                11 => PlayerVisualAction.Magic,
-                14 => null,   // Passive/aura — no animation
+                7 or 8 => PlayerVisualAction.Attack,
+                9 or 10 or 11 => PlayerVisualAction.Magic,
+                14 => null,   // Passive/aura — không chạy animation nhân vật
                 _ => null,
             };
         }
