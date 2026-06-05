@@ -31,15 +31,14 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
             var lines = PcItemCommon.ReadServerLines(path);
             bool headerSkipped = false;
-            int rowIndex = 0;
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
                 if (cols.Length < MinColumns) continue;
-                rowIndex++;
-                var entry = ParseRow(cols, rowIndex);
+                // Always read the real SkillIdCol — never shadow it with a row index.
+                var entry = ParseRow(cols);
                 if (entry != null) rows.Add(entry);
             }
             return rows;

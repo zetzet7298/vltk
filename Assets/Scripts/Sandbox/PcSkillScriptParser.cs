@@ -51,15 +51,10 @@ namespace VLTK.Sandbox
         {
             var reg = new PcSkillScriptRegistry();
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
-            foreach (var f in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
-            {
-                var ext = Path.GetExtension(f);
-                if (string.Equals(ext, ".ini", System.StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(ext, ".txt", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var s in ParseFile(f)) reg.Register(s);
-                }
-            }
+            // Use the explicit file-name family to avoid sweeping unrelated
+            // .txt/.ini files in the directory tree.
+            foreach (var f in Directory.GetFiles(dir, "skillscripts*.txt"))
+                foreach (var s in ParseFile(f)) reg.Register(s);
             return reg;
         }
     }
@@ -79,28 +74,44 @@ namespace VLTK.Sandbox
     public sealed class PcSkillScriptRegistry
     {
         private readonly Dictionary<int, PcSkillScriptEntry> _byId = new();
+        // Secondary index keyed by skillId to make per-skill lookups O(1)
+        // instead of scanning every entry in _byId.
+        private readonly Dictionary<int, List<PcSkillScriptEntry>> _bySkill = new();
+        private readonly Dictionary<int, List<PcSkillScriptEntry>> _byVersion = new();
         public int Count => _byId.Count;
 
         public void Register(PcSkillScriptEntry e)
         {
             if (e == null || e.scriptId <= 0) return;
             _byId[e.scriptId] = e;
+            if (!_bySkill.TryGetValue(e.skillId, out var sl))
+            {
+                sl = new List<PcSkillScriptEntry>();
+                _bySkill[e.skillId] = sl;
+            }
+            sl.Add(e);
+            if (!_byVersion.TryGetValue(e.version, out var vl))
+            {
+                vl = new List<PcSkillScriptEntry>();
+                _byVersion[e.version] = vl;
+            }
+            vl.Add(e);
         }
 
         public PcSkillScriptEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
 
         public IReadOnlyList<PcSkillScriptEntry> GetBySkill(int skillId)
         {
-            var list = new List<PcSkillScriptEntry>();
-            foreach (var e in _byId.Values) if (e.skillId == skillId) list.Add(e);
-            return list;
+            return _bySkill.TryGetValue(skillId, out var list)
+                ? (IReadOnlyList<PcSkillScriptEntry>)list
+                : System.Array.Empty<PcSkillScriptEntry>();
         }
 
         public IReadOnlyList<PcSkillScriptEntry> GetByVersion(int version)
         {
-            var list = new List<PcSkillScriptEntry>();
-            foreach (var e in _byId.Values) if (e.version == version) list.Add(e);
-            return list;
+            return _byVersion.TryGetValue(version, out var list)
+                ? (IReadOnlyList<PcSkillScriptEntry>)list
+                : System.Array.Empty<PcSkillScriptEntry>();
         }
 
         public IReadOnlyList<PcSkillScriptEntry> All => new List<PcSkillScriptEntry>(_byId.Values);

@@ -37,6 +37,7 @@ namespace VLTK.Sandbox
         public void Register(PcMagicAttribEntry e)
         {
             if (e == null) return;
+            if (e.attribId <= 0) return; // Skip placeholder rows to avoid zero-ID collision.
             _byId[e.attribId] = e;
         }
 
@@ -67,9 +68,11 @@ namespace VLTK.Sandbox
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
                 if (cols.Length < 7) continue;
+                int attribId = PcItemCommon.Int(cols, MagicAttribIdCol);
+                if (attribId <= 0) continue; // Drop placeholder rows early to keep registry clean.
                 rows.Add(new PcMagicAttribEntry
                 {
-                    attribId = PcItemCommon.Int(cols, MagicAttribIdCol),
+                    attribId = attribId,
                     name = PcItemCommon.Str(cols, NameCol),
                     attribType = cols.Length > 2 ? PcItemCommon.Int(cols, 2) : 0,
                     paramCount = cols.Length > ParamCountCol ? PcItemCommon.Int(cols, ParamCountCol) : 0,

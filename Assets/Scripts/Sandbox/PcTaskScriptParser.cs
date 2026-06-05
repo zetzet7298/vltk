@@ -49,15 +49,10 @@ namespace VLTK.Sandbox
         {
             var reg = new PcTaskScriptRegistry();
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
-            foreach (var f in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
-            {
-                var ext = Path.GetExtension(f);
-                if (string.Equals(ext, ".ini", System.StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(ext, ".txt", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var s in ParseFile(f)) reg.Register(s);
-                }
-            }
+            // Use the explicit file-name family to avoid sweeping unrelated
+            // .txt/.ini files in the directory tree.
+            foreach (var f in Directory.GetFiles(dir, "taskscripts*.txt"))
+                foreach (var s in ParseFile(f)) reg.Register(s);
             return reg;
         }
     }
@@ -76,28 +71,44 @@ namespace VLTK.Sandbox
     public sealed class PcTaskScriptRegistry
     {
         private readonly Dictionary<int, PcTaskScriptEntry> _byId = new();
+        // Secondary index keyed by taskId to make per-task lookups O(1)
+        // instead of scanning every entry in _byId.
+        private readonly Dictionary<int, List<PcTaskScriptEntry>> _byTask = new();
+        private readonly Dictionary<int, List<PcTaskScriptEntry>> _byTrigger = new();
         public int Count => _byId.Count;
 
         public void Register(PcTaskScriptEntry e)
         {
             if (e == null || e.scriptId <= 0) return;
             _byId[e.scriptId] = e;
+            if (!_byTask.TryGetValue(e.taskId, out var tl))
+            {
+                tl = new List<PcTaskScriptEntry>();
+                _byTask[e.taskId] = tl;
+            }
+            tl.Add(e);
+            if (!_byTrigger.TryGetValue(e.trigger, out var trl))
+            {
+                trl = new List<PcTaskScriptEntry>();
+                _byTrigger[e.trigger] = trl;
+            }
+            trl.Add(e);
         }
 
         public PcTaskScriptEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
 
         public IReadOnlyList<PcTaskScriptEntry> GetByTask(int taskId)
         {
-            var list = new List<PcTaskScriptEntry>();
-            foreach (var e in _byId.Values) if (e.taskId == taskId) list.Add(e);
-            return list;
+            return _byTask.TryGetValue(taskId, out var list)
+                ? (IReadOnlyList<PcTaskScriptEntry>)list
+                : System.Array.Empty<PcTaskScriptEntry>();
         }
 
         public IReadOnlyList<PcTaskScriptEntry> GetByTrigger(int trigger)
         {
-            var list = new List<PcTaskScriptEntry>();
-            foreach (var e in _byId.Values) if (e.trigger == trigger) list.Add(e);
-            return list;
+            return _byTrigger.TryGetValue(trigger, out var list)
+                ? (IReadOnlyList<PcTaskScriptEntry>)list
+                : System.Array.Empty<PcTaskScriptEntry>();
         }
 
         public IReadOnlyList<PcTaskScriptEntry> All => new List<PcTaskScriptEntry>(_byId.Values);

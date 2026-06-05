@@ -10,10 +10,11 @@ using VLTK.Core;
 
 namespace VLTK.Sandbox
 {
+    [System.Serializable]
     public class PcUtilitiesEntry
     {
-        public string SectionName { get; set; }
-        public Dictionary<string, string> KeyValues { get; set; } = new Dictionary<string, string>();
+        public string sectionName = string.Empty;
+        public Dictionary<string, string> keyValues = new Dictionary<string, string>();
     }
 
     public sealed class PcUtilitiesRegistry
@@ -22,7 +23,7 @@ namespace VLTK.Sandbox
         public int Count => _bySection.Count;
         public PcUtilitiesEntry Get(string section) => _bySection.TryGetValue(section, out var v) ? v : null;
         public IEnumerable<PcUtilitiesEntry> All => _bySection.Values;
-        public void Add(PcUtilitiesEntry e) { if (e != null) _bySection[e.SectionName] = e; }
+        public void Add(PcUtilitiesEntry e) { if (e != null) _bySection[e.sectionName] = e; }
     }
 
     public static class PcUtilitiesParser
@@ -44,7 +45,7 @@ namespace VLTK.Sandbox
                 {
                     var name = line.Substring(1, line.Length - 2).Trim();
                     if (string.IsNullOrEmpty(name)) continue;
-                    current = new PcUtilitiesEntry { SectionName = name };
+                    current = new PcUtilitiesEntry { sectionName = name };
                     reg.Add(current);
                     continue;
                 }
@@ -54,7 +55,7 @@ namespace VLTK.Sandbox
                 var key = line.Substring(0, eq).Trim();
                 var val = line.Substring(eq + 1).Trim();
                 if (string.IsNullOrEmpty(key)) continue;
-                current.KeyValues[key] = val;
+                current.keyValues[key] = val;
             }
             return reg;
         }

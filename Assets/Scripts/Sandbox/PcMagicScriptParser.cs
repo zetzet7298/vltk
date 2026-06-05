@@ -45,6 +45,7 @@ namespace VLTK.Sandbox
         public void Register(PcMagicScriptEntry e)
         {
             if (e == null) return;
+            if (e.scriptId <= 0) return; // Skip placeholder rows to avoid zero-ID collision.
             _byId[e.scriptId] = e;
             if (!_byAttrib.TryGetValue(e.magicAttribId, out var al)) { al = new(); _byAttrib[e.magicAttribId] = al; }
             al.Add(e);
@@ -85,13 +86,15 @@ namespace VLTK.Sandbox
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
                 if (cols.Length < 26) continue;
+                int scriptId = PcItemCommon.Int(cols, ScriptIdCol);
+                if (scriptId <= 0) continue; // Drop placeholder rows early to keep registry clean.
                 rows.Add(new PcMagicScriptEntry
                 {
                     itemGenre = PcItemCommon.Int(cols, 1),
                     detailType = PcItemCommon.Int(cols, 2),
                     particularType = PcItemCommon.Int(cols, 3),
                     name = PcItemCommon.Str(cols, NameCol),
-                    scriptId = PcItemCommon.Int(cols, ScriptIdCol),
+                    scriptId = scriptId,
                     magicAttribId = PcItemCommon.Int(cols, MagicAttribIdCol),
                     paramCount = PcItemCommon.Int(cols, ParamCountCol),
                     triggerOn = PcItemCommon.Int(cols, TriggerOnCol),

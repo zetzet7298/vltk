@@ -51,15 +51,10 @@ namespace VLTK.Sandbox
         {
             var reg = new PcGbkMapScriptRegistry();
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
-            foreach (var f in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
-            {
-                var ext = Path.GetExtension(f);
-                if (string.Equals(ext, ".ini", System.StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(ext, ".txt", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var s in ParseFile(f)) reg.Register(s);
-                }
-            }
+            // Use the explicit file-name family to avoid sweeping unrelated
+            // .txt/.ini files in the directory tree.
+            foreach (var f in Directory.GetFiles(dir, "gbkscripts*.txt"))
+                foreach (var s in ParseFile(f)) reg.Register(s);
             return reg;
         }
     }

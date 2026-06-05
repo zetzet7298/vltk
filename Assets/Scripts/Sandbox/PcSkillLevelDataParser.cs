@@ -64,15 +64,10 @@ namespace VLTK.Sandbox
         {
             var reg = new PcSkillLevelDataRegistry();
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
-            foreach (var f in Directory.GetFiles(dir, "*", SearchOption.AllDirectories))
-            {
-                var ext = Path.GetExtension(f);
-                if (string.Equals(ext, ".ini", System.StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(ext, ".txt", System.StringComparison.OrdinalIgnoreCase))
-                {
-                    foreach (var s in ParseFile(f)) reg.Register(s);
-                }
-            }
+            // Use the explicit file-name family to avoid sweeping unrelated
+            // .txt/.ini files in the directory tree.
+            foreach (var f in Directory.GetFiles(dir, "skillleveldata*.txt"))
+                foreach (var s in ParseFile(f)) reg.Register(s);
             return reg;
         }
     }
@@ -97,12 +92,24 @@ namespace VLTK.Sandbox
     public sealed class PcSkillLevelDataRegistry
     {
         private readonly Dictionary<long, PcSkillLevelDataEntry> _byKey = new();
+        // Secondary index keyed by skillId to make per-skill lookups O(1)
+        // instead of scanning every entry in _byKey.
+        private readonly Dictionary<int, List<PcSkillLevelDataEntry>> _bySkill = new();
+        private readonly Dictionary<int, int> _maxLevelBySkill = new();
         public int Count => _byKey.Count;
 
         public void Register(PcSkillLevelDataEntry e)
         {
             if (e == null || e.skillId <= 0) return;
             _byKey[((long)e.skillId << 32) | (uint)e.level] = e;
+            if (!_bySkill.TryGetValue(e.skillId, out var list))
+            {
+                list = new List<PcSkillLevelDataEntry>();
+                _bySkill[e.skillId] = list;
+            }
+            list.Add(e);
+            if (!_maxLevelBySkill.TryGetValue(e.skillId, out int max) || e.level > max)
+                _maxLevelBySkill[e.skillId] = e.level;
         }
 
         public PcSkillLevelDataEntry Get(int skillId, int level)
@@ -113,18 +120,14 @@ namespace VLTK.Sandbox
 
         public IReadOnlyList<PcSkillLevelDataEntry> GetBySkill(int skillId)
         {
-            var list = new List<PcSkillLevelDataEntry>();
-            foreach (var e in _byKey.Values)
-                if (e.skillId == skillId) list.Add(e);
-            return list;
+            return _bySkill.TryGetValue(skillId, out var list)
+                ? (IReadOnlyList<PcSkillLevelDataEntry>)list
+                : System.Array.Empty<PcSkillLevelDataEntry>();
         }
 
         public int GetMaxLevelForSkill(int skillId)
         {
-            int max = 0;
-            foreach (var e in _byKey.Values)
-                if (e.skillId == skillId && e.level > max) max = e.level;
-            return max;
+            return _maxLevelBySkill.TryGetValue(skillId, out int max) ? max : 0;
         }
 
         public IReadOnlyList<PcSkillLevelDataEntry> All

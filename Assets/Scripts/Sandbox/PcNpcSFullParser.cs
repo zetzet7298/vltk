@@ -11,16 +11,17 @@ using VLTK.Core;
 
 namespace VLTK.Sandbox
 {
+    [System.Serializable]
     public class PcNpcSFullEntry
     {
-        public int NpcId { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public int NpcTemplateId { get; set; }
-        public int Level { get; set; }
-        public int FactionId { get; set; }
-        public int Series { get; set; }
-        public int AIType { get; set; }
-        public int DialogId { get; set; }
+        public int npcId;
+        public string name = string.Empty;
+        public int npcTemplateId;
+        public int level;
+        public int factionId;
+        public int series;
+        public int aiType;
+        public int dialogId;
     }
 
     public sealed class PcNpcSFullRegistry
@@ -31,17 +32,19 @@ namespace VLTK.Sandbox
         public IEnumerable<PcNpcSFullEntry> All => _byId.Values;
         public IEnumerable<PcNpcSFullEntry> GetByTemplate(int tpl)
         {
-            foreach (var e in _byId.Values) if (e.NpcTemplateId == tpl) yield return e;
+            foreach (var e in _byId.Values) if (e.npcTemplateId == tpl) yield return e;
         }
         public IEnumerable<PcNpcSFullEntry> GetByFaction(int f)
         {
-            foreach (var e in _byId.Values) if (e.FactionId == f) yield return e;
+            foreach (var e in _byId.Values) if (e.factionId == f) yield return e;
         }
-        public void Add(PcNpcSFullEntry e) { if (e != null) _byId[e.NpcId] = e; }
+        public void Add(PcNpcSFullEntry e) { if (e != null) _byId[e.npcId] = e; }
     }
 
     public static class PcNpcSFullParser
     {
+        public const int MinColumns = 4;
+
         public static PcNpcSFullRegistry BuildRegistry(string absoluteDir)
         {
             var reg = new PcNpcSFullRegistry();
@@ -55,19 +58,21 @@ namespace VLTK.Sandbox
                 var line = raw.Trim();
                 if (line.Length == 0 || line[0] == ';' || line[0] == '#') continue;
                 var cols = line.Split('\t');
-                if (cols.Length < 4) cols = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (cols.Length < 4) continue;
+                // Skip malformed rows rather than re-splitting on whitespace;
+                // Vietnamese NPC names contain spaces and the fallback would
+                // shred the name field and shift every subsequent column.
+                if (cols.Length < MinColumns) continue;
                 if (!int.TryParse(cols[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
                 var e = new PcNpcSFullEntry
                 {
-                    NpcId = id,
-                    Name = cols.Length > 1 ? cols[1] : string.Empty,
-                    NpcTemplateId = cols.Length > 2 && int.TryParse(cols[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int t) ? t : 0,
-                    Level = cols.Length > 3 && int.TryParse(cols[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int l) ? l : 0,
-                    FactionId = cols.Length > 4 && int.TryParse(cols[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int f) ? f : 0,
-                    Series = cols.Length > 5 && int.TryParse(cols[5], NumberStyles.Integer, CultureInfo.InvariantCulture, out int s) ? s : 0,
-                    AIType = cols.Length > 6 && int.TryParse(cols[6], NumberStyles.Integer, CultureInfo.InvariantCulture, out int a) ? a : 0,
-                    DialogId = cols.Length > 7 && int.TryParse(cols[7], NumberStyles.Integer, CultureInfo.InvariantCulture, out int d) ? d : 0
+                    npcId = id,
+                    name = cols.Length > 1 ? cols[1] : string.Empty,
+                    npcTemplateId = cols.Length > 2 && int.TryParse(cols[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int t) ? t : 0,
+                    level = cols.Length > 3 && int.TryParse(cols[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int l) ? l : 0,
+                    factionId = cols.Length > 4 && int.TryParse(cols[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int f) ? f : 0,
+                    series = cols.Length > 5 && int.TryParse(cols[5], NumberStyles.Integer, CultureInfo.InvariantCulture, out int s) ? s : 0,
+                    aiType = cols.Length > 6 && int.TryParse(cols[6], NumberStyles.Integer, CultureInfo.InvariantCulture, out int a) ? a : 0,
+                    dialogId = cols.Length > 7 && int.TryParse(cols[7], NumberStyles.Integer, CultureInfo.InvariantCulture, out int d) ? d : 0
                 };
                 reg.Add(e);
             }
