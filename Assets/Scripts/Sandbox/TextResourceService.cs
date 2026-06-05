@@ -55,7 +55,16 @@ namespace VLTK.Sandbox
         }
 
         public IEnumerable<string> GetAllKeys()
-            => _reg != null ? _reg.All.Select(e => e.key) : Array.Empty<string>();
+        {
+            if (_reg == null) return Array.Empty<string>();
+            return EnumerateKeys(_reg.All);
+        }
+
+        private static IEnumerable<string> EnumerateKeys(IEnumerable<PcTextResourceEntry> entries)
+        {
+            foreach (var entry in entries)
+                yield return entry.key;
+        }
 
         public IReadOnlyList<PcTextResourceEntry> All
             => _reg != null ? _reg.All : Array.Empty<PcTextResourceEntry>();

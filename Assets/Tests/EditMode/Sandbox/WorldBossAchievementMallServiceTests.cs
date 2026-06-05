@@ -510,6 +510,24 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual("__KEY__", svc.GetOrVietnamese("__KEY__", null));
         }
 
+        [Test]
+        public void TextResourceService_GetAllKeys_ReturnsEmptyWithoutRegistry()
+        {
+            var svc = new TextResourceService();
+            CollectionAssert.IsEmpty(svc.GetAllKeys());
+        }
+
+        [Test]
+        public void TextResourceService_GetAllKeys_ReturnsRegisteredKeys()
+        {
+            var reg = new PcTextResourceRegistry();
+            reg.Register(new PcTextResourceEntry { key = "OK", vietnamese = "Thành công" });
+            reg.Register(new PcTextResourceEntry { key = "CANCEL", vietnamese = "Huỷ" });
+            var svc = new TextResourceService(reg);
+
+            CollectionAssert.AreEquivalent(new[] { "OK", "CANCEL" }, svc.GetAllKeys().ToArray());
+        }
+
         // ── AnimationBank ────────────────────────────────────────────────────
         [Test]
         public void AnimationBankService_LoadFromStreamingAssets_DoesNotThrow()
