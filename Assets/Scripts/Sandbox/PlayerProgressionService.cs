@@ -19,51 +19,115 @@ namespace VLTK.Sandbox
         public HashSet<int> knownSkills = new();
         public Dictionary<int, int> skillLevels = new();
 
-        public void GrantCaiBangSkillPanelProgression(SkillCatalog catalog)
+        // Horse unlock: PC source vltksource_new/vl_update_27/Client 6.0/settings/item/000/horseres.txt
+        // Sandbox default: player joins at level 30 (CaiBang quest complete) and unlocks
+        // a basic horse. SandboxBoot overrides to red (id=5) so testers see the 5-color mount.
+        public const int MinHorseLevel = 30;
+        public int horseId = 1; // 0 = no horse, 1/3/5/7/9 = blue/yellow/red/white/black
+
+        public bool HasHorse => horseId > 0;
+
+        public static readonly int[] AvailableHorseIds = { 1, 3, 5, 7, 9 };
+
+        /// <summary>
+        /// Compute unlocked horse id from level (PC tiering). 1-29 = none,
+        /// 30-49 = 1 (blue), 50-69 = 3, 70-89 = 5, 90-109 = 7, 110+ = 9.
+        /// </summary>
+        public static int HorseIdForLevel(int playerLevel)
         {
-            bool firstGrant = faction != CombatFaction.CaiBang || knownSkills.Count == 0;
+            if (playerLevel < MinHorseLevel) return 0;
+            int tier = (playerLevel - MinHorseLevel) / 20;
+            if (tier < 0) tier = 0;
+            if (tier >= AvailableHorseIds.Length) tier = AvailableHorseIds.Length - 1;
+            return AvailableHorseIds[tier];
+        }
+
+        public void GrantFactionSkillPanelProgression(SkillCatalog catalog, CombatFaction targetFaction)
+        {
+            bool firstGrant = faction != targetFaction || knownSkills.Count == 0;
             level = CaiBangSkillPanelLevel;
             if (firstGrant)
                 fightSkillPoints = CaiBangSkillPanelPoints;
-            faction = CombatFaction.CaiBang;
+            faction = targetFaction;
 
             if (catalog == null)
                 return;
 
             foreach (var skill in catalog.All)
             {
-                if (!skill.IsCaiBang)
+                if (skill.faction != targetFaction)
                     continue;
                 // Hide the NPC/boss variant (1539) from the player panel.
                 if (skill.skillId == NpcVariantSkillId)
                     continue;
 
-                // PC faction join seeds faction skills into KSkillList at level 0; left-clicking a skill slot spends
-                // one fight skill point and asks GOI_TONE_UP_SKILL / ApplyAddSkillLevel to raise it. Re-opening
-                // the skills window must not reset learned levels or remaining points.
                 knownSkills.Add(skill.skillId);
                 if (!skillLevels.ContainsKey(skill.skillId))
                     skillLevels[skill.skillId] = 0;
             }
         }
 
-        /// <summary>
-        /// Set all known CaiBang skills to their maximum level for testing.
-        /// Mirrors PC GM command that sets all skills to max.
-        /// Called on every SandboxManager boot / domain reload.
-        /// </summary>
+        public void GrantCaiBangSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.CaiBang);
+        }
+
+        public void GrantWuDangSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.WuDang);
+        }
+
+        public void GrantShaolinSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.Shaolin);
+        }
+
+        public void GrantTangMenSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.TangMen);
+        }
+
+        public void GrantEMeiSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.EMei);
+        }
+
+        public void GrantTianWangSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.TianWang);
+        }
+
+        public void GrantWuDuSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.WuDu);
+        }
+
+        public void GrantCuiYanSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.CuiYan);
+        }
+
+        public void GrantTianRenSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.TianRen);
+        }
+
+        public void GrantKunLunSkillPanelProgression(SkillCatalog catalog)
+        {
+            GrantFactionSkillPanelProgression(catalog, CombatFaction.KunLun);
+        }
+
         public void MaxAllSkillLevels(SkillCatalog catalog)
         {
             if (catalog == null) return;
-
-            // Ensure progression is granted first
-            GrantCaiBangSkillPanelProgression(catalog);
-
+            if (faction == CombatFaction.None)
+                faction = CombatFaction.CaiBang; // Default for test suite compatibility
+            level = CaiBangSkillPanelLevel;
+            fightSkillPoints = CaiBangSkillPanelPoints;
             foreach (var skill in catalog.All)
             {
-                if (!skill.IsCaiBang) continue;
+                if (skill.faction != CombatFaction.CaiBang && skill.faction != CombatFaction.WuDang && skill.faction != CombatFaction.Shaolin && skill.faction != CombatFaction.TangMen && skill.faction != CombatFaction.EMei && skill.faction != CombatFaction.TianWang && skill.faction != CombatFaction.WuDu && skill.faction != CombatFaction.CuiYan && skill.faction != CombatFaction.TianRen && skill.faction != CombatFaction.KunLun) continue;
                 if (skill.skillId == NpcVariantSkillId) continue;
-
                 int maxLv = skill.maxLevel > 0 ? skill.maxLevel : 1;
                 knownSkills.Add(skill.skillId);
                 skillLevels[skill.skillId] = maxLv;
