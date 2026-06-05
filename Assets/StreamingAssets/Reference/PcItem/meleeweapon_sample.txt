@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+Thi誸 Tr駓 th	0	0	0	\spr\item\equip\closeweapon\obj-sword01.spr	9	1	3	"Lo筰 ki誱 nhb籲g s総, khn╪g s竧 thng k衜. "		50	1	0	28	4	4	29	7	7	167	0	0	31												36	0	32	20	33	0						
+Cang Ki誱	0	0	0	\spr\item\equip\closeweapon\obj-sword02.spr	9	1	3	Lo筰 ki誱 頲 tinh luy謓 tth衟. 		600	2	0	28	8	8	29	15	15	167	0	0	31												36	9	32	20	33	0						
+Thanh Phong Ki誱	0	0	0	\spr\item\equip\closeweapon\obj-sword03.spr	9	1	3	"Lo筰 ki誱 m醤g, tinh luy謓, s綾 nh鋘. "		1350	3	0	28	12	12	29	23	23	167	0	0	31												36	18	32	30	33	0						
+Long Tuy襫 Ki誱	0	0	0	\spr\item\equip\closeweapon\obj-sword04.spr	9	1	3	"Lo筰 danh ki誱 th阨 Л阯g, truy襫 thuy誸 klo筰 ki誱 n祔 cLong Khr蕋 m筺h. "		2400	4	0	28	16	16	29	31	31	167	0	0	31												36	27	32	40	33	0						
+Tr穖 MKi誱	0	0	0	\spr\item\equip\closeweapon\obj-sword05.spr	9	1	3	"Ki誱 cth阨 Л阯g, th﹏ d礽 vs綾, ch衜 ng鵤 c騨g n gi秐 nhch苩 tay. "		3750	5	0	28	21	21	29	39	39	167	0	0	31												36	36	32	50	33	0						

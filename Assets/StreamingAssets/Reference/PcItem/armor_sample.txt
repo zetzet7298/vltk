@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+Sa Di ph鬰	0	2	0	\spr\item\equip\armor\obj-ma-cloth01-1.spr	22	2	3	T╪g y d祅h cho c竎 ti觰 Sa Di v鮝 nh藀 m玭		50	1	0	30	50	50	31																		36	1	32	30					38	0		
+T╪g y	0	2	0	\spr\item\equip\armor\obj-ma-cloth01-1.spr	22	2	3	Y ph鬰 t╪g nh﹏ thng m芻		200	2	0	30	100	100	31																		36	7	32	50					38	0		
+B竎h N筽 y	0	2	0	\spr\item\equip\armor\obj-ma-cloth01-2.spr	22	2	3	Thng ph鬰 chy誹 c馻 c竎 T╪g nh﹏ H竛 tri襲		400	3	0	30	150	150	31																		36	13	32	70					38	0		
+An  h閕	0	2	0	\spr\item\equip\armor\obj-ma-cloth01-3.spr	22	2	3	"C遪 g鋓 lNg襲 y, 竜 c馻 c竎 t╪g nh﹏ m芻 trong nh鱪g l骳 th玭g thng"		500	4	0	30	200	200	31																		36	19	32	90					38	0		
+U蕋  La T╪g	0	2	0	\spr\item\equip\armor\obj-ma-cloth02-1.spr	22	2	3	"C遪 g鋓 lTh蕋 襲 y, 竜 c馻 c竎 t╪g nh﹏ m芻 trong nh鱪g l骳 trang nghi猰"		1000	5	0	30	250	250	31																		36	26	32	110					38	0		
