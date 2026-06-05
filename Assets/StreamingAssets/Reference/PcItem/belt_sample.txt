@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+Ng璾 BY猽 Цi	0	6	0	\spr\item\equip\sash\obj-sash01.spr	32	2	1	Lo筰 d﹜ l璶g b籲g da tr﹗ th玭g thng. 		25	1	0	30	7	7	31																		36	1	32	20	33	0						
+Lang BY猽 Цi	0	6	0	\spr\item\equip\sash\obj-sash02.spr	32	2	1	"L祄 b籲g da s鉯, m襪 d蝟 linh ho箃. "		150	2	0	30	12	12	31																		36	8	32	29	33	0						
+Щng Y猽 Цi	0	6	0	\spr\item\equip\sash\obj-sash03.spr	32	2	1	"K誸 tlo筰 d﹜ m﹜ 100 n╩, r緉 ch綾 vc飊g. "		400	3	0	30	18	18	31																		36	14	32	39	33	0						
+M穘g BY猽 Цi	0	6	0	\spr\item\equip\sash\obj-sash04.spr	32	2	1	"L祄 tda M穘g x p vch綾 vc飊g. "		900	4	0	30	24	24	31																		36	20	32	49	33	0						
+Ng筩 BY猽 Цi	0	6	0	\spr\item\equip\sash\obj-sash05.spr	32	2	1	"L祄 tda cs蕌, p vch綾 vc飊g, cthd飊g l祄 binh kh "		1500	5	0	30	30	30	31																		36	27	32	59	33	0						

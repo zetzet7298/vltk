@@ -6,7 +6,7 @@
         "-y",
         "@upstash/context7-mcp@latest"
       ],
-      "disabled": true
+      "disabled": false
     },
     "exa": {
       "serverUrl": "https://mcp.exa.ai/mcp",
@@ -39,7 +39,7 @@
       "args": [
         "mcp"
       ],
-      "disabled": false
+      "disabled": true
     }
   }
 }

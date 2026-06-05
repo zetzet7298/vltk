@@ -1,0 +1,11 @@
+{
+  "eval_id": 4,
+  "eval_name": "check-why-map-enemies-are-wrong-types-and-spawn-",
+  "prompt": "Check why map enemies are wrong types and spawn in wrong places. Use the original PC data and report missing assets.",
+  "assertions": [
+    "Uses Region_S as authoritative source and avoids Region_C for real server enemies",
+    "Maps template ids to NpcS.txt with header-row awareness and raw-name cross-check",
+    "Avoids fake placeholder art; reports missing visual assets or creates non-render marker only",
+    "Validates through Unity compile/tests/PlayMode probes and screenshots"
+  ]
+}

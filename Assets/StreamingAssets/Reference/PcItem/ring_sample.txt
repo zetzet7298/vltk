@@ -1,0 +1,6 @@
+名称	ItemGenre	DetailType	ParticularType	动画文件名	对应物件索引	宽度	高度	说明文字	五行属性	价格	等级	是否叠放	基础属性1类型	基础属性1最小值	基础属性1最大值	基础属性2类型	基础属性2最小值	基础属性2最大值	基础属性3类型	基础属性3最小值	基础属性3最大值	基础属性4类型	基础属性4最小值	基础属性4最大值	基础属性5类型	基础属性5最小值	基础属性5最大值	基础属性6类型	基础属性6最小值	基础属性6最大值	基础属性7类型	基础属性7最小值	基础属性7最大值	需求属性1类型	需求属性1数值	需求属性2类型	需求属性2数值	需求属性3类型	需求属性3数值	需求属性4类型	需求属性4数值	需求属性5类型	需求属性5数值	需求属性6类型	需求属性6数值
+Ho?ng Ng?c Gi?i Ch?	0	3	0	\spr\item\equip\ring\obj-ring01.spr	37	1	1	Lo?i nh?n ?eo b?ng Ho?ng Ng?c th??ng th?y, kh?ng ??ng gi?. 		150	1	0																						36	1										
+C?m L?m Th?ch Gi?i Ch?	0	3	0	\spr\item\equip\ring\obj-ring02.spr	37	1	1	Lo?i nh?n ?eo b?ng qu? tr?m th??ng th?y, kh?ng ??ng gi?. 		600	2	0																						36	7										
+Ph? Dung Th?ch Gi?i Ch?	0	3	0	\spr\item\equip\ring\obj-ring03.spr	37	1	1	Lo?i nh?n ???c kh?m v?o nh?ng h?t M? N?o nh?, kh?ng qu? l?m. 		1350	3	0																						36	14										
+Ph? Th?y Gi?i Ch?	0	3	0	\spr\item\equip\ring\obj-ring04.spr	37	1	1	Lo?i nh?n ?eo r?t hi?m nh?n th?y ???c, gi? tr? c?c qu?. 		2400	4	0																						36	20										
+Th?y L?u Th?ch Gi?i Ch?	0	3	0	\spr\item\equip\ring\obj-ring05.spr	37	1	1	Lo?i nh?n b?ng Th?y L?u qu? hi?m, ch? nh?ng ng??i c? thanh danh m?i ???c ?eo. 		3750	5	0																						36	27										

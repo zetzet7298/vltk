@@ -26,6 +26,10 @@ namespace VLTK.Sandbox
         public int level;
         public float deathTimestamp = -1f; // Khi nào chết
         public float respawnDelay = 5f;
+        // Enemy attack cooldown: AI tick chỉ được phép đánh khi gameTime >= nextAttackTime.
+        // PC melee cadence ~1 hit/sec; dùng 1.0s cho enemy AI loop mặc định.
+        public float attackCooldown = 1.0f;
+        public float nextAttackTime = 0f;
         public bool isDead => combat != null && combat.currentLife <= 0;
 
         public GameplayActor(int id, string name, bool player = false)
@@ -258,6 +262,8 @@ namespace VLTK.Sandbox
         public void EnemyAttackPlayer(GameplayActor enemy)
         {
             if (_player == null || _player.isDead || enemy.isDead) return;
+            // Caller (Tick) is expected to gate via nextAttackTime; reset on hit for safety.
+            enemy.nextAttackTime = _gameTime + enemy.attackCooldown;
 
             // Simple melee damage
             int damage = UnityEngine.Random.Range(enemy.combat.minDamage, enemy.combat.maxDamage + 1);
@@ -354,6 +360,8 @@ namespace VLTK.Sandbox
                 float dist = Vector2.Distance(enemy.worldPos, _player.worldPos);
                 if (dist < 64f) // PC attack range
                 {
+                    if (_gameTime < enemy.nextAttackTime) continue;
+                    enemy.nextAttackTime = _gameTime + enemy.attackCooldown;
                     EnemyAttackPlayer(enemy);
                 }
             }

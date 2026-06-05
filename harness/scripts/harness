@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+RUST_CLI="${HARNESS_RUST_CLI:-$REPO_ROOT/scripts/bin/harness-cli}"
+
+if [ ! -x "$RUST_CLI" ]; then
+  printf 'error: Harness CLI not found or not executable: %s\n' "$RUST_CLI" >&2
+  exit 1
+fi
+
+# Intercept story update --evidence to validate paths exist
+if [ "${1:-}" = "story" ] && [ "${2:-}" = "update" ]; then
+  idx=1
+  for arg in "$@"; do
+    if [ "$arg" = "--evidence" ]; then
+      val_idx=$((idx + 1))
+      evidence_val="${!val_idx:-}"
+      if [ -n "$evidence_val" ]; then
+        validate_evidence() {
+          local raw_evidence="$1"
+          local norm_ev
+          norm_ev=$(echo "$raw_evidence" | tr '[:upper:]' '[:lower:]' | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')
+          case "$norm_ev" in
+            ""|no|none|n_a|na|tbd|pending|blocked) return 0 ;;
+          esac
+          local IFS=','
+          local path
+          for path in $raw_evidence; do
+            path=$(echo "$path" | sed -E 's/^[[:space:]]+//; s/[[:space:]]+$//')
+            [ -z "$path" ] && continue
+            local norm_path
+            norm_path=$(echo "$path" | tr '[:upper:]' '[:lower:]')
+            case "$norm_path" in
+              no|none|n_a|na|tbd|pending|blocked) continue ;;
+            esac
+            local clean_path
+            clean_path=$(echo "$path" | sed -E 's/:L?[0-9]+(-[0-9]+)?$//')
+            local check_path="$clean_path"
+            if [[ "$check_path" != /* ]]; then
+              local proj_root
+              if [[ "$REPO_ROOT" == */harness ]]; then
+                proj_root="$(cd "$REPO_ROOT/.." && pwd)"
+              else
+                proj_root="$REPO_ROOT"
+              fi
+              check_path="$proj_root/$check_path"
+            fi
+            if [ ! -f "$check_path" ] && [ ! -d "$check_path" ]; then
+              printf 'error: evidence path does not exist: %s (resolved to: %s)\n' "$path" "$check_path" >&2
+              exit 1
+            fi
+          done
+        }
+        validate_evidence "$evidence_val"
+      fi
+    fi
+    idx=$((idx + 1))
+  done
+fi
+
+HARNESS_REPO_ROOT="$REPO_ROOT" exec "$RUST_CLI" "$@"
