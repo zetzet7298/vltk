@@ -44,7 +44,6 @@ Recordings/
 *.csproj
 *.sln
 *.unityproj
-Assembly-CSharp*.csproj
 
 # ─────────────────────────────────────────────────
 # OS generated
@@ -74,6 +73,9 @@ Desktop.ini
 # ─────────────────────────────────────────────────
 # Mobile build output
 # ─────────────────────────────────────────────────
+# Gradle cache
+.gradle/
+
 *.apk
 *.aab
 *.ipa

@@ -292,6 +292,64 @@ namespace VLTK.Sandbox
         public MapDescService MapDescService { get; private set; }
         public BossSpawnService BossSpawnService { get; private set; }
         public DropRateConfigService DropRateConfigService { get; private set; }
+        // Batch 14: Station/Travel, Guild Workshop/Task, Mission Config services
+        public StationService StationService { get; private set; }
+        public StationPriceService StationPriceService { get; private set; }
+        public WaypointPriceService WaypointPriceService { get; private set; }
+        public GuildWorkshopLevelService GuildWorkshopLevelService { get; private set; }
+        public GuildTaskDefService GuildTaskDefService { get; private set; }
+        public MissionArenaConfigService MissionArenaConfigService { get; private set; }
+        public MissionBattleConfigService MissionBattleConfigService { get; private set; }
+        public MissionMazeConfigService MissionMazeConfigService { get; private set; }
+        public MissionQianchongService MissionQianchongService { get; private set; }
+        // Batch 14b: Task detail config
+        public TaskDailyConfigService TaskDailyConfigService { get; private set; }
+        public TaskRandomConfigService TaskRandomConfigService { get; private set; }
+        public TaskLevelLinkService TaskLevelLinkService { get; private set; }
+        public TaskTalkConfigService TaskTalkConfigService { get; private set; }
+        public TaskEventService TaskEventService { get; private set; }
+        // Batch 14c: Object/ItemValue/Music/Weather/Partner/NativePlace/Timer services
+        public ObjDataService ObjDataService { get; private set; }
+        public ObjectSettingService ObjectSettingService { get; private set; }
+        public MusicConfigService MusicConfigService { get; private set; }
+        public WeatherConfigService WeatherConfigService { get; private set; }
+        public ItemValueService ItemValueService { get; private set; }
+        public PartnerEventService PartnerEventService { get; private set; }
+        public PartnerBagService PartnerBagService { get; private set; }
+        public PartnerSettingService PartnerSettingService { get; private set; }
+        public NativePlaceService NativePlaceService { get; private set; }
+        public TimerTaskService TimerTaskService { get; private set; }
+        // Batch 15: Item sub-types
+        public BrokenEquipService BrokenEquipService { get; private set; }
+        public FusionService FusionService { get; private set; }
+        public MantleService MantleService { get; private set; }
+        public MaskService MaskService { get; private set; }
+        public SignetService SignetService { get; private set; }
+        public ShipinService ShipinService { get; private set; }
+        public SuiteActivateCountService SuiteActivateCountService { get; private set; }
+        public CompoundScriptService CompoundScriptService { get; private set; }
+        // Batch 15b: Config services (forbit, tax, progress, rank, foundry, platina magic, recoin, city hongbao)
+        public ForbitItemService ForbitItemService { get; private set; }
+        public TaxRateService TaxRateService { get; private set; }
+        public ProgressConfigService ProgressConfigService { get; private set; }
+        public RankSettingService RankSettingService { get; private set; }
+        public FoundryResDemandService FoundryResDemandService { get; private set; }
+        public PlatinaMagicRateService PlatinaMagicRateService { get; private set; }
+        public RecoinService RecoinService { get; private set; }
+        public CityHongbaoService CityHongbaoService { get; private set; }
+        // Batch 16: Task tollgate/newtask + remaining config
+        public TollgateKillerService TollgateKillerService { get; private set; }
+        public NewTaskBranchService NewTaskBranchService { get; private set; }
+        public MainPassTaskService MainPassTaskService { get; private set; }
+        // Batch 16b: Remaining config services
+        public AutoUpdateConfigService AutoUpdateConfigService { get; private set; }
+        public TiredWarningService TiredWarningService { get; private set; }
+        public PlayerLimitTimeService PlayerLimitTimeService { get; private set; }
+        public PermitDialogNpcService PermitDialogNpcService { get; private set; }
+        public ProductConfigService ProductConfigService { get; private set; }
+        public UtilitiesService UtilitiesService { get; private set; }
+        public ForbitHeartService ForbitHeartService { get; private set; }
+        public StringResourceCatalogService StringResourceCatalogService { get; private set; }
         private float _combatTickAccumulator;
         // M1.2: Region catalog and report
         public RegionCatalogFile RegionCatalog { get; private set; }
@@ -608,6 +666,64 @@ namespace VLTK.Sandbox
                 MapDescService = LoadOptionalStreamingService(nameof(MapDescService), () => MapDescService.LoadFromStreamingAssets());
                 BossSpawnService = LoadOptionalStreamingService(nameof(BossSpawnService), () => BossSpawnService.LoadFromStreamingAssets());
                 DropRateConfigService = LoadOptionalStreamingService(nameof(DropRateConfigService), () => DropRateConfigService.LoadFromStreamingAssets());
+                // Batch 14: Station/Travel, Guild Workshop/Task, Mission Config
+                StationService = LoadOptionalStreamingService(nameof(StationService), () => StationService.LoadFromStreamingAssets());
+                StationPriceService = LoadOptionalStreamingService(nameof(StationPriceService), () => StationPriceService.LoadFromStreamingAssets());
+                WaypointPriceService = LoadOptionalStreamingService(nameof(WaypointPriceService), () => WaypointPriceService.LoadFromStreamingAssets());
+                GuildWorkshopLevelService = LoadOptionalStreamingService(nameof(GuildWorkshopLevelService), () => GuildWorkshopLevelService.LoadFromStreamingAssets());
+                GuildTaskDefService = LoadOptionalStreamingService(nameof(GuildTaskDefService), () => GuildTaskDefService.LoadFromStreamingAssets());
+                MissionArenaConfigService = LoadOptionalStreamingService(nameof(MissionArenaConfigService), () => MissionArenaConfigService.LoadFromStreamingAssets());
+                MissionBattleConfigService = LoadOptionalStreamingService(nameof(MissionBattleConfigService), () => MissionBattleConfigService.LoadFromStreamingAssets());
+                MissionMazeConfigService = LoadOptionalStreamingService(nameof(MissionMazeConfigService), () => MissionMazeConfigService.LoadFromStreamingAssets());
+                MissionQianchongService = LoadOptionalStreamingService(nameof(MissionQianchongService), () => MissionQianchongService.LoadFromStreamingAssets());
+                // Batch 14b: Task detail config services
+                TaskDailyConfigService = LoadOptionalStreamingService(nameof(TaskDailyConfigService), () => TaskDailyConfigService.LoadFromStreamingAssets());
+                TaskRandomConfigService = LoadOptionalStreamingService(nameof(TaskRandomConfigService), () => TaskRandomConfigService.LoadFromStreamingAssets());
+                TaskLevelLinkService = LoadOptionalStreamingService(nameof(TaskLevelLinkService), () => TaskLevelLinkService.LoadFromStreamingAssets());
+                TaskTalkConfigService = LoadOptionalStreamingService(nameof(TaskTalkConfigService), () => TaskTalkConfigService.LoadFromStreamingAssets());
+                TaskEventService = LoadOptionalStreamingService(nameof(TaskEventService), () => TaskEventService.LoadFromStreamingAssets());
+                // Batch 14c: Object/ItemValue/Music/Weather/Partner/NativePlace/Timer
+                ObjDataService = LoadOptionalStreamingService(nameof(ObjDataService), () => ObjDataService.LoadFromStreamingAssets());
+                ObjectSettingService = LoadOptionalStreamingService(nameof(ObjectSettingService), () => ObjectSettingService.LoadFromStreamingAssets());
+                MusicConfigService = LoadOptionalStreamingService(nameof(MusicConfigService), () => MusicConfigService.LoadFromStreamingAssets());
+                WeatherConfigService = LoadOptionalStreamingService(nameof(WeatherConfigService), () => WeatherConfigService.LoadFromStreamingAssets());
+                ItemValueService = LoadOptionalStreamingService(nameof(ItemValueService), () => ItemValueService.LoadFromStreamingAssets());
+                PartnerEventService = LoadOptionalStreamingService(nameof(PartnerEventService), () => PartnerEventService.LoadFromStreamingAssets());
+                PartnerBagService = LoadOptionalStreamingService(nameof(PartnerBagService), () => PartnerBagService.LoadFromStreamingAssets());
+                PartnerSettingService = LoadOptionalStreamingService(nameof(PartnerSettingService), () => PartnerSettingService.LoadFromStreamingAssets());
+                NativePlaceService = LoadOptionalStreamingService(nameof(NativePlaceService), () => NativePlaceService.LoadFromStreamingAssets());
+                TimerTaskService = LoadOptionalStreamingService(nameof(TimerTaskService), () => TimerTaskService.LoadFromStreamingAssets());
+                // Batch 15: Item sub-types
+                BrokenEquipService = LoadOptionalStreamingService(nameof(BrokenEquipService), () => BrokenEquipService.LoadFromStreamingAssets());
+                FusionService = LoadOptionalStreamingService(nameof(FusionService), () => FusionService.LoadFromStreamingAssets());
+                MantleService = LoadOptionalStreamingService(nameof(MantleService), () => MantleService.LoadFromStreamingAssets());
+                MaskService = LoadOptionalStreamingService(nameof(MaskService), () => MaskService.LoadFromStreamingAssets());
+                SignetService = LoadOptionalStreamingService(nameof(SignetService), () => SignetService.LoadFromStreamingAssets());
+                ShipinService = LoadOptionalStreamingService(nameof(ShipinService), () => ShipinService.LoadFromStreamingAssets());
+                SuiteActivateCountService = LoadOptionalStreamingService(nameof(SuiteActivateCountService), () => SuiteActivateCountService.LoadFromStreamingAssets());
+                CompoundScriptService = LoadOptionalStreamingService(nameof(CompoundScriptService), () => CompoundScriptService.LoadFromStreamingAssets());
+                // Batch 15b: Config services
+                ForbitItemService = LoadOptionalStreamingService(nameof(ForbitItemService), () => ForbitItemService.LoadFromStreamingAssets());
+                TaxRateService = LoadOptionalStreamingService(nameof(TaxRateService), () => TaxRateService.LoadFromStreamingAssets());
+                ProgressConfigService = LoadOptionalStreamingService(nameof(ProgressConfigService), () => ProgressConfigService.LoadFromStreamingAssets());
+                RankSettingService = LoadOptionalStreamingService(nameof(RankSettingService), () => RankSettingService.LoadFromStreamingAssets());
+                FoundryResDemandService = LoadOptionalStreamingService(nameof(FoundryResDemandService), () => FoundryResDemandService.LoadFromStreamingAssets());
+                PlatinaMagicRateService = LoadOptionalStreamingService(nameof(PlatinaMagicRateService), () => PlatinaMagicRateService.LoadFromStreamingAssets());
+                RecoinService = LoadOptionalStreamingService(nameof(RecoinService), () => RecoinService.LoadFromStreamingAssets());
+                CityHongbaoService = LoadOptionalStreamingService(nameof(CityHongbaoService), () => CityHongbaoService.LoadFromStreamingAssets());
+                // Batch 16: Task tollgate/newtask
+                TollgateKillerService = LoadOptionalStreamingService(nameof(TollgateKillerService), () => TollgateKillerService.LoadFromStreamingAssets());
+                NewTaskBranchService = LoadOptionalStreamingService(nameof(NewTaskBranchService), () => NewTaskBranchService.LoadFromStreamingAssets());
+                MainPassTaskService = LoadOptionalStreamingService(nameof(MainPassTaskService), () => MainPassTaskService.LoadFromStreamingAssets());
+                // Batch 16b: Remaining config services
+                AutoUpdateConfigService = LoadOptionalStreamingService(nameof(AutoUpdateConfigService), () => AutoUpdateConfigService.LoadFromStreamingAssets());
+                TiredWarningService = LoadOptionalStreamingService(nameof(TiredWarningService), () => TiredWarningService.LoadFromStreamingAssets());
+                PlayerLimitTimeService = LoadOptionalStreamingService(nameof(PlayerLimitTimeService), () => PlayerLimitTimeService.LoadFromStreamingAssets());
+                PermitDialogNpcService = LoadOptionalStreamingService(nameof(PermitDialogNpcService), () => PermitDialogNpcService.LoadFromStreamingAssets());
+                ProductConfigService = LoadOptionalStreamingService(nameof(ProductConfigService), () => ProductConfigService.LoadFromStreamingAssets());
+                UtilitiesService = LoadOptionalStreamingService(nameof(UtilitiesService), () => UtilitiesService.LoadFromStreamingAssets());
+                ForbitHeartService = LoadOptionalStreamingService(nameof(ForbitHeartService), () => ForbitHeartService.LoadFromStreamingAssets());
+                StringResourceCatalogService = LoadOptionalStreamingService(nameof(StringResourceCatalogService), () => StringResourceCatalogService.LoadFromStreamingAssets());
 
                 LogOptionalServiceSummary();
 
