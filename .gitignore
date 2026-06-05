@@ -9,7 +9,8 @@
 harness.db
 harness.db-wal
 harness.db-shm
-
+bmad
+harness/harness.db
 # Rust build output for harness tooling.
 target/
 dist/
@@ -43,7 +44,6 @@ Recordings/
 *.csproj
 *.sln
 *.unityproj
-Assembly-CSharp*.csproj
 
 # ─────────────────────────────────────────────────
 # OS generated
@@ -73,6 +73,9 @@ Desktop.ini
 # ─────────────────────────────────────────────────
 # Mobile build output
 # ─────────────────────────────────────────────────
+# Gradle cache
+.gradle/
+
 *.apk
 *.aab
 *.ipa
@@ -97,6 +100,10 @@ Assets/AssetBundles/
 Assets/Resources/Extracted/
 Assets/Resources/Converted/
 unpacked/
+bak/
+*.rar
+*.zip
+*.7z
 
 # ─────────────────────────────────────────────────
 # Python tool cache (vltktool)
@@ -155,6 +162,10 @@ GoogleService-Info.plist
 # ─────────────────────────────────────────────────
 .codex/
 .factory/
+.agents/
+.understand-anything/
+.kiro/
+.pi/
 
 # ─────────────────────────────────────────────────
 # Unity auto-recovery scene backup
