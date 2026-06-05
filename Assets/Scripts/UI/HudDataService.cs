@@ -1,7 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using VLTK.Core;
 
 namespace VLTK.UI
@@ -100,21 +101,25 @@ namespace VLTK.UI
 
         public HudDataService()
         {
-            LoadData();
+            // Async loading is triggered by the caller via LoadDataAsync().
+            // Synchronous System.IO.File reads do not work on Android (jar:// path).
+            IsLoaded = false;
         }
 
-        public void LoadData()
+        /// <summary>
+        /// Async data loader using UnityWebRequest so it works on Android/iOS where
+        /// System.IO.File cannot read files inside the StreamingAssets APK archive.
+        /// Callers should <c>StartCoroutine(service.LoadDataAsync())</c>.
+        /// </summary>
+        public IEnumerator LoadDataAsync()
         {
-            try
-            {
-                string streamingPath = Application.streamingAssetsPath;
+            string streamingPath = Application.streamingAssetsPath;
 
-                // 1. Load buffs
-                string buffPath = Path.Combine(streamingPath, "buff_list.json");
-                if (File.Exists(buffPath))
+            // 1. Load buffs
+            yield return LoadAndParse<BuffListWrapper>(
+                System.IO.Path.Combine(streamingPath, "buff_list.json"),
+                wrapper =>
                 {
-                    string json = File.ReadAllText(buffPath);
-                    var wrapper = JsonUtility.FromJson<BuffListWrapper>(json);
                     _buffs.Clear();
                     if (wrapper != null && wrapper.buffs != null)
                     {
@@ -123,27 +128,25 @@ namespace VLTK.UI
                             _buffs[b.id] = b;
                         }
                     }
-                }
+                });
 
-                // 2. Load emotes
-                string emotePath = Path.Combine(streamingPath, "emote_list.json");
-                if (File.Exists(emotePath))
+            // 2. Load emotes
+            yield return LoadAndParse<EmoteListWrapper>(
+                System.IO.Path.Combine(streamingPath, "emote_list.json"),
+                wrapper =>
                 {
-                    string json = File.ReadAllText(emotePath);
-                    var wrapper = JsonUtility.FromJson<EmoteListWrapper>(json);
                     _emotes.Clear();
                     if (wrapper != null && wrapper.emotes != null)
                     {
                         _emotes.AddRange(wrapper.emotes);
                     }
-                }
+                });
 
-                // 3. Load ranking titles
-                string titlePath = Path.Combine(streamingPath, "ranking_titles.json");
-                if (File.Exists(titlePath))
+            // 3. Load ranking titles
+            yield return LoadAndParse<RankingTitleListWrapper>(
+                System.IO.Path.Combine(streamingPath, "ranking_titles.json"),
+                wrapper =>
                 {
-                    string json = File.ReadAllText(titlePath);
-                    var wrapper = JsonUtility.FromJson<RankingTitleListWrapper>(json);
                     _titles.Clear();
                     if (wrapper != null && wrapper.titles != null)
                     {
@@ -152,14 +155,13 @@ namespace VLTK.UI
                             _titles[t.id] = t;
                         }
                     }
-                }
+                });
 
-                // 4. Load faction icons
-                string factionPath = Path.Combine(streamingPath, "faction_icons.json");
-                if (File.Exists(factionPath))
+            // 4. Load faction icons
+            yield return LoadAndParse<FactionIconListWrapper>(
+                System.IO.Path.Combine(streamingPath, "faction_icons.json"),
+                wrapper =>
                 {
-                    string json = File.ReadAllText(factionPath);
-                    var wrapper = JsonUtility.FromJson<FactionIconListWrapper>(json);
                     _factions.Clear();
                     if (wrapper != null && wrapper.factions != null)
                     {
@@ -169,15 +171,13 @@ namespace VLTK.UI
                             _factions[f.abbrev] = f;
                         }
                     }
-                }
+                });
 
-                // 5. Load settings (map colors & info strings)
-                string settingPath = Path.Combine(streamingPath, "hud_settings.json");
-                if (File.Exists(settingPath))
+            // 5. Load settings (map colors & info strings)
+            yield return LoadAndParse<HudSettingsData>(
+                System.IO.Path.Combine(streamingPath, "hud_settings.json"),
+                settings =>
                 {
-                    string json = File.ReadAllText(settingPath);
-                    var settings = JsonUtility.FromJson<HudSettingsData>(json);
-                    
                     _mapColors.Clear();
                     if (settings != null && settings.map_colors != null)
                     {
@@ -201,14 +201,30 @@ namespace VLTK.UI
                             }
                         }
                     }
-                }
+                });
 
-                IsLoaded = true;
-            }
-            catch (Exception e)
+            IsLoaded = true;
+        }
+
+        private IEnumerator LoadAndParse<T>(string path, Action<T> onParsed)
+        {
+            using var req = UnityWebRequest.Get(path);
+            yield return req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.Success)
             {
-                Debug.LogError($"Error loading HUD data layer: {e}");
-                IsLoaded = false;
+                try
+                {
+                    var data = JsonUtility.FromJson<T>(req.downloadHandler.text);
+                    onParsed?.Invoke(data);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogWarning($"HudDataService: failed to parse {path}: {e.Message}");
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"HudDataService: could not load {path}: {req.error}");
             }
         }
 
@@ -248,7 +264,7 @@ namespace VLTK.UI
         {
             color = Color.white;
             if (string.IsNullOrEmpty(rgbStr)) return false;
-            
+
             string[] parts = rgbStr.Split(',');
             if (parts.Length >= 3)
             {

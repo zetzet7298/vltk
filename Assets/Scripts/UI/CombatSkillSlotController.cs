@@ -35,6 +35,10 @@ namespace VLTK.UI
         private Label _rightSkillLabel;
 
         private const long LongPressMs = 450;
+        // PR17#4: if the finger moves more than this (CSS pixels) before long-press fires,
+        // cancel the long-press so the picker does not open when the player drags a joystick
+        // across the slot.
+        private const float DragCancelThreshold = 30f;
 
         private int _activeSlot = -1; // 0=left, 1=right
         private int _pressedSlot = -1;
@@ -259,6 +263,12 @@ namespace VLTK.UI
 
         private void OnSlotMove(PointerMoveEvent evt)
         {
+            if (_slotPointerDown && !_longPressOpened)
+            {
+                float dist = Vector2.Distance(evt.position, _startPointerPos);
+                if (dist > DragCancelThreshold)
+                    CancelSlotPress();
+            }
             evt.StopPropagation();
         }
 

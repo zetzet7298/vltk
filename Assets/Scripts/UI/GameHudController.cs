@@ -148,6 +148,8 @@ namespace VLTK.UI
             LoadArt();
             SizeRootToScreen();
             InitializeCombatSkillSlots();
+            // Trigger async HUD data load (UnityWebRequest, mobile-safe).
+            StartCoroutine(HudDataService.Instance.LoadDataAsync());
         }
 
         private void InitializeCombatSkillSlots()
@@ -592,16 +594,22 @@ namespace VLTK.UI
                 SetLevel(1);
                 SetBar(_hpFill, _hpText, 100, 100);
                 SetBar(_mpFill, _mpText, 50, 50);
+            // TODO(PR17#2): MP values are placeholder until HudSnapshot exposes currentMana/maxMana from runtime state.
                 SetBar(_staminaFill, _staminaText, 100, 100);
+            // TODO(PR17#2): Stamina values are placeholder until HudSnapshot exposes currentStamina/maxStamina.
                 SetBar(_expFill, _expText, 0, 100, true);
+            // TODO(PR17#2): EXP values are placeholder until HudSnapshot exposes expPercent/expToNextLevel.
                 return;
             }
 
             SetLevel(snap.level);
             SetBar(_hpFill, _hpText, snap.currentLife, snap.maxLife);
             SetBar(_mpFill, _mpText, 50, 50);
+            // TODO(PR17#2): MP values are placeholder until HudSnapshot exposes currentMana/maxMana from runtime state.
             SetBar(_staminaFill, _staminaText, 100, 100);
+            // TODO(PR17#2): Stamina values are placeholder until HudSnapshot exposes currentStamina/maxStamina.
             SetBar(_expFill, _expText, 0, 100, true);
+            // TODO(PR17#2): EXP values are placeholder until HudSnapshot exposes expPercent/expToNextLevel.
 
             var viMapName = ToVietnameseMapName(snap.mapName);
             if (_sceneName != null) _sceneName.text = viMapName;
@@ -1081,16 +1089,10 @@ namespace VLTK.UI
 
         private void OnFactionClick()
         {
-            // Toggle StallCurrencySelector
-            if (_stallCurrencySelector != null)
-            {
-                bool hide = !_stallCurrencySelector.ClassListContains("hidden");
-                if (hide)
-                    _stallCurrencySelector.AddToClassList("hidden");
-                else
-                    _stallCurrencySelector.RemoveFromClassList("hidden");
-                SubsystemLog.Info("HUD", hide ? "Close Stall Currency" : "Open Stall Currency");
-            }
+            // TODO(PR17#3): wire to GuildPanelService when implemented. The previous body
+            // toggled _stallCurrencySelector by mistake — players pressing the Bang Phai button
+            // saw a stall currency selector instead of a faction/guild panel.
+            SubsystemLog.Info("HUD", "Toggle Bang Phai (chua co GuildPanel)");
         }
 
         private void OnPKClick() => SubsystemLog.Info("HUD", "Toggle PK");
@@ -1155,10 +1157,13 @@ namespace VLTK.UI
             
             if (buffsToShow.Count == 0)
             {
-                buffsToShow.Add(new BuffSnapshot { skillId = 15, nameVi = GetSkillName(15), isDebuff = false, durationRemaining = 24.5f });
-                buffsToShow.Add(new BuffSnapshot { skillId = 42, nameVi = GetSkillName(42), isDebuff = false, durationRemaining = 45.2f });
-                buffsToShow.Add(new BuffSnapshot { skillId = 157, nameVi = GetSkillName(157), isDebuff = false, durationRemaining = 12.8f });
-                buffsToShow.Add(new BuffSnapshot { skillId = 73, nameVi = GetSkillName(73), isDebuff = true, durationRemaining = 5.4f });
+                // TODO(PR17#6): remove the empty-state branch once the runtime feeds us real buff snapshots.
+                // The previous body added four hardcoded mock buffs (skillIds 15, 42, 157, 73) which
+                // were rendered to real players.
+                var emptyLabel = new Label("Chưa có buff");
+                emptyLabel.AddToClassList("hud-buff-empty");
+                _buffPanel.Add(emptyLabel);
+                return;
             }
             
             foreach (var b in buffsToShow)
@@ -1231,71 +1236,22 @@ namespace VLTK.UI
 
         private void PopulateTeamPreview()
         {
+            // TODO(PR17#6): populate from real team data when team system is implemented.
+            // The previous body hardcoded three mock members which were rendered to players.
             if (_teamPreview == null) return;
             _teamPreview.Clear();
-            
-            var members = new[]
-            {
-                new { name = "Đường Môn Đệ Tử", faction = "tm", hp = 80, maxHp = 100, mp = 40, maxMp = 50, isLeader = true },
-                new { name = "Nga Mi Đệ Tử", faction = "em", hp = 100, maxHp = 100, mp = 50, maxMp = 50, isLeader = false },
-                new { name = "Cái Bang Đệ Tử", faction = "gb", hp = 50, maxHp = 120, mp = 20, maxMp = 100, isLeader = false }
-            };
-            
-            foreach (var m in members)
-            {
-                var item = new VisualElement();
-                item.AddToClassList("hud-team-member");
-                
-                if (m.isLeader)
-                {
-                    var flag = new VisualElement();
-                    flag.AddToClassList("hud-team-leader-flag");
-                    item.Add(flag);
-                }
-                
-                var icon = new VisualElement();
-                icon.AddToClassList("hud-team-faction-icon");
-                
-                var fact = HudDataService.Instance.GetFaction(m.faction);
-                int placeholderSkillId = fact != null ? fact.placeholderSkillId : 124;
-
-                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{placeholderSkillId}");
-                item.Add(icon);
-                
-                var info = new VisualElement();
-                info.AddToClassList("hud-team-member-info");
-                
-                var nameLabel = new Label(m.name);
-                nameLabel.AddToClassList("hud-team-member-name");
-                info.Add(nameLabel);
-                
-                var hpTrack = new VisualElement();
-                hpTrack.AddToClassList("hud-team-bar-track");
-                var hpFill = new VisualElement();
-                hpFill.AddToClassList("hud-team-bar-fill-hp");
-                hpFill.style.width = Length.Percent(((float)m.hp / m.maxHp) * 100f);
-                hpTrack.Add(hpFill);
-                info.Add(hpTrack);
-                
-                var mpTrack = new VisualElement();
-                mpTrack.AddToClassList("hud-team-bar-track");
-                var mpFill = new VisualElement();
-                mpFill.AddToClassList("hud-team-bar-fill-mp");
-                mpFill.style.width = Length.Percent(((float)m.mp / m.maxMp) * 100f);
-                mpTrack.Add(mpFill);
-                info.Add(mpTrack);
-                
-                item.Add(info);
-                _teamPreview.Add(item);
-            }
+            var emptyLabel = new Label("Chưa có đội");
+            emptyLabel.AddToClassList("hud-team-empty");
+            _teamPreview.Add(emptyLabel);
         }
 
         private void PopulateTradeInfo()
         {
-            if (_tradePartnerName != null) _tradePartnerName.text = "     + Tên: Dã Tẩu";
-            if (_tradePartnerLevel != null) _tradePartnerLevel.text = "     + Cấp: 200";
-            if (_tradePartnerFaction != null) _tradePartnerFaction.text = "     + Phái: Võ Đang";
-            if (_tradePartnerGuild != null) _tradePartnerGuild.text = "     + Bang: Thiên Hạ";
+            // TODO(PR17#6): populate from real trade data when trade system is implemented.
+            if (_tradePartnerName != null) _tradePartnerName.text = "";
+            if (_tradePartnerLevel != null) _tradePartnerLevel.text = "";
+            if (_tradePartnerFaction != null) _tradePartnerFaction.text = "";
+            if (_tradePartnerGuild != null) _tradePartnerGuild.text = "";
         }
 
         private void CloseTradeInfo()
