@@ -35,7 +35,8 @@ namespace VLTK.Model
         // Resource references (resolved through the asset registry).
         public SourceAssetId spriteSourceId;   // body sprite (.spr)
         public string spriteClipRef;           // atlas/clip key once decoded
-        public string scriptRef;               // Lua script id/name
+        public string scriptRef;               // Lua script id/name (action/AI)
+        public string levelScriptRef;          // Lua script id/name (level-up event)
 
         // Resolution flags stamped during validation.
         public bool spriteResolved;
