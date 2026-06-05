@@ -96,6 +96,7 @@ namespace VLTK.Sandbox
         // ── Playback ────────────────────────────────────────────────────
 
         private string _requestedBgmId;
+        private string _loadingBgmId;
 
         public void PlayBGM(string id)
         {
@@ -112,15 +113,26 @@ namespace VLTK.Sandbox
                 return;
             }
 
-            // Same track already playing or already requested — skip duplicate loads.
-            if (_requestedBgmId == id && _bgmSource.clip != null)
-                return;
+            // Only the currently playing track can be skipped. A previous request
+            // may have failed while an older clip is still assigned to the source.
             if (_bgmSource.isPlaying && _bgmSource.clip != null && _bgmSource.clip.name == id)
                 return;
 
+            if (_loadingBgmId == id)
+                return;
+
             _requestedBgmId = id;
+            _loadingBgmId = id;
             var clip = await LoadClipAsync(def.resourcePath);
-            if (clip == null) return;
+            if (_loadingBgmId == id)
+                _loadingBgmId = null;
+
+            if (clip == null)
+            {
+                if (_requestedBgmId == id)
+                    _requestedBgmId = null;
+                return;
+            }
 
             // A newer PlayBGM request won while this load was in flight.
             if (_requestedBgmId != id || !BgmEnabled || _bgmSource == null)
