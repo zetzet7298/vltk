@@ -12,9 +12,6 @@ using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
-    // ── Mana Constants (PC-parity) ────────────────────────────────────────────
-    public const int MaxMana = 100;
-
     // ── Actor Runtime State (NPC + Player) ─────────────────────────────────
 
     public sealed class GameplayActor
@@ -196,6 +193,9 @@ namespace VLTK.Sandbox
             _player.combat.faction = CombatFaction.CaiBang;
             _player.combat.currentLife = CalculateMaxLife(level);
             _player.combat.maxLife = _player.combat.currentLife;
+            // maxMana lay tu PC formula (PcMaxManaFormula) de regen khong bi cap
+            // nham qua maxLife va de cap level cao khong bi tran.
+            _player.combat.maxMana = PcMaxManaFormula.Compute(level, 0, CombatFaction.CaiBang);
             _player.combat.currentMana = 100;
             _player.combat.position = pos;
 
@@ -347,7 +347,8 @@ namespace VLTK.Sandbox
             {
                 _manaRegenAccumulator -= 0.5f;
                 if (_player != null && !_player.isDead)
-                    _player.combat.currentMana = Mathf.Min(MaxMana, _player.combat.currentMana + 1);
+                    // Mana regen cap dung maxMana (khong phai maxLife - copy-paste bug).
+                    _player.combat.currentMana = Mathf.Min(_player.combat.maxMana, _player.combat.currentMana + 1);
             }
 
             // Enemy AI: attack player if in range
@@ -475,7 +476,7 @@ namespace VLTK.Sandbox
         {
             actor.deathTimestamp = -1f;
             actor.combat.currentLife = actor.combat.maxLife;
-            actor.combat.currentMana = MaxMana;
+            actor.combat.currentMana = actor.combat.maxMana;
 
             OnRespawn?.Invoke(new GameplayRespawnEvent
             {

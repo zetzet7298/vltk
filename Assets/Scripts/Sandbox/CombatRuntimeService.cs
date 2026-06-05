@@ -10,9 +10,11 @@ namespace VLTK.Sandbox
         public int actorId;
         public CombatFaction faction;
         public int level = 1;
+        public int partyId = 0;
         public bool fightMode = true;
         public bool rideHorse;
         public int currentMana = 100;
+        public int maxMana = 100; // Mana cap; regen uses this (not maxLife). PC parity: derive from PcMaxManaFormula when level/faction known.
         public int currentLife = 100;
         public int maxLife = 100;
         public int minDamage = 1;
@@ -128,6 +130,23 @@ namespace VLTK.Sandbox
             ApplyDamage(caster, target, levelData, report);
             SpawnProjectiles(skill, caster, castPoint, grid, report);
 
+            if (skillId == 357 && skillLevel >= 11)
+            {
+                var subSkill = _catalog.Resolve(389);
+                // Sub-skill có thể thiếu trong catalog; GetPcLevelData cũng có thể trả
+                // null khi skill 389 không có dữ liệu cho level này. Guard cả hai
+                // trước khi ApplyDamage/SpawnProjectiles để tránh NullReferenceException.
+                if (subSkill != null)
+                {
+                    var subLevelData = subSkill.GetPcLevelData(skillLevel);
+                    if (subLevelData != null)
+                    {
+                        ApplyDamage(caster, target, subLevelData, report);
+                        SpawnProjectiles(subSkill, caster, castPoint, grid, report);
+                    }
+                }
+            }
+
             _nextCastTime[(caster.actorId, skillId)] = CurrentTime + Mathf.Max(0, skill.timePerCast);
             report.success = true;
             report.detail = "cast ok";
@@ -146,6 +165,8 @@ namespace VLTK.Sandbox
 
         private int ResolveLevel(CombatActorState caster, SkillDefinition skill)
         {
+            if (skill.skillId == 389 && caster.skillLevels.TryGetValue(357, out var mainLevel))
+                return mainLevel;
             if (caster.skillLevels.TryGetValue(skill.skillId, out var level))
                 return level; // May be 0 = unlearned, matching PC CurrentSkillLevel
             return 0; // Not in skillLevels dict = not learned = level 0
@@ -163,6 +184,15 @@ namespace VLTK.Sandbox
         {
             if (PcKangLongYouHuiTuning.Applies(skill.skillId))
                 return PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
+            if (PcSkillTuningRegistry.HasTuning(skill.skillId, (int)skill.faction))
+            {
+                // HasTuning xác nhận cặp skill/faction tồn tại nhưng KHÔNG đảm bảo
+                // spec cho skillLevel cụ thể cũng tồn tại. Guard null trước khi
+                // dereference .attackRadius; nếu thiếu → rơi xuống default radius.
+                var spec = PcSkillTuningRegistry.GetSkillSpec(skill.skillId, skillLevel, (int)skill.faction);
+                if (spec != null)
+                    return spec.attackRadius;
+            }
             return skill.attackRadius;
         }
 
@@ -225,19 +255,21 @@ namespace VLTK.Sandbox
             int count = useMod ? Mathf.Max(1, modTuning.missileCount) : (useKangLong ? Mathf.Max(1, kangLong.missileCount) : Mathf.Max(1, skill.childSkillNum));
             SkillMissileForm form = useMod ? modTuning.missileForm : (useKangLong ? kangLong.missileForm : skill.missileForm);
             int attackRadius = useMod ? modTuning.attackRadius : (useKangLong ? kangLong.attackRadius : skill.attackRadius);
-            report.childProjectileCount = count;
+            report.childProjectileCount += count;
             for (int i = 0; i < count; i++)
             {
+                int childId = skill.childSkillId != 0 ? skill.childSkillId : skill.skillId;
                 var child = new SkillDefinition
                 {
-                    skillId = skill.childSkillId != 0 ? skill.childSkillId : skill.skillId,
+                    skillId = childId,
                     nameNormalized = skill.DisplayName + " child",
                     attackRadius = attackRadius,
-                    missileForm = form,
+                    missileForm = childId == 195 ? SkillMissileForm.Single : form,
                     effectResolved = skill.effectResolved,
                     effectSourceId = skill.effectSourceId,
                 };
-                var result = _projectiles.Cast(child, caster.position, targetPoint, grid);
+                var origin = child.skillId == 195 ? targetPoint : caster.position;
+                var result = _projectiles.Cast(child, origin, targetPoint, grid);
                 if (!result.success)
                 {
                     report.success = false;
