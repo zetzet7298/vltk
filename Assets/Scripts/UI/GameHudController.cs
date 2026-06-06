@@ -410,12 +410,14 @@ namespace VLTK.UI
             var root = doc.rootVisualElement.Q("GameHud");
             if (root != null)
             {
+                UnityEngine.Debug.Log("[HUD] Debug: root is NOT null!");
                 foreach (var kv in ButtonIcons)
                 {
                     var btn = root.Q(kv.Key);
-                    if (btn == null) continue;
+                    if (btn == null) { UnityEngine.Debug.Log($"[HUD] Debug: btn {kv.Key} is null"); continue; }
                     var icon = btn.Q(kv.Key + "Icon");
-                    if (icon == null) continue;
+                    if (icon == null) { UnityEngine.Debug.Log($"[HUD] Debug: icon {kv.Key}Icon is null"); continue; }
+                    UnityEngine.Debug.Log($"[HUD] Debug: loading icon for {kv.Key}");
                     LoadIcon(icon, artPath, kv.Value);
                 }
 
@@ -433,6 +435,10 @@ namespace VLTK.UI
                 var worldMap = root.Q("WorldMapBtn");
                 if (worldMap != null)
                     LoadIcon(worldMap, artPath, "btn_worldmap");
+            }
+            else
+            {
+                UnityEngine.Debug.LogError("[HUD] Debug: root IS NULL!");
             }
         }
 
@@ -550,7 +556,11 @@ namespace VLTK.UI
             var data = System.IO.File.ReadAllBytes(path);
             var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             tex.filterMode = FilterMode.Point;
-            if (!tex.LoadImage(data)) return null;
+            if (!tex.LoadImage(data)) 
+            {
+                UnityEngine.Debug.LogError($"[HUD] LoadTexture: LoadImage failed for {path}");
+                return null;
+            }
             return tex;
         }
 

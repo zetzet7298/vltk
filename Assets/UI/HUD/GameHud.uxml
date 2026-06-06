@@ -1,30 +1,46 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
-        <!-- Full-width PC top frame art background (main_hud_bg scaled 1280px) -->
-        <ui:VisualElement name="TopFrameBg" class="hud-top-frame-bg"/>
 
-        <!-- Top PC-style full status bar: PC 顶部控制条.ini layout -->
-        <!-- Stamina Left=87, Life Left=182, Mana Left=277, Exp Left=372, Level Left=53, WorldSort Left=499 -->
-        <ui:VisualElement name="TopLeftPanel" class="hud-top-status">
+        <!-- ═══ TOP STATUS BAR — PC 顶部控制条.ini ═══ -->
+        <!-- PC Main: Left=218, Top=0, Width=552, Height=17 → scaled ×1.6 = Left=348, W=883, H=27 -->
+        <ui:VisualElement name="TopBarPanel" class="hud-top-bar-panel">
             <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
-            <ui:Label name="LevelText" text="1" class="hud-level-box"/>
-            <ui:VisualElement name="StaminaBarTrack" class="hud-top-bar hud-stamina-track"><ui:VisualElement name="StaminaBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="HpBarTrack" class="hud-top-bar hud-hp-track"><ui:VisualElement name="HpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="MpBarTrack" class="hud-top-bar hud-mp-track"><ui:VisualElement name="MpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:Label text="Cấp" class="hud-vn-top-caption hud-vn-level-caption"/>
-            <ui:Label text="Thể lực" class="hud-vn-top-caption hud-vn-stamina-caption"/>
-            <ui:Label text="Sinh lực" class="hud-vn-top-caption hud-vn-hp-caption"/>
-            <ui:Label text="Nội lực" class="hud-vn-top-caption hud-vn-mp-caption"/>
-            <ui:Label text="Kinh nghiệm" class="hud-vn-top-caption hud-vn-exp-caption"/>
-            <ui:Label name="StaminaText" text="100/100" class="hud-top-small-text hud-stamina-text"/>
-            <ui:Label name="HpText" text="100/100" class="hud-top-small-text hud-hp-text"/>
-            <ui:Label name="MpText" text="50/50" class="hud-top-small-text hud-mp-text"/>
-            <ui:Label name="ExpText" text="0%" class="hud-top-small-text hud-exp-text"/>
+
+            <!-- Level: PC Left=53, Top=1, W=20, H=12 → ×1.6 = L=85, W=32, H=19 -->
+            <ui:Label name="LevelText" text="1" class="hud-level-label"/>
+
+            <!-- Stamina: PC Left=87, Top=2, W=104, H=14 → ×1.6 = L=139, W=166, H=22 -->
+            <ui:VisualElement name="StaminaBarTrack" class="hud-bar-track hud-stamina-track">
+                <ui:VisualElement name="StaminaBarFill" class="hud-bar-fill"/>
+            </ui:VisualElement>
+
+            <!-- Life/HP: PC Left=182, Top=2, W=104, H=14 → ×1.6 = L=291, W=166, H=22 -->
+            <ui:VisualElement name="HpBarTrack" class="hud-bar-track hud-hp-track">
+                <ui:VisualElement name="HpBarFill" class="hud-bar-fill"/>
+            </ui:VisualElement>
+
+            <!-- Mana/MP: PC Left=277, Top=2, W=104, H=14 → ×1.6 = L=443, W=166, H=22 -->
+            <ui:VisualElement name="MpBarTrack" class="hud-bar-track hud-mp-track">
+                <ui:VisualElement name="MpBarFill" class="hud-bar-fill"/>
+            </ui:VisualElement>
+
+            <!-- Exp: PC Left=372, Top=2, W=104, H=14 → ×1.6 = L=595, W=166, H=22 -->
+            <ui:VisualElement name="ExpBarTrack" class="hud-bar-track hud-exp-track">
+                <ui:VisualElement name="ExpBarFill" class="hud-bar-fill"/>
+            </ui:VisualElement>
+
+            <!-- WorldSort/Hạng: PC Left=499, Top=2, W=28, H=12 → ×1.6 = L=798, W=45, H=19 -->
+            <ui:Label name="RankText" text="Hạng ?" class="hud-rank-label"/>
+
+            <!-- Hidden labels for data binding (IMGUI overlay draws the actual text) -->
+            <ui:Label name="HpText" text="100/100" class="hud-hidden-data"/>
+            <ui:Label name="MpText" text="50/50" class="hud-hidden-data"/>
+            <ui:Label name="StaminaText" text="100/100" class="hud-hidden-data"/>
+            <ui:Label name="ExpText" text="0%" class="hud-hidden-data"/>
         </ui:VisualElement>
 
-        <!-- Optional minimap kept compact for sandbox/debug -->
+        <!-- ═══ MINIMAP — PC 小地图_小.ini ═══ -->
         <ui:VisualElement name="MinimapPanel" class="hud-minimap-panel">
             <ui:VisualElement name="MinimapFrame" class="hud-minimap-frame">
                 <ui:VisualElement name="MinimapContent" class="hud-minimap-content">
@@ -40,7 +56,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Mobile PC-style map preview. Open by tapping minimap; tap preview to move. -->
+        <!-- ═══ MAP PREVIEW (large, tap minimap to open) ═══ -->
         <ui:VisualElement name="MapPreviewOverlay" class="hud-map-preview-overlay hidden">
             <ui:VisualElement name="MapPreviewWindow" class="hud-map-preview-window">
                 <ui:VisualElement name="MapPreviewHeader" class="hud-map-preview-header">
@@ -58,7 +74,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Cái Bang skill sheet: PC source UiSkillsSheet + UiSkillsFightSub layout. IMGUI overlay renders PC art/text/icons for visual parity. -->
+        <!-- ═══ CÁI BANG SKILL PANEL ═══ -->
         <ui:VisualElement name="CaiBangSkillPanel" class="hud-cb-skill-panel hidden">
             <ui:VisualElement name="CaiBangSkillClose" class="hud-cb-close"/>
             <ui:Label name="CaiBangSkillSummary" text="200" class="hud-cb-summary"/>
@@ -67,7 +83,7 @@
             <ui:VisualElement name="CaiBangSkillPageTwo" class="hud-cb-page-tab hud-cb-page-two"><ui:Label text="Hai" class="hud-cb-page-tab-label"/></ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Chat message area + input -->
+        <!-- ═══ CHAT AREA — PC bottom-left ═══ -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
             <ui:Label text="!! Hãy sử dụng hồi phục" class="hud-chat-warning"/>
             <ui:VisualElement class="hud-chat-input-row">
@@ -77,15 +93,10 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Bottom ornate action strip -->
+        <!-- ═══ BOTTOM STRIP — PC 玩家信息主界面.ini + 工具控制条.ini ═══ -->
         <ui:VisualElement name="BottomPanel" class="hud-bottom-strip">
-            <ui:VisualElement name="ToolbarLeft" class="hud-left-tools">
-                <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:Label text="1" class="hud-hotkey-number"/><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:Label text="2" class="hud-hotkey-number"/><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnHorse" class="hud-round-btn"><ui:Label text="3" class="hud-hotkey-number"/><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnExchange" class="hud-round-btn"><ui:Label text="4" class="hud-hotkey-number"/><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
-            </ui:VisualElement>
 
+            <!-- Hotbar: 9 slots like PC (keys 1-9) -->
             <ui:VisualElement name="HotbarCenter" class="hud-main-hotbar">
                 <ui:VisualElement name="ItemSlot0" class="hud-hotbar-slot"><ui:Label text="1" class="hud-slot-number"/></ui:VisualElement>
                 <ui:VisualElement name="ItemSlot1" class="hud-hotbar-slot"><ui:Label text="2" class="hud-slot-number"/></ui:VisualElement>
@@ -98,6 +109,7 @@
                 <ui:VisualElement name="ItemSlot8" class="hud-hotbar-slot"><ui:Label text="9" class="hud-slot-number"/></ui:VisualElement>
             </ui:VisualElement>
 
+            <!-- Skill slots T/P (left/right weapon skill) -->
             <ui:VisualElement class="hud-skill-panel">
                 <ui:VisualElement name="LeftSkillSlot" class="hud-skill-slot">
                     <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
@@ -110,27 +122,33 @@
                 <ui:VisualElement class="hud-skill-keys"><ui:Label text="T"/><ui:Label text="P"/></ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="ToolbarRight" class="hud-right-menu">
-                <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/><ui:Label text="Nhân" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/><ui:Label text="Túi" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSkills" class="hud-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-btn-icon"/><ui:Label text="Võ" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/><ui:Label text="Đội" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/><ui:Label text="Bang" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/><ui:Label text="PK" class="hud-menu-label"/></ui:VisualElement>
+            <!-- Action + Menu buttons in one row: run/sit/horse/exchange | menu (Nhân/Túi/Võ/Đội/Bang/PK) | Bảo Vật -->
+            <ui:VisualElement name="ToolbarRight" class="hud-right-toolbar">
+                <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnHorse" class="hud-round-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnExchange" class="hud-round-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="ToolbarSeparator" class="hud-toolbar-sep"/>
+                <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnSkills" class="hud-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="ToolbarSeparator2" class="hud-toolbar-sep"/>
+                <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
             </ui:VisualElement>
-            <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
         </ui:VisualElement>
-        <!-- Buff / Debuff panel: PC MiniSkill.ini / SkillState.ini -->
+
+        <!-- Buff / Debuff panel -->
         <ui:VisualElement name="BuffPanel" class="hud-buff-panel">
-            <!-- Dynamically populated in C# -->
         </ui:VisualElement>
 
-        <!-- Team Preview: PC 队伍一览信息.ini -->
+        <!-- Team Preview -->
         <ui:VisualElement name="TeamPreview" class="hud-team-preview hidden">
-            <!-- Dynamically populated in C# -->
         </ui:VisualElement>
 
-        <!-- Trade Info Panel: PC TradeInfo.ini -->
+        <!-- Trade Info Panel -->
         <ui:VisualElement name="TradeInfoPanel" class="hud-trade-panel hidden">
             <ui:VisualElement name="TradeInfoClose" class="hud-trade-close"/>
             <ui:Label name="TradeTitle" text="Thông tin Giao dịch" class="hud-trade-title"/>
@@ -142,7 +160,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Stall Currency Selector: PC UiStallCurrency.ini -->
+        <!-- Stall Currency Selector -->
         <ui:VisualElement name="StallCurrencySelector" class="hud-stall-currency hidden">
             <ui:Label text="Lựa chọn tiền tệ" class="hud-stall-currency-title"/>
             <ui:VisualElement name="StallCurrencyBtns" class="hud-stall-btns-row">
@@ -151,7 +169,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Emote Picker Overlay: opened by tapping face button -->
+        <!-- Emote Picker -->
         <ui:VisualElement name="FacePickerOverlay" class="hud-face-picker-overlay hidden">
             <ui:VisualElement name="FacePickerWindow" class="hud-face-picker-window">
                 <ui:VisualElement name="FacePickerHeader" class="hud-face-picker-header">
@@ -162,7 +180,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Skill picker overlay: tap skill slot to assign → shows list of learned skills -->
+        <!-- Skill picker -->
         <ui:VisualElement name="SkillPickerOverlay" class="hud-skill-picker-overlay hidden">
             <ui:VisualElement name="SkillPickerWindow" class="hud-skill-picker-window">
                 <ui:VisualElement name="SkillPickerHeader" class="hud-skill-picker-header">

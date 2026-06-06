@@ -1139,40 +1139,8 @@ namespace VLTK.Sandbox
 
         private void EnsureMountToggleButton(RectTransform canvasTransform)
         {
-            if (canvasTransform == null) return;
-            var existing = canvasTransform.Find("MountToggleButton");
-            if (existing != null) return;
-
-            var buttonGo = new GameObject("MountToggleButton");
-            buttonGo.transform.SetParent(canvasTransform, false);
-            var rt = buttonGo.AddComponent<RectTransform>();
-            rt.anchorMin = new Vector2(1f, 0f);
-            rt.anchorMax = new Vector2(1f, 0f);
-            rt.pivot = new Vector2(1f, 0f);
-            rt.anchoredPosition = new Vector2(-32f, 220f);
-            rt.sizeDelta = new Vector2(220f, 86f);
-            var img = buttonGo.AddComponent<Image>();
-            img.sprite = CreateUiDiscSprite(new Color(0.18f, 0.42f, 0.75f, 0.85f), new Color(0.85f, 0.95f, 1f, 0.95f));
-            var btn = buttonGo.AddComponent<Button>();
-            btn.targetGraphic = img;
-            btn.onClick.AddListener(() =>
-            {
-                if (PlayerController != null) PlayerController.ToggleMount();
-            });
-
-            // Label
-            var labelGo = new GameObject("Label");
-            labelGo.transform.SetParent(buttonGo.transform, false);
-            var lrt = labelGo.AddComponent<RectTransform>();
-            lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
-            lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
-            var txt = labelGo.AddComponent<Text>();
-            txt.text = "Ngựa";
-            txt.alignment = TextAnchor.MiddleCenter;
-            txt.color = new Color(1f, 1f, 1f, 1f);
-            txt.fontSize = 36;
-            txt.fontStyle = FontStyle.Bold;
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
+            // Removed: PC uses BtnHorse in toolbar, not a standalone mount button.
+            return;
         }
 
         private static Sprite CreateUiDiscSprite(Color fill, Color ring)

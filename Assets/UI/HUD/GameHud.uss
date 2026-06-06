@@ -1,4 +1,4 @@
-/* VLTK Mobile HUD — reference layout: top stat strip + bottom ornate bar */
+/* VLTK Mobile HUD — PC-accurate layout from 顶部控制条.ini + 玩家信息主界面.ini + 工具控制条.ini */
 
 .hud-root {
     width: 1280px;
@@ -6,124 +6,99 @@
     overflow: hidden;
 }
 
-/* TOP FRAME BG: dùng main_hud_bg.png cropped+scaled làm background frame PC ornate */
-.hud-top-frame-bg {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 1280px;
-    height: 88px;
-    background-image: url('project://database/Assets/UI/HUD/Art/top_frame_bg.png');
-    -unity-background-scale-mode: stretch-to-fill;
-}
+/* ═══ HIDDEN DATA BINDING LABELS ═══ */
+.hud-hidden-data { display: none; }
 
-/* TOP STATUS STRIP — full-width container, bars dùng absolute coords trong 1280-space */
-.hud-top-status {
+/* ═══ TOP STATUS BAR ═══ */
+/* PC Main: Left=218, Top=0, Width=552, Height=17 → scaled ×1.6 */
+.hud-top-bar-panel {
     position: absolute;
     left: 0px;
     top: 0px;
     width: 1280px;
-    height: 50px;
+    height: 32px;  /* adjust to fit top_frame_bg */
     background-color: transparent;
 }
 
 .hud-pc-bar-panel-bg {
+    /* PC flat dark frame behind the 4 bars (no wooden chrome) */
     position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 883px; /* PC 552 ×1.6, scaled from bar art */
-    height: 27px; /* PC 17px × 1.6 */
-    background-image: url('project://database/Assets/UI/HUD/Art/bar_panel_bg.png');
-    -unity-background-scale-mode: stretch-to-fill;
-    display: none; /* top_frame_bg.png đã bao gồm bars art — ẩn cái này */
+    left: 283px;
+    top: 2px;
+    width: 708px;   /* stamina@289 → exp end @985, +pad */
+    height: 34px;
+    background-color: rgb(18,20,18);
+    border-width: 1px;
+    border-color: rgb(120,130,120);
 }
 
-.hud-level-box {
+/* Level text: PC Left=53, Top=1, W=20, H=12 → ×1.6 */
+.hud-level-label {
     position: absolute;
-    left: 433px; /* PC Level.Left=53, container=348 → 348+85=433 absolute */
-    top: 8px;
-    width: 32px;
-    height: 14px;
+    left: 235px;   /* left of stamina bar @289 (PC-pixel derived) */
+    top: 4px;
+    width: 46px;
+    height: 19px;
     font-size: 11px;
     color: rgb(55,231,63);
     -unity-text-align: middle-center;
-    background-color: transparent;
-    border-width: 0px;
-}
-
-.hud-top-bar {
-    position: absolute;
-    top: 3px; /* PC bars Top=2, scaled */
-    width: 166px; /* PC 104px × 1.6 */
-    height: 14px; /* PC 9px × 1.6 */
-    background-color: transparent;
-    border-width: 0px;
+    background-color: rgb(18,40,22);
+    border-width: 1px;
+    border-color: rgb(90,120,90);
     overflow: hidden;
 }
 
-/* Bars dùng absolute coords trong 1280-space:
-   Container (PC Main.Left=218): 218×1.6=348
-   Stamina: 348+87×1.6=487, Life:639, Mana:791, Exp:943 */
-.hud-stamina-track { left: 487px; }
-.hud-hp-track { left: 639px; }
-.hud-mp-track { left: 791px; }
-.hud-exp-track { left: 943px; }
+/* Rank/Hạng: PC Left=499, Top=2 → ×1.6 */
+.hud-rank-label {
+    position: absolute;
+    left: 992px;   /* right of exp bar end @985 (PC-pixel derived) */
+    top: 4px;
+    width: 64px;
+    height: 19px;
+    font-size: 10px;
+    color: rgb(55,231,63);
+    -unity-text-align: middle-center;
+    background-color: rgb(18,40,22);
+    border-width: 1px;
+    border-color: rgb(90,120,90);
+    overflow: hidden;
+}
 
-.hud-top-fill {
+/* Bar tracks: PC Top=2, W=104, H=14 → ×1.6 */
+.hud-bar-track {
+    position: absolute;
+    top: 4px;
+    width: 166px;   /* 104 × 1.6 */
+    height: 16px;   /* PC fill H=9→×1.6≈14, +pad; leaves room for value text below */
+    background-color: rgb(8,10,8);
+    border-width: 1px;
+    border-color: rgb(70,80,70);
+    overflow: hidden;
+}
+
+/* Bar positions — relative to top-bar-panel, offsets from Main.Left=218→348:
+   Stamina: 348 + 87×1.6 = 348 + 139 = 487
+   HP/Life: 348 + 182×1.6 = 348 + 291 = 639
+   MP/Mana: 348 + 277×1.6 = 348 + 443 = 791
+   Exp:     348 + 372×1.6 = 348 + 595 = 943 */
+.hud-stamina-track { left: 289px; }
+.hud-hp-track      { left: 465px; }
+.hud-mp-track      { left: 641px; }
+.hud-exp-track     { left: 816px; }
+
+.hud-bar-fill {
     width: 100%;
-    height: 14px; /* PC 9px ×1.6 */
+    height: 16px;
     -unity-background-scale-mode: stretch-to-fill;
 }
 
-.hud-exp-track .hud-top-fill {
-    background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png');
-}
-.hud-hp-track .hud-top-fill {
-    background-image: url('project://database/Assets/UI/HUD/Art/bar_hp_fill.png');
-}
-.hud-mp-track .hud-top-fill {
-    background-image: url('project://database/Assets/UI/HUD/Art/bar_mp_fill.png');
-}
-.hud-stamina-track .hud-top-fill {
-    background-image: url('project://database/Assets/UI/HUD/Art/bar_stamina_fill.png');
-}
-
-.hud-vn-top-caption {
-    position: absolute;
-    top: -1px;
-    height: 10px;
-    font-size: 9px;
-    color: rgb(230,230,210);
-    -unity-text-align: middle-center;
-    -unity-font-style: bold;
-}
-/* Captions ẩn - IMGUI overlay sẽ vẽ. Positions absolute trong 1280-space. */
-.hud-vn-level-caption { left: 433px; width: 40px; display: none; } /* 348+85 */
-.hud-vn-stamina-caption { left: 487px; width: 166px; display: none; } /* 348+139 */
-.hud-vn-hp-caption { left: 639px; width: 166px; display: none; } /* 348+291 */
-.hud-vn-mp-caption { left: 791px; width: 166px; display: none; } /* 348+443 */
-.hud-vn-exp-caption { left: 943px; width: 166px; display: none; } /* 348+595 */
+.hud-hp-track .hud-bar-fill      { background-image: url('project://database/Assets/UI/HUD/Art/bar_hp_fill.png'); }
+.hud-mp-track .hud-bar-fill      { background-image: url('project://database/Assets/UI/HUD/Art/bar_mp_fill.png'); }
+.hud-stamina-track .hud-bar-fill { background-image: url('project://database/Assets/UI/HUD/Art/bar_stamina_fill.png'); }
+.hud-exp-track .hud-bar-fill     { background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png'); }
 
 
-.hud-top-small-text {
-    position: absolute;
-    top: 17px;
-    width: 104px;
-    height: 12px;
-    font-size: 12px;
-    color: rgb(255,255,255);
-    -unity-text-align: middle-center;
-    background-color: transparent;
-}
-/* Values dưới bar tracks — ẩn UIToolkit labels, IMGUI overlay sẽ vẽ. Absolute 1280-space. */
-.hud-stamina-text { left: 487px; display: none; }
-.hud-hp-text { left: 639px; display: none; }
-.hud-mp-text { left: 791px; display: none; }
-.hud-exp-text { left: 943px; display: none; }
-
-
-
-/* MINIMAP: sandbox helper, top-right */
+/* ═══ MINIMAP ═══ */
 .hud-minimap-panel {
     position: absolute;
     right: 6px;
@@ -136,9 +111,9 @@
 .hud-minimap-frame {
     width: 130px;
     height: 130px;
-    border-width: 2px;
-    border-color: rgb(180,150,80);
-    border-radius: 2px;
+    border-width: 1px;
+    border-color: rgb(20,25,20);
+    border-radius: 0px;
     background-color: rgba(5,10,5,0.92);
     overflow: hidden;
 }
@@ -199,13 +174,18 @@
     height: 14px;
     margin-left: 1px;
     margin-right: 1px;
+    background-color: rgb(30,45,40);
+    border-width: 1px;
+    border-color: rgb(15,20,15);
     -unity-background-scale-mode: scale-to-fit;
 }
+#WorldMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_worldmap.png'); }
+#ToggleMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_toggle.png'); }
 
-.hidden {
-    display: none;
-}
+.hidden { display: none; }
 
+
+/* ═══ MAP PREVIEW ═══ */
 .hud-map-preview-overlay {
     position: absolute;
     left: 0px;
@@ -273,10 +253,7 @@
     -unity-background-scale-mode: stretch-to-fill;
 }
 
-.hud-preview-player-dot {
-    width: 14px;
-    height: 14px;
-}
+.hud-preview-player-dot { width: 14px; height: 14px; }
 
 .hud-map-preview-coords,
 .hud-map-preview-help {
@@ -286,7 +263,8 @@
     -unity-text-align: middle-center;
 }
 
-/* CÁI BANG SKILL PANEL — PC refs: UiSkillsSheet.ini 205x376, UiSkillsFightSub.ini 5x5 grid 36px slots. */
+
+/* ═══ CÁI BANG SKILL PANEL ═══ */
 .hud-cb-skill-panel {
     position: absolute;
     left: 338px;
@@ -296,21 +274,6 @@
     background-color: rgba(0,0,0,0);
     padding-left: 7px;
     padding-right: 7px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
-
-.hud-cb-header {
-    height: 56px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.hud-cb-title {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-    flex-grow: 1;
 }
 
 .hud-cb-close {
@@ -321,11 +284,6 @@
     height: 29px;
     background-image: url('project://database/Assets/StreamingAssets/UI/HUD/Art/vi/btn_close_skill_02_vi.png');
     -unity-background-scale-mode: stretch-to-fill;
-}
-
-.hud-cb-close-text {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
 }
 
 .hud-cb-summary {
@@ -348,84 +306,27 @@
     border-width: 0px;
 }
 
-.hud-cb-grid-cell {
-    width: 38px;
-    height: 51px;
-    align-items: flex-start;
-    justify-content: flex-start;
-}
+.hud-cb-grid-cell { width: 38px; height: 51px; align-items: flex-start; justify-content: flex-start; }
+.hud-cb-grid-cell-upgradable { background-color: rgba(0,0,0,0); }
+.hud-cb-grid-slot { width: 36px; height: 36px; background-color: rgba(0,0,0,0); -unity-background-scale-mode: scale-to-fit; }
+.hud-cb-grid-level { position: absolute; left: 0; top: 36px; width: 36px; height: 12px; color: rgb(218,255,165); font-size: 12px; -unity-font-style: bold; -unity-text-align: middle-center; }
+.hud-cb-add-point { position: absolute; left: 22px; top: 35px; width: 14px; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/状态加点按钮改_01.png'); -unity-background-scale-mode: stretch-to-fill; }
+.hud-cb-grid-name { color: rgba(0,0,0,0); font-size: 1px; }
+.hud-cb-page-tab { position: absolute; top: 314px; height: 20px; background-color: rgba(0,0,0,0); }
+.hud-cb-page-one { left: 0px; width: 36px; }
+.hud-cb-page-two { left: 37px; width: 31px; }
+.hud-cb-page-tab-label { color: rgba(0,0,0,0); font-size: 1px; }
+.hud-cb-page-tab-active { background-color: rgba(255,220,90,0.10); }
 
-.hud-cb-grid-cell-upgradable {
-    background-color: rgba(0,0,0,0);
-}
 
-.hud-cb-grid-slot {
-    width: 36px;
-    height: 36px;
-    background-color: rgba(0,0,0,0);
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.hud-cb-grid-level {
-    position: absolute;
-    left: 0px;
-    top: 36px;
-    width: 36px;
-    height: 12px;
-    color: rgb(218,255,165);
-    font-size: 12px;
-    -unity-font-style: bold;
-    -unity-text-align: middle-center;
-}
-
-.hud-cb-add-point {
-    position: absolute;
-    left: 22px;
-    top: 35px;
-    width: 14px;
-    height: 14px;
-    background-image: url('project://database/Assets/UI/HUD/Art/状态加点按钮改_01.png');
-    -unity-background-scale-mode: stretch-to-fill;
-}
-
-.hud-cb-grid-name {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-}
-
-.hud-cb-page-tab {
-    position: absolute;
-    top: 314px;
-    height: 20px;
-    background-color: rgba(0,0,0,0);
-}
-
-.hud-cb-page-one {
-    left: 0px;
-    width: 36px;
-}
-
-.hud-cb-page-two {
-    left: 37px;
-    width: 31px;
-}
-
-.hud-cb-page-tab-label {
-    color: rgba(0,0,0,0);
-    font-size: 1px;
-}
-
-.hud-cb-page-tab-active {
-    background-color: rgba(255,220,90,0.10);
-}
-
-/* CHAT AREA */
+/* ═══ CHAT AREA ═══ */
+/* PC: chat in bottom-left, above hotbar. Keep left=155 to avoid joystick. */
 .hud-chat-panel {
     position: absolute;
     left: 155px;
-    bottom: 78px;
-    width: 430px;
-    height: 70px;
+    bottom: 72px;   /* = chiều cao bottom strip mới */
+    width: 480px;
+    height: 60px;
     flex-direction: column;
     justify-content: flex-end;
 }
@@ -472,83 +373,44 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* BOTTOM ORNATE STRIP */
+
+/* ═══ BOTTOM STRIP ═══ */
+/* PC bottom: hotbar 1-9 | skill T/P | action buttons | menu icons | Bảo Vật */
 .hud-bottom-strip {
     position: absolute;
-    left: 155px;
+    left: 0px;
     right: 0px;
     bottom: 0px;
+    width: 1280px;
     height: 82px;
     flex-direction: row;
-    align-items: flex-end;
-    background-color: rgba(0,0,0,0.78);
-    border-top-width: 2px;
-    border-top-color: rgb(35,115,95);
-    padding-left: 0px;
-    padding-right: 8px;
-    padding-bottom: 6px;
-}
-
-.hud-left-tools {
-    position: absolute;
-    right: 8px;
-    bottom: 84px;
-    flex-direction: row;
-    width: 190px;
-    height: 48px;
+    justify-content: flex-start;
     align-items: center;
-    justify-content: flex-end;
-}
-
-.hud-round-btn {
-    width: 42px;
-    height: 42px;
-    margin-right: 4px;
-    border-width: 2px;
-    border-color: rgb(45,130,105);
-    border-radius: 21px;
-    background-color: rgba(5,22,20,0.95);
-    overflow: hidden;
-}
-
-.hud-hotkey-number {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 14px;
-    height: 14px;
-    color: rgb(210,210,190);
-    font-size: 9px;
-    -unity-text-align: middle-center;
-}
-
-.hud-btn-icon {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    width: 100%;
-    height: 100%;
-    -unity-background-scale-mode: scale-to-fit;
-}
-
-.hud-main-hotbar {
-    flex-direction: row;
-    width: 540px;
-    height: 58px;
-    align-items: center;
-    margin-left: 0px;
+    background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png');
+    -unity-background-scale-mode: stretch-to-fill;
     background-color: transparent;
     border-width: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+/* ═══ HOTBAR: 9 slots like PC ═══ */
+.hud-main-hotbar {
+    flex-direction: row;
+    height: 60px;
+    align-items: center;
+    background-color: transparent;
+    border-width: 0px;
+    flex-shrink: 0;
 }
 
 .hud-hotbar-slot {
-    width: 58px;
-    height: 54px;
-    background-color: rgba(5,5,5,0.85);
-    border-width: 1px;
-    border-color: rgb(70,70,70);
-    margin-left: 2px;
-    margin-right: 2px;
+    width: 36px;
+    height: 36px;
+    background-color: transparent;
+    border-width: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 .hud-slot-number {
@@ -562,33 +424,34 @@
     -unity-text-align: upper-left;
 }
 
+
+/* ═══ SKILL SLOTS (T/P) ═══ */
 .hud-skill-panel {
     flex-direction: row;
-    width: 120px;
-    height: 58px;
+    width: 108px;   /* 2 slots × 54px */
+    height: 60px;
     align-items: center;
     justify-content: center;
-    margin-left: 8px;
+    margin-left: 2px;
     background-color: transparent;
     border-width: 0px;
+    flex-shrink: 0;
 }
 
 .hud-skill-slot {
-    width: 48px;
-    height: 48px;
-    background-color: rgba(0,0,0,0.60);
-    border-width: 1px;
-    border-color: rgb(60,140,115);
-    margin-left: 2px;
-    margin-right: 2px;
+    width: 42px;
+    height: 42px;
+    background-color: transparent;
+    border-width: 0px;
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .hud-skill-panel > .hud-skill-slot {
-    width: 56px;
-    height: 56px;
-    border-width: 1px;
-    border-color: rgb(100,100,100);
-    background-color: rgba(5,5,5,0.85);
+    width: 42px;
+    height: 42px;
+    border-width: 0px;
+    background-color: transparent;
     border-radius: 0px;
     justify-content: center;
     align-items: center;
@@ -618,158 +481,87 @@
     text-overflow: ellipsis;
 }
 
-/* Skill picker overlay */
-.hud-skill-picker-overlay {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
+.hud-skill-keys { display: none; }
 
-.hud-skill-picker-window {
-    width: 340px;
-    max-height: 440px;
-    background-color: rgba(15,35,28,0.97);
-    border-width: 2px;
-    border-color: rgb(80,160,120);
-    border-radius: 8px;
-}
 
-.hud-skill-picker-header {
+/* ═══ RIGHT TOOLBAR: action + menu + Bảo Vật ═══ */
+/* PC: all icon buttons in one row: action (run/sit/horse/exchange) → menu (Nhân/Túi/Võ/Đội/Bang/PK) → Bảo Vật */
+.hud-right-toolbar {
     flex-direction: row;
-    justify-content: space-between;
+    height: 72px;
     align-items: center;
-    padding: 10px 14px;
-    border-bottom-width: 1px;
-    border-bottom-color: rgb(50,100,80);
+    justify-content: flex-start;
+    padding-right: 4px;
+    padding-left: 0px;
+    flex-shrink: 0;
 }
 
-.hud-skill-picker-title {
-    font-size: 14px;
-    color: rgb(220,235,210);
-    -unity-font-style: bold;
-}
-
-.hud-skill-picker-close {
+.hud-round-btn {
     width: 28px;
     height: 28px;
-    background-color: rgba(180,60,60,0.7);
-    border-radius: 14px;
-}
-
-.hud-skill-picker-list {
-    height: 380px;
-    max-height: 380px;
+    margin-right: 1px;
+    border-width: 0px;
+    background-color: transparent;
     overflow: hidden;
+    flex-shrink: 0;
 }
 
-.hud-skill-picker-list .unity-scroll-view__content-container {
-    min-height: 760px;
-}
-
-.skill-picker-item {
-    flex-direction: row;
-    align-items: center;
-    padding: 8px 12px;
-    margin: 3px 6px;
-    border-width: 1px;
-    border-color: rgb(50,100,80);
-    border-radius: 4px;
-    background-color: rgba(20,50,40,0.8);
-}
-
-.skill-picker-item:hover {
-    background-color: rgba(40,80,60,0.9);
-    border-color: rgb(100,180,130);
-}
-
-.skill-picker-icon {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-    background-size: contain;
-}
-
-.skill-picker-info {
-    flex: 1;
-}
-
-.skill-picker-name {
-    font-size: 13px;
-    color: rgb(220,235,210);
-    -unity-font-style: bold;
-}
-
-.skill-picker-level {
-    font-size: 10px;
-    color: rgb(160,200,170);
-}
-
-.skill-picker-type {
-    font-size: 10px;
-    color: rgb(140,170,150);
-    margin-top: 2px;
-}
-
-.hud-skill-keys {
-    display: none;
-}
-
-.hud-right-menu {
+.hud-btn-icon {
     position: absolute;
-    right: 84px;
-    bottom: 0px;
-    flex-direction: row;
-    height: 48px;
-    align-items: center;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-toolbar-sep {
+    width: 1px;
+    height: 24px;
+    margin-left: 2px;
+    margin-right: 2px;
+    background-color: transparent;
 }
 
 .hud-menu-btn {
-    width: 46px;
-    height: 46px;
-    margin-left: 4px;
+    width: 29px;
+    height: 29px;
+    margin-right: 1px;
     border-width: 0px;
     background-color: transparent;
     overflow: visible;
+    flex-shrink: 0;
 }
 
-.hud-menu-label {
+.hud-menu-btn-icon {
     position: absolute;
     left: 0px;
-    right: 0px;
-    bottom: -13px;
-    height: 12px;
-    font-size: 9px;
-    color: rgb(225,230,205);
-    -unity-text-align: middle-center;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
+.hud-menu-label { display: none; }
+
+/* Bảo Vật: large round button at end of toolbar */
 .hud-baovat-btn {
-    position: absolute;
-    right: 8px;
-    bottom: 8px;
-    width: 72px;
-    height: 72px;
-    border-radius: 36px;
-    border-width: 3px;
-    border-color: rgb(230, 180, 50);
-    background-color: rgb(110, 20, 10);
+    width: 46px;
+    height: 46px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 23px;
+    border-width: 0px;
+    background-color: transparent;
+    flex-shrink: 0;
 }
 
-/* ──────────────────────────────────────────────────────────────────────────
-   NEW HUD PANELS STYLING
-   ────────────────────────────────────────────────────────────────────────── */
 
-/* Buff / Debuff Panel */
+/* ═══ BUFF/DEBUFF PANEL ═══ */
 .hud-buff-panel {
     position: absolute;
-    left: 120px;
-    top: 52px;
+    left: 10px;
+    top: 24px;   /* ngay dưới top bar 22px + 2px gap */
     width: 240px;
     height: 72px;
     flex-direction: row;
@@ -777,45 +569,15 @@
     background-color: transparent;
 }
 
-.hud-buff-cell {
-    width: 32px;
-    height: 38px;
-    margin: 2px;
-    align-items: center;
-    justify-content: flex-start;
-}
+.hud-buff-cell { width: 24px; height: 30px; margin: 1px; align-items: center; justify-content: flex-start; }
+.hud-buff-icon { width: 20px; height: 20px; border-width: 1px; border-radius: 2px; background-color: rgb(10, 20, 15); -unity-background-scale-mode: scale-to-fit; }
+.hud-buff-border-green { border-color: rgb(55, 231, 63); }
+.hud-buff-border-orange { border-color: rgb(255, 140, 0); }
+.hud-buff-timer { font-size: 7px; color: rgb(55, 231, 63); -unity-text-align: middle-center; height: 10px; margin-top: 1px; -unity-font-style: bold; }
+.hud-debuff-timer { color: rgb(255, 140, 0); }
 
-.hud-buff-icon {
-    width: 24px;
-    height: 24px;
-    border-width: 1px;
-    border-radius: 2px;
-    background-color: rgb(10, 20, 15);
-    -unity-background-scale-mode: scale-to-fit;
-}
 
-.hud-buff-border-green {
-    border-color: rgb(55, 231, 63);
-}
-
-.hud-buff-border-orange {
-    border-color: rgb(255, 140, 0);
-}
-
-.hud-buff-timer {
-    font-size: 8px;
-    color: rgb(55, 231, 63);
-    -unity-text-align: middle-center;
-    height: 11px;
-    margin-top: 1px;
-    -unity-font-style: bold;
-}
-
-.hud-debuff-timer {
-    color: rgb(255, 140, 0);
-}
-
-/* Team Preview Overlay */
+/* ═══ TEAM PREVIEW ═══ */
 .hud-team-preview {
     position: absolute;
     left: 10px;
@@ -847,47 +609,15 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-.hud-team-faction-icon {
-    width: 26px;
-    height: 26px;
-    margin-right: 6px;
-    background-color: rgba(0,0,0,0.5);
-    -unity-background-scale-mode: scale-to-fit;
-}
+.hud-team-faction-icon { width: 26px; height: 26px; margin-right: 6px; background-color: rgba(0,0,0,0.5); -unity-background-scale-mode: scale-to-fit; }
+.hud-team-member-info { flex-grow: 1; flex-direction: column; }
+.hud-team-member-name { font-size: 10px; color: rgb(165, 255, 203); -unity-font-style: bold; margin-bottom: 2px; max-width: 120px; overflow: hidden; }
+.hud-team-bar-track { height: 5px; width: 73px; background-color: rgba(0, 0, 0, 0.6); margin-bottom: 1px; overflow: hidden; }
+.hud-team-bar-fill-hp { height: 100%; background-color: rgb(220, 50, 40); }
+.hud-team-bar-fill-mp { height: 100%; background-color: rgb(40, 120, 220); }
 
-.hud-team-member-info {
-    flex-grow: 1;
-    flex-direction: column;
-}
 
-.hud-team-member-name {
-    font-size: 10px;
-    color: rgb(165, 255, 203);
-    -unity-font-style: bold;
-    margin-bottom: 2px;
-    max-width: 120px;
-    overflow: hidden;
-}
-
-.hud-team-bar-track {
-    height: 5px;
-    width: 73px;
-    background-color: rgba(0, 0, 0, 0.6);
-    margin-bottom: 1px;
-    overflow: hidden;
-}
-
-.hud-team-bar-fill-hp {
-    height: 100%;
-    background-color: rgb(220, 50, 40);
-}
-
-.hud-team-bar-fill-mp {
-    height: 100%;
-    background-color: rgb(40, 120, 220);
-}
-
-/* Trade Info Panel */
+/* ═══ TRADE INFO PANEL ═══ */
 .hud-trade-panel {
     position: absolute;
     left: 15px;
@@ -913,27 +643,12 @@
     border-color: rgb(220, 220, 220);
 }
 
-.hud-trade-title {
-    font-size: 11px;
-    color: rgb(255, 220, 90);
-    -unity-font-style: bold;
-    -unity-text-align: middle-center;
-    margin-bottom: 6px;
-    border-bottom-width: 1px;
-    border-bottom-color: rgb(80, 80, 80);
-}
+.hud-trade-title { font-size: 11px; color: rgb(255, 220, 90); -unity-font-style: bold; -unity-text-align: middle-center; margin-bottom: 6px; border-bottom-width: 1px; border-bottom-color: rgb(80, 80, 80); }
+.hud-trade-rows { flex-direction: column; }
+.hud-trade-label { font-size: 10px; color: rgb(230, 230, 210); margin-bottom: 2px; }
 
-.hud-trade-rows {
-    flex-direction: column;
-}
 
-.hud-trade-label {
-    font-size: 10px;
-    color: rgb(230, 230, 210);
-    margin-bottom: 2px;
-}
-
-/* Stall Currency Selector */
+/* ═══ STALL CURRENCY ═══ */
 .hud-stall-currency {
     position: absolute;
     left: 460px;
@@ -948,30 +663,12 @@
     align-items: center;
 }
 
-.hud-stall-currency-title {
-    font-size: 11px;
-    color: rgb(230, 230, 210);
-    margin-bottom: 8px;
-    -unity-font-style: bold;
-}
+.hud-stall-currency-title { font-size: 11px; color: rgb(230, 230, 210); margin-bottom: 8px; -unity-font-style: bold; }
+.hud-stall-btns-row { flex-direction: row; justify-content: space-between; width: 100%; }
+.hud-stall-btn { font-size: 10px; background-color: rgb(35, 115, 95); border-color: rgb(55, 185, 150); color: white; width: 75px; height: 24px; border-radius: 4px; }
 
-.hud-stall-btns-row {
-    flex-direction: row;
-    justify-content: space-between;
-    width: 100%;
-}
 
-.hud-stall-btn {
-    font-size: 10px;
-    background-color: rgb(35, 115, 95);
-    border-color: rgb(55, 185, 150);
-    color: white;
-    width: 75px;
-    height: 24px;
-    border-radius: 4px;
-}
-
-/* Emote / Face Picker Overlay */
+/* ═══ FACE PICKER ═══ */
 .hud-face-picker-overlay {
     position: absolute;
     left: 0px;
@@ -995,52 +692,58 @@
     bottom: 150px;
 }
 
-.hud-face-picker-header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    padding: 6px 10px;
-    border-bottom-width: 1px;
-    border-bottom-color: rgb(50, 100, 80);
-}
+.hud-face-picker-header { flex-direction: row; justify-content: space-between; align-items: center; padding: 6px 10px; border-bottom-width: 1px; border-bottom-color: rgb(50, 100, 80); }
+.hud-face-picker-title { font-size: 12px; color: rgb(220, 235, 210); -unity-font-style: bold; }
+.hud-face-picker-close { width: 20px; height: 20px; background-color: rgba(180, 60, 60, 0.85); border-radius: 10px; }
+.hud-face-picker-list { max-height: 190px; }
+.hud-face-picker-list .unity-scroll-view__content-container { flex-direction: row; flex-wrap: wrap; padding: 4px; }
+.hud-face-item { width: 28px; height: 28px; margin: 2px; align-items: center; justify-content: center; background-color: rgba(20, 50, 40, 0.8); border-width: 1px; border-color: rgb(50, 100, 80); border-radius: 4px; }
+.hud-face-item-text { font-size: 14px; -unity-text-align: middle-center; }
 
-.hud-face-picker-title {
-    font-size: 12px;
-    color: rgb(220, 235, 210);
-    -unity-font-style: bold;
-}
 
-.hud-face-picker-close {
-    width: 20px;
-    height: 20px;
-    background-color: rgba(180, 60, 60, 0.85);
-    border-radius: 10px;
-}
-
-.hud-face-picker-list {
-    max-height: 190px;
-}
-
-.hud-face-picker-list .unity-scroll-view__content-container {
-    flex-direction: row;
-    flex-wrap: wrap;
-    padding: 4px;
-}
-
-.hud-face-item {
-    width: 28px;
-    height: 28px;
-    margin: 2px;
-    align-items: center;
+/* ═══ SKILL PICKER ═══ */
+.hud-skill-picker-overlay {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.7);
     justify-content: center;
-    background-color: rgba(20, 50, 40, 0.8);
-    border-width: 1px;
-    border-color: rgb(50, 100, 80);
-    border-radius: 4px;
+    align-items: center;
+    z-index: 1000;
 }
 
-.hud-face-item-text {
-    font-size: 14px;
-    -unity-text-align: middle-center;
+.hud-skill-picker-window {
+    width: 340px;
+    max-height: 440px;
+    background-color: rgba(15,35,28,0.97);
+    border-width: 2px;
+    border-color: rgb(80,160,120);
+    border-radius: 8px;
 }
 
+.hud-skill-picker-header { flex-direction: row; justify-content: space-between; align-items: center; padding: 10px 14px; border-bottom-width: 1px; border-bottom-color: rgb(50,100,80); }
+.hud-skill-picker-title { font-size: 14px; color: rgb(220,235,210); -unity-font-style: bold; }
+.hud-skill-picker-close { width: 28px; height: 28px; background-color: rgba(180,60,60,0.7); border-radius: 14px; }
+.hud-skill-picker-list { height: 380px; max-height: 380px; overflow: hidden; }
+.hud-skill-picker-list .unity-scroll-view__content-container { min-height: 760px; }
+
+.skill-picker-item { flex-direction: row; align-items: center; padding: 8px 12px; margin: 3px 6px; border-width: 1px; border-color: rgb(50,100,80); border-radius: 4px; background-color: rgba(20,50,40,0.8); }
+.skill-picker-item:hover { background-color: rgba(40,80,60,0.9); border-color: rgb(100,180,130); }
+.skill-picker-icon { width: 40px; height: 40px; margin-right: 10px; background-size: contain; }
+.skill-picker-info { flex: 1; }
+.skill-picker-name { font-size: 13px; color: rgb(220,235,210); -unity-font-style: bold; }
+.skill-picker-level { font-size: 10px; color: rgb(160,200,170); }
+.skill-picker-type { font-size: 10px; color: rgb(140,170,150); margin-top: 2px; }
+
+/* ═══ PC BAR ART = SINGLE VISUAL TRUTH ═══
+   Bottom bar background = authentic PC frame (icons + slots + VN text baked in).
+   Hide overlay icon visuals + slot numbers so PC art shows through with zero
+   doubling. Containers stay (click zones intact). */
+#BottomPanel .hud-slot-number { display: none; }
+#BottomPanel .hud-btn-icon { display: none; }
+#BottomPanel .hud-menu-btn-icon { display: none; }
+#BottomPanel .hud-skill-slot-icon { display: none; }
+#BottomPanel .hud-skill-slot-label { display: none; }
+#BottomPanel .hud-skill-keys { display: none; }
+
+/* Exp bar defaults to empty (0%) like PC reference; SetBar fills it when bridge live. */
+#ExpBarFill { width: 0; }

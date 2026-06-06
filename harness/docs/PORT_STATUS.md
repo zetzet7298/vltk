@@ -252,7 +252,7 @@ PC: 20+ systems
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
 | 12.1 | Mobile HUD | Yes | ✅ | ✅ | GameHudController + HudDataService + MobileJoystick |
-| 12.2 | HUD Art (PC SPR) | 1,851 SPR | ~410 | 🔄 | StreamingAssets/UI/HUD/Art/ có ~410 PNG + HudArtCatalogService runtime; HUD user-facing baked Chinese audit có 279 PNG CJK, catalog Việt hóa + tests chặn close/refresh/chat/skill/friend/guild/team text Trung |
+| 12.2 | HUD Art (PC SPR) | 1,851 SPR | ~410 | 🔄 | StreamingAssets/UI/HUD/Art/ có ~410 PNG + HudArtCatalogService runtime; HUD user-facing baked Chinese audit có 279 PNG CJK, catalog Việt hóa + tests chặn close/refresh/chat/skill/friend/guild/team text Trung. Bottom bar = SPR PC thật `jx1024.spr` (uid 917565dd, 1024.pak) band y[680-768]=1024x89, KHÔNG crop screenshot; spec layout từ INI `工具控制条` (dc11ac12)+`主界面玩家信息窗口` (e3b06434) → HudBottomBarPcSpec.cs + HudBottomBarAuthenticityTests.cs. Top bar: bars repositioned tới toạ độ PC-pixel (stamina/hp/mp/exp 289/465/641/816), khung phẳng PC-style, level/rank box, connection text — khớp pixel pc_hud.png. Minimap: viền mỏng 1px (đúng PC, không ornate), 2 nút tiện ích icon SPR thật. Bottom bar menu icons = SPR PC gốc từ 1024.pak (b5b2ef55/3d42308f/56d016e0/04e4c9e4/823193a1/46c617c6/00a58516/1023e503) + Bảo Vật cam thật (8f845112, updatejx08.pak) composite |
 | 12.3 | Vietnamese Text Overlay | - | ✅ | ✅ | PcHudVietnameseTextOverlay |
 | 12.4 | Skill Panel | Yes | ✅ | ✅ | PcSkillPanelService + CombatSkillSlotController |
 | 12.5 | Minimap Panel | Yes | ✅ | ✅ | MinimapPanel |
