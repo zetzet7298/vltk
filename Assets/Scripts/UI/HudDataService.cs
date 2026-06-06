@@ -89,6 +89,15 @@ namespace VLTK.UI
         private static HudDataService _instance;
         public static HudDataService Instance => _instance ??= new HudDataService();
 
+        // Domain reload is disabled in Enter Play Mode Settings for faster iteration.
+        // Without this, _instance (and its cached buffs/emotes/settings) would persist
+        // across Play sessions, causing stale HUD state during development.
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticsForFastPlayMode()
+        {
+            _instance = null;
+        }
+
         private Dictionary<int, BuffData> _buffs = new();
         private List<EmoteData> _emotes = new();
         private Dictionary<int, RankingTitleData> _titles = new();
