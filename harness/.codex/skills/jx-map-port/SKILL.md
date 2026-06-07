@@ -9,8 +9,9 @@ description: >-
   minimap parity bugs: gray/not zoomed minimap, preview missing, wrong coordinates,
   player dot not following movement, minimap/preview click-to-move broken, player/camera
   blocked before minimap edge, Chinese map names, preview not closing outside, or default
-  boot-map changes. Encodes signed-byte hash, Z-projection, spatial-tree sorting,
-  active-map bounds, PC coordinate labels, click-to-move, Unity serialized-field gotchas.
+  boot-map changes. Covers mission maps with Lua NewWorld entry scripts, map-specific NPC
+  boss SPR staging, signed-byte hash, Z-projection, spatial-tree sorting, active-map bounds,
+  PC coordinate labels, click-to-move, Unity serialized-field gotchas.
 ---
 
 # JX Online 1 / VLTK Map Porting
@@ -149,6 +150,7 @@ Important behavior:
 - User-facing map names must be Vietnamese. Known mappings:
   - `巴陵县` / `Map_79` → `Ba Lăng huyện`
   - `风之骑` / `Map_389` / mojibake variants → `Phong Kỳ (Vượt ải 120+)`
+  - `沙漠山洞1` / `Map_907` → `Vượt ải Nhiếp Thí Trần`
 - A map is not truly navigable until player/camera clamp uses the active map bounds, not
   the old Ba Lăng defaults.
 
@@ -187,6 +189,14 @@ player there and any auto-spawn script for NPCs. Example from Tín sứ Vượt 
 and `global/autoexec.lua` spawns templates `822`/`377`. Preserve PC IDs and Việt hoá
 only user-facing names.
 
+For multi-instance mission maps, choose the representative map ID from the PC script, not
+the display name alone. Example from Vượt ải Nhiếp Thí Trần:
+`script/missions/killbossmatch/class.lua` has `tbMapId={907..916}`, `tbNpc={1480..1489}`,
+entry `NewWorld(nMapId,1476,3274)` / `NewWorld(nMapId,1579,3186)`, and `maplist.ini`
+maps `907=西北北区\沙漠迷宫\沙漠山洞1`; use project map id `907` unless the user asks for
+another instance. Read `NpcS.txt`/`Reference/PcNpc/npcs.txt` for template stats and
+`NpcResType` before creating any enemy fallback.
+
 Use the helper to find the map name and bounds in one shot when `.wor` is available:
 
 ```bash
@@ -219,6 +229,18 @@ python3 scripts/jx_map_port.py \
   --unity-root /var/www/vltk-mobile \
   --data-dir '/var/www/vltksource_new/vl_update_27/Client 6.0/data' \
   --bounds 79 78 101 100
+
+# Mission maps with map-specific NPC/boss visuals: stage extra SPRs from NpcResType too.
+cat >/tmp/map907_extra_spr.txt <<'EOF'
+spr\npcres\boss\boss018\boss018_wlk.spr
+spr\npcres\boss\boss019\boss019_wlk.spr
+EOF
+python3 scripts/jx_map_port.py \
+  --map-name '西北北区\沙漠迷宫\沙漠山洞1' \
+  --project-map-id 907 \
+  --unity-root /var/www/vltk-mobile \
+  --bounds 77 96 105 109 \
+  --extra-spr-file /tmp/map907_extra_spr.txt
 ```
 
 It will, in one pass:
@@ -229,12 +251,15 @@ It will, in one pass:
 - collect every ground / cover / builtin `imageName`, resolve each with the same hash,
   extract + rebuild the SPR (handling per-frame-compressed sprites), and stage it under
   `Assets/StreamingAssets/Sprites/{ComputePathUid}.spr` so the runtime finds it by name.
+- stage any `--extra-spr` / `--extra-spr-file` path and write `extra_spr_names.json`; use
+  this for mission NPC/boss visuals because they are not referenced by Region_C art names.
 
 Expected healthy output: `extracted regions: N`, `staged art: M/M failed=0`.
 Then verify `manifest.json` and `image_names.json`; use `image_names.json` for the
 referenced-art count because shared SPRs may appear as modified existing files in git,
-not only new files. If `failed>0`, read `references/pitfalls.md` — usually a loose-art
-fallback or a new per-frame SPR shape.
+not only new files. When extras are staged, `M` equals map art plus extra SPRs; verify
+`extra_spr_names.json` separately. If `failed>0`, read `references/pitfalls.md` — usually
+a loose-art fallback or a new per-frame SPR shape.
 
 ### 3. Render & verify in Unity
 
@@ -253,6 +278,10 @@ the original: stone plaza (青砖), Jiangnan houses, trees, water edges should a
 with real art. `manage_camera` screenshots only work **while in play mode** — a shot
 taken after stop shows only the skybox.
 
+Do not treat `SprRuntimeService.CacheCount == 0` as a map failure: `MapRenderer` uses
+`ResolveTexture`, not the sprite cache. Treat `MissCount == 0`, visible real terrain, and
+`Rendered N regions` as the map-art signal.
+
 ### 4. Runtime glue checklist for new/default maps
 
 If the task sets a map as default or makes it playable, update all runtime surfaces:
@@ -265,6 +294,11 @@ If the task sets a map as default or makes it playable, update all runtime surfa
 - `MapEnemyDatabase`: add PC template ids and default spawn only from PC scripts/data.
 - `SandboxRuntimeState`, `GameHudController`, `PcHudVietnameseTextOverlay`: show Vietnamese
   names even when PC text arrives as Chinese or mojibake.
+- Prefer `MapPortManifest.TryGet(activeMapId)` for HUD/overlay map names before raw PC text;
+  raw names can arrive as mojibake (`M颽 an...`) even when the manifest name is correct.
+- NPC SPR path folders are data-dependent: `ani*` → `spr\npcres\animal`, `boss*` →
+  `spr\npcres\boss`, otherwise `spr\npcres\enemy`. Do not route `boss018` through
+  `enemy` or visuals will spawn with nameplates but no body.
 - `SandboxPlayerController`: call/apply active map bounds after `MapManager.OnMapLoaded`;
   never leave Ba Lăng `mapBoundsMin/Max` as movement/camera clamp for another map.
 - Serialized prefabs can also stale public fields (example: `Assets/Prefabs/Player.prefab`
@@ -286,6 +320,10 @@ significant effort to diagnose and fix):
 - **Multi-piece structures render correctly**: The 牌坊 gate (12 pieces from b013_v2_*.spr)
   should show pillars behind crossbeams. If pieces overlap wrong, the file-order sorting
   counter or builtin pivot is broken.
+- **Mission NPC visuals load**: For boss/mission maps, console should show `PcNpcVisual Loaded
+  spr\npcres\boss\...` and a play probe should report `visualsWithClip == visuals.Length`.
+  Nameplates without bodies mean either extra SPRs were not staged or the NPC folder mapping
+  (`boss` vs `enemy`) is wrong.
 
 ### 6. Keep the tests green
 
@@ -293,6 +331,9 @@ Prefer targeted Unity tests for touched systems (`MinimapTests`, `HudDataBridgeT
 `SandboxBootE2ETests`, map flow tests). Some repo test assemblies are gated by
 `VLTK_ENABLE_TESTS`; if enabling that define exposes unrelated stale compile errors, record
 that fact and fall back to `validate_script` plus Play Mode probes for the touched runtime.
+Unity MCP `run_tests` may sometimes return `summary.total=0` for a specific test name; do
+not count that as real coverage. Add/adjust an EditMode assertion anyway, validate scripts,
+then use Play Mode probes for default map, bounds, renderer, enemies, and visual clips.
 Always clear/read console after refresh; known Addressables GUID conflicts can be ignored
 per AGENTS, but new compile/runtime errors cannot.
 
@@ -355,6 +396,7 @@ Unity implementation rules:
 
 6. **Coordinate/name labels**
    - UI Toolkit labels may not render reliably in this project; `PcHudVietnameseTextOverlay.cs` draws IMGUI text over the HUD.
+   - Prefer manifest ID lookup for the overlay title; only fall back to raw-name switch mappings.
    - Small minimap label positions in 1280x720 reference coords:
      - map name: `(1144, 4, 112, 14)`
      - coords: `(1146, 18, 112, 14)`
@@ -386,6 +428,7 @@ Per ported map, under `Assets/StreamingAssets/`:
 - `TestData/Regions/Map_{id}_C/{col}_{row}_Region_C.dat` — one per occupied cell
 - `TestData/Regions/Map_{id}_C/manifest.json` — bounds, cells, hasGround/hasBuiltin
 - `TestData/Regions/Map_{id}_C/image_names.json` — every art path referenced
+- `TestData/Regions/Map_{id}_C/extra_spr_names.json` — optional mission/NPC SPRs staged with `--extra-spr*`
 - `Sprites/{ComputePathUid}.spr` — every resolved art asset (shared across maps)
 
 The renderer, projection math, and SPR decoder are map-agnostic for plain extraction, but
