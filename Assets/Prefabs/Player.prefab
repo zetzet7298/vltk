@@ -127,7 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0e0f30d95fee254188c117853496cff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: VLTK.Sandbox::VLTK.Sandbox.SandboxPlayerController
-  moveSpeed: 900
+  moveSpeed: 1800
   allowKeyboardFallback: 1
   isFemale: 0
   joystick: {fileID: 0}

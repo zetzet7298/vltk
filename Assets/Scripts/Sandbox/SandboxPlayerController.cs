@@ -18,7 +18,7 @@ namespace VLTK.Sandbox
     public sealed class SandboxPlayerController : MonoBehaviour
     {
         [Header("Movement")]
-        public float moveSpeed = 180f; // PC chuẩn: tốc độ chạy người chơi
+        public float moveSpeed = 360f; // 200% tốc độ hiện tại (180f) theo yêu cầu test map rộng
         public bool allowKeyboardFallback = true;
 
         [Header("Player Gender")]
