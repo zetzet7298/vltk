@@ -17,7 +17,7 @@ namespace VLTK.Sandbox
     public sealed class SandboxPlayerController : MonoBehaviour
     {
         [Header("Movement")]
-        public float moveSpeed = 900f; // TEMP: 5x normal (180) for movement testing
+        public float moveSpeed = 180f; // PC chuẩn: tốc độ chạy người chơi
         public bool allowKeyboardFallback = true;
 
         [Header("Player Gender")]
@@ -40,7 +40,7 @@ namespace VLTK.Sandbox
         [Header("Camera Follow")]
         public Camera followCamera;
         public bool followCameraEnabled = true;
-        public float followOrthoSize = 480f;  // wider view to see full map context
+        public float followOrthoSize = 300f;  // zoom cân bằng: player rõ nhưng vẫn thấy context (160 quá gần, 480 quá xa)
         public float followSmooth = 12f;
         public float cameraZ = -100f;
 
@@ -355,12 +355,11 @@ namespace VLTK.Sandbox
             bool mounted = evt.newState == MountState.Mounted;
             if (visual != null)
                 visual.SetMounted(mounted);
+            // Horse body now renders as layered HH/HB/HT parts inside the player visual
+            // (full 320x320 8-dir, frame-synced with rider). The legacy 50x76 single-frame
+            // HorseVisual is kept disabled to avoid a duplicate mismatched horse.
             if (horse != null)
-            {
-                if (evt.horseType > 0) horse.SetHorseId(evt.horseType);
-                horse.gameObject.SetActive(mounted);
-                if (mounted) SyncHorseDirectionAndSorting();
-            }
+                horse.gameObject.SetActive(false);
         }
 
         /// <summary>

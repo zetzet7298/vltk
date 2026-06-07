@@ -1139,8 +1139,38 @@ namespace VLTK.Sandbox
 
         private void EnsureMountToggleButton(RectTransform canvasTransform)
         {
-            // Removed: PC uses BtnHorse in toolbar, not a standalone mount button.
-            return;
+            if (canvasTransform == null || canvasTransform.Find("MountBtn") != null)
+                return;
+
+            // Nút lên/xuống ngựa — góc phải, ngang tầm giữa (khớp horse_btn spec 0.90,0.55).
+            var btnGo = new GameObject("MountBtn");
+            btnGo.transform.SetParent(canvasTransform, false);
+            var rt = btnGo.AddComponent<RectTransform>();
+            rt.anchorMin = new Vector2(1f, 0f);
+            rt.anchorMax = new Vector2(1f, 0f);
+            rt.pivot = new Vector2(1f, 0f);
+            rt.anchoredPosition = new Vector2(-32f, 200f);
+            rt.sizeDelta = new Vector2(150f, 60f);
+            var img = btnGo.AddComponent<Image>();
+            img.color = new Color(0.45f, 0.30f, 0.12f, 0.9f);
+            var btn = btnGo.AddComponent<Button>();
+            btn.targetGraphic = img;
+
+            var lblGo = new GameObject("Label");
+            lblGo.transform.SetParent(btnGo.transform, false);
+            var lrt = lblGo.AddComponent<RectTransform>();
+            lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
+            lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
+            var txt = lblGo.AddComponent<Text>();
+            txt.alignment = TextAnchor.MiddleCenter;
+            txt.color = Color.white;
+            txt.fontSize = 24;
+            txt.fontStyle = FontStyle.Bold;
+            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf") ?? Font.CreateDynamicFontFromOSFont("Arial", 14);
+
+            var toggle = btnGo.AddComponent<MountToggleButton>();
+            toggle.Bind(PlayerController, txt);
+            btn.onClick.AddListener(toggle.OnClick);
         }
 
         private static Sprite CreateUiDiscSprite(Color fill, Color ring)

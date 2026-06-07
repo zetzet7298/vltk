@@ -140,7 +140,10 @@ namespace VLTK.Sandbox
 
         public void SetAction(PlayerVisualAction action)
         {
-            if (isMounted) action = PlayerVisualAction.Ride;
+            // When mounted, map on-foot action to its mounted equivalent:
+            // Move -> RideMove (HR01 gallop), everything else -> Ride (RD01 idle).
+            if (isMounted)
+                action = (action == PlayerVisualAction.Move) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
 
@@ -161,13 +164,9 @@ namespace VLTK.Sandbox
             isMounted = mounted;
             _loadedAction = (PlayerVisualAction)(-1);
             if (isMounted)
-            {
-                currentAction = PlayerVisualAction.Ride;
-            }
+                currentAction = (LastMoveInput.sqrMagnitude > 0.0001f) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
             else
-            {
                 currentAction = Vector2.zero == LastMoveInput ? PlayerVisualAction.Idle : PlayerVisualAction.Move;
-            }
             _time = 0f;
             RefreshActionParts(force: true);
             ApplyFrame(0f);
@@ -218,7 +217,7 @@ namespace VLTK.Sandbox
             {
                 var runtime = GetOrCreatePart(spec);
                 runtime.spec = spec;
-                runtime.clip = LoadClip(spec.sourcePath);
+                runtime.clip = LoadClip(spec.sourcePath, spec.expectedDirections);
                 bool ok = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
                 runtime.renderer.enabled = ok;
                 runtime.renderer.gameObject.SetActive(ok);
@@ -266,6 +265,7 @@ namespace VLTK.Sandbox
             float rate = currentAction switch
             {
                 PlayerVisualAction.Move => moveFrameRate,
+                PlayerVisualAction.RideMove => moveFrameRate,
                 PlayerVisualAction.Magic => magicFrameRate,
                 PlayerVisualAction.Attack => attackFrameRate,
                 _ => idleFrameRate,
@@ -310,7 +310,7 @@ namespace VLTK.Sandbox
             }
         }
 
-        private ClipRuntime LoadClip(string sourcePath)
+        private ClipRuntime LoadClip(string sourcePath, int expectedDirections = 0)
         {
             if (string.IsNullOrEmpty(sourcePath))
                 return null;
@@ -318,7 +318,7 @@ namespace VLTK.Sandbox
             string root = string.IsNullOrEmpty(spritesRootOverride)
                 ? Path.Combine(Application.streamingAssetsPath, "Sprites")
                 : spritesRootOverride;
-            string cacheKey = $"{root}|{sourcePath}|ppu={pixelsPerUnit:F3}|ref={referencePixel.x:F1},{referencePixel.y:F1}";
+            string cacheKey = $"{root}|{sourcePath}|ppu={pixelsPerUnit:F3}|ref={referencePixel.x:F1},{referencePixel.y:F1}|dir={expectedDirections}";
             if (ClipCache.TryGetValue(cacheKey, out var cached))
             {
                 if (IsClipAlive(cached))
@@ -341,8 +341,12 @@ namespace VLTK.Sandbox
                 return null;
             }
 
-            int directions = Mathf.Max(1, decoded.header.directions);
             int totalFrames = decoded.frames.Length;
+            // SPR header directions không đáng tin với vài file (HH/HT báo dirs=1 dù
+            // thực có 8). Ưu tiên hint expectedDirections nếu chia hết totalFrames.
+            int directions = Mathf.Max(1, decoded.header.directions);
+            if (expectedDirections > 1 && totalFrames % expectedDirections == 0)
+                directions = expectedDirections;
             int framesPerDirection = Mathf.Max(1, totalFrames / directions);
             if (totalFrames % directions != 0)
                 directions = 1;

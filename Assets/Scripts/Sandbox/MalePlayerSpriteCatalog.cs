@@ -15,7 +15,8 @@ namespace VLTK.Sandbox
         Move,       // RN01/RN03 (run)
         Magic,      // MG01/MG04 (magic cast)
         Attack,     // AT04/AT05 (melee attack)
-        Ride,       // HM01 (mounted: rider SPRs + separate horse body)
+        Ride,       // RD01 (mounted IDLE: RideStand — full 8-dir layered horse+rider)
+        RideMove,   // HR01 (mounted MOVE: RideRun gallop — full 8-dir layered horse+rider)
     }
 
     /// <summary>
@@ -54,13 +55,17 @@ namespace VLTK.Sandbox
         public string name;
         public string sourcePath;
         public bool required;
+        // Override cho SPR header directions sai. 0 = dùng header. Horse HH/HT báo
+        // dirs=1 dù thực có 8 hướng × 14 frame → ép 8 để không bị "tự xoay".
+        public int expectedDirections;
 
-        public PlayerSpritePartSpec(PlayerSpritePartKind kind, string name, string sourcePath, bool required = true)
+        public PlayerSpritePartSpec(PlayerSpritePartKind kind, string name, string sourcePath, bool required = true, int expectedDirections = 0)
         {
             this.kind = kind;
             this.name = name;
             this.sourcePath = sourcePath;
             this.required = required;
+            this.expectedDirections = expectedDirections;
         }
     }
 
@@ -78,12 +83,14 @@ namespace VLTK.Sandbox
         public const string SourceRoot = @"spr\npcres\man";
         public const int DirectionCount = 8;
         public const int ArmorVariant = 19;
-        public const int MountArmorVariant = 050;  // MA_*_050_HM01 — default mount outfit.
-        public const int MountAltArmorVariant = 072; // MA_*_072_HM01 — alt mount outfit.
-        public const int MountHelmetVariant = 016;   // MA_HB_016_HM01 — horse-body / saddle region.
-        public const int MountAltHelmetVariant = 018; // MA_HB_018_HM01 — alt horse-body region.
+        public const int MountArmorVariant = 050;  // MA_(BD/HD/HR/LH/RH)_050 — mounted rider outfit.
+        public const int MountAltArmorVariant = 072; // alt mounted rider outfit.
+        public const int MountHorseVariant = 016;   // MA_(HH/HB/HT)_016 — horse body (front/mid/back).
+        public const int MountAltHorseVariant = 018; // alt horse body.
         public const int ShadowVariant = 999;
-        public const string MountActionSuffix = "HM01"; // PC 男主角骑马关联表.txt: cdo_fightstand/cdo_run share HM01 when mounted.
+        // PC 男主角马* tables: RideStand=RD01 (mounted idle), RideRun=HR01 (mounted gallop).
+        public const string MountIdleSuffix = "RD01";
+        public const string MountMoveSuffix = "HR01";
         public const int EmptyWeaponVariant = 0;
         public const int ShortWeaponVariant = 001; // 单手剑1 from 男主角右手武器.txt
         public const int StaffWeaponVariant = 010; // 长棍类1 from 男主角右手武器.txt
@@ -134,7 +141,9 @@ namespace VLTK.Sandbox
         public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon)
         {
             if (action == PlayerVisualAction.Ride)
-                return BuildMountedParts(MountArmorVariant, MountHelmetVariant);
+                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MountIdleSuffix);
+            if (action == PlayerVisualAction.RideMove)
+                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MountMoveSuffix);
 
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
@@ -163,18 +172,27 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
-        /// Build the mounted rider parts (BD/HD/HB) with HM01 action suffix.
-        /// PC npcres/man mounts never ship Shadow, Hair, LeftHand, RightHand,
-        /// or Weapon SPRs for HM01 — the rider on a horse is a single layered
-        /// set with the horse body coming from a separate horse*.spr model.
+        /// Build the full mounted layered set: horse body (HH/HB/HT = parts 12/13/14)
+        /// + rider (BD/HD/HR/LH/RH). Suffix is RD01 (idle/RideStand) or HR01 (move/RideRun),
+        /// both 8-direction. PC tables 男主角马前/马中/马后 map HH/HB/HT to the horse body;
+        /// 男主角 BD/HD/HR/LH/RH ride columns supply the rider. No Shadow/Weapon when mounted.
         /// </summary>
-        public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant, int helmetVariant)
+        public static PlayerSpritePartSpec[] BuildMountedParts(int riderVariant, int horseVariant, string suffix)
         {
             return new PlayerSpritePartSpec[]
             {
-                new(PlayerSpritePartKind.Body,         "MountBody",    BuildPath("BD", bodyVariant, MountActionSuffix)),
-                new(PlayerSpritePartKind.Head,         "MountHead",    BuildPath("HD", bodyVariant, MountActionSuffix)),
-                new(PlayerSpritePartKind.Saddle,       "MountSaddle",  BuildPath("HB", helmetVariant, MountActionSuffix)),
+                // Horse body — drawn behind/around rider per draw-order (ids 12/13/14).
+                // HH/HT SPR header báo dirs=1 sai → ép expectedDirections=8 (khớp HB) để
+                // animation khóa theo hướng rider, không "tự xoay" qua mọi hướng.
+                new(PlayerSpritePartKind.HorseFront,  "HorseFront",  BuildPath("HH", horseVariant, suffix), true, 8),
+                new(PlayerSpritePartKind.HorseMiddle, "HorseMiddle", BuildPath("HB", horseVariant, suffix), true, 8),
+                new(PlayerSpritePartKind.HorseRear,   "HorseRear",   BuildPath("HT", horseVariant, suffix), true, 8),
+                // Rider.
+                new(PlayerSpritePartKind.Body,        "MountBody",   BuildPath("BD", riderVariant, suffix)),
+                new(PlayerSpritePartKind.Head,        "MountHead",   BuildPath("HD", riderVariant, suffix)),
+                new(PlayerSpritePartKind.Hair,        "MountHair",   BuildPath("HR", riderVariant, suffix)),
+                new(PlayerSpritePartKind.LeftHand,    "MountLeftHand",  BuildPath("LH", riderVariant, suffix)),
+                new(PlayerSpritePartKind.RightHand,   "MountRightHand", BuildPath("RH", riderVariant, suffix)),
             };
         }
 

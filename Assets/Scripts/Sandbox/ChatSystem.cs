@@ -232,6 +232,16 @@ namespace VLTK.Sandbox
 
         private void BuildUIInternal()
         {
+            // Host RectTransform phải full-stretch, nếu không _panelRoot (neo 0–0.45×0–0.35)
+            // sẽ resolve theo host 0-size ở tâm canvas → mọi panel sụp về giữa màn (ngay trên player).
+            var hostRt = GetComponent<RectTransform>();
+            if (hostRt == null)
+                hostRt = gameObject.AddComponent<RectTransform>();
+            hostRt.anchorMin = Vector2.zero;
+            hostRt.anchorMax = Vector2.one;
+            hostRt.offsetMin = Vector2.zero;
+            hostRt.offsetMax = Vector2.zero;
+
             _panelRoot = new GameObject("ChatPanel");
             _panelRoot.transform.SetParent(transform, false);
 
@@ -241,9 +251,12 @@ namespace VLTK.Sandbox
             mainRt.offsetMin = new Vector2(8f, 8f);
             mainRt.offsetMax = new Vector2(-8f, -8f);
 
-            // Semi-transparent background
+            // Semi-transparent background. raycastTarget=false để touch xuyên qua xuống
+            // joystick (chat panel ở góc dưới-trái trùng chỗ joystick). Tab/input vẫn
+            // có raycast riêng nên vẫn bấm được.
             var bg = _panelRoot.AddComponent<Image>();
             bg.color = new Color(0.02f, 0.02f, 0.05f, 0.65f);
+            bg.raycastTarget = false;
 
             // Tab bar
             var tabBar = new GameObject("TabBar");
