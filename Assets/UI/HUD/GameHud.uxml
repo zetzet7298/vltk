@@ -190,5 +190,20 @@
                 <ui:ScrollView name="SkillPickerList" class="hud-skill-picker-list"/>
             </ui:VisualElement>
         </ui:VisualElement>
+
+        <!-- ═══ INVENTORY WINDOW (Hành Trang) — PC 物品 / 6a5d8c4c.ini ═══ -->
+        <!-- PC open: 背包按钮 (Player_Items) / F4 / U → Open([[items]]). Grid 4×7 (mobile). -->
+        <ui:VisualElement name="InventoryWindow" class="hud-inv-overlay hidden">
+            <ui:VisualElement name="InventoryFrame" class="hud-inv-frame">
+                <ui:VisualElement name="InventoryHeader" class="hud-inv-header">
+                    <ui:Label name="InventoryTitle" text="Hành Trang" class="hud-inv-title"/>
+                    <ui:VisualElement name="InventoryClose" class="hud-inv-close"/>
+                </ui:VisualElement>
+                <ui:ScrollView name="InventoryGrid" class="hud-inv-grid"/>
+                <ui:VisualElement name="InventoryFooter" class="hud-inv-footer">
+                    <ui:Label name="InventoryMoney" text="Bạc: 0" class="hud-inv-money"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

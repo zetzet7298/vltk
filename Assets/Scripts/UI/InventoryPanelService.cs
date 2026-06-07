@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VLTK.Sandbox;
+using VLTK.Model;
 
 namespace VLTK.UI
 {
@@ -62,10 +63,75 @@ namespace VLTK.UI
         public const string LabelSort = "Sắp xếp";
         public const int DefaultSlotCount = 30;
 
+        /// <summary>Mobile backpack grid (Hành Trang) — 4 columns × 7 rows = 28 slots.</summary>
+        public const int GridColumns = InventoryWindowPcSpec.GridColumns; // 4
+        public const int GridRows = InventoryWindowPcSpec.GridRows;       // 7
+        public const int GridSlotCount = InventoryWindowPcSpec.SlotCount; // 28
+
         private static readonly int[] _defaultSlotOrder = Enumerable.Range(0, DefaultSlotCount).ToArray();
 
         /// <summary>Thứ tự ô mặc định 30 slot.</summary>
         public static IReadOnlyList<int> GetPcInventoryOrder() => _defaultSlotOrder;
+
+        /// <summary>
+        /// Map a runtime InventoryService item to its quality tier (PC 7bfc9072.ini).
+        /// 0=white,1=blue,2=purple,3=gold/platina,4=red(broken). Derived from refine
+        /// level + set membership since the contract bundle has no explicit tier field.
+        /// </summary>
+        public static int ResolveQuality(ItemDefinition def)
+        {
+            if (def == null) return 0;
+            if (def.setId > 0) return 3;            // set piece -> gold/platina tier
+            if (def.refineLevel >= 7) return 2;     // heavily refined -> purple
+            if (def.refineLevel >= 1) return 1;     // refined -> blue
+            return 0;                               // white
+        }
+
+        /// <summary>
+        /// Build the mobile backpack snapshot (4×7 grid) bound to the live
+        /// InventoryService entries. PC behavior: Open([[items]]) lists held items
+        /// into the grid; empty trailing slots stay blank.
+        /// </summary>
+        public static InventoryPanelSnapshot BuildGridSnapshot(InventoryService inventory, int playerId, int gold = 0, int silver = 0)
+        {
+            var rows = new List<InventoryPanelRow>(GridSlotCount);
+            var entries = inventory?.Inventory;
+            int used = 0;
+            for (int i = 0; i < GridSlotCount; i++)
+            {
+                if (entries != null && i < entries.Count)
+                {
+                    var e = entries[i];
+                    var def = e.item;
+                    int quality = ResolveQuality(def);
+                    rows.Add(new InventoryPanelRow(
+                        slotIdx: i,
+                        itemId: def != null ? def.itemId : 0,
+                        count: e.count,
+                        itemGenre: 0,
+                        itemDetail: 0,
+                        itemParticular: 0,
+                        isLocked: false,
+                        isEquipped: false,
+                        itemName: def != null ? def.DisplayName : string.Empty,
+                        itemQuality: quality));
+                    if (def != null) used++;
+                }
+                else
+                {
+                    rows.Add(new InventoryPanelRow(i, 0, 0, 0, 0, 0, false, false, string.Empty, 0));
+                }
+            }
+            return new InventoryPanelSnapshot
+            {
+                playerId = playerId,
+                totalSlots = GridSlotCount,
+                usedSlots = used,
+                gold = gold,
+                silver = silver,
+                rows = rows,
+            };
+        }
 
         /// <summary>Dựng snapshot dựa trên ItemDatabase và danh sách vật phẩm của player.</summary>
         public static InventoryPanelSnapshot BuildSnapshot(ItemDatabase db, int playerId, int pageIndex = 0)

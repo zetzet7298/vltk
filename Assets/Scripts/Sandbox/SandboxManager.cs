@@ -111,6 +111,9 @@ namespace VLTK.Sandbox
         public ShopPanel ShopPanel { get; private set; }
         private InventoryService _inventoryService;
 
+        /// <summary>Runtime inventory service (item search/add/equip). Used by the HUD bag window.</summary>
+        public InventoryService InventoryService => _inventoryService;
+
         // PC-parity runtime services (meridian, partner, title, lottery, recipe, etc.)
         public MeridianService MeridianService { get; private set; }
         public PartnerService PartnerService { get; private set; }

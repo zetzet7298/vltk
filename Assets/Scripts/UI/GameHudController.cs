@@ -109,6 +109,11 @@ namespace VLTK.UI
         private ScrollView _facePickerList;
         private Button _faceBtn;
 
+        // Inventory window (Hành Trang)
+        private VisualElement _invWindow, _invClose, _invFrame;
+        private ScrollView _invGrid;
+        private Label _invMoney;
+
 
         private HudDataBridge _bridge;
         private MinimapService _minimapService;
@@ -273,6 +278,12 @@ namespace VLTK.UI
             _facePickerList = root.Q<ScrollView>("FacePickerList");
             _faceBtn = root.Q<Button>("FaceBtn");
 
+            _invWindow = root.Q("InventoryWindow");
+            _invFrame = root.Q("InventoryFrame");
+            _invClose = root.Q("InventoryClose");
+            _invGrid = root.Q<ScrollView>("InventoryGrid");
+            _invMoney = root.Q<Label>("InventoryMoney");
+
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
@@ -341,6 +352,25 @@ namespace VLTK.UI
             RegisterClick(root, "CaiBangSkillClose", CloseSkillPanel);
             RegisterClick(root, "CaiBangSkillPageOne", () => SetSkillPage(0));
             RegisterClick(root, "CaiBangSkillPageTwo", () => SetSkillPage(1));
+
+            RegisterClick(root, "InventoryClose", CloseInventory);
+            if (_invGrid != null)
+                _invGrid.pickingMode = PickingMode.Position;
+            if (_invWindow != null)
+            {
+                // Tap outside the frame closes the window (PC closes on CloseBtn; mobile adds tap-outside).
+                _invWindow.pickingMode = PickingMode.Position;
+                _invWindow.RegisterCallback<PointerDownEvent>(evt =>
+                {
+                    if (_invFrame == null || !_invFrame.worldBound.Contains(evt.position))
+                    {
+                        CloseInventory();
+                        evt.StopPropagation();
+                    }
+                });
+            }
+            if (_invFrame != null)
+                _invFrame.pickingMode = PickingMode.Position;
 
             if (_skillPanel != null)
                 _skillPanel.pickingMode = PickingMode.Position;
@@ -976,6 +1006,80 @@ namespace VLTK.UI
             _skillPanel?.AddToClassList("hidden");
         }
 
+        // ── Inventory window (Hành Trang) — PC 物品 / Open([[items]]) ──────────
+
+        public bool IsInventoryVisible => _invWindow != null && !_invWindow.ClassListContains("hidden");
+
+        public void ToggleInventory()
+        {
+            if (IsInventoryVisible) CloseInventory();
+            else OpenInventory();
+        }
+
+        public void OpenInventory()
+        {
+            var manager = SandboxManager.Instance;
+            var inventory = manager != null ? manager.InventoryService : null;
+            int playerId = manager != null && manager.PlayerProgression != null ? 1 : 0;
+            var snap = InventoryPanelService.BuildGridSnapshot(inventory, playerId);
+            PopulateInventory(snap);
+            _invWindow?.RemoveFromClassList("hidden");
+            CloseSkillPanel();
+            CloseMapPreview();
+            SubsystemLog.Info("HUD", $"Open Inventory (slots={snap.totalSlots}, used={snap.usedSlots})");
+        }
+
+        public void CloseInventory()
+        {
+            _invWindow?.AddToClassList("hidden");
+            SubsystemLog.Info("HUD", "Close Inventory");
+        }
+
+        public int InventorySlotCount => _invGrid?.contentContainer.childCount ?? 0;
+
+        public void PopulateInventory(InventoryPanelSnapshot snap)
+        {
+            if (_invMoney != null)
+                _invMoney.text = $"Bạc: {(snap != null ? snap.silver : 0)}";
+            if (_invGrid == null) return;
+            _invGrid.Clear();
+            _invGrid.contentContainer.style.flexDirection = FlexDirection.Row;
+            _invGrid.contentContainer.style.flexWrap = Wrap.Wrap;
+            _invGrid.contentContainer.style.alignContent = Align.FlexStart;
+
+            var rows = snap?.rows;
+            int count = rows != null ? rows.Count : InventoryPanelService.GridSlotCount;
+            for (int i = 0; i < count; i++)
+            {
+                var slot = new VisualElement { name = $"InvSlot{i}" };
+                slot.AddToClassList("hud-inv-slot");
+
+                var icon = new VisualElement { name = $"InvSlotIcon{i}" };
+                icon.AddToClassList("hud-inv-slot-icon");
+                slot.Add(icon);
+
+                if (rows != null && i < rows.Count)
+                {
+                    var r = rows[i];
+                    if (r.itemId != 0)
+                    {
+                        var c = InventoryWindowPcSpec.TierColor(r.itemQuality);
+                        slot.style.borderTopColor = slot.style.borderBottomColor =
+                            slot.style.borderLeftColor = slot.style.borderRightColor =
+                            new StyleColor(new Color(c.r / 255f, c.g / 255f, c.b / 255f));
+
+                        if (r.count > 1)
+                        {
+                            var countLabel = new Label(r.count.ToString());
+                            countLabel.AddToClassList("hud-inv-slot-count");
+                            slot.Add(countLabel);
+                        }
+                    }
+                }
+                _invGrid.Add(slot);
+            }
+        }
+
         private void PopulateSkillPanel(PcSkillPanelSnapshot snap)
         {
             if (_skillSummary != null)
@@ -1078,7 +1182,7 @@ namespace VLTK.UI
         private void OnSitClick() => SubsystemLog.Info("HUD", "Toggle Sit");
         private void OnHorseClick() => SubsystemLog.Info("HUD", "Toggle Horse");
         private void OnStatusClick() => SubsystemLog.Info("HUD", "Open Character Status");
-        private void OnItemsClick() => SubsystemLog.Info("HUD", "Open Inventory");
+        private void OnItemsClick() => ToggleInventory();
         private void OnSkillsClick() => OpenSkillPanel();
 
         private void OnTeamClick()
