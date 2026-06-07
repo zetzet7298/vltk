@@ -125,10 +125,10 @@ namespace VLTK.UI
         // Button name → SPR icon file mapping (matching PC 按钮条按钮/*.spr)
         private static readonly Dictionary<string, string> ButtonIcons = new()
         {
-            { "BtnRun", "btn_run" },      // 跑步 (not extracted, use placeholder name)
-            { "BtnSit", "btn_sit" },
-            { "BtnHorse", "btn_horse" },
-            { "BtnExchange", "btn_exchange" },
+            // NOTE: run/sit/horse/exchange round-action icons were fabricated
+            // placeholders (verified: not in any PAK uid, no image-match in 1024.pak,
+            // not baked in jx1024.spr band). Removed per the strict no-fabrication
+            // rule — only authentic PC SPRs may be displayed.
             { "BtnStatus", "btn_status" },
             { "BtnItems", "btn_items" },
             { "BtnSkills", "btn_skills" },
