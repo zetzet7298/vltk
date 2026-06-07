@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — Inventory Panel Service (Túi đồ)
 // UI service: dựng snapshot các ô vật phẩm trong túi đồ nhân vật.
-// PC reference: 30 default slots, gold/silver, khóa, trang bị, tiêu hao.
+// PC reference: UID 05ea8560 item grid 6×10, money, equipment, consumables.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace VLTK.UI
         public readonly bool isLocked;
         public readonly bool isEquipped;
         public readonly string itemName;
-        public readonly int itemQuality; // 0=trắng, 1=xanh, 2=lam, 3=tím, 4=vàng
+        public readonly int itemQuality; // 0=trắng, 1=xanh, 2=tím, 3=vàng, 4=đỏ
 
         public InventoryPanelRow(int slotIdx, int itemId, int count, int itemGenre, int itemDetail, int itemParticular, bool isLocked, bool isEquipped, string itemName, int itemQuality)
         {
@@ -61,16 +61,16 @@ namespace VLTK.UI
         public const string LabelQuest = "Nhiệm vụ";
         public const string LabelLocked = "Khóa";
         public const string LabelSort = "Sắp xếp";
-        public const int DefaultSlotCount = 30;
+        public const int DefaultSlotCount = InventoryWindowPcSpec.SlotCount;
 
-        /// <summary>Mobile backpack grid (Hành Trang) — 4 columns × 7 rows = 28 slots.</summary>
-        public const int GridColumns = InventoryWindowPcSpec.GridColumns; // 4
-        public const int GridRows = InventoryWindowPcSpec.GridRows;       // 7
-        public const int GridSlotCount = InventoryWindowPcSpec.SlotCount; // 28
+        /// <summary>PC backpack grid (Hành Trang) — 6 columns × 10 rows = 60 slots.</summary>
+        public const int GridColumns = InventoryWindowPcSpec.GridColumns;
+        public const int GridRows = InventoryWindowPcSpec.GridRows;
+        public const int GridSlotCount = InventoryWindowPcSpec.SlotCount;
 
         private static readonly int[] _defaultSlotOrder = Enumerable.Range(0, DefaultSlotCount).ToArray();
 
-        /// <summary>Thứ tự ô mặc định 30 slot.</summary>
+        /// <summary>Thứ tự ô mặc định theo grid PC 6×10.</summary>
         public static IReadOnlyList<int> GetPcInventoryOrder() => _defaultSlotOrder;
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace VLTK.UI
         }
 
         /// <summary>
-        /// Build the mobile backpack snapshot (4×7 grid) bound to the live
+        /// Build the PC backpack snapshot (6×10 grid) bound to the live
         /// InventoryService entries. PC behavior: Open([[items]]) lists held items
         /// into the grid; empty trailing slots stay blank.
         /// </summary>

@@ -758,47 +758,61 @@
 #ExpBarFill { width: 0; }
 
 
-/* ═══ INVENTORY WINDOW (Hành Trang) — colors from PC 6a5d8c4c.ini / 7bfc9072.ini ═══ */
+/* ═══ INVENTORY WINDOW (Hành Trang) — PC 05ea8560 道具界面 + 7bfc9072 colors ═══ */
 .hud-inv-overlay {
     position: absolute;
     left: 0; right: 0; top: 0; bottom: 0;
-    background-color: rgba(0,0,0,0.7);
-    justify-content: center;
-    align-items: center;
+    background-color: rgba(0,0,0,0);
     z-index: 1000;
 }
 
-/* Frame uses PC [Settings] BGBorderColor=100,80,30 over a dark fill. */
 .hud-inv-frame {
-    width: 300px;
-    max-height: 460px;
-    background-color: rgba(28,20,8,0.97);
-    border-width: 2px;
-    border-color: rgb(100,80,30);
-    border-radius: 6px;
+    position: absolute;
+    right: 6px;
+    top: 136px;
+    width: 214px;
+    height: 474px;
+    background-color: rgba(0,0,0,0);
+    background-image: url('project://database/Assets/UI/HUD/Art/道具面板2.png');
+    -unity-background-scale-mode: stretch-to-fill;
+    border-width: 0px;
+    border-radius: 0px;
+    overflow: hidden;
 }
 
-.hud-inv-header { flex-direction: row; justify-content: space-between; align-items: center; padding: 9px 12px; border-bottom-width: 1px; border-bottom-color: rgb(100,80,30); }
-.hud-inv-title { font-size: 14px; color: rgb(243,194,70); -unity-font-style: bold; }
-.hud-inv-close { width: 26px; height: 26px; background-color: rgba(180,60,60,0.8); border-radius: 13px; }
+.hud-inv-header { position: absolute; left: 0px; top: 0px; width: 214px; height: 474px; padding: 0px; border-width: 0px; }
+.hud-inv-title { color: rgba(0,0,0,0); font-size: 1px; }
+.hud-inv-close {
+    position: absolute;
+    left: 142px;
+    top: 414px;
+    width: 65px;
+    height: 28px;
+    background-color: rgba(0,0,0,0);
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/btn_close_02_vi.png');
+    -unity-background-scale-mode: stretch-to-fill;
+    border-radius: 0px;
+}
 
-.hud-inv-grid { height: 360px; max-height: 360px; overflow: hidden; padding: 6px; }
+.hud-inv-grid { position: absolute; left: 24px; top: 72px; width: 168px; height: 280px; max-height: 280px; overflow: hidden; padding: 0px; background-color: rgba(0,0,0,0); border-width: 0px; }
 .hud-inv-grid .unity-scroll-view__content-container { flex-direction: row; flex-wrap: wrap; }
+.hud-inv-grid .unity-scroll-view__vertical-scroller { display: none; }
+.hud-inv-grid .unity-scroll-view__horizontal-scroller { display: none; }
 
-/* Item tile: PC [ItemBox] UnitBorder=2 -> 2px margin. */
+/* PC [ItemBox] 168×280, HUnits=6, VUnits=10, UnitBorder=1. */
 .hud-inv-slot {
-    width: 60px;
-    height: 60px;
-    margin: 2px;
-    background-color: rgba(15,12,6,0.9);
+    width: 26px;
+    height: 26px;
+    margin: 1px;
+    background-color: rgba(0,0,0,0);
     border-width: 1px;
-    border-color: rgb(100,80,30);
+    border-color: rgba(0,0,0,0);
     align-items: center;
     justify-content: center;
 }
-.hud-inv-slot-icon { width: 48px; height: 48px; background-size: contain; }
-.hud-inv-slot-count { position: absolute; right: 3px; bottom: 1px; font-size: 11px; color: rgb(255,255,255); -unity-font-style: bold; }
+.hud-inv-slot-icon { width: 24px; height: 24px; background-size: contain; }
+.hud-inv-slot-count { position: absolute; right: 0px; bottom: -2px; font-size: 10px; color: rgb(255,255,255); -unity-font-style: bold; }
 
-.hud-inv-footer { flex-direction: row; align-items: center; padding: 8px 12px; border-top-width: 1px; border-top-color: rgb(100,80,30); }
-/* Money text color from PC [Money] Color=255,217,78. */
-.hud-inv-money { font-size: 13px; color: rgb(255,217,78); -unity-font-style: bold; }
+.hud-inv-footer { position: absolute; left: 0px; top: 0px; width: 214px; height: 474px; padding: 0px; border-width: 0px; background-color: rgba(0,0,0,0); }
+/* Money text color from PC 05ea8560 [Money] Color=255,217,78. */
+.hud-inv-money { position: absolute; left: 53px; top: 353px; width: 110px; height: 14px; font-size: 12px; color: rgb(255,217,78); -unity-font-style: bold; }

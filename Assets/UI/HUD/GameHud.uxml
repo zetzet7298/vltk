@@ -191,8 +191,8 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- ═══ INVENTORY WINDOW (Hành Trang) — PC 物品 / 6a5d8c4c.ini ═══ -->
-        <!-- PC open: 背包按钮 (Player_Items) / F4 / U → Open([[items]]). Grid 4×7 (mobile). -->
+        <!-- ═══ INVENTORY WINDOW (Hành Trang) — PC 道具界面 / UID 05ea8560 ═══ -->
+        <!-- PC open: [Items] Player_Items (dc11ac12) / F4 / U → Open([[items]]). Grid 6×10. -->
         <ui:VisualElement name="InventoryWindow" class="hud-inv-overlay hidden">
             <ui:VisualElement name="InventoryFrame" class="hud-inv-frame">
                 <ui:VisualElement name="InventoryHeader" class="hud-inv-header">

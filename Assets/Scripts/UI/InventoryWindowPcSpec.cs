@@ -1,43 +1,45 @@
 namespace VLTK.UI
 {
     /// <summary>
-    /// Source-of-truth inventory ("Hành Trang" / 物品 backpack) window spec ported
-    /// verbatim from PC UI INI files extracted from 1024.pak via unpak_tool.
-    ///
-    /// PC open behavior (1024.pak/autoexec.lua):
-    ///   背包按钮 (ClassType Player_Items), key F4, key U  ->  Open([[items]])
-    ///
-    /// PC window layout (6a5d8c4c.ini — grid item window template, 储物箱):
-    ///   [Main]   Left=40 Top=145 Width=214 Height=454  Moveable=1
-    ///            Image=\spr\Ui3\储物箱\储物箱更新.spr
-    ///   [ItemBox] Left=24 Top=72 Width=168 Height=280 HUnits=6 VUnits=10 UnitBorder=2
-    ///   [Money]   Left=53 Top=353 Width=138 Height=14 Color=255,217,78
-    ///   [CloseBtn] Left=109 Top=394 Width=80 Height=28
-    ///
-    /// Frame colors ([Settings] block in 6a5d8c4c.ini) and item-tier text colors
-    /// (7bfc9072.ini) are exact PC values — used to build the frame because the
-    /// window SPR (储物箱更新.spr) is NOT present in any active PAK (verified by
-    /// index scan across all 30 data PAKs; scanner validated against the known
-    /// jx1024 uid) and pc_hud.png does not show the window open, so there is no
-    /// authentic pixel art to extract. No SPR is fabricated.
-    ///
-    /// Mobile adaptation (approved): 4 columns x 7 rows = 28 slots.
-    /// DO NOT invent values — all numbers below trace to the cited PC INI.
+    /// PC inventory ("Hành Trang" / 道具界面) window spec extracted from
+    /// 1024.pak: trigger UID dc11ac12 [Items] -> Player_Items/Open([[items]]),
+    /// window UID 05ea8560, item colors UID 7bfc9072.
     /// </summary>
     public static class InventoryWindowPcSpec
     {
-        // PC open trigger (autoexec.lua): Open([[items]]) via 背包按钮 / F4 / U.
         public const string PcOpenCommand = "Open([[items]])";
         public const string PcButtonClassType = "Player_Items";
-        public const string PcBackgroundSpr = @"\spr\Ui3\储物箱\储物箱更新.spr";
+        public const string PcToolbarUid = "dc11ac12";
+        public const string PcWindowUid = "05ea8560";
+        public const string PcItemColorUid = "7bfc9072";
+        public const string PcBackgroundSpr = @"\spr\Ui3\道具\daojumianban.spr";
+        public const string PcBackgroundArtName = "道具面板2";
+        public const string PcBackgroundSpriteUid = "16503a96";
+        public const string PcBackgroundDuplicateSpriteUid = "77b67466";
 
-        // Mobile grid (approved): 4 columns x 7 rows.
-        public const int GridColumns = 4;
-        public const int GridRows = 7;
-        public const int SlotCount = GridColumns * GridRows; // 28
+        public const int WindowLeft = 805;
+        public const int WindowTop = 145;
+        public const int WindowWidth = 214;
+        public const int WindowHeight = 474;
 
-        // PC [ItemBox] UnitBorder=2 (gap between item tiles).
-        public const int UnitBorder = 2;
+        public const int GridLeft = 24;
+        public const int GridTop = 72;
+        public const int GridWidth = 168;
+        public const int GridHeight = 280;
+        public const int GridColumns = 6;
+        public const int GridRows = 10;
+        public const int SlotCount = GridColumns * GridRows;
+        public const int UnitBorder = 1;
+
+        public const int MoneyLeft = 53;
+        public const int MoneyTop = 353;
+        public const int MoneyWidth = 110;
+        public const int MoneyHeight = 14;
+
+        public const int CloseLeft = 142;
+        public const int CloseTop = 414;
+        public const int CloseWidth = 65;
+        public const int CloseHeight = 28;
 
         /// <summary>RGB color (0-255) ported from PC INI.</summary>
         public readonly struct Rgb
@@ -48,7 +50,7 @@ namespace VLTK.UI
             public Rgb(int r, int g, int b) { this.r = r; this.g = g; this.b = b; }
         }
 
-        // Frame colors — 6a5d8c4c.ini [Settings].
+        // Frame colors — 05ea8560 [Settings].
         public static readonly Rgb FrameBorderColor = new Rgb(100, 80, 30);  // BGBorderColor
         public static readonly Rgb FrameBgColor = new Rgb(243, 194, 70);     // BGSpriteColor
         public static readonly Rgb FramePurpleColor = new Rgb(188, 40, 255); // BGPurpleColor
@@ -56,7 +58,7 @@ namespace VLTK.UI
         public static readonly Rgb FramePlatinaBorder = new Rgb(110, 110, 110);
         public static readonly Rgb FramePlatinaColor = new Rgb(240, 240, 240);
 
-        // Money text color — 6a5d8c4c.ini [Money] Color=255,217,78.
+        // Money text color — 05ea8560 [Money] Color=255,217,78.
         public static readonly Rgb MoneyColor = new Rgb(255, 217, 78);
 
         // Item quality tier text colors — 7bfc9072.ini.

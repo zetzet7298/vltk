@@ -440,6 +440,7 @@ namespace VLTK.UI
             LoadBarArt(_staminaFill, artPath, "bar_stamina_fill");
             LoadBarArt(_expFill, artPath, "bar_exp_fill");
             LoadPanelArt(artPath);
+            LoadElementImage(_invFrame, artPath, InventoryWindowPcSpec.PcBackgroundArtName);
 
             var doc = GetComponent<UIDocument>();
             var root = doc.rootVisualElement.Q("GameHud");
