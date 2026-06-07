@@ -63,6 +63,14 @@ Khi cần tìm hoặc tra cứu bất kỳ **UI, icon, ảnh, SPR, PAK, hay tài
 3. **KHÔNG được tự viết script riêng** để decode/scan SPR/PAK, hash uid, hay match ảnh. Tool đã chuẩn hoá, đã test, có guard chống crash.
 4. **KHÔNG quét toàn bộ source.** Dùng logic (đọc ini/lua, suy ra feature) để **thu hẹp vùng** (1 PAK / 1 folder) trước, rồi mới trỏ tool vào — quét rộng sẽ crash máy.
 5. Nếu tool thiếu tính năng cần thiết → **bổ sung vào tool trong `/var/www/vltktool/`** (surgical edit + test), không tạo script rời.
+ 6. **Tra port docs trước khi quét tool** — `/var/www/vltksource_new/docs/port_docs/` là tài liệu đã audit (verified vs source):
+    - `16_client_resources.md` — cây tài nguyên client (PAK, SPR, ui3, settings) + feature nằm ở PAK/folder nào → dùng để **thu hẹp vùng** (point 4).
+    - `18_spr_asset_index.md` — index 62,949 SPR đã phân loại: bảng nhóm (Visual nhân vật/NPC, Vật phẩm, Kỹ năng, UI...) + nguồn bằng chứng từng nhóm. Có label map + CMS API (`http://localhost:8081/`, chạy bằng `make dev` trong vltktool).
+    - `19_pak_spr_taxonomy.md` — taxonomy PAK→SPR, cách map nhóm → folder gốc khi port.
+ 7. **Quy tắc provenance (≥99% không bịa)** — mỗi SPR có field `confidence` trong label map:
+    - `high` (39,509): có path engine THẬT (proven từ npcres-table / part-enum / code-ref / named). Port trực tiếp được.
+    - `unidentified` (23,440): hash-only `unknown/<hash>.spr`, KHÔNG resolve được path. **KHÔNG gán công dụng** (Icon/Visual/Object...) vì sẽ sai — chỉ có metadata đo được (pak nguồn, kích thước, frame). Muốn biết là gì → mở preview tool xem, KHÔNG đoán tên/công dụng.
+    - `pak_origin`: LUÔN biết (sự thật cứng từ pak index) — dùng để truy vết.
 
 
 ## Unity Package Matrix
