@@ -10,13 +10,18 @@ description: >-
   Ui3, 顶部控制条, 工具控制条, 主界面玩家信息窗口, jx1024.spr, or PC sprites. Enforce
   verified corrections: UI art is in Client 6.0/data/*.pak, not Utility/Run/Ui/ui3;
   no C++ source exists in this dump; extract/key/composite SPRs instead of
-  screenshot crops; keep Vietnamese text and verify against pc_hud.png.
+  screenshot crops; keep Vietnamese text; verify against PC source, pc_hud.png,
+  and live Unity runtime hit-testing because this skill can go stale.
 ---
 
 # JX / VLTK PC HUD Porting
 
 Use this skill to make the Unity mobile HUD visually match the PC client as closely as
 possible. Do not redesign the HUD from memory. Treat PC INI + PC SPR as source of truth.
+
+This skill is a checklist, **not** source of truth. Before editing, re-open the current
+Unity files and the PC data. If a statement here conflicts with live source/runtime,
+trust PC source + current Unity code + runtime probes, then update this skill.
 
 ## First principle
 
@@ -75,6 +80,8 @@ Main files:
 - `Assets/UI/HUD/HudPanelSettings.asset`
 - `Assets/Scripts/UI/HudDataService.cs` — data bridge between runtime state and HUD
 - `Assets/Scripts/UI/HudUserFacingArtCatalog.cs` — PC art path → Unity texture lookup
+- `Assets/Scripts/UI/HudBottomBarPcSpec.cs` — PC `工具控制条` bottom-button rects
+- `Assets/Scripts/UI/InventoryWindowPcSpec.cs` — PC inventory window + mobile 4×7 override
 - `Assets/UI/HUD/Textures/` — alternative bar textures (`tex_hp_bar.png` etc)
 - `Assets/UI/HUD/HudTheme.tss` — UI Toolkit theme
 
@@ -84,19 +91,20 @@ settings in this project. Keep art in UI Toolkit; only use IMGUI/uGUI for text i
 
 ## PAK / SPR extraction workflow
 
-The art you need is almost always inside a PAK, not loose on disk. The session that
-proved this out used `/var/www/vltktool/unpak_tool.py` (PAK index reader + entry
-decompressor) plus a small SPR header reader. The pipeline:
+The art you need is almost always inside a PAK, not loose on disk. First read
+`/var/www/vltktool/README.md` and use the existing tools there. Do not write ad-hoc
+SPR/PAK scanners unless the tool itself needs a surgical enhancement; broad scans can
+crash the machine and usually produce false confidence.
+
+Pipeline:
 
 1. **Find the SPR/INI uid.** Build the GBK bytes of the in-game path (e.g.
    `\spr\UI3\主界面\背包按钮.spr`) and hash with `unpak_tool.file_id_from_bytes`. Scan
-   each PAK's index for that uid. If the hash misses (casing/path-variant), fall back
-   to **byte-safe header scanning**: walk every entry, decompress, check the SPR magic
-   `b'SPR\x00'`, then read frame width at `frame_blob+0` and height at `+2`. This finds
-   art by dimensions even when filenames are GBK-mangled.
-2. **Decompress the entry** with `unpak_tool.decompress_entry(pak, off, size, flag)`.
-3. **Decode SPR frames to PNG.** Each SPR holds N frames; use the project's
-   `extract_item_spr.py` (or equivalent) to write `*_frame_000.png` etc.
+   each PAK's index for that uid. If the hash misses, use `resolve_uid.py` or a narrow
+   `find_spr_by_image.py --pak <one pak>` query; never scan the whole source tree.
+2. **Decompress the entry** with `/var/www/vltktool/unpak_tool.py` or its library API.
+3. **Decode SPR frames to PNG.** Each SPR holds N frames; use
+   `/var/www/vltktool/extract_item_spr.py` to write `*_frame_000.png` etc.
 4. **Copy the PNG into the Unity project** under `Assets/UI/HUD/Art/` (and the mirror
    `Assets/StreamingAssets/UI/HUD/Art/` if the catalog reads from there).
 5. **Reimport as a Texture2D.** A bare `cp` does NOT register the asset — the USS
@@ -196,6 +204,26 @@ el.RegisterCallback<PointerDownEvent>(_ => cb());
 Also keep bottom HUD panels physically away from the joystick. In the current layout,
 left chat/hotbar content starts at `x >= 155` to leave the joystick lane free.
 
+## Runtime UI Toolkit traps
+
+Do not assume a registered callback proves a button is clickable. Reproduce pointer
+issues in Play Mode:
+
+1. Locate the live `UIDocument`, then query the element (`BtnItems`, `ToolbarRight`,
+   `InventoryWindow`, etc.).
+2. Inspect `pickingMode`, `resolvedStyle.display`, and `worldBound` for the element,
+   its parents, and likely overlay siblings.
+3. Call `panel.Pick(centerOfVisiblePcIcon)` and verify the picked element is the one
+   with the intended handler.
+4. If the visible icon is baked into art, use an invisible proxy at the PC INI rect
+   instead of trusting a flex child that can be elsewhere.
+
+UI Toolkit/UIDocument can recreate the visual tree across domain reload/play-mode
+transitions. Controllers that cache `VisualElement` references must detect stale trees
+and rebind (`ReferenceEquals(currentRoot, cachedRoot)`, check required elements/proxies).
+Manual calls like `OpenInventory()` can pass while real clicks fail if the hitbox or
+cached tree is stale.
+
 ## Minimap fixes
 
 Pixel-truth finding: in `pc_hud.png` the minimap frame is a **thin ~1px dark border**
@@ -226,24 +254,21 @@ Do not remove action buttons just to avoid overlap. Users expect:
 - mount/dismount horse
 - trade/exchange
 
-If they collide with joystick, move them to the right side above the main menu cluster.
-Current layout places `ToolbarLeft` at bottom-right above menu:
+If they collide with joystick, keep them in the PC bottom-right lane (`ToolbarRight`),
+not over the joystick. Current UXML uses one row:
+`run/sit/horse/exchange | status/items/skills/team/faction/PK | Bảo Vật`.
 
-```css
-.hud-left-tools {
-    position: absolute;
-    right: 8px;
-    bottom: 58px;
-}
-```
+Known source gap: the action-row SPRs (run/sit/horse/exchange) were not found in the
+scanned PAK manifests. When exact SPR proof is absent, the only accepted fallback is an
+explicitly documented PC screenshot crop from `pc_hud.png` for that action icon. Do not
+invent replacement art.
 
-Known source gap: the action-row SPRs (run/sit/horse/exchange) were **not found** in
-the PAKs scanned this session — only the PK sword (`63ba885e`) turned up. Do not invent
-a run icon. Leave the slot blank or keep searching other PAKs (`updatejx*.pak`).
+## Bottom bar: SPR truth + hitboxes
 
-## Bottom bar: SPR truth
+The bottom bar may be shipped in Unity as a precomposited `bottom_bar_bg.png`, but that
+file is only an implementation artifact. The source of truth is still PC SPR + INI; do
+not resize/reposition by eyeballing the Unity PNG.
 
-The bottom bar is **not** a single wide PNG and **must not** be a screenshot crop.
 Verified composition:
 
 - Base art = the real PC bar SPR `jx1024.spr` (uid `917565dd`, `1024.pak`), band
@@ -257,9 +282,29 @@ Verified composition:
   `Assets/Tests/EditMode/Sandbox/HudBottomBarAuthenticityTests.cs`. Update the spec +
   tests together when slots change.
 
-Why this matters: an earlier shortcut cropped the bar straight out of `hud.png`. That
-looks pixel-identical but is *not* a port — it can't adapt, localize, or rebind. Always
-composite from real SPRs at INI coordinates.
+Runtime lesson: visible baked pixels and UI Toolkit click elements can drift apart.
+Before blaming business logic, compare `panel.Pick()` at the **visible PC icon center**
+against the expected element. If the baked icon is in `bottom_bar_bg.png`, place an
+invisible `PickingMode.Position` proxy at the matching `HudBottomBarPcSpec` rect and
+route it to the PC handler. Example: inventory uses `[Items]` left=611 top=728 width=28
+height=28 in 1024×768 PC coords; Unity scales that over the 1280×82 bottom strip and
+routes to `OnItemsClick()` / `Open([[items]])`.
+
+## Inventory / Túi đồ specifics
+
+PC click path:
+
+- `1024.pak` uid `dc11ac12`, section `[Items]`, `ClassType=Player_Items`, icon
+  `\spr\UI3\主界面\背包按钮.spr`.
+- `Client 6.0/data/1024/Ui/autoexec.lua`: `F4 -> Open([[items]])`.
+- Real window uid `05ea8560` (`道具界面`), not the storage-box window:
+  `[Main]` 214×474, background `\spr\Ui3\道具\daojumianban.spr`, `[ItemBox]`
+  left=24 top=72 width=168 height=280, `HUnits=6`, `VUnits=10`, `UnitBorder=1`.
+
+Mobile has an intentional user override: render/cap inventory to **4 columns × 7 rows**
+(28 slots) while preserving the PC 6×10 provenance in `InventoryWindowPcSpec`. When a
+user reports “bấm Túi đồ không hiện”, first verify the hitbox/proxy at the baked PC icon;
+then verify `OpenInventory()` renders `InventoryWindow` with 28 slots.
 
 ## Vietnamese text
 
@@ -316,13 +361,15 @@ After any HUD edit:
 3. Capture a Game View screenshot with `unityMCP_manage_camera screenshot`.
 4. Check:
    - no compile errors
+   - `panel.Pick()` at each visible PC icon center hits the expected element/proxy
+   - manual controller call (e.g. `OpenInventory()`) and real pointer dispatch both work
    - HP/MP/Stamina/EXP use PC sprite fills and correct clipping
    - minimap button is inside the minimap frame
    - icons are not upside-down
    - joystick is not visually covered and UI Toolkit does not steal pointer events
    - action buttons exist (sit/horse/trade; run if sprite found)
    - Vietnamese text is visible and not clipped
-5. Save `Assets/Scenes/Sandbox.unity` when verified.
+5. Save `Assets/Scenes/Sandbox.unity` only if this task intentionally changed the scene.
 
 ## Don't do these
 
