@@ -102,16 +102,16 @@ namespace VLTK.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator E2E_DefaultMap_IsTinSuVuotAiPhongKy120()
+        public IEnumerator E2E_DefaultMap_IsVuotAiNhiepThiTran()
         {
             yield return BootSandbox();
 
             var mgr = SandboxManager.Instance;
-            Assert.AreEqual(SandboxManager.TinSuVuotAiPhongKy120MapId, mgr.defaultMapId);
-            Assert.AreEqual(SandboxManager.TinSuVuotAiPhongKy120MapId, mgr.MapManager.ActiveMapId);
-            Assert.AreEqual("Phong Kỳ (Vượt ải 120+)", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
-            Assert.AreEqual(new Vector2(40448f, -51712f), mgr.PlayerController.mapBoundsMin);
-            Assert.AreEqual(new Vector2(52224f, -39936f), mgr.PlayerController.mapBoundsMax);
+            Assert.AreEqual(SandboxManager.VuotAiNhiepThiTranMapId, mgr.defaultMapId);
+            Assert.AreEqual(SandboxManager.VuotAiNhiepThiTranMapId, mgr.MapManager.ActiveMapId);
+            Assert.AreEqual("Vượt ải Nhiếp Thí Trần", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
+            Assert.AreEqual(new Vector2(39424f, -56320f), mgr.PlayerController.mapBoundsMin);
+            Assert.AreEqual(new Vector2(54272f, -49152f), mgr.PlayerController.mapBoundsMax);
         }
 
         // --- Map load / switch / unload lifecycle through the live runtime ---

@@ -847,6 +847,8 @@ namespace VLTK.UI
                 "Phong Kỳ (trên 120)" => "Phong Kỳ (Vượt ải 120+)",
                 "Phong K?(tr猲 120)" => "Phong Kỳ (Vượt ải 120+)",
                 "Phong K� (tr�n 120)" => "Phong Kỳ (Vượt ải 120+)",
+                "沙漠山洞1" => "Vượt ải Nhiếp Thí Trần",
+                "Map_907" => "Vượt ải Nhiếp Thí Trần",
                 _ => raw,
             };
         }

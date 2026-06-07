@@ -85,6 +85,17 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void VuotAiNhiepThiTran_UsesPcMissionTemplatesAndBossSprites()
+        {
+            var ids = MapEnemyDatabase.GetEnemyTemplateIdsForMap(MapPortManifest.VuotAiNhiepThiTranId);
+
+            CollectionAssert.AreEqual(new[] { 1481, 1485, 1488, 1483, 1482, 1480, 1489, 1486, 1487, 1484 }, ids);
+            Assert.AreEqual(new Vector2(47232f, -52544f), MapEnemyDatabase.GetDefaultSpawnPoint(MapPortManifest.VuotAiNhiepThiTranId));
+            Assert.AreEqual("Nhất quỷ", MapEnemyDatabase.Resolve(1481).DisplayName);
+            Assert.AreEqual(@"spr\npcres\boss\boss018\boss018_wlk.spr", MapEnemyDatabase.BuildNpcSprPath("boss018", "wlk"));
+        }
+
+        [Test]
         public void Register_NullIsNoOp()
         {
             var registry = new MapSpawnRegistry();

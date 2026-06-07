@@ -25,7 +25,7 @@ PC: 1,005 maps
 
 | # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
 |---|---------|-----|--------|-----------|---------|
-| 1.1 | Map Region Renderer | 1,005 | 1,006 | ✅ | MapCatalog.json + PC maplist.ini merged → 1,006 map runtime entries (MapManager.LoadCatalog). MapRenderer + RegionStreamingService hoạt động. **2026-06-07: ported Tín sứ Vượt ải Phong Kỳ 120+ (PC mapId 389, `特殊用地\任务用地\信使任务\风之骑`) từ client PAK → `Map_389_C` 516 Region_C + 96/96 SPR, set làm default boot map thay Ba Lăng.** |
+| 1.1 | Map Region Renderer | 1,005 | 1,006 | ✅ | MapCatalog.json + PC maplist.ini merged → 1,006 map runtime entries (MapManager.LoadCatalog). MapRenderer + RegionStreamingService hoạt động. **2026-06-07: ported Tín sứ Vượt ải Phong Kỳ 120+ (PC mapId 389, `特殊用地\任务用地\信使任务\风之骑`) từ client PAK → `Map_389_C` 516 Region_C + 96/96 SPR, set làm default boot map thay Ba Lăng.** **2026-06-08: ported Vượt ải Nhiếp Thí Trần / killbossmatch (PC mapId 907, `西北北区\沙漠迷宫\沙漠山洞1`) từ client PAK → `Map_907_C` 229 Region_C + 60/60 map SPR + 10 boss SPR, set làm default boot map thay Phong Kỳ.** |
 | 1.2 | Thành phố (City) | 5 | 5 | ✅ | Framework + MapListFullService (1,005 map) + StationService + tests |
 | 1.3 | Thủ đô (Capital) | 2 | 2 | ✅ | MapListFullService + StationPriceService + tests |
 | 1.4 | Vùng (Country) | 10 | 10 | ✅ | MapListFullService + StationPriceService + tests |

@@ -57,6 +57,7 @@ namespace VLTK.Sandbox
     {
         public const int BaLangHuyenMapId = 79;
         public const int TinSuVuotAiPhongKy120MapId = 389;
+        public const int VuotAiNhiepThiTranMapId = 907;
         public const int PlayerActorId = 1;
 
         private readonly Dictionary<string, SandboxServiceLoadStatus> _serviceLoadStatuses = new();
@@ -74,7 +75,7 @@ namespace VLTK.Sandbox
         public Transform servicesRoot;
 
         [Header("Boot")]
-        public int defaultMapId = TinSuVuotAiPhongKy120MapId;
+        public int defaultMapId = VuotAiNhiepThiTranMapId;
         public bool loadDefaultMapOnBoot = true;
 
         public static SandboxManager Instance { get; private set; }
@@ -1371,6 +1372,7 @@ namespace VLTK.Sandbox
                 MapPortManifest.DaiLyId => "bgm_daily",
                 MapPortManifest.BienKinhId => "bgm_bienkinh",
                 MapPortManifest.TinSuVuotAiPhongKy120Id => "bgm_balang",
+                MapPortManifest.VuotAiNhiepThiTranId => "bgm_balang",
                 _ => "bgm_balang",
             };
             AudioService?.PlayBGM(bgmId);

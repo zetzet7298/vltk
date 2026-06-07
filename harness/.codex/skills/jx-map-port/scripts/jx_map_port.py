@@ -75,6 +75,12 @@ def compute_path_uid(name, enc="gb2312"):
         v = (((v + (i + 1) * c) % 0x8000000B) * 0xFFFFFFEF) & 0xFFFFFFFF
     return f"{(v ^ 0x12345678) & 0xffffffff:08x}"
 
+def normalize_resource_path(name):
+    s = name.strip().rstrip('\x00').replace('/', '\\')
+    if s and not s.startswith('\\'):
+        s = '\\' + s
+    return s
+
 # ---------------------------------------------------------------- pak index
 def build_index(data_dir):
     idx = {}
@@ -100,7 +106,13 @@ def read_entry(loc):
 
 # ---------------------------------------------------------------- region parsing
 def parse_sections(d):
+    if len(d) < 4:
+        raise ValueError("Region_C too short")
     sc = struct.unpack_from('<I', d, 0)[0]; h = 4 + sc * 8
+    if sc <= 0 or sc > 16:
+        raise ValueError(f"invalid Region_C section count {sc}")
+    if len(d) < h:
+        raise ValueError(f"Region_C header truncated: sections={sc} size={len(d)}")
     return sc, h, [struct.unpack_from('<II', d, 4 + i * 8) for i in range(sc)]
 
 def _clean(b):
@@ -247,6 +259,10 @@ def main():
     ap.add_argument("--bounds", nargs=4, type=int, metavar=("MINX","MINY","MAXX","MAXY"),
                     help="grid bounds; overrides .wor")
     ap.add_argument("--scan-pad", type=int, default=0, help="expand bounds by N cells when scanning")
+    ap.add_argument("--extra-spr", action="append", default=[],
+                    help="additional SPR path to stage with the map (repeatable; useful for mission NPC visuals)")
+    ap.add_argument("--extra-spr-file", default=None,
+                    help="newline-delimited extra SPR paths to stage with the map")
     args = ap.parse_args()
 
     pc_client = os.path.join(args.pc_root, "Client 6.0")
@@ -296,7 +312,7 @@ def main():
             os.remove(f + ".meta")
 
     # 1) regions
-    regions = []; allnames = set(); n = 0
+    regions = []; allnames = set(); n = 0; invalid = []
     for X in range(minX, maxX + 1):
         for Y in range(minY, maxY + 1):
             path = f"\\maps\\{args.map_name}\\v_{Y:03d}\\{X:03d}_Region_C.dat"
@@ -307,8 +323,12 @@ def main():
             d = ucl_decompress(raw, method, dsize)
             if not d or len(d) < 4:
                 continue
-            sc, h, secs = parse_sections(d)
-            allnames |= collect_names(d)
+            try:
+                sc, h, secs = parse_sections(d)
+                allnames |= collect_names(d)
+            except ValueError as ex:
+                invalid.append((X, Y, str(ex)))
+                continue
             open(os.path.join(dest_reg, f"{X}_{Y}_Region_C.dat"), 'wb').write(d)
             regions.append({"col": X, "row": Y,
                             "hasGround": len(secs) > 4 and secs[4][1] > 0,
@@ -323,6 +343,20 @@ def main():
     json.dump(sorted(allnames), open(os.path.join(dest_reg, "image_names.json"), "w"),
               ensure_ascii=False, indent=2)
     print(f"extracted regions: {n}; distinct imageNames: {len(allnames)}")
+    extra_spr = [normalize_resource_path(x) for x in args.extra_spr if x and x.strip()]
+    if args.extra_spr_file:
+        with open(args.extra_spr_file, "r", encoding="utf-8") as f:
+            extra_spr.extend(normalize_resource_path(x) for x in f if x.strip())
+    extra_spr = sorted(set(x for x in extra_spr if x))
+    if extra_spr:
+        json.dump(extra_spr, open(os.path.join(dest_reg, "extra_spr_names.json"), "w"),
+                  ensure_ascii=False, indent=2)
+        allnames |= set(extra_spr)
+        print(f"extra SPRs to stage: {len(extra_spr)}")
+    if invalid:
+        print(f"skipped invalid/colliding Region_C entries: {len(invalid)}")
+        for X, Y, reason in invalid[:20]:
+            print(f"  INVALID {X}_{Y}: {reason}")
     if n == 0:
         print("WARNING: 0 regions. Check map name spelling/encoding and bounds. "
               "See references/pitfalls.md.", file=sys.stderr)
@@ -333,12 +367,17 @@ def main():
     for nm in allnames:
         dest = os.path.join(dest_spr, compute_path_uid(nm) + ".spr")
         uid = g_filename2id(nm.encode("gbk", "ignore"))
-        written = False
+        written = os.path.exists(dest) and os.path.getsize(dest) > 0
+        if written:
+            ok += 1
         if uid in idx:
             raw, method, dsize = read_entry(idx[uid])
             flat = get_flat_spr(raw, method, dsize)
             if flat:
-                open(dest, 'wb').write(flat); written = True; ok += 1
+                open(dest, 'wb').write(flat)
+                if not written:
+                    ok += 1
+                written = True
         if not written:
             lp = loose_path(by_rel, nm)
             if lp:

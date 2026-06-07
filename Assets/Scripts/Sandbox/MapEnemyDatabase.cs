@@ -73,6 +73,18 @@ namespace VLTK.Sandbox
             MakeTemplate(70, "水牛", "Trâu nước", "ani090", 0, 3, 250, 3, 3, 350, 600, 4, 60, 20, 10, 0, 0, 0, 20, 0, 0),
             MakeTemplate(71, "毒蛙", "Ếch độc", "ani091", 0, 2, 130, 5, 5, 300, 500, 2, 45, 15, 10, 0, 0, 0, 15, 0, 0),
             MakeTemplate(72, "猛虎", "Hổ dữ", "ani092", 0, 0, 500, 6, 8, 550, 1000, 3, 90, 40, 20, 0, 0, 0, 50, 0, 0),
+
+            // Vượt ải Nhiếp Thí Trần / killbossmatch (PC script tbNpc ids 1480..1489).
+            MakeTemplate(1481, "gubo_Christmas", "Nhất quỷ", "boss018", 0, 0, 4200000, 18, 18, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1485, "tangburan_Christmas", "Nhị quỷ", "boss019", 0, 1, 4500000, 6, 6, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1488, "lanyiyi_Christmas", "Tam quỷ", "boss008", 0, 1, 3600000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1483, "helianpiao_Christmas", "Tứ quỷ", "boss002", 0, 2, 3100000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1482, "zhonglingxiu_Christmas", "Ngũ quỷ", "boss005", 0, 2, 3100000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1480, "duanmurui_Christmas", "Lục quỷ", "boss015", 0, 3, 3600000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1489, "mengcanglang_Christmas", "Thất quỷ", "boss012", 0, 3, 4200000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1486, "shansinan_Christmas", "Bát quỷ", "boss022", 0, 4, 4800000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1487, "xuanjizi_Christmas", "Cửu quỷ", "boss017", 0, 4, 4800000, 12, 12, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
+            MakeTemplate(1484, "wangzuo_Christmas", "Thập quỷ", "boss024", 0, 0, 8000000, 15, 15, 1800, 2000, 1, 50, 25, 25, 25, 25, 30),
         };
 
         /// <summary>
@@ -92,6 +104,8 @@ namespace VLTK.Sandbox
             [MapPortManifest.PhuongTuongId] = new[] { 50, 70, 72 },
             // PC source: global/autoexec.lua spawns Bạch Dực (822) and Dịch quan (377) on map 389.
             [MapPortManifest.TinSuVuotAiPhongKy120Id] = new[] { 822, 377 },
+            // PC source: missions/killbossmatch/class.lua tbMapId={907..916}, tbNpc={1480..1489}.
+            [MapPortManifest.VuotAiNhiepThiTranId] = new[] { 1481, 1485, 1488, 1483, 1482, 1480, 1489, 1486, 1487, 1484 },
         };
 
         /// <summary>Default spawn points per map (training area or town center from PC data).</summary>
@@ -119,6 +133,8 @@ namespace VLTK.Sandbox
             [MapPortManifest.PhuongTuongId] = new Vector2(50000f, -48000f),
             // Tín sứ vượt ải / Phong Kỳ 120+: wagoner.lua NewWorld(389,1582,3137).
             [MapPortManifest.TinSuVuotAiPhongKy120Id] = new Vector2(50624f, -50208f),
+            // Vượt ải Nhiếp Thí Trần: killbossmatch/class.lua NewWorld(907,1476,3274).
+            [MapPortManifest.VuotAiNhiepThiTranId] = new Vector2(47232f, -52544f),
         };
 
         private static readonly Dictionary<int, NpcTemplate> _templateLookup;
@@ -213,7 +229,9 @@ namespace VLTK.Sandbox
         public static string BuildNpcSprPath(string resType, string action)
         {
             if (string.IsNullOrWhiteSpace(resType)) return null;
-            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase) ? "animal" : "enemy";
+            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase)
+                ? "animal"
+                : resType.StartsWith("boss", System.StringComparison.OrdinalIgnoreCase) ? "boss" : "enemy";
             return $@"spr\npcres\{folder}\{resType}\{resType}_{action}.spr";
         }
 

@@ -413,10 +413,13 @@ namespace VLTK.UI
             var pos = (Vector2)player.transform.position;
             VLTK.Sandbox.BaLangEnemyDatabase.WorldToMps(pos.x, pos.y, out int mpsX, out int mpsY);
             var coord = $"{mpsX}/{mpsY}";
-            var rawMapName = VLTK.Sandbox.SandboxManager.Instance?.MapManager?.ActiveMap?.catalogEntry?.displayNameRaw
-                ?? VLTK.Sandbox.SandboxManager.Instance?.MapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
+            var mapManager = VLTK.Sandbox.SandboxManager.Instance?.MapManager;
+            var rawMapName = mapManager?.ActiveMap?.catalogEntry?.displayNameRaw
+                ?? mapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
                 ?? "Bản đồ";
-            var mapName = ToVietnameseMapName(rawMapName);
+            var mapName = VLTK.Sandbox.MapPortManifest.TryGet(mapManager?.ActiveMapId ?? -1, out var portEntry)
+                ? portEntry.nameVi
+                : ToVietnameseMapName(rawMapName);
 
             // PC minimap: yellow map name on top, green coords + "Tìm" below frame
             var mapNameStyle = new GUIStyle(_minimap) { alignment = TextAnchor.UpperRight, fontSize = 10,
@@ -450,6 +453,8 @@ namespace VLTK.UI
                 "Phong Kỳ (trên 120)" => "Phong Kỳ (Vượt ải 120+)",
                 "Phong K?(tr猲 120)" => "Phong Kỳ (Vượt ải 120+)",
                 "Phong K� (tr�n 120)" => "Phong Kỳ (Vượt ải 120+)",
+                "沙漠山洞1" => "Vượt ải Nhiếp Thí Trần",
+                "Map_907" => "Vượt ải Nhiếp Thí Trần",
                 _ => raw,
             };
         }

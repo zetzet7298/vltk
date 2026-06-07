@@ -128,7 +128,9 @@ public static void WorldToMps(float worldX, float worldY, out int mpsX, out int 
         public static string BuildNpcSprPath(string resType, string action)
         {
             if (string.IsNullOrWhiteSpace(resType)) return null;
-            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase) ? "animal" : "enemy";
+            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase)
+                ? "animal"
+                : resType.StartsWith("boss", System.StringComparison.OrdinalIgnoreCase) ? "boss" : "enemy";
             return $@"spr\npcres\{folder}\{resType}\{resType}_{action}.spr";
         }
 
