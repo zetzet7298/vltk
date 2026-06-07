@@ -102,14 +102,14 @@ namespace VLTK.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator E2E_DefaultMap_IsBaLangHuyen()
+        public IEnumerator E2E_DefaultMap_IsTinSuVuotAiPhongKy120()
         {
             yield return BootSandbox();
 
             var mgr = SandboxManager.Instance;
-            Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.defaultMapId);
-            Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.MapManager.ActiveMapId);
-            Assert.AreEqual("巴陵县", mgr.MapManager.ActiveMap.catalogEntry.displayNameRaw);
+            Assert.AreEqual(SandboxManager.TinSuVuotAiPhongKy120MapId, mgr.defaultMapId);
+            Assert.AreEqual(SandboxManager.TinSuVuotAiPhongKy120MapId, mgr.MapManager.ActiveMapId);
+            Assert.AreEqual("Phong Kỳ (Vượt ải 120+)", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
         }
 
         // --- Map load / switch / unload lifecycle through the live runtime ---

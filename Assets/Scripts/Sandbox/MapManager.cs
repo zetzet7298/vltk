@@ -15,6 +15,19 @@ namespace VLTK.Sandbox
         private int _activeMapId = -1;
         private MapDefinition _activeMap;
 
+        [Serializable]
+        private sealed class RegionManifestJson
+        {
+            public RegionManifestCell[] regions;
+        }
+
+        [Serializable]
+        private sealed class RegionManifestCell
+        {
+            public int col;
+            public int row;
+        }
+
         public event Action<int> OnMapLoaded;
         public event Action<int> OnMapUnloaded;
         public event Action<string> OnMapError;
@@ -181,27 +194,30 @@ namespace VLTK.Sandbox
 
         private MapDefinition BuildRuntimeDefinition(MapCatalogEntry entry)
         {
+            bool hasCatalogRect = entry.rect != null && entry.rect.width > 0f && entry.rect.height > 0f;
+            bool hasManifestBounds = TryLoadRegionManifestBounds(entry.mapId, out var manifestBounds,
+                out int manifestCountX, out int manifestCountY);
+
             float sourceX = (entry.rect?.x ?? 0f) * 512f;
             float sourceY = (entry.rect?.y ?? 0f) * 512f;
             float sourceW = Mathf.Max(1f, (entry.rect?.width ?? 1f) * 512f);
             float sourceH = Mathf.Max(1f, (entry.rect?.height ?? 1f) * 512f);
+            var sourceBounds = hasCatalogRect
+                ? new RectDef { x = sourceX, y = -sourceY - sourceH, width = sourceW, height = sourceH }
+                : hasManifestBounds
+                    ? manifestBounds
+                    : new RectDef { x = sourceX, y = -sourceY - sourceH, width = sourceW, height = sourceH };
 
             return new MapDefinition
             {
                 catalogEntry = entry,
-                regionCountX = (int)(entry.rect?.width ?? 0),
-                regionCountY = (int)(entry.rect?.height ?? 0),
+                regionCountX = hasCatalogRect ? (int)entry.rect.width : manifestCountX,
+                regionCountY = hasCatalogRect ? (int)entry.rect.height : manifestCountY,
                 regionWidthPixels = 512,
                 regionHeightPixels = 1024,
                 cellWidth = 32,
                 cellHeight = 32,
-                sourceBoundsRect = new RectDef
-                {
-                    x = sourceX,
-                    y = -sourceY - sourceH,
-                    width = sourceW,
-                    height = sourceH,
-                },
+                sourceBoundsRect = sourceBounds,
                 mapLtRegionIndex = entry.mapLeftTopRegionIndex,
                 environmentProfile = new EnvironmentProfile
                 {
@@ -210,6 +226,37 @@ namespace VLTK.Sandbox
                 },
                 conversionStatus = ConversionStatus.NotStarted,
             };
+        }
+
+        private static bool TryLoadRegionManifestBounds(int mapId, out RectDef bounds, out int countX, out int countY)
+        {
+            bounds = null;
+            countX = 0;
+            countY = 0;
+            var path = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapId}_C", "manifest.json");
+            if (!File.Exists(path)) return false;
+
+            RegionManifestJson manifest;
+            try { manifest = JsonUtility.FromJson<RegionManifestJson>(File.ReadAllText(path)); }
+            catch { return false; }
+            if (manifest?.regions == null || manifest.regions.Length == 0) return false;
+
+            int minCol = int.MaxValue, maxCol = int.MinValue, minRow = int.MaxValue, maxRow = int.MinValue;
+            foreach (var region in manifest.regions)
+            {
+                minCol = Mathf.Min(minCol, region.col);
+                maxCol = Mathf.Max(maxCol, region.col);
+                minRow = Mathf.Min(minRow, region.row);
+                maxRow = Mathf.Max(maxRow, region.row);
+            }
+            if (minCol == int.MaxValue || minRow == int.MaxValue) return false;
+
+            countX = maxCol - minCol + 1;
+            countY = maxRow - minRow + 1;
+            float width = countX * 512f;
+            float height = countY * 512f;
+            bounds = new RectDef { x = minCol * 512f, y = -(minRow * 512f) - height, width = width, height = height };
+            return true;
         }
 
         public void UnloadCurrentMap()

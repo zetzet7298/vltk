@@ -445,6 +445,11 @@ namespace VLTK.UI
             {
                 "巴陵县" => "Ba Lăng huyện",
                 "Map_79" => "Ba Lăng huyện",
+                "风之骑" => "Phong Kỳ (Vượt ải 120+)",
+                "Map_389" => "Phong Kỳ (Vượt ải 120+)",
+                "Phong Kỳ (trên 120)" => "Phong Kỳ (Vượt ải 120+)",
+                "Phong K?(tr猲 120)" => "Phong Kỳ (Vượt ải 120+)",
+                "Phong K� (tr�n 120)" => "Phong Kỳ (Vượt ải 120+)",
                 _ => raw,
             };
         }

@@ -43,6 +43,7 @@ namespace VLTK.Sandbox
         public const int LamAnId = 103;
         public const int QuangChauId = 176;
         public const int PhuongTuongId = 121;
+        public const int TinSuVuotAiPhongKy120Id = 389;
 
         public static readonly IReadOnlyDictionary<int, MapPortEntry> Entries = new Dictionary<int, MapPortEntry>
         {
@@ -56,6 +57,7 @@ namespace VLTK.Sandbox
             [LamAnId] = new(LamAnId, "Lâm An", "临安", MapPortStatus.Ported),
             [QuangChauId] = new(QuangChauId, "Quảng Châu", "广州", MapPortStatus.Ported),
             [PhuongTuongId] = new(PhuongTuongId, "Phượng Tường", "凤翔", MapPortStatus.Ported),
+            [TinSuVuotAiPhongKy120Id] = new(TinSuVuotAiPhongKy120Id, "Phong Kỳ (Vượt ải 120+)", "风之骑", MapPortStatus.Ported),
         };
 
         public static bool TryGet(int mapId, out MapPortEntry entry) => Entries.TryGetValue(mapId, out entry);

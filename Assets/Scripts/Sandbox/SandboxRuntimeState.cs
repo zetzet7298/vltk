@@ -25,9 +25,18 @@ namespace VLTK.Sandbox
 
         public bool HasActiveMap => Player != null && MapManager?.ActiveMap != null;
         public int ActiveMapId => MapManager?.ActiveMapId ?? 0;
-        public string ActiveMapName => MapManager?.ActiveMap?.catalogEntry?.displayNameRaw
-            ?? MapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
-            ?? "Sandbox";
+        public string ActiveMapName
+        {
+            get
+            {
+                int mapId = ActiveMapId;
+                if (MapPortManifest.TryGet(mapId, out var portEntry))
+                    return portEntry.nameVi;
+                return MapManager?.ActiveMap?.catalogEntry?.displayNameRaw
+                    ?? MapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
+                    ?? "Sandbox";
+            }
+        }
         public MapDefinition ActiveMapDefinition => MapManager?.ActiveMap;
 
         public Vector2 PlayerWorldPosition => Player != null
