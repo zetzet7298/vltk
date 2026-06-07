@@ -746,6 +746,9 @@
    doubling. Containers stay (click zones intact). */
 #BottomPanel .hud-slot-number { display: none; }
 #BottomPanel .hud-btn-icon { display: none; }
+/* Round action buttons (run/sit/horse/exchange) have no baked band art, so
+   their authentic pc_hud.png pixels must stay visible. */
+#BottomPanel .hud-round-btn .hud-btn-icon { display: flex; }
 #BottomPanel .hud-menu-btn-icon { display: none; }
 #BottomPanel .hud-skill-slot-icon { display: none; }
 #BottomPanel .hud-skill-slot-label { display: none; }
