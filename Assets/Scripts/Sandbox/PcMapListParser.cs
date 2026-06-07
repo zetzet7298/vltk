@@ -53,6 +53,17 @@ namespace VLTK.Sandbox
                 var value = line.Substring(eq + 1).Trim();
                 if (string.IsNullOrEmpty(key)) continue;
 
+                if (int.TryParse(key, NumberStyles.Integer, CultureInfo.InvariantCulture, out int bareMapId))
+                {
+                    if (!groups.TryGetValue(bareMapId, out var bareBag))
+                    {
+                        bareBag = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                        groups[bareMapId] = bareBag;
+                    }
+                    bareBag["path"] = value;
+                    continue;
+                }
+
                 int underscore = key.IndexOf('_');
                 if (underscore <= 0) continue;
                 if (!int.TryParse(key.Substring(0, underscore), NumberStyles.Integer, CultureInfo.InvariantCulture, out int mapId))

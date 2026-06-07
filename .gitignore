@@ -93,6 +93,8 @@ sysinfo.txt
 # ─────────────────────────────────────────────────
 Assets/StreamingAssets/aa/
 Assets/AssetBundles/
+Assets/StreamingAssets/Generated/MapRegions/
+Assets/StreamingAssets/Generated/MapSprites/
 
 # ─────────────────────────────────────────────────
 # Converted/extracted game assets (intermediate output from vltktool)

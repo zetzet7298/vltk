@@ -232,39 +232,61 @@ namespace VLTK.Sprites
         private byte[] FindSprData(string sanitizedKey, string originalName)
         {
             originalName = originalName?.TrimEnd('\0') ?? "";
+            foreach (var root in EnumerateSpriteRoots())
+            {
+                var data = FindSprDataInRoot(root, sanitizedKey, originalName);
+                if (data != null)
+                    return data;
+            }
 
-            // Strategy 1: exact UID match (e.g. "00002d56")
-            var directPath = Path.Combine(_spritesRoot, $"{sanitizedKey}.spr");
+            return null;
+        }
+
+        private IEnumerable<string> EnumerateSpriteRoots()
+        {
+            if (!string.IsNullOrEmpty(_spritesRoot))
+                yield return _spritesRoot;
+
+            var streamingRoot = Path.GetDirectoryName(_spritesRoot);
+            if (!string.IsNullOrEmpty(streamingRoot))
+            {
+                var generatedRoot = Path.Combine(streamingRoot, "Generated", "MapSprites");
+                if (!string.Equals(generatedRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
+                    yield return generatedRoot;
+            }
+        }
+
+        private static byte[] FindSprDataInRoot(string root, string sanitizedKey, string originalName)
+        {
+            if (string.IsNullOrEmpty(root))
+                return null;
+
+            var directPath = Path.Combine(root, $"{sanitizedKey}.spr");
             if (File.Exists(directPath))
                 return File.ReadAllBytes(directPath);
 
-            // Strategy 2: try the original name sanitized (e.g. "image_tree_abc" from "image\tree\abc")
             var nameKey = SanitizeKey(Path.GetFileNameWithoutExtension(originalName));
             if (nameKey != sanitizedKey)
             {
-                var namePath = Path.Combine(_spritesRoot, $"{nameKey}.spr");
+                var namePath = Path.Combine(root, $"{nameKey}.spr");
                 if (File.Exists(namePath))
                     return File.ReadAllBytes(namePath);
             }
 
-            // Strategy 3: try matching by UID portion at end of path
-            // Many sprite names are like "image\effect\00002d56.spr"
             string uidFromPath = ExtractUidFromPath(originalName);
             if (!string.IsNullOrEmpty(uidFromPath) && uidFromPath != sanitizedKey)
             {
-                var uidPath = Path.Combine(_spritesRoot, $"{uidFromPath}.spr");
+                var uidPath = Path.Combine(root, $"{uidFromPath}.spr");
                 if (File.Exists(uidPath))
                     return File.ReadAllBytes(uidPath);
             }
 
-            // Strategy 4: compute the JX/PAK UID from the source path.
-            // vltktool extracts unknown PAK entries as {uid:08x}.spr using this hash.
             string hashedUid = ComputePathUidHex(originalName);
             if (!string.IsNullOrEmpty(hashedUid) &&
                 hashedUid != sanitizedKey &&
                 hashedUid != uidFromPath)
             {
-                var hashedPath = Path.Combine(_spritesRoot, $"{hashedUid}.spr");
+                var hashedPath = Path.Combine(root, $"{hashedUid}.spr");
                 if (File.Exists(hashedPath))
                     return File.ReadAllBytes(hashedPath);
             }

@@ -63,6 +63,8 @@ namespace VLTK.Sandbox
             _spriteCache.Clear();
             _builtinSortCounter = 0;
             _loadedMapId = -1;
+            ContentBounds = new Bounds();
+            HasContent = false;
         }
 
         // JX region scene constants (KScenePlaceRegionC): scene 512x1024, ground cell 32.
@@ -80,19 +82,28 @@ namespace VLTK.Sandbox
         public const int BuiltinSortingOrder = 1000;  // base for structures/trees (above cover)
         public const int PlayerSortingOrder = 5000;   // actors above static map art
 
+        private static string ResolveRegionFolder(string regionFolder)
+        {
+            if (string.IsNullOrEmpty(regionFolder)) return null;
+            if (Path.IsPathRooted(regionFolder)) return regionFolder;
+            return Path.Combine(Application.streamingAssetsPath, regionFolder);
+        }
+
         private void LoadSampleRegions(MapDefinition mapDef)
         {
-            // Prefer client-projected regions (COL_ROW_Region_C.dat) exported for this map.
+            // Prefer generated bulk-port regions, then legacy client-projected test regions.
+            var generatedDir = ResolveRegionFolder(mapDef.catalogEntry?.regionFolder);
             var clientDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}_C");
-            bool client = Directory.Exists(clientDir);
-            var regionsDir = client
-                ? clientDir
-                : Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}");
+            var legacyDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}");
+            var regionsDir = Directory.Exists(generatedDir) ? generatedDir : clientDir;
+            if (!Directory.Exists(regionsDir))
+                regionsDir = legacyDir;
             if (!Directory.Exists(regionsDir))
                 regionsDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions");
             if (!Directory.Exists(regionsDir))
             {
                 SubsystemLog.Warn("MapRenderer", "No test region data available");
+                ApplyFullMapBounds(mapDef);
                 return;
             }
 
@@ -111,6 +122,7 @@ namespace VLTK.Sandbox
             if (entries.Count == 0)
             {
                 SubsystemLog.Warn("MapRenderer", "No coordinate-named region files found");
+                ApplyFullMapBounds(mapDef);
                 return;
             }
 
