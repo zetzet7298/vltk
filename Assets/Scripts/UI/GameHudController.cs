@@ -449,7 +449,10 @@ namespace VLTK.UI
             LoadTextureIntoElement(this, png, name, tex =>
             {
                 fill.style.backgroundImage = new StyleBackground(tex);
-                fill.style.backgroundSize = new BackgroundSize(104, 9);
+                // Fill the full track (166x16) so the authentic SPR covers the
+                // dark socket fully; clip-by-percent still works via the track's
+                // overflow:hidden + the fill element's percentage width.
+                fill.style.backgroundSize = new BackgroundSize(166, 16);
             });
         }
 
