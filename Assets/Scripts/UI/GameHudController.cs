@@ -124,8 +124,12 @@ namespace VLTK.UI
         private int _minimapTextureMapId = -1;
         private int _previewTextureMapId = -1;
         private int _skillPageIndex;
+        private VisualElement _boundRoot;
         private Vector2 _lastMinimapCenter;
         private Vector2? _lastMoveTarget;
+        private const string InventoryItemsHitProxyName = "BtnItemsPcHitProxy";
+        private const float BottomBarUiWidth = 1280f;
+        private const float BottomBarUiHeight = 82f;
 
         // Button name → SPR icon file mapping (matching PC 按钮条按钮/*.spr)
         private static readonly Dictionary<string, string> ButtonIcons = new()
@@ -189,6 +193,9 @@ namespace VLTK.UI
 
         private void EnsureRuntimeReady()
         {
+            if (_initialized && !IsBoundToCurrentVisualTree())
+                _initialized = false;
+
             if (_initialized)
                 return;
 
@@ -198,6 +205,17 @@ namespace VLTK.UI
                 LoadArt();
                 SizeRootToScreen();
             }
+        }
+
+        private bool IsBoundToCurrentVisualTree()
+        {
+            var doc = GetComponent<UIDocument>();
+            var root = doc?.rootVisualElement?.Q("GameHud");
+            if (root == null || !ReferenceEquals(root, _boundRoot))
+                return false;
+            if (!ReferenceEquals(root.Q("InventoryWindow"), _invWindow))
+                return false;
+            return root.Q(InventoryItemsHitProxyName) != null;
         }
 
         private void InitBridge()
@@ -283,6 +301,8 @@ namespace VLTK.UI
             _invClose = root.Q("InventoryClose");
             _invGrid = root.Q<ScrollView>("InventoryGrid");
             _invMoney = root.Q<Label>("InventoryMoney");
+
+            RegisterInventoryPcHitProxy(root);
 
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
@@ -397,6 +417,7 @@ namespace VLTK.UI
                 _mapPreviewFrame.RegisterCallback<PointerDownEvent>(OnPreviewMapPointerDown);
             }
 
+            _boundRoot = root;
             _initialized = true;
         }
 
@@ -424,6 +445,46 @@ namespace VLTK.UI
                     evt.StopPropagation();
                 });
             }
+        }
+
+        private void RegisterInventoryPcHitProxy(VisualElement root)
+        {
+            var bottom = root.Q("BottomPanel");
+            if (bottom == null)
+                return;
+
+            var proxy = bottom.Q(InventoryItemsHitProxyName);
+            if (proxy != null)
+                return;
+
+            proxy = new VisualElement { name = InventoryItemsHitProxyName };
+            proxy.pickingMode = PickingMode.Position;
+            proxy.style.position = Position.Absolute;
+            proxy.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
+
+            // The visible bag is baked into bottom_bar_bg.png from PC 1024.pak.
+            // The legacy flex BtnItems hitbox sits far left of that art, so taps on
+            // the real PC Túi đồ icon miss unless we place this invisible proxy at
+            // 工具控制条.ini [Items] (ClassType=Player_Items / Open([[items]])).
+            ApplyBottomBarButtonRect(proxy, HudBottomBarPcSpec.ToolControlBar["Items"]);
+            proxy.RegisterCallback<PointerDownEvent>(evt =>
+            {
+                OnItemsClick();
+                evt.StopImmediatePropagation();
+            });
+
+            bottom.Add(proxy);
+            proxy.BringToFront();
+        }
+
+        private static void ApplyBottomBarButtonRect(VisualElement el, HudBottomBarPcSpec.ButtonRect rect)
+        {
+            float scaleX = BottomBarUiWidth / HudBottomBarPcSpec.BarWidth;
+            float scaleY = BottomBarUiHeight / HudBottomBarPcSpec.BarHeight;
+            el.style.left = rect.left * scaleX;
+            el.style.top = (rect.top - HudBottomBarPcSpec.BarBandTop) * scaleY;
+            el.style.width = rect.width * scaleX;
+            el.style.height = rect.height * scaleY;
         }
 
         private void LoadArt()

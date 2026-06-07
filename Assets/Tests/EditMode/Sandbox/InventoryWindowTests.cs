@@ -180,6 +180,45 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void Controller_ItemsPcHitProxy_OpensInventoryAtBakedPcButton()
+        {
+            var go = new GameObject("InvHudHitProxyTest");
+            try
+            {
+                var hud = go.AddComponent<GameHudController>();
+                var root = new VisualElement { name = "GameHud" };
+                var bottom = new VisualElement { name = "BottomPanel" };
+                root.Add(bottom);
+
+                var invWindow = new VisualElement { name = "InventoryWindow" };
+                invWindow.AddToClassList("hidden");
+                var invGrid = new ScrollView { name = "InventoryGrid" };
+                var invMoney = new Label { name = "InventoryMoney" };
+                SetField(hud, "_invWindow", invWindow);
+                SetField(hud, "_invGrid", invGrid);
+                SetField(hud, "_invMoney", invMoney);
+
+                InvokePrivate(hud, "RegisterInventoryPcHitProxy", root);
+                var proxy = bottom.Q("BtnItemsPcHitProxy");
+                Assert.IsNotNull(proxy, "PC Túi đồ hit proxy must exist over the baked bottom-bar icon");
+                Assert.AreEqual(PickingMode.Position, proxy.pickingMode);
+                Assert.AreEqual(611f * 1280f / 1024f, proxy.style.left.value.value, 0.01f);
+                Assert.AreEqual((728f - 680f) * 82f / 89f, proxy.style.top.value.value, 0.01f);
+
+                Assert.IsFalse(hud.IsInventoryVisible);
+                var evt = PointerDownEvent.GetPooled();
+                evt.target = proxy;
+                proxy.SendEvent(evt);
+                Assert.IsTrue(hud.IsInventoryVisible);
+                Assert.AreEqual(28, hud.InventorySlotCount);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
         public void Controller_PopulateInventory_RendersSlotsAndMoney()
         {
             var go = new GameObject("InvHudTest2");
@@ -220,6 +259,13 @@ namespace VLTK.Tests.Sandbox
             var f = typeof(GameHudController).GetField(name, BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(f, $"Field {name} not found");
             f.SetValue(hud, value);
+        }
+
+        private static void InvokePrivate(GameHudController hud, string name, params object[] args)
+        {
+            var method = typeof(GameHudController).GetMethod(name, BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(method, $"Method {name} not found");
+            method.Invoke(hud, args);
         }
 
         private static ItemDefinition Item(int id, string name, int refine, int setId)
