@@ -96,6 +96,38 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(svc.AddItem(999));
         }
 
+        [Test]
+        public void AddItem_RejectsNewStackWhenMobileBagFull()
+        {
+            var items = new List<ItemDefinition>();
+            for (int i = 1; i <= InventoryService.MaxInventorySlots + 1; i++)
+                items.Add(Item(i, $"Item {i}", 28, i));
+
+            var svc = new InventoryService(DbWith(items.ToArray()));
+            for (int i = 1; i <= InventoryService.MaxInventorySlots; i++)
+                Assert.IsTrue(svc.AddItem(i), $"slot {i} should fit");
+
+            Assert.AreEqual(InventoryService.MaxInventorySlots, svc.Inventory.Count);
+            Assert.IsFalse(svc.AddItem(InventoryService.MaxInventorySlots + 1));
+            Assert.AreEqual(InventoryService.MaxInventorySlots, svc.Inventory.Count);
+        }
+
+        [Test]
+        public void AddItem_StacksExistingWhenMobileBagFull()
+        {
+            var items = new List<ItemDefinition>();
+            for (int i = 1; i <= InventoryService.MaxInventorySlots; i++)
+                items.Add(Item(i, $"Item {i}", 28, i));
+
+            var svc = new InventoryService(DbWith(items.ToArray()));
+            for (int i = 1; i <= InventoryService.MaxInventorySlots; i++)
+                Assert.IsTrue(svc.AddItem(i));
+
+            Assert.IsTrue(svc.AddItem(1, 3));
+            Assert.AreEqual(InventoryService.MaxInventorySlots, svc.Inventory.Count);
+            Assert.AreEqual(4, svc.Inventory[0].count);
+        }
+
         // --- AC#3: equip + stat preview ---
 
         [Test]

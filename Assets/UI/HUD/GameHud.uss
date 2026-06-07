@@ -794,19 +794,40 @@
     border-radius: 0px;
 }
 
-.hud-inv-grid { position: absolute; left: 24px; top: 72px; width: 168px; height: 280px; max-height: 280px; overflow: hidden; padding: 0px; background-color: rgba(0,0,0,0); border-width: 0px; }
+.hud-inv-grid-backdrop {
+    position: absolute;
+    left: 24px;
+    top: 72px;
+    width: 168px;
+    height: 280px;
+    background-color: rgb(2,2,2);
+    border-width: 0px;
+}
+
+.hud-inv-grid {
+    position: absolute;
+    left: 24px;
+    top: 72px;
+    width: 112px;
+    height: 196px;
+    max-height: 196px;
+    overflow: hidden;
+    padding: 0px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+}
 .hud-inv-grid .unity-scroll-view__content-container { flex-direction: row; flex-wrap: wrap; }
 .hud-inv-grid .unity-scroll-view__vertical-scroller { display: none; }
 .hud-inv-grid .unity-scroll-view__horizontal-scroller { display: none; }
 
-/* PC [ItemBox] 168×280, HUnits=6, VUnits=10, UnitBorder=1. */
+/* PC [ItemBox] is 168×280 / 6×10. Mobile override: 4×7, 26px slot + 1px margin. */
 .hud-inv-slot {
     width: 26px;
     height: 26px;
     margin: 1px;
-    background-color: rgba(0,0,0,0);
+    background-color: rgba(2,2,2,0.55);
     border-width: 1px;
-    border-color: rgba(0,0,0,0);
+    border-color: rgba(42,37,35,0.85);
     align-items: center;
     justify-content: center;
 }

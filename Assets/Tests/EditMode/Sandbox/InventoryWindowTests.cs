@@ -11,20 +11,32 @@ namespace VLTK.Tests.Sandbox
 {
     /// <summary>
     /// Port verification for the inventory window ("Hành Trang" / PC 物品 Open([[items]])).
-    /// Verifies the spec values trace to PC INI, the 6×10 grid binds InventoryService
-    /// data, tier colors match 7bfc9072.ini, and the bag button toggles the window.
+    /// Verifies the spec values trace to PC INI, the mobile 4×7 override binds
+    /// InventoryService data, tier colors match 7bfc9072.ini, and the bag button toggles the window.
     /// </summary>
     public class InventoryWindowTests
     {
         // ── Spec parity (PC 05ea8560 / dc11ac12 / 7bfc9072) ──────────────────
 
         [Test]
-        public void Spec_GridIs6x10_60Slots()
+        public void Spec_PcGridIs6x10_60Slots()
         {
-            Assert.AreEqual(6, InventoryWindowPcSpec.GridColumns);
-            Assert.AreEqual(10, InventoryWindowPcSpec.GridRows);
-            Assert.AreEqual(60, InventoryWindowPcSpec.SlotCount);
-            Assert.AreEqual(60, InventoryPanelService.GridSlotCount);
+            Assert.AreEqual(6, InventoryWindowPcSpec.PcGridColumns);
+            Assert.AreEqual(10, InventoryWindowPcSpec.PcGridRows);
+            Assert.AreEqual(60, InventoryWindowPcSpec.PcSlotCount);
+            Assert.AreEqual(60, InventoryPanelService.PcGridSlotCount);
+            Assert.AreEqual(1, InventoryWindowPcSpec.PcUnitBorder);
+        }
+
+        [Test]
+        public void Spec_MobileOverrideIs4x7_28Slots()
+        {
+            Assert.AreEqual(4, InventoryWindowPcSpec.GridColumns);
+            Assert.AreEqual(7, InventoryWindowPcSpec.GridRows);
+            Assert.AreEqual(28, InventoryWindowPcSpec.SlotCount);
+            Assert.AreEqual(28, InventoryPanelService.GridSlotCount);
+            Assert.AreEqual(112, InventoryWindowPcSpec.GridWidth);
+            Assert.AreEqual(196, InventoryWindowPcSpec.GridHeight);
             Assert.AreEqual(1, InventoryWindowPcSpec.UnitBorder);
         }
 
@@ -44,10 +56,10 @@ namespace VLTK.Tests.Sandbox
         {
             Assert.AreEqual(214, InventoryWindowPcSpec.WindowWidth);
             Assert.AreEqual(474, InventoryWindowPcSpec.WindowHeight);
-            Assert.AreEqual(24, InventoryWindowPcSpec.GridLeft);
-            Assert.AreEqual(72, InventoryWindowPcSpec.GridTop);
-            Assert.AreEqual(168, InventoryWindowPcSpec.GridWidth);
-            Assert.AreEqual(280, InventoryWindowPcSpec.GridHeight);
+            Assert.AreEqual(24, InventoryWindowPcSpec.PcGridLeft);
+            Assert.AreEqual(72, InventoryWindowPcSpec.PcGridTop);
+            Assert.AreEqual(168, InventoryWindowPcSpec.PcGridWidth);
+            Assert.AreEqual(280, InventoryWindowPcSpec.PcGridHeight);
             Assert.AreEqual(53, InventoryWindowPcSpec.MoneyLeft);
             Assert.AreEqual(353, InventoryWindowPcSpec.MoneyTop);
             Assert.AreEqual(142, InventoryWindowPcSpec.CloseLeft);
@@ -87,11 +99,11 @@ namespace VLTK.Tests.Sandbox
         // ── Snapshot bound to runtime InventoryService ───────────────────────
 
         [Test]
-        public void BuildSnapshot_AlwaysHas60Slots()
+        public void BuildSnapshot_AlwaysHasMobile28Slots()
         {
             var snap = InventoryPanelService.BuildGridSnapshot((InventoryService)null, 1);
-            Assert.AreEqual(60, snap.totalSlots);
-            Assert.AreEqual(60, snap.rows.Count);
+            Assert.AreEqual(28, snap.totalSlots);
+            Assert.AreEqual(28, snap.rows.Count);
             Assert.AreEqual(0, snap.usedSlots);
         }
 
@@ -116,7 +128,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(3, snap.rows[2].itemQuality, "set piece -> gold tier");
             Assert.AreEqual(2, snap.rows[2].count);
             // Trailing slots empty.
-            Assert.AreEqual(0, snap.rows[59].itemId);
+            Assert.AreEqual(0, snap.rows[27].itemId);
         }
 
         [Test]
@@ -156,7 +168,7 @@ namespace VLTK.Tests.Sandbox
 
                 hud.ToggleInventory();
                 Assert.IsTrue(hud.IsInventoryVisible);
-                Assert.AreEqual(60, hud.InventorySlotCount, "grid populated with 60 slots");
+                Assert.AreEqual(28, hud.InventorySlotCount, "grid populated with 28 mobile slots");
 
                 hud.ToggleInventory();
                 Assert.IsFalse(hud.IsInventoryVisible);
@@ -185,7 +197,7 @@ namespace VLTK.Tests.Sandbox
                 var snap = InventoryPanelService.BuildGridSnapshot(inv, 1, gold: 0, silver: 1234);
 
                 hud.PopulateInventory(snap);
-                Assert.AreEqual(60, hud.InventorySlotCount);
+                Assert.AreEqual(28, hud.InventorySlotCount);
                 Assert.AreEqual("Bạc: 1234", invMoney.text);
             }
             finally

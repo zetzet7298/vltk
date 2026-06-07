@@ -32,6 +32,9 @@ namespace VLTK.Sandbox
     /// </summary>
     public class InventoryService
     {
+        // PC source 05ea8560 is 6×10; mobile Hành Trang capacity is user-requested 4×7.
+        public const int MaxInventorySlots = 28;
+
         private readonly ItemContractImporter _db;
         private readonly List<InventoryEntry> _inventory = new();
         private readonly Dictionary<EquipSlot, ItemDefinition> _equipped = new();
@@ -82,8 +85,17 @@ namespace VLTK.Sandbox
                 return false;
             }
             var existing = _inventory.Find(e => e.item.itemId == itemId);
-            if (existing != null) existing.count += count;
-            else _inventory.Add(new InventoryEntry { item = item, count = count });
+            if (existing != null)
+            {
+                existing.count += count;
+                return true;
+            }
+            if (_inventory.Count >= MaxInventorySlots)
+            {
+                SubsystemLog.Warn("Inventory", $"AddItem: mobile bag full ({MaxInventorySlots} slots)");
+                return false;
+            }
+            _inventory.Add(new InventoryEntry { item = item, count = count });
             return true;
         }
 

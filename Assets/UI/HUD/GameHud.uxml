@@ -192,13 +192,14 @@
         </ui:VisualElement>
 
         <!-- ═══ INVENTORY WINDOW (Hành Trang) — PC 道具界面 / UID 05ea8560 ═══ -->
-        <!-- PC open: [Items] Player_Items (dc11ac12) / F4 / U → Open([[items]]). Grid 6×10. -->
+        <!-- PC open: [Items] Player_Items (dc11ac12) / F4 → Open([[items]]). PC grid 6×10; mobile override 4×7. -->
         <ui:VisualElement name="InventoryWindow" class="hud-inv-overlay hidden">
             <ui:VisualElement name="InventoryFrame" class="hud-inv-frame">
                 <ui:VisualElement name="InventoryHeader" class="hud-inv-header">
                     <ui:Label name="InventoryTitle" text="Hành Trang" class="hud-inv-title"/>
                     <ui:VisualElement name="InventoryClose" class="hud-inv-close"/>
                 </ui:VisualElement>
+                <ui:VisualElement name="InventoryGridBackdrop" class="hud-inv-grid-backdrop"/>
                 <ui:ScrollView name="InventoryGrid" class="hud-inv-grid"/>
                 <ui:VisualElement name="InventoryFooter" class="hud-inv-footer">
                     <ui:Label name="InventoryMoney" text="Bạc: 0" class="hud-inv-money"/>

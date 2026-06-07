@@ -22,14 +22,28 @@ namespace VLTK.UI
         public const int WindowWidth = 214;
         public const int WindowHeight = 474;
 
-        public const int GridLeft = 24;
-        public const int GridTop = 72;
-        public const int GridWidth = 168;
-        public const int GridHeight = 280;
-        public const int GridColumns = 6;
-        public const int GridRows = 10;
+        // PC source-of-truth ItemBox (05ea8560): 6 columns × 10 rows = 60 slots.
+        public const int PcGridLeft = 24;
+        public const int PcGridTop = 72;
+        public const int PcGridWidth = 168;
+        public const int PcGridHeight = 280;
+        public const int PcGridColumns = 6;
+        public const int PcGridRows = 10;
+        public const int PcSlotCount = PcGridColumns * PcGridRows;
+        public const int PcUnitBorder = 1;
+
+        // Mobile capacity override requested by the player: 4 columns × 7 rows = 28 slots.
+        public const int GridLeft = PcGridLeft;
+        public const int GridTop = PcGridTop;
+        public const int GridColumns = 4;
+        public const int GridRows = 7;
         public const int SlotCount = GridColumns * GridRows;
-        public const int UnitBorder = 1;
+        public const int UnitBorder = PcUnitBorder;
+        public const int SlotInnerSize = 26;
+        public const int SlotMargin = 1;
+        public const int SlotOuterSize = SlotInnerSize + SlotMargin * 2;
+        public const int GridWidth = GridColumns * SlotOuterSize;
+        public const int GridHeight = GridRows * SlotOuterSize;
 
         public const int MoneyLeft = 53;
         public const int MoneyTop = 353;

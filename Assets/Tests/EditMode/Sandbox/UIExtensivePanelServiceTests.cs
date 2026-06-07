@@ -19,7 +19,7 @@ namespace VLTK.Tests.EditMode
             {
                 var snap = InventoryPanelService.BuildSnapshot(null, 1);
                 Assert.IsNotNull(snap);
-                Assert.AreEqual(60, snap.totalSlots);
+                Assert.AreEqual(28, snap.totalSlots);
                 Assert.AreEqual(0, snap.usedSlots);
             });
         }
@@ -31,6 +31,14 @@ namespace VLTK.Tests.EditMode
             Assert.IsNotNull(order);
             Assert.Greater(order.Count, 0);
             Assert.AreEqual(60, order.Count);
+        }
+
+        [Test]
+        public void GetMobileInventoryOrder_Is4x7()
+        {
+            var order = InventoryPanelService.GetMobileInventoryOrder();
+            Assert.IsNotNull(order);
+            Assert.AreEqual(28, order.Count);
         }
 
         [Test]

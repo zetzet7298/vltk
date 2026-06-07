@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — Inventory Panel Service (Túi đồ)
 // UI service: dựng snapshot các ô vật phẩm trong túi đồ nhân vật.
-// PC reference: UID 05ea8560 item grid 6×10, money, equipment, consumables.
+// PC reference: UID 05ea8560 item grid 6×10; mobile visible capacity override is 4×7.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ namespace VLTK.UI
     /// <summary>Dịch vụ UI: panel túi đồ nhân vật.</summary>
     public static class InventoryPanelService
     {
-        public const string Title = "Túi Đồ";
+        public const string Title = "Hành Trang";
         public const string LabelItem = "Vật phẩm";
         public const string LabelEquip = "Trang bị";
         public const string LabelConsumable = "Tiêu hao";
@@ -62,16 +62,23 @@ namespace VLTK.UI
         public const string LabelLocked = "Khóa";
         public const string LabelSort = "Sắp xếp";
         public const int DefaultSlotCount = InventoryWindowPcSpec.SlotCount;
+        public const int PcGridColumns = InventoryWindowPcSpec.PcGridColumns;
+        public const int PcGridRows = InventoryWindowPcSpec.PcGridRows;
+        public const int PcGridSlotCount = InventoryWindowPcSpec.PcSlotCount;
 
-        /// <summary>PC backpack grid (Hành Trang) — 6 columns × 10 rows = 60 slots.</summary>
+        /// <summary>Mobile backpack grid (Hành Trang) — player-requested 4 columns × 7 rows = 28 slots.</summary>
         public const int GridColumns = InventoryWindowPcSpec.GridColumns;
         public const int GridRows = InventoryWindowPcSpec.GridRows;
         public const int GridSlotCount = InventoryWindowPcSpec.SlotCount;
 
         private static readonly int[] _defaultSlotOrder = Enumerable.Range(0, DefaultSlotCount).ToArray();
+        private static readonly int[] _pcSlotOrder = Enumerable.Range(0, PcGridSlotCount).ToArray();
 
-        /// <summary>Thứ tự ô mặc định theo grid PC 6×10.</summary>
-        public static IReadOnlyList<int> GetPcInventoryOrder() => _defaultSlotOrder;
+        /// <summary>Thứ tự ô PC gốc theo grid 6×10, giữ lại để trace source-of-truth.</summary>
+        public static IReadOnlyList<int> GetPcInventoryOrder() => _pcSlotOrder;
+
+        /// <summary>Thứ tự ô mobile đang dùng theo grid 4×7.</summary>
+        public static IReadOnlyList<int> GetMobileInventoryOrder() => _defaultSlotOrder;
 
         /// <summary>
         /// Map a runtime InventoryService item to its quality tier (PC 7bfc9072.ini).
@@ -88,9 +95,9 @@ namespace VLTK.UI
         }
 
         /// <summary>
-        /// Build the PC backpack snapshot (6×10 grid) bound to the live
-        /// InventoryService entries. PC behavior: Open([[items]]) lists held items
-        /// into the grid; empty trailing slots stay blank.
+        /// Build the visible mobile backpack snapshot (4×7 grid) bound to the live
+        /// InventoryService entries. PC behavior remains Open([[items]]) listing held
+        /// items into the grid; empty trailing mobile slots stay blank.
         /// </summary>
         public static InventoryPanelSnapshot BuildGridSnapshot(InventoryService inventory, int playerId, int gold = 0, int silver = 0)
         {
