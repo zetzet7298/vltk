@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
+using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
@@ -123,6 +124,17 @@ namespace VLTK.Sandbox
         {
             MoveTarget = worldTarget;
             HasMoveTarget = true;
+        }
+
+        /// <summary>Apply active PC map source bounds so movement/camera clamp matches minimap/world extent.</summary>
+        public void SetMapBounds(RectDef sourceBounds)
+        {
+            if (sourceBounds == null || sourceBounds.width <= 0f || sourceBounds.height <= 0f)
+                return;
+
+            mapBoundsMin = new Vector2(sourceBounds.x, sourceBounds.y);
+            mapBoundsMax = new Vector2(sourceBounds.x + sourceBounds.width, sourceBounds.y + sourceBounds.height);
+            clampToMapBounds = true;
         }
 
         public void ClearMoveTarget()
@@ -431,8 +443,16 @@ namespace VLTK.Sandbox
 
             if (clampToMapBounds)
             {
-                camX = Mathf.Clamp(camX, mapBoundsMin.x + halfW, mapBoundsMax.x - halfW);
-                camY = Mathf.Clamp(camY, mapBoundsMin.y + halfH, mapBoundsMax.y - halfH);
+                float minCamX = mapBoundsMin.x + halfW;
+                float maxCamX = mapBoundsMax.x - halfW;
+                float minCamY = mapBoundsMin.y + halfH;
+                float maxCamY = mapBoundsMax.y - halfH;
+                camX = minCamX <= maxCamX
+                    ? Mathf.Clamp(camX, minCamX, maxCamX)
+                    : (mapBoundsMin.x + mapBoundsMax.x) * 0.5f;
+                camY = minCamY <= maxCamY
+                    ? Mathf.Clamp(camY, minCamY, maxCamY)
+                    : (mapBoundsMin.y + mapBoundsMax.y) * 0.5f;
             }
 
             var target = new Vector3(camX, camY, cameraZ);

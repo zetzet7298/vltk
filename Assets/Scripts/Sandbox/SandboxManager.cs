@@ -428,6 +428,7 @@ namespace VLTK.Sandbox
                     {
                         MapRenderer.LoadMapRegions(MapManager.ActiveMap);
                         EnsurePlayerController();
+                        ApplyActiveMapBoundsToPlayer();
                         EnsureEnemyRuntime();
                         PlacePlayerOnActiveMap();
                         SpawnEnemiesForActiveMap();
@@ -1045,10 +1046,23 @@ namespace VLTK.Sandbox
             SubsystemLog.Info("Sandbox", $"Player pre-placed at {spawn} for map {mapId}");
         }
 
+        private void ApplyActiveMapBoundsToPlayer()
+        {
+            var bounds = MapManager?.ActiveMap?.sourceBoundsRect;
+            if (PlayerController == null || bounds == null)
+                return;
+
+            PlayerController.SetMapBounds(bounds);
+            SubsystemLog.Info("Sandbox",
+                $"Player map bounds set to x={bounds.x}..{bounds.x + bounds.width}, y={bounds.y}..{bounds.y + bounds.height}");
+        }
+
         private void PlacePlayerOnActiveMap()
         {
             if (PlayerController == null)
                 return;
+
+            ApplyActiveMapBoundsToPlayer();
 
             // Map-specific spawn point
             int mapId = MapManager?.ActiveMapId ?? defaultMapId;

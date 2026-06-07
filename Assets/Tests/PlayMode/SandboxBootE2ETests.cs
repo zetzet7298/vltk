@@ -110,6 +110,8 @@ namespace VLTK.Tests.PlayMode
             Assert.AreEqual(SandboxManager.TinSuVuotAiPhongKy120MapId, mgr.defaultMapId);
             Assert.AreEqual(SandboxManager.TinSuVuotAiPhongKy120MapId, mgr.MapManager.ActiveMapId);
             Assert.AreEqual("Phong Kỳ (Vượt ải 120+)", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
+            Assert.AreEqual(new Vector2(40448f, -51712f), mgr.PlayerController.mapBoundsMin);
+            Assert.AreEqual(new Vector2(52224f, -39936f), mgr.PlayerController.mapBoundsMax);
         }
 
         // --- Map load / switch / unload lifecycle through the live runtime ---
