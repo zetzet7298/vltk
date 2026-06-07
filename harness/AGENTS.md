@@ -4,6 +4,10 @@
 
 Khi dùng write hoặc edit, giữ mỗi call nhỏ (≈ ≤150 dòng/lần). File lớn thì chia nhiều lần write/edit tuần tự. Write một phát quá lớn dễ làm đứt stream giữa chừng.
 
+## Research trước khi làm
+
+Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng API/library lạ), **PHẢI dùng exa (`exa_web_search_exa`/`exa_web_fetch_exa`) và deepwiki (`mcp_deepwiki_deepwiki_fetch`) để research** cách làm chuẩn — không đoán, không vá mò. Research xong mới implement. Xong việc thì **commit all change + push**.
+
 ## Skill Matrix
 
 ### 🔴 Bắt buộc — Dùng trước & trong mọi port task

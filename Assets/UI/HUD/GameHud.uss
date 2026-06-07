@@ -426,13 +426,19 @@
 
 
 /* ═══ SKILL SLOTS (T/P) ═══ */
+/* Absolute over the baked T/P art in the jade arch (bottom_bar_bg.png 1280×82):
+   T slot art x[613..657], P slot art x[660..705], vertically centered (~y19..61).
+   MUST be absolute + BringToFront (code) so it sits over ToolbarRight which is a
+   later flex sibling — otherwise menu buttons (Kỹ năng) steal the center tap. */
 .hud-skill-panel {
+    position: absolute;
+    left: 612px;
+    top: 19px;
+    width: 95px;
+    height: 44px;
     flex-direction: row;
-    width: 108px;   /* 2 slots × 54px */
-    height: 60px;
     align-items: center;
-    justify-content: center;
-    margin-left: 2px;
+    justify-content: flex-start;
     background-color: transparent;
     border-width: 0px;
     flex-shrink: 0;

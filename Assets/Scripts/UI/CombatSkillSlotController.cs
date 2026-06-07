@@ -35,6 +35,8 @@ namespace VLTK.UI
         private Label _rightSkillLabel;
 
         private const long LongPressMs = 450;
+        // Finger jitter while holding must not cancel the long-press; only a real drag does.
+        private const float SlotDragCancelThreshold = 45f;
 
         private int _activeSlot = -1; // 0=left, 1=right
         private int _pressedSlot = -1;
@@ -43,6 +45,14 @@ namespace VLTK.UI
         private bool _slotPointerDown;
         private bool _longPressOpened;
         private bool _initialized;
+
+        // Picker tap tracking — ScrollView captures the pointer for drag-scroll on
+        // touch, which swallows ClickEvent on child items, so we detect the tap at
+        // list level: record press pos, and on release within a small move threshold
+        // assign the skill under the release point.
+        private Vector2 _pickerPressPos;
+        private bool _pickerPointerDown;
+        private const float PickerTapMoveThreshold = 12f;
         private SkillCatalog _catalog;
         private PlayerProgressionState _progression;
 
@@ -80,6 +90,28 @@ namespace VLTK.UI
 
             _leftSlot = root.Q("LeftSkillSlot");
             _rightSlot = root.Q("RightSkillSlot");
+
+            // The skill panel is absolute-positioned over the baked T/P art. ToolbarRight
+            // (menu buttons incl. "Kỹ năng") and BtnTreasure are later flex siblings, so
+            // without this they paint over the T/P center and steal the tap (= tap opens the
+            // skill panel / treasure instead, and long-press never reaches the slot handler).
+            // GameHudController rebuilds BottomPanel children after bind, which pushes our
+            // panel back behind ToolbarRight, so a one-shot BringToFront() does NOT stick.
+            // Re-assert front order on every layout change of the parent.
+            var skillPanel = _leftSlot?.parent;
+            if (skillPanel?.parent != null)
+            {
+                skillPanel.BringToFront();
+                skillPanel.parent.RegisterCallback<GeometryChangedEvent>(_ => skillPanel.BringToFront());
+            }
+            // ROOT-LEVEL TRICKLE-DOWN INTERCEPT (bulletproof against sibling-order rebuilds):
+            // Unity routes pointer events by VisualElement hierarchy, NOT draw order. After a
+            // BottomPanel rebuild, ToolbarRight/BtnTreasure become the pick-target over the
+            // T/P slots and eat the tap, so BringToFront alone is unreliable. Per Unity's own
+            // guidance, intercept PointerDown at the root during the trickle-down phase, hit-test
+            // the T/P slot bounds ourselves, and StopImmediatePropagation so no menu button can
+            // steal the tap. Pointer capture (set in BeginSlotPress) then routes move/up/cancel.
+            root.RegisterCallback<PointerDownEvent>(OnRootPointerDownCapture, TrickleDown.TrickleDown);
             _skillPickerOverlay = root.Q("SkillPickerOverlay");
             _skillPickerWindow = root.Q("SkillPickerWindow");
             _skillPickerClose = root.Q("SkillPickerClose");
@@ -142,9 +174,23 @@ namespace VLTK.UI
                 _skillPickerList.pickingMode = PickingMode.Position;
                 _skillPickerList.mode = ScrollViewMode.Vertical;
                 _skillPickerList.verticalScrollerVisibility = ScrollerVisibility.AlwaysVisible;
-                _skillPickerList.RegisterCallback<PointerDownEvent>(evt => evt.StopPropagation());
+                _skillPickerList.RegisterCallback<PointerDownEvent>(evt =>
+                {
+                    _pickerPressPos = (Vector2)evt.position;
+                    _pickerPointerDown = true;
+                    evt.StopPropagation();
+                });
                 _skillPickerList.RegisterCallback<PointerMoveEvent>(evt => evt.StopPropagation());
-                _skillPickerList.RegisterCallback<PointerUpEvent>(evt => evt.StopPropagation());
+                _skillPickerList.RegisterCallback<PointerUpEvent>(evt =>
+                {
+                    evt.StopPropagation();
+                    if (!_pickerPointerDown) return;
+                    _pickerPointerDown = false;
+                    // Treat as a tap only if the pointer barely moved (otherwise it was a scroll drag).
+                    if (Vector2.Distance((Vector2)evt.position, _pickerPressPos) > PickerTapMoveThreshold)
+                        return;
+                    AssignSkillUnderPoint((Vector2)evt.position);
+                });
                 _skillPickerList.RegisterCallback<WheelEvent>(evt => evt.StopPropagation());
             }
 
@@ -238,6 +284,24 @@ namespace VLTK.UI
             evt.StopPropagation();
         }
 
+        // Root trickle-down intercept: fires BEFORE the event reaches ToolbarRight/BtnTreasure,
+        // so a tap on the T/P slot area always starts a slot press — immune to sibling-order
+        // rebuilds that would otherwise let a menu button become the pick-target and eat the tap.
+        private void OnRootPointerDownCapture(PointerDownEvent evt)
+        {
+            var pos = (Vector2)evt.position;
+            if (_leftSlot != null && _leftSlot.worldBound.Contains(pos))
+            {
+                BeginSlotPress(0, evt.pointerId, evt.position);
+                evt.StopImmediatePropagation();
+            }
+            else if (_rightSlot != null && _rightSlot.worldBound.Contains(pos))
+            {
+                BeginSlotPress(1, evt.pointerId, evt.position);
+                evt.StopImmediatePropagation();
+            }
+        }
+
         private void BeginSlotPress(int slot, int pointerId, Vector2 screenPos)
         {
             _pressedSlot = slot;
@@ -259,6 +323,13 @@ namespace VLTK.UI
 
         private void OnSlotMove(PointerMoveEvent evt)
         {
+            // Only a real drag (finger moved far) cancels the long-press; small jitter
+            // while holding must NOT abort it, otherwise the picker never opens on device.
+            if (_slotPointerDown && !_longPressOpened &&
+                Vector2.Distance((Vector2)evt.position, _startPointerPos) > SlotDragCancelThreshold)
+            {
+                CancelSlotPress();
+            }
             evt.StopPropagation();
         }
 
@@ -283,7 +354,13 @@ namespace VLTK.UI
 
         private void OnSlotCancel(PointerCancelEvent evt)
         {
-            CancelSlotPress();
+            // Device fires PointerCancel on finger jitter / capture loss while holding.
+            // Do NOT kill the press here — that would stop the long-press from ever opening
+            // the picker. Just release the pointer capture; the Update-independent coroutine
+            // keeps running and opens the picker at 450ms unless a real PointerUp arrives.
+            int slot = _pressedSlot;
+            if (slot >= 0)
+                (slot == 0 ? _leftSlot : _rightSlot)?.ReleasePointer(_pressedPointerId);
             evt.StopPropagation();
         }
 
@@ -402,6 +479,7 @@ namespace VLTK.UI
                 item.Add(info);
 
                 int capturedId = skillId;
+                item.userData = capturedId; // used by AssignSkillUnderPoint (touch tap path)
                 item.RegisterCallback<ClickEvent>(evt =>
                 {
                     AssignSkill(_activeSlot, capturedId);
@@ -413,21 +491,49 @@ namespace VLTK.UI
             }
         }
 
+        /// <summary>
+        /// Assign the skill whose picker item is under the given panel point. Used by the
+        /// touch tap path because ScrollView pointer-capture swallows ClickEvent on items.
+        /// </summary>
+        private void AssignSkillUnderPoint(Vector2 panelPoint)
+        {
+            if (_skillPickerList == null) return;
+            var container = _skillPickerList.contentContainer;
+            foreach (var child in container.Children())
+            {
+                if (!child.ClassListContains("skill-picker-item")) continue;
+                if (!child.worldBound.Contains(panelPoint)) continue;
+                if (child.userData is int skillId)
+                {
+                    AssignSkill(_activeSlot, skillId);
+                    CloseSkillPicker();
+                }
+                return;
+            }
+        }
+
         private void RefreshSlotVisuals()
         {
             string artPath = HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art");
 
+            // The bottom bar bakes PC fist art into the background. The USS rule
+            // `#BottomPanel .hud-skill-slot-icon { display: none; }` hides slot icons
+            // so that baked art shows through on EMPTY slots. When a skill is assigned
+            // we override that inline (inline style beats USS) so the assigned skill
+            // icon draws over the baked fist — matching PC where T/P show the bound skill.
             if (_leftSkillIcon != null)
             {
                 if (leftSlotSkillId > 0)
                 {
                     GameHudController.LoadIconStatic(this, _leftSkillIcon, artPath, $"cai_bang_skill_{leftSlotSkillId}");
                     _leftSkillIcon.RemoveFromClassList("empty");
+                    _leftSkillIcon.style.display = DisplayStyle.Flex;
                 }
                 else
                 {
                     _leftSkillIcon.style.backgroundImage = new StyleBackground();
                     _leftSkillIcon.AddToClassList("empty");
+                    _leftSkillIcon.style.display = StyleKeyword.Null; // fall back to USS (hidden in bottom bar)
                 }
             }
 
@@ -437,11 +543,13 @@ namespace VLTK.UI
                 {
                     GameHudController.LoadIconStatic(this, _rightSkillIcon, artPath, $"cai_bang_skill_{rightSlotSkillId}");
                     _rightSkillIcon.RemoveFromClassList("empty");
+                    _rightSkillIcon.style.display = DisplayStyle.Flex;
                 }
                 else
                 {
                     _rightSkillIcon.style.backgroundImage = new StyleBackground();
                     _rightSkillIcon.AddToClassList("empty");
+                    _rightSkillIcon.style.display = StyleKeyword.Null; // fall back to USS (hidden in bottom bar)
                 }
             }
 
