@@ -1629,6 +1629,64 @@ def object_task_optional_pickup_message_action(source: str) -> dict[str, Any] | 
     }
 
 
+def object_task_missing_item_pickup_message_action(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {'main', 'GetTask', 'HaveItem', 'SetPropState', 'AddEventItem', 'Msg2Player', 'AddNote', 'if', 'and'}
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(elseif|else|for|while|repeat)\b', clean_source):
+        return None
+    if len(parse_lua_calls(clean_source, 'SetPropState', limit=2)) != 1:
+        return None
+    event_items = int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=2), 1)
+    if len(event_items) != 1:
+        return None
+    msg = single_string(parse_lua_calls(clean_source, 'Msg2Player', limit=2))
+    if not is_safe_user_message(msg):
+        return None
+    notes = [clean_user_message(call[0]) for call in parse_lua_calls(clean_source, 'AddNote', limit=2) if call]
+    notes = [note for note in notes if is_safe_user_message(note)]
+    if len(notes) != 1:
+        return None
+
+    task_id = None
+    task_condition = r'GetTask\s*\(\s*(\d+)\s*\)\s*==\s*([0-9\s*+\-]+)'
+    task_assign = re.search(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(\d+)\s*\)', clean_source)
+    if task_assign:
+        task_var = re.escape(task_assign.group(1))
+        task_id = int(task_assign.group(2))
+        task_condition = task_var + r'\s*==\s*([0-9\s*+\-]+)'
+
+    match = re.search(
+        r'if\s*\(?\s*' + task_condition +
+        r'\s*\)?\s*and\s*\(?\s*HaveItem\s*\(\s*(\d+)\s*\)\s*==\s*0\s*\)?\s*then(?P<body>.*?)end',
+        clean_source, re.S | re.I)
+    if not match:
+        return None
+
+    if task_assign:
+        task_value_expr = match.group(1)
+        item_id = int(match.group(2))
+    else:
+        task_id = int(match.group(1))
+        task_value_expr = match.group(2)
+        item_id = int(match.group(3))
+    task_value = int_lua_constant_expr(task_value_expr)
+    if task_id is None or task_value is None:
+        return None
+    if event_items[0][0] != item_id:
+        return None
+    return {
+        'taskId': task_id,
+        'taskValue': task_value,
+        'requiredMissingItemId': item_id,
+        'eventItemIds': [item_id],
+        'message': msg,
+        'notes': notes,
+        'setPropState': True,
+    }
+
+
 def object_task_talk_message_action(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     if not source_uses_only_calls(clean_source, {'main', 'GetTask', 'Talk', 'if'}):
@@ -1824,6 +1882,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **task_optional_pickup,
             })
             continue
+        task_missing_item_pickup = object_task_missing_item_pickup_message_action(source_text)
+        if task_missing_item_pickup is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskMissingItemPickupMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): SetPropState/AddEventItem/Msg2Player/AddNote only when GetTask(id)==value and HaveItem(item)==0, no task mutation',
+                **task_missing_item_pickup,
+            })
+            continue
         task_talk = object_task_talk_message_action(source_text)
         if task_talk is not None:
             entries.append({
@@ -1877,6 +1951,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
         'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
         'deterministicObjectTaskOptionalPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalPickupMessage'),
+        'deterministicObjectTaskMissingItemPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskMissingItemPickupMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicObjectTaskTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskTalkMessage'),

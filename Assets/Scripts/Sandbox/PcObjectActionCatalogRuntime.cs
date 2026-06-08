@@ -70,12 +70,14 @@ namespace VLTK.Sandbox
         public int noteTaskId;
         public int noteTaskMinExclusive;
         public int noteTaskMaxExclusive;
+        public int requiredMissingItemId;
         public string[] elseMessages;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsPickupMessage => string.Equals(actionKind, "PickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskOptionalPickupMessage => string.Equals(actionKind, "TaskOptionalPickupMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskMissingItemPickupMessage => string.Equals(actionKind, "TaskMissingItemPickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskTalkMessage => string.Equals(actionKind, "TaskTalkMessage", StringComparison.OrdinalIgnoreCase);

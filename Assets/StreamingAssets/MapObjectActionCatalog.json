@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T08:04:47Z",
+  "generatedAtUtc": "2026-06-08T10:49:23Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -857,6 +857,52 @@
       "requiredFaction": "tianren",
       "requiredFactionId": 6,
       "reviveId": 28
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室外\\obj\\trobj05\\trobj05.lua",
+      "scriptId": 3521648130,
+      "scriptIdHex": "0xD1E81602",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教室外\\obj\\trobj05\\trobj05.lua",
+      "actionKind": "TaskMissingItemPickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): SetPropState/AddEventItem/Msg2Player/AddNote only when GetTask(id)==value and HaveItem(item)==0, no task mutation",
+      "taskId": 4,
+      "taskValue": 5170,
+      "requiredMissingItemId": 125,
+      "eventItemIds": [
+        125
+      ],
+      "message": "Tìm được Tiểu Hoàng cẩu đi lạc.",
+      "notes": [
+        "Tìm được Tiểu Hoàng cẩu."
+      ],
+      "setPropState": true
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室外\\obj\\trobj06\\trobj06.lua",
+      "scriptId": 1661836851,
+      "scriptIdHex": "0x630D9E33",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教室外\\obj\\trobj06\\trobj06.lua",
+      "actionKind": "TaskMissingItemPickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): SetPropState/AddEventItem/Msg2Player/AddNote only when GetTask(id)==value and HaveItem(item)==0, no task mutation",
+      "taskId": 4,
+      "taskValue": 5170,
+      "requiredMissingItemId": 126,
+      "eventItemIds": [
+        126
+      ],
+      "message": "Tìm được Tiểu Khôi la đi lạc.",
+      "notes": [
+        "Tìm được Tiểu Khôi la."
+      ],
+      "setPropState": true
     },
     {
       "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室外\\obj\\天忍教-告示牌1.lua",

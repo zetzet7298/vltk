@@ -250,10 +250,11 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(268, catalog.Count);
+            Assert.AreEqual(270, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
+            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -277,6 +278,13 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(20 * 256, optionalPickup.noteTaskMaxExclusive);
             Assert.AreEqual(118, optionalPickup.eventItemIds.Single());
             Assert.AreEqual("Tìm thấy một miếng Lượng Ngân Khoáng trong khu rừng ở phía tây Thành Đô.", optionalPickup.taskNotes.Single());
+            var taskMissingPickup = catalog.Find(@"\script\中原北区\天忍教\天忍教室外\obj\trobj05\trobj05.lua");
+            Assert.IsNotNull(taskMissingPickup);
+            Assert.IsTrue(taskMissingPickup.IsTaskMissingItemPickupMessage);
+            Assert.AreEqual(4, taskMissingPickup.taskId);
+            Assert.AreEqual(20 * 256 + 50, taskMissingPickup.taskValue);
+            Assert.AreEqual(125, taskMissingPickup.requiredMissingItemId);
+            Assert.AreEqual(125, taskMissingPickup.eventItemIds.Single());
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -353,6 +361,61 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(116, sideEffects.eventItems.Single());
             Assert.AreEqual("Tại khu Đông Bắc Vũ Lăng sơn tìm được Linh Chi.", sideEffects.notes.Single());
             StringAssert.Contains("SetPropState=True", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskMissingItemPickupMessage_RequiresPcTaskAndMissingItem()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\task_missing_item_pickup.lua",
+                        actionKind = "TaskMissingItemPickupMessage",
+                        taskId = 4,
+                        taskValue = 20 * 256 + 50,
+                        requiredMissingItemId = 125,
+                        message = "Tìm được Tiểu Hoàng cẩu đi lạc. ",
+                        eventItemIds = new[] { 125 },
+                        notes = new[] { "Tìm được Tiểu Hoàng cẩu. " },
+                        setPropState = true,
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost { taskValues = { [4] = 20 * 256 + 50 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\task_missing_item_pickup.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.IsTrue(result.hideObject);
+            Assert.AreEqual("Tìm được Tiểu Hoàng cẩu đi lạc. ", sideEffects.message);
+            Assert.AreEqual(125, sideEffects.eventItems.Single());
+            Assert.AreEqual("Tìm được Tiểu Hoàng cẩu. ", sideEffects.notes.Single());
+            StringAssert.Contains("matched=True", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [4] = 20 * 256 + 40 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsTrue(result.success);
+            Assert.IsFalse(result.hideObject);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+            CollectionAssert.IsEmpty(sideEffects.eventItems);
+
+            host = new FakeTrapTravelHost { taskValues = { [4] = 20 * 256 + 50 }, itemCounts = { [125] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsTrue(result.success);
+            Assert.IsFalse(result.hideObject);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+            CollectionAssert.IsEmpty(sideEffects.eventItems);
         }
 
 

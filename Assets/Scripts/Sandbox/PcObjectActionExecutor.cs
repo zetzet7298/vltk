@@ -108,6 +108,45 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskMissingItemPickupMessage)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+
+                int taskValue = _host.GetTaskValue(action.taskId);
+                bool taskMatched = taskValue == action.taskValue;
+                bool itemMissing = !_host.HaveItem(action.requiredMissingItemId, 1);
+                bool matched = taskMatched && itemMissing;
+                int notes = 0;
+                if (matched)
+                {
+                    if (!string.IsNullOrWhiteSpace(action.message))
+                        _sideEffects.PostMessage(action.message);
+                    if (action.eventItemIds != null)
+                    {
+                        foreach (int eventItemId in action.eventItemIds)
+                            _sideEffects.AddEventItem(eventItemId);
+                    }
+                    if (action.notes != null)
+                    {
+                        foreach (string note in action.notes)
+                        {
+                            if (string.IsNullOrWhiteSpace(note)) continue;
+                            _sideEffects.AddNote(note);
+                            notes++;
+                        }
+                    }
+                }
+
+                result = Success(action,
+                    $"TaskMissingItemPickupMessage(GetTask({action.taskId})={taskValue}, expected={action.taskValue}, HaveItem({action.requiredMissingItemId})={!itemMissing}, matched={matched}, items={FormatInts(action.eventItemIds)}, notes={notes}, SetPropState={action.setPropState})");
+                result.hideObject = matched && action.setPropState;
+                return true;
+            }
+
             if (action.IsSayMessage)
             {
                 if (_sideEffects == null)
