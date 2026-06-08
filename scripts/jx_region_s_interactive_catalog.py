@@ -279,6 +279,14 @@ def script_action_summary(source: str) -> dict[str, Any]:
     msg2_player = [args[:1] for args in parse_lua_calls(source, 'Msg2Player')]
     talk = parse_lua_calls(source, 'Talk')
     say = parse_lua_calls(source, 'Say')
+    add_event_item = [args[:1] for args in parse_lua_calls(source, 'AddEventItem')]
+    add_note = [args[:1] for args in parse_lua_calls(source, 'AddNote')]
+    set_prop_state = parse_lua_calls(source, 'SetPropState')
+    get_task = parse_lua_calls(source, 'GetTask')
+    set_task = parse_lua_calls(source, 'SetTask') + parse_lua_calls(source, 'SetTaskTemp')
+    have_item = parse_lua_calls(source, 'HaveItem')
+    add_item = parse_lua_calls(source, 'AddItem')
+    del_item = parse_lua_calls(source, 'DelItem')
     return {
         'hasMain': re.search(r'function\s+main\s*\(', source) is not None,
         'newWorldCalls': new_world[:8],
@@ -287,6 +295,14 @@ def script_action_summary(source: str) -> dict[str, Any]:
         'msg2PlayerCalls': msg2_player[:8],
         'talkCalls': talk[:8],
         'sayCalls': say[:8],
+        'addEventItemCalls': add_event_item[:8],
+        'addNoteCalls': add_note[:8],
+        'setPropStateCalls': set_prop_state[:8],
+        'getTaskCalls': get_task[:8],
+        'setTaskCalls': set_task[:8],
+        'haveItemCalls': have_item[:8],
+        'addItemCalls': add_item[:8],
+        'delItemCalls': del_item[:8],
         'setsFightState': 'SetFightState' in source,
         'talks': 'Talk(' in source or 'Msg2Player' in source,
         'usesTaskApis': any(token in source for token in ('GetTask', 'SetTask', 'SetTaskTemp', 'AddNote')),
@@ -428,18 +444,55 @@ def build_object_script_catalog(geometries: list[dict[str, Any]], pc_root: Path)
     return entries, coverage
 
 
+def single_string(calls: list[list[str]]) -> str:
+    if not calls or not calls[0]:
+        return ''
+    return str(calls[0][0]).strip()
+
+
+def int_args(calls: list[list[str]], width: int) -> list[tuple[int, ...]]:
+    result: list[tuple[int, ...]] = []
+    for call in calls or []:
+        if len(call) < width:
+            continue
+        values = []
+        ok = True
+        for arg in call[:width]:
+            if not re.fullmatch(r'\d+', str(arg).strip()):
+                ok = False
+                break
+            values.append(int(str(arg).strip()))
+        if ok:
+            result.append(tuple(values))
+    return result
+
+
+def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
+    if not actions.get('msg2PlayerCalls'):
+        return False
+    if actions.get('newWorldCalls') or actions.get('setPosCalls') or actions.get('setFightStateCalls'):
+        return False
+    if actions.get('talkCalls') or actions.get('sayCalls'):
+        return False
+    if actions.get('getTaskCalls') or actions.get('setTaskCalls') or actions.get('haveItemCalls'):
+        return False
+    if actions.get('addItemCalls') or actions.get('delItemCalls'):
+        return False
+    if actions.get('usesCityApis'):
+        return False
+    return bool(actions.get('addEventItemCalls') or actions.get('addNoteCalls') or actions.get('setPropStateCalls'))
+
+
 def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     for script in object_scripts:
         actions = script.get('actions') or {}
         if not script.get('resolved') or not actions.get('hasMain'):
             continue
-        if actions.get('talks') or actions.get('sayCalls') or actions.get('usesTaskApis') or actions.get('usesItemApis') or actions.get('usesObjectApis') or actions.get('usesCityApis'):
-            continue
         fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1)
         fight_value = fight_state[0] if fight_state is not None else -1
         new_world = int_args_unique(actions.get('newWorldCalls') or [], 3)
-        if new_world:
+        if new_world and not (actions.get('talks') or actions.get('sayCalls') or actions.get('usesTaskApis') or actions.get('usesItemApis') or actions.get('usesObjectApis') or actions.get('usesCityApis')):
             entries.append({
                 'scriptPath': script.get('scriptPath', ''),
                 'scriptId': script.get('scriptId', 0),
@@ -452,9 +505,28 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 'fightState': fight_value,
                 'source': 'PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects',
             })
+            continue
+        if is_safe_pickup_message(actions):
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'PickupMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'message': single_string(actions.get('msg2PlayerCalls') or []),
+                'eventItemIds': [values[0] for values in int_args(actions.get('addEventItemCalls') or [], 1)],
+                'notes': [call[0] for call in (actions.get('addNoteCalls') or []) if call],
+                'setPropState': bool(actions.get('setPropStateCalls')),
+                'source': 'PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch',
+            })
     coverage = {
         'deterministicObjectActions': len(entries),
         'deterministicObjectNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
+        'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
     }
     return entries, coverage
 

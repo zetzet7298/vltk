@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T03:52:43Z",
+  "generatedAtUtc": "2026-06-08T04:01:05Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -27,6 +27,66 @@
       "targetCellY": 3199,
       "fightState": 1,
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\武陵山\\武陵山\\obj\\twobj02.lua",
+      "scriptId": 637889423,
+      "scriptIdHex": "0x26056B8F",
+      "sourceRelPath": "script\\两湖区\\武陵山\\武陵山\\obj\\twobj02.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm được Linh Chi.",
+      "eventItemIds": [
+        116
+      ],
+      "notes": [
+        "Tại khu Đông Bắc Vũ Lăng sơn tìm được Linh Chi. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\武陵山\\武陵山\\obj\\twobj03.lua",
+      "scriptId": 586872631,
+      "scriptIdHex": "0x22FAF737",
+      "sourceRelPath": "script\\两湖区\\武陵山\\武陵山\\obj\\twobj03.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm được Huyền Sâm.",
+      "eventItemIds": [
+        135
+      ],
+      "notes": [
+        "Tại khu Đông Bắc Vũ Lăng sơn tìm được Huyền Sâm. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\武陵山\\武陵山\\obj\\twobj04.lua",
+      "scriptId": 1062752991,
+      "scriptIdHex": "0x3F5852DF",
+      "sourceRelPath": "script\\两湖区\\武陵山\\武陵山\\obj\\twobj04.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm được Hà Thủ Ô.",
+      "eventItemIds": [
+        144
+      ],
+      "notes": [
+        "Tại khu Đông Bắc Vũ Lăng sơn tìm được Hà Thủ Ô. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
     },
     {
       "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫1\\trap\\铁塔迷宫1to铁塔迷宫2.lua",
@@ -77,6 +137,106 @@
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
     },
     {
+      "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj04.lua",
+      "scriptId": 998809255,
+      "scriptIdHex": "0x3B889EA7",
+      "sourceRelPath": "script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj04.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Hái được Đương Quy",
+      "eventItemIds": [
+        107
+      ],
+      "notes": [
+        "Tìm được Đương Quy ở phƯa Đông Phục Ngưu sơn "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj05.lua",
+      "scriptId": 876074123,
+      "scriptIdHex": "0x3437D48B",
+      "sourceRelPath": "script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj05.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Hái đượcHợp Hoan",
+      "eventItemIds": [
+        134
+      ],
+      "notes": [
+        "Tìm được Hợp Hoan  ở phƯa Đông Phục Ngưu sơn "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj06.lua",
+      "scriptId": 813591423,
+      "scriptIdHex": "0x307E6B7F",
+      "sourceRelPath": "script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj06.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Hái được Huyền Sâm",
+      "eventItemIds": [
+        135
+      ],
+      "notes": [
+        "Tìm được Huyền Sâm ở phía Đông Phục Ngưu sơn "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj07.lua",
+      "scriptId": 212115811,
+      "scriptIdHex": "0x0CA4A163",
+      "sourceRelPath": "script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj07.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Hái được Phòng Kỷ",
+      "eventItemIds": [
+        136
+      ],
+      "notes": [
+        "Tìm được Phòng Kỷ ở phƯa Đông Phục Ngưu sơn "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj08.lua",
+      "scriptId": 149153623,
+      "scriptIdHex": "0x08E3E757",
+      "sourceRelPath": "script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj08.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Hái được Chu Sa",
+      "eventItemIds": [
+        137
+      ],
+      "notes": [
+        "Tìm được Chu Sa  ở phía Đông Phục Ngưu sơn "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
       "scriptPath": "\\script\\中原南区\\武当派\\井底迷宫\\trap\\井底迷宫to武当派.lua",
       "scriptId": 2808791787,
       "scriptIdHex": "0xA76AC2EB",
@@ -87,6 +247,166 @@
       "targetCellY": 3390,
       "fightState": -1,
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\wdobj09.lua",
+      "scriptId": 1148944010,
+      "scriptIdHex": "0x447B7E8A",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\wdobj09.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Lấy được Từ Thiết khoáng.",
+      "eventItemIds": [
+        138
+      ],
+      "notes": [
+        "Tìm thấy Từ Thiết khoáng ở phía tây nam ngoài thành Tương Dương. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\wdobj10.lua",
+      "scriptId": 3125312597,
+      "scriptIdHex": "0xBA487C55",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\wdobj10.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Lấy được Ngân Lượng khoáng.",
+      "eventItemIds": [
+        118
+      ],
+      "notes": [
+        "Tìm thấy Ngân Lượng khoáng ở phía tây nam ngoài thành Tương Dương. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\wdobj11.lua",
+      "scriptId": 3077616735,
+      "scriptIdHex": "0xB770B45F",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\wdobj11.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Lấy được XƯch Đồng khoáng.",
+      "eventItemIds": [
+        121
+      ],
+      "notes": [
+        "Tìm thấy XƯch Đồng khoáng ở phƯa tây nam ngoài thành Tương Dương. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\江南区\\龙泉村\\obj\\捡拾_白雪百合.lua",
+      "scriptId": 1163404135,
+      "scriptIdHex": "0x45582367",
+      "sourceRelPath": "script\\江南区\\龙泉村\\obj\\捡拾_白雪百合.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đến Long Tuyền thôn tìm được Bạch Tuyết Bách Hợp",
+      "eventItemIds": [
+        232
+      ],
+      "notes": [
+        "Đến Long Tuyền thôn tìm được Bạch Tuyết Bách Hợp "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\江南区\\龙泉村\\obj\\捡拾_阳春灵芝.lua",
+      "scriptId": 1346286868,
+      "scriptIdHex": "0x503EB514",
+      "sourceRelPath": "script\\江南区\\龙泉村\\obj\\捡拾_阳春灵芝.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đến Long Tuyền thôn tìm được Dương Xuân Linh Chi",
+      "eventItemIds": [
+        231
+      ],
+      "notes": [
+        "Đến Long Tuyền thôn tìm được Dương Xuân Linh Chi "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\昆仑派\\快活林迷宫\\obj\\捡拾_klen_山里红.lua",
+      "scriptId": 3532893578,
+      "scriptIdHex": "0xD293AD8A",
+      "sourceRelPath": "script\\西北北区\\昆仑派\\快活林迷宫\\obj\\捡拾_klen_山里红.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm thấy được sơn Lý Hồng.",
+      "eventItemIds": [
+        117
+      ],
+      "notes": [
+        "Tìm thấy được sơn Lý Hồng. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\西南南区\\大理府\\大理府\\obj\\捡拾_cyl30_碧裳凤蝶.lua",
+      "scriptId": 2776426780,
+      "scriptIdHex": "0xA57CE91C",
+      "sourceRelPath": "script\\西南南区\\大理府\\大理府\\obj\\捡拾_cyl30_碧裳凤蝶.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Lấy được Bích Thường Phượng Điệp.",
+      "eventItemIds": [
+        3
+      ],
+      "notes": [
+        "Lấy được Bích Thường Phượng Điệp. "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\西南南区\\大理府\\大理府\\obj\\捡拾_cyl30_红蚯蚓.lua",
+      "scriptId": 54763138,
+      "scriptIdHex": "0x03439E82",
+      "sourceRelPath": "script\\西南南区\\大理府\\大理府\\obj\\捡拾_cyl30_红蚯蚓.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm được giun đất đỏ",
+      "eventItemIds": [
+        4
+      ],
+      "notes": [
+        "Tìm được giun đất đỏ "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
     }
   ]
 }

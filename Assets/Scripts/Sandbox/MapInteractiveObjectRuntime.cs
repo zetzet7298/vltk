@@ -22,6 +22,7 @@ namespace VLTK.Sandbox
         private MapInteractiveCatalogFile _catalog;
         private PcObjectActionCatalogFile _actionCatalog;
         private PcObjectActionExecutor _actionExecutor;
+        private SandboxObjectActionSideEffects _actionSideEffects;
 
         private void Awake()
         {
@@ -103,7 +104,8 @@ namespace VLTK.Sandbox
         private void AttachInteractionIfPorted(GameObject go, MapInteractiveObject obj)
         {
             _actionCatalog ??= PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
-            _actionExecutor ??= new PcObjectActionExecutor(_actionCatalog, new SandboxTrapTravelHost());
+            _actionSideEffects ??= new SandboxObjectActionSideEffects();
+            _actionExecutor ??= new PcObjectActionExecutor(_actionCatalog, new SandboxTrapTravelHost(), _actionSideEffects);
             if (!_actionExecutor.HasAction(obj)) return;
             var interaction = go.AddComponent<PcMapObjectInteraction>();
             interaction.Configure(obj, _actionExecutor);

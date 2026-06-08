@@ -1,8 +1,10 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — executes deterministic PC Region_S object Lua actions.
-// Ported object API subset: NewWorld(mapId,x,y) with optional SetFightState().
+// Ported object API subset: NewWorld(mapId,x,y), optional SetFightState(),
+// and safe pickup messages: SetPropState/AddEventItem/AddNote/Msg2Player.
 // -----------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using UnityEngine;
 using VLTK.Core;
 
@@ -12,17 +14,27 @@ namespace VLTK.Sandbox
     {
         public bool success;
         public string detail;
+        public bool hideObject;
+    }
+
+    public interface IObjectActionSideEffects
+    {
+        void PostMessage(string message);
+        void AddEventItem(int eventItemId);
+        void AddNote(string note);
     }
 
     public sealed class PcObjectActionExecutor
     {
         private readonly PcObjectActionCatalogFile _catalog;
         private readonly ITrapTravelHost _host;
+        private readonly IObjectActionSideEffects _sideEffects;
 
-        public PcObjectActionExecutor(PcObjectActionCatalogFile catalog, ITrapTravelHost host)
+        public PcObjectActionExecutor(PcObjectActionCatalogFile catalog, ITrapTravelHost host, IObjectActionSideEffects sideEffects = null)
         {
             _catalog = catalog;
             _host = host;
+            _sideEffects = sideEffects;
         }
 
         public bool HasAction(MapInteractiveObject obj)
@@ -38,6 +50,32 @@ namespace VLTK.Sandbox
             if (_host == null)
             {
                 result = Failure(action, "object travel host unavailable");
+                return true;
+            }
+
+            if (action.IsPickupMessage)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+                if (!string.IsNullOrWhiteSpace(action.message))
+                    _sideEffects.PostMessage(action.message);
+                if (action.eventItemIds != null)
+                {
+                    foreach (int eventItemId in action.eventItemIds)
+                        _sideEffects.AddEventItem(eventItemId);
+                }
+                if (action.notes != null)
+                {
+                    foreach (string note in action.notes)
+                        if (!string.IsNullOrWhiteSpace(note))
+                            _sideEffects.AddNote(note);
+                }
+                result = Success(action,
+                    $"PickupMessage(msg='{action.message}', items={FormatInts(action.eventItemIds)}, notes={action.notes?.Length ?? 0}, SetPropState={action.setPropState})");
+                result.hideObject = action.setPropState;
                 return true;
             }
 
@@ -71,6 +109,44 @@ namespace VLTK.Sandbox
             string fight = action.fightState >= 0 ? $", SetFightState({action.fightState})" : string.Empty;
             return $"{detail}{fight}; script={action.scriptPath}";
         }
+
+        private static string FormatInts(int[] values)
+        {
+            if (values == null || values.Length == 0) return "[]";
+            return "[" + string.Join(",", values) + "]";
+        }
+    }
+
+    public sealed class SandboxObjectActionSideEffects : IObjectActionSideEffects
+    {
+        private readonly List<int> _eventItemIds = new();
+        private readonly List<string> _notes = new();
+
+        public IReadOnlyList<int> EventItemIds => _eventItemIds;
+        public IReadOnlyList<string> Notes => _notes;
+
+        public void PostMessage(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message)) return;
+            var manager = SandboxManager.Instance;
+            if (manager?.ChatService != null)
+                manager.ChatService.PostSystemMessage(message);
+            SubsystemLog.Info("MapObject", $"PC Msg2Player: {message}");
+        }
+
+        public void AddEventItem(int eventItemId)
+        {
+            if (eventItemId <= 0) return;
+            _eventItemIds.Add(eventItemId);
+            SubsystemLog.Info("MapObject", $"PC AddEventItem({eventItemId}) recorded");
+        }
+
+        public void AddNote(string note)
+        {
+            if (string.IsNullOrWhiteSpace(note)) return;
+            _notes.Add(note);
+            SubsystemLog.Info("MapObject", $"PC AddNote: {note}");
+        }
     }
 
     [DisallowMultipleComponent]
@@ -93,9 +169,15 @@ namespace VLTK.Sandbox
             if (_executor == null || !_executor.TryExecute(_object, out var result))
                 return null;
             if (result.success)
+            {
                 SubsystemLog.Info("MapObject", $"PC object action applied: {result.detail}");
+                if (result.hideObject)
+                    gameObject.SetActive(false);
+            }
             else
+            {
                 SubsystemLog.Error("MapObject", $"PC object action failed: {result.detail}");
+            }
             return result;
         }
 

@@ -40,8 +40,9 @@ EXPECTED_OBJECT_SPRITES = 34
 EXPECTED_OBJECT_SCRIPT_REFS = 449
 EXPECTED_OBJECT_SCRIPTS = 299
 EXPECTED_RESOLVED_OBJECT_SCRIPTS = 299
-EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 7
+EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 23
 EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS = 7
+EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS = 16
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
 EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 645
@@ -455,8 +456,11 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     audit.require(object_script_cov.get('missingObjectScripts') == 0, 'object script missing count must be 0')
     audit.require(len(object_script_catalog.get('entries', [])) == EXPECTED_OBJECT_SCRIPTS, 'MapObjectScriptCatalog entry count mismatch')
     audit.require(len(object_action_catalog.get('entries', [])) == EXPECTED_DETERMINISTIC_OBJECT_ACTIONS, 'MapObjectActionCatalog deterministic action count mismatch')
-    object_new_world = sum(1 for e in object_action_catalog.get('entries', []) if e.get('actionKind') == 'NewWorld')
+    object_actions = object_action_catalog.get('entries', [])
+    object_new_world = sum(1 for e in object_actions if e.get('actionKind') == 'NewWorld')
+    object_pickup_message = sum(1 for e in object_actions if e.get('actionKind') == 'PickupMessage')
     audit.require(object_new_world == EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS, 'MapObjectActionCatalog NewWorld count mismatch')
+    audit.require(object_pickup_message == EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS, 'MapObjectActionCatalog PickupMessage count mismatch')
     audit.require(trap_cov.get('uniqueTrapIds') == EXPECTED_TRAP_IDS, 'unique trap id count mismatch')
     audit.require(trap_cov.get('resolvedTrapScripts') == EXPECTED_RESOLVED_TRAP_SCRIPTS, 'resolved trap script count mismatch')
     missing_ids = set(trap_cov.get('missingTrapScriptIds', []))
@@ -487,8 +491,9 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'objectScriptRefs': object_script_cov.get('objectScriptRefs'),
         'objectScripts': object_script_cov.get('uniqueObjectScripts'),
         'resolvedObjectScripts': object_script_cov.get('resolvedObjectScripts'),
-        'deterministicObjectActions': len(object_action_catalog.get('entries', [])),
+        'deterministicObjectActions': len(object_actions),
         'deterministicObjectNewWorldActions': object_new_world,
+        'deterministicObjectPickupMessageActions': object_pickup_message,
         'trapIds': trap_cov.get('uniqueTrapIds'),
         'resolvedTrapScripts': trap_cov.get('resolvedTrapScripts'),
         'missingTrapScripts': sorted(missing_ids),

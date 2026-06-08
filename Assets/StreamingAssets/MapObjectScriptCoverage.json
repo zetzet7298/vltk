@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T03:52:43Z",
+  "generatedAtUtc": "2026-06-08T04:01:05Z",
   "objectScriptRefs": 449,
   "uniqueObjectScripts": 299,
   "resolvedObjectScripts": 299,
@@ -10,6 +10,7 @@
   "objectScriptsWithMsg2Player": 48,
   "objectScriptsWithTalk": 31,
   "objectScriptsWithSay": 156,
-  "deterministicObjectActions": 7,
-  "deterministicObjectNewWorldActions": 7
+  "deterministicObjectActions": 23,
+  "deterministicObjectNewWorldActions": 7,
+  "deterministicObjectPickupMessageActions": 16
 }

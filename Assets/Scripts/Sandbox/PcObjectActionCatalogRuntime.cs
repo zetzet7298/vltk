@@ -54,9 +54,14 @@ namespace VLTK.Sandbox
         public int targetCellX;
         public int targetCellY;
         public int fightState = -1;
+        public string message;
+        public int[] eventItemIds;
+        public string[] notes;
+        public bool setPropState;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsPickupMessage => string.Equals(actionKind, "PickupMessage", StringComparison.OrdinalIgnoreCase);
 
         public Vector2 TargetWorldPosition()
             => MapEnemyDatabase.MpsToWorld(targetCellX * 32, targetCellY * 32);

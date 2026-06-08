@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T03:52:43Z",
+  "generatedAtUtc": "2026-06-08T04:01:05Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -19,6 +19,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -42,6 +50,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -81,6 +97,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -109,6 +133,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -137,6 +169,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -160,6 +200,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -188,6 +236,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -216,6 +272,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -244,6 +308,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -272,6 +344,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -301,6 +381,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -329,6 +417,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -357,6 +453,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -385,6 +489,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -408,6 +520,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -431,6 +551,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -454,6 +582,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -482,6 +618,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -510,6 +654,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -538,6 +690,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -566,6 +726,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -594,6 +762,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -622,6 +798,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -650,6 +834,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -673,6 +865,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -696,6 +896,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -719,6 +927,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -747,6 +963,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -775,6 +999,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -803,6 +1035,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -831,6 +1071,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -864,6 +1112,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": true,
         "talks": false,
         "usesTaskApis": false,
@@ -897,6 +1153,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": true,
         "talks": false,
         "usesTaskApis": false,
@@ -940,6 +1204,35 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Mở rương báu phía Bắc hồ"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "3"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "3",
+            "60*256+40"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "101"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "101"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -968,6 +1261,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -991,6 +1292,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1019,6 +1328,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1042,6 +1359,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1070,6 +1395,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1098,6 +1431,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1126,6 +1467,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1154,6 +1503,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1182,6 +1539,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1210,6 +1575,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1242,6 +1615,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1269,6 +1650,30 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "182"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy Ngọc Bội "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [
+          [
+            "1"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -1292,6 +1697,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1320,6 +1733,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1347,6 +1768,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "116"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tại khu Đông Bắc Vũ Lăng sơn tìm được Linh Chi. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -1374,6 +1815,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "135"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tại khu Đông Bắc Vũ Lăng sơn tìm được Huyền Sâm. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -1401,6 +1862,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "144"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tại khu Đông Bắc Vũ Lăng sơn tìm được Hà Thủ Ô. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -1429,6 +1910,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1457,6 +1946,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1486,6 +1983,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1514,6 +2019,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1542,6 +2055,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1574,6 +2095,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1602,6 +2131,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1630,6 +2167,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1658,6 +2203,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1686,6 +2239,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1714,6 +2275,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1759,6 +2328,42 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "132"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Mở rương báu"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "4"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "4",
+            "68"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "132"
+          ],
+          [
+            "102"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "102"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -1782,6 +2387,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1805,6 +2418,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1832,6 +2453,34 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "125"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được Tiểu Hoàng cẩu. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [
+          [
+            "4"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "125"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -1859,6 +2508,34 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "126"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được Tiểu Khôi la. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [
+          [
+            "4"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "126"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -1882,6 +2559,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1910,6 +2595,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -1941,6 +2634,14 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": false,
@@ -1971,6 +2672,14 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": false,
@@ -1999,6 +2708,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2027,6 +2744,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2120,6 +2845,27 @@
             "án Bát Ni Ma Mê Hồng. /L40_S2_correct"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Gặp Tịch Diệt Nhị Tăng cầu truyền đạt lại chỉ thị cho phương Trượng. "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "7"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "7",
+            "40*256+50"
+          ]
+        ],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -2172,6 +2918,43 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "28"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lấy được Dịch Cân Kinh. "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "7"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "47",
+            "0"
+          ],
+          [
+            "47",
+            "2"
+          ],
+          [
+            "47",
+            "1"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "28"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -2202,6 +2985,14 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": false,
@@ -2225,6 +3016,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2248,6 +3047,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2271,6 +3078,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2294,6 +3109,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2322,6 +3145,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2350,6 +3181,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2378,6 +3217,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2406,6 +3253,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2429,6 +3284,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2452,6 +3315,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2475,6 +3346,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2498,6 +3377,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2521,6 +3408,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2549,6 +3444,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2572,6 +3475,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2600,6 +3511,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2628,6 +3547,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2656,6 +3583,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2684,6 +3619,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2712,6 +3655,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2740,6 +3691,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -2797,6 +3756,45 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Mở được cơ quan thứ nhất "
+          ],
+          [
+            "Cả ba cơ quan đều đã mở"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "4"
+          ],
+          [
+            "21"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "21",
+            "UTask_trsub01"
+          ],
+          [
+            "4",
+            "50*256+50"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "160"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "160"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -2830,6 +3828,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": true,
         "talks": false,
         "usesTaskApis": false,
@@ -2887,6 +3893,45 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Mở được cơ quan thứ hai "
+          ],
+          [
+            "Cả ba cơ quan đều đã mở"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "4"
+          ],
+          [
+            "21"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "21",
+            "UTask_trsub01"
+          ],
+          [
+            "4",
+            "50*256+50"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "161"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "161"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -2920,6 +3965,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": true,
         "talks": false,
         "usesTaskApis": false,
@@ -2953,6 +4006,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": true,
         "talks": false,
         "usesTaskApis": false,
@@ -3010,6 +4071,45 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Mở được cơ quan thứ ba "
+          ],
+          [
+            "Cả ba cơ quan đều đã mở"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "4"
+          ],
+          [
+            "21"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "21",
+            "UTask_trsub01"
+          ],
+          [
+            "4",
+            "50*256+50"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "162"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "162"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3043,6 +4143,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": true,
         "talks": false,
         "usesTaskApis": false,
@@ -3066,6 +4174,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3108,6 +4224,46 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "211"
+          ],
+          [
+            "201"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lấy được chiếc túi thứ nhất "
+          ],
+          [
+            "Lấy được chiếc túi thứ hai "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "8"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "203"
+          ],
+          [
+            "211"
+          ],
+          [
+            "201"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "203"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3143,6 +4299,18 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "8"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3179,6 +4347,30 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "208"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lấy được chiếc túi thứ ba "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "8"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "208"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3221,6 +4413,46 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "200"
+          ],
+          [
+            "205"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lấy được chiƠc túi thứ 8 "
+          ],
+          [
+            "Lấy được chiƠc túi thứ 9 "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "8"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "202"
+          ],
+          [
+            "200"
+          ],
+          [
+            "205"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "202"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3263,6 +4495,39 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "209"
+          ],
+          [
+            "210"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Bạn lấy được 4 chiƠc túi vải "
+          ],
+          [
+            "Bạn lấy được 5 chiƠc túi vải "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "8"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "209"
+          ],
+          [
+            "210"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3305,6 +4570,46 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "206"
+          ],
+          [
+            "207"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Bạn lấy được túi vải thứ sáu "
+          ],
+          [
+            "Bạn lấy được túi vải thứ bảy "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "8"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "204"
+          ],
+          [
+            "206"
+          ],
+          [
+            "207"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "204"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3332,6 +4637,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "107"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được Đương Quy ở phƯa Đông Phục Ngưu sơn "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3359,6 +4684,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "134"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được Hợp Hoan  ở phƯa Đông Phục Ngưu sơn "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3386,6 +4731,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "135"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được Huyền Sâm ở phía Đông Phục Ngưu sơn "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3413,6 +4778,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "136"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được Phòng Kỷ ở phƯa Đông Phục Ngưu sơn "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3440,6 +4825,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "137"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được Chu Sa  ở phía Đông Phục Ngưu sơn "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3468,6 +4873,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3491,6 +4904,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3514,6 +4935,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3537,6 +4966,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3560,6 +4997,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3583,6 +5028,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3606,6 +5059,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3634,6 +5095,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3663,6 +5132,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3725,6 +5202,54 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [
+          [
+            "69"
+          ],
+          [
+            "69"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lá bùa trên bảo rương ở Thái Tử nham viết:: Đến thành Tương Dương tìm chủ tiệm thuốc tìm cách ngăn chặn bệnh dịch hạch lan tràn trong doanh trại quân Tống. "
+          ],
+          [
+            "Mở Bảo rương có Ngọc Thanh Chân Kinh. "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "5"
+          ],
+          [
+            "17"
+          ],
+          [
+            "17"
+          ],
+          [
+            "17"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "17",
+            "SetByte(GetTask(17"
+          ],
+          [
+            "17",
+            "SetByte(GetTask(17"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "69"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3789,6 +5314,54 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [
+          [
+            "70"
+          ],
+          [
+            "70"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lá bùa trên bảo rương ở Thái Tử nham viết: Đến thành Tương Dương tìm Thợ rèn tìm cách giải quyết vấn đề sức mạnh chống quân Kim không đủ. "
+          ],
+          [
+            "Mở Bảo rương"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "5"
+          ],
+          [
+            "17"
+          ],
+          [
+            "17"
+          ],
+          [
+            "17"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "17",
+            "SetByte(GetTask(17"
+          ],
+          [
+            "17",
+            "SetByte(GetTask(17"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "70"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3854,6 +5427,54 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "71"
+          ],
+          [
+            "71"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương"
+          ],
+          [
+            "Mở Bảo rương có được bộ Thái Thanh Chân Kinh "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "5"
+          ],
+          [
+            "17"
+          ],
+          [
+            "17"
+          ],
+          [
+            "17"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "17",
+            "SetByte(GetTask(17"
+          ],
+          [
+            "17",
+            "SetByte(GetTask(17"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "71"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -3877,6 +5498,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3900,6 +5529,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3928,6 +5565,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3951,6 +5596,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -3979,6 +5632,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4007,6 +5668,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4030,6 +5699,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4053,6 +5730,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4081,6 +5766,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4104,6 +5797,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4132,6 +5833,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4160,6 +5869,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4188,6 +5905,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4215,6 +5940,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "138"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy Từ Thiết khoáng ở phía tây nam ngoài thành Tương Dương. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -4242,6 +5987,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "118"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy Ngân Lượng khoáng ở phía tây nam ngoài thành Tương Dương. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -4269,6 +6034,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "121"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy XƯch Đồng khoáng ở phƯa tây nam ngoài thành Tương Dương. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -4292,6 +6077,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4315,6 +6108,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4338,6 +6139,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4361,6 +6170,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4384,6 +6201,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4407,6 +6232,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4435,6 +6268,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4463,6 +6304,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4491,6 +6340,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4519,6 +6376,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4542,6 +6407,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4565,6 +6438,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4588,6 +6469,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4616,6 +6505,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4639,6 +6536,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4662,6 +6567,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4690,6 +6603,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4713,6 +6634,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4741,6 +6670,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4769,6 +6706,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4797,6 +6742,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4825,6 +6778,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4853,6 +6814,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4881,6 +6850,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4909,6 +6886,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -4936,6 +6921,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "232"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Đến Long Tuyền thôn tìm được Bạch Tuyết Bách Hợp "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -4963,6 +6968,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "231"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Đến Long Tuyền thôn tìm được Dương Xuân Linh Chi "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -4991,6 +7016,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5019,6 +7052,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5047,6 +7088,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5070,6 +7119,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5093,6 +7150,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5158,6 +7223,58 @@
             "2",
             "Tiếp tục mở cửa /Turn_On",
             "Đóng/Turn_Off"
+          ]
+        ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Bạn đã phá được Cơ quan"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Uworld41"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "352"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "352"
           ]
         ],
         "setsFightState": false,
@@ -5227,6 +7344,54 @@
             "Đóng/Turn_Off"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Uworld41"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "352"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "352"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -5292,6 +7457,54 @@
             "2",
             "Tiếp tục mở cửa /Turn_On",
             "Đóng/Turn_Off"
+          ]
+        ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Uworld41"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "352"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "352"
           ]
         ],
         "setsFightState": false,
@@ -5361,6 +7574,54 @@
             "Đóng/Turn_Off"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Cur_Switchs"
+          ],
+          [
+            "41",
+            "Uworld41"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "352"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "352"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -5388,6 +7649,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "117"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy được sơn Lý Hồng. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -5416,6 +7697,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5439,6 +7728,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5462,6 +7759,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5490,6 +7795,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5518,6 +7831,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5554,6 +7875,34 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "9"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Bạn nhận được HuyƠt Hồn Thần KiƠm "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "9"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "212"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "212"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -5582,6 +7931,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5610,6 +7967,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5647,6 +8012,58 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "16"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Phái lấy Ngũ Sắc Thạch "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "9"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [
+          [
+            "11"
+          ],
+          [
+            "12"
+          ],
+          [
+            "13"
+          ],
+          [
+            "14"
+          ],
+          [
+            "15"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "11"
+          ],
+          [
+            "12"
+          ],
+          [
+            "13"
+          ],
+          [
+            "14"
+          ],
+          [
+            "15"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -5675,6 +8092,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5703,6 +8128,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5731,6 +8164,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5759,6 +8200,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5787,6 +8236,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5815,6 +8272,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5838,6 +8303,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5861,6 +8334,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5884,6 +8365,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5907,6 +8396,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5930,6 +8427,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5953,6 +8458,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -5976,6 +8489,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6005,6 +8526,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6028,6 +8557,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6051,6 +8588,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6079,6 +8624,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6107,6 +8660,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6135,6 +8696,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6163,6 +8732,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6191,6 +8768,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6219,6 +8804,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6247,6 +8840,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6275,6 +8876,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6303,6 +8912,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6331,6 +8948,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6359,6 +8984,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6387,6 +9020,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6415,6 +9056,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6438,6 +9087,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6461,6 +9118,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6484,6 +9149,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6507,6 +9180,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6530,6 +9211,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6553,6 +9242,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6581,6 +9278,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6609,6 +9314,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6699,6 +9412,73 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [
+          [
+            "41"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Trên bia đá trước phòng Đường U"
+          ],
+          [
+            "ở phía trước bia đá tại Vô Tâm Cốc biết là phải tìm khẩu quyết bia đá trong cốc trước. "
+          ],
+          [
+            "Đường U lệnh cho bạn mang Kim Hạng Quyển giao cho Đường Cừu chưởng môn. "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "2"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "2",
+            "20*256+40"
+          ],
+          [
+            "2",
+            "20*256+60"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "37"
+          ],
+          [
+            "38"
+          ],
+          [
+            "39"
+          ],
+          [
+            "40"
+          ],
+          [
+            "41"
+          ],
+          [
+            "41"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "37"
+          ],
+          [
+            "38"
+          ],
+          [
+            "39"
+          ],
+          [
+            "40"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -6722,6 +9502,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6745,6 +9533,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6773,6 +9569,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6801,6 +9605,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6829,6 +9641,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6857,6 +9677,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6880,6 +9708,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -6931,6 +9767,35 @@
             "Không cần /refuse"
           ]
         ],
+        "addEventItemCalls": [
+          [
+            "49"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tại tầng thứ 3 của Trúc Tơ Động có 2 rương báu đánh vỡ 1 rương báu"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "2"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "2",
+            "67"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "49"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -6982,6 +9847,31 @@
             "Không cần /refuse"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Lấy được một vạn lượng trong rương báu tại tầng thứ 3 của Trúc Tơ Động. "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "2"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "2",
+            "60*256+70"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "49"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -7005,6 +9895,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7028,6 +9926,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7051,6 +9957,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7079,6 +9993,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7107,6 +10029,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7135,6 +10065,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7162,6 +10100,33 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "118"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy một miếng Lượng Ngân Khoáng trong khu rừng ở phía tây Thành Đô. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [
+          [
+            "1"
+          ],
+          [
+            "1"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -7185,6 +10150,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7208,6 +10181,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7231,6 +10212,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7254,6 +10243,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7277,6 +10274,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7327,6 +10332,23 @@
             "Không màng /no"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "11"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "11",
+            "1"
+          ]
+        ],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -7350,6 +10372,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7373,6 +10403,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7396,6 +10434,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7419,6 +10465,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7447,6 +10501,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7475,6 +10537,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7503,6 +10573,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7531,6 +10609,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7559,6 +10645,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7587,6 +10681,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7614,6 +10716,30 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "177"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy chạc cây "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [
+          [
+            "1"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -7641,6 +10767,30 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "178"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm thấy da trâu "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [
+          [
+            "1"
+          ]
+        ],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -7664,6 +10814,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7687,6 +10845,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7710,6 +10876,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7738,6 +10912,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7766,6 +10948,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7789,6 +10979,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7817,6 +11015,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7845,6 +11051,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7873,6 +11087,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7917,6 +11139,45 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "42"
+          ],
+          [
+            "42"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Mở rương lấy được Hoả Khí Phổ "
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "2"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "2",
+            "30*256+50"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "98"
+          ],
+          [
+            "42"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "98"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -7945,6 +11206,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -7973,6 +11242,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8002,6 +11279,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8030,6 +11315,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8058,6 +11351,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8086,6 +11387,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8114,6 +11423,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8142,6 +11459,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8170,6 +11495,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8193,6 +11526,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8216,6 +11557,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8243,6 +11592,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "3"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Lấy được Bích Thường Phượng Điệp. "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -8270,6 +11639,26 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "4"
+          ]
+        ],
+        "addNoteCalls": [
+          [
+            "Tìm được giun đất đỏ "
+          ]
+        ],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -8298,6 +11687,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8326,6 +11723,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8354,6 +11759,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8382,6 +11795,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8410,6 +11831,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8438,6 +11867,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8466,6 +11903,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8499,6 +11944,47 @@
         ],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [
+          [
+            "Đánh bại trợ thủ của tên ác bá"
+          ]
+        ],
+        "setPropStateCalls": [],
+        "getTaskCalls": [
+          [
+            "6"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "6",
+            "40*256+30"
+          ]
+        ],
+        "haveItemCalls": [
+          [
+            "197"
+          ],
+          [
+            "196"
+          ],
+          [
+            "198"
+          ]
+        ],
+        "addItemCalls": [],
+        "delItemCalls": [
+          [
+            "197"
+          ],
+          [
+            "196"
+          ],
+          [
+            "198"
+          ]
+        ],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -8522,6 +12008,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8550,6 +12044,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8593,6 +12095,31 @@
           ]
         ],
         "sayCalls": [],
+        "addEventItemCalls": [
+          [
+            "1"
+          ]
+        ],
+        "addNoteCalls": [],
+        "setPropStateCalls": [
+          [
+            ""
+          ]
+        ],
+        "getTaskCalls": [
+          [
+            "6"
+          ]
+        ],
+        "setTaskCalls": [
+          [
+            "6",
+            "20*256+20"
+          ]
+        ],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": true,
         "usesTaskApis": true,
@@ -8616,6 +12143,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8639,6 +12174,14 @@
         "msg2PlayerCalls": [],
         "talkCalls": [],
         "sayCalls": [],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
@@ -8667,6 +12210,14 @@
             "0"
           ]
         ],
+        "addEventItemCalls": [],
+        "addNoteCalls": [],
+        "setPropStateCalls": [],
+        "getTaskCalls": [],
+        "setTaskCalls": [],
+        "haveItemCalls": [],
+        "addItemCalls": [],
+        "delItemCalls": [],
         "setsFightState": false,
         "talks": false,
         "usesTaskApis": false,
