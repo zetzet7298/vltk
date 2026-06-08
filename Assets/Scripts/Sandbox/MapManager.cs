@@ -123,7 +123,10 @@ namespace VLTK.Sandbox
             {
                 var entries = MapCatalogLoader.ToModelEntries(catalogFile);
                 foreach (var entry in entries)
+                {
+                    if (entry == null || entry.mapId <= 0) continue;
                     _catalog[entry.mapId] = entry;
+                }
 
                 // AC4: parse and expose discovery report
                 var report = MapCatalogLoader.ToDiscoveryReport(catalogFile);

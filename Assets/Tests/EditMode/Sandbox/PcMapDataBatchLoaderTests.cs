@@ -48,7 +48,14 @@ namespace VLTK.Tests.Sandbox
         {
             var manager = new MapManager();
             manager.LoadCatalog();
-            Assert.GreaterOrEqual(manager.Catalog.Count, 1000, "MapManager should merge full PC maplist runtime catalog");
+            Assert.AreEqual(1005, manager.Catalog.Count, "MapManager runtime catalog should match the 1,005 positive PC maplist ids, with no legacy mapId=0 placeholder pollution.");
+            Assert.IsFalse(manager.Catalog.ContainsKey(0));
+            Assert.IsTrue(manager.Catalog.ContainsKey(MapPortManifest.DaiLyId));
+            Assert.IsTrue(manager.Catalog.ContainsKey(MapPortManifest.LamAnId));
+            Assert.AreEqual("Vượt ải Nhiếp Thí Trần", manager.Catalog[MapPortManifest.VuotAiNhiepThiTranId].displayNameNormalized);
+            Assert.AreEqual("Mật đạo Nha môn Tương Dương", manager.Catalog[79].displayNameNormalized, "79 is not Ba Lăng huyện in PC maplist truth.");
+            Assert.IsFalse(string.IsNullOrEmpty(manager.Catalog[MapPortManifest.VuotAiNhiepThiTranId].geometryKey));
+            Assert.IsFalse(string.IsNullOrEmpty(manager.Catalog[MapPortManifest.VuotAiNhiepThiTranId].regionFolder));
         }
 
         [Test]
