@@ -81,9 +81,11 @@ namespace VLTK.Tests.Sandbox
             public bool hasMap = true;
             public int fightState = -1;
             public int playerLevel = 1;
+            public long currentDateYmdHm = 202606080900;
 
             public bool HasMap(int targetMapId) => hasMap;
             public int GetPlayerLevel() => playerLevel;
+            public long GetCurrentDateYmdHm() => currentDateYmdHm;
             public int GetFightState() => fightState;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
@@ -97,6 +99,7 @@ namespace VLTK.Tests.Sandbox
         private sealed class FakeTrapActionSideEffects : ITrapActionSideEffects
         {
             public readonly List<string> messages = new();
+            public readonly List<int> stationIds = new();
             public readonly List<int> terminiIds = new();
             public int protectTicks;
             public int skillStateId;
@@ -104,6 +107,7 @@ namespace VLTK.Tests.Sandbox
             public int skillStateTime;
 
             public void PostMessage(string message) => messages.Add(message);
+            public void AddStation(int stationId) => stationIds.Add(stationId);
             public void AddTermini(int terminiId) => terminiIds.Add(terminiId);
             public void SetProtectTime(int ticks) => protectTicks = ticks;
             public void AddSkillState(int nextSkillStateId, int level, int durationTicks)
@@ -518,6 +522,68 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, sideEffects.skillStateLevel);
             Assert.AreEqual(54, sideEffects.skillStateTime);
             StringAssert.Contains("GetLevel()==5", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_OpenServerDateGateSetPos_BranchesFromDateAndFightState()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 904,
+                        trapIdHex = "0x00000388",
+                        scriptPath = @"\script\gate.lua",
+                        actionKind = "OpenServerDateGateSetPos",
+                        openServerDate = 202202111248,
+                        openServerMessage = "Thời gian open server là 17h, xin hãy quay lại sau",
+                        closedTargetCellX = 1695,
+                        closedTargetCellY = 3099,
+                        ifFightState = 0,
+                        ifTargetCellX = 1697,
+                        ifTargetCellY = 3097,
+                        ifNextFightState = 1,
+                        elseTargetCellX = 1695,
+                        elseTargetCellY = 3099,
+                        elseNextFightState = 0,
+                        closedStationIds = new[] { 10 },
+                        openStationIds = new[] { 15 },
+                        closedProtectTicks = 54,
+                        closedSkillStateId = 963,
+                        closedSkillStateLevel = 1,
+                        closedSkillStateTime = 54,
+                    }
+                }
+            };
+
+            var closedHost = new FakeTrapTravelHost { currentDateYmdHm = 202101010900, fightState = 0 };
+            var closedSideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, closedHost, closedSideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 904 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1695 * 32, 3099 * 32), closedHost.position);
+            Assert.AreEqual(0, closedHost.fightState);
+            CollectionAssert.AreEqual(new[] { "Thời gian open server là 17h, xin hãy quay lại sau" }, closedSideEffects.messages);
+            CollectionAssert.AreEqual(new[] { 10 }, closedSideEffects.stationIds);
+            Assert.AreEqual(54, closedSideEffects.protectTicks);
+            Assert.AreEqual(963, closedSideEffects.skillStateId);
+
+            var openHost = new FakeTrapTravelHost { currentDateYmdHm = 202606080900, fightState = 0 };
+            var openSideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, openHost, openSideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x00000388" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1697 * 32, 3097 * 32), openHost.position);
+            Assert.AreEqual(1, openHost.fightState);
+            CollectionAssert.IsEmpty(openSideEffects.messages);
+            CollectionAssert.AreEqual(new[] { 15 }, openSideEffects.stationIds);
+            StringAssert.Contains("GetLocalDate()==202606080900", result.detail);
         }
 
         [Test]

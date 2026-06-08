@@ -28,6 +28,7 @@ JX_MAP_PORT = UNITY_ROOT / 'harness/.codex/skills/jx-map-port/scripts/jx_map_por
 VLTK_DECODE = Path('/var/www/vltktool/decode_item_texts_vi.py')
 REGION_FILE_RE = re.compile(r'^(\d+)_(\d+)_Region_S\.dat$', re.IGNORECASE)
 KILLBOSSMATCH_MAP_IDS = set(range(907, 917))
+OPEN_SERVER_CONFIG_RELPATH = Path('script/global/pgaming/configserver/configall.lua')
 
 
 def load_module(path: Path, name: str):
@@ -496,6 +497,7 @@ def clean_user_message(message: str) -> str:
             .replace('đƠn', 'đến')
             .replace('ĐƠn', 'Đến')
             .replace('nă cứ', 'nó cứ')
+            .replace('quay lai', 'quay lại')
             .replace('  ', ' '))
 
 
@@ -751,6 +753,113 @@ def is_safe_trap_level_gate_newworld(actions: dict[str, Any], source: str) -> bo
     if actions.get('addTerminiCalls') and not expr_args(actions.get('addTerminiCalls') or [], 1):
         return False
     return bool(talk_messages(actions))
+
+
+def open_server_config(pc_root: Path = PC_ROOT) -> tuple[int, str]:
+    path = server_root(pc_root) / OPEN_SERVER_CONFIG_RELPATH
+    try:
+        text = decode_legacy_text(path.read_bytes())
+    except Exception:
+        return 0, ''
+    date_match = re.search(r'ThoiGianOpenServer\s*=\s*(\d+)', text)
+    msg_match = re.search(r'ThoiGianOpenServerText\s*=\s*"([^"]*)"', text)
+    date_value = int(date_match.group(1)) if date_match else 0
+    message = clean_user_message(msg_match.group(1)) if msg_match else ''
+    return date_value, message
+
+
+def split_date_gate_blocks(source: str) -> tuple[str, str] | None:
+    lines = (source or '').splitlines()
+    start = None
+    for index, line in enumerate(lines):
+        if re.search(r'\bif\s+nDate\s*<\s*ThoiGianOpenServer\s*then\b', line):
+            start = index
+            break
+    if start is None:
+        return None
+
+    closed: list[str] = []
+    opened: list[str] = []
+    branch = closed
+    depth = 1
+    for line in lines[start + 1:]:
+        stripped = line.strip()
+        if depth == 1 and re.fullmatch(r'else\s*;?', stripped):
+            branch = opened
+            continue
+        if re.fullmatch(r'end\s*;?', stripped):
+            depth -= 1
+            if depth <= 0:
+                break
+            branch.append(line)
+            continue
+        branch.append(line)
+        if re.search(r'\bif\b.*\bthen\b', stripped) and not re.search(r'\belseif\b', stripped):
+            depth += 1
+    if not closed or not opened:
+        return None
+    return '\n'.join(closed), '\n'.join(opened)
+
+
+def unique_int_list(calls: list[list[str]]) -> list[int]:
+    values: list[int] = []
+    for parsed in expr_args(calls or [], 1):
+        value = parsed[0]
+        if value not in values:
+            values.append(value)
+    return values
+
+
+def first_expr_arg(calls: list[list[str]], width: int) -> tuple[int, ...] | None:
+    parsed = expr_args(calls or [], width)
+    return parsed[0] if parsed else None
+
+
+def open_server_date_gate_setpos(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {
+        'main', 'Include', 'tonumber', 'GetLocalDate', 'if', 'GetFightState',
+        'SetPos', 'Msg2Player', 'AddStation', 'SetProtectTime', 'AddSkillState',
+        'SetFightState'
+    }
+    if 'ThoiGianOpenServer' not in clean_source or not source_uses_only_calls(clean_source, allowed):
+        return None
+    blocks = split_date_gate_blocks(clean_source)
+    if blocks is None:
+        return None
+    closed_block, open_block = blocks
+    closed_positions = int_args(parse_lua_calls(closed_block, 'SetPos'), 2)
+    if not closed_positions:
+        return None
+    open_branch = conditional_fight_state_setpos(open_block)
+    if open_branch is None:
+        return None
+    open_server_date, open_server_message = open_server_config()
+    if open_server_date <= 0 or not is_safe_user_message(open_server_message):
+        return None
+    closed_actions = script_action_summary(closed_block)
+    open_actions = script_action_summary(open_block)
+    closed_skill = first_expr_arg(closed_actions.get('addSkillStateCalls') or [], 4)
+    open_skill = first_expr_arg(open_actions.get('addSkillStateCalls') or [], 4)
+    closed_protect = first_expr_arg(closed_actions.get('setProtectTimeCalls') or [], 1)
+    open_protect = first_expr_arg(open_actions.get('setProtectTimeCalls') or [], 1)
+    return {
+        'openServerDate': open_server_date,
+        'openServerMessage': open_server_message,
+        'closedTargetCellX': closed_positions[0][0],
+        'closedTargetCellY': closed_positions[0][1],
+        'closedStationIds': unique_int_list([args[:1] for args in parse_lua_calls(closed_block, 'AddStation')]),
+        'openStationIds': unique_int_list([args[:1] for args in parse_lua_calls(open_block, 'AddStation')]),
+        'closedProtectTicks': closed_protect[0] if closed_protect else 0,
+        'openProtectTicks': open_protect[0] if open_protect else 0,
+        'closedSkillStateId': closed_skill[0] if closed_skill else 0,
+        'closedSkillStateLevel': closed_skill[1] if closed_skill else 0,
+        'closedSkillStateTime': closed_skill[3] if closed_skill else 0,
+        'openSkillStateId': open_skill[0] if open_skill else 0,
+        'openSkillStateLevel': open_skill[1] if open_skill else 0,
+        'openSkillStateTime': open_skill[3] if open_skill else 0,
+        **open_branch,
+    }
 
 
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
@@ -1015,6 +1124,23 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'source': 'PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos',
             })
             continue
+        open_server_gate = open_server_date_gate_setpos(source)
+        if open_server_gate is not None:
+            entry = {
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'OpenServerDateGateSetPos',
+                'targetMapId': 0,
+                'targetCellX': open_server_gate['closedTargetCellX'],
+                'targetCellY': open_server_gate['closedTargetCellY'],
+                'fightState': -1,
+                'source': 'PC trap Lua main(): Include(configall.lua), if tonumber(GetLocalDate()) < ThoiGianOpenServer then SetPos/Msg2Player/AddStation/SetProtectTime/AddSkillState else GetFightState SetPos/SetFightState plus optional AddStation/protect/buff',
+            }
+            entry.update(open_server_gate)
+            entries.append(entry)
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -1078,6 +1204,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapMessageActions': sum(1 for e in entries if e['actionKind'] in {'Msg2Player', 'SayMessage', 'TalkMessage'}),
         'deterministicTrapMsg2PlayerNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'Msg2PlayerNewWorld'),
         'deterministicTrapLevelGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelGateNewWorld'),
+        'deterministicTrapOpenServerDateGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'OpenServerDateGateSetPos'),
     }
     return entries, coverage
 

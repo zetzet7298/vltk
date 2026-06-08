@@ -75,6 +75,20 @@ namespace VLTK.Sandbox
         public int skillStateId;
         public int skillStateLevel;
         public int skillStateTime;
+        public long openServerDate;
+        public string openServerMessage;
+        public int closedTargetCellX;
+        public int closedTargetCellY;
+        public int[] closedStationIds;
+        public int[] openStationIds;
+        public int closedProtectTicks;
+        public int openProtectTicks;
+        public int closedSkillStateId;
+        public int closedSkillStateLevel;
+        public int closedSkillStateTime;
+        public int openSkillStateId;
+        public int openSkillStateLevel;
+        public int openSkillStateTime;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -85,6 +99,7 @@ namespace VLTK.Sandbox
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsMsg2PlayerNewWorld => string.Equals(actionKind, "Msg2PlayerNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsLevelGateNewWorld => string.Equals(actionKind, "LevelGateNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsOpenServerDateGateSetPos => string.Equals(actionKind, "OpenServerDateGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()
@@ -97,6 +112,9 @@ namespace VLTK.Sandbox
 
         public Vector2 FailTargetWorldPosition()
             => CellToWorld(failTargetCellX, failTargetCellY);
+
+        public Vector2 ClosedTargetWorldPosition()
+            => CellToWorld(closedTargetCellX, closedTargetCellY);
 
         public int ConditionalNextFightState(int currentFightState)
             => currentFightState == ifFightState ? ifNextFightState : elseNextFightState;

@@ -2,9 +2,11 @@
 // VLTK Mobile — executes the deterministic subset of PC trap Lua actions.
 // Ported APIs: NewWorld(mapId,x,y), SetPos(x,y), and simple
 // GetFightState()/SetFightState() gate traps with PC cell coords, plus read-only
-// Msg2Player/Say/Talk message-only traps, and Msg2Player+NewWorld traps.
+// Msg2Player/Say/Talk message-only traps, Msg2Player+NewWorld traps, and
+// open-server date gates from configall.lua.
 // -----------------------------------------------------------------------------
 
+using System;
 using UnityEngine;
 using VLTK.Core;
 using VLTK.Model;
@@ -26,6 +28,7 @@ namespace VLTK.Sandbox
     {
         bool HasMap(int mapId);
         int GetPlayerLevel();
+        long GetCurrentDateYmdHm();
         int GetFightState();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
@@ -35,6 +38,7 @@ namespace VLTK.Sandbox
     public interface ITrapActionSideEffects
     {
         void PostMessage(string message);
+        void AddStation(int stationId);
         void AddTermini(int terminiId);
         void SetProtectTime(int ticks);
         void AddSkillState(int skillStateId, int level, int durationTicks);
@@ -139,6 +143,35 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsOpenServerDateGateSetPos)
+            {
+                long currentDate = _host.GetCurrentDateYmdHm();
+                if (currentDate < action.openServerDate)
+                {
+                    var closedTarget = action.ClosedTargetWorldPosition();
+                    _host.SetPos(closedTarget);
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.openServerMessage))
+                        _sideEffects.PostMessage(action.openServerMessage);
+                    ApplyStationProtectSkill(action.closedStationIds, action.closedProtectTicks,
+                        action.closedSkillStateId, action.closedSkillStateLevel, action.closedSkillStateTime);
+                    result = Success(action,
+                        $"GetLocalDate()=={currentDate} < {action.openServerDate} -> SetPos({action.closedTargetCellX},{action.closedTargetCellY}) -> {closedTarget}");
+                    return true;
+                }
+
+                int currentFightState = _host.GetFightState();
+                var openTarget = action.ConditionalTargetWorldPosition(currentFightState);
+                int nextFightState = action.ConditionalNextFightState(currentFightState);
+                _host.SetPos(openTarget);
+                if (nextFightState >= 0)
+                    _host.SetFightState(nextFightState);
+                ApplyStationProtectSkill(action.openStationIds, action.openProtectTicks,
+                    action.openSkillStateId, action.openSkillStateLevel, action.openSkillStateTime);
+                result = Success(action,
+                    $"GetLocalDate()=={currentDate} >= {action.openServerDate}, GetFightState()=={currentFightState} -> SetPos({(currentFightState == action.ifFightState ? action.ifTargetCellX : action.elseTargetCellX)},{(currentFightState == action.ifFightState ? action.ifTargetCellY : action.elseTargetCellY)}) -> {openTarget}, SetFightState({nextFightState})");
+                return true;
+            }
+
             if (action.IsNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -211,6 +244,21 @@ namespace VLTK.Sandbox
                 _sideEffects.AddSkillState(action.skillStateId, action.skillStateLevel, action.skillStateTime);
         }
 
+        private void ApplyStationProtectSkill(int[] stationIds, int protectTicks,
+            int skillStateId, int skillStateLevel, int skillStateTime)
+        {
+            if (_sideEffects == null) return;
+            if (stationIds != null)
+            {
+                foreach (int stationId in stationIds)
+                    _sideEffects.AddStation(stationId);
+            }
+            if (protectTicks > 0)
+                _sideEffects.SetProtectTime(protectTicks);
+            if (skillStateId > 0)
+                _sideEffects.AddSkillState(skillStateId, skillStateLevel, skillStateTime);
+        }
+
         private static TrapActionExecutionResult Success(PcTrapActionCatalogEntry action, string detail)
             => new TrapActionExecutionResult { success = true, detail = Detail(action, detail) };
 
@@ -233,6 +281,12 @@ namespace VLTK.Sandbox
             if (manager?.ChatService != null)
                 manager.ChatService.PostSystemMessage(message);
             SubsystemLog.Info("Trap", $"PC trap message: {message}");
+        }
+
+        public void AddStation(int stationId)
+        {
+            if (stationId <= 0) return;
+            SubsystemLog.Info("Trap", $"PC AddStation({stationId}) recorded");
         }
 
         public void AddTermini(int terminiId)
@@ -270,6 +324,9 @@ namespace VLTK.Sandbox
                    ?? manager?.PlayerProgression?.level
                    ?? 1;
         }
+
+        public long GetCurrentDateYmdHm()
+            => long.Parse(DateTime.Now.ToString("yyyyMMddHHmm"));
 
         public int GetFightState()
         {
