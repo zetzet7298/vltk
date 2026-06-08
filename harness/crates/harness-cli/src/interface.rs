@@ -274,7 +274,10 @@ struct BacklogQueryArgs {
 
 #[derive(Subcommand, Debug)]
 enum QueryView {
-    /// Test matrix.
+    /// Harness story-slice proof matrix.
+    #[command(
+        after_help = "Matrix status/proof columns describe Harness story-slice validation only; they do not certify full PC→Mobile port parity. For PC→Mobile completion, use docs/PORT_STATUS.md as source of truth."
+    )]
     Matrix(MatrixQueryArgs),
     /// Harness improvement proposals.
     Backlog(BacklogQueryArgs),
@@ -630,6 +633,11 @@ fn resolve_context() -> Result<HarnessContext, InterfaceError> {
 }
 
 fn print_matrix(records: &[StoryMatrixRecord], numeric: bool) {
+    if std::env::var("HARNESS_MATRIX_NOTE_PRINTED").as_deref() != Ok("1") {
+        println!("NOTE: matrix status/proof columns describe Harness story-slice validation only; they do not certify full PC→Mobile port parity.");
+        println!("NOTE: docs/PORT_STATUS.md is the source of truth for PC→Mobile port completion.");
+    }
+
     let rows = records
         .iter()
         .map(|record| {
@@ -913,5 +921,7 @@ mod tests {
             .render_long_help()
             .to_string();
         assert!(matrix_help.contains("--numeric"));
+        assert!(matrix_help.contains("story-slice validation"));
+        assert!(matrix_help.contains("docs/PORT_STATUS.md"));
     }
 }

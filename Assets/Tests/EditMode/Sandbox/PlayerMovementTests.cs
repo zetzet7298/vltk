@@ -144,5 +144,92 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(player.RequestMoveTo(new Vector2(100, 100), null));
             Assert.AreEqual(MoveStepResult.Moving, player.Step(1f, null));
         }
+
+        [Test]
+        public void SandboxController_MoveTo_ClampsMinimapTargetToActiveMapBounds()
+        {
+            var go = new GameObject("player-controller-clamp-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.SetMapBounds(new RectDef
+                {
+                    x = 39424f,
+                    y = -56320f,
+                    width = 14848f,
+                    height = 7168f,
+                });
+
+                controller.MoveTo(new Vector2(999999f, -999999f));
+
+                Assert.AreEqual(new Vector2(54272f, -56320f), controller.MoveTarget);
+                Assert.IsTrue(controller.HasMoveTarget);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_SetMapBounds_ReclampsPendingTarget()
+        {
+            var go = new GameObject("player-controller-reclamp-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.MoveTo(new Vector2(60000f, -60000f));
+
+                controller.SetMapBounds(new RectDef
+                {
+                    x = 39424f,
+                    y = -56320f,
+                    width = 14848f,
+                    height = 7168f,
+                });
+
+                Assert.AreEqual(new Vector2(54272f, -56320f), controller.MoveTarget);
+                Assert.IsTrue(controller.HasMoveTarget);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_OutOfBoundsTarget_ArrivesAtClampedMap907Edge()
+        {
+            var go = new GameObject("player-controller-edge-arrival-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.SetMapBounds(new RectDef
+                {
+                    x = 39424f,
+                    y = -56320f,
+                    width = 14848f,
+                    height = 7168f,
+                });
+                go.transform.position = new Vector3(54264f, -56320f, 0f);
+
+                controller.MoveTo(new Vector2(999999f, -999999f));
+                controller.SimulateMove(0.016f);
+
+                Assert.IsFalse(controller.HasMoveTarget);
+                Assert.AreEqual(new Vector2(54272f, -56320f), (Vector2)go.transform.position);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
     }
 }

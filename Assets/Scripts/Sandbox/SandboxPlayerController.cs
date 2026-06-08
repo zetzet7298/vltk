@@ -142,7 +142,7 @@ namespace VLTK.Sandbox
 
         public void MoveTo(Vector2 worldTarget)
         {
-            MoveTarget = worldTarget;
+            MoveTarget = ClampToActiveMapBounds(worldTarget);
             HasMoveTarget = true;
         }
 
@@ -155,6 +155,18 @@ namespace VLTK.Sandbox
             mapBoundsMin = new Vector2(sourceBounds.x, sourceBounds.y);
             mapBoundsMax = new Vector2(sourceBounds.x + sourceBounds.width, sourceBounds.y + sourceBounds.height);
             clampToMapBounds = true;
+            if (HasMoveTarget)
+                MoveTarget = ClampToActiveMapBounds(MoveTarget);
+        }
+
+        private Vector2 ClampToActiveMapBounds(Vector2 worldPosition)
+        {
+            if (!clampToMapBounds)
+                return worldPosition;
+
+            return new Vector2(
+                Mathf.Clamp(worldPosition.x, mapBoundsMin.x, mapBoundsMax.x),
+                Mathf.Clamp(worldPosition.y, mapBoundsMin.y, mapBoundsMax.y));
         }
 
         public void ClearMoveTarget()
@@ -220,7 +232,9 @@ namespace VLTK.Sandbox
                 float arrive = Mathf.Max(0.1f, targetArriveDistance);
                 if (toTarget.magnitude <= arrive)
                 {
-                    transform.position = new Vector3(MoveTarget.x, MoveTarget.y, transform.position.z);
+                    var clampedTarget = ClampToActiveMapBounds(MoveTarget);
+                    transform.position = new Vector3(clampedTarget.x, clampedTarget.y, transform.position.z);
+                    MoveTarget = clampedTarget;
                     HasMoveTarget = false;
                     input = Vector2.zero;
                 }
@@ -249,17 +263,8 @@ namespace VLTK.Sandbox
                         HasMoveTarget = false;
                     }
                 }
-                transform.position = new Vector3(next.x, next.y, transform.position.z);
-
-                // Clamp player inside map bounds
-                if (clampToMapBounds)
-                {
-                    var clamped = new Vector3(
-                        Mathf.Clamp(transform.position.x, mapBoundsMin.x, mapBoundsMax.x),
-                        Mathf.Clamp(transform.position.y, mapBoundsMin.y, mapBoundsMax.y),
-                        transform.position.z);
-                    transform.position = clamped;
-                }
+                var boundedNext = ClampToActiveMapBounds(next);
+                transform.position = new Vector3(boundedNext.x, boundedNext.y, transform.position.z);
             }
 
             EnsureVisual();

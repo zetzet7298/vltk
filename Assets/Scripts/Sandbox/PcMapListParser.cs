@@ -164,14 +164,54 @@ namespace VLTK.Sandbox
             catch (DecoderFallbackException)
             {
             }
+
             try
             {
-                return Encoding.GetEncoding("GB2312").GetString(bytes);
+                string gb2312 = Encoding.GetEncoding("GB2312").GetString(bytes);
+                if (PreservesAsciiDelimiters(bytes, gb2312))
+                    return gb2312;
             }
             catch
             {
-                return Encoding.UTF8.GetString(bytes);
             }
+
+            return DecodeLatin1(bytes);
+        }
+
+        private static bool PreservesAsciiDelimiters(byte[] bytes, string decoded)
+        {
+            return CountByte(bytes, (byte)'\t') == CountChar(decoded, '\t')
+                && CountByte(bytes, (byte)'=') == CountChar(decoded, '=')
+                && CountByte(bytes, (byte)',') == CountChar(decoded, ',')
+                && CountByte(bytes, (byte)'\n') == CountChar(decoded, '\n')
+                && CountByte(bytes, (byte)'\r') == CountChar(decoded, '\r');
+        }
+
+        private static int CountByte(byte[] bytes, byte value)
+        {
+            int count = 0;
+            if (bytes == null) return 0;
+            for (int i = 0; i < bytes.Length; i++)
+                if (bytes[i] == value) count++;
+            return count;
+        }
+
+        private static int CountChar(string text, char value)
+        {
+            int count = 0;
+            if (string.IsNullOrEmpty(text)) return 0;
+            for (int i = 0; i < text.Length; i++)
+                if (text[i] == value) count++;
+            return count;
+        }
+
+        private static string DecodeLatin1(byte[] bytes)
+        {
+            if (bytes == null || bytes.Length == 0) return string.Empty;
+            var chars = new char[bytes.Length];
+            for (int i = 0; i < bytes.Length; i++)
+                chars[i] = (char)bytes[i];
+            return new string(chars);
         }
     }
 }

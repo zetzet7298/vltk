@@ -5,10 +5,14 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-DB_PATH="${HARNESS_DB:-$REPO_ROOT/harness.db}"
-SCHEMA_DIR="$REPO_ROOT/scripts/schema"
-INSTALLED_RUST_CLI="$REPO_ROOT/scripts/bin/harness-cli"
-DEV_RUST_CLI="$REPO_ROOT/target/debug/harness-cli"
+HARNESS_ROOT="$REPO_ROOT"
+if [ -d "$REPO_ROOT/harness/scripts" ]; then
+  HARNESS_ROOT="$(cd "$REPO_ROOT/harness" && pwd)"
+fi
+DB_PATH="${HARNESS_DB:-$HARNESS_ROOT/harness.db}"
+SCHEMA_DIR="$HARNESS_ROOT/scripts/schema"
+INSTALLED_RUST_CLI="$HARNESS_ROOT/scripts/bin/harness-cli"
+DEV_RUST_CLI="$HARNESS_ROOT/target/debug/harness-cli"
 RUST_CLI="${HARNESS_RUST_CLI:-}"
 
 if [ -z "$RUST_CLI" ]; then
@@ -29,6 +33,16 @@ rust_cli_supports() {
       ;;
   esac
 }
+
+print_matrix_semantics_note() {
+  printf 'NOTE: matrix status/proof columns describe Harness story-slice validation only; they do not certify full PC→Mobile port parity.\n'
+  printf 'NOTE: docs/PORT_STATUS.md is the source of truth for PC→Mobile port completion.\n'
+}
+
+if [ "${1:-}" = "query" ] && [ "${2:-}" = "matrix" ]; then
+  print_matrix_semantics_note
+  export HARNESS_MATRIX_NOTE_PRINTED=1
+fi
 
 # Intercept story update --evidence to validate paths exist
 if [ "${1:-}" = "story" ] && [ "${2:-}" = "update" ]; then
@@ -83,7 +97,7 @@ fi
 if [ "${HARNESS_DISABLE_RUST_CLI:-0}" != "1" ] &&
    [ -x "$RUST_CLI" ] &&
    rust_cli_supports "${1:-}" "${2:-}"; then
-  HARNESS_REPO_ROOT="$REPO_ROOT" exec "$RUST_CLI" "$@"
+  HARNESS_REPO_ROOT="$HARNESS_ROOT" HARNESS_DB="$DB_PATH" exec "$RUST_CLI" "$@"
 fi
 
 # ── helpers ────────────────────────────────────────────────────────
@@ -253,9 +267,9 @@ cmd_import() {
 }
 
 import_brownfield() {
-  local matrix_path="$REPO_ROOT/docs/TEST_MATRIX.md"
-  local decisions_dir="$REPO_ROOT/docs/decisions"
-  local backlog_path="$REPO_ROOT/docs/HARNESS_BACKLOG.md"
+  local matrix_path="$HARNESS_ROOT/docs/TEST_MATRIX.md"
+  local decisions_dir="$HARNESS_ROOT/docs/decisions"
+  local backlog_path="$HARNESS_ROOT/docs/HARNESS_BACKLOG.md"
   [ -f "$matrix_path" ] || die "brownfield import: missing $matrix_path"
   [ -d "$decisions_dir" ] || die "brownfield import: missing $decisions_dir"
 
@@ -982,7 +996,8 @@ Commands:
   query   <view>        Query harness data (matrix, backlog, decisions, ...)
 
 Environment:
-  HARNESS_DB            Override database path (default: <repo>/harness.db)
+  HARNESS_DB            Override database path (default: <repo>/harness.db,
+                        or <repo>/harness/harness.db when Harness is nested)
 
 Run 'harness <command> --help' or 'harness query help' for details.
 EOF

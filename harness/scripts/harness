@@ -2,11 +2,22 @@
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+DB_PATH="${HARNESS_DB:-$REPO_ROOT/harness.db}"
 RUST_CLI="${HARNESS_RUST_CLI:-$REPO_ROOT/scripts/bin/harness-cli}"
 
 if [ ! -x "$RUST_CLI" ]; then
   printf 'error: Harness CLI not found or not executable: %s\n' "$RUST_CLI" >&2
   exit 1
+fi
+
+print_matrix_semantics_note() {
+  printf 'NOTE: matrix status/proof columns describe Harness story-slice validation only; they do not certify full PC→Mobile port parity.\n'
+  printf 'NOTE: docs/PORT_STATUS.md is the source of truth for PC→Mobile port completion.\n'
+}
+
+if [ "${1:-}" = "query" ] && [ "${2:-}" = "matrix" ]; then
+  print_matrix_semantics_note
+  export HARNESS_MATRIX_NOTE_PRINTED=1
 fi
 
 # Intercept story update --evidence to validate paths exist
@@ -59,4 +70,4 @@ if [ "${1:-}" = "story" ] && [ "${2:-}" = "update" ]; then
   done
 fi
 
-HARNESS_REPO_ROOT="$REPO_ROOT" exec "$RUST_CLI" "$@"
+HARNESS_REPO_ROOT="$REPO_ROOT" HARNESS_DB="$DB_PATH" exec "$RUST_CLI" "$@"

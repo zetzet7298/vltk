@@ -86,9 +86,9 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Player task defs | `Reference/PcMission/player_task_def.txt` | 656 rows | ✅ data | mission execution partial |
 | Guild levels | `Reference/PcTong/tong_level_data.txt` | 6 rows | ✅ | guild scripts partial |
 | City war config | `Reference/PcEvent/citywar.ini` | 90 data lines | ✅ data | join/router semantics partial |
-| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | 🔄 | old mobile 224 mismatch unresolved |
-| Wharves | `Reference/PcMap/wharf.txt` | 11 rows | 🔄 | old mobile 10 mismatch unresolved |
-| Revive positions | `Reference/PcMap/revivepos.ini` | 656 lines / 241 verifier revive entries previously claimed | 🔄 | exact runtime count needs dedicated proof |
+| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / 🔄 runtime | parser preserves exact PC count; Unity MCP EditMode proof 36/36 passed; travel runtime behavior still partial |
+| Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / 🔄 runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; Unity MCP EditMode proof 36/36 passed; travel runtime behavior still partial |
+| Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / 🔄 runtime | parser preserves section `[949]` `region=1,3` with 1 real coordinate; Unity MCP EditMode proof 36/36 passed; travel runtime behavior still partial |
 | Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data | runtime behavior not fully audited |
 
 ## Missing or path-mismatch evidence
@@ -122,8 +122,8 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Server Region_S extraction | ✅ data / 🔄 gameplay | `MapSpawnCoverage.json` facts above | Spawn AI/scheduling/runtime parity |
 | Region_S object catalog/action executor | 🔄 | 453 object records, 299 deterministic actions | Full object script semantics not globally proven |
 | Region_S trap script resolver/executor | 🔄 | 817/817 resolved, 804 deterministic, 13 deferred | Port ClearSkill/Tong/CityWar deferred families |
-| Minimap/click-to-move/bounds | 🔄 | services exist; user reported early blocking on 907 | Need reproduce/fix/verify full map 907 movement |
-| Waypoint/wharf/revive/scroll runtime | 🔄 | reference data exists; mismatches for waypoint/wharf | Dedicated count parity tests + skipped row reasons |
+| Minimap/click-to-move/bounds | 🔄 | map 907 target clamp + minimap RectTransform offset fix/tests added; Unity MCP EditMode proof 36/36 passed | Need player/in-editor smoke proof for full map 907 movement feel |
+| Waypoint/wharf/revive/scroll runtime | 🔄 | exact parser/count tests added for 225 waypoint, 11 wharf/16 SECT, 139 revive sections/241 coords, 2,600 scroll values; parser smoke + Unity MCP EditMode proof passed | Prove end-to-end travel runtime behavior |
 
 ### 2. Factions
 
@@ -298,9 +298,9 @@ For each future status row, cite at least one of:
 
 ## Immediate map-port priorities
 
-1. Fix/verify map 907 movement bounds/minimap/click-to-move after user reported early blocking.
+1. Map 907 movement bounds/minimap/click-to-move: target clamp and minimap RectTransform fixes are implemented and Unity MCP EditMode proof passed; still needs player/in-editor feel smoke before marking runtime `✅`.
 2. Port remaining resolved deferred trap families from PC source: `ClearSkillTeamEnterHole`, then `TongMapEntrance`, then `CityWarJoinRouter`.
-3. Add exact count tests for waypoint/wharf/revive mismatches.
+3. Waypoint/wharf/revive/scroll exact parser/count tests are added and Unity MCP EditMode proof passed; still needs end-to-end travel runtime proof.
 4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
 
 ## Harness DB sync audit — 2026-06-08

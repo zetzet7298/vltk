@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC wharflist.txt parser (bến tàu - 11 entries)
-// Source: settings/wharflist.txt (GB2312). Cột phẳng.
+// VLTK Mobile — PC wharf.txt parser (bến tàu - 11 entries)
+// Source: settings/wharf.txt. Format: ID, DESC, COUNT, SECT1..SECT4.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -15,8 +15,10 @@ namespace VLTK.Sandbox
     {
         public int WharfId { get; set; }
         public int FromMapId { get; set; }
-        public int ToMapId { get; set; }
-        public int BoatId { get; set; }
+        public int PosX { get; set; }
+        public int PosY { get; set; }
+        public int SectCount { get; set; }
+        public string Name { get; set; } = string.Empty;
         public int CostSilver { get; set; }
         public int RequiredLevel { get; set; }
     }
@@ -33,7 +35,7 @@ namespace VLTK.Sandbox
         }
         public IEnumerable<PcWharfEntry> GetByToMap(int mapId)
         {
-            foreach (var e in _byId.Values) if (e.ToMapId == mapId) yield return e;
+            foreach (var e in _byId.Values) if (e.FromMapId == mapId) yield return e;
         }
         public void Add(PcWharfEntry e) { if (e != null) _byId[e.WharfId] = e; }
     }
@@ -44,18 +46,19 @@ namespace VLTK.Sandbox
         {
             var rows = new List<VLTK.Model.WharfEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var registry = BuildRegistry(Path.GetDirectoryName(path));
+            var registry = BuildRegistryFromFile(path);
             foreach (var e in registry.All)
             {
                 rows.Add(new VLTK.Model.WharfEntry
                 {
                     wharfId = e.WharfId,
                     mapId = e.FromMapId,
-                    posX = e.ToMapId,
-                    posY = e.BoatId,
+                    posX = e.PosX,
+                    posY = e.PosY,
                     price = e.CostSilver,
-                    nameRaw = e.WharfId.ToString(),
-                    nameNormalized = e.WharfId.ToString(),
+                    sectCount = e.SectCount,
+                    nameRaw = e.Name,
+                    nameNormalized = e.Name,
                 });
             }
             return rows;
@@ -66,7 +69,15 @@ namespace VLTK.Sandbox
             var reg = new PcWharfRegistry();
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "wharflist.txt");
+            if (!File.Exists(path)) path = Path.Combine(absoluteDir, "wharf.txt");
             if (!File.Exists(path)) return reg;
+            return BuildRegistryFromFile(path);
+        }
+
+        private static PcWharfRegistry BuildRegistryFromFile(string path)
+        {
+            var reg = new PcWharfRegistry();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return reg;
             var lines = PcMapListParser.ReadLines(path);
             foreach (var raw in lines)
             {
@@ -74,21 +85,41 @@ namespace VLTK.Sandbox
                 var line = raw.Trim();
                 if (line.Length == 0 || line[0] == ';' || line[0] == '#') continue;
                 var cols = line.Split('\t');
-                if (cols.Length < 4) cols = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (cols.Length < 4) continue;
                 if (!int.TryParse(cols[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
+                if (!TryParseSect(cols[3], out int mapId, out int posX, out int posY)) continue;
                 var e = new PcWharfEntry
                 {
                     WharfId = id,
-                    FromMapId = cols.Length > 1 && int.TryParse(cols[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int f) ? f : 0,
-                    ToMapId = cols.Length > 2 && int.TryParse(cols[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int t) ? t : 0,
-                    BoatId = cols.Length > 3 && int.TryParse(cols[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int b) ? b : 0,
-                    CostSilver = cols.Length > 4 && int.TryParse(cols[4], NumberStyles.Integer, CultureInfo.InvariantCulture, out int c) ? c : 0,
-                    RequiredLevel = cols.Length > 5 && int.TryParse(cols[5], NumberStyles.Integer, CultureInfo.InvariantCulture, out int r) ? r : 0
+                    FromMapId = mapId,
+                    PosX = posX,
+                    PosY = posY,
+                    Name = cols.Length > 1 ? cols[1].Trim() : string.Empty,
+                    SectCount = CountSectColumns(cols),
+                    CostSilver = 0,
                 };
                 reg.Add(e);
             }
             return reg;
+        }
+
+        private static int CountSectColumns(string[] cols)
+        {
+            int count = 0;
+            for (int i = 3; i < cols.Length; i++)
+                if (TryParseSect(cols[i], out _, out _, out _)) count++;
+            return count;
+        }
+
+        private static bool TryParseSect(string value, out int mapId, out int posX, out int posY)
+        {
+            mapId = posX = posY = 0;
+            if (string.IsNullOrWhiteSpace(value)) return false;
+            var parts = value.Split(',');
+            if (parts.Length < 3) return false;
+            return int.TryParse(parts[0].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out mapId)
+                && int.TryParse(parts[1].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out posX)
+                && int.TryParse(parts[2].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out posY);
         }
     }
 }

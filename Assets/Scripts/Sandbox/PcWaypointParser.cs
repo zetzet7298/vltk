@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC waypoint.txt parser (225 waypoints dịch chuyển)
-// Source: settings/waypoint.txt (GB2312). Cột phẳng.
+// Source: settings/waypoint.txt. Format: ID, DESC, SECT(map,x,y), FightState.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -19,6 +19,7 @@ namespace VLTK.Sandbox
         public int PosY { get; set; }
         public string Name { get; set; } = string.Empty;
         public int RequiredLevel { get; set; }
+        public int FightState { get; set; }
     }
 
     public sealed class PcWaypointRegistry
@@ -40,7 +41,7 @@ namespace VLTK.Sandbox
         {
             var rows = new List<VLTK.Model.WaypointEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var registry = BuildRegistry(Path.GetDirectoryName(path));
+            var registry = BuildRegistryFromFile(path);
             foreach (var e in registry.All)
             {
                 rows.Add(new VLTK.Model.WaypointEntry
@@ -51,6 +52,7 @@ namespace VLTK.Sandbox
                     posY = e.PosY,
                     nameRaw = e.Name,
                     nameNormalized = e.Name,
+                    fightState = e.FightState,
                 });
             }
             return rows;
@@ -62,6 +64,13 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "waypoint.txt");
             if (!File.Exists(path)) return reg;
+            return BuildRegistryFromFile(path);
+        }
+
+        private static PcWaypointRegistry BuildRegistryFromFile(string path)
+        {
+            var reg = new PcWaypointRegistry();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return reg;
             var lines = PcMapListParser.ReadLines(path);
             foreach (var raw in lines)
             {
@@ -69,21 +78,32 @@ namespace VLTK.Sandbox
                 var line = raw.Trim();
                 if (line.Length == 0 || line[0] == ';' || line[0] == '#') continue;
                 var cols = line.Split('\t');
-                if (cols.Length < 4) cols = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 if (cols.Length < 4) continue;
                 if (!int.TryParse(cols[0], NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
+                if (!TryParseSect(cols[2], out int mapId, out int posX, out int posY)) continue;
                 var e = new PcWaypointEntry
                 {
                     WaypointId = id,
-                    MapId = cols.Length > 1 && int.TryParse(cols[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int m) ? m : 0,
-                    PosX = cols.Length > 2 && int.TryParse(cols[2], NumberStyles.Integer, CultureInfo.InvariantCulture, out int x) ? x : 0,
-                    PosY = cols.Length > 3 && int.TryParse(cols[3], NumberStyles.Integer, CultureInfo.InvariantCulture, out int y) ? y : 0,
-                    Name = cols.Length > 4 ? cols[4] : string.Empty,
-                    RequiredLevel = cols.Length > 5 && int.TryParse(cols[5], NumberStyles.Integer, CultureInfo.InvariantCulture, out int r) ? r : 0
+                    MapId = mapId,
+                    PosX = posX,
+                    PosY = posY,
+                    Name = cols.Length > 1 ? cols[1].Trim() : string.Empty,
+                    FightState = cols.Length > 3 && int.TryParse(cols[3].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int f) ? f : 0,
                 };
                 reg.Add(e);
             }
             return reg;
+        }
+
+        private static bool TryParseSect(string value, out int mapId, out int posX, out int posY)
+        {
+            mapId = posX = posY = 0;
+            if (string.IsNullOrWhiteSpace(value)) return false;
+            var parts = value.Split(',');
+            if (parts.Length < 3) return false;
+            return int.TryParse(parts[0].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out mapId)
+                && int.TryParse(parts[1].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out posX)
+                && int.TryParse(parts[2].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out posY);
         }
     }
 }

@@ -1,15 +1,10 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC settings/scroll.txt (Cuộn dịch chuyển) parser
-// Source: scroll.txt (2,600 entries, GB2312).
-//   Cols 0:  ScrollId
-//   Col  1:  Name
-//   Col  2:  FromMapId
-//   Col  3:  ToMapId
-//   Col  4:  RequiredLevel
-//   Col  5:  Cost
+// Source: settings/scroll.txt (2,600 entries). Format: ScrollId, Value.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 namespace VLTK.Sandbox
@@ -73,15 +68,16 @@ namespace VLTK.Sandbox
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
-                if (cols.Length < 6) continue;
+                if (cols.Length < 2) continue;
+                if (!int.TryParse((cols[0] ?? string.Empty).Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int id)) continue;
                 rows.Add(new PcScrollEntry
                 {
-                    scrollId = PcItemCommon.Int(cols, 0),
-                    name = PcItemCommon.Str(cols, NameCol),
-                    fromMapId = PcItemCommon.Int(cols, FromMapCol),
-                    toMapId = PcItemCommon.Int(cols, ToMapCol),
-                    requiredLevel = PcItemCommon.Int(cols, ReqLevelCol),
-                    cost = PcItemCommon.Int(cols, CostCol),
+                    scrollId = id,
+                    name = string.Empty,
+                    fromMapId = 0,
+                    toMapId = 0,
+                    requiredLevel = 0,
+                    cost = int.TryParse((cols[1] ?? string.Empty).Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int value) ? value : 0,
                 });
             }
             return rows;
