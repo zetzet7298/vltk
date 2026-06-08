@@ -150,6 +150,12 @@ namespace VLTK.UI
         private string _mallSellType = "all";
         private int _treasureChestBet;
         private bool _treasureChestSpun;
+        private string _characterPage = "BtnAttribPage";
+        private int _characterStrength;
+        private int _characterVitality;
+        private int _characterDexterity;
+        private int _characterEnergy;
+        private string _characterSignature = string.Empty;
         private float _defaultRunSpeed;
         private TradeSession _tradeSession;
         private PartyMember _tradeTarget;
@@ -2110,21 +2116,90 @@ namespace VLTK.UI
 
         private void OnStatusClick()
         {
+            OpenPcCharacterPanel("Mở nhân vật / thuộc tính");
+            SubsystemLog.Info("HUD", "Open Character Status");
+        }
+
+        private void OpenPcCharacterPanel(string statusLine = null)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = CharacterPanelService.Title;
+            _pcToolList.Clear();
+
             var manager = SandboxManager.Instance;
             var snap = CharacterPanelService.BuildSnapshot(manager?.PlayerProgression, null, 1);
-            var rows = new List<string>
+            if (!string.IsNullOrEmpty(statusLine))
+                AddPcToolRow(statusLine);
+            AddPcToolRow($"PC 2711122c/11da85ea page={CharacterPageLabel(_characterPage)} signature={(string.IsNullOrEmpty(_characterSignature) ? "--" : _characterSignature)}");
+            AddPcToolRow($"Tên: {snap.playerName}; Cấp: {snap.level}; Sức mạnh tổng: {CharacterPanelService.ComputePowerLevel(snap)}");
+            AddPcToolRow($"Sinh lực: {snap.hp}/{snap.hpMax}; Nội lực: {snap.mp}/{snap.mpMax}; Thể lực: {snap.stamina}/{snap.staminaMax}");
+            AddPcToolRow($"Công/Thủ: {snap.attack}/{snap.defense}; Chính xác/Né/Bạo/Đỡ: {snap.hit}/{snap.dodge}/{snap.crit}/{snap.block}");
+            AddPcToolRow($"Điểm cộng local: Lực={_characterStrength}, Sinh={_characterVitality}, Thân={_characterDexterity}, Nội={_characterEnergy}");
+            foreach (var control in CharacterPanelService.PcControls)
             {
-                $"Tên: {snap.playerName}",
-                $"Cấp: {snap.level}",
-                $"Sinh lực: {snap.hp}/{snap.hpMax}",
-                $"Nội lực: {snap.mp}/{snap.mpMax}",
-                $"Thể lực: {snap.stamina}/{snap.staminaMax}",
-                $"Công/Thủ: {snap.attack}/{snap.defense}",
-                $"Chính xác/Né/Bạo/Đỡ: {snap.hit}/{snap.dodge}/{snap.crit}/{snap.block}",
-                $"Sức mạnh: {CharacterPanelService.ComputePowerLevel(snap)}",
-            };
-            OpenPcToolPanel(CharacterPanelService.Title, rows);
-            SubsystemLog.Info("HUD", "Open Character Status");
+                var section = control.pcSection;
+                AddPcToolActionRow($"PC {control.pcFile} [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcCharacterControlClick(section));
+            }
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcCharacterControlClick(string pcSection)
+        {
+            switch (pcSection)
+            {
+                case "BtnAttribPage":
+                case "BtnEquipPage":
+                case "BtnJudgePage":
+                case "BtnMeridianPage":
+                    _characterPage = pcSection;
+                    OpenPcCharacterPanel($"PC [{pcSection}]: chuyển sang {CharacterPageLabel(pcSection)}.");
+                    break;
+                case "AddStrength":
+                    _characterStrength++;
+                    OpenPcCharacterPanel($"PC [AddStrength]: Lực={_characterStrength}.");
+                    break;
+                case "AddVitality":
+                    _characterVitality++;
+                    OpenPcCharacterPanel($"PC [AddVitality]: Sinh={_characterVitality}.");
+                    break;
+                case "AddDexterity":
+                    _characterDexterity++;
+                    OpenPcCharacterPanel($"PC [AddDexterity]: Thân={_characterDexterity}.");
+                    break;
+                case "AddEnergy":
+                    _characterEnergy++;
+                    OpenPcCharacterPanel($"PC [AddEnergy]: Nội={_characterEnergy}.");
+                    break;
+                case "SummitSign":
+                    _characterSignature = "Võ lâm mobile";
+                    OpenPcCharacterPanel("PC [SummitSign]: đã lưu mô tả nhân vật.");
+                    break;
+                case "DelSignButton":
+                    _characterSignature = string.Empty;
+                    OpenPcCharacterPanel("PC [DelSignButton]: đã xóa mô tả nhân vật.");
+                    break;
+                case "Item":
+                    OpenPcCharacterPanel("PC [Item]: mở thông tin vật phẩm/trang bị đang chọn.");
+                    break;
+                case "Close":
+                    ClosePcToolPanel();
+                    break;
+            }
+        }
+
+        private static string CharacterPageLabel(string pcSection)
+        {
+            switch (pcSection)
+            {
+                case "BtnEquipPage": return "Trang bị";
+                case "BtnJudgePage": return "Đánh giá";
+                case "BtnMeridianPage": return "Kinh mạch";
+                default: return "Thuộc tính";
+            }
         }
 
         private void OnItemsClick() => ToggleInventory();
