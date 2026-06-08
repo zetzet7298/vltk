@@ -193,13 +193,14 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(774, catalog.Count);
+            Assert.AreEqual(775, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalMessageNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
@@ -1130,6 +1131,61 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(result.success);
             Assert.AreEqual(default(Vector2), host.position);
             StringAssert.Contains("no branch", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskOptionalMessageNewWorld_PostsOnlyMatchingPcTaskTalk()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 910,
+                        trapIdHex = "0x0000038E",
+                        scriptPath = @"\script\江南区\临安\莫空月居所\trap\离开.lua",
+                        actionKind = "TaskOptionalMessageNewWorld",
+                        taskId = 43,
+                        taskBranches = new[]
+                        {
+                            new PcTrapTaskSetPosBranch
+                            {
+                                values = new[] { 100 },
+                                message = "Cút mau! Đừng để ta gặp lại thấy ngươi đấy!",
+                            },
+                        },
+                        fightState = 0,
+                        targetMapId = 176,
+                        targetCellX = 1413,
+                        targetCellY = 2991,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValue = 100 };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 910 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(176, host.mapId);
+            Assert.AreEqual(0, host.fightState);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1413 * 32, 2991 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Cút mau! Đừng để ta gặp lại thấy ngươi đấy!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValue = 0 };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0000038E" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(176, host.mapId);
+            Assert.AreEqual(0, host.fightState);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+            StringAssert.Contains("GetTask(43)==0", result.detail);
         }
 
         [Test]

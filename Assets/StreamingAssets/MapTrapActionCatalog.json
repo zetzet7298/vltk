@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T06:51:31Z",
+  "generatedAtUtc": "2026-06-08T07:00:08Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -2465,6 +2465,29 @@
       "targetCellY": 3407,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 836231573,
+      "trapIdHex": "0x31D7E195",
+      "scriptPath": "\\script\\江南区\\临安\\莫空月居所\\trap\\离开.lua",
+      "sourceRelPath": "script\\江南区\\临安\\莫空月居所\\trap\\离开.lua",
+      "actionKind": "TaskOptionalMessageNewWorld",
+      "source": "PC trap Lua main(): optional read-only Talk when GetTask(id)==value, then deterministic SetFightState/NewWorld regardless of task state",
+      "targetMapId": 176,
+      "targetCellX": 1413,
+      "targetCellY": 2991,
+      "fightState": 0,
+      "taskId": 43,
+      "taskBranches": [
+        {
+          "values": [
+            100
+          ],
+          "targetCellX": 0,
+          "targetCellY": 0,
+          "message": "Cút mau! Đừng để ta gặp lại thấy ngươi đấy!"
+        }
+      ]
     },
     {
       "trapId": 836299096,

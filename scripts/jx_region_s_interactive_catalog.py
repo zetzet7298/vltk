@@ -496,6 +496,7 @@ def clean_user_message(message: str) -> str:
             .replace('TiƠng', 'Tiếng')
             .replace('giƠng', 'giếng')
             .replace('GiƠng', 'Giếng')
+            .replace('Cút mau! Đơng để ta gặp lại thấy ngươi đă!', 'Cút mau! Đừng để ta gặp lại thấy ngươi đấy!')
             .replace('đƠn', 'đến')
             .replace('ĐƠn', 'Đến')
             .replace('nă cứ', 'nó cứ')
@@ -717,6 +718,45 @@ def is_safe_trap_msg2player_newworld(actions: dict[str, Any], source: str) -> bo
     if actions.get('setFightStateCalls') and int_args_unique(actions.get('setFightStateCalls') or [], 1) is None:
         return False
     return is_safe_user_message(single_string(actions.get('msg2PlayerCalls')))
+
+
+def task_optional_talk_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'GetTask', 'Talk', 'SetFightState', 'NewWorld', 'if'}):
+        return None
+    if re.search(r'\b(elseif|for|while)\b', clean_source):
+        return None
+
+    new_world = int_args(parse_lua_calls(clean_source, 'NewWorld', limit=2), 3)
+    fight_state = int_args(parse_lua_calls(clean_source, 'SetFightState', limit=2), 1)
+    talk_lines = talk_messages({'talkCalls': parse_lua_calls(clean_source, 'Talk', limit=2)})
+    if len(new_world) != 1 or len(fight_state) != 1 or len(talk_lines) != 1:
+        return None
+
+    task_match = re.search(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(\d+)\s*\)', clean_source)
+    if task_match:
+        task_var = re.escape(task_match.group(1))
+        task_id = int(task_match.group(2))
+        value_match = re.search(r'\bif\s*\(\s*' + task_var + r'\s*==\s*(\d+)\s*\)', clean_source)
+    else:
+        value_match = re.search(r'\bif\s*\(\s*GetTask\s*\(\s*(\d+)\s*\)\s*==\s*(\d+)\s*\)', clean_source)
+        task_id = int(value_match.group(1)) if value_match else -1
+    if not value_match or task_id < 0:
+        return None
+
+    return {
+        'targetMapId': new_world[0][0],
+        'targetCellX': new_world[0][1],
+        'targetCellY': new_world[0][2],
+        'fightState': fight_state[0][0],
+        'taskId': task_id,
+        'taskBranches': [{
+            'values': [int(value_match.group(1 if task_match else 2))],
+            'targetCellX': 0,
+            'targetCellY': 0,
+            'message': talk_lines[0],
+        }],
+    }
 
 
 def level_gate_requirement(source: str) -> int | None:
@@ -1591,6 +1631,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'source': 'PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState/AddTermini, with no branch/task/item side effects',
             })
             continue
+        task_optional = task_optional_talk_newworld(source)
+        if task_optional is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskOptionalMessageNewWorld',
+                'source': 'PC trap Lua main(): optional read-only Talk when GetTask(id)==value, then deterministic SetFightState/NewWorld regardless of task state',
+                **task_optional,
+            })
+            continue
         level_bracket = level_bracket_newworld(source)
         if level_bracket is not None:
             entries.append({
@@ -1838,6 +1890,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'RandomNewWorld'),
         'deterministicTrapReviveReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'ReviveReturnNewWorld'),
         'deterministicTrapTaskSetPosMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetPosMessage'),
+        'deterministicTrapTaskOptionalMessageNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalMessageNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),

@@ -134,6 +134,25 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskOptionalMessageNewWorld)
+            {
+                if (!_host.HasMap(action.targetMapId))
+                {
+                    result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                    return true;
+                }
+
+                int taskValue = _host.GetTaskValue(action.taskId);
+                var branch = FindTaskBranch(action, taskValue);
+                if (branch != null && _sideEffects != null && !string.IsNullOrWhiteSpace(branch.message))
+                    _sideEffects.PostMessage(branch.message);
+                ApplyFightState(action);
+                _host.NewWorld(action.targetMapId, target);
+                result = Success(action,
+                    $"GetTask({action.taskId})=={taskValue} -> optional Talk + NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                return true;
+            }
+
             if (action.IsClearSkillSwitchTrap)
             {
                 int currentFightState = _host.GetFightState();
