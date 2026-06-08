@@ -329,12 +329,8 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MinimapPcButtons_ExposeSearchAndMarkerActions()
+        public void MinimapPcButtons_ExposeFlagMarkerActionOnly()
         {
-            InvokePrivateMethod("OnMinimapSearchClick");
-            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
-            Assert.AreEqual("Tìm kiếm bản đồ", _pcToolTitle.text);
-
             InvokePrivateMethod("OnMinimapMarkerClick");
             Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
             Assert.AreEqual("Đánh dấu bản đồ", _pcToolTitle.text);

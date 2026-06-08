@@ -153,6 +153,7 @@ namespace VLTK.Tests.Sandbox
                 else
                     StringAssert.Contains($"RegisterClick(root, \"{name}\"", controller, name + " must have a concrete mobile handler.");
             }
+            StringAssert.DoesNotContain("OnMinimapSearchClick", controller, "PC ec10b91e/f8bf2550 declare BtnFlag/SwitchBtn/WorldMapBtn/CaveMapBtn only; do not invent a minimap Search button.");
             StringAssert.Contains("name=\"MapPosInput\"", uxml, "PC ec10b91e [MapPosInput] coordinate entry must remain present.");
             StringAssert.Contains("_mapPosInput.RegisterCallback<KeyDownEvent>", controller, "MapPosInput must accept Enter to apply path-find coordinates.");
             StringAssert.Contains("TryParsePcScenePos", controller, "MapPosInput must parse PC x/y coordinate format.");
