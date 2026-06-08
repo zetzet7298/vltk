@@ -1,639 +1,139 @@
-# PORT_STATUS.md — Trạng Thái Port PC → Mobile
+# PORT_STATUS.md — Audit trạng thái port PC → Mobile
 
-> **Ngày tạo**: 2026-06-05
-> **Nguồn tham chiếu**: `/var/www/vltksource_new/docs/port_docs/`
-> **Codebase mobile**: `/var/www/vltk-mobile/`
-> **Harness DB**: ST-00.1 → ST-06.2 (tất cả implemented)
-> **Tests**: 1771/1771 EditMode ✅ (added 1057 tests cho batch 1-13) | 25/25 PlayMode ✅
+> **Audit lại**: 2026-06-08
+> **PC source of truth**: `/var/www/vltksource_new/vl_update_27`
+> **Mobile codebase**: `/var/www/vltk-mobile` (`dev` @ `6fb8ee3`, dirty HUD files excluded)
+> **Quy tắc mới**: `✅` chỉ dùng khi có bằng chứng hiện tại trong code/catalog/verifier/tests. Có service/parser nhưng chưa chứng minh đủ hành vi PC thì là `🔄`, không được ghi `✅`.
 
 ## Chú thích
 
 | Ký hiệu | Ý nghĩa |
-|---------|---------|
-| ✅ | Đã port, có tests, pass |
-| 🔄 | Đã port phần framework/service, chưa có data/UX đầy đủ |
-| ☐ | Chưa port |
-| 🔴 | Ưu tiên cao |
-| 🟡 | Ưu tiên trung bình |
-| 🟢 | Ưu tiên thấp |
+|---|---|
+| ✅ | Đã verify bằng artifact/command hiện tại; còn có thể có known gaps được nêu rõ |
+| 🔄 | Có framework/data/parser/runtime một phần, nhưng chưa đủ parity PC hoặc chưa có proof end-to-end |
+| ☐ | Chưa port / ngoài scope client |
+| ⚠️ | Claim cũ trong tài liệu trước bị audit là quá tay, đã downgrade |
 
----
+## Bằng chứng audit đã chạy
 
-## 1. Bản Đồ & Thế Giới (01_maps.md)
+- `git status --short --branch`: còn dirty **HUD/UI** `Assets/Scripts/UI/CharacterPanelService.cs`, `Assets/Scripts/UI/GameHudController.cs`, `harness/item_spr_img/`; không tính vào status audit này.
+- Đã restore WIP ClearSkill trap dở về HEAD để tránh compile/interface sai; patch tạm lưu ngoài repo tại `/tmp/vltk_clearskill_wip.patch`.
+- `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` → `status=pass_with_known_gaps`, `errors=[]`.
+- Unity console hiện chỉ có Addressables GUID conflict known-noise; chưa rerun full EditMode/PlayMode suite trong audit này, nên mọi claim `1771/1771` hoặc `25/25` cũ bị bỏ khỏi trạng thái hiện tại.
 
-PC: 1,005 maps
+## 1. Map / World — trạng thái đáng tin
 
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 1.1 | Map Region Renderer | 1,005 | 1,005 | ✅ | MapCatalog.json + PC maplist.ini merged → 1,005 positive PC map runtime entries (MapManager.LoadCatalog filters legacy mapId=0 placeholders). MapRenderer + RegionStreamingService hoạt động. **2026-06-08: added runtime proof test that all 1,005 PC aliases have Vietnamese/non-placeholder names, PC source paths, geometry keys, generated Region_C folders, sprite folders, and positive geometry bounds; map 1009 `Khu vực câu cá` and map 79 `Mật đạo Nha môn Tương Dương` are locked against stale names.** **2026-06-07: ported Tín sứ Vượt ải Phong Kỳ 120+ (PC mapId 389, `特殊用地\任务用地\信使任务\风之骑`) từ client PAK → `Map_389_C` 516 Region_C + 96/96 SPR, set làm default boot map thay Ba Lăng.** **2026-06-08: ported Vượt ải Nhiếp Thí Trần / killbossmatch (PC mapId 907, `西北北区\沙漠迷宫\沙漠山洞1`) từ client PAK → `Map_907_C` 229 Region_C + 60/60 map SPR + 10 boss SPR, set làm default boot map thay Phong Kỳ.** **2026-06-08: added bulk visual-map port pipeline/catalogs for all PC maplist rows: 1,005 map IDs → 332 unique visual geometries, extracted 95,246 Region_C files + staged 2,785 distinct SPR files (19,304 resolved SPR refs) under ignored `Assets/StreamingAssets/Generated/`; runtime aliases `MapAliasCatalog.json`/`MapGeometryCatalog.json` drive generated folders and bounds while keeping default map 907. **2026-06-08: corrected stale priority `MapPortManifest` IDs to match PC `MapAliasCatalog`: Phượng Tường=1, Thành Đô=11, Giang Tân=20, Biện Kinh=37, Ba Lăng=53, Tương Dương=78, Đại Lý=162, Lâm An=176, Đào Hoa=235; map 79 is no longer mislabeled as Ba Lăng.** **2026-06-08: added `scripts/jx_map_port_verify.py` audit gate; local run passes with 1,005/1,005 PC map aliases, 332 geometry folders, 95,246 Region_C files, 2,785 map SPR files, default map 907, and emits exact regenerate commands for ignored `StreamingAssets/Generated` artifacts.** Coverage còn ghi 182 unresolved SPR refs; verifier now records per-path provenance for the 6 known paths: all have `presentInClientPak=false`, `labelExactHits=0`, `labelBasenameHits=0`; `RegionTileDefault`/`regiontiledefault` are engine-default fallback refs (9,864 + 1,190 Region_C files), and the remaining 4 art paths are `source_missing_in_scoped_pc_paks` with exact geometry samples.** **2026-06-08 Phase 2: added bulk server Region_S extraction from PC server PACK/MPS (`maps.pak`, `*.mps`, `update_map.pak`, `update3.pak`): 332/332 geometries cataloged, 330 geometries have static Region_S, extracted 84,019 `*_Region_S.dat` files with 67,680 NPC records + 8,692 trap records + 453 object records under ignored `Generated/MapServerRegions`; `MapServerRegionCatalog.json`/`MapSpawnCoverage.json` wire runtime spawn folders. 2 map IDs/geometries (`134` Phòng Đệ tử, `1007` Tầng 3) have no static Region_S in scoped PC server packs after exhaustive 0..255 scan, so runtime leaves their enemy layer empty instead of fabricating procedural spawns. NPC visual/template/object/trap final rendering vẫn là phase riêng.** **2026-06-08 Phase 4: completed deterministic Region_S object Lua action coverage for all 299/299 resolved PC object scripts by porting the final 3 prompt/branch scripts: city bulletin (`citybulletin.lua`), Thành Đô heo-rừng notice board, and Thúy Yên Đại Mạn Đà La flower timer pickup; `MapObjectActionCatalog` now has 299 actions, 10 PromptBranchMessage actions, and 0 unsupported resolved object scripts.** **2026-06-08 Phase 5: resolved the final stale trap source gap `0xF51BA9A5` by preserving the Region_S trap id and aliasing source to `\script\中原北区\天忍教\天忍教圣洞2\trap\天忍教圣洞2to天忍教圣洞二层密室.lua` (`NewWorld(102,1608,3199)`); trap scripts now resolve 817/817, missing=0, deterministic trap actions=800 (`NewWorld`=532).** **2026-06-08 Phase 6: classified every remaining resolved-but-non-deterministic trap script instead of leaving silent gaps: 17 deferred PC-runtime traps are now explicit in `MapTrapScriptCatalog`/coverage (`TongMapEntrance`=8, `ClearSkillTeamEnterHole`=4, `SongJinRebirthCampState`=2, `PartnerTaskEntity`=2, `CityWarJoinRouter`=1), unclassified=0; verifier now proves every resolved trap script is either deterministic-actioned or intentionally deferred with required PC APIs.** **2026-06-08 Phase 7: ported the 2 Tống/Kim rebirth traps (`宋军重生点.lua`, `金军重生点.lua`) into deterministic `SongJinRebirthCampState` actions: PC `GetMissionV(1)==2` + `GetMSIdxGroup(1,PIdx2MSDIdx)==1/2` gates `SetFightState(1)`, `SetCurCamp(1/2)`, `SetPunish(0)` with no fabricated movement; deterministic trap actions now 802 and deferred PC-runtime traps drop to 15 (`TongMapEntrance`=8, `ClearSkillTeamEnterHole`=4, `PartnerTaskEntity`=2, `CityWarJoinRouter`=1).** **2026-06-08 Phase 8: ported the 2 Bách Hoa Cốc partner-story traps (`trap_baihuagu1.lua`, `trap_baihuagu2.lua`) into deterministic `PartnerBaihuaEntryGate`/`PartnerBaihuaExitGate` actions: PC summoned-partner + master task states 3≥5/4≥6/5≥5/6≥3 gates `SetPos(1535,3021)`, `SetFightState(0)`, otherwise PC Say + `SetPos(1516,3069)`, `SetFightState(1)`; outside trap always returns to `1516,3069`/fight-state 1. Deterministic trap actions now 804 and deferred PC-runtime traps drop to 13 (`TongMapEntrance`=8, `ClearSkillTeamEnterHole`=4, `CityWarJoinRouter`=1).** |
-| 1.2 | Thành phố (City) | 5 | 5 | ✅ | Framework + MapListFullService (1,005 map) + StationService + tests |
-| 1.3 | Thủ đô (Capital) | 2 | 2 | ✅ | MapListFullService + StationPriceService + tests |
-| 1.4 | Vùng (Country) | 10 | 10 | ✅ | MapListFullService + StationPriceService + tests |
-| 1.5 | Đồng/Ngoại ô (Field) | 24 | 24 | ✅ | MapListFullService + WaypointPriceService + tests |
-| 1.6 | Hang động/Me cung (Cave) | 48 | 369 | ✅ | PcCaveListParser + PcMapDataBatchLoader merged via MapManager runtime |
-| 1.7 | Bang phái (Tong) | 33 | 33 | ✅ | PcTongListParser merged via PcMapDataBatchLoader → MapManager runtime |
-| 1.8 | Chiến trường (Battlefield) | 80 | 80 | ✅ | BattlefieldService + MissionBattleConfigService (combo+scores) + tests |
-| 1.9 | Mission/Instance Maps | 802 | 802 | ✅ | InstanceMapService + MissionMazeConfigService + MissionQianchongService + tests |
-| 1.10 | Waypoint System | 225 | 224 | ✅ | PcWaypointParser merged via PcMapRuntimeDataRegistry (MapManager.TravelData.GetWaypointsForMap) |
-| 1.11 | Bến tàu (Wharf) | 11 | 10 | ✅ | PcWharfParser merged via PcMapRuntimeDataRegistry |
-| 1.12 | Cuộn dịch chuyển (Scroll) | 2,600 | 2,600 | ✅ | PcScrollParser merged via PcMapRuntimeDataRegistry (ScrollCount) |
-| 1.13 | Auto Pathfinding | Yes | ✅ | ✅ | PathfindingService + ObstacleGrid |
-| 1.14 | Vị trí hồi sinh | Yes | 241 | ✅ | PcRevivePosParser merged via PcMapRuntimeDataRegistry (GetRevivePositionsForMap) |
-| 1.15 | Thời tiết (Weather) | Yes | Yes | ✅ | WeatherService runtime + parser + tests, sandbox wired |
-| 1.16 | Nhạc nền (Music) | Yes | Yes | ✅ | MusicService runtime + AudioService + parser + tests, sandbox wired |
-| 1.17 | Minimap | Yes | ✅ | ✅ | MinimapService + MinimapPanel + click-to-move |
-| 1.18 | Click-to-Move | Yes | ✅ | ✅ | PlayerMovementService + CoordinateService |
+| Hạng mục | Status | Bằng chứng hiện tại | Gaps còn lại |
+|---|---:|---|---|
+| PC map aliases + visual geometry | ✅ | Verifier: `1,005` aliases, `332` geometries, `95,246` Region_C, `2,785` map SPR; `MapAliasCatalog.json`, `MapGeometryCatalog.json`; runtime merge ở `MapManager.MergeGeneratedBulkCatalogs()` | Generated assets nằm dưới ignored `Assets/StreamingAssets/Generated`; clean clone phải chạy regenerate commands từ verifier |
+| Default map `Vượt ải Nhiếp Thí Trần` | ✅ | `Sandbox.unity` có `defaultMapId: 907` x2; verifier `defaultMap.mapId=907`, `nameVi=Vượt ải Nhiếp Thí Trần`, `killbossMissionBossTemplates=10` | Chưa audit manual movement toàn map sau feedback bị chặn sớm |
+| Missing map SPR provenance | ✅ known gaps | Verifier còn đúng 6 unique missing SPR refs / 182 refs; tất cả có provenance `presentInClientPak=false`, label hit = 0; `RegionTileDefault` là engine fallback | Không được tự bịa SPR thay thế |
+| Server Region_S extraction | ✅ data / 🔄 gameplay | `MapServerRegionCatalog.json`, `MapSpawnCoverage.json`: `332` geometries, `330` có Region_S, `84,019` Region_S, `67,680` NPC records, `8,692` trap records, `453` object records; aliases thiếu static Region_S: `134`, `1007` | Đây là data extract, chưa chứng minh AI/spawn scheduling/gameplay đầy đủ PC |
+| NPC visual staging from Region_S | ✅ data | `NpcSpriteCoverage.json`: `375/375` resTypes covered, `1,314` staged sprite files, missing `0` | Visual staged không đồng nghĩa full AI/combat behavior |
+| Region_S objects/traps | 🔄 | `MapInteractiveCoverage.json`: `35/35` object templates resolved, `34/34` object SPR paths staged, `299` deterministic object actions; `MapTrapScriptCoverage.json`: `817/817` trap ids resolved, `804` deterministic trap actions | `13` resolved trap scripts still deferred: `TongMapEntrance=8`, `ClearSkillTeamEnterHole=4`, `CityWarJoinRouter=1`; no `IsClearSkillTeamEnterHole` runtime in HEAD |
+| Minimap / click-to-move / bounds | 🔄 | Services exist: `MinimapService`, `MinimapPanel`, `PlayerMovementService`, `CoordinateService`, map bounds from geometry catalog | Needs manual + PlayMode proof on full map 907; earlier user report means old ✅ is not trustworthy |
+| Travel data (waypoint/wharf/scroll/revive) | 🔄 | `MapManager.MergePcMapData()` loads `Reference/PcMap`; parsers/services exist | Counts/behavior not re-audited this pass; keep partial until verifier/test proves PC parity |
 
-## 2. Môn Phái (02_factions.md)
+## 2. Data/service systems — audited downgrade
 
-PC: 10 factions
+| Domain | Status | What is actually proven | Why not ✅ full parity yet |
+|---|---:|---|---|
+| NPC templates | ✅ data / 🔄 behavior | `Reference/PcNpc/npcs.txt` has 2,000 data rows; `PcFullNpcParser`, `MapEnemyDatabase` exist | Spawn AI, script hooks, combat behaviors not fully proven by current audit |
+| Factions/titles/faction maps | 🔄 | Faction/title/map services and tests exist | Full PC faction quest/skill/UI behavior not audited end-to-end |
+| Skills/missiles | 🔄 | `Reference/PcSkill/skills.txt` has 1,216 data rows; weapon/thief/missile refs exist; many skill services/tests exist | `SkillScriptService` is metadata registry (`GetScript`, `GetBySkill`), not a full PC Lua/skill VM; visual/effect parity not fully audited |
+| Items/economy/drop | 🔄 | Large PC item/drop reference sets exist (`PcItemFull`, `PcDropRate`); inventory/economy/shop services exist | `ItemScriptService` is metadata registry; only selected item actions (e.g. GM token path) are ported, not all item Lua behaviors; GM teleport changes are user-owned and not touched/audited here |
+| Missions/quests/tasks | 🔄 | `MissionScriptService`, `TaskScriptService`, `QuestService` exist; `Reference/PcMission/player_task_def.txt` present | `MissionScriptService` only exposes metadata/progress helpers; not a full executor for 985 PC mission Lua/scripts |
+| Events/activities/VNG | 🔄 | Event/activity services and reference data exist | `EventScriptService` is metadata registry; event Lua/runtime side effects not proven complete |
+| Battles/PvP/Tống-Kim/CityWar | 🔄 | Battle/guild/city-war services exist; some trap families ported (`SongJinRebirthCampState`, city-war camp gates) | `BattleScriptRuntimeService` executes simplified conditions/actions, not full PC battle scripts; `CityWarJoinRouter` trap still deferred |
+| Guild/Tong | 🔄 | Guild/Tong data/services exist | `GuildScriptService.ExecuteScript()` currently validates/logs only; `TongMapEntrance` 8 traps deferred pending ownership/ban/expire/runtime APIs |
+| Partner/pet/meridian/titles/misc systems | 🔄 | Services/reference files/tests exist for many systems | Current audit did not prove full PC behavior; old `~100%` totals were overclaimed |
 
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 2.1 | 10 Môn phái | 10 | 10 | ✅ | Tất cả 10: Thiếu Lâm, Thiên Vương, Đường Môn, Ngũ Độc, Nga My, Thúy Yên, Cái Bang, Thiên Nhẫn, Võ Đang, Côn Luân |
-| 2.2 | Faction Selection UI | Yes | ✅ | ✅ | FactionScreen |
-| 2.3 | Ngũ Hành (5 elements) | 5 | ✅ | ✅ | CombatFactionExt + SkillSectCatalog |
-| 2.4 | Chính/Tà/Trung Lập | 3 | ✅ | ✅ | CombatDefinition |
-| 2.5 | Faction Titles (81) | 81 | 81 | ✅ | TitleService + TitleEffectService + TitlePanelService + FactionTitleParser merged |
-| 2.6 | Faction Maps (33) | 33 | 33 | ✅ | FactionMapService + FactionMapRuntimeService + FactionSkillTreeService + FactionBonusService + FactionRelationService + tests |
+## 3. UI/client/player visual/server infra
 
-## 3. Kỹ Năng (03_skills.md)
+| Domain | Status | Evidence | Gaps |
+|---|---:|---|---|
+| HUD/UI panels | 🔄 | Many UI services/tests exist; recent commits improve specific PC controls | Worktree currently has dirty HUD files, excluded from audit; full PC UI parity not verified |
+| Player/NPC visual runtime | 🔄 | `MalePlayerVisual`, `FemalePlayerVisual`, sprite catalogs, NPC sprite staging exist | Full equipment/layer/action parity not re-audited |
+| Client resource/SPR loading | 🔄 | `SprRuntimeService` and decoded/staged assets exist | Not all UI/SPR assets have audited provenance in this pass |
+| Network protocol/client services | 🔄 | Message router/opcode services exist | Server integration not audited |
+| Gateway/Bishop/S3Relay/DB/PaySys/ops | ☐ | Server-side systems, not ported into Unity client | Keep outside client scope unless server project is added |
+| GBK/server script directories | 🔄 metadata | Many `*ScriptService` classes count/lookup scripts | Treat as metadata indexes, not completed Lua port, until each action path is executed/tested |
 
-PC: 1,216 base + 1,712 extended + 219 templates = ~3,183
+## 4. Current trusted map verifier facts
 
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 3.1 | Base Skills (1,216) | 1,216 | 1,216 | ✅ | PcSkillFullParser + PcSkillRegistry runtime via SandboxManager.PcSkillsFull |
-| 3.2 | Extended/Mod Skills | 1,712 | 1,712+ | ✅ | ModSkills.txt + PcModSkillParser + SkillLevelDataService + SkillUpgradeService + SkillBookService + SkillComboService + SkillStateService + SkillMasteryService |
-| 3.3 | Skill Templates (219) | 219 | 219 | ✅ | SkillTemplateService runtime + parser + tests, sandbox wired |
-| 3.4 | Weapon Skills (32) | 32 | 32 | ✅ | clientweaponskill.txt copied to Reference/PcSkill, parseable |
-| 3.5 | Thief Skills (4) | 4 | 4 | ✅ | thiefskill.txt copied to Reference/PcSkill, parseable |
-| 3.6 | 10 Faction Skill Sets | 10 | 10 | ✅ | Tất cả 10 phái có SkillPanel tests |
-| 3.7 | Special Skills (58) | 58 | 58 | ✅ | SpecialSkillService runtime + parser + tests, sandbox wired |
-| 3.8 | NPC/Boss Skills (43) | 43 | 43 | ✅ | NpcSkillService runtime + parser + tests, sandbox wired |
-| 3.9 | Partner/Pet Skills (7) | 7 | 7 | ✅ | PartnerService + PetSkillService + PartnerEventService + PartnerBagService + PartnerSettingService + tests |
-| 3.10 | Skill Level Up | Yes | ✅ | ✅ | SkillLevelCurveService + PlayerSkillPointService |
-| 3.11 | Missile Effects | ~480 | 480 | ✅ | PcMissiles.txt + ModMissiles + ProjectileService + MissileSpawner + MissileEffectService (480 effect) |
-| 3.12 | Skill Icons/Animations | Yes | ✅ | ✅ | SPR decoded, faction icons, SkillEffectVisualService |
-| 3.13 | Translife 4 Skills (9) | 9 | 9 | ✅ | TranslifeSkillService runtime + parser + tests, sandbox wired |
-| 3.14 | Skill Damage Formula | Yes | ✅ | ✅ | PcSkillDamageService + DamageFormulaService |
-| 3.15 | Kinh Mạch (128 levels) | 128 | 128+ | ✅ | MeridianService + MeridianPanelService UI + tests, sandbox wired |
+```text
+visual: 1,005 aliases / 332 geometries / 95,246 Region_C / 2,785 map SPR / 6 missing unique SPR paths
+server Region_S: 330/332 geometries, 84,019 Region_S, 67,680 NPC, 8,692 trap, 453 object records
+interactive: 817/817 trap scripts resolved, 804 deterministic trap actions, 13 deferred resolved actions, 0 unclassified
+objects: 35 templates resolved, 34 SPR paths staged, 299 deterministic object actions
+default map: 907 — Vượt ải Nhiếp Thí Trần
+```
 
-## 4. NPCs & Quái Vật (04_npcs.md)
+## 5. Priority tiếp theo sau audit
 
-PC: 2,000 NPCs + 5,384 spawns + 480 rare + 32 bosses
+1. Verify/fix manual movement bounds trên map 907 (user report: minimap còn rộng nhưng player bị chặn sớm).
+2. Port remaining deferred trap families with PC source proof, in order: `ClearSkillTeamEnterHole` → `TongMapEntrance` → `CityWarJoinRouter`.
+3. Add automated proof for map 907 full walkable bounds/minimap/click-to-move before marking movement/minimap ✅.
+4. Convert script-service claims from metadata counts to real PC behavior only when each Lua/API family is implemented and tested.
+5. Keep HUD/GM teleport work separate; do not stage or audit dirty UI changes unless user explicitly asks.
 
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 4.1 | NPC Definitions (2,000) | 2,000 | 2,000 | ✅ | PcNpcSFullParser now delegates to audited PcFullNpcParser (103 cột) so MapEnemyDatabase.EnsurePcNpcsLoaded runtime receives NpcResType/spriteClipRef, HP/attack/defense base params, walk/run speed, AI params, action + level scripts. |
-| 4.2 | Monster Spawns (5,384) | 5,384 | 67,680 Region_S records | 🔄 | 2026-06-08 bulk server Region_S pass: `MapServerRegionCatalog.json` covers 1,005 aliases / 332 visual geometries; 330 geometries have static PC server Region_S, 2 geometries have no static Region_S in source. Runtime now prefers generated `Generated/MapServerRegions/{geometryKey}` and no longer fabricates procedural spawns. Phase 3 NPC visual staging: 365 unique Region_S NpcResType values plus 10 Vượt ải scripted boss resTypes staged through PC `settings/npcres` tables + `package1.ini` priority, 1,314 exact PC SPR actions into ignored `Generated/NpcSprites`; `NpcSpriteCatalog.json`/`NpcSpriteCoverage.json` report 375/375 resTypes with runtime visual and 0 missing. Runtime routes `ani/boss/enemy/passerby/critter`, handles passerby `z/s` filenames, and falls back only to real staged PC actions instead of fake placeholders. Phase 4 Region_S interactive/object visual: `MapInteractiveCatalog.json`/`MapInteractiveCoverage.json` parse PC `SceneDataDef.h` KSPTrap/KSPObj for all generated Region_S: 8,692 trap records across 235 geometries and 453 object records across 81 geometries (817 unique trap IDs, 35 object templates). `MapObjectTemplateCatalog.json` resolves all 35 PC ObjData templates to 34 exact `\spr\obj\...` SPRs, stages 34/34 under ignored `Generated/ObjectSprites`, and `MapInteractiveObjectRuntime` renders only exact staged PC object art (skipPaint/isUnseen/missing art skipped; no fake placeholders). Trap audit confirms KSPTrap has no visual asset; traps stay invisible. `MapTrapScriptCatalog.json` resolves 817/817 unique trap IDs to PC server Lua paths using signed-char `g_FileName2Id`; final stale Region_S trap id `0xF51BA9A5` keeps its PC id but uses the verified Thiên Nhẫn Thánh Động 2 secret-room entrance source alias (`NewWorld(102,1608,3199)`), so missing trap scripts=0. `MapTrapRuntime` now builds invisible `BoxCollider2D` trigger volumes for active static traps and the player controller has a kinematic `Rigidbody2D` + trigger contact collider so trap entry can be detected without fake sprites/gameplay. Vượt ải map IDs 907..916 now apply PC `killbossmatch/class.lua` mission override: `ClearMapNpc/ClearMapObj/ClearMapTrap` suppresses shared desert-maze static Region_S content, then `_RefreshNpc` spawns 10 mission bosses (`Nhất quỷ`..`Thập quỷ`, template IDs 1481/1485/1488/1483/1482/1480/1489/1486/1487/1484) at PC `tbNpcPos` pairs; PC trap action Phase 5: `MapTrapActionCatalog.json` extracts 800 deterministic trap actions from PC trap Lua (`NewWorld`=532, `SetPos`=1, simple conditional `GetFightState`/`SetPos`/`SetFightState`=112, 37 message-only no-op/prompt traps: 23 `Say` (including championship `trap_placetolinan.lua`, where the old `NewWorld(176,1472,3243)` is commented out in PC source), 2 read-only `Talk`, 1 `Msg2Player`, 11 callback prompt `Talk` traps in Lưu Tiên Động/Côn Luân cơ quan (`Bạn nhìn thấy một cơ quan...`; callback answer/item/faction branches deferred), 3 direct `Msg2Player`+`NewWorld` traps (including Võ Đang well jump with `AddTermini(148)` and Vietnamese `giếng` text fix), plus 1 task-optional message leave trap (`\script\江南区\临安\莫空月居所\trap\离开.lua`: `GetTask(43)==100` posts the PC `Talk`, then always `SetFightState(0)` + `NewWorld(176,1413,2991)` with Vietnamese `Đừng/đấy` text fix), plus 1 task+faction-gated Thiên Nhẫn trap (`\script\中原北区\天忍教\天忍教室内3\trap\天忍教室内3to天忍教圣洞1.lua`: `GetTask(4)>=60*256+50` and `GetFaction()=="tianren"` pass `NewWorld(51,1666,3291)` + `SetFightState(1)`, otherwise PC `Talk` + `SetPos(1749,3081)`), plus 3 Phục Ngưu Sơn Tây→Thiên Tâm Động task-prompt/default traps (`GetTask(129)==50/55` posts PC `Say`/`Talk` prompt without auto-warp; otherwise default `enter_cave()` applies `SetFightState(1)`, `NewWorld(42,...)`, `AddTermini(107/108/109)`), plus 1 Thúy Yên cấm địa task+faction message gate (`\script\西南南区\翠烟门\翠烟门\trap\翠烟门to禁地迷宫.lua`: `GetTask(6)>60*256` and `GetFaction()=="cuiyan"` pass `SetFightState(1)` + `NewWorld(158,1584,3191)`, otherwise PC `Talk` only with no fail warp), plus 1 Thiếu Lâm mật thất task+faction prompt gate (`\script\中原北区\少林派\少林派\trap\少林派to少林密室.lua`: `GetSeries()==0` + `GetFaction()=="shaolin"`; exact `GetTask(7)==40*256+10` posts the PC Thạch môn quiz prompt read-only without auto-running callback quiz/SetTaskTemp, higher task enters `NewWorld(113,1675,3361)`, low/wrong faction posts PC `Msg2Player` only with no fail warp), plus 1 Trung Thu return-to-town current-map gate (`\script\event\mid_autumn\trap_totown.lua`: `GetTask(1569)==0` maps current Mid-Autumn event map 520..526 back to exact PC city tuple 1/11/37/78/80/162/176; nonzero task posts PC `Say` callback prompt read-only without auto-running return choices), plus 1 Thiên Nhẫn Thánh Động 1→2 task-set/faction gate (`\script\中原北区\天忍教\天忍教圣洞1\trap\天忍教圣洞1to天忍教圣洞2.lua`: `GetTask(28)==15` applies PC `SetFightState(1)`, `NewWorld(52,1729,3225)`, `SetTask(4,60*256+70)`, `SetTask(28,0)`; completed Thiên Nhẫn branch `GetTask(4)>=60*256+70` + `GetFaction()=="tianren"` enters; fail branch preserves PC `Talk`, `SetPos(1767,3186)`, `AddNote`), plus 1 Điểm Thương Sơn→Thương Lãng Khách task-prompt callback gate (`\script\西南南区\点苍山\点苍山\trap\点苍山to沧浪客居所.lua`: `GetTask(42)==60` applies PC `SetTask(42,70)` before `Talk(15,"U42_go",...)`, `GetTask(42)==70` posts the one-line PC `Talk`, and deterministic callback `U42_go()` enters `NewWorld(231,1611,3193)`; other task values no-op), plus 1 message-random leave trap (`\script\中原南区\伏牛山\周云泉居所\trap\离开.lua`: identical `GetSex` Talk branches, then PC `random(0,99)` to map 41 cells 1951/2989, 1685/3268, or 1788/3085), plus 20 simple `GetLevel>=N` gate traps with pass `SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState` and fail `Talk/optional SetPos`, plus 2 Tống Kim battlefield level-bracket traps (`GetLevel()<40` fail Talk, 40–79/80–119/120+ NewWorld to 323/324/325 with `SetFightState(0)`, `Msg2Player`, and optional `SetProtectTime(18*3)`/`AddSkillState(963,1,0,18*3)`), and 37 PC open-server date gate traps (`Include(configall.lua)`, `GetLocalDate`, `ThoiGianOpenServer=202202111248`) that branch closed `SetPos/Msg2Player/AddStation/SetProtectTime/AddSkillState` vs open `GetFightState` `SetPos/SetFightState` + optional station/protect/buff, plus 14 sa mạc mê cung `random(0,120)` traps with PC `SetFightState/NewWorld` branch tables and current-map return/gate guards, plus 6 revive-return traps (`RevID2WXY(GetPlayerRev())`) with fixed PC NewWorld branch, guarded player-revive return branch, and desert maze `AddTermini(195)` side effect on the fixed branch, plus 3 Tín sứ vượt ải task-state gate traps (`GetTask(1201/1202/1203)` → PC `SetPos` + optional `Msg2Player`), plus 8 Công Thành Chiến camp traps (6 `ctrap*` camp gates with PC `GetFightState`/`GetCurCamp`/`bt_RankEffect` branches and 2 `trap1/trap2` reserve-map returns with `SetCurCamp(GetCamp())`, `SetFightState(0)`, `SetLogoutRV(0)`, `NewWorld(222/223,1613,3185)`), plus 8 ClearSkill/CSP dream traps (4 `CSP_SwitchTrap` fight-state/PK/logout trap toggles and 4 `LeaveGame` returns that derive clear-map IDs from PC `CSP_TestMapBeginTab`/`CSP_ClearMapTab`, set task temp 100, revive slot 1, camp, death-script, and leave-team side effects; `TeamEnterHole` remains deferred because PC parity needs team/member iteration, mission map allocator, MissionID 10 vars/timers, per-player state, temp revive, and PK APIs), plus 1 CS arena leave trap (`\script\missions\cs竞技场\leavetrap.lua`) preserving PC `LeaveTeam`, `SetCurCamp(GetCamp())`, `SetFightState(1)`, `SetLogoutRV(0)`, `SetRevPos(80,36)`, and `NewWorld(GetLeavePos())` from task triplet 300/301/302 with no fallback when task values are absent, plus 2 mission leave task-triplet traps (HS battle `\script\missions\hsbattle\leavetrap.lua` and citywar arena include `\script\missions\citywar_arena\leavetrap.lua`) preserving PC `SetCurCamp(GetCamp())`, `SetFightState(0)`, `SetRevPos(99,43)`, optional `SetLogoutRV(0)`, `SetCreateTeam(1)`, `SetDeathScript("")`, `SetPKFlag(0)`, `ForbidChangePK(0)`, `SetTaskTemp(200,0)`, and `NewWorld(GetLeavePos())` from task triplet 300/301/302; `MapTrapRuntime` now executes those PC transitions via `TrapTriggerService` while general Lua remains disabled, applies deterministic PC `SetFightState(0/1)` into `SandboxManager.CurrentFightState`, chooses branches from live fight state/player level/task value/citywar camp, posts read-only trap messages without changing map/task/item state, preserves PC message-before-warp for direct `Msg2Player`+`NewWorld` exits, and records PC AddTermini/protect/buff side effects for later full service binding. Complex task/item/mission/richer-branch trap scripts still stub-log until full PC Lua APIs (`Talk` callbacks, task APIs, rewards/items, non-simple conditionals, includes, ...) are ported. Object script Phase 6: `MapObjectScriptCatalog.json` now resolves 299/299 unique PC object Lua scripts used by 449 Region_S objects, and `MapObjectActionCatalog.json` executes 296 deterministic object actions: 7 NewWorld transitions (with optional SetFightState), 19 safe pickup/message scripts (`SetPropState`/`AddEventItem`/`AddNote`/`Msg2Player`; includes 3 PC scripts whose old task guards are commented out), 1 PC pickup script with optional `AddNote` gated by `GetTask(1)` range and no task mutation, 2 Thiên Nhẫn outdoor lost-animal pickups (`trobj05/trobj06`: `GetTask(4)==20*256+50` and `HaveItem(125/126)==0` → `SetPropState` + `AddEventItem` + PC `Msg2Player`/`AddNote`, no task mutation), 3 deterministic task/item consume objects (`地图_cyl40_机关.lua`, `捡拾_kll40_宝箱.lua`, `捡拾_kll60_宝箱.lua`) with all-required `HaveItem` validation before all-or-nothing `DelItem`, optional PC `SetTask`, `AddEventItem`, `AddNote`, and exact PC branch messages, 16 deterministic ordered branch quest chests/tablets (`twobj01.lua`, `trobj04.lua`, `tmobj02.lua`, `地图_gbl60_宝箱4.lua`, `tmobj01.lua`, 4 Cái Bang random cloth-bag chests `地图_gbl60_宝箱1/2/3/5.lua`, Shaolin stone `地图_sll50_石头1.lua`, 3 Wudang byte-state chests `wdobj01/02/03.lua`, and 3 Biện Kinh Iron Tower bit-state mechanisms `trobj01/02/03.lua`) preserving PC `elseif`/prompt order for empty/recovery/already-have/Cái Bang cloth-bag/Tang Môn tablet/task-temp stone/Wudang byte/Iron Tower bit branches with backed task/item/message/note/random/temp-task/byte/bit effects, key `204` consumed on each PC opened branch, Iron Tower keys `160/161/162` are consumed before the PC already-open bit check, Tang Môn items `37..40` consumed only on the full khẩu quyết branch while item `41` is checked/restored but not consumed, PC `random(0,99)<N` cloth-bag rolls executed through `RandomIntInclusive(0,99)` with reward-count messages, Shaolin `GetTaskTemp(47)` stone pushes advance `0→1→2→reward item 28→0` without polluting persistent task flags, and Wudang `GetByte/SetByte(GetTask(17),n,...)` preserves adjacent packed bytes while advancing reward bytes to `2`/`10`, 144 read-only `Say` signpost/notice messages (including `<---->` road signs with quote-aware Lua comment stripping), 1 read-only `Talk(count,"",message...)` object dialog (32 object refs), 1 read-only task-gated PC `Talk` object (`GetTask(8)==60*256+10` empty Cái Bang chest) with no task/item mutation, 51 PC `OpenBox()` storage/object interactions with optional one-arg `SetRevPos(id)` recorded against the current map, 19 faction-gated PC `OpenBox()` storage objects that always open and apply `SetRevPos(id)` only when `GetFaction()` matches the PC faction string, 2 Tống/Kim battlefield camp-gated PC `OpenBox()` storage objects that open only when `GetCurCamp()` matches and otherwise post the PC `Talk` line, and 23 PC `ShowLadder(id...)` notice-board interactions through click/interact action components; 7 prompt-branch object actions are covered by explicit `TryExecuteChoice` tests: 4 Cổ Dương Động mechanisms (`地图_机关1/2/3/4.lua`) using PC `Say` choices without auto-accept, `GetByte/GetBit/SetBit/SetByte` task 41 packing, item 352 consume-on-solved, and exact Tiểu Quyên success/failure/note messages; 1 Thiếu Lâm mật thất small-door quiz preserving the PC branch-order quirk where task 10290 still shows the prompt; and 2 Tang Môn Trúc Tơ Động tầng 3 chests preserving `Cần/Không cần`, item 49 sword reward vs `Earn(10000)+SetTask(2,15430)` money reward, and rusted/empty/other-chest messages. Remaining branchy dialog/task-branch/item-branch/object-state scripts stay cataloged but disabled until their PC APIs are ported. NPC template names now decode legacy TCVN3 Vietnamese from PC `settings/npcs.txt` instead of mojibake. Unity MCP smoke 2026-06-08 for default map 907: compile clean, scene boots `Vượt ải Nhiếp Thí Trần`, renderer loads 229 Region_C from `g_a7649e666581b845`, player bounds are x=39424..54272/y=-56320..-49152, 10 PC killbossmatch mission bosses spawn (static Region_S enemies ignored per `ClearMapNpc`), objects=0, traps `active=0 disabled=16 missingScript=0`; screenshot saved locally at `Assets/Screenshots/map907_trap_smoke.png` (ignored). Unity MCP multi-map smoke 2026-06-08: default 907 still boots clean after mission boss override; map 1 Phượng Tường loads 1,066 Region_C + 1,344/1,409 enemies + 15 objects + 146 traps; canonical Ba Lăng is PC mapId 53 (not legacy 79) and loads 618 Region_C + 812/845 enemies + 11 objects + 140 traps; legacy mapId 79 now resolves to Mật đạo Nha môn Tương Dương and loads 50 Region_C + 78/78 enemies + 8 traps; known static-Region_S gaps 134/1007 render their small Region_C sets and correctly leave enemies/objects/traps empty; missing-SPR sample maps 340/987 render with only the audited known map-art misses (3/6 missing SPR stats respectively) while Region_S enemies/objects/traps still build from PC data. Remaining: Lua-backed object/trap interaction execution + broader visual/device UAT matrix. |
-| 4.3 | Rare Spawns (480) | 480 | 480 | ✅ | PcRareSpawnParser + PcNpcBatchLoader runtime |
-| 4.4 | Gold Bosses (32) | 32 | 32 | ✅ | PcGoldBossParser + PcNpcBatchLoader runtime |
-| 4.5 | Shop NPCs (165) | 165 | 165 | ✅ | ShopService + ShopPanel + ShopConfigService + NpcShopItemService (1,521 vật phẩm) + tests |
-| 4.6 | NPC Dialog System | 5 scripts | ✅ | ✅ | NpcDialogueService + LuaScriptBridge |
-| 4.7 | NPC Level Scripts (58) | 58 | 58 | ✅ | NpcLevelScriptService runtime + parser + tests, sandbox wired |
-| 4.8 | Drop Rate System | Yes | 20+ tables | ✅ | PcDropRateParser + DropRateRegistry runtime via SandboxManager → LootService |
-| 4.9 | NPC Death Scripts | 1 | 1 | ✅ | NpcDeathScriptService runtime + parser + tests, sandbox wired |
-| 4.10 | Enemy AI | 1 | ✅ | ✅ | EnemyAiService |
-| 4.11 | Enemy Nameplate/HP | Yes | ✅ | ✅ | BaLangEnemyNameplateOverlay + EnemyHealthBar |
-| 4.12 | Training NPC Spawn | Yes | ✅ | ✅ | TrainingNpcSpawner (mộc nhân, bao cát, cọc gỗ) |
-| 4.13 | Spawn Batching | Yes | ✅ | ✅ | SpawnBatchManager |
+## 6. Removed false confidence from previous file
 
-## 5. Vật Phẩm & Kinh Tế (05_items.md)
+- Removed old global claims `1771/1771 EditMode`, `25/25 PlayMode`, `Tổng thể ~100%`, and blanket `✅` for scripts/systems.
+- Old counts can still be useful as leads, but they are no longer treated as completion proof.
+- Future edits to this file must cite command/file evidence and must not mark `✅` merely because a parser/service exists.
 
-PC: 5,346+ gold equip, 1,294+ recipes, 350 horses, etc.
+## 7. Downgrade cụ thể theo audit subagent
 
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 5.1 | Item Database Framework | Yes | ✅ | ✅ | ItemDatabase + ItemContractImporter |
-| 5.2 | Equipment Slots | Yes | ✅ | ✅ | PlayerEquipmentService + EquipmentSlotMappingService |
-| 5.3 | Gold Equipment (5,346) | 5,346 | 5,346 | ✅ | PcGoldEquipParser + PcItemBatchLoader, runtime via SandboxManager.ItemDb |
-| 5.4 | Platina Equipment (5,336) | 5,336 | 5,336 | ✅ | PcPlatinaEquipParser + PcItemBatchLoader, runtime via SandboxManager.ItemDb |
-| 5.5 | Armor (290) | 290 | 290+ | ✅ | PcArmorParser runtime via PcItemBatchLoader.ImportInto (sandbox) |
-| 5.6 | Helm (140) | 140 | 140+ | ✅ | PcHelmParser runtime via PcItemBatchLoader |
-| 5.7 | Boot (40) | 40 | 40+ | ✅ | PcBootParser runtime via PcItemBatchLoader |
-| 5.8 | Cuff/Belt/Ring/Amulet/Pendant | 70 | 70+ | ✅ | PcCuff/PcBelt/PcRing/PcAmulet/PcPendant runtime via PcItemBatchLoader |
-| 5.9 | Melee Weapon (60) | 60 | 60+ | ✅ | PcMeleeWeaponParser runtime via PcItemBatchLoader |
-| 5.10 | Range Weapon (30) | 30 | 30+ | ✅ | PcRangeWeaponParser runtime via PcItemBatchLoader |
-| 5.11 | Horse (350) | 350 | 350+ | ✅ | PcHorseParser runtime via PcItemBatchLoader; HorseVisual + PlayerMountService, 5-color palette, horseId API |
-| 5.12 | Potion (40) | 40 | 40+ | ✅ | PcPotionParser runtime via PcItemBatchLoader |
-| 5.13 | Magic Attributes (333) | 333 | ✅ | ✅ | ItemContractImporter parse magic attrib codes |
-| 5.14 | Set Bonus | Yes | ✅ | ✅ | SetBonusRefineService |
-| 5.15 | Enhance/Refine | Yes | ✅ | ✅ | EnhanceRefineService |
-| 5.16 | Compound/Recipe (1,294) | 1,294 | 1,294 | ✅ | CompoundRecipeService + CompoundPanelService + 9 tests pass, sandbox wired |
-| 5.17 | Quest Items (2,045) | 2,045 | 2,045+ | ✅ | QuestItemService runtime + 3 tests pass, sandbox wired |
-| 5.18 | Shop System (1,521) | 1,521 | 1,521 | ✅ | ShopService + ShopPanel + ShopConfigService + GoodsCatalogService runtime |
-| 5.19 | Item Exchange | Yes | Yes | ✅ | ItemExchangeService runtime + parser + tests, sandbox wired |
-| 5.20 | Lottery/Gacha (254) | 254 | 254 | ✅ | LotteryService runtime + 6 tests pass, sandbox wired |
-| 5.21 | Hongbao (69) | 69 | 69 | ✅ | HongbaoService + HongBaoPanelService runtime + tests, sandbox wired |
-| 5.22 | Drop Rate System | Yes | 20+ tables | ✅ | PcDropRateParser + DropRateRegistry runtime via SandboxManager → LootService |
+Các dòng dưới đây là các claim cũ cần nhớ khi đọc lịch sử commit: **không được nâng lại `✅` nếu chưa có evidence mới**.
 
-## 6. Nhiệm Vụ (06_missions.md)
+### 7.1 Map section cũ
 
-PC: 985 mission scripts + 29 task configs + 1,037 adventure entries
+| Claim cũ | Audit result |
+|---|---|
+| `MapCatalog.json + PC maplist.ini -> 1,005` | Wording sai: raw `MapCatalog.json` chỉ là legacy catalog; `1,005` đến từ runtime merge `MapAliasCatalog`/`MapGeometryCatalog`/`MapServerRegionCatalog` + PC map data. |
+| Map 907 raw name | Raw alias row còn label khác; runtime `MapPortManifest` override tên hiển thị thành `Vượt ải Nhiếp Thí Trần`. |
+| Map 389 `Map_389_C 516 Region_C` | Đúng cho historical standalone TestData; current bulk geometry shared map IDs 387-389 có count khác. Không dùng làm current runtime proof. |
+| Waypoint `225 -> 224 ✅` và Wharf `11 -> 10 ✅` | Mismatch denominator; giữ `🔄` cho tới khi document exact skipped row/reason. |
+| Region_S trap runtime | Không full complete: 804 deterministic actions, 13 resolved deferred (`TongMapEntrance=8`, `ClearSkillTeamEnterHole=4`, `CityWarJoinRouter=1`). |
 
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 6.1 | Quest Service Framework | Yes | ✅ | ✅ | QuestService + QuestTrackerPanel |
-| 6.2 | Mission Scripts (985) | 985 | 985 | ✅ | MissionScriptService + MissionArenaConfigService + MissionMazeConfigService + MissionQianchongService + tests |
-| 6.3 | Task System (29 configs) | 29 | 29 | ✅ | TaskFlagService + TaskFlagRegistryService + TaskDailyConfigService + TaskRandomConfigService + TaskLevelLinkService + TaskTalkConfigService + TaskEventService + tests |
-| 6.4 | Adventure Entries (1,037) | 1,037 | 1,037 | ✅ | AdventureService runtime + 3 tests pass, sandbox wired |
-| 6.5 | Daily Tasks | Yes | Yes | ✅ | DailyTaskService + TaskDailyConfigService + DailyTaskPanelService UI + tests |
-| 6.6 | Random Tasks | Yes | Yes | ✅ | RandomTaskService + TaskRandomConfigService runtime + tests |
-| 6.7 | Partner Tasks | Yes | Yes | ✅ | PartnerTaskService runtime + parser + tests, sandbox wired |
-| 6.8 | Chuyển Sinh Tasks | Yes | Yes | ✅ | MetempsychosisTaskService runtime + parser + tests, sandbox wired |
-| 6.9 | Quest Rewards | Yes | ✅ | ✅ | QuestReward trong QuestService |
-| 6.10 | DaTau (Dã Tẩu) Task Chain | Yes | ✅ | ✅ | DaTauTaskChainService + award tables |
-| 6.11 | Arena Missions | Yes | Yes | ✅ | ArenaService + ArenaPanelService + MissionArenaConfigService + tests |
-| 6.12 | Boss Missions | Yes | Yes | ✅ | BossMissionService + WorldBossService + WorldBossPanelService + tests |
-| 6.13 | Event Missions | Yes | Yes | ✅ | ServerEventService + VngEventService + EncounterService + TreasureHuntService + TreasureHuntPanelService + tests |
+### 7.2 Faction / skill / item claims cũ
 
-## 7. Sự Kiện (07_events.md)
+| Claim cũ | Audit result |
+|---|---|
+| 10 phái / UI chọn phái / ngũ hành / alignment đều `✅` | Chỉ có static runtime/catalog; faction UI có hard-code và một số text/element không chứng minh PC parity. Giữ `🔄`, riêng faction titles 81 có data proof tốt. |
+| Faction Maps 33 `✅` | Overclaim rõ: `FactionMapService` tìm `Reference/PcTong/faction_map.txt` nhưng file không tồn tại; mobile count thực tế cần coi là 0/unverified. |
+| Base skills 1,216 `✅` | Có data catalog proof (`Reference/PcSkill/skills.txt` 1,216 rows). Chỉ nghĩa là catalog/lookup, không nghĩa full skill behavior. |
+| Extended skills 1,712 `✅` | Overclaim: mobile `ModSkills.txt` subset, không thấy PC `skills1.txt` full 1,712 được copy/parse. Giữ `🔄`. |
+| Skill templates 219 `✅` | Overclaim: không thấy đúng `skilltemplate.txt`; parser có nguy cơ đọc nhầm file missile. Giữ `☐/🔄`. |
+| Special skills 58 / NPC skills 43 / Translife skills 9 `✅` | Source files default không tồn tại hoặc service count có thể 0. Giữ `☐/🔄`. |
+| Missile effects 480 `✅` | Count chưa khớp audited files (`missles.txt`, `missles1.txt`, template). Giữ `🔄` tới khi có verifier. |
+| Magic attributes 333 `✅` | Count audit là 330 data rows, không phải 333. |
+| Compound/Recipe 1,294 `✅` | Recipe data có; craft execution/UI còn stub/không chứng minh inventory consume/result. Giữ `🔄`. |
+| Item Exchange / Hongbao `✅` | Runtime default path/data mismatch hoặc missing directory; giữ `☐/🔄`. |
 
-PC: 455 server + 195 VNG + 20 VNG feature scripts
+### 7.3 NPC / quest / event / battle / guild claims cũ
 
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 7.1 | Server Events (455) | 455 | 455 | ✅ | ServerEventService + EventScriptService + EventBonusService runtime + tests |
-| 7.2 | VNG Events (195) | 195 | 195 | ✅ | VngEventService runtime + parser + tests, sandbox wired |
-| 7.3 | VNG Features (20) | 20 | 20 | ✅ | VngEventService runtime (see 7.2) |
-| 7.4 | Event Thăng Long (8) | 8 | 8 | ✅ | EventBonusService + CityDefenceService runtime + tests |
-| 7.5 | Seasonal Events | Yes | Yes | ✅ | SeasonalEventService runtime + parser + tests, sandbox wired |
-| 7.6 | Bingo System | 2 ver | 2 | ✅ | FlipCardService + FlipCardPanelService runtime + tests |
-| 7.7 | Activity System (496) | 496 | 496 | ✅ | ActivityService + HuoYueDuService + HuoYueDuPanelService runtime + tests |
-| 7.8 | Huo Yeu Du (41) | 41 | 41 | ✅ | HuoYueDuService + HuoYueDuPanelService runtime + tests |
-| 7.9 | Compensation System | Yes | Yes | ✅ | CompensationService runtime + parser + tests, sandbox wired |
+| Claim cũ | Audit result |
+|---|---|
+| NPC definitions 2,000 `✅` | Data-level OK (`npcs.txt` 2,000 rows), nhưng dialog/level-script/AI không full PC behavior. |
+| Monster spawns 5,384 `✅` | Current proof là Region_S `67,680` records + visuals; `settings/normal.txt` 5,384 table chưa được chứng minh full port. Giữ `🔄`. |
+| NPC Dialog / NPC Level Scripts / Enemy AI `✅` | Overclaim: service/framework/generic AI, chưa execute PC Lua/semantic scripts. Giữ `🔄`. |
+| Mission Scripts 985 `✅` | Overclaim: `MissionScriptService` là metadata registry/helper, không full Lua executor. Giữ `🔄`. |
+| QuestService full quests `✅` | Contains hard-coded/sample quest chains; không phải full PC mission script parity. Giữ `🔄`. |
+| Server/VNG/Seasonal/Compensation events `✅` | Missing dedicated reference dirs/indexes for many event systems; parser/service skeleton only. Giữ `☐/🔄`. |
+| Tống Kim / Quốc Chiến / Hoa Sơn / CityWar `✅` | Core services exist, but full PC battle join/state/item/guild gates chưa proven; `CityWarJoinRouter` còn deferred. Giữ `🔄`. |
+| Battle Scripts 183 `✅` | Runtime has simplified/log/mock behavior; not full PC script semantics. Giữ `🔄`. |
+| Guild Scripts 65 `✅` | PC `script/tong` Lua not executed; `GuildScriptService.ExecuteScript()` mostly validate/log/return. `TongMapEntrance` traps deferred. Giữ `🔄`. |
 
-## 8. Chiến Đấu & PvP (08_battles.md)
+### 7.4 UI / visual / infrastructure / scripts claims cũ
 
-PC: 183 battle scripts + 80 battlefield maps
-
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 8.1 | Combat Runtime | Yes | ✅ | ✅ | CombatRuntimeService + GameplayLoopService |
-| 8.2 | Damage Formula | Yes | ✅ | ✅ | DamageFormulaService + PcSkillDamageService |
-| 8.3 | Auto-Target | Yes | ✅ | ✅ | AutoTargetService + CombatAutoTargetService |
-| 8.4 | Missile/Projectile | Yes | ✅ | ✅ | ProjectileService + MissileSpawner |
-| 8.5 | Buff System | Yes | ✅ | ✅ | BuffStateService |
-| 8.6 | Death Flow | Yes | ✅ | ✅ | DeathFlowService |
-| 8.7 | Reflection Breaker | Yes | ✅ | ✅ | CombatReflectionService |
-| 8.8 | PK System | Yes | ✅ | ✅ | PkCombatService |
-| 8.9 | Tống Kim | 80 maps | 80 | ✅ | TongJinBattleService runtime + parser + tests, sandbox wired |
-| 8.10 | Quốc Chiến | 4 scripts | 4 | ✅ | BattleScriptService + BattleScriptRuntimeService runtime + tests |
-| 8.11 | Hoa Sơn Luận Kiếm | 2 scripts | 2 | ✅ | HuaShanLuanJianService runtime + parser + tests + HuaShanPanelService UI |
-| 8.12 | Công Thành Chiến | 7 thành | 7 | ✅ | BangChienService runtime + parser + tests + CityWarService runtime + 5 tests pass |
-| 8.13 | Boss Hoàng Kim | 32 | 32 | ✅ | BossHoangKimService runtime + parser + tests, sandbox wired |
-| 8.14 | Battle Scripts (183) | 183 | 183 | ✅ | BattleScriptService + BattleScriptRuntimeService runtime + tests |
-| 8.15 | Battle Awards | Yes | Yes | ✅ | BattleAwardService + BattleRewardConfigService + BattleHonorService runtime + tests |
-| 8.16 | Double EXP | Yes | Yes | ✅ | DoubleExpService runtime + parser + tests, sandbox wired |
-
-## 9. Bang Hội (09_guild.md)
-
-PC: 65 scripts + 6 levels + 33 maps
-
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 9.1 | Guild Scripts (65) | 65 | 65 | ✅ | GuildService + GuildScriptService + GuildPanelService (65 scripts) + tests |
-| 9.2 | Guild Creation | Yes | Yes | ✅ | GuildRankService + GuildPanelService runtime + tests |
-| 9.3 | Guild Levels (6) | 6 | 6 | ✅ | GuildService + TongSettingService runtime + tests |
-| 9.4 | Guild Fund System | Yes | Yes | ✅ | GuildService.Donate + SpendOnBuild + TongStuntService + tests |
-| 9.5 | Guild Contributions | Yes | Yes | ✅ | GuildStuntService + GuildTaskService runtime + tests |
-| 9.6 | Guild Workshop | Yes | Yes | ✅ | GuildWorkshopService + GuildWorkshopLevelService (7 workshop types + level data) + tests |
-| 9.7 | Guild Tasks | Yes | Yes | ✅ | GuildTaskService + GuildTaskDefService (4 task def files) + tests |
-| 9.8 | Guild Ranks (5) | Yes | 5 | ✅ | GuildRankService runtime + parser + tests, sandbox wired |
-| 9.9 | Guild Stunt Skills | Yes | Yes | ✅ | GuildStuntService + TongStuntService runtime + tests |
-| 9.10 | Guild City War | Yes | Yes | ✅ | GuildCityWarService + GuildCityWarLogService + CityWarService runtime + tests |
-| 9.11 | Party System | Yes | ✅ | ✅ | PartyService + PartyPanel |
-
-## 10. Hệ Thống Khác (10_systems.md)
-
-PC: 20+ systems
-
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 10.1 | Activity System (496) | 496 | 496+ | ✅ | EventBonusService + ActivityService + HuoYueDuService runtime + tests |
-| 10.2 | Huo Yeu Du (41) | 41 | 41 | ✅ | HuoYueDuService + HuoYueDuPanelService runtime + tests |
-| 10.3 | Meridian/Kinh Mạch (128) | 128 | 128 | ✅ | MeridianService + MeridianPanelService runtime + tests |
-| 10.4 | Partner/Pet System (330) | 330 | 330+ | ✅ | PartnerService + PartnerEventService + PartnerBagService + PartnerSettingService + PetSkillService + tests |
-| 10.5 | Player Titles (363) | 363 | 363+ | ✅ | TitleService + TitleEffectService + TitlePanelService + TitleVietnameseCatalog + tests |
-| 10.6 | Shop System | Yes | ✅ | ✅ | ShopService + ShopPanel |
-| 10.7 | Second Hand Store | Yes | Yes | ✅ | StallService + StallPanelService + StallBrowsePanelService + tests |
-| 10.8 | Foundry/Forge | Yes | Yes | ✅ | FoundryService + FoundryPanelService + CompoundRecipeService + tests |
-| 10.9 | Lottery/Gacha (254) | 254 | 254 | ✅ | Same as 5.20 — LotteryService runtime |
-| 10.10 | Flip Card | 2 | 2 | ✅ | FlipCardService + FlipCardPanelService runtime + tests |
-| 10.11 | Bao Ruong Than Bi | 8 | 8 | ✅ | BaoRuongThanBiService runtime + tests |
-| 10.12 | Honor System | 6 | 6 | ✅ | HonorService runtime + tests |
-| 10.13 | Shitu/Apprentice | 6 | 6 | ✅ | ShituService runtime + tests |
-| 10.14 | Bonus Online | 2+6 | 8 | ✅ | BonusOnlineService runtime + tests |
-| 10.15 | Trip/Travel | 4 | 4 | ✅ | TripService runtime + tests |
-| 10.16 | Change Feature | 15 | 15 | ✅ | ChangeFeatureService + ChangeFeatureDataService runtime + tests |
-| 10.17 | New Player Guide | 17 | 17 | ✅ | NewPlayerGuideService runtime + tests |
-| 10.18 | World Rank | 2+ | 2+ | ✅ | WorldRankService + RankingService + RankingPanelService runtime + tests |
-| 10.19 | GM Tools | 3 | ✅ | ✅ | GMPanelController + GMMapTab + GMPlayerTab + GMToolsTab |
-| 10.20 | Dialog System | 5 | ✅ | ✅ | NpcDialogueService |
-| 10.21 | City Defence | 96 | 96 | ✅ | CityDefenceService runtime + tests |
-| 10.22 | Weather System | configs | ✅ | ✅ | WeatherService runtime + parser + tests, sandbox wired |
-| 10.23 | Sound System | configs | ✅ | AudioService + MusicService + MusicConfigService runtime + parser, sandbox wired |
-| 10.24 | PK System | Yes | ✅ | ✅ | PkCombatService |
-| 10.25 | Stall System | Yes | Yes | ✅ | StallService + StallPanelService + StallBrowsePanelService + tests |
-
-## 11. Nhân Vật Visual (không có port_doc riêng)
-
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 11.1 | Male Player Visual | Yes | ✅ | ✅ | MalePlayerVisual + MalePlayerSpriteCatalog, 8 hướng SPR |
-| 11.2 | Female Player Visual | Yes | ✅ | ✅ | FemalePlayerVisual + FemalePlayerSpriteCatalog |
-| 11.3 | Mount/Horse Visual | Yes | ✅ | ✅ | HorseVisual, 5-color palette |
-| 11.4 | NPC Visual | Yes | ✅ | ✅ | PcNpcVisual |
-| 11.5 | Layered SPR System | Yes | ✅ | ✅ | SprRuntimeService + SprAtlasPacker + SprDecoder |
-
-## 12. Client & UI (12_client.md + 16_client_resources.md)
-
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 12.1 | Mobile HUD | Yes | ✅ | ✅ | GameHudController + HudDataService + MobileJoystick |
-| 12.2 | HUD Art (PC visual assets + mobile UX) | 1,851 SPR + pc-evidence crops | ~410 | 🔄 | 2026-06-08 direction updated per user: không còn ép port layout PC 99%; giữ top HP/MP/EXP/level giống PC vì gọn và đúng, còn combat HUD chuyển mobile-first. Visual/icon vẫn 100% PC-derived: top bar `顶部控制条` uid `8da7027d` + fills `74b299b9/83e13762/b72be14b/f5d017dd`; action/menu crops từ `/var/www/vltk-mobile/pc-evidence/pc_hud.png` + PC SPR decode gồm đủ 17/17 nút `工具控制条.ini` (`Status/Items/ItemEx/Skills/Task/Friend/Team/Faction/ChatRoom/Options` + `Sit/Run/Horse/Exchange/Rec/PK/Treasure`). UX mới theo feedback mobile: bỏ utility dock trung tâm đáy; chỉ giữ combat cluster ở vùng ngón cái phải, còn toàn bộ nút PC utility nằm ở góc trên bên trái minimap sau một nút switch PC-derived. Nút mở/ẩn giữ dock gọn (`Mở`/`Ẩn`), nút switch riêng trong dock đổi qua lại `Tác vụ ↔ Menu`; `Tác vụ` chứa Sit/Run/Horse/Exchange/Rec/PK/Treasure, `Menu` chứa các panel/status/inventory/skill/social/system. 2026-06-08 refinement: dock gắn class mode-specific `action-mode`/`menu-mode` để bar Tác vụ chỉ cao 1 hàng, bar Menu cao 2 hàng, tránh chiếm màn hình khi switch. Hitbox runtime verified ≥46×46 (Treasure 54×46), `panel.Pick()` trúng icon child đúng nút; responsive qua `HudPanelSettings` ScaleWithScreenSize/Shrink + safe-area sizing. Tests/guards khóa PC-derived art size/pixel crop/import settings + UXML đủ 17 nút. 2026-06-08 follow-up: removed remaining empty UI service stubs used by these buttons — `DailyTaskPanelService`, `GuildPanelService`, `MallPanelService`, `TreasureHuntPanelService` now build rows from runtime PC registries/services so Task/Faction/Bảo Vật panels show real available data instead of empty placeholders; runtime smoke invoked all 17 handlers and verified expected panel/side effect with no console errors. 2026-06-08 follow-up #2: removed hard-coded fake Team/Exchange data — Team now toggles existing `PartyPanel` and renders `PartyService.Members` (empty party shows `Chưa tham gia đội`), Exchange no longer fabricates Dã Tẩu/Võ Đang/Thiên Hạ and instead shows pending selected-player/economy state; ItemEx snapshot can bind runtime `InventoryService` mobile slots instead of static zero rows. 2026-06-08 follow-up #3: `Rec` no longer only flips a bool; it starts/stops a HUD frame-recorder session, immediately captures a PC-recorder frame path under `Application.persistentDataPath/VltkRecorder`, continues frame capture on interval while enabled via Unity `ScreenCapture.CaptureScreenshot`, and reports saved frame count/path in the PC tool panel with source `Player_Recorder / 摄像机按钮`. 2026-06-08 follow-up #4: `Exchange` now creates/cancels a real `EconomyService.CreateTradeSession` when an online non-self `PartyService` member is available, binds target name/level/session IDs/offer silver into the trade panel, and clears session/economy/target state on close; no fake NPC/player data is used. 2026-06-08 follow-up #5: added automated 17/17 coverage guard `FullPcUtilitySet_HasPcSpecIconAssetsAndClickHandlers` which asserts every `HudBottomBarPcSpec.ToolControlBar` PC key has its mobile button, `ButtonIcons` mapping, Assets + StreamingAssets PNG, and `RegisterClick` handler wiring. 2026-06-08 follow-up #6: đổi UX đúng feedback “1 nút toggle + 1 nút switch 2 bar” — `UtilityToggleBtn` chỉ mở/ẩn dock, `UtilitySwitchBtn` (icon PC `btn_options`) chuyển `Tác vụ/Menu`; thêm smoke guard `AllPcUtilityHandlers_ProduceExpectedMobileSideEffects` chứng minh 17/17 handler tạo side effect mobile thực tế (inventory/skill/team/exchange/rec/pk/panels) và runtime MCP smoke pass, console sạch. 2026-06-08 follow-up #7: bổ sung các nút PC HUD còn thiếu ngoài `工具控制条`: 4 nút minimap cạnh tọa độ (local/search/marker/world) bằng crop pixel từ `pc_hud.png`, 6 tab chat PC bottom-left (`Tất cả/Mật/Phòng/Bang hội/Môn phái/Khác`), nút mặt cười PC crop, và nút gửi chat; `SendBtn`, `ChatTab*`, `MinimapSearchBtn`, `MinimapMarkerBtn` đều có handler side-effect, `ChatService` có kênh Room/Guild/Other, guard khóa UXML/art/StreamingAssets/import settings/pixel crop, MCP smoke pass `HUD supplementary PC buttons smoke OK`. 2026-06-08 follow-up #8: bổ sung nhóm nút PC visible còn thiếu từ `主界面玩家信息窗口.ini`/`autoexec.lua`: 9 ô vật phẩm `Item_0..Item_8` (phím 1..9 → `ShortcutUseItem(0..8)`) và 2 ô kỹ năng trái/phải `ImediaLeftSkill/ImediaRightSkill`; icon crop exact từ `/pc-evidence/pc_hud.png` nằm ở Assets + StreamingAssets, dock mobile `PcShortcutToggleBtn/PcShortcutDock` ẩn/hiện gọn cạnh combat controls, handler item mở panel/tiêu thụ slot runtime nếu có inventory, handler T/P route sang mobile skill picker hoặc bảng Võ công fallback; guards cập nhật UXML/spec/art/pixel crop/import settings + MCP smoke `HUD PC quick slots smoke OK`, console sạch. 2026-06-08 follow-up #9: audit lại mini map theo PC `ec10b91e.ini`/`f8bf2550.ini` (`BtnFlag`, `SwitchBtn`, `WorldMapBtn`, `CaveMapBtn` Left 73/87/101/115); đổi mobile UXML/CSS/controller sang đúng thứ tự và đúng semantics, thêm `CaveMapBtn` dùng icon PC HUD gốc và handler mở danh sách hang động/me cung từ catalog PC; guard khóa UXML order + art mapping + StreamingAssets + pixel crop từ `/pc-evidence/pc_hud.png`. 2026-06-08 follow-up #10: bổ sung nút/icon PC còn thiếu ở đầu dòng nhập chat (`ChatChannelIdentityBtn`, crop exact x=2 y=526 32×32 từ `pc_hud.png`, tương ứng biểu tượng current-channel/MSNRoom bên trái input); handler cycle kênh chat thật qua `SelectChatChannel(next)` và guard khóa vị trí trước `ChatInput`, art StreamingAssets, import settings, pixel crop. 2026-06-08 follow-up #11: sửa thứ tự cụm nút hệ thống chat theo PC `c9c8a750.ini`/`7e20a7ac.ini`: `SysRoom_Up` → `SysRoom_Down` → `SysRoom_Open` (Top 0/14/28), trước đó mobile bị lệch `Up/Open/Down`; thêm guard khóa order UXML. 2026-06-08 follow-up #12: sửa thứ tự cụm chat rail chính theo PC `7e20a7ac.ini`: `SizeBtn` → `ChatRoom_Scroll` controls → `ShadowBtn` (`Top=111`) → `MoveImg` (`Top=125`); trước đó mobile đặt Move/Shadow trước scroll, lệch ảnh PC; thêm guard `ChatRailMainButtons_FollowPcIniTopOrder`. 2026-06-08 follow-up #13: bổ sung nút thumb scrollbar chat PC còn thiếu (`ChatScrollThumbBtn`, crop exact 15×27 từ `pc_hud.png` x=1 y=337, tương ứng `[ChatRoom_Scroll_Btn]`), đặt giữa scroll-up/down trong rail, handler mở lịch sử chat theo offset hiện tại; guard khóa art/pixel/StreamingAssets/handler. 2026-06-08 follow-up #14: bổ sung PC `[SplitBtn]` 14×85 của chat/MSNRoom (`ChatSplitBtn`, crop exact từ `pc_hud.png` x=2 y=365) đặt sau scrollbar controls; handler toggle mở rộng/thu gọn chat/MSNRoom, guard khóa UXML order + art/pixel/import/handler. 2026-06-08 follow-up #15: audit `Button14=ZhenFa` trong PC `dc11ac12` — comment `;û��`, không có section `[ZhenFa]`, không có Image/ClassType và không visible trong `pc_hud.png`; thêm `DisabledDeclaredToolButtons` + guard để không ai bịa icon/handler mobile khi thiếu bằng chứng PC. 2026-06-08 follow-up #16: thêm guard manifest `PcHudVisibleControlManifest_CoversCurrentPcEvidence` khóa coverage hiện tại theo `pc_hud.png` + INI `8da7027d/dc11ac12/7e20a7ac/c9c8a750/ec10b91e/f8bf2550`: 6 top status controls, 4 minimap, 11 chat rail, 6 chat tabs, chat input controls, 9 quick item slots, T/P skill slots, 17 utility buttons đều phải có UXML và handler tương ứng. 2026-06-08 follow-up #17: bổ sung PC minimap `[ScenePos]` click + `[MapPosInput]` Type=2 từ `ec10b91e.ini`: tap tọa độ mở input PC `x/y`, Enter parse `x/y` hoặc `x,y`, chuyển về world coord `x*8,-y*8`, gọi `MovePlayerTo` và cập nhật target; guard + MCP smoke khóa UXML/handler/parser. 2026-06-08 follow-up #18: sửa `BtnOptions` đúng PC `e6641da3.ini` thay vì menu mobile tự chế: `ExitGame/GameHelp/Options/OffLine/ContiumeGame` → `Thoát game/Trợ giúp/Tùy chọn/Treo máy offline/Tiếp tục game`, giữ `CloseGame` và `GameTask` trong disabled manifest vì bị comment trong PC INI; tests + MCP smoke khóa thứ tự/tên/confirm flags. 2026-06-08 follow-up #19: sửa `BtnFriend` theo PC QQ/friend window `2b9c5056.ini`: panel mobile giờ expose đúng các control PC `UnitBtnFriend/UnitBtnBrother/UnitBtnEnemy/UnitBtnOther/FindBtn/Invisible/ScrollUp/ScrollDown/CloseBtn` trước danh sách bạn runtime; thêm `FriendPanelService`, tests và MCP smoke khóa thứ tự control. 2026-06-08 follow-up #20: sửa `BtnTask` đúng `Player_Task/Nhiệm vụ`: thay daily-only panel bằng `QuestTaskPanelService` dùng `QuestService` PC mission/dialog runtime, hiển thị active/available/completed quests (`Tập Luyện Cơ Bản` ở level 1) và chỉ append daily task phụ nếu có; tests + MCP smoke khóa `PC [Task] Player_Task` và quest runtime. 2026-06-08 follow-up #21: sửa lớp phủ đen góc 7 giờ/bottom-left do hitbox chat rail mobile tự vẽ nền; `ChatBar` root + `.hud-chat-rail-btn` giờ transparent/border 0, chỉ icon SPR PC hiển thị nhưng hitbox vẫn dùng cho touch; thêm guard `ChatRailKeepsPcPixelsWithoutDarkMobileOverlay`. Cùng slice sửa `BtnChatRoom` expose đủ PC `[Channels]` từ `7e20a7ac/c9c8a750.ini` (`CH_NEARBY..CH_CUSTOM`, default `CH_SYSTEM/Nhắc nhở`) trước lịch sử chat runtime; tests + MCP smoke khóa 15 kênh. 2026-06-08 follow-up #22: bổ sung PC `Ui3/icon_bar.ini` uid `fdaebb7f` gồm 7 icon phải màn hình `Icon_0..Icon_6` (`arena/ico`, `activityguide/guidebutton`, `TreasureChest/icon`, `TreasureChest/shop`, `pet/icon`, `loginprize/icon`, `funcprize/funcprize`). SPR được resolve bằng `resolve_uid.py` từ exact INI paths: `updatejx10` uid `700a8ee5/2e4dd833` và `updatejx11` uid `8c1d0ab7/67631a54/c607a3b7/15ecc032/812c951b`, decode frame 0 bằng `extract_item_spr.py`, đặt ở Assets + StreamingAssets. Mobile render thành rail top-right 46px hitbox, icon 23/25px PC gốc; handlers mở panel runtime-backed cho Arena/Activity+HuoYueDu/Treasure/Mall/Partner/SignIn/EventBonus+FlipCard, không fake data; guard + MCP smoke `HUD PC icon bar smoke OK`. |
-| 12.3 | Vietnamese Text Overlay | - | ✅ | ✅ | PcHudVietnameseTextOverlay |
-| 12.4 | Skill Panel / Combat Hotbar | Yes | ✅ | ✅ | Mobile-first hotbar thay T/P PC bằng 4 ô skill + deck A/B. Tap ô trống mở picker kỹ năng đã học; tap ô đã gán cast với auto-target nearest theo `CombatAutoTargetService` (không Physics2D scan); long-press đổi skill; drag khi giữ skill hiện vùng `Hủy`; thả ngoài vùng hủy cast, thả trong vùng hủy cancel. Primary attack dùng slot 0 hoặc skill đầu tiên trong deck. Target lock ưu tiên mục tiêu đã khóa, fallback nearest và tự lock nearest sau cast. PC visual của icon/slot giữ bằng crops/skill icons generated; bố trí/hitbox tối ưu mobile. Tests: deck độc lập, primary slot resolution, target lock clear/lock, auto-target/facing/effect regressions. |
-| 12.5 | Minimap Panel | Yes | ✅ | ✅ | MinimapPanel |
-| 12.6 | Quest Tracker Panel | Yes | ✅ | ✅ | QuestTrackerPanel |
-| 12.7 | Inventory Panel | Yes | ✅ | ✅ | **HUD bag window "Hành Trang" (2026-06-07 corrected)**: nút Túi đồ (BtnItems) bottom bar → `GameHudController.OnItemsClick()` → `ToggleInventory()` mở/đóng cửa sổ hành trang (PC source: UID `dc11ac12` `[Items]` `ClassType=Player_Items`, phím F4/U → `Open([[items]])`). UI đã sửa từ storage-box UID `6a5d8c4c` sang hành trang thật UID `05ea8560` (`道具界面`): `[Main]` 214×474, `Image=\spr\Ui3\道具\daojumianban.spr`, `[ItemBox]` 168×280 tại 24,72, `HUnits=6`, `VUnits=10`, `UnitBorder=1`, `[Money]` 53,353 color 255,217,78, `[CloseBtn]` 142,414 65×28. SPR panel xác thực từ `1024.pak` bằng `find_spr_by_image.py`: UID `16503a96` (duplicate `77b67466`) decoded 214×474 và được dùng trong `Assets/UI/HUD/Art/道具面板2.png` + StreamingAssets. Màu phẩm chất vẫn từ UID `7bfc9072` (White/Blue/Purple/Gold/Red). PC provenance giữ `ItemBox` gốc 6×10 = 60 ô; user chốt mobile override 4×7 = 28 ô capacity, `InventoryService.MaxInventorySlots` chặn item stack mới khi đầy nhưng vẫn cho stack item đang có. `InventoryPanelService.BuildGridSnapshot` bind `SandboxManager.InventoryService.Inventory`, render 28 ô mobile và `ResolveQuality` map tier (setId>0→gold, refine≥7→purple, refine≥1→blue, else white). Files: `InventoryWindowPcSpec.cs`, `InventoryPanelService.cs`, `InventoryService.cs`, `GameHud.uxml`, `GameHud.uss`, `InventoryWindowTests.cs`, `InventoryServiceTests.cs`, `UIExtensivePanelServiceTests.cs`. **GM token item 4890 (2026-06-08): long-press or item-detail `Dùng` opens PC-order GM Test Server action sheet; tap remains detail-first to avoid destructive mis-taps; icon `yupai_haozhao.png` is copied to project art and StreamingAssets for runtime loading. Full-map teleport browser now ports THP-style map travel into the GM token with search/filter/page UI over 1,005 PC map aliases; PC NewWorld coords, revivepos.ini, waypoint.txt, then geometry-center fallback are used in that order.** |
-| 12.8 | Map Select Panel | Yes | ✅ | ✅ | MapSelectPanel |
-| 12.9 | Chat Panel | Yes | ✅ | ✅ | ChatPanel (ChatService + ChatSystem) |
-| 12.10 | Party Panel | Yes | ✅ | ✅ | PartyPanel |
-| 12.11 | Faction Screen | Yes | ✅ | ✅ | FactionScreen |
-| 12.12 | Shop Panel | Yes | ✅ | ✅ | ShopPanel |
-| 12.13 | Touch Input | - | ✅ | ✅ | TouchInputService + MobileJoystick |
-| 12.14 | Camera Rig | - | ✅ | ✅ | CameraRigService |
-| 12.15 | SimCity Auto-play | 14 plugins | 14 | ✅ | SimCityPluginService runtime + tests |
-| 12.16 | Client Skill Scripts (722) | 722 | 722 | ✅ | ClientSkillScriptService runtime + tests |
-
-## 13. Hạ Tầng Server (14_infrastructure.md + 17_operations_database.md)
-
-| # | Hệ thống | PC | Mobile | Trạng thái | Chi tiết |
-|---|---------|-----|--------|-----------|---------|
-| 13.1 | Gateway (Goddess) | Yes | 0 | ☐ | Server-side, không port vào client |
-| 13.2 | Gateway (Bishop) | Yes | 0 | ☐ | Server-side |
-| 13.3 | S3Relay | Yes | 0 | ☐ | Server-side |
-| 13.4 | Network Protocol | Yes | Yes | ✅ | 46 message types + 46 opcodes + MessageRouter + tests |
-| 13.5 | Level/EXP System (200) | 200 | ✅ | ✅ | PlayerLevelService |
-| 13.6 | Multi-language (VN) | 5 files | ✅ | ✅ | Vietnamese text trong toàn bộ UI |
-| 13.7 | Resource PAK Loading | Yes | ✅ | ✅ | SprRuntimeService decode SPR từ PAK |
-| 13.8 | Docker/MySQL/MSSQL | Yes | N/A | ☐ | Server-side, không port vào client |
-| 13.9 | PaySys | Yes | N/A | ☐ | Server-side |
-| 13.10 | Backup System | Yes | N/A | ☐ | Server-side |
-
-## 14. GBK Script Dirs (15_encoded_scripts.md)
-
-PC: 2,360 files trong 9 dirs GBK
-
-| # | Vùng | Files | Trạng thái | Ghi chú |
-|---|------|-------|-----------|---------|
-| 14.1 | Đông Bắc - Trường Bạch | 29 | 29 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
-| 14.2 | Đại Lý Phủ | 333 | 333 | ✅ | AreaScriptService + TownScriptService runtime + tests |
-| 14.3 | Thiên Vương Bang | 268 | 268 | ✅ | FactionQuestAreaService + AreaScriptService runtime + tests |
-| 14.4 | Dược Vương Cốc | 236 | 236 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
-| 14.5 | Phượng Tường | 209 | 209 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
-| 14.6 | Thành Đô | 346 | 346 | ✅ | AreaScriptService + GbkMapScriptService runtime + tests |
-| 14.7 | Thạch Cổ Trấn | 223 | 223 | ✅ | TownScriptService + AreaScriptService runtime + tests |
-| 14.8 | Tống Kim Battlefield | 354 | 354 | ✅ | AreaScriptService + TongBattleScriptService runtime + tests |
-| 14.9 | Võ Đang Phái | 362 | 362 | ✅ | FactionQuestAreaService + AreaScriptService runtime + tests |
-
-## 15. Server Scripts (11_scripts_overview.md)
-
-PC: ~6,500+ script files
-
-| # | Module | PC Files | Mobile | Trạng thái |
-|---|--------|----------|--------|-----------|
-| 15.1 | Core Libraries (44) | 44 | 44 | ✅ | LibraryScriptService (44 library functions) + tests |
-| 15.2 | Activity System (496) | 496 | 496 | ✅ | ActivityService + EventScriptService (455) + GlobalScriptService (579) + tests |
-| 15.3 | Mission Scripts (985) | 985 | 985 | ✅ | MissionScriptService + parser + tests |
-| 15.4 | Global Scripts (579) | 579 | 579 | ✅ | GlobalScriptService + parser + tests |
-| 15.5 | Item Scripts (635) | 635 | 635 | ✅ | ItemScriptService + MagicScriptService (5,142) + parser + tests; `PcMagicScriptItemParser` imports script item tuple `6/1/4890` (`gmroleitem2.lua`) and `GmTestServerItemService` ports `lenhbaiadmintestserver.lua` menu/actions with GM/dev gate + full-map THP-style teleport browser |
-| 15.6 | Skill Scripts (4 versions) | 2,486 | 2,486 | ✅ | SkillScriptService + ClientSkillScriptService (722) + parser + tests |
-| 15.7 | Event Scripts (455) | 455 | 455 | ✅ | EventScriptService + ServerEventService + parser + tests |
-| 15.8 | Task Scripts (316) | 316 | 316 | ✅ | TaskScriptService + TaskFlagRegistryService + parser + tests |
-| 15.9 | Battle Scripts (183) | 183 | 183 | ✅ | BattleScriptService + BattleScriptRuntimeService + parser + tests |
-| 15.10 | Guild Scripts (65) | 65 | 65 | ✅ | GuildScriptService + GuildService + parser + tests |
-| 15.11 | VNG Scripts (195+20) | 215 | 215 | ✅ | VngEventService (195) + 20 VNG features + tests |
-
----
-
-## Tổng Hợp Thống Kê
-
-### Đã hoàn thành (✅) — Framework + Core Logic
-
-| Hệ thống | Chi tiết |
-|---------|---------|
-| 10 Môn Phái + Ngũ Hành | Full catalog, skill panels, tests |
-| Combat System | Damage, death, reflection, auto-target, missiles, buffs |
-| Player Visual | Male + Female, 8-hướng SPR, mount/horse |
-| HUD + Mobile UI | Joystick, minimap, chat, party, shop, quest tracker |
-| Map Renderer | Region streaming, obstacle grid, click-to-move |
-| NPC/Enemy Spawn | Template registry, Ba Lăng verified, training NPCs |
-| Items + Equipment | Slot mapping, magic attributes, set bonus, enhance/refine |
-| Quest + DaTau | Quest service, Dã Tẩu chain, rewards |
-| Shop + Economy | Shop system, economy service |
-| Lua Bridge | LuaScriptBridge + TaskFlagService |
-| PK + BangChien stub | PkCombatService + BangChienService |
-| Audio | AudioService (async clip loading) |
-| GM Tools | GM panel + tabs |
-| Vietnamese | Toàn bộ UI tiếng Việt |
-| Meridian Runtime | MeridianService + tests (Kinh Mạch 128 huyệt đạo) |
-| Partner/Pet Runtime | PartnerService + PetSkillService + tests |
-| Title Runtime | TitleService (player + faction titles) + tests |
-| Lottery Runtime | LotteryService (gacha, daily/weekly) + tests |
-| Compound Runtime | CompoundRecipeService (công thức bạch kim) + tests |
-| Quest Item Runtime | QuestItemService (vật phẩm nhiệm vụ) + tests |
-| Adventure Runtime | AdventureService (mạo hiểm 1,037) + tests |
-| Guild Runtime | GuildService (6 cấp bang + tài chính/công trình) + tests |
-| Attrib Const Runtime | AttribConstService (thuộc tính hằng số) + tests |
-| Missle Catalog Runtime | MissleCatalogService (480+ đạn) + tests |
-| Event Bonus Runtime | EventBonusService (sự kiện + phần thưởng) + tests |
-| City War Runtime | CityWarService (7 khu vực thành chiến) + tests |
-| Auction Runtime | AuctionService (đấu giá + buyout) + tests |
-| Goods Catalog Runtime | GoodsCatalogService (1,521 vật phẩm bán) + tests |
-| Shop Config Runtime | ShopConfigService (1,521 cửa hàng NPC) + tests |
-| Battlefield Runtime | BattlefieldService (Tống Kim 80 maps) + tests |
-| Instance Map Runtime | InstanceMapService (mê cung/chiến trường 802) + tests |
-| Hongbao Runtime | HongbaoService (hồng bao 69) + tests |
-| Item Exchange Runtime | ItemExchangeService (đổi vật phẩm) + tests |
-| Special Skill Runtime | SpecialSkillService (58 skill đặc biệt) + tests |
-| NPC Skill Runtime | NpcSkillService (43 skill quái/boss) + tests |
-| Translife Skill Runtime | TranslifeSkillService (9 skill chuyển sinh) + tests |
-| Skill Template Runtime | SkillTemplateService (219 template) + tests |
-| NPC Level Script Runtime | NpcLevelScriptService (58 kịch bản theo cấp) + tests |
-| NPC Death Script Runtime | NpcDeathScriptService (kịch bản chết) + tests |
-| Daily Task Runtime | DailyTaskService (nhiệm vụ hàng ngày) + tests |
-| Boss Mission Runtime | BossMissionService (nhiệm vụ boss) + tests |
-| Server Event Runtime | ServerEventService (455 sự kiện server) + tests |
-| VNG Event Runtime | VngEventService (195 sự kiện VNG) + tests |
-| Battle Script Runtime | BattleScriptService (183 kịch bản chiến đấu) + tests |
-| Weather Runtime | WeatherService (runtime + parser + tests) |
-| Music Runtime | MusicService (nhạc nền + parser + tests) |
-| Guild Workshop Runtime | GuildWorkshopService (công trình bang) + tests |
-| HuoYueDu Runtime | HuoYueDuService (điểm hoạt động 41) + tests |
-| CityDefence Runtime | CityDefenceService (thủ thành 96) + tests |
-| Activity Runtime | ActivityService (496 hoạt động) + tests |
-| Random Task Runtime | RandomTaskService (nhiệm vụ ngẫu nhiên) + tests |
-| Partner Task Runtime | PartnerTaskService (nhiệm vụ pet) + tests |
-| Metempsychosis Task Runtime | MetempsychosisTaskService (chuyển sinh) + tests |
-| Arena Runtime | ArenaService (võ đài) + tests |
-| Trip Runtime | TripService (du lịch 4) + tests |
-| Bonus Online Runtime | BonusOnlineService (thưởng online 8) + tests |
-| Guild Rank Runtime | GuildRankService (5 rank) + tests |
-| Guild Stunt Runtime | GuildStuntService (skill đặc biệt bang) + tests |
-| Guild Task Runtime | GuildTaskService (nhiệm vụ bang) + tests |
-| Honor Runtime | HonorService (vinh danh 6) + tests |
-| Shitu Runtime | ShituService (sư đồ 6) + tests |
-| Foundry Runtime | FoundryService (luyện đồ) + tests |
-| World Rank Runtime | WorldRankService (bảng xếp hạng) + tests |
-| New Player Guide Runtime | NewPlayerGuideService (tân thủ 17) + tests |
-| Change Feature Runtime | ChangeFeatureService (đổi ngoại hình 15) + tests |
-| Stall Runtime | StallService (bày bán) + tests |
-| Flip Card Runtime | FlipCardService (lật thẻ 2) + tests |
-| Bao Ruong Than Bi Runtime | BaoRuongThanBiService (rương thần bí 8) + tests |
-| Seasonal Event Runtime | SeasonalEventService (sự kiện mùa) + tests |
-| Compensation Runtime | CompensationService (bồi thường) + tests |
-| Faction Map Runtime | FactionMapService (33 bản đồ phái) + tests |
-| Battle Award Runtime | BattleAwardService (phần thưởng chiến đấu) + tests |
-| Double EXP Runtime | DoubleExpService (cấu hình x2 EXP) + tests |
-| SimCity Plugin Runtime | SimCityPluginService (14 plugin auto-play) + tests |
-| Client Skill Script Runtime | ClientSkillScriptService (722 script skill client) + tests |
-| Tống Kim Battle Runtime | TongJinBattleService (80 trận) + parser + tests |
-| Công Thành Chiến Runtime | BangChienService (7 thành) + parser + tests |
-| Boss Hoàng Kim Runtime | BossHoangKimService (32 boss) + parser + tests |
-| Task Flag Runtime | TaskFlagService (29 cờ nhiệm vụ) + parser + tests |
-| Title Panel UI | TitlePanelService (Danh hiệu) + tests |
-| Meridian Panel UI | MeridianPanelService (Kinh mạch) + tests |
-| Guild Panel UI | GuildPanelService (Bang hội) + tests |
-| Daily Task Panel UI | DailyTaskPanelService (NV hằng ngày) + tests |
-| HongBao Panel UI | HongBaoPanelService (Hồng bao) + tests |
-| Auction Panel UI | AuctionPanelService (Đấu giá) + tests |
-| Title Vietnamese Catalog | TitleVietnameseCatalog (50+ ánh xạ tên) |
-| Faction Vietnamese Catalog | FactionVietnameseCatalog (16 môn phái) |
-| Network Protocol | 46 message types + 46 opcodes + MessageRouter |
-| Save/Load Runtime | SaveSlotService (slot manager) + tests |
-| Mail Runtime | MailService + PcMailParser + tests |
-| Mount Runtime | MountService + PcMountParser + tests |
-| Ranking Runtime | RankingService + PcRankingParser + tests |
-| Friend Runtime | FriendService + PcFriendParser + tests |
-| Pet Runtime | PetService + tests |
-| Shop Config Runtime | ShopConfigService + PcShopConfigParser (1,521 vật phẩm shop) + tests |
-| Missile Effect Runtime | MissileEffectService + PcMissileEffectParser (480 effect) + tests |
-| HUD Art Catalog | HudArtCatalogService + PcHudArtCatalogParser + tests; 2026-06-08 HUD mobile UX uses Stitch top-right rail toggles, PC SPR/crop icons for full toolbar/1-9/T-P/chat/minimap controls, verified compile + Unity screenshots `hud_stitch_pc_shortcut_open.png`, `hud_stitch_utility_action_open.png`; PC chat rail `QQ主界面向上/向下按钮` + `频道开与关b` routes scroll/history and channel-toggle actions; full PC chat side controls `[SizeBtn]/[MoveImg]/[ShadowBtn]/[SysRoom_Up]/[SysRoom_Open]/[SysRoom_Down]` now use `chat_bar_top`, `chat_bar_bottom`, `聊天条阴影按钮`, `提示信息窗－上/开关/下` art with touch hitboxes and handlers, screenshots `hud_pc_chat_rail_controls.png`, `hud_pc_full_chat_side_controls.png` |
-| Faction Map Runtime | FactionMapRuntimeService (capture/ownership) + tests |
-| Battle Script Runtime | BattleScriptRuntimeService (eval/execute) + tests |
-| Task Flag Registry | TaskFlagRegistryService + PcTaskFlagConfigParser + tests |
-| Inventory Panel UI | InventoryPanelService (Túi đồ) + tests |
-| Map Panel UI | MapPanelService (Bản đồ thế giới) + tests |
-| Bag Panel UI | BagPanelService (Rương đồ) + tests |
-| NPC Dialog Panel UI | NpcDialogPanelService (Đối thoại NPC) + tests |
-| Character Panel UI | CharacterPanelService (Thông tin nhân vật) + tests |
-| Skill Tree Panel UI | SkillTreePanelService (Cây kỹ năng) + tests |
-| Stall Panel UI | StallPanelService (Bày bán) + tests |
-| Compound Panel UI | CompoundPanelService (Ghép đồ) + tests |
-| Map List Full Runtime | MapListFullService (1,005 map) + parser + tests |
-| Map Element Runtime | MapElementService (ngũ hành map) + parser + tests |
-| Map Respawn Runtime | MapRespawnService (vị trí hồi sinh) + parser + tests |
-| Map Block Runtime | MapBlockService (chướng ngại) + parser + tests |
-| Map NPC Respawn Runtime | MapNpcRespawnService (spawn NPC) + parser + tests |
-| Map Music Runtime | MapMusicService (nhạc map) + parser + tests |
-| Skill Level Data Runtime | SkillLevelDataService (chi tiết cấp) + parser + tests |
-| Skill Upgrade Runtime | SkillUpgradeService (chuỗi nâng cấp) + parser + tests |
-| Skill Book Runtime | SkillBookService (sách kỹ năng) + parser + tests |
-| Skill Combo Runtime | SkillComboService (chuỗi kỹ năng) + parser + tests |
-| Skill State Runtime | SkillStateService (trạng thái) + parser + tests |
-| Skill Mastery Runtime | SkillMasteryService (tinh thông) + parser + tests |
-| World Boss Runtime | WorldBossService (boss thế giới) + parser + tests |
-| Achievement Runtime | AchievementService (250+ thành tựu) + parser + tests |
-| Daily Reward Runtime | DailyRewardService (thưởng hằng ngày) + parser + tests |
-| Mall Runtime | MallService (cửa hàng) + parser + tests |
-| Fashion Runtime | FashionService (thời trang) + parser + tests |
-| Sign In Runtime | SignInService (điểm danh) + parser + tests |
-| Treasure Hunt Runtime | TreasureHuntService (săn kho báu) + parser + tests |
-| Encounter Runtime | EncounterService (kỳ ngộ) + parser + tests |
-| Friend Gift Runtime | FriendGiftService (quà bạn bè) + parser + tests |
-| Text Resource Runtime | TextResourceService (1,000+ text tiếng Việt) + parser + tests |
-| Animation Bank Runtime | AnimationBankService (animation sprite) + parser + tests |
-| Faction Skill Tree Runtime | FactionSkillTreeService (cây kỹ năng môn phái) + parser + tests |
-| Faction Bonus Runtime | FactionBonusService (bonus cấp môn phái) + parser + tests |
-| Faction Relation Runtime | FactionRelationService (chính/tà/trung lập) + parser + tests |
-| Guild Script Runtime | GuildScriptService (65 lua-like guild scripts) + parser + tests |
-| Battle Map Config Runtime | BattleMapConfigService (80 battlefields config) + parser + tests |
-| Battle Reward Config Runtime | BattleRewardConfigService (phần thưởng trận) + parser + tests |
-| Battle Honor Runtime | BattleHonorService (vinh danh) + parser + tests |
-| Sơ/Trung/Cao Jin Runtime | SjBattleService (3 cấp Tống Kim) + parser + tests |
-| Mail Panel UI | MailPanelService (Hòm thư) + tests |
-| Ranking Panel UI | RankingPanelService (Xếp hạng) + tests |
-| Achievement Panel UI | AchievementPanelService (Thành tựu) + tests |
-| Sign-In Panel UI | SignInPanelService (Điểm danh) + tests |
-| Fashion Panel UI | FashionPanelService (Thời trang) + tests |
-| Mall Panel UI | MallPanelService (Cửa hàng VIP) + tests |
-| Treasure Hunt Panel UI | TreasureHuntPanelService (Săn kho báu) + tests |
-| Mount Panel UI | MountPanelService (Cưỡi ngựa) + tests |
-| Performance Benchmark Tests | PerformanceBenchmarkTests (10 benchmarks) |
-| Integration Tests | IntegrationTests (10 cross-service workflows) |
-| Coverage Smoke Tests | CoverageSmokeTests (auto-discovery of all services) |
-| Service Self-Check Tests | ServiceSelfCheckTests (verify minimum API) |
-| Vietnamese Localization Tests | VietnameseLocalizationTests (6 diacritics checks) |
-| Hoa Sơn Luận Kiếm Runtime | HuaShanLuanJianService (2 scripts + rounds) + parser + tests |
-| Sprite Asset Runtime | SpriteAssetService (sprite registry) + parser + tests |
-| Sound Effect Runtime | SoundEffectService (sound registry) + parser + tests |
-| Map Connection Runtime | MapConnectionService (kết nối map) + parser + tests |
-| NPC Shop Item Runtime | NpcShopItemService (165 shop NPC) + parser + tests |
-| Reputation Runtime | ReputationService (danh vọng) + parser + tests |
-| Title Effect Runtime | TitleEffectService (363 title effects) + parser + tests |
-| VIP Level Runtime | VipLevelService (12 cấp VIP) + parser + tests |
-| Battle Map Panel UI | BattleMapPanelService (Bản đồ chiến trường) + tests |
-| Hua Sơn Panel UI | HuaShanPanelService (Hoa Sơn Luận Kiếm) + tests |
-| VIP Panel UI | VipPanelService (Cấp VIP) + tests |
-| Reputation Panel UI | ReputationPanelService (Danh vọng) + tests |
-| Settings Panel UI | SettingsPanelService (Cài đặt) + tests |
-| System Menu Panel UI | SystemMenuPanelService (Menu hệ thống) + tests |
-| Loading Screen Panel UI | LoadingScreenPanelService (Màn hình tải) + tests |
-| Guild City War Runtime | GuildCityWarService (Bang hội công thành) + tests |
-| Guild City War Log Runtime | GuildCityWarLogService (nhật ký trận) + parser + tests |
-| Mission Script Registry | MissionScriptService (985 mission script metadata) + parser + tests |
-| Skill Script Registry | SkillScriptService (2,486 skill script metadata) + parser + tests |
-| Item Script Registry | ItemScriptService (635 item script metadata) + parser + tests |
-| Event Script Registry | EventScriptService (455 event script metadata) + parser + tests |
-| Task Script Registry | TaskScriptService (316 task script metadata) + parser + tests |
-| Global Script Registry | GlobalScriptService (579 global script metadata) + parser + tests |
-| Library Script Registry | LibraryScriptService (44 library functions) + parser + tests |
-| World Boss Panel UI | WorldBossPanelService (Boss thế giới) + tests |
-| HuoYueDu Panel UI | HuoYueDuPanelService (Điểm hoạt động) + tests |
-| Flip Card Panel UI | FlipCardPanelService (Lật thẻ/Bingo) + tests |
-| Foundry Panel UI | FoundryPanelService (Rèn đúc) + tests |
-| Stall Browse Panel UI | StallBrowsePanelService (Duyệt gian hàng) + tests |
-| Arena Panel UI | ArenaPanelService (Đấu trường) + tests |
-| Title Effect Panel UI | TitleEffectPanelService (Hiệu ứng danh hiệu) + tests |
-| Faction Bonus Panel UI | FactionBonusPanelService (Bonus môn phái) + tests |
-| Area Script Runtime | AreaScriptService (9 GBK areas) + parser + tests |
-| GBK Map Script Runtime | GbkMapScriptService (per-map scripts) + parser + tests |
-| Faction Quest Area Runtime | FactionQuestAreaService (quest môn phái) + parser + tests |
-| Town Script Runtime | TownScriptService (thị trấn) + parser + tests |
-| GBK Trigger Runtime | GbkTriggerService (trigger system) + parser + tests |
-| Tong Battle Script Runtime | TongBattleScriptService (battle scripts) + parser + tests |
-| Portrait Runtime | PortraitService (chân dung) + tests |
-| Sound List Runtime | SoundListService (danh sách âm thanh) + tests |
-| Killer Runtime | KillerService (quy tắc PK) + tests |
-| Item Detail Runtime | ItemDetailService (chi tiết vật phẩm) + tests |
-| Item Type Runtime | ItemTypeService (loại vật phẩm) + tests |
-| Map Traffic Runtime | MapTrafficService (lưu lượng map) + tests |
-| Map Type Runtime | MapTypeService (loại bản đồ) + tests |
-| Adjust Color Runtime | AdjustColorService (điều chỉnh màu) + tests |
-| Client Weapon Skill Runtime | ClientWeaponSkillService (vũ khí skill client) + tests |
-| Gold Equip Runtime | GoldEquipService (5,346 trang bị vàng) + tests |
-| Platina Equip Runtime | PlatinaEquipService (5,336 trang bị bạch kim) + tests |
-| Horse Runtime | HorseService (350 ngựa) + tests |
-| Potion Runtime | PotionService (40+ thuốc) + tests |
-| Magic Script Runtime | MagicScriptService (5,142 magic script) + tests |
-| Magic Attrib Runtime | MagicAttribService (333 thuộc tính) + tests |
-| Scroll Runtime | ScrollService (2,600 cuộn dịch chuyển) + tests |
-| Cave List Full Runtime | CaveListFullService (48 hang động) + tests |
-| Gold Boss Runtime | GoldBossService (boss vàng) + tests |
-| Change Feature Data Runtime | ChangeFeatureDataService (đổi ngoại hình data) + tests |
-| Global Config Runtime | GlobalConfigService (cấu hình chung) + tests |
-| Normal Spawn Runtime | NormalSpawnService (quái thường) + tests |
-| Rare Spawn Runtime | RareSpawnService (quái hiếm) + tests |
-| Wharf Runtime | WharfService (bến tàu) + tests |
-| Waypoint Runtime | WaypointService (điểm dịch chuyển) + tests |
-| Auto Path Route Runtime | AutoPathRouteService (đường đi tự động) + tests |
-| Revive Pos Runtime | RevivePosService (vị trí hồi sinh) + tests |
-| Faction Config Runtime | FactionConfigService (cấu hình môn phái) + tests |
-| NPC Res Runtime | NpcResService (tài nguyên NPC) + tests |
-| NPC S Full Runtime | NpcSFullService (toàn bộ NPC) + tests |
-| Tong Stunt Runtime | TongStuntService (võ công bang) + tests |
-| Tong Setting Runtime | TongSettingService (cấu hình bang) + tests |
-| Tong NPC Pos Runtime | TongNpcPosService (vị trí NPC bang) + tests |
-| Map List Runtime | MapListService (danh sách map) + tests |
-| Map Desc Runtime | MapDescService (mô tả map) + tests |
-| Boss Spawn Runtime | BossSpawnService (boss spawn) + tests |
-| Drop Rate Config Runtime | DropRateConfigService (cấu hình drop) + tests |
-| Station Runtime | StationService (16 trạm xe) + tests |
-| Station Price Runtime | StationPriceService (giá vé trạm) + tests |
-| Waypoint Price Runtime | WaypointPriceService (giá waypoint) + tests |
-| Guild Workshop Level Runtime | GuildWorkshopLevelService (7 workshop + level data) + tests |
-| Guild Task Def Runtime | GuildTaskDefService (4 task def files) + tests |
-| Mission Arena Config Runtime | MissionArenaConfigService (arena battle/ready) + tests |
-| Mission Battle Config Runtime | MissionBattleConfigService (combo+scores matrix) + tests |
-| Mission Maze Config Runtime | MissionMazeConfigService (19 maze tasks) + tests |
-| Mission Qianchong Runtime | MissionQianchongService (6 tracks) + tests |
-| Task Daily Config Runtime | TaskDailyConfigService (NV hằng ngày chi tiết) + tests |
-| Task Random Config Runtime | TaskRandomConfigService (NV ngẫu nhiên chi tiết) + tests |
-| Task Level Link Runtime | TaskLevelLinkService (liên kết cấp) + tests |
-| Task Talk Config Runtime | TaskTalkConfigService (đối thoại NV) + tests |
-| Task Event Runtime | TaskEventService (sự kiện NV) + tests |
-| Obj Data Runtime | ObjDataService (vật thể map) + tests |
-| Object Setting Runtime | ObjectSettingService (cấu hình vật thể) + tests |
-| Music Config Runtime | MusicConfigService (nhạc theo map) + tests |
-| Weather Config Runtime | WeatherConfigService (thời tiết chi tiết) + tests |
-| Item Value Runtime | ItemValueService (giá trị vật phẩm) + tests |
-| Partner Event Runtime | PartnerEventService (sự kiện đồng hành) + tests |
-| Partner Bag Runtime | PartnerBagService (túi đồ đồng hành) + tests |
-| Partner Setting Runtime | PartnerSettingService (cấu hình đồng hành) + tests |
-| Native Place Runtime | NativePlaceService (quê hương) + tests |
-| Timer Task Runtime | TimerTaskService (định thời) + tests |
-
-### Chưa port (☐) — Data + Content + Scripts
-
-| Danh mục | Ước tính | Ưu tiên |
-|---------|----------|---------|
-| Map visual coverage (đủ 1,005 PC map aliases) | ✅ done: 332 unique geometries / 1,005 aliases; `scripts/jx_map_port_verify.py` verifies catalogs + ignored Generated assets; còn interaction/Lua validation | 🔴 |
-| Server Lua Scripts (~6,500) | ~6,500; trap catalog resolves 817/817 trap scripts; Region_S deterministic trap executor hiện chạy 804 PC-safe actions, and the remaining 13 resolved trap scripts are explicitly deferred by PC-runtime family (Tong/team/citywar) with 0 unclassified gaps; gồm Tangmen Trúc Tơ động item-gated HaveItem/DelItem/SetTask/NewWorld và Lâm An→Mạc Không Nguyệt multi-key Talk callback NewWorld/protect/buff bằng QuestItemService questkey DetailType adapter; còn PC APIs ngoài scope (Tong/team/mission/city/protect/buff/callback phức tạp) | 🔴 |
-| Item Data (gold/platina/etc) | ~10,682 items | 🔴 |
-| Mission Scripts | 985 | 🔴 |
-| Monster Spawn Data | ✅ data+visual staged: 67,680 Region_S records; còn AI/Lua parity validation | 🔴 |
-| Event Scripts | 455+195 | 🟡 |
-| Battle Scripts | 183 | 🔴 |
-| Guild System | 65 scripts | 🟡 |
-| Partner/Pet System | 330 events | 🟡 |
-| Meridian/Kinh Mạch | 128 levels | 🟡 |
-| Titles (363+81) | 444 | 🟢 |
-| Various Systems (lottery, etc) | ~20 systems | 🟢 |
-
-### Ước tính % hoàn thành
-
-| Khía cạnh | % | Ghi chú |
-|----------|---|---------|
-| **Framework/Engine** | ~99% | 262 runtime services, 238 parsers, 38 UI panels, render, input, audio, combat |
-| **Data/Content (items, NPCs, skills, drop, waypoint)** | ~95% | Phase 1 data port hoàn tất; 10,742+ items + 2,000 NPCs + 1,216 skills runtime |
-| **Map Coverage** | 100% (1,005 positive PC runtime) | MapCatalog.json + PC maplist merged; legacy mapId=0 placeholders filtered |
-| **Travel/Waypoint/Wharf/Scroll/Revive** | 100% | All merged via PcMapRuntimeDataRegistry |
-| **Lua Scripts (server-side)** | ~0% | Server scripts chưa port (cần server-side) |
-| **Tổng thể** | ~100% | 262 runtime services + 238 parsers (batch 1-16: +Item sub-types + Config + Tollgate/Newtask); 38 UI panels; 46 network msg types; chỉ còn 1 🔄 (HUD Art SPR assets) + 6 ☐ server-side only (gateway/db/paysys) |
-
----
-
-## Thứ Tự Ưu Tiên Port Tiếp Theo
-
-### Phase 1 — Data Port (✅ HOÀN THÀT)
-1. ✅ Item Data Import (10,742+ items runtime)
-2. ✅ Monster Spawn Data (2,000 NPC templates runtime)
-3. ✅ NPC Data (2,000 NPCs runtime)
-4. ✅ Map Data (1,005 positive PC map runtime entries)
-
-### Phase 2 — Travel & Combat Data (✅ HOÀN THÀT)
-5. ✅ Waypoint/Scroll/Wharf/Revive runtime registry
-6. ✅ Drop Rate Tables (20+ runtime via DropRateRegistry)
-7. ✅ Base skills (1,216) + Weapon/Thief skills
-
-### Phase 3 — Content Systems (✅ HOÀN THÀNH)
-8. ✅ Mission Scripts (985) + Adventure (1,037) + MissionArena/Maze/Qianchong config
-9. ✅ Quest Items (2,045) + Compound/Recipe (1,294) runtime done
-10. ✅ Battle Scripts (183) + Tống Kim maps (80) + BattleScriptRuntime
-
-### Phase 4 — Guild & Battle (✅ HOÀN THÀNH)
-11. ✅ Guild System — levels + fund + 65 scripts + workshop + city war
-12. ✅ Partner/Pet System — runtime + events + bag + settings
-13. ✅ Meridian/Kinh Mạch — 128 levels + panel UI
-14. ✅ Event Scripts — 455+195 + Seasonal + Compensation
-
-### Phase 5 — Polish (✅ HOÀN THÀNH)
-15. ✅ Titles (444) + Faction Titles (81) + TitleEffect + TitlePanel
-16. ✅ All 25+ systems — Lottery, Compound, Auction, Goods, Shop, Flip Card, Bao Ruong, Honor, Shitu, Bonus, Trip, Change Feature, Guide, World Rank, City Defence, Stall, Foundry, Activity, HuoYueDu, Meridian, Double EXP
-
----
-
-*Tài liệu tự động tạo từ cross-reference giữa `/var/www/vltksource_new/docs/port_docs/` và `/var/www/vltk-mobile/Assets/Scripts/`*
+| Claim cũ | Audit result |
+|---|---|
+| Test count `1771/1771 EditMode`, `25/25 PlayMode` | Not verified; no TestResults artifact in audit. Must rerun Unity tests before recording exact pass count. |
+| HUD Art / Client UI `✅` | Dirty HUD WIP exists and is excluded; committed baseline has many assets/tests but not 100% PC HUD parity. Giữ `🔄`. |
+| GM teleport/browser evidence | User-owned/out-of-scope; không dùng làm proof cho map/UI port audit. |
+| Male/Female/Mount/NPC visual `✅` | Base runtime/catalog/tests exist; full PC equipment/layer/wardrobe/mount coverage chưa audit. Giữ `🔄`, except SPR decoder/runtime core can be `✅`. |
+| Multi-language toàn UI `✅` | Overclaim; many Vietnamese labels exist, full localization audit chưa làm. Giữ `🔄`. |
+| Section 14 GBK dirs `✅` | Treat as registry/parser coverage, not semantic script execution. Giữ `🔄`. |
+| Section 15 Server Scripts `✅` | Contradicts old summary “Lua Scripts ~0%”; use `🔄 indexed/cataloged, semantic runtime partial` until full Lua semantics are implemented. |
