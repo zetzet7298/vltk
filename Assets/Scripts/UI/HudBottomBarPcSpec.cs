@@ -76,6 +76,17 @@ namespace VLTK.UI
                 ["Treasure"] = new ButtonRect(742, 502, 58, 58, @"pc-evidence/pc_hud.png#BaoVat", "Player_Treasure", "Bảo Vật"),
             };
 
+        /// <summary>
+        /// Declared in 工具控制条.ini [Main] but intentionally not a rendered PC HUD button.
+        /// Button14=ZhenFa is preceded by PC comment ";û��" and the same INI has no [ZhenFa]
+        /// section / Image / ClassType, so mobile must not invent a fake icon or handler.
+        /// </summary>
+        public static readonly IReadOnlyDictionary<string, string> DisabledDeclaredToolButtons =
+            new Dictionary<string, string>
+            {
+                ["ZhenFa"] = "Declared as Button14 in dc11ac12 工具控制条.ini, but no [ZhenFa] section/art/ClassType exists; not visible in pc-evidence/pc_hud.png.",
+            };
+
         /// <summary>PC item hotkeys Item_0..Item_8 from 主界面玩家信息窗口.ini: 1..9 -> ShortcutUseItem(0..8).</summary>
         public static readonly IReadOnlyDictionary<string, ButtonRect> QuickItemSlots =
             new Dictionary<string, ButtonRect>

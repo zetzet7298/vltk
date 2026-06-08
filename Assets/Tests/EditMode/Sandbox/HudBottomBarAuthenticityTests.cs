@@ -107,6 +107,21 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcToolbarSourceAudit_DoesNotInventDisabledZhenFaButton()
+        {
+            // PC source: dc11ac12 工具控制条.ini has Button14=ZhenFa after comment ";û��",
+            // but no [ZhenFa] section, Image, Tip, or ClassType. It is not visible in pc-evidence/pc_hud.png.
+            Assert.IsTrue(HudBottomBarPcSpec.DisabledDeclaredToolButtons.ContainsKey("ZhenFa"));
+            StringAssert.Contains("no [ZhenFa] section/art/ClassType", HudBottomBarPcSpec.DisabledDeclaredToolButtons["ZhenFa"]);
+            Assert.IsFalse(HudBottomBarPcSpec.ToolControlBar.ContainsKey("ZhenFa"), "Do not fabricate a ZhenFa HUD button without PC art/handler evidence.");
+
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            var icons = GetButtonIconMap();
+            Assert.IsFalse(uxml.Contains("BtnZhenFa"), "Mobile HUD must not expose fake ZhenFa art.");
+            Assert.IsFalse(icons.ContainsKey("BtnZhenFa"), "ButtonIcons must stay PC-proven only.");
+        }
+
+        [Test]
         public void FullPcUtilitySet_HasPcSpecIconAssetsAndClickHandlers()
         {
             var controllerPath = Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs");
