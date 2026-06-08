@@ -55,6 +55,7 @@ namespace VLTK.Tests.Sandbox
             AssertTextureSize("QQ主界面向上按钮_00.png", 16, 10);
             AssertTextureSize("QQ主界面向下按钮_00.png", 16, 10);
             AssertTextureSize("btn_chat_scroll_thumb_pc.png", 15, 27);
+            AssertTextureSize("btn_chat_split_pc.png", 14, 85);
             AssertTextureSize("频道开与关b.png", 20, 20);
             AssertTextureSize("提示信息窗－上_00.png", 15, 14);
             AssertTextureSize("提示信息窗－开关_00.png", 15, 14);
@@ -85,7 +86,7 @@ namespace VLTK.Tests.Sandbox
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC minimap control.");
             foreach (var name in new[] { "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther", "ChatChannelIdentityBtn", "FaceBtn", "SendBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC bottom-chat control.");
-            foreach (var name in new[] { "ChatRail", "ChatSizeBtn", "ChatMoveBtn", "ChatShadowBtn", "ChatScrollUpBtn", "ChatScrollThumbBtn", "ChatChannelToggleBtn", "ChatScrollDownBtn", "ChatSysUpBtn", "ChatSysOpenBtn", "ChatSysDownBtn" })
+            foreach (var name in new[] { "ChatRail", "ChatSizeBtn", "ChatMoveBtn", "ChatShadowBtn", "ChatScrollUpBtn", "ChatScrollThumbBtn", "ChatSplitBtn", "ChatChannelToggleBtn", "ChatScrollDownBtn", "ChatSysUpBtn", "ChatSysOpenBtn", "ChatSysDownBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC chat rail control.");
             StringAssert.Contains("name=\"PcShortcutToggleBtn\"", uxml);
             StringAssert.Contains("name=\"PcShortcutDock\" class=\"hud-pc-shortcut-dock hidden\"", uxml);
@@ -139,6 +140,7 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("RegisterClick(root, \"ChatScrollUpBtn\", OnChatScrollUpClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatScrollThumbBtn\", OnChatScrollThumbClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatScrollDownBtn\", OnChatScrollDownClick)", controller);
+            StringAssert.Contains("RegisterClick(root, \"ChatSplitBtn\", OnChatSplitClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatChannelToggleBtn\", OnChatChannelToggleClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatTabGuild\", () => SelectChatChannel(ChatChannel.Guild))", controller);
             StringAssert.Contains("RegisterClick(root, \"MinimapMarkerBtn\", OnMinimapMarkerClick)", controller);
@@ -179,7 +181,7 @@ namespace VLTK.Tests.Sandbox
                 "主界面按钮-世界频道选择.png", "主界面按钮-密人频道选择.png", "主界面按钮-城市频道选择.png",
                 "主界面按钮-队伍频道选择.png", "主界面按钮-门派频道选择.png", "主界面按钮-好友频道选择.png",
                 "chat_bar_top.png", "chat_bar_bottom.png", "聊天条阴影按钮.png",
-                "QQ主界面向上按钮_00.png", "QQ主界面向下按钮_00.png", "btn_chat_scroll_thumb_pc.png", "频道开与关b.png",
+                "QQ主界面向上按钮_00.png", "QQ主界面向下按钮_00.png", "btn_chat_scroll_thumb_pc.png", "btn_chat_split_pc.png", "频道开与关b.png",
                 "提示信息窗－上_00.png", "提示信息窗－开关_00.png", "提示信息窗－下_00.png"
             })
             {
@@ -197,11 +199,12 @@ namespace VLTK.Tests.Sandbox
             int scrollUp = uxml.IndexOf("name=\"ChatScrollUpBtn\"", System.StringComparison.Ordinal);
             int thumb = uxml.IndexOf("name=\"ChatScrollThumbBtn\"", System.StringComparison.Ordinal);
             int scrollDown = uxml.IndexOf("name=\"ChatScrollDownBtn\"", System.StringComparison.Ordinal);
+            int split = uxml.IndexOf("name=\"ChatSplitBtn\"", System.StringComparison.Ordinal);
             int channel = uxml.IndexOf("name=\"ChatChannelToggleBtn\"", System.StringComparison.Ordinal);
             int shadow = uxml.IndexOf("name=\"ChatShadowBtn\"", System.StringComparison.Ordinal);
             int move = uxml.IndexOf("name=\"ChatMoveBtn\"", System.StringComparison.Ordinal);
-            Assert.IsTrue(size >= 0 && scrollUp > size && thumb > scrollUp && scrollDown > thumb && channel > scrollDown && shadow > channel && move > shadow,
-                "PC chat HUD order is SizeBtn, ChatRoom_Scroll thumb/controls, channel toggle, ShadowBtn Top=111, MoveImg Top=125; mobile must not omit the PC scrollbar thumb.");
+            Assert.IsTrue(size >= 0 && scrollUp > size && thumb > scrollUp && scrollDown > thumb && split > scrollDown && channel > split && shadow > channel && move > shadow,
+                "PC chat HUD order is SizeBtn, ChatRoom_Scroll thumb/controls, SplitBtn, channel toggle, ShadowBtn Top=111, MoveImg Top=125; mobile must not omit SplitBtn.");
         }
 
         [Test]
@@ -266,6 +269,7 @@ namespace VLTK.Tests.Sandbox
             var face = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chat_face.png"));
             var channelIdentity = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chat_channel_identity_pc.png"));
             var chatThumb = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chat_scroll_thumb_pc.png"));
+            var chatSplit = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chat_split_pc.png"));
             var minimapFlag = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_flag_pc.png"));
             var minimapSwitch = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_switch_pc.png"));
             var minimapWorld = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_world_full_pc.png"));
@@ -281,6 +285,7 @@ namespace VLTK.Tests.Sandbox
             AssertPixelsEqual(face.GetPixel(12, 12), pc.GetPixel(282 + 12, 526 + 12), "chat face crop must stay PC-derived");
             AssertPixelsEqual(channelIdentity.GetPixel(16, 16), pc.GetPixel(2 + 16, 526 + 16), "chat current-channel identity crop must stay PC-derived");
             AssertPixelsEqual(chatThumb.GetPixel(7, 13), pc.GetPixel(1 + 7, 337 + 13), "chat scroll thumb crop must stay PC-derived");
+            AssertPixelsEqual(chatSplit.GetPixel(7, 42), pc.GetPixel(2 + 7, 365 + 42), "chat split handle crop must stay PC-derived");
             AssertPixelsEqual(minimapFlag.GetPixel(8, 8), pc.GetPixel(742 + 8, 134 + 8), "minimap flag crop must stay PC-derived");
             AssertPixelsEqual(minimapSwitch.GetPixel(8, 8), pc.GetPixel(758 + 8, 134 + 8), "minimap switch crop must stay PC-derived");
             AssertPixelsEqual(minimapWorld.GetPixel(8, 8), pc.GetPixel(774 + 8, 134 + 8), "minimap world-map crop must stay PC-derived");
@@ -301,6 +306,7 @@ namespace VLTK.Tests.Sandbox
             Object.DestroyImmediate(face);
             Object.DestroyImmediate(channelIdentity);
             Object.DestroyImmediate(chatThumb);
+            Object.DestroyImmediate(chatSplit);
             Object.DestroyImmediate(minimapFlag);
             Object.DestroyImmediate(minimapSwitch);
             Object.DestroyImmediate(minimapWorld);
@@ -331,6 +337,7 @@ namespace VLTK.Tests.Sandbox
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_face.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_channel_identity_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_scroll_thumb_pc.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_split_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_flag_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_switch_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_world_full_pc.png");

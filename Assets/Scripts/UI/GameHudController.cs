@@ -412,6 +412,7 @@ namespace VLTK.UI
             RegisterClick(root, "ChatScrollUpBtn", OnChatScrollUpClick);
             RegisterClick(root, "ChatScrollThumbBtn", OnChatScrollThumbClick);
             RegisterClick(root, "ChatScrollDownBtn", OnChatScrollDownClick);
+            RegisterClick(root, "ChatSplitBtn", OnChatSplitClick);
             RegisterClick(root, "ChatChannelToggleBtn", OnChatChannelToggleClick);
             RegisterClick(root, "ChatSysUpBtn", OnChatSystemUpClick);
             RegisterClick(root, "ChatSysOpenBtn", OnChatSystemOpenClick);
@@ -2081,6 +2082,18 @@ namespace VLTK.UI
         {
             OpenPcToolPanel("Cuộn chat", BuildChatHistoryRows());
             SubsystemLog.Info("HUD", $"Chat scrollbar thumb offset={_chatHistoryOffset}");
+        }
+
+        private void OnChatSplitClick()
+        {
+            _chatExpanded = !_chatExpanded;
+            _chatPanel?.EnableInClassList("hud-chat-expanded", _chatExpanded);
+            OpenPcToolPanel("Chia khung chat", new[]
+            {
+                _chatExpanded ? "Đã mở rộng vùng chat/MSNRoom." : "Đã thu gọn vùng chat/MSNRoom.",
+                "PC: [SplitBtn] 14x85 là handle đổi kích thước MSNRoom/ChatRoom.",
+            });
+            SubsystemLog.Info("HUD", _chatExpanded ? "Expand chat split" : "Collapse chat split");
         }
 
         private void OnChatSystemUpClick()

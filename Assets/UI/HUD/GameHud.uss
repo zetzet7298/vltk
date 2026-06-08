@@ -398,6 +398,11 @@
     height: 27px;
 }
 
+.hud-chat-rail-icon.chat-split {
+    width: 14px;
+    height: 85px;
+}
+
 .hud-chat-rail-icon.chat-size,
 .hud-chat-rail-icon.chat-move,
 .hud-chat-rail-icon.chat-shadow {
@@ -422,6 +427,7 @@
 .hud-chat-rail-icon.chat-shadow { background-image: url('project://database/Assets/UI/HUD/Art/聊天条阴影按钮.png'); }
 .hud-chat-rail-icon.chat-up { background-image: url('project://database/Assets/UI/HUD/Art/QQ主界面向上按钮_00.png'); }
 .hud-chat-rail-icon.chat-thumb { background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_scroll_thumb_pc.png'); }
+.hud-chat-rail-icon.chat-split { background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_split_pc.png'); }
 .hud-chat-rail-icon.chat-channel { background-image: url('project://database/Assets/UI/HUD/Art/频道开与关b.png'); }
 .hud-chat-rail-icon.chat-down { background-image: url('project://database/Assets/UI/HUD/Art/QQ主界面向下按钮_00.png'); }
 .hud-chat-rail-icon.chat-sys-up { background-image: url('project://database/Assets/UI/HUD/Art/提示信息窗－上_00.png'); }
