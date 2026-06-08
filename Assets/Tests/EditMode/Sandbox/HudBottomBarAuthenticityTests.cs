@@ -188,6 +188,20 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ChatRailMainButtons_FollowPcIniTopOrder()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            int size = uxml.IndexOf("name=\"ChatSizeBtn\"", System.StringComparison.Ordinal);
+            int scrollUp = uxml.IndexOf("name=\"ChatScrollUpBtn\"", System.StringComparison.Ordinal);
+            int channel = uxml.IndexOf("name=\"ChatChannelToggleBtn\"", System.StringComparison.Ordinal);
+            int scrollDown = uxml.IndexOf("name=\"ChatScrollDownBtn\"", System.StringComparison.Ordinal);
+            int shadow = uxml.IndexOf("name=\"ChatShadowBtn\"", System.StringComparison.Ordinal);
+            int move = uxml.IndexOf("name=\"ChatMoveBtn\"", System.StringComparison.Ordinal);
+            Assert.IsTrue(size >= 0 && scrollUp > size && channel > scrollUp && scrollDown > channel && shadow > scrollDown && move > shadow,
+                "PC chat HUD order is SizeBtn, ChatRoom_Scroll controls, ShadowBtn Top=111, MoveImg Top=125; mobile must not place Move/Shadow before scroll controls.");
+        }
+
+        [Test]
         public void ChatSystemRailButtons_FollowPcIniTopOrder()
         {
             var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
