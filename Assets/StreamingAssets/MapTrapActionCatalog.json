@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T09:02:14Z",
+  "generatedAtUtc": "2026-06-08T09:11:27Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -5007,6 +5007,33 @@
       "targetCellY": 3205,
       "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 1729460368,
+      "trapIdHex": "0x67157890",
+      "scriptPath": "\\script\\中原北区\\少林派\\少林派\\trap\\少林派to少林密室.lua",
+      "sourceRelPath": "script\\中原北区\\少林派\\少林派\\trap\\少林派to少林密室.lua",
+      "actionKind": "TaskFactionPromptGateNewWorld",
+      "source": "PC trap Lua main(): GetSeries/GetFaction/GetTask gate, exact task callback prompt is read-only, higher task NewWorld, low/wrong faction Msg2Player, no item/task mutation",
+      "taskId": 7,
+      "requiredSeries": 0,
+      "passTaskMinInclusive": 10250,
+      "requiredFaction": "shaolin",
+      "requiredFactionId": 1,
+      "taskBranches": [
+        {
+          "values": [
+            10250
+          ],
+          "message": "Trước Thạch môn có khắc mấy hàng chữ: Muốn vào mật thất, phải trả lời 3 câu hỏi dưới đây!"
+        }
+      ],
+      "targetMapId": 113,
+      "targetCellX": 1675,
+      "targetCellY": 3361,
+      "fightState": -1,
+      "message": "Cấm địa của bổn phái, không được vào!",
+      "blockedMessage": "Nơi đây là cấm địa của bổn phái, người ngoài không được vào!"
     },
     {
       "trapId": 1739324081,

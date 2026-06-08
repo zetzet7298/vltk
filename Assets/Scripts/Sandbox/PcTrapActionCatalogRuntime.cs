@@ -120,6 +120,7 @@ namespace VLTK.Sandbox
         public int[] reviveReturnMapIds;
         public int taskId;
         public int passTaskMinInclusive;
+        public int requiredSeries;
         public int midTaskMinExclusive;
         public int midTaskMaxExclusive;
         public string requiredFaction;
@@ -179,6 +180,7 @@ namespace VLTK.Sandbox
         public bool IsTaskFactionGateNewWorld => string.Equals(actionKind, "TaskFactionGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskPromptDefaultNewWorld => string.Equals(actionKind, "TaskPromptDefaultNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskFactionMessageGateNewWorld => string.Equals(actionKind, "TaskFactionMessageGateNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskFactionPromptGateNewWorld => string.Equals(actionKind, "TaskFactionPromptGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);

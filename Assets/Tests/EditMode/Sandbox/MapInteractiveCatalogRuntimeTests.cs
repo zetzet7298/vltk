@@ -199,7 +199,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(792, catalog.Count);
+            Assert.AreEqual(793, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -211,6 +211,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionGateNewWorld));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskPromptDefaultNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionMessageGateNewWorld));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionPromptGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
@@ -1720,6 +1721,84 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(-1, host.mapId);
             Assert.AreEqual(default(Vector2), host.position);
             CollectionAssert.AreEqual(new[] { "Nơi này là cấm địa Thúy Yên không được xông vào!" }, sideEffects.messages);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskFactionPromptGateNewWorld_BranchesWithoutAutoQuizOrFailWarp()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0x67157890u,
+                        trapIdHex = "0x67157890",
+                        scriptPath = @"\script\中原北区\少林派\少林派\trap\少林派to少林密室.lua",
+                        actionKind = "TaskFactionPromptGateNewWorld",
+                        taskId = 7,
+                        passTaskMinInclusive = 40 * 256 + 10,
+                        requiredSeries = 0,
+                        requiredFaction = "shaolin",
+                        requiredFactionId = (int)CombatFaction.Shaolin,
+                        targetMapId = 113,
+                        targetCellX = 1675,
+                        targetCellY = 3361,
+                        fightState = -1,
+                        taskBranches = new[]
+                        {
+                            new PcTrapTaskSetPosBranch
+                            {
+                                values = new[] { 40 * 256 + 10 },
+                                message = "Trước Thạch môn có khắc mấy hàng chữ: Muốn vào mật thất, phải trả lời 3 câu hỏi dưới đây!",
+                            },
+                        },
+                        message = "Cấm địa của bổn phái, không được vào!",
+                        blockedMessage = "Nơi đây là cấm địa của bổn phái, người ngoài không được vào!",
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValue = 40 * 256 + 10, playerFactionId = (int)CombatFaction.Shaolin };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x67157890" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Trước Thạch môn có khắc mấy hàng chữ: Muốn vào mật thất, phải trả lời 3 câu hỏi dưới đây!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValue = 40 * 256 + 11, playerFactionId = (int)CombatFaction.Shaolin };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x67157890" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(113, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1675 * 32, 3361 * 32), host.position);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValue = 40 * 256, playerFactionId = (int)CombatFaction.Shaolin };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x67157890" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Cấm địa của bổn phái, không được vào!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValue = 40 * 256 + 11, playerFactionId = (int)CombatFaction.None };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x67157890" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Nơi đây là cấm địa của bổn phái, người ngoài không được vào!" }, sideEffects.messages);
         }
 
         [Test]

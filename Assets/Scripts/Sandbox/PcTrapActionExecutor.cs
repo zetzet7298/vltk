@@ -239,6 +239,50 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskFactionPromptGateNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                int factionId = _host.GetPlayerFactionId();
+                if (factionId != action.requiredFactionId)
+                {
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.blockedMessage))
+                        _sideEffects.PostMessage(action.blockedMessage);
+                    result = Success(action,
+                        $"GetTask({action.taskId})={taskValue}, faction={factionId} -> wrong-faction Msg2Player only, no warp");
+                    return true;
+                }
+
+                var branch = FindTaskBranch(action, taskValue);
+                if (branch != null)
+                {
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(branch.message))
+                        _sideEffects.PostMessage(branch.message);
+                    result = Success(action,
+                        $"GetTask({action.taskId})=={taskValue}, GetFaction()=={action.requiredFaction}#{action.requiredFactionId} -> callback prompt only, no warp");
+                    return true;
+                }
+
+                if (taskValue >= action.passTaskMinInclusive)
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    ApplyFightState(action);
+                    _host.NewWorld(action.targetMapId, target);
+                    result = Success(action,
+                        $"GetTask({action.taskId})={taskValue}, GetFaction()=={action.requiredFaction}#{action.requiredFactionId} -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                    return true;
+                }
+
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.message))
+                    _sideEffects.PostMessage(action.message);
+                result = Success(action,
+                    $"GetTask({action.taskId})={taskValue}, GetFaction()=={action.requiredFaction}#{action.requiredFactionId} -> low-task Msg2Player only, no warp");
+                return true;
+            }
+
             if (action.IsClearSkillSwitchTrap)
             {
                 int currentFightState = _host.GetFightState();
