@@ -34,6 +34,7 @@ namespace VLTK.Sandbox
         int RandomIntInclusive(int minInclusive, int maxInclusive);
         int GetTaskValue(int taskId);
         void SetTaskValue(int taskId, int value);
+        int GetTaskTempValue(int taskId);
         bool HaveItem(int pcQuestKeyDetailType, int minCount);
         bool DelItem(int pcQuestKeyDetailType, int count);
         int GetCurCamp();
@@ -1276,6 +1277,9 @@ namespace VLTK.Sandbox
         {
             SandboxManager.Instance?.TaskFlagService?.SetFlag(taskId, value);
         }
+
+        public int GetTaskTempValue(int taskId)
+            => SandboxManager.Instance?.GetTaskTemp(taskId) ?? 0;
 
         public bool HaveItem(int pcQuestKeyDetailType, int minCount)
         {

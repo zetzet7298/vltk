@@ -2064,6 +2064,52 @@ OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    '0xC65213F8': {
+        'branches': [
+            {
+                'label': 'task_12830_temp_2_reward_28',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 7, 'value': 50 * 256 + 30},
+                    {'type': 'MissingItem', 'itemId': 28, 'count': 1},
+                    {'type': 'TaskTempEquals', 'taskId': 47, 'value': 2},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Tảng đá dần được xê dịch, bạn hình thấy phía dưới hình như có 1 quyển sách'},
+                    {'type': 'AddEventItem', 'itemId': 28},
+                    {'type': 'AddNote', 'message': 'Lấy được Dịch Cân Kinh.'},
+                    {'type': 'PostMessage', 'message': 'Lấy được Dịch Cân Kinh.'},
+                    {'type': 'SetTaskTemp', 'taskId': 47, 'value': 0},
+                ],
+            },
+            {
+                'label': 'task_12830_temp_1_push_moves',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 7, 'value': 50 * 256 + 30},
+                    {'type': 'MissingItem', 'itemId': 28, 'count': 1},
+                    {'type': 'TaskTempEquals', 'taskId': 47, 'value': 1},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn thử dùng sức đẩy tảng đá, hìh như nó có chút lay chuyển'},
+                    {'type': 'SetTaskTemp', 'taskId': 47, 'value': 2},
+                ],
+            },
+            {
+                'label': 'task_12830_temp_default_push_stuck',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 7, 'value': 50 * 256 + 30},
+                    {'type': 'MissingItem', 'itemId': 28, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ'},
+                    {'type': 'SetTaskTemp', 'taskId': 47, 'value': 1},
+                ],
+            },
+            {
+                'label': 'locked_or_already_has_book',
+                'effects': [{'type': 'PostMessage', 'message': 'Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ'}],
+            },
+        ],
+    },
 }
 
 
@@ -2072,7 +2118,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     if spec is None:
         return None
     clean_source = strip_lua_line_comments(script.get('sourceText', ''))
-    allowed = {'main', 'GetTask', 'SetTask', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
+    allowed = {'main', 'GetTask', 'SetTask', 'GetTaskTemp', 'SetTaskTemp', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
     uses_random_rewards = any(
         effect.get('type') == 'RandomAddEventItemIfMissing'
         for branch in spec.get('branches', [])
@@ -2099,6 +2145,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     effect_del_items: list[int] = []
     effect_event_items: list[int] = []
     effect_set_tasks: list[tuple[int, int]] = []
+    effect_set_task_temps: list[tuple[int, int]] = []
     for branch in spec.get('branches', []):
         for effect in branch.get('effects', []):
             if effect.get('type') == 'ConsumeItems':
@@ -2107,6 +2154,8 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
                 effect_event_items.append(effect.get('itemId', 0))
             elif effect.get('type') == 'SetTask':
                 effect_set_tasks.append((effect.get('taskId', 0), effect.get('value', 0)))
+            elif effect.get('type') == 'SetTaskTemp':
+                effect_set_task_temps.append((effect.get('taskId', 0), effect.get('value', 0)))
 
     source_del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=12), 1)]
     source_event_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=8), 1)]
@@ -2119,8 +2168,18 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
         if task_id is None or task_value is None:
             return None
         source_set_tasks.append((task_id, task_value))
+    source_set_task_temps = []
+    for call in parse_lua_calls(clean_source, 'SetTaskTemp', limit=8):
+        if len(call) < 2:
+            return None
+        task_id = int_expr(call[0])
+        task_value = int_lua_constant_expr(call[1])
+        if task_id is None or task_value is None:
+            return None
+        source_set_task_temps.append((task_id, task_value))
     expected_del_items = spec.get('sourceConsumeItemIds', effect_del_items)
-    if source_del_items != expected_del_items or source_event_items != effect_event_items or source_set_tasks != effect_set_tasks:
+    if (source_del_items != expected_del_items or source_event_items != effect_event_items or
+            source_set_tasks != effect_set_tasks or source_set_task_temps != effect_set_task_temps):
         return None
     result = dict(spec)
     result.pop('sourceConsumeItemIds', None)

@@ -224,7 +224,7 @@ namespace VLTK.Sandbox
 
                     var stats = ApplyBranchEffects(branch);
                     result = Success(action,
-                        $"TaskItemBranchMessage(branch={i}, label='{branch?.label}', effects={stats.effects}, consumed={stats.consumed}, items={stats.eventItems}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks}, randomRewards={stats.randomRewards})");
+                        $"TaskItemBranchMessage(branch={i}, label='{branch?.label}', effects={stats.effects}, consumed={stats.consumed}, items={stats.eventItems}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks}, setTaskTemps={stats.setTaskTemps}, randomRewards={stats.randomRewards})");
                     return true;
                 }
 
@@ -375,6 +375,10 @@ namespace VLTK.Sandbox
                 {
                     if (_host.GetTaskValue(condition.taskId) <= condition.value) return false;
                 }
+                else if (string.Equals(type, "TaskTempEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetTaskTempValue(condition.taskId) != condition.value) return false;
+                }
                 else if (string.Equals(type, "HaveItem", System.StringComparison.OrdinalIgnoreCase))
                 {
                     if (!_host.HaveItem(condition.itemId, condition.count <= 0 ? 1 : condition.count)) return false;
@@ -421,6 +425,11 @@ namespace VLTK.Sandbox
                 {
                     _host.SetTaskValue(effect.taskId, effect.value);
                     stats.setTasks++;
+                }
+                else if (string.Equals(type, "SetTaskTemp", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    _host.SetTaskTemp(effect.taskId, effect.value);
+                    stats.setTaskTemps++;
                 }
                 else if (string.Equals(type, "PostMessage", System.StringComparison.OrdinalIgnoreCase))
                 {
@@ -542,6 +551,7 @@ namespace VLTK.Sandbox
             public int notes;
             public int messages;
             public int setTasks;
+            public int setTaskTemps;
             public int randomRewards;
         }
 

@@ -93,6 +93,7 @@ namespace VLTK.Sandbox
         public string CurrentDeathScript { get; private set; } = string.Empty;
         public int CurrentReviveMapId { get; private set; } = 0;
         public int CurrentReviveId { get; private set; } = 0;
+        private readonly Dictionary<int, int> _taskTempValues = new();
         public AssetRegistry AssetRegistry { get; private set; }
         public MapManager MapManager { get; private set; }
         public MapRenderer MapRenderer { get; private set; }
@@ -1206,9 +1207,15 @@ namespace VLTK.Sandbox
         public void SetTaskTemp(int taskId, int value)
         {
             if (taskId > 0)
-                TaskFlagService?.SetFlag(taskId, value);
+            {
+                if (value == 0) _taskTempValues.Remove(taskId);
+                else _taskTempValues[taskId] = value;
+            }
             SubsystemLog.Info("Sandbox", $"PC SetTaskTemp({taskId},{value}) applied");
         }
+
+        public int GetTaskTemp(int taskId)
+            => taskId > 0 && _taskTempValues.TryGetValue(taskId, out var value) ? value : 0;
 
         public void SetDeathScript(string scriptPath)
         {

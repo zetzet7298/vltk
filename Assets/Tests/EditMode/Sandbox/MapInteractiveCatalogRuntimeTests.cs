@@ -89,6 +89,7 @@ namespace VLTK.Tests.Sandbox
             public int randomValue = 0;
             public int taskValue = 0;
             public Dictionary<int, int> taskValues = new();
+            public Dictionary<int, int> taskTempValues = new();
             public Dictionary<int, int> itemCounts = new();
             public int curCamp = 0;
             public int originalCamp = 0;
@@ -119,6 +120,7 @@ namespace VLTK.Tests.Sandbox
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
             public int GetTaskValue(int taskId) => taskValues.TryGetValue(taskId, out var value) ? value : taskValue;
             public void SetTaskValue(int taskId, int value) => taskValues[taskId] = value;
+            public int GetTaskTempValue(int taskId) => taskTempValues.TryGetValue(taskId, out var value) ? value : 0;
             public bool HaveItem(int pcQuestKeyDetailType, int minCount)
                 => minCount <= 0 || (itemCounts.TryGetValue(pcQuestKeyDetailType, out var count) && count >= minCount);
             public bool DelItem(int pcQuestKeyDetailType, int count)
@@ -152,6 +154,8 @@ namespace VLTK.Tests.Sandbox
             {
                 taskTempId = taskId;
                 taskTempValue = value;
+                if (value == 0) taskTempValues.Remove(taskId);
+                else taskTempValues[taskId] = value;
             }
             public void SetDeathScript(string scriptPath) => deathScript = scriptPath;
             public void LeaveTeam() => leftTeam = true;
@@ -250,13 +254,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(282, catalog.Count);
+            Assert.AreEqual(283, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
-            Assert.AreEqual(9, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
+            Assert.AreEqual(10, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -324,6 +328,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(7, tmTablet.branches.Length);
             Assert.AreEqual("task_5140_has_formula_chars", tmTablet.branches[0].label);
             Assert.AreEqual("default_sign_text", tmTablet.branches[6].label);
+            var shaolinStone = catalog.Find(@"\script\中原北区\少林派\少林派\obj\地图_sll50_石头1.lua");
+            Assert.IsNotNull(shaolinStone);
+            Assert.IsTrue(shaolinStone.IsTaskItemBranchMessage);
+            Assert.AreEqual(4, shaolinStone.branches.Length);
+            Assert.AreEqual("task_12830_temp_2_reward_28", shaolinStone.branches[0].label);
+            Assert.AreEqual("SetTaskTemp", shaolinStone.branches[0].effects[4].type);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -987,6 +997,79 @@ namespace VLTK.Tests.Sandbox
             CollectionAssert.IsEmpty(sideEffects.eventItems);
             CollectionAssert.AreEqual(new[] { "Bạn thử dùng chìa khóa mở chiếc rương", "Bạn thất vọng vì chiếc rương này trống rỗng." }, sideEffects.messages);
             StringAssert.Contains("randomRewards=0", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemBranchMessage_PreservesPcTaskTempStoneSequence()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\sll50_stone.lua",
+                        actionKind = "TaskItemBranchMessage",
+                        branches = new[]
+                        {
+                            new PcObjectActionBranch
+                            {
+                                label = "task_12830_temp_2_reward_28",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 7, value = 50 * 256 + 30 }, new PcObjectActionCondition { type = "MissingItem", itemId = 28 }, new PcObjectActionCondition { type = "TaskTempEquals", taskId = 47, value = 2 } },
+                                effects = new[] { new PcObjectActionEffect { type = "AddEventItem", itemId = 28 }, new PcObjectActionEffect { type = "AddNote", message = "Lấy được Dịch Cân Kinh." }, new PcObjectActionEffect { type = "SetTaskTemp", taskId = 47, value = 0 } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_12830_temp_1_push_moves",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 7, value = 50 * 256 + 30 }, new PcObjectActionCondition { type = "MissingItem", itemId = 28 }, new PcObjectActionCondition { type = "TaskTempEquals", taskId = 47, value = 1 } },
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Bạn thử dùng sức đẩy tảng đá, hìh như nó có chút lay chuyển" }, new PcObjectActionEffect { type = "SetTaskTemp", taskId = 47, value = 2 } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_12830_temp_default_push_stuck",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 7, value = 50 * 256 + 30 }, new PcObjectActionCondition { type = "MissingItem", itemId = 28 } },
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ" }, new PcObjectActionEffect { type = "SetTaskTemp", taskId = 47, value = 1 } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "locked_or_already_has_book",
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ" } },
+                            },
+                        }
+                    }
+                }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\sll50_stone.lua" };
+            var host = new FakeTrapTravelHost { taskValues = { [7] = 50 * 256 + 30 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+            Assert.AreEqual(1, host.GetTaskTempValue(47));
+            StringAssert.Contains("branch=2", result.detail);
+
+            host.taskTempValues[47] = 1;
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.AreEqual(2, host.GetTaskTempValue(47));
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ", "Bạn thử dùng sức đẩy tảng đá, hìh như nó có chút lay chuyển" }, sideEffects.messages);
+            StringAssert.Contains("branch=1", result.detail);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.AreEqual(0, host.GetTaskTempValue(47));
+            CollectionAssert.AreEqual(new[] { 28 }, sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "Lấy được Dịch Cân Kinh." }, sideEffects.notes);
+            StringAssert.Contains("branch=0", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [7] = 50 * 256 + 30 }, taskTempValues = { [47] = 2 }, itemCounts = { [28] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.AreEqual(2, host.GetTaskTempValue(47));
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ" }, sideEffects.messages);
+            StringAssert.Contains("branch=3", result.detail);
         }
 
 

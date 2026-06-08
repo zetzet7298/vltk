@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T11:49:22Z",
+  "generatedAtUtc": "2026-06-08T12:00:11Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -1166,6 +1166,129 @@
       "fightState": -1,
       "message": "Chiến trường Tống Kim<---->Tương Dương",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\少林派\\少林派\\obj\\地图_sll50_石头1.lua",
+      "scriptId": 3327267832,
+      "scriptIdHex": "0xC65213F8",
+      "sourceRelPath": "script\\中原北区\\少林派\\少林派\\obj\\地图_sll50_石头1.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_12830_temp_2_reward_28",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 7,
+              "value": 12830
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 28,
+              "count": 1
+            },
+            {
+              "type": "TaskTempEquals",
+              "taskId": 47,
+              "value": 2
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Tảng đá dần được xê dịch, bạn hình thấy phía dưới hình như có 1 quyển sách"
+            },
+            {
+              "type": "AddEventItem",
+              "itemId": 28
+            },
+            {
+              "type": "AddNote",
+              "message": "Lấy được Dịch Cân Kinh."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Lấy được Dịch Cân Kinh."
+            },
+            {
+              "type": "SetTaskTemp",
+              "taskId": 47,
+              "value": 0
+            }
+          ]
+        },
+        {
+          "label": "task_12830_temp_1_push_moves",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 7,
+              "value": 12830
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 28,
+              "count": 1
+            },
+            {
+              "type": "TaskTempEquals",
+              "taskId": 47,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng sức đẩy tảng đá, hìh như nó có chút lay chuyển"
+            },
+            {
+              "type": "SetTaskTemp",
+              "taskId": 47,
+              "value": 2
+            }
+          ]
+        },
+        {
+          "label": "task_12830_temp_default_push_stuck",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 7,
+              "value": 12830
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 28,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ"
+            },
+            {
+              "type": "SetTaskTemp",
+              "taskId": 47,
+              "value": 1
+            }
+          ]
+        },
+        {
+          "label": "locked_or_already_has_book",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ"
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\中原北区\\少林派\\少林派\\obj\\地图_sll50_石头2.lua",
