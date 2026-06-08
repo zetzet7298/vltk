@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T04:39:01Z",
+  "generatedAtUtc": "2026-06-08T04:48:01Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -22,6 +22,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -32,6 +35,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -53,6 +58,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -63,6 +71,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -98,6 +108,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -108,6 +121,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": true
       }
     },
@@ -134,6 +149,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -144,6 +162,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -170,6 +190,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -180,6 +203,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -201,6 +226,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -211,6 +239,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -237,6 +267,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -247,6 +280,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -273,6 +308,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -283,6 +321,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -309,6 +349,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -319,6 +362,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -345,6 +390,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -355,6 +403,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -381,6 +431,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -391,6 +444,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -417,6 +472,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -427,6 +485,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -453,6 +513,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -463,6 +526,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -489,6 +554,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -499,6 +567,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -520,6 +590,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -530,6 +603,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -551,6 +626,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -561,6 +639,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -582,6 +662,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -592,6 +675,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -618,6 +703,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -628,6 +716,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -654,6 +744,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -664,6 +757,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -690,6 +785,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -700,6 +798,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -726,6 +826,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -736,6 +839,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -762,6 +867,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -772,6 +880,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -798,6 +908,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -808,6 +921,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -834,6 +949,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -844,6 +962,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -865,6 +985,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -875,6 +998,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -896,6 +1021,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -906,6 +1034,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -927,6 +1057,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -937,6 +1070,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -963,6 +1098,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -973,6 +1111,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -999,6 +1139,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1009,6 +1152,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1035,6 +1180,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1045,6 +1193,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1071,6 +1221,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1081,6 +1234,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1112,6 +1267,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1122,6 +1280,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1153,6 +1313,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1163,6 +1326,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1205,6 +1370,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "3"
@@ -1232,6 +1400,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1258,6 +1428,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1268,6 +1441,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1289,6 +1464,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1299,6 +1477,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1325,6 +1505,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1335,6 +1518,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1356,6 +1541,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1366,6 +1554,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1392,6 +1582,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1402,6 +1595,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1428,6 +1623,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1438,6 +1636,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1464,6 +1664,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1474,6 +1677,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1500,6 +1705,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1510,6 +1718,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1536,6 +1746,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1546,6 +1759,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1572,6 +1787,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1582,6 +1800,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1612,6 +1832,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1622,6 +1845,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1659,6 +1884,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "1"
@@ -1673,6 +1901,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1694,6 +1924,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1704,6 +1937,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1730,6 +1965,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1740,6 +1978,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1777,6 +2017,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1787,6 +2030,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1824,6 +2069,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1834,6 +2082,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1871,6 +2121,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1881,6 +2134,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1907,6 +2162,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1917,6 +2175,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1943,6 +2203,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1953,6 +2216,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -1979,6 +2244,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -1989,6 +2257,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2015,6 +2285,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2025,6 +2298,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2051,6 +2326,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2061,6 +2339,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2091,6 +2371,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2101,6 +2384,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2127,6 +2412,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2137,6 +2425,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2163,6 +2453,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2173,6 +2466,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2199,6 +2494,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2209,6 +2507,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2235,6 +2535,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2245,6 +2548,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2271,6 +2576,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2281,6 +2589,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2330,6 +2640,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "4"
@@ -2360,6 +2673,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2381,6 +2696,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2391,6 +2709,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2412,6 +2732,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2422,6 +2745,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2459,6 +2784,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "4"
@@ -2477,6 +2805,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2514,6 +2844,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "4"
@@ -2532,6 +2865,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2553,6 +2888,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2563,6 +2901,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2589,6 +2929,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2599,6 +2942,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2626,6 +2971,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2636,6 +2984,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2663,6 +3013,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2673,6 +3026,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2699,6 +3054,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2709,6 +3067,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2735,6 +3095,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2745,6 +3108,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2817,6 +3182,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "7"
@@ -2836,6 +3204,8 @@
         "usesTaskApis": true,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2890,6 +3260,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "7"
@@ -2921,6 +3294,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2948,6 +3323,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2958,6 +3336,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -2979,6 +3359,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -2989,6 +3372,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3010,6 +3395,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3020,6 +3408,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3041,6 +3431,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3051,6 +3444,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3072,6 +3467,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3082,6 +3480,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3108,6 +3508,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3118,6 +3521,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3144,6 +3549,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3154,6 +3562,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3180,6 +3590,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3190,6 +3603,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3216,6 +3631,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3226,6 +3644,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3247,6 +3667,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3257,6 +3680,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3278,6 +3703,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3288,6 +3716,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3309,6 +3739,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3319,6 +3752,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3340,6 +3775,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3350,6 +3788,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3371,6 +3811,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3381,6 +3824,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3407,6 +3852,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3417,6 +3865,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3438,6 +3888,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3448,6 +3901,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3474,6 +3929,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3484,6 +3942,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3510,6 +3970,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3520,6 +3983,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3546,6 +4011,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3556,6 +4024,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3582,6 +4052,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3592,6 +4065,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3618,6 +4093,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3628,6 +4106,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3654,6 +4134,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3664,6 +4147,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3725,6 +4210,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "4"
@@ -3759,6 +4247,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3790,6 +4280,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3800,6 +4293,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3861,6 +4356,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "4"
@@ -3895,6 +4393,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3926,6 +4426,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3936,6 +4439,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -3967,6 +4472,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -3977,6 +4485,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4038,6 +4548,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "4"
@@ -4072,6 +4585,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4103,6 +4618,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4113,6 +4631,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4134,6 +4654,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4144,6 +4667,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4198,6 +4723,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "8"
@@ -4226,6 +4754,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4259,6 +4789,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "8"
@@ -4273,6 +4806,8 @@
         "usesTaskApis": true,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4315,6 +4850,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "8"
@@ -4333,6 +4871,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4387,6 +4927,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "8"
@@ -4415,6 +4958,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4469,6 +5014,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "8"
@@ -4490,6 +5038,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4544,6 +5094,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "8"
@@ -4572,6 +5125,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4609,6 +5164,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4619,6 +5177,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4656,6 +5216,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4666,6 +5229,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4703,6 +5268,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4713,6 +5281,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4750,6 +5320,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4760,6 +5333,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4797,6 +5372,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4807,6 +5385,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4833,6 +5413,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4843,6 +5426,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4864,6 +5449,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4874,6 +5462,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4895,6 +5485,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4905,6 +5498,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4926,6 +5521,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4936,6 +5534,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4957,6 +5557,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4967,6 +5570,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -4988,6 +5593,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -4998,6 +5606,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5019,6 +5629,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5029,6 +5642,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5055,6 +5670,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5065,6 +5683,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5092,6 +5712,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5102,6 +5725,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5173,6 +5798,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "5"
@@ -5209,6 +5837,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5280,6 +5910,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "5"
@@ -5316,6 +5949,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5387,6 +6022,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "5"
@@ -5423,6 +6061,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5444,6 +6084,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5454,6 +6097,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5475,6 +6120,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5485,6 +6133,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5511,6 +6161,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5521,6 +6174,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5542,6 +6197,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5552,6 +6210,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5578,6 +6238,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5588,6 +6251,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5614,6 +6279,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5624,6 +6292,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5645,6 +6315,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5655,6 +6328,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5676,6 +6351,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5686,6 +6364,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5712,6 +6392,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5722,6 +6405,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5743,6 +6428,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5753,6 +6441,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5779,6 +6469,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5789,6 +6482,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5815,6 +6510,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5825,6 +6523,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5851,6 +6551,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5861,6 +6564,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5898,6 +6603,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5908,6 +6616,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5945,6 +6655,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -5955,6 +6668,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -5992,6 +6707,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6002,6 +6720,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6023,6 +6743,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6033,6 +6756,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6054,6 +6779,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6064,6 +6792,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6085,6 +6815,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6095,6 +6828,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6116,6 +6851,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6126,6 +6864,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6147,6 +6887,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6157,6 +6900,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6178,6 +6923,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6188,6 +6936,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6214,6 +6964,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6224,6 +6977,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6250,6 +7005,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6260,6 +7018,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6286,6 +7046,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6296,6 +7059,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6322,6 +7087,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6332,6 +7100,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6353,6 +7123,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6363,6 +7136,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6384,6 +7159,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6394,6 +7172,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6415,6 +7195,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6425,6 +7208,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6451,6 +7236,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6461,6 +7249,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6482,6 +7272,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6492,6 +7285,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6513,6 +7308,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6523,6 +7321,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6549,6 +7349,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6559,6 +7362,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6580,6 +7385,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6590,6 +7398,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6616,6 +7426,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6626,6 +7439,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6652,6 +7467,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6662,6 +7480,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6688,6 +7508,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6698,6 +7521,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6724,6 +7549,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6734,6 +7562,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6760,6 +7590,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6770,6 +7603,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6796,6 +7631,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6806,6 +7644,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6832,6 +7672,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6842,6 +7685,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6879,6 +7724,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6889,6 +7737,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6926,6 +7776,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6936,6 +7789,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6962,6 +7817,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -6972,6 +7830,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -6998,6 +7858,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7008,6 +7871,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7034,6 +7899,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7044,6 +7912,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7065,6 +7935,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7075,6 +7948,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7096,6 +7971,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7106,6 +7984,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7173,6 +8053,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "41"
@@ -7223,6 +8106,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7286,6 +8171,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "41"
@@ -7336,6 +8224,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7399,6 +8289,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "41"
@@ -7449,6 +8342,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7512,6 +8407,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "41"
@@ -7562,6 +8460,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7599,6 +8499,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7609,6 +8512,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7635,6 +8540,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7645,6 +8553,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7666,6 +8576,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7676,6 +8589,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7697,6 +8612,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7707,6 +8625,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7733,6 +8653,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7743,6 +8666,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7769,6 +8694,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7779,6 +8707,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7821,6 +8751,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "9"
@@ -7843,6 +8776,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7869,6 +8804,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7879,6 +8817,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7905,6 +8845,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -7915,6 +8858,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -7957,6 +8902,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "9"
@@ -8003,6 +8951,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8029,6 +8979,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8039,6 +8992,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8065,6 +9020,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8075,6 +9033,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8101,6 +9061,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8111,6 +9074,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8137,6 +9102,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8147,6 +9115,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8173,6 +9143,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8183,6 +9156,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8209,6 +9184,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8219,6 +9197,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8240,6 +9220,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8250,6 +9233,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8271,6 +9256,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8281,6 +9269,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8302,6 +9292,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8312,6 +9305,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8333,6 +9328,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8343,6 +9341,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8364,6 +9364,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8374,6 +9377,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8395,6 +9400,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8405,6 +9413,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8426,6 +9436,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8436,6 +9449,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8462,6 +9477,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8472,6 +9490,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8493,6 +9513,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8503,6 +9526,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8524,6 +9549,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8534,6 +9562,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8560,6 +9590,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8570,6 +9603,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8596,6 +9631,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8606,6 +9644,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8632,6 +9672,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8642,6 +9685,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8668,6 +9713,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8678,6 +9726,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8704,6 +9754,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8714,6 +9767,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8740,6 +9795,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8750,6 +9808,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8776,6 +9836,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8786,6 +9849,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8812,6 +9877,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8822,6 +9890,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8848,6 +9918,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8858,6 +9931,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8884,6 +9959,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8894,6 +9972,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8920,6 +10000,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8930,6 +10013,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8956,6 +10041,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -8966,6 +10054,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -8992,6 +10082,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9002,6 +10095,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9023,6 +10118,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9033,6 +10131,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9054,6 +10154,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9064,6 +10167,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9085,6 +10190,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9095,6 +10203,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9116,6 +10226,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9126,6 +10239,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9147,6 +10262,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9157,6 +10275,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9178,6 +10298,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9188,6 +10311,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9214,6 +10339,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9224,6 +10352,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9250,6 +10380,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9260,6 +10393,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9344,6 +10479,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "2"
@@ -9399,6 +10537,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9420,6 +10560,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9430,6 +10573,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9451,6 +10596,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9461,6 +10609,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9487,6 +10637,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9497,6 +10650,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9523,6 +10678,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9533,6 +10691,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9559,6 +10719,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9569,6 +10732,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9595,6 +10760,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9605,6 +10773,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9626,6 +10796,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9636,6 +10809,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9692,6 +10867,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "2"
@@ -9715,6 +10893,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9767,6 +10947,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "2"
@@ -9790,6 +10973,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9811,6 +10996,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9821,6 +11009,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9842,6 +11032,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9852,6 +11045,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9873,6 +11068,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9883,6 +11081,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9909,6 +11109,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9919,6 +11122,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9945,6 +11150,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9955,6 +11163,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -9981,6 +11191,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -9991,6 +11204,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10028,6 +11243,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "1"
@@ -10045,6 +11263,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10066,6 +11286,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10076,6 +11299,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10097,6 +11322,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10107,6 +11335,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10128,6 +11358,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10138,6 +11371,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10159,6 +11394,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10169,6 +11407,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10190,6 +11430,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10200,6 +11443,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10244,6 +11489,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "11"
@@ -10263,6 +11511,8 @@
         "usesTaskApis": true,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10284,6 +11534,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10294,6 +11547,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10315,6 +11570,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10325,6 +11583,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10346,6 +11606,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10356,6 +11619,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10377,6 +11642,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10387,6 +11655,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10413,6 +11683,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10423,6 +11696,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10449,6 +11724,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10459,6 +11737,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10485,6 +11765,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10495,6 +11778,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10521,6 +11806,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10531,6 +11819,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10557,6 +11847,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10567,6 +11860,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10593,6 +11888,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10603,6 +11901,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10640,6 +11940,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "1"
@@ -10654,6 +11957,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10691,6 +11996,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "1"
@@ -10705,6 +12013,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10726,6 +12036,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10736,6 +12049,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10757,6 +12072,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10767,6 +12085,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10788,6 +12108,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10798,6 +12121,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10824,6 +12149,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10834,6 +12162,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10860,6 +12190,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10870,6 +12203,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10891,6 +12226,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10901,6 +12239,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10927,6 +12267,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10937,6 +12280,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10963,6 +12308,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -10973,6 +12321,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -10999,6 +12349,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11009,6 +12362,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11061,6 +12416,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "2"
@@ -11091,6 +12449,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11117,6 +12477,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11127,6 +12490,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11153,6 +12518,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11163,6 +12531,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11189,6 +12559,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11199,6 +12572,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11225,6 +12600,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11235,6 +12613,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11261,6 +12641,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11271,6 +12654,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11297,6 +12682,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11307,6 +12695,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11333,6 +12723,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11343,6 +12736,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11369,6 +12764,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11379,6 +12777,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11405,6 +12805,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11415,6 +12818,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11436,6 +12841,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11446,6 +12854,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11467,6 +12877,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11477,6 +12890,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11514,6 +12929,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11524,6 +12942,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11561,6 +12981,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11571,6 +12994,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11597,6 +13022,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11607,6 +13035,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11633,6 +13063,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11643,6 +13076,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11669,6 +13104,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11679,6 +13117,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11705,6 +13145,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11715,6 +13158,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11741,6 +13186,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11751,6 +13199,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11777,6 +13227,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11787,6 +13240,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11813,6 +13268,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11823,6 +13281,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11858,6 +13318,9 @@
           ]
         ],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "6"
@@ -11897,6 +13360,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11918,6 +13383,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11928,6 +13396,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -11954,6 +13424,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -11964,6 +13437,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -12012,6 +13487,9 @@
             ""
           ]
         ],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [
           [
             "6"
@@ -12031,6 +13509,8 @@
         "usesTaskApis": true,
         "usesItemApis": true,
         "usesObjectApis": true,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -12052,6 +13532,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -12062,6 +13545,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -12083,6 +13568,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -12093,6 +13581,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     },
@@ -12119,6 +13609,9 @@
         "addEventItemCalls": [],
         "addNoteCalls": [],
         "setPropStateCalls": [],
+        "addTerminiCalls": [],
+        "setProtectTimeCalls": [],
+        "addSkillStateCalls": [],
         "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
@@ -12129,6 +13622,8 @@
         "usesTaskApis": false,
         "usesItemApis": false,
         "usesObjectApis": false,
+        "usesTerminiApis": false,
+        "usesProtectApis": false,
         "usesCityApis": false
       }
     }

@@ -304,6 +304,9 @@ def script_action_summary(source: str) -> dict[str, Any]:
     add_event_item = [args[:1] for args in parse_lua_calls(source, 'AddEventItem')]
     add_note = [args[:1] for args in parse_lua_calls(source, 'AddNote')]
     set_prop_state = parse_lua_calls(source, 'SetPropState')
+    add_termini = [args[:1] for args in parse_lua_calls(source, 'AddTermini')]
+    set_protect_time = [args[:1] for args in parse_lua_calls(source, 'SetProtectTime')]
+    add_skill_state = [args[:4] for args in parse_lua_calls(source, 'AddSkillState')]
     get_task = parse_lua_calls(source, 'GetTask')
     set_task = parse_lua_calls(source, 'SetTask') + parse_lua_calls(source, 'SetTaskTemp')
     have_item = parse_lua_calls(source, 'HaveItem')
@@ -320,6 +323,9 @@ def script_action_summary(source: str) -> dict[str, Any]:
         'addEventItemCalls': add_event_item[:8],
         'addNoteCalls': add_note[:8],
         'setPropStateCalls': set_prop_state[:8],
+        'addTerminiCalls': add_termini[:8],
+        'setProtectTimeCalls': set_protect_time[:8],
+        'addSkillStateCalls': add_skill_state[:8],
         'getTaskCalls': get_task[:8],
         'setTaskCalls': set_task[:8],
         'haveItemCalls': have_item[:8],
@@ -330,6 +336,8 @@ def script_action_summary(source: str) -> dict[str, Any]:
         'usesTaskApis': any(token in source for token in ('GetTask', 'SetTask', 'SetTaskTemp', 'AddNote')),
         'usesItemApis': any(token in source for token in ('AddItem', 'DelItem', 'HaveItem', 'AddEventItem')),
         'usesObjectApis': any(token in source for token in ('SetPropState', 'SetObjState', 'DelObj')),
+        'usesTerminiApis': 'AddTermini' in source,
+        'usesProtectApis': 'SetProtectTime' in source or 'AddSkillState' in source,
         'usesCityApis': 'OpenCityManageUI' in source,
     }
 
@@ -344,6 +352,9 @@ def trap_script_action_summary(source: str) -> dict[str, Any]:
         'msg2PlayerCalls': actions.get('msg2PlayerCalls', []),
         'talkCalls': actions.get('talkCalls', []),
         'sayCalls': actions.get('sayCalls', []),
+        'addTerminiCalls': actions.get('addTerminiCalls', []),
+        'setProtectTimeCalls': actions.get('setProtectTimeCalls', []),
+        'addSkillStateCalls': actions.get('addSkillStateCalls', []),
         'setsFightState': actions.get('setsFightState', False),
         'talks': actions.get('talks', False),
     }
@@ -522,6 +533,34 @@ def int_args(calls: list[list[str]], width: int) -> list[tuple[int, ...]]:
     return result
 
 
+def int_expr(value: Any) -> int | None:
+    text = str(value).strip()
+    if re.fullmatch(r'\d+', text):
+        return int(text)
+    match = re.fullmatch(r'(\d+)\s*\*\s*(\d+)', text)
+    if match:
+        return int(match.group(1)) * int(match.group(2))
+    return None
+
+
+def expr_args(calls: list[list[str]], width: int) -> list[tuple[int, ...]]:
+    result: list[tuple[int, ...]] = []
+    for call in calls or []:
+        if len(call) < width:
+            continue
+        values: list[int] = []
+        valid = True
+        for arg in call[:width]:
+            parsed = int_expr(arg)
+            if parsed is None:
+                valid = False
+                break
+            values.append(parsed)
+        if valid:
+            result.append(tuple(values))
+    return result
+
+
 def is_safe_say_message(actions: dict[str, Any]) -> bool:
     if not actions.get('sayCalls'):
         return False
@@ -672,6 +711,46 @@ def is_safe_trap_msg2player_newworld(actions: dict[str, Any], source: str) -> bo
     if actions.get('setFightStateCalls') and int_args_unique(actions.get('setFightStateCalls') or [], 1) is None:
         return False
     return is_safe_user_message(single_string(actions.get('msg2PlayerCalls')))
+
+
+def level_gate_requirement(source: str) -> int | None:
+    match = re.search(r'GetLevel\s*\(\s*\)\s*>=\s*(\d+)', strip_lua_line_comments(source))
+    return int(match.group(1)) if match else None
+
+
+def is_safe_trap_level_gate_newworld(actions: dict[str, Any], source: str) -> bool:
+    if level_gate_requirement(source) is None:
+        return False
+    allowed = {
+        'main', 'if', 'GetLevel', 'SetFightState', 'NewWorld', 'Talk', 'SetPos',
+        'AddTermini', 'SetProtectTime', 'AddSkillState'
+    }
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, allowed):
+        return False
+    if re.search(r'\b(elseif|for|while)\b', clean_source):
+        return False
+    if actions.get('msg2PlayerCalls') or actions.get('sayCalls'):
+        return False
+    if (
+        actions.get('getTaskCalls') or actions.get('setTaskCalls') or actions.get('haveItemCalls') or
+        actions.get('addEventItemCalls') or actions.get('addNoteCalls') or actions.get('setPropStateCalls') or
+        actions.get('addItemCalls') or actions.get('delItemCalls') or actions.get('usesCityApis')
+    ):
+        return False
+    if int_args_unique(actions.get('newWorldCalls') or [], 3) is None:
+        return False
+    if int_args_unique(actions.get('setFightStateCalls') or [], 1) is None:
+        return False
+    if actions.get('setPosCalls') and int_args_unique(actions.get('setPosCalls') or [], 2) is None:
+        return False
+    if actions.get('setProtectTimeCalls') and expr_args_unique(actions.get('setProtectTimeCalls') or [], 1) is None:
+        return False
+    if actions.get('addSkillStateCalls') and expr_args_unique(actions.get('addSkillStateCalls') or [], 4) is None:
+        return False
+    if actions.get('addTerminiCalls') and not expr_args(actions.get('addTerminiCalls') or [], 1):
+        return False
+    return bool(talk_messages(actions))
 
 
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
@@ -829,6 +908,13 @@ def int_args_unique(calls: list[list[str]], width: int) -> tuple[int, ...] | Non
     return next(iter(parsed))
 
 
+def expr_args_unique(calls: list[list[str]], width: int) -> tuple[int, ...] | None:
+    parsed = set(expr_args(calls or [], width))
+    if len(parsed) != 1:
+        return None
+    return next(iter(parsed))
+
+
 def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     for script in trap_scripts:
@@ -900,6 +986,35 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'source': 'PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects',
             })
             continue
+        if is_safe_trap_level_gate_newworld(actions, source):
+            new_world = int_args_unique(actions.get('newWorldCalls') or [], 3)
+            fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1)
+            fail_pos = int_args_unique(actions.get('setPosCalls') or [], 2) if actions.get('setPosCalls') else None
+            protect_time = expr_args_unique(actions.get('setProtectTimeCalls') or [], 1) if actions.get('setProtectTimeCalls') else None
+            skill_state = expr_args_unique(actions.get('addSkillStateCalls') or [], 4) if actions.get('addSkillStateCalls') else None
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'LevelGateNewWorld',
+                'targetMapId': new_world[0],
+                'targetCellX': new_world[1],
+                'targetCellY': new_world[2],
+                'fightState': fight_state[0],
+                'requiredLevel': level_gate_requirement(source),
+                'failTargetCellX': fail_pos[0] if fail_pos else 0,
+                'failTargetCellY': fail_pos[1] if fail_pos else 0,
+                'message': '\n'.join(talk_messages(actions)),
+                'messages': talk_messages(actions),
+                'terminiIds': [values[0] for values in expr_args(actions.get('addTerminiCalls') or [], 1)],
+                'protectTicks': protect_time[0] if protect_time else 0,
+                'skillStateId': skill_state[0] if skill_state else 0,
+                'skillStateLevel': skill_state[1] if skill_state else 0,
+                'skillStateTime': skill_state[3] if skill_state else 0,
+                'source': 'PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos',
+            })
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -962,6 +1077,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicTrapMessageActions': sum(1 for e in entries if e['actionKind'] in {'Msg2Player', 'SayMessage', 'TalkMessage'}),
         'deterministicTrapMsg2PlayerNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'Msg2PlayerNewWorld'),
+        'deterministicTrapLevelGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelGateNewWorld'),
     }
     return entries, coverage
 

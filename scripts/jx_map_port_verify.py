@@ -47,7 +47,7 @@ EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 142
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 672
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 692
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
@@ -56,6 +56,7 @@ EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_SAY_MESSAGE_ACTIONS = 22
 EXPECTED_DETERMINISTIC_TRAP_TALK_MESSAGE_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_NEWWORLD_ACTIONS = 2
+EXPECTED_DETERMINISTIC_TRAP_LEVEL_GATE_NEWWORLD_ACTIONS = 20
 EXPECTED_MISSING_TRAP_SCRIPTS = {'0xF51BA9A5'}
 KNOWN_FAILED_MAP_SPRITES = {
     r'\system\spr\RegionTileDefault.spr',
@@ -493,6 +494,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_say_message = sum(1 for e in action_entries if e.get('actionKind') == 'SayMessage')
     action_talk_message = sum(1 for e in action_entries if e.get('actionKind') == 'TalkMessage')
     action_msg2_player_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'Msg2PlayerNewWorld')
+    action_level_gate_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'LevelGateNewWorld')
     action_message = action_msg2_player + action_say_message + action_talk_message
     audit.require(len(trap_catalog.get('entries', [])) == EXPECTED_TRAP_IDS, 'MapTrapScriptCatalog entry count mismatch')
     audit.require(len(action_entries) == EXPECTED_DETERMINISTIC_TRAP_ACTIONS, 'MapTrapActionCatalog deterministic action count mismatch')
@@ -504,6 +506,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     audit.require(action_say_message == EXPECTED_DETERMINISTIC_TRAP_SAY_MESSAGE_ACTIONS, 'MapTrapActionCatalog SayMessage count mismatch')
     audit.require(action_talk_message == EXPECTED_DETERMINISTIC_TRAP_TALK_MESSAGE_ACTIONS, 'MapTrapActionCatalog TalkMessage count mismatch')
     audit.require(action_msg2_player_new_world == EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_NEWWORLD_ACTIONS, 'MapTrapActionCatalog Msg2PlayerNewWorld count mismatch')
+    audit.require(action_level_gate_new_world == EXPECTED_DETERMINISTIC_TRAP_LEVEL_GATE_NEWWORLD_ACTIONS, 'MapTrapActionCatalog LevelGateNewWorld count mismatch')
     audit.facts['interactive'] = {
         'traps': interactive.get('trapEntries'),
         'objects': interactive.get('objectEntries'),
@@ -529,6 +532,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapSayMessageActions': action_say_message,
         'deterministicTrapTalkMessageActions': action_talk_message,
         'deterministicTrapMsg2PlayerNewWorldActions': action_msg2_player_new_world,
+        'deterministicTrapLevelGateNewWorldActions': action_level_gate_new_world,
     }
 
 

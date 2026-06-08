@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T04:39:01Z",
+  "generatedAtUtc": "2026-06-08T04:48:01Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -143,6 +143,30 @@
       "elseTargetCellX": 1581,
       "elseTargetCellY": 3233,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 123827185,
+      "trapIdHex": "0x076173F1",
+      "scriptPath": "\\script\\江南区\\龙泉村\\trap\\龙泉村to五毒教.lua",
+      "sourceRelPath": "script\\江南区\\龙泉村\\trap\\龙泉村to五毒教.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 183,
+      "targetCellX": 1371,
+      "targetCellY": 3677,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 144198562,
@@ -2575,6 +2599,32 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 1396616935,
+      "trapIdHex": "0x533EAEE7",
+      "scriptPath": "\\script\\江南区\\龙泉村\\trap\\龙泉村to清溪洞.lua",
+      "sourceRelPath": "script\\江南区\\龙泉村\\trap\\龙泉村to清溪洞.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 198,
+      "targetCellX": 1522,
+      "targetCellY": 2955,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        211
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 1397835010,
       "trapIdHex": "0x53514502",
       "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\trap\\襄阳to伏牛山东.lua",
@@ -3195,6 +3245,30 @@
       "elseNextFightState": 0
     },
     {
+      "trapId": 1674145877,
+      "trapIdHex": "0x63C97055",
+      "scriptPath": "\\script\\西北南区\\永乐镇\\trap\\永乐镇to华山.lua",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\trap\\永乐镇to华山.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 2,
+      "targetCellX": 2287,
+      "targetCellY": 4092,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1851,
+      "failTargetCellY": 2831,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 1688369251,
       "trapIdHex": "0x64A27863",
       "scriptPath": "\\script\\西南北区\\唐门\\唐门\\trap\\唐门to成都.lua",
@@ -3551,6 +3625,30 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 1860139780,
+      "trapIdHex": "0x6EDF7B04",
+      "scriptPath": "\\script\\中原南区\\稻香村\\trap\\稻香村to扬州.lua",
+      "sourceRelPath": "script\\中原南区\\稻香村\\trap\\稻香村to扬州.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 80,
+      "targetCellX": 1446,
+      "targetCellY": 3077,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1911,
+      "failTargetCellY": 3211,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 1864747593,
       "trapIdHex": "0x6F25CA49",
       "scriptPath": "\\script\\两湖区\\武陵山\\白水洞迷宫\\trap\\白水洞迷宫3to武陵山3.lua",
@@ -3573,6 +3671,32 @@
       "targetCellY": 2861,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 1870138638,
+      "trapIdHex": "0x6F780D0E",
+      "scriptPath": "\\script\\西北北区\\龙门镇\\trap\\trap_tofenglingdu.lua",
+      "sourceRelPath": "script\\西北北区\\龙门镇\\trap\\trap_tofenglingdu.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 336,
+      "targetCellX": 1119,
+      "targetCellY": 3192,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        224
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 1872781567,
@@ -5322,6 +5446,30 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 2617733828,
+      "trapIdHex": "0x9C0772C4",
+      "scriptPath": "\\script\\两湖区\\巴陵县\\trap\\巴陵县to南岳镇.lua",
+      "sourceRelPath": "script\\两湖区\\巴陵县\\trap\\巴陵县to南岳镇.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 54,
+      "targetCellX": 1471,
+      "targetCellY": 2992,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1808,
+      "failTargetCellY": 3456,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 54,
+      "skillStateId": 963,
+      "skillStateLevel": 1,
+      "skillStateTime": 54,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 2620370307,
       "trapIdHex": "0x9C2FAD83",
       "scriptPath": "\\script\\两湖区\\神农架\\燕子洞迷宫\\trap\\燕子洞迷宫1to神农架1.lua",
@@ -5679,6 +5827,30 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 2753492350,
+      "trapIdHex": "0xA41EF57E",
+      "scriptPath": "\\script\\西南北区\\江津村\\连接trap\\江津村to成都.lua",
+      "sourceRelPath": "script\\西南北区\\江津村\\连接trap\\江津村to成都.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 11,
+      "targetCellX": 3407,
+      "targetCellY": 5295,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 3402,
+      "failTargetCellY": 6019,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 2754127158,
       "trapIdHex": "0xA428A536",
       "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\trap\\伏牛山东3to鸡冠洞3.lua",
@@ -6029,6 +6201,30 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 2891399607,
+      "trapIdHex": "0xAC5741B7",
+      "scriptPath": "\\script\\中原北区\\朱仙镇\\trap\\朱仙镇to汴京.lua",
+      "sourceRelPath": "script\\中原北区\\朱仙镇\\trap\\朱仙镇to汴京.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 37,
+      "targetCellX": 1945,
+      "targetCellY": 3855,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1506,
+      "failTargetCellY": 2860,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 2894816270,
       "trapIdHex": "0xAC8B640E",
       "scriptPath": "\\script\\西南南区\\点苍山\\点苍山洞二层\\trap\\点苍山洞二层4to点苍山洞三层1.lua",
@@ -6139,6 +6335,30 @@
       "elseTargetCellX": 1874,
       "elseTargetCellY": 3020,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 2945576716,
+      "trapIdHex": "0xAF91EF0C",
+      "scriptPath": "\\script\\西北南区\\永乐镇\\trap\\永乐镇to凤翔.lua",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\trap\\永乐镇to凤翔.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 1,
+      "targetCellX": 1800,
+      "targetCellY": 3603,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1411,
+      "failTargetCellY": 2913,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 2960235559,
@@ -6400,6 +6620,32 @@
       "targetCellY": 3191,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3127090509,
+      "trapIdHex": "0xBA639D4D",
+      "scriptPath": "\\script\\西北北区\\龙门镇\\trap\\龙门镇to药王谷.lua",
+      "sourceRelPath": "script\\西北北区\\龙门镇\\trap\\龙门镇to药王谷.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 140,
+      "targetCellX": 2429,
+      "targetCellY": 3731,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        183
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 3127150414,
@@ -6845,6 +7091,32 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3329974233,
+      "trapIdHex": "0xC67B5FD9",
+      "scriptPath": "\\script\\江南区\\龙泉村\\trap\\龙泉村to雁荡山.lua",
+      "sourceRelPath": "script\\江南区\\龙泉村\\trap\\龙泉村to雁荡山.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 195,
+      "targetCellX": 682,
+      "targetCellY": 2863,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        156
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 3331798672,
       "trapIdHex": "0xC6973690",
       "scriptPath": "\\script\\西北南区\\剑阁西北\\经皇洞迷宫\\经皇洞3to金光洞3.lua",
@@ -7003,6 +7275,32 @@
       "targetCellY": 2999,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3407947926,
+      "trapIdHex": "0xCB212896",
+      "scriptPath": "\\script\\江南区\\龙泉村\\trap\\龙泉村to武夷山.lua",
+      "sourceRelPath": "script\\江南区\\龙泉村\\trap\\龙泉村to武夷山.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 193,
+      "targetCellX": 1937,
+      "targetCellY": 2851,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        154
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 3414187974,
@@ -7279,6 +7577,32 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3505793327,
+      "trapIdHex": "0xD0F6292F",
+      "scriptPath": "\\script\\江南区\\龙泉村\\trap\\龙泉村to罗宵山.lua",
+      "sourceRelPath": "script\\江南区\\龙泉村\\trap\\龙泉村to罗宵山.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 179,
+      "targetCellX": 1618,
+      "targetCellY": 3292,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        153
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 3518103629,
       "trapIdHex": "0xD1B2004D",
       "scriptPath": "\\script\\两湖区\\桃花源\\trap\\桃花源西.lua",
@@ -7381,6 +7705,32 @@
       "targetCellY": 3009,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3551699588,
+      "trapIdHex": "0xD3B2A284",
+      "scriptPath": "\\script\\西北北区\\龙门镇\\trap\\trap_tomogaoku.lua",
+      "sourceRelPath": "script\\西北北区\\龙门镇\\trap\\trap_tomogaoku.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 340,
+      "targetCellX": 1853,
+      "targetCellY": 3446,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        225
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 3553266490,
@@ -7608,6 +7958,30 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3667243001,
+      "trapIdHex": "0xDA95AFF9",
+      "scriptPath": "\\script\\西南南区\\石鼓镇\\trap\\石鼓镇to大理府.lua",
+      "sourceRelPath": "script\\西南南区\\石鼓镇\\trap\\石鼓镇to大理府.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 162,
+      "targetCellX": 1691,
+      "targetCellY": 3517,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 3669866741,
       "trapIdHex": "0xDABDB8F5",
       "scriptPath": "\\script\\global\\特殊用地\\宋金报名点\\trap\\song_trap.lua",
@@ -7656,6 +8030,32 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3685519343,
+      "trapIdHex": "0xDBAC8FEF",
+      "scriptPath": "\\script\\西北北区\\龙门镇\\trap\\龙门镇to黄河源头.lua",
+      "sourceRelPath": "script\\西北北区\\龙门镇\\trap\\龙门镇to黄河源头.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 122,
+      "targetCellX": 1612,
+      "targetCellY": 3328,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        182
+      ],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 3686085572,
       "trapIdHex": "0xDBB533C4",
       "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞三层\\trap\\留仙洞三层2to留仙洞二层5.lua",
@@ -7666,6 +8066,30 @@
       "targetCellY": 2929,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3688459730,
+      "trapIdHex": "0xDBD96DD2",
+      "scriptPath": "\\script\\西北北区\\龙门镇\\trap\\龙门镇to昆仑派.lua",
+      "sourceRelPath": "script\\西北北区\\龙门镇\\trap\\龙门镇to昆仑派.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 131,
+      "targetCellX": 1872,
+      "targetCellY": 3659,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 0,
+      "failTargetCellY": 0,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 3690129279,
@@ -8144,6 +8568,32 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3913465827,
+      "trapIdHex": "0xE942BFE3",
+      "scriptPath": "\\script\\两湖区\\巴陵县\\trap\\巴陵县to神农架.lua",
+      "sourceRelPath": "script\\两湖区\\巴陵县\\trap\\巴陵县to神农架.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 74,
+      "targetCellX": 2040,
+      "targetCellY": 3259,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1338,
+      "failTargetCellY": 3353,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        46
+      ],
+      "protectTicks": 54,
+      "skillStateId": 963,
+      "skillStateLevel": 1,
+      "skillStateTime": 54,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
       "trapId": 3915399024,
       "trapIdHex": "0xE9603F70",
       "scriptPath": "\\script\\中原北区\\剑阁中原\\trap\\剑阁中原to锁云洞.lua",
@@ -8466,6 +8916,30 @@
       "targetCellY": 3061,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 4061677319,
+      "trapIdHex": "0xF2184707",
+      "scriptPath": "\\script\\中原南区\\稻香村\\trap\\稻香村to襄阳.lua",
+      "sourceRelPath": "script\\中原南区\\稻香村\\trap\\稻香村to襄阳.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 78,
+      "targetCellX": 1799,
+      "targetCellY": 3425,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1335,
+      "failTargetCellY": 3397,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [],
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 4063640753,
@@ -8972,6 +9446,32 @@
       "targetCellY": 2888,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 4274748173,
+      "trapIdHex": "0xFECB7B0D",
+      "scriptPath": "\\script\\两湖区\\巴陵县\\trap\\巴陵县to武陵山.lua",
+      "sourceRelPath": "script\\两湖区\\巴陵县\\trap\\巴陵县to武陵山.lua",
+      "actionKind": "LevelGateNewWorld",
+      "targetMapId": 70,
+      "targetCellX": 1608,
+      "targetCellY": 3230,
+      "fightState": 1,
+      "requiredLevel": 5,
+      "failTargetCellX": 1334,
+      "failTargetCellY": 3306,
+      "message": "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!",
+      "messages": [
+        "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!"
+      ],
+      "terminiIds": [
+        47
+      ],
+      "protectTicks": 54,
+      "skillStateId": 963,
+      "skillStateLevel": 1,
+      "skillStateTime": 54,
+      "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
     },
     {
       "trapId": 4288408725,

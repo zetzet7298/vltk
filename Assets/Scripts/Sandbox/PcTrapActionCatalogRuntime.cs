@@ -67,6 +67,14 @@ namespace VLTK.Sandbox
         public int elseNextFightState = -1;
         public string message;
         public string[] messages;
+        public int requiredLevel;
+        public int failTargetCellX;
+        public int failTargetCellY;
+        public int[] terminiIds;
+        public int protectTicks;
+        public int skillStateId;
+        public int skillStateLevel;
+        public int skillStateTime;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -76,6 +84,7 @@ namespace VLTK.Sandbox
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsMsg2PlayerNewWorld => string.Equals(actionKind, "Msg2PlayerNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsLevelGateNewWorld => string.Equals(actionKind, "LevelGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()
@@ -85,6 +94,9 @@ namespace VLTK.Sandbox
             => currentFightState == ifFightState
                 ? CellToWorld(ifTargetCellX, ifTargetCellY)
                 : CellToWorld(elseTargetCellX, elseTargetCellY);
+
+        public Vector2 FailTargetWorldPosition()
+            => CellToWorld(failTargetCellX, failTargetCellY);
 
         public int ConditionalNextFightState(int currentFightState)
             => currentFightState == ifFightState ? ifNextFightState : elseNextFightState;

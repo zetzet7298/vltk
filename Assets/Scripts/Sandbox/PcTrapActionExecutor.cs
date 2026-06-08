@@ -25,6 +25,7 @@ namespace VLTK.Sandbox
     public interface ITrapTravelHost
     {
         bool HasMap(int mapId);
+        int GetPlayerLevel();
         int GetFightState();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
@@ -34,6 +35,9 @@ namespace VLTK.Sandbox
     public interface ITrapActionSideEffects
     {
         void PostMessage(string message);
+        void AddTermini(int terminiId);
+        void SetProtectTime(int ticks);
+        void AddSkillState(int skillStateId, int level, int durationTicks);
     }
 
     public sealed class PcTrapActionExecutor : ITrapActionExecutor
@@ -104,6 +108,37 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsLevelGateNewWorld)
+            {
+                int playerLevel = _host.GetPlayerLevel();
+                if (playerLevel >= action.requiredLevel)
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    ApplyFightState(action);
+                    ApplyOptionalSideEffects(action);
+                    _host.NewWorld(action.targetMapId, target);
+                    result = Success(action,
+                        $"GetLevel()=={playerLevel} >= {action.requiredLevel} -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                    return true;
+                }
+
+                PostTrapMessages(action);
+                if (action.failTargetCellX > 0 || action.failTargetCellY > 0)
+                {
+                    var failTarget = action.FailTargetWorldPosition();
+                    _host.SetPos(failTarget);
+                    result = Success(action,
+                        $"GetLevel()=={playerLevel} < {action.requiredLevel} -> Talk + SetPos({action.failTargetCellX},{action.failTargetCellY}) -> {failTarget}");
+                    return true;
+                }
+                result = Success(action, $"GetLevel()=={playerLevel} < {action.requiredLevel} -> Talk");
+                return true;
+            }
+
             if (action.IsNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -148,6 +183,34 @@ namespace VLTK.Sandbox
                 _host.SetFightState(action.fightState);
         }
 
+        private void PostTrapMessages(PcTrapActionCatalogEntry action)
+        {
+            if (_sideEffects == null) return;
+            if (action.messages != null)
+            {
+                foreach (string message in action.messages)
+                    if (!string.IsNullOrWhiteSpace(message))
+                        _sideEffects.PostMessage(message);
+                return;
+            }
+            if (!string.IsNullOrWhiteSpace(action.message))
+                _sideEffects.PostMessage(action.message);
+        }
+
+        private void ApplyOptionalSideEffects(PcTrapActionCatalogEntry action)
+        {
+            if (_sideEffects == null) return;
+            if (action.terminiIds != null)
+            {
+                foreach (int terminiId in action.terminiIds)
+                    _sideEffects.AddTermini(terminiId);
+            }
+            if (action.protectTicks > 0)
+                _sideEffects.SetProtectTime(action.protectTicks);
+            if (action.skillStateId > 0)
+                _sideEffects.AddSkillState(action.skillStateId, action.skillStateLevel, action.skillStateTime);
+        }
+
         private static TrapActionExecutionResult Success(PcTrapActionCatalogEntry action, string detail)
             => new TrapActionExecutionResult { success = true, detail = Detail(action, detail) };
 
@@ -171,6 +234,24 @@ namespace VLTK.Sandbox
                 manager.ChatService.PostSystemMessage(message);
             SubsystemLog.Info("Trap", $"PC trap message: {message}");
         }
+
+        public void AddTermini(int terminiId)
+        {
+            if (terminiId <= 0) return;
+            SubsystemLog.Info("Trap", $"PC AddTermini({terminiId}) recorded");
+        }
+
+        public void SetProtectTime(int ticks)
+        {
+            if (ticks <= 0) return;
+            SubsystemLog.Info("Trap", $"PC SetProtectTime({ticks}) recorded");
+        }
+
+        public void AddSkillState(int skillStateId, int level, int durationTicks)
+        {
+            if (skillStateId <= 0) return;
+            SubsystemLog.Info("Trap", $"PC AddSkillState({skillStateId},{level},0,{durationTicks}) recorded");
+        }
     }
 
     public sealed class SandboxTrapTravelHost : ITrapTravelHost
@@ -179,6 +260,15 @@ namespace VLTK.Sandbox
         {
             var manager = SandboxManager.Instance;
             return manager?.MapManager?.Catalog != null && manager.MapManager.Catalog.ContainsKey(mapId);
+        }
+
+        public int GetPlayerLevel()
+        {
+            var manager = SandboxManager.Instance;
+            return manager?.GameplayLoop?.Player?.level
+                   ?? manager?.GameplayLoop?.LevelService?.Level
+                   ?? manager?.PlayerProgression?.level
+                   ?? 1;
         }
 
         public int GetFightState()

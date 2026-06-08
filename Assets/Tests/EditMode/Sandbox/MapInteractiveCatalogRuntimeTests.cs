@@ -80,8 +80,10 @@ namespace VLTK.Tests.Sandbox
             public Vector2 position;
             public bool hasMap = true;
             public int fightState = -1;
+            public int playerLevel = 1;
 
             public bool HasMap(int targetMapId) => hasMap;
+            public int GetPlayerLevel() => playerLevel;
             public int GetFightState() => fightState;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
@@ -95,8 +97,21 @@ namespace VLTK.Tests.Sandbox
         private sealed class FakeTrapActionSideEffects : ITrapActionSideEffects
         {
             public readonly List<string> messages = new();
+            public readonly List<int> terminiIds = new();
+            public int protectTicks;
+            public int skillStateId;
+            public int skillStateLevel;
+            public int skillStateTime;
 
             public void PostMessage(string message) => messages.Add(message);
+            public void AddTermini(int terminiId) => terminiIds.Add(terminiId);
+            public void SetProtectTime(int ticks) => protectTicks = ticks;
+            public void AddSkillState(int nextSkillStateId, int level, int durationTicks)
+            {
+                skillStateId = nextSkillStateId;
+                skillStateLevel = level;
+                skillStateTime = durationTicks;
+            }
         }
 
         private sealed class FakeObjectActionSideEffects : IObjectActionSideEffects
@@ -121,13 +136,14 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(672, catalog.Count);
+            Assert.AreEqual(692, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
+            Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);
@@ -447,6 +463,61 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1459 * 32, 3277 * 32), host.position);
             CollectionAssert.AreEqual(new[] { "Bạn thoát khỏi nơi nguy hiểm." }, sideEffects.messages);
             StringAssert.Contains("Msg2Player + NewWorld", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_LevelGateNewWorld_BranchesFromPlayerLevel()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 903,
+                        trapIdHex = "0x00000387",
+                        scriptPath = @"\script\level_gate.lua",
+                        actionKind = "LevelGateNewWorld",
+                        requiredLevel = 5,
+                        targetMapId = 54,
+                        targetCellX = 1471,
+                        targetCellY = 2992,
+                        fightState = 1,
+                        failTargetCellX = 1808,
+                        failTargetCellY = 3456,
+                        messages = new[] { "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!" },
+                        terminiIds = new[] { 46 },
+                        protectTicks = 54,
+                        skillStateId = 963,
+                        skillStateLevel = 1,
+                        skillStateTime = 54,
+                    }
+                }
+            };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var host = new FakeTrapTravelHost { playerLevel = 4 };
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 903 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1808 * 32, 3456 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Phía trước nguy hiểm! Xin hãy quay về rèn luyện thêm!" }, sideEffects.messages);
+
+            host.playerLevel = 5;
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x00000387" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(54, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1471 * 32, 2992 * 32), host.position);
+            Assert.AreEqual(1, host.fightState);
+            CollectionAssert.AreEqual(new[] { 46 }, sideEffects.terminiIds);
+            Assert.AreEqual(54, sideEffects.protectTicks);
+            Assert.AreEqual(963, sideEffects.skillStateId);
+            Assert.AreEqual(1, sideEffects.skillStateLevel);
+            Assert.AreEqual(54, sideEffects.skillStateTime);
+            StringAssert.Contains("GetLevel()==5", result.detail);
         }
 
         [Test]
