@@ -47,7 +47,7 @@ EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 142
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 751
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 759
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
@@ -61,6 +61,8 @@ EXPECTED_DETERMINISTIC_TRAP_OPEN_SERVER_DATE_GATE_SETPOS_ACTIONS = 37
 EXPECTED_DETERMINISTIC_TRAP_RANDOM_NEWWORLD_ACTIONS = 14
 EXPECTED_DETERMINISTIC_TRAP_REVIVE_RETURN_NEWWORLD_ACTIONS = 5
 EXPECTED_DETERMINISTIC_TRAP_TASK_SETPOS_MESSAGE_ACTIONS = 3
+EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_GATE_SETPOS_ACTIONS = 6
+EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_RETURN_NEWWORLD_ACTIONS = 2
 EXPECTED_MISSING_TRAP_SCRIPTS = {'0xF51BA9A5'}
 KNOWN_FAILED_MAP_SPRITES = {
     r'\system\spr\RegionTileDefault.spr',
@@ -503,6 +505,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_random_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'RandomNewWorld')
     action_revive_return_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'ReviveReturnNewWorld')
     action_task_setpos_message = sum(1 for e in action_entries if e.get('actionKind') == 'TaskSetPosMessage')
+    action_citywar_camp_gate_setpos = sum(1 for e in action_entries if e.get('actionKind') == 'CityWarCampGateSetPos')
+    action_citywar_camp_return_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'CityWarCampReturnNewWorld')
     action_message = action_msg2_player + action_say_message + action_talk_message
     audit.require(len(trap_catalog.get('entries', [])) == EXPECTED_TRAP_IDS, 'MapTrapScriptCatalog entry count mismatch')
     audit.require(len(action_entries) == EXPECTED_DETERMINISTIC_TRAP_ACTIONS, 'MapTrapActionCatalog deterministic action count mismatch')
@@ -523,6 +527,10 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
                   'MapTrapActionCatalog ReviveReturnNewWorld count mismatch')
     audit.require(action_task_setpos_message == EXPECTED_DETERMINISTIC_TRAP_TASK_SETPOS_MESSAGE_ACTIONS,
                   'MapTrapActionCatalog TaskSetPosMessage count mismatch')
+    audit.require(action_citywar_camp_gate_setpos == EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_GATE_SETPOS_ACTIONS,
+                  'MapTrapActionCatalog CityWarCampGateSetPos count mismatch')
+    audit.require(action_citywar_camp_return_newworld == EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_RETURN_NEWWORLD_ACTIONS,
+                  'MapTrapActionCatalog CityWarCampReturnNewWorld count mismatch')
     audit.facts['interactive'] = {
         'traps': interactive.get('trapEntries'),
         'objects': interactive.get('objectEntries'),
@@ -553,6 +561,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapRandomNewWorldActions': action_random_new_world,
         'deterministicTrapReviveReturnNewWorldActions': action_revive_return_new_world,
         'deterministicTrapTaskSetPosMessageActions': action_task_setpos_message,
+        'deterministicTrapCityWarCampGateSetPosActions': action_citywar_camp_gate_setpos,
+        'deterministicTrapCityWarCampReturnNewWorldActions': action_citywar_camp_return_newworld,
     }
 
 

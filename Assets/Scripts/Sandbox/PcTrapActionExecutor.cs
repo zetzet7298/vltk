@@ -3,7 +3,7 @@
 // Ported APIs: NewWorld(mapId,x,y), SetPos(x,y), and simple
 // GetFightState()/SetFightState() gate traps with PC cell coords, plus read-only
 // Msg2Player/Say/Talk message-only traps, Msg2Player+NewWorld traps, and
-// open-server date gates from configall.lua, and task-state gates from PC GetTask().
+// open-server date gates from configall.lua, and task-state gates from PC GetTask(), and deterministic citywar camp gates.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -33,10 +33,15 @@ namespace VLTK.Sandbox
         long GetCurrentDateYmdHm();
         int RandomIntInclusive(int minInclusive, int maxInclusive);
         int GetTaskValue(int taskId);
+        int GetCurCamp();
+        int GetCamp();
+        int GetBattleRank();
         int GetFightState();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
         void SetFightState(int fightState);
+        void SetCurCamp(int camp);
+        void SetLogoutRv(int value);
     }
 
     public interface ITrapActionSideEffects
@@ -46,6 +51,7 @@ namespace VLTK.Sandbox
         void AddTermini(int terminiId);
         void SetProtectTime(int ticks);
         void AddSkillState(int skillStateId, int level, int durationTicks);
+        void ApplyCityWarRankEffect(int rank);
     }
 
     public sealed class PcTrapActionExecutor : ITrapActionExecutor
@@ -117,6 +123,71 @@ namespace VLTK.Sandbox
                     _sideEffects.PostMessage(branch.message);
                 result = Success(action,
                     $"GetTask({action.taskId})=={taskValue} -> SetPos({branch.targetCellX},{branch.targetCellY}) -> {branchTarget}");
+                return true;
+            }
+
+            if (action.IsCityWarCampGateSetPos)
+            {
+                int currentFightState = _host.GetFightState();
+                if (currentFightState == action.ifFightState)
+                {
+                    var enterTarget = action.CityWarEnterWorldPosition();
+                    _host.SetPos(enterTarget);
+                    if (action.enterNextFightState >= 0)
+                        _host.SetFightState(action.enterNextFightState);
+                    if (action.applyRankEffectOnEnter && _sideEffects != null)
+                        _sideEffects.ApplyCityWarRankEffect(_host.GetBattleRank());
+                    result = Success(action,
+                        $"GetFightState()=={currentFightState} -> SetPos({action.enterCellX},{action.enterCellY}) -> {enterTarget}, SetFightState({action.enterNextFightState}), bt_RankEffect");
+                    return true;
+                }
+
+                int currentCamp = _host.GetCurCamp();
+                if (currentCamp != action.requiredCamp)
+                {
+                    var blockedTarget = action.CityWarBlockedWorldPosition();
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.blockedMessage))
+                        _sideEffects.PostMessage(action.blockedMessage);
+                    _host.SetPos(blockedTarget);
+                    result = Success(action,
+                        $"GetCurCamp()=={currentCamp} != {action.requiredCamp} -> Msg2Player + SetPos({action.blockedCellX},{action.blockedCellY}) -> {blockedTarget}");
+                    return true;
+                }
+
+                var exitTarget = action.CityWarExitWorldPosition();
+                _host.SetPos(exitTarget);
+                if (action.exitNextFightState >= 0)
+                    _host.SetFightState(action.exitNextFightState);
+                result = Success(action,
+                    $"GetCurCamp()=={currentCamp}, GetFightState()=={currentFightState} -> SetPos({action.exitCellX},{action.exitCellY}) -> {exitTarget}, SetFightState({action.exitNextFightState})");
+                return true;
+            }
+
+            if (action.IsCityWarCampReturnNewWorld)
+            {
+                int currentCamp = _host.GetCurCamp();
+                if (currentCamp != action.requiredCamp)
+                {
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.blockedMessage))
+                        _sideEffects.PostMessage(action.blockedMessage);
+                    result = Success(action, $"GetCurCamp()=={currentCamp} != {action.requiredCamp} -> Msg2Player");
+                    return true;
+                }
+
+                if (!_host.HasMap(action.targetMapId))
+                {
+                    result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                    return true;
+                }
+
+                if (action.resetCurCampToOriginal)
+                    _host.SetCurCamp(_host.GetCamp());
+                ApplyFightState(action);
+                if (action.logoutRv >= 0)
+                    _host.SetLogoutRv(action.logoutRv);
+                _host.NewWorld(action.targetMapId, target);
+                result = Success(action,
+                    $"GetCurCamp()=={currentCamp} -> SetCurCamp(GetCamp()), SetLogoutRV({action.logoutRv}), NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
                 return true;
             }
 
@@ -436,6 +507,11 @@ namespace VLTK.Sandbox
             if (skillStateId <= 0) return;
             SubsystemLog.Info("Trap", $"PC AddSkillState({skillStateId},{level},0,{durationTicks}) recorded");
         }
+
+        public void ApplyCityWarRankEffect(int rank)
+        {
+            SubsystemLog.Info("Trap", $"PC bt_RankEffect(BT_GetData(PL_CURRANK={rank})) recorded");
+        }
     }
 
     public sealed class SandboxTrapTravelHost : ITrapTravelHost
@@ -488,6 +564,15 @@ namespace VLTK.Sandbox
         public int GetTaskValue(int taskId)
             => SandboxManager.Instance?.TaskFlagService?.GetFlag(taskId) ?? 0;
 
+        public int GetCurCamp()
+            => SandboxManager.Instance?.GetCurCamp() ?? 0;
+
+        public int GetCamp()
+            => SandboxManager.Instance?.GetCamp() ?? 0;
+
+        public int GetBattleRank()
+            => 0;
+
         public int GetFightState()
         {
             return SandboxManager.Instance?.GetFightState() ?? 1;
@@ -511,6 +596,16 @@ namespace VLTK.Sandbox
         public void SetFightState(int fightState)
         {
             SandboxManager.Instance?.SetFightState(fightState);
+        }
+
+        public void SetCurCamp(int camp)
+        {
+            SandboxManager.Instance?.SetCurCamp(camp);
+        }
+
+        public void SetLogoutRv(int value)
+        {
+            SandboxManager.Instance?.SetLogoutRv(value);
         }
     }
 }

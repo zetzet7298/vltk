@@ -984,6 +984,78 @@ def task_setpos_message_gate(source: str) -> dict[str, Any] | None:
     return {'taskId': task_id, 'taskBranches': branches}
 
 
+def citywar_camp_gate_setpos(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {
+        'main', 'Include', 'GetFightState', 'SetPos', 'SetFightState',
+        'bt_RankEffect', 'BT_GetData', 'if', 'GetCurCamp', 'Msg2Player'
+    }
+    if 'citywar_city' not in clean_source or 'bt_RankEffect(BT_GetData(PL_CURRANK))' not in clean_source:
+        return None
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(for|while|elseif)\b', clean_source):
+        return None
+    positions = int_args(parse_lua_calls(clean_source, 'SetPos', limit=8), 2)
+    fight_states = int_args(parse_lua_calls(clean_source, 'SetFightState', limit=8), 1)
+    if len(positions) != 3 or len(fight_states) != 2:
+        return None
+    if positions[0] != positions[1] or fight_states[0][0] != 1 or fight_states[1][0] != 0:
+        return None
+    camp_match = re.search(r'GetCurCamp\s*\(\s*\)\s*~=\s*(\d+)', clean_source)
+    if camp_match is None:
+        return None
+    message = single_string(parse_lua_calls(clean_source, 'Msg2Player', limit=2))
+    if not is_safe_user_message(message):
+        return None
+    return {
+        'requiredCamp': int(camp_match.group(1)),
+        'ifFightState': 0,
+        'enterCellX': positions[0][0],
+        'enterCellY': positions[0][1],
+        'enterNextFightState': fight_states[0][0],
+        'blockedCellX': positions[1][0],
+        'blockedCellY': positions[1][1],
+        'blockedMessage': message,
+        'exitCellX': positions[2][0],
+        'exitCellY': positions[2][1],
+        'exitNextFightState': fight_states[1][0],
+        'applyRankEffectOnEnter': True,
+    }
+
+
+def citywar_camp_return_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {'main', 'if', 'GetCurCamp', 'Msg2Player', 'SetCurCamp', 'GetCamp', 'SetFightState', 'SetLogoutRV', 'NewWorld'}
+    if 'SetCurCamp(GetCamp())' not in clean_source or 'SetLogoutRV(0)' not in clean_source:
+        return None
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(for|while|elseif)\b', clean_source):
+        return None
+    camp_match = re.search(r'GetCurCamp\s*\(\s*\)\s*~=\s*(\d+)', clean_source)
+    if camp_match is None:
+        return None
+    new_world = int_args_unique(parse_lua_calls(clean_source, 'NewWorld', limit=4), 3)
+    fight_state = int_args_unique(parse_lua_calls(clean_source, 'SetFightState', limit=4), 1)
+    logout = int_args_unique(parse_lua_calls(clean_source, 'SetLogoutRV', limit=4), 1)
+    if new_world is None or fight_state is None or logout is None:
+        return None
+    message = single_string(parse_lua_calls(clean_source, 'Msg2Player', limit=2))
+    if not is_safe_user_message(message):
+        return None
+    return {
+        'requiredCamp': int(camp_match.group(1)),
+        'targetMapId': new_world[0],
+        'targetCellX': new_world[1],
+        'targetCellY': new_world[2],
+        'fightState': fight_state[0],
+        'logoutRv': logout[0],
+        'resetCurCampToOriginal': True,
+        'blockedMessage': message,
+    }
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
         return False
@@ -1308,6 +1380,34 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_setpos,
             })
             continue
+        citywar_gate = citywar_camp_gate_setpos(source)
+        if citywar_gate is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'CityWarCampGateSetPos',
+                'targetMapId': 0,
+                'targetCellX': citywar_gate['enterCellX'],
+                'targetCellY': citywar_gate['enterCellY'],
+                'fightState': -1,
+                'source': 'PC citywar_city chengzhan_map ctrap: GetFightState enter branch SetPos/SetFightState/bt_RankEffect; else camp guard Msg2Player+SetPos or exit SetPos/SetFightState',
+                **citywar_gate,
+            })
+            continue
+        citywar_return = citywar_camp_return_newworld(source)
+        if citywar_return is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'CityWarCampReturnNewWorld',
+                'source': 'PC citywar_city chengzhan_map trap1/trap2: camp guard then SetCurCamp(GetCamp), SetFightState, SetLogoutRV, NewWorld reserve map',
+                **citywar_return,
+            })
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -1375,6 +1475,8 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'RandomNewWorld'),
         'deterministicTrapReviveReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'ReviveReturnNewWorld'),
         'deterministicTrapTaskSetPosMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetPosMessage'),
+        'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
+        'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
     }
     return entries, coverage
 

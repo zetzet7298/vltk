@@ -83,6 +83,9 @@ namespace VLTK.Sandbox
         public SandboxBootReport BootReport { get; private set; }
         public bool IsInitialized { get; private set; }
         public int CurrentFightState { get; private set; } = 1;
+        public int CurrentCamp { get; private set; } = 0;
+        public int OriginalCamp { get; private set; } = 0;
+        public int CurrentLogoutRv { get; private set; } = 0;
         public AssetRegistry AssetRegistry { get; private set; }
         public MapManager MapManager { get; private set; }
         public MapRenderer MapRenderer { get; private set; }
@@ -1145,6 +1148,28 @@ namespace VLTK.Sandbox
         {
             CurrentFightState = Mathf.Clamp(fightState, 0, 1);
             SubsystemLog.Info("Sandbox", $"PC SetFightState({CurrentFightState}) applied");
+        }
+
+        public int GetCurCamp() => CurrentCamp;
+
+        public int GetCamp() => OriginalCamp;
+
+        public void SetCurCamp(int camp)
+        {
+            CurrentCamp = Mathf.Max(0, camp);
+            SubsystemLog.Info("Sandbox", $"PC SetCurCamp({CurrentCamp}) applied");
+        }
+
+        public void SetOriginalCamp(int camp)
+        {
+            OriginalCamp = Mathf.Max(0, camp);
+            SubsystemLog.Info("Sandbox", $"PC GetCamp source set to {OriginalCamp}");
+        }
+
+        public void SetLogoutRv(int value)
+        {
+            CurrentLogoutRv = value;
+            SubsystemLog.Info("Sandbox", $"PC SetLogoutRV({CurrentLogoutRv}) applied");
         }
 
         private void ApplyActiveMapBoundsToPlayer()

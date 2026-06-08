@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T05:41:15Z",
+  "generatedAtUtc": "2026-06-08T05:51:53Z",
   "uniqueTrapIds": 817,
   "resolvedTrapScripts": 816,
   "missingTrapScripts": 1,
@@ -8,7 +8,7 @@
     "0xF51BA9A5"
   ],
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
-  "deterministicTrapActions": 751,
+  "deterministicTrapActions": 759,
   "deterministicNewWorldActions": 532,
   "deterministicSetPosActions": 1,
   "deterministicFightStateSetPosActions": 112,
@@ -21,5 +21,7 @@
   "deterministicTrapOpenServerDateGateSetPosActions": 37,
   "deterministicTrapRandomNewWorldActions": 14,
   "deterministicTrapReviveReturnNewWorldActions": 5,
-  "deterministicTrapTaskSetPosMessageActions": 3
+  "deterministicTrapTaskSetPosMessageActions": 3,
+  "deterministicTrapCityWarCampGateSetPosActions": 6,
+  "deterministicTrapCityWarCampReturnNewWorldActions": 2
 }

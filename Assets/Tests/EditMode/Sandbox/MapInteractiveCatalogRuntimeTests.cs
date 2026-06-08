@@ -88,6 +88,10 @@ namespace VLTK.Tests.Sandbox
             public long currentDateYmdHm = 202606080900;
             public int randomValue = 0;
             public int taskValue = 0;
+            public int curCamp = 0;
+            public int originalCamp = 0;
+            public int battleRank = 0;
+            public int logoutRv = -1;
 
             public bool HasMap(int targetMapId) => hasMap;
             public int GetCurrentMapId() => currentMapId;
@@ -101,6 +105,9 @@ namespace VLTK.Tests.Sandbox
             public long GetCurrentDateYmdHm() => currentDateYmdHm;
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
             public int GetTaskValue(int taskId) => taskValue;
+            public int GetCurCamp() => curCamp;
+            public int GetCamp() => originalCamp;
+            public int GetBattleRank() => battleRank;
             public int GetFightState() => fightState;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
@@ -109,6 +116,8 @@ namespace VLTK.Tests.Sandbox
             }
             public void SetPos(Vector2 worldPosition) => position = worldPosition;
             public void SetFightState(int nextFightState) => fightState = nextFightState;
+            public void SetCurCamp(int nextCamp) => curCamp = nextCamp;
+            public void SetLogoutRv(int value) => logoutRv = value;
         }
 
         private sealed class FakeTrapActionSideEffects : ITrapActionSideEffects
@@ -120,6 +129,7 @@ namespace VLTK.Tests.Sandbox
             public int skillStateId;
             public int skillStateLevel;
             public int skillStateTime;
+            public int rankEffect;
 
             public void PostMessage(string message) => messages.Add(message);
             public void AddStation(int stationId) => stationIds.Add(stationId);
@@ -131,6 +141,7 @@ namespace VLTK.Tests.Sandbox
                 skillStateLevel = level;
                 skillStateTime = durationTicks;
             }
+            public void ApplyCityWarRankEffect(int rank) => rankEffect = rank;
         }
 
         private sealed class FakeObjectActionSideEffects : IObjectActionSideEffects
@@ -599,6 +610,115 @@ namespace VLTK.Tests.Sandbox
             CollectionAssert.IsEmpty(openSideEffects.messages);
             CollectionAssert.AreEqual(new[] { 15 }, openSideEffects.stationIds);
             StringAssert.Contains("GetLocalDate()==202606080900", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_CityWarCampGateSetPos_PreservesPcCampBranches()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 908,
+                        trapIdHex = "0x0000038C",
+                        scriptPath = @"\script\missions\citywar_city\chengzhan_map\ctrap1.lua",
+                        actionKind = "CityWarCampGateSetPos",
+                        requiredCamp = 1,
+                        ifFightState = 0,
+                        enterCellX = 1571,
+                        enterCellY = 3263,
+                        enterNextFightState = 1,
+                        blockedCellX = 1571,
+                        blockedCellY = 3263,
+                        blockedMessage = "Không thể đi được, nếu đi sẽ đến nơi phục kích của địch quân. ",
+                        exitCellX = 1565,
+                        exitCellY = 3246,
+                        exitNextFightState = 0,
+                        applyRankEffectOnEnter = true,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { fightState = 0, curCamp = 2, battleRank = 4 };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 908 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1571 * 32, 3263 * 32), host.position);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(4, sideEffects.rankEffect);
+
+            host = new FakeTrapTravelHost { fightState = 1, curCamp = 2 };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0000038C" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1571 * 32, 3263 * 32), host.position);
+            Assert.AreEqual(1, host.fightState);
+            CollectionAssert.AreEqual(new[] { "Không thể đi được, nếu đi sẽ đến nơi phục kích của địch quân. " }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { fightState = 1, curCamp = 1 };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 908 }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1565 * 32, 3246 * 32), host.position);
+            Assert.AreEqual(0, host.fightState);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_CityWarCampReturnNewWorld_ResetsCampAndWarps()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 909,
+                        trapIdHex = "0x0000038D",
+                        scriptPath = @"\script\missions\citywar_city\chengzhan_map\trap1.lua",
+                        actionKind = "CityWarCampReturnNewWorld",
+                        requiredCamp = 1,
+                        targetMapId = 222,
+                        targetCellX = 1613,
+                        targetCellY = 3185,
+                        fightState = 0,
+                        resetCurCampToOriginal = true,
+                        logoutRv = 0,
+                        blockedMessage = "Không thể đi được, nếu đi sẽ đến nơi phục kích của địch quân. ",
+                    }
+                }
+            };
+
+            var blockedHost = new FakeTrapTravelHost { curCamp = 2 };
+            var blockedEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, blockedHost, blockedEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 909 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, blockedHost.mapId);
+            CollectionAssert.AreEqual(new[] { "Không thể đi được, nếu đi sẽ đến nơi phục kích của địch quân. " }, blockedEffects.messages);
+
+            var host = new FakeTrapTravelHost { curCamp = 1, originalCamp = 0, fightState = 1 };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0000038D" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(222, host.mapId);
+            Assert.AreEqual(0, host.curCamp);
+            Assert.AreEqual(0, host.fightState);
+            Assert.AreEqual(0, host.logoutRv);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1613 * 32, 3185 * 32), host.position);
         }
 
         [Test]

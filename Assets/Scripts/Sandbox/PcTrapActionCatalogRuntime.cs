@@ -114,6 +114,19 @@ namespace VLTK.Sandbox
         public int[] reviveReturnMapIds;
         public int taskId;
         public PcTrapTaskSetPosBranch[] taskBranches;
+        public int requiredCamp;
+        public int enterCellX;
+        public int enterCellY;
+        public int enterNextFightState = -1;
+        public int exitCellX;
+        public int exitCellY;
+        public int exitNextFightState = -1;
+        public int blockedCellX;
+        public int blockedCellY;
+        public string blockedMessage;
+        public bool applyRankEffectOnEnter;
+        public bool resetCurCampToOriginal;
+        public int logoutRv = -1;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -128,6 +141,8 @@ namespace VLTK.Sandbox
         public bool IsRandomNewWorld => string.Equals(actionKind, "RandomNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsReviveReturnNewWorld => string.Equals(actionKind, "ReviveReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskSetPosMessage => string.Equals(actionKind, "TaskSetPosMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
+        public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()
@@ -152,6 +167,15 @@ namespace VLTK.Sandbox
 
         public Vector2 TaskBranchWorldPosition(PcTrapTaskSetPosBranch branch)
             => CellToWorld(branch.targetCellX, branch.targetCellY);
+
+        public Vector2 CityWarEnterWorldPosition()
+            => CellToWorld(enterCellX, enterCellY);
+
+        public Vector2 CityWarExitWorldPosition()
+            => CellToWorld(exitCellX, exitCellY);
+
+        public Vector2 CityWarBlockedWorldPosition()
+            => CellToWorld(blockedCellX, blockedCellY);
 
         public int ConditionalNextFightState(int currentFightState)
             => currentFightState == ifFightState ? ifNextFightState : elseNextFightState;
