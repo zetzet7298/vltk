@@ -188,6 +188,16 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ChatSystemRailButtons_FollowPcIniTopOrder()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            int up = uxml.IndexOf("name=\"ChatSysUpBtn\"", System.StringComparison.Ordinal);
+            int down = uxml.IndexOf("name=\"ChatSysDownBtn\"", System.StringComparison.Ordinal);
+            int open = uxml.IndexOf("name=\"ChatSysOpenBtn\"", System.StringComparison.Ordinal);
+            Assert.IsTrue(up >= 0 && down > up && open > down, "PC c9c8a750/7e20a7ac has SysRoom_Up Top=0, SysRoom_Down Top=14, SysRoom_Open Top=28; mobile rail must not swap Down/Open.");
+        }
+
+        [Test]
         public void ChatChannelIdentityButton_PortsPcInputPrefixControl()
         {
             var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
