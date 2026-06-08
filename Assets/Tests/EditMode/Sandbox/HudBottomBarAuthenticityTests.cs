@@ -64,6 +64,13 @@ namespace VLTK.Tests.Sandbox
             AssertTextureSize("btn_minimap_switch_pc.png", 16, 16);
             AssertTextureSize("btn_minimap_world_full_pc.png", 16, 16);
             AssertTextureSize("btn_minimap_cave_pc.png", 16, 16);
+            AssertTextureSize("icon_bar_arena.png", 25, 25);
+            AssertTextureSize("icon_bar_activity.png", 23, 23);
+            AssertTextureSize("icon_bar_treasure.png", 23, 23);
+            AssertTextureSize("icon_bar_shop.png", 23, 23);
+            AssertTextureSize("icon_bar_pet.png", 23, 23);
+            AssertTextureSize("icon_bar_loginprize.png", 23, 23);
+            AssertTextureSize("icon_bar_funcprize.png", 23, 23);
             for (int i = 1; i <= 9; i++)
                 AssertTextureSize($"btn_quick_item_{i}_pc.png", 36, 36);
             AssertTextureSize("btn_pc_left_skill_slot.png", 36, 36);
@@ -239,6 +246,41 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, $"btn_quick_item_{i}_pc.png")), $"quick item {i} must exist in StreamingAssets.");
             Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_pc_left_skill_slot.png")));
             Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_pc_right_skill_slot.png")));
+
+            Assert.AreEqual(7, HudBottomBarPcSpec.IconBar.Count, "PC Ui3/icon_bar.ini must expose Icon_0..Icon_6.");
+            foreach (var pair in PcIconBarButtonIds())
+            {
+                Assert.IsTrue(icons.ContainsKey(pair.Key), pair.Key + " must have PC SPR icon art.");
+                string iconFile = icons[pair.Key] + ".png";
+                Assert.IsTrue(File.Exists(Path.Combine(Application.dataPath, ArtRoot, iconFile)), iconFile + " must exist in Assets HUD art.");
+                Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, iconFile)), iconFile + " must exist in StreamingAssets.");
+                StringAssert.Contains($"RegisterClick(root, \"{pair.Key}\", () => OnIconBarClick({pair.Value}))", controller);
+            }
+        }
+
+        [Test]
+        public void PcIconBar_PortsSevenPcIniIconsWithRuntimeHandlers()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            var css = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uss"));
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+
+            StringAssert.Contains("PcIconBar", uxml);
+            StringAssert.Contains("Ui3/icon_bar.ini", controller);
+            StringAssert.Contains("PC Ui3/icon_bar.ini", css);
+            StringAssert.Contains("width: 46px;", css, "Icon bar hitboxes must be mobile touch-sized while preserving 23/25px PC icon art.");
+            foreach (var pair in PcIconBarButtonIds())
+            {
+                StringAssert.Contains($"name=\"{pair.Key}\"", uxml);
+                StringAssert.Contains($"RegisterClick(root, \"{pair.Key}\", () => OnIconBarClick({pair.Value}))", controller);
+            }
+            StringAssert.Contains("ArenaService.GetAllArenas()", controller);
+            StringAssert.Contains("ActivityService.GetAllActivities()", controller);
+            StringAssert.Contains("TreasureHuntService.All", controller);
+            StringAssert.Contains("MallService.All", controller);
+            StringAssert.Contains("PartnerService.AllActivePets", controller);
+            StringAssert.Contains("SignInService.All", controller);
+            StringAssert.Contains("EventBonusService.GetAllEvents()", controller);
         }
 
         [Test]
@@ -446,6 +488,8 @@ namespace VLTK.Tests.Sandbox
                 AssertCriticalTextureImport($"Assets/UI/HUD/Art/btn_quick_item_{i}_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_pc_left_skill_slot.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_pc_right_skill_slot.png");
+            foreach (var file in new[] { "icon_bar_arena.png", "icon_bar_activity.png", "icon_bar_treasure.png", "icon_bar_shop.png", "icon_bar_pet.png", "icon_bar_loginprize.png", "icon_bar_funcprize.png" })
+                AssertCriticalTextureImport($"Assets/UI/HUD/Art/{file}");
         }
 
         private static string ExtractCssBlock(string css, string selector)
@@ -457,6 +501,20 @@ namespace VLTK.Tests.Sandbox
             Assert.Greater(open, start, selector + " must open a USS block.");
             Assert.Greater(close, open, selector + " must close a USS block.");
             return css.Substring(open + 1, close - open - 1);
+        }
+
+        private static Dictionary<string, int> PcIconBarButtonIds()
+        {
+            return new Dictionary<string, int>
+            {
+                ["IconBarArenaBtn"] = 0,
+                ["IconBarActivityBtn"] = 1,
+                ["IconBarTreasureBtn"] = 2,
+                ["IconBarShopBtn"] = 3,
+                ["IconBarPetBtn"] = 4,
+                ["IconBarLoginPrizeBtn"] = 5,
+                ["IconBarFuncPrizeBtn"] = 6,
+            };
         }
 
         private static Dictionary<string, (string buttonName, string handlerName)> PcUtilityButtonIds()

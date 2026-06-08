@@ -556,6 +556,27 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcIconBarButtons_OpenRuntimeBackedPanels()
+        {
+            for (int i = 0; i < 7; i++)
+            {
+                InvokePrivateMethod("OnIconBarClick", i);
+                Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+                Assert.Greater(_pcToolList.contentContainer.childCount, 1);
+                var labels = _pcToolList.Query<Label>().ToList();
+                Assert.IsTrue(labels.Exists(l => l.text.Contains("PC source: Ui3/icon_bar.ini")), "Icon bar panel must cite PC source.");
+            }
+
+            InvokePrivateMethod("OnIconBarClick", 0);
+            Assert.AreEqual("Đấu trường", _pcToolTitle.text);
+            StringAssert.Contains("Đấu trường PC loaded", _pcToolList.Query<Label>().ToList()[2].text);
+
+            InvokePrivateMethod("OnIconBarClick", 6);
+            Assert.AreEqual("Thưởng chức năng", _pcToolTitle.text);
+            Assert.IsTrue(_root.Q("IconBarFuncPrizeBtn").ClassListContains("active"));
+        }
+
+        [Test]
         public void OnFactionClick_OpensPcToolPanelWithGuildSummary()
         {
             Assert.IsTrue(_pcToolPanel.ClassListContains("hidden"));

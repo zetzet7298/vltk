@@ -87,6 +87,20 @@ namespace VLTK.UI
                 ["ZhenFa"] = "Declared as Button14 in dc11ac12 工具控制条.ini, but no [ZhenFa] section/art/ClassType exists; not visible in pc-evidence/pc_hud.png.",
             };
 
+
+        /// <summary>Ui3/icon_bar.ini (uid fdaebb7f), PC 1024 mode right-side icon strip.</summary>
+        public static readonly IReadOnlyList<ButtonRect> IconBar =
+            new List<ButtonRect>
+            {
+                new ButtonRect(994, 150, 25, 25, @"\spr\Ui3\arena\ico.spr", "Icon_0", "Đấu trường"),
+                new ButtonRect(994, 175, 25, 25, @"\spr\Ui3\activityguide\guidebutton.spr", "Icon_1", "Hướng dẫn hoạt động"),
+                new ButtonRect(994, 200, 25, 25, @"\spr\Ui3\TreasureChest\icon.spr", "Icon_2", "Rương báu"),
+                new ButtonRect(994, 225, 25, 25, @"\spr\Ui3\TreasureChest\shop.spr", "Icon_3", "Cửa hàng rương báu"),
+                new ButtonRect(994, 250, 25, 25, @"\spr\Ui3\pet\icon.spr", "Icon_4", "Đồng hành / thú cưng"),
+                new ButtonRect(994, 275, 25, 25, @"\spr\Ui3\loginprize\icon.spr", "Icon_5", "Điểm danh"),
+                new ButtonRect(994, 300, 25, 25, @"\spr\Ui3\funcprize\funcprize.spr", "Icon_6", "Thưởng chức năng"),
+            };
+
         /// <summary>PC item hotkeys Item_0..Item_8 from 主界面玩家信息窗口.ini: 1..9 -> ShortcutUseItem(0..8).</summary>
         public static readonly IReadOnlyDictionary<string, ButtonRect> QuickItemSlots =
             new Dictionary<string, ButtonRect>

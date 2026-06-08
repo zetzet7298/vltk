@@ -200,6 +200,13 @@ namespace VLTK.UI
             { "BtnPK", "btn_pk" },
             { "BtnTreasure", "btn_treasure" },
             { "PrimaryAttackBtn", "btn_primary_attack" },
+            { "IconBarArenaBtn", "icon_bar_arena" },
+            { "IconBarActivityBtn", "icon_bar_activity" },
+            { "IconBarTreasureBtn", "icon_bar_treasure" },
+            { "IconBarShopBtn", "icon_bar_shop" },
+            { "IconBarPetBtn", "icon_bar_pet" },
+            { "IconBarLoginPrizeBtn", "icon_bar_loginprize" },
+            { "IconBarFuncPrizeBtn", "icon_bar_funcprize" },
         };
 
         private void Awake()
@@ -404,6 +411,13 @@ namespace VLTK.UI
             RegisterClick(root, "BtnExchange", OnExchangeClick);
             RegisterClick(root, "BtnRec", OnRecClick);
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
+            RegisterClick(root, "IconBarArenaBtn", () => OnIconBarClick(0));
+            RegisterClick(root, "IconBarActivityBtn", () => OnIconBarClick(1));
+            RegisterClick(root, "IconBarTreasureBtn", () => OnIconBarClick(2));
+            RegisterClick(root, "IconBarShopBtn", () => OnIconBarClick(3));
+            RegisterClick(root, "IconBarPetBtn", () => OnIconBarClick(4));
+            RegisterClick(root, "IconBarLoginPrizeBtn", () => OnIconBarClick(5));
+            RegisterClick(root, "IconBarFuncPrizeBtn", () => OnIconBarClick(6));
             RegisterClick(root, "PcToolClose", ClosePcToolPanel);
             RegisterClick(root, "ChatChannelIdentityBtn", OnChatChannelIdentityClick);
             RegisterClick(root, "SendBtn", OnSendChatClick);
@@ -2315,6 +2329,127 @@ namespace VLTK.UI
             OpenPcToolPanel("Phòng chat", rows);
             SubsystemLog.Info("HUD", "Open ChatRoom panel");
         }
+
+        private void OnIconBarClick(int index)
+        {
+            var spec = index >= 0 && index < HudBottomBarPcSpec.IconBar.Count ? HudBottomBarPcSpec.IconBar[index] : default;
+            foreach (var button in IconBarButtonNames())
+                _boundRoot?.Q(button)?.EnableInClassList("active", false);
+            if (index >= 0 && index < IconBarButtonNames().Length)
+                _boundRoot?.Q(IconBarButtonNames()[index])?.EnableInClassList("active", true);
+
+            OpenPcToolPanel(spec.tipVi, BuildIconBarRows(index, spec));
+            SubsystemLog.Info("HUD", $"Open PC icon bar {index}: {spec.classType}");
+        }
+
+        private IReadOnlyList<string> BuildIconBarRows(int index, HudBottomBarPcSpec.ButtonRect spec)
+        {
+            var manager = SandboxManager.Instance;
+            var rows = new List<string>
+            {
+                $"PC source: Ui3/icon_bar.ini {spec.classType}",
+                $"SPR: {spec.spr}",
+            };
+
+            switch (index)
+            {
+                case 0:
+                    rows.Add($"Đấu trường PC loaded: {manager?.ArenaService?.Count ?? 0}");
+                    if (manager?.ArenaService != null)
+                    {
+                        int count = 0;
+                        foreach (var arena in manager.ArenaService.GetAllArenas())
+                        {
+                            if (arena == null) continue;
+                            rows.Add($"#{arena.arenaId} map={arena.mapId} level={arena.minLevel}-{arena.maxLevel}");
+                            if (++count >= 5) break;
+                        }
+                    }
+                    break;
+                case 1:
+                    rows.Add($"Hoạt động PC: {manager?.ActivityService?.Count ?? 0}; điểm hoạt động: {manager?.HuoYueDuService?.Count ?? 0}");
+                    if (manager?.ActivityService != null)
+                    {
+                        int count = 0;
+                        foreach (var activity in manager.ActivityService.GetAllActivities())
+                        {
+                            if (activity == null) continue;
+                            rows.Add($"#{activity.activityId}: {activity.nameRaw}");
+                            if (++count >= 5) break;
+                        }
+                    }
+                    break;
+                case 2:
+                    rows.Add($"Săn kho báu PC: {manager?.TreasureHuntService?.Count ?? 0}");
+                    if (manager?.TreasureHuntService != null)
+                    {
+                        int count = 0;
+                        foreach (var t in manager.TreasureHuntService.All)
+                        {
+                            if (t == null) continue;
+                            rows.Add($"#{t.treasureId} map={t.mapId} pos={t.posX},{t.posY} lv>={t.requiredLevel}");
+                            if (++count >= 5) break;
+                        }
+                    }
+                    break;
+                case 3:
+                    rows.Add($"Cửa hàng PC: {manager?.MallService?.Count ?? 0}");
+                    if (manager?.MallService != null)
+                    {
+                        int count = 0;
+                        foreach (var item in manager.MallService.All)
+                        {
+                            if (item == null) continue;
+                            rows.Add($"#{item.mallItemId}: item={item.itemId} giá={item.price} tồn={item.stock}");
+                            if (++count >= 5) break;
+                        }
+                    }
+                    break;
+                case 4:
+                    rows.Add($"Đồng hành active: {manager?.PartnerService?.ActivePetCount ?? 0}/{VLTK.Sandbox.PartnerService.MaxPetSlots}");
+                    if (manager?.PartnerService != null)
+                    {
+                        foreach (var pet in manager.PartnerService.AllActivePets)
+                            rows.Add($"Pet #{pet.petId}: {pet.nameVi} lv{pet.level} hp={pet.currentHp}/{pet.maxHp}");
+                    }
+                    break;
+                case 5:
+                    rows.Add($"Điểm danh PC rewards: {manager?.SignInService?.Count ?? 0}");
+                    if (manager?.SignInService != null)
+                    {
+                        int count = 0;
+                        foreach (var reward in manager.SignInService.All)
+                        {
+                            if (reward == null) continue;
+                            rows.Add($"Ngày {reward.signInDay}: item={reward.rewardItemId} x{reward.rewardCount} gold={reward.rewardGold}");
+                            if (++count >= 5) break;
+                        }
+                    }
+                    break;
+                case 6:
+                    rows.Add($"Thưởng chức năng/event: {manager?.EventBonusService?.Count ?? 0}; lật thẻ: {manager?.FlipCardService?.Count ?? 0}");
+                    if (manager?.EventBonusService != null)
+                    {
+                        int count = 0;
+                        foreach (var eventName in manager.EventBonusService.GetAllEvents())
+                        {
+                            rows.Add($"Event: {eventName}");
+                            if (++count >= 5) break;
+                        }
+                    }
+                    break;
+            }
+
+            if (rows.Count == 2)
+                rows.Add("Runtime service chưa sẵn sàng hoặc không có dữ liệu PC để hiển thị.");
+            return rows;
+        }
+
+        private static string[] IconBarButtonNames() => new[]
+        {
+            "IconBarArenaBtn", "IconBarActivityBtn", "IconBarTreasureBtn", "IconBarShopBtn",
+            "IconBarPetBtn", "IconBarLoginPrizeBtn", "IconBarFuncPrizeBtn"
+        };
 
         private void OnOptionsClick()
         {

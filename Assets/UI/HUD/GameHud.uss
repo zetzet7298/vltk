@@ -1511,6 +1511,45 @@
     bottom: auto;
 }
 
+
+/* PC Ui3/icon_bar.ini — 7-icon right strip. 46px touch hitboxes preserve 23/25px PC SPR icons. */
+.hud-pc-icon-bar {
+    position: absolute;
+    right: 148px;
+    top: 128px;
+    width: 46px;
+    height: 322px;
+    flex-direction: column;
+    align-items: center;
+    z-index: 918;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+}
+
+.hud-pc-icon-bar-btn {
+    width: 46px;
+    height: 46px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(18,27,16,0.62);
+    border-width: 1px;
+    border-color: rgba(242,202,80,0.34);
+    border-radius: 11px;
+}
+
+.hud-pc-icon-bar-btn.active {
+    background-color: rgba(52,74,34,0.80);
+    border-color: rgba(168,255,112,0.78);
+}
+
+.hud-pc-icon-bar-icon {
+    width: 25px;
+    height: 25px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
 /* PC quick shortcuts from 主界面玩家信息窗口.ini: 1..9 ShortcutUseItem + T/P skill assignment.
    Stitch "Jade Path Legacy" UX: keep this secondary bar in the top-right safe zone,
    directly left of the minimap, and hide it behind a 54px touch switch. */

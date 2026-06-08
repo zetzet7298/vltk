@@ -59,6 +59,17 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <!-- PC Ui3/icon_bar.ini: right-side 7 icon strip. Visuals are exact SPR frame-0 decodes; layout is mobile-safe beside minimap. -->
+        <ui:VisualElement name="PcIconBar" class="hud-pc-icon-bar">
+            <ui:VisualElement name="IconBarArenaBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarArenaBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
+            <ui:VisualElement name="IconBarActivityBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarActivityBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
+            <ui:VisualElement name="IconBarTreasureBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarTreasureBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
+            <ui:VisualElement name="IconBarShopBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarShopBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
+            <ui:VisualElement name="IconBarPetBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarPetBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
+            <ui:VisualElement name="IconBarLoginPrizeBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarLoginPrizeBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
+            <ui:VisualElement name="IconBarFuncPrizeBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarFuncPrizeBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
+        </ui:VisualElement>
+
         <!-- ═══ MAP PREVIEW (large, tap minimap to open) ═══ -->
         <ui:VisualElement name="MapPreviewOverlay" class="hud-map-preview-overlay hidden">
             <ui:VisualElement name="MapPreviewWindow" class="hud-map-preview-window">
