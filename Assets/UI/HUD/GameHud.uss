@@ -365,6 +365,21 @@
     height: 30px;
     flex-direction: row;
     align-items: center;
+    z-index: 881;
+}
+
+/* PC e3b06434.dat [OpenChannelBtn]: broad channel-open click proxy at the 7-o'clock chat corner.
+   The PC INI points Image=\Spr\Ui3\主界面\按钮条按钮\ (folder only), so drawing a mobile
+   panel here creates the wrong dark wrapper. Keep the 60x60 hit area transparent. */
+.hud-open-channel-btn {
+    position: absolute;
+    left: 102px;
+    top: -10px;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    z-index: 879;
 }
 
 .hud-chat-tab {

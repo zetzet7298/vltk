@@ -420,6 +420,7 @@ namespace VLTK.UI
             RegisterClick(root, "IconBarLoginPrizeBtn", () => OnIconBarClick(5));
             RegisterClick(root, "IconBarFuncPrizeBtn", () => OnIconBarClick(6));
             RegisterClick(root, "PcToolClose", ClosePcToolPanel);
+            RegisterClick(root, "OpenChannelBtn", OnChatChannelToggleClick);
             RegisterClick(root, "ChatChannelIdentityBtn", OnChatChannelIdentityClick);
             RegisterClick(root, "SendBtn", OnSendChatClick);
             RegisterClick(root, "ChatSizeBtn", OnChatSizeClick);

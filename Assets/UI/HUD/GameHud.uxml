@@ -102,6 +102,9 @@
         <!-- ═══ CHAT AREA — PC bottom-left ═══ -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
             <ui:Label name="ChatWarning" text="!! Hãy sử dụng hồi phục" class="hud-chat-warning hidden"/>
+            <!-- PC 主界面玩家信息窗口.ini [OpenChannelBtn] at 110,430,60x60 has no concrete SPR file (Image is only a folder).
+                 Keep it as an invisible PC-equivalent proxy so mobile gets the behavior without drawing the bad 7-o'clock wrapper. -->
+            <ui:VisualElement name="OpenChannelBtn" class="hud-open-channel-btn"/>
             <ui:VisualElement name="ChatTabs" class="hud-chat-tabs">
                 <ui:VisualElement name="ChatTabAll" class="hud-chat-tab active"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
                 <ui:VisualElement name="ChatTabPrivate" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>

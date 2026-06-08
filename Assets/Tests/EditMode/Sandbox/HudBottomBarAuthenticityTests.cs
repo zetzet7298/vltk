@@ -91,7 +91,7 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("name=\"MobileUtilityMenuRowB\"", uxml);
             foreach (var name in new[] { "MinimapMarkerBtn", "ToggleMapBtn", "WorldMapBtn", "CaveMapBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC minimap control.");
-            foreach (var name in new[] { "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther", "ChatChannelIdentityBtn", "FaceBtn", "SendBtn" })
+            foreach (var name in new[] { "OpenChannelBtn", "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther", "ChatChannelIdentityBtn", "FaceBtn", "SendBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC bottom-chat control.");
             foreach (var name in new[] { "ChatRail", "ChatSizeBtn", "ChatMoveBtn", "ChatShadowBtn", "ChatScrollUpBtn", "ChatScrollThumbBtn", "ChatSplitBtn", "ChatChannelToggleBtn", "ChatScrollDownBtn", "ChatSysUpBtn", "ChatSysOpenBtn", "ChatSysDownBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC chat rail control.");
@@ -130,7 +130,7 @@ namespace VLTK.Tests.Sandbox
                 "ScenePos", "MinimapMarkerBtn", "ToggleMapBtn", "WorldMapBtn", "CaveMapBtn",
                 "ChatSizeBtn", "ChatScrollUpBtn", "ChatScrollThumbBtn", "ChatScrollDownBtn", "ChatSplitBtn",
                 "ChatChannelToggleBtn", "ChatShadowBtn", "ChatMoveBtn", "ChatSysUpBtn", "ChatSysDownBtn", "ChatSysOpenBtn",
-                "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther",
+                "OpenChannelBtn", "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther",
                 "ChatChannelIdentityBtn", "FaceBtn", "SendBtn",
                 "PcShortcutToggleBtn", "PcLeftSkillBtn", "PcRightSkillBtn",
                 "UtilityToggleBtn", "UtilitySwitchBtn",
@@ -243,6 +243,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_chat_send.png")), "PC send button must exist in StreamingAssets.");
             Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_chat_face.png")), "PC face button must exist in StreamingAssets.");
             Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_chat_channel_identity_pc.png")), "PC current-channel identity button must exist in StreamingAssets.");
+            StringAssert.Contains("RegisterClick(root, \"OpenChannelBtn\", OnChatChannelToggleClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatChannelIdentityBtn\", OnChatChannelIdentityClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"SendBtn\", OnSendChatClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatScrollUpBtn\", OnChatScrollUpClick)", controller);
@@ -356,11 +357,16 @@ namespace VLTK.Tests.Sandbox
             var css = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uss"));
             var panel = ExtractCssBlock(css, ".hud-chat-panel");
             var railButton = ExtractCssBlock(css, ".hud-chat-rail-btn");
+            var openChannel = ExtractCssBlock(css, ".hud-open-channel-btn");
 
             StringAssert.Contains("background-color: rgba(0,0,0,0);", panel, "ChatBar root must stay transparent so it does not wrap the 7-o'clock joystick/chat corner.");
             StringAssert.Contains("border-width: 0px;", panel, "ChatBar root must not draw a mobile wrapper over PC HUD pixels.");
             StringAssert.Contains("background-color: rgba(0,0,0,0);", railButton, "PC chat rail buttons use exact SPR icons only; the widened mobile hitbox must be visually transparent.");
             StringAssert.Contains("border-width: 0px;", railButton, "PC chat rail hitboxes must not draw a dark column over the bottom-left HUD.");
+            StringAssert.Contains("width: 60px;", openChannel, "PC [OpenChannelBtn] keeps its 60x60 hit proxy from e3b06434.dat.");
+            StringAssert.Contains("height: 60px;", openChannel, "PC [OpenChannelBtn] keeps its 60x60 hit proxy from e3b06434.dat.");
+            StringAssert.Contains("background-color: rgba(0,0,0,0);", openChannel, "PC [OpenChannelBtn] has no concrete SPR file; it must not draw a dark 7-o'clock wrapper.");
+            StringAssert.Contains("border-width: 0px;", openChannel, "PC [OpenChannelBtn] must be behavioral only, not a visual overlay.");
             StringAssert.Contains("pickingMode = PickingMode.Ignore", File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs")),
                 "Decorative HUD containers must not steal joystick touches.");
         }
