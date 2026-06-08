@@ -39,9 +39,10 @@ EXPECTED_OBJECT_TEMPLATES = 35
 EXPECTED_OBJECT_SPRITES = 34
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 533
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 645
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
+EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
 EXPECTED_MISSING_TRAP_SCRIPTS = {'0xF51BA9A5'}
 KNOWN_FAILED_MAP_SPRITES = {
     r'\system\spr\RegionTileDefault.spr',
@@ -456,10 +457,12 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_entries = trap_action_catalog.get('entries', [])
     action_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'NewWorld')
     action_set_pos = sum(1 for e in action_entries if e.get('actionKind') == 'SetPos')
+    action_fight_state_set_pos = sum(1 for e in action_entries if e.get('actionKind') == 'FightStateSetPos')
     audit.require(len(trap_catalog.get('entries', [])) == EXPECTED_TRAP_IDS, 'MapTrapScriptCatalog entry count mismatch')
     audit.require(len(action_entries) == EXPECTED_DETERMINISTIC_TRAP_ACTIONS, 'MapTrapActionCatalog deterministic action count mismatch')
     audit.require(action_new_world == EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS, 'MapTrapActionCatalog NewWorld count mismatch')
     audit.require(action_set_pos == EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS, 'MapTrapActionCatalog SetPos count mismatch')
+    audit.require(action_fight_state_set_pos == EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS, 'MapTrapActionCatalog FightStateSetPos count mismatch')
     audit.facts['interactive'] = {
         'traps': interactive.get('trapEntries'),
         'objects': interactive.get('objectEntries'),
@@ -471,6 +474,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapActions': len(action_entries),
         'deterministicNewWorldActions': action_new_world,
         'deterministicSetPosActions': action_set_pos,
+        'deterministicFightStateSetPosActions': action_fight_state_set_pos,
     }
 
 

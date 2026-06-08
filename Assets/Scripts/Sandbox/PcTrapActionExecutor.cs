@@ -1,6 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — executes the deterministic subset of PC trap Lua actions.
-// Ported APIs: NewWorld(mapId,x,y) and SetPos(x,y), with PC cell coords.
+// Ported APIs: NewWorld(mapId,x,y), SetPos(x,y), and simple
+// GetFightState()/SetFightState() gate traps with PC cell coords.
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
@@ -23,6 +24,7 @@ namespace VLTK.Sandbox
     public interface ITrapTravelHost
     {
         bool HasMap(int mapId);
+        int GetFightState();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
         void SetFightState(int fightState);
@@ -74,6 +76,19 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsFightStateSetPos)
+            {
+                int currentFightState = _host.GetFightState();
+                var conditionalTarget = action.ConditionalTargetWorldPosition(currentFightState);
+                int nextFightState = action.ConditionalNextFightState(currentFightState);
+                if (nextFightState >= 0)
+                    _host.SetFightState(nextFightState);
+                _host.SetPos(conditionalTarget);
+                result = Success(action,
+                    $"GetFightState()=={currentFightState} -> SetPos({(currentFightState == action.ifFightState ? action.ifTargetCellX : action.elseTargetCellX)},{(currentFightState == action.ifFightState ? action.ifTargetCellY : action.elseTargetCellY)}) -> {conditionalTarget}, SetFightState({nextFightState})");
+                return true;
+            }
+
             result = Failure(action, $"unsupported trap action '{action.actionKind}'");
             return true;
         }
@@ -103,6 +118,11 @@ namespace VLTK.Sandbox
         {
             var manager = SandboxManager.Instance;
             return manager?.MapManager?.Catalog != null && manager.MapManager.Catalog.ContainsKey(mapId);
+        }
+
+        public int GetFightState()
+        {
+            return SandboxManager.Instance?.GetFightState() ?? 1;
         }
 
         public void NewWorld(int mapId, Vector2 worldPosition)

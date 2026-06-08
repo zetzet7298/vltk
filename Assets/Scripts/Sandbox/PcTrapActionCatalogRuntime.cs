@@ -57,13 +57,33 @@ namespace VLTK.Sandbox
         public int targetCellX;
         public int targetCellY;
         public int fightState = -1;
+        public int ifFightState = -1;
+        public int ifTargetCellX;
+        public int ifTargetCellY;
+        public int ifNextFightState = -1;
+        public int elseFightState = -1;
+        public int elseTargetCellX;
+        public int elseTargetCellY;
+        public int elseNextFightState = -1;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsSetPos => string.Equals(actionKind, "SetPos", StringComparison.OrdinalIgnoreCase);
+        public bool IsFightStateSetPos => string.Equals(actionKind, "FightStateSetPos", StringComparison.OrdinalIgnoreCase);
 
         public Vector2 TargetWorldPosition()
-            => MapEnemyDatabase.MpsToWorld(targetCellX * 32, targetCellY * 32);
+            => CellToWorld(targetCellX, targetCellY);
+
+        public Vector2 ConditionalTargetWorldPosition(int currentFightState)
+            => currentFightState == ifFightState
+                ? CellToWorld(ifTargetCellX, ifTargetCellY)
+                : CellToWorld(elseTargetCellX, elseTargetCellY);
+
+        public int ConditionalNextFightState(int currentFightState)
+            => currentFightState == ifFightState ? ifNextFightState : elseNextFightState;
+
+        private static Vector2 CellToWorld(int cellX, int cellY)
+            => MapEnemyDatabase.MpsToWorld(cellX * 32, cellY * 32);
     }
 
     public static class PcTrapActionCatalogRuntime

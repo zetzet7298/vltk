@@ -26,7 +26,8 @@
   ],
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "elapsedSeconds": 1.553,
-  "deterministicTrapActions": 533,
+  "deterministicTrapActions": 645,
   "deterministicNewWorldActions": 532,
-  "deterministicSetPosActions": 1
+  "deterministicSetPosActions": 1,
+  "deterministicFightStateSetPosActions": 112
 }

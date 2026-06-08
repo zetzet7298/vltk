@@ -81,6 +81,7 @@ namespace VLTK.Tests.Sandbox
             public int fightState = -1;
 
             public bool HasMap(int targetMapId) => hasMap;
+            public int GetFightState() => fightState;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
                 mapId = targetMapId;
@@ -96,7 +97,8 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(533, catalog.Count);
+            Assert.AreEqual(645, catalog.Count);
+            Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);
@@ -166,6 +168,47 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(result.success);
             Assert.AreEqual(-1, host.fightState);
             StringAssert.Contains("target map 999999 missing", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_FightStateSetPos_UsesCurrentFightStateBranch()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 777,
+                        trapIdHex = "0x00000309",
+                        actionKind = "FightStateSetPos",
+                        ifFightState = 0,
+                        ifTargetCellX = 1577,
+                        ifTargetCellY = 3246,
+                        ifNextFightState = 1,
+                        elseFightState = 1,
+                        elseTargetCellX = 1581,
+                        elseTargetCellY = 3233,
+                        elseNextFightState = 0,
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost { fightState = 0 };
+            var executor = new PcTrapActionExecutor(catalog, host);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 777 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1577 * 32, 3246 * 32), host.position);
+            Assert.AreEqual(1, host.fightState);
+            StringAssert.Contains("GetFightState()==0", result.detail);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x00000309" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1581 * 32, 3233 * 32), host.position);
+            Assert.AreEqual(0, host.fightState);
+            StringAssert.Contains("GetFightState()==1", result.detail);
         }
 
         [Test]

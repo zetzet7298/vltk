@@ -335,6 +335,7 @@ def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[d
                 'scriptPath': src['scriptPath'],
                 'sourceRelPath': src['sourceRelPath'],
                 'actions': script_action_summary(text),
+                'sourceText': text,
             })
         entries.append(entry)
     coverage = {
@@ -345,6 +346,44 @@ def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[d
         'sourceScriptRoot': str(root / 'script'),
     }
     return entries, coverage
+
+
+def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
+    if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
+        return None
+    match = re.search(
+        r'if\s*\(?\s*GetFightState\s*\(\s*\)\s*==\s*(\d+)\s*\)?\s*then(?P<then>.*?)else(?P<else>.*?)end\s*;?',
+        source, re.S)
+    if not match:
+        return None
+
+    def first_pair(block: str) -> tuple[int, int] | None:
+        pairs = re.findall(r'\bSetPos\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)', block)
+        if len(pairs) != 1:
+            return None
+        return int(pairs[0][0]), int(pairs[0][1])
+
+    def first_state(block: str, fallback: int) -> int:
+        states = re.findall(r'\bSetFightState\s*\(\s*(\d+)\s*\)', block)
+        return int(states[0]) if len(states) == 1 else fallback
+
+    then_pos = first_pair(match.group('then'))
+    else_pos = first_pair(match.group('else'))
+    if then_pos is None or else_pos is None:
+        return None
+
+    if_state = int(match.group(1))
+    else_state = 1 - if_state if if_state in (0, 1) else -1
+    return {
+        'ifFightState': if_state,
+        'ifTargetCellX': then_pos[0],
+        'ifTargetCellY': then_pos[1],
+        'ifNextFightState': first_state(match.group('then'), if_state),
+        'elseFightState': else_state,
+        'elseTargetCellX': else_pos[0],
+        'elseTargetCellY': else_pos[1],
+        'elseNextFightState': first_state(match.group('else'), else_state),
+    }
 
 
 def int_args_unique(calls: list[list[str]], width: int) -> tuple[int, ...] | None:
@@ -369,6 +408,25 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         actions = script.get('actions') or {}
         if not script.get('resolved') or not actions.get('hasMain') or actions.get('talks'):
             continue
+        source = script.get('sourceText', '')
+        fight_state_setpos = conditional_fight_state_setpos(source)
+        if fight_state_setpos is not None:
+            entry = {
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'FightStateSetPos',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC trap Lua main(): if GetFightState()==N then SetPos/SetFightState else SetPos/SetFightState with no Talk/Msg2Player/NewWorld',
+            }
+            entry.update(fight_state_setpos)
+            entries.append(entry)
+            continue
+
         fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1)
         fight_value = fight_state[0] if fight_state is not None else None
         new_world = int_args_unique(actions.get('newWorldCalls') or [], 3)
@@ -405,6 +463,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapActions': len(entries),
         'deterministicNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
         'deterministicSetPosActions': sum(1 for e in entries if e['actionKind'] == 'SetPos'),
+        'deterministicFightStateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'FightStateSetPos'),
     }
     return entries, coverage
 
@@ -663,12 +722,17 @@ def main() -> int:
         'spriteFolder': 'Generated/ObjectSprites',
         'templates': object_templates,
     }
+    trap_catalog_entries = []
+    for entry in trap_scripts:
+        clean_entry = dict(entry)
+        clean_entry.pop('sourceText', None)
+        trap_catalog_entries.append(clean_entry)
     trap_catalog = {
         'schemaVersion': 1,
         'generatedAtUtc': now,
         'sourceScriptRoot': str(server_root(pc_root) / 'script'),
         'hashRule': 'PC g_FileName2Id signed-char over leading-backslash GBK script path',
-        'entries': trap_scripts,
+        'entries': trap_catalog_entries,
     }
     trap_action_catalog = {
         'schemaVersion': 1,
@@ -688,6 +752,7 @@ def main() -> int:
         **coverage,
         **object_coverage,
         **trap_coverage,
+        **trap_action_coverage,
         'elapsedSeconds': round(time.time() - start, 3),
     }
     catalog_path = catalog_root / 'MapInteractiveCatalog.json'
