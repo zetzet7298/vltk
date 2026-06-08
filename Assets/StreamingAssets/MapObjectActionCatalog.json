@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T11:40:20Z",
+  "generatedAtUtc": "2026-06-08T11:49:22Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -1535,6 +1535,79 @@
       "reviveId": 53
     },
     {
+      "scriptPath": "\\script\\中原南区\\丐帮\\地下迷宫一层\\obj\\地图_gbl60_宝箱1.lua",
+      "scriptId": 1213907287,
+      "scriptIdHex": "0x485AC157",
+      "sourceRelPath": "script\\中原南区\\丐帮\\地下迷宫一层\\obj\\地图_gbl60_宝箱1.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15370_key_203_random_bags_211_201",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 8,
+              "value": 15370
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 203,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng chìa khóa mở chiếc rương"
+            },
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                203
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "RandomAddEventItemIfMissing",
+              "itemId": 211,
+              "value": 60,
+              "message": "Lấy được chiếc túi thứ nhất"
+            },
+            {
+              "type": "RandomAddEventItemIfMissing",
+              "itemId": 201,
+              "value": 60,
+              "message": "Lấy được chiếc túi thứ hai"
+            },
+            {
+              "type": "PostRewardCountMessage",
+              "messages": [
+                "Bạn thất vọng vì chiếc rương này trống rỗng.",
+                "Bạn lấy được một chiếc túi vải",
+                "Bạn lấy được 2 chiếc túi vải"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương này đã khóa rồi"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "scriptPath": "\\script\\中原南区\\丐帮\\地下迷宫三层\\obj\\地图_gbl60_宝箱empty.lua",
       "scriptId": 3190417318,
       "scriptIdHex": "0xBE29E7A6",
@@ -1553,6 +1626,186 @@
       ],
       "elseMessages": [
         "Bảo rương này đã khóa rồi"
+      ]
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\丐帮\\地下迷宫二层\\obj\\地图_gbl60_宝箱2.lua",
+      "scriptId": 2607650527,
+      "scriptIdHex": "0x9B6D96DF",
+      "sourceRelPath": "script\\中原南区\\丐帮\\地下迷宫二层\\obj\\地图_gbl60_宝箱2.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15370_random_bag_208",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 8,
+              "value": 15370
+            }
+          ],
+          "effects": [
+            {
+              "type": "RandomAddEventItemIfMissing",
+              "itemId": 208,
+              "value": 50,
+              "message": "Lấy được chiếc túi thứ ba"
+            },
+            {
+              "type": "PostRewardCountMessage",
+              "messages": [
+                "Chiếc rương này không có gì",
+                "Bạn mở chiếc rương đó ra, lấy được một cái túi vải"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương này đã khóa rồi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\丐帮\\地下迷宫五层\\obj\\地图_gbl60_宝箱5.lua",
+      "scriptId": 2825860551,
+      "scriptIdHex": "0xA86F35C7",
+      "sourceRelPath": "script\\中原南区\\丐帮\\地下迷宫五层\\obj\\地图_gbl60_宝箱5.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15370_key_202_random_bags_200_205",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 8,
+              "value": 15370
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 202,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng chìa khóa mở chiếc rương"
+            },
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                202
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "RandomAddEventItemIfMissing",
+              "itemId": 200,
+              "value": 30,
+              "message": "Lấy được chiếc túi thứ 8"
+            },
+            {
+              "type": "RandomAddEventItemIfMissing",
+              "itemId": 205,
+              "value": 30,
+              "message": "Lấy được chiếc túi thứ 9"
+            },
+            {
+              "type": "PostRewardCountMessage",
+              "messages": [
+                "Bạn thất vọng vì chiếc rương này trống rỗng.",
+                "Bạn lấy được một chiếc túi vải",
+                "Bạn lấy được 2 chiếc túi vải"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương này đã khóa rồi"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\丐帮\\地下迷宫四层\\obj\\地图_gbl60_宝箱3.lua",
+      "scriptId": 3186948354,
+      "scriptIdHex": "0xBDF4F902",
+      "sourceRelPath": "script\\中原南区\\丐帮\\地下迷宫四层\\obj\\地图_gbl60_宝箱3.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15370_random_bags_209_210",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 8,
+              "value": 15370
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Mở bảo rương ra."
+            },
+            {
+              "type": "RandomAddEventItemIfMissing",
+              "itemId": 209,
+              "value": 40,
+              "message": "Bạn lấy được 4 chiếc túi vải"
+            },
+            {
+              "type": "RandomAddEventItemIfMissing",
+              "itemId": 210,
+              "value": 40,
+              "message": "Bạn lấy được 5 chiếc túi vải"
+            },
+            {
+              "type": "PostRewardCountMessage",
+              "messages": [
+                "Bạn thất vọng vì chiếc rương này trống rỗng.",
+                "Bạn lấy được một chiếc túi vải",
+                "Bạn lấy được 2 chiếc túi vải"
+              ]
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương này đã khóa rồi"
+            }
+          ]
+        }
       ]
     },
     {

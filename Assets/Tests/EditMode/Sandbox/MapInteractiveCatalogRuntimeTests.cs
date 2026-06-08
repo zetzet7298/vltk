@@ -250,13 +250,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(278, catalog.Count);
+            Assert.AreEqual(282, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
-            Assert.AreEqual(5, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
+            Assert.AreEqual(9, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -313,6 +313,11 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(4, gbClothBagChest.branches.Length);
             Assert.AreEqual("task_15370_key_204_reward_206", gbClothBagChest.branches[0].label);
             Assert.AreEqual("task_15370_key_204_empty", gbClothBagChest.branches[2].label);
+            var gbRandomChest = catalog.Find(@"\script\中原南区\丐帮\地下迷宫一层\obj\地图_gbl60_宝箱1.lua");
+            Assert.IsNotNull(gbRandomChest);
+            Assert.IsTrue(gbRandomChest.IsTaskItemBranchMessage);
+            Assert.AreEqual("task_15370_key_203_random_bags_211_201", gbRandomChest.branches[0].label);
+            Assert.AreEqual("RandomAddEventItemIfMissing", gbRandomChest.branches[0].effects[2].type);
             var tmTablet = catalog.Find(@"\script\西南北区\唐门\唐门\obj\tmobj01.lua");
             Assert.IsNotNull(tmTablet);
             Assert.IsTrue(tmTablet.IsTaskItemBranchMessage);
@@ -930,6 +935,58 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, host.itemCounts[204]);
             CollectionAssert.AreEqual(new[] { "Bảo rương này đã khóa rồi" }, sideEffects.messages);
             StringAssert.Contains("branch=3", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemBranchMessage_ExecutesPcRandomRewardEffects()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\gbl60_random_chest1.lua",
+                        actionKind = "TaskItemBranchMessage",
+                        branches = new[]
+                        {
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15370_key_203_random_bags_211_201",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 8, value = 60 * 256 + 10 }, new PcObjectActionCondition { type = "HaveItem", itemId = 203 } },
+                                effects = new[]
+                                {
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Bạn thử dùng chìa khóa mở chiếc rương" },
+                                    new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 203 }, itemCounts = new[] { 1 } },
+                                    new PcObjectActionEffect { type = "RandomAddEventItemIfMissing", itemId = 211, value = 60, message = "Lấy được chiếc túi thứ nhất" },
+                                    new PcObjectActionEffect { type = "RandomAddEventItemIfMissing", itemId = 201, value = 60, message = "Lấy được chiếc túi thứ hai" },
+                                    new PcObjectActionEffect { type = "PostRewardCountMessage", messages = new[] { "Bạn thất vọng vì chiếc rương này trống rỗng.", "Bạn lấy được một chiếc túi vải", "Bạn lấy được 2 chiếc túi vải" } },
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\gbl60_random_chest1.lua" };
+            var host = new FakeTrapTravelHost { randomValue = 0, taskValues = { [8] = 60 * 256 + 10 }, itemCounts = { [203] = 1 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+            Assert.IsFalse(host.itemCounts.ContainsKey(203));
+            CollectionAssert.AreEqual(new[] { 211, 201 }, sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "Lấy được chiếc túi thứ nhất", "Lấy được chiếc túi thứ hai" }, sideEffects.notes);
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng chìa khóa mở chiếc rương", "Bạn lấy được 2 chiếc túi vải" }, sideEffects.messages);
+            StringAssert.Contains("randomRewards=2", result.detail);
+
+            host = new FakeTrapTravelHost { randomValue = 99, taskValues = { [8] = 60 * 256 + 10 }, itemCounts = { [203] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.IsEmpty(sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng chìa khóa mở chiếc rương", "Bạn thất vọng vì chiếc rương này trống rỗng." }, sideEffects.messages);
+            StringAssert.Contains("randomRewards=0", result.detail);
         }
 
 

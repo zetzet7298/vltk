@@ -1927,6 +1927,66 @@ OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    '0x485AC157': {
+        'branches': [
+            {
+                'label': 'task_15370_key_203_random_bags_211_201',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 8, 'value': 60 * 256 + 10}, {'type': 'HaveItem', 'itemId': 203, 'count': 1}],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn thử dùng chìa khóa mở chiếc rương'},
+                    {'type': 'ConsumeItems', 'itemIds': [203], 'itemCounts': [1]},
+                    {'type': 'RandomAddEventItemIfMissing', 'itemId': 211, 'value': 60, 'message': 'Lấy được chiếc túi thứ nhất'},
+                    {'type': 'RandomAddEventItemIfMissing', 'itemId': 201, 'value': 60, 'message': 'Lấy được chiếc túi thứ hai'},
+                    {'type': 'PostRewardCountMessage', 'messages': ['Bạn thất vọng vì chiếc rương này trống rỗng.', 'Bạn lấy được một chiếc túi vải', 'Bạn lấy được 2 chiếc túi vải']},
+                ],
+            },
+            {'label': 'locked', 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương này đã khóa rồi'}]},
+        ],
+    },
+    '0x9B6D96DF': {
+        'branches': [
+            {
+                'label': 'task_15370_random_bag_208',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 8, 'value': 60 * 256 + 10}],
+                'effects': [
+                    {'type': 'RandomAddEventItemIfMissing', 'itemId': 208, 'value': 50, 'message': 'Lấy được chiếc túi thứ ba'},
+                    {'type': 'PostRewardCountMessage', 'messages': ['Chiếc rương này không có gì', 'Bạn mở chiếc rương đó ra, lấy được một cái túi vải']},
+                ],
+            },
+            {'label': 'locked', 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương này đã khóa rồi'}]},
+        ],
+    },
+    '0xBDF4F902': {
+        'branches': [
+            {
+                'label': 'task_15370_random_bags_209_210',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 8, 'value': 60 * 256 + 10}],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Mở bảo rương ra.'},
+                    {'type': 'RandomAddEventItemIfMissing', 'itemId': 209, 'value': 40, 'message': 'Bạn lấy được 4 chiếc túi vải'},
+                    {'type': 'RandomAddEventItemIfMissing', 'itemId': 210, 'value': 40, 'message': 'Bạn lấy được 5 chiếc túi vải'},
+                    {'type': 'PostRewardCountMessage', 'messages': ['Bạn thất vọng vì chiếc rương này trống rỗng.', 'Bạn lấy được một chiếc túi vải', 'Bạn lấy được 2 chiếc túi vải']},
+                ],
+            },
+            {'label': 'locked', 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương này đã khóa rồi'}]},
+        ],
+    },
+    '0xA86F35C7': {
+        'branches': [
+            {
+                'label': 'task_15370_key_202_random_bags_200_205',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 8, 'value': 60 * 256 + 10}, {'type': 'HaveItem', 'itemId': 202, 'count': 1}],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn thử dùng chìa khóa mở chiếc rương'},
+                    {'type': 'ConsumeItems', 'itemIds': [202], 'itemCounts': [1]},
+                    {'type': 'RandomAddEventItemIfMissing', 'itemId': 200, 'value': 30, 'message': 'Lấy được chiếc túi thứ 8'},
+                    {'type': 'RandomAddEventItemIfMissing', 'itemId': 205, 'value': 30, 'message': 'Lấy được chiếc túi thứ 9'},
+                    {'type': 'PostRewardCountMessage', 'messages': ['Bạn thất vọng vì chiếc rương này trống rỗng.', 'Bạn lấy được một chiếc túi vải', 'Bạn lấy được 2 chiếc túi vải']},
+                ],
+            },
+            {'label': 'locked', 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương này đã khóa rồi'}]},
+        ],
+    },
     '0x2A5D7209': {
         'allowStaticSay': True,
         'branches': [
@@ -2013,11 +2073,20 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
         return None
     clean_source = strip_lua_line_comments(script.get('sourceText', ''))
     allowed = {'main', 'GetTask', 'SetTask', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
+    uses_random_rewards = any(
+        effect.get('type') == 'RandomAddEventItemIfMissing'
+        for branch in spec.get('branches', [])
+        for effect in branch.get('effects', [])
+    )
     if spec.get('allowStaticSay'):
         allowed.add('Say')
+    if uses_random_rewards:
+        allowed.add('random')
     if not source_uses_only_calls(clean_source, allowed):
         return None
-    blocked_words = r'for|while|repeat|random|Include|NewWorld|SetPropState'
+    blocked_words = r'for|while|repeat|Include|NewWorld|SetPropState'
+    if not uses_random_rewards:
+        blocked_words += r'|random'
     if not spec.get('allowStaticSay'):
         blocked_words += r'|Say'
     if re.search(r'\b(' + blocked_words + r')\b', clean_source):
@@ -2034,7 +2103,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
         for effect in branch.get('effects', []):
             if effect.get('type') == 'ConsumeItems':
                 effect_del_items.extend(effect.get('itemIds', []))
-            elif effect.get('type') == 'AddEventItem':
+            elif effect.get('type') in ('AddEventItem', 'RandomAddEventItemIfMissing'):
                 effect_event_items.append(effect.get('itemId', 0))
             elif effect.get('type') == 'SetTask':
                 effect_set_tasks.append((effect.get('taskId', 0), effect.get('value', 0)))

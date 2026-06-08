@@ -224,7 +224,7 @@ namespace VLTK.Sandbox
 
                     var stats = ApplyBranchEffects(branch);
                     result = Success(action,
-                        $"TaskItemBranchMessage(branch={i}, label='{branch?.label}', effects={stats.effects}, consumed={stats.consumed}, items={stats.eventItems}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks})");
+                        $"TaskItemBranchMessage(branch={i}, label='{branch?.label}', effects={stats.effects}, consumed={stats.consumed}, items={stats.eventItems}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks}, randomRewards={stats.randomRewards})");
                     return true;
                 }
 
@@ -434,6 +434,35 @@ namespace VLTK.Sandbox
                         stats.notes++;
                     }
                 }
+                else if (string.Equals(type, "RandomAddEventItemIfMissing", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!_host.HaveItem(effect.itemId, 1) && _host.RandomIntInclusive(0, 99) < effect.value)
+                    {
+                        _sideEffects.AddEventItem(effect.itemId);
+                        stats.eventItems++;
+                        stats.randomRewards++;
+                        if (!string.IsNullOrWhiteSpace(effect.message))
+                        {
+                            _sideEffects.AddNote(effect.message);
+                            stats.notes++;
+                        }
+                    }
+                }
+                else if (string.Equals(type, "PostRewardCountMessage", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (effect.messages != null && effect.messages.Length > 0)
+                    {
+                        int index = stats.randomRewards;
+                        if (index < 0) index = 0;
+                        if (index >= effect.messages.Length) index = effect.messages.Length - 1;
+                        string message = effect.messages[index];
+                        if (!string.IsNullOrWhiteSpace(message))
+                        {
+                            _sideEffects.PostMessage(message);
+                            stats.messages++;
+                        }
+                    }
+                }
             }
             return stats;
         }
@@ -513,6 +542,7 @@ namespace VLTK.Sandbox
             public int notes;
             public int messages;
             public int setTasks;
+            public int randomRewards;
         }
 
         private static ObjectActionExecutionResult Success(PcObjectActionCatalogEntry action, string detail)
