@@ -57,10 +57,10 @@ namespace VLTK.Tests.Sandbox
             AssertTextureSize("提示信息窗－上_00.png", 15, 14);
             AssertTextureSize("提示信息窗－开关_00.png", 15, 14);
             AssertTextureSize("提示信息窗－下_00.png", 15, 14);
-            AssertTextureSize("btn_minimap_local_pc.png", 16, 16);
-            AssertTextureSize("btn_minimap_search_pc.png", 16, 16);
-            AssertTextureSize("btn_minimap_marker_pc.png", 16, 16);
-            AssertTextureSize("btn_minimap_world_pc.png", 16, 16);
+            AssertTextureSize("btn_minimap_flag_pc.png", 16, 16);
+            AssertTextureSize("btn_minimap_switch_pc.png", 16, 16);
+            AssertTextureSize("btn_minimap_world_full_pc.png", 16, 16);
+            AssertTextureSize("btn_minimap_cave_pc.png", 16, 16);
             for (int i = 1; i <= 9; i++)
                 AssertTextureSize($"btn_quick_item_{i}_pc.png", 36, 36);
             AssertTextureSize("btn_pc_left_skill_slot.png", 36, 36);
@@ -79,7 +79,7 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("name=\"MobileUtilityActionRow\"", uxml);
             StringAssert.Contains("name=\"MobileUtilityMenuRowA\"", uxml);
             StringAssert.Contains("name=\"MobileUtilityMenuRowB\"", uxml);
-            foreach (var name in new[] { "ToggleMapBtn", "MinimapSearchBtn", "MinimapMarkerBtn", "WorldMapBtn" })
+            foreach (var name in new[] { "MinimapMarkerBtn", "ToggleMapBtn", "WorldMapBtn", "CaveMapBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC minimap control.");
             foreach (var name in new[] { "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther", "FaceBtn", "SendBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC bottom-chat control.");
@@ -136,13 +136,13 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("RegisterClick(root, \"ChatChannelToggleBtn\", OnChatChannelToggleClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatScrollDownBtn\", OnChatScrollDownClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatTabGuild\", () => SelectChatChannel(ChatChannel.Guild))", controller);
-            StringAssert.Contains("RegisterClick(root, \"MinimapSearchBtn\", OnMinimapSearchClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"MinimapMarkerBtn\", OnMinimapMarkerClick)", controller);
+            StringAssert.Contains("RegisterClick(root, \"CaveMapBtn\", OnCaveMapClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"PcShortcutToggleBtn\", OnPcShortcutToggleClick)", controller);
             StringAssert.Contains("RegisterClick(root, $\"PcItemSlot{slot}\", () => OnPcItemShortcutClick(slot))", controller);
             StringAssert.Contains("RegisterClick(root, \"PcLeftSkillBtn\", () => OnPcSkillShortcutClick(0))", controller);
             StringAssert.Contains("RegisterClick(root, \"PcRightSkillBtn\", () => OnPcSkillShortcutClick(1))", controller);
-            foreach (var file in new[] { "btn_minimap_local_pc.png", "btn_minimap_search_pc.png", "btn_minimap_marker_pc.png", "btn_minimap_world_pc.png" })
+            foreach (var file in new[] { "btn_minimap_flag_pc.png", "btn_minimap_switch_pc.png", "btn_minimap_world_full_pc.png", "btn_minimap_cave_pc.png" })
                 Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, file)), file + " must exist in StreamingAssets.");
             for (int i = 1; i <= 9; i++)
                 Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, $"btn_quick_item_{i}_pc.png")), $"quick item {i} must exist in StreamingAssets.");
@@ -185,6 +185,24 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void MinimapButtons_FollowPcIniOrderAndSemantics()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            int flag = uxml.IndexOf("name=\"MinimapMarkerBtn\"", System.StringComparison.Ordinal);
+            int toggle = uxml.IndexOf("name=\"ToggleMapBtn\"", System.StringComparison.Ordinal);
+            int world = uxml.IndexOf("name=\"WorldMapBtn\"", System.StringComparison.Ordinal);
+            int cave = uxml.IndexOf("name=\"CaveMapBtn\"", System.StringComparison.Ordinal);
+            Assert.IsTrue(flag >= 0 && toggle > flag && world > toggle && cave > world, "Mini map buttons must match PC INI order BtnFlag/SwitchBtn/WorldMapBtn/CaveMapBtn.");
+
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+            StringAssert.Contains("LoadIcon(markerMap, artPath, \"btn_minimap_flag_pc\")", controller);
+            StringAssert.Contains("LoadIcon(toggleMap, artPath, \"btn_minimap_switch_pc\")", controller);
+            StringAssert.Contains("LoadIcon(worldMap, artPath, \"btn_minimap_world_full_pc\")", controller);
+            StringAssert.Contains("LoadIcon(caveMap, artPath, \"btn_minimap_cave_pc\")", controller);
+            StringAssert.Contains("GmTeleportCatalogService.Filter(catalog.GetAllDestinations(), string.Empty, GmTeleportCatalogService.FilterCave)", controller);
+        }
+
+        [Test]
         public void MobileCombatButtonCrops_PreservePcScreenshotPixels()
         {
             var pc = LoadTexture(Path.GetFullPath(Path.Combine(Application.dataPath, "../pc-evidence/pc_hud.png")));
@@ -201,7 +219,10 @@ namespace VLTK.Tests.Sandbox
             var chatRoom = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chatroom.png"));
             var rec = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_rec.png"));
             var face = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chat_face.png"));
-            var minimapSearch = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_search_pc.png"));
+            var minimapFlag = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_flag_pc.png"));
+            var minimapSwitch = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_switch_pc.png"));
+            var minimapWorld = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_world_full_pc.png"));
+            var minimapCave = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_cave_pc.png"));
             var quick1 = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_quick_item_1_pc.png"));
             var quick9 = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_quick_item_9_pc.png"));
             var leftSkill = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_pc_left_skill_slot.png"));
@@ -211,7 +232,10 @@ namespace VLTK.Tests.Sandbox
             AssertPixelsEqual(chatRoom.GetPixel(14, 14), pc.GetPixel(708 + 14, 559 + 14), "ChatRoom crop must stay PC-derived");
             AssertPixelsEqual(rec.GetPixel(15, 15), pc.GetPixel(663 + 15, 502 + 15), "Recorder crop must stay PC-derived");
             AssertPixelsEqual(face.GetPixel(12, 12), pc.GetPixel(282 + 12, 526 + 12), "chat face crop must stay PC-derived");
-            AssertPixelsEqual(minimapSearch.GetPixel(8, 8), pc.GetPixel(758 + 8, 134 + 8), "minimap search crop must stay PC-derived");
+            AssertPixelsEqual(minimapFlag.GetPixel(8, 8), pc.GetPixel(742 + 8, 134 + 8), "minimap flag crop must stay PC-derived");
+            AssertPixelsEqual(minimapSwitch.GetPixel(8, 8), pc.GetPixel(758 + 8, 134 + 8), "minimap switch crop must stay PC-derived");
+            AssertPixelsEqual(minimapWorld.GetPixel(8, 8), pc.GetPixel(774 + 8, 134 + 8), "minimap world-map crop must stay PC-derived");
+            AssertPixelsEqual(minimapCave.GetPixel(8, 8), pc.GetPixel(790 + 8, 134 + 8), "minimap cave crop must stay PC-derived");
             AssertPixelsEqual(quick1.GetPixel(18, 18), pc.GetPixel(15 + 18, 550 + 18), "quick item 1 crop must stay PC-derived");
             AssertPixelsEqual(quick9.GetPixel(18, 18), pc.GetPixel(320 + 18, 550 + 18), "quick item 9 crop must stay PC-derived");
             AssertPixelsEqual(leftSkill.GetPixel(18, 18), pc.GetPixel(372 + 18, 529 + 18), "left skill crop must stay PC-derived");
@@ -251,10 +275,10 @@ namespace VLTK.Tests.Sandbox
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chatroom.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_send.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_face.png");
-            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_local_pc.png");
-            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_search_pc.png");
-            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_marker_pc.png");
-            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_world_pc.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_flag_pc.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_switch_pc.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_world_full_pc.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_cave_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_rec.png");
             for (int i = 1; i <= 9; i++)
                 AssertCriticalTextureImport($"Assets/UI/HUD/Art/btn_quick_item_{i}_pc.png");

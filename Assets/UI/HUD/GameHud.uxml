@@ -51,10 +51,10 @@
             <ui:Label name="SceneName" text="" class="hud-scene-name"/>
             <ui:Label name="ScenePos" text="" class="hud-scene-pos"/>
             <ui:VisualElement name="MinimapBtns" class="hud-minimap-btns">
-                <ui:VisualElement name="ToggleMapBtn" class="hud-minimap-btn"/>
-                <ui:VisualElement name="MinimapSearchBtn" class="hud-minimap-btn"/>
                 <ui:VisualElement name="MinimapMarkerBtn" class="hud-minimap-btn"/>
+                <ui:VisualElement name="ToggleMapBtn" class="hud-minimap-btn"/>
                 <ui:VisualElement name="WorldMapBtn" class="hud-minimap-btn"/>
+                <ui:VisualElement name="CaveMapBtn" class="hud-minimap-btn"/>
             </ui:VisualElement>
         </ui:VisualElement>
 

@@ -169,10 +169,10 @@
     border-color: rgb(15,20,15);
     -unity-background-scale-mode: scale-to-fit;
 }
-#ToggleMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_local_pc.png'); }
-#MinimapSearchBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_search_pc.png'); }
-#MinimapMarkerBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_marker_pc.png'); }
-#WorldMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_world_pc.png'); }
+#MinimapMarkerBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_flag_pc.png'); }
+#ToggleMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_switch_pc.png'); }
+#WorldMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_world_full_pc.png'); }
+#CaveMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_cave_pc.png'); }
 
 .hidden { display: none; }
 

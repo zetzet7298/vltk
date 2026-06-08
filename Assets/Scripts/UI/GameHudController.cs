@@ -473,9 +473,9 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "MinimapContent");
             RegisterPreviewOpen(root, "PlayerDot");
             RegisterPreviewOpen(root, "ToggleMapBtn");
-            RegisterClick(root, "MinimapSearchBtn", OnMinimapSearchClick);
             RegisterClick(root, "MinimapMarkerBtn", OnMinimapMarkerClick);
             RegisterPreviewOpen(root, "WorldMapBtn");
+            RegisterClick(root, "CaveMapBtn", OnCaveMapClick);
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
             RegisterClick(root, "CaiBangSkillClose", CloseSkillPanel);
             RegisterClick(root, "CaiBangSkillPageOne", () => SetSkillPage(0));
@@ -594,21 +594,21 @@ namespace VLTK.UI
                 LoadIcon(_playerDot, artPath, "minimap_dot");
                 LoadIcon(_mapPreviewPlayerDot, artPath, "minimap_dot");
 
-                var toggleMap = root.Q("ToggleMapBtn");
-                if (toggleMap != null)
-                    LoadIcon(toggleMap, artPath, "btn_minimap_local_pc");
-
-                var searchMap = root.Q("MinimapSearchBtn");
-                if (searchMap != null)
-                    LoadIcon(searchMap, artPath, "btn_minimap_search_pc");
-
                 var markerMap = root.Q("MinimapMarkerBtn");
                 if (markerMap != null)
-                    LoadIcon(markerMap, artPath, "btn_minimap_marker_pc");
+                    LoadIcon(markerMap, artPath, "btn_minimap_flag_pc");
+
+                var toggleMap = root.Q("ToggleMapBtn");
+                if (toggleMap != null)
+                    LoadIcon(toggleMap, artPath, "btn_minimap_switch_pc");
 
                 var worldMap = root.Q("WorldMapBtn");
                 if (worldMap != null)
-                    LoadIcon(worldMap, artPath, "btn_minimap_world_pc");
+                    LoadIcon(worldMap, artPath, "btn_minimap_world_full_pc");
+
+                var caveMap = root.Q("CaveMapBtn");
+                if (caveMap != null)
+                    LoadIcon(caveMap, artPath, "btn_minimap_cave_pc");
             }
             else
             {
@@ -1841,17 +1841,6 @@ namespace VLTK.UI
             SubsystemLog.Info("HUD", mobileSlot == 0 ? "Open left skill assignment" : "Open right skill assignment");
         }
 
-        private void OnMinimapSearchClick()
-        {
-            OpenMapPreview();
-            OpenPcToolPanel("Tìm kiếm bản đồ", new[]
-            {
-                "Mở bản đồ lớn để tìm NPC/đường đi gần vị trí hiện tại.",
-                _sceneName != null ? $"Map: {_sceneName.text}" : "Map: --",
-            });
-            SubsystemLog.Info("HUD", "Open minimap search");
-        }
-
         private void OnMinimapMarkerClick()
         {
             OpenMapPreview();
@@ -1861,6 +1850,25 @@ namespace VLTK.UI
                     : "Chạm bản đồ lớn để đánh dấu điểm đến";
             OpenPcToolPanel("Đánh dấu bản đồ", new[] { _mapPreviewCoords?.text ?? "Chạm bản đồ lớn để đánh dấu điểm đến" });
             SubsystemLog.Info("HUD", "Open minimap marker");
+        }
+
+        private void OnCaveMapClick()
+        {
+            OpenMapPreview();
+            var catalog = new GmTeleportCatalogService(SandboxManager.Instance?.MapManager);
+            var caves = GmTeleportCatalogService.Filter(catalog.GetAllDestinations(), string.Empty, GmTeleportCatalogService.FilterCave);
+            var rows = new List<string>
+            {
+                $"Hang động/me cung PC: {caves.Count}",
+                _sceneName != null ? $"Map hiện tại: {_sceneName.text}" : "Map hiện tại: --",
+            };
+            int count = Math.Min(8, caves.Count);
+            for (int i = 0; i < count; i++)
+                rows.Add(caves[i].DisplayLabel);
+            if (caves.Count > count)
+                rows.Add($"… còn {caves.Count - count} map trong danh sách cave PC.");
+            OpenPcToolPanel("Bản đồ sơn động", rows);
+            SubsystemLog.Info("HUD", "Open cave map filter");
         }
 
         private void OnRunClick()
