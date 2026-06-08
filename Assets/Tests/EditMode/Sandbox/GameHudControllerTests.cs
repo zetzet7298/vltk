@@ -559,6 +559,28 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcChatRoomChannels_AreClickableAndSelectRuntimeChannels()
+        {
+            InvokePrivateMethod("OnChatRoomClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Phòng chat", _pcToolTitle.text);
+            var actionRows = _pcToolList.Query<VisualElement>(className: "hud-pc-tool-action-row").ToList();
+            Assert.AreEqual(15, actionRows.Count, "PC [Channels] Channel0..Channel14 must be action rows, not inert text.");
+
+            InvokePrivateMethod("OnPcChatRoomChannelClick", ChatRoomPanelService.PcChannels[2]);
+            Assert.AreEqual(ChatChannel.World, GetPrivateField<ChatChannel>("_selectedChatChannel"));
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [Channels] Channel2: CH_WORLD")));
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("60000ms/2")));
+
+            InvokePrivateMethod("OnPcChatRoomChannelClick", ChatRoomPanelService.PcChannels[8]);
+            Assert.AreEqual(ChatChannel.Room, GetPrivateField<ChatChannel>("_selectedChatChannel"));
+
+            InvokePrivateMethod("OnPcChatRoomChannelClick", ChatRoomPanelService.PcChannels[14]);
+            Assert.AreEqual(ChatChannel.Other, GetPrivateField<ChatChannel>("_selectedChatChannel"));
+        }
+
+        [Test]
         public void PcFriendControls_AreClickableAndExecutePcActions()
         {
             InvokePrivateMethod("OnFriendClick");

@@ -2506,18 +2506,67 @@ namespace VLTK.UI
         {
             var chat = SandboxManager.Instance?.ChatService;
             var snap = ChatRoomPanelService.BuildSnapshot(chat, 8);
-            var rows = new List<string>
-            {
-                $"PC [Channels] Default={snap.defaultChannel} ({snap.defaultSendNameVi})",
-            };
-            foreach (var channel in snap.channels)
-                rows.Add($"Channel{channel.index}: {channel.pcName} — {channel.labelVi} — {channel.sendIntervalMs}ms/{channel.sendMsgNum}");
-            foreach (var row in snap.historyRows)
-                rows.Add(row);
-            chat?.SetChannel(ChatChannel.All);
+            OpenPcChatRoomPanel(snap);
             _chatInput?.Focus();
-            OpenPcToolPanel("Phòng chat", rows);
             SubsystemLog.Info("HUD", "Open ChatRoom panel");
+        }
+
+        private void OpenPcChatRoomPanel(ChatRoomPanelSnapshot snap)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Phòng chat";
+            _pcToolList.Clear();
+
+            AddPcToolRow($"PC [Channels] Default={snap.defaultChannel} ({snap.defaultSendNameVi})");
+            if (snap.channels != null)
+            {
+                foreach (var channel in snap.channels)
+                {
+                    var pcChannel = channel;
+                    AddPcToolActionRow($"Channel{channel.index}: {channel.pcName} — {channel.labelVi} — {channel.sendIntervalMs}ms/{channel.sendMsgNum}",
+                        () => OnPcChatRoomChannelClick(pcChannel));
+                }
+            }
+
+            if (snap.historyRows != null)
+            {
+                foreach (var row in snap.historyRows)
+                    AddPcToolRow(row);
+            }
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcChatRoomChannelClick(PcChatChannelRow pcChannel)
+        {
+            var channel = MapPcChatChannel(pcChannel.pcName);
+            SelectChatChannel(channel);
+            OpenPcToolPanel("Phòng chat", new[]
+            {
+                $"PC [Channels] Channel{pcChannel.index}: {pcChannel.pcName}",
+                $"Đã chọn: {pcChannel.labelVi} → {ChatService.ChannelNameVi(channel)}",
+                $"Giới hạn PC: {pcChannel.sendIntervalMs}ms/{pcChannel.sendMsgNum}",
+            });
+        }
+
+        private static ChatChannel MapPcChatChannel(string pcName)
+        {
+            switch (pcName)
+            {
+                case "CH_WORLD": return ChatChannel.World;
+                case "CH_NEARBY":
+                case "CH_CITY": return ChatChannel.Map;
+                case "CH_TEAM": return ChatChannel.Team;
+                case "CH_FACTION": return ChatChannel.Faction;
+                case "CH_SYSTEM": return ChatChannel.System;
+                case "CH_CHATROOM": return ChatChannel.Room;
+                case "CH_TONG":
+                case "CH_TONGUNION": return ChatChannel.Guild;
+                default: return ChatChannel.Other;
+            }
         }
 
         private void OnIconBarClick(int index)
