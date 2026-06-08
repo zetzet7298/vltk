@@ -102,6 +102,7 @@ namespace VLTK.Sandbox
         public int gateTargetCellX;
         public int gateTargetCellY;
         public int gateFightState = -1;
+        public int[] reviveReturnMapIds;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -114,6 +115,7 @@ namespace VLTK.Sandbox
         public bool IsLevelGateNewWorld => string.Equals(actionKind, "LevelGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsOpenServerDateGateSetPos => string.Equals(actionKind, "OpenServerDateGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsRandomNewWorld => string.Equals(actionKind, "RandomNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsReviveReturnNewWorld => string.Equals(actionKind, "ReviveReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()

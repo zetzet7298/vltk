@@ -80,6 +80,9 @@ namespace VLTK.Tests.Sandbox
             public Vector2 position;
             public bool hasMap = true;
             public int currentMapId = 907;
+            public bool hasReviveTarget;
+            public int reviveMapId = 53;
+            public Vector2 revivePosition;
             public int fightState = -1;
             public int playerLevel = 1;
             public long currentDateYmdHm = 202606080900;
@@ -87,6 +90,12 @@ namespace VLTK.Tests.Sandbox
 
             public bool HasMap(int targetMapId) => hasMap;
             public int GetCurrentMapId() => currentMapId;
+            public bool TryGetPlayerReviveWorld(out int targetMapId, out Vector2 worldPosition)
+            {
+                targetMapId = reviveMapId;
+                worldPosition = revivePosition;
+                return hasReviveTarget;
+            }
             public int GetPlayerLevel() => playerLevel;
             public long GetCurrentDateYmdHm() => currentDateYmdHm;
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
@@ -641,6 +650,58 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, host.fightState);
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1583 * 32, 3240 * 32), host.position);
             StringAssert.Contains("branch#2", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_ReviveReturnNewWorld_UsesPcFixedTargetOrPlayerRevive()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 906,
+                        trapIdHex = "0x0000038A",
+                        scriptPath = @"\script\revive_return.lua",
+                        actionKind = "ReviveReturnNewWorld",
+                        reviveReturnMapIds = new[] { 923, 924 },
+                        targetMapId = 320,
+                        targetCellX = 1570,
+                        targetCellY = 2337,
+                        fightState = 1,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { currentMapId = 320 };
+            var executor = new PcTrapActionExecutor(catalog, host);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 906 }, out var result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(320, host.mapId);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1570 * 32, 2337 * 32), host.position);
+
+            var reviveWorld = MapEnemyDatabase.MpsToWorld(51104, 102592);
+            host = new FakeTrapTravelHost
+            {
+                currentMapId = 923,
+                hasReviveTarget = true,
+                reviveMapId = 1,
+                revivePosition = reviveWorld,
+            };
+            executor = new PcTrapActionExecutor(catalog, host);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0000038A" }, out result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(1, host.mapId);
+            Assert.AreEqual(reviveWorld, host.position);
+            StringAssert.Contains("RevID2WXY(GetPlayerRev())", result.detail);
+
+            host = new FakeTrapTravelHost { currentMapId = 924, hasReviveTarget = false };
+            executor = new PcTrapActionExecutor(catalog, host);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 906 }, out result));
+            Assert.IsFalse(result.success);
+            StringAssert.Contains("GetPlayerRev", result.detail);
         }
 
         [Test]

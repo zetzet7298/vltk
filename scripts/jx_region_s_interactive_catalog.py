@@ -910,6 +910,33 @@ def desert_maze_random_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def revive_return_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {'main', 'SubWorldIdx2ID', 'RevID2WXY', 'GetPlayerRev', 'NewWorld', 'SetFightState', 'if'}
+    if 'RevID2WXY(GetPlayerRev())' not in clean_source or not source_uses_only_calls(clean_source, allowed):
+        return None
+    fixed_targets = []
+    for call in parse_lua_calls(clean_source, 'NewWorld', limit=8):
+        if len(call) >= 3 and all(re.fullmatch(r'\d+', str(arg).strip()) for arg in call[:3]):
+            fixed_targets.append(tuple(int(str(arg).strip()) for arg in call[:3]))
+    if len(fixed_targets) != 1:
+        return None
+    fight_state = int_args_unique(parse_lua_calls(clean_source, 'SetFightState', limit=8), 1)
+    if fight_state is None:
+        return None
+    revive_return_map_ids = [int(v) for v in re.findall(r'nSubWorldId\s*==\s*(\d+)', clean_source)]
+    if not revive_return_map_ids:
+        return None
+    target = fixed_targets[0]
+    return {
+        'reviveReturnMapIds': revive_return_map_ids,
+        'targetMapId': target[0],
+        'targetCellX': target[1],
+        'targetCellY': target[2],
+        'fightState': fight_state[0],
+    }
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
         return False
@@ -1206,6 +1233,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
             entry.update(random_maze)
             entries.append(entry)
             continue
+        revive_return = revive_return_newworld(source)
+        if revive_return is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'ReviveReturnNewWorld',
+                'source': 'PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target',
+                **revive_return,
+            })
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -1271,6 +1310,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapLevelGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelGateNewWorld'),
         'deterministicTrapOpenServerDateGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'OpenServerDateGateSetPos'),
         'deterministicTrapRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'RandomNewWorld'),
+        'deterministicTrapReviveReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'ReviveReturnNewWorld'),
     }
     return entries, coverage
 

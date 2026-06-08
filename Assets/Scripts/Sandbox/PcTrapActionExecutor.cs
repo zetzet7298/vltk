@@ -28,6 +28,7 @@ namespace VLTK.Sandbox
     {
         bool HasMap(int mapId);
         int GetCurrentMapId();
+        bool TryGetPlayerReviveWorld(out int mapId, out Vector2 worldPosition);
         int GetPlayerLevel();
         long GetCurrentDateYmdHm();
         int RandomIntInclusive(int minInclusive, int maxInclusive);
@@ -215,6 +216,39 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsReviveReturnNewWorld)
+            {
+                int currentMapId = _host.GetCurrentMapId();
+                if (Contains(action.reviveReturnMapIds, currentMapId))
+                {
+                    if (!_host.TryGetPlayerReviveWorld(out int reviveMapId, out var reviveTarget))
+                    {
+                        result = Failure(action, "GetPlayerRev()/RevID2WXY target unavailable");
+                        return true;
+                    }
+                    if (!_host.HasMap(reviveMapId))
+                    {
+                        result = Failure(action, $"revive target map {reviveMapId} missing from catalog");
+                        return true;
+                    }
+                    _host.NewWorld(reviveMapId, reviveTarget);
+                    result = Success(action,
+                        $"SubWorldIdx2ID(SubWorld)=={currentMapId} -> RevID2WXY(GetPlayerRev()) -> NewWorld({reviveMapId}) at {reviveTarget}");
+                    return true;
+                }
+
+                if (!_host.HasMap(action.targetMapId))
+                {
+                    result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                    return true;
+                }
+                ApplyFightState(action);
+                _host.NewWorld(action.targetMapId, target);
+                result = Success(action,
+                    $"SetFightState({action.fightState}) -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                return true;
+            }
+
             if (action.IsNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -384,6 +418,20 @@ namespace VLTK.Sandbox
         {
             var manager = SandboxManager.Instance;
             return manager?.MapManager?.ActiveMapId ?? manager?.defaultMapId ?? -1;
+        }
+
+        public bool TryGetPlayerReviveWorld(out int mapId, out Vector2 worldPosition)
+        {
+            mapId = 0;
+            worldPosition = default;
+            var manager = SandboxManager.Instance;
+            int currentMapId = GetCurrentMapId();
+            var revive = manager?.MapManager?.TravelData?.GetDefaultRevivePosition(currentMapId);
+            if (revive == null || revive.mapId <= 0)
+                return false;
+            mapId = revive.mapId;
+            worldPosition = MapEnemyDatabase.MpsToWorld(revive.x, revive.y);
+            return true;
         }
 
         public int GetPlayerLevel()
