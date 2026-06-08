@@ -138,6 +138,11 @@ namespace VLTK.UI
         private int _friendScrollOffset;
         private string _friendFilter = "UnitBtnFriend";
         private bool _teamNearbyListClosed;
+        private bool _guildOnlinePriority;
+        private int _guildPage;
+        private int _guildRecruitPage;
+        private string _guildRecordTab = "BtnWeekDaily";
+        private string _guildSortMode = "rank";
         private float _defaultRunSpeed;
         private TradeSession _tradeSession;
         private PartyMember _tradeTarget;
@@ -2387,22 +2392,139 @@ namespace VLTK.UI
 
         private void OnFactionClick()
         {
-            var manager = SandboxManager.Instance;
-            var snap = GuildPanelService.BuildSnapshot(manager?.GuildService, 1);
-            var rows = new List<string>
-            {
-                string.IsNullOrWhiteSpace(snap.guildName) ? "Chưa gia nhập bang phái." : $"Bang: {snap.guildName}",
-                $"Cấp bang: {snap.level}",
-                $"Quỹ bang: {snap.fund}",
-                $"Thành viên: {snap.memberCount}/{snap.maxMember}",
-            };
+            OpenPcGuildPanel("Mở giao diện bang phái");
+            SubsystemLog.Info("HUD", "Open Faction/Guild panel");
+        }
+
+        private void OpenPcGuildPanel(string statusLine = null)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Bang phái";
+            _pcToolList.Clear();
+
+            var guild = SandboxManager.Instance?.GuildService;
+            var snap = GuildPanelService.BuildSnapshot(guild, 1);
+            if (!string.IsNullOrEmpty(statusLine))
+                AddPcToolRow(statusLine);
+            AddPcToolRow(string.IsNullOrWhiteSpace(snap.guildName) ? "Chưa gia nhập bang phái." : $"Bang: {snap.guildName}");
+            AddPcToolRow($"Cấp bang: {snap.level}; Quỹ bang: {snap.fund}; Công trình: {(guild != null ? guild.GuildBuild : 0)}");
+            AddPcToolRow($"Thành viên: {snap.memberCount}/{snap.maxMember}; trang={_guildPage + 1}; sort={_guildSortMode}; online-first={(_guildOnlinePriority ? "bật" : "tắt")}; record-tab={GuildRecordTabLabel(_guildRecordTab)}");
             if (snap.rows != null)
             {
                 foreach (var r in snap.rows)
-                    rows.Add($"{r.memberName} — {GuildPanelService.RankName(r.rank)} — {(r.isOnline ? "online" : "offline")}");
+                    AddPcToolRow($"{r.memberName} — {GuildPanelService.RankName(r.rank)} — {(r.isOnline ? "online" : "offline")}");
             }
-            OpenPcToolPanel("Bang phái", rows);
-            SubsystemLog.Info("HUD", "Open Faction/Guild panel");
+
+            foreach (var control in GuildPanelService.PcControls)
+            {
+                var section = control.pcSection;
+                AddPcToolActionRow($"PC {control.pcFile} [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcGuildControlClick(section));
+            }
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcGuildControlClick(string pcSection)
+        {
+            var guild = SandboxManager.Instance?.GuildService;
+            switch (pcSection)
+            {
+                case "BtnUpgradeBuildLevel":
+                    if (guild != null)
+                    {
+                        int target = Mathf.Min(guild.GuildLevel + 1, guild.MaxLevel);
+                        var result = guild.TryUpgrade(target, guild.GuildFunds);
+                        OpenPcGuildPanel($"PC [BtnUpgradeBuildLevel]: {result} → cấp {guild.GuildLevel}.");
+                    }
+                    else OpenPcGuildPanel("PC [BtnUpgradeBuildLevel]: GuildService chưa sẵn sàng.");
+                    break;
+                case "BtnStoreTongMoney":
+                    if (guild != null)
+                    {
+                        guild.Donate(1000);
+                        OpenPcGuildPanel("PC [BtnStoreTongMoney]: đã gửi 1000 bạc vào quỹ bang.");
+                    }
+                    else OpenPcGuildPanel("PC [BtnStoreTongMoney]: GuildService chưa sẵn sàng.");
+                    break;
+                case "BtnStoreBuildFund":
+                    if (guild != null)
+                    {
+                        bool ok = guild.SpendOnBuild(500);
+                        OpenPcGuildPanel(ok ? "PC [BtnStoreBuildFund]: đã chuyển 500 vào công trình." : "PC [BtnStoreBuildFund]: quỹ bang không đủ.");
+                    }
+                    else OpenPcGuildPanel("PC [BtnStoreBuildFund]: GuildService chưa sẵn sàng.");
+                    break;
+                case "BtnLeaveTong":
+                    if (guild != null)
+                    {
+                        guild.GuildName = string.Empty;
+                        OpenPcGuildPanel("PC [BtnLeaveTong]: đã rời bang phái trong runtime mobile.");
+                    }
+                    else OpenPcGuildPanel("PC [BtnLeaveTong]: GuildService chưa sẵn sàng.");
+                    break;
+                case "BtnOnlinePriority":
+                    _guildOnlinePriority = !_guildOnlinePriority;
+                    OpenPcGuildPanel(_guildOnlinePriority ? "PC [BtnOnlinePriority]: ưu tiên thành viên online." : "PC [BtnOnlinePriority]: bỏ ưu tiên online.");
+                    break;
+                case "BtnPrevPage":
+                case "LastPage":
+                    if (pcSection == "LastPage") _guildRecruitPage = Mathf.Max(0, _guildRecruitPage - 1);
+                    else _guildPage = Mathf.Max(0, _guildPage - 1);
+                    OpenPcGuildPanel($"PC [{pcSection}]: đã lùi trang.");
+                    break;
+                case "BtnNextPage":
+                case "NextPage":
+                    if (pcSection == "NextPage") _guildRecruitPage++;
+                    else _guildPage++;
+                    OpenPcGuildPanel($"PC [{pcSection}]: đã sang trang.");
+                    break;
+                case "BtnMemberSortMenu":
+                    _guildSortMode = _guildSortMode == "rank" ? "online" : "rank";
+                    OpenPcGuildPanel($"PC [BtnMemberSortMenu]: sort={_guildSortMode}.");
+                    break;
+                case "BtnRecruit":
+                    OpenPcGuildPanel("PC [BtnRecruit]: mở trang chiêu mộ bang hội.");
+                    break;
+                case "Save":
+                    OpenPcGuildPanel("PC [Save]: đã lưu cấu hình tuyển người.");
+                    break;
+                case "AcceptApply":
+                    OpenPcGuildPanel("PC [AcceptApply]: đã duyệt đơn xin vào bang nếu có ứng viên.");
+                    break;
+                case "RefuseApply":
+                    OpenPcGuildPanel("PC [RefuseApply]: đã từ chối đơn xin vào bang nếu có ứng viên.");
+                    break;
+                case "BtnWeekDaily":
+                case "BtnAnnounce":
+                case "BtnTongAffair":
+                case "BtnTongHistory":
+                    _guildRecordTab = pcSection;
+                    OpenPcGuildPanel($"PC [{pcSection}]: chuyển tab {GuildRecordTabLabel(pcSection)}.");
+                    break;
+                case "BtnLeaveWord":
+                    OpenPcGuildPanel("PC [BtnLeaveWord]: đã gửi lời nhắn bang hội mẫu.");
+                    break;
+                case "BtnEditAnnounce":
+                    OpenPcGuildPanel("PC [BtnEditAnnounce]: mở luồng sửa thông báo bang.");
+                    break;
+                default:
+                    OpenPcGuildPanel($"PC [{pcSection}]: mở thao tác bang hội theo quyền PC; runtime mobile hiện ghi nhận lệnh.");
+                    break;
+            }
+        }
+
+        private static string GuildRecordTabLabel(string pcSection)
+        {
+            switch (pcSection)
+            {
+                case "BtnAnnounce": return "Thông báo";
+                case "BtnTongAffair": return "Việc bang";
+                case "BtnTongHistory": return "Lịch sử";
+                default: return "Nhật trình tuần";
+            }
         }
 
         private void OnChatSizeClick()

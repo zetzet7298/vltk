@@ -549,7 +549,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(_teamPreview.ClassListContains("hidden"));
             StringAssert.Contains("Chưa tham gia đội", _teamPreview.Q<Label>().text);
 
-            InvokeAndAssertPcTool(covered, "Faction", "OnFactionClick", "Bang phái", "Cấp bang");
+            InvokeAndAssertPcTool(covered, "Faction", "OnFactionClick", "Bang phái", "PC 223e63d0 [BtnUpgradeBuildLevel] Nâng công trình");
             InvokeAndAssertPcTool(covered, "ChatRoom", "OnChatRoomClick", "Phòng chat", "Channel14: CH_CUSTOM");
             InvokeAndAssertPcTool(covered, "Options", "OnOptionsClick", "Hệ thống", "Treo máy offline");
 
@@ -605,6 +605,36 @@ namespace VLTK.Tests.Sandbox
             InvokePrivateMethod("OnPcTeamControlClick", "Cancel");
             Assert.IsTrue(_pcToolPanel.ClassListContains("hidden"));
             Assert.IsTrue(_teamPreview.ClassListContains("hidden"));
+        }
+
+
+        [Test]
+        public void PcGuildControls_AreClickableAndExecutePcActions()
+        {
+            InvokePrivateMethod("OnFactionClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Bang phái", _pcToolTitle.text);
+            var actionRows = _pcToolList.Query<VisualElement>(className: "hud-pc-tool-action-row").ToList();
+            Assert.AreEqual(GuildPanelService.PcControls.Count, actionRows.Count, "PC guild controls from 223e63d0/120ebf4e/f5054c2e must be action rows, not inert text.");
+
+            InvokePrivateMethod("OnPcGuildControlClick", "BtnOnlinePriority");
+            Assert.IsTrue(GetPrivateField<bool>("_guildOnlinePriority"));
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [BtnOnlinePriority]: ưu tiên thành viên online")));
+
+            InvokePrivateMethod("OnPcGuildControlClick", "BtnNextPage");
+            Assert.AreEqual(1, GetPrivateField<int>("_guildPage"));
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [BtnNextPage]: đã sang trang")));
+
+            InvokePrivateMethod("OnPcGuildControlClick", "BtnAnnounce");
+            Assert.AreEqual("BtnAnnounce", GetPrivateField<string>("_guildRecordTab"));
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("chuyển tab Thông báo")));
+
+            InvokePrivateMethod("OnPcGuildControlClick", "Save");
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [Save]: đã lưu cấu hình tuyển người")));
         }
 
         [Test]
