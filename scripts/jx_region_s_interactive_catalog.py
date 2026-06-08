@@ -514,6 +514,10 @@ def clean_user_message(message: str) -> str:
             .replace('ĐƠn', 'Đến')
             .replace('nă cứ', 'nó cứ')
             .replace('quay lai', 'quay lại')
+            .replace('chiƠc', 'chiếc')
+            .replace('ChiƠc', 'Chiếc')
+            .replace('khăa', 'khóa')
+            .replace('Khăa', 'Khóa')
             .replace('đã đăng, hãy', 'đã đóng, hãy')
             .replace('Đã đăng, hãy', 'Đã đóng, hãy')
             .replace('  ', ' '))
@@ -1511,6 +1515,51 @@ def object_faction_open_box_action(source: str) -> dict[str, Any] | None:
     return {'requiredFaction': faction, 'requiredFactionId': faction_id, 'reviveId': revive[0]}
 
 
+def int_lua_constant_expr(text: str) -> int | None:
+    text = str(text).strip()
+    if re.fullmatch(r'\d+', text):
+        return int(text)
+    match = re.fullmatch(r'(\d+)\s*\*\s*(\d+)\s*([+-])\s*(\d+)', text)
+    if match:
+        base = int(match.group(1)) * int(match.group(2))
+        delta = int(match.group(4))
+        return base + delta if match.group(3) == '+' else base - delta
+    match = re.fullmatch(r'(\d+)\s*\*\s*(\d+)', text)
+    if match:
+        return int(match.group(1)) * int(match.group(2))
+    return None
+
+
+def object_task_talk_message_action(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'GetTask', 'Talk', 'if'}):
+        return None
+    if re.search(r'\b(elseif|for|while|repeat)\b', clean_source):
+        return None
+    if len(parse_lua_calls(clean_source, 'GetTask', limit=2)) != 1:
+        return None
+    if len(parse_lua_calls(clean_source, 'Talk', limit=3)) != 2:
+        return None
+    match = re.search(
+        r'if\s*\(?\s*GetTask\s*\(\s*(\d+)\s*\)\s*==\s*([0-9\s*+\-]+)\s*\)?\s*then(?P<then>.*?)else(?P<else>.*?)end',
+        clean_source, re.S | re.I)
+    if not match:
+        return None
+    task_value = int_lua_constant_expr(match.group(2))
+    if task_value is None:
+        return None
+    then_messages = talk_messages({'talkCalls': parse_lua_calls(match.group('then'), 'Talk', limit=2)})
+    else_messages = talk_messages({'talkCalls': parse_lua_calls(match.group('else'), 'Talk', limit=2)})
+    if not then_messages or not else_messages:
+        return None
+    return {
+        'taskId': int(match.group(1)),
+        'taskValue': task_value,
+        'messages': then_messages,
+        'elseMessages': else_messages,
+    }
+
+
 def object_camp_open_box_action(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     if not source_uses_only_calls(clean_source, {'main', 'GetCurCamp', 'OpenBox', 'Talk', 'if'}):
@@ -1660,6 +1709,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **camp_open_box,
             })
             continue
+        task_talk = object_task_talk_message_action(source_text)
+        if task_talk is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskTalkMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): read-only Talk branch selected by GetTask(id)==value, no task/item/object mutation',
+                **task_talk,
+            })
+            continue
         show_ladder = object_show_ladder_action(source_text)
         if show_ladder is not None:
             entries.append({
@@ -1698,6 +1763,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
+        'deterministicObjectTaskTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskTalkMessage'),
         'deterministicObjectOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'OpenBox'),
         'deterministicObjectFactionOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'FactionOpenBox'),
         'deterministicObjectCampOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'CampOpenBox'),

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:51:51Z",
+  "generatedAtUtc": "2026-06-08T07:59:13Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -1308,6 +1308,27 @@
       "requiredFaction": "gaibang",
       "requiredFactionId": 4,
       "reviveId": 53
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\丐帮\\地下迷宫三层\\obj\\地图_gbl60_宝箱empty.lua",
+      "scriptId": 3190417318,
+      "scriptIdHex": "0xBE29E7A6",
+      "sourceRelPath": "script\\中原南区\\丐帮\\地下迷宫三层\\obj\\地图_gbl60_宝箱empty.lua",
+      "actionKind": "TaskTalkMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): read-only Talk branch selected by GetTask(id)==value, no task/item/object mutation",
+      "taskId": 8,
+      "taskValue": 15370,
+      "messages": [
+        "Mở bảo rương ra.",
+        "Bạn thất vọng vì chiếc rương này trống rỗng."
+      ],
+      "elseMessages": [
+        "Bảo rương này đã khóa rồi"
+      ]
     },
     {
       "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj04.lua",

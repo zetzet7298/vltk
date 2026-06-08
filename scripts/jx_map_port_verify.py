@@ -40,11 +40,12 @@ EXPECTED_OBJECT_SPRITES = 34
 EXPECTED_OBJECT_SCRIPT_REFS = 449
 EXPECTED_OBJECT_SCRIPTS = 299
 EXPECTED_RESOLVED_OBJECT_SCRIPTS = 299
-EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 266
+EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 267
 EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS = 7
 EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS = 19
 EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 144
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
+EXPECTED_DETERMINISTIC_OBJECT_TASK_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_DETERMINISTIC_OBJECT_OPEN_BOX_ACTIONS = 51
 EXPECTED_DETERMINISTIC_OBJECT_FACTION_OPEN_BOX_ACTIONS = 19
 EXPECTED_DETERMINISTIC_OBJECT_CAMP_OPEN_BOX_ACTIONS = 2
@@ -486,6 +487,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     object_pickup_message = sum(1 for e in object_actions if e.get('actionKind') == 'PickupMessage')
     object_say_message = sum(1 for e in object_actions if e.get('actionKind') == 'SayMessage')
     object_talk_message = sum(1 for e in object_actions if e.get('actionKind') == 'TalkMessage')
+    object_task_talk_message = sum(1 for e in object_actions if e.get('actionKind') == 'TaskTalkMessage')
     object_open_box = sum(1 for e in object_actions if e.get('actionKind') == 'OpenBox')
     object_faction_open_box = sum(1 for e in object_actions if e.get('actionKind') == 'FactionOpenBox')
     object_camp_open_box = sum(1 for e in object_actions if e.get('actionKind') == 'CampOpenBox')
@@ -494,6 +496,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     audit.require(object_pickup_message == EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS, 'MapObjectActionCatalog PickupMessage count mismatch')
     audit.require(object_say_message == EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS, 'MapObjectActionCatalog SayMessage count mismatch')
     audit.require(object_talk_message == EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS, 'MapObjectActionCatalog TalkMessage count mismatch')
+    audit.require(object_task_talk_message == EXPECTED_DETERMINISTIC_OBJECT_TASK_TALK_MESSAGE_ACTIONS, 'MapObjectActionCatalog TaskTalkMessage count mismatch')
     audit.require(object_open_box == EXPECTED_DETERMINISTIC_OBJECT_OPEN_BOX_ACTIONS, 'MapObjectActionCatalog OpenBox count mismatch')
     audit.require(object_faction_open_box == EXPECTED_DETERMINISTIC_OBJECT_FACTION_OPEN_BOX_ACTIONS, 'MapObjectActionCatalog FactionOpenBox count mismatch')
     audit.require(object_camp_open_box == EXPECTED_DETERMINISTIC_OBJECT_CAMP_OPEN_BOX_ACTIONS, 'MapObjectActionCatalog CampOpenBox count mismatch')
@@ -584,6 +587,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicObjectPickupMessageActions': object_pickup_message,
         'deterministicObjectSayMessageActions': object_say_message,
         'deterministicObjectTalkMessageActions': object_talk_message,
+        'deterministicObjectTaskTalkMessageActions': object_task_talk_message,
         'deterministicObjectOpenBoxActions': object_open_box,
         'deterministicObjectFactionOpenBoxActions': object_faction_open_box,
         'deterministicObjectCampOpenBoxActions': object_camp_open_box,

@@ -226,11 +226,12 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(266, catalog.Count);
+            Assert.AreEqual(267, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
             Assert.AreEqual(51, catalog.entries.Count(e => e != null && e.IsOpenBox));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsFactionOpenBox));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsCampOpenBox));
@@ -243,6 +244,13 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(pickup);
             Assert.IsTrue(pickup.IsPickupMessage);
             Assert.AreEqual(182, pickup.eventItemIds.Single());
+            var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
+            Assert.IsNotNull(taskTalk);
+            Assert.IsTrue(taskTalk.IsTaskTalkMessage);
+            Assert.AreEqual(8, taskTalk.taskId);
+            Assert.AreEqual(60 * 256 + 10, taskTalk.taskValue);
+            CollectionAssert.AreEqual(new[] { "Mở bảo rương ra.", "Bạn thất vọng vì chiếc rương này trống rỗng." }, taskTalk.messages);
+            CollectionAssert.AreEqual(new[] { "Bảo rương này đã khóa rồi" }, taskTalk.elseMessages);
             var entry = catalog.Find(@"\script\两湖区\天王帮\洞庭湖底山洞1\trap\洞庭湖底1to洞庭湖底2.lua");
             Assert.IsNotNull(entry);
             Assert.IsTrue(entry.IsNewWorld);
@@ -491,6 +499,49 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(unmatched.success);
             Assert.IsFalse(otherSideEffects.openedBox);
             Assert.AreEqual("Nhìn ngươi mắt la mày loét, nhất định là Kim quốc gian tế! Người đâu! Bắt lấy hắn!", otherSideEffects.message);
+            StringAssert.Contains("matched=False", unmatched.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskTalkMessage_BranchesOnPcGetTaskValue()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua",
+                        actionKind = "TaskTalkMessage",
+                        taskId = 8,
+                        taskValue = 60 * 256 + 10,
+                        messages = new[] { "Mở bảo rương ra.", "Bạn thất vọng vì chiếc rương này trống rỗng." },
+                        elseMessages = new[] { "Bảo rương này đã khóa rồi" },
+                    }
+                }
+            };
+            var matchingHost = new FakeTrapTravelHost();
+            matchingHost.taskValues[8] = 60 * 256 + 10;
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, matchingHost, sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var matched));
+
+            Assert.IsTrue(matched.success);
+            CollectionAssert.AreEqual(new[] { "Mở bảo rương ra.", "Bạn thất vọng vì chiếc rương này trống rỗng." }, sideEffects.messages);
+            StringAssert.Contains("matched=True", matched.detail);
+
+            var otherHost = new FakeTrapTravelHost();
+            otherHost.taskValues[8] = 0;
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, otherHost, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var unmatched));
+
+            Assert.IsTrue(unmatched.success);
+            CollectionAssert.AreEqual(new[] { "Bảo rương này đã khóa rồi" }, sideEffects.messages);
             StringAssert.Contains("matched=False", unmatched.detail);
         }
 

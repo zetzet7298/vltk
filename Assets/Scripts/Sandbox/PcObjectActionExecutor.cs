@@ -3,8 +3,9 @@
 // Ported object API subset: NewWorld(mapId,x,y), optional SetFightState(),
 // safe pickup messages: SetPropState/AddEventItem/AddNote/Msg2Player,
 // read-only Say(message), read-only Talk(message...) object scripts,
-// PC faction-gated OpenBox()+SetRevPos(id) storage boxes, and
-// PC camp-gated battlefield OpenBox()/Talk storage boxes.
+// PC faction-gated OpenBox()+SetRevPos(id) storage boxes,
+// PC camp-gated battlefield OpenBox()/Talk storage boxes, and
+// read-only PC task-gated Talk message object scripts.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -120,6 +121,30 @@ namespace VLTK.Sandbox
                     posted = 1;
                 }
                 result = Success(action, $"TalkMessage(lines={posted})");
+                return true;
+            }
+
+            if (action.IsTaskTalkMessage)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+                int taskValue = _host.GetTaskValue(action.taskId);
+                bool matched = taskValue == action.taskValue;
+                string[] selected = matched ? action.messages : action.elseMessages;
+                int posted = 0;
+                if (selected != null)
+                {
+                    foreach (string message in selected)
+                    {
+                        if (string.IsNullOrWhiteSpace(message)) continue;
+                        _sideEffects.PostMessage(message);
+                        posted++;
+                    }
+                }
+                result = Success(action, $"TaskTalkMessage(GetTask({action.taskId})={taskValue}, expected={action.taskValue}, matched={matched}, lines={posted})");
                 return true;
             }
 

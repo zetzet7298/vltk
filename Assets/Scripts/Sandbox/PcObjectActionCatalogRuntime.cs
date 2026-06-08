@@ -64,12 +64,16 @@ namespace VLTK.Sandbox
         public string requiredFaction;
         public int requiredFactionId;
         public int requiredCamp;
+        public int taskId;
+        public int taskValue;
+        public string[] elseMessages;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsPickupMessage => string.Equals(actionKind, "PickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskTalkMessage => string.Equals(actionKind, "TaskTalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsOpenBox => string.Equals(actionKind, "OpenBox", StringComparison.OrdinalIgnoreCase);
         public bool IsFactionOpenBox => string.Equals(actionKind, "FactionOpenBox", StringComparison.OrdinalIgnoreCase);
         public bool IsCampOpenBox => string.Equals(actionKind, "CampOpenBox", StringComparison.OrdinalIgnoreCase);
