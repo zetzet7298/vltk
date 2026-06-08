@@ -107,6 +107,51 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcHudVisibleControlManifest_CoversCurrentPcEvidence()
+        {
+            // PC evidence scope: pc-evidence/pc_hud.png plus INIs 8da7027d, dc11ac12, 7e20a7ac/c9c8a750, ec10b91e/f8bf2550.
+            // This manifest intentionally separates visual controls from mobile-only placement, so layout can adapt but coverage cannot regress.
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+
+            string[] topStatusControls =
+            {
+                "LevelText", "StaminaBarTrack", "HpBarTrack", "MpBarTrack", "ExpBarTrack", "RankText",
+            };
+            string[] interactivePcButtons =
+            {
+                "MinimapMarkerBtn", "ToggleMapBtn", "WorldMapBtn", "CaveMapBtn",
+                "ChatSizeBtn", "ChatScrollUpBtn", "ChatScrollThumbBtn", "ChatScrollDownBtn", "ChatSplitBtn",
+                "ChatChannelToggleBtn", "ChatShadowBtn", "ChatMoveBtn", "ChatSysUpBtn", "ChatSysDownBtn", "ChatSysOpenBtn",
+                "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther",
+                "ChatChannelIdentityBtn", "FaceBtn", "SendBtn",
+                "PcShortcutToggleBtn", "PcLeftSkillBtn", "PcRightSkillBtn",
+                "UtilityToggleBtn", "UtilitySwitchBtn",
+                "BtnSit", "BtnRun", "BtnHorse", "BtnExchange", "BtnRec", "BtnPK", "BtnTreasure",
+                "BtnStatus", "BtnItems", "BtnItemEx", "BtnSkills", "BtnTask", "BtnFriend",
+                "BtnTeam", "BtnFaction", "BtnChatRoom", "BtnOptions",
+            };
+
+            foreach (var name in topStatusControls)
+                StringAssert.Contains($"name=\"{name}\"", uxml, name + " from PC top status bar must remain present.");
+            foreach (var name in interactivePcButtons)
+            {
+                StringAssert.Contains($"name=\"{name}\"", uxml, name + " from the PC HUD evidence/INI must remain present.");
+                if (name == "ToggleMapBtn" || name == "WorldMapBtn")
+                    StringAssert.Contains($"RegisterPreviewOpen(root, \"{name}\")", controller, name + " must open the PC map preview.");
+                else if (name == "FaceBtn")
+                    StringAssert.Contains("OpenFacePicker();", controller, "FaceBtn must open the PC emoji/face picker.");
+                else
+                    StringAssert.Contains($"RegisterClick(root, \"{name}\"", controller, name + " must have a concrete mobile handler.");
+            }
+            for (int i = 0; i < 9; i++)
+            {
+                StringAssert.Contains($"name=\"PcItemSlot{i}\"", uxml, $"PC quick item slot {i + 1} must remain present.");
+                StringAssert.Contains("RegisterClick(root, $\"PcItemSlot{slot}\", () => OnPcItemShortcutClick(slot))", controller);
+            }
+        }
+
+        [Test]
         public void PcToolbarSourceAudit_DoesNotInventDisabledZhenFaButton()
         {
             // PC source: dc11ac12 工具控制条.ini has Button14=ZhenFa after comment ";û��",
