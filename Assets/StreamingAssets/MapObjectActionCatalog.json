@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T11:32:22Z",
+  "generatedAtUtc": "2026-06-08T11:40:20Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -3331,6 +3331,213 @@
       "fightState": -1,
       "message": "Đi Thành Đô",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\唐门\\唐门\\obj\\tmobj01.lua",
+      "scriptId": 710767113,
+      "scriptIdHex": "0x2A5D7209",
+      "sourceRelPath": "script\\西南北区\\唐门\\唐门\\obj\\tmobj01.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_5140_has_formula_chars",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 2,
+              "value": 5140
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 37,
+              "count": 1
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 38,
+              "count": 1
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 39,
+              "count": 1
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 40,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "messages": [
+                "Cho dù ngươi đã tìm được 4 chữ 'Thiện Nhập Giả Tử', tại sao còn dám ở lại? Chẳng lẽ trên đời này có người không sợ chết?",
+                "Thiên hạ không có ai không sợ chết, nhưng không thể gặp được người thân chẳng phải đau khổ hơn chết sao?",
+                "Rốt cục ngươi là ai?",
+                "Vãn bối là Đệ tử Đường Môn, đến mời Sư cô trở về Đường Môn đoàn tụ với Chưởng môn sư huynh!",
+                "Ta không có huynh trưởng gì hết! Người thân của ta đã chết hết rồi! Năm xưa lúc ta bị đuổi khỏi Sư môn, không có ai nói giúp ta một lời nào! Lúc đó ta đã thề, đời này sẽ không bước vào Đường Môn nữa bước!",
+                "Nếu Sư cô không có chút lưu luyến với Đường Môn, tại sao lại ẩn cư ở Trúc Hải hậu sơn?",
+                "Đường U:.....",
+                "Sư cô, đã nhiều năm nay, Chưởng môn cứ hối tiếc đã không cản Sư phụ đuổi Sư cô ra khỏi gia môn, tại sao người không cho ông ta một cơ hội bù đắp? Huống chi huynh muội tình thâm hà tất chỉ vì một lúc nóng giận mà ân hận cả đời?",
+                "Ngươi không cần nhiều lời! Được! Ta cho ngươi một cơ hội. Năm đó lúc ta rời khỏi gia môn. Nhất thời vứt Kim Hạng khuyên của cha tặng xuống Phỉ Thúy hồ. Nếu ngươi có thể tìm giúp ta, ta sẽ tha thứ cho bọn họ!"
+              ]
+            },
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                37,
+                38,
+                39,
+                40
+              ],
+              "itemCounts": [
+                1,
+                1,
+                1,
+                1
+              ]
+            },
+            {
+              "type": "SetTask",
+              "taskId": 2,
+              "value": 5160
+            },
+            {
+              "type": "AddNote",
+              "message": "Trên bia đá trước phòng Đường U, nhận nhiệm vụ đi hồ Phỉ Thúy tìm Kim Hạng Quyển"
+            }
+          ]
+        },
+        {
+          "label": "task_5140_missing_formula_chars",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 2,
+              "value": 5140
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn không có khẩu quyết, không thể thông qua bia đá nói chuyện với Đường U."
+            },
+            {
+              "type": "AddNote",
+              "message": "ở phía trước bia đá tại Vô Tâm Cốc biết là phải tìm khẩu quyết bia đá trong cốc trước."
+            }
+          ]
+        },
+        {
+          "label": "task_5160_has_ring_41",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 2,
+              "value": 5160
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 41,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "messages": [
+                "Sư cô! Đệ tử đã đã tìm được Kim Hạng khuyên dưới Phỉ Thúy hồ, Sư cô có thể suy nghĩ lại không?",
+                "Ngươi đưa Kim Hạng khuyên cho Đại ca ta, thấy chiếc vòng này sẽ biết ta đã tha thứ cho huynh ấy."
+              ]
+            },
+            {
+              "type": "SetTask",
+              "taskId": 2,
+              "value": 5180
+            },
+            {
+              "type": "PostMessage",
+              "message": "Đường U lệnh cho bạn mang Kim Hạng Quyển giao cho Đường Cừu chưởng môn."
+            },
+            {
+              "type": "AddNote",
+              "message": "Đường U lệnh cho bạn mang Kim Hạng Quyển giao cho Đường Cừu chưởng môn."
+            }
+          ]
+        },
+        {
+          "label": "task_5160_missing_ring_41",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 2,
+              "value": 5160
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Nếu ngươi có thể tìm được cho ta chiếc Kim Hạng khuyên dưới Phỉ Thúy hồ, ta sẽ tha thứ cho bọn họ!"
+            }
+          ]
+        },
+        {
+          "label": "task_5180_restore_missing_ring_41",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 2,
+              "value": 5180
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 41,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 41
+            },
+            {
+              "type": "PostMessage",
+              "message": "Sao ngươi nhiều chuyện thế! Để chiếc vòng lại đây! Còn ngươi thì biến mau đi!"
+            }
+          ]
+        },
+        {
+          "label": "task_7680_plus_static_message",
+          "conditions": [
+            {
+              "type": "TaskGreaterThan",
+              "taskId": 2,
+              "value": 7679
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Ta sống thanh tịnh một mình quen rồi, không thích ai quấy nhiễu! Chuyện cũ qua rồi, nói nhiều vô ích, ngươi về đi!"
+            }
+          ]
+        },
+        {
+          "label": "default_sign_text",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Trên bia đá có viết: 'Thiện Nhập Giả, sát vô xá'. Chữ 'sát' viết bằng màu máu rất là đặc biệt."
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-储物箱1.lua",

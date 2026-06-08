@@ -1927,6 +1927,83 @@ OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    '0x2A5D7209': {
+        'allowStaticSay': True,
+        'branches': [
+            {
+                'label': 'task_5140_has_formula_chars',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 2, 'value': 20 * 256 + 20},
+                    {'type': 'HaveItem', 'itemId': 37, 'count': 1},
+                    {'type': 'HaveItem', 'itemId': 38, 'count': 1},
+                    {'type': 'HaveItem', 'itemId': 39, 'count': 1},
+                    {'type': 'HaveItem', 'itemId': 40, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'messages': [
+                        "Cho dù ngươi đã tìm được 4 chữ 'Thiện Nhập Giả Tử', tại sao còn dám ở lại? Chẳng lẽ trên đời này có người không sợ chết?",
+                        'Thiên hạ không có ai không sợ chết, nhưng không thể gặp được người thân chẳng phải đau khổ hơn chết sao?',
+                        'Rốt cục ngươi là ai?',
+                        'Vãn bối là Đệ tử Đường Môn, đến mời Sư cô trở về Đường Môn đoàn tụ với Chưởng môn sư huynh!',
+                        'Ta không có huynh trưởng gì hết! Người thân của ta đã chết hết rồi! Năm xưa lúc ta bị đuổi khỏi Sư môn, không có ai nói giúp ta một lời nào! Lúc đó ta đã thề, đời này sẽ không bước vào Đường Môn nữa bước!',
+                        'Nếu Sư cô không có chút lưu luyến với Đường Môn, tại sao lại ẩn cư ở Trúc Hải hậu sơn?',
+                        'Đường U:.....',
+                        'Sư cô, đã nhiều năm nay, Chưởng môn cứ hối tiếc đã không cản Sư phụ đuổi Sư cô ra khỏi gia môn, tại sao người không cho ông ta một cơ hội bù đắp? Huống chi huynh muội tình thâm hà tất chỉ vì một lúc nóng giận mà ân hận cả đời?',
+                        'Ngươi không cần nhiều lời! Được! Ta cho ngươi một cơ hội. Năm đó lúc ta rời khỏi gia môn. Nhất thời vứt Kim Hạng khuyên của cha tặng xuống Phỉ Thúy hồ. Nếu ngươi có thể tìm giúp ta, ta sẽ tha thứ cho bọn họ!',
+                    ]},
+                    {'type': 'ConsumeItems', 'itemIds': [37, 38, 39, 40], 'itemCounts': [1, 1, 1, 1]},
+                    {'type': 'SetTask', 'taskId': 2, 'value': 20 * 256 + 40},
+                    {'type': 'AddNote', 'message': 'Trên bia đá trước phòng Đường U, nhận nhiệm vụ đi hồ Phỉ Thúy tìm Kim Hạng Quyển'},
+                ],
+            },
+            {
+                'label': 'task_5140_missing_formula_chars',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 2, 'value': 20 * 256 + 20}],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn không có khẩu quyết, không thể thông qua bia đá nói chuyện với Đường U.'},
+                    {'type': 'AddNote', 'message': 'ở phía trước bia đá tại Vô Tâm Cốc biết là phải tìm khẩu quyết bia đá trong cốc trước.'},
+                ],
+            },
+            {
+                'label': 'task_5160_has_ring_41',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 2, 'value': 20 * 256 + 40},
+                    {'type': 'HaveItem', 'itemId': 41, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'messages': ['Sư cô! Đệ tử đã đã tìm được Kim Hạng khuyên dưới Phỉ Thúy hồ, Sư cô có thể suy nghĩ lại không?', 'Ngươi đưa Kim Hạng khuyên cho Đại ca ta, thấy chiếc vòng này sẽ biết ta đã tha thứ cho huynh ấy.']},
+                    {'type': 'SetTask', 'taskId': 2, 'value': 20 * 256 + 60},
+                    {'type': 'PostMessage', 'message': 'Đường U lệnh cho bạn mang Kim Hạng Quyển giao cho Đường Cừu chưởng môn.'},
+                    {'type': 'AddNote', 'message': 'Đường U lệnh cho bạn mang Kim Hạng Quyển giao cho Đường Cừu chưởng môn.'},
+                ],
+            },
+            {
+                'label': 'task_5160_missing_ring_41',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 2, 'value': 20 * 256 + 40}],
+                'effects': [{'type': 'PostMessage', 'message': 'Nếu ngươi có thể tìm được cho ta chiếc Kim Hạng khuyên dưới Phỉ Thúy hồ, ta sẽ tha thứ cho bọn họ!'}],
+            },
+            {
+                'label': 'task_5180_restore_missing_ring_41',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 2, 'value': 20 * 256 + 60},
+                    {'type': 'MissingItem', 'itemId': 41, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'AddEventItem', 'itemId': 41},
+                    {'type': 'PostMessage', 'message': 'Sao ngươi nhiều chuyện thế! Để chiếc vòng lại đây! Còn ngươi thì biến mau đi!'},
+                ],
+            },
+            {
+                'label': 'task_7680_plus_static_message',
+                'conditions': [{'type': 'TaskGreaterThan', 'taskId': 2, 'value': 30 * 256 - 1}],
+                'effects': [{'type': 'PostMessage', 'message': 'Ta sống thanh tịnh một mình quen rồi, không thích ai quấy nhiễu! Chuyện cũ qua rồi, nói nhiều vô ích, ngươi về đi!'}],
+            },
+            {
+                'label': 'default_sign_text',
+                'effects': [{'type': 'PostMessage', 'message': "Trên bia đá có viết: 'Thiện Nhập Giả, sát vô xá'. Chữ 'sát' viết bằng màu máu rất là đặc biệt."}],
+            },
+        ],
+    },
 }
 
 
@@ -1936,10 +2013,19 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
         return None
     clean_source = strip_lua_line_comments(script.get('sourceText', ''))
     allowed = {'main', 'GetTask', 'SetTask', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
+    if spec.get('allowStaticSay'):
+        allowed.add('Say')
     if not source_uses_only_calls(clean_source, allowed):
         return None
-    if re.search(r'\b(for|while|repeat|random|Include|Say|NewWorld|SetPropState)\b', clean_source):
+    blocked_words = r'for|while|repeat|random|Include|NewWorld|SetPropState'
+    if not spec.get('allowStaticSay'):
+        blocked_words += r'|Say'
+    if re.search(r'\b(' + blocked_words + r')\b', clean_source):
         return None
+    if spec.get('allowStaticSay'):
+        say_calls = parse_lua_calls(clean_source, 'Say', limit=4)
+        if any(len(call) != 2 or int_expr(call[1]) != 0 for call in say_calls):
+            return None
 
     effect_del_items: list[int] = []
     effect_event_items: list[int] = []
@@ -1969,6 +2055,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
         return None
     result = dict(spec)
     result.pop('sourceConsumeItemIds', None)
+    result.pop('allowStaticSay', None)
     return result
 
 

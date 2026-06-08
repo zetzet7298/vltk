@@ -250,13 +250,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(277, catalog.Count);
+            Assert.AreEqual(278, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
-            Assert.AreEqual(4, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
+            Assert.AreEqual(5, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -313,6 +313,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(4, gbClothBagChest.branches.Length);
             Assert.AreEqual("task_15370_key_204_reward_206", gbClothBagChest.branches[0].label);
             Assert.AreEqual("task_15370_key_204_empty", gbClothBagChest.branches[2].label);
+            var tmTablet = catalog.Find(@"\script\西南北区\唐门\唐门\obj\tmobj01.lua");
+            Assert.IsNotNull(tmTablet);
+            Assert.IsTrue(tmTablet.IsTaskItemBranchMessage);
+            Assert.AreEqual(7, tmTablet.branches.Length);
+            Assert.AreEqual("task_5140_has_formula_chars", tmTablet.branches[0].label);
+            Assert.AreEqual("default_sign_text", tmTablet.branches[6].label);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -924,6 +930,119 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, host.itemCounts[204]);
             CollectionAssert.AreEqual(new[] { "Bảo rương này đã khóa rồi" }, sideEffects.messages);
             StringAssert.Contains("branch=3", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemBranchMessage_PreservesTangMenTabletBranches()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\tmobj01.lua",
+                        actionKind = "TaskItemBranchMessage",
+                        branches = new[]
+                        {
+                            new PcObjectActionBranch
+                            {
+                                label = "task_5140_has_formula_chars",
+                                conditions = new[]
+                                {
+                                    new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 20 * 256 + 20 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 37 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 38 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 39 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 40 },
+                                },
+                                effects = new[]
+                                {
+                                    new PcObjectActionEffect { type = "PostMessage", messages = new[] { "Cho dù ngươi đã tìm được 4 chữ", "Ngươi không cần nhiều lời!" } },
+                                    new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 37, 38, 39, 40 }, itemCounts = new[] { 1, 1, 1, 1 } },
+                                    new PcObjectActionEffect { type = "SetTask", taskId = 2, value = 20 * 256 + 40 },
+                                    new PcObjectActionEffect { type = "AddNote", message = "Trên bia đá trước phòng Đường U" },
+                                }
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_5140_missing_formula_chars",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 20 * 256 + 20 } },
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Bạn không có khẩu quyết" }, new PcObjectActionEffect { type = "AddNote", message = "ở phía trước bia đá" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_5160_has_ring_41",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 20 * 256 + 40 }, new PcObjectActionCondition { type = "HaveItem", itemId = 41 } },
+                                effects = new[] { new PcObjectActionEffect { type = "SetTask", taskId = 2, value = 20 * 256 + 60 }, new PcObjectActionEffect { type = "PostMessage", message = "Đường U lệnh cho bạn mang Kim Hạng Quyển" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_5160_missing_ring_41",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 20 * 256 + 40 } },
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Nếu ngươi có thể tìm được" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_5180_restore_missing_ring_41",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 20 * 256 + 60 }, new PcObjectActionCondition { type = "MissingItem", itemId = 41 } },
+                                effects = new[] { new PcObjectActionEffect { type = "AddEventItem", itemId = 41 }, new PcObjectActionEffect { type = "PostMessage", message = "Sao ngươi nhiều chuyện thế!" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_7680_plus_static_message",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskGreaterThan", taskId = 2, value = 30 * 256 - 1 } },
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Ta sống thanh tịnh một mình quen rồi" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "default_sign_text",
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Trên bia đá có viết" } },
+                            },
+                        }
+                    }
+                }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\tmobj01.lua" };
+            var host = new FakeTrapTravelHost { taskValues = { [2] = 20 * 256 + 20 }, itemCounts = { [37] = 1, [38] = 1, [39] = 1, [40] = 1 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+            foreach (int itemId in new[] { 37, 38, 39, 40 }) Assert.IsFalse(host.itemCounts.ContainsKey(itemId));
+            Assert.AreEqual(20 * 256 + 40, host.GetTaskValue(2));
+            CollectionAssert.AreEqual(new[] { "Trên bia đá trước phòng Đường U" }, sideEffects.notes);
+            StringAssert.Contains("branch=0", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [2] = 20 * 256 + 40 }, itemCounts = { [41] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.AreEqual(1, host.itemCounts[41]);
+            Assert.AreEqual(20 * 256 + 60, host.GetTaskValue(2));
+            StringAssert.Contains("branch=2", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [2] = 20 * 256 + 60 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { 41 }, sideEffects.eventItems);
+            StringAssert.Contains("branch=4", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [2] = 30 * 256 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { "Ta sống thanh tịnh một mình quen rồi" }, sideEffects.messages);
+            StringAssert.Contains("branch=5", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [2] = 0 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { "Trên bia đá có viết" }, sideEffects.messages);
+            StringAssert.Contains("branch=6", result.detail);
         }
 
 
