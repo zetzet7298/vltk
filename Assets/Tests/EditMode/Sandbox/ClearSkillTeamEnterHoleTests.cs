@@ -44,6 +44,26 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void LoadFromStreamingAssets_RoutesPcDeferredTrapId()
+        {
+            var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
+            var host = new FakeTrapTravelHost
+            {
+                currentMapId = 242,
+                allMapsLoaded = false,
+                loadedMaps = { 249 },
+            };
+            var executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 3331988224u, trapIdHex = "0xC69A1B00" }, out var result));
+
+            Assert.IsTrue(result.success, result.detail);
+            Assert.AreEqual(249, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1621 * 32, 3236 * 32), host.position);
+            StringAssert.Contains("TeamEnterHole(1)", result.detail);
+        }
+
+        [Test]
         public void Execute_SelectsFirstLoadedTestMapForCurrentClearMapCity()
         {
             var host = new FakeTrapTravelHost

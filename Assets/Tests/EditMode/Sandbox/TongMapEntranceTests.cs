@@ -27,6 +27,21 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void LoadFromStreamingAssets_RoutesPcDeferredTrapIdAsHostLimitedNoOp()
+        {
+            var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
+            var host = new FakeHost { currentMapId = 591, position = new Vector2(7, 8) };
+            var executor = new PcTrapActionExecutor(catalog, host, new FakeSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 860441529u, trapIdHex = "0x33494BB9" }, out var result));
+
+            Assert.IsTrue(result.success, result.detail);
+            Assert.AreEqual(new Vector2(7, 8), host.position);
+            StringAssert.Contains("TongMapEntrance mapTongId=0", result.detail);
+            StringAssert.Contains("host lacks PC", result.detail);
+        }
+
+        [Test]
         public void DefaultRegion_OwnerAllowed_DoesNotMoveOrMessage()
         {
             var host = new FakeHost { position = new Vector2(12, -34) };

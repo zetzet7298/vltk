@@ -64,6 +64,23 @@ namespace VLTK.Sandbox
     }
 
     [Serializable]
+    internal sealed class PcTrapScriptCatalogFile
+    {
+        public PcTrapScriptCatalogEntry[] entries;
+    }
+
+    [Serializable]
+    internal sealed class PcTrapScriptCatalogEntry
+    {
+        public uint trapId;
+        public string trapIdHex;
+        public string scriptPath;
+        public string sourceRelPath;
+        public string deferredActionKind;
+        public string deferredActionReason;
+    }
+
+    [Serializable]
     public sealed partial class PcTrapActionCatalogEntry
     {
         public uint trapId;
@@ -293,7 +310,153 @@ namespace VLTK.Sandbox
         {
             string path = Path.Combine(Application.streamingAssetsPath, fileName);
             if (!File.Exists(path)) return null;
-            return JsonUtility.FromJson<PcTrapActionCatalogFile>(File.ReadAllText(path));
+            var catalog = JsonUtility.FromJson<PcTrapActionCatalogFile>(File.ReadAllText(path));
+            AppendHostLimitedDeferredActions(catalog, Path.GetDirectoryName(path));
+            return catalog;
+        }
+
+        private static void AppendHostLimitedDeferredActions(PcTrapActionCatalogFile catalog, string directory)
+        {
+            if (catalog == null || string.IsNullOrEmpty(directory)) return;
+            string scriptPath = Path.Combine(directory, "MapTrapScriptCatalog.json");
+            if (!File.Exists(scriptPath)) return;
+
+            var scriptCatalog = JsonUtility.FromJson<PcTrapScriptCatalogFile>(File.ReadAllText(scriptPath));
+            if (scriptCatalog?.entries == null) return;
+
+            var existingIds = new HashSet<uint>();
+            var existingHex = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var baseEntries = catalog.entries ?? Array.Empty<PcTrapActionCatalogEntry>();
+            foreach (var entry in baseEntries)
+            {
+                if (entry == null) continue;
+                if (entry.trapId != 0) existingIds.Add(entry.trapId);
+                if (!string.IsNullOrEmpty(entry.trapIdHex)) existingHex.Add(entry.trapIdHex);
+            }
+
+            var additions = new List<PcTrapActionCatalogEntry>();
+            foreach (var scriptEntry in scriptCatalog.entries)
+            {
+                if (scriptEntry == null || string.IsNullOrEmpty(scriptEntry.deferredActionKind)) continue;
+                if (scriptEntry.trapId != 0 && existingIds.Contains(scriptEntry.trapId)) continue;
+                if (!string.IsNullOrEmpty(scriptEntry.trapIdHex) && existingHex.Contains(scriptEntry.trapIdHex)) continue;
+                var action = CreateHostLimitedDeferredAction(scriptEntry);
+                if (action == null) continue;
+                additions.Add(action);
+                if (action.trapId != 0) existingIds.Add(action.trapId);
+                if (!string.IsNullOrEmpty(action.trapIdHex)) existingHex.Add(action.trapIdHex);
+            }
+
+            if (additions.Count == 0) return;
+            var merged = new PcTrapActionCatalogEntry[baseEntries.Length + additions.Count];
+            Array.Copy(baseEntries, merged, baseEntries.Length);
+            for (int i = 0; i < additions.Count; i++)
+                merged[baseEntries.Length + i] = additions[i];
+            catalog.entries = merged;
+        }
+
+        private static PcTrapActionCatalogEntry CreateHostLimitedDeferredAction(PcTrapScriptCatalogEntry scriptEntry)
+        {
+            var action = new PcTrapActionCatalogEntry
+            {
+                trapId = scriptEntry.trapId,
+                trapIdHex = scriptEntry.trapIdHex,
+                scriptPath = scriptEntry.scriptPath,
+                sourceRelPath = scriptEntry.sourceRelPath,
+                actionKind = scriptEntry.deferredActionKind,
+                source = scriptEntry.deferredActionReason
+            };
+
+            if (string.Equals(scriptEntry.deferredActionKind, "ClearSkillTeamEnterHole", StringComparison.OrdinalIgnoreCase))
+                return ConfigureClearSkillTeamEnterHole(action);
+            if (string.Equals(scriptEntry.deferredActionKind, "TongMapEntrance", StringComparison.OrdinalIgnoreCase))
+                return ConfigureTongMapEntrance(action);
+            if (string.Equals(scriptEntry.deferredActionKind, "CityWarJoinRouter", StringComparison.OrdinalIgnoreCase))
+                return ConfigureCityWarJoinRouter(action);
+            return null;
+        }
+
+        private static PcTrapActionCatalogEntry ConfigureClearSkillTeamEnterHole(PcTrapActionCatalogEntry action)
+        {
+            int trapIndex = ClearSkillTrapIndex(action.trapId);
+            if (trapIndex <= 0) return null;
+
+            action.trapIndex = trapIndex;
+            action.enterCellX = ClearSkillEnterCellX(trapIndex);
+            action.enterCellY = ClearSkillEnterCellY(trapIndex);
+            action.missionId = 10;
+            action.fightState = 1;
+            action.logoutRv = 1;
+            action.deathScript = @"\script\missions\clearskill\playerdeath.lua";
+            action.punish = 0;
+            action.forbidChangePk = 0;
+            action.pkFlag = 1;
+            action.setTaskTempId = 100;
+            action.setTaskTempValue = 1;
+            action.clearSkillClearMapIds = new[] { 242, 243, 244, 245, 246, 247, 248 };
+            action.clearSkillTestMapBeginIds = new[] { 249, 259, 269, 279, 289, 299, 309 };
+            action.clearSkillTestMapCount = 10;
+            return action;
+        }
+
+        private static int ClearSkillTrapIndex(uint trapId)
+        {
+            switch (trapId)
+            {
+                case 3331988224u: return 1;
+                case 3267159439u: return 2;
+                case 3730263054u: return 3;
+                case 3658077837u: return 4;
+                default: return 0;
+            }
+        }
+
+        private static int ClearSkillEnterCellX(int trapIndex)
+        {
+            switch (trapIndex)
+            {
+                case 1: return 1621;
+                case 2: return 1533;
+                case 3: return 1520;
+                case 4: return 1670;
+                default: return 0;
+            }
+        }
+
+        private static int ClearSkillEnterCellY(int trapIndex)
+        {
+            switch (trapIndex)
+            {
+                case 1: return 3236;
+                case 2: return 3235;
+                case 3: return 3352;
+                case 4: return 3347;
+                default: return 0;
+            }
+        }
+
+        private static PcTrapActionCatalogEntry ConfigureTongMapEntrance(PcTrapActionCatalogEntry action)
+        {
+            action.tongMapType = 1;
+            action.tongTaskLpCountId = PcTrapActionCatalogEntry.TongMapEntranceTaskLpCountId;
+            action.tongDefaultEnterCellX = PcTrapActionCatalogEntry.TongMapEntranceDefaultCellX;
+            action.tongDefaultEnterCellY = PcTrapActionCatalogEntry.TongMapEntranceDefaultCellY;
+            action.tongEnterMapCopyIds = new[] { PcTrapActionCatalogEntry.TongMapEntranceBorderMapCopyId };
+            action.tongEnterCellXs = new[] { PcTrapActionCatalogEntry.TongMapEntranceBorderCellX };
+            action.tongEnterCellYs = new[] { PcTrapActionCatalogEntry.TongMapEntranceBorderCellY };
+            return action;
+        }
+
+        private static PcTrapActionCatalogEntry ConfigureCityWarJoinRouter(PcTrapActionCatalogEntry action)
+        {
+            action.targetMapId = 221;
+            action.enterCellX = 1533;
+            action.enterCellY = 3211;
+            action.exitCellX = 1903;
+            action.exitCellY = 3608;
+            action.blockedCellX = 1613;
+            action.blockedCellY = 3185;
+            return action;
         }
     }
 }

@@ -129,6 +129,23 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void LoadFromStreamingAssets_RoutesPcDeferredTrapId()
+        {
+            var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
+            var host = ActiveHost(currentMapId: 222);
+            host.taskValues[232] = 9876;
+            host.taskValues[231] = 1;
+            var executor = new PcTrapActionExecutor(catalog, host, new FakeSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 907670210u, trapIdHex = "0x3619F2C2" }, out var result));
+
+            Assert.IsTrue(result.success, result.detail);
+            Assert.AreEqual(221, host.mapId);
+            Assert.AreEqual(1, host.curCamp);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1533 * 32, 3211 * 32), host.position);
+        }
+
+        [Test]
         public void ExistingTicket_NonMap222_JoinsAttackCampFromPcConstants()
         {
             var host = ActiveHost(currentMapId: 223);
@@ -224,6 +241,17 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(result.success);
             Assert.AreEqual(-1, host.mapId);
             Assert.IsFalse(host.leftTeam);
+        }
+
+        [Test]
+        public void MissingTravelHost_ReturnsFailureInsteadOfThrowing()
+        {
+            var executor = new PcTrapActionExecutor(CreateCatalog(), null, new FakeSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 907670210, trapIdHex = "0x3619F2C2" }, out var result));
+
+            Assert.IsFalse(result.success);
+            StringAssert.Contains("trap travel host unavailable", result.detail);
         }
 
         private static FakeTrapTravelHost ActiveHost(int currentMapId)

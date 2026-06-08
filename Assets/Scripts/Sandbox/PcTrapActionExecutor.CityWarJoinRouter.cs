@@ -12,6 +12,12 @@ namespace VLTK.Sandbox
             result = null;
             if (action == null || !action.IsCityWarJoinRouter) return false;
 
+            if (_host == null)
+            {
+                result = Failure(action, "trap travel host unavailable");
+                return true;
+            }
+
             int missionMapId = action.CityWarMissionMapId;
             if (!_host.HasMap(missionMapId))
             {

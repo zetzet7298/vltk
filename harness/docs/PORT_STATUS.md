@@ -45,16 +45,16 @@ Region_S files: 84,019
 Region_S records: 67,680 NPC / 8,692 trap / 453 object
 NPC sprite staging: 375/375 resTypes, 1,314 staged sprites
 object visuals/actions: 35/35 templates, 34/34 SPR paths, 299 deterministic object actions
-trap scripts/actions: 817/817 script ids resolved, 804 deterministic trap actions, 13 deferred resolved actions, 0 unclassified
+trap scripts/actions: 817/817 script ids resolved; runtime action catalog loads 804 deterministic + 13 host-limited routed actions; verifier still reports those 13 as deferred PC-runtime gaps; 0 unclassified
 default map: 907 — Vượt ải Nhiếp Thí Trần
 ```
 
-Deferred trap families still not complete:
+Deferred trap families after Batch 1 merge remain host-limited, not full PC parity:
 
 ```text
-ClearSkillTeamEnterHole: 4
-TongMapEntrance: 8
-CityWarJoinRouter: 1
+ClearSkillTeamEnterHole: 4 routed as partial runtime; captain/team/CSP_CheckValid/mission allocation/AddMSPlayer/SetTempRevPos still incomplete.
+TongMapEntrance: 8 routed as host-limited partial hook; PC Tong ownership/ban/expire/product-region/template-map APIs still incomplete.
+CityWarJoinRouter: 1 routed as partial runtime; Tong gate, mission lifecycle, card expiry, rewards, and full CityWar state still incomplete.
 ```
 
 ## Verified data files and exact counts
@@ -86,10 +86,10 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Player task defs | `Reference/PcMission/player_task_def.txt` | 656 rows | ✅ data | mission execution partial |
 | Guild levels | `Reference/PcTong/tong_level_data.txt` | 6 rows | ✅ | guild scripts partial |
 | City war config | `Reference/PcEvent/citywar.ini` | 90 data lines | ✅ data | join/router semantics partial |
-| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / 🔄 runtime | parser preserves exact PC count; Unity MCP EditMode proof 36/36 passed; travel runtime behavior still partial |
-| Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / 🔄 runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; Unity MCP EditMode proof 36/36 passed; travel runtime behavior still partial |
-| Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / 🔄 runtime | parser preserves section `[949]` `region=1,3` with 1 real coordinate; Unity MCP EditMode proof 36/36 passed; travel runtime behavior still partial |
-| Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data | runtime behavior not fully audited |
+| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / 🔄 runtime | parser preserves exact PC count; `PcMapTravelRuntimeService` lookup proof covers representative IDs/maps; end-to-end travel UX/runtime still partial |
+| Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / 🔄 runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; `PcMapTravelRuntimeService` lookup proof covers service lookup; end-to-end wharf travel UX/runtime still partial |
+| Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / 🔄 runtime | parser preserves section `[949]` `region=1,3` with 1 real coordinate; `PcMapTravelRuntimeService` lookup proof covers default/map revive lookup; in-scene revive behavior still partial |
+| Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data / 🔄 runtime | `PcMapTravelRuntimeService` proof preserves 2,600 value rows and no fabricated map rows; scroll item consumption/teleport UX still not fully audited |
 
 ## Missing or path-mismatch evidence
 
@@ -121,9 +121,9 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Region_C visual map art | ✅ known gaps | 95,246 Region_C; 2,785 SPR; 6 source-missing SPR refs documented | Do not fabricate missing refs |
 | Server Region_S extraction | ✅ data / 🔄 gameplay | `MapSpawnCoverage.json` facts above | Spawn AI/scheduling/runtime parity |
 | Region_S object catalog/action executor | 🔄 | 453 object records, 299 deterministic actions | Full object script semantics not globally proven |
-| Region_S trap script resolver/executor | 🔄 | 817/817 resolved, 804 deterministic, 13 deferred | Port ClearSkill/Tong/CityWar deferred families |
+| Region_S trap script resolver/executor | 🔄 partial runtime | 817/817 resolved; runtime catalog now loads 804 deterministic + 13 host-limited routed actions (`ClearSkillTeamEnterHole=4`, `TongMapEntrance=8`, `CityWarJoinRouter=1`) | Verifier still reports those 13 as deferred PC-runtime gaps; close host/API/mission gaps before runtime `✅` |
 | Minimap/click-to-move/bounds | 🔄 | map 907 target clamp + minimap RectTransform offset fix/tests added; Unity MCP EditMode proof 36/36 passed | Need player/in-editor smoke proof for full map 907 movement feel |
-| Waypoint/wharf/revive/scroll runtime | 🔄 | exact parser/count tests added for 225 waypoint, 11 wharf/16 SECT, 139 revive sections/241 coords, 2,600 scroll values; parser smoke + Unity MCP EditMode proof passed | Prove end-to-end travel runtime behavior |
+| Waypoint/wharf/revive/scroll runtime | 🔄 | exact parser/count tests plus `PcMapTravelRuntimeService` lookup proof: waypoint/wharf/revive/scroll counts, representative ID/map lookups, and no fabricated scroll map rows | Still needs end-to-end travel/revive/scroll behavior proof in runtime scene before `✅ runtime` |
 
 ### 2. Factions
 
@@ -205,7 +205,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | Core combat/damage/projectile/buff/death/PK services | 🔄 | services and tests exist | PC formula/skill/PvP semantic parity |
 | Tống Kim maps/rebirth traps | 🔄 | map alias counts, some rebirth traps ported | Full battlefield state/scoring/join/award behavior |
-| CityWar | 🔄 | config/service exists; `CityWarJoinRouter` deferred | Join card, Tong gates, mission state, rewards |
+| CityWar | 🔄 partial runtime | `citywar.ini` data exists; `CityWarJoinRouter` routed/tested for mission state, existing ticket, odd/even city card, no-card return, and camp join side effects | Full CityWar mission lifecycle, Tong gates, ownership/state integration, card expiry, rewards, and Unity runtime proof still missing |
 | Quốc Chiến/Hoa Sơn | 🔄/☐ | service hints exist; dedicated source proof weak/missing | Add PC source evidence/runtime tests |
 | Battle scripts 183 | 🔄 indexed/mock | `BattleScriptRuntimeService` simplified/log behavior reported; dirs missing | Full PC battle Lua semantics |
 | Battle awards/double EXP | 🔄 | services exist | PC event/schedule/effect parity |
@@ -217,7 +217,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Guild level data | ✅ data | 6 rows in `tong_level_data.txt` | Runtime behavior parity |
 | Guild creation/fund/contribution/workshop/task/rank/stunt | 🔄 | services/configs exist | PC server behavior and script side effects |
 | Guild scripts 65 | 🔄 indexed/framework | PC `script/tong` Lua not executed; service mostly validate/log/return | Semantic Lua execution or explicit indexed-only status |
-| Guild city war / Tong maps | 🔄 | `TongMapEntrance=8` and `CityWarJoinRouter=1` deferred | Tong ownership/ban/expire/enter-pos APIs |
+| Guild city war / Tong maps | 🔄 partial hooks | `TongMapEntrance=8` routed as host-limited hook; `CityWarJoinRouter=1` routed/tested as partial runtime | Implement/prove PC Tong ownership/ban/expire/template-map APIs, CityWar gate integration, and Unity runtime behavior before `✅` |
 | Party system | 🔄 | party services/panels exist | Full PC team behavior, team trap entry, UI proof |
 
 ### 10. Other systems
@@ -269,7 +269,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Item | Status | Evidence | Required next proof/work |
 |---|---:|---|---|
 | Library/activity/mission/global/item/skill/event/task/battle/guild/VNG scripts | 🔄 indexed/cataloged | service/parser classes exist; many old counts are metadata, not executable proof | Full Lua semantic runtime still incomplete |
-| Region_S trap Lua subset | 🔄 partial runtime | 804/817 resolved trap actions deterministic; 13 deferred; 0 unclassified | Finish deferred families and broaden semantic executor as needed |
+| Region_S trap Lua subset | 🔄 partial runtime | 804 deterministic trap actions plus 13 Batch 1 host-limited routed actions; verifier still lists the 13 as deferred PC-runtime gaps; 0 unclassified | Broaden semantic executor/host APIs and mission/Tong runtime before any runtime `✅` |
 
 ## Old false-confidence claims now invalid
 
@@ -299,26 +299,29 @@ For each future status row, cite at least one of:
 ## Immediate map-port priorities
 
 1. Map 907 movement bounds/minimap/click-to-move: target clamp and minimap RectTransform fixes are implemented and Unity MCP EditMode proof passed; still needs player/in-editor feel smoke before marking runtime `✅`.
-2. Port remaining resolved deferred trap families from PC source: `ClearSkillTeamEnterHole`, then `TongMapEntrance`, then `CityWarJoinRouter`.
-3. Waypoint/wharf/revive/scroll exact parser/count tests are added and Unity MCP EditMode proof passed; still needs end-to-end travel runtime proof.
+2. Verify and deepen Batch 1 routed deferred trap families: `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter`; keep them `🔄 partial runtime` until verifier + host/API/mission gaps are closed.
+3. Waypoint/wharf/revive/scroll parser/count and service lookup tests are added; still needs end-to-end travel/revive/scroll runtime proof.
 4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
 
 ## Port Factory Batch 1 audit queue — 2026-06-09
 
-Current scaffold evidence:
+Integrated Batch 1 evidence:
 
-- `d960ca7 chore: scaffold trap action port hooks` only adds partial hook/catalog files for `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter`. The new executor hooks still return `false`, so this is scaffolding, not runtime parity.
-- Harness traces `#44`-`#50` record worktree setup, task claims, main-only Unity MCP policy, and scaffold integration. Trace `#51` records CityWar PC-source inspection only. No accepted worker implementation patch after the scaffold is integrated yet.
-- Therefore no `✅` runtime row is upgraded by Batch 1 until a worker patch is integrated by main and backed by Unity/test/verifier proof.
+- `d960ca7 chore: scaffold trap action port hooks` was followed by worker patches for the scoped families plus main integration wiring.
+- `PcTrapActionCatalogRuntime.LoadFromStreamingAssets()` now augments `MapTrapActionCatalog.json` with the 13 host-limited deferred entries from `MapTrapScriptCatalog.json`, so loaded runtime catalog count is 817 (`804` deterministic + `13` routed partial actions).
+- `PcMapTravelRuntimeService` adds service-level lookup proof for PC waypoint/wharf/revive/scroll data.
+- Unity compile is clean; Unity Editor execute proof returned `catalog=817 tong=8 clear=4 city=1 travel=225/11/241/2600`. Unity Test Runner discovery returned 0 tests for this project/assembly, so this is not claimed as a Test Runner artifact.
+- `jx_map_port_verify.py --include-missing-spr-region-refs --pretty` passes with known map-SPR gaps and still reports the 13 deferred family counts, because the verifier tracks PC-runtime semantic gaps rather than Unity loader augmentation.
+- Therefore no broad `✅ runtime` row is upgraded by Batch 1. Conservative status remains `✅ data / 🔄 runtime` or `🔄 partial hook/runtime`.
 
 Conservative row update queue:
 
 | Batch 1 scope | PORT_STATUS row(s) to revisit after integration | Required proof before changing status |
 |---|---|---|
-| `ClearSkillTeamEnterHole` | Deferred trap family list; Region_S trap Lua subset | PC Lua source citation, accepted hook/executor implementation, representative tests, `jx_map_port_verify.py` showing the deferred family resolved, then Unity proof. |
-| `TongMapEntrance` | Deferred trap family list; Guild city war / Tong maps; Region_S trap Lua subset | PC `script/tong` source citation, ownership/ban/expiry/enter-pos semantics tested, verifier deferred count update, then Unity proof. |
-| `CityWarJoinRouter` | Deferred trap family list; City war config; Region_S trap Lua subset | PC city-war source citation, camp routing/current-map behavior tested, verifier deferred count update, then Unity proof. |
-| Travel runtime proof | Waypoints, Wharves, Revive positions, Scroll items | End-to-end service/runtime tests proving consumers use the exact parsed PC data; parser/count tests alone stay `✅ data / 🔄 runtime`. |
+| `ClearSkillTeamEnterHole` | Deferred trap family list; Region_S trap Lua subset | Routed as `🔄 partial runtime`; need captain/team validation, `CSP_CheckValid`, mission/free-map allocation, `OpenMission/RunMission/AddMSPlayer`, `SetTempRevPos`, and Test Runner/runtime proof before `✅`. |
+| `TongMapEntrance` | Deferred trap family list; Guild city war / Tong maps; Region_S trap Lua subset | Routed as host-limited `🔄 partial hook`; need PC host APIs for product region, map params, Tong ownership/ban/template/expire semantics and runtime proof before `✅`. |
+| `CityWarJoinRouter` | Deferred trap family list; City war config; Region_S trap Lua subset | Routed as `🔄 partial runtime`; need full mission lifecycle, Tong gate/current-map integration, card expiry, rewards, and runtime proof before `✅`. |
+| Travel runtime proof | Waypoints, Wharves, Revive positions, Scroll items | Service lookup proof added; still needs end-to-end travel/revive/scroll behavior proof in runtime scene before `✅ runtime`. |
 
 ## Harness DB sync audit — 2026-06-08
 

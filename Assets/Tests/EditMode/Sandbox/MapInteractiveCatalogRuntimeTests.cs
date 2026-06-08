@@ -258,12 +258,15 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void TrapActionCatalog_LoadsDeterministicPcNewWorldActions()
+        public void TrapActionCatalog_LoadsDeterministicAndHostLimitedPcActions()
         {
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(804, catalog.Count);
+            Assert.AreEqual(817, catalog.Count);
+            Assert.AreEqual(8, catalog.entries.Count(e => e != null && e.IsTongMapEntrance));
+            Assert.AreEqual(4, catalog.entries.Count(e => e != null && e.IsClearSkillTeamEnterHole));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsCityWarJoinRouter));
             Assert.AreEqual(532, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
@@ -287,6 +290,23 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
+            var tongEntrance = catalog.Find(0x33494BB9, "0x33494BB9");
+            Assert.IsNotNull(tongEntrance);
+            Assert.IsTrue(tongEntrance.IsTongMapEntrance);
+            Assert.AreEqual(@"\script\tong\map\fengxiang\entrance_trap.lua", tongEntrance.scriptPath);
+            Assert.AreEqual(PcTrapActionCatalogEntry.TongMapEntranceDefaultCellX, tongEntrance.tongDefaultEnterCellX);
+            var clearSkillEntrance = catalog.Find(0xC69A1B00, "0xC69A1B00");
+            Assert.IsNotNull(clearSkillEntrance);
+            Assert.IsTrue(clearSkillEntrance.IsClearSkillTeamEnterHole);
+            Assert.AreEqual(1, clearSkillEntrance.trapIndex);
+            Assert.AreEqual(1621, clearSkillEntrance.enterCellX);
+            Assert.AreEqual(3236, clearSkillEntrance.enterCellY);
+            var cityWarRouter = catalog.Find(0x3619F2C2, "0x3619F2C2");
+            Assert.IsNotNull(cityWarRouter);
+            Assert.IsTrue(cityWarRouter.IsCityWarJoinRouter);
+            Assert.AreEqual(221, cityWarRouter.targetMapId);
+            Assert.AreEqual(1533, cityWarRouter.enterCellX);
+            Assert.AreEqual(3211, cityWarRouter.enterCellY);
             var secretRoomEntrance = catalog.Find(0xF51BA9A5, "0xF51BA9A5");
             Assert.IsNotNull(secretRoomEntrance);
             Assert.IsTrue(secretRoomEntrance.IsNewWorld);
