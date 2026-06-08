@@ -2034,17 +2034,12 @@ namespace VLTK.UI
 
         private void OnFriendClick()
         {
-            var friends = SandboxManager.Instance?.FriendService?.GetFriends(1);
-            var rows = new List<string> { $"Bằng hữu: {(friends != null ? friends.Count : 0)}/{FriendService.MaxFriends}" };
-            if (friends != null && friends.Count > 0)
-            {
-                foreach (var f in friends)
-                    rows.Add($"{f.friendName} — cấp {f.level} — {(f.isOnline ? "online" : "offline")}");
-            }
-            else
-            {
-                rows.Add("Danh sách bằng hữu đang trống.");
-            }
+            var snap = FriendPanelService.BuildSnapshot(SandboxManager.Instance?.FriendService, 1);
+            var rows = new List<string> { $"Bằng hữu: {snap.friendCount}/{snap.maxFriends}" };
+            foreach (var control in snap.controls)
+                rows.Add($"PC [{control.pcSection}] {control.labelVi}: {control.actionVi}");
+            foreach (var friendRow in snap.friendRows)
+                rows.Add(friendRow);
             OpenPcToolPanel("Bằng hữu", rows);
             SubsystemLog.Info("HUD", "Open Friend panel");
         }

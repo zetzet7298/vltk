@@ -191,6 +191,24 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(SettingsPanelService.GetBool("x"));
         }
 
+        // ─── FriendPanelService ─────────────────────────────────────────────
+        [Test]
+        public void FriendPanel_BuildSnapshot_MatchesPc2b9c5056Controls()
+        {
+            var snap = FriendPanelService.BuildSnapshot(null, 1);
+            Assert.AreEqual(9, snap.controls.Count, "PC 2b9c5056.ini active friend controls must stay covered.");
+            Assert.AreEqual("UnitBtnFriend", snap.controls[0].pcSection);
+            Assert.AreEqual("UnitBtnBrother", snap.controls[1].pcSection);
+            Assert.AreEqual("UnitBtnEnemy", snap.controls[2].pcSection);
+            Assert.AreEqual("UnitBtnOther", snap.controls[3].pcSection);
+            Assert.AreEqual("FindBtn", snap.controls[4].pcSection);
+            Assert.AreEqual("Invisible", snap.controls[5].pcSection);
+            Assert.AreEqual("ScrollUp", snap.controls[6].pcSection);
+            Assert.AreEqual("ScrollDown", snap.controls[7].pcSection);
+            Assert.AreEqual("CloseBtn", snap.controls[8].pcSection);
+            StringAssert.Contains("Danh sách bằng hữu", snap.friendRows[0]);
+        }
+
         // ─── SystemMenuPanelService ─────────────────────────────────────────
         [Test]
         public void SystemMenu_BuildSnapshot_DoesNotThrow()
