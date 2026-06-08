@@ -123,6 +123,8 @@ namespace VLTK.Sandbox
         public int gateFightState = -1;
         public int[] reviveReturnMapIds;
         public int taskId;
+        public int taskValue;
+        public int alternateTaskId;
         public int passTaskMinInclusive;
         public int requiredSeries;
         public int midTaskMinExclusive;
@@ -161,6 +163,9 @@ namespace VLTK.Sandbox
         public int createTeam = -1;
         public int setTaskTempId;
         public int setTaskTempValue;
+        public int[] setTaskIds;
+        public int[] setTaskValues;
+        public string[] notes;
         public string deathScript;
         public int reviveSubWorldId;
         public string source;
@@ -186,6 +191,7 @@ namespace VLTK.Sandbox
         public bool IsTaskFactionMessageGateNewWorld => string.Equals(actionKind, "TaskFactionMessageGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskFactionPromptGateNewWorld => string.Equals(actionKind, "TaskFactionPromptGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskCurrentMapReturnNewWorld => string.Equals(actionKind, "TaskCurrentMapReturnNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskSetTaskFactionGateNewWorld => string.Equals(actionKind, "TaskSetTaskFactionGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);

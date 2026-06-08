@@ -33,6 +33,7 @@ namespace VLTK.Sandbox
         long GetCurrentDateYmdHm();
         int RandomIntInclusive(int minInclusive, int maxInclusive);
         int GetTaskValue(int taskId);
+        void SetTaskValue(int taskId, int value);
         int GetCurCamp();
         int GetCamp();
         int GetBattleRank();
@@ -60,6 +61,7 @@ namespace VLTK.Sandbox
         void AddTermini(int terminiId);
         void SetProtectTime(int ticks);
         void AddSkillState(int skillStateId, int level, int durationTicks);
+        void AddNote(string note);
         void ApplyCityWarRankEffect(int rank);
     }
 
@@ -321,6 +323,50 @@ namespace VLTK.Sandbox
                 _host.NewWorld(targetMapId, mappedTarget);
                 result = Success(action,
                     $"GetTask({action.taskId})=0, currentMap={currentMapId} -> NewWorld({targetMapId},{action.currentTargetCellXs[mappedIndex]},{action.currentTargetCellYs[mappedIndex]}) -> {mappedTarget}");
+                return true;
+            }
+
+            if (action.IsTaskSetTaskFactionGateNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                if (taskValue == action.taskValue)
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    ApplyFightState(action);
+                    _host.NewWorld(action.targetMapId, target);
+                    ApplySetTasks(action);
+                    result = Success(action,
+                        $"GetTask({action.taskId})=={taskValue} -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) + SetTask");
+                    return true;
+                }
+
+                int alternateTaskValue = _host.GetTaskValue(action.alternateTaskId);
+                int factionId = _host.GetPlayerFactionId();
+                if (alternateTaskValue >= action.passTaskMinInclusive && factionId == action.requiredFactionId)
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    ApplyFightState(action);
+                    _host.NewWorld(action.targetMapId, target);
+                    result = Success(action,
+                        $"GetTask({action.alternateTaskId})={alternateTaskValue}, GetFaction()=={action.requiredFaction}#{action.requiredFactionId} -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                    return true;
+                }
+
+                var failTarget = action.FailTargetWorldPosition();
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.message))
+                    _sideEffects.PostMessage(action.message);
+                ApplyNotes(action);
+                _host.SetPos(failTarget);
+                result = Success(action,
+                    $"GetTask({action.taskId})={taskValue}, GetTask({action.alternateTaskId})={alternateTaskValue}, faction={factionId} -> Talk + SetPos({action.failTargetCellX},{action.failTargetCellY}) -> {failTarget}");
                 return true;
             }
 
@@ -811,6 +857,24 @@ namespace VLTK.Sandbox
                 _host.SetFightState(action.fightState);
         }
 
+        private void ApplySetTasks(PcTrapActionCatalogEntry action)
+        {
+            if (action.setTaskIds == null || action.setTaskValues == null) return;
+            int count = Math.Min(action.setTaskIds.Length, action.setTaskValues.Length);
+            for (int i = 0; i < count; i++)
+                _host.SetTaskValue(action.setTaskIds[i], action.setTaskValues[i]);
+        }
+
+        private void ApplyNotes(PcTrapActionCatalogEntry action)
+        {
+            if (_sideEffects == null || action.notes == null) return;
+            foreach (string note in action.notes)
+            {
+                if (string.IsNullOrWhiteSpace(note)) continue;
+                _sideEffects.AddNote(note);
+            }
+        }
+
         private static int FindLevelBracket(PcTrapActionCatalogEntry action, int playerLevel)
         {
             int count = action.levelBracketTargetMapIds?.Length ?? 0;
@@ -949,6 +1013,12 @@ namespace VLTK.Sandbox
             SubsystemLog.Info("Trap", $"PC AddSkillState({skillStateId},{level},0,{durationTicks}) recorded");
         }
 
+        public void AddNote(string note)
+        {
+            if (string.IsNullOrWhiteSpace(note)) return;
+            SubsystemLog.Info("Trap", $"PC AddNote: {note}");
+        }
+
         public void ApplyCityWarRankEffect(int rank)
         {
             SubsystemLog.Info("Trap", $"PC bt_RankEffect(BT_GetData(PL_CURRANK={rank})) recorded");
@@ -1004,6 +1074,11 @@ namespace VLTK.Sandbox
 
         public int GetTaskValue(int taskId)
             => SandboxManager.Instance?.TaskFlagService?.GetFlag(taskId) ?? 0;
+
+        public void SetTaskValue(int taskId, int value)
+        {
+            SandboxManager.Instance?.TaskFlagService?.SetFlag(taskId, value);
+        }
 
         public int GetCurCamp()
             => SandboxManager.Instance?.GetCurCamp() ?? 0;

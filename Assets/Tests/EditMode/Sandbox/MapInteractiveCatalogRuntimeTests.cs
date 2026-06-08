@@ -117,6 +117,7 @@ namespace VLTK.Tests.Sandbox
             public long GetCurrentDateYmdHm() => currentDateYmdHm;
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
             public int GetTaskValue(int taskId) => taskValues.TryGetValue(taskId, out var value) ? value : taskValue;
+            public void SetTaskValue(int taskId, int value) => taskValues[taskId] = value;
             public int GetCurCamp() => curCamp;
             public int GetCamp() => originalCamp;
             public int GetBattleRank() => battleRank;
@@ -154,6 +155,7 @@ namespace VLTK.Tests.Sandbox
             public readonly List<string> messages = new();
             public readonly List<int> stationIds = new();
             public readonly List<int> terminiIds = new();
+            public readonly List<string> notes = new();
             public int protectTicks;
             public int skillStateId;
             public int skillStateLevel;
@@ -164,6 +166,7 @@ namespace VLTK.Tests.Sandbox
             public void AddStation(int stationId) => stationIds.Add(stationId);
             public void AddTermini(int terminiId) => terminiIds.Add(terminiId);
             public void SetProtectTime(int ticks) => protectTicks = ticks;
+            public void AddNote(string note) => notes.Add(note);
             public void AddSkillState(int nextSkillStateId, int level, int durationTicks)
             {
                 skillStateId = nextSkillStateId;
@@ -199,7 +202,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(794, catalog.Count);
+            Assert.AreEqual(795, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -213,6 +216,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionMessageGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionPromptGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskCurrentMapReturnNewWorld));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskSetTaskFactionGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
@@ -1857,6 +1861,79 @@ namespace VLTK.Tests.Sandbox
 
             Assert.IsTrue(result.success);
             Assert.AreEqual(-1, host.mapId);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskSetTaskFactionGateNewWorld_AppliesPcSetTaskAndFailNote()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0x0B4C79C1u,
+                        trapIdHex = "0x0B4C79C1",
+                        scriptPath = @"\script\中原北区\天忍教\天忍教圣洞1\trap\天忍教圣洞1to天忍教圣洞2.lua",
+                        actionKind = "TaskSetTaskFactionGateNewWorld",
+                        taskId = 28,
+                        taskValue = 15,
+                        alternateTaskId = 4,
+                        passTaskMinInclusive = 60 * 256 + 70,
+                        requiredFaction = "tianren",
+                        requiredFactionId = (int)CombatFaction.TianRen,
+                        targetMapId = 52,
+                        targetCellX = 1729,
+                        targetCellY = 3225,
+                        fightState = 1,
+                        setTaskIds = new[] { 4, 28 },
+                        setTaskValues = new[] { 60 * 256 + 70, 0 },
+                        failTargetCellX = 1767,
+                        failTargetCellY = 3186,
+                        message = "Chưa lấy được <color=Red>bốn câu khẩu quyết<color>, không thể vào tầng hai của Thánh Động.",
+                        notes = new[] { "Muốn vào tầng hai, phải lấy được bốn câu khẩu quyết." },
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValues = { [28] = 15 } };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0B4C79C1" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(52, host.mapId);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(60 * 256 + 70, host.taskValues[4]);
+            Assert.AreEqual(0, host.taskValues[28]);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+
+            host = new FakeTrapTravelHost
+            {
+                taskValues = { [4] = 60 * 256 + 70 },
+                playerFactionId = (int)CombatFaction.TianRen,
+            };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0B4C79C1" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(52, host.mapId);
+            Assert.IsFalse(host.taskValues.ContainsKey(28));
+
+            host = new FakeTrapTravelHost();
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0B4C79C1" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1767 * 32, 3186 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Chưa lấy được <color=Red>bốn câu khẩu quyết<color>, không thể vào tầng hai của Thánh Động." }, sideEffects.messages);
+            CollectionAssert.AreEqual(new[] { "Muốn vào tầng hai, phải lấy được bốn câu khẩu quyết." }, sideEffects.notes);
         }
 
         [Test]

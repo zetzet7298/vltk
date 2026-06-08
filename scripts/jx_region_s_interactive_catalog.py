@@ -2138,6 +2138,79 @@ def task_current_map_return_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def task_settask_faction_gate_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {
+        'main', 'GetTask', 'GetFaction', 'NewWorld', 'SetFightState', 'SetTask', 'Talk', 'SetPos', 'AddNote', 'if', 'elseif', 'and'
+    }):
+        return None
+    if re.search(r'\b(for|while|repeat)\b', clean_source):
+        return None
+    if 'elseif' not in clean_source or 'else' not in clean_source:
+        return None
+    match = re.search(
+        r'(?P<altVar>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<altTaskId>\d+)\s*\).*?'
+        r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<taskId>\d+)\s*\).*?'
+        r'if\s*\(?\s*(?P=var)\s*==\s*(?P<taskValue>[0-9\s*+\-]+)\s*\)?\s*then(?P<primary>.*?)'
+        r'elseif\s*\(?\s*(?P=altVar)\s*>=\s*(?P<passMin>[0-9\s*+\-]+)\s*\)?\s*and\s*\(?\s*GetFaction\s*\(\s*\)\s*==\s*["\'](?P<faction>[a-z]+)["\']\s*\)?\s*then(?P<secondary>.*?)'
+        r'else(?P<fail>.*?)end',
+        clean_source, re.S | re.I)
+    if not match:
+        return None
+    task_value = int_lua_constant_expr(match.group('taskValue'))
+    pass_min = int_lua_constant_expr(match.group('passMin'))
+    faction = match.group('faction').lower()
+    faction_id = PC_FACTION_IDS.get(faction)
+    if task_value is None or pass_min is None or faction_id is None:
+        return None
+    primary_new_world = int_args_unique(parse_lua_calls(match.group('primary'), 'NewWorld', limit=2), 3)
+    secondary_new_world = int_args_unique(parse_lua_calls(match.group('secondary'), 'NewWorld', limit=2), 3)
+    primary_fight = int_args_unique(parse_lua_calls(match.group('primary'), 'SetFightState', limit=2), 1)
+    secondary_fight = int_args_unique(parse_lua_calls(match.group('secondary'), 'SetFightState', limit=2), 1)
+    fail_pos = int_args_unique(parse_lua_calls(match.group('fail'), 'SetPos', limit=2), 2)
+    if (
+        primary_new_world is None or secondary_new_world is None or primary_new_world != secondary_new_world or
+        primary_fight is None or secondary_fight is None or primary_fight != secondary_fight or fail_pos is None
+    ):
+        return None
+    set_task_calls = parse_lua_calls(match.group('primary'), 'SetTask', limit=4)
+    set_task_ids: list[int] = []
+    set_task_values: list[int] = []
+    for call in set_task_calls:
+        if len(call) < 2 or not str(call[0]).strip().isdigit():
+            return None
+        value = int_lua_constant_expr(str(call[1]))
+        if value is None:
+            return None
+        set_task_ids.append(int(str(call[0]).strip()))
+        set_task_values.append(value)
+    if not set_task_ids:
+        return None
+    fail_messages = talk_messages({'talkCalls': parse_lua_calls(match.group('fail'), 'Talk', limit=2)})
+    notes = [clean_user_message(str(call[0])) for call in parse_lua_calls(match.group('fail'), 'AddNote', limit=2) if call]
+    notes = [note for note in notes if note and is_safe_user_message(note)]
+    if len(fail_messages) != 1:
+        return None
+    return {
+        'taskId': int(match.group('taskId')),
+        'taskValue': task_value,
+        'alternateTaskId': int(match.group('altTaskId')),
+        'passTaskMinInclusive': pass_min,
+        'requiredFaction': faction,
+        'requiredFactionId': faction_id,
+        'targetMapId': primary_new_world[0],
+        'targetCellX': primary_new_world[1],
+        'targetCellY': primary_new_world[2],
+        'fightState': primary_fight[0],
+        'setTaskIds': set_task_ids,
+        'setTaskValues': set_task_values,
+        'failTargetCellX': fail_pos[0],
+        'failTargetCellY': fail_pos[1],
+        'message': fail_messages[0],
+        'notes': notes,
+    }
+
+
 def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
     if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
         return None
@@ -2498,6 +2571,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_current_map_return,
             })
             continue
+        task_settask_faction_gate = task_settask_faction_gate_newworld(source)
+        if task_settask_faction_gate is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskSetTaskFactionGateNewWorld',
+                'source': 'PC trap Lua main(): exact GetTask branch applies SetFightState/NewWorld/SetTask; completed faction branch enters; fail branch Talk+SetPos+AddNote',
+                **task_settask_faction_gate,
+            })
+            continue
         citywar_gate = citywar_camp_gate_setpos(source)
         if citywar_gate is not None:
             entries.append({
@@ -2647,6 +2732,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskFactionMessageGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionMessageGateNewWorld'),
         'deterministicTrapTaskFactionPromptGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionPromptGateNewWorld'),
         'deterministicTrapTaskCurrentMapReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskCurrentMapReturnNewWorld'),
+        'deterministicTrapTaskSetTaskFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetTaskFactionGateNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T09:23:24Z",
+  "generatedAtUtc": "2026-06-08T09:45:43Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -647,6 +647,38 @@
       "targetCellY": 6232,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 189561281,
+      "trapIdHex": "0x0B4C79C1",
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞1\\trap\\天忍教圣洞1to天忍教圣洞2.lua",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教圣洞1\\trap\\天忍教圣洞1to天忍教圣洞2.lua",
+      "actionKind": "TaskSetTaskFactionGateNewWorld",
+      "source": "PC trap Lua main(): exact GetTask branch applies SetFightState/NewWorld/SetTask; completed faction branch enters; fail branch Talk+SetPos+AddNote",
+      "taskId": 28,
+      "taskValue": 15,
+      "alternateTaskId": 4,
+      "passTaskMinInclusive": 15430,
+      "requiredFaction": "tianren",
+      "requiredFactionId": 6,
+      "targetMapId": 52,
+      "targetCellX": 1729,
+      "targetCellY": 3225,
+      "fightState": 1,
+      "setTaskIds": [
+        4,
+        28
+      ],
+      "setTaskValues": [
+        15430,
+        0
+      ],
+      "failTargetCellX": 1767,
+      "failTargetCellY": 3186,
+      "message": "Chưa lấy được <color=Red>bốn câu khẩu quyết<color>, không thể vào tầng hai của Thánh Động.",
+      "notes": [
+        "Muốn vào tầng hai, phải lấy được bốn câu khẩu quyết."
+      ]
     },
     {
       "trapId": 191805539,
