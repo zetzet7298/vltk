@@ -144,7 +144,9 @@ namespace VLTK.Tests.Sandbox
             foreach (var name in interactivePcButtons)
             {
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " from the PC HUD evidence/INI must remain present.");
-                if (name == "ToggleMapBtn" || name == "WorldMapBtn")
+                if (name == "ToggleMapBtn")
+                    StringAssert.Contains("RegisterClick(root, \"ToggleMapBtn\", OnToggleMapClick)", controller, "PC SwitchBtn must toggle small/large minimap, not duplicate WorldMapBtn.");
+                else if (name == "WorldMapBtn")
                     StringAssert.Contains($"RegisterPreviewOpen(root, \"{name}\")", controller, name + " must open the PC map preview.");
                 else if (name == "FaceBtn")
                     StringAssert.Contains("OpenFacePicker();", controller, "FaceBtn must open the PC emoji/face picker.");
@@ -204,6 +206,21 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("Quá đông", controller);
             StringAssert.Contains("Bị giật", controller);
             StringAssert.Contains("UpdatePcConnectionStatus();", controller);
+        }
+
+        [Test]
+        public void MinimapSwitchButton_TogglesPcSmallLargeMapMode()
+        {
+            var css = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uss"));
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+
+            StringAssert.Contains("RegisterClick(root, \"ToggleMapBtn\", OnToggleMapClick)", controller);
+            StringAssert.Contains("_minimapPanel?.EnableInClassList(\"hud-minimap-large\", _minimapExpanded)", controller);
+            StringAssert.Contains("ec10b91e [SwitchBtn]", controller);
+            StringAssert.Contains("小地图_小.ini ↔ 小地图_大.ini", controller);
+            StringAssert.Contains(".hud-minimap-panel.hud-minimap-large", css);
+            StringAssert.Contains("width: 360px;", css, "Large minimap frame must follow PC f8bf2550 360-wide map mode.");
+            StringAssert.Contains("top: 306px;", css, "Large minimap buttons must move to the PC large-map bottom row instead of staying at small-map y=136.");
         }
 
         [Test]

@@ -109,6 +109,7 @@ namespace VLTK.UI
         private bool _chatRightAnchored;
         private bool _chatShadowVisible = true;
         private bool _systemReminderVisible;
+        private bool _minimapExpanded;
 
         // New HUD elements
         private VisualElement _buffPanel;
@@ -493,7 +494,7 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "MinimapContent");
             RegisterPreviewOpen(root, "PlayerDot");
             RegisterClick(root, "ScenePos", OnScenePosClick);
-            RegisterPreviewOpen(root, "ToggleMapBtn");
+            RegisterClick(root, "ToggleMapBtn", OnToggleMapClick);
             RegisterClick(root, "MinimapMarkerBtn", OnMinimapMarkerClick);
             RegisterPreviewOpen(root, "WorldMapBtn");
             RegisterClick(root, "CaveMapBtn", OnCaveMapClick);
@@ -1962,6 +1963,18 @@ namespace VLTK.UI
                     : "Chạm bản đồ lớn để đánh dấu điểm đến";
             OpenPcToolPanel("Đánh dấu bản đồ", new[] { _mapPreviewCoords?.text ?? "Chạm bản đồ lớn để đánh dấu điểm đến" });
             SubsystemLog.Info("HUD", "Open minimap marker");
+        }
+
+        private void OnToggleMapClick()
+        {
+            _minimapExpanded = !_minimapExpanded;
+            _minimapPanel?.EnableInClassList("hud-minimap-large", _minimapExpanded);
+            OpenPcToolPanel("Chuyển bản đồ nhỏ/lớn", new[]
+            {
+                _minimapExpanded ? "Đã chuyển sang bản đồ lớn." : "Đã thu về bản đồ nhỏ.",
+                "PC: ec10b91e [SwitchBtn] dùng 小地图－切换按钮0.spr để đổi 小地图_小.ini ↔ 小地图_大.ini.",
+            });
+            SubsystemLog.Info("HUD", _minimapExpanded ? "Minimap large" : "Minimap small");
         }
 
         private void OnCaveMapClick()

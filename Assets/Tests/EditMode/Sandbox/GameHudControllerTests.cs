@@ -58,6 +58,7 @@ namespace VLTK.Tests.Sandbox
         private ScrollView _pcToolList;
         private Label _pcToolTitle;
         private VisualElement _pcShortcutDock;
+        private VisualElement _minimapPanel;
         private VisualElement _pcShortcutToggleBtn;
         private Label _pcShortcutToggleLabel;
 
@@ -166,6 +167,8 @@ namespace VLTK.Tests.Sandbox
             _invWindow.Add(_invMoney);
             _invWindow.Add(_invGrid);
 
+            _minimapPanel = new VisualElement { name = "MinimapPanel" };
+
             _pcToolPanel = new VisualElement { name = "PcToolPanel" };
             _pcToolPanel.AddToClassList("hidden");
             _pcToolClose = new VisualElement { name = "PcToolClose" };
@@ -189,6 +192,7 @@ namespace VLTK.Tests.Sandbox
             _root.Add(_utilityDock);
             _root.Add(_pcShortcutToggleBtn);
             _root.Add(_pcShortcutDock);
+            _root.Add(_minimapPanel);
             _root.Add(_skillPanel);
             _root.Add(_invWindow);
             _root.Add(_pcToolPanel);
@@ -221,6 +225,7 @@ namespace VLTK.Tests.Sandbox
             SetPrivateField("_pcShortcutDock", _pcShortcutDock);
             SetPrivateField("_pcShortcutToggleBtn", _pcShortcutToggleBtn);
             SetPrivateField("_pcShortcutToggleLabel", _pcShortcutToggleLabel);
+            SetPrivateField("_minimapPanel", _minimapPanel);
             SetPrivateField("_skillPanel", _skillPanel);
             SetPrivateField("_skillList", _skillList);
             SetPrivateField("_skillSummary", _skillSummary);
@@ -553,6 +558,25 @@ namespace VLTK.Tests.Sandbox
             InvokeAndAssertPcTool(covered, "Options", "OnOptionsClick", "Hệ thống", "Treo máy offline");
 
             CollectionAssert.AreEquivalent(HudBottomBarPcSpec.ToolControlBar.Keys, covered);
+        }
+
+        [Test]
+        public void ToggleMapButton_SwitchesBetweenPcSmallAndLargeMinimap()
+        {
+            Assert.IsFalse(_minimapPanel.ClassListContains("hud-minimap-large"));
+
+            InvokePrivateMethod("OnToggleMapClick");
+
+            Assert.IsTrue(GetPrivateField<bool>("_minimapExpanded"));
+            Assert.IsTrue(_minimapPanel.ClassListContains("hud-minimap-large"));
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Chuyển bản đồ nhỏ/lớn", _pcToolTitle.text);
+            Assert.IsTrue(_pcToolList.Query<Label>().ToList().Exists(l => l.text.Contains("小地图_小.ini")));
+
+            InvokePrivateMethod("OnToggleMapClick");
+
+            Assert.IsFalse(GetPrivateField<bool>("_minimapExpanded"));
+            Assert.IsFalse(_minimapPanel.ClassListContains("hud-minimap-large"));
         }
 
         [Test]

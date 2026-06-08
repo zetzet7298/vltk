@@ -203,6 +203,39 @@
 #WorldMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_world_full_pc.png'); }
 #CaveMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_cave_pc.png'); }
 
+/* PC minimap SwitchBtn toggles 小地图_小.ini (ec10b91e) ↔ 小地图_大.ini (f8bf2550).
+   Keep the same PC button icons; only the minimap footprint changes. */
+.hud-minimap-panel.hud-minimap-large {
+    width: 370px;
+    height: 332px;
+}
+
+.hud-minimap-panel.hud-minimap-large .hud-minimap-frame {
+    width: 360px;
+    height: 300px;
+}
+
+.hud-minimap-panel.hud-minimap-large .hud-minimap-content {
+    width: 358px;
+    height: 298px;
+}
+
+.hud-minimap-panel.hud-minimap-large .hud-scene-name,
+.hud-minimap-panel.hud-minimap-large .hud-scene-pos {
+    width: 360px;
+}
+
+.hud-minimap-panel.hud-minimap-large .hud-minimap-btns {
+    left: 292px;
+    top: 306px;
+}
+
+.hud-minimap-panel.hud-minimap-large .hud-map-pos-input {
+    left: -9px;
+    top: 306px;
+    width: 126px;
+}
+
 .hidden { display: none; }
 
 
