@@ -464,6 +464,24 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
 def verify_default_map(audit: Audit, root: Path) -> None:
     manager = root / 'Assets/Scripts/Sandbox/SandboxManager.cs'
     text = manager.read_text(encoding='utf-8', errors='ignore')
+    manifest_text = (root / 'Assets/Scripts/Sandbox/MapPortManifest.cs').read_text(encoding='utf-8', errors='ignore')
+    expected_manifest_ids = {
+        'PhuongTuongId': 1,
+        'ThanhDoId': 11,
+        'GiangTanThonId': 20,
+        'BienKinhId': 37,
+        'BaLangHuyenId': 53,
+        'TuongDuongId': 78,
+        'DaiLyId': 162,
+        'LamAnId': 176,
+        'DaoHoaDaoId': 235,
+        'VuotAiNhiepThiTranId': 907,
+    }
+    for const_name, map_id in expected_manifest_ids.items():
+        audit.require(f'public const int {const_name} = {map_id};' in manifest_text,
+                      f'MapPortManifest.{const_name} must match PC MapAliasCatalog mapId {map_id}')
+    audit.require('QuangChauId' not in manifest_text and 'Quảng Châu' not in manifest_text,
+                  'MapPortManifest must not include synthetic Quảng Châu: scoped PC maplist.ini has no 广州 entry')
     audit.require('public const int VuotAiNhiepThiTranMapId = 907;' in text,
                   'SandboxManager must keep Vượt ải Nhiếp Thí Trần constant at mapId 907')
     audit.require('public int defaultMapId = VuotAiNhiepThiTranMapId;' in text,

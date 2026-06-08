@@ -106,7 +106,6 @@ namespace VLTK.Sandbox
             [MapPortManifest.DaiLyId] = new[] { 60, 61, 62 },
             [MapPortManifest.BienKinhId] = new[] { 65, 66, 67 },
             [MapPortManifest.LamAnId] = new[] { 55, 66, 67 },
-            [MapPortManifest.QuangChauId] = new[] { 70, 71, 72 },
             [MapPortManifest.PhuongTuongId] = new[] { 50, 70, 72 },
             // PC source: global/autoexec.lua spawns Bạch Dực (822) and Dịch quan (377) on map 389.
             [MapPortManifest.TinSuVuotAiPhongKy120Id] = new[] { 822, 377 },
@@ -133,8 +132,6 @@ namespace VLTK.Sandbox
             [MapPortManifest.BienKinhId] = new Vector2(53000f, -51000f),
             // Lâm An lakeside
             [MapPortManifest.LamAnId] = new Vector2(49000f, -47000f),
-            // Quảng Châu port
-            [MapPortManifest.QuangChauId] = new Vector2(51000f, -49000f),
             // Phượng Tường town
             [MapPortManifest.PhuongTuongId] = new Vector2(50000f, -48000f),
             // Tín sứ vượt ải / Phong Kỳ 120+: wagoner.lua NewWorld(389,1582,3137).

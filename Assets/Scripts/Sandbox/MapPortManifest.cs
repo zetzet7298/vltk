@@ -33,30 +33,28 @@ namespace VLTK.Sandbox
     /// <summary>Danh mục map ưu tiên port từ PC sang Unity mobile.</summary>
     public static class MapPortManifest
     {
-        public const int BaLangHuyenId = 1;
-        public const int GiangTanThonId = 2;
-        public const int DaoHoaDaoId = 3;
-        public const int TuongDuongId = 11;
-        public const int ThanhDoId = 37;
-        public const int DaiLyId = 80;
-        public const int BienKinhId = 78;
-        public const int LamAnId = 103;
-        public const int QuangChauId = 176;
-        public const int PhuongTuongId = 121;
+        public const int BaLangHuyenId = 53;
+        public const int GiangTanThonId = 20;
+        public const int DaoHoaDaoId = 235;
+        public const int TuongDuongId = 78;
+        public const int ThanhDoId = 11;
+        public const int DaiLyId = 162;
+        public const int BienKinhId = 37;
+        public const int LamAnId = 176;
+        public const int PhuongTuongId = 1;
         public const int TinSuVuotAiPhongKy120Id = 389;
         public const int VuotAiNhiepThiTranId = 907;
 
         public static readonly IReadOnlyDictionary<int, MapPortEntry> Entries = new Dictionary<int, MapPortEntry>
         {
-            [BaLangHuyenId] = new(BaLangHuyenId, "Ba Lăng Huyện", "巴陵县", MapPortStatus.Ported),
+            [BaLangHuyenId] = new(BaLangHuyenId, "Ba Lăng huyện", "巴陵县", MapPortStatus.Ported),
             [GiangTanThonId] = new(GiangTanThonId, "Giang Tân Thôn", "江津村", MapPortStatus.Ported),
-            [DaoHoaDaoId] = new(DaoHoaDaoId, "Đào Hoa Đảo", "桃花岛", MapPortStatus.Ported),
+            [DaoHoaDaoId] = new(DaoHoaDaoId, "Đào Hoa đảo (1)", "桃花岛", MapPortStatus.Ported),
             [TuongDuongId] = new(TuongDuongId, "Tương Dương", "襄阳", MapPortStatus.Ported),
             [ThanhDoId] = new(ThanhDoId, "Thành Đô", "成都", MapPortStatus.Ported),
-            [DaiLyId] = new(DaiLyId, "Đại Lý", "大理", MapPortStatus.Ported),
+            [DaiLyId] = new(DaiLyId, "Đại Lý phủ", "大理府", MapPortStatus.Ported),
             [BienKinhId] = new(BienKinhId, "Biện Kinh", "汴京", MapPortStatus.Ported),
             [LamAnId] = new(LamAnId, "Lâm An", "临安", MapPortStatus.Ported),
-            [QuangChauId] = new(QuangChauId, "Quảng Châu", "广州", MapPortStatus.Ported),
             [PhuongTuongId] = new(PhuongTuongId, "Phượng Tường", "凤翔", MapPortStatus.Ported),
             [TinSuVuotAiPhongKy120Id] = new(TinSuVuotAiPhongKy120Id, "Phong Kỳ (Vượt ải 120+)", "风之骑", MapPortStatus.Ported),
             [VuotAiNhiepThiTranId] = new(VuotAiNhiepThiTranId, "Vượt ải Nhiếp Thí Trần", "沙漠山洞1", MapPortStatus.Ported),
