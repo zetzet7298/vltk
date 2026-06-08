@@ -38,6 +38,8 @@ namespace VLTK.Sandbox
         int GetTaskValue(int taskId);
         void SetTaskValue(int taskId, int value);
         int GetTaskTempValue(int taskId);
+        int GetMissionValue(int missionVarId);
+        int GetMissionPlayerGroup(int missionId);
         bool HaveItem(int pcQuestKeyDetailType, int minCount);
         bool DelItem(int pcQuestKeyDetailType, int count);
         int GetCurCamp();
@@ -695,6 +697,33 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsSongJinRebirthCampState)
+            {
+                int missionState = _host.GetMissionValue(action.missionStateVar);
+                if (missionState == 0)
+                {
+                    result = Success(action, $"GetMissionV({action.missionStateVar})==0 -> no action");
+                    return true;
+                }
+
+                int missionGroup = _host.GetMissionPlayerGroup(action.missionId);
+                int activeMissionState = _host.GetMissionValue(action.missionStateVar);
+                if (missionGroup == action.requiredMissionGroup && activeMissionState == action.requiredMissionState)
+                {
+                    ApplyFightState(action);
+                    _host.SetCurCamp(action.targetCamp);
+                    if (action.punish >= 0)
+                        _host.SetPunish(action.punish);
+                    result = Success(action,
+                        $"GetMissionV({action.missionStateVar})=={activeMissionState}, GetMSIdxGroup({action.missionId},PIdx2MSDIdx)=={missionGroup} -> SetFightState({action.fightState}), SetCurCamp({action.targetCamp}), SetPunish({action.punish})");
+                    return true;
+                }
+
+                result = Success(action,
+                    $"GetMissionV({action.missionStateVar})=={activeMissionState}, GetMSIdxGroup({action.missionId},PIdx2MSDIdx)=={missionGroup} -> no action");
+                return true;
+            }
+
             if (action.IsMsg2PlayerNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -1308,6 +1337,12 @@ namespace VLTK.Sandbox
 
         public int GetTaskTempValue(int taskId)
             => SandboxManager.Instance?.GetTaskTemp(taskId) ?? 0;
+
+        public int GetMissionValue(int missionVarId)
+            => SandboxManager.Instance?.GetPcMissionValue(missionVarId) ?? 0;
+
+        public int GetMissionPlayerGroup(int missionId)
+            => SandboxManager.Instance?.GetPcMissionPlayerGroup(missionId) ?? 0;
 
         public bool HaveItem(int pcQuestKeyDetailType, int minCount)
         {
