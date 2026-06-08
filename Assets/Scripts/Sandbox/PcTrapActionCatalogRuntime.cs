@@ -64,7 +64,7 @@ namespace VLTK.Sandbox
     }
 
     [Serializable]
-    public sealed class PcTrapActionCatalogEntry
+    public sealed partial class PcTrapActionCatalogEntry
     {
         public uint trapId;
         public string trapIdHex;

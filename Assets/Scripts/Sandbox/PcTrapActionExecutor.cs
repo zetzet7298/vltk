@@ -81,7 +81,7 @@ namespace VLTK.Sandbox
         void ApplyCityWarRankEffect(int rank);
     }
 
-    public sealed class PcTrapActionExecutor : ITrapActionExecutor
+    public sealed partial class PcTrapActionExecutor : ITrapActionExecutor
     {
         private readonly PcTrapActionCatalogFile _catalog;
         private readonly ITrapTravelHost _host;
@@ -100,6 +100,10 @@ namespace VLTK.Sandbox
             if (trap == null || _catalog == null) return false;
             var action = _catalog.Find(trap.trapId, trap.trapIdHex);
             if (action == null) return false;
+
+            if (TryExecuteClearSkillTeamEnterHole(action, out result)) return true;
+            if (TryExecuteTongMapEntrance(action, out result)) return true;
+            if (TryExecuteCityWarJoinRouter(action, out result)) return true;
 
             if (action.IsMessageOnly)
             {
