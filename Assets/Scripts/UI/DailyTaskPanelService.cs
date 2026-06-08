@@ -1,10 +1,8 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — UI Panel Service cho Nhiệm Vụ Hằng Ngày (Daily Task Panel)
-// Reference: PC daily quest system + DailyTaskService.
-// Vietnamese: "Nhiệm Vụ Hằng Ngày", "Làm mới sau", "Phần thưởng".
+// PC source: task/dailytask/dailytask.txt.
 // -----------------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using VLTK.Sandbox;
 
@@ -53,28 +51,73 @@ namespace VLTK.UI
 
         public static DailyTaskPanelSnapshot BuildSnapshot(DailyTaskService svc, int playerId)
         {
-            return new DailyTaskPanelSnapshot { rows = System.Array.Empty<DailyTaskPanelRow>() };
+            if (svc == null)
+                return new DailyTaskPanelSnapshot { dailyRefreshSec = DailyRefreshSecDefault, rows = System.Array.Empty<DailyTaskPanelRow>() };
+
+            var entries = svc.GetAllDailyTasks();
+            var rows = new List<DailyTaskPanelRow>(entries.Count);
+            foreach (var e in entries)
+            {
+                int target = e.targetCount > 0 ? e.targetCount : 1;
+                rows.Add(new DailyTaskPanelRow(
+                    e.taskId,
+                    $"Nhiệm vụ #{e.taskId}",
+                    BuildDescription(e),
+                    0,
+                    target,
+                    false,
+                    false,
+                    e.rewardItem,
+                    e.rewardItem > 0 ? 1 : 0,
+                    DailyRefreshSecDefault));
+            }
+
+            return new DailyTaskPanelSnapshot
+            {
+                dailyRefreshSec = DailyRefreshSecDefault,
+                completedCount = 0,
+                totalCount = rows.Count,
+                rows = rows
+            };
         }
 
         public static bool TryAccept(DailyTaskService svc, int playerId, int taskId)
         {
-            return false;
+            if (svc == null || taskId <= 0)
+                return false;
+            return svc.Accept(taskId, int.MaxValue);
         }
 
         public static bool TryComplete(DailyTaskService svc, int playerId, int taskId)
         {
-            return false;
+            if (svc == null || taskId <= 0)
+                return false;
+            return svc.Complete(taskId);
         }
 
         public static int GetProgressPercent(int progress, int target)
         {
-            return 0;
+            if (target <= 0 || progress <= 0)
+                return 0;
+            if (progress >= target)
+                return 100;
+            return UnityEngine.Mathf.Clamp(progress * 100 / target, 0, 100);
         }
 
         public static string GetProgressPercent(string text, int progress, int target)
-        {
-            return string.Empty;
-        }
+            => string.IsNullOrEmpty(text) ? $"{GetProgressPercent(progress, target)}%" : text;
 
+        private static string BuildDescription(PcDailyTaskEntry e)
+        {
+            string type = e.taskType switch
+            {
+                0 => "Diệt quái",
+                1 => "Thu thập",
+                2 => "Đối thoại",
+                3 => "Đến địa điểm",
+                _ => "Nhiệm vụ",
+            };
+            return $"{type}: mục tiêu {e.targetId} x{(e.targetCount > 0 ? e.targetCount : 1)} — thưởng EXP {e.rewardExp}, bạc {e.rewardSilver}";
+        }
     }
 }

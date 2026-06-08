@@ -1,7 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — UI Panel Service cho Bang Hội (Guild Panel)
 // Reference: PC tong/guild system + GuildService.
-// Vietnamese: "Bang Hội", "Tên bang", "Cấp bang", "Quỹ bang", "Thành viên".
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -52,35 +51,60 @@ namespace VLTK.UI
         public const int RankViceLeader = 3;
         public const int RankSteward = 2;
 
+        private static readonly int[] PcRankOrder = { RankLeader, RankViceLeader, RankSteward, RankMember };
+
         public static IReadOnlyList<int> GetPcRankOrder()
-        {
-            return System.Array.Empty<int>();
-        }
+            => PcRankOrder;
 
         public static GuildPanelSnapshot BuildSnapshot(GuildService svc, int playerId, int selectedMemberId = 0)
         {
-            return new GuildPanelSnapshot { rows = System.Array.Empty<GuildPanelRow>() };
+            if (svc == null)
+                return new GuildPanelSnapshot { guildName = string.Empty, rows = System.Array.Empty<GuildPanelRow>() };
+
+            return new GuildPanelSnapshot
+            {
+                guildId = svc.GuildName.Length > 0 ? 1 : 0,
+                guildName = svc.GuildName,
+                level = svc.GuildLevel,
+                fund = svc.GuildFunds,
+                memberCount = svc.GuildName.Length > 0 ? 1 : 0,
+                maxMember = 50,
+                leaderId = svc.GuildName.Length > 0 ? playerId : 0,
+                rows = svc.GuildName.Length > 0
+                    ? new[] { new GuildPanelRow(playerId, "Bang chủ", RankLeader, svc.GuildFunds, true, 0, 0) }
+                    : System.Array.Empty<GuildPanelRow>()
+            };
         }
 
         public static bool TryDonate(GuildService svc, int playerId, int amount, int currency)
         {
-            return false;
+            if (svc == null || playerId <= 0 || amount <= 0)
+                return false;
+            svc.Donate(amount);
+            return true;
         }
 
         public static bool TryKick(GuildService svc, int playerId, int targetId)
-        {
-            return false;
-        }
+            => false;
 
         public static string RankName(int rank)
         {
-            return string.Empty;
+            return rank switch
+            {
+                RankLeader => "Bang chủ",
+                RankViceLeader => "Phó bang",
+                RankSteward => "Đường chủ",
+                RankMember => "Thành viên",
+                _ => "Chưa rõ",
+            };
         }
 
         public static string GetGuildSummary(GuildService svc)
         {
-            return string.Empty;
+            if (svc == null)
+                return "Chưa gia nhập bang phái.";
+            var name = string.IsNullOrWhiteSpace(svc.GuildName) ? "Chưa đặt tên" : svc.GuildName;
+            return $"{name} — cấp {svc.GuildLevel}, quỹ {svc.GuildFunds}, công trình {svc.GuildBuild}";
         }
-
     }
 }

@@ -92,6 +92,26 @@ namespace VLTK.Tests.EditMode.Sandbox
             foreach (var r in ranks) Assert.Greater(r, 0);
         }
 
+
+        [Test]
+        public void GuildPanelService_BuildSnapshot_UsesGuildStateAndDonate()
+        {
+            var reg = new PcTongLevelRegistry();
+            reg.Register(new PcTongLevelEntry { level = 1, requiredFunds = 0, requiredBuild = 0 });
+            var svc = new GuildService(reg) { GuildName = "Thiên Hạ" };
+            svc.Donate(1200);
+
+            var snap = GuildPanelService.BuildSnapshot(svc, 1);
+
+            Assert.AreEqual("Thiên Hạ", snap.guildName);
+            Assert.AreEqual(1, snap.level);
+            Assert.AreEqual(1200, snap.fund);
+            Assert.AreEqual(1, snap.memberCount);
+            Assert.AreEqual("Bang chủ", GuildPanelService.RankName(GuildPanelService.RankLeader));
+            Assert.IsTrue(GuildPanelService.TryDonate(svc, 1, 300, 0));
+            Assert.AreEqual(1500, svc.GuildFunds);
+        }
+
         [Test]
         public void GuildPanelService_TryDonate_RejectsNegativeAmount()
         {
@@ -113,6 +133,36 @@ namespace VLTK.Tests.EditMode.Sandbox
             var snap = DailyTaskPanelService.BuildSnapshot(null, 0);
             Assert.IsNotNull(snap);
             Assert.AreEqual(0, snap.totalCount);
+        }
+
+
+        [Test]
+        public void DailyTaskPanelService_BuildSnapshot_UsesPcTaskEntries()
+        {
+            var reg = new PcDailyTaskRegistry();
+            reg.Register(new PcDailyTaskEntry
+            {
+                taskId = 7,
+                taskType = 0,
+                targetId = 101,
+                targetCount = 3,
+                minLevel = 1,
+                maxLevel = 200,
+                rewardExp = 500,
+                rewardSilver = 20,
+                rewardItem = 99,
+            });
+            var svc = new DailyTaskService(reg);
+
+            var snap = DailyTaskPanelService.BuildSnapshot(svc, 1);
+
+            Assert.AreEqual(1, snap.totalCount);
+            Assert.AreEqual(7, snap.rows[0].taskId);
+            Assert.AreEqual(3, snap.rows[0].target);
+            StringAssert.Contains("Diệt quái", snap.rows[0].taskDesc);
+            Assert.AreEqual(50, DailyTaskPanelService.GetProgressPercent(1, 2));
+            Assert.IsTrue(DailyTaskPanelService.TryAccept(svc, 1, 7));
+            Assert.IsTrue(DailyTaskPanelService.TryComplete(svc, 1, 7));
         }
 
         [Test]

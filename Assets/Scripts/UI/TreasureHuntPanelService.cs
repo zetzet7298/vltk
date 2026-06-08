@@ -1,7 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — Treasure Hunt Panel Service (Săn Kho Báu)
-// Dựng snapshot cho UI săn kho báu. Kết hợp TreasureHuntService + vị trí map.
-// Vietnamese: "Săn Kho Báu", "Kho báu gần", "Đào", "Phát hiện", "Khoảng cách".
+// Dựng snapshot cho UI săn kho báu từ TreasureHuntService.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -59,35 +58,51 @@ namespace VLTK.UI
 
         public static TreasureHuntPanelSnapshot BuildSnapshot(TreasureHuntService svc, int playerId, int currentMapId, float posX, float posY)
         {
-            return new TreasureHuntPanelSnapshot { rows = System.Array.Empty<TreasureHuntPanelRow>() };
+            if (svc == null)
+                return new TreasureHuntPanelSnapshot { playerId = playerId, currentMapId = currentMapId, posX = posX, posY = posY, rows = Array.Empty<TreasureHuntPanelRow>() };
+
+            var rows = GetNearby(svc, currentMapId, posX, posY);
+            return new TreasureHuntPanelSnapshot
+            {
+                playerId = playerId,
+                currentMapId = currentMapId,
+                posX = posX,
+                posY = posY,
+                nearbyTreasures = rows.Count,
+                totalTreasures = svc.Count,
+                rows = rows
+            };
         }
 
         public static IReadOnlyList<TreasureHuntPanelRow> GetNearby(TreasureHuntService svc, int mapId, float x, float y)
         {
-            return System.Array.Empty<TreasureHuntPanelRow>();
+            if (svc == null)
+                return Array.Empty<TreasureHuntPanelRow>();
+            var entries = svc.GetByMap(mapId);
+            var rows = new List<TreasureHuntPanelRow>(entries.Count);
+            foreach (var e in entries)
+            {
+                float dx = e.posX - x;
+                float dy = e.posY - y;
+                float dist = (float)Math.Sqrt(dx * dx + dy * dy);
+                float range = e.detectionRange > 0 ? e.detectionRange : 0;
+                if (range <= 0 || dist <= range)
+                    rows.Add(ToRow(e, dist));
+            }
+            return rows;
         }
 
         public static bool TryDig(TreasureHuntService svc, int playerId, int treasureId)
         {
-            return false;
+            if (svc == null || playerId <= 0 || treasureId <= 0)
+                return false;
+            return svc.CanDig(treasureId, int.MaxValue);
         }
 
-    }
-
-    public class TreasureEntry
-    {
-        public int treasureId;
-        public int mapId;
-        public string mapName;
-        public float posX;
-        public float posY;
-        public string itemName;
-        public int itemCount;
-        public float detectionRange;
-    }
-
-    public class TreasureRegistry
-    {
-        public IEnumerable<TreasureEntry> All => Array.Empty<TreasureEntry>();
+        private static TreasureHuntPanelRow ToRow(PcTreasureHuntEntry e, float distance)
+        {
+            return new TreasureHuntPanelRow(e.treasureId, e.mapId, $"Bản đồ #{e.mapId}", e.posX, e.posY,
+                $"Vật phẩm #{e.itemId}", e.itemCount, distance, true, e.detectionRange);
+        }
     }
 }

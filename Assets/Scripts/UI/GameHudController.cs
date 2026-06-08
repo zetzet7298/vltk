@@ -1903,9 +1903,35 @@ namespace VLTK.UI
         {
             var manager = SandboxManager.Instance;
             var rows = new List<string>();
-            rows.Add($"Kỳ Trân Các: {(manager?.MallService != null ? manager.MallService.Count : 0)} vật phẩm cấu hình.");
-            rows.Add($"Săn kho báu: {(manager?.TreasureHuntService != null ? manager.TreasureHuntService.Count : 0)} điểm kho báu.");
-            rows.Add("Dùng để mở nhóm Bảo Vật/Kỳ Trân Các theo PC HUD.");
+
+            var mall = MallPanelService.BuildSnapshot(manager?.MallService, 1, 0);
+            rows.Add($"Kỳ Trân Các: {mall.availableItems}/{mall.totalItems} vật phẩm, đang ưu đãi {mall.onSaleItems}.");
+            if (mall.rows != null)
+            {
+                int shown = 0;
+                foreach (var r in mall.rows)
+                {
+                    rows.Add($"Mall #{r.mallItemId}: {r.itemName} — {r.effectivePrice} {r.currency}, tồn {r.stock}");
+                    if (++shown >= 4) break;
+                }
+            }
+
+            int currentMapId = manager?.MapManager?.ActiveMapId ?? 0;
+            var playerPos = manager?.PlayerController != null
+                ? (Vector2)manager.PlayerController.transform.position
+                : Vector2.zero;
+            var treasure = TreasureHuntPanelService.BuildSnapshot(manager?.TreasureHuntService, 1, currentMapId, playerPos.x, playerPos.y);
+            rows.Add($"Săn kho báu: gần {treasure.nearbyTreasures}/{treasure.totalTreasures} điểm trên map {currentMapId}.");
+            if (treasure.rows != null)
+            {
+                int shown = 0;
+                foreach (var r in treasure.rows)
+                {
+                    rows.Add($"Kho #{r.treasureId}: {r.itemName} x{r.itemCount}, cách {r.distance:0}.");
+                    if (++shown >= 4) break;
+                }
+            }
+
             OpenPcToolPanel("Bảo Vật", rows);
             SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
         }

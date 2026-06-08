@@ -1,7 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — Mall Panel Service (Cửa Hàng VIP)
-// Dựng snapshot cho UI cửa hàng VIP. Kết hợp MallService + VIP level + sale.
-// Vietnamese: "Cửa Hàng", "VIP", "Giá gốc", "Giá ưu đãi", "Còn hàng", "Giảm giá".
+// Dựng snapshot cho UI cửa hàng VIP từ MallService.
 // -----------------------------------------------------------------------------
 
 using System;
@@ -64,46 +63,78 @@ namespace VLTK.UI
 
         public static MallPanelSnapshot BuildSnapshot(MallService mall, int playerId, int vipLevel)
         {
-            return new MallPanelSnapshot { rows = System.Array.Empty<MallPanelRow>() };
+            if (mall == null)
+                return new MallPanelSnapshot { playerId = playerId, vipLevel = vipLevel, rows = Array.Empty<MallPanelRow>() };
+
+            var all = mall.All;
+            var rows = GetForVip(mall, vipLevel);
+            int onSale = 0;
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            foreach (var e in all)
+                if (mall.IsOnSale(e.mallItemId, now)) onSale++;
+
+            return new MallPanelSnapshot
+            {
+                playerId = playerId,
+                vipLevel = vipLevel,
+                totalItems = all.Count,
+                availableItems = rows.Count,
+                onSaleItems = onSale,
+                rows = rows
+            };
         }
 
         public static IReadOnlyList<MallPanelRow> GetForVip(MallService mall, int vipLevel)
         {
-            return System.Array.Empty<MallPanelRow>();
+            if (mall == null)
+                return Array.Empty<MallPanelRow>();
+            long now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+            var entries = mall.GetForVip(vipLevel);
+            var rows = new List<MallPanelRow>(entries.Count);
+            foreach (var e in entries)
+                rows.Add(ToRow(mall, e, vipLevel, now));
+            return rows;
         }
 
         public static IReadOnlyList<MallPanelRow> GetOnSale(MallService mall, long now)
         {
-            return System.Array.Empty<MallPanelRow>();
+            if (mall == null)
+                return Array.Empty<MallPanelRow>();
+            var rows = new List<MallPanelRow>();
+            foreach (var e in mall.All)
+                if (mall.IsOnSale(e.mallItemId, now)) rows.Add(ToRow(mall, e, e.requiredVipLevel, now));
+            return rows;
         }
 
         public static bool TryBuy(MallService mall, int playerId, int mallItemId, int alreadyBoughtToday)
         {
-            return false;
+            if (mall == null || playerId <= 0 || mallItemId <= 0)
+                return false;
+            return mall.CanBuy(mallItemId, 0, alreadyBoughtToday);
         }
 
         public static int GetEffectivePrice(MallService mall, int mallItemId, int vipLevel)
+            => mall == null ? 0 : Math.Max(0, mall.GetEffectivePrice(mallItemId, vipLevel));
+
+        private static MallPanelRow ToRow(MallService mall, PcMallEntry e, int vipLevel, long now)
         {
-            return 0;
+            long endsIn = e.endTimeUnix > 0 ? Math.Max(0, e.endTimeUnix - now) : 0;
+            return new MallPanelRow(e.mallItemId, e.itemId, $"Vật phẩm #{e.itemId}", e.price,
+                Math.Max(0, mall.GetEffectivePrice(e.mallItemId, vipLevel)), e.discount,
+                CurrencyName(e.currency), e.stock, e.maxBuyPerDay, e.requiredVipLevel,
+                mall.IsOnSale(e.mallItemId, now), endsIn);
         }
 
-    }
-
-    public class MallEntry
-    {
-        public int mallItemId;
-        public int itemId;
-        public string itemName;
-        public int originalPrice;
-        public int stock;
-        public int maxBuyPerDay;
-        public int requiredVipLevel;
-        public int currency;
-        public long saleEndUnix;
-    }
-
-    public class MallRegistry
-    {
-        public IEnumerable<MallEntry> All => Array.Empty<MallEntry>();
+        private static string CurrencyName(int currency)
+        {
+            return currency switch
+            {
+                MallService.CurrencyCoin => "Đồng",
+                MallService.CurrencyGold => "Vàng",
+                MallService.CurrencyBind => "Đồng khóa",
+                MallService.CurrencyVND => "VND",
+                _ => "Tiền tệ",
+            };
+        }
     }
 }
