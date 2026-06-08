@@ -48,9 +48,15 @@ namespace VLTK.Tests.Sandbox
             AssertTextureSize("btn_options.png", 20, 20);
             AssertTextureSize("btn_chat_send.png", 20, 20);
             AssertTextureSize("btn_chat_face.png", 24, 24);
+            AssertTextureSize("chat_bar_top.png", 15, 16);
+            AssertTextureSize("chat_bar_bottom.png", 15, 16);
+            AssertTextureSize("聊天条阴影按钮.png", 15, 16);
             AssertTextureSize("QQ主界面向上按钮_00.png", 16, 10);
             AssertTextureSize("QQ主界面向下按钮_00.png", 16, 10);
             AssertTextureSize("频道开与关b.png", 20, 20);
+            AssertTextureSize("提示信息窗－上_00.png", 15, 14);
+            AssertTextureSize("提示信息窗－开关_00.png", 15, 14);
+            AssertTextureSize("提示信息窗－下_00.png", 15, 14);
             AssertTextureSize("btn_minimap_local_pc.png", 16, 16);
             AssertTextureSize("btn_minimap_search_pc.png", 16, 16);
             AssertTextureSize("btn_minimap_marker_pc.png", 16, 16);
@@ -77,7 +83,7 @@ namespace VLTK.Tests.Sandbox
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC minimap control.");
             foreach (var name in new[] { "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther", "FaceBtn", "SendBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC bottom-chat control.");
-            foreach (var name in new[] { "ChatRail", "ChatScrollUpBtn", "ChatChannelToggleBtn", "ChatScrollDownBtn" })
+            foreach (var name in new[] { "ChatRail", "ChatSizeBtn", "ChatMoveBtn", "ChatShadowBtn", "ChatScrollUpBtn", "ChatChannelToggleBtn", "ChatScrollDownBtn", "ChatSysUpBtn", "ChatSysOpenBtn", "ChatSysDownBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC chat rail control.");
             StringAssert.Contains("name=\"PcShortcutToggleBtn\"", uxml);
             StringAssert.Contains("name=\"PcShortcutDock\" class=\"hud-pc-shortcut-dock hidden\"", uxml);
@@ -167,7 +173,9 @@ namespace VLTK.Tests.Sandbox
             {
                 "主界面按钮-世界频道选择.png", "主界面按钮-密人频道选择.png", "主界面按钮-城市频道选择.png",
                 "主界面按钮-队伍频道选择.png", "主界面按钮-门派频道选择.png", "主界面按钮-好友频道选择.png",
-                "QQ主界面向上按钮_00.png", "QQ主界面向下按钮_00.png", "频道开与关b.png"
+                "chat_bar_top.png", "chat_bar_bottom.png", "聊天条阴影按钮.png",
+                "QQ主界面向上按钮_00.png", "QQ主界面向下按钮_00.png", "频道开与关b.png",
+                "提示信息窗－上_00.png", "提示信息窗－开关_00.png", "提示信息窗－下_00.png"
             })
             {
                 StringAssert.Contains(file, css, file + " must be used by the HUD CSS, not replaced with generated UI art.");

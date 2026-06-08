@@ -87,7 +87,7 @@
 
         <!-- ═══ CHAT AREA — PC bottom-left ═══ -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
-            <ui:Label text="!! Hãy sử dụng hồi phục" class="hud-chat-warning"/>
+            <ui:Label name="ChatWarning" text="!! Hãy sử dụng hồi phục" class="hud-chat-warning hidden"/>
             <ui:VisualElement name="ChatTabs" class="hud-chat-tabs">
                 <ui:VisualElement name="ChatTabAll" class="hud-chat-tab active"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
                 <ui:VisualElement name="ChatTabPrivate" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
@@ -97,9 +97,15 @@
                 <ui:VisualElement name="ChatTabOther" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ChatRail" class="hud-chat-rail">
+                <ui:VisualElement name="ChatSizeBtn" class="hud-chat-rail-btn hud-chat-size"><ui:VisualElement class="hud-chat-rail-icon chat-size"/></ui:VisualElement>
+                <ui:VisualElement name="ChatMoveBtn" class="hud-chat-rail-btn hud-chat-move"><ui:VisualElement class="hud-chat-rail-icon chat-move"/></ui:VisualElement>
+                <ui:VisualElement name="ChatShadowBtn" class="hud-chat-rail-btn hud-chat-shadow"><ui:VisualElement class="hud-chat-rail-icon chat-shadow"/></ui:VisualElement>
                 <ui:VisualElement name="ChatScrollUpBtn" class="hud-chat-rail-btn hud-chat-scroll-up"><ui:VisualElement class="hud-chat-rail-icon chat-up"/></ui:VisualElement>
                 <ui:VisualElement name="ChatChannelToggleBtn" class="hud-chat-rail-btn hud-chat-channel-toggle"><ui:VisualElement class="hud-chat-rail-icon chat-channel"/></ui:VisualElement>
                 <ui:VisualElement name="ChatScrollDownBtn" class="hud-chat-rail-btn hud-chat-scroll-down"><ui:VisualElement class="hud-chat-rail-icon chat-down"/></ui:VisualElement>
+                <ui:VisualElement name="ChatSysUpBtn" class="hud-chat-rail-btn hud-chat-sys-up"><ui:VisualElement class="hud-chat-rail-icon chat-sys-up"/></ui:VisualElement>
+                <ui:VisualElement name="ChatSysOpenBtn" class="hud-chat-rail-btn hud-chat-sys-open"><ui:VisualElement class="hud-chat-rail-icon chat-sys-open"/></ui:VisualElement>
+                <ui:VisualElement name="ChatSysDownBtn" class="hud-chat-rail-btn hud-chat-sys-down"><ui:VisualElement class="hud-chat-rail-icon chat-sys-down"/></ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement class="hud-chat-input-row">
                 <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>

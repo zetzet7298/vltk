@@ -101,9 +101,14 @@ namespace VLTK.UI
         private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary;
         private TextField _chatInput;
         private VisualElement _chatTabs;
+        private Label _chatWarning;
         private ChatChannel _selectedChatChannel = ChatChannel.All;
         private int _chatHistoryOffset;
         private bool _chatChannelsVisible = true;
+        private bool _chatExpanded;
+        private bool _chatRightAnchored;
+        private bool _chatShadowVisible = true;
+        private bool _systemReminderVisible;
 
         // New HUD elements
         private VisualElement _buffPanel;
@@ -310,6 +315,7 @@ namespace VLTK.UI
             _scenePos = root.Q<Label>("ScenePos");
             _chatInput = root.Q<TextField>("ChatInput");
             _chatTabs = root.Q("ChatTabs");
+            _chatWarning = root.Q<Label>("ChatWarning");
             _minimapContent = root.Q("MinimapContent");
             _playerDot = root.Q("PlayerDot");
             _miniMapTarget = root.Q("MiniMapTarget");
@@ -399,9 +405,15 @@ namespace VLTK.UI
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
             RegisterClick(root, "PcToolClose", ClosePcToolPanel);
             RegisterClick(root, "SendBtn", OnSendChatClick);
+            RegisterClick(root, "ChatSizeBtn", OnChatSizeClick);
+            RegisterClick(root, "ChatMoveBtn", OnChatMoveClick);
+            RegisterClick(root, "ChatShadowBtn", OnChatShadowClick);
             RegisterClick(root, "ChatScrollUpBtn", OnChatScrollUpClick);
             RegisterClick(root, "ChatChannelToggleBtn", OnChatChannelToggleClick);
             RegisterClick(root, "ChatScrollDownBtn", OnChatScrollDownClick);
+            RegisterClick(root, "ChatSysUpBtn", OnChatSystemUpClick);
+            RegisterClick(root, "ChatSysOpenBtn", OnChatSystemOpenClick);
+            RegisterClick(root, "ChatSysDownBtn", OnChatSystemDownClick);
             RegisterClick(root, "ChatTabAll", () => SelectChatChannel(ChatChannel.All));
             RegisterClick(root, "ChatTabPrivate", () => SelectChatChannel(ChatChannel.Private));
             RegisterClick(root, "ChatTabRoom", () => SelectChatChannel(ChatChannel.Room));
@@ -2005,6 +2017,42 @@ namespace VLTK.UI
             SubsystemLog.Info("HUD", "Open Faction/Guild panel");
         }
 
+        private void OnChatSizeClick()
+        {
+            _chatExpanded = !_chatExpanded;
+            _chatPanel?.EnableInClassList("hud-chat-expanded", _chatExpanded);
+            OpenPcToolPanel("Chat", new[]
+            {
+                _chatExpanded ? "Đã mở rộng khung chat." : "Đã thu gọn khung chat.",
+                "PC: [SizeBtn] dùng chat_bar_top để kéo/đổi kích thước chat.",
+            });
+            SubsystemLog.Info("HUD", _chatExpanded ? "Expand chat panel" : "Collapse chat panel");
+        }
+
+        private void OnChatMoveClick()
+        {
+            _chatRightAnchored = !_chatRightAnchored;
+            _chatPanel?.EnableInClassList("hud-chat-right", _chatRightAnchored);
+            OpenPcToolPanel("Chat", new[]
+            {
+                _chatRightAnchored ? "Chat neo sang phải." : "Chat neo về trái.",
+                "PC: [MoveImg] là tay nắm moveable; mobile đổi anchor để tránh che vùng điều khiển.",
+            });
+            SubsystemLog.Info("HUD", _chatRightAnchored ? "Anchor chat right" : "Anchor chat left");
+        }
+
+        private void OnChatShadowClick()
+        {
+            _chatShadowVisible = !_chatShadowVisible;
+            _chatPanel?.EnableInClassList("hud-chat-shadow-off", !_chatShadowVisible);
+            OpenPcToolPanel("Chat", new[]
+            {
+                _chatShadowVisible ? "Đã bật bóng/nền chat." : "Đã giảm bóng/nền chat.",
+                "PC: [ShadowBtn] dùng 聊天条阴影按钮 để bật/tắt bóng chat.",
+            });
+            SubsystemLog.Info("HUD", _chatShadowVisible ? "Enable chat shadow" : "Disable chat shadow");
+        }
+
         private void OnChatScrollUpClick()
         {
             _chatHistoryOffset = Mathf.Min(_chatHistoryOffset + 6, 194);
@@ -2017,6 +2065,32 @@ namespace VLTK.UI
             _chatHistoryOffset = Mathf.Max(0, _chatHistoryOffset - 6);
             OpenPcToolPanel("Lịch sử chat", BuildChatHistoryRows());
             SubsystemLog.Info("HUD", $"Chat scroll down offset={_chatHistoryOffset}");
+        }
+
+        private void OnChatSystemUpClick()
+        {
+            _chatHistoryOffset = Mathf.Min(_chatHistoryOffset + 3, 194);
+            OpenPcToolPanel("Nhắc nhở hệ thống", BuildChatHistoryRows());
+            SubsystemLog.Info("HUD", $"System room up offset={_chatHistoryOffset}");
+        }
+
+        private void OnChatSystemDownClick()
+        {
+            _chatHistoryOffset = Mathf.Max(0, _chatHistoryOffset - 3);
+            OpenPcToolPanel("Nhắc nhở hệ thống", BuildChatHistoryRows());
+            SubsystemLog.Info("HUD", $"System room down offset={_chatHistoryOffset}");
+        }
+
+        private void OnChatSystemOpenClick()
+        {
+            _systemReminderVisible = !_systemReminderVisible;
+            _chatWarning?.EnableInClassList("hidden", !_systemReminderVisible);
+            OpenPcToolPanel("Nhắc nhở hệ thống", new[]
+            {
+                _systemReminderVisible ? "Đã mở dòng nhắc hệ thống." : "Đã ẩn dòng nhắc hệ thống.",
+                "PC: [SysRoom_Open] dùng 提示信息窗－开关 để bật/tắt ô nhắc hệ thống.",
+            });
+            SubsystemLog.Info("HUD", _systemReminderVisible ? "Show system reminder" : "Hide system reminder");
         }
 
         private void OnChatChannelToggleClick()

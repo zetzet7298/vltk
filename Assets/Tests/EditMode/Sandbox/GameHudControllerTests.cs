@@ -38,6 +38,7 @@ namespace VLTK.Tests.Sandbox
         private VisualElement _chatTabFaction;
         private VisualElement _chatTabOther;
         private VisualElement _chatTabs;
+        private Label _chatWarning;
         private VisualElement _utilityDock;
         private VisualElement _utilityActionRow;
         private VisualElement _utilityMenuRowA;
@@ -115,6 +116,8 @@ namespace VLTK.Tests.Sandbox
             _chatTabs.Add(_chatTabGuild);
             _chatTabs.Add(_chatTabFaction);
             _chatTabs.Add(_chatTabOther);
+            _chatWarning = new Label { name = "ChatWarning" };
+            _chatWarning.AddToClassList("hidden");
             _chatTabAll.AddToClassList("active");
 
             _utilityToggleBtn = new VisualElement { name = "UtilityToggleBtn" };
@@ -180,6 +183,7 @@ namespace VLTK.Tests.Sandbox
             _root.Add(_faceBtn);
             _root.Add(_chatInput);
             _root.Add(_sendBtn);
+            _root.Add(_chatWarning);
             _root.Add(_chatTabs);
             _root.Add(_utilityToggleBtn);
             _root.Add(_utilityDock);
@@ -207,6 +211,7 @@ namespace VLTK.Tests.Sandbox
             SetPrivateField("_faceBtn", _faceBtn);
             SetPrivateField("_chatInput", _chatInput);
             SetPrivateField("_chatTabs", _chatTabs);
+            SetPrivateField("_chatWarning", _chatWarning);
             SetPrivateField("_utilityDock", _utilityDock);
             SetPrivateField("_utilityActionRow", _utilityActionRow);
             SetPrivateField("_utilityMenuRowA", _utilityMenuRowA);
@@ -356,6 +361,16 @@ namespace VLTK.Tests.Sandbox
         {
             Assert.IsFalse(_chatTabs.ClassListContains("hidden"));
 
+            InvokePrivateMethod("OnChatSizeClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Chat", _pcToolTitle.text);
+
+            InvokePrivateMethod("OnChatMoveClick");
+            Assert.AreEqual("Chat", _pcToolTitle.text);
+
+            InvokePrivateMethod("OnChatShadowClick");
+            Assert.AreEqual("Chat", _pcToolTitle.text);
+
             InvokePrivateMethod("OnChatChannelToggleClick");
             Assert.IsTrue(_chatTabs.ClassListContains("hidden"));
             Assert.AreEqual("Kênh chat", _pcToolTitle.text);
@@ -368,6 +383,15 @@ namespace VLTK.Tests.Sandbox
 
             InvokePrivateMethod("OnChatScrollDownClick");
             Assert.AreEqual("Lịch sử chat", _pcToolTitle.text);
+
+            InvokePrivateMethod("OnChatSystemOpenClick");
+            Assert.IsFalse(_chatWarning.ClassListContains("hidden"));
+            Assert.AreEqual("Nhắc nhở hệ thống", _pcToolTitle.text);
+
+            InvokePrivateMethod("OnChatSystemUpClick");
+            Assert.AreEqual("Nhắc nhở hệ thống", _pcToolTitle.text);
+            InvokePrivateMethod("OnChatSystemDownClick");
+            Assert.AreEqual("Nhắc nhở hệ thống", _pcToolTitle.text);
         }
 
         [Test]
