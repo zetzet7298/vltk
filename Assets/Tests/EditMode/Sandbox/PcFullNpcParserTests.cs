@@ -12,6 +12,10 @@ namespace VLTK.Tests.Sandbox
             Directory.GetCurrentDirectory(),
             "Assets/StreamingAssets/Reference/PcNpc/npcs_sample.txt");
 
+        private static string FullPcPath => Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "Assets/StreamingAssets/Reference/PcNpc/npcs.txt");
+
         [Test]
         public void ParseFile_LoadsTenSampleRows()
         {
@@ -59,6 +63,24 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsFalse(string.IsNullOrEmpty(r.nameRaw), $"templateId={r.templateId} nameRaw empty");
                 Assert.IsFalse(string.IsNullOrEmpty(r.nameNormalized), $"templateId={r.templateId} nameNormalized empty");
             }
+        }
+
+        [Test]
+        public void ParseFile_DecodesLegacyTcvn3VietnameseNames()
+        {
+            if (!File.Exists(FullPcPath))
+            {
+                Assert.Inconclusive($"Full PC npcs.txt not found at {FullPcPath}");
+                return;
+            }
+
+            var rows = PcFullNpcParser.ParseFile(FullPcPath);
+
+            Assert.GreaterOrEqual(rows.Count, 30);
+            Assert.AreEqual("Đông Bắc hổ", rows[0].nameNormalized.Trim());
+            Assert.AreEqual("Hoa Nam hổ", rows[1].nameNormalized.Trim());
+            Assert.AreEqual("Nhím", rows[12].nameNormalized.Trim());
+            Assert.IsFalse(rows[0].nameNormalized.Contains("¶"));
         }
 
         [Test]
@@ -150,6 +172,49 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsFalse(r.nameNormalized.Contains('?'),
                     $"templateId={r.templateId} nameNormalized contains '?': {r.nameNormalized}");
             }
+        }
+
+
+        [Test]
+        public void ParseFile_DecodesLegacyTcvn3NamesFromFullReference()
+        {
+            string fullPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Assets/StreamingAssets/Reference/PcNpc/npcs.txt");
+            if (!File.Exists(fullPath))
+            {
+                Assert.Inconclusive($"Full NPC file not found at {fullPath}");
+                return;
+            }
+
+            var rows = PcFullNpcParser.ParseFile(fullPath);
+
+            Assert.Greater(rows.Count, 601, "Full NPC reference should contain PC template rows");
+            Assert.AreEqual("Đông Bắc hổ", rows[0].nameRaw.Trim());
+            Assert.AreEqual("Hươu đốm", rows[42].nameRaw.Trim());
+            Assert.AreEqual("Heo trắng", rows[43].nameRaw.Trim());
+            Assert.AreEqual("Ngọc Hoành Tử Lâm Du Quan", rows[588].nameRaw.Trim());
+            Assert.AreEqual("Giới Luật Viện đầu tọa Trường Bạch nam", rows[601].nameRaw.Trim());
+            Assert.IsFalse(rows[601].nameRaw.Contains('�'));
+            Assert.IsFalse(rows[601].nameRaw.Contains('?'));
+        }
+
+        [Test]
+        public void ParseFile_PreservesGb2312ChineseNamesWhenNpcRowIsNotVietnamese()
+        {
+            string fullPath = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Assets/StreamingAssets/Reference/PcNpc/npcs.txt");
+            if (!File.Exists(fullPath))
+            {
+                Assert.Inconclusive($"Full NPC file not found at {fullPath}");
+                return;
+            }
+
+            var rows = PcFullNpcParser.ParseFile(fullPath);
+
+            Assert.Greater(rows.Count, 1341, "Full NPC reference should contain mixed-encoding tail rows");
+            Assert.AreEqual("宋军运粮士兵", rows[1341].nameRaw.Trim());
         }
 
         [Test]
