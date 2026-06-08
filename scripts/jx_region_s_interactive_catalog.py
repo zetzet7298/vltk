@@ -444,10 +444,29 @@ def build_object_script_catalog(geometries: list[dict[str, Any]], pc_root: Path)
     return entries, coverage
 
 
+def clean_user_message(message: str) -> str:
+    message = (message or '').strip()
+    return (message
+            .replace('đƠn', 'đến')
+            .replace('ĐƠn', 'Đến')
+            .replace('  ', ' '))
+
+
+def is_safe_user_message(message: str) -> bool:
+    if not message:
+        return False
+    if '\ufffd' in message or any('\u4e00' <= ch <= '\u9fff' for ch in message):
+        return False
+    # Keep only decoded Vietnamese/ASCII-style PC text; skip mojibake-heavy lines.
+    if any(ch in message for ch in '°Å¶·¸¹º»¼½¾¿'):
+        return False
+    return True
+
+
 def single_string(calls: list[list[str]]) -> str:
     if not calls or not calls[0]:
         return ''
-    return str(calls[0][0]).strip()
+    return clean_user_message(str(calls[0][0]))
 
 
 def int_args(calls: list[list[str]], width: int) -> list[tuple[int, ...]]:
@@ -467,8 +486,33 @@ def int_args(calls: list[list[str]], width: int) -> list[tuple[int, ...]]:
     return result
 
 
+def is_safe_say_message(actions: dict[str, Any]) -> bool:
+    if not actions.get('sayCalls'):
+        return False
+    if not is_safe_user_message(single_string(actions.get('sayCalls'))):
+        return False
+    return not (
+        actions.get('newWorldCalls') or
+        actions.get('setPosCalls') or
+        actions.get('setFightStateCalls') or
+        actions.get('msg2PlayerCalls') or
+        actions.get('talkCalls') or
+        actions.get('getTaskCalls') or
+        actions.get('setTaskCalls') or
+        actions.get('haveItemCalls') or
+        actions.get('addEventItemCalls') or
+        actions.get('addNoteCalls') or
+        actions.get('setPropStateCalls') or
+        actions.get('addItemCalls') or
+        actions.get('delItemCalls') or
+        actions.get('usesCityApis')
+    )
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
+        return False
+    if not is_safe_user_message(single_string(actions.get('msg2PlayerCalls'))):
         return False
     if actions.get('newWorldCalls') or actions.get('setPosCalls') or actions.get('setFightStateCalls'):
         return False
@@ -523,10 +567,26 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 'setPropState': bool(actions.get('setPropStateCalls')),
                 'source': 'PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch',
             })
+            continue
+        if is_safe_say_message(actions):
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'SayMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'message': single_string(actions.get('sayCalls') or []),
+                'source': 'PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch',
+            })
     coverage = {
         'deterministicObjectActions': len(entries),
         'deterministicObjectNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
         'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
+        'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
     }
     return entries, coverage
 

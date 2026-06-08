@@ -127,9 +127,10 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(23, catalog.Count);
+            Assert.AreEqual(165, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsPickupMessage));
+            Assert.AreEqual(142, catalog.entries.Count(e => e != null && e.IsSayMessage));
             var entry = catalog.Find(@"\script\两湖区\天王帮\洞庭湖底山洞1\trap\洞庭湖底1to洞庭湖底2.lua");
             Assert.IsNotNull(entry);
             Assert.IsTrue(entry.IsNewWorld);
@@ -199,6 +200,34 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(116, sideEffects.eventItems.Single());
             Assert.AreEqual("Tại khu Đông Bắc Vũ Lăng sơn tìm được Linh Chi.", sideEffects.notes.Single());
             StringAssert.Contains("SetPropState=True", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_SayMessage_PostsPcText()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\signpost.lua",
+                        actionKind = "SayMessage",
+                        message = "Đi đến Biện Kinh.",
+                    }
+                }
+            };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, new FakeTrapTravelHost(), sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\signpost.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.IsFalse(result.hideObject);
+            Assert.AreEqual("Đi đến Biện Kinh.", sideEffects.message);
+            StringAssert.Contains("SayMessage", result.detail);
         }
 
         [Test]
