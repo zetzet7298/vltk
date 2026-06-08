@@ -271,6 +271,7 @@ namespace VLTK.Sandbox
         {
             if (eventItemId <= 0) return;
             _eventItemIds.Add(eventItemId);
+            SandboxManager.Instance?.QuestItemService?.AddEventItem(eventItemId);
             SubsystemLog.Info("MapObject", $"PC AddEventItem({eventItemId}) recorded");
         }
 

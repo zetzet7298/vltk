@@ -34,6 +34,8 @@ namespace VLTK.Sandbox
         int RandomIntInclusive(int minInclusive, int maxInclusive);
         int GetTaskValue(int taskId);
         void SetTaskValue(int taskId, int value);
+        bool HaveItem(int pcQuestKeyDetailType, int minCount);
+        bool DelItem(int pcQuestKeyDetailType, int count);
         int GetCurCamp();
         int GetCamp();
         int GetBattleRank();
@@ -367,6 +369,54 @@ namespace VLTK.Sandbox
                 _host.SetPos(failTarget);
                 result = Success(action,
                     $"GetTask({action.taskId})={taskValue}, GetTask({action.alternateTaskId})={alternateTaskValue}, faction={factionId} -> Talk + SetPos({action.failTargetCellX},{action.failTargetCellY}) -> {failTarget}");
+                return true;
+            }
+
+            if (action.IsTaskItemConsumeFactionGateNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                int factionId = _host.GetPlayerFactionId();
+                if (taskValue >= action.passTaskMinInclusive && factionId == action.requiredFactionId)
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    ApplyFightState(action);
+                    _host.NewWorld(action.targetMapId, target);
+                    result = Success(action,
+                        $"GetTask({action.taskId})={taskValue}, GetFaction()=={action.requiredFaction}#{action.requiredFactionId} -> repeat NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                    return true;
+                }
+
+                int requiredCount = action.requiredItemCount > 0 ? action.requiredItemCount : 1;
+                int consumeItemId = action.consumeItemId > 0 ? action.consumeItemId : action.requiredItemId;
+                int consumeCount = action.consumeItemCount > 0 ? action.consumeItemCount : requiredCount;
+                if (taskValue == action.taskValue && action.requiredItemId > 0 && _host.HaveItem(action.requiredItemId, requiredCount))
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    if (!_host.DelItem(consumeItemId, consumeCount))
+                    {
+                        result = Failure(action, $"DelItem({consumeItemId}) failed after HaveItem({action.requiredItemId})");
+                        return true;
+                    }
+                    ApplyFightState(action);
+                    _host.NewWorld(action.targetMapId, target);
+                    ApplySetTasks(action);
+                    result = Success(action,
+                        $"GetTask({action.taskId})=={taskValue}, HaveItem({action.requiredItemId}) -> DelItem({consumeItemId}) + NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) + SetTask");
+                    return true;
+                }
+
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.message))
+                    _sideEffects.PostMessage(action.message);
+                result = Success(action,
+                    $"GetTask({action.taskId})={taskValue}, faction={factionId}, HaveItem({action.requiredItemId})={_host.HaveItem(action.requiredItemId, requiredCount)} -> Talk only, no warp");
                 return true;
             }
 
@@ -1133,6 +1183,16 @@ namespace VLTK.Sandbox
         public void SetTaskValue(int taskId, int value)
         {
             SandboxManager.Instance?.TaskFlagService?.SetFlag(taskId, value);
+        }
+
+        public bool HaveItem(int pcQuestKeyDetailType, int minCount)
+        {
+            return SandboxManager.Instance?.QuestItemService?.HaveItem(pcQuestKeyDetailType, minCount) ?? false;
+        }
+
+        public bool DelItem(int pcQuestKeyDetailType, int count)
+        {
+            return SandboxManager.Instance?.QuestItemService?.DelItem(pcQuestKeyDetailType, count) ?? false;
         }
 
         public int GetCurCamp()

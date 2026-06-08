@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T09:55:37Z",
+  "generatedAtUtc": "2026-06-08T10:17:50Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -5777,6 +5777,34 @@
       "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
+      "trapId": 1941342299,
+      "trapIdHex": "0x73B6885B",
+      "scriptPath": "\\script\\西南北区\\唐门\\竹丝洞二层\\trap\\竹丝洞二层to竹丝洞三层.lua",
+      "sourceRelPath": "script\\西南北区\\唐门\\竹丝洞二层\\trap\\竹丝洞二层to竹丝洞三层.lua",
+      "actionKind": "TaskItemConsumeFactionGateNewWorld",
+      "source": "PC trap Lua main(): ordered GetTask/HaveItem/DelItem questkey branch plus completed faction repeat branch, Talk-only fail branch",
+      "taskId": 2,
+      "taskValue": 15400,
+      "passTaskMinInclusive": 15420,
+      "requiredFaction": "tangmen",
+      "requiredFactionId": 3,
+      "requiredItemId": 100,
+      "requiredItemCount": 1,
+      "consumeItemId": 100,
+      "consumeItemCount": 1,
+      "targetMapId": 28,
+      "targetCellX": 1551,
+      "targetCellY": 3192,
+      "fightState": 1,
+      "setTaskIds": [
+        2
+      ],
+      "setTaskValues": [
+        15420
+      ],
+      "message": "Không có chìa khóa, bạn không thể vào Tầng 3 Trúc Tơ động."
+    },
+    {
       "trapId": 1948268885,
       "trapIdHex": "0x74203955",
       "scriptPath": "\\script\\江南区\\罗霄山\\孽龙洞迷宫\\trap\\孽龙洞迷宫4to罗宵山4.lua",
@@ -9960,6 +9988,34 @@
       "targetCellY": 3351,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3224413973,
+      "trapIdHex": "0xC030A715",
+      "scriptPath": "\\script\\西南北区\\唐门\\竹丝洞一层\\trap\\竹丝洞一层to竹丝洞二层.lua",
+      "sourceRelPath": "script\\西南北区\\唐门\\竹丝洞一层\\trap\\竹丝洞一层to竹丝洞二层.lua",
+      "actionKind": "TaskItemConsumeFactionGateNewWorld",
+      "source": "PC trap Lua main(): ordered GetTask/HaveItem/DelItem questkey branch plus completed faction repeat branch, Talk-only fail branch",
+      "taskId": 2,
+      "taskValue": 15380,
+      "passTaskMinInclusive": 15381,
+      "requiredFaction": "tangmen",
+      "requiredFactionId": 3,
+      "requiredItemId": 99,
+      "requiredItemCount": 1,
+      "consumeItemId": 99,
+      "consumeItemCount": 1,
+      "targetMapId": 27,
+      "targetCellX": 1522,
+      "targetCellY": 3205,
+      "fightState": 1,
+      "setTaskIds": [
+        2
+      ],
+      "setTaskValues": [
+        15400
+      ],
+      "message": "Không có chìa khóa, bạn không thể vào tầng 2 Trúc Tơ động."
     },
     {
       "trapId": 3230114255,

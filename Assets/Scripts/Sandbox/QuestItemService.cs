@@ -2,7 +2,7 @@
 // VLTK Mobile — ST-06.x Quest Item Service (Vật Phẩm Nhiệm Vụ)
 // Quản lý vật phẩm nhiệm vụ: chìa khoá, đá quý, bảo đồ, lệnh bài, ...
 // PC source: settings/item/questkey.txt + 60 file PcItemFull.
-// Runtime inventory tracks owned count per encoded itemId (genre << 16 | detail << 8 | particular).
+// Runtime inventory tracks owned count per encoded itemId (genre << 24 | detail << 8 | particular).
 // -----------------------------------------------------------------------------
 
 using System;
@@ -25,15 +25,16 @@ namespace VLTK.Sandbox
         public event Action<int, int, int> OnQuestItemChanged;
 
         public int OwnedItemCount => _inventory.Count;
-        public int TotalQuantity => SumQuantities();
-        public int CatalogCount => _registry.Count;
-
-        private int SumQuantities()
+        public int TotalQuantity
         {
-            int total = 0;
-            foreach (var v in _inventory.Values) total += v;
-            return total;
+            get
+            {
+                int total = 0;
+                foreach (var v in _inventory.Values) total += v;
+                return total;
+            }
         }
+        public int CatalogCount => _registry.Count;
 
         public QuestItemService(PcQuestItemRegistry registry)
         {
@@ -42,17 +43,30 @@ namespace VLTK.Sandbox
 
         /// <summary>Mã hoá (genre, detail, particular) thành 1 itemId duy nhất.</summary>
         public static int EncodeItemId(int genre, int detail, int particular)
-            => ((genre & 0xFF) << 16) | ((detail & 0xFF) << 8) | (particular & 0xFF);
+            => ((genre & 0xFF) << 24) | ((detail & 0xFFFF) << 8) | (particular & 0xFF);
 
         /// <summary>Giải mã itemId thành (genre, detail, particular).</summary>
         public static (int genre, int detail, int particular) DecodeItemId(int itemId)
-            => ((itemId >> 16) & 0xFF, (itemId >> 8) & 0xFF, itemId & 0xFF);
+            => ((itemId >> 24) & 0xFF, (itemId >> 8) & 0xFFFF, itemId & 0xFF);
 
         /// <summary>Tra cứu thông tin vật phẩm nhiệm vụ từ itemId đã mã hoá.</summary>
         public PcQuestItemEntry GetQuestItem(int itemId)
         {
             var (g, d, p) = DecodeItemId(itemId);
             return _registry.Get(g, d, p);
+        }
+
+        /// <summary>Tra cứu questkey PC theo DetailType dùng bởi Lua HaveItem/DelItem(id).</summary>
+        public PcQuestItemEntry GetPcQuestKeyDetail(int detailType)
+            => _registry.GetByDetailType(detailType);
+
+        public bool TryEncodePcQuestKeyDetailId(int detailType, out int itemId)
+        {
+            itemId = 0;
+            var entry = GetPcQuestKeyDetail(detailType);
+            if (entry == null) return false;
+            itemId = EncodeItemId(entry.itemGenre, entry.detailType, entry.particularType);
+            return true;
         }
 
         /// <summary>Số lượng hiện có trong túi đồ.</summary>
@@ -90,6 +104,49 @@ namespace VLTK.Sandbox
         {
             if (minCount <= 0) return true;
             return GetQuestItemCount(itemId) >= minCount;
+        }
+
+        public int GetPcQuestKeyDetailCount(int detailType)
+            => TryEncodePcQuestKeyDetailId(detailType, out int itemId) ? GetQuestItemCount(itemId) : 0;
+
+        public int AddPcQuestKeyDetail(int detailType, int count)
+        {
+            if (!TryEncodePcQuestKeyDetailId(detailType, out int itemId))
+            {
+                SubsystemLog.Warn(LogTag, $"Không tìm thấy questkey PC DetailType={detailType}; bỏ qua AddEventItem/HaveItem bridge");
+                return 0;
+            }
+            return AddQuestItem(itemId, count);
+        }
+
+        public bool RemovePcQuestKeyDetail(int detailType, int count)
+        {
+            if (!TryEncodePcQuestKeyDetailId(detailType, out int itemId))
+            {
+                SubsystemLog.Warn(LogTag, $"Không tìm thấy questkey PC DetailType={detailType}; bỏ qua DelItem bridge");
+                return false;
+            }
+            return RemoveQuestItem(itemId, count);
+        }
+
+        public bool HasPcQuestKeyDetail(int detailType, int minCount)
+            => TryEncodePcQuestKeyDetailId(detailType, out int itemId) && HasQuestItem(itemId, minCount);
+
+        public bool HaveItem(int pcQuestKeyDetailType, int minCount = 1)
+            => HasPcQuestKeyDetail(pcQuestKeyDetailType, minCount);
+
+        public bool DelItem(int pcQuestKeyDetailType, int count = 1)
+            => RemovePcQuestKeyDetail(pcQuestKeyDetailType, count);
+
+        public bool AddEventItem(int pcQuestKeyDetailType, int count = 1)
+        {
+            if (!TryEncodePcQuestKeyDetailId(pcQuestKeyDetailType, out int itemId))
+            {
+                SubsystemLog.Warn(LogTag, $"Không tìm thấy questkey PC DetailType={pcQuestKeyDetailType}; bỏ qua AddEventItem bridge");
+                return false;
+            }
+            AddQuestItem(itemId, count);
+            return true;
         }
 
         /// <summary>Toàn bộ vật phẩm nhiệm vụ trong catalog.</summary>

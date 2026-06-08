@@ -89,6 +89,7 @@ namespace VLTK.Tests.Sandbox
             public int randomValue = 0;
             public int taskValue = 0;
             public Dictionary<int, int> taskValues = new();
+            public Dictionary<int, int> itemCounts = new();
             public int curCamp = 0;
             public int originalCamp = 0;
             public int battleRank = 0;
@@ -118,6 +119,17 @@ namespace VLTK.Tests.Sandbox
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
             public int GetTaskValue(int taskId) => taskValues.TryGetValue(taskId, out var value) ? value : taskValue;
             public void SetTaskValue(int taskId, int value) => taskValues[taskId] = value;
+            public bool HaveItem(int pcQuestKeyDetailType, int minCount)
+                => minCount <= 0 || (itemCounts.TryGetValue(pcQuestKeyDetailType, out var count) && count >= minCount);
+            public bool DelItem(int pcQuestKeyDetailType, int count)
+            {
+                if (count <= 0) return true;
+                if (!itemCounts.TryGetValue(pcQuestKeyDetailType, out var oldCount) || oldCount < count) return false;
+                int newCount = oldCount - count;
+                if (newCount <= 0) itemCounts.Remove(pcQuestKeyDetailType);
+                else itemCounts[pcQuestKeyDetailType] = newCount;
+                return true;
+            }
             public int GetCurCamp() => curCamp;
             public int GetCamp() => originalCamp;
             public int GetBattleRank() => battleRank;
@@ -202,7 +214,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(795, catalog.Count);
+            Assert.AreEqual(798, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -217,6 +229,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionPromptGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskCurrentMapReturnNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskSetTaskFactionGateNewWorld));
+            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeFactionGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
@@ -1934,6 +1947,77 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1767 * 32, 3186 * 32), host.position);
             CollectionAssert.AreEqual(new[] { "Chưa lấy được <color=Red>bốn câu khẩu quyết<color>, không thể vào tầng hai của Thánh Động." }, sideEffects.messages);
             CollectionAssert.AreEqual(new[] { "Muốn vào tầng hai, phải lấy được bốn câu khẩu quyết." }, sideEffects.notes);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskItemConsumeFactionGateNewWorld_ConsumesPcQuestKeyOnlyOnItemBranch()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapIdHex = "0xC030A715",
+                        scriptPath = @"\script\西南北区\唐门\竹丝洞一层\trap\竹丝洞一层to竹丝洞二层.lua",
+                        actionKind = "TaskItemConsumeFactionGateNewWorld",
+                        taskId = 2,
+                        taskValue = 60 * 256 + 20,
+                        passTaskMinInclusive = 60 * 256 + 21,
+                        requiredFaction = "tangmen",
+                        requiredFactionId = (int)CombatFaction.TangMen,
+                        requiredItemId = 99,
+                        requiredItemCount = 1,
+                        consumeItemId = 99,
+                        consumeItemCount = 1,
+                        targetMapId = 27,
+                        targetCellX = 1522,
+                        targetCellY = 3205,
+                        fightState = 1,
+                        setTaskIds = new[] { 2 },
+                        setTaskValues = new[] { 60 * 256 + 40 },
+                        message = "Không có chìa khóa, bạn không thể vào tầng 2 Trúc Tơ động.",
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValues = { [2] = 60 * 256 + 20 }, itemCounts = { [99] = 1 } };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xC030A715" }, out var result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(27, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1522 * 32, 3205 * 32), host.position);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(60 * 256 + 40, host.taskValues[2]);
+            Assert.IsFalse(host.itemCounts.ContainsKey(99));
+
+            host = new FakeTrapTravelHost { taskValues = { [2] = 60 * 256 + 40 }, itemCounts = { [99] = 1 }, playerFactionId = (int)CombatFaction.TangMen };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xC030A715" }, out result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(27, host.mapId);
+            Assert.AreEqual(1, host.itemCounts[99]);
+
+            host = new FakeTrapTravelHost { taskValues = { [2] = 60 * 256 + 20 } };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xC030A715" }, out result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Không có chìa khóa, bạn không thể vào tầng 2 Trúc Tơ động." }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { hasMap = false, taskValues = { [2] = 60 * 256 + 20 }, itemCounts = { [99] = 1 } };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xC030A715" }, out result));
+            Assert.IsFalse(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(1, host.itemCounts[99]);
+            Assert.AreEqual(60 * 256 + 20, host.taskValues[2]);
         }
 
         [Test]

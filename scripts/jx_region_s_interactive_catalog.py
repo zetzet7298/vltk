@@ -2292,6 +2292,97 @@ def task_settask_prompt_callback_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def task_item_consume_faction_gate_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    main_body = lua_function_body(clean_source, 'main')
+    if not main_body or re.search(r'\b(for|while|repeat)\b', main_body):
+        return None
+    if not source_uses_only_calls(clean_source, {
+        'main', 'GetTask', 'HaveItem', 'DelItem', 'SetFightState', 'NewWorld', 'SetTask', 'GetFaction', 'Talk', 'if', 'elseif', 'and'
+    }):
+        return None
+    task_match = re.search(r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<taskId>\d+)\s*\)', main_body)
+    if not task_match:
+        return None
+    task_var = task_match.group('var')
+    item_cond = (
+        rf'\(?\(?\s*{re.escape(task_var)}\s*==\s*(?P<itemTask>[0-9\s*+\-]+)\s*\)?\s*and\s*'
+        rf'\(?\s*HaveItem\s*\(\s*(?P<itemId>\d+)\s*\)\s*==\s*(?P<itemCount>\d+)\s*\)?\s*\)?'
+    )
+    faction_cond = (
+        rf'\(?\s*{re.escape(task_var)}\s*(?P<op>>=|>)\s*(?P<passMin>[0-9\s*+\-]+)\s*\)?\s*and\s*'
+        rf'\(?\s*GetFaction\s*\(\s*\)\s*==\s*["\'](?P<faction>[a-z]+)["\']\s*\)?'
+    )
+    patterns = [
+        rf'if\s*{item_cond}\s*then(?P<item>.*?)elseif\s*{faction_cond}\s*then(?P<repeat>.*?)else(?P<fail>.*?)end',
+        rf'if\s*{faction_cond}\s*then(?P<repeat>.*?)elseif\s*{item_cond}\s*then(?P<item>.*?)else(?P<fail>.*?)end',
+    ]
+    match = None
+    for pattern in patterns:
+        match = re.search(pattern, main_body, re.S | re.I)
+        if match:
+            break
+    if not match:
+        return None
+
+    item_task = int_lua_constant_expr(match.group('itemTask'))
+    pass_min_raw = int_lua_constant_expr(match.group('passMin'))
+    item_id = int(match.group('itemId'))
+    item_count = int(match.group('itemCount'))
+    faction = match.group('faction').lower()
+    faction_id = PC_FACTION_IDS.get(faction)
+    if item_task is None or pass_min_raw is None or item_count <= 0 or faction_id is None:
+        return None
+    pass_min = pass_min_raw + 1 if match.group('op') == '>' else pass_min_raw
+
+    item_body = match.group('item')
+    repeat_body = match.group('repeat')
+    fail_body = match.group('fail')
+    item_new_world = int_args_unique(parse_lua_calls(item_body, 'NewWorld', limit=2), 3)
+    repeat_new_world = int_args_unique(parse_lua_calls(repeat_body, 'NewWorld', limit=2), 3)
+    item_fight = int_args_unique(parse_lua_calls(item_body, 'SetFightState', limit=2), 1)
+    repeat_fight = int_args_unique(parse_lua_calls(repeat_body, 'SetFightState', limit=2), 1)
+    consume = int_args_unique(parse_lua_calls(item_body, 'DelItem', limit=2), 1)
+    if (
+        item_new_world is None or repeat_new_world is None or item_new_world != repeat_new_world or
+        item_fight is None or repeat_fight is None or item_fight != repeat_fight or consume is None or consume[0] != item_id
+    ):
+        return None
+    set_task_ids: list[int] = []
+    set_task_values: list[int] = []
+    for call in parse_lua_calls(item_body, 'SetTask', limit=4):
+        if len(call) < 2 or not str(call[0]).strip().isdigit():
+            return None
+        value = int_lua_constant_expr(str(call[1]))
+        if value is None:
+            return None
+        set_task_ids.append(int(str(call[0]).strip()))
+        set_task_values.append(value)
+    if not set_task_ids:
+        return None
+    fail_messages = talk_messages({'talkCalls': parse_lua_calls(fail_body, 'Talk', limit=2)})
+    if len(fail_messages) != 1:
+        return None
+    return {
+        'taskId': int(task_match.group('taskId')),
+        'taskValue': item_task,
+        'passTaskMinInclusive': pass_min,
+        'requiredFaction': faction,
+        'requiredFactionId': faction_id,
+        'requiredItemId': item_id,
+        'requiredItemCount': item_count,
+        'consumeItemId': item_id,
+        'consumeItemCount': item_count,
+        'targetMapId': item_new_world[0],
+        'targetCellX': item_new_world[1],
+        'targetCellY': item_new_world[2],
+        'fightState': item_fight[0],
+        'setTaskIds': set_task_ids,
+        'setTaskValues': set_task_values,
+        'message': fail_messages[0],
+    }
+
+
 def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
     if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
         return None
@@ -2664,6 +2755,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_settask_faction_gate,
             })
             continue
+        task_item_gate = task_item_consume_faction_gate_newworld(source)
+        if task_item_gate is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskItemConsumeFactionGateNewWorld',
+                'source': 'PC trap Lua main(): ordered GetTask/HaveItem/DelItem questkey branch plus completed faction repeat branch, Talk-only fail branch',
+                **task_item_gate,
+            })
+            continue
         task_settask_prompt_callback = task_settask_prompt_callback_newworld(source)
         if task_settask_prompt_callback is not None:
             entries.append({
@@ -2827,6 +2930,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskCurrentMapReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskCurrentMapReturnNewWorld'),
         'deterministicTrapTaskSetTaskFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetTaskFactionGateNewWorld'),
         'deterministicTrapTaskSetTaskPromptCallbackNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetTaskPromptCallbackNewWorld'),
+        'deterministicTrapTaskItemConsumeFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskItemConsumeFactionGateNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),
