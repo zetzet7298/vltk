@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T08:40:27Z",
+  "generatedAtUtc": "2026-06-08T09:02:14Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -8471,6 +8471,24 @@
       "targetCellY": 3363,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 2772598947,
+      "trapIdHex": "0xA54280A3",
+      "scriptPath": "\\script\\西南南区\\翠烟门\\翠烟门\\trap\\翠烟门to禁地迷宫.lua",
+      "sourceRelPath": "script\\西南南区\\翠烟门\\翠烟门\\trap\\翠烟门to禁地迷宫.lua",
+      "actionKind": "TaskFactionMessageGateNewWorld",
+      "source": "PC trap Lua main(): GetTask/GetFaction pass NewWorld+SetFightState, task-low Talk, wrong-faction Talk, no SetPos/task/item mutation",
+      "taskId": 6,
+      "passTaskMinInclusive": 15361,
+      "requiredFaction": "cuiyan",
+      "requiredFactionId": 8,
+      "targetMapId": 158,
+      "targetCellX": 1584,
+      "targetCellY": 3191,
+      "fightState": 1,
+      "message": "Không được xông vào cấm địa bổn môn!",
+      "blockedMessage": "Nơi này là cấm địa Thúy Yên không được xông vào!"
     },
     {
       "trapId": 2773263367,

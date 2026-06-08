@@ -178,6 +178,7 @@ namespace VLTK.Sandbox
         public bool IsTaskOptionalMessageNewWorld => string.Equals(actionKind, "TaskOptionalMessageNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskFactionGateNewWorld => string.Equals(actionKind, "TaskFactionGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskPromptDefaultNewWorld => string.Equals(actionKind, "TaskPromptDefaultNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskFactionMessageGateNewWorld => string.Equals(actionKind, "TaskFactionMessageGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);

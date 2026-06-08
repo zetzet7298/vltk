@@ -1993,6 +1993,48 @@ def task_prompt_default_newworld_trap(source: str) -> dict[str, Any] | None:
     }
 
 
+def task_faction_message_gate_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {'main', 'GetTask', 'GetFaction', 'SetFightState', 'NewWorld', 'Talk', 'if', 'elseif', 'and'}
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(for|while|repeat)\b', clean_source):
+        return None
+    match = re.search(
+        r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<taskId>\d+)\s*\).*?'
+        r'if\s*\(?\s*(?P=var)\s*>\s*(?P<passMin>[0-9\s*+\-]+)\s*\)?\s*and\s*\(?\s*GetFaction\s*\(\s*\)\s*==\s*["\'](?P<faction>[a-z]+)["\']\s*\)?\s*then(?P<pass>.*?)'
+        r'elseif\s*\(?\s*(?P=var)\s*<=\s*(?P<lowMax>[0-9\s*+\-]+)\s*\)?\s*then(?P<low>.*?)'
+        r'else(?P<blocked>.*?)end',
+        clean_source, re.S | re.I)
+    if not match:
+        return None
+    task_id = int(match.group('taskId'))
+    pass_min_exclusive = int_lua_constant_expr(match.group('passMin'))
+    low_max = int_lua_constant_expr(match.group('lowMax'))
+    faction = match.group('faction').lower()
+    faction_id = PC_FACTION_IDS.get(faction)
+    if pass_min_exclusive is None or low_max is None or pass_min_exclusive != low_max or faction_id is None:
+        return None
+    new_world = int_args_unique(parse_lua_calls(match.group('pass'), 'NewWorld', limit=2), 3)
+    fight_state = int_args_unique(parse_lua_calls(match.group('pass'), 'SetFightState', limit=2), 1)
+    low_messages = talk_messages({'talkCalls': parse_lua_calls(match.group('low'), 'Talk', limit=2)})
+    blocked_messages = talk_messages({'talkCalls': parse_lua_calls(match.group('blocked'), 'Talk', limit=2)})
+    if new_world is None or fight_state is None or len(low_messages) != 1 or len(blocked_messages) != 1:
+        return None
+    return {
+        'taskId': task_id,
+        'passTaskMinInclusive': pass_min_exclusive + 1,
+        'requiredFaction': faction,
+        'requiredFactionId': faction_id,
+        'targetMapId': new_world[0],
+        'targetCellX': new_world[1],
+        'targetCellY': new_world[2],
+        'fightState': fight_state[0],
+        'message': low_messages[0],
+        'blockedMessage': blocked_messages[0],
+    }
+
+
 def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
     if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
         return None
@@ -2317,6 +2359,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_prompt_default,
             })
             continue
+        task_faction_message_gate = task_faction_message_gate_newworld(source)
+        if task_faction_message_gate is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskFactionMessageGateNewWorld',
+                'source': 'PC trap Lua main(): GetTask/GetFaction pass NewWorld+SetFightState, task-low Talk, wrong-faction Talk, no SetPos/task/item mutation',
+                **task_faction_message_gate,
+            })
+            continue
         citywar_gate = citywar_camp_gate_setpos(source)
         if citywar_gate is not None:
             entries.append({
@@ -2463,6 +2517,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskOptionalMessageNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalMessageNewWorld'),
         'deterministicTrapTaskFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionGateNewWorld'),
         'deterministicTrapTaskPromptDefaultNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskPromptDefaultNewWorld'),
+        'deterministicTrapTaskFactionMessageGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionMessageGateNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),

@@ -211,6 +211,34 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskFactionMessageGateNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                int factionId = _host.GetPlayerFactionId();
+                if (taskValue >= action.passTaskMinInclusive && factionId == action.requiredFactionId)
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    ApplyFightState(action);
+                    _host.NewWorld(action.targetMapId, target);
+                    result = Success(action,
+                        $"GetTask({action.taskId})={taskValue}, GetFaction()=={action.requiredFaction}#{action.requiredFactionId} -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                    return true;
+                }
+
+                string failMessage = taskValue < action.passTaskMinInclusive
+                    ? action.message
+                    : action.blockedMessage;
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(failMessage))
+                    _sideEffects.PostMessage(failMessage);
+                result = Success(action,
+                    $"GetTask({action.taskId})={taskValue}, faction={factionId} -> Talk only, no warp");
+                return true;
+            }
+
             if (action.IsClearSkillSwitchTrap)
             {
                 int currentFightState = _host.GetFightState();
