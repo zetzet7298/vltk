@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T04:33:49Z",
+  "generatedAtUtc": "2026-06-08T04:39:01Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -2351,6 +2351,19 @@
       "targetCellY": 5092,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 1283820715,
+      "trapIdHex": "0x4C858CAB",
+      "scriptPath": "\\script\\西北北区\\昆仑派\\昆仑后山\\trap\\离开.lua",
+      "sourceRelPath": "script\\西北北区\\昆仑派\\昆仑后山\\trap\\离开.lua",
+      "actionKind": "Msg2PlayerNewWorld",
+      "targetMapId": 131,
+      "targetCellX": 1459,
+      "targetCellY": 3277,
+      "fightState": -1,
+      "message": "Bạn thoát khỏi 2 tên Ngư, Thiệu",
+      "source": "PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects"
     },
     {
       "trapId": 1286367683,
@@ -6805,6 +6818,19 @@
       "targetCellY": 2688,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3323387118,
+      "trapIdHex": "0xC616DCEE",
+      "scriptPath": "\\script\\西南南区\\点苍山\\沧浪客居所\\trap\\离开.lua",
+      "sourceRelPath": "script\\西南南区\\点苍山\\沧浪客居所\\trap\\离开.lua",
+      "actionKind": "Msg2PlayerNewWorld",
+      "targetMapId": 167,
+      "targetCellX": 1400,
+      "targetCellY": 2974,
+      "fightState": -1,
+      "message": "Bạn chạy khỏi chỗ của Thương Lương Khách, phía sau còn văng vẳng tiếng chửi mắng của ông.",
+      "source": "PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects"
     },
     {
       "trapId": 3326726574,

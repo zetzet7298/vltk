@@ -478,6 +478,10 @@ def clean_user_message(message: str) -> str:
             .replace('thiƠu', 'thiếu')
             .replace('KiƠm', 'Kiếm')
             .replace('kiƠm', 'kiếm')
+            .replace('phƯa', 'phía')
+            .replace('PhƯa', 'Phía')
+            .replace('tiƠng', 'tiếng')
+            .replace('TiƠng', 'Tiếng')
             .replace('đƠn', 'đến')
             .replace('ĐƠn', 'Đến')
             .replace('nă cứ', 'nó cứ')
@@ -646,6 +650,28 @@ def is_safe_trap_talk_message(actions: dict[str, Any], source: str) -> bool:
     if not source_uses_only_calls(source, {'main', 'Talk'}) or has_lua_control_flow(source):
         return False
     return bool(talk_messages(actions))
+
+
+def is_safe_trap_msg2player_newworld(actions: dict[str, Any], source: str) -> bool:
+    if not actions.get('msg2PlayerCalls') or not actions.get('newWorldCalls'):
+        return False
+    if actions.get('setPosCalls') or actions.get('talkCalls') or actions.get('sayCalls'):
+        return False
+    if (
+        actions.get('getTaskCalls') or actions.get('setTaskCalls') or actions.get('haveItemCalls') or
+        actions.get('addEventItemCalls') or actions.get('addNoteCalls') or actions.get('setPropStateCalls') or
+        actions.get('addItemCalls') or actions.get('delItemCalls') or actions.get('usesCityApis')
+    ):
+        return False
+    if not source_uses_only_calls(source, {'main', 'Msg2Player', 'SetFightState', 'NewWorld'}):
+        return False
+    if has_lua_control_flow(source):
+        return False
+    if int_args_unique(actions.get('newWorldCalls') or [], 3) is None:
+        return False
+    if actions.get('setFightStateCalls') and int_args_unique(actions.get('setFightStateCalls') or [], 1) is None:
+        return False
+    return is_safe_user_message(single_string(actions.get('msg2PlayerCalls')))
 
 
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
@@ -857,6 +883,23 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'source': 'PC trap Lua main(): deterministic read-only Talk(count,"",message...) with no movement/fight/task/item branch',
             })
             continue
+        if is_safe_trap_msg2player_newworld(actions, source):
+            new_world = int_args_unique(actions.get('newWorldCalls') or [], 3)
+            fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1) if actions.get('setFightStateCalls') else None
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'Msg2PlayerNewWorld',
+                'targetMapId': new_world[0],
+                'targetCellX': new_world[1],
+                'targetCellY': new_world[2],
+                'fightState': fight_state[0] if fight_state is not None else -1,
+                'message': single_string(actions.get('msg2PlayerCalls') or []),
+                'source': 'PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects',
+            })
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -918,6 +961,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicTrapTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicTrapMessageActions': sum(1 for e in entries if e['actionKind'] in {'Msg2Player', 'SayMessage', 'TalkMessage'}),
+        'deterministicTrapMsg2PlayerNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'Msg2PlayerNewWorld'),
     }
     return entries, coverage
 

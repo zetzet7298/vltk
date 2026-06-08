@@ -75,6 +75,7 @@ namespace VLTK.Sandbox
         public bool IsMsg2Player => string.Equals(actionKind, "Msg2Player", StringComparison.OrdinalIgnoreCase);
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsMsg2PlayerNewWorld => string.Equals(actionKind, "Msg2PlayerNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()

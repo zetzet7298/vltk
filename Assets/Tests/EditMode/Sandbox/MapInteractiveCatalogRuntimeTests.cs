@@ -121,12 +121,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(670, catalog.Count);
+            Assert.AreEqual(672, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
+            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);
@@ -413,6 +414,39 @@ namespace VLTK.Tests.Sandbox
                 "Trên vách viết: Thanh Âm động.",
             }, sideEffects.messages);
             StringAssert.Contains("TalkMessage", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_Msg2PlayerNewWorld_PostsMessageThenWarps()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 902,
+                        trapIdHex = "0x00000386",
+                        scriptPath = @"\script\msg_newworld.lua",
+                        actionKind = "Msg2PlayerNewWorld",
+                        message = "Bạn thoát khỏi nơi nguy hiểm.",
+                        targetMapId = 131,
+                        targetCellX = 1459,
+                        targetCellY = 3277,
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost();
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 902 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(131, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1459 * 32, 3277 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Bạn thoát khỏi nơi nguy hiểm." }, sideEffects.messages);
+            StringAssert.Contains("Msg2Player + NewWorld", result.detail);
         }
 
         [Test]

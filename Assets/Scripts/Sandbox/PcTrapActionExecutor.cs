@@ -2,7 +2,7 @@
 // VLTK Mobile — executes the deterministic subset of PC trap Lua actions.
 // Ported APIs: NewWorld(mapId,x,y), SetPos(x,y), and simple
 // GetFightState()/SetFightState() gate traps with PC cell coords, plus read-only
-// Msg2Player/Say/Talk message-only traps.
+// Msg2Player/Say/Talk message-only traps, and Msg2Player+NewWorld traps.
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
@@ -89,6 +89,21 @@ namespace VLTK.Sandbox
             }
 
             var target = action.TargetWorldPosition();
+            if (action.IsMsg2PlayerNewWorld)
+            {
+                if (!_host.HasMap(action.targetMapId))
+                {
+                    result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                    return true;
+                }
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.message))
+                    _sideEffects.PostMessage(action.message);
+                ApplyFightState(action);
+                _host.NewWorld(action.targetMapId, target);
+                result = Success(action, $"Msg2Player + NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                return true;
+            }
+
             if (action.IsNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
