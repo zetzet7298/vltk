@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T12:09:07Z",
+  "generatedAtUtc": "2026-06-08T12:29:21Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -1595,6 +1595,210 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫1\\obj\\trobj01.lua",
+      "scriptId": 4175151915,
+      "scriptIdHex": "0xF8DBC32B",
+      "sourceRelPath": "script\\中原北区\\汴京\\铁塔迷宫1\\obj\\trobj01.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_12820_key_160_bit1_complete",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 160,
+              "count": 1
+            },
+            {
+              "type": "TaskEquals",
+              "taskId": 21,
+              "value": 6
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                160
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 21,
+              "bitIndex": 1,
+              "value": 1
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở được cơ quan thứ nhất"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Mở tượng Bảo rương ở tầng thứ nhất, mở được cơ quan thứ nhất"
+            },
+            {
+              "type": "PostMessage",
+              "messages": [
+                "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như.",
+                "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
+              ]
+            },
+            {
+              "type": "SetTask",
+              "taskId": 4,
+              "value": 12850
+            },
+            {
+              "type": "AddNote",
+              "message": "Cả ba cơ quan đều đã mở, cứu được Phụng Hấp Như"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_key_160_bit1_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 160,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 1,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                160
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 21,
+              "bitIndex": 1,
+              "value": 1
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở được cơ quan thứ nhất"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Mở tượng Bảo rương ở tầng thứ nhất, mở được cơ quan thứ nhất"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_key_160_bit1_already_open_consume_key",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 160,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 1,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                160
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_bit1_already_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 1,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "task_12850_already_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12850
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "locked_missing_key_or_task",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Không có chìa khóa thì không thể mở được cơ quan này"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫1\\trap\\铁塔迷宫1to铁塔迷宫2.lua",
       "scriptId": 3648088054,
       "scriptIdHex": "0xD97167F6",
@@ -1605,6 +1809,210 @@
       "targetCellY": 3128,
       "fightState": 1,
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫2\\obj\\trobj02.lua",
+      "scriptId": 2016543260,
+      "scriptIdHex": "0x7832021C",
+      "sourceRelPath": "script\\中原北区\\汴京\\铁塔迷宫2\\obj\\trobj02.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_12820_key_161_bit2_complete",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 161,
+              "count": 1
+            },
+            {
+              "type": "TaskEquals",
+              "taskId": 21,
+              "value": 5
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                161
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 21,
+              "bitIndex": 2,
+              "value": 1
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở được cơ quan thứ hai"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Mở được Bảo rương ở tầng thứ hai. Mở được cơ quan thứ hai"
+            },
+            {
+              "type": "PostMessage",
+              "messages": [
+                "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như.",
+                "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
+              ]
+            },
+            {
+              "type": "SetTask",
+              "taskId": 4,
+              "value": 12850
+            },
+            {
+              "type": "AddNote",
+              "message": "Cả ba cơ quan đều đã mở, cứu được Phụng Hấp Như"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_key_161_bit2_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 161,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 2,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                161
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 21,
+              "bitIndex": 2,
+              "value": 1
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở được cơ quan thứ hai"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Mở được Bảo rương ở tầng thứ hai. Mở được cơ quan thứ hai"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_key_161_bit2_already_open_consume_key",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 161,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 2,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                161
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_bit2_already_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 2,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "task_12850_already_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12850
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "locked_missing_key_or_task",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Không có chìa khóa thì không thể mở được cơ quan này"
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫2\\trap\\铁塔迷宫2to铁塔迷宫1.lua",
@@ -1629,6 +2037,210 @@
       "targetCellY": 3133,
       "fightState": 1,
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫3\\obj\\trobj03.lua",
+      "scriptId": 225848066,
+      "scriptIdHex": "0x0D762B02",
+      "sourceRelPath": "script\\中原北区\\汴京\\铁塔迷宫3\\obj\\trobj03.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_12820_key_162_bit3_complete",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 162,
+              "count": 1
+            },
+            {
+              "type": "TaskEquals",
+              "taskId": 21,
+              "value": 3
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                162
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 21,
+              "bitIndex": 3,
+              "value": 1
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở được cơ quan thứ ba"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Mở được Bảo rương ở tầng thứ ba. Mở được cơ quan thứ ba"
+            },
+            {
+              "type": "PostMessage",
+              "messages": [
+                "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như.",
+                "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
+              ]
+            },
+            {
+              "type": "SetTask",
+              "taskId": 4,
+              "value": 12850
+            },
+            {
+              "type": "AddNote",
+              "message": "Cả ba cơ quan đều đã mở, cứu được Phụng Hấp Như"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_key_162_bit3_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 162,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 3,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                162
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 21,
+              "bitIndex": 3,
+              "value": 1
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở được cơ quan thứ ba"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Mở được Bảo rương ở tầng thứ ba. Mở được cơ quan thứ ba"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_key_162_bit3_already_open_consume_key",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 162,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 3,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                162
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "task_12820_bit3_already_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12820
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 21,
+              "bitIndex": 3,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "task_12850_already_open",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 12850
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            }
+          ]
+        },
+        {
+          "label": "locked_missing_key_or_task",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Không có chìa khóa thì không thể mở được cơ quan này"
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫3\\trap\\铁塔迷宫3to铁塔迷宫2.lua",

@@ -388,6 +388,10 @@ namespace VLTK.Sandbox
                     int byteValue = GetTaskByte(_host.GetTaskValue(condition.taskId), condition.byteIndex);
                     if (byteValue <= condition.minValue || byteValue >= condition.maxValue) return false;
                 }
+                else if (string.Equals(type, "TaskBitEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (GetTaskBit(_host.GetTaskValue(condition.taskId), condition.bitIndex) != condition.value) return false;
+                }
                 else if (string.Equals(type, "HaveItem", System.StringComparison.OrdinalIgnoreCase))
                 {
                     if (!_host.HaveItem(condition.itemId, condition.count <= 0 ? 1 : condition.count)) return false;
@@ -444,6 +448,12 @@ namespace VLTK.Sandbox
                 {
                     int oldValue = _host.GetTaskValue(effect.taskId);
                     _host.SetTaskValue(effect.taskId, SetTaskByte(oldValue, effect.byteIndex, effect.value));
+                    stats.setTasks++;
+                }
+                else if (string.Equals(type, "SetTaskBit", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    int oldValue = _host.GetTaskValue(effect.taskId);
+                    _host.SetTaskValue(effect.taskId, SetTaskBit(oldValue, effect.bitIndex, effect.value));
                     stats.setTasks++;
                 }
                 else if (string.Equals(type, "PostMessage", System.StringComparison.OrdinalIgnoreCase))
@@ -573,6 +583,23 @@ namespace VLTK.Sandbox
             if (shift >= 32) return taskValue;
             int mask = 0xff << shift;
             return (taskValue & ~mask) | ((byteValue & 0xff) << shift);
+        }
+
+        private static int GetTaskBit(int taskValue, int bitIndex)
+        {
+            if (bitIndex <= 0) return 0;
+            int shift = bitIndex - 1;
+            if (shift >= 32) return 0;
+            return (taskValue >> shift) & 0x1;
+        }
+
+        private static int SetTaskBit(int taskValue, int bitIndex, int bitValue)
+        {
+            if (bitIndex <= 0) return taskValue;
+            int shift = bitIndex - 1;
+            if (shift >= 32) return taskValue;
+            int mask = 1 << shift;
+            return bitValue == 0 ? (taskValue & ~mask) : (taskValue | mask);
         }
 
         private struct BranchEffectStats

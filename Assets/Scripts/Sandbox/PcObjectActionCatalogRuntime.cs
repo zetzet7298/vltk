@@ -120,6 +120,7 @@ namespace VLTK.Sandbox
         public int maxValue;
         public int itemId;
         public int byteIndex;
+        public int bitIndex;
         public int count = 1;
     }
 
@@ -131,6 +132,7 @@ namespace VLTK.Sandbox
         public int value;
         public int itemId;
         public int byteIndex;
+        public int bitIndex;
         public int[] itemIds;
         public int[] itemCounts;
         public string message;

@@ -254,13 +254,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(286, catalog.Count);
+            Assert.AreEqual(289, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
-            Assert.AreEqual(13, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
+            Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -340,6 +340,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(6, wudangChest.branches.Length);
             Assert.AreEqual("task_15380_byte1_start_plague", wudangChest.branches[0].label);
             Assert.AreEqual("SetTaskByte", wudangChest.branches[0].effects[2].type);
+            var ironTowerMechanism = catalog.Find(@"\script\中原北区\汴京\铁塔迷宫1\obj\trobj01.lua");
+            Assert.IsNotNull(ironTowerMechanism);
+            Assert.IsTrue(ironTowerMechanism.IsTaskItemBranchMessage);
+            Assert.AreEqual(6, ironTowerMechanism.branches.Length);
+            Assert.AreEqual("task_12820_key_160_bit1_complete", ironTowerMechanism.branches[0].label);
+            Assert.AreEqual("SetTaskBit", ironTowerMechanism.branches[0].effects[1].type);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -1142,6 +1148,103 @@ namespace VLTK.Tests.Sandbox
             executor = new PcObjectActionExecutor(catalog, host, sideEffects);
             Assert.IsTrue(executor.TryExecute(obj, out result));
             CollectionAssert.AreEqual(new[] { 70 }, sideEffects.eventItems);
+            StringAssert.Contains("branch=3", result.detail);
+         }
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemBranchMessage_PreservesPcTaskBitMechanismBranches()
+        {
+            var branches = new[]
+            {
+                new PcObjectActionBranch
+                {
+                    label = "task_12820_key_160_bit1_complete",
+                    conditions = new[]
+                    {
+                        new PcObjectActionCondition { type = "TaskEquals", taskId = 4, value = 50 * 256 + 20 },
+                        new PcObjectActionCondition { type = "HaveItem", itemId = 160 },
+                        new PcObjectActionCondition { type = "TaskEquals", taskId = 21, value = 6 },
+                    },
+                    effects = new[]
+                    {
+                        new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 160 }, itemCounts = new[] { 1 } },
+                        new PcObjectActionEffect { type = "SetTaskBit", taskId = 21, bitIndex = 1, value = 1 },
+                        new PcObjectActionEffect { type = "AddNote", message = "open first" },
+                        new PcObjectActionEffect { type = "PostMessage", message = "open first" },
+                        new PcObjectActionEffect { type = "SetTask", taskId = 4, value = 50 * 256 + 50 },
+                        new PcObjectActionEffect { type = "AddNote", message = "complete" },
+                    },
+                },
+                new PcObjectActionBranch
+                {
+                    label = "task_12820_key_160_bit1_open",
+                    conditions = new[]
+                    {
+                        new PcObjectActionCondition { type = "TaskEquals", taskId = 4, value = 50 * 256 + 20 },
+                        new PcObjectActionCondition { type = "HaveItem", itemId = 160 },
+                        new PcObjectActionCondition { type = "TaskBitEquals", taskId = 21, bitIndex = 1, value = 0 },
+                    },
+                    effects = new[]
+                    {
+                        new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 160 }, itemCounts = new[] { 1 } },
+                        new PcObjectActionEffect { type = "SetTaskBit", taskId = 21, bitIndex = 1, value = 1 },
+                    },
+                },
+                new PcObjectActionBranch
+                {
+                    label = "task_12820_key_160_bit1_already_open_consume_key",
+                    conditions = new[]
+                    {
+                        new PcObjectActionCondition { type = "TaskEquals", taskId = 4, value = 50 * 256 + 20 },
+                        new PcObjectActionCondition { type = "HaveItem", itemId = 160 },
+                        new PcObjectActionCondition { type = "TaskBitEquals", taskId = 21, bitIndex = 1, value = 1 },
+                    },
+                    effects = new[]
+                    {
+                        new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 160 }, itemCounts = new[] { 1 } },
+                        new PcObjectActionEffect { type = "PostMessage", message = "already open" },
+                    },
+                },
+                new PcObjectActionBranch
+                {
+                    label = "task_12820_bit1_already_open",
+                    conditions = new[]
+                    {
+                        new PcObjectActionCondition { type = "TaskEquals", taskId = 4, value = 50 * 256 + 20 },
+                        new PcObjectActionCondition { type = "TaskBitEquals", taskId = 21, bitIndex = 1, value = 1 },
+                    },
+                    effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "already open" } },
+                },
+            };
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[] { new PcObjectActionCatalogEntry { scriptPath = @"\script\trobj01.lua", actionKind = "TaskItemBranchMessage", branches = branches } }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\trobj01.lua" };
+
+            var host = new FakeTrapTravelHost { taskValues = { [4] = 50 * 256 + 20, [21] = 6 }, itemCounts = { [160] = 1 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+            Assert.AreEqual(7, host.GetTaskValue(21));
+            Assert.AreEqual(50 * 256 + 50, host.GetTaskValue(4));
+            Assert.IsFalse(host.HaveItem(160, 1));
+            CollectionAssert.AreEqual(new[] { "open first", "complete" }, sideEffects.notes);
+            StringAssert.Contains("branch=0", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [4] = 50 * 256 + 20, [21] = 1 }, itemCounts = { [160] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsFalse(host.HaveItem(160, 1), "PC DelItem(key) runs before checking an already-open bit.");
+            CollectionAssert.AreEqual(new[] { "already open" }, sideEffects.messages);
+            StringAssert.Contains("branch=2", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [4] = 50 * 256 + 20, [21] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { "already open" }, sideEffects.messages);
             StringAssert.Contains("branch=3", result.detail);
         }
 

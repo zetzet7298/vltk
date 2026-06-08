@@ -1777,6 +1777,78 @@ def object_task_item_consume_message_action(script: dict[str, Any]) -> dict[str,
     return entry
 
 
+def iron_tower_mechanism_branches(key_item_id: int, bit_index: int, completion_old_value: int,
+                                  open_message: str, open_note: str) -> list[dict[str, Any]]:
+    task_active = 50 * 256 + 20
+    task_done = 50 * 256 + 50
+    already_open = 'Cơ quan đã mở ra'
+    completion_talk = 'Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như.'
+    completion_note = 'Cả ba cơ quan đều đã mở, cứu được Phụng Hấp Như'
+    locked = 'Không có chìa khóa thì không thể mở được cơ quan này'
+    return [
+        {
+            'label': f'task_12820_key_{key_item_id}_bit{bit_index}_complete',
+            'conditions': [
+                {'type': 'TaskEquals', 'taskId': 4, 'value': task_active},
+                {'type': 'HaveItem', 'itemId': key_item_id, 'count': 1},
+                {'type': 'TaskEquals', 'taskId': 21, 'value': completion_old_value},
+            ],
+            'effects': [
+                {'type': 'ConsumeItems', 'itemIds': [key_item_id], 'itemCounts': [1]},
+                {'type': 'SetTaskBit', 'taskId': 21, 'bitIndex': bit_index, 'value': 1},
+                {'type': 'AddNote', 'message': open_note},
+                {'type': 'PostMessage', 'message': open_message},
+                {'type': 'PostMessage', 'messages': [completion_talk, completion_talk]},
+                {'type': 'SetTask', 'taskId': 4, 'value': task_done},
+                {'type': 'AddNote', 'message': completion_note},
+            ],
+        },
+        {
+            'label': f'task_12820_key_{key_item_id}_bit{bit_index}_open',
+            'conditions': [
+                {'type': 'TaskEquals', 'taskId': 4, 'value': task_active},
+                {'type': 'HaveItem', 'itemId': key_item_id, 'count': 1},
+                {'type': 'TaskBitEquals', 'taskId': 21, 'bitIndex': bit_index, 'value': 0},
+            ],
+            'effects': [
+                {'type': 'ConsumeItems', 'itemIds': [key_item_id], 'itemCounts': [1]},
+                {'type': 'SetTaskBit', 'taskId': 21, 'bitIndex': bit_index, 'value': 1},
+                {'type': 'AddNote', 'message': open_note},
+                {'type': 'PostMessage', 'message': open_message},
+            ],
+        },
+        {
+            'label': f'task_12820_key_{key_item_id}_bit{bit_index}_already_open_consume_key',
+            'conditions': [
+                {'type': 'TaskEquals', 'taskId': 4, 'value': task_active},
+                {'type': 'HaveItem', 'itemId': key_item_id, 'count': 1},
+                {'type': 'TaskBitEquals', 'taskId': 21, 'bitIndex': bit_index, 'value': 1},
+            ],
+            'effects': [
+                {'type': 'ConsumeItems', 'itemIds': [key_item_id], 'itemCounts': [1]},
+                {'type': 'PostMessage', 'message': already_open},
+            ],
+        },
+        {
+            'label': f'task_12820_bit{bit_index}_already_open',
+            'conditions': [
+                {'type': 'TaskEquals', 'taskId': 4, 'value': task_active},
+                {'type': 'TaskBitEquals', 'taskId': 21, 'bitIndex': bit_index, 'value': 1},
+            ],
+            'effects': [{'type': 'PostMessage', 'message': already_open}],
+        },
+        {
+            'label': 'task_12850_already_open',
+            'conditions': [{'type': 'TaskEquals', 'taskId': 4, 'value': task_done}],
+            'effects': [{'type': 'PostMessage', 'message': already_open}],
+        },
+        {
+            'label': 'locked_missing_key_or_task',
+            'effects': [{'type': 'PostMessage', 'message': locked}],
+        },
+    ]
+
+
 OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
     '0xC13AAB4E': {
         'branches': [
@@ -2152,6 +2224,21 @@ OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
             {'label': 'not_task_locked', 'effects': [{'type': 'PostMessage', 'message': 'Chưa nhận nhiệm vụ! Bạn không thể mở Bảo rương này!'}]},
         ],
     },
+    '0xF8DBC32B': {
+        'sourceConsumeItemIds': [160],
+        'sourceSetTaskBits': [(21, 1, 1)],
+        'branches': iron_tower_mechanism_branches(160, 1, 6, 'Mở tượng Bảo rương ở tầng thứ nhất, mở được cơ quan thứ nhất', 'Mở được cơ quan thứ nhất'),
+    },
+    '0x7832021C': {
+        'sourceConsumeItemIds': [161],
+        'sourceSetTaskBits': [(21, 2, 1)],
+        'branches': iron_tower_mechanism_branches(161, 2, 5, 'Mở được Bảo rương ở tầng thứ hai. Mở được cơ quan thứ hai', 'Mở được cơ quan thứ hai'),
+    },
+    '0x0D762B02': {
+        'sourceConsumeItemIds': [162],
+        'sourceSetTaskBits': [(21, 3, 1)],
+        'branches': iron_tower_mechanism_branches(162, 3, 3, 'Mở được Bảo rương ở tầng thứ ba. Mở được cơ quan thứ ba', 'Mở được cơ quan thứ ba'),
+    },
 }
 
 
@@ -2160,7 +2247,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     if spec is None:
         return None
     clean_source = strip_lua_line_comments(script.get('sourceText', ''))
-    allowed = {'main', 'GetTask', 'SetTask', 'GetTaskTemp', 'SetTaskTemp', 'GetByte', 'SetByte', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
+    allowed = {'main', 'GetTask', 'SetTask', 'GetTaskTemp', 'SetTaskTemp', 'GetByte', 'SetByte', 'GetBit', 'SetBit', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
     uses_random_rewards = any(
         effect.get('type') == 'RandomAddEventItemIfMissing'
         for branch in spec.get('branches', [])
@@ -2189,6 +2276,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     effect_set_tasks: list[tuple[int, int]] = []
     effect_set_task_temps: list[tuple[int, int]] = []
     effect_set_task_bytes: list[tuple[int, int, int]] = []
+    effect_set_task_bits: list[tuple[int, int, int]] = []
     for branch in spec.get('branches', []):
         for effect in branch.get('effects', []):
             if effect.get('type') == 'ConsumeItems':
@@ -2201,14 +2289,25 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
                 effect_set_task_temps.append((effect.get('taskId', 0), effect.get('value', 0)))
             elif effect.get('type') == 'SetTaskByte':
                 effect_set_task_bytes.append((effect.get('taskId', 0), effect.get('byteIndex', 0), effect.get('value', 0)))
+            elif effect.get('type') == 'SetTaskBit':
+                effect_set_task_bits.append((effect.get('taskId', 0), effect.get('bitIndex', 0), effect.get('value', 0)))
 
     source_del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=12), 1)]
     source_event_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=8), 1)]
+    source_set_task_bits = []
+    setbit_task_vars: set[str] = set()
+    for match in re.finditer(
+            r'\b([A-Za-z_][A-Za-z0-9_]*)\s*=\s*SetBit\s*\(\s*\1\s*,\s*(\d+)\s*,\s*(\d+)\s*\).*?SetTask\s*\(\s*(\d+)\s*,\s*\1\s*\)',
+            clean_source,
+            re.S):
+        setbit_task_vars.add(match.group(1))
+        source_set_task_bits.append((int(match.group(4)), int(match.group(2)), int(match.group(3))))
+
     source_set_tasks = []
     for call in parse_lua_calls(clean_source, 'SetTask', limit=8):
         if len(call) < 2:
             return None
-        if 'SetByte' in call[1]:
+        if 'SetByte' in call[1] or call[1].strip() in setbit_task_vars:
             continue
         task_id = int_expr(call[0])
         task_value = int_lua_constant_expr(call[1])
@@ -2228,12 +2327,14 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     for match in re.finditer(r'SetTask\s*\(\s*(\d+)\s*,\s*SetByte\s*\(\s*GetTask\s*\(\s*\1\s*\)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*\)', clean_source):
         source_set_task_bytes.append((int(match.group(1)), int(match.group(2)), int(match.group(3))))
     expected_del_items = spec.get('sourceConsumeItemIds', effect_del_items)
+    expected_set_task_bits = spec.get('sourceSetTaskBits', effect_set_task_bits)
     if (source_del_items != expected_del_items or source_event_items != effect_event_items or
             source_set_tasks != effect_set_tasks or source_set_task_temps != effect_set_task_temps or
-            source_set_task_bytes != effect_set_task_bytes):
+            source_set_task_bytes != effect_set_task_bytes or source_set_task_bits != expected_set_task_bits):
         return None
     result = dict(spec)
     result.pop('sourceConsumeItemIds', None)
+    result.pop('sourceSetTaskBits', None)
     result.pop('allowStaticSay', None)
     return result
 
