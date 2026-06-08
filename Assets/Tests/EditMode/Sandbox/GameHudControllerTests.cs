@@ -163,7 +163,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void OnTeamClick_TogglesTeamPreviewAndPopulatesMembers()
+        public void OnTeamClick_TogglesTeamPreviewWithoutFakeMembers()
         {
             // Initially hidden
             Assert.IsTrue(_teamPreview.ClassListContains("hidden"));
@@ -172,11 +172,34 @@ namespace VLTK.Tests.Sandbox
             // Show
             InvokePrivateMethod("OnTeamClick");
             Assert.IsFalse(_teamPreview.ClassListContains("hidden"));
-            Assert.AreEqual(3, _teamPreview.childCount, "Should populate 3 team members");
+            Assert.AreEqual(1, _teamPreview.childCount, "No Sandbox PartyService should show an empty party row, not fake members");
+            var emptyLabels = _teamPreview.Query<Label>().ToList();
+            Assert.AreEqual(1, emptyLabels.Count);
+            StringAssert.Contains("Chưa tham gia đội", emptyLabels[0].text);
 
             // Hide again
             InvokePrivateMethod("OnTeamClick");
             Assert.IsTrue(_teamPreview.ClassListContains("hidden"));
+        }
+
+        [Test]
+        public void PopulateTeamPreviewFromMembers_UsesRuntimePartyMembers()
+        {
+            var members = new List<PartyMember>
+            {
+                new PartyMember { memberId = 1, nameVi = "Thiếu Hiệp", level = 45, factionId = 7, hpCurrent = 80, hpMax = 100, mpCurrent = 30, mpMax = 60, isLeader = true, isOnline = true },
+                new PartyMember { memberId = 2, nameVi = "Đồng Đội", level = 42, factionId = 3, hpCurrent = 60, hpMax = 90, mpCurrent = 90, mpMax = 100, isLeader = false, isOnline = true },
+            };
+
+            InvokePrivateMethod("PopulateTeamPreviewFromMembers", members);
+
+            Assert.AreEqual(2, _teamPreview.childCount);
+            var labels = _teamPreview.Query<Label>().ToList();
+            Assert.AreEqual(2, labels.Count);
+            StringAssert.Contains("Thiếu Hiệp", labels[0].text);
+            StringAssert.Contains("Cái Bang", labels[0].text);
+            StringAssert.Contains("Đồng Đội", labels[1].text);
+            StringAssert.Contains("Nga My", labels[1].text);
         }
 
         [Test]
@@ -227,7 +250,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void OnExchangeClick_TogglesTradeInfoPanelAndPopulatesPartnerInfo()
+        public void OnExchangeClick_TogglesTradeInfoPanelWithoutFakePartnerInfo()
         {
             // Initially hidden
             Assert.IsTrue(_tradeInfoPanel.ClassListContains("hidden"));
@@ -235,10 +258,11 @@ namespace VLTK.Tests.Sandbox
             // Show
             InvokePrivateMethod("OnExchangeClick");
             Assert.IsFalse(_tradeInfoPanel.ClassListContains("hidden"));
-            StringAssert.Contains("Dã Tẩu", _tradePartnerName.text);
-            StringAssert.Contains("200", _tradePartnerLevel.text);
-            StringAssert.Contains("Võ Đang", _tradePartnerFaction.text);
-            StringAssert.Contains("Thiên Hạ", _tradePartnerGuild.text);
+            StringAssert.Contains("Chưa chọn người chơi", _tradePartnerName.text);
+            StringAssert.DoesNotContain("Dã Tẩu", _tradePartnerName.text);
+            StringAssert.DoesNotContain("200", _tradePartnerLevel.text);
+            StringAssert.DoesNotContain("Võ Đang", _tradePartnerFaction.text);
+            StringAssert.DoesNotContain("Thiên Hạ", _tradePartnerGuild.text);
 
             // Hide again
             InvokePrivateMethod("OnExchangeClick");

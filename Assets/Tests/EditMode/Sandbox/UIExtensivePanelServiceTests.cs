@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------------
 
 using NUnit.Framework;
+using VLTK.Sandbox;
 using VLTK.UI;
 
 namespace VLTK.Tests.EditMode
@@ -98,6 +99,19 @@ namespace VLTK.Tests.EditMode
                 Assert.IsNotNull(snap);
                 Assert.AreEqual(4, snap.totalBags);
             });
+        }
+
+        [Test]
+        public void BuildSnapshot_WithRuntimeInventory_UsesMobileInventorySlots()
+        {
+            var inv = new InventoryService(null);
+
+            var snap = BagPanelService.BuildSnapshot(1, inv);
+
+            Assert.AreEqual(1, snap.totalBags);
+            Assert.AreEqual(InventoryService.MaxInventorySlots, snap.totalSlots);
+            Assert.AreEqual(0, snap.usedSlots);
+            Assert.AreEqual("Hành trang đang mang", snap.rows[0].name);
         }
 
         [Test]

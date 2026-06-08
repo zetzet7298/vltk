@@ -1744,7 +1744,7 @@ namespace VLTK.UI
 
         private void OnItemExClick()
         {
-            var snap = BagPanelService.BuildSnapshot(1);
+            var snap = BagPanelService.BuildSnapshot(1, SandboxManager.Instance?.InventoryService);
             var rows = new List<string> { $"Tổng rương: {snap.totalBags}", $"Ô: {snap.usedSlots}/{snap.totalSlots}" };
             if (snap.rows != null)
             {
@@ -1796,6 +1796,9 @@ namespace VLTK.UI
         private void OnTeamClick()
         {
             ClosePcToolPanel();
+            var partyPanel = SandboxManager.Instance?.PartyPanel;
+            partyPanel?.Toggle();
+
             if (_teamPreview != null)
             {
                 bool hide = !_teamPreview.ClassListContains("hidden");
@@ -2099,19 +2102,31 @@ namespace VLTK.UI
         {
             if (_teamPreview == null) return;
             _teamPreview.Clear();
-            
-            var members = new[]
+
+            PopulateTeamPreviewFromMembers(SandboxManager.Instance?.PartyService?.Members);
+        }
+
+        private void PopulateTeamPreviewFromMembers(IReadOnlyList<PartyMember> members)
+        {
+            if (_teamPreview == null) return;
+            _teamPreview.Clear();
+
+            if (members == null || members.Count == 0)
             {
-                new { name = "Đường Môn Đệ Tử", faction = "tm", hp = 80, maxHp = 100, mp = 40, maxMp = 50, isLeader = true },
-                new { name = "Nga Mi Đệ Tử", faction = "em", hp = 100, maxHp = 100, mp = 50, maxMp = 50, isLeader = false },
-                new { name = "Cái Bang Đệ Tử", faction = "gb", hp = 50, maxHp = 120, mp = 20, maxMp = 100, isLeader = false }
-            };
-            
+                var empty = new VisualElement();
+                empty.AddToClassList("hud-team-member");
+                var label = new Label("Chưa tham gia đội");
+                label.AddToClassList("hud-team-member-name");
+                empty.Add(label);
+                _teamPreview.Add(empty);
+                return;
+            }
+
             foreach (var m in members)
             {
                 var item = new VisualElement();
                 item.AddToClassList("hud-team-member");
-                
+
                 if (m.isLeader)
                 {
                     var flag = new VisualElement();
@@ -2121,47 +2136,70 @@ namespace VLTK.UI
                 
                 var icon = new VisualElement();
                 icon.AddToClassList("hud-team-faction-icon");
-                
-                var fact = HudDataService.Instance.GetFaction(m.faction);
+
+                var fact = HudDataService.Instance.GetFaction(FactionIconKey(m.factionId));
                 int placeholderSkillId = fact != null ? fact.placeholderSkillId : 124;
 
                 LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{placeholderSkillId}");
                 item.Add(icon);
-                
+
                 var info = new VisualElement();
                 info.AddToClassList("hud-team-member-info");
-                
-                var nameLabel = new Label(m.name);
+
+                string faction = PartyService.FactionNameVi(m.factionId);
+                var nameLabel = new Label($"{m.nameVi} Lv{m.level} [{faction}]");
                 nameLabel.AddToClassList("hud-team-member-name");
                 info.Add(nameLabel);
-                
+
                 var hpTrack = new VisualElement();
                 hpTrack.AddToClassList("hud-team-bar-track");
                 var hpFill = new VisualElement();
                 hpFill.AddToClassList("hud-team-bar-fill-hp");
-                hpFill.style.width = Length.Percent(((float)m.hp / m.maxHp) * 100f);
+                hpFill.style.width = Length.Percent(PercentOrFull(m.hpCurrent, m.hpMax));
                 hpTrack.Add(hpFill);
                 info.Add(hpTrack);
-                
+
                 var mpTrack = new VisualElement();
                 mpTrack.AddToClassList("hud-team-bar-track");
                 var mpFill = new VisualElement();
                 mpFill.AddToClassList("hud-team-bar-fill-mp");
-                mpFill.style.width = Length.Percent(((float)m.mp / m.maxMp) * 100f);
+                mpFill.style.width = Length.Percent(PercentOrFull(m.mpCurrent, m.mpMax));
                 mpTrack.Add(mpFill);
                 info.Add(mpTrack);
-                
+
                 item.Add(info);
                 _teamPreview.Add(item);
             }
         }
 
+        private static float PercentOrFull(int current, int max)
+        {
+            if (max <= 0) return 100f;
+            return Mathf.Clamp01((float)current / max) * 100f;
+        }
+
+        private static string FactionIconKey(int factionId) => factionId switch
+        {
+            1 => "sl",
+            2 => "vd",
+            3 => "em",
+            4 => "tv",
+            5 => "tm",
+            6 => "wd",
+            7 => "cb",
+            8 => "tr",
+            9 => "cy",
+            10 => "cl",
+            _ => "cb",
+        };
+
         private void PopulateTradeInfo()
         {
-            if (_tradePartnerName != null) _tradePartnerName.text = "     + Tên: Dã Tẩu";
-            if (_tradePartnerLevel != null) _tradePartnerLevel.text = "     + Cấp: 200";
-            if (_tradePartnerFaction != null) _tradePartnerFaction.text = "     + Phái: Võ Đang";
-            if (_tradePartnerGuild != null) _tradePartnerGuild.text = "     + Bang: Thiên Hạ";
+            var economy = SandboxManager.Instance?.GameplayLoop?.Economy;
+            if (_tradePartnerName != null) _tradePartnerName.text = "     + Đối tượng: Chưa chọn người chơi";
+            if (_tradePartnerLevel != null) _tradePartnerLevel.text = economy != null ? $"     + Ví bạc: {economy.Wallet.silver}" : "     + Ví bạc: --";
+            if (_tradePartnerFaction != null) _tradePartnerFaction.text = "     + Phiên: Chưa tạo";
+            if (_tradePartnerGuild != null) _tradePartnerGuild.text = economy != null ? $"     + Kho: {economy.StashUsed}/{economy.StashUsed + economy.StashRemaining}" : "     + Trạng thái: Runtime chưa sẵn sàng";
         }
 
         private void CloseTradeInfo()
