@@ -407,6 +407,17 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ChatRailUnresolvedActiveControls_RemainAudited()
+        {
+            Assert.IsTrue(HudBottomBarPcSpec.UnresolvedDeclaredChatControls.ContainsKey("ChatRoom_Scroll"),
+                "PC chat [ChatRoom_Scroll] active track must stay audited until exact 聊天条中部改.spr art/tiling is ported.");
+            Assert.IsTrue(HudBottomBarPcSpec.UnresolvedDeclaredChatControls.ContainsKey("TabButton"),
+                "PC chat [TabButton] template must stay audited so it is not invented as a separate fake button.");
+            StringAssert.Contains("聊天条中部改.spr", HudBottomBarPcSpec.UnresolvedDeclaredChatControls["ChatRoom_Scroll"]);
+            StringAssert.Contains("non-art template", HudBottomBarPcSpec.UnresolvedDeclaredChatControls["TabButton"]);
+        }
+
+        [Test]
         public void ChatRailMainButtons_FollowPcIniTopOrder()
         {
             var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
