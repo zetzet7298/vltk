@@ -3,9 +3,12 @@
 // Replaces BaLangEnemyDatabase for all maps.
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using VLTK.Model;
+using VLTK.Sprites;
 
 namespace VLTK.Sandbox
 {
@@ -30,7 +33,10 @@ namespace VLTK.Sandbox
                 System.IO.Path.Combine(npcDir, "npcs.txt"));
             foreach (var t in templates)
             {
-                if (t != null && t.templateId > 0)
+                if (t == null || t.templateId <= 0) continue;
+                if (_templateLookup.TryGetValue(t.templateId, out var existing) && IsCuratedTemplate(t.templateId))
+                    MergePcTemplateIntoCurated(existing, t);
+                else
                     _templateLookup[t.templateId] = t;
             }
         }
@@ -146,8 +152,37 @@ namespace VLTK.Sandbox
                 _templateLookup[t.templateId] = t;
         }
 
+        private static bool IsCuratedTemplate(int templateId)
+        {
+            foreach (var template in SharedTemplates)
+                if (template.templateId == templateId)
+                    return true;
+            return false;
+        }
+
+        private static void MergePcTemplateIntoCurated(NpcTemplate curated, NpcTemplate pc)
+        {
+            if (curated == null || pc == null) return;
+            curated.kind = pc.kind;
+            curated.series = pc.series;
+            curated.walkSpeed = pc.walkSpeed > 0 ? pc.walkSpeed : curated.walkSpeed;
+            curated.runSpeed = pc.runSpeed > 0 ? pc.runSpeed : curated.runSpeed;
+            curated.visionRadius = pc.visionRadius > 0 ? pc.visionRadius : curated.visionRadius;
+            curated.activeRadius = pc.activeRadius > 0 ? pc.activeRadius : curated.activeRadius;
+            curated.aiMode = pc.aiMode > 0 ? pc.aiMode : curated.aiMode;
+            curated.aiParams = pc.aiParams != null && pc.aiParams.Length > 0 ? pc.aiParams : curated.aiParams;
+            curated.scriptRef = string.IsNullOrEmpty(pc.scriptRef) ? curated.scriptRef : pc.scriptRef;
+            curated.levelScriptRef = string.IsNullOrEmpty(pc.levelScriptRef) ? curated.levelScriptRef : pc.levelScriptRef;
+            curated.attack = pc.attack > 0 ? pc.attack : curated.attack;
+            curated.defense = pc.defense > 0 ? pc.defense : curated.defense;
+            curated.maxLife = Mathf.Max(curated.maxLife, pc.maxLife);
+            if (string.IsNullOrEmpty(curated.spriteClipRef))
+                curated.spriteClipRef = pc.spriteClipRef;
+        }
+
         public static NpcTemplate Resolve(int templateId)
         {
+            EnsurePcNpcsLoaded();
             _templateLookup.TryGetValue(templateId, out var t);
             return t;
         }
@@ -229,10 +264,73 @@ namespace VLTK.Sandbox
         public static string BuildNpcSprPath(string resType, string action)
         {
             if (string.IsNullOrWhiteSpace(resType)) return null;
-            string folder = resType.StartsWith("ani", System.StringComparison.OrdinalIgnoreCase)
-                ? "animal"
-                : resType.StartsWith("boss", System.StringComparison.OrdinalIgnoreCase) ? "boss" : "enemy";
+            foreach (var candidate in CandidateNpcSprPaths(resType, action))
+            {
+                if (IsNpcSprAvailable(candidate))
+                    return candidate;
+            }
+            return BuildNpcSprPathExact(resType, action);
+        }
+
+        private static string BuildNpcSprPathExact(string resType, string action)
+        {
+            string folder = NpcResFolder(resType);
+            if (string.Equals(action, "base", StringComparison.OrdinalIgnoreCase))
+                return $@"spr\npcres\{folder}\{resType}\{resType}.spr";
             return $@"spr\npcres\{folder}\{resType}\{resType}_{action}.spr";
+        }
+
+        private static string NpcResFolder(string resType)
+        {
+            if (resType.StartsWith("ani", StringComparison.OrdinalIgnoreCase)) return "animal";
+            if (resType.StartsWith("boss", StringComparison.OrdinalIgnoreCase)) return "boss";
+            if (resType.StartsWith("passerby", StringComparison.OrdinalIgnoreCase)) return "passerby";
+            if (resType.StartsWith("critter", StringComparison.OrdinalIgnoreCase)) return "critter";
+            return "enemy";
+        }
+
+        private static IEnumerable<string> CandidateNpcSprPaths(string resType, string requestedAction)
+        {
+            if (!string.IsNullOrWhiteSpace(requestedAction))
+                yield return BuildNpcSprPathExact(resType, requestedAction);
+            if (resType.StartsWith("passerby", StringComparison.OrdinalIgnoreCase))
+            {
+                string folder = NpcResFolder(resType);
+                yield return $@"spr\npcres\{folder}\{resType}\{resType}z.spr";
+                yield return $@"spr\npcres\{folder}\{resType}\{resType}s.spr";
+                foreach (var action in new[] { "wlk", "st", "st01", "pst", "base", "die", "st02" })
+                {
+                    if (!string.Equals(action, requestedAction, StringComparison.OrdinalIgnoreCase))
+                        yield return BuildNpcSprPathExact(resType, action);
+                }
+            }
+            else
+            {
+                foreach (var action in new[] { "wlk", "st", "die" })
+                {
+                    if (!string.Equals(action, requestedAction, StringComparison.OrdinalIgnoreCase))
+                        yield return BuildNpcSprPathExact(resType, action);
+                }
+            }
+        }
+
+        private static bool IsNpcSprAvailable(string sourcePath)
+        {
+            if (string.IsNullOrWhiteSpace(sourcePath)) return false;
+            string uid = SprRuntimeService.ComputePathUidHex(sourcePath);
+            foreach (var root in EnumerateNpcSpriteRoots())
+            {
+                if (File.Exists(Path.Combine(root, uid + ".spr")))
+                    return true;
+            }
+            return false;
+        }
+
+        private static IEnumerable<string> EnumerateNpcSpriteRoots()
+        {
+            var root = Application.streamingAssetsPath;
+            yield return Path.Combine(root, "Sprites");
+            yield return Path.Combine(root, "Generated", "NpcSprites");
         }
 
         public static bool IsTrainerSpawn(int templateId)

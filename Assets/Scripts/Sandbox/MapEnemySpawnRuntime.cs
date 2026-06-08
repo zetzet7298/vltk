@@ -147,8 +147,9 @@ namespace VLTK.Sandbox
                 go.transform.position = new Vector3(entry.worldPosition.x, entry.worldPosition.y, 0f);
 
                 var visual = go.AddComponent<PcNpcVisual>();
+                string standPath = MapEnemyDatabase.BuildNpcSprPath(template.spriteClipRef, "st");
                 string walkPath = MapEnemyDatabase.BuildNpcSprPath(template.spriteClipRef, "wlk");
-                visual.Configure(walkPath, walkPath, ReferencePixelForTemplate(template));
+                visual.Configure(standPath, walkPath, ReferencePixelForTemplate(template));
 
                 string displayName = $"{MapEnemyDatabase.VietnameseSeriesName(entry.series)} {template?.DisplayName ?? "Kẻ địch"}";
                 int maxLife = Mathf.Max(1, template?.maxLife ?? 50);

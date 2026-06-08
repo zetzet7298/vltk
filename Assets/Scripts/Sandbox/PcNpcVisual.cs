@@ -287,17 +287,30 @@ namespace VLTK.Sandbox
 
         private static byte[] ReadSprData(string root, string sourcePath)
         {
-            string uid = SprRuntimeService.ComputePathUidHex(sourcePath);
-            if (!string.IsNullOrEmpty(uid))
+            foreach (var candidateRoot in EnumerateNpcSpriteRoots(root))
             {
-                string hashedPath = Path.Combine(root, uid + ".spr");
-                if (File.Exists(hashedPath)) return File.ReadAllBytes(hashedPath);
-            }
+                string uid = SprRuntimeService.ComputePathUidHex(sourcePath);
+                if (!string.IsNullOrEmpty(uid))
+                {
+                    string hashedPath = Path.Combine(candidateRoot, uid + ".spr");
+                    if (File.Exists(hashedPath)) return File.ReadAllBytes(hashedPath);
+                }
 
-            string fileName = Path.GetFileName(sourcePath.Replace('\\', Path.DirectorySeparatorChar));
-            string direct = Path.Combine(root, fileName);
-            if (File.Exists(direct)) return File.ReadAllBytes(direct);
+                string fileName = Path.GetFileName(sourcePath.Replace('\\', Path.DirectorySeparatorChar));
+                string direct = Path.Combine(candidateRoot, fileName);
+                if (File.Exists(direct)) return File.ReadAllBytes(direct);
+            }
             return null;
+        }
+
+        private static IEnumerable<string> EnumerateNpcSpriteRoots(string spritesRoot)
+        {
+            if (!string.IsNullOrEmpty(spritesRoot))
+                yield return spritesRoot;
+
+            var streamingRoot = Path.GetDirectoryName(spritesRoot);
+            if (!string.IsNullOrEmpty(streamingRoot))
+                yield return Path.Combine(streamingRoot, "Generated", "NpcSprites");
         }
 
         private void LogMissing(string sourcePath, string reason)

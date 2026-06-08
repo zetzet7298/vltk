@@ -253,6 +253,9 @@ namespace VLTK.Sprites
                 var generatedRoot = Path.Combine(streamingRoot, "Generated", "MapSprites");
                 if (!string.Equals(generatedRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
                     yield return generatedRoot;
+                var generatedNpcRoot = Path.Combine(streamingRoot, "Generated", "NpcSprites");
+                if (!string.Equals(generatedNpcRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
+                    yield return generatedNpcRoot;
             }
         }
 

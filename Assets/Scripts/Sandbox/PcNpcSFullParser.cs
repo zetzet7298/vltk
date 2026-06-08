@@ -45,23 +45,9 @@ namespace VLTK.Sandbox
     {
         public static List<NpcTemplate> ParseFile(string path)
         {
-            var rows = new List<NpcTemplate>();
-            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var dir = Path.GetDirectoryName(path);
-            var registry = BuildRegistry(dir);
-            foreach (var e in registry.All)
-            {
-                rows.Add(new NpcTemplate
-                {
-                    templateId = e.NpcTemplateId > 0 ? e.NpcTemplateId : e.NpcId,
-                    nameRaw = e.Name,
-                    nameNormalized = e.Name,
-                    level = e.Level,
-                    series = e.Series,
-                    aiMode = e.AIType,
-                });
-            }
-            return rows;
+            // Keep this legacy entry point but use the audited full NpcS parser so
+            // runtime templates carry NpcResType, HP, speeds, AI params, and scripts.
+            return PcFullNpcParser.ParseFile(path);
         }
 
         public static int ImportIntoRegistry(string path, NpcTemplateRegistry registry)
