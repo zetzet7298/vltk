@@ -202,6 +202,7 @@ namespace VLTK.Tests.Sandbox
             public int[] ladderIds;
             public string promptMessage;
             public string[] promptChoices;
+            public int earnedSilver;
 
             public void PostMessage(string nextMessage)
             {
@@ -218,6 +219,7 @@ namespace VLTK.Tests.Sandbox
                 promptChoices = nextPromptChoices;
                 PostMessage(nextPromptMessage);
             }
+            public void EarnSilver(int amount) => earnedSilver += amount;
         }
 
         [Test]
@@ -262,14 +264,14 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(293, catalog.Count);
+            Assert.AreEqual(296, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
             Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
-            Assert.AreEqual(4, catalog.entries.Count(e => e != null && e.IsPromptBranchMessage));
+            Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsPromptBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -361,6 +363,21 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(4, guyangMechanism.choices.Length);
             Assert.AreEqual("Mở ra", guyangMechanism.choices[0].label);
             Assert.AreEqual("CompleteIfTaskBytesEqual", guyangMechanism.choices[0].effects[2].type);
+            var shaolinDoor = catalog.Find(@"\script\中原北区\少林派\少林密室\obj\地图_sll40_小门的对话.lua");
+            Assert.IsNotNull(shaolinDoor);
+            Assert.IsTrue(shaolinDoor.IsPromptBranchMessage);
+            Assert.AreEqual(3, shaolinDoor.branches.Length);
+            Assert.AreEqual("task_10260_12799_quiz_prompt", shaolinDoor.branches[0].label);
+            Assert.AreEqual(4, shaolinDoor.branches[0].choices.Length);
+            Assert.AreEqual("unreachable_task_10290_reminder", shaolinDoor.branches[1].label);
+            var tangSwordChest = catalog.Find(@"\script\西南北区\唐门\竹丝洞三层\obj\tmobj03.lua");
+            Assert.IsNotNull(tangSwordChest);
+            Assert.IsTrue(tangSwordChest.IsPromptBranchMessage);
+            Assert.AreEqual("Trong rương có 1 thanh kiếm bị sét ", tangSwordChest.branches[0].promptMessage);
+            var tangMoneyChest = catalog.Find(@"\script\西南北区\唐门\竹丝洞三层\obj\tmobj04.lua");
+            Assert.IsNotNull(tangMoneyChest);
+            Assert.IsTrue(tangMoneyChest.IsPromptBranchMessage);
+            Assert.AreEqual("EarnSilver", tangMoneyChest.branches[0].choices[0].effects[0].type);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -1352,6 +1369,125 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(30 | (1 << 8) | (2 << 16), host.GetTaskValue(41));
             Assert.IsTrue(host.HaveItem(352, 1));
             CollectionAssert.AreEqual(new[] { "Cơ quan đã mở ra", "still closed" }, sideEffects.messages);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_PromptBranchMessage_PreservesShaolinSmallDoorOrder()
+        {
+            var promptBranch = new PcObjectActionBranch
+            {
+                label = "task_10260_12799_quiz_prompt",
+                promptMessage = "Bần tăng đang bế quan tu luyện, nếu có muốn truyền lời cho bọn họ thì thông qua hai câu khẩu quyết này! Nghe kỹ đây!",
+                conditions = new[] { new PcObjectActionCondition { type = "TaskBetweenInclusive", taskId = 7, minValue = 10260, maxValue = 12799 } },
+                choices = new[]
+                {
+                    new PcObjectActionChoice { label = "án Ma Ni Bát Mê Hồng", effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "wrong" } } },
+                    new PcObjectActionChoice { label = "Hồng Bối Mê Ma Ni án", effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "wrong" } } },
+                    new PcObjectActionChoice { label = "Bát Mê Ni Hồng án Ma", effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "wrong" } } },
+                    new PcObjectActionChoice
+                    {
+                        label = "án Bát Ni Ma Mê Hồng.",
+                        effects = new[]
+                        {
+                            new PcObjectActionEffect { type = "PostMessage", messages = new[] { "line1", "line2" } },
+                            new PcObjectActionEffect { type = "SetTask", taskId = 7, value = 10290 },
+                            new PcObjectActionEffect { type = "AddNote", message = "note" },
+                            new PcObjectActionEffect { type = "PostMessage", message = "note" },
+                        }
+                    },
+                }
+            };
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\shaolin_door.lua",
+                        actionKind = "PromptBranchMessage",
+                        branches = new[]
+                        {
+                            promptBranch,
+                            new PcObjectActionBranch { label = "unreachable_task_10290_reminder", conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 7, value = 10290 } }, effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "reminder" } } },
+                            new PcObjectActionBranch { label = "default", effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "closed" } } },
+                        }
+                    }
+                }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\shaolin_door.lua" };
+            var host = new FakeTrapTravelHost { taskValues = { [7] = 10290 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.AreEqual(promptBranch.promptMessage, sideEffects.promptMessage);
+            CollectionAssert.AreEqual(new[] { "án Ma Ni Bát Mê Hồng", "Hồng Bối Mê Ma Ni án", "Bát Mê Ni Hồng án Ma", "án Bát Ni Ma Mê Hồng." }, sideEffects.promptChoices);
+            Assert.IsFalse(sideEffects.messages.Contains("reminder"));
+            StringAssert.Contains("branch=0", result.detail);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecuteChoice(obj, 3, out result));
+            Assert.AreEqual(10290, host.GetTaskValue(7));
+            CollectionAssert.AreEqual(new[] { "line1", "line2", "note" }, sideEffects.messages);
+            CollectionAssert.AreEqual(new[] { "note" }, sideEffects.notes);
+            StringAssert.Contains("choice=3", result.detail);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_PromptBranchMessage_PreservesTangMoneyChestChoice()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\tmobj04.lua",
+                        actionKind = "PromptBranchMessage",
+                        branches = new[]
+                        {
+                            new PcObjectActionBranch
+                            {
+                                promptMessage = "1 vạn lượng.",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 15420 }, new PcObjectActionCondition { type = "MissingItem", itemId = 49 } },
+                                choices = new[]
+                                {
+                                    new PcObjectActionChoice { label = "Cần", effects = new[] { new PcObjectActionEffect { type = "EarnSilver", value = 10000 }, new PcObjectActionEffect { type = "SetTask", taskId = 2, value = 15430 }, new PcObjectActionEffect { type = "AddNote", message = "money note" }, new PcObjectActionEffect { type = "PostMessage", message = "Nhận được một vạn lượng bạc " } } },
+                                    new PcObjectActionChoice { label = "Không cần", effects = System.Array.Empty<PcObjectActionEffect>() },
+                                }
+                            },
+                            new PcObjectActionBranch { label = "has_sword", conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 15420 }, new PcObjectActionCondition { type = "HaveItem", itemId = 49 } }, effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Bạn đã mở 1 rương khác nên không thể mở lại rương này!" } } },
+                            new PcObjectActionBranch { label = "empty", conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 2, value = 15430 } }, effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Bảo rương đã rỗng" } } },
+                        }
+                    }
+                }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\tmobj04.lua" };
+            var host = new FakeTrapTravelHost { taskValues = { [2] = 15420 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out _));
+            Assert.AreEqual("1 vạn lượng.", sideEffects.promptMessage);
+            CollectionAssert.AreEqual(new[] { "Cần", "Không cần" }, sideEffects.promptChoices);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecuteChoice(obj, 0, out var result));
+            Assert.AreEqual(10000, sideEffects.earnedSilver);
+            Assert.AreEqual(15430, host.GetTaskValue(2));
+            CollectionAssert.AreEqual(new[] { "Nhận được một vạn lượng bạc " }, sideEffects.messages);
+            CollectionAssert.AreEqual(new[] { "money note" }, sideEffects.notes);
+            StringAssert.Contains("silver=10000", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [2] = 15420 }, itemCounts = { [49] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { "Bạn đã mở 1 rương khác nên không thể mở lại rương này!" }, sideEffects.messages);
+            StringAssert.Contains("branch=1", result.detail);
         }
 
         [Test]

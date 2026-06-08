@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T12:59:44Z",
+  "generatedAtUtc": "2026-06-08T13:10:18Z",
   "phase": "phase4_region_s_trap_object_catalog",
   "scope": "PC Region_S trap/object catalog + exact ObjData SPR staging; traps remain invisible metadata/no gameplay placeholder",
   "sourceRegionRoot": "/var/www/vltk-mobile/Assets/StreamingAssets/Generated/MapServerRegions",
@@ -67,14 +67,14 @@
   "objectScriptsWithMsg2Player": 48,
   "objectScriptsWithTalk": 31,
   "objectScriptsWithSay": 156,
-  "deterministicObjectActions": 293,
+  "deterministicObjectActions": 296,
   "deterministicObjectNewWorldActions": 7,
   "deterministicObjectPickupMessageActions": 19,
   "deterministicObjectTaskOptionalPickupMessageActions": 1,
   "deterministicObjectTaskMissingItemPickupMessageActions": 2,
   "deterministicObjectTaskItemConsumeMessageActions": 3,
   "deterministicObjectTaskItemBranchMessageActions": 16,
-  "deterministicObjectPromptBranchMessageActions": 4,
+  "deterministicObjectPromptBranchMessageActions": 7,
   "deterministicObjectSayMessageActions": 144,
   "deterministicObjectTalkMessageActions": 1,
   "deterministicObjectTaskTalkMessageActions": 1,
@@ -82,5 +82,5 @@
   "deterministicObjectFactionOpenBoxActions": 19,
   "deterministicObjectCampOpenBoxActions": 2,
   "deterministicObjectShowLadderActions": 23,
-  "elapsedSeconds": 4.168
+  "elapsedSeconds": 4.726
 }

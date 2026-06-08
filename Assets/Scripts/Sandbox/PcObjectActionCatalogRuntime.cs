@@ -108,7 +108,9 @@ namespace VLTK.Sandbox
     public sealed class PcObjectActionBranch
     {
         public string label;
+        public string promptMessage;
         public PcObjectActionCondition[] conditions;
+        public PcObjectActionChoice[] choices;
         public PcObjectActionEffect[] effects;
     }
 

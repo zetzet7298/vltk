@@ -1889,11 +1889,93 @@ def guyang_mechanism_choices(bit_index: int, add_note: bool) -> list[dict[str, A
     ]
 
 
+def shaolin_small_door_branches() -> list[dict[str, Any]]:
+    prompt = 'Bần tăng đang bế quan tu luyện, nếu có muốn truyền lời cho bọn họ thì thông qua hai câu khẩu quyết này! Nghe kỹ đây!'
+    wrong = 'Sau khi đọc xong khẩu quyết cảnh cửa nhỏ không lung lay chút nào, có phải bạn đã niệm sai không?'
+    note = 'Gặp Tịch Diệt Nhị Tăng cầu truyền đạt lại chỉ thị cho phương Trượng. '
+    correct_lines = [
+        'Đệ tử cầu kiến Sư thúc tổ!',
+        'Có chuyện gì?',
+        'Chưởng môn phái đệ tử đến thỉnh mời hai vị Sư thúc tổ xuất quan, bàn cách cục thế thiên hạ.',
+        'Không Tịch: Thiên hạ hai chữ hai người chúng ta không hiểu, người chuyển giúp 5 câu này cho chưởng môn, ông ta sẽ hiểu rõ.',
+        'Câu thứ nhất: Thế Gian Vô Thường, Quốc Thổ Nguy Quỳ,',
+        'Không Tịch: Câu thứ hai: Tứ Đại Khổ Không, Ngũ Dương Vô Ngã,',
+        'Câu thứ ba: Sinh Diệt Biến Thăng, Hư Ngụy Vô Chủ,',
+        'Không Tịch: Câu thứ tư là: Tâm Thị ác Nguyên, Hình Vi Tội Tẩu,',
+        'Câu thứ năm là: Như Thị Quan Sát, Tiêm Ly Sinh Tử.',
+        'Thứ tự của năm câu khẩu quyết này phải nhớ rõ đó! Đi đi!',
+    ]
+    reminder = [
+        'Khẩu quyết quan trọng thế này sao ngươi có thể quên được? Ta nói lại một lần hãy nhớ kỹ đó!',
+        'Câu thứ nhất là: Thế gian vô thường, Quốc Thổ Nguy Quỳ, câu thứ hai là: Tứ Đại Khổ Không, Ngũ Dương Vô Ngã, câu thứ 3 là: Sanh Diệt Biến Thăng, Hư Ngụy Vô Chủ, câu thứ 4 là: Tâm Thị ác Nguyên, Hình Vi Tội Tẩu, câu thứ 5 là: Như Thị Quan Sát, Tiêm Ly Sinh Tử.',
+        'Lần này đừng quên nữa đó! Đi đi!',
+    ]
+    wrong_effects = [{'type': 'PostMessage', 'message': wrong}]
+    correct_effects = [
+        {'type': 'PostMessage', 'messages': correct_lines},
+        {'type': 'SetTask', 'taskId': 7, 'value': 40 * 256 + 50},
+        {'type': 'AddNote', 'message': note},
+        {'type': 'PostMessage', 'message': note},
+    ]
+    return [
+        {
+            'label': 'task_10260_12799_quiz_prompt',
+            'promptMessage': prompt,
+            'conditions': [{'type': 'TaskBetweenInclusive', 'taskId': 7, 'minValue': 40 * 256 + 20, 'maxValue': 50 * 256 - 1}],
+            'choices': [
+                {'label': 'án Ma Ni Bát Mê Hồng', 'effects': wrong_effects},
+                {'label': 'Hồng Bối Mê Ma Ni án', 'effects': wrong_effects},
+                {'label': 'Bát Mê Ni Hồng án Ma', 'effects': wrong_effects},
+                {'label': 'án Bát Ni Ma Mê Hồng.', 'effects': correct_effects},
+            ],
+        },
+        {'label': 'unreachable_task_10290_reminder', 'conditions': [{'type': 'TaskEquals', 'taskId': 7, 'value': 40 * 256 + 50}], 'effects': [{'type': 'PostMessage', 'messages': reminder}]},
+        {'label': 'default_closed_monk', 'effects': [{'type': 'PostMessage', 'message': 'Thần tăng đang bế quan tập luyện nơi đây, xin đừng làm phiền '}]},
+    ]
+
+
+def tang_chest_branches(money_chest: bool) -> list[dict[str, Any]]:
+    rust = 'Bạn thử mở rương báu, nhưng hình như nó đã bị rỉ sét!'
+    if money_chest:
+        prompt = '1 vạn lượng.'
+        active_have_item = 'Bạn đã mở 1 rương khác nên không thể mở lại rương này!'
+        done = 'Bảo rương đã rỗng'
+        accept_effects = [
+            {'type': 'EarnSilver', 'value': 10000},
+            {'type': 'SetTask', 'taskId': 2, 'value': 60 * 256 + 70},
+            {'type': 'AddNote', 'message': 'Lấy được một vạn lượng trong rương báu tại tầng thứ 3 của Trúc Tơ Động. '},
+            {'type': 'PostMessage', 'message': 'Nhận được một vạn lượng bạc '},
+        ]
+    else:
+        prompt = 'Trong rương có 1 thanh kiếm bị sét '
+        active_have_item = 'Bảo rương đã rỗng'
+        done = 'Bạn đã mở 1 rương khác nên không thể mở lại rương này!'
+        accept_effects = [
+            {'type': 'AddEventItem', 'itemId': 49},
+            {'type': 'PostMessage', 'message': 'Đoạt được Thất Tinh Tuyệt Mệnh Kiếm '},
+            {'type': 'AddNote', 'message': 'Tại tầng thứ 3 của Trúc Tơ Động có 2 rương báu đánh vỡ 1 rương báu, sẽ được Thất Tinh Tuyệt Mệnh Kiếm. '},
+        ]
+    return [
+        {
+            'label': 'task_15420_missing_sword_prompt',
+            'promptMessage': prompt,
+            'conditions': [{'type': 'TaskEquals', 'taskId': 2, 'value': 60 * 256 + 60}, {'type': 'MissingItem', 'itemId': 49, 'count': 1}],
+            'choices': [{'label': 'Cần', 'effects': accept_effects}, {'label': 'Không cần', 'effects': []}],
+        },
+        {'label': 'task_15420_already_has_sword', 'conditions': [{'type': 'TaskEquals', 'taskId': 2, 'value': 60 * 256 + 60}, {'type': 'HaveItem', 'itemId': 49, 'count': 1}], 'effects': [{'type': 'PostMessage', 'message': active_have_item}]},
+        {'label': 'task_15430_other_chest_state', 'conditions': [{'type': 'TaskEquals', 'taskId': 2, 'value': 60 * 256 + 70}], 'effects': [{'type': 'PostMessage', 'message': done}]},
+        {'label': 'default_rusted_chest', 'effects': [{'type': 'PostMessage', 'message': rust}]},
+    ]
+
+
 OBJECT_PROMPT_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
-    '0x229158A5': {'sourceBitIndex': 9, 'choices': guyang_mechanism_choices(9, True)},
-    '0x3F5990AF': {'sourceBitIndex': 10, 'choices': guyang_mechanism_choices(10, False)},
-    '0x380228A9': {'sourceBitIndex': 11, 'choices': guyang_mechanism_choices(11, False)},
-    '0x34CB60B3': {'sourceBitIndex': 12, 'choices': guyang_mechanism_choices(12, False)},
+    '0x229158A5': {'kind': 'guyang', 'sourceBitIndex': 9, 'choices': guyang_mechanism_choices(9, True)},
+    '0x3F5990AF': {'kind': 'guyang', 'sourceBitIndex': 10, 'choices': guyang_mechanism_choices(10, False)},
+    '0x380228A9': {'kind': 'guyang', 'sourceBitIndex': 11, 'choices': guyang_mechanism_choices(11, False)},
+    '0x34CB60B3': {'kind': 'guyang', 'sourceBitIndex': 12, 'choices': guyang_mechanism_choices(12, False)},
+    '0x754BAE88': {'kind': 'shaolin_small_door', 'branches': shaolin_small_door_branches()},
+    '0x2C9325F0': {'kind': 'tang_chest', 'moneyChest': False, 'branches': tang_chest_branches(False)},
+    '0x28DA7BE4': {'kind': 'tang_chest', 'moneyChest': True, 'branches': tang_chest_branches(True)},
 }
 
 
@@ -1902,25 +1984,62 @@ def object_prompt_branch_message_action(script: dict[str, Any]) -> dict[str, Any
     if spec is None:
         return None
     clean_source = strip_lua_line_comments(script.get('sourceText', ''))
-    allowed = {'main', 'Turn_On', 'Turn_Off', 'Check_Switch', 'GetTask', 'SetTask', 'GetByte', 'SetByte', 'GetBit', 'SetBit', 'HaveItem', 'DelItem', 'AddNote', 'Msg2Player', 'Talk', 'Say', 'if', 'and'}
-    if not source_uses_only_calls(clean_source, allowed):
-        return None
-    if re.search(r'\b(for|while|repeat|random|Include|NewWorld|SetPos|SetFightState|OpenBox|Earn|SetPropState)\b', clean_source):
-        return None
-    have_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'HaveItem', limit=4), 1)]
-    del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=4), 1)]
-    if have_items != [352] or del_items != [352]:
-        return None
-    bit_index = spec['sourceBitIndex']
-    if not re.search(rf'GetBit\s*\(\s*Uworld41\s*,\s*{bit_index}\s*\)\s*==\s*0', clean_source):
-        return None
-    if not re.search(rf'SetBit\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*{bit_index}\s*,\s*1\s*\)', clean_source):
-        return None
-    if not re.search(rf'SetBit\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*{bit_index}\s*,\s*0\s*\)', clean_source):
-        return None
-    if not re.search(r'GetByte\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*2\s*\).*?GetByte\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*3\s*\)', clean_source, re.S):
-        return None
-    return {'choices': spec['choices']}
+    kind = spec.get('kind', 'guyang')
+    if kind == 'guyang':
+        allowed = {'main', 'Turn_On', 'Turn_Off', 'Check_Switch', 'GetTask', 'SetTask', 'GetByte', 'SetByte', 'GetBit', 'SetBit', 'HaveItem', 'DelItem', 'AddNote', 'Msg2Player', 'Talk', 'Say', 'if', 'and'}
+        if not source_uses_only_calls(clean_source, allowed):
+            return None
+        if re.search(r'\b(for|while|repeat|random|Include|NewWorld|SetPos|SetFightState|OpenBox|Earn|SetPropState)\b', clean_source):
+            return None
+        have_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'HaveItem', limit=4), 1)]
+        del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=4), 1)]
+        if have_items != [352] or del_items != [352]:
+            return None
+        bit_index = spec['sourceBitIndex']
+        if not re.search(rf'GetBit\s*\(\s*Uworld41\s*,\s*{bit_index}\s*\)\s*==\s*0', clean_source):
+            return None
+        if not re.search(rf'SetBit\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*{bit_index}\s*,\s*1\s*\)', clean_source):
+            return None
+        if not re.search(rf'SetBit\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*{bit_index}\s*,\s*0\s*\)', clean_source):
+            return None
+        if not re.search(r'GetByte\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*2\s*\).*?GetByte\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*3\s*\)', clean_source, re.S):
+            return None
+        return {'choices': spec['choices']}
+    if kind == 'shaolin_small_door':
+        allowed = {'main', 'L40_S2_wrong', 'L40_S2_correct', 'L50_step2', 'GetTask', 'Say', 'Talk', 'SetTask', 'AddNote', 'Msg2Player', 'if', 'elseif', 'and'}
+        if not source_uses_only_calls(clean_source, allowed):
+            return None
+        if re.search(r'\b(HaveItem|DelItem|AddEventItem|Earn|NewWorld|SetPos|SetFightState|OpenBox|random|Include)\b', clean_source):
+            return None
+        if not re.search(r'GetTask\s*\(\s*7\s*\)', clean_source):
+            return None
+        if not re.search(r'SetTask\s*\(\s*7\s*,\s*40\s*\*\s*256\s*\+\s*50\s*\)', clean_source):
+            return None
+        if len(parse_lua_calls(clean_source, 'Say', limit=2)) != 1:
+            return None
+        return {'branches': spec['branches']}
+    if kind == 'tang_chest':
+        allowed = {'main', 'accept', 'refuse', 'GetTask', 'HaveItem', 'Say', 'Talk', 'AddEventItem', 'Msg2Player', 'AddNote', 'Earn', 'SetTask', 'if', 'elseif'}
+        if not source_uses_only_calls(clean_source, allowed):
+            return None
+        if re.search(r'\b(DelItem|NewWorld|SetPos|SetFightState|OpenBox|random|Include|SetPropState)\b', clean_source):
+            return None
+        if not re.search(r'GetTask\s*\(\s*2\s*\)', clean_source) or not re.search(r'HaveItem\s*\(\s*49\s*\)', clean_source):
+            return None
+        if spec.get('moneyChest'):
+            earn = int_args_unique(parse_lua_calls(clean_source, 'Earn', limit=2), 1)
+            if earn != (10000,):
+                return None
+            if not re.search(r'SetTask\s*\(\s*2\s*,\s*60\s*\*\s*256\s*\+\s*70\s*\)', clean_source):
+                return None
+        else:
+            add_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=3), 1)]
+            if add_items != [49]:
+                return None
+            if parse_lua_calls(clean_source, 'Earn', limit=1):
+                return None
+        return {'branches': spec['branches']}
+    return None
 
 
 OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {

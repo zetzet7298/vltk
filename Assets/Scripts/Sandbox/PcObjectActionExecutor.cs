@@ -30,6 +30,7 @@ namespace VLTK.Sandbox
         void OpenBox();
         void ShowLadder(int[] ladderIds);
         void ShowPrompt(string message, string[] choices);
+        void EarnSilver(int amount);
     }
 
     public sealed class PcObjectActionExecutor
@@ -251,10 +252,14 @@ namespace VLTK.Sandbox
                     return true;
                 }
 
+                if (action.branches != null && action.branches.Length > 0)
+                    return TryExecutePromptBranches(action, choiceIndex, out result);
+
                 var choices = AvailablePromptChoices(action);
                 if (choices.Count == 0)
                 {
-                    result = Success(action, "PromptBranchMessage(no matching prompt)");
+                    int elseLines = PostMessages(action.elseMessages);
+                    result = Success(action, $"PromptBranchMessage(no matching prompt, elseLines={elseLines})");
                     return true;
                 }
 
@@ -274,7 +279,7 @@ namespace VLTK.Sandbox
                 var choice = choices[choiceIndex];
                 var stats = ApplyBranchEffects(choice.effects);
                 result = Success(action,
-                    $"PromptBranchMessage(choice={choiceIndex}, label='{choice.label}', effects={stats.effects}, consumed={stats.consumed}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks})");
+                    $"PromptBranchMessage(choice={choiceIndex}, label='{choice.label}', effects={stats.effects}, consumed={stats.consumed}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks}, silver={stats.silver})");
                 return true;
             }
 
@@ -411,6 +416,51 @@ namespace VLTK.Sandbox
             return ConditionsMatch(choice?.conditions);
         }
 
+        private bool TryExecutePromptBranches(PcObjectActionCatalogEntry action, int choiceIndex, out ObjectActionExecutionResult result)
+        {
+            for (int i = 0; i < action.branches.Length; i++)
+            {
+                var branch = action.branches[i];
+                if (!BranchMatches(branch)) continue;
+
+                if (branch?.choices != null && branch.choices.Length > 0)
+                {
+                    if (choiceIndex < 0)
+                    {
+                        _sideEffects.ShowPrompt(branch.promptMessage, ChoiceLabels(branch.choices));
+                        result = Success(action, $"PromptBranchMessage(branch={i}, prompt='{branch.promptMessage}', choices={branch.choices.Length})");
+                        return true;
+                    }
+
+                    if (choiceIndex >= branch.choices.Length)
+                    {
+                        result = Failure(action, $"PromptBranchMessage branch {i} invalid choice {choiceIndex}");
+                        return true;
+                    }
+
+                    var choice = branch.choices[choiceIndex];
+                    if (!ChoiceMatches(choice))
+                    {
+                        result = Failure(action, $"PromptBranchMessage branch {i} choice {choiceIndex} conditions failed");
+                        return true;
+                    }
+
+                    var stats = ApplyBranchEffects(choice.effects);
+                    result = Success(action,
+                        $"PromptBranchMessage(branch={i}, choice={choiceIndex}, label='{choice?.label}', effects={stats.effects}, consumed={stats.consumed}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks}, silver={stats.silver})");
+                    return true;
+                }
+
+                var branchStats = ApplyBranchEffects(branch);
+                result = Success(action,
+                    $"PromptBranchMessage(branch={i}, label='{branch?.label}', effects={branchStats.effects}, consumed={branchStats.consumed}, notes={branchStats.notes}, messages={branchStats.messages}, setTasks={branchStats.setTasks}, silver={branchStats.silver})");
+                return true;
+            }
+
+            result = Success(action, "PromptBranchMessage(no matching prompt branch)");
+            return true;
+        }
+
         private bool ConditionsMatch(PcObjectActionCondition[] conditions)
         {
             if (conditions == null || conditions.Length == 0) return true;
@@ -480,6 +530,15 @@ namespace VLTK.Sandbox
             if (choices == null || choices.Count == 0) return System.Array.Empty<string>();
             var labels = new string[choices.Count];
             for (int i = 0; i < choices.Count; i++)
+                labels[i] = choices[i]?.label ?? string.Empty;
+            return labels;
+        }
+
+        private static string[] ChoiceLabels(PcObjectActionChoice[] choices)
+        {
+            if (choices == null || choices.Length == 0) return System.Array.Empty<string>();
+            var labels = new string[choices.Length];
+            for (int i = 0; i < choices.Length; i++)
                 labels[i] = choices[i]?.label ?? string.Empty;
             return labels;
         }
@@ -565,6 +624,14 @@ namespace VLTK.Sandbox
                             _sideEffects.AddNote(effect.message);
                             stats.notes++;
                         }
+                    }
+                }
+                else if (string.Equals(type, "EarnSilver", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (effect.value > 0)
+                    {
+                        _sideEffects.EarnSilver(effect.value);
+                        stats.silver += effect.value;
                     }
                 }
                 else if (string.Equals(type, "PostRewardCountMessage", System.StringComparison.OrdinalIgnoreCase))
@@ -724,6 +791,7 @@ namespace VLTK.Sandbox
             public int setTasks;
             public int setTaskTemps;
             public int randomRewards;
+            public int silver;
         }
 
         private static ObjectActionExecutionResult Success(PcObjectActionCatalogEntry action, string detail)
@@ -791,6 +859,13 @@ namespace VLTK.Sandbox
         {
             PostMessage(message);
             SubsystemLog.Info("MapObject", $"PC Say prompt choices={FormatInts(choices)}");
+        }
+
+        public void EarnSilver(int amount)
+        {
+            if (amount <= 0) return;
+            SandboxManager.Instance?.GameplayLoop?.Economy?.EarnSilver(amount);
+            SubsystemLog.Info("MapObject", $"PC Earn({amount}) silver recorded");
         }
 
         private static string FormatInts(int[] values)
