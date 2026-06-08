@@ -79,13 +79,17 @@ namespace VLTK.Tests.Sandbox
             public int mapId = -1;
             public Vector2 position;
             public bool hasMap = true;
+            public int currentMapId = 907;
             public int fightState = -1;
             public int playerLevel = 1;
             public long currentDateYmdHm = 202606080900;
+            public int randomValue = 0;
 
             public bool HasMap(int targetMapId) => hasMap;
+            public int GetCurrentMapId() => currentMapId;
             public int GetPlayerLevel() => playerLevel;
             public long GetCurrentDateYmdHm() => currentDateYmdHm;
+            public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
             public int GetFightState() => fightState;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
@@ -584,6 +588,59 @@ namespace VLTK.Tests.Sandbox
             CollectionAssert.IsEmpty(openSideEffects.messages);
             CollectionAssert.AreEqual(new[] { 15 }, openSideEffects.stationIds);
             StringAssert.Contains("GetLocalDate()==202606080900", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_RandomNewWorld_UsesPcBranchTableAndCurrentMapGuards()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 905,
+                        trapIdHex = "0x00000389",
+                        scriptPath = @"\script\desert_random.lua",
+                        actionKind = "RandomNewWorld",
+                        randomMin = 0,
+                        randomMax = 120,
+                        randomThresholds = new[] { 5, 10 },
+                        randomTargetMapIds = new[] { 224, 225, 227 },
+                        randomTargetCellXs = new[] { 1591, 1476, 1583 },
+                        randomTargetCellYs = new[] { 3013, 3274, 3240 },
+                        randomFightState = 1,
+                        noActionMapIds = new[] { 919, 920 },
+                        gateCurrentMapId = 875,
+                        gateTargetMapId = 54,
+                        gateTargetCellX = 1732,
+                        gateTargetCellY = 3154,
+                        gateFightState = 0,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { currentMapId = 919, randomValue = 0 };
+            var executor = new PcTrapActionExecutor(catalog, host);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 905 }, out var result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            StringAssert.Contains("return", result.detail);
+
+            host = new FakeTrapTravelHost { currentMapId = 875, randomValue = 0 };
+            executor = new PcTrapActionExecutor(catalog, host);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 905 }, out result));
+            Assert.AreEqual(54, host.mapId);
+            Assert.AreEqual(0, host.fightState);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1732 * 32, 3154 * 32), host.position);
+
+            host = new FakeTrapTravelHost { currentMapId = 224, randomValue = 116 };
+            executor = new PcTrapActionExecutor(catalog, host);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x00000389" }, out result));
+            Assert.AreEqual(227, host.mapId);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1583 * 32, 3240 * 32), host.position);
+            StringAssert.Contains("branch#2", result.detail);
         }
 
         [Test]

@@ -27,8 +27,10 @@ namespace VLTK.Sandbox
     public interface ITrapTravelHost
     {
         bool HasMap(int mapId);
+        int GetCurrentMapId();
         int GetPlayerLevel();
         long GetCurrentDateYmdHm();
+        int RandomIntInclusive(int minInclusive, int maxInclusive);
         int GetFightState();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
@@ -172,6 +174,47 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsRandomNewWorld)
+            {
+                int currentMapId = _host.GetCurrentMapId();
+                if (Contains(action.noActionMapIds, currentMapId))
+                {
+                    result = Success(action, $"SubWorldIdx2ID(SubWorld)=={currentMapId} -> return");
+                    return true;
+                }
+
+                if (action.gateCurrentMapId > 0 && currentMapId == action.gateCurrentMapId)
+                {
+                    if (!_host.HasMap(action.gateTargetMapId))
+                    {
+                        result = Failure(action, $"target map {action.gateTargetMapId} missing from catalog");
+                        return true;
+                    }
+                    var gateTarget = action.GateTargetWorldPosition();
+                    if (action.gateFightState >= 0)
+                        _host.SetFightState(action.gateFightState);
+                    _host.NewWorld(action.gateTargetMapId, gateTarget);
+                    result = Success(action,
+                        $"GetWorldPos()=={currentMapId} -> NewWorld({action.gateTargetMapId},{action.gateTargetCellX},{action.gateTargetCellY}) -> {gateTarget}");
+                    return true;
+                }
+
+                int branchIndex = ChooseRandomBranch(action, _host.RandomIntInclusive(action.randomMin, action.randomMax));
+                int targetMapId = action.randomTargetMapIds[branchIndex];
+                if (!_host.HasMap(targetMapId))
+                {
+                    result = Failure(action, $"target map {targetMapId} missing from catalog");
+                    return true;
+                }
+                var randomTarget = action.RandomTargetWorldPosition(branchIndex);
+                if (action.randomFightState >= 0)
+                    _host.SetFightState(action.randomFightState);
+                _host.NewWorld(targetMapId, randomTarget);
+                result = Success(action,
+                    $"random({action.randomMin},{action.randomMax}) branch#{branchIndex} -> NewWorld({targetMapId},{action.randomTargetCellXs[branchIndex]},{action.randomTargetCellYs[branchIndex]}) -> {randomTarget}");
+                return true;
+            }
+
             if (action.IsNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -208,6 +251,27 @@ namespace VLTK.Sandbox
 
             result = Failure(action, $"unsupported trap action '{action.actionKind}'");
             return true;
+        }
+
+        private static bool Contains(int[] values, int needle)
+        {
+            if (values == null) return false;
+            foreach (int value in values)
+                if (value == needle)
+                    return true;
+            return false;
+        }
+
+        private static int ChooseRandomBranch(PcTrapActionCatalogEntry action, int randomValue)
+        {
+            if (action.randomThresholds != null)
+            {
+                for (int i = 0; i < action.randomThresholds.Length; i++)
+                    if (randomValue < action.randomThresholds[i])
+                        return i;
+            }
+            int count = action.randomTargetMapIds?.Length ?? 0;
+            return Mathf.Max(0, count - 1);
         }
 
         private void ApplyFightState(PcTrapActionCatalogEntry action)
@@ -316,6 +380,12 @@ namespace VLTK.Sandbox
             return manager?.MapManager?.Catalog != null && manager.MapManager.Catalog.ContainsKey(mapId);
         }
 
+        public int GetCurrentMapId()
+        {
+            var manager = SandboxManager.Instance;
+            return manager?.MapManager?.ActiveMapId ?? manager?.defaultMapId ?? -1;
+        }
+
         public int GetPlayerLevel()
         {
             var manager = SandboxManager.Instance;
@@ -327,6 +397,13 @@ namespace VLTK.Sandbox
 
         public long GetCurrentDateYmdHm()
             => long.Parse(DateTime.Now.ToString("yyyyMMddHHmm"));
+
+        public int RandomIntInclusive(int minInclusive, int maxInclusive)
+        {
+            if (maxInclusive < minInclusive)
+                return minInclusive;
+            return UnityEngine.Random.Range(minInclusive, maxInclusive + 1);
+        }
 
         public int GetFightState()
         {

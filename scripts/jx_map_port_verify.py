@@ -47,7 +47,7 @@ EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 142
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 729
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 743
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
@@ -58,6 +58,7 @@ EXPECTED_DETERMINISTIC_TRAP_TALK_MESSAGE_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_NEWWORLD_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_LEVEL_GATE_NEWWORLD_ACTIONS = 20
 EXPECTED_DETERMINISTIC_TRAP_OPEN_SERVER_DATE_GATE_SETPOS_ACTIONS = 37
+EXPECTED_DETERMINISTIC_TRAP_RANDOM_NEWWORLD_ACTIONS = 14
 EXPECTED_MISSING_TRAP_SCRIPTS = {'0xF51BA9A5'}
 KNOWN_FAILED_MAP_SPRITES = {
     r'\system\spr\RegionTileDefault.spr',
@@ -497,6 +498,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_msg2_player_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'Msg2PlayerNewWorld')
     action_level_gate_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'LevelGateNewWorld')
     action_open_server_date_gate_setpos = sum(1 for e in action_entries if e.get('actionKind') == 'OpenServerDateGateSetPos')
+    action_random_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'RandomNewWorld')
     action_message = action_msg2_player + action_say_message + action_talk_message
     audit.require(len(trap_catalog.get('entries', [])) == EXPECTED_TRAP_IDS, 'MapTrapScriptCatalog entry count mismatch')
     audit.require(len(action_entries) == EXPECTED_DETERMINISTIC_TRAP_ACTIONS, 'MapTrapActionCatalog deterministic action count mismatch')
@@ -511,6 +513,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     audit.require(action_level_gate_new_world == EXPECTED_DETERMINISTIC_TRAP_LEVEL_GATE_NEWWORLD_ACTIONS, 'MapTrapActionCatalog LevelGateNewWorld count mismatch')
     audit.require(action_open_server_date_gate_setpos == EXPECTED_DETERMINISTIC_TRAP_OPEN_SERVER_DATE_GATE_SETPOS_ACTIONS,
                   'MapTrapActionCatalog OpenServerDateGateSetPos count mismatch')
+    audit.require(action_random_new_world == EXPECTED_DETERMINISTIC_TRAP_RANDOM_NEWWORLD_ACTIONS,
+                  'MapTrapActionCatalog RandomNewWorld count mismatch')
     audit.facts['interactive'] = {
         'traps': interactive.get('trapEntries'),
         'objects': interactive.get('objectEntries'),
@@ -538,6 +542,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapMsg2PlayerNewWorldActions': action_msg2_player_new_world,
         'deterministicTrapLevelGateNewWorldActions': action_level_gate_new_world,
         'deterministicTrapOpenServerDateGateSetPosActions': action_open_server_date_gate_setpos,
+        'deterministicTrapRandomNewWorldActions': action_random_new_world,
     }
 
 

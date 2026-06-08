@@ -862,6 +862,54 @@ def open_server_date_gate_setpos(source: str) -> dict[str, Any] | None:
     }
 
 
+def desert_maze_random_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {'main', 'random', 'if', 'elseif', 'SetFightState', 'NewWorld', 'SubWorldIdx2ID', 'GetWorldPos'}
+    if 'random(0,120)' not in clean_source or not source_uses_only_calls(clean_source, allowed):
+        return None
+    random_match = re.search(r'\brandom\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)', clean_source)
+    if not random_match:
+        return None
+    branch_source = clean_source[random_match.start():]
+    thresholds = [int(v) for v in re.findall(r'(?:if|elseif)\s*\(?\s*i\s*<\s*(\d+)\s*\)?\s*then', branch_source)]
+    branch_targets = int_args(parse_lua_calls(branch_source, 'NewWorld', limit=32), 3)
+    branch_fight_states = [v[0] for v in int_args(parse_lua_calls(branch_source, 'SetFightState', limit=32), 1)]
+    if len(branch_targets) < 2 or len(thresholds) != len(branch_targets) - 1:
+        return None
+    if len(branch_fight_states) != len(branch_targets) or len(set(branch_fight_states)) != 1:
+        return None
+    gate_match = re.search(
+        r'if\s*\(?\s*n_mapid\s*==\s*(\d+)\s*\)?\s*then(?P<body>.*?)\breturn\s*end',
+        clean_source,
+        re.S)
+    gate: dict[str, int] = {}
+    if gate_match:
+        gate_body = gate_match.group('body')
+        gate_target = int_args(parse_lua_calls(gate_body, 'NewWorld', limit=4), 3)
+        gate_fight = int_args(parse_lua_calls(gate_body, 'SetFightState', limit=4), 1)
+        if len(gate_target) != 1 or len(gate_fight) != 1:
+            return None
+        gate = {
+            'gateCurrentMapId': int(gate_match.group(1)),
+            'gateTargetMapId': gate_target[0][0],
+            'gateTargetCellX': gate_target[0][1],
+            'gateTargetCellY': gate_target[0][2],
+            'gateFightState': gate_fight[0][0],
+        }
+    no_action_map_ids = [int(v) for v in re.findall(r'nSubWorldId\s*==\s*(\d+)', clean_source)]
+    return {
+        'randomMin': int(random_match.group(1)),
+        'randomMax': int(random_match.group(2)),
+        'randomThresholds': thresholds,
+        'randomTargetMapIds': [target[0] for target in branch_targets],
+        'randomTargetCellXs': [target[1] for target in branch_targets],
+        'randomTargetCellYs': [target[2] for target in branch_targets],
+        'randomFightState': branch_fight_states[0],
+        'noActionMapIds': no_action_map_ids,
+        **gate,
+    }
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
         return False
@@ -1141,6 +1189,23 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
             entry.update(open_server_gate)
             entries.append(entry)
             continue
+        random_maze = desert_maze_random_newworld(source)
+        if random_maze is not None:
+            entry = {
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'RandomNewWorld',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC trap Lua main(): random(0,120) desert-maze SetFightState/NewWorld branch table, with optional current-map return/gate guard',
+            }
+            entry.update(random_maze)
+            entries.append(entry)
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -1205,6 +1270,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapMsg2PlayerNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'Msg2PlayerNewWorld'),
         'deterministicTrapLevelGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelGateNewWorld'),
         'deterministicTrapOpenServerDateGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'OpenServerDateGateSetPos'),
+        'deterministicTrapRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'RandomNewWorld'),
     }
     return entries, coverage
 

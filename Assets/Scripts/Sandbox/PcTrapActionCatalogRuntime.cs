@@ -89,6 +89,19 @@ namespace VLTK.Sandbox
         public int openSkillStateId;
         public int openSkillStateLevel;
         public int openSkillStateTime;
+        public int randomMin;
+        public int randomMax;
+        public int[] randomThresholds;
+        public int[] randomTargetMapIds;
+        public int[] randomTargetCellXs;
+        public int[] randomTargetCellYs;
+        public int randomFightState = -1;
+        public int[] noActionMapIds;
+        public int gateCurrentMapId;
+        public int gateTargetMapId;
+        public int gateTargetCellX;
+        public int gateTargetCellY;
+        public int gateFightState = -1;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -100,6 +113,7 @@ namespace VLTK.Sandbox
         public bool IsMsg2PlayerNewWorld => string.Equals(actionKind, "Msg2PlayerNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsLevelGateNewWorld => string.Equals(actionKind, "LevelGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsOpenServerDateGateSetPos => string.Equals(actionKind, "OpenServerDateGateSetPos", StringComparison.OrdinalIgnoreCase);
+        public bool IsRandomNewWorld => string.Equals(actionKind, "RandomNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()
@@ -115,6 +129,12 @@ namespace VLTK.Sandbox
 
         public Vector2 ClosedTargetWorldPosition()
             => CellToWorld(closedTargetCellX, closedTargetCellY);
+
+        public Vector2 GateTargetWorldPosition()
+            => CellToWorld(gateTargetCellX, gateTargetCellY);
+
+        public Vector2 RandomTargetWorldPosition(int index)
+            => CellToWorld(randomTargetCellXs[index], randomTargetCellYs[index]);
 
         public int ConditionalNextFightState(int currentFightState)
             => currentFightState == ifFightState ? ifNextFightState : elseNextFightState;
