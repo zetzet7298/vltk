@@ -250,11 +250,12 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(270, catalog.Count);
+            Assert.AreEqual(273, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
+            Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -285,6 +286,20 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(20 * 256 + 50, taskMissingPickup.taskValue);
             Assert.AreEqual(125, taskMissingPickup.requiredMissingItemId);
             Assert.AreEqual(125, taskMissingPickup.eventItemIds.Single());
+            var itemConsume = catalog.Find(@"\script\西南南区\点苍山\点苍山洞三层\obj\地图_cyl40_机关.lua");
+            Assert.IsNotNull(itemConsume);
+            Assert.IsTrue(itemConsume.IsTaskItemConsumeMessage);
+            Assert.AreEqual(6, itemConsume.taskId);
+            Assert.AreEqual(40 * 256 + 20, itemConsume.taskValue);
+            CollectionAssert.AreEqual(new[] { 197, 196, 198 }, itemConsume.requiredItemIds);
+            CollectionAssert.AreEqual(new[] { 197, 196, 198 }, itemConsume.consumeItemIds);
+            Assert.AreEqual(6, itemConsume.setTaskId);
+            Assert.AreEqual(40 * 256 + 30, itemConsume.setTaskValue);
+            var kll40Chest = catalog.Find(@"\script\西北北区\昆仑派\见性峰山洞\obj\捡拾_kll40_宝箱.lua");
+            Assert.IsNotNull(kll40Chest);
+            Assert.IsTrue(kll40Chest.IsTaskItemConsumeMessage);
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng chìa khóa mở chiếc rương" }, kll40Chest.preConsumeMessages);
+            CollectionAssert.AreEqual(new[] { "Bạn nhận được Huyết Hồn Thần Kiếm" }, kll40Chest.successMessages);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -416,6 +431,118 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(result.hideObject);
             CollectionAssert.IsEmpty(sideEffects.messages);
             CollectionAssert.IsEmpty(sideEffects.eventItems);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemConsumeMessage_ConsumesAllItemsBeforeTaskReward()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\task_item_consume.lua",
+                        actionKind = "TaskItemConsumeMessage",
+                        taskId = 6,
+                        taskValue = 40 * 256 + 20,
+                        requiredItemIds = new[] { 197, 196, 198 },
+                        requiredItemCounts = new[] { 1, 1, 1 },
+                        consumeItemIds = new[] { 197, 196, 198 },
+                        consumeItemCounts = new[] { 1, 1, 1 },
+                        setTaskId = 6,
+                        setTaskValue = 40 * 256 + 30,
+                        preConsumeMessages = new[] { "Bạn thử dùng chìa khóa mở chiếc rương" },
+                        successMessages = new[] { "Đánh bại trợ thủ của tên ác bá." },
+                        missingItemMessages = new[] { "Cần có 3 chiếc chìa khóa." },
+                        elseMessages = new[] { "Ở đây có một cơ quan." },
+                        notes = new[] { "Đánh bại trợ thủ của tên ác bá." },
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost
+            {
+                taskValues = { [6] = 40 * 256 + 20 },
+                itemCounts = { [197] = 1, [196] = 1, [198] = 1 }
+            };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\task_item_consume.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(40 * 256 + 30, host.GetTaskValue(6));
+            Assert.IsFalse(host.itemCounts.ContainsKey(197));
+            Assert.IsFalse(host.itemCounts.ContainsKey(196));
+            Assert.IsFalse(host.itemCounts.ContainsKey(198));
+            Assert.AreEqual("Đánh bại trợ thủ của tên ác bá.", sideEffects.message);
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng chìa khóa mở chiếc rương", "Đánh bại trợ thủ của tên ác bá." }, sideEffects.messages);
+            Assert.AreEqual("Đánh bại trợ thủ của tên ác bá.", sideEffects.notes.Single());
+            StringAssert.Contains("consumed=[197,196,198]", result.detail);
+
+            host = new FakeTrapTravelHost
+            {
+                taskValues = { [6] = 40 * 256 + 20 },
+                itemCounts = { [197] = 1, [196] = 1 }
+            };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(40 * 256 + 20, host.GetTaskValue(6));
+            Assert.AreEqual(1, host.itemCounts[197]);
+            Assert.AreEqual(1, host.itemCounts[196]);
+            CollectionAssert.AreEqual(new[] { "Cần có 3 chiếc chìa khóa." }, sideEffects.messages);
+            CollectionAssert.IsEmpty(sideEffects.notes);
+
+            host = new FakeTrapTravelHost { taskValues = { [6] = 40 * 256 + 10 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsTrue(result.success);
+            CollectionAssert.AreEqual(new[] { "Ở đây có một cơ quan." }, sideEffects.messages);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemConsumeMessage_AddsPcQuestReward()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\kll60_chest.lua",
+                        actionKind = "TaskItemConsumeMessage",
+                        taskId = 9,
+                        taskValue = 60 * 256 + 20,
+                        requiredItemIds = new[] { 11, 12, 13, 14, 15 },
+                        consumeItemIds = new[] { 11, 12, 13, 14, 15 },
+                        eventItemIds = new[] { 16 },
+                        successMessages = new[] { "Bạn dùng 5 chiếc chìa khóa treo phía trên để mở rương lấy Ngũ Sắc Thạch" },
+                        notes = new[] { "Phái lấy Ngũ Sắc Thạch" },
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost
+            {
+                taskValues = { [9] = 60 * 256 + 20 },
+                itemCounts = { [11] = 1, [12] = 1, [13] = 1, [14] = 1, [15] = 1 }
+            };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new MapInteractiveObject { script = @"\script\kll60_chest.lua" }, out var result));
+
+            Assert.IsTrue(result.success);
+            CollectionAssert.AreEqual(new[] { 16 }, sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "Phái lấy Ngũ Sắc Thạch" }, sideEffects.notes);
+            CollectionAssert.AreEqual(new[] { "Bạn dùng 5 chiếc chìa khóa treo phía trên để mở rương lấy Ngũ Sắc Thạch" }, sideEffects.messages);
+            foreach (int itemId in new[] { 11, 12, 13, 14, 15 })
+                Assert.IsFalse(host.itemCounts.ContainsKey(itemId));
         }
 
 
