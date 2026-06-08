@@ -7,6 +7,7 @@ ignored StreamingAssets/Generated artifacts created by the bulk port scripts.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
 import subprocess
 import sys
@@ -16,6 +17,9 @@ from typing import Any
 
 UNITY_ROOT = Path('/var/www/vltk-mobile')
 PC_ROOT = Path('/var/www/vltksource_new/vl_update_27')
+JX_MAP_PORT_REL = Path('harness/.codex/skills/jx-map-port/scripts/jx_map_port.py')
+SPR_LABEL_MAP = Path('/var/www/vltktool/vltksource_new_unpaked/_labels.json')
+PROVENANCE_SAMPLE_LIMIT = 5
 EXPECTED_MAP_ALIASES = 1005
 EXPECTED_RUNTIME_MAPS = 1006
 EXPECTED_GEOMETRIES = 332
@@ -107,7 +111,153 @@ def git_tracked_generated(unity_root: Path) -> int | None:
     return len([line for line in out.splitlines() if line.strip()])
 
 
-def verify_visual_catalogs(audit: Audit, root: Path, pc_root: Path) -> tuple[dict[str, Any], dict[str, Any]]:
+def load_jx_module(root: Path) -> Any | None:
+    path = root / JX_MAP_PORT_REL
+    if not path.is_file():
+        return None
+    try:
+        spec = importlib.util.spec_from_file_location('jx_map_port_verify_jx', path)
+        if spec is None or spec.loader is None:
+            return None
+        module = importlib.util.module_from_spec(spec)
+        sys.modules['jx_map_port_verify_jx'] = module
+        spec.loader.exec_module(module)
+        return module
+    except Exception:
+        return None
+
+
+def normalize_spr_path(name: str) -> str:
+    path = (name or '').strip().replace('/', '\\').lstrip('\\')
+    return path.lower()
+
+
+def canonical_spr_path(name: str) -> str:
+    path = (name or '').strip().replace('/', '\\')
+    return path if path.startswith('\\') else '\\' + path
+
+
+def load_label_lookups() -> tuple[set[str], dict[str, int]]:
+    if not SPR_LABEL_MAP.is_file():
+        return set(), {}
+    labels = load_json(SPR_LABEL_MAP)
+    exact: set[str] = set()
+    basenames: dict[str, int] = {}
+    for key in labels.keys():
+        norm = normalize_spr_path(str(key))
+        exact.add(norm)
+        base = norm.rsplit('\\', 1)[-1]
+        basenames[base] = basenames.get(base, 0) + 1
+    return exact, basenames
+
+
+def map_sprite_verdict(path: str, present_in_pak: bool, label_hits: int) -> str:
+    norm = normalize_spr_path(path)
+    if present_in_pak or label_hits > 0:
+        return 'unexpected_resolved_elsewhere'
+    if norm == 'system\\spr\\regiontiledefault.spr':
+        return 'engine_default_fallback_source_missing'
+    return 'source_missing_in_scoped_pc_paks'
+
+
+def build_missing_sprite_provenance(
+    audit: Audit,
+    root: Path,
+    pc_root: Path,
+    geometries: dict[str, Any],
+    missing_paths: set[str],
+    include_region_refs: bool,
+) -> list[dict[str, Any]]:
+    if not missing_paths:
+        return []
+    jx = load_jx_module(root)
+    if jx is None:
+        audit.warn('missing map SPR provenance unavailable: cannot load jx-map-port hash helpers')
+        return []
+
+    data_dir = pc_root / 'Client 6.0/data'
+    try:
+        pak_index = jx.build_index(str(data_dir))
+    except Exception:
+        pak_index = {}
+        audit.warn(f'missing map SPR provenance could not index client PAK dir: {data_dir}')
+    label_exact, label_basenames = load_label_lookups()
+
+    by_exact = {canonical_spr_path(path): path for path in missing_paths}
+    records: dict[str, dict[str, Any]] = {}
+    for path in sorted(missing_paths):
+        canonical = canonical_spr_path(path)
+        engine_uid = jx.g_filename2id(canonical.encode('gbk', errors='ignore'))
+        staged_uid = jx.compute_path_uid(canonical)
+        norm = normalize_spr_path(canonical)
+        basename = norm.rsplit('\\', 1)[-1]
+        label_hits = 1 if norm in label_exact else 0
+        basename_hits = label_basenames.get(basename, 0)
+        present = engine_uid in pak_index
+        records[path] = {
+            'path': path,
+            'engineUid': f'0x{engine_uid:08X}',
+            'stagingUid': staged_uid,
+            'presentInClientPak': present,
+            'labelExactHits': label_hits,
+            'labelBasenameHits': basename_hits,
+            'geometryCount': 0,
+            'sampleGeometries': [],
+            'verdict': map_sprite_verdict(path, present, label_hits),
+        }
+
+    sa = root / 'Assets/StreamingAssets'
+    for geometry in geometries.get('geometries', []):
+        folder = sa / geometry.get('regionFolder', '')
+        names_path = folder / 'image_names.json'
+        if not names_path.is_file():
+            continue
+        try:
+            image_names = load_json(names_path)
+        except Exception:
+            continue
+        matched_paths = {
+            by_exact[key]
+            for name in image_names
+            if (key := canonical_spr_path(str(name))) in by_exact
+        }
+        for path in matched_paths:
+            rec = records[path]
+            rec['geometryCount'] += 1
+            samples = rec['sampleGeometries']
+            if len(samples) < PROVENANCE_SAMPLE_LIMIT:
+                samples.append({
+                    'geometryKey': geometry.get('geometryKey'),
+                    'primaryMapId': geometry.get('primaryMapId'),
+                    'mapIds': geometry.get('mapIds', [])[:PROVENANCE_SAMPLE_LIMIT],
+                    'pcMapPath': geometry.get('pcMapPath'),
+                })
+
+    if include_region_refs:
+        for rec in records.values():
+            rec['regionFileRefCount'] = 0
+        for geometry in geometries.get('geometries', []):
+            folder = sa / geometry.get('regionFolder', '')
+            if not folder.is_dir():
+                continue
+            for region_path in folder.glob('*_Region_C.dat'):
+                try:
+                    names = jx.collect_names(region_path.read_bytes())
+                except Exception:
+                    continue
+                for name in names:
+                    key = by_exact.get(canonical_spr_path(str(name)))
+                    if key:
+                        records[key]['regionFileRefCount'] += 1
+    return [records[path] for path in sorted(records)]
+
+
+def verify_visual_catalogs(
+    audit: Audit,
+    root: Path,
+    pc_root: Path,
+    include_missing_spr_region_refs: bool,
+) -> tuple[dict[str, Any], dict[str, Any]]:
     sa = root / 'Assets/StreamingAssets'
     coverage = load_json(sa / 'MapPortCoverage.json')
     aliases = load_json(sa / 'MapAliasCatalog.json')
@@ -129,6 +279,14 @@ def verify_visual_catalogs(audit: Audit, root: Path, pc_root: Path) -> tuple[dic
         audit.warn(f'map SPR unresolved unique paths={len(failed_sprites)} refs={coverage.get("failedSprites")}')
     audit.require(failed_sprites <= KNOWN_FAILED_MAP_SPRITES,
                   f'unexpected failed map SPR paths: {sorted(failed_sprites - KNOWN_FAILED_MAP_SPRITES)}')
+    provenance = build_missing_sprite_provenance(
+        audit,
+        root,
+        pc_root,
+        geometries,
+        failed_sprites,
+        include_missing_spr_region_refs,
+    )
     audit.facts['visualCatalog'] = {
         'pcMapIds': len(pc_ids),
         'aliases': len(alias_ids),
@@ -137,6 +295,7 @@ def verify_visual_catalogs(audit: Audit, root: Path, pc_root: Path) -> tuple[dic
         'mapSprites': coverage.get('stagedSprites'),
         'failedSpriteRefs': coverage.get('failedSprites'),
         'failedSpriteUniquePaths': sorted(failed_sprites),
+        'missingSpriteProvenance': provenance,
     }
     return coverage, geometries
 
@@ -316,7 +475,12 @@ def run_audit(args: argparse.Namespace) -> Audit:
     root = args.unity_root.resolve()
     pc_root = args.pc_root.resolve()
     audit = Audit()
-    visual_coverage, geometries = verify_visual_catalogs(audit, root, pc_root)
+    visual_coverage, geometries = verify_visual_catalogs(
+        audit,
+        root,
+        pc_root,
+        args.include_missing_spr_region_refs,
+    )
     if not args.catalog_only:
         verify_generated_visual_assets(audit, root, visual_coverage, geometries)
     server_catalog = verify_server_region_catalogs(audit, root)
@@ -335,6 +499,8 @@ def main() -> int:
     parser.add_argument('--pc-root', type=Path, default=PC_ROOT)
     parser.add_argument('--catalog-only', action='store_true',
                         help='Do not require ignored StreamingAssets/Generated raw assets to exist locally.')
+    parser.add_argument('--include-missing-spr-region-refs', action='store_true',
+                        help='Scan generated Region_C files and include per-missing-SPR region file reference counts.')
     parser.add_argument('--fail-on-known-gaps', action='store_true',
                         help='Return non-zero for known unresolved PC gaps as well as hard errors.')
     parser.add_argument('--pretty', action='store_true')
