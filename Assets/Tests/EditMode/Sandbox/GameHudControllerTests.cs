@@ -162,11 +162,11 @@ namespace VLTK.Tests.Sandbox
             return (T)field.GetValue(_hud);
         }
 
-        private void InvokePrivateMethod(string methodName, params object[] args)
+        private object InvokePrivateMethod(string methodName, params object[] args)
         {
             var method = typeof(GameHudController).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(method, $"Method {methodName} not found on GameHudController");
-            method.Invoke(_hud, args);
+            return method.Invoke(_hud, args);
         }
 
         [Test]
@@ -274,6 +274,32 @@ namespace VLTK.Tests.Sandbox
             // Hide again
             InvokePrivateMethod("OnExchangeClick");
             Assert.IsTrue(_tradeInfoPanel.ClassListContains("hidden"));
+        }
+
+        [Test]
+        public void BeginExchangeSession_UsesEconomyTradeSessionForOnlinePartyTarget()
+        {
+            var economy = new EconomyService(initialSilver: 1234);
+            var members = new List<PartyMember>
+            {
+                new PartyMember { memberId = SandboxManager.PlayerActorId, nameVi = "Bản thân", level = 50, factionId = 7, isOnline = true },
+                new PartyMember { memberId = 2, nameVi = "Đồng Đội", level = 48, factionId = 3, isOnline = true },
+            };
+
+            var session = (TradeSession)InvokePrivateMethod("BeginExchangeSession", economy, members);
+
+            Assert.IsNotNull(session);
+            Assert.AreEqual(SandboxManager.PlayerActorId, session.initiatorId);
+            Assert.AreEqual(2, session.targetId);
+            Assert.AreSame(session, GetPrivateField<TradeSession>("_tradeSession"));
+            Assert.AreEqual("Đồng Đội", GetPrivateField<PartyMember>("_tradeTarget").nameVi);
+            Assert.AreSame(economy, GetPrivateField<EconomyService>("_tradeEconomy"));
+
+            InvokePrivateMethod("PopulateTradeInfo");
+            StringAssert.Contains("Đồng Đội", _tradePartnerName.text);
+            StringAssert.Contains("1234", _tradePartnerLevel.text);
+            StringAssert.Contains("1->2", _tradePartnerFaction.text);
+            StringAssert.Contains("Đặt bạc: 0", _tradePartnerGuild.text);
         }
 
         [Test]

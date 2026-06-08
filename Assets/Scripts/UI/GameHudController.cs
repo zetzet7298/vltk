@@ -122,6 +122,9 @@ namespace VLTK.UI
         private bool _recEnabled;
         private bool _pkEnabled;
         private float _defaultRunSpeed;
+        private TradeSession _tradeSession;
+        private PartyMember _tradeTarget;
+        private EconomyService _tradeEconomy;
         private const float RecorderFrameIntervalSeconds = 5f;
         private float _recFrameTimer;
         private int _recFrameCount;
@@ -1894,14 +1897,55 @@ namespace VLTK.UI
             {
                 bool hide = !_tradeInfoPanel.ClassListContains("hidden");
                 if (hide)
+                {
+                    _tradeSession = null;
+                    _tradeTarget = null;
+                    _tradeEconomy = null;
                     _tradeInfoPanel.AddToClassList("hidden");
+                    SetButtonActive("BtnExchange", false);
+                }
                 else
                 {
                     _tradeInfoPanel.RemoveFromClassList("hidden");
+                    var manager = SandboxManager.Instance;
+                    BeginExchangeSession(manager?.GameplayLoop?.Economy, manager?.PartyService?.Members);
                     PopulateTradeInfo();
+                    SetButtonActive("BtnExchange", _tradeSession != null);
                 }
                 SubsystemLog.Info("HUD", hide ? "Close Exchange" : "Open Exchange");
             }
+        }
+
+        private TradeSession BeginExchangeSession(EconomyService economy, IReadOnlyList<PartyMember> members)
+        {
+            _tradeSession = null;
+            _tradeTarget = null;
+            _tradeEconomy = null;
+            if (economy == null)
+                return null;
+
+            var target = SelectExchangeTarget(members);
+            if (target == null)
+                return null;
+
+            _tradeTarget = target;
+            _tradeEconomy = economy;
+            _tradeSession = economy.CreateTradeSession(SandboxManager.PlayerActorId, target.memberId);
+            _tradeSession.SetSilver(SandboxManager.PlayerActorId, 0);
+            return _tradeSession;
+        }
+
+        private static PartyMember SelectExchangeTarget(IReadOnlyList<PartyMember> members)
+        {
+            if (members == null) return null;
+            foreach (var member in members)
+            {
+                if (member == null) continue;
+                if (member.memberId == SandboxManager.PlayerActorId) continue;
+                if (!member.isOnline) continue;
+                return member;
+            }
+            return null;
         }
 
         private void OnRecClick()
@@ -2263,10 +2307,19 @@ namespace VLTK.UI
 
         private void PopulateTradeInfo()
         {
-            var economy = SandboxManager.Instance?.GameplayLoop?.Economy;
+            var economy = _tradeEconomy ?? SandboxManager.Instance?.GameplayLoop?.Economy;
+            if (_tradeSession != null && _tradeTarget != null)
+            {
+                if (_tradePartnerName != null) _tradePartnerName.text = $"     + Đối tượng: {_tradeTarget.nameVi} (ID {_tradeTarget.memberId})";
+                if (_tradePartnerLevel != null) _tradePartnerLevel.text = $"     + Cấp: {_tradeTarget.level} / Ví bạc: {(economy != null ? economy.Wallet.silver : 0)}";
+                if (_tradePartnerFaction != null) _tradePartnerFaction.text = $"     + Phiên: #{_tradeSession.initiatorId}->{_tradeSession.targetId} đang yêu cầu";
+                if (_tradePartnerGuild != null) _tradePartnerGuild.text = $"     + Đặt bạc: {_tradeSession.initiatorSilver} / Khóa: {(_tradeSession.IsReady ? "đủ" : "chưa")}";
+                return;
+            }
+
             if (_tradePartnerName != null) _tradePartnerName.text = "     + Đối tượng: Chưa chọn người chơi";
             if (_tradePartnerLevel != null) _tradePartnerLevel.text = economy != null ? $"     + Ví bạc: {economy.Wallet.silver}" : "     + Ví bạc: --";
-            if (_tradePartnerFaction != null) _tradePartnerFaction.text = "     + Phiên: Chưa tạo";
+            if (_tradePartnerFaction != null) _tradePartnerFaction.text = "     + Phiên: Chưa tạo — chọn thành viên đội để gửi yêu cầu";
             if (_tradePartnerGuild != null) _tradePartnerGuild.text = economy != null ? $"     + Kho: {economy.StashUsed}/{economy.StashUsed + economy.StashRemaining}" : "     + Trạng thái: Runtime chưa sẵn sàng";
         }
 
