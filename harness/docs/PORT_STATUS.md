@@ -1,139 +1,304 @@
-# PORT_STATUS.md — Audit trạng thái port PC → Mobile
+# PORT_STATUS.md — Evidence Audit PC → Mobile
 
-> **Audit lại**: 2026-06-08
+> **Audit date**: 2026-06-08
 > **PC source of truth**: `/var/www/vltksource_new/vl_update_27`
-> **Mobile codebase**: `/var/www/vltk-mobile` (`dev` @ `6fb8ee3`, dirty HUD files excluded)
-> **Quy tắc mới**: `✅` chỉ dùng khi có bằng chứng hiện tại trong code/catalog/verifier/tests. Có service/parser nhưng chưa chứng minh đủ hành vi PC thì là `🔄`, không được ghi `✅`.
+> **Mobile repo**: `/var/www/vltk-mobile` (`dev` at `0480502` when audit started)
+> **Scope**: toàn bộ codebase/status, không chỉ map.
+> **Dirty excluded**: `Assets/Scripts/UI/CharacterPanelService.cs`, `Assets/Scripts/UI/GameHudController.cs`, `harness/item_spr_img/` là HUD/UI WIP của human/parallel work, không dùng làm proof.
 
-## Chú thích
+## Status legend — strict
 
-| Ký hiệu | Ý nghĩa |
+| Status | Meaning |
 |---|---|
-| ✅ | Đã verify bằng artifact/command hiện tại; còn có thể có known gaps được nêu rõ |
-| 🔄 | Có framework/data/parser/runtime một phần, nhưng chưa đủ parity PC hoặc chưa có proof end-to-end |
-| ☐ | Chưa port / ngoài scope client |
-| ⚠️ | Claim cũ trong tài liệu trước bị audit là quá tay, đã downgrade |
+| ✅ | Verified by current file/catalog/verifier/test/source evidence for the stated narrow scope. |
+| 🔄 | Partial: data/service/parser/runtime exists, but PC semantic parity or end-to-end proof is missing. |
+| ☐ | Missing/not ported/client-out-of-scope. |
+| ⚠️ | Old `PORT_STATUS.md` claim was overbroad or false under this audit. |
 
-## Bằng chứng audit đã chạy
+**Hard rule:** A parser/service/test skeleton is **not** completion. Mark `✅` only when the row states the exact verified scope, e.g. “data catalog loaded”, not “PC behavior complete”.
 
-- `git status --short --branch`: còn dirty **HUD/UI** `Assets/Scripts/UI/CharacterPanelService.cs`, `Assets/Scripts/UI/GameHudController.cs`, `harness/item_spr_img/`; không tính vào status audit này.
-- Đã restore WIP ClearSkill trap dở về HEAD để tránh compile/interface sai; patch tạm lưu ngoài repo tại `/tmp/vltk_clearskill_wip.patch`.
-- `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` → `status=pass_with_known_gaps`, `errors=[]`.
-- Unity console hiện chỉ có Addressables GUID conflict known-noise; chưa rerun full EditMode/PlayMode suite trong audit này, nên mọi claim `1771/1771` hoặc `25/25` cũ bị bỏ khỏi trạng thái hiện tại.
+## Audit evidence actually collected
 
-## 1. Map / World — trạng thái đáng tin
+- `git status --short --branch`: repo dirty only with excluded HUD/UI files above.
+- `srcwalk map --scope Assets/Scripts/Sandbox --depth 1`: codebase inventory.
+- Python evidence scan:
+  - `Assets/Scripts/**/*.cs` = 691 C# scripts.
+  - `Assets/Tests/**/*.cs` = 172 test files.
+  - Rough classes: 316 `*Service`, 246 `*Parser`, 91 `*Panel*`.
+  - Rough test attributes: 2,027; inconclusive/ignore/explicit markers: 48.
+- `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty`:
+  - `status=pass_with_known_gaps`, `errors=[]`.
+- Unity console check: only known Addressables GUID conflict noise during this audit.
+- No fresh Unity Test Runner result artifact found. Old `1771/1771 EditMode` and `25/25 PlayMode` claims are **unverified** and removed.
+- Exa research timed out twice; DeepWiki fetched UnityCsReference overview. This audit relies on current repo files and PC source-of-truth, not external guesses.
 
-| Hạng mục | Status | Bằng chứng hiện tại | Gaps còn lại |
-|---|---:|---|---|
-| PC map aliases + visual geometry | ✅ | Verifier: `1,005` aliases, `332` geometries, `95,246` Region_C, `2,785` map SPR; `MapAliasCatalog.json`, `MapGeometryCatalog.json`; runtime merge ở `MapManager.MergeGeneratedBulkCatalogs()` | Generated assets nằm dưới ignored `Assets/StreamingAssets/Generated`; clean clone phải chạy regenerate commands từ verifier |
-| Default map `Vượt ải Nhiếp Thí Trần` | ✅ | `Sandbox.unity` có `defaultMapId: 907` x2; verifier `defaultMap.mapId=907`, `nameVi=Vượt ải Nhiếp Thí Trần`, `killbossMissionBossTemplates=10` | Chưa audit manual movement toàn map sau feedback bị chặn sớm |
-| Missing map SPR provenance | ✅ known gaps | Verifier còn đúng 6 unique missing SPR refs / 182 refs; tất cả có provenance `presentInClientPak=false`, label hit = 0; `RegionTileDefault` là engine fallback | Không được tự bịa SPR thay thế |
-| Server Region_S extraction | ✅ data / 🔄 gameplay | `MapServerRegionCatalog.json`, `MapSpawnCoverage.json`: `332` geometries, `330` có Region_S, `84,019` Region_S, `67,680` NPC records, `8,692` trap records, `453` object records; aliases thiếu static Region_S: `134`, `1007` | Đây là data extract, chưa chứng minh AI/spawn scheduling/gameplay đầy đủ PC |
-| NPC visual staging from Region_S | ✅ data | `NpcSpriteCoverage.json`: `375/375` resTypes covered, `1,314` staged sprite files, missing `0` | Visual staged không đồng nghĩa full AI/combat behavior |
-| Region_S objects/traps | 🔄 | `MapInteractiveCoverage.json`: `35/35` object templates resolved, `34/34` object SPR paths staged, `299` deterministic object actions; `MapTrapScriptCoverage.json`: `817/817` trap ids resolved, `804` deterministic trap actions | `13` resolved trap scripts still deferred: `TongMapEntrance=8`, `ClearSkillTeamEnterHole=4`, `CityWarJoinRouter=1`; no `IsClearSkillTeamEnterHole` runtime in HEAD |
-| Minimap / click-to-move / bounds | 🔄 | Services exist: `MinimapService`, `MinimapPanel`, `PlayerMovementService`, `CoordinateService`, map bounds from geometry catalog | Needs manual + PlayMode proof on full map 907; earlier user report means old ✅ is not trustworthy |
-| Travel data (waypoint/wharf/scroll/revive) | 🔄 | `MapManager.MergePcMapData()` loads `Reference/PcMap`; parsers/services exist | Counts/behavior not re-audited this pass; keep partial until verifier/test proves PC parity |
-
-## 2. Data/service systems — audited downgrade
-
-| Domain | Status | What is actually proven | Why not ✅ full parity yet |
-|---|---:|---|---|
-| NPC templates | ✅ data / 🔄 behavior | `Reference/PcNpc/npcs.txt` has 2,000 data rows; `PcFullNpcParser`, `MapEnemyDatabase` exist | Spawn AI, script hooks, combat behaviors not fully proven by current audit |
-| Factions/titles/faction maps | 🔄 | Faction/title/map services and tests exist | Full PC faction quest/skill/UI behavior not audited end-to-end |
-| Skills/missiles | 🔄 | `Reference/PcSkill/skills.txt` has 1,216 data rows; weapon/thief/missile refs exist; many skill services/tests exist | `SkillScriptService` is metadata registry (`GetScript`, `GetBySkill`), not a full PC Lua/skill VM; visual/effect parity not fully audited |
-| Items/economy/drop | 🔄 | Large PC item/drop reference sets exist (`PcItemFull`, `PcDropRate`); inventory/economy/shop services exist | `ItemScriptService` is metadata registry; only selected item actions (e.g. GM token path) are ported, not all item Lua behaviors; GM teleport changes are user-owned and not touched/audited here |
-| Missions/quests/tasks | 🔄 | `MissionScriptService`, `TaskScriptService`, `QuestService` exist; `Reference/PcMission/player_task_def.txt` present | `MissionScriptService` only exposes metadata/progress helpers; not a full executor for 985 PC mission Lua/scripts |
-| Events/activities/VNG | 🔄 | Event/activity services and reference data exist | `EventScriptService` is metadata registry; event Lua/runtime side effects not proven complete |
-| Battles/PvP/Tống-Kim/CityWar | 🔄 | Battle/guild/city-war services exist; some trap families ported (`SongJinRebirthCampState`, city-war camp gates) | `BattleScriptRuntimeService` executes simplified conditions/actions, not full PC battle scripts; `CityWarJoinRouter` trap still deferred |
-| Guild/Tong | 🔄 | Guild/Tong data/services exist | `GuildScriptService.ExecuteScript()` currently validates/logs only; `TongMapEntrance` 8 traps deferred pending ownership/ban/expire/runtime APIs |
-| Partner/pet/meridian/titles/misc systems | 🔄 | Services/reference files/tests exist for many systems | Current audit did not prove full PC behavior; old `~100%` totals were overclaimed |
-
-## 3. UI/client/player visual/server infra
-
-| Domain | Status | Evidence | Gaps |
-|---|---:|---|---|
-| HUD/UI panels | 🔄 | Many UI services/tests exist; recent commits improve specific PC controls | Worktree currently has dirty HUD files, excluded from audit; full PC UI parity not verified |
-| Player/NPC visual runtime | 🔄 | `MalePlayerVisual`, `FemalePlayerVisual`, sprite catalogs, NPC sprite staging exist | Full equipment/layer/action parity not re-audited |
-| Client resource/SPR loading | 🔄 | `SprRuntimeService` and decoded/staged assets exist | Not all UI/SPR assets have audited provenance in this pass |
-| Network protocol/client services | 🔄 | Message router/opcode services exist | Server integration not audited |
-| Gateway/Bishop/S3Relay/DB/PaySys/ops | ☐ | Server-side systems, not ported into Unity client | Keep outside client scope unless server project is added |
-| GBK/server script directories | 🔄 metadata | Many `*ScriptService` classes count/lookup scripts | Treat as metadata indexes, not completed Lua port, until each action path is executed/tested |
-
-## 4. Current trusted map verifier facts
+## Current high-confidence map verifier facts
 
 ```text
-visual: 1,005 aliases / 332 geometries / 95,246 Region_C / 2,785 map SPR / 6 missing unique SPR paths
-server Region_S: 330/332 geometries, 84,019 Region_S, 67,680 NPC, 8,692 trap, 453 object records
-interactive: 817/817 trap scripts resolved, 804 deterministic trap actions, 13 deferred resolved actions, 0 unclassified
-objects: 35 templates resolved, 34 SPR paths staged, 299 deterministic object actions
+visual aliases: 1,005 PC map aliases
+unique visual geometries: 332
+Region_C files: 95,246
+map SPR files: 2,785
+known missing map SPR refs: 6 unique paths / 182 refs, all source-missing or engine-default fallback
+server Region_S: 330/332 geometries; missing static Region_S aliases 134 and 1007
+Region_S files: 84,019
+Region_S records: 67,680 NPC / 8,692 trap / 453 object
+NPC sprite staging: 375/375 resTypes, 1,314 staged sprites
+object visuals/actions: 35/35 templates, 34/34 SPR paths, 299 deterministic object actions
+trap scripts/actions: 817/817 script ids resolved, 804 deterministic trap actions, 13 deferred resolved actions, 0 unclassified
 default map: 907 — Vượt ải Nhiếp Thí Trần
 ```
 
-## 5. Priority tiếp theo sau audit
+Deferred trap families still not complete:
 
-1. Verify/fix manual movement bounds trên map 907 (user report: minimap còn rộng nhưng player bị chặn sớm).
-2. Port remaining deferred trap families with PC source proof, in order: `ClearSkillTeamEnterHole` → `TongMapEntrance` → `CityWarJoinRouter`.
-3. Add automated proof for map 907 full walkable bounds/minimap/click-to-move before marking movement/minimap ✅.
-4. Convert script-service claims from metadata counts to real PC behavior only when each Lua/API family is implemented and tested.
-5. Keep HUD/GM teleport work separate; do not stage or audit dirty UI changes unless user explicitly asks.
+```text
+ClearSkillTeamEnterHole: 4
+TongMapEntrance: 8
+CityWarJoinRouter: 1
+```
 
-## 6. Removed false confidence from previous file
+## Verified data files and exact counts
 
-- Removed old global claims `1771/1771 EditMode`, `25/25 PlayMode`, `Tổng thể ~100%`, and blanket `✅` for scripts/systems.
-- Old counts can still be useful as leads, but they are no longer treated as completion proof.
-- Future edits to this file must cite command/file evidence and must not mark `✅` merely because a parser/service exists.
+These are **data/catalog facts only** unless the “Runtime parity” column says otherwise.
 
-## 7. Downgrade cụ thể theo audit subagent
+| Domain | File/artifact | Verified count | Status | Runtime parity |
+|---|---|---:|---:|---|
+| NPC templates | `Reference/PcNpc/npcs.txt` | 2,000 rows | ✅ | 🔄 behavior/scripts/AI not proven full PC |
+| Rare spawns | `Reference/PcNpc/rare.txt` | 480 rows | ✅ | 🔄 spawn scheduling not fully audited |
+| Gold bosses | `Reference/PcNpc/goldboss.txt` | 32 rows | ✅ | 🔄 event/schedule behavior not fully audited |
+| Base skills | `Reference/PcSkill/skills.txt` | 1,216 rows | ✅ | 🔄 skill behavior/formulas/scripts partial |
+| Weapon skills | `Reference/PcSkill/clientweaponskill.txt` | 32 rows | ✅ | 🔄 behavior not audited |
+| Thief skills | `Reference/PcSkill/thiefskill.txt` | 4 rows | ✅ | 🔄 behavior not audited |
+| Mod skills local | `Reference/ModSkills.txt` | 1,554 rows | 🔄 | PC `skills1.txt` 1,712 is not fully represented/proven |
+| Missiles local | `Reference/PcMissles.txt`, `Reference/ModMissles.txt` | 441 + 441 rows | 🔄 | old “480 effects” claim not proven |
+| Meridian levels | `Reference/PcMeridian/meridian_level.txt` | 128 rows | ✅ | 🔄 full UX/effect parity not audited |
+| Gold equip | `Reference/PcItemFull/goldequip.txt` | 5,346 rows | ✅ | data catalog |
+| Platina equip | `Reference/PcItemFull/platinaequip.txt` | 5,336 rows | ✅ | data catalog |
+| Armor/helm/boot/cuff/belt/ring/amulet/pendant | `PcItemFull/*.txt` | 290/140/40/20/20/10/20/20 | ✅ | data catalog |
+| Melee/range/horse/potion | `PcItemFull/*.txt` | 60/30/350/40 | ✅ | data catalog |
+| Magic attributes | `Reference/PcItemFull/magicattrib.txt` | 330 rows | ✅ | old 333 claim false |
+| Compound recipes | `Reference/PcItemFull/atlas_compound.txt` | 1,294 rows | ✅ data / 🔄 craft | craft execution/UI still partial |
+| Quest keys | `Reference/PcItemFull/questkey.txt` | 2,045 rows | ✅ | data/service |
+| Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data / 🔄 runtime path | `Reference/PcHongbao` missing |
+| Shop goods/buysell | `Reference/PcShop/goods.txt`, `buysell.txt` | 1,521 + 165 rows | ✅ | catalog; NPC shop UX not fully audited |
+| Lottery | `Reference/PcLottery/lottery.txt` | 254 rows | ✅ | data/service |
+| Adventure | `Reference/PcAdventure/adventure.txt` | 1,037 rows | ✅ | catalog; quest semantics partial |
+| Player task defs | `Reference/PcMission/player_task_def.txt` | 656 rows | ✅ data | mission execution partial |
+| Guild levels | `Reference/PcTong/tong_level_data.txt` | 6 rows | ✅ | guild scripts partial |
+| City war config | `Reference/PcEvent/citywar.ini` | 90 data lines | ✅ data | join/router semantics partial |
+| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | 🔄 | old mobile 224 mismatch unresolved |
+| Wharves | `Reference/PcMap/wharf.txt` | 11 rows | 🔄 | old mobile 10 mismatch unresolved |
+| Revive positions | `Reference/PcMap/revivepos.ini` | 656 lines / 241 verifier revive entries previously claimed | 🔄 | exact runtime count needs dedicated proof |
+| Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data | runtime behavior not fully audited |
 
-Các dòng dưới đây là các claim cũ cần nhớ khi đọc lịch sử commit: **không được nâng lại `✅` nếu chưa có evidence mới**.
+## Missing or path-mismatch evidence
 
-### 7.1 Map section cũ
+These old `✅` claims must stay downgraded until files/runtime are added and tested.
 
-| Claim cũ | Audit result |
-|---|---|
-| `MapCatalog.json + PC maplist.ini -> 1,005` | Wording sai: raw `MapCatalog.json` chỉ là legacy catalog; `1,005` đến từ runtime merge `MapAliasCatalog`/`MapGeometryCatalog`/`MapServerRegionCatalog` + PC map data. |
-| Map 907 raw name | Raw alias row còn label khác; runtime `MapPortManifest` override tên hiển thị thành `Vượt ải Nhiếp Thí Trần`. |
-| Map 389 `Map_389_C 516 Region_C` | Đúng cho historical standalone TestData; current bulk geometry shared map IDs 387-389 có count khác. Không dùng làm current runtime proof. |
-| Waypoint `225 -> 224 ✅` và Wharf `11 -> 10 ✅` | Mismatch denominator; giữ `🔄` cho tới khi document exact skipped row/reason. |
-| Region_S trap runtime | Không full complete: 804 deterministic actions, 13 resolved deferred (`TongMapEntrance=8`, `ClearSkillTeamEnterHole=4`, `CityWarJoinRouter=1`). |
+| System | Expected path/evidence | Current state | Status |
+|---|---|---|---:|
+| Faction maps 33 | `Reference/PcTong/faction_map.txt` | missing | ☐ |
+| Special skills 58 | `Reference/PcSkill/specialskills.txt` | missing | ☐ |
+| NPC/Boss skills 43 | `Reference/PcSkill/npcskills.txt` | missing | ☐ |
+| Translife skills 9 | `Reference/PcSkill/translifeskill.txt` | missing; `PcTask/translife.txt` exists but service does not load it by default | ☐/🔄 |
+| Item exchange | `Reference/PcItemExchange` | missing | ☐/🔄 framework only |
+| Hongbao runtime dir | `Reference/PcHongbao` | missing; data exists under `PcItemFull/hongbao.txt` | 🔄 |
+| Battlefield data dir | `Reference/PcBattlefield` | missing | 🔄/☐ |
+| Battle script dir | `Reference/PcBattleScript` or `Reference/PcEvent/Battle` | missing | 🔄/☐ |
+| Server event index | `Reference/PcServerEvent` or `Reference/PcEvent/Index` | missing | 🔄/☐ |
+| VNG event dir | `Reference/PcVngEvent` or `Reference/PcEvent/Vng` | missing | 🔄/☐ |
+| FlipCard dedicated dir | `Reference/PcFlipCard` | missing | 🔄 |
+| Compensation dir | `Reference/PcCompensation` | missing | 🔄/☐ |
 
-### 7.2 Faction / skill / item claims cũ
+## Section-by-section truth matrix
 
-| Claim cũ | Audit result |
-|---|---|
-| 10 phái / UI chọn phái / ngũ hành / alignment đều `✅` | Chỉ có static runtime/catalog; faction UI có hard-code và một số text/element không chứng minh PC parity. Giữ `🔄`, riêng faction titles 81 có data proof tốt. |
-| Faction Maps 33 `✅` | Overclaim rõ: `FactionMapService` tìm `Reference/PcTong/faction_map.txt` nhưng file không tồn tại; mobile count thực tế cần coi là 0/unverified. |
-| Base skills 1,216 `✅` | Có data catalog proof (`Reference/PcSkill/skills.txt` 1,216 rows). Chỉ nghĩa là catalog/lookup, không nghĩa full skill behavior. |
-| Extended skills 1,712 `✅` | Overclaim: mobile `ModSkills.txt` subset, không thấy PC `skills1.txt` full 1,712 được copy/parse. Giữ `🔄`. |
-| Skill templates 219 `✅` | Overclaim: không thấy đúng `skilltemplate.txt`; parser có nguy cơ đọc nhầm file missile. Giữ `☐/🔄`. |
-| Special skills 58 / NPC skills 43 / Translife skills 9 `✅` | Source files default không tồn tại hoặc service count có thể 0. Giữ `☐/🔄`. |
-| Missile effects 480 `✅` | Count chưa khớp audited files (`missles.txt`, `missles1.txt`, template). Giữ `🔄` tới khi có verifier. |
-| Magic attributes 333 `✅` | Count audit là 330 data rows, không phải 333. |
-| Compound/Recipe 1,294 `✅` | Recipe data có; craft execution/UI còn stub/không chứng minh inventory consume/result. Giữ `🔄`. |
-| Item Exchange / Hongbao `✅` | Runtime default path/data mismatch hoặc missing directory; giữ `☐/🔄`. |
+### 1. Maps / world
 
-### 7.3 NPC / quest / event / battle / guild claims cũ
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| 1,005 PC map aliases and 332 visual geometries | ✅ | `MapAliasCatalog.json`, `MapGeometryCatalog.json`, verifier pass | Keep generated artifacts reproducible on clean clone |
+| Default map 907 `Vượt ải Nhiếp Thí Trần` | ✅ | `Sandbox.unity defaultMapId: 907`; verifier default map fact | Manual movement/bounds still needs fix/proof |
+| Region_C visual map art | ✅ known gaps | 95,246 Region_C; 2,785 SPR; 6 source-missing SPR refs documented | Do not fabricate missing refs |
+| Server Region_S extraction | ✅ data / 🔄 gameplay | `MapSpawnCoverage.json` facts above | Spawn AI/scheduling/runtime parity |
+| Region_S object catalog/action executor | 🔄 | 453 object records, 299 deterministic actions | Full object script semantics not globally proven |
+| Region_S trap script resolver/executor | 🔄 | 817/817 resolved, 804 deterministic, 13 deferred | Port ClearSkill/Tong/CityWar deferred families |
+| Minimap/click-to-move/bounds | 🔄 | services exist; user reported early blocking on 907 | Need reproduce/fix/verify full map 907 movement |
+| Waypoint/wharf/revive/scroll runtime | 🔄 | reference data exists; mismatches for waypoint/wharf | Dedicated count parity tests + skipped row reasons |
 
-| Claim cũ | Audit result |
-|---|---|
-| NPC definitions 2,000 `✅` | Data-level OK (`npcs.txt` 2,000 rows), nhưng dialog/level-script/AI không full PC behavior. |
-| Monster spawns 5,384 `✅` | Current proof là Region_S `67,680` records + visuals; `settings/normal.txt` 5,384 table chưa được chứng minh full port. Giữ `🔄`. |
-| NPC Dialog / NPC Level Scripts / Enemy AI `✅` | Overclaim: service/framework/generic AI, chưa execute PC Lua/semantic scripts. Giữ `🔄`. |
-| Mission Scripts 985 `✅` | Overclaim: `MissionScriptService` là metadata registry/helper, không full Lua executor. Giữ `🔄`. |
-| QuestService full quests `✅` | Contains hard-coded/sample quest chains; không phải full PC mission script parity. Giữ `🔄`. |
-| Server/VNG/Seasonal/Compensation events `✅` | Missing dedicated reference dirs/indexes for many event systems; parser/service skeleton only. Giữ `☐/🔄`. |
-| Tống Kim / Quốc Chiến / Hoa Sơn / CityWar `✅` | Core services exist, but full PC battle join/state/item/guild gates chưa proven; `CityWarJoinRouter` còn deferred. Giữ `🔄`. |
-| Battle Scripts 183 `✅` | Runtime has simplified/log/mock behavior; not full PC script semantics. Giữ `🔄`. |
-| Guild Scripts 65 `✅` | PC `script/tong` Lua not executed; `GuildScriptService.ExecuteScript()` mostly validate/log/return. `TongMapEntrance` traps deferred. Giữ `🔄`. |
+### 2. Factions
 
-### 7.4 UI / visual / infrastructure / scripts claims cũ
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| 10 faction enum/static runtime | 🔄 | `CombatDefinition`, `CombatFactionExt`, `SkillSectCatalog` exist | Parse/verify against PC faction data; fix UI text/element mismatches |
+| Faction selection UI | 🔄 | `FactionScreen` exists | PC text/layout/selection flow tests |
+| Ngũ hành mapping | 🔄 | core mapping exists | Full 10-faction PC element audit; known UI/catalog mismatches |
+| Chính/Tà/Trung lập alignment | 🔄/☐ | relation/framework services exist | PC alignment source-of-truth and tests |
+| Faction titles 81 | ✅ data/service | `Reference/PcTitle/factiontitle.txt`, parser/service/tests exist | Visual/effect parity not fully audited |
+| Faction maps 33 | ☐ | expected `faction_map.txt` missing | Add correct PC source + parser + count test |
 
-| Claim cũ | Audit result |
-|---|---|
-| Test count `1771/1771 EditMode`, `25/25 PlayMode` | Not verified; no TestResults artifact in audit. Must rerun Unity tests before recording exact pass count. |
-| HUD Art / Client UI `✅` | Dirty HUD WIP exists and is excluded; committed baseline has many assets/tests but not 100% PC HUD parity. Giữ `🔄`. |
-| GM teleport/browser evidence | User-owned/out-of-scope; không dùng làm proof cho map/UI port audit. |
-| Male/Female/Mount/NPC visual `✅` | Base runtime/catalog/tests exist; full PC equipment/layer/wardrobe/mount coverage chưa audit. Giữ `🔄`, except SPR decoder/runtime core can be `✅`. |
-| Multi-language toàn UI `✅` | Overclaim; many Vietnamese labels exist, full localization audit chưa làm. Giữ `🔄`. |
-| Section 14 GBK dirs `✅` | Treat as registry/parser coverage, not semantic script execution. Giữ `🔄`. |
-| Section 15 Server Scripts `✅` | Contradicts old summary “Lua Scripts ~0%”; use `🔄 indexed/cataloged, semantic runtime partial` until full Lua semantics are implemented. |
+### 3. Skills / missiles
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Base skill catalog 1,216 | ✅ data | `PcSkill/skills.txt` 1,216 rows | Full skill behavior/formula/script parity |
+| Extended skills | 🔄 | local `ModSkills.txt` 1,554 rows | Import/verify PC `skills1.txt` 1,712 rows or document scope |
+| Skill templates 219 | ☐/🔄 | expected source missing; parser path suspect | Copy correct PC `skilltemplate.txt`; parser/test exact 219 |
+| Weapon/thief skill data | ✅ data | 32 + 4 rows | Runtime behavior tests |
+| 10 faction skill sets | 🔄 | static `SkillSectCatalog` + tests | PC skill tree/script parity and catalog text fixes |
+| Special/NPC/translife skills | ☐/🔄 | expected files missing/default service counts likely 0 | Add correct data/files or downgrade permanently |
+| Skill level up | 🔄 | level/progression services exist | PC formula/Lua parity proof |
+| Missile effects | 🔄 | local missile rows 441+441 | Verify correct PC missile count and effect SPR coverage |
+| Skill icons/animations | 🔄 | partial visual services/tests | All-skill icon/animation provenance audit |
+| Skill damage formula | 🔄 | `PcSkillDamageService` and `DamageFormulaService` partial | KNpc/KSkill parity and broader formula tests |
+| Meridian 128 | ✅ data/service | `meridian_level.txt` 128 rows; service/tests | Full effect/UX parity audit |
+
+### 4. NPCs / monsters
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| NPC templates 2,000 | ✅ data | `PcNpc/npcs.txt` 2,000 rows; full parser exists | Behavior/scripts/AI hooks |
+| Region_S static spawns | ✅ data / 🔄 runtime | 67,680 NPC records; 375/375 resType sprites | AI, respawn, level scripts, combat behavior |
+| `normal.txt` spawn table 5,384 | 🔄/☐ | only `normal_sample.txt` seen locally | Add/audit full table or remove claim |
+| Rare/gold boss tables | ✅ data | 480 rare, 32 goldboss rows | Schedule/event behavior |
+| NPC dialog | 🔄 | `NpcDialogueService` exists but hard-coded/default assumptions reported | PC `script/dailogsys` semantic execution |
+| NPC level scripts 58 | 🔄 | parser/service exists | Execute PC level script semantics |
+| Enemy AI | 🔄 | generic `EnemyAiService` exists | PC AI/script parity |
+| NPC visual | ✅ data / 🔄 full visual | `NpcSpriteCoverage.json` 375/375 | All NPC animation/state verification |
+
+### 5. Items / economy
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Core item/equipment data | ✅ data | exact counts in verified data table | Behavior/economy parity by subsystem |
+| Magic attributes | ✅ data | 330 rows; old 333 false | Formula/application parity |
+| Set bonus/enhance/refine | 🔄 | services/tests exist | PC source exact formula audit |
+| Compound/recipe | ✅ data / 🔄 craft | 1,294 recipes; craft UI/execution partial | Inventory consume/result execution |
+| Quest items | ✅ data/service | 2,045 quest keys | Full quest usage semantics |
+| Shop/auction/stall/economy | 🔄 | data/services exist | NPC shop UX and server economy behavior parity |
+| Item exchange | ☐/🔄 | default data dir missing | Add source data/runtime |
+| Hongbao | ✅ data / 🔄 runtime | data exists; default runtime dir missing | Fix service path/runtime tests |
+| Drop rates | 🔄 | `PcDropRate` has many tables; services exist | Loot behavior parity tests |
+
+### 6. Missions / quests
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Quest framework | 🔄 | `QuestService` exists; hard-coded/sample chains reported | PC mission quest import/execution |
+| Mission script metadata | 🔄 | `MissionScriptService` is metadata/helper, not Lua VM | Implement/verify semantic executor or mark indexed only |
+| Adventure entries 1,037 | ✅ data | exact row count | Runtime quest integration |
+| Task/random/talk/event configs | 🔄 | config services/parsers exist | PC behavior and side-effect tests |
+| Newtask/tollgate/mission arena/maze/qianchong configs | 🔄 | services exist | Full mission flow parity |
+
+### 7. Events / activities
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Activity/HuoYueDu services | 🔄 | services/reference config files exist | Exact PC count/source and runtime parity |
+| Server events 455 | 🔄/☐ | PC has Lua; local dedicated event index dirs missing | Add index/source and semantic executor |
+| VNG events/features | 🔄/☐ | expected local dirs missing | Add source/index and tests |
+| Seasonal/compensation/bingo/flipcard | 🔄/☐ | services exist but dedicated dirs missing for several | Add data/runtime proof |
+| Event scripts | 🔄 indexed only | `EventScriptService` metadata registry | Full Lua semantic execution |
+
+### 8. Combat / PvP / battles
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Core combat/damage/projectile/buff/death/PK services | 🔄 | services and tests exist | PC formula/skill/PvP semantic parity |
+| Tống Kim maps/rebirth traps | 🔄 | map alias counts, some rebirth traps ported | Full battlefield state/scoring/join/award behavior |
+| CityWar | 🔄 | config/service exists; `CityWarJoinRouter` deferred | Join card, Tong gates, mission state, rewards |
+| Quốc Chiến/Hoa Sơn | 🔄/☐ | service hints exist; dedicated source proof weak/missing | Add PC source evidence/runtime tests |
+| Battle scripts 183 | 🔄 indexed/mock | `BattleScriptRuntimeService` simplified/log behavior reported; dirs missing | Full PC battle Lua semantics |
+| Battle awards/double EXP | 🔄 | services exist | PC event/schedule/effect parity |
+
+### 9. Guild / Tong / party
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Guild level data | ✅ data | 6 rows in `tong_level_data.txt` | Runtime behavior parity |
+| Guild creation/fund/contribution/workshop/task/rank/stunt | 🔄 | services/configs exist | PC server behavior and script side effects |
+| Guild scripts 65 | 🔄 indexed/framework | PC `script/tong` Lua not executed; service mostly validate/log/return | Semantic Lua execution or explicit indexed-only status |
+| Guild city war / Tong maps | 🔄 | `TongMapEntrance=8` and `CityWarJoinRouter=1` deferred | Tong ownership/ban/expire/enter-pos APIs |
+| Party system | 🔄 | party services/panels exist | Full PC team behavior, team trap entry, UI proof |
+
+### 10. Other systems
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Activity, partner/pet, title, shop, stall, foundry, lottery, flip card, honor, shitu, bonus, trip, guide, world rank, city defence | 🔄 | many services/tests exist | Row-by-row PC source/count/runtime parity not fully audited |
+| Weather/music/audio | 🔄 | services/config parsers exist | Map-specific PC parity and runtime proof |
+| GM tools | 🔄 excluded | user-owned GM teleport/browser changes are out of audit scope | Do not use as port completion proof without explicit user request |
+| Dialog system | 🔄 | service exists | PC dialog Lua execution |
+
+### 11. Player/NPC visuals and SPR runtime
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| SPR decoder/runtime/atlas core | ✅ core | `SprRuntimeService`, `SprDecoder`, `SprAtlasPacker`, tests exist | Direct PC PAK runtime loading not globally audited |
+| Male/female player visual | 🔄 | visual classes/catalog JSON/tests exist | Full PC equipment/layer/hair/weapon/action coverage |
+| Mount/horse visual | 🔄 | horse/mount services/catalogs/tests exist | Full palette/animation parity |
+| NPC visual | ✅ staged data / 🔄 runtime | `NpcSpriteCoverage` 375/375 | Full animation/state parity |
+
+### 12. Client / UI
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Mobile HUD baseline | 🔄 | committed services/tests exist; current HUD files dirty and excluded | Rerun tests/smoke after human HUD WIP is resolved |
+| HUD PC art | 🔄 | partial PC-derived subset exists | Not 100% PC HUD art/layout parity; verify asset provenance row-by-row |
+| Minimap/quest/inventory/map/chat/party/faction/shop panels | 🔄 | panels/services exist | Full PC behavior/UI parity not globally proven |
+| Touch input/camera rig | 🔄 | services exist | runtime/mobile tests needed |
+| Client skill scripts 722 | 🔄 indexed | service/tests exist | semantic script execution not proven |
+| Vietnamese text | 🔄 | many labels exist | full localization audit missing |
+
+### 13. Infrastructure / network / server-side
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Network protocol DTO/router | ✅ narrow | `NetworkMessageTypes.cs`, `MessageRouter.cs`, `NetworkProtocolTests.cs`; old 46 opcodes claim has code evidence | Integration with real server not audited |
+| Level/EXP | 🔄 | `PlayerLevelService` exists | PC formula/config parity proof |
+| Resource SPR loading | ✅ core / 🔄 PAK | SPR decoder/runtime tested | Full live PAK loading/provenance not globally audited |
+| Gateway/Bishop/S3Relay/Docker/DB/PaySys/backup | ☐ | server-side/outside Unity client | Requires server project/scope |
+
+### 14. GBK script directories
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| GBK area/town/faction/tong script registries | 🔄 indexed | `AreaScriptService`, `GbkMapScriptService`, `TownScriptService`, `FactionQuestAreaService`, `TongBattleScriptService` exist | Semantic script execution not proven for the 9 dirs/counts |
+
+### 15. Server scripts
+
+| Item | Status | Evidence | Required next proof/work |
+|---|---:|---|---|
+| Library/activity/mission/global/item/skill/event/task/battle/guild/VNG scripts | 🔄 indexed/cataloged | service/parser classes exist; many old counts are metadata, not executable proof | Full Lua semantic runtime still incomplete |
+| Region_S trap Lua subset | 🔄 partial runtime | 804/817 resolved trap actions deterministic; 13 deferred; 0 unclassified | Finish deferred families and broaden semantic executor as needed |
+
+## Old false-confidence claims now invalid
+
+Never restore these without stronger proof:
+
+- `Tổng thể ~100%`.
+- `1771/1771 EditMode` or `25/25 PlayMode` without fresh Unity Test Runner artifact.
+- Section 15 server scripts as `✅` complete.
+- Section 14 GBK dirs as semantic `✅`.
+- Mission/event/battle/guild scripts as full runtime `✅` merely because metadata services exist.
+- Faction maps 33 `✅` while `faction_map.txt` is missing.
+- Extended skills 1,712 `✅` while local data is 1,554 rows and PC `skills1.txt` full import is unproven.
+- Skill templates 219, special skills 58, NPC skills 43, translife skills 9 as `✅` while expected source files are missing.
+- Item exchange and hongbao runtime as `✅` while expected runtime dirs are missing/path-mismatched.
+- HUD/UI/GM teleport claims based on dirty or user-owned changes.
+
+## Completion criteria before future `✅`
+
+For each future status row, cite at least one of:
+
+1. Exact PC file path and exact parsed count, with current file present in `Assets/StreamingAssets/Reference` or generated catalog.
+2. Runtime code path that consumes the data.
+3. Test/verifier that asserts the exact count and one representative behavior.
+4. For Lua/scripts: semantic side effects implemented and tested, not just script name/function metadata.
+5. For visual/UI: exact PC asset provenance and rendered/smoke proof.
+
+## Immediate map-port priorities
+
+1. Fix/verify map 907 movement bounds/minimap/click-to-move after user reported early blocking.
+2. Port remaining resolved deferred trap families from PC source: `ClearSkillTeamEnterHole`, then `TongMapEntrance`, then `CityWarJoinRouter`.
+3. Add exact count tests for waypoint/wharf/revive mismatches.
+4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
