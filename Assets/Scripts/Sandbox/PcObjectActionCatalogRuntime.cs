@@ -82,6 +82,7 @@ namespace VLTK.Sandbox
         public string[] missingItemMessages;
         public string[] elseMessages;
         public PcObjectActionBranch[] branches;
+        public PcObjectActionChoice[] choices;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -90,6 +91,7 @@ namespace VLTK.Sandbox
         public bool IsTaskMissingItemPickupMessage => string.Equals(actionKind, "TaskMissingItemPickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskItemConsumeMessage => string.Equals(actionKind, "TaskItemConsumeMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskItemBranchMessage => string.Equals(actionKind, "TaskItemBranchMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsPromptBranchMessage => string.Equals(actionKind, "PromptBranchMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskTalkMessage => string.Equals(actionKind, "TaskTalkMessage", StringComparison.OrdinalIgnoreCase);
@@ -106,6 +108,15 @@ namespace VLTK.Sandbox
     public sealed class PcObjectActionBranch
     {
         public string label;
+        public PcObjectActionCondition[] conditions;
+        public PcObjectActionEffect[] effects;
+    }
+
+    [Serializable]
+    public sealed class PcObjectActionChoice
+    {
+        public string label;
+        public string promptMessage;
         public PcObjectActionCondition[] conditions;
         public PcObjectActionEffect[] effects;
     }
@@ -133,9 +144,13 @@ namespace VLTK.Sandbox
         public int itemId;
         public int byteIndex;
         public int bitIndex;
+        public int compareByteIndex;
+        public int setByteIndex;
         public int[] itemIds;
         public int[] itemCounts;
         public string message;
+        public string failureMessage;
+        public string noteMessage;
         public string[] messages;
     }
 

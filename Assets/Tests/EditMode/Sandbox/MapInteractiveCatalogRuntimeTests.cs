@@ -200,6 +200,8 @@ namespace VLTK.Tests.Sandbox
             public readonly List<string> notes = new();
             public bool openedBox;
             public int[] ladderIds;
+            public string promptMessage;
+            public string[] promptChoices;
 
             public void PostMessage(string nextMessage)
             {
@@ -210,6 +212,12 @@ namespace VLTK.Tests.Sandbox
             public void AddNote(string note) => notes.Add(note);
             public void OpenBox() => openedBox = true;
             public void ShowLadder(int[] nextLadderIds) => ladderIds = nextLadderIds;
+            public void ShowPrompt(string nextPromptMessage, string[] nextPromptChoices)
+            {
+                promptMessage = nextPromptMessage;
+                promptChoices = nextPromptChoices;
+                PostMessage(nextPromptMessage);
+            }
         }
 
         [Test]
@@ -254,13 +262,14 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(289, catalog.Count);
+            Assert.AreEqual(293, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
             Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
+            Assert.AreEqual(4, catalog.entries.Count(e => e != null && e.IsPromptBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -346,6 +355,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(6, ironTowerMechanism.branches.Length);
             Assert.AreEqual("task_12820_key_160_bit1_complete", ironTowerMechanism.branches[0].label);
             Assert.AreEqual("SetTaskBit", ironTowerMechanism.branches[0].effects[1].type);
+            var guyangMechanism = catalog.Find(@"\script\西北北区\古阳洞\obj\地图_机关1.lua");
+            Assert.IsNotNull(guyangMechanism);
+            Assert.IsTrue(guyangMechanism.IsPromptBranchMessage);
+            Assert.AreEqual(4, guyangMechanism.choices.Length);
+            Assert.AreEqual("Mở ra", guyangMechanism.choices[0].label);
+            Assert.AreEqual("CompleteIfTaskBytesEqual", guyangMechanism.choices[0].effects[2].type);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -1248,6 +1263,96 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("branch=3", result.detail);
         }
 
+
+
+        [Test]
+        public void PcObjectActionExecutor_PromptBranchMessage_PreservesGuyangSwitchCallbacks()
+        {
+            var completeEffect = new PcObjectActionEffect
+            {
+                type = "CompleteIfTaskBytesEqual",
+                taskId = 41,
+                byteIndex = 2,
+                compareByteIndex = 3,
+                setByteIndex = 1,
+                value = 100,
+                itemIds = new[] { 352 },
+                itemCounts = new[] { 1 },
+                messages = new[] { "success talk", "success msg" },
+                failureMessage = "still closed",
+                noteMessage = "saved note",
+            };
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\guyang.lua",
+                        actionKind = "PromptBranchMessage",
+                        choices = new[]
+                        {
+                            new PcObjectActionChoice
+                            {
+                                label = "Mở ra",
+                                promptMessage = "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+                                conditions = new[]
+                                {
+                                    new PcObjectActionCondition { type = "TaskByteEquals", taskId = 41, byteIndex = 1, value = 30 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 352 },
+                                    new PcObjectActionCondition { type = "TaskBitEquals", taskId = 41, bitIndex = 9, value = 0 },
+                                },
+                                effects = new[]
+                                {
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Cơ quan đã mở ra" },
+                                    new PcObjectActionEffect { type = "SetTaskBit", taskId = 41, bitIndex = 9, value = 1 },
+                                    completeEffect,
+                                },
+                            },
+                            new PcObjectActionChoice
+                            {
+                                label = "Cứ tiếp tục đóng cửa",
+                                promptMessage = "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+                                conditions = new[]
+                                {
+                                    new PcObjectActionCondition { type = "TaskByteEquals", taskId = 41, byteIndex = 1, value = 30 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 352 },
+                                    new PcObjectActionCondition { type = "TaskBitEquals", taskId = 41, bitIndex = 9, value = 0 },
+                                },
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Cơ quan đã khóa lại" } },
+                            },
+                        },
+                    },
+                },
+            };
+            var obj = new MapInteractiveObject { script = @"\script\guyang.lua" };
+            int activeTask = 30 | (1 << 16);
+            var host = new FakeTrapTravelHost { taskValues = { [41] = activeTask }, itemCounts = { [352] = 1 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+            Assert.AreEqual("Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?", sideEffects.promptMessage);
+            CollectionAssert.AreEqual(new[] { "Mở ra", "Cứ tiếp tục đóng cửa" }, sideEffects.promptChoices);
+            StringAssert.Contains("choices=2", result.detail);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecuteChoice(obj, 0, out result));
+            Assert.AreEqual(100 | (1 << 8) | (1 << 16), host.GetTaskValue(41));
+            Assert.IsFalse(host.HaveItem(352, 1));
+            CollectionAssert.AreEqual(new[] { "Cơ quan đã mở ra", "success talk", "success msg" }, sideEffects.messages);
+            CollectionAssert.AreEqual(new[] { "saved note" }, sideEffects.notes);
+            StringAssert.Contains("choice=0", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [41] = 30 | (2 << 16) }, itemCounts = { [352] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecuteChoice(obj, 0, out result));
+            Assert.AreEqual(30 | (1 << 8) | (2 << 16), host.GetTaskValue(41));
+            Assert.IsTrue(host.HaveItem(352, 1));
+            CollectionAssert.AreEqual(new[] { "Cơ quan đã mở ra", "still closed" }, sideEffects.messages);
+        }
 
         [Test]
         public void PcObjectActionExecutor_TaskItemBranchMessage_PreservesTangMenTabletBranches()

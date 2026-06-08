@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T12:29:21Z",
+  "generatedAtUtc": "2026-06-08T12:59:44Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -4121,6 +4121,930 @@
       "fightState": -1,
       "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
       "reviveId": 66
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\古阳洞\\obj\\地图_机关1.lua",
+      "scriptId": 579950757,
+      "scriptIdHex": "0x229158A5",
+      "sourceRelPath": "script\\西北北区\\古阳洞\\obj\\地图_机关1.lua",
+      "actionKind": "PromptBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): Say prompt choices with deterministic callback effects over GetTask/GetByte/GetBit/HaveItem and PC Msg2Player/Talk/AddNote side effects; no auto-choice without UI",
+      "choices": [
+        {
+          "label": "Mở ra",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy",
+              "noteMessage": "Bạn đã phá được Cơ quan, cứu được Tiểu Quyên"
+            }
+          ]
+        },
+        {
+          "label": "Cứ tiếp tục đóng cửa",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy",
+              "noteMessage": "Bạn đã phá được Cơ quan, cứu được Tiểu Quyên"
+            }
+          ]
+        },
+        {
+          "label": "Tiếp tục mở cửa",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy",
+              "noteMessage": "Bạn đã phá được Cơ quan, cứu được Tiểu Quyên"
+            }
+          ]
+        },
+        {
+          "label": "Đóng",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 9,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy",
+              "noteMessage": "Bạn đã phá được Cơ quan, cứu được Tiểu Quyên"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\古阳洞\\obj\\地图_机关2.lua",
+      "scriptId": 1062834351,
+      "scriptIdHex": "0x3F5990AF",
+      "sourceRelPath": "script\\西北北区\\古阳洞\\obj\\地图_机关2.lua",
+      "actionKind": "PromptBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): Say prompt choices with deterministic callback effects over GetTask/GetByte/GetBit/HaveItem and PC Msg2Player/Talk/AddNote side effects; no auto-choice without UI",
+      "choices": [
+        {
+          "label": "Mở ra",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Cứ tiếp tục đóng cửa",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Tiếp tục mở cửa",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Đóng",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 10,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\古阳洞\\obj\\地图_机关3.lua",
+      "scriptId": 939665577,
+      "scriptIdHex": "0x380228A9",
+      "sourceRelPath": "script\\西北北区\\古阳洞\\obj\\地图_机关3.lua",
+      "actionKind": "PromptBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): Say prompt choices with deterministic callback effects over GetTask/GetByte/GetBit/HaveItem and PC Msg2Player/Talk/AddNote side effects; no auto-choice without UI",
+      "choices": [
+        {
+          "label": "Mở ra",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Cứ tiếp tục đóng cửa",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Tiếp tục mở cửa",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Đóng",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 11,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\古阳洞\\obj\\地图_机关4.lua",
+      "scriptId": 885743795,
+      "scriptIdHex": "0x34CB60B3",
+      "sourceRelPath": "script\\西北北区\\古阳洞\\obj\\地图_机关4.lua",
+      "actionKind": "PromptBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): Say prompt choices with deterministic callback effects over GetTask/GetByte/GetBit/HaveItem and PC Msg2Player/Talk/AddNote side effects; no auto-choice without UI",
+      "choices": [
+        {
+          "label": "Mở ra",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Cứ tiếp tục đóng cửa",
+          "promptMessage": "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Tiếp tục mở cửa",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã mở ra"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 1
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        },
+        {
+          "label": "Đóng",
+          "promptMessage": "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
+          "conditions": [
+            {
+              "type": "TaskByteEquals",
+              "taskId": 41,
+              "byteIndex": 1,
+              "value": 30
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 352,
+              "count": 1
+            },
+            {
+              "type": "TaskBitEquals",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Cơ quan đã khóa lại"
+            },
+            {
+              "type": "SetTaskBit",
+              "taskId": 41,
+              "bitIndex": 12,
+              "value": 0
+            },
+            {
+              "type": "CompleteIfTaskBytesEqual",
+              "taskId": 41,
+              "byteIndex": 2,
+              "compareByteIndex": 3,
+              "setByteIndex": 1,
+              "value": 100,
+              "itemIds": [
+                352
+              ],
+              "itemCounts": [
+                1
+              ],
+              "messages": [
+                "Mở được cơ quan! Cứu thành công Tiểu Quyên",
+                "Bạn mở được cơ quan, cứu thành công Tiểu Quyên"
+              ],
+              "failureMessage": "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy"
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\西北北区\\昆仑派\\快活林迷宫\\obj\\捡拾_klen_山里红.lua",

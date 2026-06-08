@@ -29,6 +29,7 @@ namespace VLTK.Sandbox
         void AddNote(string note);
         void OpenBox();
         void ShowLadder(int[] ladderIds);
+        void ShowPrompt(string message, string[] choices);
     }
 
     public sealed class PcObjectActionExecutor
@@ -48,6 +49,16 @@ namespace VLTK.Sandbox
             => obj != null && _catalog?.Find(obj.script) != null;
 
         public bool TryExecute(MapInteractiveObject obj, out ObjectActionExecutionResult result)
+        {
+            return TryExecute(obj, -1, out result);
+        }
+
+        public bool TryExecuteChoice(MapInteractiveObject obj, int choiceIndex, out ObjectActionExecutionResult result)
+        {
+            return TryExecute(obj, choiceIndex, out result);
+        }
+
+        private bool TryExecute(MapInteractiveObject obj, int choiceIndex, out ObjectActionExecutionResult result)
         {
             result = null;
             if (obj == null || _catalog == null) return false;
@@ -232,6 +243,41 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsPromptBranchMessage)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+
+                var choices = AvailablePromptChoices(action);
+                if (choices.Count == 0)
+                {
+                    result = Success(action, "PromptBranchMessage(no matching prompt)");
+                    return true;
+                }
+
+                if (choiceIndex < 0)
+                {
+                    _sideEffects.ShowPrompt(choices[0].promptMessage, ChoiceLabels(choices));
+                    result = Success(action, $"PromptBranchMessage(prompt='{choices[0].promptMessage}', choices={choices.Count})");
+                    return true;
+                }
+
+                if (choiceIndex >= choices.Count)
+                {
+                    result = Failure(action, $"PromptBranchMessage invalid choice {choiceIndex}");
+                    return true;
+                }
+
+                var choice = choices[choiceIndex];
+                var stats = ApplyBranchEffects(choice.effects);
+                result = Success(action,
+                    $"PromptBranchMessage(choice={choiceIndex}, label='{choice.label}', effects={stats.effects}, consumed={stats.consumed}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks})");
+                return true;
+            }
+
             if (action.IsSayMessage)
             {
                 if (_sideEffects == null)
@@ -357,8 +403,18 @@ namespace VLTK.Sandbox
 
         private bool BranchMatches(PcObjectActionBranch branch)
         {
-            if (branch?.conditions == null || branch.conditions.Length == 0) return true;
-            foreach (var condition in branch.conditions)
+            return ConditionsMatch(branch?.conditions);
+        }
+
+        private bool ChoiceMatches(PcObjectActionChoice choice)
+        {
+            return ConditionsMatch(choice?.conditions);
+        }
+
+        private bool ConditionsMatch(PcObjectActionCondition[] conditions)
+        {
+            if (conditions == null || conditions.Length == 0) return true;
+            foreach (var condition in conditions)
             {
                 if (condition == null) continue;
                 string type = condition.type ?? string.Empty;
@@ -404,6 +460,30 @@ namespace VLTK.Sandbox
             return true;
         }
 
+        private List<PcObjectActionChoice> AvailablePromptChoices(PcObjectActionCatalogEntry action)
+        {
+            var result = new List<PcObjectActionChoice>();
+            if (action?.choices == null) return result;
+            string prompt = null;
+            foreach (var choice in action.choices)
+            {
+                if (choice == null || !ChoiceMatches(choice)) continue;
+                prompt ??= choice.promptMessage ?? string.Empty;
+                if (!string.Equals(prompt, choice.promptMessage ?? string.Empty, System.StringComparison.Ordinal)) continue;
+                result.Add(choice);
+            }
+            return result;
+        }
+
+        private static string[] ChoiceLabels(List<PcObjectActionChoice> choices)
+        {
+            if (choices == null || choices.Count == 0) return System.Array.Empty<string>();
+            var labels = new string[choices.Count];
+            for (int i = 0; i < choices.Count; i++)
+                labels[i] = choices[i]?.label ?? string.Empty;
+            return labels;
+        }
+
         private bool ValidateBranchConsumes(PcObjectActionBranch branch)
         {
             if (branch?.effects == null) return true;
@@ -417,9 +497,14 @@ namespace VLTK.Sandbox
 
         private BranchEffectStats ApplyBranchEffects(PcObjectActionBranch branch)
         {
+            return ApplyBranchEffects(branch?.effects);
+        }
+
+        private BranchEffectStats ApplyBranchEffects(PcObjectActionEffect[] effects)
+        {
             var stats = new BranchEffectStats();
-            if (branch?.effects == null) return stats;
-            foreach (var effect in branch.effects)
+            if (effects == null) return stats;
+            foreach (var effect in effects)
             {
                 if (effect == null) continue;
                 stats.effects++;
@@ -495,6 +580,33 @@ namespace VLTK.Sandbox
                             _sideEffects.PostMessage(message);
                             stats.messages++;
                         }
+                    }
+                }
+                else if (string.Equals(type, "CompleteIfTaskBytesEqual", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    int taskValue = _host.GetTaskValue(effect.taskId);
+                    int left = GetTaskByte(taskValue, effect.byteIndex);
+                    int right = GetTaskByte(taskValue, effect.compareByteIndex);
+                    if (left == right)
+                    {
+                        if (effect.setByteIndex > 0)
+                        {
+                            _host.SetTaskValue(effect.taskId, SetTaskByte(taskValue, effect.setByteIndex, effect.value));
+                            stats.setTasks++;
+                        }
+                        if (TryConsumeItems(effect.itemIds, effect.itemCounts))
+                            stats.consumed += effect.itemIds?.Length ?? 0;
+                        stats.messages += PostMessages(effect.messages);
+                        if (!string.IsNullOrWhiteSpace(effect.noteMessage))
+                        {
+                            _sideEffects.AddNote(effect.noteMessage);
+                            stats.notes++;
+                        }
+                    }
+                    else if (!string.IsNullOrWhiteSpace(effect.failureMessage))
+                    {
+                        _sideEffects.PostMessage(effect.failureMessage);
+                        stats.messages++;
                     }
                 }
             }
@@ -675,7 +787,19 @@ namespace VLTK.Sandbox
             SubsystemLog.Info("MapObject", $"PC ShowLadder({FormatInts(ladderIds)}) recorded");
         }
 
+        public void ShowPrompt(string message, string[] choices)
+        {
+            PostMessage(message);
+            SubsystemLog.Info("MapObject", $"PC Say prompt choices={FormatInts(choices)}");
+        }
+
         private static string FormatInts(int[] values)
+        {
+            if (values == null || values.Length == 0) return "[]";
+            return "[" + string.Join(",", values) + "]";
+        }
+
+        private static string FormatInts(string[] values)
         {
             if (values == null || values.Length == 0) return "[]";
             return "[" + string.Join(",", values) + "]";

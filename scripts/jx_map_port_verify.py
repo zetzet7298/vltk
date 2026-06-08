@@ -40,13 +40,14 @@ EXPECTED_OBJECT_SPRITES = 34
 EXPECTED_OBJECT_SCRIPT_REFS = 449
 EXPECTED_OBJECT_SCRIPTS = 299
 EXPECTED_RESOLVED_OBJECT_SCRIPTS = 299
-EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 289
+EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 293
 EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS = 7
 EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS = 19
 EXPECTED_DETERMINISTIC_OBJECT_TASK_OPTIONAL_PICKUP_MESSAGE_ACTIONS = 1
 EXPECTED_DETERMINISTIC_OBJECT_TASK_MISSING_ITEM_PICKUP_MESSAGE_ACTIONS = 2
 EXPECTED_DETERMINISTIC_OBJECT_TASK_ITEM_CONSUME_MESSAGE_ACTIONS = 3
 EXPECTED_DETERMINISTIC_OBJECT_TASK_ITEM_BRANCH_MESSAGE_ACTIONS = 16
+EXPECTED_DETERMINISTIC_OBJECT_PROMPT_BRANCH_MESSAGE_ACTIONS = 4
 EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 144
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_DETERMINISTIC_OBJECT_TASK_TALK_MESSAGE_ACTIONS = 1
@@ -503,6 +504,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     object_task_missing_item_pickup_message = sum(1 for e in object_actions if e.get('actionKind') == 'TaskMissingItemPickupMessage')
     object_task_item_consume_message = sum(1 for e in object_actions if e.get('actionKind') == 'TaskItemConsumeMessage')
     object_task_item_branch_message = sum(1 for e in object_actions if e.get('actionKind') == 'TaskItemBranchMessage')
+    object_prompt_branch_message = sum(1 for e in object_actions if e.get('actionKind') == 'PromptBranchMessage')
     object_say_message = sum(1 for e in object_actions if e.get('actionKind') == 'SayMessage')
     object_talk_message = sum(1 for e in object_actions if e.get('actionKind') == 'TalkMessage')
     object_task_talk_message = sum(1 for e in object_actions if e.get('actionKind') == 'TaskTalkMessage')
@@ -516,6 +518,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     audit.require(object_task_missing_item_pickup_message == EXPECTED_DETERMINISTIC_OBJECT_TASK_MISSING_ITEM_PICKUP_MESSAGE_ACTIONS, 'MapObjectActionCatalog TaskMissingItemPickupMessage count mismatch')
     audit.require(object_task_item_consume_message == EXPECTED_DETERMINISTIC_OBJECT_TASK_ITEM_CONSUME_MESSAGE_ACTIONS, 'MapObjectActionCatalog TaskItemConsumeMessage count mismatch')
     audit.require(object_task_item_branch_message == EXPECTED_DETERMINISTIC_OBJECT_TASK_ITEM_BRANCH_MESSAGE_ACTIONS, 'MapObjectActionCatalog TaskItemBranchMessage count mismatch')
+    audit.require(object_prompt_branch_message == EXPECTED_DETERMINISTIC_OBJECT_PROMPT_BRANCH_MESSAGE_ACTIONS, 'MapObjectActionCatalog PromptBranchMessage count mismatch')
     audit.require(object_say_message == EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS, 'MapObjectActionCatalog SayMessage count mismatch')
     audit.require(object_talk_message == EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS, 'MapObjectActionCatalog TalkMessage count mismatch')
     audit.require(object_task_talk_message == EXPECTED_DETERMINISTIC_OBJECT_TASK_TALK_MESSAGE_ACTIONS, 'MapObjectActionCatalog TaskTalkMessage count mismatch')
@@ -640,6 +643,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicObjectTaskMissingItemPickupMessageActions': object_task_missing_item_pickup_message,
         'deterministicObjectTaskItemConsumeMessageActions': object_task_item_consume_message,
         'deterministicObjectTaskItemBranchMessageActions': object_task_item_branch_message,
+        'deterministicObjectPromptBranchMessageActions': object_prompt_branch_message,
         'deterministicObjectSayMessageActions': object_say_message,
         'deterministicObjectTalkMessageActions': object_talk_message,
         'deterministicObjectTaskTalkMessageActions': object_task_talk_message,

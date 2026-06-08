@@ -1849,6 +1849,80 @@ def iron_tower_mechanism_branches(key_item_id: int, bit_index: int, completion_o
     ]
 
 
+def guyang_mechanism_choices(bit_index: int, add_note: bool) -> list[dict[str, Any]]:
+    locked_prompt = 'Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?'
+    open_prompt = 'Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?'
+
+    def conditions(bit_value: int) -> list[dict[str, Any]]:
+        return [
+            {'type': 'TaskByteEquals', 'taskId': 41, 'byteIndex': 1, 'value': 30},
+            {'type': 'HaveItem', 'itemId': 352, 'count': 1},
+            {'type': 'TaskBitEquals', 'taskId': 41, 'bitIndex': bit_index, 'value': bit_value},
+        ]
+
+    def toggle_effects(bit_value: int, message: str) -> list[dict[str, Any]]:
+        complete: dict[str, Any] = {
+            'type': 'CompleteIfTaskBytesEqual',
+            'taskId': 41,
+            'byteIndex': 2,
+            'compareByteIndex': 3,
+            'setByteIndex': 1,
+            'value': 100,
+            'itemIds': [352],
+            'itemCounts': [1],
+            'messages': ['Mở được cơ quan! Cứu thành công Tiểu Quyên', 'Bạn mở được cơ quan, cứu thành công Tiểu Quyên'],
+            'failureMessage': 'Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy',
+        }
+        if add_note:
+            complete['noteMessage'] = 'Bạn đã phá được Cơ quan, cứu được Tiểu Quyên'
+        return [
+            {'type': 'PostMessage', 'message': message},
+            {'type': 'SetTaskBit', 'taskId': 41, 'bitIndex': bit_index, 'value': bit_value},
+            complete,
+        ]
+
+    return [
+        {'label': 'Mở ra', 'promptMessage': locked_prompt, 'conditions': conditions(0), 'effects': toggle_effects(1, 'Cơ quan đã mở ra')},
+        {'label': 'Cứ tiếp tục đóng cửa', 'promptMessage': locked_prompt, 'conditions': conditions(0), 'effects': toggle_effects(0, 'Cơ quan đã khóa lại')},
+        {'label': 'Tiếp tục mở cửa', 'promptMessage': open_prompt, 'conditions': conditions(1), 'effects': toggle_effects(1, 'Cơ quan đã mở ra')},
+        {'label': 'Đóng', 'promptMessage': open_prompt, 'conditions': conditions(1), 'effects': toggle_effects(0, 'Cơ quan đã khóa lại')},
+    ]
+
+
+OBJECT_PROMPT_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
+    '0x229158A5': {'sourceBitIndex': 9, 'choices': guyang_mechanism_choices(9, True)},
+    '0x3F5990AF': {'sourceBitIndex': 10, 'choices': guyang_mechanism_choices(10, False)},
+    '0x380228A9': {'sourceBitIndex': 11, 'choices': guyang_mechanism_choices(11, False)},
+    '0x34CB60B3': {'sourceBitIndex': 12, 'choices': guyang_mechanism_choices(12, False)},
+}
+
+
+def object_prompt_branch_message_action(script: dict[str, Any]) -> dict[str, Any] | None:
+    spec = OBJECT_PROMPT_BRANCH_MESSAGE_SPECS.get(script.get('scriptIdHex', ''))
+    if spec is None:
+        return None
+    clean_source = strip_lua_line_comments(script.get('sourceText', ''))
+    allowed = {'main', 'Turn_On', 'Turn_Off', 'Check_Switch', 'GetTask', 'SetTask', 'GetByte', 'SetByte', 'GetBit', 'SetBit', 'HaveItem', 'DelItem', 'AddNote', 'Msg2Player', 'Talk', 'Say', 'if', 'and'}
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(for|while|repeat|random|Include|NewWorld|SetPos|SetFightState|OpenBox|Earn|SetPropState)\b', clean_source):
+        return None
+    have_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'HaveItem', limit=4), 1)]
+    del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=4), 1)]
+    if have_items != [352] or del_items != [352]:
+        return None
+    bit_index = spec['sourceBitIndex']
+    if not re.search(rf'GetBit\s*\(\s*Uworld41\s*,\s*{bit_index}\s*\)\s*==\s*0', clean_source):
+        return None
+    if not re.search(rf'SetBit\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*{bit_index}\s*,\s*1\s*\)', clean_source):
+        return None
+    if not re.search(rf'SetBit\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*{bit_index}\s*,\s*0\s*\)', clean_source):
+        return None
+    if not re.search(r'GetByte\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*2\s*\).*?GetByte\s*\(\s*GetTask\s*\(\s*41\s*\)\s*,\s*3\s*\)', clean_source, re.S):
+        return None
+    return {'choices': spec['choices']}
+
+
 OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
     '0xC13AAB4E': {
         'branches': [
@@ -2582,6 +2656,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **task_item_branch,
             })
             continue
+        prompt_branch = object_prompt_branch_message_action(script)
+        if prompt_branch is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'PromptBranchMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): Say prompt choices with deterministic callback effects over GetTask/GetByte/GetBit/HaveItem and PC Msg2Player/Talk/AddNote side effects; no auto-choice without UI',
+                **prompt_branch,
+            })
+            continue
         task_talk = object_task_talk_message_action(source_text)
         if task_talk is not None:
             entries.append({
@@ -2638,6 +2728,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectTaskMissingItemPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskMissingItemPickupMessage'),
         'deterministicObjectTaskItemConsumeMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskItemConsumeMessage'),
         'deterministicObjectTaskItemBranchMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskItemBranchMessage'),
+        'deterministicObjectPromptBranchMessageActions': sum(1 for e in entries if e['actionKind'] == 'PromptBranchMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicObjectTaskTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskTalkMessage'),
