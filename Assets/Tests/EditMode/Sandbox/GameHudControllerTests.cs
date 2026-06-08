@@ -29,6 +29,14 @@ namespace VLTK.Tests.Sandbox
         private VisualElement _facePickerClose;
         private ScrollView _facePickerList;
         private Button _faceBtn;
+        private TextField _chatInput;
+        private VisualElement _sendBtn;
+        private VisualElement _chatTabAll;
+        private VisualElement _chatTabPrivate;
+        private VisualElement _chatTabRoom;
+        private VisualElement _chatTabGuild;
+        private VisualElement _chatTabFaction;
+        private VisualElement _chatTabOther;
         private VisualElement _utilityDock;
         private VisualElement _utilityActionRow;
         private VisualElement _utilityMenuRowA;
@@ -87,6 +95,16 @@ namespace VLTK.Tests.Sandbox
             _facePickerOverlay.Add(_facePickerList);
 
             _faceBtn = new Button { name = "FaceBtn" };
+            _chatInput = new TextField { name = "ChatInput" };
+            _sendBtn = new VisualElement { name = "SendBtn" };
+            _sendBtn.Add(new VisualElement { name = "SendBtnIcon" });
+            _chatTabAll = new VisualElement { name = "ChatTabAll" };
+            _chatTabPrivate = new VisualElement { name = "ChatTabPrivate" };
+            _chatTabRoom = new VisualElement { name = "ChatTabRoom" };
+            _chatTabGuild = new VisualElement { name = "ChatTabGuild" };
+            _chatTabFaction = new VisualElement { name = "ChatTabFaction" };
+            _chatTabOther = new VisualElement { name = "ChatTabOther" };
+            _chatTabAll.AddToClassList("active");
 
             _utilityToggleBtn = new VisualElement { name = "UtilityToggleBtn" };
             _utilityToggleLabel = new Label { name = "UtilityToggleLabel" };
@@ -139,6 +157,14 @@ namespace VLTK.Tests.Sandbox
             _root.Add(_stallCurrencySelector);
             _root.Add(_facePickerOverlay);
             _root.Add(_faceBtn);
+            _root.Add(_chatInput);
+            _root.Add(_sendBtn);
+            _root.Add(_chatTabAll);
+            _root.Add(_chatTabPrivate);
+            _root.Add(_chatTabRoom);
+            _root.Add(_chatTabGuild);
+            _root.Add(_chatTabFaction);
+            _root.Add(_chatTabOther);
             _root.Add(_utilityToggleBtn);
             _root.Add(_utilityDock);
             _root.Add(_skillPanel);
@@ -161,6 +187,7 @@ namespace VLTK.Tests.Sandbox
             SetPrivateField("_facePickerClose", _facePickerClose);
             SetPrivateField("_facePickerList", _facePickerList);
             SetPrivateField("_faceBtn", _faceBtn);
+            SetPrivateField("_chatInput", _chatInput);
             SetPrivateField("_utilityDock", _utilityDock);
             SetPrivateField("_utilityActionRow", _utilityActionRow);
             SetPrivateField("_utilityMenuRowA", _utilityMenuRowA);
@@ -267,6 +294,57 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("Cái Bang", labels[0].text);
             StringAssert.Contains("Đồng Đội", labels[1].text);
             StringAssert.Contains("Nga My", labels[1].text);
+        }
+
+        [Test]
+        public void MinimapPcButtons_ExposeSearchAndMarkerActions()
+        {
+            InvokePrivateMethod("OnMinimapSearchClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Tìm kiếm bản đồ", _pcToolTitle.text);
+
+            InvokePrivateMethod("OnMinimapMarkerClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Đánh dấu bản đồ", _pcToolTitle.text);
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("đánh dấu")));
+        }
+
+        [Test]
+        public void ChatTabsAndSendButton_ExposePcBottomChatControls()
+        {
+            InvokePrivateMethod("SelectChatChannel", ChatChannel.Guild);
+
+            Assert.AreEqual(ChatChannel.Guild, GetPrivateField<ChatChannel>("_selectedChatChannel"));
+            Assert.IsFalse(_chatTabAll.ClassListContains("active"));
+            Assert.IsTrue(_chatTabGuild.ClassListContains("active"));
+            Assert.IsFalse(_chatTabFaction.ClassListContains("active"));
+
+            _chatInput.value = "xin chào bang";
+            InvokePrivateMethod("OnSendChatClick");
+
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Chat", _pcToolTitle.text);
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Tin nhắn nháp: xin chào bang")));
+        }
+
+        [Test]
+        public void ChatService_UsesPcBottomChatChannelLabels()
+        {
+            Assert.AreEqual("Tất Cả", ChatService.ChannelNameVi(ChatChannel.All));
+            Assert.AreEqual("Mật", ChatService.ChannelNameVi(ChatChannel.Private));
+            Assert.AreEqual("Phòng", ChatService.ChannelNameVi(ChatChannel.Room));
+            Assert.AreEqual("Bang Hội", ChatService.ChannelNameVi(ChatChannel.Guild));
+            Assert.AreEqual("Môn Phái", ChatService.ChannelNameVi(ChatChannel.Faction));
+            Assert.AreEqual("Khác", ChatService.ChannelNameVi(ChatChannel.Other));
+
+            var chat = new ChatService();
+            chat.SetChannel(ChatChannel.Guild);
+            chat.SendPlayerMessage(ChatChannel.Guild, "Bang chủ", "Tập hợp");
+            var filtered = chat.GetFilteredMessages();
+            Assert.AreEqual(1, filtered.Count);
+            Assert.AreEqual(ChatChannel.Guild, filtered[0].channel);
         }
 
         [Test]

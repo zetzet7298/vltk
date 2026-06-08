@@ -20,8 +20,11 @@ namespace VLTK.Sandbox
         Map = 2,        // Khu vực / bản đồ hiện tại
         Team = 3,       // Đội / group
         Faction = 4,    // Môn phái
-        Private = 5,    // Riêng tư (whisper)
+        Private = 5,    // Mật / whisper
         System = 6,     // Thông báo hệ thống
+        Room = 7,       // Phòng chat PC
+        Guild = 8,      // Bang hội
+        Other = 9,      // Khác
     }
 
     /// <summary>A single chat message.</summary>
@@ -127,8 +130,11 @@ namespace VLTK.Sandbox
             ChatChannel.Map => "Khu Vực",
             ChatChannel.Team => "Đội",
             ChatChannel.Faction => "Môn Phái",
-            ChatChannel.Private => "Riêng",
+            ChatChannel.Private => "Mật",
             ChatChannel.System => "Hệ Thống",
+            ChatChannel.Room => "Phòng",
+            ChatChannel.Guild => "Bang Hội",
+            ChatChannel.Other => "Khác",
             _ => "???",
         };
 
@@ -140,6 +146,9 @@ namespace VLTK.Sandbox
             ChatChannel.Faction => new Color(0.9f, 0.6f, 1f),
             ChatChannel.Private => new Color(1f, 0.7f, 0.7f),
             ChatChannel.System => new Color(1f, 0.85f, 0.3f),
+            ChatChannel.Room => new Color(0.45f, 1f, 0.85f),
+            ChatChannel.Guild => new Color(0.35f, 0.9f, 0.45f),
+            ChatChannel.Other => new Color(0.95f, 0.95f, 0.65f),
             _ => Color.white,
         };
 
@@ -273,7 +282,7 @@ namespace VLTK.Sandbox
             hLayout.childControlHeight = true;
 
             // Channel tabs
-            foreach (ChatChannel ch in new[] { ChatChannel.All, ChatChannel.World, ChatChannel.Map, ChatChannel.Team, ChatChannel.Faction, ChatChannel.System })
+            foreach (ChatChannel ch in new[] { ChatChannel.All, ChatChannel.Private, ChatChannel.Room, ChatChannel.Guild, ChatChannel.Faction, ChatChannel.Other })
             {
                 var tabGo = new GameObject($"Tab_{ch}");
                 tabGo.transform.SetParent(_tabRoot, false);

@@ -52,6 +52,8 @@
             <ui:Label name="ScenePos" text="" class="hud-scene-pos"/>
             <ui:VisualElement name="MinimapBtns" class="hud-minimap-btns">
                 <ui:VisualElement name="ToggleMapBtn" class="hud-minimap-btn"/>
+                <ui:VisualElement name="MinimapSearchBtn" class="hud-minimap-btn"/>
+                <ui:VisualElement name="MinimapMarkerBtn" class="hud-minimap-btn"/>
                 <ui:VisualElement name="WorldMapBtn" class="hud-minimap-btn"/>
             </ui:VisualElement>
         </ui:VisualElement>
@@ -86,10 +88,18 @@
         <!-- ═══ CHAT AREA — PC bottom-left ═══ -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
             <ui:Label text="!! Hãy sử dụng hồi phục" class="hud-chat-warning"/>
+            <ui:VisualElement name="ChatTabs" class="hud-chat-tabs">
+                <ui:VisualElement name="ChatTabAll" class="hud-chat-tab active"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTabPrivate" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTabRoom" class="hud-chat-tab"><ui:Label text="Phòng" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTabGuild" class="hud-chat-tab"><ui:Label text="Bang hội" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTabFaction" class="hud-chat-tab"><ui:Label text="Môn phái" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTabOther" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
+            </ui:VisualElement>
             <ui:VisualElement class="hud-chat-input-row">
                 <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
-                <ui:Button name="FaceBtn" text="😊" class="hud-face-btn"/>
-                <ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/>
+                <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
+                <ui:VisualElement name="SendBtn" class="hud-send-btn"><ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/></ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
 

@@ -152,9 +152,9 @@
 
 .hud-minimap-btns {
     position: absolute;
-    left: 80px;
+    left: 56px;
     top: 136px;
-    width: 50px;
+    width: 74px;
     height: 14px;
     flex-direction: row;
     justify-content: flex-end;
@@ -169,8 +169,10 @@
     border-color: rgb(15,20,15);
     -unity-background-scale-mode: scale-to-fit;
 }
-#WorldMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_worldmap.png'); }
-#ToggleMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_toggle.png'); }
+#ToggleMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_local_pc.png'); }
+#MinimapSearchBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_search_pc.png'); }
+#MinimapMarkerBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_marker_pc.png'); }
+#WorldMapBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_world_pc.png'); }
 
 .hidden { display: none; }
 
@@ -309,46 +311,94 @@
 .hud-cb-page-tab-active { background-color: rgba(255,220,90,0.10); }
 
 
-/* ═══ CHAT AREA ═══ */
-/* Visual input chrome is baked into bottom_bar_bg.png from pc_hud.png; IMGUI draws text. */
+/* ═══ CHAT AREA — PC bottom-left channel tabs + face/send buttons ═══ */
 .hud-chat-panel {
     position: absolute;
-    left: 0px;
-    bottom: 106px;
-    width: 360px;
-    height: 70px;
+    left: 8px;
+    bottom: 92px;
+    width: 430px;
+    height: 82px;
     flex-direction: column;
     justify-content: flex-end;
+    z-index: 880;
 }
 
 .hud-chat-warning {
     display: none;
 }
 
+.hud-chat-tabs {
+    height: 30px;
+    flex-direction: row;
+    align-items: center;
+}
+
+.hud-chat-tab {
+    min-width: 46px;
+    height: 28px;
+    margin-right: 4px;
+    padding-left: 3px;
+    padding-right: 3px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.18);
+    border-width: 1px;
+    border-color: rgba(0,96,80,0.55);
+}
+
+.hud-chat-tab.active {
+    background-color: rgba(8,48,34,0.82);
+    border-color: rgb(0,205,170);
+}
+
+.hud-chat-tab-label {
+    color: rgb(0,255,210);
+    font-size: 12px;
+    -unity-text-align: middle-center;
+}
+
 .hud-chat-input-row {
-    display: none;
+    height: 32px;
+    flex-direction: row;
+    align-items: center;
+    background-color: rgba(0,0,0,0.28);
+    border-width: 1px;
+    border-color: rgba(0,90,80,0.45);
 }
 
 .hud-chat-input {
     flex-grow: 1;
-    height: 24px;
+    height: 28px;
     color: rgb(230,245,230);
     font-size: 12px;
-    background-color: rgba(0,0,0,0.45);
+    background-color: rgba(0,0,0,0.16);
     border-width: 0px;
 }
 
 .hud-face-btn {
     width: 30px;
-    height: 26px;
+    height: 30px;
+    margin-left: 3px;
+    margin-right: 3px;
     background-color: transparent;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png');
+    -unity-background-scale-mode: scale-to-fit;
+    border-width: 0px;
+}
+
+.hud-send-btn {
+    width: 30px;
+    height: 30px;
+    margin-right: 3px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0);
     border-width: 0px;
 }
 
 .hud-send-icon {
     width: 24px;
     height: 24px;
-    margin-right: 3px;
     -unity-background-scale-mode: scale-to-fit;
 }
 

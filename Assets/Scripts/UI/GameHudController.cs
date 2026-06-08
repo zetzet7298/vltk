@@ -100,6 +100,7 @@ namespace VLTK.UI
         private Label _hpText, _mpText, _staminaText, _expText;
         private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary;
         private TextField _chatInput;
+        private ChatChannel _selectedChatChannel = ChatChannel.All;
 
         // New HUD elements
         private VisualElement _buffPanel;
@@ -381,6 +382,14 @@ namespace VLTK.UI
             RegisterClick(root, "BtnRec", OnRecClick);
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
             RegisterClick(root, "PcToolClose", ClosePcToolPanel);
+            RegisterClick(root, "SendBtn", OnSendChatClick);
+            RegisterClick(root, "ChatTabAll", () => SelectChatChannel(ChatChannel.All));
+            RegisterClick(root, "ChatTabPrivate", () => SelectChatChannel(ChatChannel.Private));
+            RegisterClick(root, "ChatTabRoom", () => SelectChatChannel(ChatChannel.Room));
+            RegisterClick(root, "ChatTabGuild", () => SelectChatChannel(ChatChannel.Guild));
+            RegisterClick(root, "ChatTabFaction", () => SelectChatChannel(ChatChannel.Faction));
+            RegisterClick(root, "ChatTabOther", () => SelectChatChannel(ChatChannel.Other));
+            HighlightChatTab(_selectedChatChannel);
 
             if (_faceBtn != null)
             {
@@ -433,6 +442,8 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "MinimapContent");
             RegisterPreviewOpen(root, "PlayerDot");
             RegisterPreviewOpen(root, "ToggleMapBtn");
+            RegisterClick(root, "MinimapSearchBtn", OnMinimapSearchClick);
+            RegisterClick(root, "MinimapMarkerBtn", OnMinimapMarkerClick);
             RegisterPreviewOpen(root, "WorldMapBtn");
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
             RegisterClick(root, "CaiBangSkillClose", CloseSkillPanel);
@@ -554,11 +565,19 @@ namespace VLTK.UI
 
                 var toggleMap = root.Q("ToggleMapBtn");
                 if (toggleMap != null)
-                    LoadIcon(toggleMap, artPath, "小地图－世界大地图按钮_01");
+                    LoadIcon(toggleMap, artPath, "btn_minimap_local_pc");
+
+                var searchMap = root.Q("MinimapSearchBtn");
+                if (searchMap != null)
+                    LoadIcon(searchMap, artPath, "btn_minimap_search_pc");
+
+                var markerMap = root.Q("MinimapMarkerBtn");
+                if (markerMap != null)
+                    LoadIcon(markerMap, artPath, "btn_minimap_marker_pc");
 
                 var worldMap = root.Q("WorldMapBtn");
                 if (worldMap != null)
-                    LoadIcon(worldMap, artPath, "btn_worldmap");
+                    LoadIcon(worldMap, artPath, "btn_minimap_world_pc");
             }
             else
             {
@@ -1703,6 +1722,28 @@ namespace VLTK.UI
 
         public int CurrentUtilityBarMode => _utilityBarMode;
 
+        private void OnMinimapSearchClick()
+        {
+            OpenMapPreview();
+            OpenPcToolPanel("Tìm kiếm bản đồ", new[]
+            {
+                "Mở bản đồ lớn để tìm NPC/đường đi gần vị trí hiện tại.",
+                _sceneName != null ? $"Map: {_sceneName.text}" : "Map: --",
+            });
+            SubsystemLog.Info("HUD", "Open minimap search");
+        }
+
+        private void OnMinimapMarkerClick()
+        {
+            OpenMapPreview();
+            if (_mapPreviewCoords != null)
+                _mapPreviewCoords.text = _lastMoveTarget.HasValue
+                    ? $"Đánh dấu: {FormatPcScenePos(_lastMoveTarget.Value)}"
+                    : "Chạm bản đồ lớn để đánh dấu điểm đến";
+            OpenPcToolPanel("Đánh dấu bản đồ", new[] { _mapPreviewCoords?.text ?? "Chạm bản đồ lớn để đánh dấu điểm đến" });
+            SubsystemLog.Info("HUD", "Open minimap marker");
+        }
+
         private void OnRunClick()
         {
             var player = SandboxManager.Instance?.PlayerController;
@@ -1855,6 +1896,56 @@ namespace VLTK.UI
             }
             OpenPcToolPanel("Bang phái", rows);
             SubsystemLog.Info("HUD", "Open Faction/Guild panel");
+        }
+
+        private void SelectChatChannel(ChatChannel channel)
+        {
+            _selectedChatChannel = channel;
+            var chat = SandboxManager.Instance?.ChatService;
+            chat?.SetChannel(channel);
+            HighlightChatTab(channel);
+            _chatInput?.Focus();
+            SubsystemLog.Info("HUD", $"Select chat channel {ChatService.ChannelNameVi(channel)}");
+        }
+
+        private void HighlightChatTab(ChatChannel channel)
+        {
+            if (_boundRoot == null) return;
+            foreach (var pair in ChatTabButtons())
+                _boundRoot.Q(pair.buttonName)?.EnableInClassList("active", pair.channel == channel);
+        }
+
+        private static (string buttonName, ChatChannel channel)[] ChatTabButtons() => new[]
+        {
+            ("ChatTabAll", ChatChannel.All),
+            ("ChatTabPrivate", ChatChannel.Private),
+            ("ChatTabRoom", ChatChannel.Room),
+            ("ChatTabGuild", ChatChannel.Guild),
+            ("ChatTabFaction", ChatChannel.Faction),
+            ("ChatTabOther", ChatChannel.Other),
+        };
+
+        private void OnSendChatClick()
+        {
+            string text = _chatInput?.value?.Trim();
+            if (string.IsNullOrEmpty(text))
+            {
+                _chatInput?.Focus();
+                return;
+            }
+
+            var chat = SandboxManager.Instance?.ChatService;
+            if (chat != null)
+            {
+                var channel = chat.ActiveChannel == ChatChannel.All ? _selectedChatChannel : chat.ActiveChannel;
+                chat.SendPlayerMessage(channel, "Người chơi", text);
+                _chatInput.value = string.Empty;
+                SubsystemLog.Info("HUD", $"Send chat {ChatService.ChannelNameVi(channel)}: {text}");
+            }
+            else
+            {
+                OpenPcToolPanel("Chat", new[] { "Chat runtime chưa sẵn sàng.", $"Tin nhắn nháp: {text}" });
+            }
         }
 
         private void OnChatRoomClick()
