@@ -410,8 +410,9 @@ namespace VLTK.UI
             RegisterClick(root, "ChatMoveBtn", OnChatMoveClick);
             RegisterClick(root, "ChatShadowBtn", OnChatShadowClick);
             RegisterClick(root, "ChatScrollUpBtn", OnChatScrollUpClick);
-            RegisterClick(root, "ChatChannelToggleBtn", OnChatChannelToggleClick);
+            RegisterClick(root, "ChatScrollThumbBtn", OnChatScrollThumbClick);
             RegisterClick(root, "ChatScrollDownBtn", OnChatScrollDownClick);
+            RegisterClick(root, "ChatChannelToggleBtn", OnChatChannelToggleClick);
             RegisterClick(root, "ChatSysUpBtn", OnChatSystemUpClick);
             RegisterClick(root, "ChatSysOpenBtn", OnChatSystemOpenClick);
             RegisterClick(root, "ChatSysDownBtn", OnChatSystemDownClick);
@@ -2074,6 +2075,12 @@ namespace VLTK.UI
             _chatHistoryOffset = Mathf.Max(0, _chatHistoryOffset - 6);
             OpenPcToolPanel("Lịch sử chat", BuildChatHistoryRows());
             SubsystemLog.Info("HUD", $"Chat scroll down offset={_chatHistoryOffset}");
+        }
+
+        private void OnChatScrollThumbClick()
+        {
+            OpenPcToolPanel("Cuộn chat", BuildChatHistoryRows());
+            SubsystemLog.Info("HUD", $"Chat scrollbar thumb offset={_chatHistoryOffset}");
         }
 
         private void OnChatSystemUpClick()
