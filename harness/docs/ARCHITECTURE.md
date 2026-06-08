@@ -1,13 +1,10 @@
 # Architecture
 
-Stack: **Unity 6 LTS (6000.4.7f1)** · **C#** · **uGUI** · **MoonSharp** (Lua) ·
-**IL2CPP** (Android / iOS). See [ADR-0006](decisions/0006-unity6-csharp-mobile-stack.md).
+No application stack is selected yet.
 
-The project ports Võ Lâm Truyền Kỳ (JX Online 3) from PC (C++/DirectX/Lua) to
-Unity Mobile. Rendering uses SpriteRenderer (Built-in RP). Lua game scripts run
-via MoonSharp. Proprietary binary formats (SPR, PAK, MAP) are decoded by custom
-C# tooling. This document defines architecture layers and boundary rules that
-all implementation must follow.
+No application code exists yet. This document defines generic architecture
+questions and boundary rules that future implementation should adapt after a
+user-provided spec and stack decision exist.
 
 ## Discovery Before Shape
 

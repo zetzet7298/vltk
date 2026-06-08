@@ -41,6 +41,12 @@ indicators.
 The expected depth of a task trace: minimal for tiny work, standard for normal
 work, and detailed for high-risk work.
 
+## Verification Gate
+
+An advisory Harness check that runs or inspects mechanical proof before a task
+is closed. In Phase 4, `story verify <id>` executes a story's `verify_command`,
+and `trace --story <id>` warns when that story's verification has not passed.
+
 ## Context Phase
 
 A phase of an agent task that changes what context should be read, such as
@@ -56,9 +62,15 @@ database schema, changing a public contract, or discovering missing validation.
 A documentation, template, validation, backlog, or decision update that makes
 future agent work safer or easier.
 
+## Backlog Outcome Loop
+
+The feedback workflow for Harness improvements: record predicted impact when a
+backlog item is created, then record actual measured outcome when the item is
+closed so future agents can compare expectation with result.
+
 ## Durable Layer
 
-The SQLite database and CLI (`scripts/harness`) that stores operational records
+The SQLite database and CLI (`scripts/bin/harness-cli`) that stores operational records
 (intakes, stories, decisions, backlog items, traces) as structured, queryable
 data. Policy docs describe how to work; the durable layer stores what happened.
 

@@ -169,7 +169,6 @@ Khi cần tìm hoặc tra cứu bất kỳ **UI, icon, ảnh, SPR, PAK, hay tài
 5. **Collections namespace** — `Unity.Collections` không phải `System.Collections.Generic`
 
 <!-- HARNESS:BEGIN -->
-
 ## Harness
 
 This repo uses Harness. Before work, read:
@@ -179,30 +178,22 @@ This repo uses Harness. Before work, read:
 - `docs/FEATURE_INTAKE.md`
 - `docs/ARCHITECTURE.md`
 - `docs/CONTEXT_RULES.md`
-- `docs/PORT_STATUS.md` — **BẮT BUỘC** — Checklist trạng thái port PC→Mobile, luôn đọc trước khi bắt story mới để biết gì đã làm/g chưa làm.
-- `scripts/harness query matrix`
+- `scripts/bin/harness-cli query matrix` on macOS/Linux, or `.\scripts\bin\harness-cli.exe query matrix` on Windows
 
-Port Source-of-Truth Rule
+Use the Rust Harness CLI at `scripts/bin/harness-cli` on macOS/Linux or
+`scripts/bin/harness-cli.exe` on Windows as the main operational tool.
 
-`docs/PORT_STATUS.md` là bảng chân trị (source of truth) cho tiến độ port.
 
-- **Trước mỗi story**: đọc `docs/PORT_STATUS.md`, xác nhận section liên quan, check ✅/🔄/☐.
-- **Sau khi implement**: update status trong PORT_STATUS.md (☐ → 🔄 → ✅).
-- **Không đánh dấu ✅** nếu thiếu tests hoặc chưa verify.
-- PC reference docs: `/var/www/vltksource_new/docs/port_docs/` (00–17).
-- Mỗi story trong harness DB có field `notes` với `port-docs:` reference đến các file port_docs liên quan.
+## VLTK Mobile Harness Extension
 
-Use the Rust Harness CLI as the main operational tool. Run it through the
-stable repo-local entrypoint `scripts/harness`, which uses the prebuilt Rust
-binary at `scripts/bin/harness-cli` in installed projects.
+Project-specific source-of-truth additions for this repo:
 
-Durable Harness DB rule:
-
-- Chỉ dùng một durable Harness DB: `/var/www/vltk-mobile/harness/harness.db`.
-- Khi làm việc từ harness repo, chạy `scripts/harness ...` trong `/var/www/vltk-mobile/harness`.
-- Không tạo hoặc dùng `/var/www/vltk-mobile/harness.db` ở project root. Cụ thể: không `init`, `migrate`, `intake`, `story`, `trace` hay `query` vào DB ở repo root.
-- Nếu bắt buộc chạy từ `/var/www/vltk-mobile`, set `HARNESS_DB=/var/www/vltk-mobile/harness/harness.db` trước lệnh Harness.
-
+- `docs/PORT_STATUS.md` is the port-status truth matrix. Read it before starting any PC→Mobile port task and update it after implementation.
+- Do not mark a `PORT_STATUS.md` row `✅` unless exact code/catalog/source evidence and tests/verifier prove the stated narrow scope. Use `🔄` for parser/service/data-only or partial runtime.
+- PC reference docs live at `/var/www/vltksource_new/docs/port_docs/`.
+- Harness durable DB is `/var/www/vltk-mobile/harness/harness.db`.
+- When working from `/var/www/vltk-mobile/harness`, run Harness commands in this directory. Do not create or use `/var/www/vltk-mobile/harness.db` at project root.
+- If running Harness from `/var/www/vltk-mobile`, set `HARNESS_DB=/var/www/vltk-mobile/harness/harness.db` first.
 <!-- HARNESS:END -->
 
 ### Không tự ý tạo các tài liệu markdown trừ khi human cho phép
