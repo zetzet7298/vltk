@@ -78,6 +78,7 @@ namespace VLTK.Tests.Sandbox
             public int mapId = -1;
             public Vector2 position;
             public bool hasMap = true;
+            public int fightState = -1;
 
             public bool HasMap(int targetMapId) => hasMap;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
@@ -86,6 +87,7 @@ namespace VLTK.Tests.Sandbox
                 position = worldPosition;
             }
             public void SetPos(Vector2 worldPosition) => position = worldPosition;
+            public void SetFightState(int nextFightState) => fightState = nextFightState;
         }
 
         [Test]
@@ -133,7 +135,37 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(result.success);
             Assert.AreEqual(52, host.mapId);
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1729 * 32, 3225 * 32), host.position);
-            StringAssert.Contains("SetFightState(1) pending", result.detail);
+            Assert.AreEqual(1, host.fightState);
+            StringAssert.Contains("SetFightState(1)", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_NewWorldMissingMap_DoesNotApplyFightState()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 4321,
+                        trapIdHex = "0x000010E1",
+                        actionKind = "NewWorld",
+                        targetMapId = 999999,
+                        targetCellX = 100,
+                        targetCellY = 200,
+                        fightState = 0,
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost { hasMap = false };
+            var executor = new PcTrapActionExecutor(catalog, host);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 4321 }, out var result));
+
+            Assert.IsFalse(result.success);
+            Assert.AreEqual(-1, host.fightState);
+            StringAssert.Contains("target map 999999 missing", result.detail);
         }
 
         [Test]

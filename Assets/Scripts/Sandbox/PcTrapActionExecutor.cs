@@ -25,6 +25,7 @@ namespace VLTK.Sandbox
         bool HasMap(int mapId);
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
+        void SetFightState(int fightState);
     }
 
     public sealed class PcTrapActionExecutor : ITrapActionExecutor
@@ -59,6 +60,7 @@ namespace VLTK.Sandbox
                     result = Failure(action, $"target map {action.targetMapId} missing from catalog");
                     return true;
                 }
+                ApplyFightState(action);
                 _host.NewWorld(action.targetMapId, target);
                 result = Success(action, $"NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
                 return true;
@@ -66,6 +68,7 @@ namespace VLTK.Sandbox
 
             if (action.IsSetPos)
             {
+                ApplyFightState(action);
                 _host.SetPos(target);
                 result = Success(action, $"SetPos({action.targetCellX},{action.targetCellY}) -> {target}");
                 return true;
@@ -73,6 +76,12 @@ namespace VLTK.Sandbox
 
             result = Failure(action, $"unsupported trap action '{action.actionKind}'");
             return true;
+        }
+
+        private void ApplyFightState(PcTrapActionCatalogEntry action)
+        {
+            if (action.fightState >= 0)
+                _host.SetFightState(action.fightState);
         }
 
         private static TrapActionExecutionResult Success(PcTrapActionCatalogEntry action, string detail)
@@ -83,7 +92,7 @@ namespace VLTK.Sandbox
 
         private static string Detail(PcTrapActionCatalogEntry action, string detail)
         {
-            string fight = action.fightState >= 0 ? $", SetFightState({action.fightState}) pending" : string.Empty;
+            string fight = action.fightState >= 0 ? $", SetFightState({action.fightState})" : string.Empty;
             return $"{detail}{fight}; script={action.scriptPath}";
         }
     }
@@ -109,6 +118,11 @@ namespace VLTK.Sandbox
             var manager = SandboxManager.Instance;
             manager?.PlayerController?.PlaceAt(worldPosition, snapCamera: true);
             SubsystemLog.Info("Trap", $"PC SetPos trap moved player to {worldPosition}");
+        }
+
+        public void SetFightState(int fightState)
+        {
+            SandboxManager.Instance?.SetFightState(fightState);
         }
     }
 }

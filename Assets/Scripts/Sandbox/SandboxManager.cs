@@ -82,6 +82,7 @@ namespace VLTK.Sandbox
         public static SandboxManager Instance { get; private set; }
         public SandboxBootReport BootReport { get; private set; }
         public bool IsInitialized { get; private set; }
+        public int CurrentFightState { get; private set; } = 1;
         public AssetRegistry AssetRegistry { get; private set; }
         public MapManager MapManager { get; private set; }
         public MapRenderer MapRenderer { get; private set; }
@@ -1136,6 +1137,14 @@ namespace VLTK.Sandbox
             PlayerController.ResetMovementState();
             PlayerController.PlaceAt(spawn, snapCamera: false);
             SubsystemLog.Info("Sandbox", $"Player pre-placed at {spawn} for map {mapId}");
+        }
+
+        public int GetFightState() => CurrentFightState;
+
+        public void SetFightState(int fightState)
+        {
+            CurrentFightState = Mathf.Clamp(fightState, 0, 1);
+            SubsystemLog.Info("Sandbox", $"PC SetFightState({CurrentFightState}) applied");
         }
 
         private void ApplyActiveMapBoundsToPlayer()
