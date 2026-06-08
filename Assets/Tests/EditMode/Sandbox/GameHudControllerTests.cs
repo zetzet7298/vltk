@@ -155,6 +155,13 @@ namespace VLTK.Tests.Sandbox
             field.SetValue(_hud, value);
         }
 
+        private T GetPrivateField<T>(string fieldName)
+        {
+            var field = typeof(GameHudController).GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic);
+            Assert.IsNotNull(field, $"Field {fieldName} not found on GameHudController");
+            return (T)field.GetValue(_hud);
+        }
+
         private void InvokePrivateMethod(string methodName, params object[] args)
         {
             var method = typeof(GameHudController).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
@@ -267,6 +274,32 @@ namespace VLTK.Tests.Sandbox
             // Hide again
             InvokePrivateMethod("OnExchangeClick");
             Assert.IsTrue(_tradeInfoPanel.ClassListContains("hidden"));
+        }
+
+        [Test]
+        public void OnRecClick_StartsFrameRecorderAndWritesCaptureMetadata()
+        {
+            SetPrivateField("_recCaptureToDisk", false);
+
+            InvokePrivateMethod("OnRecClick");
+
+            Assert.IsTrue(GetPrivateField<bool>("_recEnabled"));
+            Assert.AreEqual(1, GetPrivateField<int>("_recFrameCount"));
+            string firstPath = GetPrivateField<string>("_recLastCapturePath");
+            StringAssert.Contains("VltkRecorder", firstPath);
+            StringAssert.EndsWith(".png", firstPath);
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Quay phim", _pcToolTitle.text);
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Đang ghi hình HUD")));
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Player_Recorder")));
+
+            InvokePrivateMethod("UpdateRecorder", 5f);
+            Assert.AreEqual(2, GetPrivateField<int>("_recFrameCount"));
+
+            InvokePrivateMethod("OnRecClick");
+            Assert.IsFalse(GetPrivateField<bool>("_recEnabled"));
+            Assert.IsFalse(_root.Q("BtnRec")?.ClassListContains("active") ?? false);
         }
 
         [Test]

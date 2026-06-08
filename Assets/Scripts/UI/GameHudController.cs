@@ -4,7 +4,9 @@
 // PC reference: 顶部控制条.ini, 玩家信息主界面.ini, 工具控制条.ini, 小地图_小.ini
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.Networking;
@@ -120,6 +122,11 @@ namespace VLTK.UI
         private bool _recEnabled;
         private bool _pkEnabled;
         private float _defaultRunSpeed;
+        private const float RecorderFrameIntervalSeconds = 5f;
+        private float _recFrameTimer;
+        private int _recFrameCount;
+        private string _recLastCapturePath;
+        private bool _recCaptureToDisk = true;
 
         // Inventory window (Hành Trang)
         private VisualElement _invWindow, _invClose, _invFrame;
@@ -219,6 +226,7 @@ namespace VLTK.UI
             if (!_initialized) return;
             SizeRootToScreen();
             UpdateBarsAndMinimap();
+            UpdateRecorder(Time.deltaTime);
         }
 
         private void EnsureRuntimeReady()
@@ -1899,9 +1907,69 @@ namespace VLTK.UI
         private void OnRecClick()
         {
             _recEnabled = !_recEnabled;
+            if (_recEnabled)
+            {
+                _recFrameCount = 0;
+                _recFrameTimer = RecorderFrameIntervalSeconds;
+                CaptureRecorderFrame();
+            }
             SetButtonActive("BtnRec", _recEnabled);
-            OpenPcToolPanel("Quay phim", new[] { _recEnabled ? "Đã bật chế độ ghi hình HUD." : "Đã tắt chế độ ghi hình HUD.", "PC source: Player_Recorder / 摄像机按钮." });
+            OpenPcToolPanel("Quay phim", BuildRecorderRows());
             SubsystemLog.Info("HUD", _recEnabled ? "Recorder on" : "Recorder off");
+        }
+
+        private void UpdateRecorder(float deltaTime)
+        {
+            if (!_recEnabled) return;
+            _recFrameTimer += Mathf.Max(0f, deltaTime);
+            if (_recFrameTimer < RecorderFrameIntervalSeconds) return;
+
+            CaptureRecorderFrame();
+        }
+
+        private IReadOnlyList<string> BuildRecorderRows()
+        {
+            var recSpec = HudBottomBarPcSpec.ToolControlBar["Rec"];
+            var rows = new List<string>
+            {
+                _recEnabled ? "Đang ghi hình HUD dạng chuỗi ảnh." : "Đã dừng ghi hình HUD.",
+                $"Khung đã lưu: {_recFrameCount}",
+                string.IsNullOrEmpty(_recLastCapturePath) ? "File cuối: --" : $"File cuối: {_recLastCapturePath}",
+                $"PC source: {recSpec.classType} / {recSpec.spr}",
+            };
+            return rows;
+        }
+
+        private string CaptureRecorderFrame()
+        {
+            _recFrameTimer = 0f;
+            string path = BuildRecorderCapturePath(DateTime.Now);
+            _recLastCapturePath = path;
+            _recFrameCount++;
+
+            if (!_recCaptureToDisk)
+                return path;
+
+            try
+            {
+                string dir = Path.GetDirectoryName(path);
+                if (!string.IsNullOrEmpty(dir))
+                    Directory.CreateDirectory(dir);
+                ScreenCapture.CaptureScreenshot(path);
+            }
+            catch (Exception ex)
+            {
+                _recLastCapturePath = $"Lỗi lưu: {ex.Message}";
+                SubsystemLog.Warn("HUD", $"Recorder capture failed: {ex.Message}");
+            }
+
+            return _recLastCapturePath;
+        }
+
+        private static string BuildRecorderCapturePath(DateTime now)
+        {
+            string stamp = now.ToString("yyyyMMdd_HHmmss_fff");
+            return Path.Combine(Application.persistentDataPath, "VltkRecorder", $"pc_hud_rec_{stamp}.png");
         }
 
         private void OnTreasureClick()
