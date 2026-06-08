@@ -5,6 +5,8 @@
         <!-- ═══ TOP STATUS BAR — PC 800 顶部控制条.ini / uid 8da7027d ═══ -->
         <!-- PC Main: Left=120, Top=0, Width=552, Height=17. Values are drawn by Vietnamese IMGUI overlay. -->
         <ui:VisualElement name="TopBarPanel" class="hud-top-bar-panel">
+            <!-- PC 主界面玩家信息窗口.ini [DateTime]: network/smooth status text at top-left. -->
+            <ui:Label name="PcConnectionStatusText" text="Hoạt động tốt" class="hud-pc-connection-status"/>
             <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
 
             <!-- Level number: PC Main.Left+35, Top=2, W=20, H=12 -->

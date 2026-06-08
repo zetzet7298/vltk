@@ -98,7 +98,7 @@ namespace VLTK.UI
         private VisualElement _skillPanel, _skillClose, _skillPageOne, _skillPageTwo;
         private ScrollView _skillList;
         private Label _hpText, _mpText, _staminaText, _expText;
-        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary;
+        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary, _pcConnectionStatus;
         private TextField _chatInput, _mapPosInput;
         private VisualElement _chatTabs;
         private Label _chatWarning;
@@ -318,6 +318,7 @@ namespace VLTK.UI
             _expText = root.Q<Label>("ExpText");
 
             _levelText = root.Q<Label>("LevelText");
+            _pcConnectionStatus = root.Q<Label>("PcConnectionStatusText");
             _sceneName = root.Q<Label>("SceneName");
             _scenePos = root.Q<Label>("ScenePos");
             _mapPosInput = root.Q<TextField>("MapPosInput");
@@ -850,6 +851,7 @@ namespace VLTK.UI
                 SetBar(_mpFill, _mpText, 50, 50);
                 SetBar(_staminaFill, _staminaText, 100, 100);
                 SetBar(_expFill, _expText, 0, 100, true);
+                UpdatePcConnectionStatus();
                 return;
             }
 
@@ -858,6 +860,7 @@ namespace VLTK.UI
             SetBar(_mpFill, _mpText, 50, 50);
             SetBar(_staminaFill, _staminaText, 100, 100);
             SetBar(_expFill, _expText, 0, 100, true);
+            UpdatePcConnectionStatus();
 
             var viMapName = ToVietnameseMapName(snap.mapName);
             if (_sceneName != null) _sceneName.text = viMapName;
@@ -867,6 +870,35 @@ namespace VLTK.UI
             EnsureMinimapTexture(snap);
             UpdateMinimapDots(snap);
             UpdateBuffs();
+        }
+
+
+        private void UpdatePcConnectionStatus()
+        {
+            if (_pcConnectionStatus == null) return;
+
+            float delta = Time.smoothDeltaTime > 0.0001f ? Time.smoothDeltaTime : Time.deltaTime;
+            int fps = Mathf.Clamp(Mathf.RoundToInt(1f / Mathf.Max(0.0001f, delta)), 0, 999);
+            string label;
+            Color color;
+            if (fps >= 45)
+            {
+                label = "Hoạt động tốt";
+                color = new Color(60f / 255f, 1f, 160f / 255f);
+            }
+            else if (fps >= 20)
+            {
+                label = "Quá đông";
+                color = new Color(1f, 200f / 255f, 0f);
+            }
+            else
+            {
+                label = "Bị giật";
+                color = Color.red;
+            }
+
+            _pcConnectionStatus.text = $"{label} {fps}";
+            _pcConnectionStatus.style.color = color;
         }
 
         private void EnsureMinimapTexture(HudSnapshot snap)

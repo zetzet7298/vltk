@@ -123,7 +123,7 @@ namespace VLTK.Tests.Sandbox
 
             string[] topStatusControls =
             {
-                "LevelText", "StaminaBarTrack", "HpBarTrack", "MpBarTrack", "ExpBarTrack", "RankText", "SceneName",
+                "PcConnectionStatusText", "LevelText", "StaminaBarTrack", "HpBarTrack", "MpBarTrack", "ExpBarTrack", "RankText", "SceneName",
             };
             string[] interactivePcButtons =
             {
@@ -159,6 +159,23 @@ namespace VLTK.Tests.Sandbox
                 StringAssert.Contains($"name=\"PcItemSlot{i}\"", uxml, $"PC quick item slot {i + 1} must remain present.");
                 StringAssert.Contains("RegisterClick(root, $\"PcItemSlot{slot}\", () => OnPcItemShortcutClick(slot))", controller);
             }
+        }
+
+        [Test]
+        public void PcMainDateTimeStatus_IsPortedFromMainHudIni()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            var css = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uss"));
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+
+            StringAssert.Contains("name=\"PcConnectionStatusText\"", uxml);
+            StringAssert.Contains("PC 主界面玩家信息窗口.ini [DateTime]", uxml);
+            StringAssert.Contains("left: 15px;", css);
+            StringAssert.Contains("top: 2px;", css);
+            StringAssert.Contains("Hoạt động tốt", controller);
+            StringAssert.Contains("Quá đông", controller);
+            StringAssert.Contains("Bị giật", controller);
+            StringAssert.Contains("UpdatePcConnectionStatus();", controller);
         }
 
         [Test]

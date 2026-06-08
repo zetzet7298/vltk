@@ -88,6 +88,21 @@
 .hud-exp-track .hud-bar-fill     { background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png'); }
 
 
+
+/* PC 主界面玩家信息窗口.ini [DateTime]: Smooth/Crowd/Block status text. */
+.hud-pc-connection-status {
+    position: absolute;
+    left: 15px;
+    top: 2px;
+    width: 120px;
+    height: 13px;
+    color: rgb(60,255,160);
+    font-size: 12px;
+    -unity-text-align: middle-left;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+}
+
 /* ═══ MINIMAP ═══ */
 .hud-minimap-panel {
     position: absolute;
