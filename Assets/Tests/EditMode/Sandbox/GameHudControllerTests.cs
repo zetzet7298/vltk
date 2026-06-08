@@ -35,6 +35,14 @@ namespace VLTK.Tests.Sandbox
         private VisualElement _utilityMenuRowB;
         private VisualElement _utilityToggleBtn;
         private Label _utilityToggleLabel;
+        private VisualElement _utilitySwitchBtn;
+        private Label _utilitySwitchLabel;
+        private VisualElement _skillPanel;
+        private ScrollView _skillList;
+        private Label _skillSummary;
+        private VisualElement _invWindow;
+        private ScrollView _invGrid;
+        private Label _invMoney;
         private VisualElement _pcToolPanel;
         private VisualElement _pcToolClose;
         private ScrollView _pcToolList;
@@ -85,12 +93,36 @@ namespace VLTK.Tests.Sandbox
             _utilityToggleBtn.Add(_utilityToggleLabel);
             _utilityDock = new VisualElement { name = "MobileUtilityDock" };
             _utilityDock.AddToClassList("hidden");
+            _utilitySwitchBtn = new VisualElement { name = "UtilitySwitchBtn" };
+            _utilitySwitchLabel = new Label { name = "UtilitySwitchLabel" };
+            _utilitySwitchBtn.Add(_utilitySwitchLabel);
             _utilityActionRow = new VisualElement { name = "MobileUtilityActionRow" };
             _utilityMenuRowA = new VisualElement { name = "MobileUtilityMenuRowA" };
             _utilityMenuRowB = new VisualElement { name = "MobileUtilityMenuRowB" };
+            foreach (string name in new[] { "BtnSit", "BtnRun", "BtnHorse", "BtnExchange", "BtnRec", "BtnPK", "BtnTreasure" })
+                _utilityActionRow.Add(CreateUtilityButton(name));
+            foreach (string name in new[] { "BtnStatus", "BtnItems", "BtnItemEx", "BtnSkills", "BtnTask" })
+                _utilityMenuRowA.Add(CreateUtilityButton(name));
+            foreach (string name in new[] { "BtnFriend", "BtnTeam", "BtnFaction", "BtnChatRoom", "BtnOptions" })
+                _utilityMenuRowB.Add(CreateUtilityButton(name));
+            _utilityDock.Add(_utilitySwitchBtn);
             _utilityDock.Add(_utilityActionRow);
             _utilityDock.Add(_utilityMenuRowA);
             _utilityDock.Add(_utilityMenuRowB);
+
+            _skillPanel = new VisualElement { name = "CaiBangSkillPanel" };
+            _skillPanel.AddToClassList("hidden");
+            _skillSummary = new Label { name = "CaiBangSkillSummary" };
+            _skillList = new ScrollView { name = "CaiBangSkillList" };
+            _skillPanel.Add(_skillSummary);
+            _skillPanel.Add(_skillList);
+
+            _invWindow = new VisualElement { name = "InventoryWindow" };
+            _invWindow.AddToClassList("hidden");
+            _invGrid = new ScrollView { name = "InventoryGrid" };
+            _invMoney = new Label { name = "InventoryMoney" };
+            _invWindow.Add(_invMoney);
+            _invWindow.Add(_invGrid);
 
             _pcToolPanel = new VisualElement { name = "PcToolPanel" };
             _pcToolPanel.AddToClassList("hidden");
@@ -109,6 +141,8 @@ namespace VLTK.Tests.Sandbox
             _root.Add(_faceBtn);
             _root.Add(_utilityToggleBtn);
             _root.Add(_utilityDock);
+            _root.Add(_skillPanel);
+            _root.Add(_invWindow);
             _root.Add(_pcToolPanel);
 
             // Set private fields via reflection
@@ -132,6 +166,13 @@ namespace VLTK.Tests.Sandbox
             SetPrivateField("_utilityMenuRowA", _utilityMenuRowA);
             SetPrivateField("_utilityMenuRowB", _utilityMenuRowB);
             SetPrivateField("_utilityToggleLabel", _utilityToggleLabel);
+            SetPrivateField("_utilitySwitchLabel", _utilitySwitchLabel);
+            SetPrivateField("_skillPanel", _skillPanel);
+            SetPrivateField("_skillList", _skillList);
+            SetPrivateField("_skillSummary", _skillSummary);
+            SetPrivateField("_invWindow", _invWindow);
+            SetPrivateField("_invGrid", _invGrid);
+            SetPrivateField("_invMoney", _invMoney);
             SetPrivateField("_pcToolPanel", _pcToolPanel);
             SetPrivateField("_pcToolClose", _pcToolClose);
             SetPrivateField("_pcToolList", _pcToolList);
@@ -146,6 +187,13 @@ namespace VLTK.Tests.Sandbox
             {
                 Object.DestroyImmediate(_go);
             }
+        }
+
+        private static VisualElement CreateUtilityButton(string name)
+        {
+            var button = new VisualElement { name = name };
+            button.Add(new VisualElement { name = name + "Icon" });
+            return button;
         }
 
         private void SetPrivateField(string fieldName, object value)
@@ -167,6 +215,18 @@ namespace VLTK.Tests.Sandbox
             var method = typeof(GameHudController).GetMethod(methodName, BindingFlags.Instance | BindingFlags.NonPublic);
             Assert.IsNotNull(method, $"Method {methodName} not found on GameHudController");
             return method.Invoke(_hud, args);
+        }
+
+        private void InvokeAndAssertPcTool(HashSet<string> covered, string pcKey, string methodName, string title, string rowContains = null)
+        {
+            covered.Add(pcKey);
+            InvokePrivateMethod(methodName);
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"), methodName + " should open PcToolPanel");
+            Assert.AreEqual(title, _pcToolTitle.text, methodName + " title");
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.Greater(labels.Count, 0, methodName + " should render at least one row");
+            if (!string.IsNullOrEmpty(rowContains))
+                Assert.IsTrue(labels.Exists(l => l.text.Contains(rowContains)), methodName + " should mention " + rowContains);
         }
 
         [Test]
@@ -210,7 +270,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void UtilityToggle_CyclesHiddenActionMenuHidden()
+        public void UtilityToggle_OpenCloseAndSwitchTogglesActionMenu()
         {
             Assert.AreEqual(0, _hud.CurrentUtilityBarMode);
             Assert.IsTrue(_utilityDock.ClassListContains("hidden"));
@@ -224,16 +284,27 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(_utilityMenuRowA.ClassListContains("hidden"));
             Assert.IsTrue(_utilityMenuRowB.ClassListContains("hidden"));
             Assert.IsTrue(_utilityToggleBtn.ClassListContains("active"));
-            Assert.AreEqual("Tác", _utilityToggleLabel.text);
+            Assert.IsFalse(_utilitySwitchBtn.ClassListContains("active"));
+            Assert.AreEqual("Ẩn", _utilityToggleLabel.text);
+            Assert.AreEqual("Menu", _utilitySwitchLabel.text);
 
-            InvokePrivateMethod("OnUtilityToggleClick");
+            InvokePrivateMethod("OnUtilitySwitchClick");
             Assert.AreEqual(2, _hud.CurrentUtilityBarMode);
             Assert.IsFalse(_utilityDock.ClassListContains("action-mode"));
             Assert.IsTrue(_utilityDock.ClassListContains("menu-mode"));
             Assert.IsTrue(_utilityActionRow.ClassListContains("hidden"));
             Assert.IsFalse(_utilityMenuRowA.ClassListContains("hidden"));
             Assert.IsFalse(_utilityMenuRowB.ClassListContains("hidden"));
-            Assert.AreEqual("Menu", _utilityToggleLabel.text);
+            Assert.IsTrue(_utilitySwitchBtn.ClassListContains("active"));
+            Assert.AreEqual("Ẩn", _utilityToggleLabel.text);
+            Assert.AreEqual("Tác", _utilitySwitchLabel.text);
+
+            InvokePrivateMethod("OnUtilitySwitchClick");
+            Assert.AreEqual(1, _hud.CurrentUtilityBarMode);
+            Assert.IsTrue(_utilityDock.ClassListContains("action-mode"));
+            Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
+            Assert.IsFalse(_utilitySwitchBtn.ClassListContains("active"));
+            Assert.AreEqual("Menu", _utilitySwitchLabel.text);
 
             InvokePrivateMethod("OnUtilityToggleClick");
             Assert.AreEqual(0, _hud.CurrentUtilityBarMode);
@@ -242,6 +313,62 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
             Assert.IsFalse(_utilityToggleBtn.ClassListContains("active"));
             Assert.AreEqual("Mở", _utilityToggleLabel.text);
+        }
+
+        [Test]
+        public void AllPcUtilityHandlers_ProduceExpectedMobileSideEffects()
+        {
+            var covered = new HashSet<string>();
+            SetPrivateField("_recCaptureToDisk", false);
+
+            covered.Add("Run");
+            InvokePrivateMethod("OnRunClick");
+            Assert.IsTrue(_root.Q("BtnRun").ClassListContains("active"));
+
+            InvokeAndAssertPcTool(covered, "Sit", "OnSitClick", "Ngồi", "Đang ngồi");
+            Assert.IsTrue(_root.Q("BtnSit").ClassListContains("active"));
+
+            InvokeAndAssertPcTool(covered, "Horse", "OnHorseClick", "Lên xuống ngựa", "Player runtime");
+
+            covered.Add("Exchange");
+            InvokePrivateMethod("OnExchangeClick");
+            Assert.IsFalse(_tradeInfoPanel.ClassListContains("hidden"));
+            StringAssert.Contains("Chưa chọn người chơi", _tradePartnerName.text);
+
+            InvokeAndAssertPcTool(covered, "Rec", "OnRecClick", "Quay phim", "Player_Recorder");
+            Assert.IsTrue(_root.Q("BtnRec").ClassListContains("active"));
+
+            InvokeAndAssertPcTool(covered, "PK", "OnPKClick", "PK", "Tự do");
+            Assert.IsTrue(_root.Q("BtnPK").ClassListContains("active"));
+
+            InvokeAndAssertPcTool(covered, "Treasure", "OnTreasureClick", "Bảo Vật", "Kỳ Trân Các");
+            InvokeAndAssertPcTool(covered, "Status", "OnStatusClick", CharacterPanelService.Title, "Sinh lực");
+
+            covered.Add("Items");
+            InvokePrivateMethod("OnItemsClick");
+            Assert.IsTrue(_hud.IsInventoryVisible);
+            Assert.AreEqual(InventoryPanelService.GridSlotCount, _hud.InventorySlotCount);
+
+            InvokeAndAssertPcTool(covered, "ItemEx", "OnItemExClick", "Túi hành trang", "Tổng rương");
+
+            covered.Add("Skills");
+            InvokePrivateMethod("OnSkillsClick");
+            Assert.IsTrue(_hud.IsSkillPanelVisible);
+            Assert.Greater(_hud.PcSkillPanelRowCount, 0);
+
+            InvokeAndAssertPcTool(covered, "Task", "OnTaskClick", "Nhiệm vụ", "Hoàn thành");
+            InvokeAndAssertPcTool(covered, "Friend", "OnFriendClick", "Bằng hữu", "Bằng hữu");
+
+            covered.Add("Team");
+            InvokePrivateMethod("OnTeamClick");
+            Assert.IsFalse(_teamPreview.ClassListContains("hidden"));
+            StringAssert.Contains("Chưa tham gia đội", _teamPreview.Q<Label>().text);
+
+            InvokeAndAssertPcTool(covered, "Faction", "OnFactionClick", "Bang phái", "Cấp bang");
+            InvokeAndAssertPcTool(covered, "ChatRoom", "OnChatRoomClick", "Phòng chat", "Chat runtime");
+            InvokeAndAssertPcTool(covered, "Options", "OnOptionsClick", "Hệ thống", "Cài Đặt");
+
+            CollectionAssert.AreEquivalent(HudBottomBarPcSpec.ToolControlBar.Keys, covered);
         }
 
         [Test]

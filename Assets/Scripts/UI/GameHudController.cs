@@ -112,7 +112,7 @@ namespace VLTK.UI
         private ScrollView _facePickerList;
         private Button _faceBtn;
         private VisualElement _utilityDock, _utilityActionRow, _utilityMenuRowA, _utilityMenuRowB;
-        private Label _utilityToggleLabel;
+        private Label _utilityToggleLabel, _utilitySwitchLabel;
         private VisualElement _pcToolPanel, _pcToolClose;
         private ScrollView _pcToolList;
         private Label _pcToolTitle;
@@ -171,6 +171,7 @@ namespace VLTK.UI
             // PC screen itself is the only authentic source. No flip needed
             // (already upright, unlike SPR-decoded icons).
             { "UtilityToggleBtn", "btn_options" },
+            { "UtilitySwitchBtn", "btn_options" },
             { "BtnRun", "btn_run" },
             { "BtnSit", "btn_sit" },
             { "BtnHorse", "btn_horse" },
@@ -346,6 +347,7 @@ namespace VLTK.UI
             _utilityMenuRowA = root.Q("MobileUtilityMenuRowA");
             _utilityMenuRowB = root.Q("MobileUtilityMenuRowB");
             _utilityToggleLabel = root.Q<Label>("UtilityToggleLabel");
+            _utilitySwitchLabel = root.Q<Label>("UtilitySwitchLabel");
             _pcToolPanel = root.Q("PcToolPanel");
             _pcToolClose = root.Q("PcToolClose");
             _pcToolList = root.Q<ScrollView>("PcToolList");
@@ -360,6 +362,7 @@ namespace VLTK.UI
             // Mobile-first HUD uses anchored controls instead of PC-coordinate hit proxies.
 
             RegisterClick(root, "UtilityToggleBtn", OnUtilityToggleClick);
+            RegisterClick(root, "UtilitySwitchBtn", OnUtilitySwitchClick);
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
@@ -1664,9 +1667,16 @@ namespace VLTK.UI
 
         private void OnUtilityToggleClick()
         {
-            var nextMode = _utilityBarMode == 0 ? 1 : (_utilityBarMode == 1 ? 2 : 0);
+            int nextMode = _utilityBarMode == 0 ? 1 : 0;
             ApplyUtilityBarMode(nextMode);
-            SubsystemLog.Info("HUD", nextMode == 0 ? "Hide utility bar" : (nextMode == 1 ? "Show action utility bar" : "Show menu utility bar"));
+            SubsystemLog.Info("HUD", nextMode == 0 ? "Hide utility bar" : "Show action utility bar");
+        }
+
+        private void OnUtilitySwitchClick()
+        {
+            int nextMode = _utilityBarMode == 2 ? 1 : 2;
+            ApplyUtilityBarMode(nextMode);
+            SubsystemLog.Info("HUD", nextMode == 1 ? "Switch to action utility bar" : "Switch to menu utility bar");
         }
 
         private void ApplyUtilityBarMode(int mode)
@@ -1683,9 +1693,12 @@ namespace VLTK.UI
             _utilityMenuRowA?.EnableInClassList("hidden", !showMenu);
             _utilityMenuRowB?.EnableInClassList("hidden", !showMenu);
             _boundRoot?.Q("UtilityToggleBtn")?.EnableInClassList("active", showDock);
+            _boundRoot?.Q("UtilitySwitchBtn")?.EnableInClassList("active", showMenu);
 
             if (_utilityToggleLabel != null)
-                _utilityToggleLabel.text = _utilityBarMode == 0 ? "Mở" : (_utilityBarMode == 1 ? "Tác" : "Menu");
+                _utilityToggleLabel.text = showDock ? "Ẩn" : "Mở";
+            if (_utilitySwitchLabel != null)
+                _utilitySwitchLabel.text = showMenu ? "Tác" : "Menu";
         }
 
         public int CurrentUtilityBarMode => _utilityBarMode;

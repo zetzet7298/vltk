@@ -100,9 +100,10 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Full PC utility set. Mobile UX: collapsed by default, toggles open beside the minimap. -->
+        <!-- Full PC utility set. Mobile UX: one button opens/closes, one switch swaps Tác vụ/Menu beside the minimap. -->
         <ui:VisualElement name="UtilityToggleBtn" class="hud-utility-toggle-btn"><ui:VisualElement name="UtilityToggleBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilityToggleLabel" text="Mở" class="hud-utility-toggle-label"/></ui:VisualElement>
         <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock hidden">
+            <ui:VisualElement name="UtilitySwitchBtn" class="hud-utility-switch-btn"><ui:VisualElement name="UtilitySwitchBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilitySwitchLabel" text="Menu" class="hud-utility-switch-label"/></ui:VisualElement>
             <ui:VisualElement name="MobileUtilityActionRow" class="hud-mobile-utility-row">
                 <ui:VisualElement name="BtnSit" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnRun" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>

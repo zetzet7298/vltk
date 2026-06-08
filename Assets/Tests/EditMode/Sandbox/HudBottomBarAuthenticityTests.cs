@@ -55,6 +55,7 @@ namespace VLTK.Tests.Sandbox
             var uxml = File.ReadAllText(uxmlPath);
 
             StringAssert.Contains("name=\"UtilityToggleBtn\"", uxml);
+            StringAssert.Contains("name=\"UtilitySwitchBtn\"", uxml);
             StringAssert.Contains("name=\"MobileUtilityDock\" class=\"hud-mobile-utility-dock hidden\"", uxml);
             StringAssert.Contains("name=\"MobileUtilityActionRow\"", uxml);
             StringAssert.Contains("name=\"MobileUtilityMenuRowA\"", uxml);
@@ -91,6 +92,10 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, iconFile)), iconFile + " must exist in StreamingAssets for mobile.");
                 StringAssert.Contains($"RegisterClick(root, \"{buttonName}\", {handlerName})", controller, buttonName + " must be wired to its handler.");
             }
+
+            Assert.IsTrue(icons.ContainsKey("UtilitySwitchBtn"), "Mobile bar switch must have a PC-derived icon mapping.");
+            Assert.AreEqual("btn_options", icons["UtilitySwitchBtn"], "Switch icon must reuse the PC Options art, not generated art.");
+            StringAssert.Contains("RegisterClick(root, \"UtilitySwitchBtn\", OnUtilitySwitchClick)", controller);
         }
 
         [Test]
