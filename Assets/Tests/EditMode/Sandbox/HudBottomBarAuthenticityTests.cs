@@ -27,6 +27,46 @@ namespace VLTK.Tests.Sandbox
             AssertTextureSize("btn_primary_attack.png", 42, 42);
             AssertTextureSize("btn_skill_empty_pc.png", 42, 42);
             AssertTextureSize("btn_treasure.png", 58, 58);
+
+            AssertTextureSize("btn_sit.png", 30, 30);
+            AssertTextureSize("btn_run.png", 30, 30);
+            AssertTextureSize("btn_horse.png", 30, 30);
+            AssertTextureSize("btn_exchange.png", 30, 30);
+            AssertTextureSize("btn_rec.png", 31, 31);
+            AssertTextureSize("btn_pk.png", 20, 20);
+            AssertTextureSize("btn_status.png", 20, 20);
+            AssertTextureSize("btn_items.png", 20, 20);
+            AssertTextureSize("btn_itemex.png", 28, 28);
+            AssertTextureSize("btn_skills.png", 20, 20);
+            AssertTextureSize("btn_task.png", 28, 28);
+            AssertTextureSize("btn_friend.png", 20, 20);
+            AssertTextureSize("btn_team.png", 20, 20);
+            AssertTextureSize("btn_faction.png", 20, 20);
+            AssertTextureSize("btn_chatroom.png", 28, 28);
+            AssertTextureSize("btn_options.png", 20, 20);
+        }
+
+        [Test]
+        public void FullPcUtilitySet_IsDeclaredBehindMinimapSideToggle()
+        {
+            var uxmlPath = Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml");
+            var uxml = File.ReadAllText(uxmlPath);
+
+            StringAssert.Contains("name=\"UtilityToggleBtn\"", uxml);
+            StringAssert.Contains("name=\"MobileUtilityDock\" class=\"hud-mobile-utility-dock hidden\"", uxml);
+            StringAssert.Contains("name=\"MobileUtilityActionRow\"", uxml);
+            StringAssert.Contains("name=\"MobileUtilityMenuRowA\"", uxml);
+            StringAssert.Contains("name=\"MobileUtilityMenuRowB\"", uxml);
+
+            foreach (var name in new[]
+            {
+                "BtnSit", "BtnRun", "BtnHorse", "BtnExchange", "BtnRec", "BtnPK", "BtnTreasure",
+                "BtnStatus", "BtnItems", "BtnItemEx", "BtnSkills", "BtnTask", "BtnFriend",
+                "BtnTeam", "BtnFaction", "BtnChatRoom", "BtnOptions"
+            })
+            {
+                StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist in the mobile HUD.");
+            }
         }
 
         [Test]
@@ -41,10 +81,23 @@ namespace VLTK.Tests.Sandbox
             AssertPixelsEqual(empty.GetPixel(20, 20), pc.GetPixel(416 + 20, 526 + 20), "empty skill crop must stay PC-derived");
             AssertPixelsEqual(treasure.GetPixel(29, 29), pc.GetPixel(742 + 29, 502 + 29), "treasure crop must stay PC-derived");
 
+            var itemEx = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_itemex.png"));
+            var task = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_task.png"));
+            var chatRoom = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chatroom.png"));
+            var rec = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_rec.png"));
+            AssertPixelsEqual(itemEx.GetPixel(14, 14), pc.GetPixel(522 + 14, 559 + 14), "ItemEx crop must stay PC-derived");
+            AssertPixelsEqual(task.GetPixel(14, 14), pc.GetPixel(584 + 14, 559 + 14), "Task crop must stay PC-derived");
+            AssertPixelsEqual(chatRoom.GetPixel(14, 14), pc.GetPixel(708 + 14, 559 + 14), "ChatRoom crop must stay PC-derived");
+            AssertPixelsEqual(rec.GetPixel(15, 15), pc.GetPixel(663 + 15, 502 + 15), "Recorder crop must stay PC-derived");
+
             Object.DestroyImmediate(pc);
             Object.DestroyImmediate(attack);
             Object.DestroyImmediate(empty);
             Object.DestroyImmediate(treasure);
+            Object.DestroyImmediate(itemEx);
+            Object.DestroyImmediate(task);
+            Object.DestroyImmediate(chatRoom);
+            Object.DestroyImmediate(rec);
         }
 
         [Test]
@@ -60,6 +113,10 @@ namespace VLTK.Tests.Sandbox
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_primary_attack.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_skill_empty_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_treasure.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_itemex.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_task.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chatroom.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_rec.png");
         }
 
         private static void AssertCriticalTextureImport(string assetPath)

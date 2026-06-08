@@ -180,16 +180,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void Controller_ItemsPcHitProxy_OpensInventoryAtBakedPcButton()
+        public void Controller_ItemsUtilityButtonHandler_OpensInventory()
         {
-            var go = new GameObject("InvHudHitProxyTest");
+            var go = new GameObject("InvHudUtilityButtonTest");
             try
             {
                 var hud = go.AddComponent<GameHudController>();
-                var root = new VisualElement { name = "GameHud" };
-                var bottom = new VisualElement { name = "BottomPanel" };
-                root.Add(bottom);
-
                 var invWindow = new VisualElement { name = "InventoryWindow" };
                 invWindow.AddToClassList("hidden");
                 var invGrid = new ScrollView { name = "InventoryGrid" };
@@ -198,17 +194,8 @@ namespace VLTK.Tests.Sandbox
                 SetField(hud, "_invGrid", invGrid);
                 SetField(hud, "_invMoney", invMoney);
 
-                InvokePrivate(hud, "RegisterInventoryPcHitProxy", root);
-                var proxy = bottom.Q("BtnItemsPcHitProxy");
-                Assert.IsNotNull(proxy, "PC Túi đồ hit proxy must exist over the baked bottom-bar icon");
-                Assert.AreEqual(PickingMode.Position, proxy.pickingMode);
-                Assert.AreEqual(611f * 1280f / 1024f, proxy.style.left.value.value, 0.01f);
-                Assert.AreEqual((728f - 680f) * 82f / 89f, proxy.style.top.value.value, 0.01f);
-
                 Assert.IsFalse(hud.IsInventoryVisible);
-                var evt = PointerDownEvent.GetPooled();
-                evt.target = proxy;
-                proxy.SendEvent(evt);
+                InvokePrivate(hud, "OnItemsClick");
                 Assert.IsTrue(hud.IsInventoryVisible);
                 Assert.AreEqual(28, hud.InventorySlotCount);
             }

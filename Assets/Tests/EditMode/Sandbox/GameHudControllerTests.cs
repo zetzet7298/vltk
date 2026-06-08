@@ -29,6 +29,16 @@ namespace VLTK.Tests.Sandbox
         private VisualElement _facePickerClose;
         private ScrollView _facePickerList;
         private Button _faceBtn;
+        private VisualElement _utilityDock;
+        private VisualElement _utilityActionRow;
+        private VisualElement _utilityMenuRowA;
+        private VisualElement _utilityMenuRowB;
+        private VisualElement _utilityToggleBtn;
+        private Label _utilityToggleLabel;
+        private VisualElement _pcToolPanel;
+        private VisualElement _pcToolClose;
+        private ScrollView _pcToolList;
+        private Label _pcToolTitle;
 
         [SetUp]
         public void Setup()
@@ -70,12 +80,36 @@ namespace VLTK.Tests.Sandbox
 
             _faceBtn = new Button { name = "FaceBtn" };
 
+            _utilityToggleBtn = new VisualElement { name = "UtilityToggleBtn" };
+            _utilityToggleLabel = new Label { name = "UtilityToggleLabel" };
+            _utilityToggleBtn.Add(_utilityToggleLabel);
+            _utilityDock = new VisualElement { name = "MobileUtilityDock" };
+            _utilityDock.AddToClassList("hidden");
+            _utilityActionRow = new VisualElement { name = "MobileUtilityActionRow" };
+            _utilityMenuRowA = new VisualElement { name = "MobileUtilityMenuRowA" };
+            _utilityMenuRowB = new VisualElement { name = "MobileUtilityMenuRowB" };
+            _utilityDock.Add(_utilityActionRow);
+            _utilityDock.Add(_utilityMenuRowA);
+            _utilityDock.Add(_utilityMenuRowB);
+
+            _pcToolPanel = new VisualElement { name = "PcToolPanel" };
+            _pcToolPanel.AddToClassList("hidden");
+            _pcToolClose = new VisualElement { name = "PcToolClose" };
+            _pcToolTitle = new Label { name = "PcToolTitle" };
+            _pcToolList = new ScrollView { name = "PcToolList" };
+            _pcToolPanel.Add(_pcToolClose);
+            _pcToolPanel.Add(_pcToolTitle);
+            _pcToolPanel.Add(_pcToolList);
+
             _root.Add(_buffPanel);
             _root.Add(_teamPreview);
             _root.Add(_tradeInfoPanel);
             _root.Add(_stallCurrencySelector);
             _root.Add(_facePickerOverlay);
             _root.Add(_faceBtn);
+            _root.Add(_utilityToggleBtn);
+            _root.Add(_utilityDock);
+            _root.Add(_pcToolPanel);
 
             // Set private fields via reflection
             SetPrivateField("_buffPanel", _buffPanel);
@@ -93,6 +127,16 @@ namespace VLTK.Tests.Sandbox
             SetPrivateField("_facePickerClose", _facePickerClose);
             SetPrivateField("_facePickerList", _facePickerList);
             SetPrivateField("_faceBtn", _faceBtn);
+            SetPrivateField("_utilityDock", _utilityDock);
+            SetPrivateField("_utilityActionRow", _utilityActionRow);
+            SetPrivateField("_utilityMenuRowA", _utilityMenuRowA);
+            SetPrivateField("_utilityMenuRowB", _utilityMenuRowB);
+            SetPrivateField("_utilityToggleLabel", _utilityToggleLabel);
+            SetPrivateField("_pcToolPanel", _pcToolPanel);
+            SetPrivateField("_pcToolClose", _pcToolClose);
+            SetPrivateField("_pcToolList", _pcToolList);
+            SetPrivateField("_pcToolTitle", _pcToolTitle);
+            SetPrivateField("_boundRoot", _root);
         }
 
         [TearDown]
@@ -136,18 +180,44 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void OnFactionClick_TogglesStallCurrencySelector()
+        public void UtilityToggle_CyclesHiddenActionMenuHidden()
         {
-            // Initially hidden
-            Assert.IsTrue(_stallCurrencySelector.ClassListContains("hidden"));
+            Assert.AreEqual(0, _hud.CurrentUtilityBarMode);
+            Assert.IsTrue(_utilityDock.ClassListContains("hidden"));
 
-            // Show
-            InvokePrivateMethod("OnFactionClick");
-            Assert.IsFalse(_stallCurrencySelector.ClassListContains("hidden"));
+            InvokePrivateMethod("OnUtilityToggleClick");
+            Assert.AreEqual(1, _hud.CurrentUtilityBarMode);
+            Assert.IsFalse(_utilityDock.ClassListContains("hidden"));
+            Assert.IsFalse(_utilityActionRow.ClassListContains("hidden"));
+            Assert.IsTrue(_utilityMenuRowA.ClassListContains("hidden"));
+            Assert.IsTrue(_utilityMenuRowB.ClassListContains("hidden"));
+            Assert.IsTrue(_utilityToggleBtn.ClassListContains("active"));
+            Assert.AreEqual("Tác", _utilityToggleLabel.text);
 
-            // Hide again
+            InvokePrivateMethod("OnUtilityToggleClick");
+            Assert.AreEqual(2, _hud.CurrentUtilityBarMode);
+            Assert.IsTrue(_utilityActionRow.ClassListContains("hidden"));
+            Assert.IsFalse(_utilityMenuRowA.ClassListContains("hidden"));
+            Assert.IsFalse(_utilityMenuRowB.ClassListContains("hidden"));
+            Assert.AreEqual("Menu", _utilityToggleLabel.text);
+
+            InvokePrivateMethod("OnUtilityToggleClick");
+            Assert.AreEqual(0, _hud.CurrentUtilityBarMode);
+            Assert.IsTrue(_utilityDock.ClassListContains("hidden"));
+            Assert.IsFalse(_utilityToggleBtn.ClassListContains("active"));
+            Assert.AreEqual("Mở", _utilityToggleLabel.text);
+        }
+
+        [Test]
+        public void OnFactionClick_OpensPcToolPanelWithGuildSummary()
+        {
+            Assert.IsTrue(_pcToolPanel.ClassListContains("hidden"));
+
             InvokePrivateMethod("OnFactionClick");
-            Assert.IsTrue(_stallCurrencySelector.ClassListContains("hidden"));
+
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Bang phái", _pcToolTitle.text);
+            Assert.Greater(_pcToolList.contentContainer.childCount, 0);
         }
 
         [Test]

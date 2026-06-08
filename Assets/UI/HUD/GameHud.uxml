@@ -100,19 +100,35 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom">
-            <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock">
+        <!-- Full PC utility set. Mobile UX: collapsed by default, toggles open beside the minimap. -->
+        <ui:VisualElement name="UtilityToggleBtn" class="hud-utility-toggle-btn"><ui:VisualElement name="UtilityToggleBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilityToggleLabel" text="Mở" class="hud-utility-toggle-label"/></ui:VisualElement>
+        <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock hidden">
+            <ui:VisualElement name="MobileUtilityActionRow" class="hud-mobile-utility-row">
+                <ui:VisualElement name="BtnSit" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnRun" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnHorse" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnExchange" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItems" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSkills" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTeam" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnFaction" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnRec" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnPK" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnTreasure" class="hud-mobile-treasure-btn"><ui:VisualElement name="BtnTreasureIcon" class="hud-treasure-icon"/></ui:VisualElement>
             </ui:VisualElement>
+            <ui:VisualElement name="MobileUtilityMenuRowA" class="hud-mobile-utility-row">
+                <ui:VisualElement name="BtnStatus" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnItems" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnItemEx" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnSkills" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTask" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTaskIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="MobileUtilityMenuRowB" class="hud-mobile-utility-row">
+                <ui:VisualElement name="BtnFriend" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFriendIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTeam" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnFaction" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnChatRoom" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnOptions" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnOptionsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
 
+        <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom">
             <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster">
                 <ui:VisualElement name="PrimaryAttackBtn" class="hud-primary-attack-btn"><ui:VisualElement name="PrimaryAttackBtnIcon" class="hud-primary-attack-icon"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot0" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-main"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/></ui:VisualElement>
@@ -130,6 +146,15 @@
 
         <!-- Team Preview -->
         <ui:VisualElement name="TeamPreview" class="hud-team-preview hidden">
+        </ui:VisualElement>
+
+        <!-- PC HUD tool panel: opened by Status/ItemEx/Task/Friend/Faction/ChatRoom/Options/Rec. -->
+        <ui:VisualElement name="PcToolPanel" class="hud-pc-tool-panel hidden">
+            <ui:VisualElement name="PcToolHeader" class="hud-pc-tool-header">
+                <ui:Label name="PcToolTitle" text="" class="hud-pc-tool-title"/>
+                <ui:VisualElement name="PcToolClose" class="hud-pc-tool-close"/>
+            </ui:VisualElement>
+            <ui:ScrollView name="PcToolList" class="hud-pc-tool-list"/>
         </ui:VisualElement>
 
         <!-- Trade Info Panel -->

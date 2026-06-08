@@ -109,6 +109,17 @@ namespace VLTK.UI
         private VisualElement _facePickerOverlay, _facePickerClose;
         private ScrollView _facePickerList;
         private Button _faceBtn;
+        private VisualElement _utilityDock, _utilityActionRow, _utilityMenuRowA, _utilityMenuRowB;
+        private Label _utilityToggleLabel;
+        private VisualElement _pcToolPanel, _pcToolClose;
+        private ScrollView _pcToolList;
+        private Label _pcToolTitle;
+        private int _utilityBarMode;
+        private bool _isRunning = true;
+        private bool _isSitting;
+        private bool _recEnabled;
+        private bool _pkEnabled;
+        private float _defaultRunSpeed;
 
         // Inventory window (Hành Trang)
         private VisualElement _invWindow, _invClose, _invFrame;
@@ -149,15 +160,22 @@ namespace VLTK.UI
             // button SPRs do not exist in any distributed PAK/manifest, so the
             // PC screen itself is the only authentic source. No flip needed
             // (already upright, unlike SPR-decoded icons).
+            { "UtilityToggleBtn", "btn_options" },
             { "BtnRun", "btn_run" },
             { "BtnSit", "btn_sit" },
             { "BtnHorse", "btn_horse" },
             { "BtnExchange", "btn_exchange" },
+            { "BtnRec", "btn_rec" },
             { "BtnStatus", "btn_status" },
             { "BtnItems", "btn_items" },
+            { "BtnItemEx", "btn_itemex" },
             { "BtnSkills", "btn_skills" },
+            { "BtnTask", "btn_task" },
+            { "BtnFriend", "btn_friend" },
             { "BtnTeam", "btn_team" },
             { "BtnFaction", "btn_faction" },
+            { "BtnChatRoom", "btn_chatroom" },
+            { "BtnOptions", "btn_options" },
             { "BtnPK", "btn_pk" },
             { "BtnTreasure", "btn_treasure" },
             { "PrimaryAttackBtn", "btn_primary_attack" },
@@ -312,6 +330,15 @@ namespace VLTK.UI
             _facePickerClose = root.Q("FacePickerClose");
             _facePickerList = root.Q<ScrollView>("FacePickerList");
             _faceBtn = root.Q<Button>("FaceBtn");
+            _utilityDock = root.Q("MobileUtilityDock");
+            _utilityActionRow = root.Q("MobileUtilityActionRow");
+            _utilityMenuRowA = root.Q("MobileUtilityMenuRowA");
+            _utilityMenuRowB = root.Q("MobileUtilityMenuRowB");
+            _utilityToggleLabel = root.Q<Label>("UtilityToggleLabel");
+            _pcToolPanel = root.Q("PcToolPanel");
+            _pcToolClose = root.Q("PcToolClose");
+            _pcToolList = root.Q<ScrollView>("PcToolList");
+            _pcToolTitle = root.Q<Label>("PcToolTitle");
 
             _invWindow = root.Q("InventoryWindow");
             _invFrame = root.Q("InventoryFrame");
@@ -321,17 +348,25 @@ namespace VLTK.UI
 
             // Mobile-first HUD uses anchored controls instead of PC-coordinate hit proxies.
 
+            RegisterClick(root, "UtilityToggleBtn", OnUtilityToggleClick);
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
             RegisterClick(root, "BtnStatus", OnStatusClick);
             RegisterClick(root, "BtnItems", OnItemsClick);
+            RegisterClick(root, "BtnItemEx", OnItemExClick);
             RegisterClick(root, "BtnSkills", OnSkillsClick);
+            RegisterClick(root, "BtnTask", OnTaskClick);
+            RegisterClick(root, "BtnFriend", OnFriendClick);
             RegisterClick(root, "BtnTeam", OnTeamClick);
             RegisterClick(root, "BtnFaction", OnFactionClick);
+            RegisterClick(root, "BtnChatRoom", OnChatRoomClick);
+            RegisterClick(root, "BtnOptions", OnOptionsClick);
             RegisterClick(root, "BtnPK", OnPKClick);
             RegisterClick(root, "BtnExchange", OnExchangeClick);
+            RegisterClick(root, "BtnRec", OnRecClick);
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
+            RegisterClick(root, "PcToolClose", ClosePcToolPanel);
 
             if (_faceBtn != null)
             {
@@ -435,6 +470,7 @@ namespace VLTK.UI
             }
 
             _boundRoot = root;
+            ApplyUtilityBarMode(_utilityBarMode);
             _initialized = true;
         }
 
@@ -1615,15 +1651,149 @@ namespace VLTK.UI
             return upgraded;
         }
 
-        private void OnRunClick() => SubsystemLog.Info("HUD", "Toggle Run/Walk");
-        private void OnSitClick() => SubsystemLog.Info("HUD", "Toggle Sit");
-        private void OnHorseClick() => SubsystemLog.Info("HUD", "Toggle Horse");
-        private void OnStatusClick() => SubsystemLog.Info("HUD", "Open Character Status");
+        private void OnUtilityToggleClick()
+        {
+            var nextMode = _utilityBarMode == 0 ? 1 : (_utilityBarMode == 1 ? 2 : 0);
+            ApplyUtilityBarMode(nextMode);
+            SubsystemLog.Info("HUD", nextMode == 0 ? "Hide utility bar" : (nextMode == 1 ? "Show action utility bar" : "Show menu utility bar"));
+        }
+
+        private void ApplyUtilityBarMode(int mode)
+        {
+            _utilityBarMode = Mathf.Clamp(mode, 0, 2);
+            bool showAction = _utilityBarMode == 1;
+            bool showMenu = _utilityBarMode == 2;
+            bool showDock = _utilityBarMode != 0;
+
+            _utilityDock?.EnableInClassList("hidden", !showDock);
+            _utilityActionRow?.EnableInClassList("hidden", !showAction);
+            _utilityMenuRowA?.EnableInClassList("hidden", !showMenu);
+            _utilityMenuRowB?.EnableInClassList("hidden", !showMenu);
+            _boundRoot?.Q("UtilityToggleBtn")?.EnableInClassList("active", showDock);
+
+            if (_utilityToggleLabel != null)
+                _utilityToggleLabel.text = _utilityBarMode == 0 ? "Mở" : (_utilityBarMode == 1 ? "Tác" : "Menu");
+        }
+
+        public int CurrentUtilityBarMode => _utilityBarMode;
+
+        private void OnRunClick()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player != null)
+            {
+                if (_defaultRunSpeed <= 0f)
+                    _defaultRunSpeed = Mathf.Max(1f, player.moveSpeed);
+                _isRunning = !_isRunning;
+                player.moveSpeed = _isRunning ? _defaultRunSpeed : _defaultRunSpeed * 0.5f;
+            }
+            SetButtonActive("BtnRun", _isRunning);
+            SubsystemLog.Info("HUD", _isRunning ? "Chạy bộ" : "Đi bộ");
+        }
+
+        private void OnSitClick()
+        {
+            _isSitting = !_isSitting;
+            if (_isSitting)
+                SandboxManager.Instance?.PlayerController?.ResetMovementState();
+            SetButtonActive("BtnSit", _isSitting);
+            OpenPcToolPanel("Ngồi", _isSitting ? new[] { "Đang ngồi tĩnh tọa", "Di chuyển hoặc chạm lại để đứng dậy." } : new[] { "Đã đứng dậy." });
+            SubsystemLog.Info("HUD", _isSitting ? "Sit enabled" : "Sit disabled");
+        }
+
+        private void OnHorseClick()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player != null)
+            {
+                if (player.Mount.IsMounted)
+                    player.Mount.Dismount();
+                else
+                    player.Mount.Mount(player.defaultHorseId > 0 ? player.defaultHorseId : 5);
+                SetButtonActive("BtnHorse", player.Mount.State == MountState.Mounted || player.Mount.State == MountState.Mounting);
+                SubsystemLog.Info("HUD", player.Mount.IsMounted ? "Dismount Horse" : "Mount Horse");
+            }
+            else
+            {
+                OpenPcToolPanel("Lên xuống ngựa", new[] { "Player runtime chưa sẵn sàng." });
+            }
+        }
+
+        private void OnStatusClick()
+        {
+            var manager = SandboxManager.Instance;
+            var snap = CharacterPanelService.BuildSnapshot(manager?.PlayerProgression, null, 1);
+            var rows = new List<string>
+            {
+                $"Tên: {snap.playerName}",
+                $"Cấp: {snap.level}",
+                $"Sinh lực: {snap.hp}/{snap.hpMax}",
+                $"Nội lực: {snap.mp}/{snap.mpMax}",
+                $"Thể lực: {snap.stamina}/{snap.staminaMax}",
+                $"Công/Thủ: {snap.attack}/{snap.defense}",
+                $"Chính xác/Né/Bạo/Đỡ: {snap.hit}/{snap.dodge}/{snap.crit}/{snap.block}",
+                $"Sức mạnh: {CharacterPanelService.ComputePowerLevel(snap)}",
+            };
+            OpenPcToolPanel(CharacterPanelService.Title, rows);
+            SubsystemLog.Info("HUD", "Open Character Status");
+        }
+
         private void OnItemsClick() => ToggleInventory();
+
+        private void OnItemExClick()
+        {
+            var snap = BagPanelService.BuildSnapshot(1);
+            var rows = new List<string> { $"Tổng rương: {snap.totalBags}", $"Ô: {snap.usedSlots}/{snap.totalSlots}" };
+            if (snap.rows != null)
+            {
+                foreach (var r in snap.rows)
+                    rows.Add($"{r.name}: {r.itemCount}/{r.slots} {(r.isFull ? BagPanelService.LabelFull : BagPanelService.LabelEmptySlot)}");
+            }
+            OpenPcToolPanel("Túi hành trang", rows);
+            SubsystemLog.Info("HUD", "Open ItemEx / Bag panel");
+        }
+
         private void OnSkillsClick() => OpenSkillPanel();
+
+        private void OnTaskClick()
+        {
+            var manager = SandboxManager.Instance;
+            var snap = DailyTaskPanelService.BuildSnapshot(manager?.DailyTaskService, 1);
+            var rows = new List<string> { $"Hoàn thành: {snap.completedCount}/{snap.totalCount}" };
+            if (snap.rows != null && snap.rows.Count > 0)
+            {
+                foreach (var r in snap.rows)
+                    rows.Add($"{r.taskName}: {r.progress}/{r.target} — {r.taskDesc}");
+            }
+            else
+            {
+                rows.Add("Chưa có nhiệm vụ đang theo dõi.");
+            }
+            OpenPcToolPanel("Nhiệm vụ", rows);
+            SubsystemLog.Info("HUD", "Open Task panel");
+        }
+
+        private void OnFriendClick()
+        {
+            var friends = SandboxManager.Instance?.FriendService?.GetFriends(1);
+            var rows = new List<string> { $"Bằng hữu: {(friends != null ? friends.Count : 0)}/{FriendService.MaxFriends}" };
+            if (friends != null && friends.Count > 0)
+            {
+                foreach (var f in friends)
+                    rows.Add($"{f.friendName} — cấp {f.level} — {(f.isOnline ? "online" : "offline")}");
+            }
+            else
+            {
+                rows.Add("Danh sách bằng hữu đang trống.");
+            }
+            OpenPcToolPanel("Bằng hữu", rows);
+            SubsystemLog.Info("HUD", "Open Friend panel");
+        }
+
 
         private void OnTeamClick()
         {
+            ClosePcToolPanel();
             if (_teamPreview != null)
             {
                 bool hide = !_teamPreview.ClassListContains("hidden");
@@ -1640,22 +1810,73 @@ namespace VLTK.UI
 
         private void OnFactionClick()
         {
-            // Toggle StallCurrencySelector
-            if (_stallCurrencySelector != null)
+            var manager = SandboxManager.Instance;
+            var snap = GuildPanelService.BuildSnapshot(manager?.GuildService, 1);
+            var rows = new List<string>
             {
-                bool hide = !_stallCurrencySelector.ClassListContains("hidden");
-                if (hide)
-                    _stallCurrencySelector.AddToClassList("hidden");
-                else
-                    _stallCurrencySelector.RemoveFromClassList("hidden");
-                SubsystemLog.Info("HUD", hide ? "Close Stall Currency" : "Open Stall Currency");
+                string.IsNullOrWhiteSpace(snap.guildName) ? "Chưa gia nhập bang phái." : $"Bang: {snap.guildName}",
+                $"Cấp bang: {snap.level}",
+                $"Quỹ bang: {snap.fund}",
+                $"Thành viên: {snap.memberCount}/{snap.maxMember}",
+            };
+            if (snap.rows != null)
+            {
+                foreach (var r in snap.rows)
+                    rows.Add($"{r.memberName} — {GuildPanelService.RankName(r.rank)} — {(r.isOnline ? "online" : "offline")}");
             }
+            OpenPcToolPanel("Bang phái", rows);
+            SubsystemLog.Info("HUD", "Open Faction/Guild panel");
         }
 
-        private void OnPKClick() => SubsystemLog.Info("HUD", "Toggle PK");
+        private void OnChatRoomClick()
+        {
+            var chat = SandboxManager.Instance?.ChatService;
+            var rows = new List<string>();
+            if (chat != null)
+            {
+                chat.SetChannel(ChatChannel.All);
+                rows.Add($"Kênh: {ChatService.ChannelNameVi(chat.ActiveChannel)}");
+                var messages = chat.GetFilteredMessages(8);
+                if (messages.Count == 0)
+                    rows.Add("Chưa có tin nhắn.");
+                foreach (var msg in messages)
+                    rows.Add($"[{ChatService.ChannelNameVi(msg.channel)}] {msg.senderName}: {msg.text}");
+                _chatInput?.Focus();
+            }
+            else
+            {
+                rows.Add("Chat runtime chưa sẵn sàng.");
+            }
+            OpenPcToolPanel("Phòng chat", rows);
+            SubsystemLog.Info("HUD", "Open ChatRoom panel");
+        }
+
+        private void OnOptionsClick()
+        {
+            var snap = SystemMenuPanelService.BuildSnapshot();
+            var rows = new List<string>();
+            if (snap.rows != null)
+            {
+                foreach (var r in snap.rows)
+                    rows.Add($"{r.name}: {r.description}");
+            }
+            OpenPcToolPanel("Hệ thống", rows);
+            SubsystemLog.Info("HUD", "Open System Options");
+        }
+
+        private void OnPKClick()
+        {
+            _pkEnabled = !_pkEnabled;
+            var pk = SandboxManager.Instance?.GameplayLoop?.PkRules;
+            pk?.SetPkMode(_pkEnabled ? PkMode.Free : PkMode.Peace);
+            SetButtonActive("BtnPK", _pkEnabled);
+            OpenPcToolPanel("PK", new[] { _pkEnabled ? "PK: Tự do" : "PK: Hòa bình" });
+            SubsystemLog.Info("HUD", _pkEnabled ? "Enable PK Free" : "Disable PK / Peace");
+        }
 
         private void OnExchangeClick()
         {
+            ClosePcToolPanel();
             if (_tradeInfoPanel != null)
             {
                 bool hide = !_tradeInfoPanel.ClassListContains("hidden");
@@ -1670,12 +1891,64 @@ namespace VLTK.UI
             }
         }
 
-        private void OnTreasureClick() => SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
-
-        private void OnPcToolPlaceholderClick(string key)
+        private void OnRecClick()
         {
-            if (HudBottomBarPcSpec.ToolControlBar.TryGetValue(key, out var rect))
-                SubsystemLog.Info("HUD", $"PC HUD tool {key}: {rect.tipVi}");
+            _recEnabled = !_recEnabled;
+            SetButtonActive("BtnRec", _recEnabled);
+            OpenPcToolPanel("Quay phim", new[] { _recEnabled ? "Đã bật chế độ ghi hình HUD." : "Đã tắt chế độ ghi hình HUD.", "PC source: Player_Recorder / 摄像机按钮." });
+            SubsystemLog.Info("HUD", _recEnabled ? "Recorder on" : "Recorder off");
+        }
+
+        private void OnTreasureClick()
+        {
+            var manager = SandboxManager.Instance;
+            var rows = new List<string>();
+            rows.Add($"Kỳ Trân Các: {(manager?.MallService != null ? manager.MallService.Count : 0)} vật phẩm cấu hình.");
+            rows.Add($"Săn kho báu: {(manager?.TreasureHuntService != null ? manager.TreasureHuntService.Count : 0)} điểm kho báu.");
+            rows.Add("Dùng để mở nhóm Bảo Vật/Kỳ Trân Các theo PC HUD.");
+            OpenPcToolPanel("Bảo Vật", rows);
+            SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+        }
+
+        private void SetButtonActive(string name, bool active)
+        {
+            var el = _boundRoot?.Q(name);
+            el?.EnableInClassList("active", active);
+        }
+
+        public bool IsPcToolPanelVisible => _pcToolPanel != null && !_pcToolPanel.ClassListContains("hidden");
+
+        public void ClosePcToolPanel()
+        {
+            _pcToolPanel?.AddToClassList("hidden");
+        }
+
+        private void OpenPcToolPanel(string title, IEnumerable<string> rows)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = title ?? string.Empty;
+            _pcToolList.Clear();
+            if (rows != null)
+            {
+                foreach (var row in rows)
+                    AddPcToolRow(row);
+            }
+            if (_pcToolList.contentContainer.childCount == 0)
+                AddPcToolRow("Không có dữ liệu.");
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void AddPcToolRow(string text)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("hud-pc-tool-row");
+            var label = new Label(text ?? string.Empty);
+            label.AddToClassList("hud-pc-tool-row-text");
+            row.Add(label);
+            _pcToolList?.Add(row);
         }
 
         // ── New HUD logic ──────────────────────────────────────────────────
