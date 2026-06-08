@@ -283,6 +283,47 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskCurrentMapReturnNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                if (taskValue != 0)
+                {
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.message))
+                        _sideEffects.PostMessage(action.message);
+                    result = Success(action,
+                        $"GetTask({action.taskId})={taskValue} -> Say callback prompt only, no auto-return");
+                    return true;
+                }
+
+                int currentMapId = _host.GetCurrentMapId();
+                int mappedIndex = IndexOf(action.currentMapIds, currentMapId);
+                if (mappedIndex < 0)
+                {
+                    result = Success(action, $"current map {currentMapId} not in PC return table -> no action");
+                    return true;
+                }
+
+                if (action.currentTargetMapIds == null || action.currentTargetCellXs == null || action.currentTargetCellYs == null ||
+                    mappedIndex >= action.currentTargetMapIds.Length || mappedIndex >= action.currentTargetCellXs.Length || mappedIndex >= action.currentTargetCellYs.Length)
+                {
+                    result = Failure(action, "current-map return table is malformed");
+                    return true;
+                }
+
+                int targetMapId = action.currentTargetMapIds[mappedIndex];
+                if (!_host.HasMap(targetMapId))
+                {
+                    result = Failure(action, $"target map {targetMapId} missing from catalog");
+                    return true;
+                }
+
+                var mappedTarget = action.CurrentMapTargetWorldPosition(mappedIndex);
+                _host.NewWorld(targetMapId, mappedTarget);
+                result = Success(action,
+                    $"GetTask({action.taskId})=0, currentMap={currentMapId} -> NewWorld({targetMapId},{action.currentTargetCellXs[mappedIndex]},{action.currentTargetCellYs[mappedIndex]}) -> {mappedTarget}");
+                return true;
+            }
+
             if (action.IsClearSkillSwitchTrap)
             {
                 int currentFightState = _host.GetFightState();
@@ -729,6 +770,15 @@ namespace VLTK.Sandbox
                 if (value == needle)
                     return true;
             return false;
+        }
+
+        private static int IndexOf(int[] values, int needle)
+        {
+            if (values == null) return -1;
+            for (int i = 0; i < values.Length; i++)
+                if (values[i] == needle)
+                    return i;
+            return -1;
         }
 
         private static PcTrapTaskSetPosBranch FindTaskBranch(PcTrapActionCatalogEntry action, int taskValue)

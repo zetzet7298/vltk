@@ -2088,6 +2088,56 @@ def task_faction_prompt_gate_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def task_current_map_return_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if 'tab_cityid' not in clean_source or 'SubWorldIdx2ID' not in clean_source:
+        return None
+    if any(token in clean_source for token in ('SetTask', 'HaveItem', 'DelItem', 'AddItem', 'SetTaskTemp')):
+        return None
+    rows = [tuple(int(v) for v in match) for match in re.findall(
+        r'\{\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\}', clean_source)]
+    if not rows:
+        return None
+    main_body = lua_function_body(clean_source, 'main')
+    back_town_body = lua_function_body(clean_source, 'back_town')
+    back_mingyue_body = lua_function_body(clean_source, 'back_mingyue')
+    if not main_body or not back_town_body or not back_mingyue_body:
+        return None
+    task_match = re.search(r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<taskId>\d+)\s*\)', main_body)
+    if not task_match:
+        return None
+    task_var = task_match.group('var')
+    if not re.search(rf'\b{re.escape(task_var)}\s*~=\s*0', main_body):
+        return None
+    say_calls = parse_lua_calls(main_body, 'Say', limit=2)
+    if len(say_calls) != 1 or not say_calls[0]:
+        return None
+    message = clean_user_message(str(say_calls[0][0]))
+    if not is_safe_user_message(message):
+        return None
+    compact_main = re.sub(r'\s+', '', main_body)
+    compact_back_town = re.sub(r'\s+', '', back_town_body)
+    compact_back_mingyue = re.sub(r'\s+', '', back_mingyue_body)
+    if 'NewWorld(tab_cityid[i][2],tab_cityid[i][3],tab_cityid[i][4])' not in compact_main:
+        return None
+    if 'NewWorld(tab_cityid[i][2],tab_cityid[i][3],tab_cityid[i][4])' not in compact_back_town:
+        return None
+    if 'NewWorld(tab_cityid[i][1],1565,3156)' not in compact_back_mingyue:
+        return None
+    return {
+        'taskId': int(task_match.group('taskId')),
+        'currentMapIds': [row[0] for row in rows],
+        'currentTargetMapIds': [row[1] for row in rows],
+        'currentTargetCellXs': [row[2] for row in rows],
+        'currentTargetCellYs': [row[3] for row in rows],
+        'targetMapId': rows[0][1],
+        'targetCellX': rows[0][2],
+        'targetCellY': rows[0][3],
+        'fightState': -1,
+        'message': message,
+    }
+
+
 def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
     if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
         return None
@@ -2436,6 +2486,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_faction_prompt_gate,
             })
             continue
+        task_current_map_return = task_current_map_return_newworld(source)
+        if task_current_map_return is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskCurrentMapReturnNewWorld',
+                'source': 'PC trap Lua main(): Mid-Autumn tab_cityid return; GetTask nonzero shows Say callback prompt only, task zero maps current event map id to city NewWorld; callback choices are not auto-run',
+                **task_current_map_return,
+            })
+            continue
         citywar_gate = citywar_camp_gate_setpos(source)
         if citywar_gate is not None:
             entries.append({
@@ -2584,6 +2646,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskPromptDefaultNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskPromptDefaultNewWorld'),
         'deterministicTrapTaskFactionMessageGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionMessageGateNewWorld'),
         'deterministicTrapTaskFactionPromptGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionPromptGateNewWorld'),
+        'deterministicTrapTaskCurrentMapReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskCurrentMapReturnNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),

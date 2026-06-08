@@ -113,7 +113,8 @@ namespace VLTK.UI
         private ScrollView _facePickerList;
         private Button _faceBtn;
         private VisualElement _utilityDock, _utilityActionRow, _utilityMenuRowA, _utilityMenuRowB;
-        private Label _utilityToggleLabel, _utilitySwitchLabel;
+        private VisualElement _pcShortcutDock, _pcShortcutToggleBtn;
+        private Label _utilityToggleLabel, _utilitySwitchLabel, _pcShortcutToggleLabel;
         private VisualElement _pcToolPanel, _pcToolClose;
         private ScrollView _pcToolList;
         private Label _pcToolTitle;
@@ -347,8 +348,11 @@ namespace VLTK.UI
             _utilityActionRow = root.Q("MobileUtilityActionRow");
             _utilityMenuRowA = root.Q("MobileUtilityMenuRowA");
             _utilityMenuRowB = root.Q("MobileUtilityMenuRowB");
+            _pcShortcutDock = root.Q("PcShortcutDock");
+            _pcShortcutToggleBtn = root.Q("PcShortcutToggleBtn");
             _utilityToggleLabel = root.Q<Label>("UtilityToggleLabel");
             _utilitySwitchLabel = root.Q<Label>("UtilitySwitchLabel");
+            _pcShortcutToggleLabel = root.Q<Label>("PcShortcutToggleLabel");
             _pcToolPanel = root.Q("PcToolPanel");
             _pcToolClose = root.Q("PcToolClose");
             _pcToolList = root.Q<ScrollView>("PcToolList");
@@ -364,6 +368,14 @@ namespace VLTK.UI
 
             RegisterClick(root, "UtilityToggleBtn", OnUtilityToggleClick);
             RegisterClick(root, "UtilitySwitchBtn", OnUtilitySwitchClick);
+            RegisterClick(root, "PcShortcutToggleBtn", OnPcShortcutToggleClick);
+            for (int i = 0; i < 9; i++)
+            {
+                int slot = i;
+                RegisterClick(root, $"PcItemSlot{slot}", () => OnPcItemShortcutClick(slot));
+            }
+            RegisterClick(root, "PcLeftSkillBtn", () => OnPcSkillShortcutClick(0));
+            RegisterClick(root, "PcRightSkillBtn", () => OnPcSkillShortcutClick(1));
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
@@ -1687,6 +1699,8 @@ namespace VLTK.UI
         private void OnUtilityToggleClick()
         {
             int nextMode = _utilityBarMode == 0 ? 1 : 0;
+            if (nextMode != 0)
+                ApplyPcShortcutDock(false);
             ApplyUtilityBarMode(nextMode);
             SubsystemLog.Info("HUD", nextMode == 0 ? "Hide utility bar" : "Show action utility bar");
         }
@@ -1694,6 +1708,7 @@ namespace VLTK.UI
         private void OnUtilitySwitchClick()
         {
             int nextMode = _utilityBarMode == 2 ? 1 : 2;
+            ApplyPcShortcutDock(false);
             ApplyUtilityBarMode(nextMode);
             SubsystemLog.Info("HUD", nextMode == 1 ? "Switch to action utility bar" : "Switch to menu utility bar");
         }
@@ -1721,6 +1736,91 @@ namespace VLTK.UI
         }
 
         public int CurrentUtilityBarMode => _utilityBarMode;
+
+        private void OnPcShortcutToggleClick()
+        {
+            bool show = _pcShortcutDock == null || _pcShortcutDock.ClassListContains("hidden");
+            if (show)
+                ApplyUtilityBarMode(0);
+            ApplyPcShortcutDock(show);
+            SubsystemLog.Info("HUD", show ? "Show PC quick shortcuts" : "Hide PC quick shortcuts");
+        }
+
+        private void ApplyPcShortcutDock(bool show)
+        {
+            _pcShortcutDock?.EnableInClassList("hidden", !show);
+            _pcShortcutToggleBtn?.EnableInClassList("active", show);
+            if (_pcShortcutToggleLabel != null)
+                _pcShortcutToggleLabel.text = show ? "Ẩn" : "1-9";
+        }
+
+        private void OnPcItemShortcutClick(int index)
+        {
+            int pcSlot = Mathf.Clamp(index, 0, 8);
+            string title = $"Phím tắt vật phẩm {pcSlot + 1}";
+            var rows = new List<string>
+            {
+                $"PC autoexec.lua: phím {pcSlot + 1} → ShortcutUseItem({pcSlot})",
+            };
+
+            if (TryUsePcShortcutItem(pcSlot, out var itemName, out var remaining))
+            {
+                rows.Add($"Đã dùng: {itemName}");
+                rows.Add($"Còn lại: {remaining}");
+            }
+            else
+            {
+                rows.Add("Chưa có vật phẩm ở ô tắt này trong runtime mobile.");
+                rows.Add("Mở Túi đồ để kiểm tra/gán vật phẩm hồi phục.");
+            }
+
+            OpenPcToolPanel(title, rows);
+            SubsystemLog.Info("HUD", $"ShortcutUseItem({pcSlot})");
+        }
+
+        private bool TryUsePcShortcutItem(int index, out string itemName, out int remaining)
+        {
+            itemName = string.Empty;
+            remaining = 0;
+            var inventory = SandboxManager.Instance?.InventoryService;
+            var entries = inventory?.Inventory;
+            if (entries == null || index < 0 || index >= entries.Count)
+                return false;
+
+            var entry = entries[index];
+            if (entry?.item == null || entry.count <= 0)
+                return false;
+
+            itemName = string.IsNullOrWhiteSpace(entry.item.DisplayName) ? $"Item {entry.item.itemId}" : entry.item.DisplayName;
+            entry.count = Mathf.Max(0, entry.count - 1);
+            remaining = entry.count;
+            return true;
+        }
+
+        private void OnPcSkillShortcutClick(int slot)
+        {
+            int mobileSlot = Mathf.Clamp(slot, 0, 1);
+            var combatSlots = FindObjectOfType<CombatSkillSlotController>();
+            if (combatSlots != null)
+            {
+                combatSlots.OpenSkillPicker(mobileSlot);
+                OpenPcToolPanel(mobileSlot == 0 ? "Kỹ năng trái" : "Kỹ năng phải", new[]
+                {
+                    $"PC 主界面玩家信息窗口.ini: {(mobileSlot == 0 ? "ImediaLeftSkill" : "ImediaRightSkill")}",
+                    $"Mobile: mở bảng gán kỹ năng cho ô {mobileSlot + 1}.",
+                });
+            }
+            else
+            {
+                OpenSkillPanel();
+                OpenPcToolPanel(mobileSlot == 0 ? "Kỹ năng trái" : "Kỹ năng phải", new[]
+                {
+                    "CombatSkillSlotController chưa sẵn sàng.",
+                    "Đã mở bảng Võ công để chọn/nâng kỹ năng.",
+                });
+            }
+            SubsystemLog.Info("HUD", mobileSlot == 0 ? "Open left skill assignment" : "Open right skill assignment");
+        }
 
         private void OnMinimapSearchClick()
         {

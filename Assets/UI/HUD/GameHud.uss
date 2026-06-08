@@ -342,9 +342,19 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.18);
+    background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-附近频道选择.png');
+    -unity-background-scale-mode: scale-to-fit;
     border-width: 1px;
     border-color: rgba(0,96,80,0.55);
 }
+
+/* PC SPR chat channel button visuals */
+#ChatTabAll { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-世界频道选择.png'); }
+#ChatTabPrivate { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-密人频道选择.png'); }
+#ChatTabRoom { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-城市频道选择.png'); }
+#ChatTabGuild { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-好友频道选择.png'); }
+#ChatTabFaction { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-门派频道选择.png'); }
+#ChatTabOther { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-队伍频道选择.png'); }
 
 .hud-chat-tab.active {
     background-color: rgba(8,48,34,0.82);
@@ -1380,3 +1390,134 @@
     top: 168px;
     bottom: auto;
 }
+
+/* PC quick shortcuts from 主界面玩家信息窗口.ini: 1..9 ShortcutUseItem + T/P skill assignment.
+   Stitch "Jade Path Legacy" UX: keep this secondary bar in the top-right safe zone,
+   directly left of the minimap, and hide it behind a 54px touch switch. */
+.hud-pc-shortcut-toggle-btn {
+    position: absolute;
+    right: 148px;
+    top: 68px;
+    bottom: auto;
+    width: 54px;
+    height: 54px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(18,27,16,0.88);
+    border-width: 2px;
+    border-color: rgba(242,202,80,0.72);
+    border-radius: 14px;
+    z-index: 921;
+}
+
+.hud-pc-shortcut-toggle-btn.active {
+    background-color: rgba(52,74,34,0.86);
+    border-color: rgba(168,255,112,0.88);
+}
+
+.hud-pc-shortcut-toggle-label {
+    color: rgb(255,238,174);
+    font-size: 13px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.hud-pc-shortcut-dock {
+    position: absolute;
+    right: 204px;
+    top: 74px;
+    bottom: auto;
+    width: 236px;
+    height: 158px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(18,27,16,0.88);
+    border-width: 2px;
+    border-color: rgba(242,202,80,0.66);
+    border-radius: 14px;
+    padding: 6px;
+    z-index: 914;
+}
+
+.hud-pc-shortcut-grid {
+    width: 150px;
+    height: 138px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.hud-pc-item-slot {
+    width: 46px;
+    height: 44px;
+    margin-left: 1px;
+    margin-right: 1px;
+    margin-top: 1px;
+    margin-bottom: 1px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.12);
+    border-width: 1px;
+    border-color: rgba(175,140,72,0.34);
+    border-radius: 7px;
+}
+
+.hud-pc-item-slot-icon {
+    width: 36px;
+    height: 36px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-pc-skill-shortcut-row {
+    width: 64px;
+    height: 138px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+}
+
+.hud-pc-skill-shortcut-btn {
+    width: 60px;
+    height: 62px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.12);
+    border-width: 1px;
+    border-color: rgba(175,140,72,0.34);
+    border-radius: 9px;
+}
+
+.hud-pc-skill-shortcut-icon {
+    width: 36px;
+    height: 36px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-pc-skill-shortcut-label {
+    position: absolute;
+    right: 3px;
+    bottom: 1px;
+    width: 14px;
+    height: 14px;
+    color: rgb(255,238,174);
+    font-size: 10px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    background-color: rgba(0,0,0,0.48);
+}
+.hud-pc-item-slot-icon.slot-1 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_1_pc.png'); }
+.hud-pc-item-slot-icon.slot-2 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_2_pc.png'); }
+.hud-pc-item-slot-icon.slot-3 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_3_pc.png'); }
+.hud-pc-item-slot-icon.slot-4 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_4_pc.png'); }
+.hud-pc-item-slot-icon.slot-5 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_5_pc.png'); }
+.hud-pc-item-slot-icon.slot-6 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_6_pc.png'); }
+.hud-pc-item-slot-icon.slot-7 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_7_pc.png'); }
+.hud-pc-item-slot-icon.slot-8 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_8_pc.png'); }
+.hud-pc-item-slot-icon.slot-9 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_9_pc.png'); }
+.hud-pc-skill-shortcut-icon.left-skill { background-image: url('project://database/Assets/UI/HUD/Art/btn_pc_left_skill_slot.png'); }
+.hud-pc-skill-shortcut-icon.right-skill { background-image: url('project://database/Assets/UI/HUD/Art/btn_pc_right_skill_slot.png'); }

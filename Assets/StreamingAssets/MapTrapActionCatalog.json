@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T09:11:27Z",
+  "generatedAtUtc": "2026-06-08T09:23:24Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -10922,6 +10922,56 @@
       "targetCellY": 3288,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3542522134,
+      "trapIdHex": "0xD3269916",
+      "scriptPath": "\\script\\event\\mid_autumn\\trap_totown.lua",
+      "sourceRelPath": "script\\event\\mid_autumn\\trap_totown.lua",
+      "actionKind": "TaskCurrentMapReturnNewWorld",
+      "source": "PC trap Lua main(): Mid-Autumn tab_cityid return; GetTask nonzero shows Say callback prompt only, task zero maps current event map id to city NewWorld; callback choices are not auto-run",
+      "taskId": 1569,
+      "currentMapIds": [
+        520,
+        521,
+        522,
+        523,
+        524,
+        525,
+        526
+      ],
+      "currentTargetMapIds": [
+        1,
+        11,
+        37,
+        78,
+        80,
+        162,
+        176
+      ],
+      "currentTargetCellXs": [
+        1651,
+        3183,
+        1704,
+        1596,
+        1718,
+        1697,
+        1695
+      ],
+      "currentTargetCellYs": [
+        3279,
+        5180,
+        3222,
+        3379,
+        3201,
+        3277,
+        3294
+      ],
+      "targetMapId": 1,
+      "targetCellX": 1651,
+      "targetCellY": 3279,
+      "fightState": -1,
+      "message": "Bánh của ngươi vẫn chưa hoàn thành. Hay là hãy đi tìm Thợ bánh trước đi rồi rời khỏi đây sau!"
     },
     {
       "trapId": 3545231161,

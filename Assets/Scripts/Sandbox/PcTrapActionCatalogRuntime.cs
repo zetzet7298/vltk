@@ -110,6 +110,10 @@ namespace VLTK.Sandbox
         public int[] randomTargetMapIds;
         public int[] randomTargetCellXs;
         public int[] randomTargetCellYs;
+        public int[] currentMapIds;
+        public int[] currentTargetMapIds;
+        public int[] currentTargetCellXs;
+        public int[] currentTargetCellYs;
         public int randomFightState = -1;
         public int[] noActionMapIds;
         public int gateCurrentMapId;
@@ -181,6 +185,7 @@ namespace VLTK.Sandbox
         public bool IsTaskPromptDefaultNewWorld => string.Equals(actionKind, "TaskPromptDefaultNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskFactionMessageGateNewWorld => string.Equals(actionKind, "TaskFactionMessageGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskFactionPromptGateNewWorld => string.Equals(actionKind, "TaskFactionPromptGateNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskCurrentMapReturnNewWorld => string.Equals(actionKind, "TaskCurrentMapReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);
@@ -211,6 +216,9 @@ namespace VLTK.Sandbox
 
         public Vector2 RandomTargetWorldPosition(int index)
             => CellToWorld(randomTargetCellXs[index], randomTargetCellYs[index]);
+
+        public Vector2 CurrentMapTargetWorldPosition(int index)
+            => CellToWorld(currentTargetCellXs[index], currentTargetCellYs[index]);
 
         public Vector2 TaskBranchWorldPosition(PcTrapTaskSetPosBranch branch)
             => CellToWorld(branch.targetCellX, branch.targetCellY);

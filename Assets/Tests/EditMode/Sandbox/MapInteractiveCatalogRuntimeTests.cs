@@ -199,7 +199,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(793, catalog.Count);
+            Assert.AreEqual(794, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -212,6 +212,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskPromptDefaultNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionMessageGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionPromptGateNewWorld));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskCurrentMapReturnNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
@@ -1799,6 +1800,63 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(result.success);
             Assert.AreEqual(-1, host.mapId);
             CollectionAssert.AreEqual(new[] { "Nơi đây là cấm địa của bổn phái, người ngoài không được vào!" }, sideEffects.messages);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskCurrentMapReturnNewWorld_UsesPcMidAutumnTableAndPromptGate()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0xD3269916u,
+                        trapIdHex = "0xD3269916",
+                        scriptPath = @"\script\event\mid_autumn\trap_totown.lua",
+                        actionKind = "TaskCurrentMapReturnNewWorld",
+                        taskId = 1569,
+                        currentMapIds = new[] { 520, 521 },
+                        currentTargetMapIds = new[] { 1, 11 },
+                        currentTargetCellXs = new[] { 1651, 3183 },
+                        currentTargetCellYs = new[] { 3279, 5180 },
+                        targetMapId = 1,
+                        targetCellX = 1651,
+                        targetCellY = 3279,
+                        fightState = -1,
+                        message = "Bánh của ngươi vẫn chưa hoàn thành. Hay là hãy đi tìm Thợ bánh trước đi rồi rời khỏi đây sau!",
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { currentMapId = 520, taskValue = 0 };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xD3269916" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(1, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1651 * 32, 3279 * 32), host.position);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+
+            host = new FakeTrapTravelHost { currentMapId = 520, taskValue = 1 };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xD3269916" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Bánh của ngươi vẫn chưa hoàn thành. Hay là hãy đi tìm Thợ bánh trước đi rồi rời khỏi đây sau!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { currentMapId = 999, taskValue = 0 };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xD3269916" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
         }
 
         [Test]

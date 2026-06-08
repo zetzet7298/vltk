@@ -75,5 +75,29 @@ namespace VLTK.UI
                 ["PK"]       = new ButtonRect(695, 502, 31, 31, @"\spr\UI3\主界面\PK按钮.spr",     "Player_PK",       "Đóng mở PK"),
                 ["Treasure"] = new ButtonRect(742, 502, 58, 58, @"pc-evidence/pc_hud.png#BaoVat", "Player_Treasure", "Bảo Vật"),
             };
+
+        /// <summary>PC item hotkeys Item_0..Item_8 from 主界面玩家信息窗口.ini: 1..9 -> ShortcutUseItem(0..8).</summary>
+        public static readonly IReadOnlyDictionary<string, ButtonRect> QuickItemSlots =
+            new Dictionary<string, ButtonRect>
+            {
+                ["Item_0"] = new ButtonRect(15, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_0", "ShortcutUseItem(0)", "Phím tắt vật phẩm 1"),
+                ["Item_1"] = new ButtonRect(53, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_1", "ShortcutUseItem(1)", "Phím tắt vật phẩm 2"),
+                ["Item_2"] = new ButtonRect(91, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_2", "ShortcutUseItem(2)", "Phím tắt vật phẩm 3"),
+                ["Item_3"] = new ButtonRect(129, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_3", "ShortcutUseItem(3)", "Phím tắt vật phẩm 4"),
+                ["Item_4"] = new ButtonRect(167, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_4", "ShortcutUseItem(4)", "Phím tắt vật phẩm 5"),
+                ["Item_5"] = new ButtonRect(205, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_5", "ShortcutUseItem(5)", "Phím tắt vật phẩm 6"),
+                ["Item_6"] = new ButtonRect(243, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_6", "ShortcutUseItem(6)", "Phím tắt vật phẩm 7"),
+                ["Item_7"] = new ButtonRect(281, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_7", "ShortcutUseItem(7)", "Phím tắt vật phẩm 8"),
+                ["Item_8"] = new ButtonRect(320, 550, 36, 36, @"pc-evidence/pc_hud.png#Item_8", "ShortcutUseItem(8)", "Phím tắt vật phẩm 9"),
+            };
+
+        /// <summary>PC immediate left/right skill boxes from 主界面玩家信息窗口.ini; mobile opens the skill assignment picker.</summary>
+        public static readonly IReadOnlyDictionary<string, ButtonRect> ImmediateSkillSlots =
+            new Dictionary<string, ButtonRect>
+            {
+                ["ImediaLeftSkill"] = new ButtonRect(372, 529, 36, 36, @"pc-evidence/pc_hud.png#ImediaLeftSkill", "LeftSkillAssign", "Kỹ năng trái"),
+                ["ImediaRightSkill"] = new ButtonRect(409, 529, 36, 36, @"pc-evidence/pc_hud.png#ImediaRightSkill", "RightSkillAssign", "Kỹ năng phải"),
+            };
+
     }
 }

@@ -55,6 +55,9 @@ namespace VLTK.Tests.Sandbox
         private VisualElement _pcToolClose;
         private ScrollView _pcToolList;
         private Label _pcToolTitle;
+        private VisualElement _pcShortcutDock;
+        private VisualElement _pcShortcutToggleBtn;
+        private Label _pcShortcutToggleLabel;
 
         [SetUp]
         public void Setup()
@@ -128,6 +131,16 @@ namespace VLTK.Tests.Sandbox
             _utilityDock.Add(_utilityMenuRowA);
             _utilityDock.Add(_utilityMenuRowB);
 
+            _pcShortcutToggleBtn = new VisualElement { name = "PcShortcutToggleBtn" };
+            _pcShortcutToggleLabel = new Label { name = "PcShortcutToggleLabel" };
+            _pcShortcutToggleBtn.Add(_pcShortcutToggleLabel);
+            _pcShortcutDock = new VisualElement { name = "PcShortcutDock" };
+            _pcShortcutDock.AddToClassList("hidden");
+            for (int i = 0; i < 9; i++)
+                _pcShortcutDock.Add(new VisualElement { name = $"PcItemSlot{i}" });
+            _pcShortcutDock.Add(new VisualElement { name = "PcLeftSkillBtn" });
+            _pcShortcutDock.Add(new VisualElement { name = "PcRightSkillBtn" });
+
             _skillPanel = new VisualElement { name = "CaiBangSkillPanel" };
             _skillPanel.AddToClassList("hidden");
             _skillSummary = new Label { name = "CaiBangSkillSummary" };
@@ -167,6 +180,8 @@ namespace VLTK.Tests.Sandbox
             _root.Add(_chatTabOther);
             _root.Add(_utilityToggleBtn);
             _root.Add(_utilityDock);
+            _root.Add(_pcShortcutToggleBtn);
+            _root.Add(_pcShortcutDock);
             _root.Add(_skillPanel);
             _root.Add(_invWindow);
             _root.Add(_pcToolPanel);
@@ -194,6 +209,9 @@ namespace VLTK.Tests.Sandbox
             SetPrivateField("_utilityMenuRowB", _utilityMenuRowB);
             SetPrivateField("_utilityToggleLabel", _utilityToggleLabel);
             SetPrivateField("_utilitySwitchLabel", _utilitySwitchLabel);
+            SetPrivateField("_pcShortcutDock", _pcShortcutDock);
+            SetPrivateField("_pcShortcutToggleBtn", _pcShortcutToggleBtn);
+            SetPrivateField("_pcShortcutToggleLabel", _pcShortcutToggleLabel);
             SetPrivateField("_skillPanel", _skillPanel);
             SetPrivateField("_skillList", _skillList);
             SetPrivateField("_skillSummary", _skillSummary);
@@ -391,6 +409,47 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
             Assert.IsFalse(_utilityToggleBtn.ClassListContains("active"));
             Assert.AreEqual("Mở", _utilityToggleLabel.text);
+        }
+
+        [Test]
+        public void PcShortcutDock_TogglesAndRoutesPcHotkeys()
+        {
+            Assert.IsTrue(_pcShortcutDock.ClassListContains("hidden"));
+
+            InvokePrivateMethod("OnUtilityToggleClick");
+            Assert.AreEqual(1, _hud.CurrentUtilityBarMode);
+
+            InvokePrivateMethod("OnPcShortcutToggleClick");
+            Assert.AreEqual(0, _hud.CurrentUtilityBarMode, "Shortcut and utility bars must be mutually exclusive near the minimap.");
+            Assert.IsTrue(_utilityDock.ClassListContains("hidden"));
+            Assert.IsFalse(_pcShortcutDock.ClassListContains("hidden"));
+            Assert.IsTrue(_pcShortcutToggleBtn.ClassListContains("active"));
+            Assert.AreEqual("Ẩn", _pcShortcutToggleLabel.text);
+
+            InvokePrivateMethod("OnPcItemShortcutClick", 2);
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Phím tắt vật phẩm 3", _pcToolTitle.text);
+            var itemRows = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(itemRows.Exists(l => l.text.Contains("ShortcutUseItem(2)")));
+
+            InvokePrivateMethod("OnPcShortcutToggleClick");
+            Assert.IsTrue(_pcShortcutDock.ClassListContains("hidden"));
+            Assert.IsFalse(_pcShortcutToggleBtn.ClassListContains("active"));
+            Assert.AreEqual("1-9", _pcShortcutToggleLabel.text);
+        }
+
+        [Test]
+        public void PcSkillShortcut_FallsBackToPcSkillPanelWhenCombatPickerUnavailable()
+        {
+            Assert.IsTrue(_skillPanel.ClassListContains("hidden"));
+
+            InvokePrivateMethod("OnPcSkillShortcutClick", 1);
+
+            Assert.IsFalse(_skillPanel.ClassListContains("hidden"));
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Kỹ năng phải", _pcToolTitle.text);
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("CombatSkillSlotController chưa sẵn sàng")));
         }
 
         [Test]
