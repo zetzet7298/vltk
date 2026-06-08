@@ -2,7 +2,7 @@
 // VLTK Mobile — executes deterministic PC Region_S object Lua actions.
 // Ported object API subset: NewWorld(mapId,x,y), optional SetFightState(),
 // safe pickup messages: SetPropState/AddEventItem/AddNote/Msg2Player,
-// and read-only Say(message) object scripts.
+// read-only Say(message), and read-only Talk(message...) object scripts.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -90,6 +90,32 @@ namespace VLTK.Sandbox
                 if (!string.IsNullOrWhiteSpace(action.message))
                     _sideEffects.PostMessage(action.message);
                 result = Success(action, $"SayMessage(msg='{action.message}')");
+                return true;
+            }
+
+            if (action.IsTalkMessage)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+                int posted = 0;
+                if (action.messages != null)
+                {
+                    foreach (string message in action.messages)
+                    {
+                        if (string.IsNullOrWhiteSpace(message)) continue;
+                        _sideEffects.PostMessage(message);
+                        posted++;
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(action.message))
+                {
+                    _sideEffects.PostMessage(action.message);
+                    posted = 1;
+                }
+                result = Success(action, $"TalkMessage(lines={posted})");
                 return true;
             }
 

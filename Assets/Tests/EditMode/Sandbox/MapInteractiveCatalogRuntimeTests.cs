@@ -95,10 +95,15 @@ namespace VLTK.Tests.Sandbox
         private sealed class FakeObjectActionSideEffects : IObjectActionSideEffects
         {
             public string message;
+            public readonly List<string> messages = new();
             public readonly List<int> eventItems = new();
             public readonly List<string> notes = new();
 
-            public void PostMessage(string nextMessage) => message = nextMessage;
+            public void PostMessage(string nextMessage)
+            {
+                message = nextMessage;
+                messages.Add(nextMessage);
+            }
             public void AddEventItem(int eventItemId) => eventItems.Add(eventItemId);
             public void AddNote(string note) => notes.Add(note);
         }
@@ -127,10 +132,11 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(165, catalog.Count);
+            Assert.AreEqual(166, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(142, catalog.entries.Count(e => e != null && e.IsSayMessage));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             var entry = catalog.Find(@"\script\两湖区\天王帮\洞庭湖底山洞1\trap\洞庭湖底1to洞庭湖底2.lua");
             Assert.IsNotNull(entry);
             Assert.IsTrue(entry.IsNewWorld);
@@ -228,6 +234,37 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(result.hideObject);
             Assert.AreEqual("Đi đến Biện Kinh.", sideEffects.message);
             StringAssert.Contains("SayMessage", result.detail);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_TalkMessage_PostsAllPcLines()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\talk_sign.lua",
+                        actionKind = "TalkMessage",
+                        messages = new[]
+                        {
+                            "Bạn thử dùng sức đẩy tảng đá,",
+                            "nhưng nó cứ nằm trơ trơ",
+                        },
+                    }
+                }
+            };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, new FakeTrapTravelHost(), sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\talk_sign.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.IsFalse(result.hideObject);
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng sức đẩy tảng đá,", "nhưng nó cứ nằm trơ trơ" }, sideEffects.messages);
+            StringAssert.Contains("TalkMessage", result.detail);
         }
 
         [Test]

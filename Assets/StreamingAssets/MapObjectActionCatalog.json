@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T04:16:34Z",
+  "generatedAtUtc": "2026-06-08T04:25:05Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -92,7 +92,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Địa giới núi Trường Thạch",
+      "message": "Địa giới núi Trường Thạch, chân núi Trường Bạch.",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -514,7 +514,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Đi Đại Tù động",
+      "message": "Đi Đại Tù động, Phục Lưu động.",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -631,7 +631,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "ChiƠn trường Tống Kim<---->Chu Tiên trấn",
+      "message": "Chiến trường Tống Kim<---->Chu Tiên trấn",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -644,8 +644,24 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "ChiƠn trường Tống Kim<---->Tương Dương",
+      "message": "Chiến trường Tống Kim<---->Tương Dương",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\少林派\\少林派\\obj\\地图_sll50_石头2.lua",
+      "scriptId": 3256942885,
+      "scriptIdHex": "0xC2210125",
+      "sourceRelPath": "script\\中原北区\\少林派\\少林派\\obj\\地图_sll50_石头2.lua",
+      "actionKind": "TalkMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ",
+      "messages": [
+        "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ"
+      ],
+      "source": "PC object Lua main(): deterministic read-only Talk(count,\"\",message...) with no conditional/API branch"
     },
     {
       "scriptPath": "\\script\\中原北区\\朱仙镇\\obj\\朱仙镇_告示牌1.lua",
@@ -761,7 +777,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Biện Kinh <----->ThiƠu Lâm phái",
+      "message": "Biện Kinh <----->Thiếu Lâm phái",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -787,7 +803,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Biện Kinh <----->ChiƠn trường Tống Kim",
+      "message": "Biện Kinh <----->Chiến trường Tống Kim",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -1137,7 +1153,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Tương Dương <---->ChiƠn trường Tống Kim",
+      "message": "Tương Dương <---->Chiến trường Tống Kim",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -1548,7 +1564,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Mấy ngày nay că Khu Mật sứ đến vùng này th̃ sát",
+      "message": "Mấy ngày nay că Khu Mật sứ đến vùng này th̃ sát, nên không cho bất cứ ăn mày nào xuất hiện ngoài đường",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -1587,7 +1603,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Đi KiƠm Các Thục Đạo",
+      "message": "Đi Kiếm Các Thục Đạo",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -1912,7 +1928,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Đi KiƠm Các Thục Đạo",
+      "message": "Đi Kiếm Các Thục Đạo",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -2016,7 +2032,7 @@
       "targetCellX": 0,
       "targetCellY": 0,
       "fightState": -1,
-      "message": "Đi Thần Tiên động",
+      "message": "Đi Thần Tiên động, Hưởng Thủy động.",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {

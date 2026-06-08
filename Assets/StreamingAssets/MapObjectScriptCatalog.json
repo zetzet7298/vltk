@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T04:16:34Z",
+  "generatedAtUtc": "2026-06-08T04:25:05Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -85,12 +85,10 @@
             "GetCitySummary(nCityID"
           ],
           [
-            "Làm chức Thái Thú",
-            "bạn có muốn thiết đặt thuế mới không?",
+            "Làm chức Thái Thú, bạn có muốn thiết đặt thuế mới không?",
             "2",
             "Muốn/ManageCity",
-            "Không",
-            "ta chỉ muốn xem thông tin của thành thị. /SayCityStatus"
+            "Không, ta chỉ muốn xem thông tin của thành thị. /SayCityStatus"
           ],
           [
             "Khu vực không có quản lý. ",
@@ -376,8 +374,7 @@
         "talkCalls": [],
         "sayCalls": [
           [
-            "Địa giới núi Trường Thạch",
-            "chân núi Trường Bạch. ",
+            "Địa giới núi Trường Thạch, chân núi Trường Bạch. ",
             "0"
           ]
         ],
@@ -1186,10 +1183,8 @@
           [
             "2",
             "",
-            "Rương báu trống không",
-            "Thiên Vương Di Thư' đã bị người Kim lấy đi ",
-            "Trên đất có một số dấu chân hướng về Sơn Động Thanh La Đảo",
-            "xem ra bọn sát thủ rời khỏi chưa bao lâu. "
+            "Rương báu trống không, 'Thiên Vương Di Thư' đã bị người Kim lấy đi ",
+            "Trên đất có một số dấu chân hướng về Sơn Động Thanh La Đảo, xem ra bọn sát thủ rời khỏi chưa bao lâu. "
           ],
           [
             "1",
@@ -1199,15 +1194,14 @@
           [
             "1",
             "",
-            "Không có chìa khóa",
-            "không mở được rương."
+            "Không có chìa khóa, không mở được rương."
           ]
         ],
         "sayCalls": [],
         "addEventItemCalls": [],
         "addNoteCalls": [
           [
-            "Mở rương báu phía Bắc hồ"
+            "Mở rương báu phía Bắc hồ, mới biết Thiên Vương Di Thư đã bị bọn sát thủ người nước Kim lấy đi. "
           ]
         ],
         "setPropStateCalls": [],
@@ -1978,8 +1972,7 @@
         "talkCalls": [],
         "sayCalls": [
           [
-            "Đi Đại Tù động",
-            "Phục Lưu động.",
+            "Đi Đại Tù động, Phục Lưu động.",
             "0"
           ]
         ],
@@ -2305,7 +2298,7 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Mở rương báu"
+            "Mở rương báu, lấy được một quyển sách da dê. "
           ]
         ],
         "talkCalls": [
@@ -2317,14 +2310,12 @@
           [
             "1",
             "",
-            "Không có chìa khóa",
-            "không mở được rương."
+            "Không có chìa khóa, không mở được rương."
           ],
           [
             "1",
             "",
-            "Không có chìa khóa",
-            "không mở được rương."
+            "Không có chìa khóa, không mở được rương."
           ]
         ],
         "sayCalls": [],
@@ -2335,7 +2326,7 @@
         ],
         "addNoteCalls": [
           [
-            "Mở rương báu"
+            "Mở rương báu, lấy được Thiên Nhẫn thánh thư——sách da dê. "
           ]
         ],
         "setPropStateCalls": [],
@@ -2628,9 +2619,7 @@
           [
             "1",
             "",
-            "Bọn Nam man to gan",
-            "ngông cuồng muốn chiếm rương đồ của người Kim ta",
-            "thật là nằm mơ giữa ban ngày. "
+            "Bọn Nam man to gan, ngông cuồng muốn chiếm rương đồ của người Kim ta, thật là nằm mơ giữa ban ngày. "
           ]
         ],
         "sayCalls": [],
@@ -2667,8 +2656,7 @@
           [
             "1",
             "",
-            "Nhìn ngươi mắt la mày loét",
-            "nhất định là Kim quốc gian tế! Người đâu! Bắt lấy hắn!"
+            "Nhìn ngươi mắt la mày loét, nhất định là Kim quốc gian tế! Người đâu! Bắt lấy hắn!"
           ]
         ],
         "sayCalls": [],
@@ -2774,7 +2762,7 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Thần tăng đang bế quan tập luyện nơi đây"
+            "Thần tăng đang bế quan tập luyện nơi đây, xin đừng làm phiền "
           ],
           [
             "Gặp Tịch Diệt Nhị Tăng cầu truyền đạt lại chỉ thị cho phương Trượng. "
@@ -2785,16 +2773,7 @@
             "3",
             "",
             "Khẩu quyết quan trọng thế này sao ngươi có thể quên được? Ta nói lại một lần hãy nhớ kỹ đó!",
-            "Câu thứ nhất là: Thế gian vô thường",
-            "Quốc Thổ Nguy Quỳ",
-            "câu thứ hai là: Tứ Đại Khổ Không",
-            "Ngũ Dương Vô Ngã",
-            "câu thứ 3 là: Sanh Diệt Biến Thăng",
-            "Hư Ngụy Vô Chủ",
-            "câu thứ 4 là: Tâm Thị ác Nguyên",
-            "Hình Vi Tội Tẩu",
-            "câu thứ 5 là: Như Thị Quan Sát",
-            "Tiêm Ly Sinh Tử.",
+            "Câu thứ nhất là: Thế gian vô thường, Quốc Thổ Nguy Quỳ, câu thứ hai là: Tứ Đại Khổ Không, Ngũ Dương Vô Ngã, câu thứ 3 là: Sanh Diệt Biến Thăng, Hư Ngụy Vô Chủ, câu thứ 4 là: Tâm Thị ác Nguyên, Hình Vi Tội Tẩu, câu thứ 5 là: Như Thị Quan Sát, Tiêm Ly Sinh Tử.",
             "Lần này đừng quên nữa đó! Đi đi!"
           ],
           [
@@ -2802,31 +2781,18 @@
             "L50_step2",
             "Đệ tử cầu kiến Sư thúc tổ!",
             "Có chuyện gì?",
-            "Chưởng môn phái đệ tử đến thỉnh mời hai vị Sư thúc tổ xuất quan",
-            "bàn cách cục thế thiên hạ.",
-            "Không Tịch: Thiên hạ hai chữ hai người chúng ta không hiểu",
-            "người chuyển giúp 5 câu này cho chưởng môn",
-            "ông ta sẽ hiểu rõ.",
-            "Câu thứ nhất: Thế Gian Vô Thường",
-            "Quốc Thổ Nguy Quỳ",
-            "",
-            "Không Tịch: Câu thứ hai: Tứ Đại Khổ Không",
-            "Ngũ Dương Vô Ngã",
-            "",
-            "Câu thứ ba: Sinh Diệt Biến Thăng",
-            "Hư Ngụy Vô Chủ",
-            "",
-            "Không Tịch: Câu thứ tư là: Tâm Thị ác Nguyên",
-            "Hình Vi Tội Tẩu",
-            "",
-            "Câu thứ năm là: Như Thị Quan Sát",
-            "Tiêm Ly Sinh Tử."
+            "Chưởng môn phái đệ tử đến thỉnh mời hai vị Sư thúc tổ xuất quan, bàn cách cục thế thiên hạ.",
+            "Không Tịch: Thiên hạ hai chữ hai người chúng ta không hiểu, người chuyển giúp 5 câu này cho chưởng môn, ông ta sẽ hiểu rõ.",
+            "Câu thứ nhất: Thế Gian Vô Thường, Quốc Thổ Nguy Quỳ,",
+            "Không Tịch: Câu thứ hai: Tứ Đại Khổ Không, Ngũ Dương Vô Ngã,",
+            "Câu thứ ba: Sinh Diệt Biến Thăng, Hư Ngụy Vô Chủ,",
+            "Không Tịch: Câu thứ tư là: Tâm Thị ác Nguyên, Hình Vi Tội Tẩu,",
+            "Câu thứ năm là: Như Thị Quan Sát, Tiêm Ly Sinh Tử."
           ],
           [
             "1",
             "",
-            "Sau khi đọc xong khẩu quyết cảnh cửa nhỏ không lung lay chút nào",
-            "có phải bạn đã niệm sai không?"
+            "Sau khi đọc xong khẩu quyết cảnh cửa nhỏ không lung lay chút nào, có phải bạn đã niệm sai không?"
           ],
           [
             "1",
@@ -2836,8 +2802,7 @@
         ],
         "sayCalls": [
           [
-            "Bần tăng đang bế quan tu luyện",
-            "nếu có muốn truyền lời cho bọn họ thì thông qua hai câu khẩu quyết này! Nghe kỹ đây!",
+            "Bần tăng đang bế quan tu luyện, nếu có muốn truyền lời cho bọn họ thì thông qua hai câu khẩu quyết này! Nghe kỹ đây!",
             "4",
             "án Ma Ni Bát Mê Hồng /L40_S2_wrong",
             "Hồng Bối Mê Ma Ni án /L40_S2_wrong",
@@ -2895,26 +2860,22 @@
           [
             "1",
             "",
-            "Tảng đá dần được xê dịch",
-            "bạn hình thấy phía dưới hình như có 1 quyển sách"
+            "Tảng đá dần được xê dịch, bạn hình thấy phía dưới hình như có 1 quyển sách"
           ],
           [
             "1",
             "",
-            "Bạn thử dùng sức đẩy tảng đá",
-            "hìh như nó có chút lay chuyển"
+            "Bạn thử dùng sức đẩy tảng đá, hìh như nó có chút lay chuyển"
           ],
           [
             "1",
             "",
-            "Bạn thử dùng sức đẩy tảng đá",
-            "nhưng nó cứ nằm trơ trơ "
+            "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ "
           ],
           [
             "1",
             "",
-            "Bạn thử dùng sức đẩy tảng đá",
-            "nhưng nó cứ nằm trơ trơ "
+            "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ "
           ]
         ],
         "sayCalls": [],
@@ -2980,8 +2941,7 @@
           [
             "1",
             "",
-            "Bạn thử dùng sức đẩy tảng đá",
-            "nhưng nă cứ nằm trơ trơ "
+            "Bạn thử dùng sức đẩy tảng đá, nhưng nă cứ nằm trơ trơ "
           ]
         ],
         "sayCalls": [],
@@ -3721,18 +3681,17 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Mở tượng Bảo rương ở tầng thứ nhất"
+            "Mở tượng Bảo rương ở tầng thứ nhất, mở được cơ quan thứ nhất "
           ],
           [
-            "Bạn đã phá được cơ quan tầng 3"
+            "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
           ]
         ],
         "talkCalls": [
           [
             "1",
             "",
-            "Bạn đã phá được cơ quan tầng 3",
-            "cứu được Phụng Hấp Như."
+            "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
           ],
           [
             "1",
@@ -3762,7 +3721,7 @@
             "Mở được cơ quan thứ nhất "
           ],
           [
-            "Cả ba cơ quan đều đã mở"
+            "Cả ba cơ quan đều đã mở, cứu được Phụng Hấp Như "
           ]
         ],
         "setPropStateCalls": [],
@@ -3861,15 +3820,14 @@
             "Mở được Bảo rương ở tầng thứ hai. Mở được cơ quan thứ hai "
           ],
           [
-            "Bạn đã phá được cơ quan tầng 3"
+            "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
           ]
         ],
         "talkCalls": [
           [
             "1",
             "",
-            "Bạn đã phá được cơ quan tầng 3",
-            "cứu được Phụng Hấp Như."
+            "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
           ],
           [
             "1",
@@ -3899,7 +3857,7 @@
             "Mở được cơ quan thứ hai "
           ],
           [
-            "Cả ba cơ quan đều đã mở"
+            "Cả ba cơ quan đều đã mở, cứu được Phụng Hấp Như "
           ]
         ],
         "setPropStateCalls": [],
@@ -4039,15 +3997,14 @@
             "Mở được Bảo rương ở tầng thứ ba. Mở được cơ quan thứ ba "
           ],
           [
-            "Bạn đã phá được cơ quan tầng 3"
+            "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
           ]
         ],
         "talkCalls": [
           [
             "1",
             "",
-            "Bạn đã phá được cơ quan tầng 3",
-            "cứu được Phụng Hấp Như."
+            "Bạn đã phá được cơ quan tầng 3, cứu được Phụng Hấp Như."
           ],
           [
             "1",
@@ -4077,7 +4034,7 @@
             "Mở được cơ quan thứ ba "
           ],
           [
-            "Cả ba cơ quan đều đã mở"
+            "Cả ba cơ quan đều đã mở, cứu được Phụng Hấp Như "
           ]
         ],
         "setPropStateCalls": [],
@@ -4333,7 +4290,7 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Bạn mở chiếc rương đó ra"
+            "Bạn mở chiếc rương đó ra, lấy được một cái túi vải "
           ],
           [
             "Chiếc rương này không có gì "
@@ -5162,21 +5119,20 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Gần đây bệnh dịch hạch lan tràn trong doanh trại quân Tống"
+            "Gần đây bệnh dịch hạch lan tràn trong doanh trại quân Tống, cần phải đến thành Tương Dương tìm ông chủ tiệm thuốc nhờ giúp đỡ giải quyết. "
           ],
           [
             "Bệnh dịch hạch vẫn đang lan tràn... "
           ],
           [
-            "Bệnh dịch hạch được tiêu diệt"
+            "Bệnh dịch hạch được tiêu diệt, có bộ Ngọc Thanh Chân Kinh. "
           ]
         ],
         "talkCalls": [
           [
             "1",
             "",
-            "Bảo rương: Hiện nay tiền tuyến phe Tống <color=Red>bệnh dịch hạch<color> kéo dài",
-            "hãy đến <color=Red>Tương Dương<color> tìm <color=Red>Chủ dược điếm <color> tìm cách guíp đỡ"
+            "Bảo rương: Hiện nay tiền tuyến phe Tống <color=Red>bệnh dịch hạch<color> kéo dài, hãy đến <color=Red>Tương Dương<color> tìm <color=Red>Chủ dược điếm <color> tìm cách guíp đỡ"
           ],
           [
             "1",
@@ -5196,9 +5152,7 @@
         ],
         "sayCalls": [
           [
-            "<color=Red>Bệnh dịch hạch<color> đã trừ",
-            "mở bảo rương",
-            "phát hiện 1 quyển <color=Red>'Ngọc Thanh Chân Kinh'<color>.",
+            "<color=Red>Bệnh dịch hạch<color> đã trừ, mở bảo rương, phát hiện 1 quyển <color=Red>'Ngọc Thanh Chân Kinh'<color>.",
             "0"
           ]
         ],
@@ -5272,28 +5226,25 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Gần đây khí giới chống Kim không đủ"
+            "Gần đây khí giới chống Kim không đủ, <color=Red>binh sĩ thương vong trầm trọng<color>, cần đến thành Tương Dương nhờ Thợ rèn giúp đỡ giải quyết. "
           ],
           [
-            "Do sức mạnh không đủ"
+            "Do sức mạnh không đủ, tạo nên thương vong không tránh khỏi khi chống quân Kim... "
           ],
           [
-            "Cần phải bổ sung binh khí gấp"
+            "Cần phải bổ sung binh khí gấp, sức mạnh chiến đấu của quan binh nhà Kim rất mạnh. Mở Bảo rương, có được bộ Thượng Thanh Chân Kinh. "
           ]
         ],
         "talkCalls": [
           [
             "1",
             "",
-            "Bảo rương: Gần đây <color=Red>binh khí<color> của Tống quân không đủ",
-            "<color=Red>thương vong<color> trầm trọng",
-            "hãy đến <color=Red>Tương Dương<color> tìm <color=Red>thợ rèn <color> giúp đỡ."
+            "Bảo rương: Gần đây <color=Red>binh khí<color> của Tống quân không đủ, <color=Red>thương vong<color> trầm trọng, hãy đến <color=Red>Tương Dương<color> tìm <color=Red>thợ rèn <color> giúp đỡ."
           ],
           [
             "1",
             "",
-            "Bảo rương: Do thiếu <color=Red>khí giới<color>",
-            "Tống quân thương tổn trầm trọng… "
+            "Bảo rương: Do thiếu <color=Red>khí giới<color>, Tống quân thương tổn trầm trọng… "
           ],
           [
             "1",
@@ -5308,9 +5259,7 @@
         ],
         "sayCalls": [
           [
-            "Có binh khí kịp thời",
-            "sức chiến đấu của quan binh tiền tuyến tăng mạnh! Mở Bảo rương",
-            "lấy được 1 quyển <color=Red>'Thượng Thanh Chân Kinh'<color>.",
+            "Có binh khí kịp thời, sức chiến đấu của quan binh tiền tuyến tăng mạnh! Mở Bảo rương, lấy được 1 quyển <color=Red>'Thượng Thanh Chân Kinh'<color>.",
             "0"
           ]
         ],
@@ -5327,7 +5276,7 @@
             "Lá bùa trên bảo rương ở Thái Tử nham viết: Đến thành Tương Dương tìm Thợ rèn tìm cách giải quyết vấn đề sức mạnh chống quân Kim không đủ. "
           ],
           [
-            "Mở Bảo rương"
+            "Mở Bảo rương, có được bộ Thượng Thanh Chân Kinh. "
           ]
         ],
         "setPropStateCalls": [],
@@ -5384,24 +5333,20 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương"
+            "Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương, giúp dân trừ ác. "
           ],
           [
             "Nhân dân ở thành Tương Dương vẫn trong cảnh dầu sôi lửa bỏng... "
           ],
           [
-            "Diệt xong bạo quyền ở thành Tương Dương"
+            "Diệt xong bạo quyền ở thành Tương Dương, có được 1 bộ Thái Thanh Chân Kinh. "
           ]
         ],
         "talkCalls": [
           [
             "1",
             "",
-            "Bảo rương: <color=Red>Thủ tướng<color> trong <color=Red>Nha môn Tương Dương<color> cả ngày chỉ biết uống rượu",
-            "ức hiếp bá tánh",
-            "lão bá tánh oán giận",
-            "<color=Red>bạo chính<color> lần này",
-            "làm sao diệt được?"
+            "Bảo rương: <color=Red>Thủ tướng<color> trong <color=Red>Nha môn Tương Dương<color> cả ngày chỉ biết uống rượu, ức hiếp bá tánh, lão bá tánh oán giận, <color=Red>bạo chính<color> lần này, làm sao diệt được?"
           ],
           [
             "1",
@@ -5411,9 +5356,7 @@
           [
             "1",
             "",
-            "Xóa bỏ <color=Red>chính sách tàn bạo<color> của Tương Dương",
-            "mở Bảo rương",
-            "lấy được 1 quyển <color=Red>'Thái Thanh Chân Kinh'<color>."
+            "Xóa bỏ <color=Red>chính sách tàn bạo<color> của Tương Dương, mở Bảo rương, lấy được 1 quyển <color=Red>'Thái Thanh Chân Kinh'<color>."
           ],
           [
             "1",
@@ -5437,7 +5380,7 @@
         ],
         "addNoteCalls": [
           [
-            "Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương"
+            "Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương, giúp dân trừ ác. "
           ],
           [
             "Mở Bảo rương có được bộ Thái Thanh Chân Kinh "
@@ -7186,7 +7129,7 @@
             "Cơ quan đã khóa lại"
           ],
           [
-            "Bạn mở được cơ quan"
+            "Bạn mở được cơ quan, cứu thành công Tiểu Quyên "
           ],
           [
             "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy "
@@ -7211,15 +7154,13 @@
         ],
         "sayCalls": [
           [
-            "Hiện giờ cơ quan đã bị khóa",
-            "bạn có muốn mở nó ra không?",
+            "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
             "2",
             "Mở ra /Turn_On",
             "Cứ tiếp tục đóng cửa /Turn_Off"
           ],
           [
-            "Hiện giờ cơ quan đã mở",
-            "bạn có muốn đóng nó lại không?",
+            "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
             "2",
             "Tiếp tục mở cửa /Turn_On",
             "Đóng/Turn_Off"
@@ -7228,7 +7169,7 @@
         "addEventItemCalls": [],
         "addNoteCalls": [
           [
-            "Bạn đã phá được Cơ quan"
+            "Bạn đã phá được Cơ quan, cứu được Tiểu Quyên "
           ]
         ],
         "setPropStateCalls": [],
@@ -7305,7 +7246,7 @@
             "Cơ quan đã khóa lại"
           ],
           [
-            "Bạn mở được cơ quan"
+            "Bạn mở được cơ quan, cứu thành công Tiểu Quyên "
           ],
           [
             "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy "
@@ -7330,15 +7271,13 @@
         ],
         "sayCalls": [
           [
-            "Hiện giờ cơ quan đã bị khóa",
-            "bạn có muốn mở nó ra không?",
+            "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
             "2",
             "Mở ra /Turn_On",
             "Cứ tiếp tục đóng cửa /Turn_Off"
           ],
           [
-            "Hiện giờ cơ quan đã mở",
-            "bạn có muốn đóng nó lại không?",
+            "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
             "2",
             "Tiếp tục mở cửa /Turn_On",
             "Đóng/Turn_Off"
@@ -7420,7 +7359,7 @@
             "Cơ quan đã khóa lại"
           ],
           [
-            "Bạn mở được cơ quan"
+            "Bạn mở được cơ quan, cứu thành công Tiểu Quyên "
           ],
           [
             "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy "
@@ -7445,15 +7384,13 @@
         ],
         "sayCalls": [
           [
-            "Hiện giờ cơ quan đã bị khóa",
-            "bạn có muốn mở nó ra không?",
+            "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
             "2",
             "Mở ra /Turn_On",
             "Cứ tiếp tục đóng cửa /Turn_Off"
           ],
           [
-            "Hiện giờ cơ quan đã mở",
-            "bạn có muốn đóng nó lại không?",
+            "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
             "2",
             "Tiếp tục mở cửa /Turn_On",
             "Đóng/Turn_Off"
@@ -7535,7 +7472,7 @@
             "Cơ quan đã khóa lại"
           ],
           [
-            "Bạn mở được cơ quan"
+            "Bạn mở được cơ quan, cứu thành công Tiểu Quyên "
           ],
           [
             "Nhưng khi bạn trở lại Hắc lao đẩy cánh cửa thì nó vẫn không hề động đậy "
@@ -7560,15 +7497,13 @@
         ],
         "sayCalls": [
           [
-            "Hiện giờ cơ quan đã bị khóa",
-            "bạn có muốn mở nó ra không?",
+            "Hiện giờ cơ quan đã bị khóa, bạn có muốn mở nó ra không?",
             "2",
             "Mở ra /Turn_On",
             "Cứ tiếp tục đóng cửa /Turn_Off"
           ],
           [
-            "Hiện giờ cơ quan đã mở",
-            "bạn có muốn đóng nó lại không?",
+            "Hiện giờ cơ quan đã mở, bạn có muốn đóng nó lại không?",
             "2",
             "Tiếp tục mở cửa /Turn_On",
             "Đóng/Turn_Off"
@@ -8002,8 +7937,7 @@
         ],
         "talkCalls": [
           [
-            "Không có 5 chiếc chìa khóa kia",
-            "bạn không thể mở được rương để lấy đá "
+            "Không có 5 chiếc chìa khóa kia, bạn không thể mở được rương để lấy đá "
           ],
           [
             "1",
@@ -8521,8 +8455,7 @@
         "talkCalls": [],
         "sayCalls": [
           [
-            "Mấy ngày nay că Khu Mật sứ đƠn vùng này th̃ sát",
-            "nên không cho bất cứ ăn mày nào xuất hiện ngoài đường",
+            "Mấy ngày nay că Khu Mật sứ đƠn vùng này th̃ sát, nên không cho bất cứ ăn mày nào xuất hiện ngoài đường",
             "0"
           ]
         ],
@@ -9351,45 +9284,31 @@
           [
             "9",
             "",
-            "Cho dù ngươi đã tìm được 4 chữ 'Thiện Nhập Giả Tử",
-            "tại sao còn dám ở lại? Chẳng lẽ trên đời này có người không sợ chết?",
-            "Thiên hạ không có ai không sợ chết",
-            "nhưng không thể gặp được người thân chẳng phải đau khổ hơn chết sao?",
+            "Cho dù ngươi đã tìm được 4 chữ 'Thiện Nhập Giả Tử', tại sao còn dám ở lại? Chẳng lẽ trên đời này có người không sợ chết?",
+            "Thiên hạ không có ai không sợ chết, nhưng không thể gặp được người thân chẳng phải đau khổ hơn chết sao?",
             "Rốt cục ngươi là ai?",
-            "Vãn bối là Đệ tử Đường Môn",
-            "đến mời Sư cô trở về Đường Môn đoàn tụ với Chưởng môn sư huynh! ",
-            "Ta không có huynh trưởng gì hết! Người thân của ta đã chết hết rồi! Năm xưa lúc ta bị đuổi khỏi Sư môn",
-            "không có ai nói giúp ta một lời nào! Lúc đó ta đã thề",
-            "đời này sẽ không bước vào Đường Môn nữa bước! ",
-            "Nếu Sư cô không có chút lưu luyến với Đường Môn",
-            "tại sao lại ẩn cư ở Trúc Hải hậu sơn?",
+            "Vãn bối là Đệ tử Đường Môn, đến mời Sư cô trở về Đường Môn đoàn tụ với Chưởng môn sư huynh! ",
+            "Ta không có huynh trưởng gì hết! Người thân của ta đã chết hết rồi! Năm xưa lúc ta bị đuổi khỏi Sư môn, không có ai nói giúp ta một lời nào! Lúc đó ta đã thề, đời này sẽ không bước vào Đường Môn nữa bước! ",
+            "Nếu Sư cô không có chút lưu luyến với Đường Môn, tại sao lại ẩn cư ở Trúc Hải hậu sơn?",
             "Đường U:.....",
-            "Sư cô",
-            "đã nhiều năm nay",
-            "Chưởng môn cứ hối tiếc đã không cản Sư phụ đuổi Sư cô ra khỏi gia môn",
-            "tại sao người không cho ông ta một cơ hội bù đắp? Huống chi huynh muội tình thâm hà tất chỉ vì một lúc nóng giận mà ân hận cả đời?",
-            "Ngươi không cần nhiều lời! Được! Ta cho ngươi một cơ hội. Năm đó lúc ta rời khỏi gia môn. Nhất thời vứt Kim Hạng khuyên của cha tặng xuống Phỉ Thúy hồ. Nếu ngươi có thể tìm giúp ta",
-            "ta sẽ tha thứ cho bọn họ! "
+            "Sư cô, đã nhiều năm nay, Chưởng môn cứ hối tiếc đã không cản Sư phụ đuổi Sư cô ra khỏi gia môn, tại sao người không cho ông ta một cơ hội bù đắp? Huống chi huynh muội tình thâm hà tất chỉ vì một lúc nóng giận mà ân hận cả đời?",
+            "Ngươi không cần nhiều lời! Được! Ta cho ngươi một cơ hội. Năm đó lúc ta rời khỏi gia môn. Nhất thời vứt Kim Hạng khuyên của cha tặng xuống Phỉ Thúy hồ. Nếu ngươi có thể tìm giúp ta, ta sẽ tha thứ cho bọn họ! "
           ],
           [
             "1",
             "",
-            "Bạn không có khẩu quyết",
-            "không thể thông qua bia đá nói chuyện với Đường U."
+            "Bạn không có khẩu quyết, không thể thông qua bia đá nói chuyện với Đường U."
           ],
           [
             "2",
             "",
-            "Sư cô! Đệ tử đã đã tìm được Kim Hạng khuyên dưới Phỉ Thúy hồ",
-            "Sư cô có thể suy nghĩ lại không?",
-            "Ngươi đưa Kim Hạng khuyên cho Đại ca ta",
-            "thấy chiếc vòng này sẽ biết ta đã tha thứ cho huynh ấy."
+            "Sư cô! Đệ tử đã đã tìm được Kim Hạng khuyên dưới Phỉ Thúy hồ, Sư cô có thể suy nghĩ lại không?",
+            "Ngươi đưa Kim Hạng khuyên cho Đại ca ta, thấy chiếc vòng này sẽ biết ta đã tha thứ cho huynh ấy."
           ],
           [
             "1",
             "",
-            "Nếu ngươi có thể tìm được cho ta chiếc Kim Hạng khuyên dưới Phỉ Thúy hồ",
-            "ta sẽ tha thứ cho bọn họ! "
+            "Nếu ngươi có thể tìm được cho ta chiếc Kim Hạng khuyên dưới Phỉ Thúy hồ, ta sẽ tha thứ cho bọn họ! "
           ],
           [
             "1",
@@ -9399,16 +9318,12 @@
           [
             "1",
             "",
-            "Trên bia đá có viết: 'Thiện Nhập Giả",
-            "sát vô xá'. Chữ 'sát' viết bằng màu máu rất là đặc biệt. "
+            "Trên bia đá có viết: 'Thiện Nhập Giả, sát vô xá'. Chữ 'sát' viết bằng màu máu rất là đặc biệt. "
           ]
         ],
         "sayCalls": [
           [
-            "Ta sống thanh tịnh một mình quen rồi",
-            "không thích ai quấy nhiễu! Chuyện cũ qua rồi",
-            "nói nhiều vô ích",
-            "ngươi về đi!",
+            "Ta sống thanh tịnh một mình quen rồi, không thích ai quấy nhiễu! Chuyện cũ qua rồi, nói nhiều vô ích, ngươi về đi!",
             "0"
           ]
         ],
@@ -9419,7 +9334,7 @@
         ],
         "addNoteCalls": [
           [
-            "Trên bia đá trước phòng Đường U"
+            "Trên bia đá trước phòng Đường U, nhận nhiệm vụ đi hồ Phỉ Thúy tìm Kim Hạng Quyển "
           ],
           [
             "ở phía trước bia đá tại Vô Tâm Cốc biết là phải tìm khẩu quyết bia đá trong cốc trước. "
@@ -9755,8 +9670,7 @@
           [
             "1",
             "",
-            "Bạn thử mở rương báu",
-            "nhưng hình như nó đã bị rỉ sét!"
+            "Bạn thử mở rương báu, nhưng hình như nó đã bị rỉ sét!"
           ]
         ],
         "sayCalls": [
@@ -9774,7 +9688,7 @@
         ],
         "addNoteCalls": [
           [
-            "Tại tầng thứ 3 của Trúc Tơ Động có 2 rương báu đánh vỡ 1 rương báu"
+            "Tại tầng thứ 3 của Trúc Tơ Động có 2 rương báu đánh vỡ 1 rương báu, sẽ được Thất Tinh Tuyệt Mệnh Kiếm. "
           ]
         ],
         "setPropStateCalls": [],
@@ -9835,8 +9749,7 @@
           [
             "1",
             "",
-            "Bạn thử mở rương báu",
-            "nhưng hình như nó đã bị rỉ sét!"
+            "Bạn thử mở rương báu, nhưng hình như nó đã bị rỉ sét!"
           ]
         ],
         "sayCalls": [
@@ -10317,16 +10230,12 @@
           [
             "1",
             "",
-            "Bạn giật lấy bản thông cáo",
-            "quyết tâm trừ hại giúp bá tánh!"
+            "Bạn giật lấy bản thông cáo, quyết tâm trừ hại giúp bá tánh!"
           ]
         ],
         "sayCalls": [
           [
-            "Thông cáo: Gần đây các vùng ngoại ô bị heo rừng quấy nhiễu",
-            "phá hoại mùa màng",
-            "thật là phiền phức",
-            "đã treo giải 500 lạng bạc để tìm dũng sĩ diệt bầy heo rừng này. Hễ giết được bọn chúng thì đến nha môn lãnh thưởng.",
+            "Thông cáo: Gần đây các vùng ngoại ô bị heo rừng quấy nhiễu, phá hoại mùa màng, thật là phiền phức, đã treo giải 500 lạng bạc để tìm dũng sĩ diệt bầy heo rừng này. Hễ giết được bọn chúng thì đến nha môn lãnh thưởng.",
             "2",
             "Bảng niêm yết /W11_get",
             "Không màng /no"
@@ -11134,8 +11043,7 @@
           [
             "1",
             "",
-            "Không có chìa khóa",
-            "không mở được rương báu!."
+            "Không có chìa khóa, không mở được rương báu!."
           ]
         ],
         "sayCalls": [],
@@ -11274,8 +11182,7 @@
         "talkCalls": [],
         "sayCalls": [
           [
-            "Đi Thần Tiên động",
-            "Hưởng Thủy động.",
+            "Đi Thần Tiên động, Hưởng Thủy động.",
             "0"
           ]
         ],
@@ -11933,10 +11840,10 @@
         "setFightStateCalls": [],
         "msg2PlayerCalls": [
           [
-            "Đánh bại trợ thủ của tên ác bá"
+            "Đánh bại trợ thủ của tên ác bá, lấy ba chìa khóa mở cửa ba phòng tối cứu những thiếu nữ bị bắt khác. "
           ],
           [
-            "Bạn tìm ra cơ quan phòng tối giam các thiếu nữ"
+            "Bạn tìm ra cơ quan phòng tối giam các thiếu nữ, nhưng cần có 3 chiếc chìa khóa mới mở được cơ quan này. "
           ],
           [
             "ở đây có một cơ quan nhưng không biết dùng làm gì. "
@@ -11947,7 +11854,7 @@
         "addEventItemCalls": [],
         "addNoteCalls": [
           [
-            "Đánh bại trợ thủ của tên ác bá"
+            "Đánh bại trợ thủ của tên ác bá, lấy ba chìa khóa mở cửa ba phòng tối cứu những thiếu nữ bị bắt khác. "
           ]
         ],
         "setPropStateCalls": [],
@@ -12077,21 +11984,20 @@
             "Hái một bông hoa Đại Man Đà La. "
           ],
           [
-            "Bạn cảm thấy tay bị tê liệt"
+            "Bạn cảm thấy tay bị tê liệt, đã trúng độc rồI. "
           ],
           [
             "Bạn đưa tay hái một đóa hoa Đại Man Đà La "
           ],
           [
-            "Vừa sờ vào hoa"
+            "Vừa sờ vào hoa, bạn cảm thấy tay mình bị tê liệt, hình như hoa này có độc, bạn liền rút tay lại. "
           ]
         ],
         "talkCalls": [
           [
             "1",
             "",
-            "Ngươi đang mang nhiệm vụ cấp bách như thế",
-            "mà còn chạy lung tung à?"
+            "Ngươi đang mang nhiệm vụ cấp bách như thế, mà còn chạy lung tung à?"
           ]
         ],
         "sayCalls": [],

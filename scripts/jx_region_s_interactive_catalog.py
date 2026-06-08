@@ -261,12 +261,34 @@ def decode_server_text(raw: bytes) -> str:
     return raw.decode('gb18030', errors='replace')
 
 
+def split_lua_args(arg_text: str) -> list[str]:
+    args: list[str] = []
+    buf: list[str] = []
+    quote = ''
+    for ch in arg_text:
+        if quote:
+            buf.append(ch)
+            if ch == quote:
+                quote = ''
+            continue
+        if ch in ('"', "'"):
+            quote = ch
+            buf.append(ch)
+            continue
+        if ch == ',':
+            args.append(''.join(buf).strip().strip('\"\''))
+            buf = []
+            continue
+        buf.append(ch)
+    args.append(''.join(buf).strip().strip('\"\''))
+    return args
+
+
 def parse_lua_calls(source: str, function_name: str, limit: int = 8) -> list[list[str]]:
     calls = []
     pattern = r'\b' + re.escape(function_name) + r'\s*\(([^)]*)\)'
     for match in re.finditer(pattern, source):
-        args = [part.strip().strip('\"\'') for part in match.group(1).split(',')]
-        calls.append(args)
+        calls.append(split_lua_args(match.group(1)))
         if len(calls) >= limit:
             break
     return calls
@@ -447,8 +469,15 @@ def build_object_script_catalog(geometries: list[dict[str, Any]], pc_root: Path)
 def clean_user_message(message: str) -> str:
     message = (message or '').strip()
     return (message
+            .replace('ChiƠn', 'Chiến')
+            .replace('chiƠn', 'chiến')
+            .replace('ThiƠu', 'Thiếu')
+            .replace('thiƠu', 'thiếu')
+            .replace('KiƠm', 'Kiếm')
+            .replace('kiƠm', 'kiếm')
             .replace('đƠn', 'đến')
             .replace('ĐƠn', 'Đến')
+            .replace('nă cứ', 'nó cứ')
             .replace('  ', ' '))
 
 
@@ -509,6 +538,58 @@ def is_safe_say_message(actions: dict[str, Any]) -> bool:
     )
 
 
+def source_uses_only_calls(source: str, allowed: set[str]) -> bool:
+    calls = set(re.findall(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*\(', source or ''))
+    return calls.issubset(allowed)
+
+
+def talk_messages(actions: dict[str, Any]) -> list[str]:
+    messages: list[str] = []
+    for call in actions.get('talkCalls') or []:
+        if len(call) < 3:
+            return []
+        if not str(call[0]).strip().isdigit():
+            return []
+        callback = str(call[1]).strip() if len(call) > 1 else ''
+        if callback not in ('', 'nil'):
+            return []
+        for part in call[2:]:
+            message = clean_user_message(str(part))
+            if not message:
+                continue
+            if '/' in message or not is_safe_user_message(message):
+                return []
+            messages.append(message)
+    return messages
+
+
+def is_safe_talk_message(actions: dict[str, Any], source: str) -> bool:
+    if not actions.get('talkCalls'):
+        return False
+    if not source_uses_only_calls(source, {'main', 'Talk'}):
+        return False
+    if re.search(r'\b(if|for|while)\b', source or ''):
+        return False
+    if not talk_messages(actions):
+        return False
+    return not (
+        actions.get('newWorldCalls') or
+        actions.get('setPosCalls') or
+        actions.get('setFightStateCalls') or
+        actions.get('msg2PlayerCalls') or
+        actions.get('sayCalls') or
+        actions.get('getTaskCalls') or
+        actions.get('setTaskCalls') or
+        actions.get('haveItemCalls') or
+        actions.get('addEventItemCalls') or
+        actions.get('addNoteCalls') or
+        actions.get('setPropStateCalls') or
+        actions.get('addItemCalls') or
+        actions.get('delItemCalls') or
+        actions.get('usesCityApis')
+    )
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
         return False
@@ -531,6 +612,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
     entries: list[dict[str, Any]] = []
     for script in object_scripts:
         actions = script.get('actions') or {}
+        source_text = script.get('sourceText', '')
         if not script.get('resolved') or not actions.get('hasMain'):
             continue
         fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1)
@@ -582,11 +664,29 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 'message': single_string(actions.get('sayCalls') or []),
                 'source': 'PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch',
             })
+            continue
+        talk_lines = talk_messages(actions)
+        if is_safe_talk_message(actions, source_text):
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TalkMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'message': '\n'.join(talk_lines),
+                'messages': talk_lines,
+                'source': 'PC object Lua main(): deterministic read-only Talk(count,"",message...) with no conditional/API branch',
+            })
     coverage = {
         'deterministicObjectActions': len(entries),
         'deterministicObjectNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
         'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
+        'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
     }
     return entries, coverage
 

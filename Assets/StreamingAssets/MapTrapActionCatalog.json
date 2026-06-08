@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T04:16:34Z",
+  "generatedAtUtc": "2026-06-08T04:25:05Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
