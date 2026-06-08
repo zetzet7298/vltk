@@ -37,6 +37,19 @@ namespace VLTK.UI
     /// </summary>
     public static class FriendPanelService
     {
+
+        /// <summary>
+        /// Declared in 2b9c5056.ini but not active PC buttons: zero-size or bogus art.
+        /// Keep these documented so mobile does not invent fake friend-panel controls.
+        /// </summary>
+        public static readonly IReadOnlyDictionary<string, string> DisabledPcFriendControls =
+            new Dictionary<string, string>
+            {
+                ["OptionBtn"] = @"2b9c5056 [OptionBtn] is Left=0 Top=0 Width=0 Height=0 with Image=\Spr\Ui3\0; not a visible/clickable PC HUD button.",
+                ["FriendScroll"] = "2b9c5056 [FriendScroll] is Left=0 Top=0 Width=0 Height=0 and has no Image; scroll behavior is represented by ScrollUp/ScrollDown.",
+                ["FriendScroll_Btn"] = @"2b9c5056 [FriendScroll_Btn] is Left=0 Top=0 Width=0 Height=0; do not expose the generic \Spr\Ui2\登入\拖动条.spr as a fake mobile button.",
+            };
+
         public static readonly IReadOnlyList<FriendPanelControlRow> PcControls = new List<FriendPanelControlRow>
         {
             new FriendPanelControlRow("GroupBtn", "Nhóm", "mở/thu nhóm danh sách bằng hữu"),

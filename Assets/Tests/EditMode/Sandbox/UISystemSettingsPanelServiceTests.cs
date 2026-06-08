@@ -208,6 +208,11 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual("ScrollDown", snap.controls[8].pcSection);
             Assert.AreEqual("CloseBtn", snap.controls[9].pcSection);
             StringAssert.Contains("Danh sách bằng hữu", snap.friendRows[0]);
+            Assert.IsTrue(FriendPanelService.DisabledPcFriendControls.ContainsKey("OptionBtn"));
+            Assert.IsTrue(FriendPanelService.DisabledPcFriendControls.ContainsKey("FriendScroll"));
+            Assert.IsTrue(FriendPanelService.DisabledPcFriendControls.ContainsKey("FriendScroll_Btn"));
+            StringAssert.Contains("Width=0 Height=0", FriendPanelService.DisabledPcFriendControls["OptionBtn"]);
+            StringAssert.Contains("ScrollUp/ScrollDown", FriendPanelService.DisabledPcFriendControls["FriendScroll"]);
         }
 
         // ─── SystemMenuPanelService ─────────────────────────────────────────
