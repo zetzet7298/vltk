@@ -188,6 +188,8 @@ namespace VLTK.Tests.Sandbox
             InvokePrivateMethod("OnUtilityToggleClick");
             Assert.AreEqual(1, _hud.CurrentUtilityBarMode);
             Assert.IsFalse(_utilityDock.ClassListContains("hidden"));
+            Assert.IsTrue(_utilityDock.ClassListContains("action-mode"));
+            Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
             Assert.IsFalse(_utilityActionRow.ClassListContains("hidden"));
             Assert.IsTrue(_utilityMenuRowA.ClassListContains("hidden"));
             Assert.IsTrue(_utilityMenuRowB.ClassListContains("hidden"));
@@ -196,6 +198,8 @@ namespace VLTK.Tests.Sandbox
 
             InvokePrivateMethod("OnUtilityToggleClick");
             Assert.AreEqual(2, _hud.CurrentUtilityBarMode);
+            Assert.IsFalse(_utilityDock.ClassListContains("action-mode"));
+            Assert.IsTrue(_utilityDock.ClassListContains("menu-mode"));
             Assert.IsTrue(_utilityActionRow.ClassListContains("hidden"));
             Assert.IsFalse(_utilityMenuRowA.ClassListContains("hidden"));
             Assert.IsFalse(_utilityMenuRowB.ClassListContains("hidden"));
@@ -204,6 +208,8 @@ namespace VLTK.Tests.Sandbox
             InvokePrivateMethod("OnUtilityToggleClick");
             Assert.AreEqual(0, _hud.CurrentUtilityBarMode);
             Assert.IsTrue(_utilityDock.ClassListContains("hidden"));
+            Assert.IsFalse(_utilityDock.ClassListContains("action-mode"));
+            Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
             Assert.IsFalse(_utilityToggleBtn.ClassListContains("active"));
             Assert.AreEqual("Mở", _utilityToggleLabel.text);
         }

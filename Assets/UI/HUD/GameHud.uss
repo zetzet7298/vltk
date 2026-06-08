@@ -1206,6 +1206,18 @@
     z-index: 910;
 }
 
+.hud-mobile-utility-dock.action-mode {
+    width: 372px;
+    height: 62px;
+    top: 8px;
+}
+
+.hud-mobile-utility-dock.menu-mode {
+    width: 292px;
+    height: 112px;
+    top: 8px;
+}
+
 .hud-mobile-utility-row {
     height: 48px;
     flex-direction: row;

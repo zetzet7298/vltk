@@ -1666,6 +1666,8 @@ namespace VLTK.UI
             bool showDock = _utilityBarMode != 0;
 
             _utilityDock?.EnableInClassList("hidden", !showDock);
+            _utilityDock?.EnableInClassList("action-mode", showAction);
+            _utilityDock?.EnableInClassList("menu-mode", showMenu);
             _utilityActionRow?.EnableInClassList("hidden", !showAction);
             _utilityMenuRowA?.EnableInClassList("hidden", !showMenu);
             _utilityMenuRowB?.EnableInClassList("hidden", !showMenu);
