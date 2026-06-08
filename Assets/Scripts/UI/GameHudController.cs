@@ -382,6 +382,9 @@ namespace VLTK.UI
             _pcToolClose = root.Q("PcToolClose");
             _pcToolList = root.Q<ScrollView>("PcToolList");
             _pcToolTitle = root.Q<Label>("PcToolTitle");
+            var chatRoomScrollTrack = root.Q("ChatRoomScrollTrack");
+            if (chatRoomScrollTrack != null)
+                chatRoomScrollTrack.pickingMode = PickingMode.Ignore;
 
             _invWindow = root.Q("InventoryWindow");
             _invFrame = root.Q("InventoryFrame");

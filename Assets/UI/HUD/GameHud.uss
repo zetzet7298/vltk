@@ -466,6 +466,18 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
+/* PC 7e20a7ac/c9c8a750 [ChatRoom_Scroll]: Left=-15 Top=15 Width=12 Height=95 RepeatImg=1.
+   Exact SPR path (\Spr\Ui3\聊天条\聊天条中部改.spr) is not present in active PAKs, so this uses the verified PC HUD evidence crop. */
+.hud-chat-room-scroll-track {
+    position: absolute;
+    left: 16px;
+    top: 59px;
+    width: 12px;
+    height: 95px;
+    background-image: url('project://database/Assets/UI/HUD/Art/chat_scroll_track_pc.png');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
 .hud-chat-rail-icon.chat-up,
 .hud-chat-rail-icon.chat-down {
     width: 16px;

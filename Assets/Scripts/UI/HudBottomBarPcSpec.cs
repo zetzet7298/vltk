@@ -128,16 +128,23 @@ namespace VLTK.UI
 
 
         /// <summary>
-        /// Active PC chat controls that are declared in 7e20a7ac/c9c8a750 but still need exact art/behavior resolution.
+        /// Active PC chat controls that are declared in 7e20a7ac/c9c8a750 and have been ported with auditable PC evidence.
+        /// </summary>
+        public static readonly IReadOnlyDictionary<string, string> PortedDeclaredChatControls =
+            new Dictionary<string, string>
+            {
+                ["ChatRoom_Scroll"] = @"7e20a7ac/c9c8a750 [ChatRoom_Scroll] active track: Left=-15 Top=15 Width=12 Height=95, RepeatImg=1, Image=\Spr\Ui3\聊天条\聊天条中部改.spr. The exact named SPR path is not present in active PC PAK entries, so mobile uses chat_scroll_track_pc.png cropped from pc-evidence/pc_hud.png at x=0 y=500 w=12 h=95 while preserving the PC scroll Up/Thumb/Down button controls separately.",
+            };
+
+        /// <summary>
+        /// Active PC chat controls that still need exact art/behavior resolution.
         /// Keep them visible to audits so they are not silently treated as complete or replaced by fake generated UI.
         /// </summary>
         public static readonly IReadOnlyDictionary<string, string> UnresolvedDeclaredChatControls =
             new Dictionary<string, string>
             {
-                ["ChatRoom_Scroll"] = @"7e20a7ac/c9c8a750 [ChatRoom_Scroll] is active (Left=-15 Top=15 Width=12 Height=95) and points to \Spr\Ui3\聊天条\聊天条中部改.spr. Existing mobile has Up/Thumb/Down controls, but the exact scroll-track art/tiling is not resolved yet; do not mark full PC chat rail complete without it.",
                 ["TabButton"] = "7e20a7ac/c9c8a750 [TabButton] is the PC chat-tab template (55/60x12, no Image); mobile channel tabs use per-channel PC button crops and this template must remain audited as non-art template rather than a missing separate button.",
             };
-
 
         /// <summary>Ui3/icon_bar.ini (uid fdaebb7f), PC 1024 mode right-side icon strip.</summary>
         public static readonly IReadOnlyList<ButtonRect> IconBar =

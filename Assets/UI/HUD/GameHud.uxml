@@ -114,6 +114,7 @@
                 <ui:VisualElement name="ChatTabOther" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="ChatRail" class="hud-chat-rail">
+                <ui:VisualElement name="ChatRoomScrollTrack" class="hud-chat-room-scroll-track"/>
                 <ui:VisualElement name="ChatSizeBtn" class="hud-chat-rail-btn hud-chat-size"><ui:VisualElement class="hud-chat-rail-icon chat-size"/></ui:VisualElement>
                 <ui:VisualElement name="ChatScrollUpBtn" class="hud-chat-rail-btn hud-chat-scroll-up"><ui:VisualElement class="hud-chat-rail-icon chat-up"/></ui:VisualElement>
                 <ui:VisualElement name="ChatScrollThumbBtn" class="hud-chat-rail-btn hud-chat-scroll-thumb"><ui:VisualElement class="hud-chat-rail-icon chat-thumb"/></ui:VisualElement>

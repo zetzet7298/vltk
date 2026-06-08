@@ -51,6 +51,7 @@ namespace VLTK.Tests.Sandbox
             AssertTextureSize("btn_chat_channel_identity_pc.png", 32, 32);
             AssertTextureSize("chat_bar_top.png", 15, 16);
             AssertTextureSize("chat_bar_bottom.png", 15, 16);
+            AssertTextureSize("chat_scroll_track_pc.png", 12, 95);
             AssertTextureSize("聊天条阴影按钮.png", 15, 16);
             AssertTextureSize("QQ主界面向上按钮_00.png", 16, 10);
             AssertTextureSize("QQ主界面向下按钮_00.png", 16, 10);
@@ -395,7 +396,7 @@ namespace VLTK.Tests.Sandbox
             {
                 "主界面按钮-世界频道选择.png", "主界面按钮-密人频道选择.png", "主界面按钮-城市频道选择.png",
                 "主界面按钮-队伍频道选择.png", "主界面按钮-门派频道选择.png", "主界面按钮-好友频道选择.png",
-                "chat_bar_top.png", "chat_bar_bottom.png", "聊天条阴影按钮.png",
+                "chat_bar_top.png", "chat_bar_bottom.png", "chat_scroll_track_pc.png", "聊天条阴影按钮.png",
                 "QQ主界面向上按钮_00.png", "QQ主界面向下按钮_00.png", "btn_chat_scroll_thumb_pc.png", "btn_chat_split_pc.png", "频道开与关b.png",
                 "提示信息窗－上_00.png", "提示信息窗－开关_00.png", "提示信息窗－下_00.png"
             })
@@ -407,14 +408,24 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void ChatRailUnresolvedActiveControls_RemainAudited()
+        public void ChatRailDeclaredControls_AuditPortedTrackAndTemplate()
         {
-            Assert.IsTrue(HudBottomBarPcSpec.UnresolvedDeclaredChatControls.ContainsKey("ChatRoom_Scroll"),
-                "PC chat [ChatRoom_Scroll] active track must stay audited until exact 聊天条中部改.spr art/tiling is ported.");
+            Assert.IsTrue(HudBottomBarPcSpec.PortedDeclaredChatControls.ContainsKey("ChatRoom_Scroll"),
+                "PC chat [ChatRoom_Scroll] active track must be audited with its PC crop provenance.");
+            StringAssert.Contains("聊天条中部改.spr", HudBottomBarPcSpec.PortedDeclaredChatControls["ChatRoom_Scroll"]);
+            StringAssert.Contains("chat_scroll_track_pc.png", HudBottomBarPcSpec.PortedDeclaredChatControls["ChatRoom_Scroll"]);
+            Assert.IsFalse(HudBottomBarPcSpec.UnresolvedDeclaredChatControls.ContainsKey("ChatRoom_Scroll"),
+                "ChatRoom_Scroll is now ported via verified PC evidence crop and must not remain in the unresolved bucket.");
             Assert.IsTrue(HudBottomBarPcSpec.UnresolvedDeclaredChatControls.ContainsKey("TabButton"),
                 "PC chat [TabButton] template must stay audited so it is not invented as a separate fake button.");
-            StringAssert.Contains("聊天条中部改.spr", HudBottomBarPcSpec.UnresolvedDeclaredChatControls["ChatRoom_Scroll"]);
             StringAssert.Contains("non-art template", HudBottomBarPcSpec.UnresolvedDeclaredChatControls["TabButton"]);
+
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            var css = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uss"));
+            StringAssert.Contains("name=\"ChatRoomScrollTrack\"", uxml);
+            StringAssert.Contains("chat_scroll_track_pc.png", css);
+            StringAssert.Contains("width: 12px;", ExtractCssBlock(css, ".hud-chat-room-scroll-track"));
+            StringAssert.Contains("height: 95px;", ExtractCssBlock(css, ".hud-chat-room-scroll-track"));
         }
 
         [Test]
@@ -582,6 +593,7 @@ namespace VLTK.Tests.Sandbox
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_send.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_face.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_channel_identity_pc.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/chat_scroll_track_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_scroll_thumb_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_split_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_flag_pc.png");
