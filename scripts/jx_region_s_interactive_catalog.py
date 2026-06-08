@@ -2110,6 +2110,48 @@ OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    '0x252B7020': {
+        'allowStaticSay': True,
+        'branches': [
+            {'label': 'task_15380_byte1_start_plague', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 1, 'value': 0}], 'effects': [
+                {'type': 'PostMessage', 'message': 'Bảo rương: Hiện nay tiền tuyến phe Tống <color=Red>bệnh dịch hạch<color> kéo dài, hãy đến <color=Red>Tương Dương<color> tìm <color=Red>Chủ dược điếm <color> tìm cách guíp đỡ'},
+                {'type': 'PostMessage', 'message': 'Gần đây bệnh dịch hạch lan tràn trong doanh trại quân Tống, cần phải đến thành Tương Dương tìm ông chủ tiệm thuốc nhờ giúp đỡ giải quyết.'},
+                {'type': 'SetTaskByte', 'taskId': 17, 'byteIndex': 1, 'value': 2},
+                {'type': 'AddNote', 'message': 'Lá bùa trên bảo rương ở Thái Tử nham viết:: Đến thành Tương Dương tìm chủ tiệm thuốc tìm cách ngăn chặn bệnh dịch hạch lan tràn trong doanh trại quân Tống.'},
+            ]},
+            {'label': 'task_15380_byte1_in_progress_plague', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteBetweenExclusive', 'taskId': 17, 'byteIndex': 1, 'minValue': 0, 'maxValue': 8}], 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương: <color=Red>Bệnh dịch hạch<color> vẫn đang kéo dài.....'}, {'type': 'PostMessage', 'message': 'Bệnh dịch hạch vẫn đang lan tràn...'}]},
+            {'label': 'task_15380_byte1_ready_reward_69', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 1, 'value': 8}], 'effects': [{'type': 'AddEventItem', 'itemId': 69}, {'type': 'PostMessage', 'message': "<color=Red>Bệnh dịch hạch<color> đã trừ, mở bảo rương, phát hiện 1 quyển <color=Red>'Ngọc Thanh Chân Kinh'<color>."}, {'type': 'PostMessage', 'message': 'Bệnh dịch hạch được tiêu diệt, có bộ Ngọc Thanh Chân Kinh.'}, {'type': 'SetTaskByte', 'taskId': 17, 'byteIndex': 1, 'value': 10}, {'type': 'AddNote', 'message': 'Mở Bảo rương có Ngọc Thanh Chân Kinh.'}]},
+            {'label': 'task_15380_byte1_done_restore_69', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 1, 'value': 10}, {'type': 'MissingItem', 'itemId': 69, 'count': 1}], 'effects': [{'type': 'AddEventItem', 'itemId': 69}]},
+            {'label': 'task_15380_byte1_done_empty', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 1, 'value': 10}], 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương đã rỗng'}]},
+            {'label': 'not_task_locked', 'effects': [{'type': 'PostMessage', 'message': 'Chưa nhận nhiệm vụ! Bạn không thể mở Bảo rương này!'}]},
+        ],
+    },
+    '0x21A56376': {
+        'allowStaticSay': True,
+        'branches': [
+            {'label': 'task_15380_byte2_start_weapon_shortage', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 2, 'value': 0}], 'effects': [
+                {'type': 'PostMessage', 'message': 'Bảo rương: Gần đây <color=Red>binh khí<color> của Tống quân không đủ, <color=Red>thương vong<color> trầm trọng, hãy đến <color=Red>Tương Dương<color> tìm <color=Red>thợ rèn <color> giúp đỡ.'},
+                {'type': 'PostMessage', 'message': 'Gần đây khí giới chống Kim không đủ, <color=Red>binh sĩ thương vong trầm trọng<color>, cần đến thành Tương Dương nhờ Thợ rèn giúp đỡ giải quyết.'},
+                {'type': 'SetTaskByte', 'taskId': 17, 'byteIndex': 2, 'value': 2},
+                {'type': 'AddNote', 'message': 'Lá bùa trên bảo rương ở Thái Tử nham viết: Đến thành Tương Dương tìm Thợ rèn tìm cách giải quyết vấn đề sức mạnh chống quân Kim không đủ.'},
+            ]},
+            {'label': 'task_15380_byte2_in_progress_weapon_shortage', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteBetweenExclusive', 'taskId': 17, 'byteIndex': 2, 'minValue': 0, 'maxValue': 8}], 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương: Do thiếu <color=Red>khí giới<color>, Tống quân thương tổn trầm trọng…'}, {'type': 'PostMessage', 'message': 'Do sức mạnh không đủ, tạo nên thương vong không tránh khỏi khi chống quân Kim...'}]},
+            {'label': 'task_15380_byte2_ready_reward_70', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 2, 'value': 8}], 'effects': [{'type': 'AddEventItem', 'itemId': 70}, {'type': 'PostMessage', 'message': "Có binh khí kịp thời, sức chiến đấu của quan binh tiền tuyến tăng mạnh! Mở Bảo rương, lấy được 1 quyển <color=Red>'Thượng Thanh Chân Kinh'<color>."}, {'type': 'PostMessage', 'message': 'Cần phải bổ sung binh khí gấp, sức mạnh chiến đấu của quan binh nhà Kim rất mạnh. Mở Bảo rương, có được bộ Thượng Thanh Chân Kinh.'}, {'type': 'SetTaskByte', 'taskId': 17, 'byteIndex': 2, 'value': 10}, {'type': 'AddNote', 'message': 'Mở Bảo rương, có được bộ Thượng Thanh Chân Kinh.'}]},
+            {'label': 'task_15380_byte2_done_restore_70', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 2, 'value': 10}, {'type': 'MissingItem', 'itemId': 70, 'count': 1}], 'effects': [{'type': 'AddEventItem', 'itemId': 70}]},
+            {'label': 'task_15380_byte2_done_empty', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 2, 'value': 10}], 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương đã rỗng'}]},
+            {'label': 'not_task_locked', 'effects': [{'type': 'PostMessage', 'message': 'Chưa nhận nhiệm vụ! Bạn không thể mở Bảo rương này!'}]},
+        ],
+    },
+    '0x223715BC': {
+        'branches': [
+            {'label': 'task_15380_byte3_start_tyranny', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 3, 'value': 0}], 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương: <color=Red>Thủ tướng<color> trong <color=Red>Nha môn Tương Dương<color> cả ngày chỉ biết uống rượu, ức hiếp bá tánh, lão bá tánh oán giận, <color=Red>bạo chính<color> lần này, làm sao diệt được?'}, {'type': 'PostMessage', 'message': 'Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương, giúp dân trừ ác.'}, {'type': 'SetTaskByte', 'taskId': 17, 'byteIndex': 3, 'value': 2}, {'type': 'AddNote', 'message': 'Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương, giúp dân trừ ác.'}]},
+            {'label': 'task_15380_byte3_in_progress_tyranny', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteBetweenExclusive', 'taskId': 17, 'byteIndex': 3, 'minValue': 0, 'maxValue': 5}], 'effects': [{'type': 'PostMessage', 'message': 'Bá tánh Tương Dương vẫn sống được dưới <color=Red>chính sách tàn bạo<color> của <color=Red>Thủ tướng<color>.....'}, {'type': 'PostMessage', 'message': 'Nhân dân ở thành Tương Dương vẫn trong cảnh dầu sôi lửa bỏng...'}]},
+            {'label': 'task_15380_byte3_ready_reward_71', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 3, 'value': 5}], 'effects': [{'type': 'AddEventItem', 'itemId': 71}, {'type': 'PostMessage', 'message': "Xóa bỏ <color=Red>chính sách tàn bạo<color> của Tương Dương, mở Bảo rương, lấy được 1 quyển <color=Red>'Thái Thanh Chân Kinh'<color>."}, {'type': 'PostMessage', 'message': 'Diệt xong bạo quyền ở thành Tương Dương, có được 1 bộ Thái Thanh Chân Kinh.'}, {'type': 'SetTaskByte', 'taskId': 17, 'byteIndex': 3, 'value': 10}, {'type': 'AddNote', 'message': 'Mở Bảo rương có được bộ Thái Thanh Chân Kinh'}]},
+            {'label': 'task_15380_byte3_done_restore_71', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 3, 'value': 10}, {'type': 'MissingItem', 'itemId': 71, 'count': 1}], 'effects': [{'type': 'AddEventItem', 'itemId': 71}]},
+            {'label': 'task_15380_byte3_done_empty', 'conditions': [{'type': 'TaskEquals', 'taskId': 5, 'value': 60 * 256 + 20}, {'type': 'TaskByteEquals', 'taskId': 17, 'byteIndex': 3, 'value': 10}], 'effects': [{'type': 'PostMessage', 'message': 'Bảo rương đã rỗng'}]},
+            {'label': 'not_task_locked', 'effects': [{'type': 'PostMessage', 'message': 'Chưa nhận nhiệm vụ! Bạn không thể mở Bảo rương này!'}]},
+        ],
+    },
 }
 
 
@@ -2118,7 +2160,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     if spec is None:
         return None
     clean_source = strip_lua_line_comments(script.get('sourceText', ''))
-    allowed = {'main', 'GetTask', 'SetTask', 'GetTaskTemp', 'SetTaskTemp', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
+    allowed = {'main', 'GetTask', 'SetTask', 'GetTaskTemp', 'SetTaskTemp', 'GetByte', 'SetByte', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
     uses_random_rewards = any(
         effect.get('type') == 'RandomAddEventItemIfMissing'
         for branch in spec.get('branches', [])
@@ -2146,6 +2188,7 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     effect_event_items: list[int] = []
     effect_set_tasks: list[tuple[int, int]] = []
     effect_set_task_temps: list[tuple[int, int]] = []
+    effect_set_task_bytes: list[tuple[int, int, int]] = []
     for branch in spec.get('branches', []):
         for effect in branch.get('effects', []):
             if effect.get('type') == 'ConsumeItems':
@@ -2156,6 +2199,8 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
                 effect_set_tasks.append((effect.get('taskId', 0), effect.get('value', 0)))
             elif effect.get('type') == 'SetTaskTemp':
                 effect_set_task_temps.append((effect.get('taskId', 0), effect.get('value', 0)))
+            elif effect.get('type') == 'SetTaskByte':
+                effect_set_task_bytes.append((effect.get('taskId', 0), effect.get('byteIndex', 0), effect.get('value', 0)))
 
     source_del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=12), 1)]
     source_event_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=8), 1)]
@@ -2163,6 +2208,8 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
     for call in parse_lua_calls(clean_source, 'SetTask', limit=8):
         if len(call) < 2:
             return None
+        if 'SetByte' in call[1]:
+            continue
         task_id = int_expr(call[0])
         task_value = int_lua_constant_expr(call[1])
         if task_id is None or task_value is None:
@@ -2177,9 +2224,13 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
         if task_id is None or task_value is None:
             return None
         source_set_task_temps.append((task_id, task_value))
+    source_set_task_bytes = []
+    for match in re.finditer(r'SetTask\s*\(\s*(\d+)\s*,\s*SetByte\s*\(\s*GetTask\s*\(\s*\1\s*\)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)\s*\)', clean_source):
+        source_set_task_bytes.append((int(match.group(1)), int(match.group(2)), int(match.group(3))))
     expected_del_items = spec.get('sourceConsumeItemIds', effect_del_items)
     if (source_del_items != expected_del_items or source_event_items != effect_event_items or
-            source_set_tasks != effect_set_tasks or source_set_task_temps != effect_set_task_temps):
+            source_set_tasks != effect_set_tasks or source_set_task_temps != effect_set_task_temps or
+            source_set_task_bytes != effect_set_task_bytes):
         return None
     result = dict(spec)
     result.pop('sourceConsumeItemIds', None)

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T12:00:11Z",
+  "generatedAtUtc": "2026-06-08T12:09:07Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -2302,6 +2302,531 @@
       "targetCellY": 3390,
       "fightState": -1,
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\wdobj01.lua",
+      "scriptId": 623603744,
+      "scriptIdHex": "0x252B7020",
+      "sourceRelPath": "script\\中原南区\\武当派\\武当派\\obj\\wdobj01.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15380_byte1_start_plague",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 1,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương: Hiện nay tiền tuyến phe Tống <color=Red>bệnh dịch hạch<color> kéo dài, hãy đến <color=Red>Tương Dương<color> tìm <color=Red>Chủ dược điếm <color> tìm cách guíp đỡ"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Gần đây bệnh dịch hạch lan tràn trong doanh trại quân Tống, cần phải đến thành Tương Dương tìm ông chủ tiệm thuốc nhờ giúp đỡ giải quyết."
+            },
+            {
+              "type": "SetTaskByte",
+              "taskId": 17,
+              "byteIndex": 1,
+              "value": 2
+            },
+            {
+              "type": "AddNote",
+              "message": "Lá bùa trên bảo rương ở Thái Tử nham viết:: Đến thành Tương Dương tìm chủ tiệm thuốc tìm cách ngăn chặn bệnh dịch hạch lan tràn trong doanh trại quân Tống."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte1_in_progress_plague",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteBetweenExclusive",
+              "taskId": 17,
+              "byteIndex": 1,
+              "minValue": 0,
+              "maxValue": 8
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương: <color=Red>Bệnh dịch hạch<color> vẫn đang kéo dài....."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Bệnh dịch hạch vẫn đang lan tràn..."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte1_ready_reward_69",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 1,
+              "value": 8
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 69
+            },
+            {
+              "type": "PostMessage",
+              "message": "<color=Red>Bệnh dịch hạch<color> đã trừ, mở bảo rương, phát hiện 1 quyển <color=Red>'Ngọc Thanh Chân Kinh'<color>."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Bệnh dịch hạch được tiêu diệt, có bộ Ngọc Thanh Chân Kinh."
+            },
+            {
+              "type": "SetTaskByte",
+              "taskId": 17,
+              "byteIndex": 1,
+              "value": 10
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở Bảo rương có Ngọc Thanh Chân Kinh."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte1_done_restore_69",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 1,
+              "value": 10
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 69,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 69
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte1_done_empty",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 1,
+              "value": 10
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương đã rỗng"
+            }
+          ]
+        },
+        {
+          "label": "not_task_locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Chưa nhận nhiệm vụ! Bạn không thể mở Bảo rương này!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\wdobj02.lua",
+      "scriptId": 564487030,
+      "scriptIdHex": "0x21A56376",
+      "sourceRelPath": "script\\中原南区\\武当派\\武当派\\obj\\wdobj02.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15380_byte2_start_weapon_shortage",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 2,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương: Gần đây <color=Red>binh khí<color> của Tống quân không đủ, <color=Red>thương vong<color> trầm trọng, hãy đến <color=Red>Tương Dương<color> tìm <color=Red>thợ rèn <color> giúp đỡ."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Gần đây khí giới chống Kim không đủ, <color=Red>binh sĩ thương vong trầm trọng<color>, cần đến thành Tương Dương nhờ Thợ rèn giúp đỡ giải quyết."
+            },
+            {
+              "type": "SetTaskByte",
+              "taskId": 17,
+              "byteIndex": 2,
+              "value": 2
+            },
+            {
+              "type": "AddNote",
+              "message": "Lá bùa trên bảo rương ở Thái Tử nham viết: Đến thành Tương Dương tìm Thợ rèn tìm cách giải quyết vấn đề sức mạnh chống quân Kim không đủ."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte2_in_progress_weapon_shortage",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteBetweenExclusive",
+              "taskId": 17,
+              "byteIndex": 2,
+              "minValue": 0,
+              "maxValue": 8
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương: Do thiếu <color=Red>khí giới<color>, Tống quân thương tổn trầm trọng…"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Do sức mạnh không đủ, tạo nên thương vong không tránh khỏi khi chống quân Kim..."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte2_ready_reward_70",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 2,
+              "value": 8
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 70
+            },
+            {
+              "type": "PostMessage",
+              "message": "Có binh khí kịp thời, sức chiến đấu của quan binh tiền tuyến tăng mạnh! Mở Bảo rương, lấy được 1 quyển <color=Red>'Thượng Thanh Chân Kinh'<color>."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Cần phải bổ sung binh khí gấp, sức mạnh chiến đấu của quan binh nhà Kim rất mạnh. Mở Bảo rương, có được bộ Thượng Thanh Chân Kinh."
+            },
+            {
+              "type": "SetTaskByte",
+              "taskId": 17,
+              "byteIndex": 2,
+              "value": 10
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở Bảo rương, có được bộ Thượng Thanh Chân Kinh."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte2_done_restore_70",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 2,
+              "value": 10
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 70,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 70
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte2_done_empty",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 2,
+              "value": 10
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương đã rỗng"
+            }
+          ]
+        },
+        {
+          "label": "not_task_locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Chưa nhận nhiệm vụ! Bạn không thể mở Bảo rương này!"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\wdobj03.lua",
+      "scriptId": 574035388,
+      "scriptIdHex": "0x223715BC",
+      "sourceRelPath": "script\\中原南区\\武当派\\武当派\\obj\\wdobj03.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15380_byte3_start_tyranny",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 3,
+              "value": 0
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương: <color=Red>Thủ tướng<color> trong <color=Red>Nha môn Tương Dương<color> cả ngày chỉ biết uống rượu, ức hiếp bá tánh, lão bá tánh oán giận, <color=Red>bạo chính<color> lần này, làm sao diệt được?"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương, giúp dân trừ ác."
+            },
+            {
+              "type": "SetTaskByte",
+              "taskId": 17,
+              "byteIndex": 3,
+              "value": 2
+            },
+            {
+              "type": "AddNote",
+              "message": "Lá bùa trên bảo rương ở Thái Tử nham viết: Đi cảnh cáo chủ tướng Tương Dương, giúp dân trừ ác."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte3_in_progress_tyranny",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteBetweenExclusive",
+              "taskId": 17,
+              "byteIndex": 3,
+              "minValue": 0,
+              "maxValue": 5
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bá tánh Tương Dương vẫn sống được dưới <color=Red>chính sách tàn bạo<color> của <color=Red>Thủ tướng<color>....."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Nhân dân ở thành Tương Dương vẫn trong cảnh dầu sôi lửa bỏng..."
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte3_ready_reward_71",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 3,
+              "value": 5
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 71
+            },
+            {
+              "type": "PostMessage",
+              "message": "Xóa bỏ <color=Red>chính sách tàn bạo<color> của Tương Dương, mở Bảo rương, lấy được 1 quyển <color=Red>'Thái Thanh Chân Kinh'<color>."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Diệt xong bạo quyền ở thành Tương Dương, có được 1 bộ Thái Thanh Chân Kinh."
+            },
+            {
+              "type": "SetTaskByte",
+              "taskId": 17,
+              "byteIndex": 3,
+              "value": 10
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở Bảo rương có được bộ Thái Thanh Chân Kinh"
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte3_done_restore_71",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 3,
+              "value": 10
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 71,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 71
+            }
+          ]
+        },
+        {
+          "label": "task_15380_byte3_done_empty",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 5,
+              "value": 15380
+            },
+            {
+              "type": "TaskByteEquals",
+              "taskId": 17,
+              "byteIndex": 3,
+              "value": 10
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương đã rỗng"
+            }
+          ]
+        },
+        {
+          "label": "not_task_locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Chưa nhận nhiệm vụ! Bạn không thể mở Bảo rương này!"
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\武当派-储物箱1.lua",

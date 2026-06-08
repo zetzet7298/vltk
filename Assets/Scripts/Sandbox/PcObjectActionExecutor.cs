@@ -379,6 +379,15 @@ namespace VLTK.Sandbox
                 {
                     if (_host.GetTaskTempValue(condition.taskId) != condition.value) return false;
                 }
+                else if (string.Equals(type, "TaskByteEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (GetTaskByte(_host.GetTaskValue(condition.taskId), condition.byteIndex) != condition.value) return false;
+                }
+                else if (string.Equals(type, "TaskByteBetweenExclusive", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    int byteValue = GetTaskByte(_host.GetTaskValue(condition.taskId), condition.byteIndex);
+                    if (byteValue <= condition.minValue || byteValue >= condition.maxValue) return false;
+                }
                 else if (string.Equals(type, "HaveItem", System.StringComparison.OrdinalIgnoreCase))
                 {
                     if (!_host.HaveItem(condition.itemId, condition.count <= 0 ? 1 : condition.count)) return false;
@@ -430,6 +439,12 @@ namespace VLTK.Sandbox
                 {
                     _host.SetTaskTemp(effect.taskId, effect.value);
                     stats.setTaskTemps++;
+                }
+                else if (string.Equals(type, "SetTaskByte", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    int oldValue = _host.GetTaskValue(effect.taskId);
+                    _host.SetTaskValue(effect.taskId, SetTaskByte(oldValue, effect.byteIndex, effect.value));
+                    stats.setTasks++;
                 }
                 else if (string.Equals(type, "PostMessage", System.StringComparison.OrdinalIgnoreCase))
                 {
@@ -542,6 +557,23 @@ namespace VLTK.Sandbox
 
         private static int CountAt(int[] counts, int index)
             => counts != null && index >= 0 && index < counts.Length && counts[index] > 0 ? counts[index] : 1;
+
+        private static int GetTaskByte(int taskValue, int byteIndex)
+        {
+            if (byteIndex <= 0) return 0;
+            int shift = (byteIndex - 1) * 8;
+            if (shift >= 32) return 0;
+            return (taskValue >> shift) & 0xff;
+        }
+
+        private static int SetTaskByte(int taskValue, int byteIndex, int byteValue)
+        {
+            if (byteIndex <= 0) return taskValue;
+            int shift = (byteIndex - 1) * 8;
+            if (shift >= 32) return taskValue;
+            int mask = 0xff << shift;
+            return (taskValue & ~mask) | ((byteValue & 0xff) << shift);
+        }
 
         private struct BranchEffectStats
         {

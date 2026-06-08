@@ -254,13 +254,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(283, catalog.Count);
+            Assert.AreEqual(286, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
-            Assert.AreEqual(10, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
+            Assert.AreEqual(13, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -334,6 +334,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(4, shaolinStone.branches.Length);
             Assert.AreEqual("task_12830_temp_2_reward_28", shaolinStone.branches[0].label);
             Assert.AreEqual("SetTaskTemp", shaolinStone.branches[0].effects[4].type);
+            var wudangChest = catalog.Find(@"\script\中原南区\武当派\武当派\obj\wdobj01.lua");
+            Assert.IsNotNull(wudangChest);
+            Assert.IsTrue(wudangChest.IsTaskItemBranchMessage);
+            Assert.AreEqual(6, wudangChest.branches.Length);
+            Assert.AreEqual("task_15380_byte1_start_plague", wudangChest.branches[0].label);
+            Assert.AreEqual("SetTaskByte", wudangChest.branches[0].effects[2].type);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -1069,6 +1075,73 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(executor.TryExecute(obj, out result));
             Assert.AreEqual(2, host.GetTaskTempValue(47));
             CollectionAssert.AreEqual(new[] { "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ" }, sideEffects.messages);
+            StringAssert.Contains("branch=3", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemBranchMessage_PreservesPcTaskByteBranches()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\wdobj02.lua",
+                        actionKind = "TaskItemBranchMessage",
+                        branches = new[]
+                        {
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15380_byte2_start_weapon_shortage",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 5, value = 60 * 256 + 20 }, new PcObjectActionCondition { type = "TaskByteEquals", taskId = 17, byteIndex = 2, value = 0 } },
+                                effects = new[] { new PcObjectActionEffect { type = "SetTaskByte", taskId = 17, byteIndex = 2, value = 2 }, new PcObjectActionEffect { type = "AddNote", message = "start" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15380_byte2_in_progress_weapon_shortage",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 5, value = 60 * 256 + 20 }, new PcObjectActionCondition { type = "TaskByteBetweenExclusive", taskId = 17, byteIndex = 2, minValue = 0, maxValue = 8 } },
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "in progress" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15380_byte2_ready_reward_70",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 5, value = 60 * 256 + 20 }, new PcObjectActionCondition { type = "TaskByteEquals", taskId = 17, byteIndex = 2, value = 8 } },
+                                effects = new[] { new PcObjectActionEffect { type = "AddEventItem", itemId = 70 }, new PcObjectActionEffect { type = "SetTaskByte", taskId = 17, byteIndex = 2, value = 10 }, new PcObjectActionEffect { type = "AddNote", message = "reward" } },
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15380_byte2_done_restore_70",
+                                conditions = new[] { new PcObjectActionCondition { type = "TaskEquals", taskId = 5, value = 60 * 256 + 20 }, new PcObjectActionCondition { type = "TaskByteEquals", taskId = 17, byteIndex = 2, value = 10 }, new PcObjectActionCondition { type = "MissingItem", itemId = 70 } },
+                                effects = new[] { new PcObjectActionEffect { type = "AddEventItem", itemId = 70 } },
+                            },
+                        }
+                    }
+                }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\wdobj02.lua" };
+            var host = new FakeTrapTravelHost { taskValues = { [5] = 60 * 256 + 20, [17] = 5 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+            Assert.AreEqual((2 << 8) | 5, host.GetTaskValue(17));
+            StringAssert.Contains("branch=0", result.detail);
+
+            host.taskValues[17] = (8 << 8) | 5;
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.AreEqual((10 << 8) | 5, host.GetTaskValue(17));
+            CollectionAssert.AreEqual(new[] { 70 }, sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "reward" }, sideEffects.notes);
+            StringAssert.Contains("branch=2", result.detail);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { 70 }, sideEffects.eventItems);
             StringAssert.Contains("branch=3", result.detail);
         }
 

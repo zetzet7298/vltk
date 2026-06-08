@@ -119,6 +119,7 @@ namespace VLTK.Sandbox
         public int minValue;
         public int maxValue;
         public int itemId;
+        public int byteIndex;
         public int count = 1;
     }
 
@@ -129,6 +130,7 @@ namespace VLTK.Sandbox
         public int taskId;
         public int value;
         public int itemId;
+        public int byteIndex;
         public int[] itemIds;
         public int[] itemCounts;
         public string message;
