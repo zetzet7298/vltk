@@ -40,6 +40,15 @@ namespace VLTK.Sandbox
             _registry = new NpcTemplateRegistry();
             MapEnemyDatabase.RegisterAllForMap(mapId, _registry);
 
+            if (VuotAiKillBossMatchSpawns.IsMissionMap(mapId))
+            {
+                int missionBosses = VuotAiKillBossMatchSpawns.AddMissionBossEntries(mapId, _registry, _entries);
+                BuildSceneObjects();
+                SubsystemLog.Info("MapEnemy",
+                    $"Map {mapId}: PC killbossmatch ClearMapNpc/Obj/Trap active; spawned {missionBosses} mission bosses instead of static Region_S enemies");
+                return;
+            }
+
             var spawns = BaLangEnemyRegionScanner.ScanRegionS(regionSFolder);
             if (spawns.Count == 0)
             {

@@ -468,7 +468,18 @@ def verify_default_map(audit: Audit, root: Path) -> None:
                   'SandboxManager must keep Vượt ải Nhiếp Thí Trần constant at mapId 907')
     audit.require('public int defaultMapId = VuotAiNhiepThiTranMapId;' in text,
                   'SandboxManager defaultMapId must point to Vượt ải map 907')
-    audit.facts['defaultMap'] = {'mapId': 907, 'nameVi': 'Vượt ải Nhiếp Thí Trần'}
+    enemy_runtime = (root / 'Assets/Scripts/Sandbox/MapEnemySpawnRuntime.cs').read_text(encoding='utf-8', errors='ignore')
+    killboss = root / 'Assets/Scripts/Sandbox/VuotAiKillBossMatchSpawns.cs'
+    killboss_text = killboss.read_text(encoding='utf-8', errors='ignore') if killboss.is_file() else ''
+    audit.require('VuotAiKillBossMatchSpawns.IsMissionMap(mapId)' in enemy_runtime,
+                  'MapEnemySpawnRuntime must apply PC killbossmatch ClearMapNpc mission override for map 907..916')
+    audit.require('public static readonly int[] BossTemplateIds = { 1481, 1485, 1488, 1483, 1482, 1480, 1489, 1486, 1487, 1484 }' in killboss_text,
+                  'Vượt ải killbossmatch boss template roster must match PC class.lua tbNpc order')
+    audit.facts['defaultMap'] = {
+        'mapId': 907,
+        'nameVi': 'Vượt ải Nhiếp Thí Trần',
+        'killbossMissionBossTemplates': 10,
+    }
 
 
 def run_audit(args: argparse.Namespace) -> Audit:
