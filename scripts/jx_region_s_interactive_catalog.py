@@ -4172,6 +4172,78 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
     return entries, coverage
 
 
+def deferred_trap_action_info(script: dict[str, Any]) -> dict[str, Any]:
+    """Classify resolved PC trap scripts that are intentionally not auto-executed.
+
+    These scripts are still part of the map port: Region_S references are present,
+    source Lua is resolved, and trigger volumes are built.  Their behavior depends on
+    PC runtime systems that are not safe to fake from map data alone, so keep an
+    explicit provenance/reason instead of leaving them as silent catalog holes.
+    """
+    script_path = str(script.get('scriptPath', '')).replace('/', '\\')
+    path_lower = script_path.lower()
+    source = script.get('sourceText', '') or ''
+
+    if path_lower.startswith('\\script\\tong\\map\\') and path_lower.endswith('\\entrance_trap.lua'):
+        return {
+            'deferredActionKind': 'TongMapEntrance',
+            'deferredActionReason': 'PC Include(\\script\\tong\\map\\entrance_trap.lua) depends on dynamic Tong map ownership/ban/expiry state and GetMapEnterPos; do not fabricate fallback movement.',
+            'requiredPcApis': [
+                'GetProductRegion', 'GetMapType', 'GetMapParam', 'GetTongName',
+                'TONG_GetTongMapBan', 'TONG_GetTongMapTemplate', 'GetMapEnterPos',
+                'SetFightState', 'SetPos', 'Say', 'Msg2Player',
+            ],
+        }
+
+    if path_lower == '\\script\\missions\\citywar_city\\zhongzhuan_map\\trap.lua':
+        return {
+            'deferredActionKind': 'CityWarJoinRouter',
+            'deferredActionReason': 'PC city-war transfer trap routes by mission state, Tong join age, city-war cards/items, and camp join logic; requires full city-war mission runtime.',
+            'requiredPcApis': [
+                'GetMissionV', 'GetMissionS', 'GetTongName', 'GetJoinTongTime',
+                'GetWarOfCity', 'GetItemCountEx', 'DelItemEx', 'JoinCamp',
+                'BT_SetData', 'BT_LeaveBattle', 'BT_ClearPlayerData', 'SetTask',
+                'SetPos', 'Say',
+            ],
+        }
+
+    if 'TeamEnterHole(' in source:
+        return {
+            'deferredActionKind': 'ClearSkillTeamEnterHole',
+            'deferredActionReason': 'PC TeamEnterHole opens/allocates a ClearSkill mission map and moves validated team members; requires team, mission instance, PK, revive, death-script, and temp-task runtime.',
+            'requiredPcApis': [
+                'IsCaptain', 'GetTeamSize', 'GetTeamMember', 'CSP_CheckValid',
+                'CSP_GetFreeTestMapID', 'OpenMission', 'RunMission', 'LeaveTeam',
+                'NewWorld', 'AddMSPlayer', 'SetTaskTemp', 'SetFightState',
+                'SetLogoutRV', 'SetDeathScript', 'SetPunish', 'SetTempRevPos',
+                'ForbidChangePK', 'SetPKFlag', 'Say',
+            ],
+        }
+
+    if '\\script\\missions\\宋金战场pk战\\' in path_lower:
+        return {
+            'deferredActionKind': 'SongJinRebirthCampState',
+            'deferredActionReason': 'PC Song/Jin rebirth trap mutates fight state/camp/punish only for players in a mission group while mission state is active; requires mission membership APIs.',
+            'requiredPcApis': [
+                'GetMissionV', 'PIdx2MSDIdx', 'GetMSIdxGroup', 'SetFightState',
+                'SetCurCamp', 'SetPunish',
+            ],
+        }
+
+    if path_lower.startswith('\\script\\task\\partner\\trap\\trap_baihuagu'):
+        return {
+            'deferredActionKind': 'PartnerTaskEntity',
+            'deferredActionReason': 'PC partner-story trap delegates to partner task entity doTaskEntity(); requires the partner task runtime and scripted entity state.',
+            'requiredPcApis': ['Include', 'taskProcess_005_01:doTaskEntity', 'taskProcess_005_Outside:doTaskEntity'],
+        }
+
+    return {
+        'deferredActionKind': 'UnclassifiedResolvedTrap',
+        'deferredActionReason': 'Resolved PC trap script has no deterministic action catalog entry and needs manual PC API audit before execution.',
+        'requiredPcApis': [],
+    }
+
+
 def sections(data: bytes) -> tuple[int, int, list[tuple[int, int]]]:
     if len(data) < 4:
         return 0, 0, []
@@ -4406,6 +4478,34 @@ def main() -> int:
     geometries, coverage, used_template_ids, used_trap_ids = build_catalog(region_root, server_catalog, obj_templates)
     trap_scripts, trap_coverage = build_trap_script_catalog(used_trap_ids, pc_root)
     trap_actions, trap_action_coverage = build_trap_action_catalog(trap_scripts)
+    trap_action_ids = {entry['trapId'] for entry in trap_actions}
+    deferred_trap_actions: list[dict[str, Any]] = []
+    deferred_trap_action_kinds: dict[str, int] = {}
+    for script in trap_scripts:
+        if not script.get('resolved') or script['trapId'] in trap_action_ids:
+            continue
+        deferred_info = deferred_trap_action_info(script)
+        script.update(deferred_info)
+        script['actionPortStatus'] = 'deferred_requires_pc_runtime'
+        deferred_trap_actions.append({
+            'trapId': script['trapId'],
+            'trapIdHex': script['trapIdHex'],
+            'scriptPath': script.get('scriptPath', ''),
+            'deferredActionKind': deferred_info['deferredActionKind'],
+            'deferredActionReason': deferred_info['deferredActionReason'],
+            'requiredPcApis': deferred_info.get('requiredPcApis', []),
+        })
+        kind = deferred_info['deferredActionKind']
+        deferred_trap_action_kinds[kind] = deferred_trap_action_kinds.get(kind, 0) + 1
+    trap_deferred_coverage = {
+        'deferredResolvedTrapActions': len(deferred_trap_actions),
+        'deferredResolvedTrapActionIds': [entry['trapIdHex'] for entry in deferred_trap_actions],
+        'deferredResolvedTrapActionKindCounts': dict(sorted(deferred_trap_action_kinds.items())),
+        'unclassifiedResolvedTrapActionIds': [
+            entry['trapIdHex'] for entry in deferred_trap_actions
+            if entry.get('deferredActionKind') == 'UnclassifiedResolvedTrap'
+        ],
+    }
     object_scripts, object_script_coverage = build_object_script_catalog(geometries, pc_root)
     object_actions, object_action_coverage = build_object_action_catalog(object_scripts)
     enrich_traps_in_geometries(geometries, {entry['trapId']: entry for entry in trap_scripts})
@@ -4487,6 +4587,7 @@ def main() -> int:
         **object_coverage,
         **trap_coverage,
         **trap_action_coverage,
+        **trap_deferred_coverage,
         **object_script_coverage,
         **object_action_coverage,
         'elapsedSeconds': round(time.time() - start, 3),
@@ -4508,7 +4609,10 @@ def main() -> int:
     write_json(object_action_catalog_path, object_action_catalog)
     write_json(coverage_path, coverage_payload)
     write_json(object_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **object_coverage})
-    write_json(trap_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **trap_coverage, **trap_action_coverage})
+    write_json(trap_coverage_path, {
+        'schemaVersion': 1, 'generatedAtUtc': now,
+        **trap_coverage, **trap_action_coverage, **trap_deferred_coverage,
+    })
     write_json(catalog_root / 'MapObjectScriptCoverage.json', {
         'schemaVersion': 1, 'generatedAtUtc': now, **object_script_coverage, **object_action_coverage})
     make_meta(catalog_path)

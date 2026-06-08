@@ -91,6 +91,21 @@ EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_LEAVE_ACTIONS = 4
 EXPECTED_DETERMINISTIC_TRAP_CS_ARENA_LEAVE_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_TASK_TRIPLET_LEAVE_ACTIONS = 2
 EXPECTED_MISSING_TRAP_SCRIPTS: set[str] = set()
+EXPECTED_DEFERRED_RESOLVED_TRAP_ACTIONS = 17
+EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_IDS = {
+    '0x33494BB9', '0x3619F2C2', '0x5175834A', '0x592C5C47',
+    '0x5D608EF1', '0x78CC1B49', '0x9BC53FC2', '0xA4DE52D8',
+    '0xC2BCE58F', '0xC69A1B00', '0xCAE7648B', '0xDA09D68D',
+    '0xDE574C0E', '0xE568D545', '0xF672737F', '0xFBFEFADD',
+    '0xFF191F35',
+}
+EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_KIND_COUNTS = {
+    'CityWarJoinRouter': 1,
+    'ClearSkillTeamEnterHole': 4,
+    'PartnerTaskEntity': 2,
+    'SongJinRebirthCampState': 2,
+    'TongMapEntrance': 8,
+}
 KNOWN_FAILED_MAP_SPRITES = {
     r'\system\spr\RegionTileDefault.spr',
     r'\system\spr\regiontiledefault.spr',
@@ -533,13 +548,37 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
                   f'missing trap scripts={sorted(missing_ids)} expected={sorted(EXPECTED_MISSING_TRAP_SCRIPTS)}')
     if missing_ids:
         audit.warn(f'trap scripts still source-missing: {sorted(missing_ids)}')
+    action_entries = trap_action_catalog.get('entries', [])
+    action_ids = {e.get('trapIdHex') for e in action_entries}
+    deferred_ids = set(trap_cov.get('deferredResolvedTrapActionIds', []))
+    deferred_kind_counts = trap_cov.get('deferredResolvedTrapActionKindCounts', {})
+    unclassified_deferred_ids = set(trap_cov.get('unclassifiedResolvedTrapActionIds', []))
+    deferred_catalog_entries = [
+        e for e in trap_catalog.get('entries', [])
+        if e.get('actionPortStatus') == 'deferred_requires_pc_runtime'
+    ]
+    audit.require(trap_cov.get('deferredResolvedTrapActions') == EXPECTED_DEFERRED_RESOLVED_TRAP_ACTIONS,
+                  'deferred resolved trap action count mismatch')
+    audit.require(deferred_ids == EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_IDS,
+                  f'deferred trap ids={sorted(deferred_ids)} expected={sorted(EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_IDS)}')
+    audit.require(deferred_kind_counts == EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_KIND_COUNTS,
+                  f'deferred trap kind counts={deferred_kind_counts} expected={EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_KIND_COUNTS}')
+    audit.require(not unclassified_deferred_ids,
+                  f'unclassified resolved trap action ids must be empty, got {sorted(unclassified_deferred_ids)}')
+    audit.require(len(deferred_catalog_entries) == EXPECTED_DEFERRED_RESOLVED_TRAP_ACTIONS,
+                  'MapTrapScriptCatalog deferred action entry count mismatch')
+    audit.require({e.get('trapIdHex') for e in deferred_catalog_entries} == EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_IDS,
+                  'MapTrapScriptCatalog deferred action ids mismatch')
+    audit.require(len(action_ids) == len(action_entries), 'MapTrapActionCatalog must have unique trap action ids')
+    audit.require(action_ids.isdisjoint(deferred_ids), 'deterministic and deferred trap action ids must not overlap')
+    audit.require(len(action_entries) + len(deferred_catalog_entries) == EXPECTED_RESOLVED_TRAP_SCRIPTS,
+                  'resolved trap scripts must be either deterministic actions or explicitly deferred')
 
     sprite_root = sa / object_catalog.get('spriteFolder', 'Generated/ObjectSprites')
     expected = {t.get('uid') + '.spr' for t in object_catalog.get('templates', []) if t.get('staged') and t.get('uid')}
     present = {p.name for p in sprite_root.glob('*.spr')} if sprite_root.is_dir() else set()
     audit.require(len(expected) == EXPECTED_OBJECT_SPRITES, f'object expected sprite files={len(expected)} expected={EXPECTED_OBJECT_SPRITES}')
     audit.require(expected <= present, f'missing generated object SPR files: {sorted(expected - present)[:8]}')
-    action_entries = trap_action_catalog.get('entries', [])
     action_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'NewWorld')
     action_set_pos = sum(1 for e in action_entries if e.get('actionKind') == 'SetPos')
     action_fight_state_set_pos = sum(1 for e in action_entries if e.get('actionKind') == 'FightStateSetPos')
@@ -654,6 +693,9 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'trapIds': trap_cov.get('uniqueTrapIds'),
         'resolvedTrapScripts': trap_cov.get('resolvedTrapScripts'),
         'missingTrapScripts': sorted(missing_ids),
+        'deferredResolvedTrapActions': trap_cov.get('deferredResolvedTrapActions'),
+        'deferredResolvedTrapActionKindCounts': deferred_kind_counts,
+        'unclassifiedResolvedTrapActionIds': sorted(unclassified_deferred_ids),
         'deterministicTrapActions': len(action_entries),
         'deterministicNewWorldActions': action_new_world,
         'deterministicSetPosActions': action_set_pos,
