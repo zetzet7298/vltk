@@ -181,3 +181,8 @@ Assets/_Recovery/
 Assets/_Recovery.meta
 Assets/Screenshots/*.png
 Assets/Screenshots/*.png.meta
+
+# ─────────────────────────────────────────────────
+# Agent git worktrees
+# ─────────────────────────────────────────────────
+.worktrees/
