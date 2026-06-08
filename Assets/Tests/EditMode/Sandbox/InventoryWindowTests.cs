@@ -245,6 +245,31 @@ namespace VLTK.Tests.Sandbox
             }
         }
 
+        [Test]
+        public void Controller_GmTokenDetail_ShowsUseOverlay()
+        {
+            var go = new GameObject("GmTokenDetailHudTest");
+            try
+            {
+                var hud = go.AddComponent<GameHudController>();
+                var root = new VisualElement { name = "GameHud" };
+                var invWindow = new VisualElement { name = "InventoryWindow" };
+                root.Add(invWindow);
+                SetField(hud, "_boundRoot", root);
+                SetField(hud, "_invWindow", invWindow);
+
+                var row = new InventoryPanelRow(0, 4890, 1, 6, 1, 4890, false, false, "Lệnh bài GM Test Server", 0);
+                InvokePrivate(hud, "OpenInventoryItemDetail", row);
+
+                Assert.IsTrue(hud.IsGmItemOverlayVisible);
+                Assert.IsNotNull(root.Q("GmItemActionOverlay"));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
         // ── helpers ──────────────────────────────────────────────────────────
 
         private static void AssertRgb(InventoryWindowPcSpec.Rgb c, int r, int g, int b)

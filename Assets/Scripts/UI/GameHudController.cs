@@ -113,7 +113,14 @@ namespace VLTK.UI
         private VisualElement _invWindow, _invClose, _invFrame;
         private ScrollView _invGrid;
         private Label _invMoney;
-
+        private VisualElement _gmItemOverlay, _gmItemFrame;
+        private ScrollView _gmItemList;
+        private Label _gmItemTitle, _gmItemMessage;
+        private VisualElement _pressedInventorySlot;
+        private InventoryPanelRow _pressedInventoryRow;
+        private IVisualElementScheduledItem _inventoryLongPressTimer;
+        private int _inventoryPressedPointerId = -1;
+        private bool _inventoryLongPressFired;
 
         private HudDataBridge _bridge;
         private MinimapService _minimapService;
@@ -1100,6 +1107,7 @@ namespace VLTK.UI
 
         public void CloseInventory()
         {
+            CloseGmItemOverlay();
             _invWindow?.AddToClassList("hidden");
             SubsystemLog.Info("HUD", "Close Inventory");
         }
@@ -1122,31 +1130,252 @@ namespace VLTK.UI
             {
                 var slot = new VisualElement { name = $"InvSlot{i}" };
                 slot.AddToClassList("hud-inv-slot");
+                slot.pickingMode = PickingMode.Position;
 
                 var icon = new VisualElement { name = $"InvSlotIcon{i}" };
                 icon.AddToClassList("hud-inv-slot-icon");
                 slot.Add(icon);
 
-                if (rows != null && i < rows.Count)
+                var r = rows != null && i < rows.Count
+                    ? rows[i]
+                    : new InventoryPanelRow(i, 0, 0, 0, 0, 0, false, false, string.Empty, 0);
+                if (r.itemId != 0)
                 {
-                    var r = rows[i];
-                    if (r.itemId != 0)
-                    {
-                        var c = InventoryWindowPcSpec.TierColor(r.itemQuality);
-                        slot.style.borderTopColor = slot.style.borderBottomColor =
-                            slot.style.borderLeftColor = slot.style.borderRightColor =
-                            new StyleColor(new Color(c.r / 255f, c.g / 255f, c.b / 255f));
+                    var c = InventoryWindowPcSpec.TierColor(r.itemQuality);
+                    slot.style.borderTopColor = slot.style.borderBottomColor =
+                        slot.style.borderLeftColor = slot.style.borderRightColor =
+                        new StyleColor(new Color(c.r / 255f, c.g / 255f, c.b / 255f));
 
-                        if (r.count > 1)
-                        {
-                            var countLabel = new Label(r.count.ToString());
-                            countLabel.AddToClassList("hud-inv-slot-count");
-                            slot.Add(countLabel);
-                        }
+                    if (IsGmTestServerRow(r))
+                        LoadIcon(this, icon, HudArtPathResolver.ResolveArtRoot(artFolder), "yupai_haozhao");
+
+                    if (r.count > 1)
+                    {
+                        var countLabel = new Label(r.count.ToString());
+                        countLabel.AddToClassList("hud-inv-slot-count");
+                        slot.Add(countLabel);
                     }
                 }
+
+                RegisterInventorySlotGestures(slot, r);
                 _invGrid.Add(slot);
             }
+        }
+
+        private static bool IsGmTestServerRow(InventoryPanelRow row)
+            => row.itemGenre == GmTestServerItemService.ItemGenre
+               && row.itemDetail == GmTestServerItemService.DetailType
+               && row.itemParticular == GmTestServerItemService.ParticularType;
+
+        private void RegisterInventorySlotGestures(VisualElement slot, InventoryPanelRow row)
+        {
+            if (slot == null || row.itemId == 0) return;
+            slot.RegisterCallback<PointerDownEvent>(evt => BeginInventorySlotPress(slot, row, evt));
+            slot.RegisterCallback<PointerUpEvent>(EndInventorySlotPress);
+            slot.RegisterCallback<PointerCancelEvent>(CancelInventorySlotPress);
+        }
+
+        private void BeginInventorySlotPress(VisualElement slot, InventoryPanelRow row, PointerDownEvent evt)
+        {
+            _pressedInventorySlot = slot;
+            _pressedInventoryRow = row;
+            _inventoryPressedPointerId = evt.pointerId;
+            _inventoryLongPressFired = false;
+            _inventoryLongPressTimer?.Pause();
+
+            if (IsGmTestServerRow(row))
+            {
+                slot.CapturePointer(evt.pointerId);
+                _inventoryLongPressTimer = slot.schedule.Execute(() =>
+                {
+                    if (_pressedInventorySlot != slot) return;
+                    _inventoryLongPressFired = true;
+                    OpenGmItemActionSheet(GmTestServerItemService.MainMenuId);
+                }).StartingIn(550);
+            }
+            evt.StopPropagation();
+        }
+
+        private void EndInventorySlotPress(PointerUpEvent evt)
+        {
+            _inventoryLongPressTimer?.Pause();
+            if (_pressedInventorySlot != null && _pressedInventorySlot.HasPointerCapture(_inventoryPressedPointerId))
+                _pressedInventorySlot.ReleasePointer(_inventoryPressedPointerId);
+
+            if (!_inventoryLongPressFired && _pressedInventoryRow.itemId != 0)
+                OpenInventoryItemDetail(_pressedInventoryRow);
+
+            _pressedInventorySlot = null;
+            _inventoryPressedPointerId = -1;
+            evt.StopPropagation();
+        }
+
+        private void CancelInventorySlotPress(PointerCancelEvent evt)
+        {
+            _inventoryLongPressTimer?.Pause();
+            _pressedInventorySlot = null;
+            _inventoryPressedPointerId = -1;
+            _inventoryLongPressFired = false;
+        }
+
+        private GmTestServerItemService GetGmItemService()
+            => SandboxManager.Instance != null && SandboxManager.Instance.GmTestServerItemService != null
+                ? SandboxManager.Instance.GmTestServerItemService
+                : new GmTestServerItemService();
+
+        public bool IsGmItemOverlayVisible => _gmItemOverlay != null && !_gmItemOverlay.ClassListContains("hidden");
+
+        private void EnsureGmItemOverlay()
+        {
+            var parent = _boundRoot ?? _invWindow;
+            if (parent == null) return;
+            if (_gmItemOverlay != null && _gmItemOverlay.parent == parent) return;
+
+            _gmItemOverlay = new VisualElement { name = "GmItemActionOverlay" };
+            _gmItemOverlay.AddToClassList("hidden");
+            _gmItemOverlay.style.position = Position.Absolute;
+            _gmItemOverlay.style.left = 0; _gmItemOverlay.style.right = 0;
+            _gmItemOverlay.style.top = 0; _gmItemOverlay.style.bottom = 0;
+            _gmItemOverlay.style.backgroundColor = new Color(0f, 0f, 0f, 0.55f);
+            _gmItemOverlay.style.justifyContent = Justify.Center;
+            _gmItemOverlay.style.alignItems = Align.Center;
+            _gmItemOverlay.pickingMode = PickingMode.Position;
+
+            _gmItemFrame = new VisualElement { name = "GmItemActionFrame" };
+            _gmItemFrame.style.width = 420;
+            _gmItemFrame.style.maxHeight = 560;
+            _gmItemFrame.style.paddingLeft = 12; _gmItemFrame.style.paddingRight = 12;
+            _gmItemFrame.style.paddingTop = 10; _gmItemFrame.style.paddingBottom = 10;
+            _gmItemFrame.style.backgroundColor = new Color(0.11f, 0.08f, 0.04f, 0.96f);
+            _gmItemFrame.style.borderTopWidth = _gmItemFrame.style.borderBottomWidth = 2;
+            _gmItemFrame.style.borderLeftWidth = _gmItemFrame.style.borderRightWidth = 2;
+            _gmItemFrame.style.borderTopColor = _gmItemFrame.style.borderBottomColor = new Color(0.95f, 0.76f, 0.35f);
+            _gmItemFrame.style.borderLeftColor = _gmItemFrame.style.borderRightColor = new Color(0.95f, 0.76f, 0.35f);
+
+            _gmItemTitle = new Label { name = "GmItemActionTitle" };
+            _gmItemTitle.style.color = new Color(1f, 0.86f, 0.35f);
+            _gmItemTitle.style.unityFontStyleAndWeight = FontStyle.Bold;
+            _gmItemTitle.style.fontSize = 18;
+            _gmItemMessage = new Label { name = "GmItemActionMessage" };
+            _gmItemMessage.style.whiteSpace = WhiteSpace.Normal;
+            _gmItemMessage.style.color = Color.white;
+            _gmItemMessage.style.marginBottom = 8;
+            _gmItemList = new ScrollView { name = "GmItemActionList" };
+            _gmItemList.style.maxHeight = 430;
+
+            _gmItemFrame.Add(_gmItemTitle);
+            _gmItemFrame.Add(_gmItemMessage);
+            _gmItemFrame.Add(_gmItemList);
+            _gmItemOverlay.Add(_gmItemFrame);
+            parent.Add(_gmItemOverlay);
+            _gmItemOverlay.BringToFront();
+        }
+
+        private void CloseGmItemOverlay()
+        {
+            _gmItemOverlay?.AddToClassList("hidden");
+        }
+
+        private void OpenInventoryItemDetail(InventoryPanelRow row)
+        {
+            EnsureGmItemOverlay();
+            if (_gmItemOverlay == null) return;
+            _gmItemOverlay.RemoveFromClassList("hidden");
+            _gmItemOverlay.BringToFront();
+            _gmItemTitle.text = row.itemName;
+            _gmItemMessage.text = IsGmTestServerRow(row)
+                ? "Lệnh bài này chỉ được GM sử dụng. Chọn Dùng để mở menu GM Test Server."
+                : "Vật phẩm này chưa có hành động sử dụng trên mobile.";
+            _gmItemList.Clear();
+            if (IsGmTestServerRow(row))
+                _gmItemList.Add(MakeGmButton("Dùng", () => OpenGmItemActionSheet(GmTestServerItemService.MainMenuId)));
+            _gmItemList.Add(MakeGmButton("Đóng", CloseGmItemOverlay));
+        }
+
+        private void OpenGmItemActionSheet(string menuId)
+        {
+            EnsureGmItemOverlay();
+            if (_gmItemOverlay == null) return;
+            var service = GetGmItemService();
+            _gmItemOverlay.RemoveFromClassList("hidden");
+            _gmItemOverlay.BringToFront();
+            _gmItemTitle.text = "Lệnh bài GM Test Server";
+            _gmItemMessage.text = service.CanUse
+                ? "Chọn chức năng theo menu PC."
+                : "Chỉ GM/dev mới được sử dụng Lệnh bài GM Test Server.";
+            _gmItemList.Clear();
+
+            if (menuId != GmTestServerItemService.MainMenuId)
+                _gmItemList.Add(MakeGmButton("← Quay lại", () => OpenGmItemActionSheet(GmTestServerItemService.MainMenuId)));
+
+            foreach (var option in service.GetMenu(menuId))
+            {
+                var captured = option;
+                _gmItemList.Add(MakeGmButton(captured.label, () => OnGmMenuOption(captured)));
+            }
+            _gmItemList.Add(MakeGmButton("Kết thúc đối thoại", CloseGmItemOverlay));
+        }
+
+        private Button MakeGmButton(string text, System.Action action)
+        {
+            var btn = new Button(action) { text = text };
+            btn.style.height = 34;
+            btn.style.marginBottom = 4;
+            btn.style.unityTextAlign = TextAnchor.MiddleLeft;
+            return btn;
+        }
+
+        private void OnGmMenuOption(GmItemMenuOption option)
+        {
+            if (option == null) return;
+            if (!string.IsNullOrEmpty(option.nextMenuId))
+            {
+                OpenGmItemActionSheet(option.nextMenuId);
+                return;
+            }
+            var service = GetGmItemService();
+            var result = service.Execute(option.actionId, confirmed: false);
+            if (result.status == GmItemActionStatus.NeedsConfirmation)
+            {
+                RenderGmConfirmation(option, result.message);
+                return;
+            }
+            HandleGmActionResult(result);
+        }
+
+        private void RenderGmConfirmation(GmItemMenuOption option, string message)
+        {
+            EnsureGmItemOverlay();
+            _gmItemOverlay?.RemoveFromClassList("hidden");
+            _gmItemTitle.text = option?.label ?? "Xác nhận";
+            _gmItemMessage.text = message;
+            _gmItemList.Clear();
+            _gmItemList.Add(MakeGmButton("Đúng vậy!", () =>
+            {
+                var result = GetGmItemService().Execute(option.actionId, confirmed: true);
+                HandleGmActionResult(result);
+                OpenInventory();
+            }));
+            _gmItemList.Add(MakeGmButton("Ta nhầm.", () => OpenGmItemActionSheet(GmTestServerItemService.MainMenuId)));
+        }
+
+        private void HandleGmActionResult(GmItemActionResult result)
+        {
+            if (result == null) return;
+            if (result.success && result.message == "OPEN_SKILL_PANEL")
+            {
+                CloseGmItemOverlay();
+                OpenSkillPanel();
+                return;
+            }
+            if (result.success && result.message == "OPEN_TONG_KIM_SHOP")
+            {
+                SandboxManager.Instance?.ShopPanel?.OpenShop(93);
+                _gmItemMessage.text = "Đã mở shop Tống Kim (Sale 93).";
+                return;
+            }
+            _gmItemMessage.text = result.message;
+            SubsystemLog.Info("GMItem", $"{result.status}: {result.message}");
         }
 
         private void PopulateSkillPanel(PcSkillPanelSnapshot snap)

@@ -51,6 +51,9 @@ namespace VLTK.Sandbox
         public IReadOnlyList<InventoryEntry> Inventory => _inventory;
         public IReadOnlyDictionary<EquipSlot, ItemDefinition> Equipped => _equipped;
 
+        public ItemDefinition ResolvePcItem(int itemGenre, int detailType, int particularType)
+            => _db?.ResolvePcItem(itemGenre, detailType, particularType);
+
         /// <summary>AC#1 — search the item database by id or name substring.</summary>
         public List<ItemDefinition> Search(string query)
         {
@@ -97,6 +100,33 @@ namespace VLTK.Sandbox
             }
             _inventory.Add(new InventoryEntry { item = item, count = count });
             return true;
+        }
+
+        public bool AddPcItem(int itemGenre, int detailType, int particularType, int count = 1)
+        {
+            var item = ResolvePcItem(itemGenre, detailType, particularType);
+            if (item == null)
+            {
+                SubsystemLog.Warn("Inventory", $"AddPcItem: unknown PC item {itemGenre}/{detailType}/{particularType}");
+                return false;
+            }
+            return AddItem(item.itemId, count);
+        }
+
+        public bool HasPcItem(int itemGenre, int detailType, int particularType)
+        {
+            foreach (var entry in _inventory)
+            {
+                var item = entry?.item;
+                if (item != null && item.itemGenre == itemGenre && item.detailType == detailType && item.particularType == particularType)
+                    return true;
+            }
+            return false;
+        }
+
+        public void ClearInventory()
+        {
+            _inventory.Clear();
         }
 
         /// <summary>AC#3 — equip an item into a slot; returns the recomputed stat preview.</summary>

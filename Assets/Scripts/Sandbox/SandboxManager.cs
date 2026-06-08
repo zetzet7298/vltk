@@ -118,6 +118,8 @@ namespace VLTK.Sandbox
 
         /// <summary>Runtime inventory service (item search/add/equip). Used by the HUD bag window.</summary>
         public InventoryService InventoryService => _inventoryService;
+        public GmAccessService GmAccessService { get; private set; }
+        public GmTestServerItemService GmTestServerItemService { get; private set; }
 
         // PC-parity runtime services (meridian, partner, title, lottery, recipe, etc.)
         public MeridianService MeridianService { get; private set; }
@@ -457,8 +459,11 @@ namespace VLTK.Sandbox
                 // ── New Subsystems ──────────────────────────────────
                 QuestService = new QuestService();
                 // Load PC item data via batch loader (14 categories, ~10k+ items)
+                // and script items from magicscript.txt (GM token 6/1/4890).
                 var importer = PcItemBatchLoader.ImportInto(
                     System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItem"));
+                PcMagicScriptItemParser.ImportInto(
+                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull"), importer);
                 ItemDb = new ItemDatabase(importer);
                 LootService = new LootDropService(ItemDb);
                 var dropRegistry = new DropRateRegistry();
@@ -477,9 +482,10 @@ namespace VLTK.Sandbox
                             QuestService?.UpdateKillObjective(e.victimTemplateId.Value);
                     };
 
-                // Initialize item inventory
-                var itemImporter = new ItemContractImporter();
-                _inventoryService = new InventoryService(itemImporter, null);
+                // Initialize item inventory from the same PC item importer used by ItemDb.
+                _inventoryService = new InventoryService(importer, null);
+                GmAccessService = new GmAccessService();
+                GmTestServerItemService = new GmTestServerItemService(this, _inventoryService, GmAccessService);
 
                 // Initialize Chat system
                 ChatService = new ChatService();
@@ -740,6 +746,7 @@ namespace VLTK.Sandbox
                 StringResourceCatalogService = LoadOptionalStreamingService(nameof(StringResourceCatalogService), () => StringResourceCatalogService.LoadFromStreamingAssets());
 
                 LogOptionalServiceSummary();
+                GmTestServerItemService?.EnsureGmLoginInGame();
 
                 // Wire combat events to chat log
                 if (GameplayLoop != null)
