@@ -226,9 +226,10 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(267, catalog.Count);
+            Assert.AreEqual(268, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -244,6 +245,14 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(pickup);
             Assert.IsTrue(pickup.IsPickupMessage);
             Assert.AreEqual(182, pickup.eventItemIds.Single());
+            var optionalPickup = catalog.Find(@"\script\西南北区\成都\成都\地图Obj\emobj01.lua");
+            Assert.IsNotNull(optionalPickup);
+            Assert.IsTrue(optionalPickup.IsTaskOptionalPickupMessage);
+            Assert.AreEqual(1, optionalPickup.noteTaskId);
+            Assert.AreEqual(10 * 256, optionalPickup.noteTaskMinExclusive);
+            Assert.AreEqual(20 * 256, optionalPickup.noteTaskMaxExclusive);
+            Assert.AreEqual(118, optionalPickup.eventItemIds.Single());
+            Assert.AreEqual("Tìm thấy một miếng Lượng Ngân Khoáng trong khu rừng ở phía tây Thành Đô.", optionalPickup.taskNotes.Single());
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -502,6 +511,56 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("matched=False", unmatched.detail);
         }
 
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskOptionalPickupMessage_AddsPcNoteOnlyInsideTaskRange()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\西南北区\成都\成都\地图Obj\emobj01.lua",
+                        actionKind = "TaskOptionalPickupMessage",
+                        message = "Nhặt được một miếng Lượng Ngân Khoáng.",
+                        eventItemIds = new[] { 118 },
+                        setPropState = true,
+                        noteTaskId = 1,
+                        noteTaskMinExclusive = 10 * 256,
+                        noteTaskMaxExclusive = 20 * 256,
+                        taskNotes = new[] { "Tìm thấy một miếng Lượng Ngân Khoáng trong khu rừng ở phía tây Thành Đô." },
+                    }
+                }
+            };
+            var matchingHost = new FakeTrapTravelHost();
+            matchingHost.taskValues[1] = 15 * 256;
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, matchingHost, sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\西南北区\成都\成都\地图Obj\emobj01.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var matched));
+
+            Assert.IsTrue(matched.success);
+            Assert.IsTrue(matched.hideObject);
+            Assert.AreEqual(118, sideEffects.eventItems.Single());
+            Assert.AreEqual("Tìm thấy một miếng Lượng Ngân Khoáng trong khu rừng ở phía tây Thành Đô.", sideEffects.notes.Single());
+            StringAssert.Contains("matched=True", matched.detail);
+
+            var otherHost = new FakeTrapTravelHost();
+            otherHost.taskValues[1] = 20 * 256;
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, otherHost, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var unmatched));
+
+            Assert.IsTrue(unmatched.success);
+            Assert.IsTrue(unmatched.hideObject);
+            Assert.AreEqual(118, sideEffects.eventItems.Single());
+            Assert.AreEqual(0, sideEffects.notes.Count);
+            StringAssert.Contains("matched=False", unmatched.detail);
+        }
 
         [Test]
         public void PcObjectActionExecutor_TaskTalkMessage_BranchesOnPcGetTaskValue()

@@ -1530,6 +1530,46 @@ def int_lua_constant_expr(text: str) -> int | None:
     return None
 
 
+def object_task_optional_pickup_message_action(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'SetPropState', 'AddEventItem', 'Msg2Player', 'GetTask', 'AddNote', 'if', 'and'}):
+        return None
+    if re.search(r'\b(elseif|else|for|while|repeat)\b', clean_source):
+        return None
+    if len(parse_lua_calls(clean_source, 'SetPropState', limit=2)) != 1:
+        return None
+    event_items = int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=2), 1)
+    if len(event_items) != 1:
+        return None
+    msg = single_string(parse_lua_calls(clean_source, 'Msg2Player', limit=2))
+    if not is_safe_user_message(msg):
+        return None
+    if len(parse_lua_calls(clean_source, 'AddNote', limit=2)) != 1:
+        return None
+    match = re.search(
+        r'if\s*\(?\s*GetTask\s*\(\s*(\d+)\s*\)\s*>\s*([0-9\s*+\-]+)\s*\)?\s*and\s*\(?\s*GetTask\s*\(\s*\1\s*\)\s*<\s*([0-9\s*+\-]+)\s*\)?\s*then(?P<body>.*?)end',
+        clean_source, re.S | re.I)
+    if not match:
+        return None
+    min_value = int_lua_constant_expr(match.group(2))
+    max_value = int_lua_constant_expr(match.group(3))
+    if min_value is None or max_value is None or min_value >= max_value:
+        return None
+    task_notes = [call[0] for call in parse_lua_calls(match.group('body'), 'AddNote', limit=2) if call]
+    task_notes = [clean_user_message(note) for note in task_notes if is_safe_user_message(clean_user_message(note))]
+    if not task_notes:
+        return None
+    return {
+        'message': msg,
+        'eventItemIds': [event_items[0][0]],
+        'setPropState': True,
+        'noteTaskId': int(match.group(1)),
+        'noteTaskMinExclusive': min_value,
+        'noteTaskMaxExclusive': max_value,
+        'taskNotes': task_notes,
+    }
+
+
 def object_task_talk_message_action(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     if not source_uses_only_calls(clean_source, {'main', 'GetTask', 'Talk', 'if'}):
@@ -1709,6 +1749,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **camp_open_box,
             })
             continue
+        task_optional_pickup = object_task_optional_pickup_message_action(source_text)
+        if task_optional_pickup is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskOptionalPickupMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): deterministic pickup plus AddNote only when GetTask(id) is inside PC range, no task mutation',
+                **task_optional_pickup,
+            })
+            continue
         task_talk = object_task_talk_message_action(source_text)
         if task_talk is not None:
             entries.append({
@@ -1761,6 +1817,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectActions': len(entries),
         'deterministicObjectNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
         'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
+        'deterministicObjectTaskOptionalPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalPickupMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicObjectTaskTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskTalkMessage'),

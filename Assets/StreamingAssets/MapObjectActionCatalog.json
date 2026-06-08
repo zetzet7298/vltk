@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:59:13Z",
+  "generatedAtUtc": "2026-06-08T08:04:47Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -3039,6 +3039,29 @@
       "fightState": -1,
       "message": "Đi Thành Đô",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\emobj01.lua",
+      "scriptId": 3133029663,
+      "scriptIdHex": "0xBABE3D1F",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\emobj01.lua",
+      "actionKind": "TaskOptionalPickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic pickup plus AddNote only when GetTask(id) is inside PC range, no task mutation",
+      "message": "Nhặt được một miếng Lượng Ngân Khoáng.",
+      "eventItemIds": [
+        118
+      ],
+      "setPropState": true,
+      "noteTaskId": 1,
+      "noteTaskMinExclusive": 2560,
+      "noteTaskMaxExclusive": 5120,
+      "taskNotes": [
+        "Tìm thấy một miếng Lượng Ngân Khoáng trong khu rừng ở phía tây Thành Đô."
+      ]
     },
     {
       "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-储物箱1.lua",

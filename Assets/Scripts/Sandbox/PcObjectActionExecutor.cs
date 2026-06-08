@@ -5,7 +5,8 @@
 // read-only Say(message), read-only Talk(message...) object scripts,
 // PC faction-gated OpenBox()+SetRevPos(id) storage boxes,
 // PC camp-gated battlefield OpenBox()/Talk storage boxes, and
-// read-only PC task-gated Talk message object scripts.
+// read-only PC task-gated Talk message object scripts, and
+// PC pickup scripts with task-gated optional AddNote().
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace VLTK.Sandbox
                 return true;
             }
 
-            if (action.IsPickupMessage)
+            if (action.IsPickupMessage || action.IsTaskOptionalPickupMessage)
             {
                 if (_sideEffects == null)
                 {
@@ -73,14 +74,36 @@ namespace VLTK.Sandbox
                     foreach (int eventItemId in action.eventItemIds)
                         _sideEffects.AddEventItem(eventItemId);
                 }
+                int notes = 0;
                 if (action.notes != null)
                 {
                     foreach (string note in action.notes)
-                        if (!string.IsNullOrWhiteSpace(note))
-                            _sideEffects.AddNote(note);
+                    {
+                        if (string.IsNullOrWhiteSpace(note)) continue;
+                        _sideEffects.AddNote(note);
+                        notes++;
+                    }
                 }
+                bool taskNoteMatched = false;
+                if (action.IsTaskOptionalPickupMessage && action.taskNotes != null)
+                {
+                    int taskValue = _host.GetTaskValue(action.noteTaskId);
+                    taskNoteMatched = taskValue > action.noteTaskMinExclusive && taskValue < action.noteTaskMaxExclusive;
+                    if (taskNoteMatched)
+                    {
+                        foreach (string note in action.taskNotes)
+                        {
+                            if (string.IsNullOrWhiteSpace(note)) continue;
+                            _sideEffects.AddNote(note);
+                            notes++;
+                        }
+                    }
+                }
+                string taskNote = action.IsTaskOptionalPickupMessage
+                    ? $", optionalNoteTask={action.noteTaskId} matched={taskNoteMatched}"
+                    : string.Empty;
                 result = Success(action,
-                    $"PickupMessage(msg='{action.message}', items={FormatInts(action.eventItemIds)}, notes={action.notes?.Length ?? 0}, SetPropState={action.setPropState})");
+                    $"{action.actionKind}(msg='{action.message}', items={FormatInts(action.eventItemIds)}, notes={notes}, SetPropState={action.setPropState}{taskNote})");
                 result.hideObject = action.setPropState;
                 return true;
             }
