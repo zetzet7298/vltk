@@ -40,13 +40,14 @@ EXPECTED_OBJECT_SPRITES = 34
 EXPECTED_OBJECT_SCRIPT_REFS = 449
 EXPECTED_OBJECT_SCRIPTS = 299
 EXPECTED_RESOLVED_OBJECT_SCRIPTS = 299
-EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 264
+EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 266
 EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS = 7
 EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS = 19
 EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 144
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_DETERMINISTIC_OBJECT_OPEN_BOX_ACTIONS = 51
 EXPECTED_DETERMINISTIC_OBJECT_FACTION_OPEN_BOX_ACTIONS = 19
+EXPECTED_DETERMINISTIC_OBJECT_CAMP_OPEN_BOX_ACTIONS = 2
 EXPECTED_DETERMINISTIC_OBJECT_SHOW_LADDER_ACTIONS = 23
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
@@ -487,6 +488,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     object_talk_message = sum(1 for e in object_actions if e.get('actionKind') == 'TalkMessage')
     object_open_box = sum(1 for e in object_actions if e.get('actionKind') == 'OpenBox')
     object_faction_open_box = sum(1 for e in object_actions if e.get('actionKind') == 'FactionOpenBox')
+    object_camp_open_box = sum(1 for e in object_actions if e.get('actionKind') == 'CampOpenBox')
     object_show_ladder = sum(1 for e in object_actions if e.get('actionKind') == 'ShowLadder')
     audit.require(object_new_world == EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS, 'MapObjectActionCatalog NewWorld count mismatch')
     audit.require(object_pickup_message == EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS, 'MapObjectActionCatalog PickupMessage count mismatch')
@@ -494,6 +496,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     audit.require(object_talk_message == EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS, 'MapObjectActionCatalog TalkMessage count mismatch')
     audit.require(object_open_box == EXPECTED_DETERMINISTIC_OBJECT_OPEN_BOX_ACTIONS, 'MapObjectActionCatalog OpenBox count mismatch')
     audit.require(object_faction_open_box == EXPECTED_DETERMINISTIC_OBJECT_FACTION_OPEN_BOX_ACTIONS, 'MapObjectActionCatalog FactionOpenBox count mismatch')
+    audit.require(object_camp_open_box == EXPECTED_DETERMINISTIC_OBJECT_CAMP_OPEN_BOX_ACTIONS, 'MapObjectActionCatalog CampOpenBox count mismatch')
     audit.require(object_show_ladder == EXPECTED_DETERMINISTIC_OBJECT_SHOW_LADDER_ACTIONS, 'MapObjectActionCatalog ShowLadder count mismatch')
     audit.require(trap_cov.get('uniqueTrapIds') == EXPECTED_TRAP_IDS, 'unique trap id count mismatch')
     audit.require(trap_cov.get('resolvedTrapScripts') == EXPECTED_RESOLVED_TRAP_SCRIPTS, 'resolved trap script count mismatch')
@@ -583,6 +586,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicObjectTalkMessageActions': object_talk_message,
         'deterministicObjectOpenBoxActions': object_open_box,
         'deterministicObjectFactionOpenBoxActions': object_faction_open_box,
+        'deterministicObjectCampOpenBoxActions': object_camp_open_box,
         'deterministicObjectShowLadderActions': object_show_ladder,
         'trapIds': trap_cov.get('uniqueTrapIds'),
         'resolvedTrapScripts': trap_cov.get('resolvedTrapScripts'),

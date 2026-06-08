@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:47:37Z",
+  "generatedAtUtc": "2026-06-08T07:51:51Z",
   "objectScriptRefs": 449,
   "uniqueObjectScripts": 299,
   "resolvedObjectScripts": 299,
@@ -10,12 +10,13 @@
   "objectScriptsWithMsg2Player": 48,
   "objectScriptsWithTalk": 31,
   "objectScriptsWithSay": 156,
-  "deterministicObjectActions": 264,
+  "deterministicObjectActions": 266,
   "deterministicObjectNewWorldActions": 7,
   "deterministicObjectPickupMessageActions": 19,
   "deterministicObjectSayMessageActions": 144,
   "deterministicObjectTalkMessageActions": 1,
   "deterministicObjectOpenBoxActions": 51,
   "deterministicObjectFactionOpenBoxActions": 19,
+  "deterministicObjectCampOpenBoxActions": 2,
   "deterministicObjectShowLadderActions": 23
 }

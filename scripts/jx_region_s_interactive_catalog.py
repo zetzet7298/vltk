@@ -1511,6 +1511,32 @@ def object_faction_open_box_action(source: str) -> dict[str, Any] | None:
     return {'requiredFaction': faction, 'requiredFactionId': faction_id, 'reviveId': revive[0]}
 
 
+def object_camp_open_box_action(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'GetCurCamp', 'OpenBox', 'Talk', 'if'}):
+        return None
+    if re.search(r'\b(elseif|for|while|repeat)\b', clean_source):
+        return None
+    if len(parse_lua_calls(clean_source, 'GetCurCamp', limit=2)) != 1:
+        return None
+    if len(parse_lua_calls(clean_source, 'OpenBox', limit=2)) != 1:
+        return None
+    if len(parse_lua_calls(clean_source, 'Talk', limit=2)) != 1:
+        return None
+    match = re.search(
+        r'if\s*\(?\s*GetCurCamp\s*\(\s*\)\s*==\s*(\d+)\s*\)?\s*then(?P<then>.*?)else(?P<else>.*?)end',
+        clean_source, re.S | re.I)
+    if not match:
+        return None
+    if len(parse_lua_calls(match.group('then'), 'OpenBox', limit=2)) != 1:
+        return None
+    talk_calls = parse_lua_calls(match.group('else'), 'Talk', limit=2)
+    messages = talk_messages({'talkCalls': talk_calls})
+    if len(messages) != 1:
+        return None
+    return {'requiredCamp': int(match.group(1)), 'message': messages[0]}
+
+
 def object_show_ladder_action(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     if not source_uses_only_calls(clean_source, {'main', 'ShowLadder'}):
@@ -1618,6 +1644,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **faction_open_box,
             })
             continue
+        camp_open_box = object_camp_open_box_action(source_text)
+        if camp_open_box is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'CampOpenBox',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): battlefield GetCurCamp() gate opens storage box on matching camp; otherwise posts PC Talk message',
+                **camp_open_box,
+            })
+            continue
         show_ladder = object_show_ladder_action(source_text)
         if show_ladder is not None:
             entries.append({
@@ -1658,6 +1700,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicObjectOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'OpenBox'),
         'deterministicObjectFactionOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'FactionOpenBox'),
+        'deterministicObjectCampOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'CampOpenBox'),
         'deterministicObjectShowLadderActions': sum(1 for e in entries if e['actionKind'] == 'ShowLadder'),
     }
     return entries, coverage

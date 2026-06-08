@@ -3,7 +3,8 @@
 // Ported object API subset: NewWorld(mapId,x,y), optional SetFightState(),
 // safe pickup messages: SetPropState/AddEventItem/AddNote/Msg2Player,
 // read-only Say(message), read-only Talk(message...) object scripts,
-// and PC faction-gated OpenBox()+SetRevPos(id) storage boxes.
+// PC faction-gated OpenBox()+SetRevPos(id) storage boxes, and
+// PC camp-gated battlefield OpenBox()/Talk storage boxes.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -122,24 +123,32 @@ namespace VLTK.Sandbox
                 return true;
             }
 
-            if (action.IsOpenBox || action.IsFactionOpenBox)
+            if (action.IsOpenBox || action.IsFactionOpenBox || action.IsCampOpenBox)
             {
                 if (_sideEffects == null)
                 {
                     result = Failure(action, "object side-effect host unavailable");
                     return true;
                 }
-                _sideEffects.OpenBox();
-
                 bool factionMatched = action.requiredFactionId <= 0 || _host.GetPlayerFactionId() == action.requiredFactionId;
+                bool campMatched = action.requiredCamp <= 0 || _host.GetCurCamp() == action.requiredCamp;
+                if (!action.IsCampOpenBox || campMatched)
+                    _sideEffects.OpenBox();
+
                 if (action.reviveId > 0 && factionMatched)
                     _host.SetRevPos(_host.GetCurrentMapId(), action.reviveId);
+                if (action.IsCampOpenBox && !campMatched && !string.IsNullOrWhiteSpace(action.message))
+                    _sideEffects.PostMessage(action.message);
 
                 string faction = action.requiredFactionId > 0
                     ? $", GetFaction()=={action.requiredFaction}#{action.requiredFactionId} matched={factionMatched}"
                     : string.Empty;
+                string camp = action.requiredCamp > 0
+                    ? $", GetCurCamp()=={action.requiredCamp} matched={campMatched}"
+                    : string.Empty;
                 string revive = action.reviveId > 0 && factionMatched ? $", SetRevPos({action.reviveId})" : string.Empty;
-                result = Success(action, $"{action.actionKind}(){faction}{revive}");
+                string opened = action.IsCampOpenBox && !campMatched ? ", TalkMessage" : string.Empty;
+                result = Success(action, $"{action.actionKind}(){faction}{camp}{revive}{opened}");
                 return true;
             }
 

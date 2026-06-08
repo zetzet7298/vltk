@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:47:37Z",
+  "generatedAtUtc": "2026-06-08T07:51:51Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -887,6 +887,34 @@
       "fightState": -1,
       "message": "Thiên Nhẫn Giáo<---->Biện Kinh",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\宋金战场\\obj\\jin-chuwuxiang.lua",
+      "scriptId": 3919394559,
+      "scriptIdHex": "0xE99D36FF",
+      "sourceRelPath": "script\\中原北区\\宋金战场\\obj\\jin-chuwuxiang.lua",
+      "actionKind": "CampOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): battlefield GetCurCamp() gate opens storage box on matching camp; otherwise posts PC Talk message",
+      "requiredCamp": 2,
+      "message": "Bọn Nam man to gan, ngông cuồng muốn chiếm rương đồ của người Kim ta, thật là nằm mơ giữa ban ngày."
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\宋金战场\\obj\\song-chuwuxiang.lua",
+      "scriptId": 163852550,
+      "scriptIdHex": "0x09C43106",
+      "sourceRelPath": "script\\中原北区\\宋金战场\\obj\\song-chuwuxiang.lua",
+      "actionKind": "CampOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): battlefield GetCurCamp() gate opens storage box on matching camp; otherwise posts PC Talk message",
+      "requiredCamp": 1,
+      "message": "Nhìn ngươi mắt la mày loét, nhất định là Kim quốc gian tế! Người đâu! Bắt lấy hắn!"
     },
     {
       "scriptPath": "\\script\\中原北区\\宋金战场\\obj\\宋金战场-路标1.lua",

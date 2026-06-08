@@ -226,13 +226,14 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(264, catalog.Count);
+            Assert.AreEqual(266, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(51, catalog.entries.Count(e => e != null && e.IsOpenBox));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsFactionOpenBox));
+            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsCampOpenBox));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsShowLadder));
             var sign = catalog.Find(@"\script\两湖区\巴陵县\obj\巴陵县-路标3.lua");
             Assert.IsNotNull(sign);
@@ -449,6 +450,47 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(unmatched.success);
             Assert.IsTrue(otherSideEffects.openedBox);
             Assert.AreEqual(0, otherHost.revPosId);
+            StringAssert.Contains("matched=False", unmatched.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_CampOpenBox_GatesPcBattlefieldBoxByCurrentCamp()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\中原北区\宋金战场\obj\song-chuwuxiang.lua",
+                        actionKind = "CampOpenBox",
+                        requiredCamp = 1,
+                        message = "Nhìn ngươi mắt la mày loét, nhất định là Kim quốc gian tế! Người đâu! Bắt lấy hắn!",
+                    }
+                }
+            };
+            var matchingHost = new FakeTrapTravelHost { curCamp = 1 };
+            var matchingSideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, matchingHost, matchingSideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\中原北区\宋金战场\obj\song-chuwuxiang.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var matched));
+
+            Assert.IsTrue(matched.success);
+            Assert.IsTrue(matchingSideEffects.openedBox);
+            Assert.AreEqual(0, matchingSideEffects.messages.Count);
+            StringAssert.Contains("matched=True", matched.detail);
+
+            var otherHost = new FakeTrapTravelHost { curCamp = 2 };
+            var otherSideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, otherHost, otherSideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var unmatched));
+
+            Assert.IsTrue(unmatched.success);
+            Assert.IsFalse(otherSideEffects.openedBox);
+            Assert.AreEqual("Nhìn ngươi mắt la mày loét, nhất định là Kim quốc gian tế! Người đâu! Bắt lấy hắn!", otherSideEffects.message);
             StringAssert.Contains("matched=False", unmatched.detail);
         }
 
