@@ -86,12 +86,16 @@ namespace VLTK.Sandbox
 
         private void EnsureTrapContactBody()
         {
-            var body = GetComponent<Rigidbody2D>() ?? gameObject.AddComponent<Rigidbody2D>();
+            var body = GetComponent<Rigidbody2D>();
+            if (body == null)
+                body = gameObject.AddComponent<Rigidbody2D>();
             body.bodyType = RigidbodyType2D.Kinematic;
             body.gravityScale = 0f;
             body.freezeRotation = true;
 
-            var collider = GetComponent<CircleCollider2D>() ?? gameObject.AddComponent<CircleCollider2D>();
+            var collider = GetComponent<CircleCollider2D>();
+            if (collider == null)
+                collider = gameObject.AddComponent<CircleCollider2D>();
             collider.isTrigger = true;
             collider.radius = TrapContactRadius;
             collider.offset = Vector2.zero;

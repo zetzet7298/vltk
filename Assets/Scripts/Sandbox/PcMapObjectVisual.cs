@@ -125,7 +125,7 @@ namespace VLTK.Sandbox
                 return null;
             }
 
-            int dirs = Math.Max(1, decoded.header.directions);
+            int dirs = Math.Max(1, (int)decoded.header.directions);
             int total = decoded.frames.Length;
             int framesPerDir = Math.Max(1, total / dirs);
             if (total % dirs != 0) dirs = 1;
