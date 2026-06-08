@@ -496,7 +496,7 @@ namespace VLTK.UI
             RegisterClick(root, "ScenePos", OnScenePosClick);
             RegisterClick(root, "ToggleMapBtn", OnToggleMapClick);
             RegisterClick(root, "MinimapMarkerBtn", OnMinimapMarkerClick);
-            RegisterPreviewOpen(root, "WorldMapBtn");
+            RegisterClick(root, "WorldMapBtn", OnWorldMapClick);
             RegisterClick(root, "CaveMapBtn", OnCaveMapClick);
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
             RegisterClick(root, "CaiBangSkillClose", CloseSkillPanel);
@@ -2001,6 +2001,29 @@ namespace VLTK.UI
                 "PC: ec10b91e [SwitchBtn] dùng 小地图－切换按钮0.spr để đổi 小地图_小.ini ↔ 小地图_大.ini.",
             });
             SubsystemLog.Info("HUD", _minimapExpanded ? "Minimap large" : "Minimap small");
+        }
+
+        private void OnWorldMapClick()
+        {
+            OpenMapPreview();
+            var catalog = new GmTeleportCatalogService(SandboxManager.Instance?.MapManager);
+            var destinations = catalog.GetAllDestinations();
+            var rows = new List<string>
+            {
+                $"Bản đồ thế giới PC: {destinations.Count}",
+                _sceneName != null ? $"Map hiện tại: {_sceneName.text}" : "Map hiện tại: --",
+                "PC: ec10b91e/f8bf2550 [WorldMapBtn] dùng 小地图－世界大地图按钮.spr để mở bản đồ thế giới.",
+            };
+            int count = Math.Min(10, destinations.Count);
+            for (int i = 0; i < count; i++)
+            {
+                var dest = destinations[i];
+                rows.Add($"{dest.DisplayLabel} @ {FormatPcScenePos(dest.worldPosition)} ({dest.coordinateSource})");
+            }
+            if (destinations.Count > count)
+                rows.Add($"… còn {destinations.Count - count} map PC trong danh sách thế giới.");
+            OpenPcToolPanel("Bản đồ thế giới", rows);
+            SubsystemLog.Info("HUD", "Open world map catalog");
         }
 
         private void OnCaveMapClick()

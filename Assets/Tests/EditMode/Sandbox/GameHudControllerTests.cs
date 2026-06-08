@@ -563,6 +563,18 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void WorldMapButton_OpensPcWorldMapCatalog()
+        {
+            InvokePrivateMethod("OnWorldMapClick");
+
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Bản đồ thế giới", _pcToolTitle.text);
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Bản đồ thế giới PC")));
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("小地图－世界大地图按钮.spr")));
+        }
+
+        [Test]
         public void ToggleMapButton_SwitchesBetweenPcSmallAndLargeMinimap()
         {
             Assert.IsFalse(_minimapPanel.ClassListContains("hud-minimap-large"));

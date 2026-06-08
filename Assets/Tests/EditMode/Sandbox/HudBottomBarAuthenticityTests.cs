@@ -147,7 +147,7 @@ namespace VLTK.Tests.Sandbox
                 if (name == "ToggleMapBtn")
                     StringAssert.Contains("RegisterClick(root, \"ToggleMapBtn\", OnToggleMapClick)", controller, "PC SwitchBtn must toggle small/large minimap, not duplicate WorldMapBtn.");
                 else if (name == "WorldMapBtn")
-                    StringAssert.Contains($"RegisterPreviewOpen(root, \"{name}\")", controller, name + " must open the PC map preview.");
+                    StringAssert.Contains("RegisterClick(root, \"WorldMapBtn\", OnWorldMapClick)", controller, "PC WorldMapBtn must open the PC world map catalog, not only local minimap preview.");
                 else if (name == "FaceBtn")
                     StringAssert.Contains("OpenFacePicker();", controller, "FaceBtn must open the PC emoji/face picker.");
                 else
@@ -300,6 +300,9 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("RegisterClick(root, \"MinimapMarkerBtn\", OnMinimapMarkerClick)", controller);
             StringAssert.Contains("FlagImage=地图小旗帜.spr", controller, "PC BtnFlag must place a real minimap flag, not only open a generic search panel.");
             StringAssert.Contains("_lastMoveTarget = target", controller, "PC BtnFlag must persist the flag target used by minimap dots.");
+            StringAssert.Contains("RegisterClick(root, \"WorldMapBtn\", OnWorldMapClick)", controller);
+            StringAssert.Contains("GmTeleportCatalogService(SandboxManager.Instance?.MapManager)", controller, "WorldMapBtn must use real PC map catalog data.");
+            StringAssert.Contains("小地图－世界大地图按钮.spr", controller, "WorldMapBtn behavior must keep PC source provenance.");
             StringAssert.Contains("RegisterClick(root, \"CaveMapBtn\", OnCaveMapClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"PcShortcutToggleBtn\", OnPcShortcutToggleClick)", controller);
             StringAssert.Contains("RegisterClick(root, $\"PcItemSlot{slot}\", () => OnPcItemShortcutClick(slot))", controller);
