@@ -190,6 +190,37 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsCsArenaLeaveTrap)
+            {
+                int targetMapId = _host.GetTaskValue(action.leaveMapTaskId);
+                int targetCellX = _host.GetTaskValue(action.leaveCellXTaskId);
+                int targetCellY = _host.GetTaskValue(action.leaveCellYTaskId);
+                if (targetMapId <= 0 || targetCellX <= 0 || targetCellY <= 0)
+                {
+                    result = Failure(action,
+                        $"GetLeavePos() task values unavailable: GetTask({action.leaveMapTaskId},{action.leaveCellXTaskId},{action.leaveCellYTaskId}) -> ({targetMapId},{targetCellX},{targetCellY})");
+                    return true;
+                }
+                if (!_host.HasMap(targetMapId))
+                {
+                    result = Failure(action, $"target map {targetMapId} missing from catalog");
+                    return true;
+                }
+
+                _host.LeaveTeam();
+                _host.SetCurCamp(_host.GetCamp());
+                ApplyFightState(action);
+                if (action.logoutRv >= 0)
+                    _host.SetLogoutRv(action.logoutRv);
+                if (action.reviveMapId > 0 || action.reviveSubWorldId > 0)
+                    _host.SetRevPos(action.reviveMapId, action.reviveSubWorldId);
+                var leaveTarget = CellToWorld(targetCellX, targetCellY);
+                _host.NewWorld(targetMapId, leaveTarget);
+                result = Success(action,
+                    $"CS arena LeaveTrap -> LeaveTeam, SetCurCamp(GetCamp), SetFightState({action.fightState}), SetLogoutRV({action.logoutRv}), SetRevPos({action.reviveMapId},{action.reviveSubWorldId}), NewWorld({targetMapId},{targetCellX},{targetCellY}) -> {leaveTarget}");
+                return true;
+            }
+
             if (action.IsCityWarCampGateSetPos)
             {
                 int currentFightState = _host.GetFightState();
@@ -492,6 +523,9 @@ namespace VLTK.Sandbox
             if (logoutRv >= 0)
                 _host.SetLogoutRv(logoutRv);
         }
+
+        private static Vector2 CellToWorld(int cellX, int cellY)
+            => MapEnemyDatabase.MpsToWorld(cellX * 32, cellY * 32);
 
         private static int ResolveClearSkillClearMap(PcTrapActionCatalogEntry action, int currentMapId)
         {

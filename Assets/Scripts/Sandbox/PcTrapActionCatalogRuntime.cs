@@ -138,6 +138,10 @@ namespace VLTK.Sandbox
         public int[] clearSkillClearMapIds;
         public int[] clearSkillTestMapBeginIds;
         public int clearSkillTestMapCount;
+        public int leaveMapTaskId;
+        public int leaveCellXTaskId;
+        public int leaveCellYTaskId;
+        public int reviveMapId;
         public int setTaskTempId;
         public int setTaskTempValue;
         public string deathScript;
@@ -160,6 +164,7 @@ namespace VLTK.Sandbox
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillLeaveGame => string.Equals(actionKind, "ClearSkillLeaveGame", StringComparison.OrdinalIgnoreCase);
+        public bool IsCsArenaLeaveTrap => string.Equals(actionKind, "CsArenaLeaveTrap", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()

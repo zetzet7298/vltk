@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T06:03:26Z",
+  "generatedAtUtc": "2026-06-08T06:14:48Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -1327,6 +1327,24 @@
       "targetCellY": 5152,
       "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 444401167,
+      "trapIdHex": "0x1A7D060F",
+      "scriptPath": "\\script\\missions\\cs竞技场\\leavetrap.lua",
+      "sourceRelPath": "script\\missions\\cs竞技场\\leavetrap.lua",
+      "actionKind": "CsArenaLeaveTrap",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "source": "PC cs arena leavetrap.lua: LeaveTeam, SetCurCamp(GetCamp), SetFightState, SetLogoutRV, SetRevPos(CS_RevId,CS_RevData), NewWorld(GetLeavePos()) where GetLeavePos returns GetTask(300/301/302)",
+      "fightState": 1,
+      "logoutRv": 0,
+      "reviveMapId": 80,
+      "reviveSubWorldId": 36,
+      "leaveMapTaskId": 300,
+      "leaveCellXTaskId": 301,
+      "leaveCellYTaskId": 302
     },
     {
       "trapId": 454519779,

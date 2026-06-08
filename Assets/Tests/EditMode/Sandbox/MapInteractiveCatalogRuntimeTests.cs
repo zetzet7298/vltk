@@ -88,6 +88,7 @@ namespace VLTK.Tests.Sandbox
             public long currentDateYmdHm = 202606080900;
             public int randomValue = 0;
             public int taskValue = 0;
+            public Dictionary<int, int> taskValues = new();
             public int curCamp = 0;
             public int originalCamp = 0;
             public int battleRank = 0;
@@ -113,7 +114,7 @@ namespace VLTK.Tests.Sandbox
             public int GetPlayerLevel() => playerLevel;
             public long GetCurrentDateYmdHm() => currentDateYmdHm;
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
-            public int GetTaskValue(int taskId) => taskValue;
+            public int GetTaskValue(int taskId) => taskValues.TryGetValue(taskId, out var value) ? value : taskValue;
             public int GetCurCamp() => curCamp;
             public int GetCamp() => originalCamp;
             public int GetBattleRank() => battleRank;
@@ -752,6 +753,72 @@ namespace VLTK.Tests.Sandbox
 
             Assert.IsFalse(result.success);
             StringAssert.Contains("CSP_GetCityIndexByTestMap", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_CsArenaLeaveTrap_UsesPcGetLeavePosTaskTriplet()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 912,
+                        trapIdHex = "0x00000390",
+                        scriptPath = @"\script\missions\cs竞技场\leavetrap.lua",
+                        actionKind = "CsArenaLeaveTrap",
+                        fightState = 1,
+                        logoutRv = 0,
+                        reviveMapId = 80,
+                        reviveSubWorldId = 36,
+                        leaveMapTaskId = 300,
+                        leaveCellXTaskId = 301,
+                        leaveCellYTaskId = 302,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost
+            {
+                originalCamp = 2,
+                fightState = 0,
+                taskValues =
+                {
+                    [300] = 209,
+                    [301] = 1548,
+                    [302] = 3297,
+                }
+            };
+            var executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 912 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.IsTrue(host.leftTeam);
+            Assert.AreEqual(2, host.curCamp);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(0, host.logoutRv);
+            Assert.AreEqual(80, host.revPosMapId);
+            Assert.AreEqual(36, host.revPosId);
+            Assert.AreEqual(209, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1548 * 32, 3297 * 32), host.position);
+
+            host = new FakeTrapTravelHost
+            {
+                taskValues =
+                {
+                    [300] = 0,
+                    [301] = 1548,
+                    [302] = 3297,
+                }
+            };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 912 }, out result));
+
+            Assert.IsFalse(result.success);
+            StringAssert.Contains("GetLeavePos", result.detail);
         }
 
         [Test]

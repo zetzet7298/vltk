@@ -1151,6 +1151,65 @@ def clearskill_leave_game(source: str) -> dict[str, Any] | None:
     }
 
 
+def cs_arena_constants(pc_root: Path = PC_ROOT) -> dict[str, Any]:
+    root = server_root(pc_root)
+    for src in build_script_hash_index(root).values():
+        rel = str(src.get('sourceRelPath', '')).lower()
+        script_path = str(src.get('scriptPath', ''))
+        if not rel.endswith('head.lua') or 'cs竞技场' not in script_path:
+            continue
+        try:
+            text = decode_legacy_text(Path(src['sourceFile']).read_bytes())
+        except Exception:
+            continue
+        if 'CS_RevId' not in text or 'CS_RevData' not in text or 'GetLeavePos' not in text:
+            continue
+        rev_id = re.search(r'\bCS_RevId\s*=\s*(\d+)', text)
+        rev_data = re.search(r'\bCS_RevData\s*=\s*(\d+)', text)
+        leave = re.search(r'function\s+GetLeavePos\s*\(\s*\)(.*?)end\s*;?', text, re.S)
+        task_ids = [int(v) for v in re.findall(r'GetTask\s*\(\s*(\d+)\s*\)', leave.group(1) if leave else '')]
+        if rev_id and rev_data and len(task_ids) >= 3:
+            return {
+                'reviveMapId': int(rev_id.group(1)),
+                'reviveSubWorldId': int(rev_data.group(1)),
+                'leaveTaskIds': task_ids[:3],
+            }
+    return {}
+
+
+def cs_arena_leave_trap(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {
+        'main', 'Include', 'LeaveTeam', 'SetCurCamp', 'GetCamp', 'SetFightState',
+        'SetLogoutRV', 'SetRevPos', 'NewWorld', 'GetLeavePos'
+    }
+    if not re.search(r'NewWorld\s*\(\s*GetLeavePos\s*\(\s*\)\s*\)', clean_source):
+        return None
+    if 'SetCurCamp(GetCamp())' not in clean_source:
+        return None
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(if|for|while|elseif)\b', clean_source):
+        return None
+    fight_state = int_args_unique(parse_lua_calls(clean_source, 'SetFightState', limit=2), 1)
+    logout = int_args_unique(parse_lua_calls(clean_source, 'SetLogoutRV', limit=2), 1)
+    if fight_state is None or logout is None:
+        return None
+    constants = cs_arena_constants()
+    task_ids = constants.get('leaveTaskIds') or []
+    if len(task_ids) < 3 or constants.get('reviveMapId', 0) <= 0:
+        return None
+    return {
+        'fightState': fight_state[0],
+        'logoutRv': logout[0],
+        'reviveMapId': constants['reviveMapId'],
+        'reviveSubWorldId': constants.get('reviveSubWorldId', 0),
+        'leaveMapTaskId': task_ids[0],
+        'leaveCellXTaskId': task_ids[1],
+        'leaveCellYTaskId': task_ids[2],
+    }
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
         return False
@@ -1533,6 +1592,21 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **clear_leave,
             })
             continue
+        cs_leave = cs_arena_leave_trap(source)
+        if cs_leave is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'CsArenaLeaveTrap',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'source': 'PC cs arena leavetrap.lua: LeaveTeam, SetCurCamp(GetCamp), SetFightState, SetLogoutRV, SetRevPos(CS_RevId,CS_RevData), NewWorld(GetLeavePos()) where GetLeavePos returns GetTask(300/301/302)',
+                **cs_leave,
+            })
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -1604,6 +1678,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),
         'deterministicTrapClearSkillLeaveGameActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillLeaveGame'),
+        'deterministicTrapCsArenaLeaveTrapActions': sum(1 for e in entries if e['actionKind'] == 'CsArenaLeaveTrap'),
     }
     return entries, coverage
 
