@@ -1179,6 +1179,83 @@ def cs_arena_constants(pc_root: Path = PC_ROOT) -> dict[str, Any]:
     return {}
 
 
+def normalize_lua_engine_path(path: str) -> str:
+    normalized = str(path).replace('/', '\\')
+    while '\\\\' in normalized:
+        normalized = normalized.replace('\\\\', '\\')
+    return normalized
+
+
+def read_pc_script_by_engine_path(engine_path: str, pc_root: Path = PC_ROOT) -> str:
+    wanted = normalize_lua_engine_path(engine_path).lower()
+    root = server_root(pc_root)
+    for src in build_script_hash_index(root).values():
+        if str(src.get('scriptPath', '')).lower() != wanted:
+            continue
+        try:
+            return decode_legacy_text(Path(src['sourceFile']).read_bytes())
+        except Exception:
+            return ''
+    return ''
+
+
+def task_triplet_leave_trap(source: str, pc_root: Path = PC_ROOT) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    effective_source = clean_source
+    if not re.search(r'function\s+main\s*\(', clean_source):
+        includes = parse_lua_calls(clean_source, 'Include', limit=4)
+        include_paths = [normalize_lua_engine_path(str(call[0])) for call in includes if call]
+        if len(include_paths) != 1 or include_paths[0].lower() != r'\script\missions\citywar_arena\leavetrap.lua':
+            return None
+        effective_source = strip_lua_line_comments(read_pc_script_by_engine_path(include_paths[0], pc_root))
+        if not effective_source:
+            return None
+
+    allowed = {
+        'main', 'Include', 'SetCurCamp', 'GetCamp', 'SetFightState', 'SetRevPos',
+        'SetLogoutRV', 'SetCreateTeam', 'SetDeathScript', 'SetPKFlag',
+        'ForbidChangePK', 'SetTaskTemp', 'NewWorld', 'GetLeavePos'
+    }
+    if 'LeaveTeam' in effective_source:
+        return None
+    if not re.search(r'NewWorld\s*\(\s*GetLeavePos\s*\(\s*\)\s*\)', effective_source):
+        return None
+    if 'SetCurCamp(GetCamp())' not in effective_source:
+        return None
+    if not source_uses_only_calls(effective_source, allowed):
+        return None
+    if re.search(r'\b(if|for|while|elseif)\b', effective_source):
+        return None
+
+    fight_state = int_args_unique(parse_lua_calls(effective_source, 'SetFightState', limit=2), 1)
+    revive_pos = int_args_unique(parse_lua_calls(effective_source, 'SetRevPos', limit=2), 2)
+    if fight_state is None or revive_pos is None:
+        return None
+
+    set_task_temp = int_args_unique(parse_lua_calls(effective_source, 'SetTaskTemp', limit=2), 2)
+    logout = int_args_unique(parse_lua_calls(effective_source, 'SetLogoutRV', limit=2), 1) if 'SetLogoutRV' in effective_source else None
+    create_team = int_args_unique(parse_lua_calls(effective_source, 'SetCreateTeam', limit=2), 1) if 'SetCreateTeam' in effective_source else None
+    pk_flag = int_args_unique(parse_lua_calls(effective_source, 'SetPKFlag', limit=2), 1) if 'SetPKFlag' in effective_source else None
+    forbid = int_args_unique(parse_lua_calls(effective_source, 'ForbidChangePK', limit=2), 1) if 'ForbidChangePK' in effective_source else None
+    death_calls = parse_lua_calls(effective_source, 'SetDeathScript', limit=2)
+    death_script = str(death_calls[0][0]) if death_calls and death_calls[0] else None
+    return {
+        'fightState': fight_state[0],
+        'reviveMapId': revive_pos[0],
+        'reviveSubWorldId': revive_pos[1],
+        'logoutRv': logout[0] if logout is not None else -1,
+        'createTeam': create_team[0] if create_team is not None else -1,
+        'pkFlag': pk_flag[0] if pk_flag is not None else -1,
+        'forbidChangePk': forbid[0] if forbid is not None else -1,
+        'setTaskTempId': set_task_temp[0] if set_task_temp is not None else 0,
+        'setTaskTempValue': set_task_temp[1] if set_task_temp is not None else 0,
+        'deathScript': death_script,
+        'leaveMapTaskId': 300,
+        'leaveCellXTaskId': 301,
+        'leaveCellYTaskId': 302,
+    }
+
+
 def cs_arena_leave_trap(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     allowed = {
@@ -1379,7 +1456,24 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
     for script in trap_scripts:
         source = script.get('sourceText', '')
         actions = script_action_summary(source) if source else (script.get('actions') or {})
-        if not script.get('resolved') or not actions.get('hasMain'):
+        if not script.get('resolved'):
+            continue
+        task_triplet_leave = task_triplet_leave_trap(source)
+        if task_triplet_leave is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskTripletLeaveTrap',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'source': 'PC mission leave trap: SetCurCamp(GetCamp), SetFightState, SetRevPos, optional logout/team/pk/death/task side effects, then NewWorld(GetLeavePos()) from GetTask(300/301/302)',
+                **task_triplet_leave,
+            })
+            continue
+        if not actions.get('hasMain'):
             continue
         if is_safe_trap_msg2player_message(actions, source):
             entries.append({
@@ -1681,6 +1775,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),
         'deterministicTrapClearSkillLeaveGameActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillLeaveGame'),
         'deterministicTrapCsArenaLeaveTrapActions': sum(1 for e in entries if e['actionKind'] == 'CsArenaLeaveTrap'),
+        'deterministicTrapTaskTripletLeaveTrapActions': sum(1 for e in entries if e['actionKind'] == 'TaskTripletLeaveTrap'),
     }
     return entries, coverage
 

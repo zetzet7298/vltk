@@ -47,7 +47,7 @@ EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 142
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 769
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 771
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
@@ -66,6 +66,7 @@ EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_RETURN_NEWWORLD_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_SWITCH_ACTIONS = 4
 EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_LEAVE_ACTIONS = 4
 EXPECTED_DETERMINISTIC_TRAP_CS_ARENA_LEAVE_ACTIONS = 1
+EXPECTED_DETERMINISTIC_TRAP_TASK_TRIPLET_LEAVE_ACTIONS = 2
 EXPECTED_MISSING_TRAP_SCRIPTS = {'0xF51BA9A5'}
 KNOWN_FAILED_MAP_SPRITES = {
     r'\system\spr\RegionTileDefault.spr',
@@ -513,6 +514,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_clearskill_switch = sum(1 for e in action_entries if e.get('actionKind') == 'ClearSkillSwitchTrap')
     action_clearskill_leave = sum(1 for e in action_entries if e.get('actionKind') == 'ClearSkillLeaveGame')
     action_cs_arena_leave = sum(1 for e in action_entries if e.get('actionKind') == 'CsArenaLeaveTrap')
+    action_task_triplet_leave = sum(1 for e in action_entries if e.get('actionKind') == 'TaskTripletLeaveTrap')
     action_message = action_msg2_player + action_say_message + action_talk_message
     audit.require(len(trap_catalog.get('entries', [])) == EXPECTED_TRAP_IDS, 'MapTrapScriptCatalog entry count mismatch')
     audit.require(len(action_entries) == EXPECTED_DETERMINISTIC_TRAP_ACTIONS, 'MapTrapActionCatalog deterministic action count mismatch')
@@ -543,6 +545,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
                   'MapTrapActionCatalog ClearSkillLeaveGame count mismatch')
     audit.require(action_cs_arena_leave == EXPECTED_DETERMINISTIC_TRAP_CS_ARENA_LEAVE_ACTIONS,
                   'MapTrapActionCatalog CsArenaLeaveTrap count mismatch')
+    audit.require(action_task_triplet_leave == EXPECTED_DETERMINISTIC_TRAP_TASK_TRIPLET_LEAVE_ACTIONS,
+                  'MapTrapActionCatalog TaskTripletLeaveTrap count mismatch')
     audit.facts['interactive'] = {
         'traps': interactive.get('trapEntries'),
         'objects': interactive.get('objectEntries'),
@@ -578,6 +582,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapClearSkillSwitchTrapActions': action_clearskill_switch,
         'deterministicTrapClearSkillLeaveGameActions': action_clearskill_leave,
         'deterministicTrapCsArenaLeaveTrapActions': action_cs_arena_leave,
+        'deterministicTrapTaskTripletLeaveTrapActions': action_task_triplet_leave,
     }
 
 

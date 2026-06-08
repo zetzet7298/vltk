@@ -89,6 +89,7 @@ namespace VLTK.Sandbox
         public int CurrentPkFlag { get; private set; } = 0;
         public int CurrentForbidChangePk { get; private set; } = 0;
         public int CurrentPunish { get; private set; } = 0;
+        public int CurrentCreateTeam { get; private set; } = 0;
         public string CurrentDeathScript { get; private set; } = string.Empty;
         public int CurrentReviveMapId { get; private set; } = 0;
         public int CurrentReviveId { get; private set; } = 0;
@@ -1194,6 +1195,12 @@ namespace VLTK.Sandbox
         {
             CurrentPunish = Mathf.Max(0, value);
             SubsystemLog.Info("Sandbox", $"PC SetPunish({CurrentPunish}) applied");
+        }
+
+        public void SetCreateTeam(int value)
+        {
+            CurrentCreateTeam = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC SetCreateTeam({CurrentCreateTeam}) applied");
         }
 
         public void SetTaskTemp(int taskId, int value)

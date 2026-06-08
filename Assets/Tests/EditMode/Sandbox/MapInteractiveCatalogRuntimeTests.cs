@@ -96,6 +96,7 @@ namespace VLTK.Tests.Sandbox
             public int pkFlag = -1;
             public int forbidChangePk = -1;
             public int punish = -1;
+            public int createTeam = -1;
             public int taskTempId;
             public int taskTempValue;
             public string deathScript;
@@ -131,6 +132,7 @@ namespace VLTK.Tests.Sandbox
             public void SetPkFlag(int value) => pkFlag = value;
             public void ForbidChangePk(int value) => forbidChangePk = value;
             public void SetPunish(int value) => punish = value;
+            public void SetCreateTeam(int value) => createTeam = value;
             public void SetTaskTemp(int taskId, int value)
             {
                 taskTempId = taskId;
@@ -819,6 +821,67 @@ namespace VLTK.Tests.Sandbox
 
             Assert.IsFalse(result.success);
             StringAssert.Contains("GetLeavePos", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskTripletLeaveTrap_PreservesPcMissionLeaveSideEffects()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 913,
+                        trapIdHex = "0x00000391",
+                        scriptPath = @"\script\missions\citywar_arena\leavetrap.lua",
+                        actionKind = "TaskTripletLeaveTrap",
+                        fightState = 0,
+                        logoutRv = 0,
+                        reviveMapId = 99,
+                        reviveSubWorldId = 43,
+                        createTeam = 1,
+                        deathScript = string.Empty,
+                        pkFlag = 0,
+                        forbidChangePk = 0,
+                        setTaskTempId = 200,
+                        setTaskTempValue = 0,
+                        leaveMapTaskId = 300,
+                        leaveCellXTaskId = 301,
+                        leaveCellYTaskId = 302,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost
+            {
+                originalCamp = 1,
+                fightState = 1,
+                taskValues =
+                {
+                    [300] = 20,
+                    [301] = 1536,
+                    [302] = 3223,
+                }
+            };
+            var executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 913 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(1, host.curCamp);
+            Assert.AreEqual(0, host.fightState);
+            Assert.AreEqual(99, host.revPosMapId);
+            Assert.AreEqual(43, host.revPosId);
+            Assert.AreEqual(0, host.logoutRv);
+            Assert.AreEqual(1, host.createTeam);
+            Assert.AreEqual(string.Empty, host.deathScript);
+            Assert.AreEqual(0, host.pkFlag);
+            Assert.AreEqual(0, host.forbidChangePk);
+            Assert.AreEqual(200, host.taskTempId);
+            Assert.AreEqual(0, host.taskTempValue);
+            Assert.AreEqual(20, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1536 * 32, 3223 * 32), host.position);
         }
 
         [Test]

@@ -142,6 +142,7 @@ namespace VLTK.Sandbox
         public int leaveCellXTaskId;
         public int leaveCellYTaskId;
         public int reviveMapId;
+        public int createTeam = -1;
         public int setTaskTempId;
         public int setTaskTempValue;
         public string deathScript;
@@ -165,6 +166,7 @@ namespace VLTK.Sandbox
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillLeaveGame => string.Equals(actionKind, "ClearSkillLeaveGame", StringComparison.OrdinalIgnoreCase);
         public bool IsCsArenaLeaveTrap => string.Equals(actionKind, "CsArenaLeaveTrap", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskTripletLeaveTrap => string.Equals(actionKind, "TaskTripletLeaveTrap", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()

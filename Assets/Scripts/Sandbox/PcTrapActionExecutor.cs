@@ -45,6 +45,7 @@ namespace VLTK.Sandbox
         void SetPkFlag(int value);
         void ForbidChangePk(int value);
         void SetPunish(int value);
+        void SetCreateTeam(int value);
         void SetTaskTemp(int taskId, int value);
         void SetDeathScript(string scriptPath);
         void LeaveTeam();
@@ -218,6 +219,43 @@ namespace VLTK.Sandbox
                 _host.NewWorld(targetMapId, leaveTarget);
                 result = Success(action,
                     $"CS arena LeaveTrap -> LeaveTeam, SetCurCamp(GetCamp), SetFightState({action.fightState}), SetLogoutRV({action.logoutRv}), SetRevPos({action.reviveMapId},{action.reviveSubWorldId}), NewWorld({targetMapId},{targetCellX},{targetCellY}) -> {leaveTarget}");
+                return true;
+            }
+
+            if (action.IsTaskTripletLeaveTrap)
+            {
+                int targetMapId = _host.GetTaskValue(action.leaveMapTaskId);
+                int targetCellX = _host.GetTaskValue(action.leaveCellXTaskId);
+                int targetCellY = _host.GetTaskValue(action.leaveCellYTaskId);
+                if (targetMapId <= 0 || targetCellX <= 0 || targetCellY <= 0)
+                {
+                    result = Failure(action,
+                        $"GetLeavePos() task values unavailable: GetTask({action.leaveMapTaskId},{action.leaveCellXTaskId},{action.leaveCellYTaskId}) -> ({targetMapId},{targetCellX},{targetCellY})");
+                    return true;
+                }
+                if (!_host.HasMap(targetMapId))
+                {
+                    result = Failure(action, $"target map {targetMapId} missing from catalog");
+                    return true;
+                }
+
+                _host.SetCurCamp(_host.GetCamp());
+                ApplyFightState(action);
+                if (action.reviveMapId > 0 || action.reviveSubWorldId > 0)
+                    _host.SetRevPos(action.reviveMapId, action.reviveSubWorldId);
+                if (action.logoutRv >= 0)
+                    _host.SetLogoutRv(action.logoutRv);
+                if (action.createTeam >= 0)
+                    _host.SetCreateTeam(action.createTeam);
+                if (action.deathScript != null)
+                    _host.SetDeathScript(action.deathScript);
+                ApplyPcFlagSideEffects(action.pkFlag, action.forbidChangePk, action.punish, -1);
+                if (action.setTaskTempId > 0)
+                    _host.SetTaskTemp(action.setTaskTempId, action.setTaskTempValue);
+                var leaveTarget = CellToWorld(targetCellX, targetCellY);
+                _host.NewWorld(targetMapId, leaveTarget);
+                result = Success(action,
+                    $"TaskTripletLeaveTrap -> SetCurCamp(GetCamp), SetFightState({action.fightState}), SetRevPos({action.reviveMapId},{action.reviveSubWorldId}), NewWorld({targetMapId},{targetCellX},{targetCellY}) -> {leaveTarget}");
                 return true;
             }
 
@@ -747,6 +785,11 @@ namespace VLTK.Sandbox
         public void SetPunish(int value)
         {
             SandboxManager.Instance?.SetPunish(value);
+        }
+
+        public void SetCreateTeam(int value)
+        {
+            SandboxManager.Instance?.SetCreateTeam(value);
         }
 
         public void SetTaskTemp(int taskId, int value)
