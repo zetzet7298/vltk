@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T08:32:24Z",
+  "generatedAtUtc": "2026-06-08T08:40:27Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -274,6 +274,22 @@
       "noActionMapIds": [
         919,
         920
+      ]
+    },
+    {
+      "trapId": 91887130,
+      "trapIdHex": "0x057A161A",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞三层\\trap\\留仙洞三层3to留仙洞四层1.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞三层\\trap\\留仙洞三层3to留仙洞四层1.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
       ]
     },
     {
@@ -1510,6 +1526,22 @@
       ]
     },
     {
+      "trapId": 485840127,
+      "trapIdHex": "0x1CF554FF",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞四层\\trap\\留仙洞四层5to留仙洞五层2.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞四层\\trap\\留仙洞四层5to留仙洞五层2.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
+    },
+    {
       "trapId": 491335983,
       "trapIdHex": "0x1D49312F",
       "scriptPath": "\\script\\中原南区\\稻香村\\trap\\稻香村西门.lua",
@@ -1782,6 +1814,22 @@
       "targetCellY": 3212,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 613988364,
+      "trapIdHex": "0x2498B80C",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞四层\\trap\\留仙洞四层4to留仙洞五层1.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞四层\\trap\\留仙洞四层4to留仙洞五层1.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
     },
     {
       "trapId": 615612638,
@@ -3521,6 +3569,22 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 1193850280,
+      "trapIdHex": "0x4728B5A8",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞一层\\trap\\留仙洞一层5to留仙洞二层2.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞一层\\trap\\留仙洞一层5to留仙洞二层2.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
+    },
+    {
       "trapId": 1198514086,
       "trapIdHex": "0x476FDFA6",
       "scriptPath": "\\script\\西北北区\\昆仑派\\昆仑派\\trap\\昆仑切换点2.lua",
@@ -4186,6 +4250,22 @@
       "elseNextFightState": 0
     },
     {
+      "trapId": 1423468929,
+      "trapIdHex": "0x54D86981",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞一层\\trap\\留仙洞一层6to留仙洞二层3.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞一层\\trap\\留仙洞一层6to留仙洞二层3.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
+    },
+    {
       "trapId": 1425692155,
       "trapIdHex": "0x54FA55FB",
       "scriptPath": "\\script\\两湖区\\巴陵县\\trap\\巴陵县to武陵洞.lua",
@@ -4454,6 +4534,22 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 1525899780,
+      "trapIdHex": "0x5AF36204",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞三层\\trap\\留仙洞三层5to留仙洞四层3.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞三层\\trap\\留仙洞三层5to留仙洞四层3.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
+    },
+    {
       "trapId": 1526195743,
       "trapIdHex": "0x5AF7E61F",
       "scriptPath": "\\script\\江南区\\五毒教\\五毒教\\trap\\五毒教切换点9.lua",
@@ -4542,6 +4638,22 @@
       "elseTargetCellX": 1598,
       "elseTargetCellY": 3102,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 1543547837,
+      "trapIdHex": "0x5C00ABBD",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞三层\\trap\\留仙洞三层4to留仙洞四层2.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞三层\\trap\\留仙洞三层4to留仙洞四层2.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
     },
     {
       "trapId": 1544055878,
@@ -4987,6 +5099,22 @@
       "targetCellY": 3123,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 1764014817,
+      "trapIdHex": "0x6924BAE1",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞一层\\trap\\留仙洞一层4to留仙洞二层1.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞一层\\trap\\留仙洞一层4to留仙洞二层1.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
     },
     {
       "trapId": 1767750353,
@@ -7827,6 +7955,22 @@
       "elseNextFightState": 0
     },
     {
+      "trapId": 2673430588,
+      "trapIdHex": "0x9F59503C",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞二层\\trap\\留仙洞二层4to留仙洞三层1.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞二层\\trap\\留仙洞二层4to留仙洞三层1.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
+    },
+    {
       "trapId": 2692476512,
       "trapIdHex": "0xA07BEE60",
       "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_tolongxiang.lua",
@@ -9458,6 +9602,22 @@
       "targetCellY": 3191,
       "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3163823964,
+      "trapIdHex": "0xBC941F5C",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞五层\\trap\\留仙洞五层3to留仙洞六层.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞五层\\trap\\留仙洞五层3to留仙洞六层.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
     },
     {
       "trapId": 3169136015,
@@ -12093,6 +12253,22 @@
       "elseTargetCellX": 1599,
       "elseTargetCellY": 3200,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 4010699801,
+      "trapIdHex": "0xEF0E6C19",
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞二层\\trap\\留仙洞二层5to留仙洞三层2.lua",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞二层\\trap\\留仙洞二层5to留仙洞三层2.lua",
+      "actionKind": "PromptMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported",
+      "message": "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:",
+      "messages": [
+        "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:"
+      ]
     },
     {
       "trapId": 4013344160,

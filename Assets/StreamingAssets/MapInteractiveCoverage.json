@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T08:32:24Z",
+  "generatedAtUtc": "2026-06-08T08:40:27Z",
   "phase": "phase4_region_s_trap_object_catalog",
   "scope": "PC Region_S trap/object catalog + exact ObjData SPR staging; traps remain invisible metadata/no gameplay placeholder",
   "sourceRegionRoot": "/var/www/vltk-mobile/Assets/StreamingAssets/Generated/MapServerRegions",
@@ -25,14 +25,15 @@
     "0xF51BA9A5"
   ],
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
-  "deterministicTrapActions": 780,
+  "deterministicTrapActions": 791,
   "deterministicNewWorldActions": 531,
   "deterministicSetPosActions": 1,
   "deterministicFightStateSetPosActions": 112,
   "deterministicTrapMsg2PlayerActions": 1,
   "deterministicTrapSayMessageActions": 23,
   "deterministicTrapTalkMessageActions": 2,
-  "deterministicTrapMessageActions": 26,
+  "deterministicTrapMessageActions": 37,
+  "deterministicTrapPromptMessageActions": 11,
   "deterministicTrapMsg2PlayerNewWorldActions": 3,
   "deterministicTrapLevelGateNewWorldActions": 20,
   "deterministicTrapLevelBracketNewWorldActions": 2,
@@ -70,5 +71,5 @@
   "deterministicObjectFactionOpenBoxActions": 19,
   "deterministicObjectCampOpenBoxActions": 2,
   "deterministicObjectShowLadderActions": 23,
-  "elapsedSeconds": 4.831
+  "elapsedSeconds": 5.048
 }

@@ -199,11 +199,12 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(780, catalog.Count);
+            Assert.AreEqual(791, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
-            Assert.AreEqual(26, catalog.entries.Count(e => e != null && e.IsMessageOnly));
+            Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTalkMessage));
+            Assert.AreEqual(11, catalog.entries.Count(e => e != null && e.IsPromptMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalMessageNewWorld));
@@ -767,6 +768,36 @@ namespace VLTK.Tests.Sandbox
                 "Trên vách viết: Thanh Âm động.",
             }, sideEffects.messages);
             StringAssert.Contains("TalkMessage", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_PromptMessage_PostsPcCallbackPromptWithoutWarp()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0x2498B80C,
+                        trapIdHex = "0x2498B80C",
+                        scriptPath = @"\script\西北北区\黄河源头\留仙洞四层\trap\留仙洞四层4to留仙洞五层1.lua",
+                        actionKind = "PromptMessage",
+                        messages = new[] { "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:" },
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost();
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x2498B80C" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(-1, host.fightState);
+            CollectionAssert.AreEqual(new[] { "Bạn nhìn thấy một cơ quan, trên có khắc mấy dòng chữ:" }, sideEffects.messages);
+            StringAssert.Contains("PromptMessage(lines=1)", result.detail);
         }
 
         [Test]

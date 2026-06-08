@@ -768,6 +768,35 @@ def is_safe_trap_talk_message(actions: dict[str, Any], source: str) -> bool:
     return bool(talk_messages(actions))
 
 
+def main_callback_prompt_message(source: str) -> dict[str, Any] | None:
+    main_body = lua_function_body(source, 'main')
+    if not main_body:
+        return None
+    clean_body = strip_lua_line_comments(main_body)
+    if has_lua_control_flow(clean_body):
+        return None
+    if not source_uses_only_calls(clean_body, {'Talk', 'Say'}):
+        return None
+    messages: list[str] = []
+    talk_lines = callback_talk_messages(parse_lua_calls(clean_body, 'Talk', limit=4))
+    if talk_lines:
+        messages.extend(talk_lines)
+    say_calls = parse_lua_calls(clean_body, 'Say', limit=4)
+    for call in say_calls:
+        if not call:
+            return None
+        message = clean_user_message(str(call[0]))
+        if not message or not is_safe_user_message(message):
+            return None
+        messages.append(message)
+    if not messages:
+        return None
+    return {
+        'message': '\n'.join(messages),
+        'messages': messages,
+    }
+
+
 def is_safe_trap_msg2player_newworld(actions: dict[str, Any], source: str) -> bool:
     if not actions.get('msg2PlayerCalls') or not actions.get('newWorldCalls'):
         return False
@@ -2114,6 +2143,22 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'source': 'PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState/AddTermini, with no branch/task/item side effects',
             })
             continue
+        prompt = main_callback_prompt_message(source)
+        if prompt is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'PromptMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC trap Lua main(): read-only Talk/Say prompt with callback choices; callback side effects remain deferred until PC dialog callbacks/task/item APIs are ported',
+                **prompt,
+            })
+            continue
         task_optional = task_optional_talk_newworld(source)
         if task_optional is not None:
             entries.append({
@@ -2405,7 +2450,8 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapMsg2PlayerActions': sum(1 for e in entries if e['actionKind'] == 'Msg2Player'),
         'deterministicTrapSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicTrapTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
-        'deterministicTrapMessageActions': sum(1 for e in entries if e['actionKind'] in {'Msg2Player', 'SayMessage', 'TalkMessage'}),
+        'deterministicTrapMessageActions': sum(1 for e in entries if e['actionKind'] in {'Msg2Player', 'SayMessage', 'TalkMessage', 'PromptMessage'}),
+        'deterministicTrapPromptMessageActions': sum(1 for e in entries if e['actionKind'] == 'PromptMessage'),
         'deterministicTrapMsg2PlayerNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'Msg2PlayerNewWorld'),
         'deterministicTrapLevelGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelGateNewWorld'),
         'deterministicTrapLevelBracketNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelBracketNewWorld'),

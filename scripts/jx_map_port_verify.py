@@ -53,14 +53,15 @@ EXPECTED_DETERMINISTIC_OBJECT_CAMP_OPEN_BOX_ACTIONS = 2
 EXPECTED_DETERMINISTIC_OBJECT_SHOW_LADDER_ACTIONS = 23
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 780
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 791
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 531
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
-EXPECTED_DETERMINISTIC_TRAP_MESSAGE_ACTIONS = 26
+EXPECTED_DETERMINISTIC_TRAP_MESSAGE_ACTIONS = 37
 EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_SAY_MESSAGE_ACTIONS = 23
 EXPECTED_DETERMINISTIC_TRAP_TALK_MESSAGE_ACTIONS = 2
+EXPECTED_DETERMINISTIC_TRAP_PROMPT_MESSAGE_ACTIONS = 11
 EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_NEWWORLD_ACTIONS = 3
 EXPECTED_DETERMINISTIC_TRAP_LEVEL_GATE_NEWWORLD_ACTIONS = 20
 EXPECTED_DETERMINISTIC_TRAP_LEVEL_BRACKET_NEWWORLD_ACTIONS = 2
@@ -526,6 +527,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_msg2_player = sum(1 for e in action_entries if e.get('actionKind') == 'Msg2Player')
     action_say_message = sum(1 for e in action_entries if e.get('actionKind') == 'SayMessage')
     action_talk_message = sum(1 for e in action_entries if e.get('actionKind') == 'TalkMessage')
+    action_prompt_message = sum(1 for e in action_entries if e.get('actionKind') == 'PromptMessage')
     action_msg2_player_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'Msg2PlayerNewWorld')
     action_level_gate_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'LevelGateNewWorld')
     action_level_bracket_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'LevelBracketNewWorld')
@@ -543,7 +545,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_clearskill_leave = sum(1 for e in action_entries if e.get('actionKind') == 'ClearSkillLeaveGame')
     action_cs_arena_leave = sum(1 for e in action_entries if e.get('actionKind') == 'CsArenaLeaveTrap')
     action_task_triplet_leave = sum(1 for e in action_entries if e.get('actionKind') == 'TaskTripletLeaveTrap')
-    action_message = action_msg2_player + action_say_message + action_talk_message
+    action_message = action_msg2_player + action_say_message + action_talk_message + action_prompt_message
     audit.require(len(trap_catalog.get('entries', [])) == EXPECTED_TRAP_IDS, 'MapTrapScriptCatalog entry count mismatch')
     audit.require(len(action_entries) == EXPECTED_DETERMINISTIC_TRAP_ACTIONS, 'MapTrapActionCatalog deterministic action count mismatch')
     audit.require(action_new_world == EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS, 'MapTrapActionCatalog NewWorld count mismatch')
@@ -553,6 +555,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     audit.require(action_msg2_player == EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_ACTIONS, 'MapTrapActionCatalog Msg2Player count mismatch')
     audit.require(action_say_message == EXPECTED_DETERMINISTIC_TRAP_SAY_MESSAGE_ACTIONS, 'MapTrapActionCatalog SayMessage count mismatch')
     audit.require(action_talk_message == EXPECTED_DETERMINISTIC_TRAP_TALK_MESSAGE_ACTIONS, 'MapTrapActionCatalog TalkMessage count mismatch')
+    audit.require(action_prompt_message == EXPECTED_DETERMINISTIC_TRAP_PROMPT_MESSAGE_ACTIONS, 'MapTrapActionCatalog PromptMessage count mismatch')
     audit.require(action_msg2_player_new_world == EXPECTED_DETERMINISTIC_TRAP_MSG2PLAYER_NEWWORLD_ACTIONS, 'MapTrapActionCatalog Msg2PlayerNewWorld count mismatch')
     audit.require(action_level_gate_new_world == EXPECTED_DETERMINISTIC_TRAP_LEVEL_GATE_NEWWORLD_ACTIONS, 'MapTrapActionCatalog LevelGateNewWorld count mismatch')
     audit.require(action_level_bracket_new_world == EXPECTED_DETERMINISTIC_TRAP_LEVEL_BRACKET_NEWWORLD_ACTIONS,
@@ -615,6 +618,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapMsg2PlayerActions': action_msg2_player,
         'deterministicTrapSayMessageActions': action_say_message,
         'deterministicTrapTalkMessageActions': action_talk_message,
+        'deterministicTrapPromptMessageActions': action_prompt_message,
         'deterministicTrapMsg2PlayerNewWorldActions': action_msg2_player_new_world,
         'deterministicTrapLevelGateNewWorldActions': action_level_gate_new_world,
         'deterministicTrapLevelBracketNewWorldActions': action_level_bracket_new_world,
