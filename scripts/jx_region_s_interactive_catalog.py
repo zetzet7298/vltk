@@ -494,6 +494,8 @@ def clean_user_message(message: str) -> str:
             .replace('PhƯa', 'Phía')
             .replace('tiƠng', 'tiếng')
             .replace('TiƠng', 'Tiếng')
+            .replace('giƠng', 'giếng')
+            .replace('GiƠng', 'Giếng')
             .replace('đƠn', 'đến')
             .replace('ĐƠn', 'Đến')
             .replace('nă cứ', 'nó cứ')
@@ -704,7 +706,9 @@ def is_safe_trap_msg2player_newworld(actions: dict[str, Any], source: str) -> bo
         actions.get('addItemCalls') or actions.get('delItemCalls') or actions.get('usesCityApis')
     ):
         return False
-    if not source_uses_only_calls(source, {'main', 'Msg2Player', 'SetFightState', 'NewWorld'}):
+    if actions.get('addTerminiCalls') and not expr_args(actions.get('addTerminiCalls') or [], 1):
+        return False
+    if not source_uses_only_calls(source, {'main', 'Msg2Player', 'SetFightState', 'NewWorld', 'AddTermini'}):
         return False
     if has_lua_control_flow(source):
         return False
@@ -1583,7 +1587,8 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'targetCellY': new_world[2],
                 'fightState': fight_state[0] if fight_state is not None else -1,
                 'message': single_string(actions.get('msg2PlayerCalls') or []),
-                'source': 'PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects',
+                'terminiIds': [values[0] for values in expr_args(actions.get('addTerminiCalls') or [], 1)],
+                'source': 'PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState/AddTermini, with no branch/task/item side effects',
             })
             continue
         level_bracket = level_bracket_newworld(source)

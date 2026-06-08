@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T06:38:44Z",
+  "generatedAtUtc": "2026-06-08T06:51:31Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -3745,7 +3745,8 @@
       "targetCellY": 3277,
       "fightState": -1,
       "message": "Bạn thoát khỏi 2 tên Ngư, Thiệu",
-      "source": "PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects"
+      "terminiIds": [],
+      "source": "PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState/AddTermini, with no branch/task/item side effects"
     },
     {
       "trapId": 1286367683,
@@ -7662,6 +7663,22 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 2664428991,
+      "trapIdHex": "0x9ECFF5BF",
+      "scriptPath": "\\script\\中原南区\\武当派\\武当派\\trap\\武当派to井底迷宫.lua",
+      "sourceRelPath": "script\\中原南区\\武当派\\武当派\\trap\\武当派to井底迷宫.lua",
+      "actionKind": "Msg2PlayerNewWorld",
+      "targetMapId": 82,
+      "targetCellX": 1593,
+      "targetCellY": 3193,
+      "fightState": 1,
+      "message": "Bạn nhảy xuống đáy giếng!",
+      "terminiIds": [
+        148
+      ],
+      "source": "PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState/AddTermini, with no branch/task/item side effects"
+    },
+    {
       "trapId": 2665811767,
       "trapIdHex": "0x9EE50F37",
       "scriptPath": "\\script\\西南南区\\大理府\\大理府\\trap\\大理府to石鼓镇.lua",
@@ -9880,7 +9897,8 @@
       "targetCellY": 2974,
       "fightState": -1,
       "message": "Bạn chạy khỏi chỗ của Thương Lương Khách, phía sau còn văng vẳng tiếng chửi mắng của ông.",
-      "source": "PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects"
+      "terminiIds": [],
+      "source": "PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState/AddTermini, with no branch/task/item side effects"
     },
     {
       "trapId": 3326726574,

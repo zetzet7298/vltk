@@ -193,13 +193,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(773, catalog.Count);
+            Assert.AreEqual(774, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
-            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
+            Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
@@ -504,6 +504,7 @@ namespace VLTK.Tests.Sandbox
                         scriptPath = @"\script\msg_newworld.lua",
                         actionKind = "Msg2PlayerNewWorld",
                         message = "Bạn thoát khỏi nơi nguy hiểm.",
+                        terminiIds = new[] { 148 },
                         targetMapId = 131,
                         targetCellX = 1459,
                         targetCellY = 3277,
@@ -520,6 +521,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(131, host.mapId);
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1459 * 32, 3277 * 32), host.position);
             CollectionAssert.AreEqual(new[] { "Bạn thoát khỏi nơi nguy hiểm." }, sideEffects.messages);
+            CollectionAssert.AreEqual(new[] { 148 }, sideEffects.terminiIds);
             StringAssert.Contains("Msg2Player + NewWorld", result.detail);
         }
 

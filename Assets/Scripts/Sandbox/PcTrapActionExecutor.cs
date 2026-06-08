@@ -335,6 +335,7 @@ namespace VLTK.Sandbox
                     _sideEffects.PostMessage(action.message);
                 ApplyFightState(action);
                 _host.NewWorld(action.targetMapId, target);
+                ApplyOptionalSideEffects(action);
                 result = Success(action, $"Msg2Player + NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
                 return true;
             }
