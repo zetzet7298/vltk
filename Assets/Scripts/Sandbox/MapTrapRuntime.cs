@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — Region_S Trap.dat runtime metadata/trigger layer.
 // PC KSPTrap has no sprite; this creates invisible trigger volumes only and
-// routes to TrapTriggerService as a Lua-disabled stub until script APIs are ported.
+// routes to TrapTriggerService with deterministic PC NewWorld/SetPos actions.
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
@@ -24,6 +24,7 @@ namespace VLTK.Sandbox
 
         private Transform _root;
         private MapInteractiveCatalogFile _catalog;
+        private PcTrapActionCatalogFile _actionCatalog;
         private TrapTriggerService _triggerService;
 
         private void Awake()
@@ -104,6 +105,8 @@ namespace VLTK.Sandbox
             var def = new TrapDefinition
             {
                 trapIndex = trap.index,
+                trapId = trap.trapId,
+                trapIdHex = trap.trapIdHex,
                 boundsRect = new RectDef
                 {
                     x = trap.cellX,
@@ -136,7 +139,9 @@ namespace VLTK.Sandbox
         private void EnsureService()
         {
             if (_triggerService != null) return;
-            _triggerService = new TrapTriggerService(null, luaEnabled: false) { EnterFunction = "main" };
+            _actionCatalog ??= PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
+            var executor = new PcTrapActionExecutor(_actionCatalog, new SandboxTrapTravelHost());
+            _triggerService = new TrapTriggerService(null, luaEnabled: false, actionExecutor: executor) { EnterFunction = "main" };
         }
 
         private static void DestroySafe(GameObject go)

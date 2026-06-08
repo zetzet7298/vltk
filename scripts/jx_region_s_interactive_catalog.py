@@ -270,10 +270,15 @@ def script_action_summary(source: str) -> dict[str, Any]:
     for match in re.finditer(r'\bSetPos\s*\(([^)]*)\)', source):
         args = [part.strip() for part in match.group(1).split(',')]
         set_pos.append(args[:2])
+    set_fight_state = []
+    for match in re.finditer(r'\bSetFightState\s*\(([^)]*)\)', source):
+        args = [part.strip() for part in match.group(1).split(',')]
+        set_fight_state.append(args[:1])
     return {
         'hasMain': re.search(r'function\s+main\s*\(', source) is not None,
         'newWorldCalls': new_world[:8],
         'setPosCalls': set_pos[:8],
+        'setFightStateCalls': set_fight_state[:8],
         'setsFightState': 'SetFightState' in source,
         'talks': 'Talk(' in source or 'Msg2Player' in source,
     }
@@ -338,6 +343,68 @@ def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[d
         'missingTrapScripts': len(trap_ids) - resolved,
         'missingTrapScriptIds': [f'0x{e["trapId"]:08X}' for e in entries if not e.get('resolved')],
         'sourceScriptRoot': str(root / 'script'),
+    }
+    return entries, coverage
+
+
+def int_args_unique(calls: list[list[str]], width: int) -> tuple[int, ...] | None:
+    parsed: set[tuple[int, ...]] = set()
+    for call in calls or []:
+        if len(call) < width:
+            return None
+        values = []
+        for arg in call[:width]:
+            if not re.fullmatch(r'\d+', str(arg).strip()):
+                return None
+            values.append(int(str(arg).strip()))
+        parsed.add(tuple(values))
+    if len(parsed) != 1:
+        return None
+    return next(iter(parsed))
+
+
+def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    for script in trap_scripts:
+        actions = script.get('actions') or {}
+        if not script.get('resolved') or not actions.get('hasMain') or actions.get('talks'):
+            continue
+        fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1)
+        fight_value = fight_state[0] if fight_state is not None else None
+        new_world = int_args_unique(actions.get('newWorldCalls') or [], 3)
+        set_pos = int_args_unique(actions.get('setPosCalls') or [], 2)
+        if new_world is not None:
+            map_id, cell_x, cell_y = new_world
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'NewWorld',
+                'targetMapId': map_id,
+                'targetCellX': cell_x,
+                'targetCellY': cell_y,
+                'fightState': fight_value if fight_value is not None else -1,
+                'source': 'PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch',
+            })
+        elif set_pos is not None:
+            cell_x, cell_y = set_pos
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'SetPos',
+                'targetMapId': 0,
+                'targetCellX': cell_x,
+                'targetCellY': cell_y,
+                'fightState': fight_value if fight_value is not None else -1,
+                'source': 'PC trap Lua main(): deterministic SetPos with no Talk/Msg2Player branch',
+            })
+    coverage = {
+        'deterministicTrapActions': len(entries),
+        'deterministicNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
+        'deterministicSetPosActions': sum(1 for e in entries if e['actionKind'] == 'SetPos'),
     }
     return entries, coverage
 
@@ -575,6 +642,7 @@ def main() -> int:
     obj_templates = load_objdata_templates(objdata)
     geometries, coverage, used_template_ids, used_trap_ids = build_catalog(region_root, server_catalog, obj_templates)
     trap_scripts, trap_coverage = build_trap_script_catalog(used_trap_ids, pc_root)
+    trap_actions, trap_action_coverage = build_trap_action_catalog(trap_scripts)
     enrich_traps_in_geometries(geometries, {entry['trapId']: entry for entry in trap_scripts})
     object_templates, object_coverage = stage_object_templates(
         obj_templates, used_template_ids, pc_root, object_sprite_root, args.extract)
@@ -602,6 +670,13 @@ def main() -> int:
         'hashRule': 'PC g_FileName2Id signed-char over leading-backslash GBK script path',
         'entries': trap_scripts,
     }
+    trap_action_catalog = {
+        'schemaVersion': 1,
+        'generatedAtUtc': now,
+        'sourceTrapScriptCatalog': 'MapTrapScriptCatalog.json',
+        'coordinateRule': 'PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld',
+        'entries': trap_actions,
+    }
     coverage_payload = {
         'schemaVersion': 1,
         'generatedAtUtc': now,
@@ -618,18 +693,21 @@ def main() -> int:
     catalog_path = catalog_root / 'MapInteractiveCatalog.json'
     object_catalog_path = catalog_root / 'MapObjectTemplateCatalog.json'
     trap_catalog_path = catalog_root / 'MapTrapScriptCatalog.json'
+    trap_action_catalog_path = catalog_root / 'MapTrapActionCatalog.json'
     coverage_path = catalog_root / 'MapInteractiveCoverage.json'
     object_coverage_path = catalog_root / 'MapObjectSpriteCoverage.json'
     trap_coverage_path = catalog_root / 'MapTrapScriptCoverage.json'
     write_json(catalog_path, catalog)
     write_json(object_catalog_path, object_catalog)
     write_json(trap_catalog_path, trap_catalog)
+    write_json(trap_action_catalog_path, trap_action_catalog)
     write_json(coverage_path, coverage_payload)
     write_json(object_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **object_coverage})
-    write_json(trap_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **trap_coverage})
+    write_json(trap_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **trap_coverage, **trap_action_coverage})
     make_meta(catalog_path)
     make_meta(object_catalog_path)
     make_meta(trap_catalog_path)
+    make_meta(trap_action_catalog_path)
     make_meta(coverage_path)
     make_meta(object_coverage_path)
     make_meta(trap_coverage_path)

@@ -27,6 +27,12 @@ namespace VLTK.Model
         /// <summary>Bounding area of the trap in region-local cell coordinates.</summary>
         public RectDef boundsRect;
 
+        /// <summary>Raw PC KSPTrap.uTrapId from Region_S Trap.dat.</summary>
+        public uint trapId;
+
+        /// <summary>Hex display of <see cref="trapId"/> for diagnostics.</summary>
+        public string trapIdHex;
+
         /// <summary>Script id or name from PC source (may be int or string).</summary>
         public string scriptRef;
 

@@ -30,8 +30,51 @@ namespace VLTK.Tests.Sandbox
         private TrapDefinition MakeTrap(int index, string scriptRef)
             => new TrapDefinition { trapIndex = index, scriptRef = scriptRef, triggerType = TrapTriggerType.Enter };
 
+        private class FakeTrapActionExecutor : ITrapActionExecutor
+        {
+            public bool hasAction = true;
+            public bool success = true;
+            public string detail = "NewWorld(52,1729,3225)";
+
+            public bool TryExecute(TrapDefinition trap, out TrapActionExecutionResult result)
+            {
+                result = null;
+                if (!hasAction) return false;
+                result = new TrapActionExecutionResult { success = success, detail = detail };
+                return true;
+            }
+        }
+
         private LuaScriptBridge MakeBridge(FakeLuaRuntime rt)
             => new LuaScriptBridge(rt, _ => "function OnEnter() end");
+
+        // --- PC deterministic trap actions while Lua bridge is disabled ---
+
+        [Test]
+        public void OnPlayerEnter_DeterministicPcAction_AppliesBeforeStub()
+        {
+            var exec = new FakeTrapActionExecutor();
+            var svc = new TrapTriggerService(bridge: null, luaEnabled: false, actionExecutor: exec);
+
+            LogAssert.Expect(LogType.Log, "[Trap] PC trap action applied: NewWorld(52,1729,3225)");
+            var rec = svc.OnPlayerEnter(MakeTrap(7, @"\script\trap.lua"));
+
+            Assert.AreEqual(TrapFireOutcome.PcActionApplied, rec.outcome);
+            Assert.AreEqual(exec.detail, rec.detail);
+        }
+
+        [Test]
+        public void OnPlayerEnter_DeterministicPcActionFailure_IsReported()
+        {
+            var exec = new FakeTrapActionExecutor { success = false, detail = "target map missing" };
+            var svc = new TrapTriggerService(bridge: null, luaEnabled: false, actionExecutor: exec);
+
+            LogAssert.Expect(LogType.Error, "[Trap] PC trap action failed: target map missing");
+            var rec = svc.OnPlayerEnter(MakeTrap(8, @"\script\trap.lua"));
+
+            Assert.AreEqual(TrapFireOutcome.PcActionFailed, rec.outcome);
+            Assert.AreEqual(exec.detail, rec.detail);
+        }
 
         // --- AC#1: bridge disabled → stub log ---
 

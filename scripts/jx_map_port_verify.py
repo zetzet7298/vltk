@@ -39,6 +39,9 @@ EXPECTED_OBJECT_TEMPLATES = 35
 EXPECTED_OBJECT_SPRITES = 34
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 533
+EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
+EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_MISSING_TRAP_SCRIPTS = {'0xF51BA9A5'}
 KNOWN_FAILED_MAP_SPRITES = {
     r'\system\spr\RegionTileDefault.spr',
@@ -429,6 +432,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     object_catalog = load_json(sa / 'MapObjectTemplateCatalog.json')
     trap_cov = load_json(sa / 'MapTrapScriptCoverage.json')
     trap_catalog = load_json(sa / 'MapTrapScriptCatalog.json')
+    trap_action_catalog = load_json(sa / 'MapTrapActionCatalog.json')
 
     audit.require(interactive.get('totalGeometries') == EXPECTED_GEOMETRIES, 'MapInteractive total geometry mismatch')
     audit.require(interactive.get('trapEntries') == EXPECTED_TRAP_RECORDS, 'MapInteractive trap count mismatch')
@@ -449,7 +453,13 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     present = {p.name for p in sprite_root.glob('*.spr')} if sprite_root.is_dir() else set()
     audit.require(len(expected) == EXPECTED_OBJECT_SPRITES, f'object expected sprite files={len(expected)} expected={EXPECTED_OBJECT_SPRITES}')
     audit.require(expected <= present, f'missing generated object SPR files: {sorted(expected - present)[:8]}')
+    action_entries = trap_action_catalog.get('entries', [])
+    action_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'NewWorld')
+    action_set_pos = sum(1 for e in action_entries if e.get('actionKind') == 'SetPos')
     audit.require(len(trap_catalog.get('entries', [])) == EXPECTED_TRAP_IDS, 'MapTrapScriptCatalog entry count mismatch')
+    audit.require(len(action_entries) == EXPECTED_DETERMINISTIC_TRAP_ACTIONS, 'MapTrapActionCatalog deterministic action count mismatch')
+    audit.require(action_new_world == EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS, 'MapTrapActionCatalog NewWorld count mismatch')
+    audit.require(action_set_pos == EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS, 'MapTrapActionCatalog SetPos count mismatch')
     audit.facts['interactive'] = {
         'traps': interactive.get('trapEntries'),
         'objects': interactive.get('objectEntries'),
@@ -458,6 +468,9 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'trapIds': trap_cov.get('uniqueTrapIds'),
         'resolvedTrapScripts': trap_cov.get('resolvedTrapScripts'),
         'missingTrapScripts': sorted(missing_ids),
+        'deterministicTrapActions': len(action_entries),
+        'deterministicNewWorldActions': action_new_world,
+        'deterministicSetPosActions': action_set_pos,
     }
 
 

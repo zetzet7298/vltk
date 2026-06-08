@@ -7,5 +7,8 @@
   "missingTrapScriptIds": [
     "0xF51BA9A5"
   ],
-  "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script"
+  "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
+  "deterministicTrapActions": 533,
+  "deterministicNewWorldActions": 532,
+  "deterministicSetPosActions": 1
 }

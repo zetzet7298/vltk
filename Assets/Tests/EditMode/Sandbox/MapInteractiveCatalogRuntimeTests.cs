@@ -73,6 +73,69 @@ namespace VLTK.Tests.Sandbox
             }
         }
 
+        private sealed class FakeTrapTravelHost : ITrapTravelHost
+        {
+            public int mapId = -1;
+            public Vector2 position;
+            public bool hasMap = true;
+
+            public bool HasMap(int targetMapId) => hasMap;
+            public void NewWorld(int targetMapId, Vector2 worldPosition)
+            {
+                mapId = targetMapId;
+                position = worldPosition;
+            }
+            public void SetPos(Vector2 worldPosition) => position = worldPosition;
+        }
+
+        [Test]
+        public void TrapActionCatalog_LoadsDeterministicPcNewWorldActions()
+        {
+            var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
+
+            Assert.IsNotNull(catalog);
+            Assert.AreEqual(533, catalog.Count);
+            var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
+            Assert.IsNotNull(entry);
+            Assert.Greater(entry.targetMapId, 0);
+            Assert.Greater(entry.targetCellX, 0);
+            Assert.Greater(entry.targetCellY, 0);
+            Assert.AreEqual(
+                MapEnemyDatabase.MpsToWorld(entry.targetCellX * 32, entry.targetCellY * 32),
+                entry.TargetWorldPosition());
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_NewWorld_UsesPcCellCoordinates()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 1234,
+                        trapIdHex = "0x000004D2",
+                        scriptPath = @"\script\trap.lua",
+                        actionKind = "NewWorld",
+                        targetMapId = 52,
+                        targetCellX = 1729,
+                        targetCellY = 3225,
+                        fightState = 1,
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost();
+            var executor = new PcTrapActionExecutor(catalog, host);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x000004D2" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(52, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1729 * 32, 3225 * 32), host.position);
+            StringAssert.Contains("SetFightState(1) pending", result.detail);
+        }
+
         [Test]
         public void MapTrapRuntime_DisablesStaticTrapsForVuotAiMissionMaps()
         {
