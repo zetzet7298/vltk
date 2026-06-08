@@ -370,6 +370,31 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskSetTaskPromptCallbackNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                var branch = FindPromptBranch(action, taskValue);
+                if (branch == null)
+                {
+                    result = Success(action, $"GetTask({action.taskId})=={taskValue} -> no branch");
+                    return true;
+                }
+
+                if (!_host.HasMap(action.targetMapId))
+                {
+                    result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                    return true;
+                }
+
+                ApplyPromptBranchSetTasks(branch);
+                PostPromptBranchMessages(branch);
+                ApplyFightState(action);
+                _host.NewWorld(action.targetMapId, target);
+                result = Success(action,
+                    $"GetTask({action.taskId})=={taskValue} -> Talk callback NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                return true;
+            }
+
             if (action.IsClearSkillSwitchTrap)
             {
                 int currentFightState = _host.GetFightState();
@@ -839,6 +864,18 @@ namespace VLTK.Sandbox
             return null;
         }
 
+        private static PcTrapTaskPromptBranch FindPromptBranch(PcTrapActionCatalogEntry action, int taskValue)
+        {
+            if (action.promptBranches == null) return null;
+            foreach (var branch in action.promptBranches)
+            {
+                if (branch == null) continue;
+                if (Contains(branch.values, taskValue))
+                    return branch;
+            }
+            return null;
+        }
+
         private static int ChooseRandomBranch(PcTrapActionCatalogEntry action, int randomValue)
         {
             if (action.randomThresholds != null)
@@ -872,6 +909,24 @@ namespace VLTK.Sandbox
             {
                 if (string.IsNullOrWhiteSpace(note)) continue;
                 _sideEffects.AddNote(note);
+            }
+        }
+
+        private void ApplyPromptBranchSetTasks(PcTrapTaskPromptBranch branch)
+        {
+            if (branch?.setTaskIds == null || branch.setTaskValues == null) return;
+            int count = Math.Min(branch.setTaskIds.Length, branch.setTaskValues.Length);
+            for (int i = 0; i < count; i++)
+                _host.SetTaskValue(branch.setTaskIds[i], branch.setTaskValues[i]);
+        }
+
+        private void PostPromptBranchMessages(PcTrapTaskPromptBranch branch)
+        {
+            if (_sideEffects == null || branch?.messages == null) return;
+            foreach (string message in branch.messages)
+            {
+                if (string.IsNullOrWhiteSpace(message)) continue;
+                _sideEffects.PostMessage(message);
             }
         }
 

@@ -55,6 +55,15 @@ namespace VLTK.Sandbox
     }
 
     [Serializable]
+    public sealed class PcTrapTaskPromptBranch
+    {
+        public int[] values;
+        public int[] setTaskIds;
+        public int[] setTaskValues;
+        public string[] messages;
+    }
+
+    [Serializable]
     public sealed class PcTrapActionCatalogEntry
     {
         public uint trapId;
@@ -132,6 +141,7 @@ namespace VLTK.Sandbox
         public string requiredFaction;
         public int requiredFactionId;
         public PcTrapTaskSetPosBranch[] taskBranches;
+        public PcTrapTaskPromptBranch[] promptBranches;
         public int requiredCamp;
         public int enterCellX;
         public int enterCellY;
@@ -192,6 +202,7 @@ namespace VLTK.Sandbox
         public bool IsTaskFactionPromptGateNewWorld => string.Equals(actionKind, "TaskFactionPromptGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskCurrentMapReturnNewWorld => string.Equals(actionKind, "TaskCurrentMapReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskSetTaskFactionGateNewWorld => string.Equals(actionKind, "TaskSetTaskFactionGateNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskSetTaskPromptCallbackNewWorld => string.Equals(actionKind, "TaskSetTaskPromptCallbackNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);

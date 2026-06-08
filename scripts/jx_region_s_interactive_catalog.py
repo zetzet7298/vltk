@@ -2211,6 +2211,87 @@ def task_settask_faction_gate_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def task_settask_prompt_callback_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    main_body = lua_function_body(clean_source, 'main')
+    if not main_body:
+        return None
+    if re.search(r'\b(for|while|repeat)\b', clean_source):
+        return None
+    if any(token in clean_source for token in (
+        'HaveItem', 'DelItem', 'AddItem', 'AddEventItem', 'SetTaskTemp', 'GetFaction', 'GetSeries',
+        'GetMission', 'GetTong', 'Team', 'Include', 'IncludeLib'
+    )):
+        return None
+    main_calls = set(re.findall(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*\(', main_body))
+    if not main_calls.issubset({'GetTask', 'SetTask', 'Talk', 'if', 'elseif'}):
+        return None
+    task_match = re.search(r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<taskId>\d+)\s*\)', main_body)
+    if not task_match:
+        return None
+    task_var = task_match.group('var')
+    branch_match = re.search(
+        rf'if\s*\(?\s*{re.escape(task_var)}\s*==\s*(?P<firstValue>\d+)\s*\)?\s*then(?P<first>.*?)'
+        rf'elseif\s*\(?\s*{re.escape(task_var)}\s*==\s*(?P<secondValue>\d+)\s*\)?\s*then(?P<second>.*?)end',
+        main_body, re.S | re.I)
+    if not branch_match:
+        return None
+
+    branches: list[dict[str, Any]] = []
+    callback_name = ''
+    for value_name, body_name in (('firstValue', 'first'), ('secondValue', 'second')):
+        body = branch_match.group(body_name)
+        talk_calls = parse_lua_calls(body, 'Talk', limit=2)
+        if len(talk_calls) != 1 or len(talk_calls[0]) < 3:
+            return None
+        next_callback = str(talk_calls[0][1]).strip()
+        if not next_callback:
+            return None
+        if callback_name and callback_name != next_callback:
+            return None
+        callback_name = next_callback
+        messages = callback_talk_messages(talk_calls)
+        if not messages:
+            return None
+        branch: dict[str, Any] = {'values': [int(branch_match.group(value_name))], 'messages': messages}
+        set_task_calls = parse_lua_calls(body, 'SetTask', limit=4)
+        if set_task_calls:
+            set_task_ids: list[int] = []
+            set_task_values: list[int] = []
+            for call in set_task_calls:
+                if len(call) < 2 or not str(call[0]).strip().isdigit():
+                    return None
+                parsed_value = int_lua_constant_expr(str(call[1]))
+                if parsed_value is None:
+                    return None
+                set_task_ids.append(int(str(call[0]).strip()))
+                set_task_values.append(parsed_value)
+            branch['setTaskIds'] = set_task_ids
+            branch['setTaskValues'] = set_task_values
+        branches.append(branch)
+
+    if not callback_name:
+        return None
+    callback_body = lua_function_body(clean_source, callback_name)
+    if not callback_body:
+        return None
+    callback_calls = set(re.findall(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*\(', callback_body))
+    if not callback_calls.issubset({'NewWorld'}):
+        return None
+    target = int_args_unique(parse_lua_calls(callback_body, 'NewWorld', limit=2), 3)
+    if target is None:
+        return None
+    return {
+        'taskId': int(task_match.group('taskId')),
+        'targetMapId': target[0],
+        'targetCellX': target[1],
+        'targetCellY': target[2],
+        'fightState': -1,
+        'callback': callback_name,
+        'promptBranches': branches,
+    }
+
+
 def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
     if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
         return None
@@ -2583,6 +2664,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_settask_faction_gate,
             })
             continue
+        task_settask_prompt_callback = task_settask_prompt_callback_newworld(source)
+        if task_settask_prompt_callback is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskSetTaskPromptCallbackNewWorld',
+                'source': 'PC trap Lua main(): GetTask branches show Talk(callback); first branch applies SetTask before prompt; deterministic callback NewWorld executes after prompt',
+                **task_settask_prompt_callback,
+            })
+            continue
         citywar_gate = citywar_camp_gate_setpos(source)
         if citywar_gate is not None:
             entries.append({
@@ -2733,6 +2826,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskFactionPromptGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionPromptGateNewWorld'),
         'deterministicTrapTaskCurrentMapReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskCurrentMapReturnNewWorld'),
         'deterministicTrapTaskSetTaskFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetTaskFactionGateNewWorld'),
+        'deterministicTrapTaskSetTaskPromptCallbackNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetTaskPromptCallbackNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),

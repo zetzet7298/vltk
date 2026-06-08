@@ -1937,6 +1937,76 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcTrapActionExecutor_TaskSetTaskPromptCallbackNewWorld_AppliesPcTaskThenCallbackWarp()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0x3F04E57Cu,
+                        trapIdHex = "0x3F04E57C",
+                        scriptPath = @"\script\西南南区\点苍山\点苍山\trap\点苍山to沧浪客居所.lua",
+                        actionKind = "TaskSetTaskPromptCallbackNewWorld",
+                        taskId = 42,
+                        targetMapId = 231,
+                        targetCellX = 1611,
+                        targetCellY = 3193,
+                        fightState = -1,
+                        promptBranches = new[]
+                        {
+                            new PcTrapTaskPromptBranch
+                            {
+                                values = new[] { 60 },
+                                setTaskIds = new[] { 42 },
+                                setTaskValues = new[] { 70 },
+                                messages = new[] { "Hi hi!", "Thông cảm giùm! Tiểu tử to gan, tiếp chiêu!" },
+                            },
+                            new PcTrapTaskPromptBranch
+                            {
+                                values = new[] { 70 },
+                                messages = new[] { "Tiểu tử không biết sống chết, còn không chịu đi!" },
+                            },
+                        },
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValues = { [42] = 60 } };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x3F04E57C" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(231, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1611 * 32, 3193 * 32), host.position);
+            Assert.AreEqual(70, host.taskValues[42]);
+            CollectionAssert.AreEqual(new[] { "Hi hi!", "Thông cảm giùm! Tiểu tử to gan, tiếp chiêu!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValues = { [42] = 70 } };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x3F04E57C" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(231, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Tiểu tử không biết sống chết, còn không chịu đi!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValues = { [42] = 50 } };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x3F04E57C" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+        }
+
+        [Test]
         public void PcTrapActionExecutor_RandomNewWorld_UsesPcBranchTableAndCurrentMapGuards()
         {
             var catalog = new PcTrapActionCatalogFile

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T09:45:43Z",
+  "generatedAtUtc": "2026-06-08T09:55:37Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -3235,6 +3235,58 @@
       "targetCellY": 2972,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 1057285500,
+      "trapIdHex": "0x3F04E57C",
+      "scriptPath": "\\script\\西南南区\\点苍山\\点苍山\\trap\\点苍山to沧浪客居所.lua",
+      "sourceRelPath": "script\\西南南区\\点苍山\\点苍山\\trap\\点苍山to沧浪客居所.lua",
+      "actionKind": "TaskSetTaskPromptCallbackNewWorld",
+      "source": "PC trap Lua main(): GetTask branches show Talk(callback); first branch applies SetTask before prompt; deterministic callback NewWorld executes after prompt",
+      "taskId": 42,
+      "targetMapId": 231,
+      "targetCellX": 1611,
+      "targetCellY": 3193,
+      "fightState": -1,
+      "callback": "U42_go",
+      "promptBranches": [
+        {
+          "values": [
+            60
+          ],
+          "messages": [
+            "Hi hi!",
+            "Hi hi hi!",
+            "Cháu ngoan! Đến đây ông cõng nào.....Ai cha, nặng quá!",
+            "Ông nội! Cháu muốn ăn kẹo.",
+            "Con cũng muốn.",
+            "Ông nội! Tụi nó có, còn của con thì sao?",
+            "Được rồi! Ai cũng có phần.",
+            "Xin hỏi có phải Thương Lãng Khách trong phòng?",
+            "Kẻ nào bên ngoài?",
+            "Vãn bối xin bái kiến!",
+            "Ta đang vui vầy với con cháu, không rảnh tiếp ngươi, về đi!",
+            "Thật không dám giấu, mẹ của mấy đứa trẻ này cũng rất lo lắng, mất ăn mất ngủ, xin Tiền bối tha cho bọn chúng.",
+            "Mấy đứa này đều là cháu của ta, ngươi nói cái gì mẹ bọn chúng chứ? Thằng nhóc này dám đến đây trêu ta à?",
+            "Tiền bối! Đừng đùa với ta nữa. Thông cảm giùm đi!",
+            "Thông cảm giùm! Tiểu tử to gan, tiếp chiêu!"
+          ],
+          "setTaskIds": [
+            42
+          ],
+          "setTaskValues": [
+            70
+          ]
+        },
+        {
+          "values": [
+            70
+          ],
+          "messages": [
+            "Tiểu tử không biết sống chết, còn không chịu đi!"
+          ]
+        }
+      ]
     },
     {
       "trapId": 1060675010,
