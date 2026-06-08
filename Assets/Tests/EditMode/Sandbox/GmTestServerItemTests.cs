@@ -87,6 +87,77 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(inv.HasPcItem(6, 1, 1266));
         }
 
+
+        [Test]
+        public void TeleportCatalog_LoadsAllPcMapAliases()
+        {
+            var manager = new MapManager();
+            manager.LoadCatalog();
+            var svc = new GmTeleportCatalogService(manager, PcMapDir());
+            var destinations = svc.GetAllDestinations();
+            var ids = new HashSet<int>();
+            foreach (var d in destinations) ids.Add(d.mapId);
+
+            Assert.GreaterOrEqual(ids.Count, 1005);
+            Assert.IsNotNull(svc.FindByMapId(1));
+            Assert.IsNotNull(svc.FindByMapId(1009));
+        }
+
+        [Test]
+        public void TeleportCatalog_UsesRevivePosBeforeFallback()
+        {
+            var manager = new MapManager();
+            manager.LoadCatalog();
+            var svc = new GmTeleportCatalogService(manager, PcMapDir());
+            var dest = svc.FindByMapId(1);
+            var expected = MapEnemyDatabase.MpsToWorld(51104, 102592);
+
+            Assert.IsNotNull(dest);
+            Assert.AreEqual(expected.x, dest.worldPosition.x, 0.01f);
+            Assert.AreEqual(expected.y, dest.worldPosition.y, 0.01f);
+            StringAssert.Contains("revivepos", dest.coordinateSource);
+        }
+
+        [Test]
+        public void TeleportCatalog_UsesWaypointCellCoordinatesWhenNoRevivePos()
+        {
+            var manager = new MapManager();
+            manager.LoadCatalog();
+            var svc = new GmTeleportCatalogService(manager, PcMapDir());
+            var dest = svc.FindByMapId(4);
+            var expected = MapEnemyDatabase.MpsToWorld(1596 * 32, 3282 * 32);
+
+            Assert.IsNotNull(dest);
+            Assert.AreEqual(expected.x, dest.worldPosition.x, 0.01f);
+            Assert.AreEqual(expected.y, dest.worldPosition.y, 0.01f);
+            StringAssert.Contains("waypoint", dest.coordinateSource);
+        }
+
+        [Test]
+        public void TeleportCatalog_ScriptTravelConvertsPcNewWorldCells()
+        {
+            Assert.IsTrue(GmTeleportCatalogService.TryGetScriptDestination("goto_tinsu", null, out var dest));
+            var expected = MapEnemyDatabase.MpsToWorld(3024 * 32, 5086 * 32);
+
+            Assert.AreEqual(11, dest.mapId);
+            Assert.AreEqual(expected.x, dest.worldPosition.x, 0.01f);
+            Assert.AreEqual(expected.y, dest.worldPosition.y, 0.01f);
+        }
+
+        [Test]
+        public void Service_TravelMenuIncludesAllMapsBrowserAction()
+        {
+            var svc = new GmTestServerItemService(null, null, GmAccessService.AllowForTests());
+            var menu = svc.GetMenu(GmTestServerItemService.TravelMenuId);
+
+            Assert.AreEqual("Tất cả bản đồ", menu[0].label);
+            Assert.AreEqual(GmTestServerItemService.AllMapsActionId, menu[0].actionId);
+            Assert.AreEqual(GmTestServerItemService.AllMapsActionId, svc.Execute(menu[0].actionId).message);
+        }
+
+        private static string PcMapDir()
+            => Path.Combine(Application.dataPath, "StreamingAssets/Reference/PcMap");
+
         private static ItemDefinition PcItem(int particular, string name)
         {
             return new ItemDefinition

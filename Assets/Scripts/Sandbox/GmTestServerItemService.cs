@@ -70,10 +70,12 @@ namespace VLTK.Sandbox
         public const string SpawnMenuId = "gm_menu_taobai";
         public const string TravelMenuId = "vitri_khac";
         public const string BossAssassinMenuId = "gotobosssatthu";
+        public const string AllMapsActionId = "OPEN_GM_ALL_MAP_BROWSER";
 
         private readonly SandboxManager _manager;
         private readonly InventoryService _inventory;
         private readonly GmAccessService _access;
+        private GmTeleportCatalogService _teleportCatalog;
 
         public GmTestServerItemService(SandboxManager manager = null, InventoryService inventory = null, GmAccessService access = null)
         {
@@ -85,6 +87,8 @@ namespace VLTK.Sandbox
         private InventoryService Inventory => _inventory ?? _manager?.InventoryService;
         private TaskFlagService Tasks => _manager?.TaskFlagService;
         private PlayerProgressionState Progression => _manager?.PlayerProgression;
+        private GmTeleportCatalogService TeleportCatalog
+            => _teleportCatalog ??= new GmTeleportCatalogService((_manager ?? SandboxManager.Instance)?.MapManager);
         public bool CanUse => _access == null || _access.IsAllowed;
 
         public bool IsGmToken(int itemGenre, int detailType, int particularType)
@@ -163,6 +167,7 @@ namespace VLTK.Sandbox
 
         private IReadOnlyList<GmItemMenuOption> BuildTravelMenu() => new List<GmItemMenuOption>
         {
+            new("Tất cả bản đồ", AllMapsActionId),
             new("Boss sát thủ", null, "gotobosssatthu", BossAssassinMenuId),
             new("Vượt ải", "goto_satthu"),
             new("Tín Sứ", "goto_tinsu"),
@@ -220,6 +225,7 @@ namespace VLTK.Sandbox
             return actionId switch
             {
                 "XoaItemHanhTrangGM" => ClearInventoryAndRestoreGmItems(confirmed),
+                AllMapsActionId => GmItemActionResult.Success(AllMapsActionId),
                 "fixthanhanhphu" => GmItemActionResult.Success("Đã reset trạng thái sử dụng Thần Hành Phù/Thổ Địa Phù."),
                 "HoTroSkill2" => GrantSkillSupport1xTo6x(),
                 "SkillsSystem" => GmItemActionResult.Success("OPEN_SKILL_PANEL"),
@@ -279,19 +285,40 @@ namespace VLTK.Sandbox
             return GmItemActionResult.Success("Đã nhận hỗ trợ skill 1x-6x theo PC HoTroSkill2().");
         }
 
+        public IReadOnlyList<GmTeleportDestination> GetTeleportDestinations()
+            => CanUse ? TeleportCatalog.GetAllDestinations() : Array.Empty<GmTeleportDestination>();
+
+        public GmItemActionResult TeleportToMap(int mapId)
+        {
+            if (!CanUse) return GmItemActionResult.Blocked(_access.DenialMessage);
+            var destination = TeleportCatalog.FindByMapId(mapId);
+            return destination == null
+                ? GmItemActionResult.Invalid($"Không tìm thấy map {mapId} trong catalog dịch chuyển GM.")
+                : Teleport(destination);
+        }
+
         private GmItemActionResult TryTravel(string actionId)
         {
-            if (!TravelTargets.TryGetValue(actionId, out var t)) return null;
+            var manager = _manager ?? SandboxManager.Instance;
+            if (!GmTeleportCatalogService.TryGetScriptDestination(actionId, manager?.MapManager, out var destination))
+                return null;
+            return Teleport(destination);
+        }
+
+        private GmItemActionResult Teleport(GmTeleportDestination destination)
+        {
+            if (destination == null) return GmItemActionResult.Invalid("Điểm dịch chuyển không hợp lệ.");
             var manager = _manager ?? SandboxManager.Instance;
             if (manager == null || manager.MapManager == null)
-                return GmItemActionResult.NotPorted($"Chưa có MapManager để đi tới {t.name}.");
-            if (!manager.MapManager.Catalog.ContainsKey(t.mapId))
-                return GmItemActionResult.NotPorted($"Map {t.mapId} ({t.name}) chưa có trong catalog mobile.");
+                return GmItemActionResult.NotPorted($"Chưa có MapManager để đi tới {destination.nameVi}.");
+            if (!manager.MapManager.Catalog.ContainsKey(destination.mapId))
+                return GmItemActionResult.NotPorted($"Map {destination.mapId} ({destination.nameVi}) chưa có trong catalog mobile.");
 
-            manager.SwitchMap(t.mapId);
-            manager.PlayerController?.PlaceAt(new Vector2(t.x, t.y), snapCamera: true);
-            SubsystemLog.Info("GMItem", $"Teleport {actionId} -> map {t.mapId} ({t.x},{t.y})");
-            return GmItemActionResult.Success($"Đã chuyển tới {t.name}.");
+            manager.SwitchMap(destination.mapId);
+            manager.PlayerController?.PlaceAt(destination.worldPosition, snapCamera: true);
+            SubsystemLog.Info("GMItem",
+                $"Teleport -> map {destination.mapId} {destination.worldPosition} source={destination.coordinateSource} fightState={destination.fightState}");
+            return GmItemActionResult.Success($"Đã chuyển tới {destination.nameVi} ({destination.mapId}).");
         }
 
         private static bool AddPc(InventoryService inv, int g, int d, int p, int count)
@@ -302,25 +329,5 @@ namespace VLTK.Sandbox
 
         private static bool IsEventAutoEnabled() => true;
 
-        private static readonly Dictionary<string, (int mapId, int x, int y, string name)> TravelTargets = new()
-        {
-            { "goto_satthu", (78, 1509, 3209, "Vượt ải") },
-            { "goto_thientri", (934, 1598, 3240, "Thiên Trì Mật Cảnh") },
-            { "goto_chaucoc", (176, 1574, 2955, "Loạn Chiến Cửu Châu") },
-            { "goto_vantieu", (1, 1559, 2768, "Vận Tiêu") },
-            { "goto_tinsu", (11, 3024, 5086, "Tín Sứ") },
-            { "goto_thiluyenduong", (176, 1588, 2941, "Thí Luyện Đường") },
-            { "goto_kiemgia", (949, 1580, 3158, "Kiếm Gia Mê Cung") },
-            { "goto_viemde", (37, 1711, 3179, "Viêm Đế Bảo Tàng") },
-            { "goto_phonglangdo", (336, 1124, 3187, "Phong Lăng Độ") },
-            { "gopos_9x", (93, 1640, 3264, "Boss Sát thủ 9x") },
-            { "gopos_2x", (73, 1544, 2944, "Boss Sát thủ 2x") },
-            { "gopos_3x", (4, 1576, 2992, "Boss Sát thủ 3x") },
-            { "gopos_4x", (5, 1616, 3472, "Boss Sát thủ 4x") },
-            { "gopos_5x", (12, 1792, 3168, "Boss Sát thủ 5x") },
-            { "gopos_6x", (164, 1784, 3120, "Boss Sát thủ 6x") },
-            { "gopos_7x", (123, 1600, 3200, "Boss Sát thủ 7x") },
-            { "gopos_8x", (201, 1768, 3200, "Boss Sát thủ 8x") },
-        };
     }
 }

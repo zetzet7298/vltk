@@ -270,6 +270,32 @@ namespace VLTK.Tests.Sandbox
             }
         }
 
+
+        [Test]
+        public void Controller_GmTeleportBrowser_ShowsSearchAndResults()
+        {
+            var go = new GameObject("GmTeleportBrowserHudTest");
+            try
+            {
+                var hud = go.AddComponent<GameHudController>();
+                var root = new VisualElement { name = "GameHud" };
+                var invWindow = new VisualElement { name = "InventoryWindow" };
+                root.Add(invWindow);
+                SetField(hud, "_boundRoot", root);
+                SetField(hud, "_invWindow", invWindow);
+
+                InvokePrivate(hud, "OpenGmTeleportBrowser", true);
+
+                Assert.IsTrue(hud.IsGmItemOverlayVisible);
+                Assert.IsNotNull(root.Q("GmTeleportSearch"));
+                Assert.IsNotNull(root.Q("GmTeleportResults"));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
         // ── helpers ──────────────────────────────────────────────────────────
 
         private static void AssertRgb(InventoryWindowPcSpec.Rgb c, int r, int g, int b)

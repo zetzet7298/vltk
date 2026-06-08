@@ -116,6 +116,11 @@ namespace VLTK.UI
         private VisualElement _gmItemOverlay, _gmItemFrame;
         private ScrollView _gmItemList;
         private Label _gmItemTitle, _gmItemMessage;
+        private List<GmTeleportDestination> _gmTeleportDestinations;
+        private VisualElement _gmTeleportResults;
+        private string _gmTeleportQuery = string.Empty;
+        private string _gmTeleportFilter = GmTeleportCatalogService.FilterAll;
+        private int _gmTeleportPage;
         private VisualElement _pressedInventorySlot;
         private InventoryPanelRow _pressedInventoryRow;
         private IVisualElementScheduledItem _inventoryLongPressTimer;
@@ -1362,6 +1367,11 @@ namespace VLTK.UI
         private void HandleGmActionResult(GmItemActionResult result)
         {
             if (result == null) return;
+            if (result.success && result.message == GmTestServerItemService.AllMapsActionId)
+            {
+                OpenGmTeleportBrowser(resetCatalog: true);
+                return;
+            }
             if (result.success && result.message == "OPEN_SKILL_PANEL")
             {
                 CloseGmItemOverlay();
@@ -1376,6 +1386,134 @@ namespace VLTK.UI
             }
             _gmItemMessage.text = result.message;
             SubsystemLog.Info("GMItem", $"{result.status}: {result.message}");
+        }
+
+        private void OpenGmTeleportBrowser(bool resetCatalog)
+        {
+            EnsureGmItemOverlay();
+            if (_gmItemOverlay == null) return;
+            var service = GetGmItemService();
+            _gmItemOverlay.RemoveFromClassList("hidden");
+            _gmItemOverlay.BringToFront();
+            _gmItemTitle.text = "Dịch chuyển bản đồ";
+
+            if (!service.CanUse)
+            {
+                _gmItemMessage.text = "Chỉ GM/dev mới được sử dụng dịch chuyển bản đồ.";
+                _gmItemList.Clear();
+                _gmItemList.Add(MakeGmButton("Đóng", CloseGmItemOverlay));
+                return;
+            }
+
+            if (resetCatalog || _gmTeleportDestinations == null)
+            {
+                _gmTeleportDestinations = new List<GmTeleportDestination>(service.GetTeleportDestinations());
+                _gmTeleportPage = 0;
+            }
+
+            _gmItemMessage.text = $"Đủ {_gmTeleportDestinations.Count} map PC. Tìm theo tên hoặc ID, rồi chạm map để đi.";
+            _gmItemList.Clear();
+            _gmItemList.Add(MakeGmButton("← Quay lại", () => OpenGmItemActionSheet(GmTestServerItemService.TravelMenuId)));
+
+            var search = new TextField("Tìm");
+            search.name = "GmTeleportSearch";
+            search.style.height = 32;
+            search.style.marginBottom = 4;
+            search.SetValueWithoutNotify(_gmTeleportQuery ?? string.Empty);
+            search.RegisterValueChangedCallback(evt =>
+            {
+                _gmTeleportQuery = evt.newValue ?? string.Empty;
+                _gmTeleportPage = 0;
+                RenderGmTeleportRows();
+            });
+            _gmItemList.Add(search);
+
+            var filterRow = new VisualElement { name = "GmTeleportFilters" };
+            filterRow.style.flexDirection = FlexDirection.Row;
+            filterRow.style.flexWrap = Wrap.Wrap;
+            filterRow.style.marginBottom = 6;
+            AddGmTeleportFilterButton(filterRow, GmTeleportCatalogService.FilterAll);
+            AddGmTeleportFilterButton(filterRow, GmTeleportCatalogService.FilterCity);
+            AddGmTeleportFilterButton(filterRow, GmTeleportCatalogService.FilterField);
+            AddGmTeleportFilterButton(filterRow, GmTeleportCatalogService.FilterCave);
+            AddGmTeleportFilterButton(filterRow, GmTeleportCatalogService.FilterBattlefield);
+            AddGmTeleportFilterButton(filterRow, GmTeleportCatalogService.FilterTong);
+            AddGmTeleportFilterButton(filterRow, GmTeleportCatalogService.FilterOthers);
+            _gmItemList.Add(filterRow);
+
+            _gmTeleportResults = new VisualElement { name = "GmTeleportResults" };
+            _gmItemList.Add(_gmTeleportResults);
+            RenderGmTeleportRows();
+        }
+
+        private void AddGmTeleportFilterButton(VisualElement row, string filter)
+        {
+            var btn = new Button(() =>
+            {
+                _gmTeleportFilter = filter;
+                _gmTeleportPage = 0;
+                OpenGmTeleportBrowser(resetCatalog: false);
+            }) { text = GmTeleportCatalogService.FilterLabel(filter) };
+            btn.style.height = 28;
+            btn.style.marginRight = 4;
+            btn.style.marginBottom = 4;
+            btn.style.backgroundColor = filter == _gmTeleportFilter
+                ? new Color(0.55f, 0.36f, 0.12f, 0.95f)
+                : new Color(0.18f, 0.14f, 0.08f, 0.95f);
+            row.Add(btn);
+        }
+
+        private void RenderGmTeleportRows()
+        {
+            if (_gmTeleportResults == null) return;
+            _gmTeleportResults.Clear();
+            var filtered = GmTeleportCatalogService.Filter(_gmTeleportDestinations, _gmTeleportQuery, _gmTeleportFilter);
+            int total = filtered.Count;
+            int pageSize = GmTeleportCatalogService.DefaultPageSize;
+            int maxPage = total <= 0 ? 0 : (total - 1) / pageSize;
+            _gmTeleportPage = Mathf.Clamp(_gmTeleportPage, 0, maxPage);
+            int start = _gmTeleportPage * pageSize;
+            int end = Mathf.Min(start + pageSize, total);
+
+            var nav = new VisualElement { name = "GmTeleportPageNav" };
+            nav.style.flexDirection = FlexDirection.Row;
+            nav.style.marginBottom = 5;
+            var prev = new Button(() => { _gmTeleportPage--; RenderGmTeleportRows(); }) { text = "← Trước" };
+            prev.SetEnabled(_gmTeleportPage > 0);
+            prev.style.height = 28;
+            prev.style.marginRight = 6;
+            var page = new Label(total == 0 ? "0 map" : $"{start + 1}-{end}/{total} map");
+            page.style.color = new Color(1f, 0.86f, 0.35f);
+            page.style.unityTextAlign = TextAnchor.MiddleCenter;
+            page.style.flexGrow = 1;
+            var next = new Button(() => { _gmTeleportPage++; RenderGmTeleportRows(); }) { text = "Sau →" };
+            next.SetEnabled(_gmTeleportPage < maxPage);
+            next.style.height = 28;
+            next.style.marginLeft = 6;
+            nav.Add(prev); nav.Add(page); nav.Add(next);
+            _gmTeleportResults.Add(nav);
+
+            if (total == 0)
+            {
+                var empty = new Label("Không tìm thấy map phù hợp.");
+                empty.style.color = Color.white;
+                _gmTeleportResults.Add(empty);
+                return;
+            }
+
+            for (int i = start; i < end; i++)
+            {
+                var captured = filtered[i];
+                _gmTeleportResults.Add(MakeGmButton(captured.DisplayLabel, () => OnGmTeleportMap(captured.mapId)));
+            }
+        }
+
+        private void OnGmTeleportMap(int mapId)
+        {
+            var result = GetGmItemService().TeleportToMap(mapId);
+            _gmItemMessage.text = result?.message ?? "Dịch chuyển thất bại.";
+            if (result != null)
+                SubsystemLog.Info("GMItem", $"Teleport browser {mapId}: {result.status} {result.message}");
         }
 
         private void PopulateSkillPanel(PcSkillPanelSnapshot snap)
