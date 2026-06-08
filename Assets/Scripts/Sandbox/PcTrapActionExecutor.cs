@@ -430,6 +430,7 @@ namespace VLTK.Sandbox
                 }
                 ApplyFightState(action);
                 _host.NewWorld(action.targetMapId, target);
+                ApplyOptionalSideEffects(action);
                 result = Success(action,
                     $"SetFightState({action.fightState}) -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
                 return true;

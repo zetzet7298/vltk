@@ -1073,17 +1073,20 @@ namespace VLTK.Tests.Sandbox
                         targetCellX = 1570,
                         targetCellY = 2337,
                         fightState = 1,
+                        terminiIds = new[] { 195 },
                     }
                 }
             };
 
             var host = new FakeTrapTravelHost { currentMapId = 320 };
-            var executor = new PcTrapActionExecutor(catalog, host);
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
             Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 906 }, out var result));
             Assert.IsTrue(result.success);
             Assert.AreEqual(320, host.mapId);
             Assert.AreEqual(1, host.fightState);
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1570 * 32, 2337 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { 195 }, sideEffects.terminiIds);
 
             var reviveWorld = MapEnemyDatabase.MpsToWorld(51104, 102592);
             host = new FakeTrapTravelHost
@@ -1093,11 +1096,13 @@ namespace VLTK.Tests.Sandbox
                 reviveMapId = 1,
                 revivePosition = reviveWorld,
             };
-            executor = new PcTrapActionExecutor(catalog, host);
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
             Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0000038A" }, out result));
             Assert.IsTrue(result.success);
             Assert.AreEqual(1, host.mapId);
             Assert.AreEqual(reviveWorld, host.position);
+            CollectionAssert.IsEmpty(sideEffects.terminiIds);
             StringAssert.Contains("RevID2WXY(GetPlayerRev())", result.detail);
 
             host = new FakeTrapTravelHost { currentMapId = 924, hasReviveTarget = false };

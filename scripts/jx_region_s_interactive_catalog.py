@@ -912,7 +912,7 @@ def desert_maze_random_newworld(source: str) -> dict[str, Any] | None:
 
 def revive_return_newworld(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
-    allowed = {'main', 'SubWorldIdx2ID', 'RevID2WXY', 'GetPlayerRev', 'NewWorld', 'SetFightState', 'if'}
+    allowed = {'main', 'SubWorldIdx2ID', 'RevID2WXY', 'GetPlayerRev', 'NewWorld', 'SetFightState', 'AddTermini', 'if'}
     if 'RevID2WXY(GetPlayerRev())' not in clean_source or not source_uses_only_calls(clean_source, allowed):
         return None
     fixed_targets = []
@@ -928,12 +928,14 @@ def revive_return_newworld(source: str) -> dict[str, Any] | None:
     if not revive_return_map_ids:
         return None
     target = fixed_targets[0]
+    termini_ids = [values[0] for values in expr_args(parse_lua_calls(clean_source, 'AddTermini', limit=4), 1)]
     return {
         'reviveReturnMapIds': revive_return_map_ids,
         'targetMapId': target[0],
         'targetCellX': target[1],
         'targetCellY': target[2],
         'fightState': fight_state[0],
+        'terminiIds': termini_ids,
     }
 
 
@@ -1514,7 +1516,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'scriptPath': script.get('scriptPath', ''),
                 'sourceRelPath': script.get('sourceRelPath', ''),
                 'actionKind': 'ReviveReturnNewWorld',
-                'source': 'PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target',
+                'source': 'PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target with optional AddTermini',
                 **revive_return,
             })
             continue

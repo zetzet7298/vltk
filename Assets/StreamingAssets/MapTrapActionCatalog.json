@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T06:14:48Z",
+  "generatedAtUtc": "2026-06-08T06:21:08Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -694,7 +694,7 @@
       "scriptPath": "\\script\\东北区\\长白山\\长白山北麓\\trap\\长白山北麓to长白山脚2.lua",
       "sourceRelPath": "script\\东北区\\长白山\\长白山北麓\\trap\\长白山北麓to长白山脚2.lua",
       "actionKind": "ReviveReturnNewWorld",
-      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target",
+      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target with optional AddTermini",
       "reviveReturnMapIds": [
         923,
         924
@@ -702,7 +702,8 @@
       "targetMapId": 320,
       "targetCellX": 1570,
       "targetCellY": 2337,
-      "fightState": 1
+      "fightState": 1,
+      "terminiIds": []
     },
     {
       "trapId": 213364803,
@@ -2358,7 +2359,7 @@
       "scriptPath": "\\script\\东北区\\长白山\\长白山北麓\\trap\\长白山北麓to长白山脚1.lua",
       "sourceRelPath": "script\\东北区\\长白山\\长白山北麓\\trap\\长白山北麓to长白山脚1.lua",
       "actionKind": "ReviveReturnNewWorld",
-      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target",
+      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target with optional AddTermini",
       "reviveReturnMapIds": [
         923,
         924
@@ -2366,7 +2367,8 @@
       "targetMapId": 320,
       "targetCellX": 1386,
       "targetCellY": 2253,
-      "fightState": 1
+      "fightState": 1,
+      "terminiIds": []
     },
     {
       "trapId": 833552145,
@@ -2895,6 +2897,25 @@
       "elseTargetCellX": 1555,
       "elseTargetCellY": 3239,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 976757873,
+      "trapIdHex": "0x3A382471",
+      "scriptPath": "\\script\\西北北区\\沙漠迷宫\\沙漠地表\\trap\\沙漠迷宫01.lua",
+      "sourceRelPath": "script\\西北北区\\沙漠迷宫\\沙漠地表\\trap\\沙漠迷宫01.lua",
+      "actionKind": "ReviveReturnNewWorld",
+      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target with optional AddTermini",
+      "reviveReturnMapIds": [
+        919,
+        920
+      ],
+      "targetMapId": 136,
+      "targetCellX": 1716,
+      "targetCellY": 3144,
+      "fightState": 1,
+      "terminiIds": [
+        195
+      ]
     },
     {
       "trapId": 977176049,
@@ -7793,7 +7814,7 @@
       "scriptPath": "\\script\\东北区\\长白山\\长白山南麓\\trap\\长白山南麓to长白山脚1.lua",
       "sourceRelPath": "script\\东北区\\长白山\\长白山南麓\\trap\\长白山南麓to长白山脚1.lua",
       "actionKind": "ReviveReturnNewWorld",
-      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target",
+      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target with optional AddTermini",
       "reviveReturnMapIds": [
         921,
         922
@@ -7801,7 +7822,8 @@
       "targetMapId": 320,
       "targetCellX": 1393,
       "targetCellY": 3156,
-      "fightState": 1
+      "fightState": 1,
+      "terminiIds": []
     },
     {
       "trapId": 2734603287,
@@ -8803,7 +8825,7 @@
       "scriptPath": "\\script\\东北区\\长白山\\长白山南麓\\trap\\长白山南麓to长白山脚2.lua",
       "sourceRelPath": "script\\东北区\\长白山\\长白山南麓\\trap\\长白山南麓to长白山脚2.lua",
       "actionKind": "ReviveReturnNewWorld",
-      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target",
+      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target with optional AddTermini",
       "reviveReturnMapIds": [
         921,
         922
@@ -8811,7 +8833,8 @@
       "targetMapId": 320,
       "targetCellX": 1562,
       "targetCellY": 2981,
-      "fightState": 1
+      "fightState": 1,
+      "terminiIds": []
     },
     {
       "trapId": 3125006313,
@@ -11478,7 +11501,7 @@
       "scriptPath": "\\script\\西北北区\\莫高窟\\trap\\trap_tolongmenzhen.lua",
       "sourceRelPath": "script\\西北北区\\莫高窟\\trap\\trap_tolongmenzhen.lua",
       "actionKind": "ReviveReturnNewWorld",
-      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target",
+      "source": "PC trap Lua main(): if SubWorldIdx2ID(SubWorld) is return map then RevID2WXY(GetPlayerRev())/NewWorld else SetFightState/NewWorld fixed target with optional AddTermini",
       "reviveReturnMapIds": [
         917,
         918
@@ -11486,7 +11509,8 @@
       "targetMapId": 121,
       "targetCellX": 1725,
       "targetCellY": 4275,
-      "fightState": 1
+      "fightState": 1,
+      "terminiIds": []
     },
     {
       "trapId": 3909506644,
