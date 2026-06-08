@@ -540,7 +540,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(_hud.IsSkillPanelVisible);
             Assert.Greater(_hud.PcSkillPanelRowCount, 0);
 
-            InvokeAndAssertPcTool(covered, "Task", "OnTaskClick", "Nhiệm vụ", "Hoàn thành");
+            InvokeAndAssertPcTool(covered, "Task", "OnTaskClick", "Nhiệm vụ", "PC [Task] Player_Task");
             InvokeAndAssertPcTool(covered, "Friend", "OnFriendClick", "Bằng hữu", "PC [FindBtn] Thêm bạn hữu");
 
             covered.Add("Team");

@@ -126,6 +126,20 @@ namespace VLTK.Tests.EditMode.Sandbox
             Assert.IsFalse(GuildPanelService.TryKick(null, 0, -1));
         }
 
+        // ───── QuestTaskPanelService ─────
+        [Test]
+        public void QuestTaskPanel_UsesPcQuestRuntimeBeforeDailyTasks()
+        {
+            var quest = new QuestService();
+            var snap = QuestTaskPanelService.BuildSnapshot(quest, 1, 0, 0);
+            Assert.GreaterOrEqual(snap.availableCount, 1);
+            StringAssert.Contains("PC [Task] Player_Task", snap.rows[0]);
+            bool hasTrainingQuest = false;
+            foreach (var row in snap.rows)
+                if (row.Contains("Tập Luyện Cơ Bản")) hasTrainingQuest = true;
+            Assert.IsTrue(hasTrainingQuest, "Task button should show QuestService PC quest journal entries, not only daily tasks.");
+        }
+
         // ───── DailyTaskPanelService ─────
         [Test]
         public void DailyTaskPanelService_BuildSnapshot_DoesNotThrow_WithNullService()

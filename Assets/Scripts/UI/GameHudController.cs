@@ -2017,19 +2017,19 @@ namespace VLTK.UI
         private void OnTaskClick()
         {
             var manager = SandboxManager.Instance;
-            var snap = DailyTaskPanelService.BuildSnapshot(manager?.DailyTaskService, 1);
-            var rows = new List<string> { $"Hoàn thành: {snap.completedCount}/{snap.totalCount}" };
-            if (snap.rows != null && snap.rows.Count > 0)
+            int level = manager?.PlayerProgression?.level ?? 1;
+            int faction = manager?.PlayerProgression != null ? (int)manager.PlayerProgression.faction : 0;
+            var taskSnap = QuestTaskPanelService.BuildSnapshot(manager?.QuestService, level, faction, 0, manager?.DailyTaskService);
+            var rows = new List<string>
             {
-                foreach (var r in snap.rows)
-                    rows.Add($"{r.taskName}: {r.progress}/{r.target} — {r.taskDesc}");
-            }
-            else
-            {
-                rows.Add("Chưa có nhiệm vụ đang theo dõi.");
-            }
+                $"Đang làm: {taskSnap.activeCount}",
+                $"Có thể nhận: {taskSnap.availableCount}",
+                $"Đã hoàn thành: {taskSnap.completedCount}",
+            };
+            foreach (var row in taskSnap.rows)
+                rows.Add(row);
             OpenPcToolPanel("Nhiệm vụ", rows);
-            SubsystemLog.Info("HUD", "Open Task panel");
+            SubsystemLog.Info("HUD", "Open Task/Quest panel");
         }
 
         private void OnFriendClick()
