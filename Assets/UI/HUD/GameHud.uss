@@ -457,6 +457,17 @@
     border-color: rgba(0,90,80,0.45);
 }
 
+
+.hud-chat-channel-identity-btn {
+    width: 32px;
+    height: 32px;
+    margin-left: 0px;
+    margin-right: 3px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_channel_identity_pc.png');
+    -unity-background-scale-mode: scale-to-fit;
+    border-width: 0px;
+}
+
 .hud-chat-input {
     flex-grow: 1;
     height: 28px;

@@ -108,6 +108,7 @@
                 <ui:VisualElement name="ChatSysDownBtn" class="hud-chat-rail-btn hud-chat-sys-down"><ui:VisualElement class="hud-chat-rail-icon chat-sys-down"/></ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement class="hud-chat-input-row">
+                <ui:VisualElement name="ChatChannelIdentityBtn" class="hud-chat-channel-identity-btn"/>
                 <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
                 <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
                 <ui:VisualElement name="SendBtn" class="hud-send-btn"><ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/></ui:VisualElement>

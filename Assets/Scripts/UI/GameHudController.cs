@@ -404,6 +404,7 @@ namespace VLTK.UI
             RegisterClick(root, "BtnRec", OnRecClick);
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
             RegisterClick(root, "PcToolClose", ClosePcToolPanel);
+            RegisterClick(root, "ChatChannelIdentityBtn", OnChatChannelIdentityClick);
             RegisterClick(root, "SendBtn", OnSendChatClick);
             RegisterClick(root, "ChatSizeBtn", OnChatSizeClick);
             RegisterClick(root, "ChatMoveBtn", OnChatMoveClick);
@@ -2111,6 +2112,33 @@ namespace VLTK.UI
                 "PC: nút 频道开与关b bật/tắt cụm kênh chat ở HUD.",
             });
             SubsystemLog.Info("HUD", _chatChannelsVisible ? "Show chat channels" : "Hide chat channels");
+        }
+
+        private void OnChatChannelIdentityClick()
+        {
+            var chat = SandboxManager.Instance?.ChatService;
+            var next = NextChatChannel(_selectedChatChannel);
+            SelectChatChannel(next);
+            OpenPcToolPanel("Chọn kênh chat", new[]
+            {
+                $"Kênh hiện tại: {ChatService.ChannelNameVi(next)}",
+                "PC: ô biểu tượng bên trái dòng nhập là current channel identity/menu của MSNRoom.",
+                chat != null ? $"Runtime channel: {ChatService.ChannelNameVi(chat.ActiveChannel)}" : "ChatService chưa sẵn sàng.",
+            });
+            SubsystemLog.Info("HUD", $"Cycle chat identity {ChatService.ChannelNameVi(next)}");
+        }
+
+        private static ChatChannel NextChatChannel(ChatChannel channel)
+        {
+            return channel switch
+            {
+                ChatChannel.All => ChatChannel.Private,
+                ChatChannel.Private => ChatChannel.Room,
+                ChatChannel.Room => ChatChannel.Guild,
+                ChatChannel.Guild => ChatChannel.Faction,
+                ChatChannel.Faction => ChatChannel.Other,
+                _ => ChatChannel.All,
+            };
         }
 
         private IReadOnlyList<string> BuildChatHistoryRows()

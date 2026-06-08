@@ -48,6 +48,7 @@ namespace VLTK.Tests.Sandbox
             AssertTextureSize("btn_options.png", 20, 20);
             AssertTextureSize("btn_chat_send.png", 20, 20);
             AssertTextureSize("btn_chat_face.png", 24, 24);
+            AssertTextureSize("btn_chat_channel_identity_pc.png", 32, 32);
             AssertTextureSize("chat_bar_top.png", 15, 16);
             AssertTextureSize("chat_bar_bottom.png", 15, 16);
             AssertTextureSize("聊天条阴影按钮.png", 15, 16);
@@ -81,7 +82,7 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("name=\"MobileUtilityMenuRowB\"", uxml);
             foreach (var name in new[] { "MinimapMarkerBtn", "ToggleMapBtn", "WorldMapBtn", "CaveMapBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC minimap control.");
-            foreach (var name in new[] { "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther", "FaceBtn", "SendBtn" })
+            foreach (var name in new[] { "ChatTabAll", "ChatTabPrivate", "ChatTabRoom", "ChatTabGuild", "ChatTabFaction", "ChatTabOther", "ChatChannelIdentityBtn", "FaceBtn", "SendBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC bottom-chat control.");
             foreach (var name in new[] { "ChatRail", "ChatSizeBtn", "ChatMoveBtn", "ChatShadowBtn", "ChatScrollUpBtn", "ChatChannelToggleBtn", "ChatScrollDownBtn", "ChatSysUpBtn", "ChatSysOpenBtn", "ChatSysDownBtn" })
                 StringAssert.Contains($"name=\"{name}\"", uxml, name + " must exist as a PC chat rail control.");
@@ -131,6 +132,8 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("RegisterClick(root, \"UtilitySwitchBtn\", OnUtilitySwitchClick)", controller);
             Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_chat_send.png")), "PC send button must exist in StreamingAssets.");
             Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_chat_face.png")), "PC face button must exist in StreamingAssets.");
+            Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, "btn_chat_channel_identity_pc.png")), "PC current-channel identity button must exist in StreamingAssets.");
+            StringAssert.Contains("RegisterClick(root, \"ChatChannelIdentityBtn\", OnChatChannelIdentityClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"SendBtn\", OnSendChatClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatScrollUpBtn\", OnChatScrollUpClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatChannelToggleBtn\", OnChatChannelToggleClick)", controller);
@@ -185,6 +188,21 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ChatChannelIdentityButton_PortsPcInputPrefixControl()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            int channel = uxml.IndexOf("name=\"ChatChannelIdentityBtn\"", System.StringComparison.Ordinal);
+            int input = uxml.IndexOf("name=\"ChatInput\"", System.StringComparison.Ordinal);
+            int face = uxml.IndexOf("name=\"FaceBtn\"", System.StringComparison.Ordinal);
+            Assert.IsTrue(channel >= 0 && input > channel && face > input, "PC current-channel identity icon must sit before the chat input, then face/send controls.");
+
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+            StringAssert.Contains("private void OnChatChannelIdentityClick()", controller);
+            StringAssert.Contains("SelectChatChannel(next)", controller);
+            StringAssert.Contains("PC: ô biểu tượng bên trái dòng nhập", controller);
+        }
+
+        [Test]
         public void MinimapButtons_FollowPcIniOrderAndSemantics()
         {
             var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
@@ -219,6 +237,7 @@ namespace VLTK.Tests.Sandbox
             var chatRoom = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chatroom.png"));
             var rec = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_rec.png"));
             var face = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chat_face.png"));
+            var channelIdentity = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_chat_channel_identity_pc.png"));
             var minimapFlag = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_flag_pc.png"));
             var minimapSwitch = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_switch_pc.png"));
             var minimapWorld = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_minimap_world_full_pc.png"));
@@ -232,6 +251,7 @@ namespace VLTK.Tests.Sandbox
             AssertPixelsEqual(chatRoom.GetPixel(14, 14), pc.GetPixel(708 + 14, 559 + 14), "ChatRoom crop must stay PC-derived");
             AssertPixelsEqual(rec.GetPixel(15, 15), pc.GetPixel(663 + 15, 502 + 15), "Recorder crop must stay PC-derived");
             AssertPixelsEqual(face.GetPixel(12, 12), pc.GetPixel(282 + 12, 526 + 12), "chat face crop must stay PC-derived");
+            AssertPixelsEqual(channelIdentity.GetPixel(16, 16), pc.GetPixel(2 + 16, 526 + 16), "chat current-channel identity crop must stay PC-derived");
             AssertPixelsEqual(minimapFlag.GetPixel(8, 8), pc.GetPixel(742 + 8, 134 + 8), "minimap flag crop must stay PC-derived");
             AssertPixelsEqual(minimapSwitch.GetPixel(8, 8), pc.GetPixel(758 + 8, 134 + 8), "minimap switch crop must stay PC-derived");
             AssertPixelsEqual(minimapWorld.GetPixel(8, 8), pc.GetPixel(774 + 8, 134 + 8), "minimap world-map crop must stay PC-derived");
@@ -275,6 +295,7 @@ namespace VLTK.Tests.Sandbox
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chatroom.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_send.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_face.png");
+            AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chat_channel_identity_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_flag_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_switch_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_minimap_world_full_pc.png");
