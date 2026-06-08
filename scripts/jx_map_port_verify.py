@@ -57,7 +57,7 @@ EXPECTED_DETERMINISTIC_OBJECT_CAMP_OPEN_BOX_ACTIONS = 2
 EXPECTED_DETERMINISTIC_OBJECT_SHOW_LADDER_ACTIONS = 23
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 817
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 800
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 802
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
@@ -86,24 +86,24 @@ EXPECTED_DETERMINISTIC_TRAP_TASK_ITEM_CONSUME_FACTION_GATE_NEWWORLD_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_TASK_MULTI_ITEM_PROMPT_CALLBACK_NEWWORLD_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_GATE_SETPOS_ACTIONS = 6
 EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_RETURN_NEWWORLD_ACTIONS = 2
+EXPECTED_DETERMINISTIC_TRAP_SONGJIN_REBIRTH_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_SWITCH_ACTIONS = 4
 EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_LEAVE_ACTIONS = 4
 EXPECTED_DETERMINISTIC_TRAP_CS_ARENA_LEAVE_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_TASK_TRIPLET_LEAVE_ACTIONS = 2
 EXPECTED_MISSING_TRAP_SCRIPTS: set[str] = set()
-EXPECTED_DEFERRED_RESOLVED_TRAP_ACTIONS = 17
+EXPECTED_DEFERRED_RESOLVED_TRAP_ACTIONS = 15
 EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_IDS = {
     '0x33494BB9', '0x3619F2C2', '0x5175834A', '0x592C5C47',
     '0x5D608EF1', '0x78CC1B49', '0x9BC53FC2', '0xA4DE52D8',
-    '0xC2BCE58F', '0xC69A1B00', '0xCAE7648B', '0xDA09D68D',
-    '0xDE574C0E', '0xE568D545', '0xF672737F', '0xFBFEFADD',
+    '0xC2BCE58F', '0xC69A1B00', '0xDA09D68D',
+    '0xDE574C0E', '0xE568D545', '0xFBFEFADD',
     '0xFF191F35',
 }
 EXPECTED_DEFERRED_RESOLVED_TRAP_ACTION_KIND_COUNTS = {
     'CityWarJoinRouter': 1,
     'ClearSkillTeamEnterHole': 4,
     'PartnerTaskEntity': 2,
-    'SongJinRebirthCampState': 2,
     'TongMapEntrance': 8,
 }
 KNOWN_FAILED_MAP_SPRITES = {
@@ -606,6 +606,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_task_multi_item_prompt_callback_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'TaskMultiItemPromptCallbackNewWorld')
     action_citywar_camp_gate_setpos = sum(1 for e in action_entries if e.get('actionKind') == 'CityWarCampGateSetPos')
     action_citywar_camp_return_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'CityWarCampReturnNewWorld')
+    action_songjin_rebirth = sum(1 for e in action_entries if e.get('actionKind') == 'SongJinRebirthCampState')
     action_clearskill_switch = sum(1 for e in action_entries if e.get('actionKind') == 'ClearSkillSwitchTrap')
     action_clearskill_leave = sum(1 for e in action_entries if e.get('actionKind') == 'ClearSkillLeaveGame')
     action_cs_arena_leave = sum(1 for e in action_entries if e.get('actionKind') == 'CsArenaLeaveTrap')
@@ -659,6 +660,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
                   'MapTrapActionCatalog CityWarCampGateSetPos count mismatch')
     audit.require(action_citywar_camp_return_newworld == EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_RETURN_NEWWORLD_ACTIONS,
                   'MapTrapActionCatalog CityWarCampReturnNewWorld count mismatch')
+    audit.require(action_songjin_rebirth == EXPECTED_DETERMINISTIC_TRAP_SONGJIN_REBIRTH_ACTIONS,
+                  'MapTrapActionCatalog SongJinRebirthCampState count mismatch')
     audit.require(action_clearskill_switch == EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_SWITCH_ACTIONS,
                   'MapTrapActionCatalog ClearSkillSwitchTrap count mismatch')
     audit.require(action_clearskill_leave == EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_LEAVE_ACTIONS,
@@ -725,6 +728,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapTaskMultiItemPromptCallbackNewWorldActions': action_task_multi_item_prompt_callback_newworld,
         'deterministicTrapCityWarCampGateSetPosActions': action_citywar_camp_gate_setpos,
         'deterministicTrapCityWarCampReturnNewWorldActions': action_citywar_camp_return_newworld,
+        'deterministicTrapSongJinRebirthCampStateActions': action_songjin_rebirth,
         'deterministicTrapClearSkillSwitchTrapActions': action_clearskill_switch,
         'deterministicTrapClearSkillLeaveGameActions': action_clearskill_leave,
         'deterministicTrapCsArenaLeaveTrapActions': action_cs_arena_leave,

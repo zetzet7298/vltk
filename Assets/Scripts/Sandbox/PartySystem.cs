@@ -136,6 +136,32 @@ namespace VLTK.Sandbox
             RemoveMember(memberId);
         }
 
+        /// <summary>Transfer party leadership to an existing member.</summary>
+        public bool TransferLeadership(int memberId)
+        {
+            var nextLeader = _members.Find(m => m.memberId == memberId);
+            if (nextLeader == null)
+                return false;
+
+            foreach (var member in _members)
+                member.isLeader = false;
+            nextLeader.isLeader = true;
+            _leaderId = memberId;
+            SubsystemLog.Info("Party", $"{nextLeader.nameVi} trở thành trưởng đội");
+            return true;
+        }
+
+        /// <summary>Disband the whole party, matching the PC Dismiss command.</summary>
+        public void DisbandParty()
+        {
+            if (_members.Count == 0)
+                return;
+            _members.Clear();
+            _leaderId = 0;
+            OnPartyDisbanded?.Invoke();
+            SubsystemLog.Info("Party", "Đội đã giải tán");
+        }
+
         /// <summary>Distribute EXP among party members.</summary>
         public Dictionary<int, int> DistributeExp(int totalExp)
         {

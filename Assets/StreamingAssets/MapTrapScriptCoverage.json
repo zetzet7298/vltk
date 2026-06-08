@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T14:18:43Z",
+  "generatedAtUtc": "2026-06-08T14:31:58Z",
   "uniqueTrapIds": 817,
   "resolvedTrapScripts": 817,
   "missingTrapScripts": 0,
@@ -9,7 +9,7 @@
     "0xF51BA9A5"
   ],
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
-  "deterministicTrapActions": 800,
+  "deterministicTrapActions": 802,
   "deterministicNewWorldActions": 532,
   "deterministicSetPosActions": 1,
   "deterministicFightStateSetPosActions": 112,
@@ -38,11 +38,12 @@
   "deterministicTrapTaskMultiItemPromptCallbackNewWorldActions": 1,
   "deterministicTrapCityWarCampGateSetPosActions": 6,
   "deterministicTrapCityWarCampReturnNewWorldActions": 2,
+  "deterministicTrapSongJinRebirthCampStateActions": 2,
   "deterministicTrapClearSkillSwitchTrapActions": 4,
   "deterministicTrapClearSkillLeaveGameActions": 4,
   "deterministicTrapCsArenaLeaveTrapActions": 1,
   "deterministicTrapTaskTripletLeaveTrapActions": 2,
-  "deferredResolvedTrapActions": 17,
+  "deferredResolvedTrapActions": 15,
   "deferredResolvedTrapActionIds": [
     "0x33494BB9",
     "0x3619F2C2",
@@ -54,11 +55,9 @@
     "0xA4DE52D8",
     "0xC2BCE58F",
     "0xC69A1B00",
-    "0xCAE7648B",
     "0xDA09D68D",
     "0xDE574C0E",
     "0xE568D545",
-    "0xF672737F",
     "0xFBFEFADD",
     "0xFF191F35"
   ],
@@ -66,7 +65,6 @@
     "CityWarJoinRouter": 1,
     "ClearSkillTeamEnterHole": 4,
     "PartnerTaskEntity": 2,
-    "SongJinRebirthCampState": 2,
     "TongMapEntrance": 8
   },
   "unclassifiedResolvedTrapActionIds": []

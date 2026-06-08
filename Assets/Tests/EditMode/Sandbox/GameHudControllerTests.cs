@@ -546,8 +546,7 @@ namespace VLTK.Tests.Sandbox
             InvokeAndAssertPcTool(covered, "Task", "OnTaskClick", "Nhiệm vụ", "PC [Task] Player_Task");
             InvokeAndAssertPcTool(covered, "Friend", "OnFriendClick", "Bằng hữu", "PC [FindBtn] Thêm bạn hữu");
 
-            covered.Add("Team");
-            InvokePrivateMethod("OnTeamClick");
+            InvokeAndAssertPcTool(covered, "Team", "OnTeamClick", "Tổ đội", "PC [Invite] Mời vào đội");
             Assert.IsFalse(_teamPreview.ClassListContains("hidden"));
             StringAssert.Contains("Chưa tham gia đội", _teamPreview.Q<Label>().text);
 
@@ -556,6 +555,30 @@ namespace VLTK.Tests.Sandbox
             InvokeAndAssertPcTool(covered, "Options", "OnOptionsClick", "Hệ thống", "Treo máy offline");
 
             CollectionAssert.AreEquivalent(HudBottomBarPcSpec.ToolControlBar.Keys, covered);
+        }
+
+
+        [Test]
+        public void PcTeamControls_AreClickableAndExecutePcActions()
+        {
+            InvokePrivateMethod("OnTeamClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Tổ đội", _pcToolTitle.text);
+            var actionRows = _pcToolList.Query<VisualElement>(className: "hud-pc-tool-action-row").ToList();
+            Assert.AreEqual(TeamPanelService.PcControls.Count, actionRows.Count, "PC a05d7a2c team command buttons must be action rows, not inert text.");
+
+            InvokePrivateMethod("OnPcTeamControlClick", "CloseTeam");
+            Assert.IsTrue(GetPrivateField<bool>("_teamNearbyListClosed"));
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [CloseTeam]: đã đóng danh sách lân cận")));
+
+            InvokePrivateMethod("OnPcTeamControlClick", "Refresh");
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [Refresh]: đã làm mới")));
+
+            InvokePrivateMethod("OnPcTeamControlClick", "Cancel");
+            Assert.IsTrue(_pcToolPanel.ClassListContains("hidden"));
+            Assert.IsTrue(_teamPreview.ClassListContains("hidden"));
         }
 
         [Test]

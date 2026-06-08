@@ -137,6 +137,7 @@ namespace VLTK.UI
         private bool _friendInvisible;
         private int _friendScrollOffset;
         private string _friendFilter = "UnitBtnFriend";
+        private bool _teamNearbyListClosed;
         private float _defaultRunSpeed;
         private TradeSession _tradeSession;
         private PartyMember _tradeTarget;
@@ -2254,7 +2255,6 @@ namespace VLTK.UI
 
         private void OnTeamClick()
         {
-            ClosePcToolPanel();
             var partyPanel = SandboxManager.Instance?.PartyPanel;
             partyPanel?.Toggle();
 
@@ -2270,6 +2270,119 @@ namespace VLTK.UI
                 }
                 SubsystemLog.Info("HUD", hide ? "Close Team" : "Open Team");
             }
+
+            OpenPcTeamPanel("Mở giao diện tổ đội");
+        }
+
+        private void OpenPcTeamPanel(string statusLine = null)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Tổ đội";
+            _pcToolList.Clear();
+
+            if (!string.IsNullOrEmpty(statusLine))
+                AddPcToolRow(statusLine);
+            foreach (var row in TeamPanelService.BuildRows(SandboxManager.Instance?.PartyService, _teamNearbyListClosed))
+                AddPcToolRow(row);
+            foreach (var control in TeamPanelService.PcControls)
+            {
+                var section = control.pcSection;
+                AddPcToolActionRow($"PC [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcTeamControlClick(section));
+            }
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcTeamControlClick(string pcSection)
+        {
+            var party = SandboxManager.Instance?.PartyService;
+            switch (pcSection)
+            {
+                case "Invite":
+                    OpenPcTeamPanel(party == null
+                        ? "PC [Invite]: PartyService chưa sẵn sàng để mời người chơi."
+                        : "PC [Invite]: cần chọn người chơi ở danh sách xung quanh trước khi gửi lời mời.");
+                    break;
+                case "Kick":
+                    if (party != null && TryGetFirstNonLeaderMember(party, out var kickMember))
+                    {
+                        party.RemoveMember(kickMember.memberId);
+                        PopulateTeamPreview();
+                        OpenPcTeamPanel($"PC [Kick]: đã trục xuất {kickMember.nameVi}.");
+                    }
+                    else
+                    {
+                        OpenPcTeamPanel("PC [Kick]: chưa có thành viên thường để trục xuất.");
+                    }
+                    break;
+                case "Appoint":
+                    if (party != null && TryGetFirstNonLeaderMember(party, out var appointMember) && party.TransferLeadership(appointMember.memberId))
+                    {
+                        PopulateTeamPreview();
+                        OpenPcTeamPanel($"PC [Appoint]: đã giao đội trưởng cho {appointMember.nameVi}.");
+                    }
+                    else
+                    {
+                        OpenPcTeamPanel("PC [Appoint]: chưa có thành viên nhận quyền đội trưởng.");
+                    }
+                    break;
+                case "Refresh":
+                    PopulateTeamPreview();
+                    OpenPcTeamPanel("PC [Refresh]: đã làm mới danh sách tổ đội/lân cận.");
+                    break;
+                case "Leave":
+                    if (party != null && party.IsInParty)
+                    {
+                        int leaveId = party.LeaderId != 0 ? party.LeaderId : party.Members[0].memberId;
+                        party.LeaveParty(leaveId);
+                        PopulateTeamPreview();
+                        OpenPcTeamPanel("PC [Leave]: đã rời đội.");
+                    }
+                    else
+                    {
+                        OpenPcTeamPanel("PC [Leave]: hiện chưa tham gia đội.");
+                    }
+                    break;
+                case "Dismiss":
+                    if (party != null && party.IsInParty)
+                    {
+                        party.DisbandParty();
+                        PopulateTeamPreview();
+                        OpenPcTeamPanel("PC [Dismiss]: đã giải tán đội.");
+                    }
+                    else
+                    {
+                        OpenPcTeamPanel("PC [Dismiss]: không có đội để giải tán.");
+                    }
+                    break;
+                case "CloseTeam":
+                    _teamNearbyListClosed = !_teamNearbyListClosed;
+                    OpenPcTeamPanel(_teamNearbyListClosed ? "PC [CloseTeam]: đã đóng danh sách lân cận." : "PC [CloseTeam]: đã mở danh sách lân cận.");
+                    break;
+                case "Cancel":
+                    _teamPreview?.AddToClassList("hidden");
+                    ClosePcToolPanel();
+                    break;
+            }
+        }
+
+        private static bool TryGetFirstNonLeaderMember(PartyService party, out PartyMember member)
+        {
+            member = null;
+            if (party == null || party.Members == null)
+                return false;
+            foreach (var candidate in party.Members)
+            {
+                if (candidate != null && !candidate.isLeader)
+                {
+                    member = candidate;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void OnFactionClick()
