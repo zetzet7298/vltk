@@ -370,6 +370,46 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsLevelBracketNewWorld)
+            {
+                int playerLevel = _host.GetPlayerLevel();
+                if (playerLevel < action.requiredLevel)
+                {
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.message))
+                        _sideEffects.PostMessage(action.message);
+                    ApplyOptionalSideEffects(action);
+                    result = Success(action, $"GetLevel()=={playerLevel} < {action.requiredLevel} -> Talk(message), no NewWorld");
+                    return true;
+                }
+
+                int branchIndex = FindLevelBracket(action, playerLevel);
+                if (branchIndex < 0)
+                {
+                    result = Failure(action, $"GetLevel()=={playerLevel} no level bracket target");
+                    return true;
+                }
+                int targetMapId = action.levelBracketTargetMapIds[branchIndex];
+                if (!_host.HasMap(targetMapId))
+                {
+                    result = Failure(action, $"target map {targetMapId} missing from catalog");
+                    return true;
+                }
+
+                var bracketTarget = action.LevelBracketWorldPosition(branchIndex);
+                _host.NewWorld(targetMapId, bracketTarget);
+                ApplyFightState(action);
+                if (_sideEffects != null && action.levelBracketMessages != null && branchIndex < action.levelBracketMessages.Length)
+                {
+                    string branchMessage = action.levelBracketMessages[branchIndex];
+                    if (!string.IsNullOrWhiteSpace(branchMessage))
+                        _sideEffects.PostMessage(branchMessage);
+                }
+                ApplyOptionalSideEffects(action);
+                result = Success(action,
+                    $"GetLevel()=={playerLevel} -> bracket#{branchIndex} NewWorld({targetMapId},{action.levelBracketTargetCellXs[branchIndex]},{action.levelBracketTargetCellYs[branchIndex]}) -> {bracketTarget}, SetFightState({action.fightState})");
+                return true;
+            }
+
             if (action.IsOpenServerDateGateSetPos)
             {
                 long currentDate = _host.GetCurrentDateYmdHm();
@@ -549,6 +589,23 @@ namespace VLTK.Sandbox
         {
             if (action.fightState >= 0)
                 _host.SetFightState(action.fightState);
+        }
+
+        private static int FindLevelBracket(PcTrapActionCatalogEntry action, int playerLevel)
+        {
+            int count = action.levelBracketTargetMapIds?.Length ?? 0;
+            for (int i = 0; i < count; i++)
+            {
+                int min = action.levelBracketMinLevels != null && i < action.levelBracketMinLevels.Length
+                    ? action.levelBracketMinLevels[i]
+                    : 0;
+                int max = action.levelBracketMaxExclusiveLevels != null && i < action.levelBracketMaxExclusiveLevels.Length
+                    ? action.levelBracketMaxExclusiveLevels[i]
+                    : 0;
+                if (playerLevel >= min && (max <= 0 || playerLevel < max))
+                    return i;
+            }
+            return -1;
         }
 
         private void ApplyPcFlagSideEffects(int pkFlag, int forbidChangePk, int punish, int logoutRv)

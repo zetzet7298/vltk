@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T06:31:34Z",
+  "generatedAtUtc": "2026-06-08T06:38:44Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -2865,6 +2865,54 @@
       "targetCellY": 2992,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 948300338,
+      "trapIdHex": "0x3885EA32",
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\trap\\襄阳to宋金战场.lua",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\trap\\襄阳to宋金战场.lua",
+      "actionKind": "LevelBracketNewWorld",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "source": "PC Song/Jin battlefield trap Lua: GetLevel <40 Talk fail; level 40-79/80-119/120+ NewWorld bracket, SetFightState, Msg2Player, optional protect/buff side effects",
+      "requiredLevel": 40,
+      "message": "Chiến trường Tống Kim gian khổ khốc liệt, ngươi chưa đạt đến cấp 40 hãy v̉ luyện thêm rồi hãy tƯnh.",
+      "levelBracketMinLevels": [
+        40,
+        80,
+        120
+      ],
+      "levelBracketMaxExclusiveLevels": [
+        80,
+        120,
+        0
+      ],
+      "levelBracketTargetMapIds": [
+        323,
+        324,
+        325
+      ],
+      "levelBracketTargetCellXs": [
+        1541,
+        1541,
+        1541
+      ],
+      "levelBracketTargetCellYs": [
+        3178,
+        3178,
+        3178
+      ],
+      "levelBracketMessages": [
+        "Đến nơi báo danh Chiến Trường Tống Kim Sơ Cấp",
+        "Đến nơi báo danh Chiến Trường Tống Kim Trung Cấp",
+        "Đến nơi báo danh Chiến Trường Tống Kim Cao Cấp"
+      ],
+      "fightState": 0,
+      "protectTicks": 54,
+      "skillStateId": 963,
+      "skillStateLevel": 1,
+      "skillStateTime": 54
     },
     {
       "trapId": 964440328,
@@ -7318,6 +7366,54 @@
       "targetCellY": 3169,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 2569752374,
+      "trapIdHex": "0x992B4F36",
+      "scriptPath": "\\script\\中原北区\\朱仙镇\\trap\\朱仙镇to宋金战场.lua",
+      "sourceRelPath": "script\\中原北区\\朱仙镇\\trap\\朱仙镇to宋金战场.lua",
+      "actionKind": "LevelBracketNewWorld",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "source": "PC Song/Jin battlefield trap Lua: GetLevel <40 Talk fail; level 40-79/80-119/120+ NewWorld bracket, SetFightState, Msg2Player, optional protect/buff side effects",
+      "requiredLevel": 40,
+      "message": "Chiến trường Tống Kim gian khổ khốc liệt, ngươi chưa đạt đến cấp 40 hãy về luyện thêm rồi hãy tính.",
+      "levelBracketMinLevels": [
+        40,
+        80,
+        120
+      ],
+      "levelBracketMaxExclusiveLevels": [
+        80,
+        120,
+        0
+      ],
+      "levelBracketTargetMapIds": [
+        323,
+        324,
+        325
+      ],
+      "levelBracketTargetCellXs": [
+        1570,
+        1570,
+        1570
+      ],
+      "levelBracketTargetCellYs": [
+        3085,
+        3085,
+        3085
+      ],
+      "levelBracketMessages": [
+        "Đến nơi báo danh Chiến Trường Tống Kim Sơ Cấp",
+        "Đến nơi báo danh Chiến Trường Tống Kim Trung Cấp",
+        "Đến nơi báo danh Chiến Trường Tống Kim Cao Cấp"
+      ],
+      "fightState": 0,
+      "protectTicks": 0,
+      "skillStateId": 0,
+      "skillStateLevel": 0,
+      "skillStateTime": 0
     },
     {
       "trapId": 2571297676,

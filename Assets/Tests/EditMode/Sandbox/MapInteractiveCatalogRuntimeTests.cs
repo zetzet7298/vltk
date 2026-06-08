@@ -193,7 +193,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(692, catalog.Count);
+            Assert.AreEqual(773, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -201,6 +201,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
+            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);
@@ -575,6 +576,70 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, sideEffects.skillStateLevel);
             Assert.AreEqual(54, sideEffects.skillStateTime);
             StringAssert.Contains("GetLevel()==5", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_LevelBracketNewWorld_BranchesFromPcBattlefieldLevelRanges()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 914,
+                        trapIdHex = "0x00000392",
+                        scriptPath = @"\script\中原南区\襄阳\襄阳\trap\襄阳to宋金战场.lua",
+                        actionKind = "LevelBracketNewWorld",
+                        requiredLevel = 40,
+                        message = "Chiến trường Tống Kim gian khổ khốc liệt, ngươi chưa đạt đến cấp 40 hãy về luyện thêm rồi hãy tính.",
+                        levelBracketMinLevels = new[] { 40, 80, 120 },
+                        levelBracketMaxExclusiveLevels = new[] { 80, 120, 0 },
+                        levelBracketTargetMapIds = new[] { 323, 324, 325 },
+                        levelBracketTargetCellXs = new[] { 1541, 1541, 1541 },
+                        levelBracketTargetCellYs = new[] { 3178, 3178, 3178 },
+                        levelBracketMessages = new[]
+                        {
+                            "Đến nơi báo danh Chiến Trường Tống Kim Sơ Cấp",
+                            "Đến nơi báo danh Chiến Trường Tống Kim Trung Cấp",
+                            "Đến nơi báo danh Chiến Trường Tống Kim Cao Cấp",
+                        },
+                        fightState = 0,
+                        protectTicks = 54,
+                        skillStateId = 963,
+                        skillStateLevel = 1,
+                        skillStateTime = 54,
+                    }
+                }
+            };
+
+            var sideEffects = new FakeTrapActionSideEffects();
+            var host = new FakeTrapTravelHost { playerLevel = 39 };
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 914 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Chiến trường Tống Kim gian khổ khốc liệt, ngươi chưa đạt đến cấp 40 hãy về luyện thêm rồi hãy tính." }, sideEffects.messages);
+            Assert.AreEqual(54, sideEffects.protectTicks);
+            Assert.AreEqual(963, sideEffects.skillStateId);
+
+            sideEffects = new FakeTrapActionSideEffects();
+            host = new FakeTrapTravelHost { playerLevel = 80 };
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x00000392" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(324, host.mapId);
+            Assert.AreEqual(0, host.fightState);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1541 * 32, 3178 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Đến nơi báo danh Chiến Trường Tống Kim Trung Cấp" }, sideEffects.messages);
+            Assert.AreEqual(54, sideEffects.protectTicks);
+            Assert.AreEqual(963, sideEffects.skillStateId);
+            Assert.AreEqual(1, sideEffects.skillStateLevel);
+            Assert.AreEqual(54, sideEffects.skillStateTime);
         }
 
         [Test]

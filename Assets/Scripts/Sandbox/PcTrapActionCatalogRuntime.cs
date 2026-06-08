@@ -77,6 +77,12 @@ namespace VLTK.Sandbox
         public string message;
         public string[] messages;
         public int requiredLevel;
+        public int[] levelBracketMinLevels;
+        public int[] levelBracketMaxExclusiveLevels;
+        public int[] levelBracketTargetMapIds;
+        public int[] levelBracketTargetCellXs;
+        public int[] levelBracketTargetCellYs;
+        public string[] levelBracketMessages;
         public int failTargetCellX;
         public int failTargetCellY;
         public int[] terminiIds;
@@ -157,6 +163,7 @@ namespace VLTK.Sandbox
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsMsg2PlayerNewWorld => string.Equals(actionKind, "Msg2PlayerNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsLevelGateNewWorld => string.Equals(actionKind, "LevelGateNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsLevelBracketNewWorld => string.Equals(actionKind, "LevelBracketNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsOpenServerDateGateSetPos => string.Equals(actionKind, "OpenServerDateGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsRandomNewWorld => string.Equals(actionKind, "RandomNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsReviveReturnNewWorld => string.Equals(actionKind, "ReviveReturnNewWorld", StringComparison.OrdinalIgnoreCase);
@@ -179,6 +186,9 @@ namespace VLTK.Sandbox
 
         public Vector2 FailTargetWorldPosition()
             => CellToWorld(failTargetCellX, failTargetCellY);
+
+        public Vector2 LevelBracketWorldPosition(int index)
+            => CellToWorld(levelBracketTargetCellXs[index], levelBracketTargetCellYs[index]);
 
         public Vector2 ClosedTargetWorldPosition()
             => CellToWorld(closedTargetCellX, closedTargetCellY);

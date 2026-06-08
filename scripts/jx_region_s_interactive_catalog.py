@@ -755,6 +755,53 @@ def is_safe_trap_level_gate_newworld(actions: dict[str, Any], source: str) -> bo
     return bool(talk_messages(actions))
 
 
+def level_bracket_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {
+        'main', 'Include', 'if', 'elseif', 'GetLevel', 'Talk', 'NewWorld',
+        'SetFightState', 'Msg2Player', 'SetProtectTime', 'AddSkillState'
+    }
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if 'GetLevel() < 40' not in clean_source or 'elseif' not in clean_source:
+        return None
+    if re.search(r'\b(for|while)\b', clean_source):
+        return None
+    new_worlds = int_args(parse_lua_calls(clean_source, 'NewWorld', limit=6), 3)
+    if len(new_worlds) != 3:
+        return None
+    fight_state = int_args_unique(parse_lua_calls(clean_source, 'SetFightState', limit=6), 1)
+    if fight_state is None:
+        return None
+    if [target[0] for target in new_worlds] != [323, 324, 325]:
+        return None
+
+    fail_lines = talk_messages({'talkCalls': parse_lua_calls(clean_source, 'Talk', limit=2)})
+    if len(fail_lines) != 1:
+        return None
+    branch_messages = [clean_user_message(str(call[0])) for call in parse_lua_calls(clean_source, 'Msg2Player', limit=6) if call]
+    if len(branch_messages) != 3 or not all(is_safe_user_message(message) for message in branch_messages):
+        return None
+    protect = expr_args_unique(parse_lua_calls(clean_source, 'SetProtectTime', limit=2), 1) if 'SetProtectTime' in clean_source else None
+    skill = expr_args_unique(parse_lua_calls(clean_source, 'AddSkillState', limit=2), 4) if 'AddSkillState' in clean_source else None
+
+    return {
+        'requiredLevel': 40,
+        'message': fail_lines[0],
+        'levelBracketMinLevels': [40, 80, 120],
+        'levelBracketMaxExclusiveLevels': [80, 120, 0],
+        'levelBracketTargetMapIds': [target[0] for target in new_worlds],
+        'levelBracketTargetCellXs': [target[1] for target in new_worlds],
+        'levelBracketTargetCellYs': [target[2] for target in new_worlds],
+        'levelBracketMessages': branch_messages,
+        'fightState': fight_state[0],
+        'protectTicks': protect[0] if protect is not None else 0,
+        'skillStateId': skill[0] if skill is not None else 0,
+        'skillStateLevel': skill[1] if skill is not None else 0,
+        'skillStateTime': skill[3] if skill is not None else 0,
+    }
+
+
 def open_server_config(pc_root: Path = PC_ROOT) -> tuple[int, str]:
     path = server_root(pc_root) / OPEN_SERVER_CONFIG_RELPATH
     try:
@@ -1539,6 +1586,21 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 'source': 'PC trap Lua main(): deterministic Msg2Player(message) followed by NewWorld(map,x,y), optional SetFightState, with no branch/task/item side effects',
             })
             continue
+        level_bracket = level_bracket_newworld(source)
+        if level_bracket is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'LevelBracketNewWorld',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'source': 'PC Song/Jin battlefield trap Lua: GetLevel <40 Talk fail; level 40-79/80-119/120+ NewWorld bracket, SetFightState, Msg2Player, optional protect/buff side effects',
+                **level_bracket,
+            })
+            continue
         if is_safe_trap_level_gate_newworld(actions, source):
             new_world = int_args_unique(actions.get('newWorldCalls') or [], 3)
             fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1)
@@ -1766,6 +1828,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapMessageActions': sum(1 for e in entries if e['actionKind'] in {'Msg2Player', 'SayMessage', 'TalkMessage'}),
         'deterministicTrapMsg2PlayerNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'Msg2PlayerNewWorld'),
         'deterministicTrapLevelGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelGateNewWorld'),
+        'deterministicTrapLevelBracketNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelBracketNewWorld'),
         'deterministicTrapOpenServerDateGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'OpenServerDateGateSetPos'),
         'deterministicTrapRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'RandomNewWorld'),
         'deterministicTrapReviveReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'ReviveReturnNewWorld'),
