@@ -29,6 +29,18 @@ VLTK_DECODE = Path('/var/www/vltktool/decode_item_texts_vi.py')
 REGION_FILE_RE = re.compile(r'^(\d+)_(\d+)_Region_S\.dat$', re.IGNORECASE)
 KILLBOSSMATCH_MAP_IDS = set(range(907, 917))
 OPEN_SERVER_CONFIG_RELPATH = Path('script/global/pgaming/configserver/configall.lua')
+PC_FACTION_IDS = {
+    'shaolin': 1,
+    'tianwang': 2,
+    'tangmen': 3,
+    'gaibang': 4,
+    'wudu': 5,
+    'tianren': 6,
+    'emei': 7,
+    'cuiyan': 8,
+    'wudang': 9,
+    'kunlun': 10,
+}
 
 
 def load_module(path: Path, name: str):
@@ -1446,6 +1458,33 @@ def object_open_box_action(source: str) -> dict[str, Any] | None:
     return {'reviveId': revive_id}
 
 
+def object_faction_open_box_action(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'OpenBox', 'GetFaction', 'SetRevPos', 'if'}):
+        return None
+    if re.search(r'\b(elseif|else|for|while|repeat)\b', clean_source):
+        return None
+    if len(parse_lua_calls(clean_source, 'OpenBox', limit=2)) != 1:
+        return None
+    if len(parse_lua_calls(clean_source, 'GetFaction', limit=2)) != 1:
+        return None
+    if len(parse_lua_calls(clean_source, 'SetRevPos', limit=2)) != 1:
+        return None
+    if_match = re.search(
+        r'if\s*\(?\s*GetFaction\s*\(\s*\)\s*==\s*["\']([a-z]+)["\']\s*\)?\s*then(?P<body>.*?)end',
+        clean_source, re.S | re.I)
+    if not if_match:
+        return None
+    faction = if_match.group(1).lower()
+    faction_id = PC_FACTION_IDS.get(faction)
+    if faction_id is None:
+        return None
+    revive = int_args_unique(parse_lua_calls(if_match.group('body'), 'SetRevPos', limit=2), 1)
+    if revive is None:
+        return None
+    return {'requiredFaction': faction, 'requiredFactionId': faction_id, 'reviveId': revive[0]}
+
+
 def object_show_ladder_action(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     if not source_uses_only_calls(clean_source, {'main', 'ShowLadder'}):
@@ -1537,6 +1576,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **open_box,
             })
             continue
+        faction_open_box = object_faction_open_box_action(source_text)
+        if faction_open_box is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'FactionOpenBox',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction',
+                **faction_open_box,
+            })
+            continue
         show_ladder = object_show_ladder_action(source_text)
         if show_ladder is not None:
             entries.append({
@@ -1576,6 +1631,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicObjectOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'OpenBox'),
+        'deterministicObjectFactionOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'FactionOpenBox'),
         'deterministicObjectShowLadderActions': sum(1 for e in entries if e['actionKind'] == 'ShowLadder'),
     }
     return entries, coverage

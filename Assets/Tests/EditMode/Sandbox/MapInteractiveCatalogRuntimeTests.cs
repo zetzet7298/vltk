@@ -92,6 +92,7 @@ namespace VLTK.Tests.Sandbox
             public int curCamp = 0;
             public int originalCamp = 0;
             public int battleRank = 0;
+            public int playerFactionId = (int)CombatFaction.None;
             public int logoutRv = -1;
             public int pkFlag = -1;
             public int forbidChangePk = -1;
@@ -120,6 +121,7 @@ namespace VLTK.Tests.Sandbox
             public int GetCamp() => originalCamp;
             public int GetBattleRank() => battleRank;
             public int GetFightState() => fightState;
+            public int GetPlayerFactionId() => playerFactionId;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
                 mapId = targetMapId;
@@ -388,6 +390,57 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(53, host.revPosMapId);
             Assert.AreEqual(19, host.revPosId);
             StringAssert.Contains("OpenBox", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_FactionOpenBox_AlwaysOpensAndGatesPcReviveByFaction()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\两湖区\天王帮\天王帮\obj\天王帮-储物箱1.lua",
+                        actionKind = "FactionOpenBox",
+                        reviveId = 21,
+                        requiredFaction = "tianwang",
+                        requiredFactionId = (int)CombatFaction.TianWang,
+                    }
+                }
+            };
+            var matchingHost = new FakeTrapTravelHost
+            {
+                currentMapId = 21,
+                playerFactionId = (int)CombatFaction.TianWang,
+            };
+            var matchingSideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, matchingHost, matchingSideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\两湖区\天王帮\天王帮\obj\天王帮-储物箱1.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var matched));
+
+            Assert.IsTrue(matched.success);
+            Assert.IsTrue(matchingSideEffects.openedBox);
+            Assert.AreEqual(21, matchingHost.revPosMapId);
+            Assert.AreEqual(21, matchingHost.revPosId);
+            StringAssert.Contains("matched=True", matched.detail);
+
+            var otherHost = new FakeTrapTravelHost
+            {
+                currentMapId = 21,
+                playerFactionId = (int)CombatFaction.CaiBang,
+            };
+            var otherSideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, otherHost, otherSideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var unmatched));
+
+            Assert.IsTrue(unmatched.success);
+            Assert.IsTrue(otherSideEffects.openedBox);
+            Assert.AreEqual(0, otherHost.revPosId);
+            StringAssert.Contains("matched=False", unmatched.detail);
         }
 
         [Test]

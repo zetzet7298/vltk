@@ -2,7 +2,8 @@
 // VLTK Mobile — executes deterministic PC Region_S object Lua actions.
 // Ported object API subset: NewWorld(mapId,x,y), optional SetFightState(),
 // safe pickup messages: SetPropState/AddEventItem/AddNote/Msg2Player,
-// read-only Say(message), and read-only Talk(message...) object scripts.
+// read-only Say(message), read-only Talk(message...) object scripts,
+// and PC faction-gated OpenBox()+SetRevPos(id) storage boxes.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -121,7 +122,7 @@ namespace VLTK.Sandbox
                 return true;
             }
 
-            if (action.IsOpenBox)
+            if (action.IsOpenBox || action.IsFactionOpenBox)
             {
                 if (_sideEffects == null)
                 {
@@ -129,10 +130,16 @@ namespace VLTK.Sandbox
                     return true;
                 }
                 _sideEffects.OpenBox();
-                if (action.reviveId > 0)
+
+                bool factionMatched = action.requiredFactionId <= 0 || _host.GetPlayerFactionId() == action.requiredFactionId;
+                if (action.reviveId > 0 && factionMatched)
                     _host.SetRevPos(_host.GetCurrentMapId(), action.reviveId);
-                string revive = action.reviveId > 0 ? $", SetRevPos({action.reviveId})" : string.Empty;
-                result = Success(action, $"OpenBox(){revive}");
+
+                string faction = action.requiredFactionId > 0
+                    ? $", GetFaction()=={action.requiredFaction}#{action.requiredFactionId} matched={factionMatched}"
+                    : string.Empty;
+                string revive = action.reviveId > 0 && factionMatched ? $", SetRevPos({action.reviveId})" : string.Empty;
+                result = Success(action, $"{action.actionKind}(){faction}{revive}");
                 return true;
             }
 

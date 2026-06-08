@@ -61,6 +61,8 @@ namespace VLTK.Sandbox
         public bool setPropState;
         public int reviveId;
         public int[] ladderIds;
+        public string requiredFaction;
+        public int requiredFactionId;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -68,6 +70,7 @@ namespace VLTK.Sandbox
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsOpenBox => string.Equals(actionKind, "OpenBox", StringComparison.OrdinalIgnoreCase);
+        public bool IsFactionOpenBox => string.Equals(actionKind, "FactionOpenBox", StringComparison.OrdinalIgnoreCase);
         public bool IsShowLadder => string.Equals(actionKind, "ShowLadder", StringComparison.OrdinalIgnoreCase);
 
         public Vector2 TargetWorldPosition()

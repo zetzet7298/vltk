@@ -37,6 +37,7 @@ namespace VLTK.Sandbox
         int GetCamp();
         int GetBattleRank();
         int GetFightState();
+        int GetPlayerFactionId();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
         void SetFightState(int fightState);
@@ -837,6 +838,15 @@ namespace VLTK.Sandbox
         public int GetFightState()
         {
             return SandboxManager.Instance?.GetFightState() ?? 1;
+        }
+
+        public int GetPlayerFactionId()
+        {
+            var manager = SandboxManager.Instance;
+            var gameplayFaction = manager?.GameplayLoop?.Player?.combat.faction ?? CombatFaction.None;
+            if (gameplayFaction != CombatFaction.None)
+                return (int)gameplayFaction;
+            return (int)(manager?.PlayerProgression?.faction ?? CombatFaction.None);
         }
 
         public void NewWorld(int mapId, Vector2 worldPosition)

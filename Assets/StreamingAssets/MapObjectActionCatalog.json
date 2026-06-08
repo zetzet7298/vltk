@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:17:51Z",
+  "generatedAtUtc": "2026-06-08T07:34:21Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -306,6 +306,36 @@
       "fightState": -1,
       "message": "Nam Nhạc trấn<——>Hắc Sa động",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-储物箱1.lua",
+      "scriptId": 3593558342,
+      "scriptIdHex": "0xD6315946",
+      "sourceRelPath": "script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "tianwang",
+      "requiredFactionId": 2,
+      "reviveId": 21
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-储物箱2.lua",
+      "scriptId": 3527318567,
+      "scriptIdHex": "0xD23E9C27",
+      "sourceRelPath": "script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "tianwang",
+      "requiredFactionId": 2,
+      "reviveId": 22
     },
     {
       "scriptPath": "\\script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-告示牌1.lua",
@@ -753,6 +783,36 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室内3\\obj\\天忍教-储物箱1.lua",
+      "scriptId": 1100521165,
+      "scriptIdHex": "0x41989ECD",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教室内3\\obj\\天忍教-储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "tianren",
+      "requiredFactionId": 6,
+      "reviveId": 27
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室内3\\obj\\天忍教-储物箱2.lua",
+      "scriptId": 1563332071,
+      "scriptIdHex": "0x5D2E8DE7",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教室内3\\obj\\天忍教-储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "tianren",
+      "requiredFactionId": 6,
+      "reviveId": 28
+    },
+    {
       "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室外\\obj\\天忍教-告示牌1.lua",
       "scriptId": 819132237,
       "scriptIdHex": "0x30D2F74D",
@@ -823,6 +883,36 @@
         "Bạn thử dùng sức đẩy tảng đá, nhưng nó cứ nằm trơ trơ"
       ],
       "source": "PC object Lua main(): deterministic read-only Talk(count,\"\",message...) with no conditional/API branch"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\少林派\\少林派\\obj\\少林派储物箱1.lua",
+      "scriptId": 4277133640,
+      "scriptIdHex": "0xFEEFE148",
+      "sourceRelPath": "script\\中原北区\\少林派\\少林派\\obj\\少林派储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "shaolin",
+      "requiredFactionId": 1,
+      "reviveId": 51
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\少林派\\少林派\\obj\\少林派储物箱2.lua",
+      "scriptId": 4211056248,
+      "scriptIdHex": "0xFAFF9E78",
+      "sourceRelPath": "script\\中原北区\\少林派\\少林派\\obj\\少林派储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "shaolin",
+      "requiredFactionId": 1,
+      "reviveId": 52
     },
     {
       "scriptPath": "\\script\\中原北区\\朱仙镇\\obj\\朱仙镇_储物箱1.lua",
@@ -1131,6 +1221,21 @@
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
     },
     {
+      "scriptPath": "\\script\\中原南区\\丐帮\\丐帮\\obj\\丐帮储物箱1.lua",
+      "scriptId": 3863291309,
+      "scriptIdHex": "0xE64525AD",
+      "sourceRelPath": "script\\中原南区\\丐帮\\丐帮\\obj\\丐帮储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "gaibang",
+      "requiredFactionId": 4,
+      "reviveId": 53
+    },
+    {
       "scriptPath": "\\script\\中原南区\\伏牛山\\伏牛山东\\obj\\wdobj04.lua",
       "scriptId": 998809255,
       "scriptIdHex": "0x3B889EA7",
@@ -1350,6 +1455,36 @@
       "targetCellY": 3390,
       "fightState": -1,
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\武当派-储物箱1.lua",
+      "scriptId": 146251580,
+      "scriptIdHex": "0x08B79F3C",
+      "sourceRelPath": "script\\中原南区\\武当派\\武当派\\obj\\武当派-储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "wudang",
+      "requiredFactionId": 9,
+      "reviveId": 39
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\武当派-储物箱2.lua",
+      "scriptId": 74086843,
+      "scriptIdHex": "0x046A79BB",
+      "sourceRelPath": "script\\中原南区\\武当派\\武当派\\obj\\武当派-储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "wudang",
+      "requiredFactionId": 9,
+      "reviveId": 40
     },
     {
       "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\武当派-告示牌1.lua",
@@ -1752,6 +1887,36 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\江南区\\五毒教\\五毒教\\obj\\五毒教储物箱1.lua",
+      "scriptId": 3949098729,
+      "scriptIdHex": "0xEB6276E9",
+      "sourceRelPath": "script\\江南区\\五毒教\\五毒教\\obj\\五毒教储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "wudu",
+      "requiredFactionId": 5,
+      "reviveId": 70
+    },
+    {
+      "scriptPath": "\\script\\江南区\\五毒教\\五毒教\\obj\\五毒教储物箱2.lua",
+      "scriptId": 3880112251,
+      "scriptIdHex": "0xE745D07B",
+      "sourceRelPath": "script\\江南区\\五毒教\\五毒教\\obj\\五毒教储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "wudu",
+      "requiredFactionId": 5,
+      "reviveId": 71
+    },
+    {
       "scriptPath": "\\script\\江南区\\五毒教\\五毒教\\obj\\路标_五毒教to武夷山.lua",
       "scriptId": 3832455622,
       "scriptIdHex": "0xE46EA1C6",
@@ -2005,6 +2170,36 @@
       "fightState": -1,
       "message": "Đi Côn Lôn phái",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\昆仑派\\昆仑派\\obj\\昆仑派储物箱1.lua",
+      "scriptId": 3591604481,
+      "scriptIdHex": "0xD6138901",
+      "sourceRelPath": "script\\西北北区\\昆仑派\\昆仑派\\obj\\昆仑派储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "kunlun",
+      "requiredFactionId": 10,
+      "reviveId": 57
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\昆仑派\\昆仑派\\obj\\昆仑派储物箱2.lua",
+      "scriptId": 3525551665,
+      "scriptIdHex": "0xD223A631",
+      "sourceRelPath": "script\\西北北区\\昆仑派\\昆仑派\\obj\\昆仑派储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "kunlun",
+      "requiredFactionId": 10,
+      "reviveId": 58
     },
     {
       "scriptPath": "\\script\\西北北区\\昆仑派\\昆仑派\\obj\\路标_昆仑派to快活林迷宫.lua",
@@ -2566,6 +2761,36 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-储物箱1.lua",
+      "scriptId": 1028541500,
+      "scriptIdHex": "0x3D4E4C3C",
+      "sourceRelPath": "script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "tangmen",
+      "requiredFactionId": 3,
+      "reviveId": 15
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-储物箱2.lua",
+      "scriptId": 958912424,
+      "scriptIdHex": "0x3927D7A8",
+      "sourceRelPath": "script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "tangmen",
+      "requiredFactionId": 3,
+      "reviveId": 16
+    },
+    {
       "scriptPath": "\\script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-告示牌1.lua",
       "scriptId": 646018355,
       "scriptIdHex": "0x26817533",
@@ -2633,6 +2858,36 @@
         7,
         18
       ]
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\峨嵋派\\峨嵋派\\Obj\\西南北区-峨嵋派-储物箱1.lua",
+      "scriptId": 1547587730,
+      "scriptIdHex": "0x5C3E5092",
+      "sourceRelPath": "script\\西南北区\\峨嵋派\\峨嵋派\\obj\\西南北区-峨嵋派-储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "emei",
+      "requiredFactionId": 7,
+      "reviveId": 13
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\峨嵋派\\峨嵋派\\Obj\\西南北区-峨嵋派-储物箱2.lua",
+      "scriptId": 1528112872,
+      "scriptIdHex": "0x5B1526E8",
+      "sourceRelPath": "script\\西南北区\\峨嵋派\\峨嵋派\\obj\\西南北区-峨嵋派-储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "emei",
+      "requiredFactionId": 7,
+      "reviveId": 14
     },
     {
       "scriptPath": "\\script\\西南北区\\峨嵋派\\峨嵋派\\Obj\\西南北区-峨嵋派-告示牌1.lua",
@@ -3329,6 +3584,36 @@
       "fightState": -1,
       "message": "Đi đến Đại Lý",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南南区\\翠烟门\\翠烟门\\obj\\翠烟门储物箱1.lua",
+      "scriptId": 188115230,
+      "scriptIdHex": "0x0B36691E",
+      "sourceRelPath": "script\\西南南区\\翠烟门\\翠烟门\\obj\\翠烟门储物箱1.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "cuiyan",
+      "requiredFactionId": 8,
+      "reviveId": 61
+    },
+    {
+      "scriptPath": "\\script\\西南南区\\翠烟门\\翠烟门\\obj\\翠烟门储物箱2.lua",
+      "scriptId": 113641038,
+      "scriptIdHex": "0x06C6064E",
+      "sourceRelPath": "script\\西南南区\\翠烟门\\翠烟门\\obj\\翠烟门储物箱2.lua",
+      "actionKind": "FactionOpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): OpenBox() always executes; SetRevPos(id) only when GetFaction() equals required PC faction",
+      "requiredFaction": "cuiyan",
+      "requiredFactionId": 8,
+      "reviveId": 62
     },
     {
       "scriptPath": "\\script\\西南南区\\翠烟门\\翠烟门\\obj\\路标_翠烟门to大理府.lua",
