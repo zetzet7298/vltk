@@ -1,4 +1,6 @@
 using System.IO;
+using System.Collections.Generic;
+using System.Reflection;
 using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -70,6 +72,28 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void FullPcUtilitySet_HasPcSpecIconAssetsAndClickHandlers()
+        {
+            var controllerPath = Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs");
+            var controller = File.ReadAllText(controllerPath);
+            var icons = GetButtonIconMap();
+
+            Assert.AreEqual(17, HudBottomBarPcSpec.ToolControlBar.Count, "PC 工具控制条 must stay at the full 17-button set.");
+            foreach (var pair in PcUtilityButtonIds())
+            {
+                string pcKey = pair.Key;
+                string buttonName = pair.Value.buttonName;
+                string handlerName = pair.Value.handlerName;
+                Assert.IsTrue(HudBottomBarPcSpec.ToolControlBar.ContainsKey(pcKey), pcKey + " must remain in PC toolbar spec.");
+                Assert.IsTrue(icons.ContainsKey(buttonName), buttonName + " must have an icon mapping.");
+                string iconFile = icons[buttonName] + ".png";
+                Assert.IsTrue(File.Exists(Path.Combine(Application.dataPath, ArtRoot, iconFile)), iconFile + " must exist in Assets HUD art.");
+                Assert.IsTrue(File.Exists(Path.Combine(Application.streamingAssetsPath, ArtRoot, iconFile)), iconFile + " must exist in StreamingAssets for mobile.");
+                StringAssert.Contains($"RegisterClick(root, \"{buttonName}\", {handlerName})", controller, buttonName + " must be wired to its handler.");
+            }
+        }
+
+        [Test]
         public void MobileCombatButtonCrops_PreservePcScreenshotPixels()
         {
             var pc = LoadTexture(Path.GetFullPath(Path.Combine(Application.dataPath, "../pc-evidence/pc_hud.png")));
@@ -117,6 +141,37 @@ namespace VLTK.Tests.Sandbox
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_task.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_chatroom.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_rec.png");
+        }
+
+        private static Dictionary<string, (string buttonName, string handlerName)> PcUtilityButtonIds()
+        {
+            return new Dictionary<string, (string buttonName, string handlerName)>
+            {
+                ["Status"] = ("BtnStatus", "OnStatusClick"),
+                ["Items"] = ("BtnItems", "OnItemsClick"),
+                ["ItemEx"] = ("BtnItemEx", "OnItemExClick"),
+                ["Skills"] = ("BtnSkills", "OnSkillsClick"),
+                ["Task"] = ("BtnTask", "OnTaskClick"),
+                ["Friend"] = ("BtnFriend", "OnFriendClick"),
+                ["Team"] = ("BtnTeam", "OnTeamClick"),
+                ["Faction"] = ("BtnFaction", "OnFactionClick"),
+                ["ChatRoom"] = ("BtnChatRoom", "OnChatRoomClick"),
+                ["Options"] = ("BtnOptions", "OnOptionsClick"),
+                ["Sit"] = ("BtnSit", "OnSitClick"),
+                ["Run"] = ("BtnRun", "OnRunClick"),
+                ["Horse"] = ("BtnHorse", "OnHorseClick"),
+                ["Exchange"] = ("BtnExchange", "OnExchangeClick"),
+                ["Rec"] = ("BtnRec", "OnRecClick"),
+                ["PK"] = ("BtnPK", "OnPKClick"),
+                ["Treasure"] = ("BtnTreasure", "OnTreasureClick"),
+            };
+        }
+
+        private static Dictionary<string, string> GetButtonIconMap()
+        {
+            var field = typeof(GameHudController).GetField("ButtonIcons", BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.NotNull(field, "GameHudController.ButtonIcons must exist.");
+            return (Dictionary<string, string>)field.GetValue(null);
         }
 
         private static void AssertCriticalTextureImport(string assetPath)
