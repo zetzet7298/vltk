@@ -88,6 +88,38 @@ namespace VLTK.UI
             };
 
 
+        public readonly struct MainHudBinding
+        {
+            public readonly string pcName;
+            public readonly string mobileElement;
+            public readonly string handlerName;
+            public readonly string sourceNote;
+
+            public MainHudBinding(string pcName, string mobileElement, string handlerName, string sourceNote)
+            {
+                this.pcName = pcName;
+                this.mobileElement = mobileElement;
+                this.handlerName = handlerName;
+                this.sourceNote = sourceNote;
+            }
+        }
+
+        /// <summary>Interactive controls declared by 主界面玩家信息窗口.ini (uid e3b06434) and their mobile-equivalent behavior.</summary>
+        public static readonly IReadOnlyList<MainHudBinding> MainHudControlBindings =
+            new List<MainHudBinding>
+            {
+                new MainHudBinding("Friend", "BtnFriend", "OnFriendClick", @"\spr\UI3\主界面\人际关系按钮.spr -> FriendPanelService"),
+                new MainHudBinding("Options", "BtnOptions", "OnOptionsClick", @"\spr\UI3\主界面\系统按钮.spr -> PC system/options menu"),
+                new MainHudBinding("Recorder", "BtnRec", "OnRecClick", @"\Spr\Ui3\主界面\录像按钮.spr -> recorder toggle/capture"),
+                new MainHudBinding("InputEdit", "ChatInput", string.Empty, "PC chat text input -> UI Toolkit TextField bound to ChatService"),
+                new MainHudBinding("SendBtn", "SendBtn", "OnSendChatClick", @"\Spr\Ui3\主界面\主界面按钮-聊天发送.spr -> ChatService.Send"),
+                new MainHudBinding("ChannelBtn", "ChatChannelIdentityBtn", "OnChatChannelIdentityClick", "PC current-channel selector -> cycle active ChatService channel"),
+                new MainHudBinding("OpenChannelBtn", "OpenChannelBtn", "OnChatChannelToggleClick", "PC 60x60 channel-open proxy; Image is folder-only, so transparent behavior proxy"),
+                new MainHudBinding("Face", "FaceBtn", "OpenFacePicker", @"\Spr\Ui3\表情\01.spr -> face/emote picker"),
+                new MainHudBinding("Market", "BtnTreasure", "OnTreasureClick", @"\spr\UI3\主界面\奇珍阁按钮_vn.spr -> Kỳ Trân Các/MallService"),
+            };
+
+
         /// <summary>Ui3/icon_bar.ini (uid fdaebb7f), PC 1024 mode right-side icon strip.</summary>
         public static readonly IReadOnlyList<ButtonRect> IconBar =
             new List<ButtonRect>

@@ -162,6 +162,34 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcMainHudIniInteractiveControls_HaveExplicitMobileBindings()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+
+            Assert.AreEqual(9, HudBottomBarPcSpec.MainHudControlBindings.Count,
+                "PC 主界面玩家信息窗口.ini uid e3b06434 interactive controls must be explicitly audited, including Market/OpenChannelBtn/Recorder.");
+
+            foreach (var binding in HudBottomBarPcSpec.MainHudControlBindings)
+            {
+                StringAssert.Contains($"name=\"{binding.mobileElement}\"", uxml, binding.pcName + " must map to a concrete mobile HUD element.");
+                Assert.IsFalse(string.IsNullOrWhiteSpace(binding.sourceNote), binding.pcName + " must keep PC provenance/behavior notes.");
+
+                if (binding.mobileElement == "ChatInput")
+                    StringAssert.Contains("_chatInput = root.Q<TextField>(\"ChatInput\")", controller, "PC InputEdit must bind to the runtime chat input field.");
+                else if (binding.handlerName == "OpenFacePicker")
+                    StringAssert.Contains("OpenFacePicker();", controller, "PC Face button must open the face/emote picker.");
+                else
+                    StringAssert.Contains($"RegisterClick(root, \"{binding.mobileElement}\", {binding.handlerName})", controller, binding.pcName + " must invoke its PC-equivalent handler.");
+            }
+
+            StringAssert.Contains("Market", HudBottomBarPcSpec.MainHudControlBindings[8].pcName);
+            StringAssert.Contains("奇珍阁按钮_vn.spr", HudBottomBarPcSpec.MainHudControlBindings[8].sourceNote);
+            StringAssert.Contains("MallPanelService.BuildSnapshot", controller, "PC Market/Kỳ Trân Các must route to real mall data, not a placeholder.");
+            StringAssert.Contains("Kỳ Trân Các", controller, "PC Market button must expose the Vietnamese Kỳ Trân Các behavior.");
+        }
+
+        [Test]
         public void PcMainDateTimeStatus_IsPortedFromMainHudIni()
         {
             var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
