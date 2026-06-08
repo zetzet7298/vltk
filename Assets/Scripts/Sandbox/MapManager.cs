@@ -61,6 +61,24 @@ namespace VLTK.Sandbox
             public string status;
         }
 
+        [Serializable]
+        private sealed class GeneratedServerRegionCatalogJson
+        {
+            public GeneratedServerRegionEntry[] geometries;
+        }
+
+        [Serializable]
+        private sealed class GeneratedServerRegionEntry
+        {
+            public string geometryKey;
+            public string serverRegionFolder;
+            public int regionSCount;
+            public int npcCount;
+            public int trapCount;
+            public int objCount;
+            public string status;
+        }
+
         public event Action<int> OnMapLoaded;
         public event Action<int> OnMapUnloaded;
         public event Action<string> OnMapError;
@@ -180,6 +198,7 @@ namespace VLTK.Sandbox
             var root = Application.streamingAssetsPath;
             var aliasCatalog = LoadJson<GeneratedAliasCatalogJson>(Path.Combine(root, "MapAliasCatalog.json"));
             var geometryCatalog = LoadJson<GeneratedGeometryCatalogJson>(Path.Combine(root, "MapGeometryCatalog.json"));
+            var serverRegionCatalog = LoadJson<GeneratedServerRegionCatalogJson>(Path.Combine(root, "MapServerRegionCatalog.json"));
             if (aliasCatalog?.aliases == null || aliasCatalog.aliases.Length == 0)
                 return;
 
@@ -191,6 +210,16 @@ namespace VLTK.Sandbox
                     if (geometry == null || string.IsNullOrEmpty(geometry.geometryKey)) continue;
                     if (!IsGeometryAvailable(geometry)) continue;
                     geometries[geometry.geometryKey] = geometry;
+                }
+            }
+
+            var serverRegions = new Dictionary<string, GeneratedServerRegionEntry>(StringComparer.OrdinalIgnoreCase);
+            if (serverRegionCatalog?.geometries != null)
+            {
+                foreach (var serverRegion in serverRegionCatalog.geometries)
+                {
+                    if (!IsServerRegionAvailable(serverRegion)) continue;
+                    serverRegions[serverRegion.geometryKey] = serverRegion;
                 }
             }
 
@@ -244,10 +273,16 @@ namespace VLTK.Sandbox
                     entry.geometryBounds = geometry.bounds;
                     entry.conversionStatus = ConversionStatus.Partial;
                 }
+
+                if (!string.IsNullOrEmpty(alias.geometryKey) &&
+                    serverRegions.TryGetValue(alias.geometryKey, out var serverRegion))
+                {
+                    entry.serverRegionFolder = serverRegion.serverRegionFolder;
+                }
             }
 
             SubsystemLog.Info("MapManager",
-                $"Generated visual map catalogs merged: +{added} maps, updated={updated}, geometries={geometries.Count}");
+                $"Generated visual map catalogs merged: +{added} maps, updated={updated}, geometries={geometries.Count}, serverRegions={serverRegions.Count}");
         }
 
         private static bool IsGeometryAvailable(GeneratedGeometryEntry geometry)
@@ -258,6 +293,14 @@ namespace VLTK.Sandbox
                    geometry.bounds != null &&
                    geometry.bounds.width > 0f &&
                    geometry.bounds.height > 0f;
+        }
+
+        private static bool IsServerRegionAvailable(GeneratedServerRegionEntry serverRegion)
+        {
+            return serverRegion != null &&
+                   serverRegion.regionSCount > 0 &&
+                   !string.IsNullOrEmpty(serverRegion.geometryKey) &&
+                   !string.IsNullOrEmpty(serverRegion.serverRegionFolder);
         }
 
         private static T LoadJson<T>(string path) where T : class

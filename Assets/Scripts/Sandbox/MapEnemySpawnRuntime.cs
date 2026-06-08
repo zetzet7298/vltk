@@ -11,9 +11,9 @@ using VLTK.Model;
 namespace VLTK.Sandbox
 {
     /// <summary>
-    /// Multi-map enemy spawn runtime. Loads Region_S data for any map,
+    /// Multi-map enemy spawn runtime. Loads PC Region_S data for any map,
     /// spawns enemies with proper templates, AI, nameplates.
-    /// Falls back to procedural spawns when Region_S data is unavailable.
+    /// Does not fabricate NPC spawns when PC Region_S data is unavailable.
     /// </summary>
     public sealed class MapEnemySpawnRuntime : MonoBehaviour
     {
@@ -40,12 +40,11 @@ namespace VLTK.Sandbox
             _registry = new NpcTemplateRegistry();
             MapEnemyDatabase.RegisterAllForMap(mapId, _registry);
 
-            // Try Region_S data first
             var spawns = BaLangEnemyRegionScanner.ScanRegionS(regionSFolder);
             if (spawns.Count == 0)
             {
-                // Fallback: procedural spawns around default spawn point
-                spawns = GenerateProceduralSpawns(mapId);
+                SubsystemLog.Info("MapEnemy",
+                    $"Map {mapId}: no PC Region_S entries to spawn; leaving enemy layer empty");
             }
 
             int id = 1;
@@ -71,50 +70,7 @@ namespace VLTK.Sandbox
 
             BuildSceneObjects();
             SubsystemLog.Info("MapEnemy",
-                $"Map {mapId}: Spawned {liveEnemyCount} enemies from {spawns.Count} Region_S entries");
-        }
-
-        /// <summary>
-        /// Generate procedural enemy spawns when Region_S data is not available.
-        /// Spawns enemies around the default spawn point for the map.
-        /// </summary>
-        private List<RegionSSpawnEntry> GenerateProceduralSpawns(int mapId)
-        {
-            var result = new List<RegionSSpawnEntry>();
-            var spawnCenter = MapEnemyDatabase.GetDefaultSpawnPoint(mapId);
-            var templateIds = MapEnemyDatabase.GetEnemyTemplateIdsForMap(mapId);
-
-            // Convert world center to approximate MPS for spawn generation
-            MapEnemyDatabase.WorldToMps(spawnCenter.x, spawnCenter.y, out int cx, out int cy);
-
-            // Spawn 30-60 enemies spread across 3-5 region tiles around the center
-            var rng = new System.Random(mapId * 7919 + 42);
-            int count = 30 + (mapId % 5) * 8;
-
-            for (int i = 0; i < count; i++)
-            {
-                int tid = templateIds[i % templateIds.Length];
-                int offsetX = (rng.Next(-3, 4)) * 512 + rng.Next(-200, 200);
-                int offsetY = (rng.Next(-3, 4)) * 1024 + rng.Next(-400, 400);
-
-                result.Add(new RegionSSpawnEntry
-                {
-                    templateId = tid,
-                    mpsX = cx + offsetX,
-                    mpsY = cy + offsetY,
-                    nameRaw = "",
-                    level = 1 + (mapId % 10),
-                    curFrame = rng.Next(0, 8),
-                    kind = 0,
-                    camp = 0,
-                    series = (byte)(tid % 5),
-                    script = "",
-                });
-            }
-
-            SubsystemLog.Info("MapEnemy",
-                $"Map {mapId}: Generated {count} procedural spawns (no Region_S data)");
-            return result;
+                $"Map {mapId}: spawned {liveEnemyCount} enemies from {spawns.Count} PC Region_S entries");
         }
 
         /// <summary>

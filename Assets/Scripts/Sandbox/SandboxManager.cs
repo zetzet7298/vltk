@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -965,8 +966,51 @@ namespace VLTK.Sandbox
             if (EnemyRuntime == null || MapManager?.ActiveMap == null)
                 return;
             // Region_S folder contains server-side NPC spawn data with real PC coordinates.
-            var regionSFolder = System.IO.Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{MapManager.ActiveMapId}");
+            var regionSFolder = ResolveRegionSFolderForActiveMap();
             EnemyRuntime.SpawnForMap(MapManager.ActiveMapId, regionSFolder);
+        }
+
+        private string ResolveRegionSFolderForActiveMap()
+        {
+            var mapId = MapManager.ActiveMapId;
+            var entry = MapManager.ActiveMap?.catalogEntry;
+            if (!string.IsNullOrEmpty(entry?.serverRegionFolder))
+            {
+                var generated = ResolveStreamingAssetsPath(entry.serverRegionFolder);
+                if (HasRegionSFiles(generated))
+                {
+                    SubsystemLog.Info("MapEnemy", $"Map {mapId}: using generated PC server Region_S: {entry.serverRegionFolder}");
+                    return generated;
+                }
+
+                SubsystemLog.Warn("MapEnemy", $"Map {mapId}: generated server Region_S missing on disk, falling back to legacy TestData");
+            }
+
+            var legacy = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapId}");
+            if (HasRegionSFiles(legacy))
+                SubsystemLog.Info("MapEnemy", $"Map {mapId}: using legacy TestData Region_S");
+            else
+                SubsystemLog.Info("MapEnemy", $"Map {mapId}: no static PC Region_S files found");
+            return legacy;
+        }
+
+        private static string ResolveStreamingAssetsPath(string path)
+        {
+            return Path.IsPathRooted(path) ? path : Path.Combine(Application.streamingAssetsPath, path);
+        }
+
+        private static bool HasRegionSFiles(string folder)
+        {
+            try
+            {
+                return !string.IsNullOrEmpty(folder) &&
+                       Directory.Exists(folder) &&
+                       Directory.GetFiles(folder, "*_Region_S.dat").Length > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private void SpawnTrainingNpcs()

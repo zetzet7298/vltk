@@ -1,0 +1,6329 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-06-08T00:16:21Z",
+  "sourceRoot": "/var/www/vltksource_new/vl_update_27",
+  "sourcePakDir": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak",
+  "sourceGeometryCatalog": "/var/www/vltk-mobile/Assets/StreamingAssets/MapGeometryCatalog.json",
+  "isPartialRun": false,
+  "totalGeometries": 332,
+  "processedGeometries": 332,
+  "geometries": [
+    {
+      "geometryKey": "g_e0cd455d94a1f824",
+      "pcMapPath": "西北南区\\凤翔",
+      "serverMapPath": "西北南区\\凤翔",
+      "primaryMapId": 1,
+      "mapIds": [
+        1
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e0cd455d94a1f824",
+      "status": "extracted",
+      "regionSCount": 1031,
+      "npcCount": 1409,
+      "trapCount": 146,
+      "objCount": 15,
+      "attemptedCells": 1650,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e246709f45bd92fd",
+      "pcMapPath": "西北南区\\华山",
+      "serverMapPath": "西北南区\\华山",
+      "primaryMapId": 2,
+      "mapIds": [
+        2
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e246709f45bd92fd",
+      "status": "extracted",
+      "regionSCount": 450,
+      "npcCount": 698,
+      "trapCount": 77,
+      "objCount": 2,
+      "attemptedCells": 624,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0d021e3eefcfce3e",
+      "pcMapPath": "西北南区\\剑阁西北\\剑阁西北",
+      "serverMapPath": "西北南区\\剑阁西北\\剑阁西北",
+      "primaryMapId": 3,
+      "mapIds": [
+        3
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0d021e3eefcfce3e",
+      "status": "extracted",
+      "regionSCount": 400,
+      "npcCount": 338,
+      "trapCount": 35,
+      "objCount": 1,
+      "attemptedCells": 489,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_790264db5dd75497",
+      "pcMapPath": "西北南区\\剑阁西北\\金光洞迷宫",
+      "serverMapPath": "西北南区\\剑阁西北\\金光洞迷宫",
+      "primaryMapId": 4,
+      "mapIds": [
+        4
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_790264db5dd75497",
+      "status": "extracted",
+      "regionSCount": 337,
+      "npcCount": 230,
+      "trapCount": 27,
+      "objCount": 0,
+      "attemptedCells": 630,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_be0f9a2b007dfd5c",
+      "pcMapPath": "西北南区\\剑阁西北\\经皇洞迷宫",
+      "serverMapPath": "西北南区\\剑阁西北\\经皇洞迷宫",
+      "primaryMapId": 5,
+      "mapIds": [
+        5
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_be0f9a2b007dfd5c",
+      "status": "extracted",
+      "regionSCount": 280,
+      "npcCount": 182,
+      "trapCount": 36,
+      "objCount": 0,
+      "attemptedCells": 627,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_24fea7310241a45f",
+      "pcMapPath": "西北南区\\剑阁西北\\锁云洞迷宫",
+      "serverMapPath": "西北南区\\剑阁西北\\锁云洞迷宫",
+      "primaryMapId": 6,
+      "mapIds": [
+        6
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_24fea7310241a45f",
+      "status": "extracted",
+      "regionSCount": 257,
+      "npcCount": 229,
+      "trapCount": 26,
+      "objCount": 0,
+      "attemptedCells": 432,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_770661e137c4533b",
+      "pcMapPath": "西北南区\\秦陵\\秦陵",
+      "serverMapPath": "西北南区\\秦陵\\秦陵",
+      "primaryMapId": 7,
+      "mapIds": [
+        7
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_770661e137c4533b",
+      "status": "extracted",
+      "regionSCount": 209,
+      "npcCount": 275,
+      "trapCount": 43,
+      "objCount": 1,
+      "attemptedCells": 400,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ffa49ee51a839cd4",
+      "pcMapPath": "西北南区\\秦陵\\秦始皇陵地下一层",
+      "serverMapPath": "西北南区\\秦陵\\秦始皇陵地下一层",
+      "primaryMapId": 8,
+      "mapIds": [
+        8
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ffa49ee51a839cd4",
+      "status": "extracted",
+      "regionSCount": 140,
+      "npcCount": 189,
+      "trapCount": 12,
+      "objCount": 0,
+      "attemptedCells": 228,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_10e0a06fb53bb6c3",
+      "pcMapPath": "西南北区\\长江源头\\长江源头",
+      "serverMapPath": "西南北区\\长江源头\\长江源头",
+      "primaryMapId": 9,
+      "mapIds": [
+        9
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_10e0a06fb53bb6c3",
+      "status": "extracted",
+      "regionSCount": 388,
+      "npcCount": 359,
+      "trapCount": 57,
+      "objCount": 2,
+      "attemptedCells": 826,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1c2ef2f5182733c1",
+      "pcMapPath": "西南北区\\长江源头\\雁石洞迷宫",
+      "serverMapPath": "西南北区\\长江源头\\雁石洞迷宫",
+      "primaryMapId": 10,
+      "mapIds": [
+        10
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1c2ef2f5182733c1",
+      "status": "extracted",
+      "regionSCount": 194,
+      "npcCount": 266,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 322,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8fa45fab48e4b2b6",
+      "pcMapPath": "西南北区\\成都\\成都",
+      "serverMapPath": "西南北区\\成都\\成都",
+      "primaryMapId": 11,
+      "mapIds": [
+        11
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8fa45fab48e4b2b6",
+      "status": "extracted",
+      "regionSCount": 827,
+      "npcCount": 760,
+      "trapCount": 225,
+      "objCount": 24,
+      "attemptedCells": 1632,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_266ef5f294bde30f",
+      "pcMapPath": "西南北区\\成都\\成都信相寺后院地道迷宫",
+      "serverMapPath": "西南北区\\成都\\成都信相寺后院地道迷宫",
+      "primaryMapId": 12,
+      "mapIds": [
+        12
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_266ef5f294bde30f",
+      "status": "extracted",
+      "regionSCount": 102,
+      "npcCount": 46,
+      "trapCount": 18,
+      "objCount": 0,
+      "attemptedCells": 172,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_40ec5fc5bc00ecb2",
+      "pcMapPath": "西南北区\\峨嵋派\\峨嵋派",
+      "serverMapPath": "西南北区\\峨嵋派\\峨嵋派",
+      "primaryMapId": 13,
+      "mapIds": [
+        13
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_40ec5fc5bc00ecb2",
+      "status": "extracted",
+      "regionSCount": 863,
+      "npcCount": 559,
+      "trapCount": 114,
+      "objCount": 6,
+      "attemptedCells": 2046,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9407d98bac232392",
+      "pcMapPath": "西南北区\\峨嵋派\\猛虎洞穴迷宫",
+      "serverMapPath": "西南北区\\峨嵋派\\猛虎洞穴迷宫",
+      "primaryMapId": 14,
+      "mapIds": [
+        14
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9407d98bac232392",
+      "status": "extracted",
+      "regionSCount": 61,
+      "npcCount": 49,
+      "trapCount": 15,
+      "objCount": 0,
+      "attemptedCells": 97,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_81640126c1409747",
+      "pcMapPath": "西南北区\\峨嵋派\\讲经堂",
+      "serverMapPath": "西南北区\\峨嵋派\\讲经堂",
+      "primaryMapId": 15,
+      "mapIds": [
+        15
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_81640126c1409747",
+      "status": "extracted",
+      "regionSCount": 7,
+      "npcCount": 1,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 28,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_35ab12e2e0b76720",
+      "pcMapPath": "西南北区\\峨嵋派\\前殿",
+      "serverMapPath": "西南北区\\峨嵋派\\前殿",
+      "primaryMapId": 16,
+      "mapIds": [
+        16
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_35ab12e2e0b76720",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 4,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c68cc029de5f14a4",
+      "pcMapPath": "西南北区\\峨嵋派\\正殿",
+      "serverMapPath": "西南北区\\峨嵋派\\正殿",
+      "primaryMapId": 17,
+      "mapIds": [
+        17
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c68cc029de5f14a4",
+      "status": "extracted",
+      "regionSCount": 9,
+      "npcCount": 1,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 10,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_426eebf03542c57e",
+      "pcMapPath": "西南北区\\峨嵋派\\左偏殿",
+      "serverMapPath": "西南北区\\峨嵋派\\左偏殿",
+      "primaryMapId": 18,
+      "mapIds": [
+        18
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_426eebf03542c57e",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 7,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_38c822e1364624a8",
+      "pcMapPath": "西南北区\\剑阁西南",
+      "serverMapPath": "西南北区\\剑阁西南",
+      "primaryMapId": 19,
+      "mapIds": [
+        19
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_38c822e1364624a8",
+      "status": "extracted",
+      "regionSCount": 644,
+      "npcCount": 828,
+      "trapCount": 37,
+      "objCount": 1,
+      "attemptedCells": 1082,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f4c3530b0252ede8",
+      "pcMapPath": "西南北区\\江津村",
+      "serverMapPath": "西南北区\\江津村",
+      "primaryMapId": 20,
+      "mapIds": [
+        20
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f4c3530b0252ede8",
+      "status": "extracted",
+      "regionSCount": 615,
+      "npcCount": 669,
+      "trapCount": 84,
+      "objCount": 12,
+      "attemptedCells": 1020,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_cbb6c9d2a38ee89b",
+      "pcMapPath": "西南北区\\青城山\\青城山",
+      "serverMapPath": "西南北区\\青城山\\青城山",
+      "primaryMapId": 21,
+      "mapIds": [
+        21
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_cbb6c9d2a38ee89b",
+      "status": "extracted",
+      "regionSCount": 1136,
+      "npcCount": 813,
+      "trapCount": 42,
+      "objCount": 15,
+      "attemptedCells": 3532,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d59549108b9b12c1",
+      "pcMapPath": "西南北区\\青城山\\白云洞迷宫",
+      "serverMapPath": "西南北区\\青城山\\白云洞迷宫",
+      "primaryMapId": 22,
+      "mapIds": [
+        22
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d59549108b9b12c1",
+      "status": "extracted",
+      "regionSCount": 181,
+      "npcCount": 267,
+      "trapCount": 14,
+      "objCount": 1,
+      "attemptedCells": 300,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e2605cff323ad72e",
+      "pcMapPath": "西南北区\\青城山\\神仙洞迷宫",
+      "serverMapPath": "西南北区\\青城山\\神仙洞迷宫",
+      "primaryMapId": 23,
+      "mapIds": [
+        23
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e2605cff323ad72e",
+      "status": "extracted",
+      "regionSCount": 182,
+      "npcCount": 214,
+      "trapCount": 14,
+      "objCount": 0,
+      "attemptedCells": 288,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d7d9374a010b3da9",
+      "pcMapPath": "西南北区\\青城山\\响水洞迷宫",
+      "serverMapPath": "西南北区\\青城山\\响水洞迷宫",
+      "primaryMapId": 24,
+      "mapIds": [
+        24
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d7d9374a010b3da9",
+      "status": "extracted",
+      "regionSCount": 565,
+      "npcCount": 718,
+      "trapCount": 15,
+      "objCount": 0,
+      "attemptedCells": 1056,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c7e3c0275384378a",
+      "pcMapPath": "西南北区\\唐门\\唐门",
+      "serverMapPath": "西南北区\\唐门\\唐门",
+      "primaryMapId": 25,
+      "mapIds": [
+        25
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c7e3c0275384378a",
+      "status": "extracted",
+      "regionSCount": 847,
+      "npcCount": 899,
+      "trapCount": 149,
+      "objCount": 10,
+      "attemptedCells": 2352,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_31c433b34bd30c13",
+      "pcMapPath": "西南北区\\唐门\\竹丝洞一层",
+      "serverMapPath": "西南北区\\唐门\\竹丝洞一层",
+      "primaryMapId": 26,
+      "mapIds": [
+        26
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_31c433b34bd30c13",
+      "status": "extracted",
+      "regionSCount": 42,
+      "npcCount": 33,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 84,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_003cb1a04260ac88",
+      "pcMapPath": "西南北区\\唐门\\竹丝洞二层",
+      "serverMapPath": "西南北区\\唐门\\竹丝洞二层",
+      "primaryMapId": 27,
+      "mapIds": [
+        27
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_003cb1a04260ac88",
+      "status": "extracted",
+      "regionSCount": 24,
+      "npcCount": 25,
+      "trapCount": 10,
+      "objCount": 0,
+      "attemptedCells": 32,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_888057c3b391bb5a",
+      "pcMapPath": "西南北区\\唐门\\竹丝洞三层",
+      "serverMapPath": "西南北区\\唐门\\竹丝洞三层",
+      "primaryMapId": 28,
+      "mapIds": [
+        28
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_888057c3b391bb5a",
+      "status": "extracted",
+      "regionSCount": 10,
+      "npcCount": 0,
+      "trapCount": 10,
+      "objCount": 2,
+      "attemptedCells": 11,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e651f0fa3f2bdd49",
+      "pcMapPath": "西南北区\\唐门\\暗器房",
+      "serverMapPath": "西南北区\\唐门\\暗器房",
+      "primaryMapId": 29,
+      "mapIds": [
+        29
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e651f0fa3f2bdd49",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 5,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a2dcd502b1c2a2fa",
+      "pcMapPath": "西南北区\\唐门\\火器房",
+      "serverMapPath": "西南北区\\唐门\\火器房",
+      "primaryMapId": 30,
+      "mapIds": [
+        30
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a2dcd502b1c2a2fa",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 5,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f7d541252b1583bc",
+      "pcMapPath": "西南北区\\唐门\\武功房",
+      "serverMapPath": "西南北区\\唐门\\武功房",
+      "primaryMapId": 31,
+      "mapIds": [
+        31
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f7d541252b1583bc",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e7c88703e83ad898",
+      "pcMapPath": "西南北区\\唐门\\医药房",
+      "serverMapPath": "西南北区\\唐门\\医药房",
+      "primaryMapId": 32,
+      "mapIds": [
+        32
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e7c88703e83ad898",
+      "status": "extracted",
+      "regionSCount": 4,
+      "npcCount": 1,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bfc00922d4b010d8",
+      "pcMapPath": "西南北区\\唐门\\会客大厅",
+      "serverMapPath": "西南北区\\唐门\\会客大厅",
+      "primaryMapId": 33,
+      "mapIds": [
+        33
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bfc00922d4b010d8",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6e30292d1facc23e",
+      "pcMapPath": "西南北区\\唐门\\议事大厅",
+      "serverMapPath": "西南北区\\唐门\\议事大厅",
+      "primaryMapId": 34,
+      "mapIds": [
+        34
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6e30292d1facc23e",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 9,
+      "objCount": 0,
+      "attemptedCells": 35,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_32361aedfeab7249",
+      "pcMapPath": "西南北区\\唐门\\正房",
+      "serverMapPath": "西南北区\\唐门\\正房",
+      "primaryMapId": 35,
+      "mapIds": [
+        35
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_32361aedfeab7249",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 0,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7fb6991a1ef66288",
+      "pcMapPath": "西南北区\\唐门\\祭祖厅",
+      "serverMapPath": "西南北区\\唐门\\祭祖厅",
+      "primaryMapId": 36,
+      "mapIds": [
+        36
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7fb6991a1ef66288",
+      "status": "extracted",
+      "regionSCount": 4,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 30,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bbcc96770d822697",
+      "pcMapPath": "中原北区\\汴京\\汴京",
+      "serverMapPath": "中原北区\\汴京\\汴京",
+      "primaryMapId": 37,
+      "mapIds": [
+        37
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bbcc96770d822697",
+      "status": "extracted",
+      "regionSCount": 1818,
+      "npcCount": 3104,
+      "trapCount": 150,
+      "objCount": 14,
+      "attemptedCells": 3725,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6c3a42987a5bd950",
+      "pcMapPath": "中原北区\\汴京\\铁塔迷宫",
+      "serverMapPath": "中原北区\\汴京\\铁塔迷宫",
+      "primaryMapId": 38,
+      "mapIds": [
+        38
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6c3a42987a5bd950",
+      "status": "extracted",
+      "regionSCount": 96,
+      "npcCount": 126,
+      "trapCount": 14,
+      "objCount": 2,
+      "attemptedCells": 144,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c21bc0054a18728f",
+      "pcMapPath": "中原北区\\汴京\\铁塔迷宫2",
+      "serverMapPath": "中原北区\\汴京\\铁塔迷宫2",
+      "primaryMapId": 39,
+      "mapIds": [
+        39
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c21bc0054a18728f",
+      "status": "extracted",
+      "regionSCount": 91,
+      "npcCount": 75,
+      "trapCount": 0,
+      "objCount": 3,
+      "attemptedCells": 144,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_90c871059b9a7f8c",
+      "pcMapPath": "中原北区\\汴京\\铁塔迷宫3",
+      "serverMapPath": "中原北区\\汴京\\铁塔迷宫3",
+      "primaryMapId": 40,
+      "mapIds": [
+        40
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_90c871059b9a7f8c",
+      "status": "extracted",
+      "regionSCount": 89,
+      "npcCount": 116,
+      "trapCount": 0,
+      "objCount": 2,
+      "attemptedCells": 128,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_40aa2f74770755b7",
+      "pcMapPath": "中原北区\\伏牛山\\伏牛山西",
+      "serverMapPath": "中原北区\\伏牛山\\伏牛山西",
+      "primaryMapId": 41,
+      "mapIds": [
+        41
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_40aa2f74770755b7",
+      "status": "extracted",
+      "regionSCount": 465,
+      "npcCount": 448,
+      "trapCount": 57,
+      "objCount": 1,
+      "attemptedCells": 1059,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_364add32e0a047cc",
+      "pcMapPath": "中原北区\\伏牛山\\天心洞迷宫",
+      "serverMapPath": "中原北区\\伏牛山\\天心洞迷宫",
+      "primaryMapId": 42,
+      "mapIds": [
+        42
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_364add32e0a047cc",
+      "status": "extracted",
+      "regionSCount": 137,
+      "npcCount": 172,
+      "trapCount": 45,
+      "objCount": 0,
+      "attemptedCells": 208,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_61584014f8817d55",
+      "pcMapPath": "中原北区\\剑阁中原",
+      "serverMapPath": "中原北区\\剑阁中原",
+      "primaryMapId": 43,
+      "mapIds": [
+        43
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_61584014f8817d55",
+      "status": "extracted",
+      "regionSCount": 352,
+      "npcCount": 363,
+      "trapCount": 13,
+      "objCount": 0,
+      "attemptedCells": 504,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_fa2144e2044c6988",
+      "pcMapPath": "中原北区\\宋金战场",
+      "serverMapPath": "中原北区\\宋金战场",
+      "primaryMapId": 44,
+      "mapIds": [
+        44,
+        375,
+        376,
+        377
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_fa2144e2044c6988",
+      "status": "extracted",
+      "regionSCount": 1177,
+      "npcCount": 899,
+      "trapCount": 54,
+      "objCount": 6,
+      "attemptedCells": 2585,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a6157f2fe7f37ed7",
+      "pcMapPath": "中原北区\\天忍教\\天忍教室外",
+      "serverMapPath": "中原北区\\天忍教\\天忍教室外",
+      "primaryMapId": 45,
+      "mapIds": [
+        45
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a6157f2fe7f37ed7",
+      "status": "extracted",
+      "regionSCount": 98,
+      "npcCount": 124,
+      "trapCount": 57,
+      "objCount": 5,
+      "attemptedCells": 140,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3a7ff01ac60cb9a2",
+      "pcMapPath": "中原北区\\天忍教\\天忍教室内1",
+      "serverMapPath": "中原北区\\天忍教\\天忍教室内1",
+      "primaryMapId": 46,
+      "mapIds": [
+        46
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3a7ff01ac60cb9a2",
+      "status": "extracted",
+      "regionSCount": 53,
+      "npcCount": 38,
+      "trapCount": 28,
+      "objCount": 0,
+      "attemptedCells": 98,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_92f3ccfbd3b7c17c",
+      "pcMapPath": "中原北区\\天忍教\\天忍教室内左2",
+      "serverMapPath": "中原北区\\天忍教\\天忍教室内左2",
+      "primaryMapId": 47,
+      "mapIds": [
+        47
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_92f3ccfbd3b7c17c",
+      "status": "extracted",
+      "regionSCount": 44,
+      "npcCount": 44,
+      "trapCount": 34,
+      "objCount": 0,
+      "attemptedCells": 64,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_cc81aca385ff55a1",
+      "pcMapPath": "中原北区\\天忍教\\天忍教室内右2",
+      "serverMapPath": "中原北区\\天忍教\\天忍教室内右2",
+      "primaryMapId": 48,
+      "mapIds": [
+        48
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_cc81aca385ff55a1",
+      "status": "extracted",
+      "regionSCount": 39,
+      "npcCount": 27,
+      "trapCount": 32,
+      "objCount": 0,
+      "attemptedCells": 79,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_28280435cc03ae27",
+      "pcMapPath": "中原北区\\天忍教\\天忍教室内3",
+      "serverMapPath": "中原北区\\天忍教\\天忍教室内3",
+      "primaryMapId": 49,
+      "mapIds": [
+        49
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_28280435cc03ae27",
+      "status": "extracted",
+      "regionSCount": 94,
+      "npcCount": 9,
+      "trapCount": 36,
+      "objCount": 2,
+      "attemptedCells": 160,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6086f712bdbdcedc",
+      "pcMapPath": "中原北区\\天忍教\\七杀洞迷宫",
+      "serverMapPath": "中原北区\\天忍教\\七杀洞迷宫",
+      "primaryMapId": 50,
+      "mapIds": [
+        50
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6086f712bdbdcedc",
+      "status": "extracted",
+      "regionSCount": 85,
+      "npcCount": 122,
+      "trapCount": 32,
+      "objCount": 0,
+      "attemptedCells": 144,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_95ce6da3b8c07491",
+      "pcMapPath": "中原北区\\天忍教\\天忍教圣洞1",
+      "serverMapPath": "中原北区\\天忍教\\天忍教圣洞1",
+      "primaryMapId": 51,
+      "mapIds": [
+        51
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_95ce6da3b8c07491",
+      "status": "extracted",
+      "regionSCount": 141,
+      "npcCount": 173,
+      "trapCount": 21,
+      "objCount": 0,
+      "attemptedCells": 242,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0310b1b548342581",
+      "pcMapPath": "中原北区\\天忍教\\天忍教圣洞2",
+      "serverMapPath": "中原北区\\天忍教\\天忍教圣洞2",
+      "primaryMapId": 52,
+      "mapIds": [
+        52
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0310b1b548342581",
+      "status": "extracted",
+      "regionSCount": 165,
+      "npcCount": 56,
+      "trapCount": 25,
+      "objCount": 1,
+      "attemptedCells": 288,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1bbe240c72569d69",
+      "pcMapPath": "两湖区\\巴陵县",
+      "serverMapPath": "两湖区\\巴陵县",
+      "primaryMapId": 53,
+      "mapIds": [
+        53
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1bbe240c72569d69",
+      "status": "extracted",
+      "regionSCount": 577,
+      "npcCount": 845,
+      "trapCount": 140,
+      "objCount": 11,
+      "attemptedCells": 660,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1af49bcf693f54c2",
+      "pcMapPath": "两湖区\\南岳镇",
+      "serverMapPath": "两湖区\\南岳镇",
+      "primaryMapId": 54,
+      "mapIds": [
+        54
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1af49bcf693f54c2",
+      "status": "extracted",
+      "regionSCount": 234,
+      "npcCount": 165,
+      "trapCount": 69,
+      "objCount": 10,
+      "attemptedCells": 390,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6ee99758f2752276",
+      "pcMapPath": "两湖区\\桃花源",
+      "serverMapPath": "两湖区\\桃花源",
+      "primaryMapId": 55,
+      "mapIds": [
+        55
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6ee99758f2752276",
+      "status": "extracted",
+      "regionSCount": 354,
+      "npcCount": 420,
+      "trapCount": 77,
+      "objCount": 2,
+      "attemptedCells": 396,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_63425e9f1d7da82f",
+      "pcMapPath": "两湖区\\衡山派\\衡山派",
+      "serverMapPath": "两湖区\\衡山派\\衡山派",
+      "primaryMapId": 56,
+      "mapIds": [
+        56
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_63425e9f1d7da82f",
+      "status": "extracted",
+      "regionSCount": 169,
+      "npcCount": 183,
+      "trapCount": 21,
+      "objCount": 2,
+      "attemptedCells": 323,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ee33a8b6ec4a0b23",
+      "pcMapPath": "两湖区\\衡山派\\衡山大厅",
+      "serverMapPath": "两湖区\\衡山派\\衡山大厅",
+      "primaryMapId": 57,
+      "mapIds": [
+        57
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ee33a8b6ec4a0b23",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 2,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bee556fdbc21ad3b",
+      "pcMapPath": "两湖区\\衡山派\\独孤剑卧室",
+      "serverMapPath": "两湖区\\衡山派\\独孤剑卧室",
+      "primaryMapId": 58,
+      "mapIds": [
+        58
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bee556fdbc21ad3b",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 9,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9f0045010dc95b61",
+      "pcMapPath": "两湖区\\天王帮\\天王帮",
+      "serverMapPath": "两湖区\\天王帮\\天王帮",
+      "primaryMapId": 59,
+      "mapIds": [
+        59
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9f0045010dc95b61",
+      "status": "extracted",
+      "regionSCount": 440,
+      "npcCount": 381,
+      "trapCount": 84,
+      "objCount": 7,
+      "attemptedCells": 920,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_77a43514139df751",
+      "pcMapPath": "两湖区\\天王帮\\前殿",
+      "serverMapPath": "两湖区\\天王帮\\前殿",
+      "primaryMapId": 60,
+      "mapIds": [
+        60
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_77a43514139df751",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_560f42d3d61e89e2",
+      "pcMapPath": "两湖区\\天王帮\\天王大殿",
+      "serverMapPath": "两湖区\\天王帮\\天王大殿",
+      "primaryMapId": 61,
+      "mapIds": [
+        61
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_560f42d3d61e89e2",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 9,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_974597b0cf3d7b05",
+      "pcMapPath": "两湖区\\天王帮\\寝宫",
+      "serverMapPath": "两湖区\\天王帮\\寝宫",
+      "primaryMapId": 62,
+      "mapIds": [
+        62
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_974597b0cf3d7b05",
+      "status": "extracted",
+      "regionSCount": 7,
+      "npcCount": 1,
+      "trapCount": 9,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9a4c3e6f76a62b6c",
+      "pcMapPath": "两湖区\\天王帮\\帮众家1",
+      "serverMapPath": "两湖区\\天王帮\\帮众家1",
+      "primaryMapId": 63,
+      "mapIds": [
+        63
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9a4c3e6f76a62b6c",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_22ee620feefb0e93",
+      "pcMapPath": "两湖区\\天王帮\\帮众家2",
+      "serverMapPath": "两湖区\\天王帮\\帮众家2",
+      "primaryMapId": 64,
+      "mapIds": [
+        64
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_22ee620feefb0e93",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 34776,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a913c4f44d1bf062",
+      "pcMapPath": "两湖区\\天王帮\\天王岛山洞",
+      "serverMapPath": "两湖区\\天王帮\\天王岛山洞",
+      "primaryMapId": 65,
+      "mapIds": [
+        65
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a913c4f44d1bf062",
+      "status": "extracted",
+      "regionSCount": 188,
+      "npcCount": 169,
+      "trapCount": 19,
+      "objCount": 0,
+      "attemptedCells": 326,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_feb2b12243878a9a",
+      "pcMapPath": "两湖区\\天王帮\\洞庭湖底山洞1",
+      "serverMapPath": "两湖区\\天王帮\\洞庭湖底山洞1",
+      "primaryMapId": 66,
+      "mapIds": [
+        66
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_feb2b12243878a9a",
+      "status": "extracted",
+      "regionSCount": 119,
+      "npcCount": 107,
+      "trapCount": 10,
+      "objCount": 1,
+      "attemptedCells": 199,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5b5ce83515a37eaa",
+      "pcMapPath": "两湖区\\天王帮\\洞庭湖底山洞2",
+      "serverMapPath": "两湖区\\天王帮\\洞庭湖底山洞2",
+      "primaryMapId": 67,
+      "mapIds": [
+        67
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5b5ce83515a37eaa",
+      "status": "extracted",
+      "regionSCount": 91,
+      "npcCount": 81,
+      "trapCount": 0,
+      "objCount": 1,
+      "attemptedCells": 150,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d3d3d07348d2cf23",
+      "pcMapPath": "两湖区\\天王帮\\青螺岛",
+      "serverMapPath": "两湖区\\天王帮\\青螺岛",
+      "primaryMapId": 68,
+      "mapIds": [
+        68
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d3d3d07348d2cf23",
+      "status": "extracted",
+      "regionSCount": 136,
+      "npcCount": 106,
+      "trapCount": 5,
+      "objCount": 2,
+      "attemptedCells": 238,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ff0264422104a1a3",
+      "pcMapPath": "两湖区\\天王帮\\青螺岛山洞",
+      "serverMapPath": "两湖区\\天王帮\\青螺岛山洞",
+      "primaryMapId": 69,
+      "mapIds": [
+        69
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ff0264422104a1a3",
+      "status": "extracted",
+      "regionSCount": 231,
+      "npcCount": 245,
+      "trapCount": 9,
+      "objCount": 0,
+      "attemptedCells": 365,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b2b1bd1d60d39657",
+      "pcMapPath": "两湖区\\武陵山\\武陵",
+      "serverMapPath": "两湖区\\武陵山\\武陵",
+      "primaryMapId": 70,
+      "mapIds": [
+        70
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b2b1bd1d60d39657",
+      "status": "extracted",
+      "regionSCount": 793,
+      "npcCount": 428,
+      "trapCount": 93,
+      "objCount": 27,
+      "attemptedCells": 1649,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8cab601f6895fe3d",
+      "pcMapPath": "两湖区\\武陵山\\白水洞迷宫",
+      "serverMapPath": "两湖区\\武陵山\\白水洞迷宫",
+      "primaryMapId": 71,
+      "mapIds": [
+        71
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8cab601f6895fe3d",
+      "status": "extracted",
+      "regionSCount": 105,
+      "npcCount": 76,
+      "trapCount": 37,
+      "objCount": 0,
+      "attemptedCells": 266,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_528f36b348d1a073",
+      "pcMapPath": "两湖区\\武陵山\\大酋洞迷宫",
+      "serverMapPath": "两湖区\\武陵山\\大酋洞迷宫",
+      "primaryMapId": 72,
+      "mapIds": [
+        72
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_528f36b348d1a073",
+      "status": "extracted",
+      "regionSCount": 217,
+      "npcCount": 175,
+      "trapCount": 69,
+      "objCount": 0,
+      "attemptedCells": 486,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_fe05bc641461c3eb",
+      "pcMapPath": "两湖区\\武陵山\\伏流洞迷宫",
+      "serverMapPath": "两湖区\\武陵山\\伏流洞迷宫",
+      "primaryMapId": 73,
+      "mapIds": [
+        73
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_fe05bc641461c3eb",
+      "status": "extracted",
+      "regionSCount": 183,
+      "npcCount": 128,
+      "trapCount": 30,
+      "objCount": 0,
+      "attemptedCells": 323,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bd91f96d44e52c0c",
+      "pcMapPath": "两湖区\\神农架\\神农架",
+      "serverMapPath": "两湖区\\神农架\\神农架",
+      "primaryMapId": 74,
+      "mapIds": [
+        74
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bd91f96d44e52c0c",
+      "status": "extracted",
+      "regionSCount": 591,
+      "npcCount": 557,
+      "trapCount": 91,
+      "objCount": 12,
+      "attemptedCells": 984,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f403fa439ca05174",
+      "pcMapPath": "两湖区\\神农架\\蚩尤洞迷宫",
+      "serverMapPath": "两湖区\\神农架\\蚩尤洞迷宫",
+      "primaryMapId": 75,
+      "mapIds": [
+        75
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f403fa439ca05174",
+      "status": "extracted",
+      "regionSCount": 150,
+      "npcCount": 216,
+      "trapCount": 18,
+      "objCount": 0,
+      "attemptedCells": 273,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3f1b0c1a218d5bae",
+      "pcMapPath": "两湖区\\神农架\\山宝洞迷宫",
+      "serverMapPath": "两湖区\\神农架\\山宝洞迷宫",
+      "primaryMapId": 76,
+      "mapIds": [
+        76
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3f1b0c1a218d5bae",
+      "status": "extracted",
+      "regionSCount": 218,
+      "npcCount": 195,
+      "trapCount": 41,
+      "objCount": 0,
+      "attemptedCells": 362,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_28bea5589e61f288",
+      "pcMapPath": "两湖区\\神农架\\燕子洞迷宫",
+      "serverMapPath": "两湖区\\神农架\\燕子洞迷宫",
+      "primaryMapId": 77,
+      "mapIds": [
+        77
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_28bea5589e61f288",
+      "status": "extracted",
+      "regionSCount": 368,
+      "npcCount": 271,
+      "trapCount": 46,
+      "objCount": 0,
+      "attemptedCells": 817,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b8afc5ce72d8919c",
+      "pcMapPath": "中原南区\\襄阳\\襄阳",
+      "serverMapPath": "中原南区\\襄阳\\襄阳",
+      "primaryMapId": 78,
+      "mapIds": [
+        78
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b8afc5ce72d8919c",
+      "status": "extracted",
+      "regionSCount": 697,
+      "npcCount": 1336,
+      "trapCount": 131,
+      "objCount": 25,
+      "attemptedCells": 1040,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5fd4d16ac0924559",
+      "pcMapPath": "中原南区\\襄阳\\襄阳城衙门秘道",
+      "serverMapPath": "中原南区\\襄阳\\襄阳城衙门秘道",
+      "primaryMapId": 79,
+      "mapIds": [
+        79
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5fd4d16ac0924559",
+      "status": "extracted",
+      "regionSCount": 45,
+      "npcCount": 78,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 78,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d3a293b771dc6dea",
+      "pcMapPath": "中原南区\\扬州",
+      "serverMapPath": "中原南区\\扬州",
+      "primaryMapId": 80,
+      "mapIds": [
+        80
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d3a293b771dc6dea",
+      "status": "extracted",
+      "regionSCount": 739,
+      "npcCount": 1031,
+      "trapCount": 76,
+      "objCount": 11,
+      "attemptedCells": 1110,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ff016854d15ff88f",
+      "pcMapPath": "中原南区\\武当派\\武当派",
+      "serverMapPath": "中原南区\\武当派\\武当派",
+      "primaryMapId": 81,
+      "mapIds": [
+        81
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ff016854d15ff88f",
+      "status": "extracted",
+      "regionSCount": 539,
+      "npcCount": 684,
+      "trapCount": 121,
+      "objCount": 9,
+      "attemptedCells": 1022,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_73eac31faec01362",
+      "pcMapPath": "中原南区\\武当派\\井底迷宫",
+      "serverMapPath": "中原南区\\武当派\\井底迷宫",
+      "primaryMapId": 82,
+      "mapIds": [
+        82
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_73eac31faec01362",
+      "status": "extracted",
+      "regionSCount": 350,
+      "npcCount": 438,
+      "trapCount": 0,
+      "objCount": 1,
+      "attemptedCells": 720,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ea19dc3e89a80d42",
+      "pcMapPath": "中原南区\\武当派\\火狼洞迷宫",
+      "serverMapPath": "中原南区\\武当派\\火狼洞迷宫",
+      "primaryMapId": 83,
+      "mapIds": [
+        83
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ea19dc3e89a80d42",
+      "status": "extracted",
+      "regionSCount": 197,
+      "npcCount": 220,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 520,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a0535685e1b1345e",
+      "pcMapPath": "中原南区\\武当派\\紫霄大殿",
+      "serverMapPath": "中原南区\\武当派\\紫霄大殿",
+      "primaryMapId": 84,
+      "mapIds": [
+        84
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a0535685e1b1345e",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_cc57280bc43c329f",
+      "pcMapPath": "中原南区\\武当派\\十方殿",
+      "serverMapPath": "中原南区\\武当派\\十方殿",
+      "primaryMapId": 85,
+      "mapIds": [
+        85
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_cc57280bc43c329f",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 2,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 9,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_47a066269751c37a",
+      "pcMapPath": "中原南区\\武当派\\父母殿",
+      "serverMapPath": "中原南区\\武当派\\父母殿",
+      "primaryMapId": 86,
+      "mapIds": [
+        86
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_47a066269751c37a",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 10,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9a724902317d6bdd",
+      "pcMapPath": "中原南区\\武当派\\龙虎殿",
+      "serverMapPath": "中原南区\\武当派\\龙虎殿",
+      "primaryMapId": 87,
+      "mapIds": [
+        87
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9a724902317d6bdd",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 1,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 9,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_81ae31044d8da602",
+      "pcMapPath": "中原南区\\武当派\\雅室1",
+      "serverMapPath": "中原南区\\武当派\\雅室1",
+      "primaryMapId": 88,
+      "mapIds": [
+        88
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_81ae31044d8da602",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 0,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_d9b338f6e0363520",
+      "pcMapPath": "中原南区\\武当派\\雅室2",
+      "serverMapPath": "中原南区\\武当派\\雅室2",
+      "primaryMapId": 89,
+      "mapIds": [
+        89
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d9b338f6e0363520",
+      "status": "extracted",
+      "regionSCount": 3,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_860f02a700b64436",
+      "pcMapPath": "中原南区\\伏牛山\\伏牛山东",
+      "serverMapPath": "中原南区\\伏牛山\\伏牛山东",
+      "primaryMapId": 90,
+      "mapIds": [
+        90
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_860f02a700b64436",
+      "status": "extracted",
+      "regionSCount": 624,
+      "npcCount": 635,
+      "trapCount": 51,
+      "objCount": 13,
+      "attemptedCells": 1020,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3e5e23ce3d861e1d",
+      "pcMapPath": "中原南区\\伏牛山\\鸡冠洞迷宫",
+      "serverMapPath": "中原南区\\伏牛山\\鸡冠洞迷宫",
+      "primaryMapId": 91,
+      "mapIds": [
+        91
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3e5e23ce3d861e1d",
+      "status": "extracted",
+      "regionSCount": 225,
+      "npcCount": 228,
+      "trapCount": 55,
+      "objCount": 0,
+      "attemptedCells": 480,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_473bd4946314f521",
+      "pcMapPath": "中原南区\\蜀冈山\\蜀冈山",
+      "serverMapPath": "中原南区\\蜀冈山\\蜀冈山",
+      "primaryMapId": 92,
+      "mapIds": [
+        92
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_473bd4946314f521",
+      "status": "extracted",
+      "regionSCount": 919,
+      "npcCount": 1219,
+      "trapCount": 79,
+      "objCount": 1,
+      "attemptedCells": 1295,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bfa93eaa8fdf1b8b",
+      "pcMapPath": "中原南区\\蜀冈山\\荐菊洞密宫",
+      "serverMapPath": "中原南区\\蜀冈山\\荐菊洞密宫",
+      "primaryMapId": 93,
+      "mapIds": [
+        93
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bfa93eaa8fdf1b8b",
+      "status": "extracted",
+      "regionSCount": 107,
+      "npcCount": 135,
+      "trapCount": 41,
+      "objCount": 0,
+      "attemptedCells": 208,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_71c912f7ac86ccb7",
+      "pcMapPath": "中原南区\\蜀冈山\\灵谷洞密宫",
+      "serverMapPath": "中原南区\\蜀冈山\\灵谷洞密宫",
+      "primaryMapId": 94,
+      "mapIds": [
+        94
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_71c912f7ac86ccb7",
+      "status": "extracted",
+      "regionSCount": 99,
+      "npcCount": 102,
+      "trapCount": 50,
+      "objCount": 0,
+      "attemptedCells": 160,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e9550018bbdbca18",
+      "pcMapPath": "西南北区\\新手客栈",
+      "serverMapPath": "西南北区\\新手客栈",
+      "primaryMapId": 95,
+      "mapIds": [
+        95
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e9550018bbdbca18",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 4,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_025804d217aeb7b5",
+      "pcMapPath": "两湖区\\新手客栈",
+      "serverMapPath": "两湖区\\新手客栈",
+      "primaryMapId": 96,
+      "mapIds": [
+        96
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_025804d217aeb7b5",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 4,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 14706,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_898b9a050624aece",
+      "pcMapPath": "西南北区\\江津新手洞",
+      "serverMapPath": "西南北区\\江津新手洞",
+      "primaryMapId": 97,
+      "mapIds": [
+        97
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_898b9a050624aece",
+      "status": "extracted",
+      "regionSCount": 3,
+      "npcCount": 1,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_7aea3ea3e9545651",
+      "pcMapPath": "两湖区\\巴陵新手洞",
+      "serverMapPath": "两湖区\\巴陵新手洞",
+      "primaryMapId": 98,
+      "mapIds": [
+        98
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7aea3ea3e9545651",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 10,
+      "objCount": 0,
+      "attemptedCells": 25250,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6e9ac2a4f727977b",
+      "pcMapPath": "西北南区\\永乐镇",
+      "serverMapPath": "西北南区\\永乐镇",
+      "primaryMapId": 99,
+      "mapIds": [
+        99
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6e9ac2a4f727977b",
+      "status": "extracted",
+      "regionSCount": 904,
+      "npcCount": 892,
+      "trapCount": 142,
+      "objCount": 6,
+      "attemptedCells": 1085,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_21d3802621dd8124",
+      "pcMapPath": "中原北区\\朱仙镇",
+      "serverMapPath": "中原北区\\朱仙镇",
+      "primaryMapId": 100,
+      "mapIds": [
+        100
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_21d3802621dd8124",
+      "status": "extracted",
+      "regionSCount": 782,
+      "npcCount": 1333,
+      "trapCount": 141,
+      "objCount": 7,
+      "attemptedCells": 1035,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_30dd0630410ed4a4",
+      "pcMapPath": "中原南区\\稻香村",
+      "serverMapPath": "中原南区\\稻香村",
+      "primaryMapId": 101,
+      "mapIds": [
+        101
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_30dd0630410ed4a4",
+      "status": "extracted",
+      "regionSCount": 708,
+      "npcCount": 893,
+      "trapCount": 263,
+      "objCount": 6,
+      "attemptedCells": 1066,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_880df071aa431433",
+      "pcMapPath": "中原北区\\天忍教\\天忍教圣洞二层密室",
+      "serverMapPath": "中原北区\\天忍教\\天忍教圣洞二层密室",
+      "primaryMapId": 102,
+      "mapIds": [
+        102
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_880df071aa431433",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 0,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0c978221fdbaa1b3",
+      "pcMapPath": "中原北区\\少林派\\少林派",
+      "serverMapPath": "中原北区\\少林派\\少林派",
+      "primaryMapId": 103,
+      "mapIds": [
+        103
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0c978221fdbaa1b3",
+      "status": "extracted",
+      "regionSCount": 1108,
+      "npcCount": 1009,
+      "trapCount": 99,
+      "objCount": 35,
+      "attemptedCells": 1551,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_66d2f9cb3fafc802",
+      "pcMapPath": "中原北区\\少林派\\藏经阁",
+      "serverMapPath": "中原北区\\少林派\\藏经阁",
+      "primaryMapId": 104,
+      "mapIds": [
+        104
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_66d2f9cb3fafc802",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 10,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c0dc8022a8e78bb2",
+      "pcMapPath": "中原北区\\少林派\\达摩堂",
+      "serverMapPath": "中原北区\\少林派\\达摩堂",
+      "primaryMapId": 105,
+      "mapIds": [
+        105
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c0dc8022a8e78bb2",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 14,
+      "objCount": 0,
+      "attemptedCells": 7,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3cb4e45b4f696bc6",
+      "pcMapPath": "中原北区\\少林派\\大雄宝殿",
+      "serverMapPath": "中原北区\\少林派\\大雄宝殿",
+      "primaryMapId": 106,
+      "mapIds": [
+        106
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3cb4e45b4f696bc6",
+      "status": "extracted",
+      "regionSCount": 9,
+      "npcCount": 0,
+      "trapCount": 13,
+      "objCount": 0,
+      "attemptedCells": 20,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0e2fb5c137b7731a",
+      "pcMapPath": "中原北区\\少林派\\弟子房1",
+      "serverMapPath": "中原北区\\少林派\\弟子房1",
+      "primaryMapId": 107,
+      "mapIds": [
+        107
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0e2fb5c137b7731a",
+      "status": "extracted",
+      "regionSCount": 3,
+      "npcCount": 4,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_f560b83d0bc7ebd5",
+      "pcMapPath": "中原北区\\少林派\\弟子房2",
+      "serverMapPath": "中原北区\\少林派\\弟子房2",
+      "primaryMapId": 108,
+      "mapIds": [
+        108
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f560b83d0bc7ebd5",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 6,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_49df1a49f0eaebe4",
+      "pcMapPath": "中原北区\\少林派\\方丈禅室",
+      "serverMapPath": "中原北区\\少林派\\方丈禅室",
+      "primaryMapId": 109,
+      "mapIds": [
+        109
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_49df1a49f0eaebe4",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 4,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_86fdbe8470d75630",
+      "pcMapPath": "中原北区\\少林派\\罗汉堂",
+      "serverMapPath": "中原北区\\少林派\\罗汉堂",
+      "primaryMapId": 110,
+      "mapIds": [
+        110
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_86fdbe8470d75630",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 1,
+      "trapCount": 14,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_675a505c769171d7",
+      "pcMapPath": "中原北区\\少林派\\木人巷",
+      "serverMapPath": "中原北区\\少林派\\木人巷",
+      "primaryMapId": 111,
+      "mapIds": [
+        111
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_675a505c769171d7",
+      "status": "extracted",
+      "regionSCount": 110,
+      "npcCount": 160,
+      "trapCount": 10,
+      "objCount": 0,
+      "attemptedCells": 360,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_34f73f3011f435db",
+      "pcMapPath": "中原北区\\少林派\\千佛殿",
+      "serverMapPath": "中原北区\\少林派\\千佛殿",
+      "primaryMapId": 112,
+      "mapIds": [
+        112
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_34f73f3011f435db",
+      "status": "extracted",
+      "regionSCount": 7,
+      "npcCount": 0,
+      "trapCount": 11,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ade9bf709dabe93f",
+      "pcMapPath": "中原北区\\少林派\\少林密室",
+      "serverMapPath": "中原北区\\少林派\\少林密室",
+      "primaryMapId": 113,
+      "mapIds": [
+        113
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ade9bf709dabe93f",
+      "status": "extracted",
+      "regionSCount": 156,
+      "npcCount": 226,
+      "trapCount": 10,
+      "objCount": 1,
+      "attemptedCells": 242,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d982e34fd992b682",
+      "pcMapPath": "中原北区\\少林派\\一百零八罗汉阵",
+      "serverMapPath": "中原北区\\少林派\\一百零八罗汉阵",
+      "primaryMapId": 114,
+      "mapIds": [
+        114
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d982e34fd992b682",
+      "status": "extracted",
+      "regionSCount": 194,
+      "npcCount": 253,
+      "trapCount": 15,
+      "objCount": 0,
+      "attemptedCells": 375,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1c563850b2c3e079",
+      "pcMapPath": "中原南区\\丐帮\\丐帮",
+      "serverMapPath": "中原南区\\丐帮\\丐帮",
+      "primaryMapId": 115,
+      "mapIds": [
+        115
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1c563850b2c3e079",
+      "status": "extracted",
+      "regionSCount": 660,
+      "npcCount": 267,
+      "trapCount": 68,
+      "objCount": 1,
+      "attemptedCells": 1344,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1eee73ecf0815d15",
+      "pcMapPath": "中原南区\\丐帮\\地下迷宫一层",
+      "serverMapPath": "中原南区\\丐帮\\地下迷宫一层",
+      "primaryMapId": 116,
+      "mapIds": [
+        116
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1eee73ecf0815d15",
+      "status": "extracted",
+      "regionSCount": 114,
+      "npcCount": 127,
+      "trapCount": 14,
+      "objCount": 1,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c1ee10cfeda7a6a7",
+      "pcMapPath": "中原南区\\丐帮\\地下迷宫二层",
+      "serverMapPath": "中原南区\\丐帮\\地下迷宫二层",
+      "primaryMapId": 117,
+      "mapIds": [
+        117
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c1ee10cfeda7a6a7",
+      "status": "extracted",
+      "regionSCount": 117,
+      "npcCount": 128,
+      "trapCount": 17,
+      "objCount": 2,
+      "attemptedCells": 192,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_dad5cccffed35f3d",
+      "pcMapPath": "中原南区\\丐帮\\地下迷宫三层",
+      "serverMapPath": "中原南区\\丐帮\\地下迷宫三层",
+      "primaryMapId": 118,
+      "mapIds": [
+        118
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_dad5cccffed35f3d",
+      "status": "extracted",
+      "regionSCount": 108,
+      "npcCount": 81,
+      "trapCount": 29,
+      "objCount": 5,
+      "attemptedCells": 209,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ce91a9c3a00c2e2c",
+      "pcMapPath": "中原南区\\丐帮\\地下迷宫四层",
+      "serverMapPath": "中原南区\\丐帮\\地下迷宫四层",
+      "primaryMapId": 119,
+      "mapIds": [
+        119
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ce91a9c3a00c2e2c",
+      "status": "extracted",
+      "regionSCount": 80,
+      "npcCount": 100,
+      "trapCount": 25,
+      "objCount": 3,
+      "attemptedCells": 130,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8e14eca5c34d9251",
+      "pcMapPath": "中原南区\\丐帮\\地下迷宫五层",
+      "serverMapPath": "中原南区\\丐帮\\地下迷宫五层",
+      "primaryMapId": 120,
+      "mapIds": [
+        120
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8e14eca5c34d9251",
+      "status": "extracted",
+      "regionSCount": 101,
+      "npcCount": 102,
+      "trapCount": 20,
+      "objCount": 2,
+      "attemptedCells": 198,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3b89c2620b5d38d7",
+      "pcMapPath": "西北北区\\龙门镇",
+      "serverMapPath": "西北北区\\龙门镇",
+      "primaryMapId": 121,
+      "mapIds": [
+        121
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3b89c2620b5d38d7",
+      "status": "extracted",
+      "regionSCount": 703,
+      "npcCount": 1253,
+      "trapCount": 149,
+      "objCount": 7,
+      "attemptedCells": 1107,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f1d9402de33536e1",
+      "pcMapPath": "西北北区\\黄河源头\\黄河源头",
+      "serverMapPath": "西北北区\\黄河源头\\黄河源头",
+      "primaryMapId": 122,
+      "mapIds": [
+        122
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f1d9402de33536e1",
+      "status": "extracted",
+      "regionSCount": 199,
+      "npcCount": 203,
+      "trapCount": 33,
+      "objCount": 1,
+      "attemptedCells": 215,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_aca50ffbba1fb274",
+      "pcMapPath": "西北北区\\黄河源头\\老虎洞迷宫",
+      "serverMapPath": "西北北区\\黄河源头\\老虎洞迷宫",
+      "primaryMapId": 123,
+      "mapIds": [
+        123
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_aca50ffbba1fb274",
+      "status": "extracted",
+      "regionSCount": 85,
+      "npcCount": 128,
+      "trapCount": 12,
+      "objCount": 0,
+      "attemptedCells": 112,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6ba7b36b22744418",
+      "pcMapPath": "西北北区\\黄河源头\\轩辕洞迷宫",
+      "serverMapPath": "西北北区\\黄河源头\\轩辕洞迷宫",
+      "primaryMapId": 124,
+      "mapIds": [
+        124
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6ba7b36b22744418",
+      "status": "extracted",
+      "regionSCount": 65,
+      "npcCount": 70,
+      "trapCount": 17,
+      "objCount": 0,
+      "attemptedCells": 99,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_42088cb986365092",
+      "pcMapPath": "西北北区\\黄河源头\\留仙洞一层",
+      "serverMapPath": "西北北区\\黄河源头\\留仙洞一层",
+      "primaryMapId": 125,
+      "mapIds": [
+        125
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_42088cb986365092",
+      "status": "extracted",
+      "regionSCount": 111,
+      "npcCount": 99,
+      "trapCount": 34,
+      "objCount": 0,
+      "attemptedCells": 204,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b999b0278232e4a5",
+      "pcMapPath": "西北北区\\黄河源头\\留仙洞二层",
+      "serverMapPath": "西北北区\\黄河源头\\留仙洞二层",
+      "primaryMapId": 126,
+      "mapIds": [
+        126
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b999b0278232e4a5",
+      "status": "extracted",
+      "regionSCount": 98,
+      "npcCount": 99,
+      "trapCount": 32,
+      "objCount": 0,
+      "attemptedCells": 204,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8603efbeebdde7f8",
+      "pcMapPath": "西北北区\\黄河源头\\留仙洞三层",
+      "serverMapPath": "西北北区\\黄河源头\\留仙洞三层",
+      "primaryMapId": 127,
+      "mapIds": [
+        127
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8603efbeebdde7f8",
+      "status": "extracted",
+      "regionSCount": 92,
+      "npcCount": 81,
+      "trapCount": 38,
+      "objCount": 0,
+      "attemptedCells": 140,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_639bb25664e0da0b",
+      "pcMapPath": "西北北区\\黄河源头\\留仙洞四层",
+      "serverMapPath": "西北北区\\黄河源头\\留仙洞四层",
+      "primaryMapId": 128,
+      "mapIds": [
+        128
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_639bb25664e0da0b",
+      "status": "extracted",
+      "regionSCount": 71,
+      "npcCount": 72,
+      "trapCount": 42,
+      "objCount": 0,
+      "attemptedCells": 130,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1590e53761e052f5",
+      "pcMapPath": "西北北区\\黄河源头\\留仙洞五层",
+      "serverMapPath": "西北北区\\黄河源头\\留仙洞五层",
+      "primaryMapId": 129,
+      "mapIds": [
+        129
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1590e53761e052f5",
+      "status": "extracted",
+      "regionSCount": 112,
+      "npcCount": 99,
+      "trapCount": 25,
+      "objCount": 0,
+      "attemptedCells": 186,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d0b34a65a0e61774",
+      "pcMapPath": "西北北区\\黄河源头\\留仙洞六层",
+      "serverMapPath": "西北北区\\黄河源头\\留仙洞六层",
+      "primaryMapId": 130,
+      "mapIds": [
+        130
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d0b34a65a0e61774",
+      "status": "extracted",
+      "regionSCount": 70,
+      "npcCount": 48,
+      "trapCount": 7,
+      "objCount": 1,
+      "attemptedCells": 108,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5ddba1bc309ac333",
+      "pcMapPath": "西北北区\\昆仑派\\昆仑派",
+      "serverMapPath": "西北北区\\昆仑派\\昆仑派",
+      "primaryMapId": 131,
+      "mapIds": [
+        131
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5ddba1bc309ac333",
+      "status": "extracted",
+      "regionSCount": 501,
+      "npcCount": 571,
+      "trapCount": 62,
+      "objCount": 4,
+      "attemptedCells": 989,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bc16b17131370c87",
+      "pcMapPath": "西北北区\\昆仑派\\冰穴迷宫",
+      "serverMapPath": "西北北区\\昆仑派\\冰穴迷宫",
+      "primaryMapId": 132,
+      "mapIds": [
+        132
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bc16b17131370c87",
+      "status": "extracted",
+      "regionSCount": 143,
+      "npcCount": 150,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 216,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6e5a043b9cc96c5c",
+      "pcMapPath": "西北北区\\昆仑派\\弟子房1",
+      "serverMapPath": "西北北区\\昆仑派\\弟子房1",
+      "primaryMapId": 133,
+      "mapIds": [
+        133
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6e5a043b9cc96c5c",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 26578,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5f1aefd37d59a9b3",
+      "pcMapPath": "西北北区\\昆仑派\\弟子房2",
+      "serverMapPath": "西北北区\\昆仑派\\弟子房2",
+      "primaryMapId": 134,
+      "mapIds": [
+        134
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5f1aefd37d59a9b3",
+      "status": "no_static_region_s",
+      "regionSCount": 0,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_5d32f001c80a1911",
+      "pcMapPath": "西北北区\\昆仑派\\见性峰山洞",
+      "serverMapPath": "西北北区\\昆仑派\\见性峰山洞",
+      "primaryMapId": 135,
+      "mapIds": [
+        135
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5d32f001c80a1911",
+      "status": "extracted",
+      "regionSCount": 171,
+      "npcCount": 242,
+      "trapCount": 8,
+      "objCount": 1,
+      "attemptedCells": 437,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_08609169155d69f6",
+      "pcMapPath": "西北北区\\昆仑派\\快活林迷宫",
+      "serverMapPath": "西北北区\\昆仑派\\快活林迷宫",
+      "primaryMapId": 136,
+      "mapIds": [
+        136
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_08609169155d69f6",
+      "status": "extracted",
+      "regionSCount": 127,
+      "npcCount": 97,
+      "trapCount": 25,
+      "objCount": 6,
+      "attemptedCells": 172,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0a014300610a9bf2",
+      "pcMapPath": "西北北区\\昆仑派\\天微殿",
+      "serverMapPath": "西北北区\\昆仑派\\天微殿",
+      "primaryMapId": 137,
+      "mapIds": [
+        137
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0a014300610a9bf2",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0853bb64fac162af",
+      "pcMapPath": "西北北区\\昆仑派\\正殿",
+      "serverMapPath": "西北北区\\昆仑派\\正殿",
+      "primaryMapId": 138,
+      "mapIds": [
+        138
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0853bb64fac162af",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 9,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_44c2b8673c4033eb",
+      "pcMapPath": "西北北区\\昆仑派\\紫微殿",
+      "serverMapPath": "西北北区\\昆仑派\\紫微殿",
+      "primaryMapId": 139,
+      "mapIds": [
+        139
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_44c2b8673c4033eb",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_09e8afc6b9bcd4ed",
+      "pcMapPath": "西北北区\\药王谷\\药王谷",
+      "serverMapPath": "西北北区\\药王谷\\药王谷",
+      "primaryMapId": 140,
+      "mapIds": [
+        140
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_09e8afc6b9bcd4ed",
+      "status": "extracted",
+      "regionSCount": 224,
+      "npcCount": 314,
+      "trapCount": 32,
+      "objCount": 1,
+      "attemptedCells": 374,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d51e50026a99e91e",
+      "pcMapPath": "西北北区\\药王谷\\药王洞一层",
+      "serverMapPath": "西北北区\\药王谷\\药王洞一层",
+      "primaryMapId": 141,
+      "mapIds": [
+        141
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d51e50026a99e91e",
+      "status": "extracted",
+      "regionSCount": 86,
+      "npcCount": 133,
+      "trapCount": 38,
+      "objCount": 0,
+      "attemptedCells": 135,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d1f00dfa428e4616",
+      "pcMapPath": "西北北区\\药王谷\\药王洞二层",
+      "serverMapPath": "西北北区\\药王谷\\药王洞二层",
+      "primaryMapId": 142,
+      "mapIds": [
+        142
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d1f00dfa428e4616",
+      "status": "extracted",
+      "regionSCount": 82,
+      "npcCount": 185,
+      "trapCount": 33,
+      "objCount": 0,
+      "attemptedCells": 112,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_fcf649b93a39189c",
+      "pcMapPath": "西北北区\\药王谷\\药王洞三层",
+      "serverMapPath": "西北北区\\药王谷\\药王洞三层",
+      "primaryMapId": 143,
+      "mapIds": [
+        143
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_fcf649b93a39189c",
+      "status": "extracted",
+      "regionSCount": 88,
+      "npcCount": 180,
+      "trapCount": 33,
+      "objCount": 0,
+      "attemptedCells": 126,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_88d2adc270d1fa6f",
+      "pcMapPath": "西北北区\\药王谷\\药王洞四层",
+      "serverMapPath": "西北北区\\药王谷\\药王洞四层",
+      "primaryMapId": 144,
+      "mapIds": [
+        144
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_88d2adc270d1fa6f",
+      "status": "extracted",
+      "regionSCount": 88,
+      "npcCount": 220,
+      "trapCount": 12,
+      "objCount": 0,
+      "attemptedCells": 112,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_4981a5d780bca4ec",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞一层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞一层",
+      "primaryMapId": 145,
+      "mapIds": [
+        145
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_4981a5d780bca4ec",
+      "status": "extracted",
+      "regionSCount": 45,
+      "npcCount": 28,
+      "trapCount": 24,
+      "objCount": 0,
+      "attemptedCells": 112,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c3083849bbc1f1fb",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞二层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞二层",
+      "primaryMapId": 146,
+      "mapIds": [
+        146
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c3083849bbc1f1fb",
+      "status": "extracted",
+      "regionSCount": 46,
+      "npcCount": 28,
+      "trapCount": 25,
+      "objCount": 0,
+      "attemptedCells": 126,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9340a44e8325d148",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞三层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞三层",
+      "primaryMapId": 147,
+      "mapIds": [
+        147
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9340a44e8325d148",
+      "status": "extracted",
+      "regionSCount": 45,
+      "npcCount": 32,
+      "trapCount": 12,
+      "objCount": 0,
+      "attemptedCells": 126,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8cfa364bef57ef93",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞四层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞四层",
+      "primaryMapId": 148,
+      "mapIds": [
+        148
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8cfa364bef57ef93",
+      "status": "extracted",
+      "regionSCount": 44,
+      "npcCount": 32,
+      "trapCount": 21,
+      "objCount": 0,
+      "attemptedCells": 126,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_2dbeddcccb831bf9",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞五层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞五层",
+      "primaryMapId": 149,
+      "mapIds": [
+        149
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_2dbeddcccb831bf9",
+      "status": "extracted",
+      "regionSCount": 13,
+      "npcCount": 18,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 30,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_19cc3fb1dc3da1df",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞六层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞六层",
+      "primaryMapId": 150,
+      "mapIds": [
+        150
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_19cc3fb1dc3da1df",
+      "status": "extracted",
+      "regionSCount": 11,
+      "npcCount": 18,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 35,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d9957f81a3f31bc0",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞七层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞七层",
+      "primaryMapId": 151,
+      "mapIds": [
+        151
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d9957f81a3f31bc0",
+      "status": "extracted",
+      "regionSCount": 11,
+      "npcCount": 18,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 35,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5440ed975f7fefe6",
+      "pcMapPath": "西北北区\\药王谷\\雪豹洞八层",
+      "serverMapPath": "西北北区\\药王谷\\雪豹洞八层",
+      "primaryMapId": 152,
+      "mapIds": [
+        152
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5440ed975f7fefe6",
+      "status": "extracted",
+      "regionSCount": 54,
+      "npcCount": 32,
+      "trapCount": 23,
+      "objCount": 0,
+      "attemptedCells": 91,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ed866d786aa5fa3a",
+      "pcMapPath": "西南南区\\石鼓镇",
+      "serverMapPath": "西南南区\\石鼓镇",
+      "primaryMapId": 153,
+      "mapIds": [
+        153
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ed866d786aa5fa3a",
+      "status": "extracted",
+      "regionSCount": 821,
+      "npcCount": 2043,
+      "trapCount": 65,
+      "objCount": 2,
+      "attemptedCells": 910,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d7755677a6c840b4",
+      "pcMapPath": "西南南区\\翠烟门\\翠烟",
+      "serverMapPath": "西南南区\\翠烟门\\翠烟",
+      "primaryMapId": 154,
+      "mapIds": [
+        154
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d7755677a6c840b4",
+      "status": "extracted",
+      "regionSCount": 1097,
+      "npcCount": 1341,
+      "trapCount": 77,
+      "objCount": 21,
+      "attemptedCells": 2838,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_69639018f4f42ad1",
+      "pcMapPath": "西南南区\\翠烟门\\百花厅",
+      "serverMapPath": "西南南区\\翠烟门\\百花厅",
+      "primaryMapId": 155,
+      "mapIds": [
+        155
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_69639018f4f42ad1",
+      "status": "extracted",
+      "regionSCount": 10,
+      "npcCount": 1,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ef6402acda5bf171",
+      "pcMapPath": "西南南区\\翠烟门\\弟子房1",
+      "serverMapPath": "西南南区\\翠烟门\\弟子房1",
+      "primaryMapId": 156,
+      "mapIds": [
+        156
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ef6402acda5bf171",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_148d49c7b0dcac36",
+      "pcMapPath": "西南南区\\翠烟门\\弟子房2",
+      "serverMapPath": "西南南区\\翠烟门\\弟子房2",
+      "primaryMapId": 157,
+      "mapIds": [
+        157
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_148d49c7b0dcac36",
+      "status": "extracted",
+      "regionSCount": 5,
+      "npcCount": 1,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_3fbd8a72822cab27",
+      "pcMapPath": "西南南区\\翠烟门\\禁地迷宫",
+      "serverMapPath": "西南南区\\翠烟门\\禁地迷宫",
+      "primaryMapId": 158,
+      "mapIds": [
+        158
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3fbd8a72822cab27",
+      "status": "extracted",
+      "regionSCount": 185,
+      "npcCount": 321,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 345,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_581d029d207f0bfb",
+      "pcMapPath": "西南南区\\翠烟门\\门楼",
+      "serverMapPath": "西南南区\\翠烟门\\门楼",
+      "primaryMapId": 159,
+      "mapIds": [
+        159
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_581d029d207f0bfb",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 35496,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ae05fa29af5c39af",
+      "pcMapPath": "西南南区\\翠烟门\\守玉厅",
+      "serverMapPath": "西南南区\\翠烟门\\守玉厅",
+      "primaryMapId": 160,
+      "mapIds": [
+        160
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ae05fa29af5c39af",
+      "status": "extracted",
+      "regionSCount": 7,
+      "npcCount": 1,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_53cae08728328e73",
+      "pcMapPath": "西南南区\\翠烟门\\主房",
+      "serverMapPath": "西南南区\\翠烟门\\主房",
+      "primaryMapId": 161,
+      "mapIds": [
+        161
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_53cae08728328e73",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_649438ab7e93ec4d",
+      "pcMapPath": "西南南区\\大理\\大理府",
+      "serverMapPath": "西南南区\\大理\\大理府",
+      "primaryMapId": 162,
+      "mapIds": [
+        162
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_649438ab7e93ec4d",
+      "status": "extracted",
+      "regionSCount": 655,
+      "npcCount": 712,
+      "trapCount": 120,
+      "objCount": 13,
+      "attemptedCells": 1057,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a1ef5655a7ab4127",
+      "pcMapPath": "西南南区\\大理\\恶霸家地道",
+      "serverMapPath": "西南南区\\大理\\恶霸家地道",
+      "primaryMapId": 163,
+      "mapIds": [
+        163
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a1ef5655a7ab4127",
+      "status": "extracted",
+      "regionSCount": 80,
+      "npcCount": 120,
+      "trapCount": 13,
+      "objCount": 0,
+      "attemptedCells": 144,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_081e5e53bac2e682",
+      "pcMapPath": "西南南区\\大理\\千寻塔一层",
+      "serverMapPath": "西南南区\\大理\\千寻塔一层",
+      "primaryMapId": 164,
+      "mapIds": [
+        164
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_081e5e53bac2e682",
+      "status": "extracted",
+      "regionSCount": 191,
+      "npcCount": 300,
+      "trapCount": 27,
+      "objCount": 0,
+      "attemptedCells": 286,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_097cde255e5ec285",
+      "pcMapPath": "西南南区\\大理\\千寻塔二层",
+      "serverMapPath": "西南南区\\大理\\千寻塔二层",
+      "primaryMapId": 165,
+      "mapIds": [
+        165
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_097cde255e5ec285",
+      "status": "extracted",
+      "regionSCount": 76,
+      "npcCount": 128,
+      "trapCount": 21,
+      "objCount": 0,
+      "attemptedCells": 160,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d065fdc722716b01",
+      "pcMapPath": "西南南区\\大理\\千寻塔三层",
+      "serverMapPath": "西南南区\\大理\\千寻塔三层",
+      "primaryMapId": 166,
+      "mapIds": [
+        166
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d065fdc722716b01",
+      "status": "extracted",
+      "regionSCount": 78,
+      "npcCount": 150,
+      "trapCount": 9,
+      "objCount": 0,
+      "attemptedCells": 112,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8a2583c712ffff30",
+      "pcMapPath": "西南南区\\点苍山\\点苍山",
+      "serverMapPath": "西南南区\\点苍山\\点苍山",
+      "primaryMapId": 167,
+      "mapIds": [
+        167
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8a2583c712ffff30",
+      "status": "extracted",
+      "regionSCount": 656,
+      "npcCount": 750,
+      "trapCount": 65,
+      "objCount": 2,
+      "attemptedCells": 1624,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b52e5799ed459cd8",
+      "pcMapPath": "西南南区\\点苍山\\凤眼洞迷宫",
+      "serverMapPath": "西南南区\\点苍山\\凤眼洞迷宫",
+      "primaryMapId": 168,
+      "mapIds": [
+        168
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b52e5799ed459cd8",
+      "status": "extracted",
+      "regionSCount": 289,
+      "npcCount": 320,
+      "trapCount": 28,
+      "objCount": 0,
+      "attemptedCells": 640,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_546a03a6b8dcb177",
+      "pcMapPath": "西南南区\\点苍山\\龙眼洞迷宫",
+      "serverMapPath": "西南南区\\点苍山\\龙眼洞迷宫",
+      "primaryMapId": 169,
+      "mapIds": [
+        169
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_546a03a6b8dcb177",
+      "status": "extracted",
+      "regionSCount": 261,
+      "npcCount": 318,
+      "trapCount": 34,
+      "objCount": 0,
+      "attemptedCells": 580,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_33cf315cd27715ec",
+      "pcMapPath": "西南南区\\点苍山\\土匪迷宫",
+      "serverMapPath": "西南南区\\点苍山\\土匪迷宫",
+      "primaryMapId": 170,
+      "mapIds": [
+        170
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_33cf315cd27715ec",
+      "status": "extracted",
+      "regionSCount": 157,
+      "npcCount": 234,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 330,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_99b55e8d3c4e0b80",
+      "pcMapPath": "西南南区\\点苍山\\点苍山洞一层",
+      "serverMapPath": "西南南区\\点苍山\\点苍山洞一层",
+      "primaryMapId": 171,
+      "mapIds": [
+        171
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_99b55e8d3c4e0b80",
+      "status": "extracted",
+      "regionSCount": 127,
+      "npcCount": 234,
+      "trapCount": 31,
+      "objCount": 0,
+      "attemptedCells": 209,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7c0a4508529776c1",
+      "pcMapPath": "西南南区\\点苍山\\点苍山洞二层",
+      "serverMapPath": "西南南区\\点苍山\\点苍山洞二层",
+      "primaryMapId": 172,
+      "mapIds": [
+        172
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7c0a4508529776c1",
+      "status": "extracted",
+      "regionSCount": 197,
+      "npcCount": 234,
+      "trapCount": 27,
+      "objCount": 0,
+      "attemptedCells": 468,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d35d1a10f1f888ef",
+      "pcMapPath": "西南南区\\点苍山\\点苍山洞三层",
+      "serverMapPath": "西南南区\\点苍山\\点苍山洞三层",
+      "primaryMapId": 173,
+      "mapIds": [
+        173
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d35d1a10f1f888ef",
+      "status": "extracted",
+      "regionSCount": 123,
+      "npcCount": 234,
+      "trapCount": 11,
+      "objCount": 1,
+      "attemptedCells": 228,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_03279d6a3fc1cd07",
+      "pcMapPath": "江南区\\龙泉",
+      "serverMapPath": "江南区\\龙泉",
+      "primaryMapId": 174,
+      "mapIds": [
+        174
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_03279d6a3fc1cd07",
+      "status": "extracted",
+      "regionSCount": 645,
+      "npcCount": 762,
+      "trapCount": 127,
+      "objCount": 7,
+      "attemptedCells": 736,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e151d401bb12f832",
+      "pcMapPath": "江南区\\西山村",
+      "serverMapPath": "江南区\\西山村",
+      "primaryMapId": 175,
+      "mapIds": [
+        175
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e151d401bb12f832",
+      "status": "extracted",
+      "regionSCount": 57,
+      "npcCount": 0,
+      "trapCount": 15,
+      "objCount": 1,
+      "attemptedCells": 118,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ad02420d67723d45",
+      "pcMapPath": "江南区\\临安\\临安",
+      "serverMapPath": "江南区\\临安\\临安",
+      "primaryMapId": 176,
+      "mapIds": [
+        176
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ad02420d67723d45",
+      "status": "extracted",
+      "regionSCount": 1653,
+      "npcCount": 1106,
+      "trapCount": 65,
+      "objCount": 6,
+      "attemptedCells": 3243,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d609b98a3796ae24",
+      "pcMapPath": "江南区\\临安\\御花园",
+      "serverMapPath": "江南区\\临安\\御花园",
+      "primaryMapId": 177,
+      "mapIds": [
+        177
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d609b98a3796ae24",
+      "status": "extracted",
+      "regionSCount": 50,
+      "npcCount": 0,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 86,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a609460c5c5c709d",
+      "pcMapPath": "江南区\\临安\\御花园山洞",
+      "serverMapPath": "江南区\\临安\\御花园山洞",
+      "primaryMapId": 178,
+      "mapIds": [
+        178
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a609460c5c5c709d",
+      "status": "extracted",
+      "regionSCount": 81,
+      "npcCount": 79,
+      "trapCount": 13,
+      "objCount": 0,
+      "attemptedCells": 128,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_cedc59f01148c74f",
+      "pcMapPath": "江南区\\罗霄山\\罗霄山",
+      "serverMapPath": "江南区\\罗霄山\\罗霄山",
+      "primaryMapId": 179,
+      "mapIds": [
+        179
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_cedc59f01148c74f",
+      "status": "extracted",
+      "regionSCount": 727,
+      "npcCount": 695,
+      "trapCount": 65,
+      "objCount": 2,
+      "attemptedCells": 1092,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1a5d6b7db4959ea4",
+      "pcMapPath": "江南区\\罗霄山\\龙宫洞迷宫",
+      "serverMapPath": "江南区\\罗霄山\\龙宫洞迷宫",
+      "primaryMapId": 180,
+      "mapIds": [
+        180
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1a5d6b7db4959ea4",
+      "status": "extracted",
+      "regionSCount": 202,
+      "npcCount": 170,
+      "trapCount": 38,
+      "objCount": 0,
+      "attemptedCells": 378,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d6e2cc1aaaa05fa0",
+      "pcMapPath": "江南区\\罗霄山\\两水洞迷宫",
+      "serverMapPath": "江南区\\罗霄山\\两水洞迷宫",
+      "primaryMapId": 181,
+      "mapIds": [
+        181,
+        959
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d6e2cc1aaaa05fa0",
+      "status": "extracted",
+      "regionSCount": 247,
+      "npcCount": 360,
+      "trapCount": 57,
+      "objCount": 0,
+      "attemptedCells": 496,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9973f3197cf92b8a",
+      "pcMapPath": "江南区\\罗霄山\\孽龙洞迷宫",
+      "serverMapPath": "江南区\\罗霄山\\孽龙洞迷宫",
+      "primaryMapId": 182,
+      "mapIds": [
+        182
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9973f3197cf92b8a",
+      "status": "extracted",
+      "regionSCount": 459,
+      "npcCount": 403,
+      "trapCount": 31,
+      "objCount": 0,
+      "attemptedCells": 1012,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6a848646490933c9",
+      "pcMapPath": "江南区\\五毒教\\五毒",
+      "serverMapPath": "江南区\\五毒教\\五毒",
+      "primaryMapId": 183,
+      "mapIds": [
+        183
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6a848646490933c9",
+      "status": "extracted",
+      "regionSCount": 1094,
+      "npcCount": 561,
+      "trapCount": 161,
+      "objCount": 3,
+      "attemptedCells": 3162,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_07cf9e2b44c05f9d",
+      "pcMapPath": "江南区\\五毒教\\赤蝎寨",
+      "serverMapPath": "江南区\\五毒教\\赤蝎寨",
+      "primaryMapId": 184,
+      "mapIds": [
+        184
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_07cf9e2b44c05f9d",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 4,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f17652c0922d4e91",
+      "pcMapPath": "江南区\\五毒教\\金蛇寨",
+      "serverMapPath": "江南区\\五毒教\\金蛇寨",
+      "primaryMapId": 185,
+      "mapIds": [
+        185
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f17652c0922d4e91",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 4,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_378f45b6f8f95394",
+      "pcMapPath": "江南区\\五毒教\\墨蛛寨",
+      "serverMapPath": "江南区\\五毒教\\墨蛛寨",
+      "primaryMapId": 186,
+      "mapIds": [
+        186
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_378f45b6f8f95394",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 4,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c41f82aeff7aff56",
+      "pcMapPath": "江南区\\五毒教\\青蜈寨",
+      "serverMapPath": "江南区\\五毒教\\青蜈寨",
+      "primaryMapId": 187,
+      "mapIds": [
+        187
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c41f82aeff7aff56",
+      "status": "extracted",
+      "regionSCount": 7,
+      "npcCount": 1,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_4f284dd06a5d750d",
+      "pcMapPath": "江南区\\五毒教\\银蟾寨",
+      "serverMapPath": "江南区\\五毒教\\银蟾寨",
+      "primaryMapId": 188,
+      "mapIds": [
+        188
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_4f284dd06a5d750d",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_539e33f0b689d52a",
+      "pcMapPath": "江南区\\五毒教\\总寨",
+      "serverMapPath": "江南区\\五毒教\\总寨",
+      "primaryMapId": 189,
+      "mapIds": [
+        189
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_539e33f0b689d52a",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 12,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a09f68d95c21fc6a",
+      "pcMapPath": "江南区\\五毒教\\入门迷宫",
+      "serverMapPath": "江南区\\五毒教\\入门迷宫",
+      "primaryMapId": 190,
+      "mapIds": [
+        190
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a09f68d95c21fc6a",
+      "status": "extracted",
+      "regionSCount": 649,
+      "npcCount": 561,
+      "trapCount": 2,
+      "objCount": 0,
+      "attemptedCells": 1518,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_78ab26227cb7c694",
+      "pcMapPath": "江南区\\五毒教\\弟子房1",
+      "serverMapPath": "江南区\\五毒教\\弟子房1",
+      "primaryMapId": 191,
+      "mapIds": [
+        191
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_78ab26227cb7c694",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_5ba8497d846485dd",
+      "pcMapPath": "江南区\\五毒教\\弟子房2",
+      "serverMapPath": "江南区\\五毒教\\弟子房2",
+      "primaryMapId": 192,
+      "mapIds": [
+        192
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5ba8497d846485dd",
+      "status": "extracted",
+      "regionSCount": 3,
+      "npcCount": 5,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_5e246f20cab00333",
+      "pcMapPath": "江南区\\武夷山\\武夷山",
+      "serverMapPath": "江南区\\武夷山\\武夷山",
+      "primaryMapId": 193,
+      "mapIds": [
+        193
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5e246f20cab00333",
+      "status": "extracted",
+      "regionSCount": 869,
+      "npcCount": 548,
+      "trapCount": 80,
+      "objCount": 2,
+      "attemptedCells": 2376,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_706cab971ed08299",
+      "pcMapPath": "江南区\\武夷山\\玉华洞迷宫",
+      "serverMapPath": "江南区\\武夷山\\玉华洞迷宫",
+      "primaryMapId": 194,
+      "mapIds": [
+        194
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_706cab971ed08299",
+      "status": "extracted",
+      "regionSCount": 488,
+      "npcCount": 280,
+      "trapCount": 22,
+      "objCount": 0,
+      "attemptedCells": 918,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_eef63209edff257e",
+      "pcMapPath": "江南区\\雁荡山\\雁荡山",
+      "serverMapPath": "江南区\\雁荡山\\雁荡山",
+      "primaryMapId": 195,
+      "mapIds": [
+        195
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_eef63209edff257e",
+      "status": "extracted",
+      "regionSCount": 595,
+      "npcCount": 464,
+      "trapCount": 63,
+      "objCount": 2,
+      "attemptedCells": 2146,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9a8bdc7beab448e4",
+      "pcMapPath": "江南区\\雁荡山\\羊角洞迷宫",
+      "serverMapPath": "江南区\\雁荡山\\羊角洞迷宫",
+      "primaryMapId": 196,
+      "mapIds": [
+        196
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9a8bdc7beab448e4",
+      "status": "extracted",
+      "regionSCount": 266,
+      "npcCount": 239,
+      "trapCount": 47,
+      "objCount": 0,
+      "attemptedCells": 464,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0e4565886e4e1840",
+      "pcMapPath": "中原南区\\天牢",
+      "serverMapPath": "中原南区\\天牢",
+      "primaryMapId": 197,
+      "mapIds": [
+        197
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0e4565886e4e1840",
+      "status": "extracted",
+      "regionSCount": 24,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 40,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_740c4795babfd2ac",
+      "pcMapPath": "江南区\\清溪洞迷宫",
+      "serverMapPath": "江南区\\清溪洞迷宫",
+      "primaryMapId": 198,
+      "mapIds": [
+        198
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_740c4795babfd2ac",
+      "status": "extracted",
+      "regionSCount": 171,
+      "npcCount": 282,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 374,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a554205bf4810d5a",
+      "pcMapPath": "两湖区\\武陵洞迷宫",
+      "serverMapPath": "两湖区\\武陵洞迷宫",
+      "primaryMapId": 199,
+      "mapIds": [
+        199
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a554205bf4810d5a",
+      "status": "extracted",
+      "regionSCount": 337,
+      "npcCount": 400,
+      "trapCount": 11,
+      "objCount": 0,
+      "attemptedCells": 630,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_72e39deb8024af33",
+      "pcMapPath": "西北北区\\古阳洞迷宫",
+      "serverMapPath": "西北北区\\古阳洞迷宫",
+      "primaryMapId": 200,
+      "mapIds": [
+        200
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_72e39deb8024af33",
+      "status": "extracted",
+      "regionSCount": 203,
+      "npcCount": 283,
+      "trapCount": 8,
+      "objCount": 4,
+      "attemptedCells": 364,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_88363a2577c772c5",
+      "pcMapPath": "西北南区\\冰河洞迷宫",
+      "serverMapPath": "西北南区\\冰河洞迷宫",
+      "primaryMapId": 201,
+      "mapIds": [
+        201
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_88363a2577c772c5",
+      "status": "extracted",
+      "regionSCount": 217,
+      "npcCount": 280,
+      "trapCount": 12,
+      "objCount": 0,
+      "attemptedCells": 420,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e4a20eac45a39201",
+      "pcMapPath": "西南北区\\芙蓉洞迷宫",
+      "serverMapPath": "西南北区\\芙蓉洞迷宫",
+      "primaryMapId": 202,
+      "mapIds": [
+        202
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e4a20eac45a39201",
+      "status": "extracted",
+      "regionSCount": 289,
+      "npcCount": 400,
+      "trapCount": 4,
+      "objCount": 0,
+      "attemptedCells": 480,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d9e1692a680e3fb9",
+      "pcMapPath": "西南南区\\无名洞迷宫",
+      "serverMapPath": "西南南区\\无名洞迷宫",
+      "primaryMapId": 203,
+      "mapIds": [
+        203
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d9e1692a680e3fb9",
+      "status": "extracted",
+      "regionSCount": 248,
+      "npcCount": 280,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 496,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_666f6a2fa3093541",
+      "pcMapPath": "中原北区\\飞天洞迷宫",
+      "serverMapPath": "中原北区\\飞天洞迷宫",
+      "primaryMapId": 204,
+      "mapIds": [
+        204
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_666f6a2fa3093541",
+      "status": "extracted",
+      "regionSCount": 368,
+      "npcCount": 400,
+      "trapCount": 7,
+      "objCount": 0,
+      "attemptedCells": 945,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3e2b60ecde559e53",
+      "pcMapPath": "中原南区\\阳中洞迷宫",
+      "serverMapPath": "中原南区\\阳中洞迷宫",
+      "primaryMapId": 205,
+      "mapIds": [
+        205
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3e2b60ecde559e53",
+      "status": "extracted",
+      "regionSCount": 229,
+      "npcCount": 280,
+      "trapCount": 6,
+      "objCount": 0,
+      "attemptedCells": 480,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_896d5c337e6c823e",
+      "pcMapPath": "西北南区\\秦陵\\秦始皇陵地下二层",
+      "serverMapPath": "西北南区\\秦陵\\秦始皇陵地下二层",
+      "primaryMapId": 206,
+      "mapIds": [
+        206
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_896d5c337e6c823e",
+      "status": "extracted",
+      "regionSCount": 59,
+      "npcCount": 120,
+      "trapCount": 11,
+      "objCount": 0,
+      "attemptedCells": 91,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3caaf28e00948faf",
+      "pcMapPath": "西北南区\\秦陵\\秦始皇陵地下三层",
+      "serverMapPath": "西北南区\\秦陵\\秦始皇陵地下三层",
+      "primaryMapId": 207,
+      "mapIds": [
+        207
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3caaf28e00948faf",
+      "status": "extracted",
+      "regionSCount": 53,
+      "npcCount": 120,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 84,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d3cb634b42ec6754",
+      "pcMapPath": "中原南区\\大牢",
+      "serverMapPath": "中原南区\\大牢",
+      "primaryMapId": 208,
+      "mapIds": [
+        208
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d3cb634b42ec6754",
+      "status": "extracted",
+      "regionSCount": 76,
+      "npcCount": 1,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 162,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_04a89f764fb3a0ac",
+      "pcMapPath": "中原南区\\yanwuchang",
+      "serverMapPath": "中原南区\\yanwuchang",
+      "primaryMapId": 209,
+      "mapIds": [
+        209,
+        210,
+        211
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_04a89f764fb3a0ac",
+      "status": "extracted",
+      "regionSCount": 21,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 72,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ee68224bee458aa2",
+      "pcMapPath": "西北南区\\华山绝顶",
+      "serverMapPath": "西北南区\\华山绝顶",
+      "primaryMapId": 212,
+      "mapIds": [
+        212,
+        864,
+        865
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ee68224bee458aa2",
+      "status": "extracted",
+      "regionSCount": 254,
+      "npcCount": 0,
+      "trapCount": 17,
+      "objCount": 0,
+      "attemptedCells": 568,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_610ff41bbf75792f",
+      "pcMapPath": "特殊用地\\帮会擂台",
+      "serverMapPath": "特殊用地\\帮会擂台",
+      "primaryMapId": 213,
+      "mapIds": [
+        213,
+        214,
+        215,
+        216,
+        217,
+        218,
+        219,
+        220,
+        709,
+        710,
+        711,
+        712,
+        713,
+        714,
+        715,
+        716,
+        717,
+        718,
+        719,
+        720,
+        721,
+        722,
+        723,
+        724,
+        725,
+        726,
+        727,
+        728,
+        729,
+        730,
+        731,
+        732,
+        733,
+        734,
+        735,
+        736,
+        737,
+        738,
+        739,
+        740,
+        741,
+        742,
+        743,
+        744,
+        745,
+        746,
+        747,
+        748,
+        749,
+        750,
+        751,
+        752,
+        753,
+        754,
+        755,
+        756,
+        757,
+        758,
+        759,
+        760,
+        761,
+        762,
+        763,
+        764,
+        765,
+        766,
+        767,
+        768,
+        769,
+        770,
+        771,
+        772,
+        773,
+        774,
+        775,
+        776,
+        777,
+        778,
+        779,
+        780,
+        781,
+        782,
+        783,
+        784,
+        785,
+        786,
+        787,
+        788,
+        789,
+        790,
+        791,
+        792,
+        793,
+        794,
+        795,
+        796,
+        797,
+        798,
+        799,
+        800,
+        801,
+        802
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_610ff41bbf75792f",
+      "status": "extracted",
+      "regionSCount": 44,
+      "npcCount": 2,
+      "trapCount": 14,
+      "objCount": 0,
+      "attemptedCells": 77,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_628f74392e4e527e",
+      "pcMapPath": "特殊用地\\剑门关vn",
+      "serverMapPath": "特殊用地\\剑门关vn",
+      "primaryMapId": 221,
+      "mapIds": [
+        221
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_628f74392e4e527e",
+      "status": "extracted",
+      "regionSCount": 285,
+      "npcCount": 0,
+      "trapCount": 99,
+      "objCount": 0,
+      "attemptedCells": 510,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_17c7609ac75b52c5",
+      "pcMapPath": "特殊用地\\剑门关中转",
+      "serverMapPath": "特殊用地\\剑门关中转",
+      "primaryMapId": 222,
+      "mapIds": [
+        222,
+        223
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_17c7609ac75b52c5",
+      "status": "extracted",
+      "regionSCount": 46,
+      "npcCount": 6,
+      "trapCount": 17,
+      "objCount": 0,
+      "attemptedCells": 63,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_196cb211ef8c0e75",
+      "pcMapPath": "西北北区\\沙漠迷宫\\沙漠地表",
+      "serverMapPath": "西北北区\\沙漠迷宫\\沙漠地表",
+      "primaryMapId": 224,
+      "mapIds": [
+        224,
+        919,
+        920
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_196cb211ef8c0e75",
+      "status": "extracted",
+      "regionSCount": 365,
+      "npcCount": 710,
+      "trapCount": 160,
+      "objCount": 0,
+      "attemptedCells": 722,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a7649e666581b845",
+      "pcMapPath": "西北北区\\沙漠迷宫\\沙漠山洞1",
+      "serverMapPath": "西北北区\\沙漠迷宫\\沙漠山洞1",
+      "primaryMapId": 225,
+      "mapIds": [
+        225,
+        907,
+        908,
+        909,
+        910,
+        911,
+        912,
+        913,
+        914,
+        915,
+        916
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a7649e666581b845",
+      "status": "extracted",
+      "regionSCount": 225,
+      "npcCount": 410,
+      "trapCount": 16,
+      "objCount": 0,
+      "attemptedCells": 450,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_dec6b904ab41364b",
+      "pcMapPath": "西北北区\\沙漠迷宫\\沙漠山洞2",
+      "serverMapPath": "西北北区\\沙漠迷宫\\沙漠山洞2",
+      "primaryMapId": 226,
+      "mapIds": [
+        226,
+        875
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_dec6b904ab41364b",
+      "status": "extracted",
+      "regionSCount": 197,
+      "npcCount": 390,
+      "trapCount": 31,
+      "objCount": 0,
+      "attemptedCells": 390,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_999569e093dcd0dc",
+      "pcMapPath": "西北北区\\沙漠迷宫\\沙漠山洞3",
+      "serverMapPath": "西北北区\\沙漠迷宫\\沙漠山洞3",
+      "primaryMapId": 227,
+      "mapIds": [
+        227
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_999569e093dcd0dc",
+      "status": "extracted",
+      "regionSCount": 355,
+      "npcCount": 680,
+      "trapCount": 15,
+      "objCount": 0,
+      "attemptedCells": 589,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0517b5d63bc8960e",
+      "pcMapPath": "西北北区\\昆仑派\\昆仑后山",
+      "serverMapPath": "西北北区\\昆仑派\\昆仑后山",
+      "primaryMapId": 228,
+      "mapIds": [
+        228
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0517b5d63bc8960e",
+      "status": "extracted",
+      "regionSCount": 12,
+      "npcCount": 2,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 16,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_44107ae48b3c3c62",
+      "pcMapPath": "西南北区\\唐门\\战斗祭祖厅",
+      "serverMapPath": "西南北区\\唐门\\战斗祭祖厅",
+      "primaryMapId": 229,
+      "mapIds": [
+        229
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_44107ae48b3c3c62",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_40edb7757340d85b",
+      "pcMapPath": "西南南区\\大理\\map_dalijiejing",
+      "serverMapPath": "西南南区\\大理\\map_dalijiejing",
+      "primaryMapId": 230,
+      "mapIds": [
+        230
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_40edb7757340d85b",
+      "status": "extracted",
+      "regionSCount": 19,
+      "npcCount": 1,
+      "trapCount": 14,
+      "objCount": 0,
+      "attemptedCells": 20,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_4bb6443287d4a5ff",
+      "pcMapPath": "西南南区\\点苍山\\沧浪客居所",
+      "serverMapPath": "西南南区\\点苍山\\沧浪客居所",
+      "primaryMapId": 231,
+      "mapIds": [
+        231
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_4bb6443287d4a5ff",
+      "status": "extracted",
+      "regionSCount": 6,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 6,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_62c872a94c0edd13",
+      "pcMapPath": "中原南区\\伏牛山\\周云泉居所",
+      "serverMapPath": "中原南区\\伏牛山\\周云泉居所",
+      "primaryMapId": 232,
+      "mapIds": [
+        232
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_62c872a94c0edd13",
+      "status": "extracted",
+      "regionSCount": 7,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b8ddddf79926165b",
+      "pcMapPath": "中原南区\\蜀冈山\\map_mokongkejusuo",
+      "serverMapPath": "中原南区\\蜀冈山\\map_mokongkejusuo",
+      "primaryMapId": 233,
+      "mapIds": [
+        233
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b8ddddf79926165b",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 10,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b9b1a574db277966",
+      "pcMapPath": "江南区\\五毒教\\战斗金蛇寨",
+      "serverMapPath": "江南区\\五毒教\\战斗金蛇寨",
+      "primaryMapId": 234,
+      "mapIds": [
+        234
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b9b1a574db277966",
+      "status": "extracted",
+      "regionSCount": 8,
+      "npcCount": 1,
+      "trapCount": 5,
+      "objCount": 0,
+      "attemptedCells": 8,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_88e58601ed20a236",
+      "pcMapPath": "江南区\\桃花岛",
+      "serverMapPath": "江南区\\桃花岛",
+      "primaryMapId": 235,
+      "mapIds": [
+        235,
+        236,
+        237,
+        238,
+        239,
+        240,
+        241,
+        614,
+        615,
+        616,
+        617,
+        618,
+        619,
+        620,
+        621,
+        622,
+        623,
+        624,
+        625,
+        626,
+        627,
+        628,
+        629,
+        630,
+        631,
+        632,
+        633,
+        634,
+        635,
+        636,
+        637,
+        638,
+        639,
+        640,
+        641,
+        642,
+        643,
+        644,
+        645,
+        646,
+        647,
+        648,
+        649,
+        650
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_88e58601ed20a236",
+      "status": "extracted",
+      "regionSCount": 90,
+      "npcCount": 12,
+      "trapCount": 8,
+      "objCount": 1,
+      "attemptedCells": 247,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5f6db0bc7f89a50a",
+      "pcMapPath": "特殊用地\\梦境",
+      "serverMapPath": "特殊用地\\梦境",
+      "primaryMapId": 242,
+      "mapIds": [
+        242,
+        243,
+        244,
+        245,
+        246,
+        247,
+        248
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5f6db0bc7f89a50a",
+      "status": "extracted",
+      "regionSCount": 517,
+      "npcCount": 488,
+      "trapCount": 73,
+      "objCount": 2,
+      "attemptedCells": 660,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_871b45972e71a68f",
+      "pcMapPath": "特殊用地\\梦境山洞",
+      "serverMapPath": "特殊用地\\梦境山洞",
+      "primaryMapId": 249,
+      "mapIds": [
+        249,
+        250,
+        251,
+        252,
+        253,
+        254,
+        255,
+        256,
+        257,
+        258,
+        259,
+        260,
+        261,
+        262,
+        263,
+        264,
+        265,
+        266,
+        267,
+        268,
+        269,
+        270,
+        271,
+        272,
+        273,
+        274,
+        275,
+        276,
+        277,
+        278,
+        279,
+        280,
+        281,
+        282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
+        291,
+        292,
+        293,
+        294,
+        295,
+        296,
+        297,
+        298,
+        299,
+        300,
+        301,
+        302,
+        303,
+        304,
+        305,
+        306,
+        307,
+        308,
+        309,
+        310,
+        311,
+        312,
+        313,
+        314,
+        315,
+        316,
+        317,
+        318
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_871b45972e71a68f",
+      "status": "extracted",
+      "regionSCount": 78,
+      "npcCount": 0,
+      "trapCount": 26,
+      "objCount": 0,
+      "attemptedCells": 144,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_94dc59e98cc21cdf",
+      "pcMapPath": "东北区\\临渝关",
+      "serverMapPath": "东北区\\临渝关",
+      "primaryMapId": 319,
+      "mapIds": [
+        319,
+        986
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_94dc59e98cc21cdf",
+      "status": "extracted",
+      "regionSCount": 563,
+      "npcCount": 1285,
+      "trapCount": 119,
+      "objCount": 2,
+      "attemptedCells": 928,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6437bbd579bb888c",
+      "pcMapPath": "东北区\\长白山\\长白山脚",
+      "serverMapPath": "东北区\\长白山\\长白山脚",
+      "primaryMapId": 320,
+      "mapIds": [
+        320
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6437bbd579bb888c",
+      "status": "extracted",
+      "regionSCount": 948,
+      "npcCount": 1493,
+      "trapCount": 97,
+      "objCount": 6,
+      "attemptedCells": 1224,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_48d2c8e82f3e8681",
+      "pcMapPath": "东北区\\长白山\\长白山南",
+      "serverMapPath": "东北区\\长白山\\长白山南",
+      "primaryMapId": 321,
+      "mapIds": [
+        321,
+        921,
+        922
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_48d2c8e82f3e8681",
+      "status": "extracted",
+      "regionSCount": 1241,
+      "npcCount": 2328,
+      "trapCount": 53,
+      "objCount": 2,
+      "attemptedCells": 1505,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7db897ed68e7c12f",
+      "pcMapPath": "东北区\\长白山\\长白山北麓",
+      "serverMapPath": "东北区\\长白山\\长白山北麓",
+      "primaryMapId": 322,
+      "mapIds": [
+        322,
+        923,
+        924
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7db897ed68e7c12f",
+      "status": "extracted",
+      "regionSCount": 1058,
+      "npcCount": 1943,
+      "trapCount": 48,
+      "objCount": 2,
+      "attemptedCells": 1260,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7994bb46dd13ff7f",
+      "pcMapPath": "特殊用地\\宋金报名点",
+      "serverMapPath": "特殊用地\\宋金报名点",
+      "primaryMapId": 323,
+      "mapIds": [
+        323,
+        324,
+        325,
+        972,
+        973,
+        974
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7994bb46dd13ff7f",
+      "status": "extracted",
+      "regionSCount": 45,
+      "npcCount": 6,
+      "trapCount": 30,
+      "objCount": 2,
+      "attemptedCells": 57,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_815be905c16d9526",
+      "pcMapPath": "特殊用地\\平原战场",
+      "serverMapPath": "特殊用地\\平原战场",
+      "primaryMapId": 326,
+      "mapIds": [
+        326,
+        327,
+        328
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_815be905c16d9526",
+      "status": "extracted",
+      "regionSCount": 537,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 918,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5530612919559dcd",
+      "pcMapPath": "特殊用地\\河滨战场",
+      "serverMapPath": "特殊用地\\河滨战场",
+      "primaryMapId": 329,
+      "mapIds": [
+        329,
+        330,
+        331,
+        863,
+        1009
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5530612919559dcd",
+      "status": "extracted",
+      "regionSCount": 656,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1026,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_eb5c782591632360",
+      "pcMapPath": "西南南区\\天龙寺\\天龙寺",
+      "serverMapPath": "西南南区\\天龙寺\\天龙寺",
+      "primaryMapId": 332,
+      "mapIds": [
+        332
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_eb5c782591632360",
+      "status": "extracted",
+      "regionSCount": 765,
+      "npcCount": 1,
+      "trapCount": 158,
+      "objCount": 2,
+      "attemptedCells": 862,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_688c6eec16c0c37e",
+      "pcMapPath": "西北南区\\华山派\\华山派",
+      "serverMapPath": "西北南区\\华山派\\华山派",
+      "primaryMapId": 333,
+      "mapIds": [
+        333
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_688c6eec16c0c37e",
+      "status": "extracted",
+      "regionSCount": 370,
+      "npcCount": 1,
+      "trapCount": 175,
+      "objCount": 7,
+      "attemptedCells": 640,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c67853412535eb9f",
+      "pcMapPath": "特殊用地\\比武大会会场",
+      "serverMapPath": "特殊用地\\比武大会会场",
+      "primaryMapId": 334,
+      "mapIds": [
+        334
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c67853412535eb9f",
+      "status": "extracted",
+      "regionSCount": 9,
+      "npcCount": 4,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 172593,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_1e77d4078e95aaee",
+      "pcMapPath": "特殊用地\\比武场",
+      "serverMapPath": "特殊用地\\比武场",
+      "primaryMapId": 335,
+      "mapIds": [
+        335
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_1e77d4078e95aaee",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 7,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 30807,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a2d671349efa4fb5",
+      "pcMapPath": "中原北区\\风陵渡",
+      "serverMapPath": "中原北区\\风陵渡",
+      "primaryMapId": 336,
+      "mapIds": [
+        336
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a2d671349efa4fb5",
+      "status": "extracted",
+      "regionSCount": 845,
+      "npcCount": 974,
+      "trapCount": 41,
+      "objCount": 0,
+      "attemptedCells": 1064,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ec321cabe8d09203",
+      "pcMapPath": "中原北区\\渡船",
+      "serverMapPath": "中原北区\\渡船",
+      "primaryMapId": 337,
+      "mapIds": [
+        337,
+        338,
+        339,
+        416,
+        417,
+        418,
+        419,
+        420,
+        421,
+        422,
+        423,
+        424,
+        425,
+        426,
+        427,
+        428,
+        429,
+        430,
+        431,
+        432,
+        433,
+        434,
+        435,
+        436,
+        437,
+        438,
+        439,
+        440,
+        441,
+        442,
+        443,
+        444,
+        445,
+        446,
+        447,
+        448,
+        449,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455,
+        456,
+        457,
+        458,
+        459,
+        460,
+        461,
+        462,
+        463
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ec321cabe8d09203",
+      "status": "extracted",
+      "regionSCount": 19,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 32,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8285f598f3b84d73",
+      "pcMapPath": "西北北区\\莫高窟",
+      "serverMapPath": "西北北区\\莫高窟",
+      "primaryMapId": 340,
+      "mapIds": [
+        340,
+        917,
+        918
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8285f598f3b84d73",
+      "status": "extracted",
+      "regionSCount": 1054,
+      "npcCount": 2587,
+      "trapCount": 10,
+      "objCount": 1,
+      "attemptedCells": 1300,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b8dd8d57a8a155c4",
+      "pcMapPath": "东北区\\漠北草原",
+      "serverMapPath": "东北区\\漠北草原",
+      "primaryMapId": 341,
+      "mapIds": [
+        341
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b8dd8d57a8a155c4",
+      "status": "extracted",
+      "regionSCount": 661,
+      "npcCount": 832,
+      "trapCount": 119,
+      "objCount": 3,
+      "attemptedCells": 814,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_01577953ab92aab2",
+      "pcMapPath": "江南区\\西山群岛",
+      "serverMapPath": "江南区\\西山群岛",
+      "primaryMapId": 342,
+      "mapIds": [
+        342
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_01577953ab92aab2",
+      "status": "extracted",
+      "regionSCount": 4,
+      "npcCount": 4,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_70fa871f63093356",
+      "pcMapPath": "两湖区\\衡山密室",
+      "serverMapPath": "两湖区\\衡山密室",
+      "primaryMapId": 343,
+      "mapIds": [
+        343
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_70fa871f63093356",
+      "status": "extracted",
+      "regionSCount": 22,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 40,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_809c68dad9f6efbe",
+      "pcMapPath": "特殊用地\\城镇战场",
+      "serverMapPath": "特殊用地\\城镇战场",
+      "primaryMapId": 344,
+      "mapIds": [
+        344,
+        345,
+        346,
+        516,
+        517
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_809c68dad9f6efbe",
+      "status": "extracted",
+      "regionSCount": 973,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1436,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d4abe13ab720caf6",
+      "pcMapPath": "特殊用地\\山谷战场",
+      "serverMapPath": "特殊用地\\山谷战场",
+      "primaryMapId": 347,
+      "mapIds": [
+        347,
+        348,
+        349
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d4abe13ab720caf6",
+      "status": "extracted",
+      "regionSCount": 683,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 945,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b4b9655d3bcf3d0a",
+      "pcMapPath": "特殊用地\\森林战场",
+      "serverMapPath": "特殊用地\\森林战场",
+      "primaryMapId": 350,
+      "mapIds": [
+        350,
+        351,
+        352
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b4b9655d3bcf3d0a",
+      "status": "extracted",
+      "regionSCount": 461,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 690,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_cb9902f4ccded568",
+      "pcMapPath": "特殊用地\\营寨战场",
+      "serverMapPath": "特殊用地\\营寨战场",
+      "primaryMapId": 353,
+      "mapIds": [
+        353,
+        354,
+        355
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_cb9902f4ccded568",
+      "status": "extracted",
+      "regionSCount": 822,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 986,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3306c2d2730e061e",
+      "pcMapPath": "特殊用地\\切磋场",
+      "serverMapPath": "特殊用地\\切磋场",
+      "primaryMapId": 356,
+      "mapIds": [
+        356
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3306c2d2730e061e",
+      "status": "extracted",
+      "regionSCount": 4,
+      "npcCount": 5,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_8b0abbf124d15dfc",
+      "pcMapPath": "特殊用地\\平原单挑战场",
+      "serverMapPath": "特殊用地\\平原单挑战场",
+      "primaryMapId": 357,
+      "mapIds": [
+        357,
+        358,
+        359
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8b0abbf124d15dfc",
+      "status": "extracted",
+      "regionSCount": 23,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 15260,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b5ec66efa7e685b0",
+      "pcMapPath": "特殊用地\\河滨单挑战场",
+      "serverMapPath": "特殊用地\\河滨单挑战场",
+      "primaryMapId": 360,
+      "mapIds": [
+        360,
+        361,
+        362
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b5ec66efa7e685b0",
+      "status": "extracted",
+      "regionSCount": 17,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 20,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_932726a062838b23",
+      "pcMapPath": "特殊用地\\森林单挑战场",
+      "serverMapPath": "特殊用地\\森林单挑战场",
+      "primaryMapId": 363,
+      "mapIds": [
+        363,
+        364,
+        365
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_932726a062838b23",
+      "status": "extracted",
+      "regionSCount": 16,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 25,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_cfd788b133914c9e",
+      "pcMapPath": "特殊用地\\山谷单挑战场",
+      "serverMapPath": "特殊用地\\山谷单挑战场",
+      "primaryMapId": 366,
+      "mapIds": [
+        366,
+        367,
+        368
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_cfd788b133914c9e",
+      "status": "extracted",
+      "regionSCount": 15,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 30,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b22d68ae26418c2f",
+      "pcMapPath": "特殊用地\\城镇单挑战场",
+      "serverMapPath": "特殊用地\\城镇单挑战场",
+      "primaryMapId": 369,
+      "mapIds": [
+        369,
+        370,
+        371
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b22d68ae26418c2f",
+      "status": "extracted",
+      "regionSCount": 47,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 77,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ff74976c070d58c0",
+      "pcMapPath": "特殊用地\\营寨单挑战场",
+      "serverMapPath": "特殊用地\\营寨单挑战场",
+      "primaryMapId": 372,
+      "mapIds": [
+        372,
+        373,
+        374
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ff74976c070d58c0",
+      "status": "extracted",
+      "regionSCount": 19,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 30,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_268a501c428a4414",
+      "pcMapPath": "特殊用地\\冲锋战场",
+      "serverMapPath": "特殊用地\\冲锋战场",
+      "primaryMapId": 378,
+      "mapIds": [
+        378,
+        379,
+        380,
+        886,
+        887,
+        888,
+        900,
+        971
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_268a501c428a4414",
+      "status": "extracted",
+      "regionSCount": 263,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 798,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_5223efcb4fd266a6",
+      "pcMapPath": "特殊用地\\新密林战场",
+      "serverMapPath": "特殊用地\\新密林战场",
+      "primaryMapId": 381,
+      "mapIds": [
+        381,
+        382,
+        383,
+        605,
+        606,
+        607,
+        803,
+        804,
+        805,
+        806,
+        807,
+        808,
+        809,
+        810,
+        811,
+        812,
+        813,
+        814,
+        815,
+        816,
+        817,
+        818,
+        819,
+        820,
+        889,
+        890,
+        891,
+        899,
+        970
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_5223efcb4fd266a6",
+      "status": "extracted",
+      "regionSCount": 329,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 900,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bb2b7291e009f3af",
+      "pcMapPath": "特殊用地\\界桥战场",
+      "serverMapPath": "特殊用地\\界桥战场",
+      "primaryMapId": 384,
+      "mapIds": [
+        384,
+        385,
+        386,
+        898
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bb2b7291e009f3af",
+      "status": "extracted",
+      "regionSCount": 486,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 545,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bebd69b049de110f",
+      "pcMapPath": "特殊用地\\任务用地\\信使任务\\风之骑",
+      "serverMapPath": "特殊用地\\任务用地\\信使任务\\风之骑",
+      "primaryMapId": 387,
+      "mapIds": [
+        387,
+        388,
+        389
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bebd69b049de110f",
+      "status": "extracted",
+      "regionSCount": 515,
+      "npcCount": 0,
+      "trapCount": 21,
+      "objCount": 0,
+      "attemptedCells": 526,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_4608df16e39d31e3",
+      "pcMapPath": "特殊用地\\任务用地\\信使任务\\山神庙",
+      "serverMapPath": "特殊用地\\任务用地\\信使任务\\山神庙",
+      "primaryMapId": 390,
+      "mapIds": [
+        390,
+        391,
+        392
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_4608df16e39d31e3",
+      "status": "extracted",
+      "regionSCount": 463,
+      "npcCount": 0,
+      "trapCount": 15,
+      "objCount": 0,
+      "attemptedCells": 547,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_28e36afecc551f32",
+      "pcMapPath": "特殊用地\\任务用地\\信使任务\\千宝库",
+      "serverMapPath": "特殊用地\\任务用地\\信使任务\\千宝库",
+      "primaryMapId": 393,
+      "mapIds": [
+        393,
+        394,
+        395
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_28e36afecc551f32",
+      "status": "extracted",
+      "regionSCount": 568,
+      "npcCount": 0,
+      "trapCount": 2,
+      "objCount": 0,
+      "attemptedCells": 729,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7e0478bbbbc310c5",
+      "pcMapPath": "特殊用地\\武林大会专用\\武林大会会场",
+      "serverMapPath": "特殊用地\\武林大会专用\\武林大会会场",
+      "primaryMapId": 396,
+      "mapIds": [
+        396,
+        398,
+        400,
+        402,
+        404,
+        406,
+        408,
+        410,
+        412,
+        414,
+        527,
+        528,
+        529,
+        530,
+        531,
+        532,
+        533,
+        534,
+        540,
+        542,
+        544,
+        546,
+        548,
+        550,
+        552,
+        554,
+        556,
+        558,
+        560,
+        561,
+        562,
+        563,
+        564,
+        565,
+        566,
+        567,
+        568,
+        569,
+        570,
+        571,
+        572,
+        573,
+        574,
+        575,
+        576,
+        577,
+        578,
+        579,
+        651,
+        652,
+        653,
+        654,
+        655,
+        656,
+        657,
+        658,
+        659,
+        660,
+        661,
+        662,
+        663,
+        664,
+        665,
+        666,
+        667,
+        668,
+        669,
+        670,
+        671,
+        672,
+        673,
+        674,
+        675,
+        676,
+        677,
+        678,
+        679,
+        680,
+        681,
+        682,
+        683,
+        684,
+        991,
+        993
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7e0478bbbbc310c5",
+      "status": "extracted",
+      "regionSCount": 122,
+      "npcCount": 0,
+      "trapCount": 30,
+      "objCount": 0,
+      "attemptedCells": 248,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_15f3c8b336d024d4",
+      "pcMapPath": "特殊用地\\联赛比赛用地",
+      "serverMapPath": "特殊用地\\联赛比赛用地",
+      "primaryMapId": 397,
+      "mapIds": [
+        397,
+        399,
+        401,
+        403,
+        405,
+        407,
+        409,
+        411,
+        413,
+        415,
+        535,
+        536,
+        537,
+        538,
+        541,
+        543,
+        545,
+        547,
+        549,
+        551,
+        553,
+        555,
+        557,
+        559,
+        685,
+        686,
+        687,
+        688,
+        689,
+        690,
+        691,
+        692,
+        693,
+        694,
+        695,
+        696,
+        697,
+        698,
+        699,
+        700,
+        701,
+        702,
+        703,
+        704,
+        705,
+        706,
+        707,
+        708,
+        992
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_15f3c8b336d024d4",
+      "status": "extracted",
+      "regionSCount": 826,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1569,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_80179be007174e0f",
+      "pcMapPath": "特殊用地\\杀手的试炼",
+      "serverMapPath": "特殊用地\\杀手的试炼",
+      "primaryMapId": 464,
+      "mapIds": [
+        464,
+        465,
+        466,
+        467,
+        468,
+        469,
+        470,
+        471,
+        472,
+        473,
+        474,
+        475,
+        476,
+        477,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        484,
+        485,
+        486,
+        487,
+        488,
+        489,
+        490,
+        491,
+        492,
+        493,
+        494,
+        495,
+        496,
+        497,
+        498,
+        499,
+        500,
+        501,
+        502,
+        503,
+        504,
+        505,
+        506,
+        507,
+        508,
+        509,
+        510,
+        511
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_80179be007174e0f",
+      "status": "extracted",
+      "regionSCount": 24,
+      "npcCount": 0,
+      "trapCount": 14,
+      "objCount": 0,
+      "attemptedCells": 96,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f98385add53418ae",
+      "pcMapPath": "特殊用地\\任务用地\\同伴教育任务\\云中道",
+      "serverMapPath": "特殊用地\\任务用地\\同伴教育任务\\云中道",
+      "primaryMapId": 512,
+      "mapIds": [
+        512
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f98385add53418ae",
+      "status": "extracted",
+      "regionSCount": 348,
+      "npcCount": 3,
+      "trapCount": 33,
+      "objCount": 4,
+      "attemptedCells": 22243,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0c400d07b4a98013",
+      "pcMapPath": "特殊用地\\任务用地\\同伴剧情任务\\百花谷",
+      "serverMapPath": "特殊用地\\任务用地\\同伴剧情任务\\百花谷",
+      "primaryMapId": 513,
+      "mapIds": [
+        513
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0c400d07b4a98013",
+      "status": "extracted",
+      "regionSCount": 185,
+      "npcCount": 0,
+      "trapCount": 45,
+      "objCount": 0,
+      "attemptedCells": 14911,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_c1505202fe4ec064",
+      "pcMapPath": "特殊用地\\任务用地\\同伴剧情任务\\山贼洞",
+      "serverMapPath": "特殊用地\\任务用地\\同伴剧情任务\\山贼洞",
+      "primaryMapId": 514,
+      "mapIds": [
+        514
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_c1505202fe4ec064",
+      "status": "extracted",
+      "regionSCount": 324,
+      "npcCount": 0,
+      "trapCount": 35,
+      "objCount": 0,
+      "attemptedCells": 8649,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_cbdb262e71fb1118",
+      "pcMapPath": "特殊用地\\任务用地\\同伴剧情任务\\紫霞岭",
+      "serverMapPath": "特殊用地\\任务用地\\同伴剧情任务\\紫霞岭",
+      "primaryMapId": 515,
+      "mapIds": [
+        515
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_cbdb262e71fb1118",
+      "status": "extracted",
+      "regionSCount": 336,
+      "npcCount": 0,
+      "trapCount": 41,
+      "objCount": 0,
+      "attemptedCells": 56523,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7b62f381343846f3",
+      "pcMapPath": "特殊用地\\卫国战争\\烽火连城报名点",
+      "serverMapPath": "特殊用地\\卫国战争\\烽火连城报名点",
+      "primaryMapId": 518,
+      "mapIds": [
+        518,
+        519,
+        608,
+        609,
+        610,
+        611,
+        612,
+        613
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7b62f381343846f3",
+      "status": "extracted",
+      "regionSCount": 99,
+      "npcCount": 0,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 127,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8617616d6cfd7762",
+      "pcMapPath": "特殊用地\\明月镇",
+      "serverMapPath": "特殊用地\\明月镇",
+      "primaryMapId": 520,
+      "mapIds": [
+        520,
+        521,
+        522,
+        523,
+        524,
+        525,
+        526
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8617616d6cfd7762",
+      "status": "extracted",
+      "regionSCount": 70,
+      "npcCount": 0,
+      "trapCount": 8,
+      "objCount": 0,
+      "attemptedCells": 121,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3395a9b5713db1b8",
+      "pcMapPath": "特殊用地\\长歌门禁地",
+      "serverMapPath": "特殊用地\\长歌门禁地",
+      "primaryMapId": 539,
+      "mapIds": [
+        539,
+        829,
+        830,
+        831,
+        832,
+        833,
+        834,
+        835,
+        836,
+        837,
+        838,
+        839,
+        840
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3395a9b5713db1b8",
+      "status": "extracted",
+      "regionSCount": 371,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 526,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_a7232992ffddc5ed",
+      "pcMapPath": "特殊用地\\卫国战争\\烽火连城新地图",
+      "serverMapPath": "特殊用地\\卫国战争\\烽火连城新地图",
+      "primaryMapId": 580,
+      "mapIds": [
+        580,
+        581
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_a7232992ffddc5ed",
+      "status": "extracted",
+      "regionSCount": 1500,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 2210,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0525d95e4d0d2fd0",
+      "pcMapPath": "特殊用地\\圣诞地图",
+      "serverMapPath": "特殊用地\\圣诞地图",
+      "primaryMapId": 582,
+      "mapIds": [
+        582,
+        583,
+        821,
+        822,
+        866,
+        867,
+        882,
+        958,
+        961,
+        977
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0525d95e4d0d2fd0",
+      "status": "extracted",
+      "regionSCount": 314,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 407,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0d658f97e4127141",
+      "pcMapPath": "特殊用地\\春节地图",
+      "serverMapPath": "特殊用地\\春节地图",
+      "primaryMapId": 584,
+      "mapIds": [
+        584,
+        585,
+        823,
+        824,
+        849,
+        850,
+        893,
+        894,
+        901,
+        906
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0d658f97e4127141",
+      "status": "extracted",
+      "regionSCount": 480,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 527,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7c28853bcbde7b48",
+      "pcMapPath": "特殊用地\\帮会专用\\公共地图",
+      "serverMapPath": "特殊用地\\帮会专用\\公共地图",
+      "primaryMapId": 586,
+      "mapIds": [
+        586,
+        595,
+        596,
+        597
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7c28853bcbde7b48",
+      "status": "extracted",
+      "regionSCount": 108,
+      "npcCount": 0,
+      "trapCount": 56,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_01dbf31da810d620",
+      "pcMapPath": "特殊用地\\帮会专用\\成都",
+      "serverMapPath": "特殊用地\\帮会专用\\成都",
+      "primaryMapId": 587,
+      "mapIds": [
+        587
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_01dbf31da810d620",
+      "status": "extracted",
+      "regionSCount": 108,
+      "npcCount": 0,
+      "trapCount": 50,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b79131ef474d98e2",
+      "pcMapPath": "特殊用地\\帮会专用\\大理",
+      "serverMapPath": "特殊用地\\帮会专用\\大理",
+      "primaryMapId": 588,
+      "mapIds": [
+        588
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b79131ef474d98e2",
+      "status": "extracted",
+      "regionSCount": 102,
+      "npcCount": 0,
+      "trapCount": 58,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_50c066e8a092761b",
+      "pcMapPath": "特殊用地\\帮会专用\\凤翔",
+      "serverMapPath": "特殊用地\\帮会专用\\凤翔",
+      "primaryMapId": 589,
+      "mapIds": [
+        589
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_50c066e8a092761b",
+      "status": "extracted",
+      "regionSCount": 107,
+      "npcCount": 0,
+      "trapCount": 54,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_3a418ccc7e911281",
+      "pcMapPath": "特殊用地\\帮会专用\\临安",
+      "serverMapPath": "特殊用地\\帮会专用\\临安",
+      "primaryMapId": 590,
+      "mapIds": [
+        590
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3a418ccc7e911281",
+      "status": "extracted",
+      "regionSCount": 93,
+      "npcCount": 0,
+      "trapCount": 47,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_9c048025037078ab",
+      "pcMapPath": "特殊用地\\帮会专用\\襄阳",
+      "serverMapPath": "特殊用地\\帮会专用\\襄阳",
+      "primaryMapId": 591,
+      "mapIds": [
+        591
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_9c048025037078ab",
+      "status": "extracted",
+      "regionSCount": 108,
+      "npcCount": 0,
+      "trapCount": 41,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_52e28f6d892a7bb4",
+      "pcMapPath": "特殊用地\\帮会专用\\新手村帮会地图",
+      "serverMapPath": "特殊用地\\帮会专用\\新手村帮会地图",
+      "primaryMapId": 592,
+      "mapIds": [
+        592
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_52e28f6d892a7bb4",
+      "status": "extracted",
+      "regionSCount": 3,
+      "npcCount": 12,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 54960,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_7ec0190735cb0177",
+      "pcMapPath": "特殊用地\\帮会专用\\扬州",
+      "serverMapPath": "特殊用地\\帮会专用\\扬州",
+      "primaryMapId": 593,
+      "mapIds": [
+        593
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_7ec0190735cb0177",
+      "status": "extracted",
+      "regionSCount": 92,
+      "npcCount": 0,
+      "trapCount": 48,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e70cefc2ecbb9ca8",
+      "pcMapPath": "特殊用地\\帮会专用\\汴京",
+      "serverMapPath": "特殊用地\\帮会专用\\汴京",
+      "primaryMapId": 594,
+      "mapIds": [
+        594
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e70cefc2ecbb9ca8",
+      "status": "extracted",
+      "regionSCount": 110,
+      "npcCount": 0,
+      "trapCount": 64,
+      "objCount": 0,
+      "attemptedCells": 180,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_89bce18b3da09b10",
+      "pcMapPath": "特殊用地\\帮会专用\\城市帮会地图",
+      "serverMapPath": "特殊用地\\帮会专用\\城市帮会地图",
+      "primaryMapId": 598,
+      "mapIds": [
+        598,
+        599,
+        600,
+        601,
+        602,
+        603,
+        604
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_89bce18b3da09b10",
+      "status": "extracted",
+      "regionSCount": 3,
+      "npcCount": 1,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_73383bd9c0952b6f",
+      "pcMapPath": "特殊用地\\端午节地图",
+      "serverMapPath": "特殊用地\\端午节地图",
+      "primaryMapId": 825,
+      "mapIds": [
+        825,
+        826,
+        827,
+        828
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_73383bd9c0952b6f",
+      "status": "extracted",
+      "regionSCount": 583,
+      "npcCount": 2,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 19737,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_37c7d0d3dc71f9e7",
+      "pcMapPath": "特殊用地\\精英擂台",
+      "serverMapPath": "特殊用地\\精英擂台",
+      "primaryMapId": 841,
+      "mapIds": [
+        841,
+        842,
+        843,
+        844,
+        845,
+        846,
+        847,
+        848
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_37c7d0d3dc71f9e7",
+      "status": "extracted",
+      "regionSCount": 38,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 54755,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0d205e22cdf961cf",
+      "pcMapPath": "特殊用地\\炎帝宝藏准备场",
+      "serverMapPath": "特殊用地\\炎帝宝藏准备场",
+      "primaryMapId": 851,
+      "mapIds": [
+        851,
+        852
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0d205e22cdf961cf",
+      "status": "extracted",
+      "regionSCount": 10,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 25,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_722b91f1a59a4e69",
+      "pcMapPath": "特殊用地\\炎帝宝藏",
+      "serverMapPath": "特殊用地\\炎帝宝藏",
+      "primaryMapId": 853,
+      "mapIds": [
+        853,
+        854,
+        855,
+        856,
+        857,
+        858,
+        859,
+        860,
+        861,
+        862
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_722b91f1a59a4e69",
+      "status": "extracted",
+      "regionSCount": 205,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 575,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_138b87bb06d30998",
+      "pcMapPath": "特殊用地\\荒漠战场",
+      "serverMapPath": "特殊用地\\荒漠战场",
+      "primaryMapId": 868,
+      "mapIds": [
+        868,
+        869,
+        870
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_138b87bb06d30998",
+      "status": "extracted",
+      "regionSCount": 418,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1715,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_19a9d3b59febf18d",
+      "pcMapPath": "特殊用地\\安期炼丹洞",
+      "serverMapPath": "特殊用地\\安期炼丹洞",
+      "primaryMapId": 871,
+      "mapIds": [
+        871,
+        872,
+        873,
+        874,
+        892,
+        957,
+        967
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_19a9d3b59febf18d",
+      "status": "extracted",
+      "regionSCount": 26,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 30,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_021de1f1e64a6e6d",
+      "pcMapPath": "特殊用地\\古城战场",
+      "serverMapPath": "特殊用地\\古城战场",
+      "primaryMapId": 876,
+      "mapIds": [
+        876,
+        877,
+        878
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_021de1f1e64a6e6d",
+      "status": "extracted",
+      "regionSCount": 744,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1471,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_91f591c861dc6396",
+      "pcMapPath": "特殊用地\\金石山战场",
+      "serverMapPath": "特殊用地\\金石山战场",
+      "primaryMapId": 879,
+      "mapIds": [
+        879,
+        880,
+        881
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_91f591c861dc6396",
+      "status": "extracted",
+      "regionSCount": 413,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1392,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e650dfeedf4eff68",
+      "pcMapPath": "特殊用地\\箭塔战场",
+      "serverMapPath": "特殊用地\\箭塔战场",
+      "primaryMapId": 883,
+      "mapIds": [
+        883,
+        884,
+        885
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e650dfeedf4eff68",
+      "status": "extracted",
+      "regionSCount": 731,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1520,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b5c0930c6168f3e2",
+      "pcMapPath": "特殊用地\\chunfenggu",
+      "serverMapPath": "特殊用地\\chunfenggu",
+      "primaryMapId": 895,
+      "mapIds": [
+        895
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b5c0930c6168f3e2",
+      "status": "extracted",
+      "regionSCount": 154,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 6385,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_82c3169f8ad98901",
+      "pcMapPath": "特殊用地\\tianxingu1",
+      "serverMapPath": "特殊用地\\tianxingu1",
+      "primaryMapId": 896,
+      "mapIds": [
+        896
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_82c3169f8ad98901",
+      "status": "extracted",
+      "regionSCount": 98,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 120,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_27242ad5c7fa98b2",
+      "pcMapPath": "rongyuxitong\\mingrentang",
+      "serverMapPath": "rongyuxitong\\mingrentang",
+      "primaryMapId": 897,
+      "mapIds": [
+        897
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_27242ad5c7fa98b2",
+      "status": "extracted",
+      "regionSCount": 61,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 91,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6f2529995a9a0d09",
+      "pcMapPath": "特殊用地\\丛林战场",
+      "serverMapPath": "特殊用地\\丛林战场",
+      "primaryMapId": 902,
+      "mapIds": [
+        902,
+        903,
+        904
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6f2529995a9a0d09",
+      "status": "extracted",
+      "regionSCount": 3,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_df9625d293c981ee",
+      "pcMapPath": "特殊用地\\xinchanggemen",
+      "serverMapPath": "特殊用地\\xinchanggemen",
+      "primaryMapId": 905,
+      "mapIds": [
+        905,
+        950,
+        951,
+        952,
+        953,
+        954,
+        955,
+        956
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_df9625d293c981ee",
+      "status": "extracted",
+      "regionSCount": 62,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 63,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_881d704edae21e8f",
+      "pcMapPath": "特殊用地\\shiliantang",
+      "serverMapPath": "特殊用地\\shiliantang",
+      "primaryMapId": 925,
+      "mapIds": [
+        925
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_881d704edae21e8f",
+      "status": "extracted",
+      "regionSCount": 34,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 54,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8f0ccffa894e3d26",
+      "pcMapPath": "特殊用地\\qichengdazhan\\chengduzhanchang",
+      "serverMapPath": "特殊用地\\qichengdazhan\\chengduzhanchang",
+      "primaryMapId": 926,
+      "mapIds": [
+        926,
+        933
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8f0ccffa894e3d26",
+      "status": "extracted",
+      "regionSCount": 464,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 640,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_af5c9412360e3cc0",
+      "pcMapPath": "特殊用地\\qichengdazhan\\bianjingzhanchang",
+      "serverMapPath": "特殊用地\\qichengdazhan\\bianjingzhanchang",
+      "primaryMapId": 927,
+      "mapIds": [
+        927
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_af5c9412360e3cc0",
+      "status": "extracted",
+      "regionSCount": 545,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 640,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_6d5924ef5c77122d",
+      "pcMapPath": "特殊用地\\qichengdazhan\\dalizhanchang",
+      "serverMapPath": "特殊用地\\qichengdazhan\\dalizhanchang",
+      "primaryMapId": 928,
+      "mapIds": [
+        928
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_6d5924ef5c77122d",
+      "status": "extracted",
+      "regionSCount": 687,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 885,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0e5d4ac89d1f2569",
+      "pcMapPath": "特殊用地\\qichengdazhan\\fengxiangzhanchang",
+      "serverMapPath": "特殊用地\\qichengdazhan\\fengxiangzhanchang",
+      "primaryMapId": 929,
+      "mapIds": [
+        929
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0e5d4ac89d1f2569",
+      "status": "extracted",
+      "regionSCount": 543,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 663,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f3cf52d70ede5fee",
+      "pcMapPath": "特殊用地\\qichengdazhan\\linanzhanchang",
+      "serverMapPath": "特殊用地\\qichengdazhan\\linanzhanchang",
+      "primaryMapId": 930,
+      "mapIds": [
+        930
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f3cf52d70ede5fee",
+      "status": "extracted",
+      "regionSCount": 535,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 641,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d6f740368b9b7c5b",
+      "pcMapPath": "特殊用地\\qichengdazhan\\xiangyangzhanchang",
+      "serverMapPath": "特殊用地\\qichengdazhan\\xiangyangzhanchang",
+      "primaryMapId": 931,
+      "mapIds": [
+        931
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d6f740368b9b7c5b",
+      "status": "extracted",
+      "regionSCount": 544,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 691,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_816eb50ef6b0e5c6",
+      "pcMapPath": "特殊用地\\qichengdazhan\\yangzhouzhanchang",
+      "serverMapPath": "特殊用地\\qichengdazhan\\yangzhouzhanchang",
+      "primaryMapId": 932,
+      "mapIds": [
+        932
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_816eb50ef6b0e5c6",
+      "status": "extracted",
+      "regionSCount": 509,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 672,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_8e694e2e8124d222",
+      "pcMapPath": "特殊用地\\huanzhuangditu",
+      "serverMapPath": "特殊用地\\huanzhuangditu",
+      "primaryMapId": 934,
+      "mapIds": [
+        934
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_8e694e2e8124d222",
+      "status": "extracted",
+      "regionSCount": 50,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 154,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_26984da28fc866e5",
+      "pcMapPath": "特殊用地\\tianchimijing1",
+      "serverMapPath": "特殊用地\\tianchimijing1",
+      "primaryMapId": 935,
+      "mapIds": [
+        935
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_26984da28fc866e5",
+      "status": "extracted",
+      "regionSCount": 529,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 969,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0b7c22fde183d257",
+      "pcMapPath": "特殊用地\\tianchimijing2",
+      "serverMapPath": "特殊用地\\tianchimijing2",
+      "primaryMapId": 936,
+      "mapIds": [
+        936,
+        963
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0b7c22fde183d257",
+      "status": "extracted",
+      "regionSCount": 19,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 28,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_16fb33d2ba90f1ef",
+      "pcMapPath": "特殊用地\\tianchimijing3",
+      "serverMapPath": "特殊用地\\tianchimijing3",
+      "primaryMapId": 937,
+      "mapIds": [
+        937,
+        938,
+        939,
+        940,
+        941,
+        942,
+        943,
+        944,
+        945,
+        946
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_16fb33d2ba90f1ef",
+      "status": "extracted",
+      "regionSCount": 86,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 89,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_abd4e57a026a3f27",
+      "pcMapPath": "特殊用地\\tianchimijing4",
+      "serverMapPath": "特殊用地\\tianchimijing4",
+      "primaryMapId": 947,
+      "mapIds": [
+        947
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_abd4e57a026a3f27",
+      "status": "extracted",
+      "regionSCount": 61,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 82,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_d9b6f50fb71e7d0f",
+      "pcMapPath": "特殊用地\\jianzhong",
+      "serverMapPath": "特殊用地\\jianzhong",
+      "primaryMapId": 948,
+      "mapIds": [
+        948
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_d9b6f50fb71e7d0f",
+      "status": "extracted",
+      "regionSCount": 577,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 2012,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_64842d428194965e",
+      "pcMapPath": "特殊用地\\shijiangu1",
+      "serverMapPath": "特殊用地\\shijiangu1",
+      "primaryMapId": 949,
+      "mapIds": [
+        949
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_64842d428194965e",
+      "status": "extracted",
+      "regionSCount": 44,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 47,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_64aee08a3f2f7404",
+      "pcMapPath": "特殊用地\\leitai",
+      "serverMapPath": "特殊用地\\leitai",
+      "primaryMapId": 960,
+      "mapIds": [
+        960
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_64aee08a3f2f7404",
+      "status": "extracted",
+      "regionSCount": 184,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 375,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_0b7485226d11af04",
+      "pcMapPath": "特殊用地\\yandibaozangzhunbeiditu",
+      "serverMapPath": "特殊用地\\yandibaozangzhunbeiditu",
+      "primaryMapId": 962,
+      "mapIds": [
+        962
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_0b7485226d11af04",
+      "status": "extracted",
+      "regionSCount": 1002,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 46004,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_57bdbff3f71ad244",
+      "pcMapPath": "中原南区\\演武场一",
+      "serverMapPath": "中原南区\\演武场一",
+      "primaryMapId": 964,
+      "mapIds": [
+        964,
+        965,
+        966
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_57bdbff3f71ad244",
+      "status": "extracted",
+      "regionSCount": 92,
+      "npcCount": 2,
+      "trapCount": 26,
+      "objCount": 0,
+      "attemptedCells": 162,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e1d3db0a7795b30b",
+      "pcMapPath": "特殊用地\\yuegedao",
+      "serverMapPath": "特殊用地\\yuegedao",
+      "primaryMapId": 968,
+      "mapIds": [
+        968
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e1d3db0a7795b30b",
+      "status": "extracted",
+      "regionSCount": 250,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 340,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_82b6173a6691dac8",
+      "pcMapPath": "特殊用地\\yuegemigu",
+      "serverMapPath": "特殊用地\\yuegemigu",
+      "primaryMapId": 969,
+      "mapIds": [
+        969
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_82b6173a6691dac8",
+      "status": "extracted",
+      "regionSCount": 2107,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 2352,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_48edbe62232cb682",
+      "pcMapPath": "特殊用地\\jingjichang",
+      "serverMapPath": "特殊用地\\jingjichang",
+      "primaryMapId": 975,
+      "mapIds": [
+        975
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_48edbe62232cb682",
+      "status": "extracted",
+      "regionSCount": 29,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 60,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_307cb49510091b4b",
+      "pcMapPath": "特殊用地\\qianchonglou",
+      "serverMapPath": "特殊用地\\qianchonglou",
+      "primaryMapId": 976,
+      "mapIds": [
+        976
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_307cb49510091b4b",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 84,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_eea6148ea15bec07",
+      "pcMapPath": "特殊用地\\banghuichengbao",
+      "serverMapPath": "特殊用地\\banghuichengbao",
+      "primaryMapId": 978,
+      "mapIds": [
+        978,
+        979,
+        980,
+        981,
+        982,
+        983,
+        984
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_eea6148ea15bec07",
+      "status": "extracted",
+      "regionSCount": 15,
+      "npcCount": 12,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_fe60fe4b01f1aa0c",
+      "pcMapPath": "特殊用地\\bianjingdigong",
+      "serverMapPath": "特殊用地\\bianjingdigong",
+      "primaryMapId": 985,
+      "mapIds": [
+        985,
+        994
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_fe60fe4b01f1aa0c",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 1,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_05d743559e83145f",
+      "pcMapPath": "西北南区\\华山派2013",
+      "serverMapPath": "西北南区\\华山派2013",
+      "primaryMapId": 987,
+      "mapIds": [
+        987
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_05d743559e83145f",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 1,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_3b3d18fe3c436dfb",
+      "pcMapPath": "特殊用地\\sjwar",
+      "serverMapPath": "特殊用地\\sjwar",
+      "primaryMapId": 988,
+      "mapIds": [
+        988
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3b3d18fe3c436dfb",
+      "status": "extracted",
+      "regionSCount": 4,
+      "npcCount": 7,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_3446f4da64d289fb",
+      "pcMapPath": "`厥庥A地\\安期炼丹洞",
+      "serverMapPath": "特殊用地\\安期炼丹洞",
+      "primaryMapId": 995,
+      "mapIds": [
+        995
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_3446f4da64d289fb",
+      "status": "extracted",
+      "regionSCount": 26,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 11882,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_bf4cd8812ac9a6b6",
+      "pcMapPath": "`厥庥A地\\guta",
+      "serverMapPath": "`厥庥A地\\guta",
+      "primaryMapId": 996,
+      "mapIds": [
+        996
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_bf4cd8812ac9a6b6",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 2,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 47276,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_f8f5a42bbdc80540",
+      "pcMapPath": "`厥庥A地\\dasanguan",
+      "serverMapPath": "`厥庥A地\\dasanguan",
+      "primaryMapId": 997,
+      "mapIds": [
+        997
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_f8f5a42bbdc80540",
+      "status": "extracted",
+      "regionSCount": 4,
+      "npcCount": 2,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 49820,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_e6f77f8e617889e0",
+      "pcMapPath": "`厥庥A地\\canglangzhai",
+      "serverMapPath": "`厥庥A地\\canglangzhai",
+      "primaryMapId": 998,
+      "mapIds": [
+        998
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_e6f77f8e617889e0",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 39516,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_729ed4f654ec30b7",
+      "pcMapPath": "特殊用地\\baihutangyiceng",
+      "serverMapPath": "特殊用地\\baihutangyiceng",
+      "primaryMapId": 1001,
+      "mapIds": [
+        1001,
+        1002,
+        1003,
+        1004
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_729ed4f654ec30b7",
+      "status": "extracted",
+      "regionSCount": 2,
+      "npcCount": 1,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 31132,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_ecc53a784547de41",
+      "pcMapPath": "特殊用地\\baihutangerceng",
+      "serverMapPath": "特殊用地\\baihutangerceng",
+      "primaryMapId": 1005,
+      "mapIds": [
+        1005,
+        1006
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_ecc53a784547de41",
+      "status": "extracted",
+      "regionSCount": 1,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 1,
+      "rescueScanUsed": false
+    },
+    {
+      "geometryKey": "g_b86f99255490155b",
+      "pcMapPath": "特殊用地\\baihutangsanceng",
+      "serverMapPath": "特殊用地\\baihutangsanceng",
+      "primaryMapId": 1007,
+      "mapIds": [
+        1007
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_b86f99255490155b",
+      "status": "no_static_region_s",
+      "regionSCount": 0,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 65536,
+      "rescueScanUsed": true
+    },
+    {
+      "geometryKey": "g_fe8cac694688f9b2",
+      "pcMapPath": "tieu_bang_chien",
+      "serverMapPath": "tieu_bang_chien",
+      "primaryMapId": 1008,
+      "mapIds": [
+        1008
+      ],
+      "serverRegionFolder": "Generated/MapServerRegions/g_fe8cac694688f9b2",
+      "status": "extracted",
+      "regionSCount": 26,
+      "npcCount": 56,
+      "trapCount": 0,
+      "objCount": 0,
+      "attemptedCells": 35,
+      "rescueScanUsed": false
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-06-08T00:16:21Z",
+  "phase": "phase2_server_region_s_spawns",
+  "scope": "server Region_S binary extraction only; final NPC visuals/combat/object/trap wiring excluded",
+  "sourceRoot": "/var/www/vltksource_new/vl_update_27",
+  "sourcePakDir": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak",
+  "sourcePackages": [
+    "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak/maps.pak",
+    "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak/yanwuchang.mps",
+    "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak/qianchonglou.mps",
+    "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak/jingjichang.mps",
+    "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak/update_map.pak",
+    "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak/update3.pak"
+  ],
+  "sourceGeometryCatalog": "/var/www/vltk-mobile/Assets/StreamingAssets/MapGeometryCatalog.json",
+  "isPartialRun": false,
+  "totalGeometries": 332,
+  "processedGeometries": 332,
+  "geometriesWithRegionS": 330,
+  "geometriesMissingRegionS": 2,
+  "geometriesWithoutStaticRegionS": 2,
+  "coveredAliases": 1003,
+  "processedAliases": 1005,
+  "catalogedAliases": 1005,
+  "aliasesWithoutStaticRegionS": 2,
+  "extractedRegionS": 84019,
+  "npcEntries": 67680,
+  "trapEntries": 8692,
+  "objectEntries": 453,
+  "missingGeometryKeys": [
+    "g_5f1aefd37d59a9b3",
+    "g_b86f99255490155b"
+  ],
+  "elapsedSeconds": 28.85
+}
