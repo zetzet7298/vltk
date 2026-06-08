@@ -196,16 +196,17 @@ namespace VLTK.Tests.Sandbox
         public void FriendPanel_BuildSnapshot_MatchesPc2b9c5056Controls()
         {
             var snap = FriendPanelService.BuildSnapshot(null, 1);
-            Assert.AreEqual(9, snap.controls.Count, "PC 2b9c5056.ini active friend controls must stay covered.");
-            Assert.AreEqual("UnitBtnFriend", snap.controls[0].pcSection);
-            Assert.AreEqual("UnitBtnBrother", snap.controls[1].pcSection);
-            Assert.AreEqual("UnitBtnEnemy", snap.controls[2].pcSection);
-            Assert.AreEqual("UnitBtnOther", snap.controls[3].pcSection);
-            Assert.AreEqual("FindBtn", snap.controls[4].pcSection);
-            Assert.AreEqual("Invisible", snap.controls[5].pcSection);
-            Assert.AreEqual("ScrollUp", snap.controls[6].pcSection);
-            Assert.AreEqual("ScrollDown", snap.controls[7].pcSection);
-            Assert.AreEqual("CloseBtn", snap.controls[8].pcSection);
+            Assert.AreEqual(10, snap.controls.Count, "PC 2b9c5056.ini active friend controls must stay covered, including GroupBtn.");
+            Assert.AreEqual("GroupBtn", snap.controls[0].pcSection);
+            Assert.AreEqual("UnitBtnFriend", snap.controls[1].pcSection);
+            Assert.AreEqual("UnitBtnBrother", snap.controls[2].pcSection);
+            Assert.AreEqual("UnitBtnEnemy", snap.controls[3].pcSection);
+            Assert.AreEqual("UnitBtnOther", snap.controls[4].pcSection);
+            Assert.AreEqual("FindBtn", snap.controls[5].pcSection);
+            Assert.AreEqual("Invisible", snap.controls[6].pcSection);
+            Assert.AreEqual("ScrollUp", snap.controls[7].pcSection);
+            Assert.AreEqual("ScrollDown", snap.controls[8].pcSection);
+            Assert.AreEqual("CloseBtn", snap.controls[9].pcSection);
             StringAssert.Contains("Danh sách bằng hữu", snap.friendRows[0]);
         }
 
@@ -238,6 +239,8 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual("Tiếp tục game", snap.rows[4].name);
             Assert.IsTrue(snap.rows[0].requiresConfirm);
             Assert.IsTrue(snap.rows[3].requiresConfirm);
+            Assert.AreEqual(@"\spr\Ui3\系统\系统－离线托管.spr", snap.rows[3].iconPath);
+            Assert.AreEqual(@"\spr\Ui3\系统\系统－返回.spr", snap.rows[4].iconPath);
             Assert.IsTrue(SystemMenuPanelService.DisabledPcSystemMenuButtons.ContainsKey("CloseGame"));
             Assert.IsTrue(SystemMenuPanelService.DisabledPcSystemMenuButtons.ContainsKey("GameTask"));
         }

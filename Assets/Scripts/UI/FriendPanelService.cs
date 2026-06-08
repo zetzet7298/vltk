@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC Friend Panel Service (BtnFriend / 2b9c5056.ini)
-// PC controls: Friend/Brother/Enemy/Other tabs, Find, Close, ScrollUp/Down,
-// Invisible toggle, plus runtime friend list rows.
+// PC controls: Group toggle, Friend/Brother/Enemy/Other tabs, Find, Close,
+// ScrollUp/Down, Invisible toggle, plus runtime friend list rows.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -39,6 +39,7 @@ namespace VLTK.UI
     {
         public static readonly IReadOnlyList<FriendPanelControlRow> PcControls = new List<FriendPanelControlRow>
         {
+            new FriendPanelControlRow("GroupBtn", "Nhóm", "mở/thu nhóm danh sách bằng hữu"),
             new FriendPanelControlRow("UnitBtnFriend", "Bạn hữu", "lọc danh sách bạn"),
             new FriendPanelControlRow("UnitBtnBrother", "Huynh đệ", "lọc huynh đệ"),
             new FriendPanelControlRow("UnitBtnEnemy", "Cừu nhân", "lọc cừu nhân"),

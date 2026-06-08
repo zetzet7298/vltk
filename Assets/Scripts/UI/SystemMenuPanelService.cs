@@ -65,8 +65,8 @@ namespace VLTK.UI
                     new SystemMenuRow(MenuExitGame, "Thoát game", "PC [ExitGame] — yêu cầu xác nhận trước khi rời game", @"\spr\Ui3\系统\系统－退出.spr", true, true),
                     new SystemMenuRow(MenuGameHelp, "Trợ giúp", "PC [GameHelp] — mở hướng dẫn trò chơi", @"\spr\Ui3\系统\系统－帮助.spr", true, false),
                     new SystemMenuRow(MenuOptions, "Tùy chọn", "PC [Options] — cài đặt trò chơi", @"\spr\Ui3\系统\系统－选项.spr", true, false),
-                    new SystemMenuRow(MenuOffLine, "Treo máy offline", "PC [OffLine] — trạng thái treo máy/rời mạng", @"\spr\Ui3\系统\系统－离线挂机.spr", true, true),
-                    new SystemMenuRow(MenuContinueGame, "Tiếp tục game", "PC [ContiumeGame] — đóng menu hệ thống và quay lại", @"\spr\Ui3\系统\系统－继续.spr", true, false),
+                    new SystemMenuRow(MenuOffLine, "Treo máy offline", "PC [OffLine] — trạng thái treo máy/rời mạng", @"\spr\Ui3\系统\系统－离线托管.spr", true, true),
+                    new SystemMenuRow(MenuContinueGame, "Tiếp tục game", "PC [ContiumeGame] — đóng menu hệ thống và quay lại", @"\spr\Ui3\系统\系统－返回.spr", true, false),
                 },
             };
         }
