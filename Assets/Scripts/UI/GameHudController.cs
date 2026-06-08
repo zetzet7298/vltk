@@ -2301,22 +2301,17 @@ namespace VLTK.UI
         private void OnChatRoomClick()
         {
             var chat = SandboxManager.Instance?.ChatService;
-            var rows = new List<string>();
-            if (chat != null)
+            var snap = ChatRoomPanelService.BuildSnapshot(chat, 8);
+            var rows = new List<string>
             {
-                chat.SetChannel(ChatChannel.All);
-                rows.Add($"Kênh: {ChatService.ChannelNameVi(chat.ActiveChannel)}");
-                var messages = chat.GetFilteredMessages(8);
-                if (messages.Count == 0)
-                    rows.Add("Chưa có tin nhắn.");
-                foreach (var msg in messages)
-                    rows.Add($"[{ChatService.ChannelNameVi(msg.channel)}] {msg.senderName}: {msg.text}");
-                _chatInput?.Focus();
-            }
-            else
-            {
-                rows.Add("Chat runtime chưa sẵn sàng.");
-            }
+                $"PC [Channels] Default={snap.defaultChannel} ({snap.defaultSendNameVi})",
+            };
+            foreach (var channel in snap.channels)
+                rows.Add($"Channel{channel.index}: {channel.pcName} — {channel.labelVi} — {channel.sendIntervalMs}ms/{channel.sendMsgNum}");
+            foreach (var row in snap.historyRows)
+                rows.Add(row);
+            chat?.SetChannel(ChatChannel.All);
+            _chatInput?.Focus();
             OpenPcToolPanel("Phòng chat", rows);
             SubsystemLog.Info("HUD", "Open ChatRoom panel");
         }

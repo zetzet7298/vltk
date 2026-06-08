@@ -292,6 +292,21 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ChatRailKeepsPcPixelsWithoutDarkMobileOverlay()
+        {
+            var css = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uss"));
+            var panel = ExtractCssBlock(css, ".hud-chat-panel");
+            var railButton = ExtractCssBlock(css, ".hud-chat-rail-btn");
+
+            StringAssert.Contains("background-color: rgba(0,0,0,0);", panel, "ChatBar root must stay transparent so it does not wrap the 7-o'clock joystick/chat corner.");
+            StringAssert.Contains("border-width: 0px;", panel, "ChatBar root must not draw a mobile wrapper over PC HUD pixels.");
+            StringAssert.Contains("background-color: rgba(0,0,0,0);", railButton, "PC chat rail buttons use exact SPR icons only; the widened mobile hitbox must be visually transparent.");
+            StringAssert.Contains("border-width: 0px;", railButton, "PC chat rail hitboxes must not draw a dark column over the bottom-left HUD.");
+            StringAssert.Contains("pickingMode = PickingMode.Ignore", File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs")),
+                "Decorative HUD containers must not steal joystick touches.");
+        }
+
+        [Test]
         public void ChatSystemRailButtons_FollowPcIniTopOrder()
         {
             var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
@@ -431,6 +446,17 @@ namespace VLTK.Tests.Sandbox
                 AssertCriticalTextureImport($"Assets/UI/HUD/Art/btn_quick_item_{i}_pc.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_pc_left_skill_slot.png");
             AssertCriticalTextureImport("Assets/UI/HUD/Art/btn_pc_right_skill_slot.png");
+        }
+
+        private static string ExtractCssBlock(string css, string selector)
+        {
+            int start = css.IndexOf(selector, System.StringComparison.Ordinal);
+            Assert.GreaterOrEqual(start, 0, selector + " must exist in GameHud.uss");
+            int open = css.IndexOf('{', start);
+            int close = css.IndexOf('}', open + 1);
+            Assert.Greater(open, start, selector + " must open a USS block.");
+            Assert.Greater(close, open, selector + " must close a USS block.");
+            return css.Substring(open + 1, close - open - 1);
         }
 
         private static Dictionary<string, (string buttonName, string handlerName)> PcUtilityButtonIds()

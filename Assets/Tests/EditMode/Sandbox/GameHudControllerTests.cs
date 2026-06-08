@@ -549,7 +549,7 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("Chưa tham gia đội", _teamPreview.Q<Label>().text);
 
             InvokeAndAssertPcTool(covered, "Faction", "OnFactionClick", "Bang phái", "Cấp bang");
-            InvokeAndAssertPcTool(covered, "ChatRoom", "OnChatRoomClick", "Phòng chat", "Chat runtime");
+            InvokeAndAssertPcTool(covered, "ChatRoom", "OnChatRoomClick", "Phòng chat", "Channel14: CH_CUSTOM");
             InvokeAndAssertPcTool(covered, "Options", "OnOptionsClick", "Hệ thống", "Treo máy offline");
 
             CollectionAssert.AreEquivalent(HudBottomBarPcSpec.ToolControlBar.Keys, covered);

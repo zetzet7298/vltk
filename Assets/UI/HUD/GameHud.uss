@@ -335,6 +335,8 @@
     flex-direction: column;
     justify-content: flex-end;
     z-index: 880;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
 }
 
 .hud-chat-warning {
@@ -392,9 +394,9 @@
     height: 44px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0.20);
-    border-width: 1px;
-    border-color: rgba(0,96,80,0.38);
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-color: rgba(0,0,0,0);
 }
 
 .hud-chat-rail-icon {

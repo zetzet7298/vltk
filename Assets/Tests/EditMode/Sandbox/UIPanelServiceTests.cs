@@ -126,6 +126,22 @@ namespace VLTK.Tests.EditMode.Sandbox
             Assert.IsFalse(GuildPanelService.TryKick(null, 0, -1));
         }
 
+        // ───── ChatRoomPanelService ─────
+        [Test]
+        public void ChatRoomPanel_MatchesPcChannelsList()
+        {
+            var snap = ChatRoomPanelService.BuildSnapshot(null, 8);
+            Assert.AreEqual("CH_SYSTEM", snap.defaultChannel);
+            Assert.AreEqual("Nhắc nhở", snap.defaultSendNameVi);
+            Assert.AreEqual(15, snap.channels.Count, "PC 7e20a7ac/c9c8a750 [Channels] has Channel0..Channel14.");
+            Assert.AreEqual("CH_NEARBY", snap.channels[0].pcName);
+            Assert.AreEqual("CH_SYSTEM", snap.channels[4].pcName);
+            Assert.AreEqual("CH_CHATROOM", snap.channels[8].pcName);
+            Assert.AreEqual("CH_CUSTOM", snap.channels[14].pcName);
+            Assert.AreEqual(60000, snap.channels[2].sendIntervalMs);
+            Assert.AreEqual(0, snap.channels[4].sendMsgNum);
+        }
+
         // ───── QuestTaskPanelService ─────
         [Test]
         public void QuestTaskPanel_UsesPcQuestRuntimeBeforeDailyTasks()
