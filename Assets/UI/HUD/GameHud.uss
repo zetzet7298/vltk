@@ -10,85 +10,75 @@
 .hud-hidden-data { display: none; }
 
 /* ═══ TOP STATUS BAR ═══ */
-/* PC Main: Left=218, Top=0, Width=552, Height=17 → scaled ×1.6 */
+/* PC 800 Main: Left=120, Top=0, Width=552, Height=17 (uid 8da7027d / 973816f3). */
 .hud-top-bar-panel {
     position: absolute;
     left: 0px;
     top: 0px;
     width: 1280px;
-    height: 32px;  /* adjust to fit top_frame_bg */
+    height: 40px;
     background-color: transparent;
 }
 
 .hud-pc-bar-panel-bg {
-    /* PC flat dark frame behind the 4 bars (no wooden chrome) */
     position: absolute;
-    left: 283px;
-    top: 2px;
-    width: 708px;   /* stamina@289 → exp end @985, +pad */
-    height: 34px;
-    background-color: rgb(18,20,18);
-    border-width: 1px;
-    border-color: rgb(120,130,120);
+    left: 120px;
+    top: 0px;
+    width: 552px;
+    height: 17px;
+    background-image: url('project://database/Assets/UI/HUD/Art/top_status_strip.png');
+    -unity-background-scale-mode: stretch-to-fill;
+    background-color: transparent;
+    border-width: 0px;
 }
 
-/* Level text: PC Left=53, Top=1, W=20, H=12 → ×1.6 */
 .hud-level-label {
     position: absolute;
-    left: 235px;   /* left of stamina bar @289 (PC-pixel derived) */
-    top: 4px;
-    width: 46px;
-    height: 19px;
+    left: 155px;
+    top: 2px;
+    width: 20px;
+    height: 12px;
     font-size: 11px;
-    color: rgb(55,231,63);
+    color: rgba(0,0,0,0);
     -unity-text-align: middle-center;
-    background-color: rgb(18,40,22);
-    border-width: 1px;
-    border-color: rgb(90,120,90);
+    background-color: transparent;
+    border-width: 0px;
     overflow: hidden;
 }
 
-/* Rank/Hạng: PC Left=499, Top=2 → ×1.6 */
 .hud-rank-label {
     position: absolute;
-    left: 992px;   /* right of exp bar end @985 (PC-pixel derived) */
-    top: 4px;
-    width: 64px;
-    height: 19px;
+    left: 642px;
+    top: 2px;
+    width: 28px;
+    height: 12px;
     font-size: 10px;
-    color: rgb(55,231,63);
+    color: rgba(0,0,0,0);
     -unity-text-align: middle-center;
-    background-color: rgb(18,40,22);
-    border-width: 1px;
-    border-color: rgb(90,120,90);
+    background-color: transparent;
+    border-width: 0px;
     overflow: hidden;
 }
 
-/* Bar tracks: PC Top=2, W=104, H=14 → ×1.6 */
+/* Bar tracks: PC 800 INI Top=3, W=104, image H=9. */
 .hud-bar-track {
     position: absolute;
-    top: 4px;
-    width: 166px;   /* 104 × 1.6 */
-    height: 16px;   /* PC fill H=9→×1.6≈14, +pad; leaves room for value text below */
-    background-color: rgb(8,10,8);
-    border-width: 1px;
-    border-color: rgb(70,80,70);
+    top: 3px;
+    width: 104px;
+    height: 9px;
+    background-color: transparent;
+    border-width: 0px;
     overflow: hidden;
 }
 
-/* Bar positions — relative to top-bar-panel, offsets from Main.Left=218→348:
-   Stamina: 348 + 87×1.6 = 348 + 139 = 487
-   HP/Life: 348 + 182×1.6 = 348 + 291 = 639
-   MP/Mana: 348 + 277×1.6 = 348 + 443 = 791
-   Exp:     348 + 372×1.6 = 348 + 595 = 943 */
-.hud-stamina-track { left: 289px; }
-.hud-hp-track      { left: 465px; }
-.hud-mp-track      { left: 641px; }
-.hud-exp-track     { left: 816px; }
+.hud-stamina-track { left: 178px; }
+.hud-hp-track      { left: 288px; }
+.hud-mp-track      { left: 398px; }
+.hud-exp-track     { left: 508px; }
 
 .hud-bar-fill {
     width: 100%;
-    height: 16px;
+    height: 11px;
     -unity-background-scale-mode: stretch-to-fill;
 }
 
@@ -282,7 +272,7 @@
     top: 342px;
     width: 97px;
     height: 29px;
-    background-image: url('project://database/Assets/StreamingAssets/UI/HUD/Art/vi/btn_close_skill_02_vi.png');
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/btn_close_skill_02_vi.png');
     -unity-background-scale-mode: stretch-to-fill;
 }
 
@@ -320,34 +310,23 @@
 
 
 /* ═══ CHAT AREA ═══ */
-/* PC: chat in bottom-left, above hotbar. Keep left=155 to avoid joystick. */
+/* Visual input chrome is baked into bottom_bar_bg.png from pc_hud.png; IMGUI draws text. */
 .hud-chat-panel {
     position: absolute;
-    left: 155px;
-    bottom: 72px;   /* = chiều cao bottom strip mới */
-    width: 480px;
-    height: 60px;
+    left: 0px;
+    bottom: 106px;
+    width: 360px;
+    height: 70px;
     flex-direction: column;
     justify-content: flex-end;
 }
 
 .hud-chat-warning {
-    width: 430px;
-    height: 18px;
-    font-size: 15px;
-    color: rgb(255,40,30);
-    -unity-font-style: bold;
-    -unity-text-align: middle-left;
+    display: none;
 }
 
 .hud-chat-input-row {
-    flex-direction: row;
-    align-items: center;
-    width: 430px;
-    height: 28px;
-    background-color: rgba(5,10,8,0.85);
-    border-width: 1px;
-    border-color: rgb(70,70,70);
+    display: none;
 }
 
 .hud-chat-input {
@@ -375,14 +354,14 @@
 
 
 /* ═══ BOTTOM STRIP ═══ */
-/* PC bottom: hotbar 1-9 | skill T/P | action buttons | menu icons | Bảo Vật */
+/* PC 800 bottom/action/menu chrome is one stitched 800px strip centered at x=240 from pc-evidence/pc_hud.png. */
 .hud-bottom-strip {
     position: absolute;
     left: 0px;
     right: 0px;
     bottom: 0px;
     width: 1280px;
-    height: 82px;
+    height: 106px;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
@@ -394,14 +373,9 @@
     padding-right: 0px;
 }
 
-/* ═══ HOTBAR: 9 slots like PC ═══ */
+/* The authentic hotbar pixels are baked into bottom_bar_bg.png. */
 .hud-main-hotbar {
-    flex-direction: row;
-    height: 60px;
-    align-items: center;
-    background-color: transparent;
-    border-width: 0px;
-    flex-shrink: 0;
+    display: none;
 }
 
 .hud-hotbar-slot {
@@ -426,14 +400,11 @@
 
 
 /* ═══ SKILL SLOTS (T/P) ═══ */
-/* Absolute over the baked T/P art in the jade arch (bottom_bar_bg.png 1280×82):
-   T slot art x[613..657], P slot art x[660..705], vertically centered (~y19..61).
-   MUST be absolute + BringToFront (code) so it sits over ToolbarRight which is a
-   later flex sibling — otherwise menu buttons (Kỹ năng) steal the center tap. */
+/* Absolute over centered PC 800 T/P art in bottom_bar_bg.png: centered x0=240 + PC x≈360..455. */
 .hud-skill-panel {
     position: absolute;
-    left: 612px;
-    top: 19px;
+    left: 600px;
+    top: 27px;
     width: 95px;
     height: 44px;
     flex-direction: row;
@@ -490,22 +461,24 @@
 .hud-skill-keys { display: none; }
 
 
-/* ═══ RIGHT TOOLBAR: action + menu + Bảo Vật ═══ */
-/* PC: all icon buttons in one row: action (run/sit/horse/exchange) → menu (Nhân/Túi/Võ/Đội/Bang/PK) → Bảo Vật */
+/* ═══ RIGHT TOOLBAR HITBOXES ═══ */
+/* Visible pixels are baked into the centered stitched bottom_bar_bg.png; controller offsets transparent buttons from PC 800 INI by x=240. */
 .hud-right-toolbar {
-    flex-direction: row;
-    height: 72px;
-    align-items: center;
-    justify-content: flex-start;
-    padding-right: 4px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 1280px;
+    height: 106px;
+    background-color: transparent;
     padding-left: 0px;
-    flex-shrink: 0;
+    padding-right: 0px;
 }
 
 .hud-round-btn {
-    width: 28px;
-    height: 28px;
-    margin-right: 1px;
+    position: absolute;
+    width: 31px;
+    height: 31px;
+    margin-right: 0px;
     border-width: 0px;
     background-color: transparent;
     overflow: hidden;
@@ -519,6 +492,7 @@
     width: 100%;
     height: 100%;
     -unity-background-scale-mode: scale-to-fit;
+    opacity: 0;
 }
 
 .hud-toolbar-sep {
@@ -530,9 +504,10 @@
 }
 
 .hud-menu-btn {
-    width: 29px;
-    height: 29px;
-    margin-right: 1px;
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    margin-right: 0px;
     border-width: 0px;
     background-color: transparent;
     overflow: visible;
@@ -546,17 +521,19 @@
     width: 100%;
     height: 100%;
     -unity-background-scale-mode: scale-to-fit;
+    opacity: 0;
 }
 
 .hud-menu-label { display: none; }
 
-/* Bảo Vật: large round button at end of toolbar */
+/* Bảo Vật pixels are baked into bottom_bar_bg.png; this is the hitbox. */
 .hud-baovat-btn {
-    width: 46px;
-    height: 46px;
-    margin-left: 2px;
-    margin-right: 2px;
-    border-radius: 23px;
+    position: absolute;
+    width: 58px;
+    height: 58px;
+    margin-left: 0px;
+    margin-right: 0px;
+    border-radius: 29px;
     border-width: 0px;
     background-color: transparent;
     flex-shrink: 0;
@@ -837,3 +814,225 @@
 .hud-inv-footer { position: absolute; left: 0px; top: 0px; width: 214px; height: 474px; padding: 0px; border-width: 0px; background-color: rgba(0,0,0,0); }
 /* Money text color from PC 05ea8560 [Money] Color=255,217,78. */
 .hud-inv-money { position: absolute; left: 53px; top: 353px; width: 110px; height: 14px; font-size: 12px; color: rgb(255,217,78); -unity-font-style: bold; }
+
+/* ═══ MOBILE-FIRST COMBAT HUD — PC visual pixels, thumb-first layout ═══ */
+.hud-mobile-bottom {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    width: 1280px;
+    height: 220px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+}
+
+.hud-mobile-utility-dock {
+    position: absolute;
+    left: 320px;
+    bottom: 18px;
+    width: 520px;
+    height: 64px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.18);
+    border-width: 1px;
+    border-color: rgba(220,175,80,0.22);
+    border-radius: 18px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
+
+.hud-mobile-utility-btn {
+    width: 52px;
+    height: 52px;
+    margin-left: 2px;
+    margin-right: 2px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.18);
+    border-width: 1px;
+    border-color: rgba(175,140,72,0.34);
+    border-radius: 13px;
+}
+
+.hud-mobile-treasure-btn {
+    width: 62px;
+    height: 62px;
+    margin-left: 6px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+}
+
+#BottomPanel.hud-mobile-bottom .hud-btn-icon,
+#BottomPanel.hud-mobile-bottom .hud-menu-btn-icon {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-treasure-icon {
+    display: flex;
+    width: 58px;
+    height: 58px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-combat-action-cluster {
+    position: absolute;
+    right: 18px;
+    bottom: 8px;
+    width: 318px;
+    height: 210px;
+    background-color: rgba(0,0,0,0);
+}
+
+.hud-primary-attack-btn {
+    position: absolute;
+    right: 24px;
+    bottom: 30px;
+    width: 82px;
+    height: 82px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.26);
+    border-width: 2px;
+    border-color: rgba(240,200,90,0.55);
+    border-radius: 41px;
+}
+
+.hud-primary-attack-icon {
+    width: 58px;
+    height: 58px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_primary_attack.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.hud-mobile-skill-slot {
+    position: absolute;
+    width: 70px;
+    height: 70px;
+    align-items: center;
+    justify-content: center;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+    -unity-background-scale-mode: scale-to-fit;
+    background-color: rgba(0,0,0,0.14);
+    border-width: 1px;
+    border-color: rgba(230,190,90,0.45);
+    border-radius: 18px;
+    overflow: hidden;
+}
+
+.hud-skill-slot-main  { right: 100px; bottom: 20px; }
+.hud-skill-slot-left  { right: 178px; bottom: 58px; }
+.hud-skill-slot-top   { right: 108px; bottom: 104px; }
+.hud-skill-slot-upper { right: 28px; bottom: 122px; }
+
+#BottomPanel.hud-mobile-bottom .hud-skill-slot-icon {
+    display: flex;
+    width: 50px;
+    height: 50px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+#BottomPanel.hud-mobile-bottom .hud-skill-slot-icon.empty {
+    background-color: rgba(0,0,0,0);
+}
+
+#BottomPanel.hud-mobile-bottom .hud-skill-slot-label {
+    display: flex;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: 1px;
+    height: 14px;
+    font-size: 10px;
+    color: rgb(255,238,170);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    background-color: rgba(0,0,0,0.38);
+}
+
+.hud-deck-switch-btn {
+    position: absolute;
+    right: 202px;
+    bottom: 126px;
+    width: 52px;
+    height: 52px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(20,24,20,0.72);
+    border-width: 2px;
+    border-color: rgba(240,200,90,0.58);
+    border-radius: 26px;
+}
+
+.hud-deck-switch-label {
+    color: rgb(255,232,128);
+    font-size: 20px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.hud-cancel-cast-zone {
+    position: absolute;
+    right: 142px;
+    bottom: 158px;
+    width: 96px;
+    height: 46px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(120,20,20,0.76);
+    border-width: 2px;
+    border-color: rgba(255,170,120,0.78);
+    border-radius: 23px;
+}
+
+.hud-cancel-cast-label {
+    color: rgb(255,235,220);
+    font-size: 15px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.hud-target-lock-field {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0,0,0,0);
+}
+
+.hud-target-lock-marker {
+    position: absolute;
+    left: 50%;
+    top: 132px;
+    width: 180px;
+    height: 30px;
+    margin-left: -90px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(16,18,16,0.76);
+    border-width: 1px;
+    border-color: rgba(255,215,95,0.62);
+    border-radius: 15px;
+}
+
+.hud-target-lock-name {
+    color: rgb(255,231,160);
+    font-size: 13px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+/* Mobile HUD does not use the old stitched PC bottom strip. Keep its classes
+   dormant so stale PC-strip rules cannot hide mobile icons or move hitboxes. */
+#BottomPanel.hud-mobile-bottom .hud-slot-number,
+#BottomPanel.hud-mobile-bottom .hud-skill-keys {
+    display: none;
+}

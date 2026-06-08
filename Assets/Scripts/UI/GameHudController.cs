@@ -89,6 +89,7 @@ namespace VLTK.UI
         public string artFolder = "UI/HUD/Art";
 
         private VisualElement _hpFill, _mpFill, _staminaFill, _expFill;
+        private VisualElement _topBarPanel, _bottomPanel, _minimapPanel, _chatPanel;
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
@@ -139,9 +140,6 @@ namespace VLTK.UI
         private VisualElement _boundRoot;
         private Vector2 _lastMinimapCenter;
         private Vector2? _lastMoveTarget;
-        private const string InventoryItemsHitProxyName = "BtnItemsPcHitProxy";
-        private const float BottomBarUiWidth = 1280f;
-        private const float BottomBarUiHeight = 82f;
 
         // Button name → SPR icon file mapping (matching PC 按钮条按钮/*.spr)
         private static readonly Dictionary<string, string> ButtonIcons = new()
@@ -161,6 +159,8 @@ namespace VLTK.UI
             { "BtnTeam", "btn_team" },
             { "BtnFaction", "btn_faction" },
             { "BtnPK", "btn_pk" },
+            { "BtnTreasure", "btn_treasure" },
+            { "PrimaryAttackBtn", "btn_primary_attack" },
         };
 
         private void Awake()
@@ -227,7 +227,7 @@ namespace VLTK.UI
                 return false;
             if (!ReferenceEquals(root.Q("InventoryWindow"), _invWindow))
                 return false;
-            return root.Q(InventoryItemsHitProxyName) != null;
+            return root.Q("BottomPanel") != null;
         }
 
         private void InitBridge()
@@ -254,6 +254,11 @@ namespace VLTK.UI
             root.pickingMode = PickingMode.Ignore;
             foreach (var child in root.Children())
                 child.pickingMode = PickingMode.Ignore;
+
+            _topBarPanel = root.Q("TopBarPanel");
+            _bottomPanel = root.Q("BottomPanel");
+            _minimapPanel = root.Q("MinimapPanel");
+            _chatPanel = root.Q("ChatBar");
 
             _hpFill = root.Q("HpBarFill");
             _mpFill = root.Q("MpBarFill");
@@ -314,7 +319,7 @@ namespace VLTK.UI
             _invGrid = root.Q<ScrollView>("InventoryGrid");
             _invMoney = root.Q<Label>("InventoryMoney");
 
-            RegisterInventoryPcHitProxy(root);
+            // Mobile-first HUD uses anchored controls instead of PC-coordinate hit proxies.
 
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
@@ -459,46 +464,6 @@ namespace VLTK.UI
             }
         }
 
-        private void RegisterInventoryPcHitProxy(VisualElement root)
-        {
-            var bottom = root.Q("BottomPanel");
-            if (bottom == null)
-                return;
-
-            var proxy = bottom.Q(InventoryItemsHitProxyName);
-            if (proxy != null)
-                return;
-
-            proxy = new VisualElement { name = InventoryItemsHitProxyName };
-            proxy.pickingMode = PickingMode.Position;
-            proxy.style.position = Position.Absolute;
-            proxy.style.backgroundColor = new Color(0f, 0f, 0f, 0f);
-
-            // The visible bag is baked into bottom_bar_bg.png from PC 1024.pak.
-            // The legacy flex BtnItems hitbox sits far left of that art, so taps on
-            // the real PC Túi đồ icon miss unless we place this invisible proxy at
-            // 工具控制条.ini [Items] (ClassType=Player_Items / Open([[items]])).
-            ApplyBottomBarButtonRect(proxy, HudBottomBarPcSpec.ToolControlBar["Items"]);
-            proxy.RegisterCallback<PointerDownEvent>(evt =>
-            {
-                OnItemsClick();
-                evt.StopImmediatePropagation();
-            });
-
-            bottom.Add(proxy);
-            proxy.BringToFront();
-        }
-
-        private static void ApplyBottomBarButtonRect(VisualElement el, HudBottomBarPcSpec.ButtonRect rect)
-        {
-            float scaleX = BottomBarUiWidth / HudBottomBarPcSpec.BarWidth;
-            float scaleY = BottomBarUiHeight / HudBottomBarPcSpec.BarHeight;
-            el.style.left = rect.left * scaleX;
-            el.style.top = (rect.top - HudBottomBarPcSpec.BarBandTop) * scaleY;
-            el.style.width = rect.width * scaleX;
-            el.style.height = rect.height * scaleY;
-        }
-
         private void LoadArt()
         {
             var artPath = HudArtPathResolver.ResolveArtRoot(artFolder);
@@ -558,10 +523,9 @@ namespace VLTK.UI
             LoadTextureIntoElement(this, png, name, tex =>
             {
                 fill.style.backgroundImage = new StyleBackground(tex);
-                // Fill the full track (166x16) so the authentic SPR covers the
-                // dark socket fully; clip-by-percent still works via the track's
-                // overflow:hidden + the fill element's percentage width.
-                fill.style.backgroundSize = new BackgroundSize(166, 16);
+                // PC 800 top status bars use 106x11 SPR fills clipped inside
+                // 104x9 INI tracks; do not stretch them to stale 1024/1280 sizes.
+                fill.style.backgroundSize = new BackgroundSize(106, 11);
             });
         }
 
@@ -682,13 +646,50 @@ namespace VLTK.UI
             if (doc == null) return;
             var hud = doc.rootVisualElement.Q("GameHud");
             if (hud == null) return;
-            var panel = doc.panelSettings;
-            float w = panel != null && panel.referenceResolution.x > 0 ? panel.referenceResolution.x : Screen.width;
-            float h = panel != null && panel.referenceResolution.y > 0 ? panel.referenceResolution.y : Screen.height;
+
+            // Responsive mobile rule: keep a 1280x720 PC-HUD reference rectangle
+            // uniformly scaled by PanelSettings Shrink. Extra width/height becomes
+            // safe-area padding; PC chrome and hitboxes stay pixel-aligned inside it.
+            const float referenceWidth = 1280f;
+            const float referenceHeight = 720f;
+            float screenWidth = Mathf.Max(1f, Screen.width);
+            float screenHeight = Mathf.Max(1f, Screen.height);
+            float scale = Mathf.Min(screenWidth / referenceWidth, screenHeight / referenceHeight);
+            float w = screenWidth / scale;
+            float h = screenHeight / scale;
+            float safeX = Mathf.Max(0f, (w - referenceWidth) * 0.5f);
+            float safeY = Mathf.Max(0f, (h - referenceHeight) * 0.5f);
+
             hud.style.width = w;
             hud.style.height = h;
             doc.rootVisualElement.style.width = w;
             doc.rootVisualElement.style.height = h;
+
+            if (_topBarPanel != null)
+            {
+                _topBarPanel.style.left = safeX;
+                _topBarPanel.style.top = safeY;
+                _topBarPanel.style.width = referenceWidth;
+                _topBarPanel.style.height = 40f;
+            }
+            if (_bottomPanel != null)
+            {
+                _bottomPanel.style.left = safeX;
+                _bottomPanel.style.bottom = safeY;
+                _bottomPanel.style.width = referenceWidth;
+                _bottomPanel.style.height = 220f;
+            }
+            if (_chatPanel != null)
+            {
+                _chatPanel.style.left = safeX;
+                _chatPanel.style.bottom = safeY + 176f;
+            }
+            if (_minimapPanel != null)
+            {
+                _minimapPanel.style.left = safeX + 1138f;
+                _minimapPanel.style.right = StyleKeyword.Auto;
+                _minimapPanel.style.top = safeY + 4f;
+            }
             if (_mapPreviewOverlay != null)
             {
                 _mapPreviewOverlay.style.width = w;
@@ -696,8 +697,8 @@ namespace VLTK.UI
             }
             if (_skillPanel != null)
             {
-                _skillPanel.style.left = Mathf.Clamp(338f, 0f, Mathf.Max(0f, w - 205f));
-                _skillPanel.style.top = Mathf.Clamp(110f, 0f, Mathf.Max(0f, h - 376f));
+                _skillPanel.style.left = safeX + Mathf.Clamp(338f, 0f, Mathf.Max(0f, referenceWidth - 205f));
+                _skillPanel.style.top = safeY + Mathf.Clamp(110f, 0f, Mathf.Max(0f, referenceHeight - 376f));
             }
         }
 
@@ -1670,6 +1671,12 @@ namespace VLTK.UI
         }
 
         private void OnTreasureClick() => SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+
+        private void OnPcToolPlaceholderClick(string key)
+        {
+            if (HudBottomBarPcSpec.ToolControlBar.TryGetValue(key, out var rect))
+                SubsystemLog.Info("HUD", $"PC HUD tool {key}: {rect.tipVi}");
+        }
 
         // ── New HUD logic ──────────────────────────────────────────────────
 

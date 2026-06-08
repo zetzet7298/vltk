@@ -124,8 +124,8 @@ namespace VLTK.UI
             };
             _rankStyle = new GUIStyle(GUI.skin.label)
             {
-                alignment = TextAnchor.MiddleLeft,
-                fontSize = 9,  /* giảm từ 10 → 9 để không tràn vào tên map */
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 11,
                 fontStyle = FontStyle.Bold,
                 normal = { textColor = new Color(55/255f, 231/255f, 63/255f) }
             };
@@ -251,38 +251,36 @@ namespace VLTK.UI
         private void OnGUI()
         {
             EnsureStyles();
-            float sx = Screen.width / 1280f;
-            float sy = Screen.height / 720f;
-            GUI.matrix = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, new Vector3(sx, sy, 1f));
+            // Match HudPanelSettings responsive Shrink mode: one uniform scale,
+            // with any extra width/height used as centered safe-area padding.
+            const float referenceWidth = 1280f;
+            const float referenceHeight = 720f;
+            float scale = Mathf.Min(Screen.width / referenceWidth, Screen.height / referenceHeight);
+            float offsetX = (Screen.width - referenceWidth * scale) * 0.5f;
+            float offsetY = (Screen.height - referenceHeight * scale) * 0.5f;
+            GUI.matrix = Matrix4x4.TRS(new Vector3(offsetX, offsetY, 0f), Quaternion.identity, new Vector3(scale, scale, 1f));
             int oldDepth = GUI.depth;
             GUI.depth = -10000;
 
-            // ═══ TOP BAR TEXT — PC 顶部控制条.ini ═══
-            // PC Main.Left=218 → 1280-space: 348. All bar offsets relative to Main.Left, scaled ×1.6.
-            // PC layout: Level at 53, Stamina at 87, Life at 182, Mana at 277, Exp at 372, WorldSort at 499
-            // PC bar tracks: Top=2, Width=104, Height=9 (fill). Text below bars: Top=12, Height=12.
-            const float C = 348f;  // Main.Left × 1.6
-            const float BW = 166f; // PC 104 × 1.6
+            // ═══ TOP BAR TEXT — PC 800 顶部控制条.ini (uid 8da7027d) ═══
+            // Main.Left=120; Level=35; Stamina=58; Life=168; Mana=278; Exp=388; WorldSort=522.
+            const float BW = 104f;
 
             // Connection status far-left — PC: green text "Hoạt động tốt NN"
-            Label(20f, 4f, 200f, 16f, "Hoạt động tốt 97", _levelStyle);
+            Label(14f, 4f, 100f, 14f, "Hoạt động tốt 97", _levelStyle);
 
-            // "+ Cấp X" — PC: Level.Text color=55,231,63, Font=12, HAlign=1 (center)
-            Label(235f, 4f, 46f, 16f, "Cấp " + GetLevelText(), _levelStyle);
+            // Number only: "+ Cấp" is baked into top_status_strip.png.
+            Label(155f, 2f, 20f, 12f, GetLevelText(), _levelStyle);
 
             // Bar values below tracks — PC: Top=12 from bar parent, Text.Left=-5, W=104, H=12
             // Bar parent Top=2 → Text absolute top = 2+12 = 14 → scaled = ~17
-            // Stamina at offset 87→139, HP at 182→291, MP at 277→443, Exp at 372→595
-            Label(289f, 19f, BW, 14f, GetStaminaText(), _topValue);  // PC-pixel derived ×1.6
-            Label(465f, 19f, BW, 14f, GetHpText(), _topValue);
-            Label(641f, 19f, BW, 14f, GetMpText(), _topValue);
-            Label(816f, 19f, BW, 14f, GetExpText(), _topValue);
+            Label(178f, 19f, BW, 12f, GetStaminaText(), _topValue);
+            Label(288f, 19f, BW, 12f, GetHpText(), _topValue);
+            Label(398f, 19f, BW, 12f, GetMpText(), _topValue);
+            Label(508f, 19f, BW, 12f, GetExpText(), _topValue);
 
-            // "Hạng N" — PC WorldSort: Left=499, Top=2, W=28, H=12, color=55,231,63
-            // Width 60px (giảm từ 80px) để không tràn vào tên map ở minimap header
-            var rankText = "Hạng " + GetRankText();
-            if (rankText.Length > 8) rankText = rankText.Substring(0, 8); // cắt nếu quá dài
-            Label(992f, 4f, 64f, 16f, rankText, _rankStyle);
+            // Number only: "Hạng" is baked into top_status_strip.png.
+            Label(642f, 2f, 28f, 12f, GetRankText(), _rankStyle);
 
             // ═══ CHAT TABS — PC bottom-left ═══
             // PC chat tabs: Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác

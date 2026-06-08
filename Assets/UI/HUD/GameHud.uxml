@@ -2,35 +2,35 @@
     <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
 
-        <!-- ═══ TOP STATUS BAR — PC 顶部控制条.ini ═══ -->
-        <!-- PC Main: Left=218, Top=0, Width=552, Height=17 → scaled ×1.6 = Left=348, W=883, H=27 -->
+        <!-- ═══ TOP STATUS BAR — PC 800 顶部控制条.ini / uid 8da7027d ═══ -->
+        <!-- PC Main: Left=120, Top=0, Width=552, Height=17. Values are drawn by Vietnamese IMGUI overlay. -->
         <ui:VisualElement name="TopBarPanel" class="hud-top-bar-panel">
             <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
 
-            <!-- Level: PC Left=53, Top=1, W=20, H=12 → ×1.6 = L=85, W=32, H=19 -->
+            <!-- Level number: PC Main.Left+35, Top=2, W=20, H=12 -->
             <ui:Label name="LevelText" text="1" class="hud-level-label"/>
 
-            <!-- Stamina: PC Left=87, Top=2, W=104, H=14 → ×1.6 = L=139, W=166, H=22 -->
+            <!-- Stamina: PC Main.Left+58, Top=3, W=104, H=14 -->
             <ui:VisualElement name="StaminaBarTrack" class="hud-bar-track hud-stamina-track">
                 <ui:VisualElement name="StaminaBarFill" class="hud-bar-fill"/>
             </ui:VisualElement>
 
-            <!-- Life/HP: PC Left=182, Top=2, W=104, H=14 → ×1.6 = L=291, W=166, H=22 -->
+            <!-- Life/HP: PC Main.Left+168, Top=3, W=104, H=14 -->
             <ui:VisualElement name="HpBarTrack" class="hud-bar-track hud-hp-track">
                 <ui:VisualElement name="HpBarFill" class="hud-bar-fill"/>
             </ui:VisualElement>
 
-            <!-- Mana/MP: PC Left=277, Top=2, W=104, H=14 → ×1.6 = L=443, W=166, H=22 -->
+            <!-- Mana/MP: PC Main.Left+278, Top=3, W=104, H=14 -->
             <ui:VisualElement name="MpBarTrack" class="hud-bar-track hud-mp-track">
                 <ui:VisualElement name="MpBarFill" class="hud-bar-fill"/>
             </ui:VisualElement>
 
-            <!-- Exp: PC Left=372, Top=2, W=104, H=14 → ×1.6 = L=595, W=166, H=22 -->
+            <!-- Exp: PC Main.Left+388, Top=3, W=104, H=12 -->
             <ui:VisualElement name="ExpBarTrack" class="hud-bar-track hud-exp-track">
                 <ui:VisualElement name="ExpBarFill" class="hud-bar-fill"/>
             </ui:VisualElement>
 
-            <!-- WorldSort/Hạng: PC Left=499, Top=2, W=28, H=12 → ×1.6 = L=798, W=45, H=19 -->
+            <!-- WorldSort number: PC Main.Left+522, Top=2, W=28, H=12 -->
             <ui:Label name="RankText" text="Hạng ?" class="hud-rank-label"/>
 
             <!-- Hidden labels for data binding (IMGUI overlay draws the actual text) -->
@@ -93,50 +93,34 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- ═══ BOTTOM STRIP — PC 玩家信息主界面.ini + 工具控制条.ini ═══ -->
-        <ui:VisualElement name="BottomPanel" class="hud-bottom-strip">
+        <!-- ═══ MOBILE COMBAT HUD — PC visual assets, mobile-first layout ═══ -->
+        <ui:VisualElement name="TargetLockField" class="hud-target-lock-field">
+            <ui:VisualElement name="TargetLockMarker" class="hud-target-lock-marker hidden">
+                <ui:Label name="TargetLockName" text="" class="hud-target-lock-name"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
 
-            <!-- Hotbar: 9 slots like PC (keys 1-9) -->
-            <ui:VisualElement name="HotbarCenter" class="hud-main-hotbar">
-                <ui:VisualElement name="ItemSlot0" class="hud-hotbar-slot"><ui:Label text="1" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot1" class="hud-hotbar-slot"><ui:Label text="2" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot2" class="hud-hotbar-slot"><ui:Label text="3" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot3" class="hud-hotbar-slot"><ui:Label text="4" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot4" class="hud-hotbar-slot"><ui:Label text="5" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot5" class="hud-hotbar-slot"><ui:Label text="6" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot6" class="hud-hotbar-slot"><ui:Label text="7" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot7" class="hud-hotbar-slot"><ui:Label text="8" class="hud-slot-number"/></ui:VisualElement>
-                <ui:VisualElement name="ItemSlot8" class="hud-hotbar-slot"><ui:Label text="9" class="hud-slot-number"/></ui:VisualElement>
+        <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom">
+            <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock">
+                <ui:VisualElement name="BtnRun" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnHorse" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnExchange" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnItems" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnSkills" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTeam" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnFaction" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnPK" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTreasure" class="hud-mobile-treasure-btn"><ui:VisualElement name="BtnTreasureIcon" class="hud-treasure-icon"/></ui:VisualElement>
             </ui:VisualElement>
 
-            <!-- Skill slots T/P (left/right weapon skill) -->
-            <ui:VisualElement class="hud-skill-panel">
-                <ui:VisualElement name="LeftSkillSlot" class="hud-skill-slot">
-                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
-                    <ui:Label name="SlotLabel" text="+" class="hud-skill-slot-label"/>
-                </ui:VisualElement>
-                <ui:VisualElement name="RightSkillSlot" class="hud-skill-slot">
-                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
-                    <ui:Label name="SlotLabel" text="+" class="hud-skill-slot-label"/>
-                </ui:VisualElement>
-                <ui:VisualElement class="hud-skill-keys"><ui:Label text="T"/><ui:Label text="P"/></ui:VisualElement>
-            </ui:VisualElement>
-
-            <!-- Action + Menu buttons in one row: run/sit/horse/exchange | menu (Nhân/Túi/Võ/Đội/Bang/PK) | Bảo Vật -->
-            <ui:VisualElement name="ToolbarRight" class="hud-right-toolbar">
-                <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnHorse" class="hud-round-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnExchange" class="hud-round-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="ToolbarSeparator" class="hud-toolbar-sep"/>
-                <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSkills" class="hud-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="ToolbarSeparator2" class="hud-toolbar-sep"/>
-                <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
+            <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster">
+                <ui:VisualElement name="PrimaryAttackBtn" class="hud-primary-attack-btn"><ui:VisualElement name="PrimaryAttackBtnIcon" class="hud-primary-attack-icon"/></ui:VisualElement>
+                <ui:VisualElement name="SkillSlot0" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-main"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/></ui:VisualElement>
+                <ui:VisualElement name="SkillSlot1" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-left"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="2" class="hud-skill-slot-label"/></ui:VisualElement>
+                <ui:VisualElement name="SkillSlot2" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-top"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="3" class="hud-skill-slot-label"/></ui:VisualElement>
+                <ui:VisualElement name="SkillSlot3" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-upper"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="4" class="hud-skill-slot-label"/></ui:VisualElement>
+                <ui:VisualElement name="DeckSwitchBtn" class="hud-deck-switch-btn"><ui:Label name="DeckSwitchLabel" text="A" class="hud-deck-switch-label"/></ui:VisualElement>
+                <ui:VisualElement name="CancelCastZone" class="hud-cancel-cast-zone hidden"><ui:Label text="Hủy" class="hud-cancel-cast-label"/></ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
 

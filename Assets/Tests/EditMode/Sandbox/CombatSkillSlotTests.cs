@@ -384,5 +384,74 @@ namespace VLTK.Tests.Sandbox
                 Object.DestroyImmediate(playerGo);
             }
         }
+
+        [Test]
+        public void MobileDeck_AssignsFourSlotsAndSwitchesIndependentDecks()
+        {
+            var go = new GameObject("CombatDeckTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                controller.AssignSkill(0, 357);
+                controller.AssignSkill(1, 359);
+                controller.AssignSkill(2, 117);
+                controller.AssignSkill(3, 128);
+
+                Assert.AreEqual(357, controller.GetAssignedSkill(0));
+                Assert.AreEqual(128, controller.GetAssignedSkill(3));
+                Assert.AreEqual(357, controller.LeftSkillId, "legacy left slot should mirror deck A slot 0");
+                Assert.AreEqual(359, controller.RightSkillId, "legacy right slot should mirror deck A slot 1");
+
+                controller.ToggleDeck();
+                Assert.AreEqual(1, controller.ActiveDeckIndex);
+                Assert.AreEqual(0, controller.GetAssignedSkill(0));
+                controller.AssignSkill(0, 153);
+                Assert.AreEqual(153, controller.GetAssignedSkill(0));
+
+                controller.ToggleDeck();
+                Assert.AreEqual(357, controller.GetAssignedSkill(0), "deck A assignment must survive deck B edits");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void PrimaryAttack_UsesSlotZeroThenFirstAssignedSkill()
+        {
+            var go = new GameObject("PrimaryAttackSlotTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                Assert.AreEqual(-1, controller.ResolvePrimaryAttackSlot());
+                controller.AssignSkill(2, 117);
+                Assert.AreEqual(2, controller.ResolvePrimaryAttackSlot());
+                controller.AssignSkill(0, 357);
+                Assert.AreEqual(0, controller.ResolvePrimaryAttackSlot());
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void TargetLock_CanLockAndClearWithoutPhysicsScan()
+        {
+            var go = new GameObject("TargetLockTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                controller.LockTarget(42, "Cọc gỗ");
+                Assert.AreEqual(42, controller.LockedTargetId);
+                controller.ClearTargetLock();
+                Assert.AreEqual(-1, controller.LockedTargetId);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
     }
 }

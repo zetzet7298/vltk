@@ -10,58 +10,80 @@ using VLTK.Sandbox;
 namespace VLTK.UI
 {
     /// <summary>
-    /// Manages the 2 combat skill slots (left and right) with skill assignment
-    /// and auto-target attack flow. Matches the mobile mockup layout:
-    /// - Tap empty slot → open skill picker to assign a skill
-    /// - Tap assigned slot → auto-attack nearest enemy
+    /// Mobile-first combat hotbar using PC-derived JX icon art.
+    /// Layout semantics: 4 assignable skill slots, A/B deck switch,
+    /// tap-to-auto-target, hold/drag-to-aim with cancel zone, and target lock.
+    /// PC behavior source remains KNpc nearest-enemy style targeting via CombatAutoTargetService.
     /// </summary>
     [RequireComponent(typeof(UIDocument))]
     public class CombatSkillSlotController : MonoBehaviour
     {
-        [Header("Config")]
+        [Header("Legacy slot compatibility")]
         public int leftSlotSkillId;
         public int rightSlotSkillId;
 
-        private VisualElement _leftSlot;
-        private VisualElement _rightSlot;
+        [Header("Mobile decks")]
+        [SerializeField] private int[] deckASkillIds = new int[MobileSkillSlotCount];
+        [SerializeField] private int[] deckBSkillIds = new int[MobileSkillSlotCount];
+
+        private const int MobileSkillSlotCount = 4;
+        private const long LongPressMs = 450;
+        private const float SlotDragCancelThreshold = 45f;
+        private const float PickerTapMoveThreshold = 12f;
+
+        private readonly VisualElement[] _skillSlots = new VisualElement[MobileSkillSlotCount];
+        private readonly VisualElement[] _skillIcons = new VisualElement[MobileSkillSlotCount];
+        private readonly Label[] _skillLabels = new Label[MobileSkillSlotCount];
+
+        private VisualElement _primaryAttackBtn;
+        private VisualElement _deckSwitchBtn;
+        private Label _deckSwitchLabel;
+        private VisualElement _cancelCastZone;
+        private VisualElement _targetLockMarker;
+        private Label _targetLockName;
+
         private VisualElement _skillPickerOverlay;
         private VisualElement _skillPickerWindow;
         private VisualElement _skillPickerClose;
         private ScrollView _skillPickerList;
         private Label _skillPickerTitle;
-        private VisualElement _leftSkillIcon;
-        private VisualElement _rightSkillIcon;
-        private Label _leftSkillLabel;
-        private Label _rightSkillLabel;
 
-        private const long LongPressMs = 450;
-        // Finger jitter while holding must not cancel the long-press; only a real drag does.
-        private const float SlotDragCancelThreshold = 45f;
-
-        private int _activeSlot = -1; // 0=left, 1=right
+        private int _activeDeckIndex;
+        private int _activeSlot = -1;
         private int _pressedSlot = -1;
         private int _pressedPointerId = -1;
         private Vector2 _startPointerPos;
         private bool _slotPointerDown;
         private bool _longPressOpened;
+        private bool _aimingDrag;
         private bool _initialized;
 
-        // Picker tap tracking — ScrollView captures the pointer for drag-scroll on
-        // touch, which swallows ClickEvent on child items, so we detect the tap at
-        // list level: record press pos, and on release within a small move threshold
-        // assign the skill under the release point.
         private Vector2 _pickerPressPos;
         private bool _pickerPointerDown;
-        private const float PickerTapMoveThreshold = 12f;
         private SkillCatalog _catalog;
         private PlayerProgressionState _progression;
 
-        public int LeftSkillId => leftSlotSkillId;
-        public int RightSkillId => rightSlotSkillId;
+        private int _lockedTargetId = -1;
+        private string _lockedTargetName = string.Empty;
+
+        public int LeftSkillId => GetDeck(0)[0];
+        public int RightSkillId => GetDeck(0)[1];
+        public int ActiveDeckIndex => _activeDeckIndex;
+        public int LockedTargetId => _lockedTargetId;
         public bool IsPickerVisible => _skillPickerOverlay != null && !_skillPickerOverlay.ClassListContains("hidden");
+        public bool IsAimingDrag => _aimingDrag;
+        public bool IsCancelCastVisible => _cancelCastZone != null && !_cancelCastZone.ClassListContains("hidden");
 
         private void Start()
         {
+            BindElements();
+        }
+
+        /// <summary>Initialize with catalog and progression data.</summary>
+        public void Initialize(SkillCatalog catalog, PlayerProgressionState progression)
+        {
+            _catalog = catalog;
+            _progression = progression;
             BindElements();
         }
 
@@ -69,76 +91,67 @@ namespace VLTK.UI
         {
             if (_initialized) return;
 
+            EnsureDeckArrays();
+            ImportLegacySlotsIfNeeded();
+            FillDefaultDeckIfEmpty();
+
             var doc = GetComponent<UIDocument>();
             if (doc == null || doc.rootVisualElement == null) return;
-
-            // Auto-assign default hotbar skills if empty
-            if (leftSlotSkillId == 0 && rightSlotSkillId == 0)
-            {
-                var manager = SandboxManager.Instance;
-                if (manager != null && manager.PlayerProgression != null)
-                {
-                    var prog = manager.PlayerProgression;
-                    GetDefaultSkillsForFaction(prog.faction, out int defaultLeft, out int defaultRight);
-                    if (prog.knownSkills.Contains(defaultLeft)) leftSlotSkillId = defaultLeft;
-                    if (prog.knownSkills.Contains(defaultRight)) rightSlotSkillId = defaultRight;
-                }
-            }
 
             var root = doc.rootVisualElement.Q("GameHud");
             if (root == null) return;
 
-            _leftSlot = root.Q("LeftSkillSlot");
-            _rightSlot = root.Q("RightSkillSlot");
-
-            // The skill panel is absolute-positioned over the baked T/P art. ToolbarRight
-            // (menu buttons incl. "Kỹ năng") and BtnTreasure are later flex siblings, so
-            // without this they paint over the T/P center and steal the tap (= tap opens the
-            // skill panel / treasure instead, and long-press never reaches the slot handler).
-            // GameHudController rebuilds BottomPanel children after bind, which pushes our
-            // panel back behind ToolbarRight, so a one-shot BringToFront() does NOT stick.
-            // Re-assert front order on every layout change of the parent.
-            var skillPanel = _leftSlot?.parent;
-            if (skillPanel?.parent != null)
+            for (int i = 0; i < MobileSkillSlotCount; i++)
             {
-                skillPanel.BringToFront();
-                skillPanel.parent.RegisterCallback<GeometryChangedEvent>(_ => skillPanel.BringToFront());
+                int slotIndex = i;
+                var slot = root.Q($"SkillSlot{i}") ?? root.Q(i == 0 ? "LeftSkillSlot" : i == 1 ? "RightSkillSlot" : string.Empty);
+                _skillSlots[i] = slot;
+                if (slot == null) continue;
+
+                _skillIcons[i] = slot.Q("SlotIcon");
+                _skillLabels[i] = slot.Q<Label>("SlotLabel");
+                slot.pickingMode = PickingMode.Position;
+                slot.RegisterCallback<PointerDownEvent>(evt => OnSkillSlotDown(slotIndex, evt));
+                slot.RegisterCallback<PointerMoveEvent>(OnSlotMove);
+                slot.RegisterCallback<PointerUpEvent>(OnSlotUp);
+                slot.RegisterCallback<PointerCancelEvent>(OnSlotCancel);
             }
-            // ROOT-LEVEL TRICKLE-DOWN INTERCEPT (bulletproof against sibling-order rebuilds):
-            // Unity routes pointer events by VisualElement hierarchy, NOT draw order. After a
-            // BottomPanel rebuild, ToolbarRight/BtnTreasure become the pick-target over the
-            // T/P slots and eat the tap, so BringToFront alone is unreliable. Per Unity's own
-            // guidance, intercept PointerDown at the root during the trickle-down phase, hit-test
-            // the T/P slot bounds ourselves, and StopImmediatePropagation so no menu button can
-            // steal the tap. Pointer capture (set in BeginSlotPress) then routes move/up/cancel.
+
+            _primaryAttackBtn = root.Q("PrimaryAttackBtn");
+            if (_primaryAttackBtn != null)
+            {
+                _primaryAttackBtn.pickingMode = PickingMode.Position;
+                _primaryAttackBtn.RegisterCallback<PointerDownEvent>(evt =>
+                {
+                    TriggerPrimaryAttack();
+                    evt.StopPropagation();
+                });
+            }
+
+            _deckSwitchBtn = root.Q("DeckSwitchBtn");
+            _deckSwitchLabel = root.Q<Label>("DeckSwitchLabel");
+            if (_deckSwitchBtn != null)
+            {
+                _deckSwitchBtn.pickingMode = PickingMode.Position;
+                _deckSwitchBtn.RegisterCallback<PointerDownEvent>(evt =>
+                {
+                    ToggleDeck();
+                    evt.StopPropagation();
+                });
+            }
+
+            _cancelCastZone = root.Q("CancelCastZone");
+            _targetLockMarker = root.Q("TargetLockMarker");
+            _targetLockName = root.Q<Label>("TargetLockName");
+            UpdateTargetLockMarker();
+
             root.RegisterCallback<PointerDownEvent>(OnRootPointerDownCapture, TrickleDown.TrickleDown);
+
             _skillPickerOverlay = root.Q("SkillPickerOverlay");
             _skillPickerWindow = root.Q("SkillPickerWindow");
             _skillPickerClose = root.Q("SkillPickerClose");
             _skillPickerList = root.Q<ScrollView>("SkillPickerList");
             _skillPickerTitle = root.Q<Label>("SkillPickerTitle");
-
-            if (_leftSlot != null)
-            {
-                _leftSkillIcon = _leftSlot.Q("SlotIcon");
-                _leftSkillLabel = _leftSlot.Q<Label>("SlotLabel");
-                _leftSlot.pickingMode = PickingMode.Position;
-                _leftSlot.RegisterCallback<PointerDownEvent>(OnLeftSlotDown);
-                _leftSlot.RegisterCallback<PointerMoveEvent>(OnSlotMove);
-                _leftSlot.RegisterCallback<PointerUpEvent>(OnSlotUp);
-                _leftSlot.RegisterCallback<PointerCancelEvent>(OnSlotCancel);
-            }
-
-            if (_rightSlot != null)
-            {
-                _rightSkillIcon = _rightSlot.Q("SlotIcon");
-                _rightSkillLabel = _rightSlot.Q<Label>("SlotLabel");
-                _rightSlot.pickingMode = PickingMode.Position;
-                _rightSlot.RegisterCallback<PointerDownEvent>(OnRightSlotDown);
-                _rightSlot.RegisterCallback<PointerMoveEvent>(OnSlotMove);
-                _rightSlot.RegisterCallback<PointerUpEvent>(OnSlotUp);
-                _rightSlot.RegisterCallback<PointerCancelEvent>(OnSlotCancel);
-            }
 
             if (_skillPickerWindow != null)
             {
@@ -163,7 +176,6 @@ namespace VLTK.UI
                 _skillPickerOverlay.pickingMode = PickingMode.Position;
                 _skillPickerOverlay.RegisterCallback<PointerDownEvent>(evt =>
                 {
-                    // Tap outside list closes picker; list itself stops propagation so touch-drag scroll works.
                     CloseSkillPicker();
                     evt.StopPropagation();
                 });
@@ -186,7 +198,6 @@ namespace VLTK.UI
                     evt.StopPropagation();
                     if (!_pickerPointerDown) return;
                     _pickerPointerDown = false;
-                    // Treat as a tap only if the pointer barely moved (otherwise it was a scroll drag).
                     if (Vector2.Distance((Vector2)evt.position, _pickerPressPos) > PickerTapMoveThreshold)
                         return;
                     AssignSkillUnderPoint((Vector2)evt.position);
@@ -198,137 +209,174 @@ namespace VLTK.UI
             RefreshSlotVisuals();
         }
 
-        /// <summary>Initialize with catalog and progression data.</summary>
-        public void Initialize(SkillCatalog catalog, PlayerProgressionState progression)
+        private void EnsureDeckArrays()
         {
-            _catalog = catalog;
-            _progression = progression;
-            BindElements();
+            if (deckASkillIds == null || deckASkillIds.Length != MobileSkillSlotCount)
+                Array.Resize(ref deckASkillIds, MobileSkillSlotCount);
+            if (deckBSkillIds == null || deckBSkillIds.Length != MobileSkillSlotCount)
+                Array.Resize(ref deckBSkillIds, MobileSkillSlotCount);
+        }
+
+        private int[] GetDeck(int deckIndex) => deckIndex == 1 ? deckBSkillIds : deckASkillIds;
+        private int[] ActiveDeck => GetDeck(_activeDeckIndex);
+
+        private bool IsDeckEmpty(int[] deck)
+        {
+            if (deck == null) return true;
+            for (int i = 0; i < MobileSkillSlotCount; i++)
+                if (deck[i] > 0) return false;
+            return true;
+        }
+
+        private void ImportLegacySlotsIfNeeded()
+        {
+            if (IsDeckEmpty(deckASkillIds))
+            {
+                deckASkillIds[0] = leftSlotSkillId;
+                deckASkillIds[1] = rightSlotSkillId;
+            }
+            else
+            {
+                leftSlotSkillId = deckASkillIds[0];
+                rightSlotSkillId = deckASkillIds[1];
+            }
+        }
+
+        private void FillDefaultDeckIfEmpty()
+        {
+            if (!IsDeckEmpty(deckASkillIds)) return;
+
+            var manager = SandboxManager.Instance;
+            var prog = _progression ?? manager?.PlayerProgression;
+            if (prog == null) return;
+
+            GetDefaultSkillsForFaction(prog.faction, out int defaultLeft, out int defaultRight);
+            if (defaultLeft > 0 && prog.knownSkills.Contains(defaultLeft)) deckASkillIds[0] = defaultLeft;
+            if (defaultRight > 0 && prog.knownSkills.Contains(defaultRight)) deckASkillIds[1] = defaultRight;
+
+            var catalog = _catalog ?? manager?.CombatSkillCatalog;
+            var order = PcSkillPanelService.GetPcSkillOrder(prog.faction);
+            int slot = 0;
+            foreach (var skillId in order)
+            {
+                if (skillId == PcSkillPanelService.NpcVariantSkillId) continue;
+                if (!prog.knownSkills.Contains(skillId) && prog.GetSkillLevel(skillId) <= 0) continue;
+                var skill = catalog?.Resolve(skillId);
+                if (skill != null && skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
+
+                while (slot < MobileSkillSlotCount && deckASkillIds[slot] > 0) slot++;
+                if (slot >= MobileSkillSlotCount) break;
+                deckASkillIds[slot++] = skillId;
+            }
+
+            leftSlotSkillId = deckASkillIds[0];
+            rightSlotSkillId = deckASkillIds[1];
         }
 
         private void GetDefaultSkillsForFaction(CombatFaction faction, out int leftSkill, out int rightSkill)
         {
             switch (faction)
             {
-                case CombatFaction.CaiBang:
-                    leftSkill = 357;
-                    rightSkill = 359;
-                    break;
-                case CombatFaction.WuDang:
-                    leftSkill = 153;
-                    rightSkill = 155;
-                    break;
-                case CombatFaction.Shaolin:
-                    leftSkill = 10;
-                    rightSkill = 11;
-                    break;
-                case CombatFaction.TangMen:
-                    leftSkill = 47;
-                    rightSkill = 58;
-                    break;
-                case CombatFaction.EMei:
-                    leftSkill = 80;
-                    rightSkill = 91;
-                    break;
-                case CombatFaction.TianWang:
-                    leftSkill = 40;
-                    rightSkill = 41;
-                    break;
-                case CombatFaction.WuDu:
-                    leftSkill = 63;
-                    rightSkill = 65;
-                    break;
-                case CombatFaction.CuiYan:
-                    leftSkill = 99;
-                    rightSkill = 105;
-                    break;
-                case CombatFaction.TianRen:
-                    leftSkill = 142;
-                    rightSkill = 148;
-                    break;
-                case CombatFaction.KunLun:
-                    leftSkill = 172;
-                    rightSkill = 182;
-                    break;
-                default:
-                    leftSkill = 0;
-                    rightSkill = 0;
-                    break;
+                case CombatFaction.CaiBang: leftSkill = 357; rightSkill = 359; break;
+                case CombatFaction.WuDang: leftSkill = 153; rightSkill = 155; break;
+                case CombatFaction.Shaolin: leftSkill = 10; rightSkill = 11; break;
+                case CombatFaction.TangMen: leftSkill = 47; rightSkill = 58; break;
+                case CombatFaction.EMei: leftSkill = 80; rightSkill = 91; break;
+                case CombatFaction.TianWang: leftSkill = 40; rightSkill = 41; break;
+                case CombatFaction.WuDu: leftSkill = 63; rightSkill = 65; break;
+                case CombatFaction.CuiYan: leftSkill = 99; rightSkill = 105; break;
+                case CombatFaction.TianRen: leftSkill = 142; rightSkill = 148; break;
+                case CombatFaction.KunLun: leftSkill = 172; rightSkill = 182; break;
+                default: leftSkill = 0; rightSkill = 0; break;
             }
         }
 
-        /// <summary>Assign a skill to a specific slot.</summary>
+        public int GetAssignedSkill(int slot, int deckIndex = -1)
+        {
+            EnsureDeckArrays();
+            if (slot < 0 || slot >= MobileSkillSlotCount) return 0;
+            return GetDeck(deckIndex < 0 ? _activeDeckIndex : deckIndex)[slot];
+        }
+
+        /// <summary>Assign a skill to a specific slot on the active deck.</summary>
         public void AssignSkill(int slot, int skillId)
         {
-            if (slot == 0) leftSlotSkillId = skillId;
-            else if (slot == 1) rightSlotSkillId = skillId;
+            EnsureDeckArrays();
+            if (slot < 0 || slot >= MobileSkillSlotCount) return;
+            ActiveDeck[slot] = Mathf.Max(0, skillId);
+            SyncLegacySlotFields();
             RefreshSlotVisuals();
-            SubsystemLog.Info("Combat", $"Assigned skill {skillId} to slot {slot}");
+            SubsystemLog.Info("Combat", $"Assigned skill {skillId} to deck {ActiveDeckName()} slot {slot}");
         }
 
-        /// <summary>Clear a slot (remove assigned skill).</summary>
-        public void ClearSlot(int slot)
+        public void ClearSlot(int slot) => AssignSkill(slot, 0);
+
+        public void ToggleDeck()
         {
-            AssignSkill(slot, 0);
+            _activeDeckIndex = _activeDeckIndex == 0 ? 1 : 0;
+            SyncLegacySlotFields();
+            RefreshSlotVisuals();
+            SubsystemLog.Info("Combat", $"Switch combat deck {ActiveDeckName()}");
         }
 
-        private void OnLeftSlotDown(PointerDownEvent evt)
+        private string ActiveDeckName() => _activeDeckIndex == 0 ? "A" : "B";
+
+        private void SyncLegacySlotFields()
         {
-            BeginSlotPress(0, evt.pointerId, evt.position);
+            leftSlotSkillId = deckASkillIds != null && deckASkillIds.Length > 0 ? deckASkillIds[0] : 0;
+            rightSlotSkillId = deckASkillIds != null && deckASkillIds.Length > 1 ? deckASkillIds[1] : 0;
+        }
+
+        private void OnSkillSlotDown(int slot, PointerDownEvent evt)
+        {
+            BeginSlotPress(slot, evt.pointerId, evt.position);
             evt.StopPropagation();
         }
 
-        private void OnRightSlotDown(PointerDownEvent evt)
-        {
-            BeginSlotPress(1, evt.pointerId, evt.position);
-            evt.StopPropagation();
-        }
-
-        // Root trickle-down intercept: fires BEFORE the event reaches ToolbarRight/BtnTreasure,
-        // so a tap on the T/P slot area always starts a slot press — immune to sibling-order
-        // rebuilds that would otherwise let a menu button become the pick-target and eat the tap.
         private void OnRootPointerDownCapture(PointerDownEvent evt)
         {
             var pos = (Vector2)evt.position;
-            if (_leftSlot != null && _leftSlot.worldBound.Contains(pos))
+            for (int i = 0; i < MobileSkillSlotCount; i++)
             {
-                BeginSlotPress(0, evt.pointerId, evt.position);
+                if (_skillSlots[i] == null || !_skillSlots[i].worldBound.Contains(pos)) continue;
+                BeginSlotPress(i, evt.pointerId, evt.position);
                 evt.StopImmediatePropagation();
-            }
-            else if (_rightSlot != null && _rightSlot.worldBound.Contains(pos))
-            {
-                BeginSlotPress(1, evt.pointerId, evt.position);
-                evt.StopImmediatePropagation();
+                return;
             }
         }
 
         private void BeginSlotPress(int slot, int pointerId, Vector2 screenPos)
         {
+            if (slot < 0 || slot >= MobileSkillSlotCount) return;
             _pressedSlot = slot;
             _pressedPointerId = pointerId;
             _startPointerPos = screenPos;
             _slotPointerDown = true;
             _longPressOpened = false;
-            (slot == 0 ? _leftSlot : _rightSlot)?.CapturePointer(pointerId);
+            _aimingDrag = false;
+            HideCancelCastZone();
+            _skillSlots[slot]?.CapturePointer(pointerId);
             StartCoroutine(OpenPickerAfterLongPress(slot, pointerId));
         }
 
         private IEnumerator OpenPickerAfterLongPress(int slot, int pointerId)
         {
             yield return new WaitForSeconds(LongPressMs / 1000f);
-            if (!_slotPointerDown || _pressedSlot != slot || _pressedPointerId != pointerId) yield break;
+            if (!_slotPointerDown || _aimingDrag || _pressedSlot != slot || _pressedPointerId != pointerId) yield break;
             _longPressOpened = true;
             OpenSkillPicker(slot);
         }
 
         private void OnSlotMove(PointerMoveEvent evt)
         {
-            // Only a real drag (finger moved far) cancels the long-press; small jitter
-            // while holding must NOT abort it, otherwise the picker never opens on device.
-            if (_slotPointerDown && !_longPressOpened &&
-                Vector2.Distance((Vector2)evt.position, _startPointerPos) > SlotDragCancelThreshold)
+            if (_slotPointerDown && !_longPressOpened && _pressedSlot >= 0)
             {
-                CancelSlotPress();
+                float distance = Vector2.Distance((Vector2)evt.position, _startPointerPos);
+                if (distance > SlotDragCancelThreshold && GetAssignedSkill(_pressedSlot) > 0)
+                {
+                    _aimingDrag = true;
+                    ShowCancelCastZone();
+                }
             }
             evt.StopPropagation();
         }
@@ -336,73 +384,173 @@ namespace VLTK.UI
         private void OnSlotUp(PointerUpEvent evt)
         {
             int slot = _pressedSlot;
-            (slot == 0 ? _leftSlot : _rightSlot)?.ReleasePointer(evt.pointerId);
+            ReleasePressedSlotCapture(evt.pointerId);
             _slotPointerDown = false;
             _pressedSlot = -1;
             _pressedPointerId = -1;
 
-            if (!_longPressOpened && slot >= 0)
+            if (_aimingDrag && slot >= 0)
             {
-                int skillId = slot == 0 ? leftSlotSkillId : rightSlotSkillId;
+                bool cancelled = IsInCancelCastZone((Vector2)evt.position);
+                if (!cancelled)
+                    TriggerSkillSlot(slot, GetAssignedSkill(slot));
+                else
+                    SubsystemLog.Info("Combat", $"Cancel aim deck {ActiveDeckName()} slot {slot}");
+            }
+            else if (!_longPressOpened && slot >= 0)
+            {
+                int skillId = GetAssignedSkill(slot);
                 if (skillId > 0) TriggerSkillSlot(slot, skillId);
                 else OpenSkillPicker(slot);
             }
 
             _longPressOpened = false;
+            _aimingDrag = false;
+            HideCancelCastZone();
             evt.StopPropagation();
         }
 
         private void OnSlotCancel(PointerCancelEvent evt)
         {
-            // Device fires PointerCancel on finger jitter / capture loss while holding.
-            // Do NOT kill the press here — that would stop the long-press from ever opening
-            // the picker. Just release the pointer capture; the Update-independent coroutine
-            // keeps running and opens the picker at 450ms unless a real PointerUp arrives.
-            int slot = _pressedSlot;
-            if (slot >= 0)
-                (slot == 0 ? _leftSlot : _rightSlot)?.ReleasePointer(_pressedPointerId);
+            // Mobile devices can fire PointerCancel during capture changes. Keep the
+            // press alive for long-press unless we were actually aiming; then cancel aim.
+            if (_aimingDrag)
+            {
+                ReleasePressedSlotCapture(_pressedPointerId);
+                ResetPressState();
+            }
             evt.StopPropagation();
         }
 
-        private void CancelSlotPress()
+        private void ReleasePressedSlotCapture(int pointerId)
         {
             int slot = _pressedSlot;
-            if (slot >= 0)
-            {
-                (slot == 0 ? _leftSlot : _rightSlot)?.ReleasePointer(_pressedPointerId);
-            }
+            if (slot >= 0 && slot < MobileSkillSlotCount)
+                _skillSlots[slot]?.ReleasePointer(pointerId);
+        }
+
+        private void ResetPressState()
+        {
             _slotPointerDown = false;
             _pressedSlot = -1;
             _pressedPointerId = -1;
             _longPressOpened = false;
+            _aimingDrag = false;
+            HideCancelCastZone();
         }
 
-        /// <summary>Open the skill picker overlay for a specific slot.</summary>
+        private void ShowCancelCastZone()
+        {
+            _cancelCastZone?.RemoveFromClassList("hidden");
+        }
+
+        private void HideCancelCastZone()
+        {
+            _cancelCastZone?.AddToClassList("hidden");
+        }
+
+        private bool IsInCancelCastZone(Vector2 panelPoint)
+            => _cancelCastZone != null
+               && !_cancelCastZone.ClassListContains("hidden")
+               && _cancelCastZone.worldBound.Contains(panelPoint);
+
         public void OpenSkillPicker(int slot)
         {
-            _activeSlot = slot;
+            _activeSlot = Mathf.Clamp(slot, 0, MobileSkillSlotCount - 1);
             BindElements();
 
-            if (_skillPickerOverlay != null)
-            {
-                _skillPickerOverlay.RemoveFromClassList("hidden");
-            }
+            _skillPickerOverlay?.RemoveFromClassList("hidden");
             if (_skillPickerTitle != null)
-            {
-                _skillPickerTitle.text = slot == 0 ? "Chọn kỹ năng (Trái)" : "Chọn kỹ năng (Phải)";
-            }
-            PopulateSkillPicker();
+                _skillPickerTitle.text = $"Chọn kỹ năng ({ActiveDeckName()}-{_activeSlot + 1})";
 
-            SubsystemLog.Info("Combat", $"Skill picker opened for slot {slot}");
+            PopulateSkillPicker();
+            SubsystemLog.Info("Combat", $"Skill picker opened for deck {ActiveDeckName()} slot {_activeSlot}");
         }
 
-        /// <summary>Close the skill picker overlay.</summary>
         public void CloseSkillPicker()
         {
             _activeSlot = -1;
-            if (_skillPickerOverlay != null)
+            _skillPickerOverlay?.AddToClassList("hidden");
+        }
+
+        public void TriggerPrimaryAttack()
+        {
+            int slot = ResolvePrimaryAttackSlot();
+            if (slot >= 0)
             {
-                _skillPickerOverlay.AddToClassList("hidden");
+                TriggerSkillSlot(slot, GetAssignedSkill(slot));
+                return;
+            }
+
+            if (TryLockNearestTarget())
+                SubsystemLog.Info("Combat", $"Primary attack locked target {_lockedTargetName}; assign a skill to cast.");
+            else
+                OpenSkillPicker(0);
+        }
+
+        public int ResolvePrimaryAttackSlot()
+        {
+            if (GetAssignedSkill(0) > 0) return 0;
+            for (int i = 1; i < MobileSkillSlotCount; i++)
+                if (GetAssignedSkill(i) > 0) return i;
+            return -1;
+        }
+
+        public bool TryLockNearestTarget()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player == null) return false;
+            var enemies = CollectEnemies();
+            EnemyRuntimeInfo best = null;
+            float bestDist = float.MaxValue;
+            Vector2 casterPos = player.transform.position;
+            foreach (var enemy in enemies)
+            {
+                if (enemy == null || !enemy.alive) continue;
+                float dist = Vector2.Distance(casterPos, enemy.position);
+                if (dist >= bestDist) continue;
+                best = enemy;
+                bestDist = dist;
+            }
+
+            if (best == null)
+            {
+                ClearTargetLock();
+                return false;
+            }
+
+            LockTarget(best.enemyId, string.IsNullOrWhiteSpace(best.displayName) ? $"Mục tiêu {best.enemyId}" : best.displayName);
+            return true;
+        }
+
+        public void LockTarget(int enemyId, string displayName)
+        {
+            _lockedTargetId = enemyId;
+            _lockedTargetName = displayName ?? string.Empty;
+            UpdateTargetLockMarker();
+            SubsystemLog.Info("Combat", $"Lock target {_lockedTargetName} ({_lockedTargetId})");
+        }
+
+        public void ClearTargetLock()
+        {
+            _lockedTargetId = -1;
+            _lockedTargetName = string.Empty;
+            UpdateTargetLockMarker();
+        }
+
+        private void UpdateTargetLockMarker()
+        {
+            if (_targetLockMarker == null) return;
+            if (_lockedTargetId >= 0)
+            {
+                _targetLockMarker.RemoveFromClassList("hidden");
+                if (_targetLockName != null)
+                    _targetLockName.text = string.IsNullOrWhiteSpace(_lockedTargetName) ? "Đã khóa" : _lockedTargetName;
+            }
+            else
+            {
+                _targetLockMarker.AddToClassList("hidden");
+                if (_targetLockName != null) _targetLockName.text = string.Empty;
             }
         }
 
@@ -420,31 +568,15 @@ namespace VLTK.UI
             CombatFaction playerFaction = progression?.faction ?? CombatFaction.CaiBang;
             var factionSkillOrder = PcSkillPanelService.GetPcSkillOrder(playerFaction);
 
-            var activeSkillIds = new System.Collections.Generic.List<int>();
             foreach (var skillId in factionSkillOrder)
             {
-                if (skillId == PcSkillPanelService.NpcVariantSkillId)
-                    continue;
-
+                if (skillId == PcSkillPanelService.NpcVariantSkillId) continue;
                 var skill = catalog.Resolve(skillId);
                 if (skill == null) continue;
-
-                if (skill.skillStyle == PcSkillStyle.PassivityNpcState)
-                    continue;
+                if (skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
 
                 int learnedLevel = progression?.GetSkillLevel(skill.skillId) ?? 0;
                 if (learnedLevel <= 0) continue;
-
-                activeSkillIds.Add(skillId);
-            }
-
-            foreach (var skillId in activeSkillIds)
-            {
-                var skill = catalog.Resolve(skillId);
-                if (skill == null) continue;
-
-                int learnedLevel = progression?.GetSkillLevel(skill.skillId) ?? 0;
-                if (learnedLevel <= 0) continue; // Only show learned skills
 
                 var item = new VisualElement();
                 item.AddToClassList("skill-picker-item");
@@ -457,29 +589,19 @@ namespace VLTK.UI
 
                 var info = new VisualElement();
                 info.AddToClassList("skill-picker-info");
-
                 var nameLabel = new Label(skill.DisplayName);
                 nameLabel.AddToClassList("skill-picker-name");
-                info.Add(nameLabel);
-
                 var levelLabel = new Label($"Cấp {learnedLevel}");
                 levelLabel.AddToClassList("skill-picker-level");
-                info.Add(levelLabel);
-
-                var typeLabel = new Label(skill.missileForm switch
-                {
-                    SkillMissileForm.Single => "Tấn công đơn mục tiêu",
-                    SkillMissileForm.Surround => "Tấn công phạm vi",
-                    SkillMissileForm.Fan => "Tấn công hình quạt",
-                    _ => skill.isAura ? "Trận pháp" : "Hỗ trợ",
-                });
+                var typeLabel = new Label(skill.skillStyle == PcSkillStyle.PassivityNpcState ? "Bị động" : "Chủ động");
                 typeLabel.AddToClassList("skill-picker-type");
+                info.Add(nameLabel);
+                info.Add(levelLabel);
                 info.Add(typeLabel);
-
                 item.Add(info);
 
                 int capturedId = skillId;
-                item.userData = capturedId; // used by AssignSkillUnderPoint (touch tap path)
+                item.userData = capturedId;
                 item.RegisterCallback<ClickEvent>(evt =>
                 {
                     AssignSkill(_activeSlot, capturedId);
@@ -491,10 +613,6 @@ namespace VLTK.UI
             }
         }
 
-        /// <summary>
-        /// Assign the skill whose picker item is under the given panel point. Used by the
-        /// touch tap path because ScrollView pointer-capture swallows ClickEvent on items.
-        /// </summary>
         private void AssignSkillUnderPoint(Vector2 panelPoint)
         {
             if (_skillPickerList == null) return;
@@ -515,64 +633,58 @@ namespace VLTK.UI
         private void RefreshSlotVisuals()
         {
             string artPath = HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art");
-
-            // The bottom bar bakes PC fist art into the background. The USS rule
-            // `#BottomPanel .hud-skill-slot-icon { display: none; }` hides slot icons
-            // so that baked art shows through on EMPTY slots. When a skill is assigned
-            // we override that inline (inline style beats USS) so the assigned skill
-            // icon draws over the baked fist — matching PC where T/P show the bound skill.
-            if (_leftSkillIcon != null)
+            for (int i = 0; i < MobileSkillSlotCount; i++)
             {
-                if (leftSlotSkillId > 0)
+                int skillId = GetAssignedSkill(i);
+                var icon = _skillIcons[i];
+                if (icon != null)
                 {
-                    GameHudController.LoadIconStatic(this, _leftSkillIcon, artPath, $"cai_bang_skill_{leftSlotSkillId}");
-                    _leftSkillIcon.RemoveFromClassList("empty");
-                    _leftSkillIcon.style.display = DisplayStyle.Flex;
+                    if (skillId > 0)
+                    {
+                        GameHudController.LoadIconStatic(this, icon, artPath, $"cai_bang_skill_{skillId}");
+                        icon.RemoveFromClassList("empty");
+                        icon.style.display = DisplayStyle.Flex;
+                    }
+                    else
+                    {
+                        icon.style.backgroundImage = new StyleBackground();
+                        icon.AddToClassList("empty");
+                        icon.style.display = DisplayStyle.Flex;
+                    }
                 }
-                else
-                {
-                    _leftSkillIcon.style.backgroundImage = new StyleBackground();
-                    _leftSkillIcon.AddToClassList("empty");
-                    _leftSkillIcon.style.display = StyleKeyword.Null; // fall back to USS (hidden in bottom bar)
-                }
+                UpdateSlotLabel(_skillLabels[i], i, skillId);
             }
 
-            if (_rightSkillIcon != null)
-            {
-                if (rightSlotSkillId > 0)
-                {
-                    GameHudController.LoadIconStatic(this, _rightSkillIcon, artPath, $"cai_bang_skill_{rightSlotSkillId}");
-                    _rightSkillIcon.RemoveFromClassList("empty");
-                    _rightSkillIcon.style.display = DisplayStyle.Flex;
-                }
-                else
-                {
-                    _rightSkillIcon.style.backgroundImage = new StyleBackground();
-                    _rightSkillIcon.AddToClassList("empty");
-                    _rightSkillIcon.style.display = StyleKeyword.Null; // fall back to USS (hidden in bottom bar)
-                }
-            }
-
-            UpdateSlotLabel(_leftSkillLabel, leftSlotSkillId);
-            UpdateSlotLabel(_rightSkillLabel, rightSlotSkillId);
+            if (_deckSwitchLabel != null)
+                _deckSwitchLabel.text = ActiveDeckName();
         }
 
-        private void UpdateSlotLabel(Label label, int skillId)
+        private void UpdateSlotLabel(Label label, int slot, int skillId)
         {
             if (label == null) return;
             if (skillId <= 0)
             {
-                label.text = "+";
+                label.text = (slot + 1).ToString();
                 return;
             }
             var catalog = _catalog ?? SandboxManager.Instance?.CombatSkillCatalog;
             var skill = catalog?.Resolve(skillId);
-            label.text = skill?.DisplayName ?? $"Skill {skillId}";
+            label.text = skill == null ? skillId.ToString() : ShortenSkillName(skill.DisplayName);
         }
 
-        /// <summary>Trigger a skill slot — auto-target nearest enemy and cast.</summary>
+        private static string ShortenSkillName(string displayName)
+        {
+            if (string.IsNullOrWhiteSpace(displayName)) return string.Empty;
+            var words = displayName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length == 1) return words[0].Length <= 3 ? words[0] : words[0].Substring(0, 3);
+            return (words[0][0].ToString() + words[words.Length - 1][0]).ToUpperInvariant();
+        }
+
+        /// <summary>Trigger a skill slot — prefer locked target, else auto-target nearest enemy.</summary>
         public void TriggerSkillSlot(int slot, int skillId)
         {
+            if (skillId <= 0) return;
+
             var manager = SandboxManager.Instance;
             if (manager == null) return;
 
@@ -580,50 +692,31 @@ namespace VLTK.UI
             var skill = catalog?.Resolve(skillId);
             if (skill == null) return;
 
-            // Get caster position from player controller
             var player = manager.PlayerController;
             if (player == null) return;
 
             Vector2 casterPos = player.transform.position;
-
-            // Play the PC character cast animation selected by Skills.txt CharAnimId.
-            // PC KNpc.cpp uses m_CastFrame (default 20 ticks) for non-physical magic skills.
-            // The animation suffix depends on equipped weapon (MG01=empty, MG04=staff).
             player.PlayPcSkillAction(skill.charAnimId, PcCastAnimationDurationSeconds(skill));
 
-            // Get enemies in scene
             var enemies = CollectEnemies();
-
-            // Find nearest enemy in range. PC Kháng Long VM tuning expands range by level.
             int skillLevel = manager.PlayerProgression?.skillLevels.TryGetValue(skillId, out var lv) == true ? lv : skill.maxLevel;
-            var targetService = new CombatAutoTargetService();
-            var target = targetService.FindNearestEnemy(casterPos, skill, enemies, skillLevel);
+            var target = ResolveCombatTarget(casterPos, skill, enemies, skillLevel);
 
             if (target != null)
             {
-                // Face toward target
                 int facing = CombatAutoTargetService.ComputeFacing8Way(casterPos, target.position);
                 player.SetFacing(facing);
 
-                // Cast the skill
                 var combatRuntime = manager.CombatRuntime;
                 if (combatRuntime != null)
                 {
                     var caster = CreateCombatActor(player, skill);
                     var targetActor = CreateTargetActor(target);
-
-                    var report = combatRuntime.Cast(
-                        caster, targetActor, skillId,
-                        target.position, CombatRelation.Enemy);
+                    var report = combatRuntime.Cast(caster, targetActor, skillId, target.position, CombatRelation.Enemy);
 
                     if (report.success)
                     {
-                        // Play skill visual effect first. PC applies damage when missile/skill resolves,
-                        // so mirror HP to the live BaLangEnemyAi when the visual reaches impact.
                         var effectService = manager.SkillEffectVisual;
-                        // PC missiles track the enemy NPC's current position each tick.
-                        // Capture a callback that returns the live target's transform position so
-                        // the visual effect chases the enemy as it moves (homing).
                         BaLangEnemyAi liveTarget = target.enemyBehaviour;
                         System.Func<Vector2> currentTargetPos = liveTarget != null
                             ? (System.Func<Vector2>)(() => (Vector2)liveTarget.transform.position)
@@ -632,32 +725,83 @@ namespace VLTK.UI
                         if (target.enemyBehaviour != null)
                             StartCoroutine(ApplyLiveEnemyHpAtImpact(target, targetActor.currentLife, skillId, report.skillLevel, report, fx));
 
-                        SubsystemLog.Info("Combat",
-                            $"Cast {skill.DisplayName} → {target.name} " +
-                            $"(dmg={report.damageResults.Count}, pendingHp={targetActor.currentLife}, range={target.distance:F0})");
+                        SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} [{ActiveDeckName()}-{slot + 1}] → {target.name} " +
+                                                     $"(dmg={report.damageResults.Count}, pendingHp={targetActor.currentLife}, range={target.distance:F0})");
                     }
                     else
                     {
-                        SubsystemLog.Warn("Combat",
-                            $"Cast {skill.DisplayName} FAILED: {report.reason} — {report.detail}");
+                        SubsystemLog.Warn("Combat", $"Cast {skill.DisplayName} FAILED: {report.reason} — {report.detail}");
                     }
                 }
             }
             else
             {
-                // No enemy in range — still play cast animation but no damage
                 var effectService = manager.SkillEffectVisual;
                 effectService?.PlaySkillCast(skill, casterPos, casterPos + new Vector2(0, -50f), 1);
                 SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} — no enemy in range");
             }
         }
 
+        private CombatTargetInfo ResolveCombatTarget(
+            Vector2 casterPos,
+            SkillDefinition skill,
+            IReadOnlyList<EnemyRuntimeInfo> enemies,
+            int skillLevel)
+        {
+            var locked = FindLockedTarget(casterPos, skill, enemies, skillLevel);
+            if (locked != null) return locked;
+
+            var targetService = new CombatAutoTargetService();
+            var nearest = targetService.FindNearestEnemy(casterPos, skill, enemies, skillLevel);
+            if (nearest != null)
+                LockTarget(nearest.enemyId, nearest.name);
+            return nearest;
+        }
+
+        private CombatTargetInfo FindLockedTarget(
+            Vector2 casterPos,
+            SkillDefinition skill,
+            IReadOnlyList<EnemyRuntimeInfo> enemies,
+            int skillLevel)
+        {
+            if (_lockedTargetId < 0 || enemies == null || skill == null) return null;
+            int attackRadius;
+            if (PcKangLongYouHuiTuning.Applies(skill.skillId) && skillLevel > 0)
+                attackRadius = PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
+            else if (PcCaiBangSkillTuning.Applies(skill.skillId) && skillLevel > 0)
+                attackRadius = PcCaiBangSkillTuning.AtLevel(skill.skillId, skillLevel).attackRadius;
+            else
+                attackRadius = skill.attackRadius;
+            float maxRange = attackRadius > 0 ? attackRadius : 500f;
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                var enemy = enemies[i];
+                if (enemy == null || enemy.enemyId != _lockedTargetId || !enemy.alive) continue;
+                float dist = Vector2.Distance(casterPos, enemy.position);
+                if (dist > maxRange) break;
+                return new CombatTargetInfo
+                {
+                    enemyIndex = i,
+                    position = enemy.position,
+                    distance = dist,
+                    enemyId = enemy.enemyId,
+                    name = enemy.displayName,
+                    currentLife = enemy.currentLife,
+                    maxLife = enemy.maxLife,
+                    enemyBehaviour = enemy.enemyBehaviour,
+                };
+            }
+
+            ClearTargetLock();
+            return null;
+        }
+
         private static float PcCastAnimationDurationSeconds(SkillDefinition skill)
         {
             if (skill == null) return 0f;
             if (skill.charAnimId == 14) return 0f; // cdo_none
-            // PC default player CastSpeed is 20 ticks, advanced by SubWorld.m_dwCurrentTime (~18 ticks/sec).
-            return 20f / 18f;
+            return 20f / 18f; // PC default m_CastFrame=20 ticks, ~18 ticks/sec.
         }
 
         private IEnumerator ApplyLiveEnemyHpAtImpact(CombatTargetInfo target, int hp, int skillId, int skillLevel, CombatCastReport report, ActiveSkillEffect fx)
@@ -683,9 +827,7 @@ namespace VLTK.UI
                     {
                         var subSkill = manager.CombatSkillCatalog?.Resolve(389);
                         if (subSkill != null)
-                        {
                             manager.SkillEffectVisual?.PlaySkillCast(subSkill, target.position, target.position, skillLevel);
-                        }
                     }
 
                     if (report.damageResults.Count > 1)
@@ -698,10 +840,7 @@ namespace VLTK.UI
                             {
                                 float dist = Vector2.Distance(target.position, enemy.position);
                                 if (dist <= 3.0f)
-                                {
-                                    int newLife = Mathf.Max(0, enemy.currentLife - aoeDamage);
-                                    enemy.enemyBehaviour.SetLife(newLife);
-                                }
+                                    enemy.enemyBehaviour.SetLife(Mathf.Max(0, enemy.currentLife - aoeDamage));
                             }
                         }
                     }
@@ -715,7 +854,6 @@ namespace VLTK.UI
             var runtime = SandboxManager.Instance?.EnemyRuntime;
             if (runtime == null) return enemies;
 
-            // Collect from BaLangEnemySpawnRuntime
             var spawns = runtime.GetActiveEnemies();
             if (spawns != null)
             {
@@ -741,11 +879,8 @@ namespace VLTK.UI
             var manager = SandboxManager.Instance;
             var progression = _progression ?? manager?.PlayerProgression ?? new PlayerProgressionState();
 
-            // Ensure progression has been granted so level/skills are populated.
             if (manager != null)
-            {
                 manager.GrantFactionSkillPanelProgression(progression.faction);
-            }
 
             int playerLevel = progression.level;
             int playerMana = PcMaxManaFormula.Compute(playerLevel, 0, progression.faction);
@@ -761,14 +896,12 @@ namespace VLTK.UI
                 maxLife = 100,
             };
 
-            // Copy known skills and levels from progression (populated by GrantFactionSkillPanelProgression).
             foreach (var id in progression.knownSkills)
                 actor.knownSkills.Add(id);
             foreach (var kv in progression.skillLevels)
                 actor.skillLevels[kv.Key] = kv.Value > 0 ? kv.Value : 1;
 
-            // Ensure the active skill has at least level 1
-            if (!actor.skillLevels.ContainsKey(skill.skillId) || actor.skillLevels[skill.skillId] <= 0)
+            if (skill != null && (!actor.skillLevels.ContainsKey(skill.skillId) || actor.skillLevels[skill.skillId] <= 0))
                 actor.skillLevels[skill.skillId] = 1;
 
             return actor;
