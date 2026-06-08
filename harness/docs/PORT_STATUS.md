@@ -302,3 +302,32 @@ For each future status row, cite at least one of:
 2. Port remaining resolved deferred trap families from PC source: `ClearSkillTeamEnterHole`, then `TongMapEntrance`, then `CityWarJoinRouter`.
 3. Add exact count tests for waypoint/wharf/revive mismatches.
 4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
+
+## Harness DB sync audit — 2026-06-08
+
+Command evidence:
+
+```bash
+scripts/harness query stats
+scripts/harness query sql "select status,count(*) from story group by status;"
+scripts/harness query sql "select sum(unit_proof),sum(integration_proof),sum(e2e_proof),sum(platform_proof),count(*) from story;"
+scripts/harness query traces
+scripts/harness query backlog --open
+```
+
+Current Harness DB facts:
+
+```text
+stats: intakes=15, stories=32, decisions=6, backlog_items=2 before adding sync backlog, traces=41
+story status counts: implemented=32
+story proof flags: unit=32, integration=32, e2e=0, platform=0, total=32
+latest traces: ST-06.1 HUD work at trace #40/#41; map 389 traces #38/#39 have no story_id
+open backlog after audit: #2 Align root harness wrapper..., #3 Align Harness matrix semantics with PORT_STATUS truth matrix
+```
+
+Sync verdict:
+
+- **Not semantically synced** if Harness matrix `implemented` is read as “full PC port complete”. It is a historical story-slice/test matrix.
+- `PORT_STATUS.md` remains the port-completion authority. It intentionally marks many domains `🔄/☐` even when Harness story rows are `implemented`, because story rows prove older implementation slices, not full PC data/visual/Lua parity.
+- Do **not** use `scripts/harness query matrix` alone to claim port completeness or `% complete`.
+- Backlog #3 records the required Harness follow-up: align matrix semantics with this truth matrix or add explicit story notes/status categories distinguishing “story slice implemented” from “PC parity complete”.
