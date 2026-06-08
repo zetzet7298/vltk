@@ -95,6 +95,16 @@ namespace VLTK.Tests.Sandbox
             public int originalCamp = 0;
             public int battleRank = 0;
             public int playerFactionId = (int)CombatFaction.None;
+            public int playerSeriesId = -1;
+            public int playerSex = 0;
+            public string playerName = "Người chơi";
+            public int timerId = 0;
+            public int setTimerTicks;
+            public int setTimerId;
+            public int cityArea;
+            public string cityOwnerMasterName = "";
+            public string cityStatusSummary = "city status";
+            public string citySealInfo = "";
             public int logoutRv = -1;
             public int pkFlag = -1;
             public int forbidChangePk = -1;
@@ -116,6 +126,9 @@ namespace VLTK.Tests.Sandbox
                 return hasReviveTarget;
             }
             public int GetPlayerLevel() => playerLevel;
+            public int GetPlayerSeriesId() => playerSeriesId;
+            public int GetPlayerSex() => playerSex;
+            public string GetPlayerName() => playerName;
             public long GetCurrentDateYmdHm() => currentDateYmdHm;
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
             public int GetTaskValue(int taskId) => taskValues.TryGetValue(taskId, out var value) ? value : taskValue;
@@ -137,6 +150,17 @@ namespace VLTK.Tests.Sandbox
             public int GetBattleRank() => battleRank;
             public int GetFightState() => fightState;
             public int GetPlayerFactionId() => playerFactionId;
+            public int GetTimerId() => timerId;
+            public void SetTimer(int ticks, int nextTimerId)
+            {
+                setTimerTicks = ticks;
+                setTimerId = nextTimerId;
+                timerId = nextTimerId;
+            }
+            public int GetCityArea() => cityArea;
+            public string GetCityOwnerMasterName(int cityId) => cityOwnerMasterName;
+            public string GetCityStatusSummary(int cityId) => cityStatusSummary;
+            public string GetCitySealInfo() => citySealInfo;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
                 mapId = targetMapId;
@@ -203,6 +227,7 @@ namespace VLTK.Tests.Sandbox
             public string promptMessage;
             public string[] promptChoices;
             public int earnedSilver;
+            public int openedCityManageId;
 
             public void PostMessage(string nextMessage)
             {
@@ -220,6 +245,7 @@ namespace VLTK.Tests.Sandbox
                 PostMessage(nextPromptMessage);
             }
             public void EarnSilver(int amount) => earnedSilver += amount;
+            public void OpenCityManage(int cityId) => openedCityManageId = cityId;
         }
 
         [Test]
@@ -264,14 +290,14 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(296, catalog.Count);
+            Assert.AreEqual(299, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
             Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
-            Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsPromptBranchMessage));
+            Assert.AreEqual(10, catalog.entries.Count(e => e != null && e.IsPromptBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -378,6 +404,21 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(tangMoneyChest);
             Assert.IsTrue(tangMoneyChest.IsPromptBranchMessage);
             Assert.AreEqual("EarnSilver", tangMoneyChest.branches[0].choices[0].effects[0].type);
+            var cityBulletin = catalog.Find(@"\script\missions\citywar_global\citybulletin.lua");
+            Assert.IsNotNull(cityBulletin);
+            Assert.IsTrue(cityBulletin.IsPromptBranchMessage);
+            Assert.AreEqual("city_1_7_owner_prompt", cityBulletin.branches[0].label);
+            Assert.AreEqual("OpenCityManage", cityBulletin.branches[0].choices[0].effects[0].type);
+            var chengduBulletin = catalog.Find(@"\script\西南北区\成都\成都\地图Obj\西南北区-成都府-告示牌1.lua");
+            Assert.IsNotNull(chengduBulletin);
+            Assert.IsTrue(chengduBulletin.IsPromptBranchMessage);
+            Assert.AreEqual("task_11_zero_prompt", chengduBulletin.branches[0].label);
+            Assert.AreEqual("SetTask", chengduBulletin.branches[0].choices[0].effects[1].type);
+            var cuiyanFlower = catalog.Find(@"\script\西南南区\翠烟门\翠烟门\obj\捡拾_cyl20_大曼陀罗花.lua");
+            Assert.IsNotNull(cuiyanFlower);
+            Assert.IsTrue(cuiyanFlower.IsPromptBranchMessage);
+            Assert.AreEqual("cuiyan_task_timer_0_poison", cuiyanFlower.branches[1].label);
+            Assert.AreEqual("SetTimer", cuiyanFlower.branches[1].effects[3].type);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -1488,6 +1529,113 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(executor.TryExecute(obj, out result));
             CollectionAssert.AreEqual(new[] { "Bạn đã mở 1 rương khác nên không thể mở lại rương này!" }, sideEffects.messages);
             StringAssert.Contains("branch=1", result.detail);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_PromptBranchMessage_PreservesCityBulletinCallbacks()
+        {
+            var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
+            var obj = new MapInteractiveObject { script = @"\script\missions\citywar_global\citybulletin.lua" };
+            var host = new FakeTrapTravelHost { cityArea = 3, playerName = "Thái Thú", cityOwnerMasterName = "Thái Thú", cityStatusSummary = "city status", citySealInfo = "seal" };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual("Làm chức Thái Thú, bạn có muốn thiết đặt thuế mới không?", sideEffects.promptMessage);
+            CollectionAssert.AreEqual(new[] { "Muốn", "Không, ta chỉ muốn xem thông tin của thành thị." }, sideEffects.promptChoices);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecuteChoice(obj, 0, out result));
+            Assert.AreEqual(3, sideEffects.openedCityManageId);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecuteChoice(obj, 1, out result));
+            CollectionAssert.AreEqual(new[] { "city status\nseal" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { cityArea = 0 };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { "Khu vực không có quản lý. " }, sideEffects.messages);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_PromptBranchMessage_PreservesChengduBulletinTaskBranches()
+        {
+            var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
+            var obj = new MapInteractiveObject { script = @"\script\西南北区\成都\成都\地图Obj\西南北区-成都府-告示牌1.lua" };
+            var host = new FakeTrapTravelHost { taskValues = { [11] = 0 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            StringAssert.StartsWith("Thông cáo: Gần đây", sideEffects.promptMessage);
+            CollectionAssert.AreEqual(new[] { "Bảng niêm yết", "Không màng" }, sideEffects.promptChoices);
+
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecuteChoice(obj, 0, out result));
+            Assert.AreEqual(1, host.GetTaskValue(11));
+            CollectionAssert.AreEqual(new[] { "Bạn giật lấy bản thông cáo, quyết tâm trừ hại giúp bá tánh!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { playerName = "Mai", playerSex = 1, taskValues = { [11] = 100 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            StringAssert.Contains("Nha dịch phủ Thành Đô: Nữ hiệpMai", sideEffects.message);
+
+            host = new FakeTrapTravelHost { currentDateYmdHm = 202606080900, taskValues = { [11] = 20200101 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            StringAssert.StartsWith("Thông cáo: Gần đây", sideEffects.promptMessage);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_PromptBranchMessage_PreservesCuiyanFlowerTimerBranches()
+        {
+            var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
+            var obj = new MapInteractiveObject { script = @"\script\西南南区\翠烟门\翠烟门\obj\捡拾_cyl20_大曼陀罗花.lua" };
+            var host = new FakeTrapTravelHost { playerSeriesId = 2, playerFactionId = (int)CombatFaction.CuiYan, timerId = 0, taskValues = { [6] = 20 * 256 + 10 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.hideObject);
+            CollectionAssert.AreEqual(new[] { 1 }, sideEffects.eventItems);
+            Assert.AreEqual(32400, host.setTimerTicks);
+            Assert.AreEqual(8, host.setTimerId);
+            Assert.AreEqual(20 * 256 + 20, host.GetTaskValue(6));
+            CollectionAssert.AreEqual(new[] { "Hái một bông hoa Đại Man Đà La. ", "Bạn cảm thấy tay bị tê liệt, đã trúng độc rồI. " }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { playerSeriesId = 2, playerFactionId = (int)CombatFaction.CuiYan, timerId = 7, taskValues = { [6] = 20 * 256 + 10 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsFalse(result.hideObject);
+            CollectionAssert.IsEmpty(sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "Ngươi đang mang nhiệm vụ cấp bách như thế, mà còn chạy lung tung à?" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { playerSeriesId = 2, playerFactionId = (int)CombatFaction.CuiYan, timerId = 8, taskValues = { [6] = 20 * 256 + 10 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsTrue(result.hideObject);
+            Assert.AreEqual(0, host.setTimerTicks);
+            Assert.AreEqual(20 * 256 + 10, host.GetTaskValue(6));
+            CollectionAssert.AreEqual(new[] { 1 }, sideEffects.eventItems);
+
+            host = new FakeTrapTravelHost { playerSeriesId = 1, playerFactionId = (int)CombatFaction.TangMen, timerId = 0, taskValues = { [6] = 20 * 256 + 10 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            CollectionAssert.AreEqual(new[] { "Bạn đưa tay hái một đóa hoa Đại Man Đà La ", "Vừa sờ vào hoa, bạn cảm thấy tay mình bị tê liệt, hình như hoa này có độc, bạn liền rút tay lại. " }, sideEffects.messages);
         }
 
         [Test]

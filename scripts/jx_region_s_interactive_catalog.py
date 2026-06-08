@@ -1968,7 +1968,71 @@ def tang_chest_branches(money_chest: bool) -> list[dict[str, Any]]:
     ]
 
 
+def city_bulletin_branches() -> list[dict[str, Any]]:
+    return [
+        {
+            'label': 'city_1_7_owner_prompt',
+            'promptMessage': 'Làm chức Thái Thú, bạn có muốn thiết đặt thuế mới không?',
+            'conditions': [
+                {'type': 'CityAreaBetweenInclusive', 'minValue': 1, 'maxValue': 7},
+                {'type': 'CityMasterEqualsPlayer'},
+            ],
+            'choices': [
+                {'label': 'Muốn', 'effects': [{'type': 'OpenCityManage'}]},
+                {'label': 'Không, ta chỉ muốn xem thông tin của thành thị.', 'effects': [{'type': 'PostCityStatus'}]},
+            ],
+        },
+        {
+            'label': 'city_1_7_status',
+            'conditions': [{'type': 'CityAreaBetweenInclusive', 'minValue': 1, 'maxValue': 7}],
+            'effects': [{'type': 'PostCityStatus'}],
+        },
+        {'label': 'not_city_managed', 'effects': [{'type': 'PostMessage', 'message': 'Khu vực không có quản lý. '}]},
+    ]
+
+
+def chengdu_bulletin_branches() -> list[dict[str, Any]]:
+    prompt = 'Thông cáo: Gần đây các vùng ngoại ô bị heo rừng quấy nhiễu, phá hoại mùa màng, thật là phiền phức, đã treo giải 500 lạng bạc để tìm dũng sĩ diệt bầy heo rừng này. Hễ giết được bọn chúng thì đến nha môn lãnh thưởng.'
+    accept = [
+        {'type': 'PostMessage', 'message': 'Bạn giật lấy bản thông cáo, quyết tâm trừ hại giúp bá tánh!'},
+        {'type': 'SetTask', 'taskId': 11, 'value': 1},
+    ]
+    choices = [{'label': 'Bảng niêm yết', 'effects': accept}, {'label': 'Không màng', 'effects': []}]
+    return [
+        {'label': 'task_11_zero_prompt', 'promptMessage': prompt, 'conditions': [{'type': 'TaskEquals', 'taskId': 11, 'value': 0}], 'choices': choices},
+        {
+            'label': 'task_11_expired_prompt',
+            'promptMessage': prompt,
+            'conditions': [{'type': 'TaskGreaterThan', 'taskId': 11, 'value': 255}, {'type': 'TaskLessThanCurrentDateYmd', 'taskId': 11}],
+            'choices': choices,
+        },
+        {
+            'label': 'task_11_in_progress',
+            'conditions': [{'type': 'TaskLessThanOrEquals', 'taskId': 11, 'value': 255}],
+            'effects': [{'type': 'PostMessage', 'message': 'Nha dịch phủ Thành Đô: {sexstr}{playerName}Nhiều hiệp sĩ hăng hái vì dân trừ hoạ, đem lại sự yên bình cho dân chúng, chuẩn bị đón những tráng sĩ chiến thắng trở về. '}],
+        },
+        {'label': 'task_11_cooldown', 'effects': [{'type': 'PostMessage', 'message': 'Nha dịch phủ Thành Đô: {sexstr}{playerName}Vì dân trừ họa, ai diệt được mối hoạ heo rừng ở 4 vùng, bổn phủ thưởng ngay 500 lạng và biểu dương hành động nghĩa hiệp. Bố cáo. '}]},
+    ]
+
+
+def cuiyan_flower_branches() -> list[dict[str, Any]]:
+    gate = [
+        {'type': 'PlayerSeriesEquals', 'value': 2},
+        {'type': 'PlayerFactionEquals', 'value': PC_FACTION_IDS['cuiyan']},
+        {'type': 'TaskBetweenInclusive', 'taskId': 6, 'minValue': 20 * 256 + 10, 'maxValue': 30 * 256 - 1},
+    ]
+    pickup = [{'type': 'SetPropState'}, {'type': 'AddEventItem', 'itemId': 1}, {'type': 'PostMessage', 'message': 'Hái một bông hoa Đại Man Đà La. '}]
+    return [
+        {'label': 'cuiyan_task_other_timer_busy', 'conditions': gate + [{'type': 'TimerIdNotEquals', 'value': 0}, {'type': 'TimerIdNotEquals', 'value': 8}], 'effects': [{'type': 'PostMessage', 'message': 'Ngươi đang mang nhiệm vụ cấp bách như thế, mà còn chạy lung tung à?'}]},
+        {'label': 'cuiyan_task_timer_0_poison', 'conditions': gate + [{'type': 'TimerIdEquals', 'value': 0}], 'effects': pickup + [{'type': 'SetTimer', 'value': 32400, 'timerId': 8}, {'type': 'SetTask', 'taskId': 6, 'value': 20 * 256 + 20}, {'type': 'PostMessage', 'message': 'Bạn cảm thấy tay bị tê liệt, đã trúng độc rồI. '}]},
+        {'label': 'cuiyan_task_timer_8_pickup', 'conditions': gate + [{'type': 'TimerIdEquals', 'value': 8}], 'effects': pickup},
+        {'label': 'default_poison_touch', 'effects': [{'type': 'PostMessage', 'messages': ['Bạn đưa tay hái một đóa hoa Đại Man Đà La ', 'Vừa sờ vào hoa, bạn cảm thấy tay mình bị tê liệt, hình như hoa này có độc, bạn liền rút tay lại. ']}]},
+    ]
+
+
 OBJECT_PROMPT_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
+    '0x005D4282': {'kind': 'city_bulletin', 'branches': city_bulletin_branches()},
+    '0x0DAD339F': {'kind': 'chengdu_bulletin', 'branches': chengdu_bulletin_branches()},
     '0x229158A5': {'kind': 'guyang', 'sourceBitIndex': 9, 'choices': guyang_mechanism_choices(9, True)},
     '0x3F5990AF': {'kind': 'guyang', 'sourceBitIndex': 10, 'choices': guyang_mechanism_choices(10, False)},
     '0x380228A9': {'kind': 'guyang', 'sourceBitIndex': 11, 'choices': guyang_mechanism_choices(11, False)},
@@ -1976,6 +2040,7 @@ OBJECT_PROMPT_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
     '0x754BAE88': {'kind': 'shaolin_small_door', 'branches': shaolin_small_door_branches()},
     '0x2C9325F0': {'kind': 'tang_chest', 'moneyChest': False, 'branches': tang_chest_branches(False)},
     '0x28DA7BE4': {'kind': 'tang_chest', 'moneyChest': True, 'branches': tang_chest_branches(True)},
+    '0xE749F2BF': {'kind': 'cuiyan_flower', 'branches': cuiyan_flower_branches()},
 }
 
 
@@ -1985,6 +2050,50 @@ def object_prompt_branch_message_action(script: dict[str, Any]) -> dict[str, Any
         return None
     clean_source = strip_lua_line_comments(script.get('sourceText', ''))
     kind = spec.get('kind', 'guyang')
+    if kind == 'city_bulletin':
+        allowed = {'main', 'SayCityStatus', 'ManageCity', 'GetCityArea', 'GetCitySummary', 'NW_GetSealInfo', 'Say', 'OpenCityManageUI', 'GetCityOwner', 'GetName', 'if'}
+        if not source_uses_only_calls(clean_source, allowed):
+            return None
+        if re.search(r'\b(NewWorld|SetPos|SetFightState|OpenBox|Earn|SetPropState|AddEventItem|SetTask|GetTask|random|Include)\b', clean_source):
+            return None
+        if not re.search(r'GetCityArea\s*\(\s*\)', clean_source) or not re.search(r'OpenCityManageUI\s*\(\s*nCityID\s*\)', clean_source):
+            return None
+        if not re.search(r'GetCityOwner\s*\(\s*nCityID\s*\)', clean_source) or not re.search(r'MasterName\s*==\s*GetName\s*\(\s*\)', clean_source):
+            return None
+        return {
+            'branches': spec['branches'],
+            'sourceDescription': 'PC city bulletin Lua: GetCityArea/GetCityOwner gate, owner Say callback opens city management UI or posts GetCitySummary()+NW_GetSealInfo; non-city areas post PC no-management message.',
+        }
+    if kind == 'chengdu_bulletin':
+        allowed = {'main', 'W11_get', 'no', 'GetTask', 'tonumber', 'date', 'GetSex', 'Say', 'Talk', 'GetName', 'SetTask', 'if', 'elseif', 'and', 'or'}
+        if not source_uses_only_calls(clean_source, allowed):
+            return None
+        if re.search(r'\b(NewWorld|SetPos|SetFightState|OpenBox|Earn|SetPropState|AddEventItem|HaveItem|DelItem|random|Include)\b', clean_source):
+            return None
+        if not re.search(r'GetTask\s*\(\s*11\s*\)', clean_source) or not re.search(r'date\s*\(\s*"%Y%m%d"\s*\)', clean_source):
+            return None
+        if not re.search(r'SetTask\s*\(\s*11\s*,\s*1\s*\)', clean_source):
+            return None
+        return {
+            'branches': spec['branches'],
+            'sourceDescription': 'PC Chengdu notice-board Lua: GetTask(11), date("%Y%m%d"), GetSex/GetName formatting, Say callback W11_get sets task 11 and posts PC notice text.',
+        }
+    if kind == 'cuiyan_flower':
+        allowed = {'Include', 'main', 'GetTask', 'GetSeries', 'GetFaction', 'GetTimerId', 'Talk', 'SetPropState', 'AddEventItem', 'Msg2Player', 'SetTimer', 'SetTask', 'if', 'and'}
+        if not source_uses_only_calls(clean_source, allowed):
+            return None
+        if re.search(r'\b(NewWorld|SetPos|SetFightState|OpenBox|Earn|HaveItem|DelItem|random|AddNote)\b', clean_source):
+            return None
+        if not re.search(r'GetSeries\s*\(\s*\)\s*==\s*2', clean_source) or 'GetFaction() == "cuiyan"' not in clean_source:
+            return None
+        if not re.search(r'GetTask\s*\(\s*6\s*\)', clean_source) or not re.search(r'SetTask\s*\(\s*6\s*,\s*20\s*\*\s*256\s*\+\s*20\s*\)', clean_source):
+            return None
+        if not re.search(r'SetTimer\s*\(\s*3\s*\*\s*CTime\s*\*\s*FramePerSec\s*,\s*8\s*\)', clean_source):
+            return None
+        return {
+            'branches': spec['branches'],
+            'sourceDescription': 'PC Cuiyan flower Lua: GetSeries/GetFaction/GetTask gate, GetTimerId branches, SetPropState/AddEventItem, SetTimer(32400,8), SetTask(6,5140), and PC poison messages.',
+        }
     if kind == 'guyang':
         allowed = {'main', 'Turn_On', 'Turn_Off', 'Check_Switch', 'GetTask', 'SetTask', 'GetByte', 'SetByte', 'GetBit', 'SetBit', 'HaveItem', 'DelItem', 'AddNote', 'Msg2Player', 'Talk', 'Say', 'if', 'and'}
         if not source_uses_only_calls(clean_source, allowed):
@@ -2777,6 +2886,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
             continue
         prompt_branch = object_prompt_branch_message_action(script)
         if prompt_branch is not None:
+            source_description = prompt_branch.pop('sourceDescription', 'PC object Lua main(): Say prompt choices with deterministic callback effects over GetTask/GetByte/GetBit/HaveItem and PC Msg2Player/Talk/AddNote side effects; no auto-choice without UI')
             entries.append({
                 'scriptPath': script.get('scriptPath', ''),
                 'scriptId': script.get('scriptId', 0),
@@ -2787,7 +2897,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 'targetCellX': 0,
                 'targetCellY': 0,
                 'fightState': -1,
-                'source': 'PC object Lua main(): Say prompt choices with deterministic callback effects over GetTask/GetByte/GetBit/HaveItem and PC Msg2Player/Talk/AddNote side effects; no auto-choice without UI',
+                'source': source_description,
                 **prompt_branch,
             })
             continue

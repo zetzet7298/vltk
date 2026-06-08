@@ -148,6 +148,7 @@ namespace VLTK.Sandbox
         public int bitIndex;
         public int compareByteIndex;
         public int setByteIndex;
+        public int timerId;
         public int[] itemIds;
         public int[] itemCounts;
         public string message;

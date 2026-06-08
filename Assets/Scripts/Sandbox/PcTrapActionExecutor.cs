@@ -30,6 +30,9 @@ namespace VLTK.Sandbox
         int GetCurrentMapId();
         bool TryGetPlayerReviveWorld(out int mapId, out Vector2 worldPosition);
         int GetPlayerLevel();
+        int GetPlayerSeriesId();
+        int GetPlayerSex();
+        string GetPlayerName();
         long GetCurrentDateYmdHm();
         int RandomIntInclusive(int minInclusive, int maxInclusive);
         int GetTaskValue(int taskId);
@@ -42,6 +45,12 @@ namespace VLTK.Sandbox
         int GetBattleRank();
         int GetFightState();
         int GetPlayerFactionId();
+        int GetTimerId();
+        void SetTimer(int ticks, int timerId);
+        int GetCityArea();
+        string GetCityOwnerMasterName(int cityId);
+        string GetCityStatusSummary(int cityId);
+        string GetCitySealInfo();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
         void SetFightState(int fightState);
@@ -1225,6 +1234,8 @@ namespace VLTK.Sandbox
 
     public sealed class SandboxTrapTravelHost : ITrapTravelHost
     {
+        private int _timerId;
+
         public bool HasMap(int mapId)
         {
             var manager = SandboxManager.Instance;
@@ -1259,6 +1270,23 @@ namespace VLTK.Sandbox
                    ?? manager?.PlayerProgression?.level
                    ?? 1;
         }
+
+        public int GetPlayerSeriesId()
+        {
+            return GetPlayerFactionId() switch
+            {
+                (int)CombatFaction.Shaolin or (int)CombatFaction.TianWang => 0,
+                (int)CombatFaction.TangMen or (int)CombatFaction.WuDu => 1,
+                (int)CombatFaction.EMei or (int)CombatFaction.CuiYan => 2,
+                (int)CombatFaction.CaiBang or (int)CombatFaction.TianRen => 3,
+                (int)CombatFaction.WuDang or (int)CombatFaction.KunLun => 4,
+                _ => -1,
+            };
+        }
+
+        public int GetPlayerSex() => 0;
+
+        public string GetPlayerName() => "Người chơi";
 
         public long GetCurrentDateYmdHm()
             => long.Parse(DateTime.Now.ToString("yyyyMMddHHmm"));
@@ -1313,6 +1341,46 @@ namespace VLTK.Sandbox
                 return (int)gameplayFaction;
             return (int)(manager?.PlayerProgression?.faction ?? CombatFaction.None);
         }
+
+        public int GetTimerId() => _timerId;
+
+        public void SetTimer(int ticks, int timerId)
+        {
+            _timerId = timerId;
+            SubsystemLog.Info("Trap", $"PC SetTimer({ticks},{timerId}) recorded");
+        }
+
+        public int GetCityArea()
+        {
+            var manager = SandboxManager.Instance;
+            int currentMap = GetCurrentMapId();
+            var cityWar = manager?.CityWarService;
+            if (cityWar == null) return 0;
+            foreach (var city in cityWar.GetAllCities())
+            {
+                if (city?.mapIds == null || !city.mapIds.Contains(currentMap)) continue;
+                string key = city.key ?? string.Empty;
+                const string prefix = "AreaName";
+                if (!key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)) continue;
+                return int.TryParse(key.Substring(prefix.Length), out int id) ? id : 0;
+            }
+            return 0;
+        }
+
+        public string GetCityOwnerMasterName(int cityId) => string.Empty;
+
+        public string GetCityStatusSummary(int cityId)
+        {
+            var cityWar = SandboxManager.Instance?.CityWarService;
+            var city = cityWar?.GetCity(cityId);
+            var state = cityWar?.GetCityState(cityId);
+            if (city == null && state == null) return "Khu vực không có quản lý. ";
+            string name = state?.nameVi ?? city?.name ?? $"Thành {cityId}";
+            int ownerFaction = state?.ownerFaction ?? CityWarService.NeutralFaction;
+            return $"{name}: Chủ thành {ownerFaction.FactionViName()}, quân phòng thủ {state?.defenderCount ?? 0}.";
+        }
+
+        public string GetCitySealInfo() => string.Empty;
 
         public void NewWorld(int mapId, Vector2 worldPosition)
         {

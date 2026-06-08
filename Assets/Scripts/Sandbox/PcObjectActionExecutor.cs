@@ -31,6 +31,7 @@ namespace VLTK.Sandbox
         void ShowLadder(int[] ladderIds);
         void ShowPrompt(string message, string[] choices);
         void EarnSilver(int amount);
+        void OpenCityManage(int cityId);
     }
 
     public sealed class PcObjectActionExecutor
@@ -448,12 +449,14 @@ namespace VLTK.Sandbox
                     var stats = ApplyBranchEffects(choice.effects);
                     result = Success(action,
                         $"PromptBranchMessage(branch={i}, choice={choiceIndex}, label='{choice?.label}', effects={stats.effects}, consumed={stats.consumed}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks}, silver={stats.silver})");
+                    result.hideObject = stats.hideObject;
                     return true;
                 }
 
                 var branchStats = ApplyBranchEffects(branch);
                 result = Success(action,
                     $"PromptBranchMessage(branch={i}, label='{branch?.label}', effects={branchStats.effects}, consumed={branchStats.consumed}, notes={branchStats.notes}, messages={branchStats.messages}, setTasks={branchStats.setTasks}, silver={branchStats.silver})");
+                result.hideObject = branchStats.hideObject;
                 return true;
             }
 
@@ -481,6 +484,14 @@ namespace VLTK.Sandbox
                 {
                     if (_host.GetTaskValue(condition.taskId) <= condition.value) return false;
                 }
+                else if (string.Equals(type, "TaskLessThanOrEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetTaskValue(condition.taskId) > condition.value) return false;
+                }
+                else if (string.Equals(type, "TaskLessThanCurrentDateYmd", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetTaskValue(condition.taskId) >= CurrentDateYmd()) return false;
+                }
                 else if (string.Equals(type, "TaskTempEquals", System.StringComparison.OrdinalIgnoreCase))
                 {
                     if (_host.GetTaskTempValue(condition.taskId) != condition.value) return false;
@@ -505,6 +516,33 @@ namespace VLTK.Sandbox
                 else if (string.Equals(type, "MissingItem", System.StringComparison.OrdinalIgnoreCase))
                 {
                     if (_host.HaveItem(condition.itemId, condition.count <= 0 ? 1 : condition.count)) return false;
+                }
+                else if (string.Equals(type, "PlayerSeriesEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetPlayerSeriesId() != condition.value) return false;
+                }
+                else if (string.Equals(type, "PlayerFactionEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetPlayerFactionId() != condition.value) return false;
+                }
+                else if (string.Equals(type, "TimerIdEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetTimerId() != condition.value) return false;
+                }
+                else if (string.Equals(type, "TimerIdNotEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetTimerId() == condition.value) return false;
+                }
+                else if (string.Equals(type, "CityAreaBetweenInclusive", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    int cityArea = _host.GetCityArea();
+                    if (cityArea < condition.minValue || cityArea > condition.maxValue) return false;
+                }
+                else if (string.Equals(type, "CityMasterEqualsPlayer", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    int cityId = condition.value > 0 ? condition.value : _host.GetCityArea();
+                    string master = _host.GetCityOwnerMasterName(cityId) ?? string.Empty;
+                    if (!string.Equals(master, _host.GetPlayerName() ?? string.Empty, System.StringComparison.Ordinal)) return false;
                 }
             }
             return true;
@@ -608,9 +646,33 @@ namespace VLTK.Sandbox
                 {
                     if (!string.IsNullOrWhiteSpace(effect.message))
                     {
-                        _sideEffects.AddNote(effect.message);
+                        _sideEffects.AddNote(FormatRuntimeMessage(effect.message));
                         stats.notes++;
                     }
+                }
+                else if (string.Equals(type, "SetPropState", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    stats.hideObject = true;
+                }
+                else if (string.Equals(type, "SetTimer", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    _host.SetTimer(effect.value, effect.timerId);
+                    stats.timers++;
+                }
+                else if (string.Equals(type, "PostCityStatus", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    string summary = _host.GetCityStatusSummary(effect.value > 0 ? effect.value : _host.GetCityArea());
+                    string seal = _host.GetCitySealInfo();
+                    string message = string.IsNullOrWhiteSpace(seal) ? summary : summary + "\n" + seal;
+                    if (!string.IsNullOrWhiteSpace(message))
+                    {
+                        _sideEffects.PostMessage(message);
+                        stats.messages++;
+                    }
+                }
+                else if (string.Equals(type, "OpenCityManage", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    _sideEffects.OpenCityManage(effect.value > 0 ? effect.value : _host.GetCityArea());
                 }
                 else if (string.Equals(type, "RandomAddEventItemIfMissing", System.StringComparison.OrdinalIgnoreCase))
                 {
@@ -686,7 +748,7 @@ namespace VLTK.Sandbox
             int count = 0;
             if (!string.IsNullOrWhiteSpace(effect.message))
             {
-                _sideEffects.PostMessage(effect.message);
+                _sideEffects.PostMessage(FormatRuntimeMessage(effect.message));
                 count++;
             }
             if (effect.messages == null) return count;
@@ -738,10 +800,25 @@ namespace VLTK.Sandbox
             foreach (string message in messages)
             {
                 if (string.IsNullOrWhiteSpace(message)) continue;
-                _sideEffects.PostMessage(message);
+                _sideEffects.PostMessage(FormatRuntimeMessage(message));
                 count++;
             }
             return count;
+        }
+
+        private string FormatRuntimeMessage(string message)
+        {
+            if (string.IsNullOrEmpty(message)) return message;
+            string sex = _host.GetPlayerSex() == 0 ? "Tráng sĩ " : "Nữ hiệp";
+            return message
+                .Replace("{sexstr}", sex)
+                .Replace("{playerName}", _host.GetPlayerName() ?? string.Empty);
+        }
+
+        private int CurrentDateYmd()
+        {
+            long ymdhm = _host.GetCurrentDateYmdHm();
+            return (int)(ymdhm / 10000L);
         }
 
         private static int CountAt(int[] counts, int index)
@@ -792,6 +869,8 @@ namespace VLTK.Sandbox
             public int setTaskTemps;
             public int randomRewards;
             public int silver;
+            public int timers;
+            public bool hideObject;
         }
 
         private static ObjectActionExecutionResult Success(PcObjectActionCatalogEntry action, string detail)
@@ -866,6 +945,11 @@ namespace VLTK.Sandbox
             if (amount <= 0) return;
             SandboxManager.Instance?.GameplayLoop?.Economy?.EarnSilver(amount);
             SubsystemLog.Info("MapObject", $"PC Earn({amount}) silver recorded");
+        }
+
+        public void OpenCityManage(int cityId)
+        {
+            SubsystemLog.Info("MapObject", $"PC OpenCityManageUI({cityId}) recorded");
         }
 
         private static string FormatInts(int[] values)
