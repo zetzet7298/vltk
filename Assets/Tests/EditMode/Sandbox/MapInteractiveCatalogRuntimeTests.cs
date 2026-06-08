@@ -110,6 +110,51 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ObjectActionCatalog_LoadsDeterministicPcNewWorldActions()
+        {
+            var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
+
+            Assert.IsNotNull(catalog);
+            Assert.AreEqual(7, catalog.Count);
+            var entry = catalog.Find(@"\script\两湖区\天王帮\洞庭湖底山洞1\trap\洞庭湖底1to洞庭湖底2.lua");
+            Assert.IsNotNull(entry);
+            Assert.IsTrue(entry.IsNewWorld);
+            Assert.AreEqual(67, entry.targetMapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1591 * 32, 3193 * 32), entry.TargetWorldPosition());
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_NewWorld_UsesPcCellCoordinates()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\object_newworld.lua",
+                        actionKind = "NewWorld",
+                        targetMapId = 67,
+                        targetCellX = 1591,
+                        targetCellY = 3193,
+                        fightState = 1,
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost();
+            var executor = new PcObjectActionExecutor(catalog, host);
+            var obj = new MapInteractiveObject { script = @"\script\object_newworld.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(67, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1591 * 32, 3193 * 32), host.position);
+            Assert.AreEqual(1, host.fightState);
+            StringAssert.Contains("SetFightState(1)", result.detail);
+        }
+
+        [Test]
         public void PcTrapActionExecutor_NewWorld_UsesPcCellCoordinates()
         {
             var catalog = new PcTrapActionCatalogFile

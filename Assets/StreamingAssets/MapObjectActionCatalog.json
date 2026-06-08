@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-06-08T03:52:43Z",
+  "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
+  "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
+  "entries": [
+    {
+      "scriptPath": "\\script\\两湖区\\天王帮\\洞庭湖底山洞1\\trap\\洞庭湖底1to洞庭湖底2.lua",
+      "scriptId": 1861659795,
+      "scriptIdHex": "0x6EF6AC93",
+      "sourceRelPath": "script\\两湖区\\天王帮\\洞庭湖底山洞1\\trap\\洞庭湖底1to洞庭湖底2.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 67,
+      "targetCellX": 1591,
+      "targetCellY": 3193,
+      "fightState": 1,
+      "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\天王帮\\洞庭湖底山洞2\\trap\\洞庭湖底2to洞庭湖底1.lua",
+      "scriptId": 1244341365,
+      "scriptIdHex": "0x4A2B2475",
+      "sourceRelPath": "script\\两湖区\\天王帮\\洞庭湖底山洞2\\trap\\洞庭湖底2to洞庭湖底1.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 66,
+      "targetCellX": 1596,
+      "targetCellY": 3199,
+      "fightState": 1,
+      "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫1\\trap\\铁塔迷宫1to铁塔迷宫2.lua",
+      "scriptId": 3648088054,
+      "scriptIdHex": "0xD97167F6",
+      "sourceRelPath": "script\\中原北区\\汴京\\铁塔迷宫1\\trap\\铁塔迷宫1to铁塔迷宫2.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 39,
+      "targetCellX": 1682,
+      "targetCellY": 3128,
+      "fightState": 1,
+      "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫2\\trap\\铁塔迷宫2to铁塔迷宫1.lua",
+      "scriptId": 466565640,
+      "scriptIdHex": "0x1BCF3A08",
+      "sourceRelPath": "script\\中原北区\\汴京\\铁塔迷宫2\\trap\\铁塔迷宫2to铁塔迷宫1.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 38,
+      "targetCellX": 1702,
+      "targetCellY": 3134,
+      "fightState": 1,
+      "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫2\\trap\\铁塔迷宫2to铁塔迷宫3.lua",
+      "scriptId": 308396582,
+      "scriptIdHex": "0x1261C226",
+      "sourceRelPath": "script\\中原北区\\汴京\\铁塔迷宫2\\trap\\铁塔迷宫2to铁塔迷宫3.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 40,
+      "targetCellX": 1668,
+      "targetCellY": 3133,
+      "fightState": 1,
+      "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\铁塔迷宫3\\trap\\铁塔迷宫3to铁塔迷宫2.lua",
+      "scriptId": 1371045704,
+      "scriptIdHex": "0x51B87F48",
+      "sourceRelPath": "script\\中原北区\\汴京\\铁塔迷宫3\\trap\\铁塔迷宫3to铁塔迷宫2.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 39,
+      "targetCellX": 1690,
+      "targetCellY": 3032,
+      "fightState": 1,
+      "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\武当派\\井底迷宫\\trap\\井底迷宫to武当派.lua",
+      "scriptId": 2808791787,
+      "scriptIdHex": "0xA76AC2EB",
+      "sourceRelPath": "script\\中原南区\\武当派\\井底迷宫\\trap\\井底迷宫to武当派.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 81,
+      "targetCellX": 1580,
+      "targetCellY": 3390,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
+    }
+  ]
+}

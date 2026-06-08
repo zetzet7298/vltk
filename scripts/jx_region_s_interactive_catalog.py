@@ -261,26 +261,50 @@ def decode_server_text(raw: bytes) -> str:
     return raw.decode('gb18030', errors='replace')
 
 
+def parse_lua_calls(source: str, function_name: str, limit: int = 8) -> list[list[str]]:
+    calls = []
+    pattern = r'\b' + re.escape(function_name) + r'\s*\(([^)]*)\)'
+    for match in re.finditer(pattern, source):
+        args = [part.strip().strip('\"\'') for part in match.group(1).split(',')]
+        calls.append(args)
+        if len(calls) >= limit:
+            break
+    return calls
+
+
 def script_action_summary(source: str) -> dict[str, Any]:
-    new_world = []
-    for match in re.finditer(r'\bNewWorld\s*\(([^)]*)\)', source):
-        args = [part.strip() for part in match.group(1).split(',')]
-        new_world.append(args[:3])
-    set_pos = []
-    for match in re.finditer(r'\bSetPos\s*\(([^)]*)\)', source):
-        args = [part.strip() for part in match.group(1).split(',')]
-        set_pos.append(args[:2])
-    set_fight_state = []
-    for match in re.finditer(r'\bSetFightState\s*\(([^)]*)\)', source):
-        args = [part.strip() for part in match.group(1).split(',')]
-        set_fight_state.append(args[:1])
+    new_world = [args[:3] for args in parse_lua_calls(source, 'NewWorld')]
+    set_pos = [args[:2] for args in parse_lua_calls(source, 'SetPos')]
+    set_fight_state = [args[:1] for args in parse_lua_calls(source, 'SetFightState')]
+    msg2_player = [args[:1] for args in parse_lua_calls(source, 'Msg2Player')]
+    talk = parse_lua_calls(source, 'Talk')
+    say = parse_lua_calls(source, 'Say')
     return {
         'hasMain': re.search(r'function\s+main\s*\(', source) is not None,
         'newWorldCalls': new_world[:8],
         'setPosCalls': set_pos[:8],
         'setFightStateCalls': set_fight_state[:8],
+        'msg2PlayerCalls': msg2_player[:8],
+        'talkCalls': talk[:8],
+        'sayCalls': say[:8],
         'setsFightState': 'SetFightState' in source,
         'talks': 'Talk(' in source or 'Msg2Player' in source,
+        'usesTaskApis': any(token in source for token in ('GetTask', 'SetTask', 'SetTaskTemp', 'AddNote')),
+        'usesItemApis': any(token in source for token in ('AddItem', 'DelItem', 'HaveItem', 'AddEventItem')),
+        'usesObjectApis': any(token in source for token in ('SetPropState', 'SetObjState', 'DelObj')),
+        'usesCityApis': 'OpenCityManageUI' in source,
+    }
+
+
+def trap_script_action_summary(source: str) -> dict[str, Any]:
+    actions = script_action_summary(source)
+    return {
+        'hasMain': actions.get('hasMain', False),
+        'newWorldCalls': actions.get('newWorldCalls', []),
+        'setPosCalls': actions.get('setPosCalls', []),
+        'setFightStateCalls': actions.get('setFightStateCalls', []),
+        'setsFightState': actions.get('setsFightState', False),
+        'talks': actions.get('talks', False),
     }
 
 
@@ -334,7 +358,7 @@ def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[d
             entry.update({
                 'scriptPath': src['scriptPath'],
                 'sourceRelPath': src['sourceRelPath'],
-                'actions': script_action_summary(text),
+                'actions': trap_script_action_summary(text),
                 'sourceText': text,
             })
         entries.append(entry)
@@ -344,6 +368,93 @@ def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[d
         'missingTrapScripts': len(trap_ids) - resolved,
         'missingTrapScriptIds': [f'0x{e["trapId"]:08X}' for e in entries if not e.get('resolved')],
         'sourceScriptRoot': str(root / 'script'),
+    }
+    return entries, coverage
+
+
+
+def normalize_script_path(script: str) -> str:
+    script = (script or '').strip()
+    if script and not script.startswith('\\'):
+        script = '\\' + script
+    return script
+
+
+def build_object_script_catalog(geometries: list[dict[str, Any]], pc_root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    usage: dict[str, int] = {}
+    for geometry in geometries:
+        for obj in geometry.get('objects', []):
+            script = normalize_script_path(obj.get('script', ''))
+            if script:
+                usage[script] = usage.get(script, 0) + 1
+    root = server_root(pc_root)
+    script_index = build_script_hash_index(root)
+    entries: list[dict[str, Any]] = []
+    resolved = 0
+    for script in sorted(usage):
+        script_id = jx.g_filename2id(script.encode('gbk', errors='ignore'))
+        src = script_index.get(script_id)
+        entry = {
+            'scriptPath': script,
+            'scriptId': int(script_id),
+            'scriptIdHex': f'0x{script_id:08X}',
+            'objectRefs': usage[script],
+            'resolved': src is not None,
+        }
+        if src:
+            resolved += 1
+            try:
+                raw = Path(src['sourceFile']).read_bytes()
+                text = decode_legacy_text(raw)
+            except Exception:
+                text = ''
+            entry.update({
+                'sourceRelPath': src['sourceRelPath'],
+                'actions': script_action_summary(text),
+                'sourceText': text,
+            })
+        entries.append(entry)
+    coverage = {
+        'objectScriptRefs': sum(usage.values()),
+        'uniqueObjectScripts': len(usage),
+        'resolvedObjectScripts': resolved,
+        'missingObjectScripts': len(usage) - resolved,
+        'missingObjectScriptIds': [e['scriptIdHex'] for e in entries if not e.get('resolved')],
+        'objectScriptsWithNewWorld': sum(1 for e in entries if (e.get('actions') or {}).get('newWorldCalls')),
+        'objectScriptsWithMsg2Player': sum(1 for e in entries if (e.get('actions') or {}).get('msg2PlayerCalls')),
+        'objectScriptsWithTalk': sum(1 for e in entries if (e.get('actions') or {}).get('talkCalls')),
+        'objectScriptsWithSay': sum(1 for e in entries if (e.get('actions') or {}).get('sayCalls')),
+    }
+    return entries, coverage
+
+
+def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    entries: list[dict[str, Any]] = []
+    for script in object_scripts:
+        actions = script.get('actions') or {}
+        if not script.get('resolved') or not actions.get('hasMain'):
+            continue
+        if actions.get('talks') or actions.get('sayCalls') or actions.get('usesTaskApis') or actions.get('usesItemApis') or actions.get('usesObjectApis') or actions.get('usesCityApis'):
+            continue
+        fight_state = int_args_unique(actions.get('setFightStateCalls') or [], 1)
+        fight_value = fight_state[0] if fight_state is not None else -1
+        new_world = int_args_unique(actions.get('newWorldCalls') or [], 3)
+        if new_world:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'NewWorld',
+                'targetMapId': new_world[0],
+                'targetCellX': new_world[1],
+                'targetCellY': new_world[2],
+                'fightState': fight_value,
+                'source': 'PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects',
+            })
+    coverage = {
+        'deterministicObjectActions': len(entries),
+        'deterministicObjectNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'NewWorld'),
     }
     return entries, coverage
 
@@ -702,6 +813,8 @@ def main() -> int:
     geometries, coverage, used_template_ids, used_trap_ids = build_catalog(region_root, server_catalog, obj_templates)
     trap_scripts, trap_coverage = build_trap_script_catalog(used_trap_ids, pc_root)
     trap_actions, trap_action_coverage = build_trap_action_catalog(trap_scripts)
+    object_scripts, object_script_coverage = build_object_script_catalog(geometries, pc_root)
+    object_actions, object_action_coverage = build_object_action_catalog(object_scripts)
     enrich_traps_in_geometries(geometries, {entry['trapId']: entry for entry in trap_scripts})
     object_templates, object_coverage = stage_object_templates(
         obj_templates, used_template_ids, pc_root, object_sprite_root, args.extract)
@@ -726,6 +839,15 @@ def main() -> int:
     for entry in trap_scripts:
         clean_entry = dict(entry)
         clean_entry.pop('sourceText', None)
+        actions = clean_entry.get('actions')
+        if actions:
+            clean_entry['actions'] = {
+                'hasMain': actions.get('hasMain', False),
+                'newWorldCalls': actions.get('newWorldCalls', []),
+                'setPosCalls': actions.get('setPosCalls', []),
+                'setsFightState': actions.get('setsFightState', False),
+                'talks': actions.get('talks', False),
+            }
         trap_catalog_entries.append(clean_entry)
     trap_catalog = {
         'schemaVersion': 1,
@@ -734,12 +856,31 @@ def main() -> int:
         'hashRule': 'PC g_FileName2Id signed-char over leading-backslash GBK script path',
         'entries': trap_catalog_entries,
     }
+    object_script_catalog_entries = []
+    for entry in object_scripts:
+        clean_entry = dict(entry)
+        clean_entry.pop('sourceText', None)
+        object_script_catalog_entries.append(clean_entry)
+    object_script_catalog = {
+        'schemaVersion': 1,
+        'generatedAtUtc': now,
+        'sourceScriptRoot': str(server_root(pc_root) / 'script'),
+        'hashRule': 'PC g_FileName2Id signed-char over leading-backslash GBK script path',
+        'entries': object_script_catalog_entries,
+    }
     trap_action_catalog = {
         'schemaVersion': 1,
         'generatedAtUtc': now,
         'sourceTrapScriptCatalog': 'MapTrapScriptCatalog.json',
         'coordinateRule': 'PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld',
         'entries': trap_actions,
+    }
+    object_action_catalog = {
+        'schemaVersion': 1,
+        'generatedAtUtc': now,
+        'sourceObjectScriptCatalog': 'MapObjectScriptCatalog.json',
+        'coordinateRule': 'PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld',
+        'entries': object_actions,
     }
     coverage_payload = {
         'schemaVersion': 1,
@@ -753,12 +894,16 @@ def main() -> int:
         **object_coverage,
         **trap_coverage,
         **trap_action_coverage,
+        **object_script_coverage,
+        **object_action_coverage,
         'elapsedSeconds': round(time.time() - start, 3),
     }
     catalog_path = catalog_root / 'MapInteractiveCatalog.json'
     object_catalog_path = catalog_root / 'MapObjectTemplateCatalog.json'
     trap_catalog_path = catalog_root / 'MapTrapScriptCatalog.json'
     trap_action_catalog_path = catalog_root / 'MapTrapActionCatalog.json'
+    object_script_catalog_path = catalog_root / 'MapObjectScriptCatalog.json'
+    object_action_catalog_path = catalog_root / 'MapObjectActionCatalog.json'
     coverage_path = catalog_root / 'MapInteractiveCoverage.json'
     object_coverage_path = catalog_root / 'MapObjectSpriteCoverage.json'
     trap_coverage_path = catalog_root / 'MapTrapScriptCoverage.json'
@@ -766,13 +911,20 @@ def main() -> int:
     write_json(object_catalog_path, object_catalog)
     write_json(trap_catalog_path, trap_catalog)
     write_json(trap_action_catalog_path, trap_action_catalog)
+    write_json(object_script_catalog_path, object_script_catalog)
+    write_json(object_action_catalog_path, object_action_catalog)
     write_json(coverage_path, coverage_payload)
     write_json(object_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **object_coverage})
     write_json(trap_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **trap_coverage, **trap_action_coverage})
+    write_json(catalog_root / 'MapObjectScriptCoverage.json', {
+        'schemaVersion': 1, 'generatedAtUtc': now, **object_script_coverage, **object_action_coverage})
     make_meta(catalog_path)
     make_meta(object_catalog_path)
     make_meta(trap_catalog_path)
     make_meta(trap_action_catalog_path)
+    make_meta(object_script_catalog_path)
+    make_meta(object_action_catalog_path)
+    make_meta(catalog_root / 'MapObjectScriptCoverage.json')
     make_meta(coverage_path)
     make_meta(object_coverage_path)
     make_meta(trap_coverage_path)

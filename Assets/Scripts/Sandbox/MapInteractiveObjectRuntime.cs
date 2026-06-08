@@ -16,9 +16,12 @@ namespace VLTK.Sandbox
         public int RenderedCount { get; private set; }
         public int SkippedCount { get; private set; }
         public int MissingVisualCount { get; private set; }
+        public int InteractiveActionCount { get; private set; }
 
         private Transform _root;
         private MapInteractiveCatalogFile _catalog;
+        private PcObjectActionCatalogFile _actionCatalog;
+        private PcObjectActionExecutor _actionExecutor;
 
         private void Awake()
         {
@@ -56,6 +59,7 @@ namespace VLTK.Sandbox
             RenderedCount = 0;
             SkippedCount = 0;
             MissingVisualCount = 0;
+            InteractiveActionCount = 0;
             CurrentMapId = -1;
         }
 
@@ -92,7 +96,18 @@ namespace VLTK.Sandbox
                 MissingVisualCount++;
                 return;
             }
+            AttachInteractionIfPorted(go, obj);
             RenderedCount++;
+        }
+
+        private void AttachInteractionIfPorted(GameObject go, MapInteractiveObject obj)
+        {
+            _actionCatalog ??= PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
+            _actionExecutor ??= new PcObjectActionExecutor(_actionCatalog, new SandboxTrapTravelHost());
+            if (!_actionExecutor.HasAction(obj)) return;
+            var interaction = go.AddComponent<PcMapObjectInteraction>();
+            interaction.Configure(obj, _actionExecutor);
+            InteractiveActionCount++;
         }
 
         private static void DestroySafe(GameObject go)
