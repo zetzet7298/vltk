@@ -78,6 +78,23 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void TreasureButton_ClearsPcScreenshotSevenOClockWrapper()
+        {
+            var pc = LoadTexture(Path.GetFullPath(Path.Combine(Application.dataPath, "../pc-evidence/pc_hud.png")));
+            var treasure = LoadTexture(Path.Combine(Application.dataPath, ArtRoot, "btn_treasure.png"));
+
+            AssertPixelsEqual(treasure.GetPixel(29, 29), pc.GetPixel(742 + 29, 502 + 29),
+                "Kỳ Trân Các center pixels must stay from the PC HUD evidence.");
+            Assert.AreEqual(0f, treasure.GetPixel(2, 48).a,
+                "PC screenshot has bottom-bar chrome covering the 7-o'clock outside corner; mobile must clear that wrapper when the icon is reused standalone.");
+            Assert.AreEqual(0f, treasure.GetPixel(0, 57).a,
+                "Kỳ Trân Các standalone HUD icon must not carry opaque PC bottom-strip background pixels.");
+
+            Object.DestroyImmediate(pc);
+            Object.DestroyImmediate(treasure);
+        }
+
+        [Test]
         public void FullPcUtilitySet_IsDeclaredBehindMinimapSideToggle()
         {
             var uxmlPath = Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml");
@@ -170,8 +187,11 @@ namespace VLTK.Tests.Sandbox
             var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
             var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
 
-            Assert.AreEqual(9, HudBottomBarPcSpec.MainHudControlBindings.Count,
-                "PC 主界面玩家信息窗口.ini uid e3b06434 interactive controls must be explicitly audited, including Market/OpenChannelBtn/Recorder.");
+            Assert.AreEqual(8, HudBottomBarPcSpec.MainHudControlBindings.Count,
+                "PC 主界面玩家信息窗口.ini uid e3b06434 interactive controls must be explicitly audited; unresolved declared controls must not be aliased to other PC buttons.");
+            Assert.IsTrue(HudBottomBarPcSpec.UnresolvedDeclaredMainHudControls.ContainsKey("Recorder"),
+                "PC main [Recorder] uses 录像按钮.spr and must stay marked unresolved until its exact PC art/visibility is proven.");
+            StringAssert.Contains("Do not alias it to toolbar [Rec]", HudBottomBarPcSpec.UnresolvedDeclaredMainHudControls["Recorder"]);
 
             foreach (var binding in HudBottomBarPcSpec.MainHudControlBindings)
             {
@@ -186,8 +206,8 @@ namespace VLTK.Tests.Sandbox
                     StringAssert.Contains($"RegisterClick(root, \"{binding.mobileElement}\", {binding.handlerName})", controller, binding.pcName + " must invoke its PC-equivalent handler.");
             }
 
-            StringAssert.Contains("Market", HudBottomBarPcSpec.MainHudControlBindings[8].pcName);
-            StringAssert.Contains("奇珍阁按钮_vn.spr", HudBottomBarPcSpec.MainHudControlBindings[8].sourceNote);
+            StringAssert.Contains("Market", HudBottomBarPcSpec.MainHudControlBindings[7].pcName);
+            StringAssert.Contains("奇珍阁按钮_vn.spr", HudBottomBarPcSpec.MainHudControlBindings[7].sourceNote);
             StringAssert.Contains("MallPanelService.BuildSnapshot", controller, "PC Market/Kỳ Trân Các must route to real mall data, not a placeholder.");
             StringAssert.Contains("Kỳ Trân Các", controller, "PC Market button must expose the Vietnamese Kỳ Trân Các behavior.");
         }

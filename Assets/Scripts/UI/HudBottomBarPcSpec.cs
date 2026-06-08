@@ -110,13 +110,20 @@ namespace VLTK.UI
             {
                 new MainHudBinding("Friend", "BtnFriend", "OnFriendClick", @"\spr\UI3\主界面\人际关系按钮.spr -> FriendPanelService"),
                 new MainHudBinding("Options", "BtnOptions", "OnOptionsClick", @"\spr\UI3\主界面\系统按钮.spr -> PC system/options menu"),
-                new MainHudBinding("Recorder", "BtnRec", "OnRecClick", @"\Spr\Ui3\主界面\录像按钮.spr -> recorder toggle/capture"),
                 new MainHudBinding("InputEdit", "ChatInput", string.Empty, "PC chat text input -> UI Toolkit TextField bound to ChatService"),
                 new MainHudBinding("SendBtn", "SendBtn", "OnSendChatClick", @"\Spr\Ui3\主界面\主界面按钮-聊天发送.spr -> ChatService.Send"),
                 new MainHudBinding("ChannelBtn", "ChatChannelIdentityBtn", "OnChatChannelIdentityClick", "PC current-channel selector -> cycle active ChatService channel"),
                 new MainHudBinding("OpenChannelBtn", "OpenChannelBtn", "OnChatChannelToggleClick", "PC 60x60 channel-open proxy; Image is folder-only, so transparent behavior proxy"),
                 new MainHudBinding("Face", "FaceBtn", "OpenFacePicker", @"\Spr\Ui3\表情\01.spr -> face/emote picker"),
                 new MainHudBinding("Market", "BtnTreasure", "OnTreasureClick", @"\spr\UI3\主界面\奇珍阁按钮_vn.spr -> Kỳ Trân Các/MallService"),
+            };
+
+
+        /// <summary>Declared by 主界面玩家信息窗口.ini but not safely renderable yet because the exact PC art is unresolved/not visible in pc_hud.png.</summary>
+        public static readonly IReadOnlyDictionary<string, string> UnresolvedDeclaredMainHudControls =
+            new Dictionary<string, string>
+            {
+                ["Recorder"] = @"e3b06434 [Recorder] points to \Spr\Ui3\主界面\录像按钮.spr, but resolve_uid against 1024/slistcache/client PAKs found no matching entry and pc_hud.png does not show a distinct 25x25 recorder at that coordinate. Do not alias it to toolbar [Rec] \spr\UI3\主界面\摄像机按钮.spr.",
             };
 
 
