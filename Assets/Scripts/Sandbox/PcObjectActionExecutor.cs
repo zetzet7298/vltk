@@ -197,6 +197,41 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskItemBranchMessage)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+
+                var branches = action.branches;
+                if (branches == null || branches.Length == 0)
+                {
+                    result = Failure(action, "TaskItemBranchMessage has no branches");
+                    return true;
+                }
+
+                for (int i = 0; i < branches.Length; i++)
+                {
+                    var branch = branches[i];
+                    if (!BranchMatches(branch)) continue;
+                    if (!ValidateBranchConsumes(branch))
+                    {
+                        result = Failure(action, $"TaskItemBranchMessage branch {i} failed consume precheck");
+                        return true;
+                    }
+
+                    var stats = ApplyBranchEffects(branch);
+                    result = Success(action,
+                        $"TaskItemBranchMessage(branch={i}, label='{branch?.label}', effects={stats.effects}, consumed={stats.consumed}, items={stats.eventItems}, notes={stats.notes}, messages={stats.messages}, setTasks={stats.setTasks})");
+                    return true;
+                }
+
+                result = Success(action, "TaskItemBranchMessage(no matching branch)");
+                return true;
+            }
+
             if (action.IsSayMessage)
             {
                 if (_sideEffects == null)
@@ -320,6 +355,103 @@ namespace VLTK.Sandbox
             return true;
         }
 
+        private bool BranchMatches(PcObjectActionBranch branch)
+        {
+            if (branch?.conditions == null || branch.conditions.Length == 0) return true;
+            foreach (var condition in branch.conditions)
+            {
+                if (condition == null) continue;
+                string type = condition.type ?? string.Empty;
+                if (string.Equals(type, "TaskEquals", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetTaskValue(condition.taskId) != condition.value) return false;
+                }
+                else if (string.Equals(type, "TaskBetweenInclusive", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    int taskValue = _host.GetTaskValue(condition.taskId);
+                    if (taskValue < condition.minValue || taskValue > condition.maxValue) return false;
+                }
+                else if (string.Equals(type, "TaskGreaterThan", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.GetTaskValue(condition.taskId) <= condition.value) return false;
+                }
+                else if (string.Equals(type, "HaveItem", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!_host.HaveItem(condition.itemId, condition.count <= 0 ? 1 : condition.count)) return false;
+                }
+                else if (string.Equals(type, "MissingItem", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_host.HaveItem(condition.itemId, condition.count <= 0 ? 1 : condition.count)) return false;
+                }
+            }
+            return true;
+        }
+
+        private bool ValidateBranchConsumes(PcObjectActionBranch branch)
+        {
+            if (branch?.effects == null) return true;
+            foreach (var effect in branch.effects)
+            {
+                if (effect == null || !string.Equals(effect.type, "ConsumeItems", System.StringComparison.OrdinalIgnoreCase)) continue;
+                if (!HasAllItems(effect.itemIds, effect.itemCounts)) return false;
+            }
+            return true;
+        }
+
+        private BranchEffectStats ApplyBranchEffects(PcObjectActionBranch branch)
+        {
+            var stats = new BranchEffectStats();
+            if (branch?.effects == null) return stats;
+            foreach (var effect in branch.effects)
+            {
+                if (effect == null) continue;
+                stats.effects++;
+                string type = effect.type ?? string.Empty;
+                if (string.Equals(type, "ConsumeItems", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (TryConsumeItems(effect.itemIds, effect.itemCounts))
+                        stats.consumed += effect.itemIds?.Length ?? 0;
+                }
+                else if (string.Equals(type, "AddEventItem", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    _sideEffects.AddEventItem(effect.itemId);
+                    stats.eventItems++;
+                }
+                else if (string.Equals(type, "SetTask", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    _host.SetTaskValue(effect.taskId, effect.value);
+                    stats.setTasks++;
+                }
+                else if (string.Equals(type, "PostMessage", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    stats.messages += PostEffectMessages(effect);
+                }
+                else if (string.Equals(type, "AddNote", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    if (!string.IsNullOrWhiteSpace(effect.message))
+                    {
+                        _sideEffects.AddNote(effect.message);
+                        stats.notes++;
+                    }
+                }
+            }
+            return stats;
+        }
+
+        private int PostEffectMessages(PcObjectActionEffect effect)
+        {
+            if (effect == null) return 0;
+            int count = 0;
+            if (!string.IsNullOrWhiteSpace(effect.message))
+            {
+                _sideEffects.PostMessage(effect.message);
+                count++;
+            }
+            if (effect.messages == null) return count;
+            count += PostMessages(effect.messages);
+            return count;
+        }
+
         private bool HasAllItems(int[] itemIds, int[] counts)
         {
             if (itemIds == null || itemIds.Length == 0) return true;
@@ -372,6 +504,16 @@ namespace VLTK.Sandbox
 
         private static int CountAt(int[] counts, int index)
             => counts != null && index >= 0 && index < counts.Length && counts[index] > 0 ? counts[index] : 1;
+
+        private struct BranchEffectStats
+        {
+            public int effects;
+            public int consumed;
+            public int eventItems;
+            public int notes;
+            public int messages;
+            public int setTasks;
+        }
 
         private static ObjectActionExecutionResult Success(PcObjectActionCatalogEntry action, string detail)
             => new ObjectActionExecutionResult { success = true, detail = Detail(action, detail) };

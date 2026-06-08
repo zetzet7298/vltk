@@ -1777,6 +1777,147 @@ def object_task_item_consume_message_action(script: dict[str, Any]) -> dict[str,
     return entry
 
 
+OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
+    '0xC13AAB4E': {
+        'branches': [
+            {
+                'label': 'task_15380_key_101_success',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 3, 'value': 60 * 256 + 20},
+                    {'type': 'HaveItem', 'itemId': 101, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'ConsumeItems', 'itemIds': [101], 'itemCounts': [1]},
+                    {'type': 'PostMessage', 'messages': ["Rương báu trống không, 'Thiên Vương Di Thư' đã bị người Kim lấy đi", 'Trên đất có một số dấu chân hướng về Sơn Động Thanh La Đảo, xem ra bọn sát thủ rời khỏi chưa bao lâu.']},
+                    {'type': 'SetTask', 'taskId': 3, 'value': 60 * 256 + 40},
+                    {'type': 'AddNote', 'message': 'Mở rương báu phía Bắc hồ, mới biết Thiên Vương Di Thư đã bị bọn sát thủ người nước Kim lấy đi.'},
+                ],
+            },
+            {
+                'label': 'task_15400_empty_chest',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 3, 'value': 60 * 256 + 40}],
+                'effects': [{'type': 'PostMessage', 'message': 'Rương báu trống không.'}],
+            },
+            {
+                'label': 'locked',
+                'effects': [{'type': 'PostMessage', 'message': 'Không có chìa khóa, không mở được rương.'}],
+            },
+        ],
+    },
+    '0xDA624A5A': {
+        'branches': [
+            {
+                'label': 'task_15430_already_has_sheepskin_book',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 4, 'value': 60 * 256 + 70},
+                    {'type': 'HaveItem', 'itemId': 132, 'count': 1},
+                ],
+                'effects': [{'type': 'PostMessage', 'message': 'Bảo rương đã rỗng'}],
+            },
+            {
+                'label': 'task_15430_key_102_reward_132',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 4, 'value': 60 * 256 + 70},
+                    {'type': 'HaveItem', 'itemId': 102, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'ConsumeItems', 'itemIds': [102], 'itemCounts': [1]},
+                    {'type': 'AddEventItem', 'itemId': 132},
+                    {'type': 'AddNote', 'message': 'Mở rương báu, lấy được Thiên Nhẫn thánh thư——sách da dê.'},
+                    {'type': 'PostMessage', 'message': 'Mở rương báu, lấy được một quyển sách da dê.'},
+                ],
+            },
+            {
+                'label': 'task_15430_missing_key',
+                'conditions': [{'type': 'TaskEquals', 'taskId': 4, 'value': 60 * 256 + 70}],
+                'effects': [{'type': 'PostMessage', 'message': 'Không có chìa khóa, không mở được rương.'}],
+            },
+            {
+                'label': 'locked',
+                'effects': [{'type': 'PostMessage', 'message': 'Không có chìa khóa, không mở được rương.'}],
+            },
+        ],
+    },
+    '0x12D2A6DF': {
+        'branches': [
+            {
+                'label': 'task_7710_key_98_reward_42',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 2, 'value': 30 * 256 + 30},
+                    {'type': 'HaveItem', 'itemId': 98, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'ConsumeItems', 'itemIds': [98], 'itemCounts': [1]},
+                    {'type': 'AddEventItem', 'itemId': 42},
+                    {'type': 'PostMessage', 'message': 'Lấy được Hỏa Khí Phổ'},
+                    {'type': 'SetTask', 'taskId': 2, 'value': 30 * 256 + 50},
+                    {'type': 'AddNote', 'message': 'Mở rương lấy được Hoả Khí Phổ'},
+                ],
+            },
+            {
+                'label': 'task_7730_to_7740_restore_reward_42',
+                'conditions': [
+                    {'type': 'TaskBetweenInclusive', 'taskId': 2, 'minValue': 30 * 256 + 50, 'maxValue': 30 * 256 + 60},
+                    {'type': 'MissingItem', 'itemId': 42, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'AddEventItem', 'itemId': 42},
+                    {'type': 'PostMessage', 'message': "Hóa ra 'Hỏa Khí Phổ' ngươi đã bỏ quên trong rương báu!"},
+                ],
+            },
+            {
+                'label': 'post_progress_empty_chest',
+                'conditions': [{'type': 'TaskGreaterThan', 'taskId': 2, 'value': 30 * 256 + 30}],
+                'effects': [{'type': 'PostMessage', 'message': 'Bảo rương đã rỗng'}],
+            },
+            {
+                'label': 'locked',
+                'effects': [{'type': 'PostMessage', 'message': 'Không có chìa khóa, không mở được rương báu!.'}],
+            },
+        ],
+    },
+}
+
+
+def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, Any] | None:
+    spec = OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS.get(script.get('scriptIdHex', ''))
+    if spec is None:
+        return None
+    clean_source = strip_lua_line_comments(script.get('sourceText', ''))
+    allowed = {'main', 'GetTask', 'SetTask', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'elseif', 'and'}
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(for|while|repeat|random|Include|Say|NewWorld|SetPropState)\b', clean_source):
+        return None
+
+    effect_del_items: list[int] = []
+    effect_event_items: list[int] = []
+    effect_set_tasks: list[tuple[int, int]] = []
+    for branch in spec.get('branches', []):
+        for effect in branch.get('effects', []):
+            if effect.get('type') == 'ConsumeItems':
+                effect_del_items.extend(effect.get('itemIds', []))
+            elif effect.get('type') == 'AddEventItem':
+                effect_event_items.append(effect.get('itemId', 0))
+            elif effect.get('type') == 'SetTask':
+                effect_set_tasks.append((effect.get('taskId', 0), effect.get('value', 0)))
+
+    source_del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=12), 1)]
+    source_event_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=8), 1)]
+    source_set_tasks = []
+    for call in parse_lua_calls(clean_source, 'SetTask', limit=8):
+        if len(call) < 2:
+            return None
+        task_id = int_expr(call[0])
+        task_value = int_lua_constant_expr(call[1])
+        if task_id is None or task_value is None:
+            return None
+        source_set_tasks.append((task_id, task_value))
+    if source_del_items != effect_del_items or source_event_items != effect_event_items or source_set_tasks != effect_set_tasks:
+        return None
+    return dict(spec)
+
+
 def object_task_talk_message_action(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     if not source_uses_only_calls(clean_source, {'main', 'GetTask', 'Talk', 'if'}):
@@ -2004,6 +2145,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **task_item_consume,
             })
             continue
+        task_item_branch = object_task_item_branch_message_action(script)
+        if task_item_branch is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskItemBranchMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs',
+                **task_item_branch,
+            })
+            continue
         task_talk = object_task_talk_message_action(source_text)
         if task_talk is not None:
             entries.append({
@@ -2059,6 +2216,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectTaskOptionalPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalPickupMessage'),
         'deterministicObjectTaskMissingItemPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskMissingItemPickupMessage'),
         'deterministicObjectTaskItemConsumeMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskItemConsumeMessage'),
+        'deterministicObjectTaskItemBranchMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskItemBranchMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicObjectTaskTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskTalkMessage'),

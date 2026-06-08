@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T11:06:56Z",
+  "generatedAtUtc": "2026-06-08T11:20:41Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -431,6 +431,87 @@
       "source": "PC object Lua main(): deterministic NewWorld with optional SetFightState and no dialog/task/item/object side effects"
     },
     {
+      "scriptPath": "\\script\\两湖区\\天王帮\\青螺岛\\obj\\twobj01.lua",
+      "scriptId": 3241847630,
+      "scriptIdHex": "0xC13AAB4E",
+      "sourceRelPath": "script\\两湖区\\天王帮\\青螺岛\\obj\\twobj01.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15380_key_101_success",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 3,
+              "value": 15380
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 101,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                101
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "PostMessage",
+              "messages": [
+                "Rương báu trống không, 'Thiên Vương Di Thư' đã bị người Kim lấy đi",
+                "Trên đất có một số dấu chân hướng về Sơn Động Thanh La Đảo, xem ra bọn sát thủ rời khỏi chưa bao lâu."
+              ]
+            },
+            {
+              "type": "SetTask",
+              "taskId": 3,
+              "value": 15400
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở rương báu phía Bắc hồ, mới biết Thiên Vương Di Thư đã bị bọn sát thủ người nước Kim lấy đi."
+            }
+          ]
+        },
+        {
+          "label": "task_15400_empty_chest",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 3,
+              "value": 15400
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Rương báu trống không."
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Không có chìa khóa, không mở được rương."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "scriptPath": "\\script\\两湖区\\天王帮\\青螺岛\\obj\\青螺岛-石碑1.lua",
       "scriptId": 45821813,
       "scriptIdHex": "0x02BB2F75",
@@ -827,6 +908,104 @@
       "fightState": -1,
       "message": "Phục Ngưu sơn<---->Biện Kinh",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\obj\\trobj04.lua",
+      "scriptId": 3663874650,
+      "scriptIdHex": "0xDA624A5A",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教圣洞2\\obj\\trobj04.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15430_already_has_sheepskin_book",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 15430
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 132,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương đã rỗng"
+            }
+          ]
+        },
+        {
+          "label": "task_15430_key_102_reward_132",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 15430
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 102,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                102
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "AddEventItem",
+              "itemId": 132
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở rương báu, lấy được Thiên Nhẫn thánh thư——sách da dê."
+            },
+            {
+              "type": "PostMessage",
+              "message": "Mở rương báu, lấy được một quyển sách da dê."
+            }
+          ]
+        },
+        {
+          "label": "task_15430_missing_key",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 4,
+              "value": 15430
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Không có chìa khóa, không mở được rương."
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Không có chìa khóa, không mở được rương."
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室内3\\obj\\天忍教-储物箱1.lua",
@@ -3589,6 +3768,114 @@
       "fightState": -1,
       "message": "Đi Nga Mi phái",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\青城山\\白云洞迷宫\\obj\\tmobj02.lua",
+      "scriptId": 315795167,
+      "scriptIdHex": "0x12D2A6DF",
+      "sourceRelPath": "script\\西南北区\\青城山\\白云洞迷宫\\obj\\tmobj02.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_7710_key_98_reward_42",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 2,
+              "value": 7710
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 98,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                98
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "AddEventItem",
+              "itemId": 42
+            },
+            {
+              "type": "PostMessage",
+              "message": "Lấy được Hỏa Khí Phổ"
+            },
+            {
+              "type": "SetTask",
+              "taskId": 2,
+              "value": 7730
+            },
+            {
+              "type": "AddNote",
+              "message": "Mở rương lấy được Hoả Khí Phổ"
+            }
+          ]
+        },
+        {
+          "label": "task_7730_to_7740_restore_reward_42",
+          "conditions": [
+            {
+              "type": "TaskBetweenInclusive",
+              "taskId": 2,
+              "minValue": 7730,
+              "maxValue": 7740
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 42,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "AddEventItem",
+              "itemId": 42
+            },
+            {
+              "type": "PostMessage",
+              "message": "Hóa ra 'Hỏa Khí Phổ' ngươi đã bỏ quên trong rương báu!"
+            }
+          ]
+        },
+        {
+          "label": "post_progress_empty_chest",
+          "conditions": [
+            {
+              "type": "TaskGreaterThan",
+              "taskId": 2,
+              "value": 7710
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương đã rỗng"
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Không có chìa khóa, không mở được rương báu!."
+            }
+          ]
+        }
+      ]
     },
     {
       "scriptPath": "\\script\\西南北区\\青城山\\青城山\\obj\\西南北区-青城山-路标11.lua",

@@ -81,6 +81,7 @@ namespace VLTK.Sandbox
         public string[] successMessages;
         public string[] missingItemMessages;
         public string[] elseMessages;
+        public PcObjectActionBranch[] branches;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -88,6 +89,7 @@ namespace VLTK.Sandbox
         public bool IsTaskOptionalPickupMessage => string.Equals(actionKind, "TaskOptionalPickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskMissingItemPickupMessage => string.Equals(actionKind, "TaskMissingItemPickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskItemConsumeMessage => string.Equals(actionKind, "TaskItemConsumeMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskItemBranchMessage => string.Equals(actionKind, "TaskItemBranchMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskTalkMessage => string.Equals(actionKind, "TaskTalkMessage", StringComparison.OrdinalIgnoreCase);
@@ -98,6 +100,39 @@ namespace VLTK.Sandbox
 
         public Vector2 TargetWorldPosition()
             => MapEnemyDatabase.MpsToWorld(targetCellX * 32, targetCellY * 32);
+    }
+
+    [Serializable]
+    public sealed class PcObjectActionBranch
+    {
+        public string label;
+        public PcObjectActionCondition[] conditions;
+        public PcObjectActionEffect[] effects;
+    }
+
+    [Serializable]
+    public sealed class PcObjectActionCondition
+    {
+        public string type;
+        public int taskId;
+        public int value;
+        public int minValue;
+        public int maxValue;
+        public int itemId;
+        public int count = 1;
+    }
+
+    [Serializable]
+    public sealed class PcObjectActionEffect
+    {
+        public string type;
+        public int taskId;
+        public int value;
+        public int itemId;
+        public int[] itemIds;
+        public int[] itemCounts;
+        public string message;
+        public string[] messages;
     }
 
     public static class PcObjectActionCatalogRuntime
