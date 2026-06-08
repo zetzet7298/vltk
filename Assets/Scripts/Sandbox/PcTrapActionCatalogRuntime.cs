@@ -140,6 +140,10 @@ namespace VLTK.Sandbox
         public int requiredItemCount;
         public int consumeItemId;
         public int consumeItemCount;
+        public int[] requiredItemIds;
+        public int[] requiredItemCounts;
+        public int[] consumeItemIds;
+        public int[] consumeItemCounts;
         public int midTaskMinExclusive;
         public int midTaskMaxExclusive;
         public string requiredFaction;
@@ -208,6 +212,7 @@ namespace VLTK.Sandbox
         public bool IsTaskSetTaskFactionGateNewWorld => string.Equals(actionKind, "TaskSetTaskFactionGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskSetTaskPromptCallbackNewWorld => string.Equals(actionKind, "TaskSetTaskPromptCallbackNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskItemConsumeFactionGateNewWorld => string.Equals(actionKind, "TaskItemConsumeFactionGateNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskMultiItemPromptCallbackNewWorld => string.Equals(actionKind, "TaskMultiItemPromptCallbackNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);

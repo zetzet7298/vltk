@@ -581,7 +581,7 @@ PC: ~6,500+ script files
 | Danh mục | Ước tính | Ưu tiên |
 |---------|----------|---------|
 | Map visual coverage (đủ 1,005 PC map aliases) | ✅ done: 332 unique geometries / 1,005 aliases; `scripts/jx_map_port_verify.py` verifies catalogs + ignored Generated assets; còn interaction/Lua validation | 🔴 |
-| Server Lua Scripts (~6,500) | ~6,500; trap catalog resolve 816/817 trap scripts; Region_S deterministic trap executor hiện chạy 798 PC-safe actions, gồm Tangmen Trúc Tơ động item-gated HaveItem/DelItem/SetTask/NewWorld bằng QuestItemService questkey DetailType adapter; còn PC APIs ngoài scope (Tong/team/mission/city/protect/buff/callback phức tạp) | 🔴 |
+| Server Lua Scripts (~6,500) | ~6,500; trap catalog resolve 816/817 trap scripts; Region_S deterministic trap executor hiện chạy 799 PC-safe actions, gồm Tangmen Trúc Tơ động item-gated HaveItem/DelItem/SetTask/NewWorld và Lâm An→Mạc Không Nguyệt multi-key Talk callback NewWorld/protect/buff bằng QuestItemService questkey DetailType adapter; còn PC APIs ngoài scope (Tong/team/mission/city/protect/buff/callback phức tạp) | 🔴 |
 | Item Data (gold/platina/etc) | ~10,682 items | 🔴 |
 | Mission Scripts | 985 | 🔴 |
 | Monster Spawn Data | ✅ data+visual staged: 67,680 Region_S records; còn AI/Lua parity validation | 🔴 |

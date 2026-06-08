@@ -420,6 +420,56 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskMultiItemPromptCallbackNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                var branch = FindPromptBranch(action, taskValue);
+                if (branch == null)
+                {
+                    result = Success(action, $"GetTask({action.taskId})=={taskValue} -> no branch");
+                    return true;
+                }
+
+                bool isItemBranch = taskValue == action.taskValue;
+                if (isItemBranch && !HasRequiredItems(action))
+                {
+                    if (_sideEffects != null)
+                    {
+                        if (!string.IsNullOrWhiteSpace(action.message))
+                            _sideEffects.PostMessage(action.message);
+                        if (!string.IsNullOrWhiteSpace(action.blockedMessage))
+                            _sideEffects.PostMessage(action.blockedMessage);
+                    }
+                    result = Success(action,
+                        $"GetTask({action.taskId})=={taskValue}, required questkeys missing -> Talk/Msg2Player only, no warp");
+                    return true;
+                }
+
+                if (!_host.HasMap(action.targetMapId))
+                {
+                    result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                    return true;
+                }
+
+                if (isItemBranch)
+                {
+                    ApplyPromptBranchSetTasks(branch);
+                    if (!ConsumeItems(action))
+                    {
+                        result = Failure(action, "DelItem(...) failed after HaveItem(...) for multi-item prompt branch");
+                        return true;
+                    }
+                }
+                PostPromptBranchMessages(branch);
+                ApplyFightState(action);
+                _host.NewWorld(action.targetMapId, target);
+                ApplyOptionalSideEffects(action);
+                result = Success(action,
+                    $"GetTask({action.taskId})=={taskValue} -> Talk callback NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}" +
+                    (isItemBranch ? ", SetTask + DelItem[]" : string.Empty));
+                return true;
+            }
+
             if (action.IsTaskSetTaskPromptCallbackNewWorld)
             {
                 int taskValue = _host.GetTaskValue(action.taskId);
@@ -950,6 +1000,48 @@ namespace VLTK.Sandbox
             int count = Math.Min(action.setTaskIds.Length, action.setTaskValues.Length);
             for (int i = 0; i < count; i++)
                 _host.SetTaskValue(action.setTaskIds[i], action.setTaskValues[i]);
+        }
+
+        private bool HasRequiredItems(PcTrapActionCatalogEntry action)
+        {
+            if (action.requiredItemIds != null && action.requiredItemIds.Length > 0)
+            {
+                for (int i = 0; i < action.requiredItemIds.Length; i++)
+                {
+                    int itemId = action.requiredItemIds[i];
+                    int count = CountAt(action.requiredItemCounts, i, 1);
+                    if (itemId > 0 && !_host.HaveItem(itemId, count))
+                        return false;
+                }
+                return true;
+            }
+            int requiredCount = action.requiredItemCount > 0 ? action.requiredItemCount : 1;
+            return action.requiredItemId <= 0 || _host.HaveItem(action.requiredItemId, requiredCount);
+        }
+
+        private bool ConsumeItems(PcTrapActionCatalogEntry action)
+        {
+            if (action.consumeItemIds != null && action.consumeItemIds.Length > 0)
+            {
+                for (int i = 0; i < action.consumeItemIds.Length; i++)
+                {
+                    int itemId = action.consumeItemIds[i];
+                    int count = CountAt(action.consumeItemCounts, i, 1);
+                    if (itemId > 0 && !_host.DelItem(itemId, count))
+                        return false;
+                }
+                return true;
+            }
+            int consumeItemId = action.consumeItemId > 0 ? action.consumeItemId : action.requiredItemId;
+            int consumeCount = action.consumeItemCount > 0 ? action.consumeItemCount : Math.Max(1, action.requiredItemCount);
+            return consumeItemId <= 0 || _host.DelItem(consumeItemId, consumeCount);
+        }
+
+        private static int CountAt(int[] counts, int index, int fallback)
+        {
+            if (counts == null || index < 0 || index >= counts.Length || counts[index] <= 0)
+                return fallback;
+            return counts[index];
         }
 
         private void ApplyNotes(PcTrapActionCatalogEntry action)

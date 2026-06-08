@@ -214,7 +214,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(798, catalog.Count);
+            Assert.AreEqual(799, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -230,6 +230,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskCurrentMapReturnNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskSetTaskFactionGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeFactionGateNewWorld));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskMultiItemPromptCallbackNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
@@ -2018,6 +2019,95 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(-1, host.mapId);
             Assert.AreEqual(1, host.itemCounts[99]);
             Assert.AreEqual(60 * 256 + 20, host.taskValues[2]);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskMultiItemPromptCallbackNewWorld_ConsumesBothKeysThenRunsCallback()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapIdHex = "0x2518CA24",
+                        scriptPath = @"\script\江南区\临安\临安\trap\临安to莫空月居所.lua",
+                        actionKind = "TaskMultiItemPromptCallbackNewWorld",
+                        taskId = 43,
+                        taskValue = 90,
+                        targetMapId = 233,
+                        targetCellX = 1597,
+                        targetCellY = 3207,
+                        fightState = 1,
+                        protectTicks = 18 * 3,
+                        skillStateId = 963,
+                        skillStateLevel = 1,
+                        skillStateTime = 18 * 3,
+                        requiredItemIds = new[] { 381, 382 },
+                        requiredItemCounts = new[] { 1, 1 },
+                        consumeItemIds = new[] { 381, 382 },
+                        consumeItemCounts = new[] { 1, 1 },
+                        message = "Bạn đã thử hồi lâu nhưng cánh cửa vẫn không mở! Chỉ nghe được tiếng con gái kêu la!",
+                        blockedMessage = "Không có hai chiếc chìa khóa Vân-Lôi thì ngươi sẽ không thể vào nơi của công tử để chế ngự hắn. ",
+                        promptBranches = new[]
+                        {
+                            new PcTrapTaskPromptBranch
+                            {
+                                values = new[] { 90 },
+                                setTaskIds = new[] { 43 },
+                                setTaskValues = new[] { 100 },
+                                messages = new[] { "Cứu mạng! Xin cứu mạng!", "Dừng tay!", "Đừng nhiều lời! Đánh đi!" },
+                            },
+                            new PcTrapTaskPromptBranch
+                            {
+                                values = new[] { 100 },
+                                messages = new[] { "Ha!Ha! Bọn thủ hạ của ta còn nương tay nên mới để cho ngươi giữ được mạng đến đây. " },
+                            },
+                        },
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValues = { [43] = 90 }, itemCounts = { [381] = 1, [382] = 1 } };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x2518CA24" }, out var result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(233, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1597 * 32, 3207 * 32), host.position);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(100, host.taskValues[43]);
+            Assert.IsFalse(host.itemCounts.ContainsKey(381));
+            Assert.IsFalse(host.itemCounts.ContainsKey(382));
+            Assert.AreEqual(18 * 3, sideEffects.protectTicks);
+            Assert.AreEqual(963, sideEffects.skillStateId);
+            Assert.AreEqual(1, sideEffects.skillStateLevel);
+            Assert.AreEqual(18 * 3, sideEffects.skillStateTime);
+            CollectionAssert.AreEqual(new[] { "Cứu mạng! Xin cứu mạng!", "Dừng tay!", "Đừng nhiều lời! Đánh đi!" }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValues = { [43] = 100 } };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x2518CA24" }, out result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(233, host.mapId);
+            Assert.IsFalse(host.taskValues.ContainsKey(100));
+            CollectionAssert.AreEqual(new[] { "Ha!Ha! Bọn thủ hạ của ta còn nương tay nên mới để cho ngươi giữ được mạng đến đây. " }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValues = { [43] = 90 }, itemCounts = { [381] = 1 } };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x2518CA24" }, out result));
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(1, host.itemCounts[381]);
+            Assert.AreEqual(90, host.taskValues[43]);
+            CollectionAssert.AreEqual(new[]
+            {
+                "Bạn đã thử hồi lâu nhưng cánh cửa vẫn không mở! Chỉ nghe được tiếng con gái kêu la!",
+                "Không có hai chiếc chìa khóa Vân-Lôi thì ngươi sẽ không thể vào nơi của công tử để chế ngự hắn. "
+            }, sideEffects.messages);
         }
 
         [Test]

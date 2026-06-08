@@ -2383,6 +2383,116 @@ def task_item_consume_faction_gate_newworld(source: str) -> dict[str, Any] | Non
     }
 
 
+def task_multi_item_prompt_callback_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    main_body = lua_function_body(clean_source, 'main')
+    if not main_body or re.search(r'\b(for|while|repeat|Include|IncludeLib)\b', clean_source):
+        return None
+    main_calls = set(re.findall(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*\(', main_body))
+    if not main_calls.issubset({'GetTask', 'HaveItem', 'SetTask', 'DelItem', 'Talk', 'Msg2Player', 'if', 'elseif', 'and'}):
+        return None
+    task_match = re.search(r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<taskId>\d+)\s*\)', main_body)
+    if not task_match:
+        return None
+    task_var = task_match.group('var')
+    match = re.search(
+        rf'if\s*\(?\s*{re.escape(task_var)}\s*==\s*(?P<itemTask>\d+)\s*\)?\s*and\s*'
+        rf'\(?\s*HaveItem\s*\(\s*(?P<itemA>\d+)\s*\)\s*==\s*(?P<countA>\d+)\s*\)?\s*and\s*'
+        rf'\(?\s*HaveItem\s*\(\s*(?P<itemB>\d+)\s*\)\s*==\s*(?P<countB>\d+)\s*\)?\s*then(?P<item>.*?)'
+        rf'elseif\s*\(?\s*{re.escape(task_var)}\s*==\s*(?P<repeatTask>\d+)\s*\)?\s*then(?P<repeat>.*?)'
+        rf'elseif\s*\(?\s*{re.escape(task_var)}\s*==\s*(?P<failTask>\d+)\s*\)?\s*then(?P<fail>.*?)end',
+        main_body, re.S | re.I)
+    if not match:
+        return None
+    item_task = int(match.group('itemTask'))
+    repeat_task = int(match.group('repeatTask'))
+    fail_task = int(match.group('failTask'))
+    if item_task != fail_task:
+        return None
+    item_ids = [int(match.group('itemA')), int(match.group('itemB'))]
+    item_counts = [int(match.group('countA')), int(match.group('countB'))]
+    if any(v <= 0 for v in item_ids + item_counts):
+        return None
+
+    item_body = match.group('item')
+    repeat_body = match.group('repeat')
+    fail_body = match.group('fail')
+    del_items = [int(call[0]) for call in parse_lua_calls(item_body, 'DelItem', limit=4)
+                 if call and str(call[0]).strip().isdigit()]
+    if del_items != item_ids:
+        return None
+    set_task_ids: list[int] = []
+    set_task_values: list[int] = []
+    for call in parse_lua_calls(item_body, 'SetTask', limit=4):
+        if len(call) < 2 or not str(call[0]).strip().isdigit():
+            return None
+        value = int_lua_constant_expr(str(call[1]))
+        if value is None:
+            return None
+        set_task_ids.append(int(str(call[0]).strip()))
+        set_task_values.append(value)
+    if not set_task_ids:
+        return None
+
+    item_talk = parse_lua_calls(item_body, 'Talk', limit=2)
+    repeat_talk = parse_lua_calls(repeat_body, 'Talk', limit=2)
+    if len(item_talk) != 1 or len(repeat_talk) != 1:
+        return None
+    callback = str(item_talk[0][1]).strip() if len(item_talk[0]) > 1 else ''
+    repeat_callback = str(repeat_talk[0][1]).strip() if len(repeat_talk[0]) > 1 else ''
+    if not callback or callback != repeat_callback:
+        return None
+    item_messages = callback_talk_messages(item_talk)
+    repeat_messages = callback_talk_messages(repeat_talk)
+    fail_messages = talk_messages({'talkCalls': parse_lua_calls(fail_body, 'Talk', limit=2)})
+    msg2 = [clean_user_message(str(call[0])) for call in parse_lua_calls(fail_body, 'Msg2Player', limit=2) if call]
+    msg2 = [m for m in msg2 if m and is_safe_user_message(m)]
+    if not item_messages or not repeat_messages or len(fail_messages) != 1 or len(msg2) != 1:
+        return None
+
+    callback_body = lua_function_body(clean_source, callback)
+    if not callback_body:
+        return None
+    callback_calls = set(re.findall(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*\(', callback_body))
+    if not callback_calls.issubset({'SetFightState', 'NewWorld', 'SetProtectTime', 'AddSkillState'}):
+        return None
+    target = int_args_unique(parse_lua_calls(callback_body, 'NewWorld', limit=2), 3)
+    fight = int_args_unique(parse_lua_calls(callback_body, 'SetFightState', limit=2), 1)
+    protect_calls = parse_lua_calls(callback_body, 'SetProtectTime', limit=2)
+    skill_calls = parse_lua_calls(callback_body, 'AddSkillState', limit=2)
+    if target is None or fight is None or len(protect_calls) != 1 or len(skill_calls) != 1 or len(skill_calls[0]) < 4:
+        return None
+    protect_ticks = int_lua_constant_expr(protect_calls[0][0])
+    skill_id = int_lua_constant_expr(skill_calls[0][0])
+    skill_level = int_lua_constant_expr(skill_calls[0][1])
+    skill_time = int_lua_constant_expr(skill_calls[0][3])
+    if protect_ticks is None or skill_id is None or skill_level is None or skill_time is None:
+        return None
+    return {
+        'taskId': int(task_match.group('taskId')),
+        'taskValue': item_task,
+        'targetMapId': target[0],
+        'targetCellX': target[1],
+        'targetCellY': target[2],
+        'fightState': fight[0],
+        'protectTicks': protect_ticks,
+        'skillStateId': skill_id,
+        'skillStateLevel': skill_level,
+        'skillStateTime': skill_time,
+        'requiredItemIds': item_ids,
+        'requiredItemCounts': item_counts,
+        'consumeItemIds': item_ids,
+        'consumeItemCounts': [1 for _ in item_ids],
+        'callback': callback,
+        'promptBranches': [
+            {'values': [item_task], 'setTaskIds': set_task_ids, 'setTaskValues': set_task_values, 'messages': item_messages},
+            {'values': [repeat_task], 'messages': repeat_messages},
+        ],
+        'message': fail_messages[0],
+        'blockedMessage': msg2[0],
+    }
+
+
 def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
     if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
         return None
@@ -2767,6 +2877,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_item_gate,
             })
             continue
+        task_multi_item_prompt = task_multi_item_prompt_callback_newworld(source)
+        if task_multi_item_prompt is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskMultiItemPromptCallbackNewWorld',
+                'source': 'PC trap Lua main(): GetTask + two HaveItem questkeys gate SetTask/DelItem/Talk callback; deterministic callback applies fight state, NewWorld, protect, skill state',
+                **task_multi_item_prompt,
+            })
+            continue
         task_settask_prompt_callback = task_settask_prompt_callback_newworld(source)
         if task_settask_prompt_callback is not None:
             entries.append({
@@ -2931,6 +3053,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskSetTaskFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetTaskFactionGateNewWorld'),
         'deterministicTrapTaskSetTaskPromptCallbackNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetTaskPromptCallbackNewWorld'),
         'deterministicTrapTaskItemConsumeFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskItemConsumeFactionGateNewWorld'),
+        'deterministicTrapTaskMultiItemPromptCallbackNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskMultiItemPromptCallbackNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T10:17:50Z",
+  "generatedAtUtc": "2026-06-08T10:35:44Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -1910,6 +1910,73 @@
       "elseTargetCellX": 1329,
       "elseTargetCellY": 2723,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 622381604,
+      "trapIdHex": "0x2518CA24",
+      "scriptPath": "\\script\\江南区\\临安\\临安\\trap\\临安to莫空月居所.lua",
+      "sourceRelPath": "script\\江南区\\临安\\临安\\trap\\临安to莫空月居所.lua",
+      "actionKind": "TaskMultiItemPromptCallbackNewWorld",
+      "source": "PC trap Lua main(): GetTask + two HaveItem questkeys gate SetTask/DelItem/Talk callback; deterministic callback applies fight state, NewWorld, protect, skill state",
+      "taskId": 43,
+      "taskValue": 90,
+      "targetMapId": 233,
+      "targetCellX": 1597,
+      "targetCellY": 3207,
+      "fightState": 1,
+      "protectTicks": 54,
+      "skillStateId": 963,
+      "skillStateLevel": 1,
+      "skillStateTime": 54,
+      "requiredItemIds": [
+        381,
+        382
+      ],
+      "requiredItemCounts": [
+        1,
+        1
+      ],
+      "consumeItemIds": [
+        381,
+        382
+      ],
+      "consumeItemCounts": [
+        1,
+        1
+      ],
+      "callback": "U43_go",
+      "promptBranches": [
+        {
+          "values": [
+            90
+          ],
+          "setTaskIds": [
+            43
+          ],
+          "setTaskValues": [
+            100
+          ],
+          "messages": [
+            "Cứu mạng! Xin cứu mạng!",
+            "Dừng tay!",
+            "To gan! Dám can thiệp vào chuyện của bổn công tử à?",
+            "Ngươi là một tên bẩn thỉu giả danh thành kẻ phong lưu! Ngươi còn muốn hại thêm bao nhiêu người nữa?",
+            "Ha! Ha! Ha! Triều đình thì thối nát. Chiến loạn xảy ra khắp nơi. Ai cũng chỉ muốn sống yên thân. Ngay cả Hoàng Thượng còn không chú ý đến ta. Ngươi lại cứ muốn nhúng tay?",
+            "Đừng nhiều lời! Đánh đi!",
+            "Hừm! Muốn làm anh hùng ư? Để xem ngươi có bản lĩnh gì!"
+          ]
+        },
+        {
+          "values": [
+            100
+          ],
+          "messages": [
+            "Ha!Ha! Bọn thủ hạ của ta còn nương tay nên mới để cho ngươi giữ được mạng đến đây."
+          ]
+        }
+      ],
+      "message": "Bạn đã thử hồi lâu nhưng cánh cửa vẫn không mở! Chỉ nghe được tiếng con gái kêu la!",
+      "blockedMessage": "Không có hai chiếc chìa khóa Vân-Lôi thì ngươi sẽ không thể vào nơi của công tử để chế ngự hắn."
     },
     {
       "trapId": 631805625,

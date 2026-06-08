@@ -53,7 +53,7 @@ EXPECTED_DETERMINISTIC_OBJECT_CAMP_OPEN_BOX_ACTIONS = 2
 EXPECTED_DETERMINISTIC_OBJECT_SHOW_LADDER_ACTIONS = 23
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 798
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 799
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 531
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
@@ -79,6 +79,7 @@ EXPECTED_DETERMINISTIC_TRAP_TASK_CURRENT_MAP_RETURN_NEWWORLD_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_TASK_SETTASK_FACTION_GATE_NEWWORLD_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_TASK_SETTASK_PROMPT_CALLBACK_NEWWORLD_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_TASK_ITEM_CONSUME_FACTION_GATE_NEWWORLD_ACTIONS = 2
+EXPECTED_DETERMINISTIC_TRAP_TASK_MULTI_ITEM_PROMPT_CALLBACK_NEWWORLD_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_GATE_SETPOS_ACTIONS = 6
 EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_RETURN_NEWWORLD_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_CLEARSKILL_SWITCH_ACTIONS = 4
@@ -551,6 +552,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_task_settask_faction_gate_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'TaskSetTaskFactionGateNewWorld')
     action_task_settask_prompt_callback_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'TaskSetTaskPromptCallbackNewWorld')
     action_task_item_consume_faction_gate_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'TaskItemConsumeFactionGateNewWorld')
+    action_task_multi_item_prompt_callback_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'TaskMultiItemPromptCallbackNewWorld')
     action_citywar_camp_gate_setpos = sum(1 for e in action_entries if e.get('actionKind') == 'CityWarCampGateSetPos')
     action_citywar_camp_return_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'CityWarCampReturnNewWorld')
     action_clearskill_switch = sum(1 for e in action_entries if e.get('actionKind') == 'ClearSkillSwitchTrap')
@@ -600,6 +602,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
                   'MapTrapActionCatalog TaskSetTaskPromptCallbackNewWorld count mismatch')
     audit.require(action_task_item_consume_faction_gate_newworld == EXPECTED_DETERMINISTIC_TRAP_TASK_ITEM_CONSUME_FACTION_GATE_NEWWORLD_ACTIONS,
                   'MapTrapActionCatalog TaskItemConsumeFactionGateNewWorld count mismatch')
+    audit.require(action_task_multi_item_prompt_callback_newworld == EXPECTED_DETERMINISTIC_TRAP_TASK_MULTI_ITEM_PROMPT_CALLBACK_NEWWORLD_ACTIONS,
+                  'MapTrapActionCatalog TaskMultiItemPromptCallbackNewWorld count mismatch')
     audit.require(action_citywar_camp_gate_setpos == EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_GATE_SETPOS_ACTIONS,
                   'MapTrapActionCatalog CityWarCampGateSetPos count mismatch')
     audit.require(action_citywar_camp_return_newworld == EXPECTED_DETERMINISTIC_TRAP_CITYWAR_CAMP_RETURN_NEWWORLD_ACTIONS,
@@ -660,6 +664,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapTaskSetTaskFactionGateNewWorldActions': action_task_settask_faction_gate_newworld,
         'deterministicTrapTaskSetTaskPromptCallbackNewWorldActions': action_task_settask_prompt_callback_newworld,
         'deterministicTrapTaskItemConsumeFactionGateNewWorldActions': action_task_item_consume_faction_gate_newworld,
+        'deterministicTrapTaskMultiItemPromptCallbackNewWorldActions': action_task_multi_item_prompt_callback_newworld,
         'deterministicTrapCityWarCampGateSetPosActions': action_citywar_camp_gate_setpos,
         'deterministicTrapCityWarCampReturnNewWorldActions': action_citywar_camp_return_newworld,
         'deterministicTrapClearSkillSwitchTrapActions': action_clearskill_switch,
