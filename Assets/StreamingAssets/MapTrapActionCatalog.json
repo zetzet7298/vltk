@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:00:08Z",
+  "generatedAtUtc": "2026-06-08T07:05:12Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -12674,6 +12674,40 @@
       "targetCellY": 3391,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 4208580552,
+      "trapIdHex": "0xFAD9D7C8",
+      "scriptPath": "\\script\\中原南区\\伏牛山\\周云泉居所\\trap\\离开.lua",
+      "sourceRelPath": "script\\中原南区\\伏牛山\\周云泉居所\\trap\\离开.lua",
+      "actionKind": "MessageRandomNewWorld",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): read-only Talk message then random(min,max) branch table NewWorld targets; duplicated GetSex message branches are identical",
+      "message": "Bạn mau chóng đi xuống núi, phía sau vẫn vang lên tiếng chửi mắng của Lôi Quyết: 'Tiểu tử thối! Đừng có chạy'!",
+      "randomMin": 0,
+      "randomMax": 99,
+      "randomThresholds": [
+        33,
+        67
+      ],
+      "randomTargetMapIds": [
+        41,
+        41,
+        41
+      ],
+      "randomTargetCellXs": [
+        1951,
+        1685,
+        1788
+      ],
+      "randomTargetCellYs": [
+        2989,
+        3268,
+        3085
+      ]
     },
     {
       "trapId": 4217954356,

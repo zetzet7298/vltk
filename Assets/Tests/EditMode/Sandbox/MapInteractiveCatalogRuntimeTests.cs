@@ -193,7 +193,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(775, catalog.Count);
+            Assert.AreEqual(776, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -201,6 +201,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalMessageNewWorld));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
@@ -1239,6 +1240,46 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, host.fightState);
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1583 * 32, 3240 * 32), host.position);
             StringAssert.Contains("branch#2", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_MessageRandomNewWorld_PostsPcTalkThenUsesPcRandomBranch()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 911,
+                        trapIdHex = "0x0000038F",
+                        scriptPath = @"\script\中原南区\伏牛山\周云泉居所\trap\离开.lua",
+                        actionKind = "MessageRandomNewWorld",
+                        message = "Bạn mau chóng đi xuống núi, phía sau vẫn vang lên tiếng chửi mắng của Lôi Quyết: 'Tiểu tử thối! Đừng có chạy'!",
+                        randomMin = 0,
+                        randomMax = 99,
+                        randomThresholds = new[] { 33, 67 },
+                        randomTargetMapIds = new[] { 41, 41, 41 },
+                        randomTargetCellXs = new[] { 1951, 1685, 1788 },
+                        randomTargetCellYs = new[] { 2989, 3268, 3085 },
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { randomValue = 66 };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 911 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(41, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1685 * 32, 3268 * 32), host.position);
+            CollectionAssert.AreEqual(new[]
+            {
+                "Bạn mau chóng đi xuống núi, phía sau vẫn vang lên tiếng chửi mắng của Lôi Quyết: 'Tiểu tử thối! Đừng có chạy'!"
+            }, sideEffects.messages);
+            StringAssert.Contains("Talk + random(0,99) branch#1", result.detail);
         }
 
         [Test]

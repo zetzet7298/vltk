@@ -759,6 +759,36 @@ def task_optional_talk_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def message_random_newworld(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'GetSex', 'Talk', 'random', 'if', 'elseif', 'NewWorld'}):
+        return None
+    if re.search(r'\b(for|while)\b', clean_source):
+        return None
+
+    random_match = re.search(r'\b([A-Za-z_][A-Za-z0-9_]*)\s*=\s*random\s*\(\s*(\d+)\s*,\s*(\d+)\s*\)', clean_source)
+    if not random_match:
+        return None
+    random_var = re.escape(random_match.group(1))
+    thresholds = [int(value) for value in re.findall(r'\b(?:if|elseif)\s*\(\s*' + random_var + r'\s*<\s*(\d+)\s*\)', clean_source)]
+    new_worlds = int_args(parse_lua_calls(clean_source, 'NewWorld', limit=4), 3)
+    talk_lines = talk_messages({'talkCalls': parse_lua_calls(clean_source, 'Talk', limit=4)})
+    if len(thresholds) != 2 or len(new_worlds) != 3 or len(talk_lines) != 2:
+        return None
+    if talk_lines[0] != talk_lines[1]:
+        return None
+
+    return {
+        'message': talk_lines[0],
+        'randomMin': int(random_match.group(2)),
+        'randomMax': int(random_match.group(3)),
+        'randomThresholds': thresholds,
+        'randomTargetMapIds': [values[0] for values in new_worlds],
+        'randomTargetCellXs': [values[1] for values in new_worlds],
+        'randomTargetCellYs': [values[2] for values in new_worlds],
+    }
+
+
 def level_gate_requirement(source: str) -> int | None:
     match = re.search(r'GetLevel\s*\(\s*\)\s*>=\s*(\d+)', strip_lua_line_comments(source))
     return int(match.group(1)) if match else None
@@ -1704,6 +1734,22 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
             entry.update(open_server_gate)
             entries.append(entry)
             continue
+        message_random = message_random_newworld(source)
+        if message_random is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'MessageRandomNewWorld',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC trap Lua main(): read-only Talk message then random(min,max) branch table NewWorld targets; duplicated GetSex message branches are identical',
+                **message_random,
+            })
+            continue
         random_maze = desert_maze_random_newworld(source)
         if random_maze is not None:
             entry = {
@@ -1888,6 +1934,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapLevelBracketNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'LevelBracketNewWorld'),
         'deterministicTrapOpenServerDateGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'OpenServerDateGateSetPos'),
         'deterministicTrapRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'RandomNewWorld'),
+        'deterministicTrapMessageRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'MessageRandomNewWorld'),
         'deterministicTrapReviveReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'ReviveReturnNewWorld'),
         'deterministicTrapTaskSetPosMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetPosMessage'),
         'deterministicTrapTaskOptionalMessageNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalMessageNewWorld'),

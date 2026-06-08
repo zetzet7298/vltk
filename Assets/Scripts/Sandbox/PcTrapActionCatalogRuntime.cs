@@ -166,6 +166,7 @@ namespace VLTK.Sandbox
         public bool IsLevelBracketNewWorld => string.Equals(actionKind, "LevelBracketNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsOpenServerDateGateSetPos => string.Equals(actionKind, "OpenServerDateGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsRandomNewWorld => string.Equals(actionKind, "RandomNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsMessageRandomNewWorld => string.Equals(actionKind, "MessageRandomNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsReviveReturnNewWorld => string.Equals(actionKind, "ReviveReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskSetPosMessage => string.Equals(actionKind, "TaskSetPosMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskOptionalMessageNewWorld => string.Equals(actionKind, "TaskOptionalMessageNewWorld", StringComparison.OrdinalIgnoreCase);

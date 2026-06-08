@@ -47,7 +47,7 @@ EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 142
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
-EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 775
+EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 776
 EXPECTED_DETERMINISTIC_NEWWORLD_TRAP_ACTIONS = 532
 EXPECTED_DETERMINISTIC_SETPOS_TRAP_ACTIONS = 1
 EXPECTED_DETERMINISTIC_FIGHTSTATE_SETPOS_TRAP_ACTIONS = 112
@@ -60,6 +60,7 @@ EXPECTED_DETERMINISTIC_TRAP_LEVEL_GATE_NEWWORLD_ACTIONS = 20
 EXPECTED_DETERMINISTIC_TRAP_LEVEL_BRACKET_NEWWORLD_ACTIONS = 2
 EXPECTED_DETERMINISTIC_TRAP_OPEN_SERVER_DATE_GATE_SETPOS_ACTIONS = 37
 EXPECTED_DETERMINISTIC_TRAP_RANDOM_NEWWORLD_ACTIONS = 14
+EXPECTED_DETERMINISTIC_TRAP_MESSAGE_RANDOM_NEWWORLD_ACTIONS = 1
 EXPECTED_DETERMINISTIC_TRAP_REVIVE_RETURN_NEWWORLD_ACTIONS = 6
 EXPECTED_DETERMINISTIC_TRAP_TASK_SETPOS_MESSAGE_ACTIONS = 3
 EXPECTED_DETERMINISTIC_TRAP_TASK_OPTIONAL_MESSAGE_NEWWORLD_ACTIONS = 1
@@ -510,6 +511,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     action_level_bracket_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'LevelBracketNewWorld')
     action_open_server_date_gate_setpos = sum(1 for e in action_entries if e.get('actionKind') == 'OpenServerDateGateSetPos')
     action_random_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'RandomNewWorld')
+    action_message_random_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'MessageRandomNewWorld')
     action_revive_return_new_world = sum(1 for e in action_entries if e.get('actionKind') == 'ReviveReturnNewWorld')
     action_task_setpos_message = sum(1 for e in action_entries if e.get('actionKind') == 'TaskSetPosMessage')
     action_task_optional_message_newworld = sum(1 for e in action_entries if e.get('actionKind') == 'TaskOptionalMessageNewWorld')
@@ -537,6 +539,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
                   'MapTrapActionCatalog OpenServerDateGateSetPos count mismatch')
     audit.require(action_random_new_world == EXPECTED_DETERMINISTIC_TRAP_RANDOM_NEWWORLD_ACTIONS,
                   'MapTrapActionCatalog RandomNewWorld count mismatch')
+    audit.require(action_message_random_new_world == EXPECTED_DETERMINISTIC_TRAP_MESSAGE_RANDOM_NEWWORLD_ACTIONS,
+                  'MapTrapActionCatalog MessageRandomNewWorld count mismatch')
     audit.require(action_revive_return_new_world == EXPECTED_DETERMINISTIC_TRAP_REVIVE_RETURN_NEWWORLD_ACTIONS,
                   'MapTrapActionCatalog ReviveReturnNewWorld count mismatch')
     audit.require(action_task_setpos_message == EXPECTED_DETERMINISTIC_TRAP_TASK_SETPOS_MESSAGE_ACTIONS,
@@ -584,6 +588,7 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicTrapLevelBracketNewWorldActions': action_level_bracket_new_world,
         'deterministicTrapOpenServerDateGateSetPosActions': action_open_server_date_gate_setpos,
         'deterministicTrapRandomNewWorldActions': action_random_new_world,
+        'deterministicTrapMessageRandomNewWorldActions': action_message_random_new_world,
         'deterministicTrapReviveReturnNewWorldActions': action_revive_return_new_world,
         'deterministicTrapTaskSetPosMessageActions': action_task_setpos_message,
         'deterministicTrapTaskOptionalMessageNewWorldActions': action_task_optional_message_newworld,

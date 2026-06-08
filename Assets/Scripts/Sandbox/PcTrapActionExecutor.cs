@@ -459,6 +459,26 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsMessageRandomNewWorld)
+            {
+                int branchIndex = ChooseRandomBranch(action, _host.RandomIntInclusive(action.randomMin, action.randomMax));
+                int targetMapId = action.randomTargetMapIds[branchIndex];
+                if (!_host.HasMap(targetMapId))
+                {
+                    result = Failure(action, $"target map {targetMapId} missing from catalog");
+                    return true;
+                }
+                var randomTarget = action.RandomTargetWorldPosition(branchIndex);
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.message))
+                    _sideEffects.PostMessage(action.message);
+                if (action.randomFightState >= 0)
+                    _host.SetFightState(action.randomFightState);
+                _host.NewWorld(targetMapId, randomTarget);
+                result = Success(action,
+                    $"Talk + random({action.randomMin},{action.randomMax}) branch#{branchIndex} -> NewWorld({targetMapId},{action.randomTargetCellXs[branchIndex]},{action.randomTargetCellYs[branchIndex]}) -> {randomTarget}");
+                return true;
+            }
+
             if (action.IsRandomNewWorld)
             {
                 int currentMapId = _host.GetCurrentMapId();
