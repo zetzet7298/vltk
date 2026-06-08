@@ -1876,6 +1876,57 @@ OBJECT_TASK_ITEM_BRANCH_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
             },
         ],
     },
+    '0xB92D4E6B': {
+        'sourceConsumeItemIds': [204],
+        'branches': [
+            {
+                'label': 'task_15370_key_204_reward_206',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 8, 'value': 60 * 256 + 10},
+                    {'type': 'HaveItem', 'itemId': 204, 'count': 1},
+                    {'type': 'MissingItem', 'itemId': 206, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn thử dùng chìa khóa mở chiếc rương'},
+                    {'type': 'ConsumeItems', 'itemIds': [204], 'itemCounts': [1]},
+                    {'type': 'AddEventItem', 'itemId': 206},
+                    {'type': 'AddNote', 'message': 'Bạn lấy được túi vải thứ sáu'},
+                    {'type': 'PostMessage', 'message': 'Bạn lấy được một chiếc túi vải'},
+                ],
+            },
+            {
+                'label': 'task_15370_key_204_reward_207',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 8, 'value': 60 * 256 + 10},
+                    {'type': 'HaveItem', 'itemId': 204, 'count': 1},
+                    {'type': 'MissingItem', 'itemId': 207, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn thử dùng chìa khóa mở chiếc rương'},
+                    {'type': 'ConsumeItems', 'itemIds': [204], 'itemCounts': [1]},
+                    {'type': 'AddEventItem', 'itemId': 207},
+                    {'type': 'AddNote', 'message': 'Bạn lấy được túi vải thứ bảy'},
+                    {'type': 'PostMessage', 'message': 'Bạn lấy được một chiếc túi vải'},
+                ],
+            },
+            {
+                'label': 'task_15370_key_204_empty',
+                'conditions': [
+                    {'type': 'TaskEquals', 'taskId': 8, 'value': 60 * 256 + 10},
+                    {'type': 'HaveItem', 'itemId': 204, 'count': 1},
+                ],
+                'effects': [
+                    {'type': 'PostMessage', 'message': 'Bạn thử dùng chìa khóa mở chiếc rương'},
+                    {'type': 'ConsumeItems', 'itemIds': [204], 'itemCounts': [1]},
+                    {'type': 'PostMessage', 'message': 'Bạn thất vọng vì chiếc rương này trống rỗng.'},
+                ],
+            },
+            {
+                'label': 'locked',
+                'effects': [{'type': 'PostMessage', 'message': 'Bảo rương này đã khóa rồi'}],
+            },
+        ],
+    },
 }
 
 
@@ -1913,9 +1964,12 @@ def object_task_item_branch_message_action(script: dict[str, Any]) -> dict[str, 
         if task_id is None or task_value is None:
             return None
         source_set_tasks.append((task_id, task_value))
-    if source_del_items != effect_del_items or source_event_items != effect_event_items or source_set_tasks != effect_set_tasks:
+    expected_del_items = spec.get('sourceConsumeItemIds', effect_del_items)
+    if source_del_items != expected_del_items or source_event_items != effect_event_items or source_set_tasks != effect_set_tasks:
         return None
-    return dict(spec)
+    result = dict(spec)
+    result.pop('sourceConsumeItemIds', None)
+    return result
 
 
 def object_task_talk_message_action(source: str) -> dict[str, Any] | None:

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T11:20:41Z",
+  "generatedAtUtc": "2026-06-08T11:32:22Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -1553,6 +1553,157 @@
       ],
       "elseMessages": [
         "Bảo rương này đã khóa rồi"
+      ]
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\丐帮\\地下迷宫四层\\obj\\地图_gbl60_宝箱4.lua",
+      "scriptId": 3106754155,
+      "scriptIdHex": "0xB92D4E6B",
+      "sourceRelPath": "script\\中原南区\\丐帮\\地下迷宫四层\\obj\\地图_gbl60_宝箱4.lua",
+      "actionKind": "TaskItemBranchMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): explicit deterministic ordered branch table over GetTask/HaveItem with PC-ordered DelItem/AddEventItem/SetTask/AddNote/Msg2Player/Talk effects and no random/callback/city APIs",
+      "branches": [
+        {
+          "label": "task_15370_key_204_reward_206",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 8,
+              "value": 15370
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 204,
+              "count": 1
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 206,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng chìa khóa mở chiếc rương"
+            },
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                204
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "AddEventItem",
+              "itemId": 206
+            },
+            {
+              "type": "AddNote",
+              "message": "Bạn lấy được túi vải thứ sáu"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Bạn lấy được một chiếc túi vải"
+            }
+          ]
+        },
+        {
+          "label": "task_15370_key_204_reward_207",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 8,
+              "value": 15370
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 204,
+              "count": 1
+            },
+            {
+              "type": "MissingItem",
+              "itemId": 207,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng chìa khóa mở chiếc rương"
+            },
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                204
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "AddEventItem",
+              "itemId": 207
+            },
+            {
+              "type": "AddNote",
+              "message": "Bạn lấy được túi vải thứ bảy"
+            },
+            {
+              "type": "PostMessage",
+              "message": "Bạn lấy được một chiếc túi vải"
+            }
+          ]
+        },
+        {
+          "label": "task_15370_key_204_empty",
+          "conditions": [
+            {
+              "type": "TaskEquals",
+              "taskId": 8,
+              "value": 15370
+            },
+            {
+              "type": "HaveItem",
+              "itemId": 204,
+              "count": 1
+            }
+          ],
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bạn thử dùng chìa khóa mở chiếc rương"
+            },
+            {
+              "type": "ConsumeItems",
+              "itemIds": [
+                204
+              ],
+              "itemCounts": [
+                1
+              ]
+            },
+            {
+              "type": "PostMessage",
+              "message": "Bạn thất vọng vì chiếc rương này trống rỗng."
+            }
+          ]
+        },
+        {
+          "label": "locked",
+          "effects": [
+            {
+              "type": "PostMessage",
+              "message": "Bảo rương này đã khóa rồi"
+            }
+          ]
+        }
       ]
     },
     {

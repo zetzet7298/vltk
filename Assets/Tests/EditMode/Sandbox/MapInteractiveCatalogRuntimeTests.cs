@@ -250,13 +250,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(276, catalog.Count);
+            Assert.AreEqual(277, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalPickupMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskMissingItemPickupMessage));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeMessage));
-            Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
+            Assert.AreEqual(4, catalog.entries.Count(e => e != null && e.IsTaskItemBranchMessage));
             Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskTalkMessage));
@@ -307,6 +307,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(3, twChest.branches.Length);
             Assert.AreEqual("task_15380_key_101_success", twChest.branches[0].label);
             Assert.AreEqual(4, twChest.branches[0].effects.Length);
+            var gbClothBagChest = catalog.Find(@"\script\中原南区\丐帮\地下迷宫四层\obj\地图_gbl60_宝箱4.lua");
+            Assert.IsNotNull(gbClothBagChest);
+            Assert.IsTrue(gbClothBagChest.IsTaskItemBranchMessage);
+            Assert.AreEqual(4, gbClothBagChest.branches.Length);
+            Assert.AreEqual("task_15370_key_204_reward_206", gbClothBagChest.branches[0].label);
+            Assert.AreEqual("task_15370_key_204_empty", gbClothBagChest.branches[2].label);
             var taskTalk = catalog.Find(@"\script\中原南区\丐帮\地下迷宫三层\obj\地图_gbl60_宝箱empty.lua");
             Assert.IsNotNull(taskTalk);
             Assert.IsTrue(taskTalk.IsTaskTalkMessage);
@@ -807,6 +813,117 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(executor.TryExecute(obj, out result));
             CollectionAssert.AreEqual(new[] { "Không có chìa khóa, không mở được rương." }, sideEffects.messages);
             StringAssert.Contains("branch=2", result.detail);
+        }
+
+
+        [Test]
+        public void PcObjectActionExecutor_TaskItemBranchMessage_ConsumesSharedKeyForEachNestedRewardBranch()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\gbl60_chest4.lua",
+                        actionKind = "TaskItemBranchMessage",
+                        branches = new[]
+                        {
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15370_key_204_reward_206",
+                                conditions = new[]
+                                {
+                                    new PcObjectActionCondition { type = "TaskEquals", taskId = 8, value = 60 * 256 + 10 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 204, count = 1 },
+                                    new PcObjectActionCondition { type = "MissingItem", itemId = 206, count = 1 },
+                                },
+                                effects = new[]
+                                {
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Bạn thử dùng chìa khóa mở chiếc rương" },
+                                    new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 204 }, itemCounts = new[] { 1 } },
+                                    new PcObjectActionEffect { type = "AddEventItem", itemId = 206 },
+                                    new PcObjectActionEffect { type = "AddNote", message = "Bạn lấy được túi vải thứ sáu" },
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Bạn lấy được một chiếc túi vải" },
+                                }
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15370_key_204_reward_207",
+                                conditions = new[]
+                                {
+                                    new PcObjectActionCondition { type = "TaskEquals", taskId = 8, value = 60 * 256 + 10 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 204, count = 1 },
+                                    new PcObjectActionCondition { type = "MissingItem", itemId = 207, count = 1 },
+                                },
+                                effects = new[]
+                                {
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Bạn thử dùng chìa khóa mở chiếc rương" },
+                                    new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 204 }, itemCounts = new[] { 1 } },
+                                    new PcObjectActionEffect { type = "AddEventItem", itemId = 207 },
+                                    new PcObjectActionEffect { type = "AddNote", message = "Bạn lấy được túi vải thứ bảy" },
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Bạn lấy được một chiếc túi vải" },
+                                }
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "task_15370_key_204_empty",
+                                conditions = new[]
+                                {
+                                    new PcObjectActionCondition { type = "TaskEquals", taskId = 8, value = 60 * 256 + 10 },
+                                    new PcObjectActionCondition { type = "HaveItem", itemId = 204, count = 1 },
+                                },
+                                effects = new[]
+                                {
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Bạn thử dùng chìa khóa mở chiếc rương" },
+                                    new PcObjectActionEffect { type = "ConsumeItems", itemIds = new[] { 204 }, itemCounts = new[] { 1 } },
+                                    new PcObjectActionEffect { type = "PostMessage", message = "Bạn thất vọng vì chiếc rương này trống rỗng." },
+                                }
+                            },
+                            new PcObjectActionBranch
+                            {
+                                label = "locked",
+                                effects = new[] { new PcObjectActionEffect { type = "PostMessage", message = "Bảo rương này đã khóa rồi" } },
+                            },
+                        }
+                    }
+                }
+            };
+            var obj = new MapInteractiveObject { script = @"\script\gbl60_chest4.lua" };
+
+            var host = new FakeTrapTravelHost { taskValues = { [8] = 60 * 256 + 10 }, itemCounts = { [204] = 1 } };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+            Assert.IsFalse(host.itemCounts.ContainsKey(204));
+            CollectionAssert.AreEqual(new[] { 206 }, sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng chìa khóa mở chiếc rương", "Bạn lấy được một chiếc túi vải" }, sideEffects.messages);
+            StringAssert.Contains("branch=0", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [8] = 60 * 256 + 10 }, itemCounts = { [204] = 1, [206] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsFalse(host.itemCounts.ContainsKey(204));
+            CollectionAssert.AreEqual(new[] { 207 }, sideEffects.eventItems);
+            CollectionAssert.AreEqual(new[] { "Bạn lấy được túi vải thứ bảy" }, sideEffects.notes);
+            StringAssert.Contains("branch=1", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [8] = 60 * 256 + 10 }, itemCounts = { [204] = 1, [206] = 1, [207] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.IsFalse(host.itemCounts.ContainsKey(204));
+            CollectionAssert.AreEqual(new[] { "Bạn thử dùng chìa khóa mở chiếc rương", "Bạn thất vọng vì chiếc rương này trống rỗng." }, sideEffects.messages);
+            StringAssert.Contains("branch=2", result.detail);
+
+            host = new FakeTrapTravelHost { taskValues = { [8] = 0 }, itemCounts = { [204] = 1 } };
+            sideEffects = new FakeObjectActionSideEffects();
+            executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            Assert.IsTrue(executor.TryExecute(obj, out result));
+            Assert.AreEqual(1, host.itemCounts[204]);
+            CollectionAssert.AreEqual(new[] { "Bảo rương này đã khóa rồi" }, sideEffects.messages);
+            StringAssert.Contains("branch=3", result.detail);
         }
 
 
