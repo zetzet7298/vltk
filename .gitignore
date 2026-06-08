@@ -97,6 +97,8 @@ Assets/StreamingAssets/Generated/MapRegions/
 Assets/StreamingAssets/Generated/MapSprites/
 Assets/StreamingAssets/Generated/MapServerRegions/
 Assets/StreamingAssets/Generated/NpcSprites/
+Assets/StreamingAssets/Generated.meta
+Assets/StreamingAssets/Generated/*.meta
 
 # ─────────────────────────────────────────────────
 # Converted/extracted game assets (intermediate output from vltktool)
