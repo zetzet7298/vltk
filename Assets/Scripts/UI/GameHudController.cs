@@ -100,7 +100,10 @@ namespace VLTK.UI
         private Label _hpText, _mpText, _staminaText, _expText;
         private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary;
         private TextField _chatInput;
+        private VisualElement _chatTabs;
         private ChatChannel _selectedChatChannel = ChatChannel.All;
+        private int _chatHistoryOffset;
+        private bool _chatChannelsVisible = true;
 
         // New HUD elements
         private VisualElement _buffPanel;
@@ -306,6 +309,7 @@ namespace VLTK.UI
             _sceneName = root.Q<Label>("SceneName");
             _scenePos = root.Q<Label>("ScenePos");
             _chatInput = root.Q<TextField>("ChatInput");
+            _chatTabs = root.Q("ChatTabs");
             _minimapContent = root.Q("MinimapContent");
             _playerDot = root.Q("PlayerDot");
             _miniMapTarget = root.Q("MiniMapTarget");
@@ -395,6 +399,9 @@ namespace VLTK.UI
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
             RegisterClick(root, "PcToolClose", ClosePcToolPanel);
             RegisterClick(root, "SendBtn", OnSendChatClick);
+            RegisterClick(root, "ChatScrollUpBtn", OnChatScrollUpClick);
+            RegisterClick(root, "ChatChannelToggleBtn", OnChatChannelToggleClick);
+            RegisterClick(root, "ChatScrollDownBtn", OnChatScrollDownClick);
             RegisterClick(root, "ChatTabAll", () => SelectChatChannel(ChatChannel.All));
             RegisterClick(root, "ChatTabPrivate", () => SelectChatChannel(ChatChannel.Private));
             RegisterClick(root, "ChatTabRoom", () => SelectChatChannel(ChatChannel.Room));
@@ -1996,6 +2003,62 @@ namespace VLTK.UI
             }
             OpenPcToolPanel("Bang phái", rows);
             SubsystemLog.Info("HUD", "Open Faction/Guild panel");
+        }
+
+        private void OnChatScrollUpClick()
+        {
+            _chatHistoryOffset = Mathf.Min(_chatHistoryOffset + 6, 194);
+            OpenPcToolPanel("Lịch sử chat", BuildChatHistoryRows());
+            SubsystemLog.Info("HUD", $"Chat scroll up offset={_chatHistoryOffset}");
+        }
+
+        private void OnChatScrollDownClick()
+        {
+            _chatHistoryOffset = Mathf.Max(0, _chatHistoryOffset - 6);
+            OpenPcToolPanel("Lịch sử chat", BuildChatHistoryRows());
+            SubsystemLog.Info("HUD", $"Chat scroll down offset={_chatHistoryOffset}");
+        }
+
+        private void OnChatChannelToggleClick()
+        {
+            _chatChannelsVisible = !_chatChannelsVisible;
+            _chatTabs?.EnableInClassList("hidden", !_chatChannelsVisible);
+            OpenPcToolPanel("Kênh chat", new[]
+            {
+                _chatChannelsVisible ? "Đã mở dải chọn kênh." : "Đã ẩn dải chọn kênh.",
+                "PC: nút 频道开与关b bật/tắt cụm kênh chat ở HUD.",
+            });
+            SubsystemLog.Info("HUD", _chatChannelsVisible ? "Show chat channels" : "Hide chat channels");
+        }
+
+        private IReadOnlyList<string> BuildChatHistoryRows()
+        {
+            var rows = new List<string>();
+            var chat = SandboxManager.Instance?.ChatService;
+            if (chat == null || chat.History == null || chat.History.Count == 0)
+            {
+                rows.Add("Chưa có tin nhắn.");
+                return rows;
+            }
+
+            var filtered = new List<ChatMessage>();
+            for (int i = chat.History.Count - 1; i >= 0; i--)
+            {
+                var msg = chat.History[i];
+                if (chat.ActiveChannel == ChatChannel.All || msg.channel == chat.ActiveChannel || msg.channel == ChatChannel.System)
+                    filtered.Add(msg);
+            }
+
+            int start = Mathf.Clamp(_chatHistoryOffset, 0, Mathf.Max(0, filtered.Count - 1));
+            int end = Mathf.Min(filtered.Count, start + 8);
+            rows.Add($"Kênh: {ChatService.ChannelNameVi(chat.ActiveChannel)} — {start + 1}/{filtered.Count}");
+            for (int i = start; i < end; i++)
+            {
+                var msg = filtered[i];
+                string sender = string.IsNullOrWhiteSpace(msg.senderName) ? string.Empty : msg.senderName + ": ";
+                rows.Add($"[{ChatService.ChannelNameVi(msg.channel)}] {sender}{msg.text}");
+            }
+            return rows;
         }
 
         private void SelectChatChannel(ChatChannel channel)

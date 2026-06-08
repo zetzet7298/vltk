@@ -37,6 +37,7 @@ namespace VLTK.Tests.Sandbox
         private VisualElement _chatTabGuild;
         private VisualElement _chatTabFaction;
         private VisualElement _chatTabOther;
+        private VisualElement _chatTabs;
         private VisualElement _utilityDock;
         private VisualElement _utilityActionRow;
         private VisualElement _utilityMenuRowA;
@@ -107,6 +108,13 @@ namespace VLTK.Tests.Sandbox
             _chatTabGuild = new VisualElement { name = "ChatTabGuild" };
             _chatTabFaction = new VisualElement { name = "ChatTabFaction" };
             _chatTabOther = new VisualElement { name = "ChatTabOther" };
+            _chatTabs = new VisualElement { name = "ChatTabs" };
+            _chatTabs.Add(_chatTabAll);
+            _chatTabs.Add(_chatTabPrivate);
+            _chatTabs.Add(_chatTabRoom);
+            _chatTabs.Add(_chatTabGuild);
+            _chatTabs.Add(_chatTabFaction);
+            _chatTabs.Add(_chatTabOther);
             _chatTabAll.AddToClassList("active");
 
             _utilityToggleBtn = new VisualElement { name = "UtilityToggleBtn" };
@@ -172,12 +180,7 @@ namespace VLTK.Tests.Sandbox
             _root.Add(_faceBtn);
             _root.Add(_chatInput);
             _root.Add(_sendBtn);
-            _root.Add(_chatTabAll);
-            _root.Add(_chatTabPrivate);
-            _root.Add(_chatTabRoom);
-            _root.Add(_chatTabGuild);
-            _root.Add(_chatTabFaction);
-            _root.Add(_chatTabOther);
+            _root.Add(_chatTabs);
             _root.Add(_utilityToggleBtn);
             _root.Add(_utilityDock);
             _root.Add(_pcShortcutToggleBtn);
@@ -203,6 +206,7 @@ namespace VLTK.Tests.Sandbox
             SetPrivateField("_facePickerList", _facePickerList);
             SetPrivateField("_faceBtn", _faceBtn);
             SetPrivateField("_chatInput", _chatInput);
+            SetPrivateField("_chatTabs", _chatTabs);
             SetPrivateField("_utilityDock", _utilityDock);
             SetPrivateField("_utilityActionRow", _utilityActionRow);
             SetPrivateField("_utilityMenuRowA", _utilityMenuRowA);
@@ -345,6 +349,25 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual("Chat", _pcToolTitle.text);
             var labels = _pcToolList.Query<Label>().ToList();
             Assert.IsTrue(labels.Exists(l => l.text.Contains("Tin nhắn nháp: xin chào bang")));
+        }
+
+        [Test]
+        public void ChatRailButtons_ToggleChannelsAndOpenHistoryPanel()
+        {
+            Assert.IsFalse(_chatTabs.ClassListContains("hidden"));
+
+            InvokePrivateMethod("OnChatChannelToggleClick");
+            Assert.IsTrue(_chatTabs.ClassListContains("hidden"));
+            Assert.AreEqual("Kênh chat", _pcToolTitle.text);
+
+            InvokePrivateMethod("OnChatScrollUpClick");
+            Assert.AreEqual("Lịch sử chat", _pcToolTitle.text);
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Chưa có tin nhắn") || l.text.Contains("Kênh:")));
+
+            InvokePrivateMethod("OnChatScrollDownClick");
+            Assert.AreEqual("Lịch sử chat", _pcToolTitle.text);
         }
 
         [Test]

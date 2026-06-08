@@ -421,7 +421,7 @@ PC: ~6,500+ script files
 | Pet Runtime | PetService + tests |
 | Shop Config Runtime | ShopConfigService + PcShopConfigParser (1,521 vật phẩm shop) + tests |
 | Missile Effect Runtime | MissileEffectService + PcMissileEffectParser (480 effect) + tests |
-| HUD Art Catalog | HudArtCatalogService + PcHudArtCatalogParser + tests; 2026-06-08 HUD mobile UX uses Stitch top-right rail toggles, PC SPR/crop icons for full toolbar/1-9/T-P/chat/minimap controls, verified compile + Unity screenshots `hud_stitch_pc_shortcut_open.png`, `hud_stitch_utility_action_open.png` |
+| HUD Art Catalog | HudArtCatalogService + PcHudArtCatalogParser + tests; 2026-06-08 HUD mobile UX uses Stitch top-right rail toggles, PC SPR/crop icons for full toolbar/1-9/T-P/chat/minimap controls, verified compile + Unity screenshots `hud_stitch_pc_shortcut_open.png`, `hud_stitch_utility_action_open.png`; PC chat rail `QQ主界面向上/向下按钮` + `频道开与关b` now routes scroll/history and channel-toggle actions, screenshot `hud_pc_chat_rail_controls.png` |
 | Faction Map Runtime | FactionMapRuntimeService (capture/ownership) + tests |
 | Battle Script Runtime | BattleScriptRuntimeService (eval/execute) + tests |
 | Task Flag Registry | TaskFlagRegistryService + PcTaskFlagConfigParser + tests |
