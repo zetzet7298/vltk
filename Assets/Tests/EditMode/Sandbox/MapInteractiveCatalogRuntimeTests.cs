@@ -199,7 +199,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(776, catalog.Count);
+            Assert.AreEqual(777, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(26, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -207,6 +207,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalMessageNewWorld));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionGateNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
@@ -1462,6 +1463,84 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, host.fightState);
             CollectionAssert.IsEmpty(sideEffects.messages);
             StringAssert.Contains("GetTask(43)==0", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskFactionGateNewWorld_BranchesOnPcTaskAndFaction()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0x308D7B8F,
+                        trapIdHex = "0x308D7B8F",
+                        scriptPath = @"\script\中原北区\天忍教\天忍教室内3\trap\天忍教室内3to天忍教圣洞1.lua",
+                        actionKind = "TaskFactionGateNewWorld",
+                        taskId = 4,
+                        passTaskMinInclusive = 60 * 256 + 50,
+                        midTaskMinExclusive = 60 * 256,
+                        midTaskMaxExclusive = 60 * 256 + 50,
+                        requiredFaction = "tianren",
+                        requiredFactionId = (int)CombatFaction.TianRen,
+                        targetMapId = 51,
+                        targetCellX = 1666,
+                        targetCellY = 3291,
+                        fightState = 1,
+                        failTargetCellX = 1749,
+                        failTargetCellY = 3081,
+                        message = "Bạn chưa đưa 5 thanh đoản kiếm cho Hoàn Nhan Hùng Liệt, chưa thể vào Thánh động.",
+                        blockedMessage = "Đây là Thánh động Thiên Nhẫn giáo, những người đã vào không thể trở ra.",
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost
+            {
+                taskValue = 60 * 256 + 50,
+                playerFactionId = (int)CombatFaction.TianRen,
+            };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x308D7B8F" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(51, host.mapId);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1666 * 32, 3291 * 32), host.position);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+
+            host = new FakeTrapTravelHost
+            {
+                taskValue = 60 * 256 + 10,
+                playerFactionId = (int)CombatFaction.TianRen,
+            };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 0x308D7B8F }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1749 * 32, 3081 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Bạn chưa đưa 5 thanh đoản kiếm cho Hoàn Nhan Hùng Liệt, chưa thể vào Thánh động." }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost
+            {
+                taskValue = 0,
+                playerFactionId = (int)CombatFaction.TianRen,
+            };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x308D7B8F" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1749 * 32, 3081 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Đây là Thánh động Thiên Nhẫn giáo, những người đã vào không thể trở ra." }, sideEffects.messages);
         }
 
         [Test]

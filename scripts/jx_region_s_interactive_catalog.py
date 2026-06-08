@@ -1829,6 +1829,58 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
     return entries, coverage
 
 
+def task_faction_gate_newworld_trap(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'GetTask', 'GetFaction', 'NewWorld', 'SetFightState', 'Talk', 'SetPos', 'if', 'elseif', 'and'}):
+        return None
+    if re.search(r'\b(for|while|repeat)\b', clean_source):
+        return None
+    if 'elseif' not in clean_source or 'else' not in clean_source:
+        return None
+    match = re.search(
+        r'(?P<var>[A-Za-z_][A-Za-z0-9_]*)\s*=\s*GetTask\s*\(\s*(?P<taskId>\d+)\s*\).*?'
+        r'if\s*\(?\s*(?P=var)\s*>=\s*(?P<passMin>[0-9\s*+\-]+)\s*\)?\s*and\s*\(?\s*GetFaction\s*\(\s*\)\s*==\s*["\'](?P<faction>[a-z]+)["\']\s*\)?\s*then(?P<pass>.*?)'
+        r'elseif\s*\(?\s*(?P=var)\s*>\s*(?P<midMin>[0-9\s*+\-]+)\s*\)?\s*and\s*\(?\s*(?P=var)\s*<\s*(?P<midMax>[0-9\s*+\-]+)\s*\)?\s*then(?P<mid>.*?)'
+        r'else(?P<fail>.*?)end',
+        clean_source, re.S | re.I)
+    if not match:
+        return None
+    task_id = int(match.group('taskId'))
+    pass_min = int_lua_constant_expr(match.group('passMin'))
+    faction = match.group('faction').lower()
+    faction_id = PC_FACTION_IDS.get(faction)
+    mid_min = int_lua_constant_expr(match.group('midMin'))
+    mid_max = int_lua_constant_expr(match.group('midMax'))
+    if pass_min is None or mid_min is None or mid_max is None or faction_id is None:
+        return None
+    new_world = int_args_unique(parse_lua_calls(match.group('pass'), 'NewWorld', limit=2), 3)
+    fight_state = int_args_unique(parse_lua_calls(match.group('pass'), 'SetFightState', limit=2), 1)
+    mid_pos = int_args_unique(parse_lua_calls(match.group('mid'), 'SetPos', limit=2), 2)
+    fail_pos = int_args_unique(parse_lua_calls(match.group('fail'), 'SetPos', limit=2), 2)
+    if new_world is None or fight_state is None or mid_pos is None or fail_pos is None or mid_pos != fail_pos:
+        return None
+    mid_messages = talk_messages({'talkCalls': parse_lua_calls(match.group('mid'), 'Talk', limit=2)})
+    fail_messages = talk_messages({'talkCalls': parse_lua_calls(match.group('fail'), 'Talk', limit=2)})
+    if len(mid_messages) != 1 or len(fail_messages) != 1:
+        return None
+    return {
+        'taskId': task_id,
+        'passTaskMinInclusive': pass_min,
+        'midTaskMinExclusive': mid_min,
+        'midTaskMaxExclusive': mid_max,
+        'requiredFaction': faction,
+        'requiredFactionId': faction_id,
+        'targetMapId': new_world[0],
+        'targetCellX': new_world[1],
+        'targetCellY': new_world[2],
+        'fightState': fight_state[0],
+        'failTargetCellX': mid_pos[0],
+        'failTargetCellY': mid_pos[1],
+        'message': mid_messages[0],
+        'blockedMessage': fail_messages[0],
+    }
+
+
 def conditional_fight_state_setpos(source: str) -> dict[str, int] | None:
     if 'Talk(' in source or 'Msg2Player' in source or 'NewWorld' in source:
         return None
@@ -2113,6 +2165,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **task_setpos,
             })
             continue
+        task_faction_gate = task_faction_gate_newworld_trap(source)
+        if task_faction_gate is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskFactionGateNewWorld',
+                'source': 'PC trap Lua main(): GetTask/GetFaction gate, pass NewWorld+SetFightState, otherwise Talk+SetPos to fail target',
+                **task_faction_gate,
+            })
+            continue
         citywar_gate = citywar_camp_gate_setpos(source)
         if citywar_gate is not None:
             entries.append({
@@ -2256,6 +2320,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapReviveReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'ReviveReturnNewWorld'),
         'deterministicTrapTaskSetPosMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetPosMessage'),
         'deterministicTrapTaskOptionalMessageNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalMessageNewWorld'),
+        'deterministicTrapTaskFactionGateNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskFactionGateNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),

@@ -154,6 +154,37 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskFactionGateNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                int factionId = _host.GetPlayerFactionId();
+                if (taskValue >= action.passTaskMinInclusive && factionId == action.requiredFactionId)
+                {
+                    if (!_host.HasMap(action.targetMapId))
+                    {
+                        result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                        return true;
+                    }
+                    _host.NewWorld(action.targetMapId, target);
+                    if (action.fightState >= 0)
+                        _host.SetFightState(action.fightState);
+                    result = Success(action,
+                        $"GetTask({action.taskId})={taskValue}, GetFaction()=={action.requiredFaction}#{action.requiredFactionId} -> NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                    return true;
+                }
+
+                var failTarget = action.FailTargetWorldPosition();
+                string failMessage = taskValue > action.midTaskMinExclusive && taskValue < action.midTaskMaxExclusive
+                    ? action.message
+                    : action.blockedMessage;
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(failMessage))
+                    _sideEffects.PostMessage(failMessage);
+                _host.SetPos(failTarget);
+                result = Success(action,
+                    $"GetTask({action.taskId})={taskValue}, faction={factionId} -> Talk + SetPos({action.failTargetCellX},{action.failTargetCellY}) -> {failTarget}");
+                return true;
+            }
+
             if (action.IsClearSkillSwitchTrap)
             {
                 int currentFightState = _host.GetFightState();

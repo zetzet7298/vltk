@@ -119,6 +119,11 @@ namespace VLTK.Sandbox
         public int gateFightState = -1;
         public int[] reviveReturnMapIds;
         public int taskId;
+        public int passTaskMinInclusive;
+        public int midTaskMinExclusive;
+        public int midTaskMaxExclusive;
+        public string requiredFaction;
+        public int requiredFactionId;
         public PcTrapTaskSetPosBranch[] taskBranches;
         public int requiredCamp;
         public int enterCellX;
@@ -170,6 +175,7 @@ namespace VLTK.Sandbox
         public bool IsReviveReturnNewWorld => string.Equals(actionKind, "ReviveReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskSetPosMessage => string.Equals(actionKind, "TaskSetPosMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskOptionalMessageNewWorld => string.Equals(actionKind, "TaskOptionalMessageNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskFactionGateNewWorld => string.Equals(actionKind, "TaskFactionGateNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);

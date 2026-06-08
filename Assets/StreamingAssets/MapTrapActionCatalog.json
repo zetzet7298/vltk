@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:51:51Z",
+  "generatedAtUtc": "2026-06-08T08:19:23Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -2340,6 +2340,28 @@
       "targetCellY": 3147,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 814578575,
+      "trapIdHex": "0x308D7B8F",
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室内3\\trap\\天忍教室内3to天忍教圣洞1.lua",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教室内3\\trap\\天忍教室内3to天忍教圣洞1.lua",
+      "actionKind": "TaskFactionGateNewWorld",
+      "source": "PC trap Lua main(): GetTask/GetFaction gate, pass NewWorld+SetFightState, otherwise Talk+SetPos to fail target",
+      "taskId": 4,
+      "passTaskMinInclusive": 15410,
+      "midTaskMinExclusive": 15360,
+      "midTaskMaxExclusive": 15410,
+      "requiredFaction": "tianren",
+      "requiredFactionId": 6,
+      "targetMapId": 51,
+      "targetCellX": 1666,
+      "targetCellY": 3291,
+      "fightState": 1,
+      "failTargetCellX": 1749,
+      "failTargetCellY": 3081,
+      "message": "Bạn chưa đưa 5 thanh đoản kiếm cho Hoàn Nhan Hùng Liệt, chưa thể vào Thánh động.",
+      "blockedMessage": "Đây là Thánh động Thiên Nhẫn giáo, những người đã vào không thể trở ra."
     },
     {
       "trapId": 829060918,
