@@ -559,6 +559,39 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcSystemMenuRows_AreClickableAndExecutePcActions()
+        {
+            InvokePrivateMethod("OnOptionsClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Hệ thống", _pcToolTitle.text);
+            var actionRows = _pcToolList.Query<VisualElement>(className: "hud-pc-tool-action-row").ToList();
+            Assert.AreEqual(5, actionRows.Count, "PC e6641da3 rows must be action rows, not inert text.");
+
+            InvokePrivateMethod("OnPcSystemMenuRowClick", SystemMenuPanelService.MenuOffLine);
+            Assert.AreEqual("Treo máy offline", _pcToolTitle.text);
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Đã bật treo máy offline")));
+            Assert.IsTrue(GetPrivateField<bool>("_offlineMode"));
+
+            InvokePrivateMethod("OnPcSystemMenuRowClick", SystemMenuPanelService.MenuOptions);
+            Assert.AreEqual("Tùy chọn", _pcToolTitle.text);
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [Options]")));
+
+            InvokePrivateMethod("OnPcSystemMenuRowClick", SystemMenuPanelService.MenuGameHelp);
+            Assert.AreEqual("Trợ giúp", _pcToolTitle.text);
+
+            InvokePrivateMethod("OnPcSystemMenuRowClick", SystemMenuPanelService.MenuExitGame);
+            Assert.AreEqual("Thoát game", _pcToolTitle.text);
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Yêu cầu xác nhận")));
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            InvokePrivateMethod("OnPcSystemMenuRowClick", SystemMenuPanelService.MenuContinueGame);
+            Assert.IsTrue(_pcToolPanel.ClassListContains("hidden"));
+        }
+
+        [Test]
         public void WorldMapButton_OpensPcWorldMapCatalog()
         {
             InvokePrivateMethod("OnWorldMapClick");

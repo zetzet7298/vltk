@@ -132,6 +132,7 @@ namespace VLTK.UI
         private bool _isSitting;
         private bool _recEnabled;
         private bool _pkEnabled;
+        private bool _offlineMode;
         private float _defaultRunSpeed;
         private TradeSession _tradeSession;
         private PartyMember _tradeTarget;
@@ -2549,14 +2550,91 @@ namespace VLTK.UI
         private void OnOptionsClick()
         {
             var snap = SystemMenuPanelService.BuildSnapshot();
-            var rows = new List<string>();
-            if (snap.rows != null)
-            {
-                foreach (var r in snap.rows)
-                    rows.Add($"{r.name}: {r.description}");
-            }
-            OpenPcToolPanel("Hệ thống", rows);
+            OpenPcSystemMenuPanel(snap.rows);
             SubsystemLog.Info("HUD", "Open System Options");
+        }
+
+        private void OpenPcSystemMenuPanel(IEnumerable<SystemMenuRow> rows)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Hệ thống";
+            _pcToolList.Clear();
+
+            if (rows != null)
+            {
+                foreach (var row in rows)
+                {
+                    string text = $"PC [{SystemMenuSectionName(row.menuId)}] {row.name}: {row.description}";
+                    AddPcToolActionRow(text, () => OnPcSystemMenuRowClick(row.menuId));
+                }
+            }
+
+            if (_pcToolList.contentContainer.childCount == 0)
+                AddPcToolRow("Không có dữ liệu.");
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcSystemMenuRowClick(int menuId)
+        {
+            switch (menuId)
+            {
+                case SystemMenuPanelService.MenuExitGame:
+                    OpenPcToolPanel("Thoát game", new[]
+                    {
+                        @"PC [ExitGame] \spr\Ui3\系统\系统－退出.spr",
+                        "Yêu cầu xác nhận trước khi rời game; mobile không tự thoát ngay khi chạm để tránh thao tác nhầm.",
+                    });
+                    break;
+                case SystemMenuPanelService.MenuGameHelp:
+                    OpenPcToolPanel("Trợ giúp", new[]
+                    {
+                        @"PC [GameHelp] \spr\Ui3\系统\系统－帮助.spr",
+                        "Mở hướng dẫn trò chơi / danh sách phím và thao tác mobile tương đương.",
+                    });
+                    break;
+                case SystemMenuPanelService.MenuOptions:
+                    var settings = SettingsPanelService.BuildSnapshot();
+                    var settingRows = new List<string>
+                    {
+                        @"PC [Options] \spr\Ui3\系统\系统－选项.spr",
+                        $"Tùy chọn khả dụng: {(settings.rows == null ? 0 : settings.rows.Count)}",
+                    };
+                    if (settings.rows != null)
+                    {
+                        foreach (var row in settings.rows)
+                            settingRows.Add($"{row.displayName}: {row.description}");
+                    }
+                    OpenPcToolPanel("Tùy chọn", settingRows);
+                    break;
+                case SystemMenuPanelService.MenuOffLine:
+                    _offlineMode = !_offlineMode;
+                    OpenPcToolPanel("Treo máy offline", new[]
+                    {
+                        @"PC [OffLine] \spr\Ui3\系统\系统－离线托管.spr",
+                        _offlineMode ? "Đã bật treo máy offline." : "Đã tắt treo máy offline.",
+                    });
+                    break;
+                case SystemMenuPanelService.MenuContinueGame:
+                    ClosePcToolPanel();
+                    break;
+            }
+        }
+
+        private static string SystemMenuSectionName(int menuId)
+        {
+            switch (menuId)
+            {
+                case SystemMenuPanelService.MenuExitGame: return "ExitGame";
+                case SystemMenuPanelService.MenuGameHelp: return "GameHelp";
+                case SystemMenuPanelService.MenuOptions: return "Options";
+                case SystemMenuPanelService.MenuOffLine: return "OffLine";
+                case SystemMenuPanelService.MenuContinueGame: return "ContiumeGame";
+                default: return "Unknown";
+            }
         }
 
         private void OnPKClick()
@@ -2770,6 +2848,23 @@ namespace VLTK.UI
             var label = new Label(text ?? string.Empty);
             label.AddToClassList("hud-pc-tool-row-text");
             row.Add(label);
+            _pcToolList?.Add(row);
+        }
+
+        private void AddPcToolActionRow(string text, System.Action action)
+        {
+            var row = new VisualElement();
+            row.AddToClassList("hud-pc-tool-row");
+            row.AddToClassList("hud-pc-tool-action-row");
+            row.pickingMode = PickingMode.Position;
+            var label = new Label(text ?? string.Empty);
+            label.AddToClassList("hud-pc-tool-row-text");
+            row.Add(label);
+            row.RegisterCallback<PointerDownEvent>(evt =>
+            {
+                action?.Invoke();
+                evt.StopPropagation();
+            });
             _pcToolList?.Add(row);
         }
 
