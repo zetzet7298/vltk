@@ -71,6 +71,15 @@ namespace VLTK.Sandbox
         public int noteTaskMinExclusive;
         public int noteTaskMaxExclusive;
         public int requiredMissingItemId;
+        public int[] requiredItemIds;
+        public int[] requiredItemCounts;
+        public int[] consumeItemIds;
+        public int[] consumeItemCounts;
+        public int setTaskId;
+        public int setTaskValue;
+        public string[] preConsumeMessages;
+        public string[] successMessages;
+        public string[] missingItemMessages;
         public string[] elseMessages;
         public string source;
 
@@ -78,6 +87,7 @@ namespace VLTK.Sandbox
         public bool IsPickupMessage => string.Equals(actionKind, "PickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskOptionalPickupMessage => string.Equals(actionKind, "TaskOptionalPickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskMissingItemPickupMessage => string.Equals(actionKind, "TaskMissingItemPickupMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskItemConsumeMessage => string.Equals(actionKind, "TaskItemConsumeMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTaskTalkMessage => string.Equals(actionKind, "TaskTalkMessage", StringComparison.OrdinalIgnoreCase);

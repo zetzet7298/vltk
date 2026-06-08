@@ -203,8 +203,25 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SystemMenu_GetByName_NonNull()
         {
-            var menu = SystemMenuPanelService.GetByName("Nhân Vật");
+            var menu = SystemMenuPanelService.GetByName("Tùy chọn");
             Assert.IsTrue(menu.HasValue);
+            Assert.AreEqual(SystemMenuPanelService.MenuOptions, menu.Value.menuId);
+        }
+
+        [Test]
+        public void SystemMenu_BuildSnapshot_MatchesPcE6641da3Buttons()
+        {
+            var snap = SystemMenuPanelService.BuildSnapshot();
+            Assert.AreEqual(5, snap.rows.Count, "PC e6641da3.ini exposes exactly ExitGame/GameHelp/Options/OffLine/ContiumeGame.");
+            Assert.AreEqual("Thoát game", snap.rows[0].name);
+            Assert.AreEqual("Trợ giúp", snap.rows[1].name);
+            Assert.AreEqual("Tùy chọn", snap.rows[2].name);
+            Assert.AreEqual("Treo máy offline", snap.rows[3].name);
+            Assert.AreEqual("Tiếp tục game", snap.rows[4].name);
+            Assert.IsTrue(snap.rows[0].requiresConfirm);
+            Assert.IsTrue(snap.rows[3].requiresConfirm);
+            Assert.IsTrue(SystemMenuPanelService.DisabledPcSystemMenuButtons.ContainsKey("CloseGame"));
+            Assert.IsTrue(SystemMenuPanelService.DisabledPcSystemMenuButtons.ContainsKey("GameTask"));
         }
 
         [Test]

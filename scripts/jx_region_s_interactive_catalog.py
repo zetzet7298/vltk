@@ -503,6 +503,11 @@ def clean_user_message(message: str) -> str:
             .replace('thiƠu', 'thiếu')
             .replace('KiƠm', 'Kiếm')
             .replace('kiƠm', 'kiếm')
+            .replace('HuyƠt', 'Huyết')
+            .replace('huyƠt', 'huyết')
+            .replace('dùngchìa', 'dùng chìa')
+            .replace('dùngchìa khóa', 'dùng chìa khóa')
+            .replace('khóamở', 'khóa mở')
             .replace('phƯa', 'phía')
             .replace('PhƯa', 'Phía')
             .replace('tiƠng', 'tiếng')
@@ -518,6 +523,8 @@ def clean_user_message(message: str) -> str:
             .replace('ChiƠc', 'Chiếc')
             .replace('khăa', 'khóa')
             .replace('Khăa', 'Khóa')
+            .replace('dùngchìa khóa', 'dùng chìa khóa')
+            .replace('khóamở', 'khóa mở')
             .replace('đã đăng, hãy', 'đã đóng, hãy')
             .replace('Đã đăng, hãy', 'Đã đóng, hãy')
             .replace('  ', ' '))
@@ -1687,6 +1694,89 @@ def object_task_missing_item_pickup_message_action(source: str) -> dict[str, Any
     }
 
 
+OBJECT_TASK_ITEM_CONSUME_MESSAGE_SPECS: dict[str, dict[str, Any]] = {
+    '0xC457F445': {
+        'taskId': 6,
+        'taskValue': 40 * 256 + 20,
+        'requiredItemIds': [197, 196, 198],
+        'consumeItemIds': [197, 196, 198],
+        'setTaskId': 6,
+        'setTaskValue': 40 * 256 + 30,
+        'successMessages': ['Đánh bại trợ thủ của tên ác bá, lấy ba chìa khóa mở cửa ba phòng tối cứu những thiếu nữ bị bắt khác.'],
+        'missingItemMessages': ['Bạn tìm ra cơ quan phòng tối giam các thiếu nữ, nhưng cần có 3 chiếc chìa khóa mới mở được cơ quan này.'],
+        'elseMessages': ['ở đây có một cơ quan nhưng không biết dùng làm gì.'],
+        'notes': ['Đánh bại trợ thủ của tên ác bá, lấy ba chìa khóa mở cửa ba phòng tối cứu những thiếu nữ bị bắt khác.'],
+    },
+    '0x702D9884': {
+        'taskId': 9,
+        'taskValue': 40 * 256 + 20,
+        'requiredItemIds': [212],
+        'consumeItemIds': [212],
+        'eventItemIds': [9],
+        'preConsumeMessages': ['Bạn thử dùng chìa khóa mở chiếc rương'],
+        'successMessages': ['Bạn nhận được Huyết Hồn Thần Kiếm'],
+        'missingItemMessages': ['Bảo rương này đã khóa rồi'],
+        'elseMessages': ['Bảo rương này đã khóa rồi'],
+        'notes': ['Bạn nhận được Huyết Hồn Thần Kiếm'],
+    },
+    '0xD7719634': {
+        'taskId': 9,
+        'taskValue': 60 * 256 + 20,
+        'requiredItemIds': [11, 12, 13, 14, 15],
+        'consumeItemIds': [11, 12, 13, 14, 15],
+        'eventItemIds': [16],
+        'successMessages': ['Bạn dùng 5 chiếc chìa khóa treo phía trên để mở rương lấy Ngũ Sắc Thạch'],
+        'missingItemMessages': ['Không có 5 chiếc chìa khóa kia, bạn không thể mở được rương để lấy đá'],
+        'elseMessages': ['Bảo rương này đã khóa rồi'],
+        'notes': ['Phái lấy Ngũ Sắc Thạch'],
+    },
+}
+
+
+def object_task_item_consume_message_action(script: dict[str, Any]) -> dict[str, Any] | None:
+    spec = OBJECT_TASK_ITEM_CONSUME_MESSAGE_SPECS.get(script.get('scriptIdHex', ''))
+    if spec is None:
+        return None
+    clean_source = strip_lua_line_comments(script.get('sourceText', ''))
+    allowed = {'main', 'GetTask', 'SetTask', 'HaveItem', 'DelItem', 'AddEventItem', 'AddNote', 'Msg2Player', 'Talk', 'if', 'and'}
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(elseif|for|while|repeat|random|Include|Say)\b', clean_source):
+        return None
+
+    have_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'HaveItem', limit=12), 1)]
+    del_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'DelItem', limit=12), 1)]
+    if have_items != spec['requiredItemIds'] or del_items != spec['consumeItemIds']:
+        return None
+
+    set_task_calls = parse_lua_calls(clean_source, 'SetTask', limit=2)
+    if spec.get('setTaskId', 0) > 0:
+        if len(set_task_calls) != 1 or len(set_task_calls[0]) < 2:
+            return None
+        task_id = int_expr(set_task_calls[0][0])
+        task_value = int_lua_constant_expr(set_task_calls[0][1])
+        if task_id != spec['setTaskId'] or task_value != spec['setTaskValue']:
+            return None
+    elif set_task_calls:
+        return None
+
+    event_items = [values[0] for values in int_args(parse_lua_calls(clean_source, 'AddEventItem', limit=4), 1)]
+    if event_items != spec.get('eventItemIds', []):
+        return None
+    notes = [clean_user_message(call[0]) for call in parse_lua_calls(clean_source, 'AddNote', limit=4) if call]
+    if notes != spec.get('notes', []):
+        return None
+    msg2 = [clean_user_message(call[0]) for call in parse_lua_calls(clean_source, 'Msg2Player', limit=8) if call]
+    expected_msg2 = [m for m in (spec.get('preConsumeMessages', []) + spec.get('successMessages', []) + spec.get('missingItemMessages', []) + spec.get('elseMessages', [])) if m in msg2]
+    if not expected_msg2:
+        return None
+
+    entry = dict(spec)
+    entry['requiredItemCounts'] = [1] * len(entry.get('requiredItemIds', []))
+    entry['consumeItemCounts'] = [1] * len(entry.get('consumeItemIds', []))
+    return entry
+
+
 def object_task_talk_message_action(source: str) -> dict[str, Any] | None:
     clean_source = strip_lua_line_comments(source)
     if not source_uses_only_calls(clean_source, {'main', 'GetTask', 'Talk', 'if'}):
@@ -1898,6 +1988,22 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 **task_missing_item_pickup,
             })
             continue
+        task_item_consume = object_task_item_consume_message_action(script)
+        if task_item_consume is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskItemConsumeMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): deterministic GetTask gate with all-required HaveItem check, all-or-nothing DelItem, optional SetTask/AddEventItem/AddNote, and PC Msg2Player/Talk branch messages',
+                **task_item_consume,
+            })
+            continue
         task_talk = object_task_talk_message_action(source_text)
         if task_talk is not None:
             entries.append({
@@ -1952,6 +2058,7 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
         'deterministicObjectTaskOptionalPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskOptionalPickupMessage'),
         'deterministicObjectTaskMissingItemPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskMissingItemPickupMessage'),
+        'deterministicObjectTaskItemConsumeMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskItemConsumeMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
         'deterministicObjectTaskTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskTalkMessage'),

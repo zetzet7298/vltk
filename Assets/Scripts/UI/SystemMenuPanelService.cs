@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — UI System Menu Panel Service (Menu Hệ Thống)
-// Menu chính của game: Nhân Vật, Kỹ Năng, Túi Đồ, Bản Đồ, Nhiệm Vụ, Thư, Bang.
-// Vietnamese: "Menu", "Nhân Vật", "Kỹ Năng", "Túi Đồ", "Bản Đồ", "Nhiệm Vụ".
+// VLTK Mobile — PC System Menu Panel Service (BtnOptions / e6641da3.ini)
+// PC system menu rows: ExitGame, GameHelp, Options, OffLine, ContiumeGame.
+// Vietnamese: "Thoát game", "Trợ giúp", "Tùy chọn", "Treo máy", "Tiếp tục".
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -35,53 +35,40 @@ namespace VLTK.UI
     }
 
     /// <summary>
-    /// Panel service Menu Hệ Thống — danh sách menu chính + filter enabled.
+    /// PC system menu opened by 工具控制条.ini [Options] (ClassType inferred by button slot).
+    /// Source: e6641da3.ini [ExitGame]/[GameHelp]/[Options]/[OffLine]/[ContiumeGame].
+    /// Commented PC sections [CloseGame] and [GameTask] are intentionally not exposed.
     /// </summary>
     public static class SystemMenuPanelService
     {
-        public const int MenuCharacter = 0;
-        public const int MenuSkill = 1;
-        public const int MenuInventory = 2;
-        public const int MenuMap = 3;
-        public const int MenuQuest = 4;
-        public const int MenuMail = 5;
-        public const int MenuGuild = 6;
-        public const int MenuTitle = 7;
-        public const int MenuAchievement = 8;
-        public const int MenuSettings = 9;
-        public const int MenuHelp = 10;
-        public const int MenuLogout = 11;
-        public const int MenuQuit = 12;
+        public const int MenuExitGame = 0;
+        public const int MenuGameHelp = 1;
+        public const int MenuOptions = 2;
+        public const int MenuOffLine = 3;
+        public const int MenuContinueGame = 4;
+
+        // Disabled/commented in PC e6641da3.ini; keep documented so we do not invent buttons.
+        public static readonly IReadOnlyDictionary<string, string> DisabledPcSystemMenuButtons =
+            new Dictionary<string, string>
+            {
+                ["CloseGame"] = "Commented out in e6641da3.ini; no active PC button.",
+                ["GameTask"] = "Commented out in e6641da3.ini; no active PC button.",
+            };
 
         public static SystemMenuPanelSnapshot BuildSnapshot()
         {
-            var snap = new SystemMenuPanelSnapshot
+            return new SystemMenuPanelSnapshot
             {
                 playerId = 0,
-                rows = new List<SystemMenuRow>(),
-            };
-            try
-            {
-                var list = new List<SystemMenuRow>
+                rows = new List<SystemMenuRow>
                 {
-                    new SystemMenuRow(MenuCharacter, "Nhân Vật", "Thông tin nhân vật", "icons/character.png", true, false),
-                    new SystemMenuRow(MenuSkill, "Kỹ Năng", "Cây kỹ năng và chiêu thức", "icons/skill.png", true, false),
-                    new SystemMenuRow(MenuInventory, "Túi Đồ", "Túi đồ và trang bị", "icons/inventory.png", true, false),
-                    new SystemMenuRow(MenuMap, "Bản Đồ", "Bản đồ thế giới", "icons/map.png", true, false),
-                    new SystemMenuRow(MenuQuest, "Nhiệm Vụ", "Nhiệm vụ hiện tại", "icons/quest.png", true, false),
-                    new SystemMenuRow(MenuMail, "Thư", "Hòm thư", "icons/mail.png", true, false),
-                    new SystemMenuRow(MenuGuild, "Bang Hội", "Bang hội và thành viên", "icons/guild.png", true, false),
-                    new SystemMenuRow(MenuTitle, "Danh Hiệu", "Danh hiệu và thành tựu", "icons/title.png", true, false),
-                    new SystemMenuRow(MenuAchievement, "Thành Tựu", "Hệ thống thành tựu", "icons/achievement.png", true, false),
-                    new SystemMenuRow(MenuSettings, "Cài Đặt", "Cài đặt game", "icons/settings.png", true, false),
-                    new SystemMenuRow(MenuHelp, "Trợ Giúp", "Hướng dẫn và FAQ", "icons/help.png", true, false),
-                    new SystemMenuRow(MenuLogout, "Đăng Xuất", "Đăng xuất khỏi game", "icons/logout.png", true, true),
-                    new SystemMenuRow(MenuQuit, "Thoát", "Thoát khỏi game", "icons/quit.png", true, true),
-                };
-                snap.rows = list;
-            }
-            catch { }
-            return snap;
+                    new SystemMenuRow(MenuExitGame, "Thoát game", "PC [ExitGame] — yêu cầu xác nhận trước khi rời game", @"\spr\Ui3\系统\系统－退出.spr", true, true),
+                    new SystemMenuRow(MenuGameHelp, "Trợ giúp", "PC [GameHelp] — mở hướng dẫn trò chơi", @"\spr\Ui3\系统\系统－帮助.spr", true, false),
+                    new SystemMenuRow(MenuOptions, "Tùy chọn", "PC [Options] — cài đặt trò chơi", @"\spr\Ui3\系统\系统－选项.spr", true, false),
+                    new SystemMenuRow(MenuOffLine, "Treo máy offline", "PC [OffLine] — trạng thái treo máy/rời mạng", @"\spr\Ui3\系统\系统－离线挂机.spr", true, true),
+                    new SystemMenuRow(MenuContinueGame, "Tiếp tục game", "PC [ContiumeGame] — đóng menu hệ thống và quay lại", @"\spr\Ui3\系统\系统－继续.spr", true, false),
+                },
+            };
         }
 
         public static SystemMenuRow? GetByName(string name)

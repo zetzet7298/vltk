@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T10:49:23Z",
+  "generatedAtUtc": "2026-06-08T11:06:56Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -2369,6 +2369,50 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\西北北区\\昆仑派\\见性峰山洞\\obj\\捡拾_kll40_宝箱.lua",
+      "scriptId": 1882036356,
+      "scriptIdHex": "0x702D9884",
+      "sourceRelPath": "script\\西北北区\\昆仑派\\见性峰山洞\\obj\\捡拾_kll40_宝箱.lua",
+      "actionKind": "TaskItemConsumeMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic GetTask gate with all-required HaveItem check, all-or-nothing DelItem, optional SetTask/AddEventItem/AddNote, and PC Msg2Player/Talk branch messages",
+      "taskId": 9,
+      "taskValue": 10260,
+      "requiredItemIds": [
+        212
+      ],
+      "consumeItemIds": [
+        212
+      ],
+      "eventItemIds": [
+        9
+      ],
+      "preConsumeMessages": [
+        "Bạn thử dùng chìa khóa mở chiếc rương"
+      ],
+      "successMessages": [
+        "Bạn nhận được Huyết Hồn Thần Kiếm"
+      ],
+      "missingItemMessages": [
+        "Bảo rương này đã khóa rồi"
+      ],
+      "elseMessages": [
+        "Bảo rương này đã khóa rồi"
+      ],
+      "notes": [
+        "Bạn nhận được Huyết Hồn Thần Kiếm"
+      ],
+      "requiredItemCounts": [
+        1
+      ],
+      "consumeItemCounts": [
+        1
+      ]
+    },
+    {
       "scriptPath": "\\script\\西北北区\\药王谷\\药王谷\\obj\\路标_药王谷to龙门镇.lua",
       "scriptId": 2902711635,
       "scriptIdHex": "0xAD03DD53",
@@ -2393,6 +2437,63 @@
       "fightState": -1,
       "message": "Đi Long Môn trấn",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\黄河源头\\留仙洞六层\\obj\\捡拾_kll60_宝箱.lua",
+      "scriptId": 3614545460,
+      "scriptIdHex": "0xD7719634",
+      "sourceRelPath": "script\\西北北区\\黄河源头\\留仙洞六层\\obj\\捡拾_kll60_宝箱.lua",
+      "actionKind": "TaskItemConsumeMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic GetTask gate with all-required HaveItem check, all-or-nothing DelItem, optional SetTask/AddEventItem/AddNote, and PC Msg2Player/Talk branch messages",
+      "taskId": 9,
+      "taskValue": 15380,
+      "requiredItemIds": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "consumeItemIds": [
+        11,
+        12,
+        13,
+        14,
+        15
+      ],
+      "eventItemIds": [
+        16
+      ],
+      "successMessages": [
+        "Bạn dùng 5 chiếc chìa khóa treo phía trên để mở rương lấy Ngũ Sắc Thạch"
+      ],
+      "missingItemMessages": [
+        "Không có 5 chiếc chìa khóa kia, bạn không thể mở được rương để lấy đá"
+      ],
+      "elseMessages": [
+        "Bảo rương này đã khóa rồi"
+      ],
+      "notes": [
+        "Phái lấy Ngũ Sắc Thạch"
+      ],
+      "requiredItemCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "consumeItemCounts": [
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
     },
     {
       "scriptPath": "\\script\\西北北区\\黄河源头\\黄河源头\\obj\\路标_黄河源头to龙门镇.lua",
@@ -3762,6 +3863,54 @@
       "fightState": -1,
       "message": "Đi đến Đại Lư",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南南区\\点苍山\\点苍山洞三层\\obj\\地图_cyl40_机关.lua",
+      "scriptId": 3294098501,
+      "scriptIdHex": "0xC457F445",
+      "sourceRelPath": "script\\西南南区\\点苍山\\点苍山洞三层\\obj\\地图_cyl40_机关.lua",
+      "actionKind": "TaskItemConsumeMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic GetTask gate with all-required HaveItem check, all-or-nothing DelItem, optional SetTask/AddEventItem/AddNote, and PC Msg2Player/Talk branch messages",
+      "taskId": 6,
+      "taskValue": 10260,
+      "requiredItemIds": [
+        197,
+        196,
+        198
+      ],
+      "consumeItemIds": [
+        197,
+        196,
+        198
+      ],
+      "setTaskId": 6,
+      "setTaskValue": 10270,
+      "successMessages": [
+        "Đánh bại trợ thủ của tên ác bá, lấy ba chìa khóa mở cửa ba phòng tối cứu những thiếu nữ bị bắt khác."
+      ],
+      "missingItemMessages": [
+        "Bạn tìm ra cơ quan phòng tối giam các thiếu nữ, nhưng cần có 3 chiếc chìa khóa mới mở được cơ quan này."
+      ],
+      "elseMessages": [
+        "ở đây có một cơ quan nhưng không biết dùng làm gì."
+      ],
+      "notes": [
+        "Đánh bại trợ thủ của tên ác bá, lấy ba chìa khóa mở cửa ba phòng tối cứu những thiếu nữ bị bắt khác."
+      ],
+      "requiredItemCounts": [
+        1,
+        1,
+        1
+      ],
+      "consumeItemCounts": [
+        1,
+        1,
+        1
+      ]
     },
     {
       "scriptPath": "\\script\\西南南区\\石鼓镇\\obj\\石鼓镇储物箱1.lua",
