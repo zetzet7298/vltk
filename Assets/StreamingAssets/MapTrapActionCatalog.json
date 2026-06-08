@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T10:35:44Z",
+  "generatedAtUtc": "2026-06-08T14:00:28Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -12993,6 +12993,18 @@
       "targetCellX": 2087,
       "targetCellY": 3353,
       "fightState": 1,
+      "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 4112230821,
+      "trapIdHex": "0xF51BA9A5",
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua",
+      "actionKind": "NewWorld",
+      "targetMapId": 102,
+      "targetCellX": 1608,
+      "targetCellY": 3199,
+      "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {

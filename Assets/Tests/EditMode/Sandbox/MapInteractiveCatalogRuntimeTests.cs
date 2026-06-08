@@ -254,7 +254,8 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(799, catalog.Count);
+            Assert.AreEqual(800, catalog.Count);
+            Assert.AreEqual(532, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -274,6 +275,13 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
+            var secretRoomEntrance = catalog.Find(0xF51BA9A5, "0xF51BA9A5");
+            Assert.IsNotNull(secretRoomEntrance);
+            Assert.IsTrue(secretRoomEntrance.IsNewWorld);
+            Assert.AreEqual(102, secretRoomEntrance.targetMapId);
+            Assert.AreEqual(1608, secretRoomEntrance.targetCellX);
+            Assert.AreEqual(3199, secretRoomEntrance.targetCellY);
+            StringAssert.Contains("天忍教圣洞2to天忍教圣洞二层密室.lua", secretRoomEntrance.scriptPath);
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);

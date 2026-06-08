@@ -42,6 +42,18 @@ PC_FACTION_IDS = {
     'kunlun': 10,
 }
 
+# PC Region_S for Thiên Nhẫn Thánh Động 2 keeps a stale trap hash that no
+# longer matches any source filename in server1/script. The five trap cells are
+# the entrance strip beside the reciprocal secret-room exit; PC source still
+# ships the authoritative entrance Lua below (NewWorld(102,1608,3199)). Preserve
+# the Region_S trap id while resolving behavior from the scoped PC source.
+TRAP_SCRIPT_ID_SOURCE_ALIASES: dict[int, dict[str, str]] = {
+    0xF51BA9A5: {
+        'scriptPath': r'\script\中原北区\天忍教\天忍教圣洞2\trap\天忍教圣洞2to天忍教圣洞二层密室.lua',
+        'reason': 'stale Region_S hash on map 52 entrance strip; reciprocal map 102 exit returns to the same PC cave entrance coordinates',
+    },
+}
+
 
 def load_module(path: Path, name: str):
     spec = importlib.util.spec_from_file_location(name, path)
@@ -406,10 +418,21 @@ def build_script_hash_index(root: Path) -> dict[int, dict[str, Any]]:
 def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     root = server_root(pc_root)
     script_index = build_script_hash_index(root)
+    script_path_index = {
+        str(src.get('scriptPath', '')).replace('/', '\\').lower(): src
+        for src in script_index.values()
+        if src.get('scriptPath')
+    }
     entries: list[dict[str, Any]] = []
     resolved = 0
     for trap_id in sorted(trap_ids):
         src = script_index.get(trap_id)
+        alias = None
+        if src is None:
+            alias = TRAP_SCRIPT_ID_SOURCE_ALIASES.get(trap_id)
+            if alias:
+                wanted = str(alias.get('scriptPath', '')).replace('/', '\\').lower()
+                src = script_path_index.get(wanted)
         entry = {
             'trapId': trap_id,
             'trapIdHex': f'0x{trap_id:08X}',
@@ -427,12 +450,16 @@ def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[d
                 'actions': trap_script_action_summary(text),
                 'sourceText': text,
             })
+            if alias:
+                entry['sourceAliasForTrapId'] = True
+                entry['sourceAliasReason'] = alias.get('reason', '')
         entries.append(entry)
     coverage = {
         'uniqueTrapIds': len(trap_ids),
         'resolvedTrapScripts': resolved,
         'missingTrapScripts': len(trap_ids) - resolved,
         'missingTrapScriptIds': [f'0x{e["trapId"]:08X}' for e in entries if not e.get('resolved')],
+        'sourceAliasTrapScriptIds': [f'0x{e["trapId"]:08X}' for e in entries if e.get('sourceAliasForTrapId')],
         'sourceScriptRoot': str(root / 'script'),
     }
     return entries, coverage

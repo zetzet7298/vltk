@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:51:51Z",
+  "generatedAtUtc": "2026-06-08T14:00:28Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -16719,7 +16719,24 @@
     {
       "trapId": 4112230821,
       "trapIdHex": "0xF51BA9A5",
-      "resolved": false
+      "resolved": true,
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua",
+      "actions": {
+        "hasMain": true,
+        "newWorldCalls": [
+          [
+            "102",
+            "1608",
+            "3199"
+          ]
+        ],
+        "setPosCalls": [],
+        "setsFightState": false,
+        "talks": false
+      },
+      "sourceAliasForTrapId": true,
+      "sourceAliasReason": "stale Region_S hash on map 52 entrance strip; reciprocal map 102 exit returns to the same PC cave entrance coordinates"
     },
     {
       "trapId": 4117877793,

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:17:51Z",
+  "generatedAtUtc": "2026-06-08T14:00:28Z",
   "sourceRegionRoot": "/var/www/vltk-mobile/Assets/StreamingAssets/Generated/MapServerRegions",
   "sourceServerCatalog": "/var/www/vltk-mobile/Assets/StreamingAssets/MapServerRegionCatalog.json",
   "formatSource": "Assets/StreamingAssets/Reference/SceneDataDef.h KSPTrap/KSPObj",
@@ -875,7 +875,8 @@
           "trapId": 4112230821,
           "reserved": 0,
           "trapIdHex": "0xF51BA9A5",
-          "scriptResolved": false
+          "scriptResolved": true,
+          "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua"
         },
         {
           "regionCol": 100,
@@ -887,7 +888,8 @@
           "trapId": 4112230821,
           "reserved": 0,
           "trapIdHex": "0xF51BA9A5",
-          "scriptResolved": false
+          "scriptResolved": true,
+          "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua"
         },
         {
           "regionCol": 100,
@@ -899,7 +901,8 @@
           "trapId": 4112230821,
           "reserved": 0,
           "trapIdHex": "0xF51BA9A5",
-          "scriptResolved": false
+          "scriptResolved": true,
+          "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua"
         },
         {
           "regionCol": 100,
@@ -911,7 +914,8 @@
           "trapId": 4112230821,
           "reserved": 0,
           "trapIdHex": "0xF51BA9A5",
-          "scriptResolved": false
+          "scriptResolved": true,
+          "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua"
         },
         {
           "regionCol": 100,
@@ -923,7 +927,8 @@
           "trapId": 4112230821,
           "reserved": 0,
           "trapIdHex": "0xF51BA9A5",
-          "scriptResolved": false
+          "scriptResolved": true,
+          "scriptPath": "\\script\\中原北区\\天忍教\\天忍教圣洞2\\trap\\天忍教圣洞2to天忍教圣洞二层密室.lua"
         },
         {
           "regionCol": 108,
