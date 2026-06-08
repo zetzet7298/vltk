@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T04:25:05Z",
+  "generatedAtUtc": "2026-06-08T04:33:49Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -497,6 +497,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 354949676,
+      "trapIdHex": "0x15281A2C",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_tojingxin.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_tojingxin.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên xông vào Tịnh Tâm Thiền Viện đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 360168688,
       "trapIdHex": "0x1577BCF0",
       "scriptPath": "\\script\\西南南区\\翠烟门\\禁地迷宫\\trap\\禁地迷宫to翠烟门.lua",
@@ -615,6 +628,19 @@
       "targetCellY": 3088,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 408037587,
+      "trapIdHex": "0x185228D3",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_todizang.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_todizang.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Địa Tàng Điện đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 412571922,
@@ -1177,6 +1203,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 700130979,
+      "trapIdHex": "0x29BB26A3",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_tosiguoya.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_tosiguoya.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, tạm thời phong tỏa đường lên Tư Quá Nhai.",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 703560378,
       "trapIdHex": "0x29EF7ABA",
       "scriptPath": "\\script\\中原北区\\宋金战场\\trap\\宋金战场to襄阳.lua",
@@ -1263,6 +1302,19 @@
       "targetCellY": 3205,
       "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 751699973,
+      "trapIdHex": "0x2CCE0805",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_tolianhuafeng.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_tolianhuafeng.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, tạm thời phong tỏa đường lên Liên Hoa Phong.",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 752353516,
@@ -1819,6 +1871,22 @@
       "elseTargetCellX": 1664,
       "elseTargetCellY": 3307,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 1089516732,
+      "trapIdHex": "0x40F0B4BC",
+      "scriptPath": "\\script\\江南区\\桃花岛\\trap\\桃花岛to安期练丹洞.lua",
+      "sourceRelPath": "script\\江南区\\桃花岛\\trap\\桃花岛to安期练丹洞.lua",
+      "actionKind": "TalkMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Bạn cảm thấy một làn gió lạnh thổi đến, ngước mắt nhìn lên thấy một thạch động, trên viết: <color=red>An Kỳ Luyện Đan động<color>",
+      "messages": [
+        "Bạn cảm thấy một làn gió lạnh thổi đến, ngước mắt nhìn lên thấy một thạch động, trên viết: <color=red>An Kỳ Luyện Đan động<color>"
+      ],
+      "source": "PC trap Lua main(): deterministic read-only Talk(count,\"\",message...) with no movement/fight/task/item branch"
     },
     {
       "trapId": 1097753135,
@@ -2395,6 +2463,19 @@
       "targetCellY": 5117,
       "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 1332396161,
+      "trapIdHex": "0x4F6AC081",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_tochaoyangfeng.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_tochaoyangfeng.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, tạm thời phong tỏa đường lên Triều Dương Phong.",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 1336753857,
@@ -3709,6 +3790,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 1940577553,
+      "trapIdHex": "0x73AADD11",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_todaxiong.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_todaxiong.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Đại Hùng Bảo Điện đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 1948268885,
       "trapIdHex": "0x74203955",
       "scriptPath": "\\script\\江南区\\罗霄山\\孽龙洞迷宫\\trap\\孽龙洞迷宫4to罗宵山4.lua",
@@ -4223,6 +4317,22 @@
       "targetCellY": 3968,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 2221788695,
+      "trapIdHex": "0x846DCE17",
+      "scriptPath": "\\script\\江南区\\桃花岛\\trap\\桃花岛to清音洞.lua",
+      "sourceRelPath": "script\\江南区\\桃花岛\\trap\\桃花岛to清音洞.lua",
+      "actionKind": "TalkMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Bạn cảm thấy một làn gió lạnh thổi đến, ngước mắt nhìn lên thấy một thạch động, trên viết: <color=red>Thanh Âm động<color>",
+      "messages": [
+        "Bạn cảm thấy một làn gió lạnh thổi đến, ngước mắt nhìn lên thấy một thạch động, trên viết: <color=red>Thanh Âm động<color>"
+      ],
+      "source": "PC trap Lua main(): deterministic read-only Talk(count,\"\",message...) with no movement/fight/task/item branch"
     },
     {
       "trapId": 2225500815,
@@ -5001,6 +5111,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 2536251924,
+      "trapIdHex": "0x972C2214",
+      "scriptPath": "\\script\\missions\\citydefence\\trap\\trap_baoming.lua",
+      "sourceRelPath": "script\\missions\\citydefence\\trap\\trap_baoming.lua",
+      "actionKind": "Msg2Player",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Phía trước chiến tranh kịch liệt, xem ra không nên tự ý xông vào.",
+      "source": "PC trap Lua main(): deterministic read-only Msg2Player(message) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 2545718845,
       "trapIdHex": "0x97BC963D",
       "scriptPath": "\\script\\中原北区\\少林派\\少林派\\trap\\少林切换点1.lua",
@@ -5055,6 +5178,19 @@
       "targetCellY": 3217,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 2552825533,
+      "trapIdHex": "0x982906BD",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_toyaoshi.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_toyaoshi.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Dược Sư Điện đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 2554519376,
@@ -5301,6 +5437,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 2692476512,
+      "trapIdHex": "0xA07BEE60",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_tolongxiang.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_tolongxiang.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Long Tượng Bảo Tháp đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 2694154331,
       "trapIdHex": "0xA095885B",
       "scriptPath": "\\script\\中原北区\\汴京\\汴京\\trap\\汴京西门.lua",
@@ -5527,6 +5676,19 @@
       "targetCellY": 2736,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 2754486756,
+      "trapIdHex": "0xA42E21E4",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_tolianhuadian.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_tolianhuadian.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, ngươi đừng nên tùy tiện xông vào Liên Hoa điện, nếu không về sau không có nhiệm vụ!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 2760860364,
@@ -5817,6 +5979,19 @@
       "elseNextFightState": 0
     },
     {
+      "trapId": 2866474008,
+      "trapIdHex": "0xAADAEC18",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_toyunvdian.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_toyunvdian.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, ngươi đừng nên tùy tiện xông vào Ngọc Nữ điện, nếu không về sau không có nhiệm vụ!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 2889451457,
       "trapIdHex": "0xAC3987C1",
       "scriptPath": "\\script\\中原南区\\襄阳\\襄阳城衙门秘道\\trap\\衙门秘道to襄阳.lua",
@@ -6019,6 +6194,19 @@
       "targetCellY": 3188,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 2978411952,
+      "trapIdHex": "0xB186F5B0",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_toyunvfeng.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_toyunvfeng.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, tạm thời phong tỏa đường núi đi Ngọc Nữ Phong.",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 2981680198,
@@ -6409,6 +6597,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3252881555,
+      "trapIdHex": "0xC1E30893",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_toyousuobuwei.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_toyousuobuwei.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, người đừng nên tùy tiện xông vào Bất Vi Hiên, nếu không về sau không có nhiệm vụ!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 3264917852,
       "trapIdHex": "0xC29AB15C",
       "scriptPath": "\\script\\两湖区\\武陵山\\武陵山\\trap\\武陵山7to大酋洞迷宫1.lua",
@@ -6511,6 +6712,19 @@
       "targetCellY": 2993,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3292083716,
+      "trapIdHex": "0xC4393604",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_toxumi.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_toxumi.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên xông vào Yếu Di Viện đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 3294145125,
@@ -6813,6 +7027,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3440918428,
+      "trapIdHex": "0xCD183F9C",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_towuxiang.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_towuxiang.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Vô Tướng Bảo Tháp đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 3442470137,
       "trapIdHex": "0xCD2FECF9",
       "scriptPath": "\\script\\西北北区\\昆仑派\\昆仑派\\trap\\昆仑派to紫微殿.lua",
@@ -6915,6 +7142,19 @@
       "targetCellY": 3130,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3479381060,
+      "trapIdHex": "0xCF632444",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_towuwo.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_towuwo.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Vô Ngã Tâm Trai đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 3481373479,
@@ -7165,6 +7405,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3560291976,
+      "trapIdHex": "0xD435BE88",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_toluoyanfeng.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_toluoyanfeng.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, tạm thời phong tỏa đường lên Lạc Nhạn Phong.",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 3568127579,
       "trapIdHex": "0xD4AD4E5B",
       "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室内3\\trap\\天忍教室内3to天忍教室内右2.lua",
@@ -7409,6 +7662,19 @@
       "elseNextFightState": 0
     },
     {
+      "trapId": 3694879449,
+      "trapIdHex": "0xDC3B62D9",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_towuchen.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_towuchen.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Vô Trần Bảo Tháp đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 3696293838,
       "trapIdHex": "0xDC50F7CE",
       "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室内左2\\trap\\天忍教室内左2to天忍教室内3.lua",
@@ -7469,6 +7735,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 3704041134,
+      "trapIdHex": "0xDCC72EAE",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_tozhengqitang.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_tozhengqitang.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, người đừng nên tùy tiện xông vào Chánh Khí Đường, nếu không về sau không có nhiệm vụ!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 3704846927,
       "trapIdHex": "0xDCD37A4F",
       "scriptPath": "\\script\\两湖区\\神农架\\山宝洞迷宫\\trap\\山宝洞迷宫4to神农架8.lua",
@@ -7503,6 +7782,19 @@
       "targetCellY": 3169,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3710319476,
+      "trapIdHex": "0xDD26FB74",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_toluoyange.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_toluoyange.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, ngươi đừng nên tùy tiện xông vào Lạc Nhạn Các, nếu không về sau không có nhiệm vụ!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 3721490225,
@@ -7611,6 +7903,19 @@
       "targetCellY": 3072,
       "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3774620212,
+      "trapIdHex": "0xE0FC2234",
+      "scriptPath": "\\script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_tobanruo.lua",
+      "sourceRelPath": "script\\西南南区\\天龙寺\\天龙寺\\trap\\trap_tobanruo.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tăng nhân trong tự đang tịnh tu, tốt nhất ngươi đừng nên tùy tiện xông vào Bàn Nhược Đường đó!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 3788953819,
@@ -8137,6 +8442,19 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 4063640753,
+      "trapIdHex": "0xF2363CB1",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_tochaoyangge.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_tochaoyangge.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, ngươi đừng nên tùy tiện xông vào Triều Dương Các, nếu không về sau không có nhiệm vụ làm đâu.",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
+    },
+    {
       "trapId": 4071244825,
       "trapIdHex": "0xF2AA4419",
       "scriptPath": "\\script\\江南区\\罗霄山\\罗霄山\\trap\\罗宵山to临安.lua",
@@ -8251,6 +8569,19 @@
       "elseTargetCellX": 1206,
       "elseTargetCellY": 2742,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 4119712289,
+      "trapIdHex": "0xF58DD221",
+      "scriptPath": "\\script\\西北南区\\华山派\\华山派\\trap\\trap_toyuntaifeng.lua",
+      "sourceRelPath": "script\\西北南区\\华山派\\华山派\\trap\\trap_toyuntaifeng.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Đệ tử Hoa Sơn phái đều hạ sơn thu thập nhiệm vụ rồi, tạm thời phong tỏa đường núi đi Vân Đài Phong.",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 4130329094,

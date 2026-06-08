@@ -140,7 +140,10 @@ namespace VLTK.Sandbox
         {
             if (_triggerService != null) return;
             _actionCatalog ??= PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
-            var executor = new PcTrapActionExecutor(_actionCatalog, new SandboxTrapTravelHost());
+            var executor = new PcTrapActionExecutor(
+                _actionCatalog,
+                new SandboxTrapTravelHost(),
+                new SandboxTrapActionSideEffects());
             _triggerService = new TrapTriggerService(null, luaEnabled: false, actionExecutor: executor) { EnterFunction = "main" };
         }
 

@@ -65,11 +65,17 @@ namespace VLTK.Sandbox
         public int elseTargetCellX;
         public int elseTargetCellY;
         public int elseNextFightState = -1;
+        public string message;
+        public string[] messages;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsSetPos => string.Equals(actionKind, "SetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsFightStateSetPos => string.Equals(actionKind, "FightStateSetPos", StringComparison.OrdinalIgnoreCase);
+        public bool IsMsg2Player => string.Equals(actionKind, "Msg2Player", StringComparison.OrdinalIgnoreCase);
+        public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()
             => CellToWorld(targetCellX, targetCellY);

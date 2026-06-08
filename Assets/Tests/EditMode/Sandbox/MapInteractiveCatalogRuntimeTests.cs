@@ -92,6 +92,13 @@ namespace VLTK.Tests.Sandbox
             public void SetFightState(int nextFightState) => fightState = nextFightState;
         }
 
+        private sealed class FakeTrapActionSideEffects : ITrapActionSideEffects
+        {
+            public readonly List<string> messages = new();
+
+            public void PostMessage(string message) => messages.Add(message);
+        }
+
         private sealed class FakeObjectActionSideEffects : IObjectActionSideEffects
         {
             public string message;
@@ -114,8 +121,12 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(645, catalog.Count);
+            Assert.AreEqual(670, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
+            Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
+            Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
+            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTalkMessage));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);
@@ -367,6 +378,41 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1581 * 32, 3233 * 32), host.position);
             Assert.AreEqual(0, host.fightState);
             StringAssert.Contains("GetFightState()==1", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_MessageOnly_PostsPcTrapLines()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 901,
+                        trapIdHex = "0x00000385",
+                        scriptPath = @"\script\trap_message.lua",
+                        actionKind = "TalkMessage",
+                        messages = new[]
+                        {
+                            "Bạn cảm thấy một làn gió lạnh thổi đến.",
+                            "Trên vách viết: Thanh Âm động.",
+                        },
+                    }
+                }
+            };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, new FakeTrapTravelHost(), sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 901 }, out var result));
+
+            Assert.IsTrue(result.success);
+            CollectionAssert.AreEqual(new[]
+            {
+                "Bạn cảm thấy một làn gió lạnh thổi đến.",
+                "Trên vách viết: Thanh Âm động.",
+            }, sideEffects.messages);
+            StringAssert.Contains("TalkMessage", result.detail);
         }
 
         [Test]

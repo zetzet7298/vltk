@@ -1,7 +1,8 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — executes the deterministic subset of PC trap Lua actions.
 // Ported APIs: NewWorld(mapId,x,y), SetPos(x,y), and simple
-// GetFightState()/SetFightState() gate traps with PC cell coords.
+// GetFightState()/SetFightState() gate traps with PC cell coords, plus read-only
+// Msg2Player/Say/Talk message-only traps.
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
@@ -30,15 +31,22 @@ namespace VLTK.Sandbox
         void SetFightState(int fightState);
     }
 
+    public interface ITrapActionSideEffects
+    {
+        void PostMessage(string message);
+    }
+
     public sealed class PcTrapActionExecutor : ITrapActionExecutor
     {
         private readonly PcTrapActionCatalogFile _catalog;
         private readonly ITrapTravelHost _host;
+        private readonly ITrapActionSideEffects _sideEffects;
 
-        public PcTrapActionExecutor(PcTrapActionCatalogFile catalog, ITrapTravelHost host)
+        public PcTrapActionExecutor(PcTrapActionCatalogFile catalog, ITrapTravelHost host, ITrapActionSideEffects sideEffects = null)
         {
             _catalog = catalog;
             _host = host;
+            _sideEffects = sideEffects;
         }
 
         public bool TryExecute(TrapDefinition trap, out TrapActionExecutionResult result)
@@ -47,6 +55,32 @@ namespace VLTK.Sandbox
             if (trap == null || _catalog == null) return false;
             var action = _catalog.Find(trap.trapId, trap.trapIdHex);
             if (action == null) return false;
+
+            if (action.IsMessageOnly)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "trap side-effect host unavailable");
+                    return true;
+                }
+                int posted = 0;
+                if (action.messages != null)
+                {
+                    foreach (string message in action.messages)
+                    {
+                        if (string.IsNullOrWhiteSpace(message)) continue;
+                        _sideEffects.PostMessage(message);
+                        posted++;
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(action.message))
+                {
+                    _sideEffects.PostMessage(action.message);
+                    posted = 1;
+                }
+                result = Success(action, $"{action.actionKind}(lines={posted})");
+                return true;
+            }
 
             if (_host == null)
             {
@@ -109,6 +143,18 @@ namespace VLTK.Sandbox
         {
             string fight = action.fightState >= 0 ? $", SetFightState({action.fightState})" : string.Empty;
             return $"{detail}{fight}; script={action.scriptPath}";
+        }
+    }
+
+    public sealed class SandboxTrapActionSideEffects : ITrapActionSideEffects
+    {
+        public void PostMessage(string message)
+        {
+            if (string.IsNullOrWhiteSpace(message)) return;
+            var manager = SandboxManager.Instance;
+            if (manager?.ChatService != null)
+                manager.ChatService.PostSystemMessage(message);
+            SubsystemLog.Info("Trap", $"PC trap message: {message}");
         }
     }
 
