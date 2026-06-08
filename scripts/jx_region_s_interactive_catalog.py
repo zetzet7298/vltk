@@ -937,6 +937,53 @@ def revive_return_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def task_setpos_message_gate(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    allowed = {'main', 'if', 'elseif', 'GetTask', 'SetPos', 'Msg2Player'}
+    if not source_uses_only_calls(clean_source, allowed):
+        return None
+    if re.search(r'\b(for|while)\b', clean_source):
+        return None
+    branches: list[dict[str, Any]] = []
+    task_id: int | None = None
+    branch_re = re.compile(
+        r'(?:if|elseif)\s*\((?P<cond>.*?)\)\s*then(?P<body>.*?)(?=^\s*elseif\s*\(|^\s*end\b)',
+        re.S | re.M)
+    for match in branch_re.finditer(clean_source):
+        cond = match.group('cond')
+        body = match.group('body')
+        task_matches = re.findall(r'GetTask\s*\(\s*(\d+)\s*\)\s*==\s*(\d+)', cond)
+        if not task_matches:
+            return None
+        branch_task_ids = {int(tid) for tid, _value in task_matches}
+        if len(branch_task_ids) != 1:
+            return None
+        branch_task_id = next(iter(branch_task_ids))
+        if task_id is None:
+            task_id = branch_task_id
+        elif task_id != branch_task_id:
+            return None
+        values = [int(value) for _tid, value in task_matches]
+        set_pos = int_args(parse_lua_calls(body, 'SetPos', limit=4), 2)
+        if len(set_pos) != 1:
+            return None
+        messages = parse_lua_calls(body, 'Msg2Player', limit=2)
+        if len(messages) > 1:
+            return None
+        message = clean_user_message(messages[0][0]) if messages and messages[0] else ''
+        if message and not is_safe_user_message(message):
+            return None
+        branches.append({
+            'values': values,
+            'targetCellX': set_pos[0][0],
+            'targetCellY': set_pos[0][1],
+            'message': message,
+        })
+    if task_id is None or not branches:
+        return None
+    return {'taskId': task_id, 'taskBranches': branches}
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
         return False
@@ -1245,6 +1292,22 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **revive_return,
             })
             continue
+        task_setpos = task_setpos_message_gate(source)
+        if task_setpos is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'TaskSetPosMessage',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC trap Lua main(): task-state gate using GetTask(id), deterministic SetPos plus optional Msg2Player per branch',
+                **task_setpos,
+            })
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -1311,6 +1374,7 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapOpenServerDateGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'OpenServerDateGateSetPos'),
         'deterministicTrapRandomNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'RandomNewWorld'),
         'deterministicTrapReviveReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'ReviveReturnNewWorld'),
+        'deterministicTrapTaskSetPosMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetPosMessage'),
     }
     return entries, coverage
 

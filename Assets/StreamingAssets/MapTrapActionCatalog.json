@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T05:27:54Z",
+  "generatedAtUtc": "2026-06-08T05:41:15Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -2083,6 +2083,55 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 778940582,
+      "trapIdHex": "0x2E6DB0A6",
+      "scriptPath": "\\script\\task\\tollgate\\messenger\\trap\\trap_qianbaoku.lua",
+      "sourceRelPath": "script\\task\\tollgate\\messenger\\trap\\trap_qianbaoku.lua",
+      "actionKind": "TaskSetPosMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): task-state gate using GetTask(id), deterministic SetPos plus optional Msg2Player per branch",
+      "taskId": 1203,
+      "taskBranches": [
+        {
+          "values": [
+            10
+          ],
+          "targetCellX": 1414,
+          "targetCellY": 3197,
+          "message": "Trước tiên phải đối thoại trước với Dịch Quan trong khu vực"
+        },
+        {
+          "values": [
+            21
+          ],
+          "targetCellX": 1414,
+          "targetCellY": 3197,
+          "message": "Hãy đối thoại với Dịch Quan trong bản đồ trước để tiếp tục nhiệm vụ."
+        },
+        {
+          "values": [
+            20
+          ],
+          "targetCellX": 1414,
+          "targetCellY": 3191,
+          "message": "Muốn ra khỏi bản đồ này hãy đi tìm Tiêu Trấn"
+        },
+        {
+          "values": [
+            30,
+            25,
+            0
+          ],
+          "targetCellX": 1414,
+          "targetCellY": 3197,
+          "message": "Xin lỗi! Hiện tại bạn không thể vào ải được."
+        }
+      ]
+    },
+    {
       "trapId": 779105788,
       "trapIdHex": "0x2E7035FC",
       "scriptPath": "\\script\\中原北区\\伏牛山\\天心洞迷宫\\trap\\天心洞3to伏牛山西3.lua",
@@ -3221,6 +3270,47 @@
       "elseTargetCellX": 1614,
       "elseTargetCellY": 3224,
       "elseNextFightState": 0
+    },
+    {
+      "trapId": 1198954402,
+      "trapIdHex": "0x477697A2",
+      "scriptPath": "\\script\\task\\tollgate\\messenger\\trap\\trap_fengzhiqi.lua",
+      "sourceRelPath": "script\\task\\tollgate\\messenger\\trap\\trap_fengzhiqi.lua",
+      "actionKind": "TaskSetPosMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): task-state gate using GetTask(id), deterministic SetPos plus optional Msg2Player per branch",
+      "taskId": 1201,
+      "taskBranches": [
+        {
+          "values": [
+            10
+          ],
+          "targetCellX": 1563,
+          "targetCellY": 3118,
+          "message": "Trước tiên phải đối thoại trước với Dịch Quan trong khu vực"
+        },
+        {
+          "values": [
+            20
+          ],
+          "targetCellX": 1559,
+          "targetCellY": 3113,
+          "message": ""
+        },
+        {
+          "values": [
+            30,
+            25,
+            0
+          ],
+          "targetCellX": 1563,
+          "targetCellY": 3118,
+          "message": "Xin lỗi! Hiện tại bạn không thể vào ải được."
+        }
+      ]
     },
     {
       "trapId": 1207754356,
@@ -5428,6 +5518,47 @@
       "targetCellY": 3199,
       "fightState": -1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 2105639356,
+      "trapIdHex": "0x7D8181BC",
+      "scriptPath": "\\script\\task\\tollgate\\messenger\\trap\\trap_shanshenmiao.lua",
+      "sourceRelPath": "script\\task\\tollgate\\messenger\\trap\\trap_shanshenmiao.lua",
+      "actionKind": "TaskSetPosMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC trap Lua main(): task-state gate using GetTask(id), deterministic SetPos plus optional Msg2Player per branch",
+      "taskId": 1202,
+      "taskBranches": [
+        {
+          "values": [
+            10
+          ],
+          "targetCellX": 1337,
+          "targetCellY": 3154,
+          "message": "Trước tiên phải đối thoại trước với Dịch Quan trong khu vực"
+        },
+        {
+          "values": [
+            20
+          ],
+          "targetCellX": 1340,
+          "targetCellY": 3148,
+          "message": ""
+        },
+        {
+          "values": [
+            30,
+            25,
+            0
+          ],
+          "targetCellX": 1337,
+          "targetCellY": 3154,
+          "message": "Xin lỗi! Hiện tại bạn không thể vào ải được."
+        }
+      ]
     },
     {
       "trapId": 2106729734,

@@ -46,6 +46,15 @@ namespace VLTK.Sandbox
     }
 
     [Serializable]
+    public sealed class PcTrapTaskSetPosBranch
+    {
+        public int[] values;
+        public int targetCellX;
+        public int targetCellY;
+        public string message;
+    }
+
+    [Serializable]
     public sealed class PcTrapActionCatalogEntry
     {
         public uint trapId;
@@ -103,6 +112,8 @@ namespace VLTK.Sandbox
         public int gateTargetCellY;
         public int gateFightState = -1;
         public int[] reviveReturnMapIds;
+        public int taskId;
+        public PcTrapTaskSetPosBranch[] taskBranches;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
@@ -116,6 +127,7 @@ namespace VLTK.Sandbox
         public bool IsOpenServerDateGateSetPos => string.Equals(actionKind, "OpenServerDateGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsRandomNewWorld => string.Equals(actionKind, "RandomNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsReviveReturnNewWorld => string.Equals(actionKind, "ReviveReturnNewWorld", StringComparison.OrdinalIgnoreCase);
+        public bool IsTaskSetPosMessage => string.Equals(actionKind, "TaskSetPosMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsMessageOnly => IsMsg2Player || IsSayMessage || IsTalkMessage;
 
         public Vector2 TargetWorldPosition()
@@ -137,6 +149,9 @@ namespace VLTK.Sandbox
 
         public Vector2 RandomTargetWorldPosition(int index)
             => CellToWorld(randomTargetCellXs[index], randomTargetCellYs[index]);
+
+        public Vector2 TaskBranchWorldPosition(PcTrapTaskSetPosBranch branch)
+            => CellToWorld(branch.targetCellX, branch.targetCellY);
 
         public int ConditionalNextFightState(int currentFightState)
             => currentFightState == ifFightState ? ifNextFightState : elseNextFightState;

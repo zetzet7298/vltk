@@ -87,6 +87,7 @@ namespace VLTK.Tests.Sandbox
             public int playerLevel = 1;
             public long currentDateYmdHm = 202606080900;
             public int randomValue = 0;
+            public int taskValue = 0;
 
             public bool HasMap(int targetMapId) => hasMap;
             public int GetCurrentMapId() => currentMapId;
@@ -99,6 +100,7 @@ namespace VLTK.Tests.Sandbox
             public int GetPlayerLevel() => playerLevel;
             public long GetCurrentDateYmdHm() => currentDateYmdHm;
             public int RandomIntInclusive(int minInclusive, int maxInclusive) => randomValue;
+            public int GetTaskValue(int taskId) => taskValue;
             public int GetFightState() => fightState;
             public void NewWorld(int targetMapId, Vector2 worldPosition)
             {
@@ -597,6 +599,78 @@ namespace VLTK.Tests.Sandbox
             CollectionAssert.IsEmpty(openSideEffects.messages);
             CollectionAssert.AreEqual(new[] { 15 }, openSideEffects.stationIds);
             StringAssert.Contains("GetLocalDate()==202606080900", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskSetPosMessage_BranchesOnPcGetTaskValue()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 907,
+                        trapIdHex = "0x0000038B",
+                        scriptPath = @"\script\task\tollgate\messenger\trap\trap_fengzhiqi.lua",
+                        actionKind = "TaskSetPosMessage",
+                        taskId = 1201,
+                        taskBranches = new[]
+                        {
+                            new PcTrapTaskSetPosBranch
+                            {
+                                values = new[] { 10 },
+                                targetCellX = 1563,
+                                targetCellY = 3118,
+                                message = "Trước tiên phải đối thoại trước với Dịch Quan trong khu vực",
+                            },
+                            new PcTrapTaskSetPosBranch
+                            {
+                                values = new[] { 20 },
+                                targetCellX = 1559,
+                                targetCellY = 3113,
+                            },
+                            new PcTrapTaskSetPosBranch
+                            {
+                                values = new[] { 30, 25, 0 },
+                                targetCellX = 1563,
+                                targetCellY = 3118,
+                                message = "Xin lỗi! Hiện tại bạn không thể vào ải được.",
+                            },
+                        },
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValue = 20 };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 907 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1559 * 32, 3113 * 32), host.position);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+            StringAssert.Contains("GetTask(1201)==20", result.detail);
+
+            host = new FakeTrapTravelHost { taskValue = 25 };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0000038B" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1563 * 32, 3118 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { "Xin lỗi! Hiện tại bạn không thể vào ải được." }, sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValue = 99 };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 907 }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(default(Vector2), host.position);
+            StringAssert.Contains("no branch", result.detail);
         }
 
         [Test]

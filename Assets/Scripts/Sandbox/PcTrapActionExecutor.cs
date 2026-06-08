@@ -3,7 +3,7 @@
 // Ported APIs: NewWorld(mapId,x,y), SetPos(x,y), and simple
 // GetFightState()/SetFightState() gate traps with PC cell coords, plus read-only
 // Msg2Player/Say/Talk message-only traps, Msg2Player+NewWorld traps, and
-// open-server date gates from configall.lua.
+// open-server date gates from configall.lua, and task-state gates from PC GetTask().
 // -----------------------------------------------------------------------------
 
 using System;
@@ -32,6 +32,7 @@ namespace VLTK.Sandbox
         int GetPlayerLevel();
         long GetCurrentDateYmdHm();
         int RandomIntInclusive(int minInclusive, int maxInclusive);
+        int GetTaskValue(int taskId);
         int GetFightState();
         void NewWorld(int mapId, Vector2 worldPosition);
         void SetPos(Vector2 worldPosition);
@@ -100,6 +101,25 @@ namespace VLTK.Sandbox
             }
 
             var target = action.TargetWorldPosition();
+            if (action.IsTaskSetPosMessage)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                var branch = FindTaskBranch(action, taskValue);
+                if (branch == null)
+                {
+                    result = Success(action, $"GetTask({action.taskId})=={taskValue} -> no branch");
+                    return true;
+                }
+
+                var branchTarget = action.TaskBranchWorldPosition(branch);
+                _host.SetPos(branchTarget);
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(branch.message))
+                    _sideEffects.PostMessage(branch.message);
+                result = Success(action,
+                    $"GetTask({action.taskId})=={taskValue} -> SetPos({branch.targetCellX},{branch.targetCellY}) -> {branchTarget}");
+                return true;
+            }
+
             if (action.IsMsg2PlayerNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -296,6 +316,18 @@ namespace VLTK.Sandbox
             return false;
         }
 
+        private static PcTrapTaskSetPosBranch FindTaskBranch(PcTrapActionCatalogEntry action, int taskValue)
+        {
+            if (action.taskBranches == null) return null;
+            foreach (var branch in action.taskBranches)
+            {
+                if (branch == null) continue;
+                if (Contains(branch.values, taskValue))
+                    return branch;
+            }
+            return null;
+        }
+
         private static int ChooseRandomBranch(PcTrapActionCatalogEntry action, int randomValue)
         {
             if (action.randomThresholds != null)
@@ -452,6 +484,9 @@ namespace VLTK.Sandbox
                 return minInclusive;
             return UnityEngine.Random.Range(minInclusive, maxInclusive + 1);
         }
+
+        public int GetTaskValue(int taskId)
+            => SandboxManager.Instance?.TaskFlagService?.GetFlag(taskId) ?? 0;
 
         public int GetFightState()
         {
