@@ -147,56 +147,6 @@ namespace VLTK.Sandbox
                 return true;
             }
 
-            if (action.IsTaskItemConsumeMessage)
-            {
-                if (_sideEffects == null)
-                {
-                    result = Failure(action, "object side-effect host unavailable");
-                    return true;
-                }
-
-                int taskValue = _host.GetTaskValue(action.taskId);
-                bool taskMatched = taskValue == action.taskValue;
-                if (!taskMatched)
-                {
-                    int elseLines = PostMessages(action.elseMessages);
-                    result = Success(action,
-                        $"TaskItemConsumeMessage(GetTask({action.taskId})={taskValue}, expected={action.taskValue}, matched=False, elseLines={elseLines})");
-                    return true;
-                }
-
-                bool hasItems = HasAllItems(action.requiredItemIds, action.requiredItemCounts);
-                if (!hasItems)
-                {
-                    int missingLines = PostMessages(action.missingItemMessages);
-                    result = Success(action,
-                        $"TaskItemConsumeMessage(GetTask({action.taskId})={taskValue}, requiredItems={FormatInts(action.requiredItemIds)}, matchedItems=False, missingLines={missingLines})");
-                    return true;
-                }
-
-                int preMessages = PostMessages(action.preConsumeMessages);
-                if (!TryConsumeItems(action.consumeItemIds ?? action.requiredItemIds, action.consumeItemCounts ?? action.requiredItemCounts))
-                {
-                    result = Failure(action, $"TaskItemConsumeMessage failed to DelItem({FormatInts(action.consumeItemIds ?? action.requiredItemIds)}) after validation");
-                    return true;
-                }
-
-                if (action.setTaskId > 0)
-                    _host.SetTaskValue(action.setTaskId, action.setTaskValue);
-                if (action.eventItemIds != null)
-                {
-                    foreach (int eventItemId in action.eventItemIds)
-                        _sideEffects.AddEventItem(eventItemId);
-                }
-
-                int notes = AddNotes(action.notes);
-                int messages = PostMessages(action.successMessages ?? action.messages);
-                result = Success(action,
-                    $"TaskItemConsumeMessage(GetTask({action.taskId})={taskValue}, consumed={FormatInts(action.consumeItemIds ?? action.requiredItemIds)}, SetTask({action.setTaskId},{action.setTaskValue}), items={FormatInts(action.eventItemIds)}, notes={notes}, preMessages={preMessages}, messages={messages})");
-                result.hideObject = action.setPropState;
-                return true;
-            }
-
             if (action.IsSayMessage)
             {
                 if (_sideEffects == null)
@@ -319,59 +269,6 @@ namespace VLTK.Sandbox
             result = Failure(action, $"unsupported object action '{action.actionKind}'");
             return true;
         }
-
-        private bool HasAllItems(int[] itemIds, int[] counts)
-        {
-            if (itemIds == null || itemIds.Length == 0) return true;
-            for (int i = 0; i < itemIds.Length; i++)
-            {
-                int count = CountAt(counts, i);
-                if (!_host.HaveItem(itemIds[i], count))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool TryConsumeItems(int[] itemIds, int[] counts)
-        {
-            if (itemIds == null || itemIds.Length == 0) return true;
-            if (!HasAllItems(itemIds, counts)) return false;
-            for (int i = 0; i < itemIds.Length; i++)
-            {
-                if (!_host.DelItem(itemIds[i], CountAt(counts, i)))
-                    return false;
-            }
-            return true;
-        }
-
-        private int AddNotes(string[] notes)
-        {
-            int count = 0;
-            if (notes == null) return count;
-            foreach (string note in notes)
-            {
-                if (string.IsNullOrWhiteSpace(note)) continue;
-                _sideEffects.AddNote(note);
-                count++;
-            }
-            return count;
-        }
-
-        private int PostMessages(string[] messages)
-        {
-            int count = 0;
-            if (messages == null) return count;
-            foreach (string message in messages)
-            {
-                if (string.IsNullOrWhiteSpace(message)) continue;
-                _sideEffects.PostMessage(message);
-                count++;
-            }
-            return count;
-        }
-
-        private static int CountAt(int[] counts, int index)
-            => counts != null && index >= 0 && index < counts.Length && counts[index] > 0 ? counts[index] : 1;
 
         private static ObjectActionExecutionResult Success(PcObjectActionCatalogEntry action, string detail)
             => new ObjectActionExecutionResult { success = true, detail = Detail(action, detail) };
