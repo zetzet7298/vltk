@@ -150,6 +150,20 @@
     -unity-text-align: middle-center;
 }
 
+/* PC ec10b91e [MapPosInput]: coord entry behind ScenePos (Tip=click to find path). */
+.hud-map-pos-input {
+    position: absolute;
+    left: -43px;
+    top: 129px;
+    width: 112px;
+    height: 14px;
+    font-size: 10px;
+    color: rgb(0,255,255);
+    background-color: rgba(0,0,0,0.66);
+    border-width: 1px;
+    border-color: rgb(255,0,0);
+}
+
 .hud-minimap-btns {
     position: absolute;
     left: 56px;

@@ -50,6 +50,7 @@
             </ui:VisualElement>
             <ui:Label name="SceneName" text="" class="hud-scene-name"/>
             <ui:Label name="ScenePos" text="" class="hud-scene-pos"/>
+            <ui:TextField name="MapPosInput" value="" class="hud-map-pos-input hidden"/>
             <ui:VisualElement name="MinimapBtns" class="hud-minimap-btns">
                 <ui:VisualElement name="MinimapMarkerBtn" class="hud-minimap-btn"/>
                 <ui:VisualElement name="ToggleMapBtn" class="hud-minimap-btn"/>

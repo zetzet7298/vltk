@@ -99,7 +99,7 @@ namespace VLTK.UI
         private ScrollView _skillList;
         private Label _hpText, _mpText, _staminaText, _expText;
         private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary;
-        private TextField _chatInput;
+        private TextField _chatInput, _mapPosInput;
         private VisualElement _chatTabs;
         private Label _chatWarning;
         private ChatChannel _selectedChatChannel = ChatChannel.All;
@@ -313,6 +313,7 @@ namespace VLTK.UI
             _levelText = root.Q<Label>("LevelText");
             _sceneName = root.Q<Label>("SceneName");
             _scenePos = root.Q<Label>("ScenePos");
+            _mapPosInput = root.Q<TextField>("MapPosInput");
             _chatInput = root.Q<TextField>("ChatInput");
             _chatTabs = root.Q("ChatTabs");
             _chatWarning = root.Q<Label>("ChatWarning");
@@ -475,12 +476,27 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "MinimapFrame");
             RegisterPreviewOpen(root, "MinimapContent");
             RegisterPreviewOpen(root, "PlayerDot");
+            RegisterClick(root, "ScenePos", OnScenePosClick);
             RegisterPreviewOpen(root, "ToggleMapBtn");
             RegisterClick(root, "MinimapMarkerBtn", OnMinimapMarkerClick);
             RegisterPreviewOpen(root, "WorldMapBtn");
             RegisterClick(root, "CaveMapBtn", OnCaveMapClick);
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
             RegisterClick(root, "CaiBangSkillClose", CloseSkillPanel);
+            if (_mapPosInput != null)
+            {
+                _mapPosInput.pickingMode = PickingMode.Position;
+                _mapPosInput.RegisterCallback<KeyDownEvent>(evt =>
+                {
+                    if (evt.keyCode == KeyCode.Return || evt.keyCode == KeyCode.KeypadEnter)
+                    {
+                        ApplyMapPosInput();
+                        evt.StopPropagation();
+                    }
+                });
+                _mapPosInput.RegisterCallback<FocusOutEvent>(_ => _mapPosInput.AddToClassList("hidden"));
+            }
+
             RegisterClick(root, "CaiBangSkillPageOne", () => SetSkillPage(0));
             RegisterClick(root, "CaiBangSkillPageTwo", () => SetSkillPage(1));
 
@@ -1054,6 +1070,52 @@ namespace VLTK.UI
                     text.text = $"{cur}/{max}";
                 }
             }
+        }
+
+        private void OnScenePosClick()
+        {
+            // PC ec10b91e [ScenePos] Tip=click to find path and [MapPosInput] Type=2.
+            // Mobile keeps the same coordinate entry semantics: tap coords, enter x/y, move to that PC coordinate.
+            if (_mapPosInput == null)
+            {
+                OpenMapPreview();
+                return;
+            }
+
+            _mapPosInput.value = _scenePos != null ? _scenePos.text : string.Empty;
+            _mapPosInput.RemoveFromClassList("hidden");
+            _mapPosInput.Focus();
+        }
+
+        private void ApplyMapPosInput()
+        {
+            if (_mapPosInput == null) return;
+            if (!TryParsePcScenePos(_mapPosInput.value, out var target))
+            {
+                if (_mapPreviewCoords != null)
+                    _mapPreviewCoords.text = "Tọa độ không hợp lệ. Dùng dạng x/y.";
+                OpenMapPreview();
+                return;
+            }
+
+            MovePlayerTo(target);
+            _lastMoveTarget = target;
+            _mapPosInput.AddToClassList("hidden");
+            if (_mapPreviewCoords != null)
+                _mapPreviewCoords.text = $"Đến: {FormatPcScenePos(target)}";
+            OpenMapPreview();
+        }
+
+        private static bool TryParsePcScenePos(string text, out Vector2 world)
+        {
+            world = Vector2.zero;
+            if (string.IsNullOrWhiteSpace(text)) return false;
+            var parts = text.Trim().Replace(',', '/').Split('/');
+            if (parts.Length != 2) return false;
+            if (!int.TryParse(parts[0].Trim(), out var x)) return false;
+            if (!int.TryParse(parts[1].Trim(), out var y)) return false;
+            world = new Vector2(x * 8f, -y * 8f);
+            return true;
         }
 
         private void OpenMapPreview()
