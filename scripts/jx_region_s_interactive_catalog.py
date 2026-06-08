@@ -1314,50 +1314,6 @@ def citywar_camp_return_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
-def songjin_rebirth_camp_state(source: str) -> dict[str, Any] | None:
-    clean_source = strip_lua_line_comments(source)
-    allowed = {
-        'main', 'GetMissionV', 'PIdx2MSDIdx', 'GetMSIdxGroup', 'SetFightState',
-        'SetCurCamp', 'SetPunish', 'if',
-    }
-    if not source_uses_only_calls(clean_source, allowed):
-        return None
-    if re.search(r'\b(for|while|elseif|NewWorld|SetPos|Say|Talk|Msg2Player)\b', clean_source):
-        return None
-
-    mission_values = int_args(parse_lua_calls(clean_source, 'GetMissionV', limit=4), 1)
-    fight_state = int_args_unique(parse_lua_calls(clean_source, 'SetFightState', limit=2), 1)
-    cur_camp = int_args_unique(parse_lua_calls(clean_source, 'SetCurCamp', limit=2), 1)
-    punish = int_args_unique(parse_lua_calls(clean_source, 'SetPunish', limit=2), 1)
-    msd_match = re.search(r'PIdx2MSDIdx\s*\(\s*(\d+)\s*,\s*PlayerIndex\s*\)', clean_source)
-    group_match = re.search(r'GetMSIdxGroup\s*\(\s*(\d+)\s*,\s*MSDIdx\s*\)\s*==\s*(\d+)', clean_source)
-    state_match = re.search(r'GetMissionV\s*\(\s*(\d+)\s*\)\s*==\s*(\d+)', clean_source)
-    zero_state_match = re.search(r'\bState\s*==\s*0', clean_source)
-    if (
-        len(mission_values) < 2 or msd_match is None or fight_state is None or
-        cur_camp is None or punish is None or group_match is None or
-        state_match is None or zero_state_match is None
-    ):
-        return None
-    mission_var = mission_values[0][0]
-    mission_id = int(msd_match.group(1))
-    if int(group_match.group(1)) != mission_id or int(state_match.group(1)) != mission_var:
-        return None
-    required_group = int(group_match.group(2))
-    target_camp = cur_camp[0]
-    if target_camp != required_group:
-        return None
-    return {
-        'missionId': mission_id,
-        'missionStateVar': mission_var,
-        'requiredMissionState': int(state_match.group(2)),
-        'requiredMissionGroup': required_group,
-        'targetCamp': target_camp,
-        'fightState': fight_state[0],
-        'punish': punish[0],
-    }
-
-
 def clearskill_constants(pc_root: Path = PC_ROOT) -> dict[str, Any]:
     path = server_root(pc_root) / 'script/missions/clearskill/head.lua'
     try:
@@ -4081,21 +4037,6 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **citywar_return,
             })
             continue
-        songjin_rebirth = songjin_rebirth_camp_state(source)
-        if songjin_rebirth is not None:
-            entries.append({
-                'trapId': script['trapId'],
-                'trapIdHex': script['trapIdHex'],
-                'scriptPath': script.get('scriptPath', ''),
-                'sourceRelPath': script.get('sourceRelPath', ''),
-                'actionKind': 'SongJinRebirthCampState',
-                'targetMapId': 0,
-                'targetCellX': 0,
-                'targetCellY': 0,
-                'source': 'PC Song/Jin rebirth trap: if GetMissionV(1)==2 and GetMSIdxGroup(1,PIdx2MSDIdx)==camp then SetFightState(1), SetCurCamp(camp), SetPunish(0); no movement.',
-                **songjin_rebirth,
-            })
-            continue
         clear_switch = clearskill_switch_trap(source)
         if clear_switch is not None:
             entries.append({
@@ -4223,7 +4164,6 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskMultiItemPromptCallbackNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'TaskMultiItemPromptCallbackNewWorld'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
-        'deterministicTrapSongJinRebirthCampStateActions': sum(1 for e in entries if e['actionKind'] == 'SongJinRebirthCampState'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),
         'deterministicTrapClearSkillLeaveGameActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillLeaveGame'),
         'deterministicTrapCsArenaLeaveTrapActions': sum(1 for e in entries if e['actionKind'] == 'CsArenaLeaveTrap'),

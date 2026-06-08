@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T14:31:58Z",
+  "generatedAtUtc": "2026-06-08T14:18:43Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -13769,7 +13769,18 @@
         "setPosCalls": [],
         "setsFightState": true,
         "talks": false
-      }
+      },
+      "deferredActionKind": "SongJinRebirthCampState",
+      "deferredActionReason": "PC Song/Jin rebirth trap mutates fight state/camp/punish only for players in a mission group while mission state is active; requires mission membership APIs.",
+      "requiredPcApis": [
+        "GetMissionV",
+        "PIdx2MSDIdx",
+        "GetMSIdxGroup",
+        "SetFightState",
+        "SetCurCamp",
+        "SetPunish"
+      ],
+      "actionPortStatus": "deferred_requires_pc_runtime"
     },
     {
       "trapId": 3407947926,
@@ -17073,7 +17084,18 @@
         "setPosCalls": [],
         "setsFightState": true,
         "talks": false
-      }
+      },
+      "deferredActionKind": "SongJinRebirthCampState",
+      "deferredActionReason": "PC Song/Jin rebirth trap mutates fight state/camp/punish only for players in a mission group while mission state is active; requires mission membership APIs.",
+      "requiredPcApis": [
+        "GetMissionV",
+        "PIdx2MSDIdx",
+        "GetMSIdxGroup",
+        "SetFightState",
+        "SetCurCamp",
+        "SetPunish"
+      ],
+      "actionPortStatus": "deferred_requires_pc_runtime"
     },
     {
       "trapId": 4135267855,

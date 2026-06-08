@@ -90,8 +90,6 @@ namespace VLTK.Tests.Sandbox
             public int taskValue = 0;
             public Dictionary<int, int> taskValues = new();
             public Dictionary<int, int> taskTempValues = new();
-            public Dictionary<int, int> missionValues = new();
-            public Dictionary<int, int> missionPlayerGroups = new();
             public Dictionary<int, int> itemCounts = new();
             public int curCamp = 0;
             public int originalCamp = 0;
@@ -136,8 +134,6 @@ namespace VLTK.Tests.Sandbox
             public int GetTaskValue(int taskId) => taskValues.TryGetValue(taskId, out var value) ? value : taskValue;
             public void SetTaskValue(int taskId, int value) => taskValues[taskId] = value;
             public int GetTaskTempValue(int taskId) => taskTempValues.TryGetValue(taskId, out var value) ? value : 0;
-            public int GetMissionValue(int missionVarId) => missionValues.TryGetValue(missionVarId, out var value) ? value : 0;
-            public int GetMissionPlayerGroup(int missionId) => missionPlayerGroups.TryGetValue(missionId, out var group) ? group : 0;
             public bool HaveItem(int pcQuestKeyDetailType, int minCount)
                 => minCount <= 0 || (itemCounts.TryGetValue(pcQuestKeyDetailType, out var count) && count >= minCount);
             public bool DelItem(int pcQuestKeyDetailType, int count)
@@ -258,7 +254,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(802, catalog.Count);
+            Assert.AreEqual(800, catalog.Count);
             Assert.AreEqual(532, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
@@ -275,7 +271,6 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskCurrentMapReturnNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskSetTaskFactionGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeFactionGateNewWorld));
-            Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsSongJinRebirthCampState));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskMultiItemPromptCallbackNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
@@ -287,16 +282,6 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1608, secretRoomEntrance.targetCellX);
             Assert.AreEqual(3199, secretRoomEntrance.targetCellY);
             StringAssert.Contains("天忍教圣洞2to天忍教圣洞二层密室.lua", secretRoomEntrance.scriptPath);
-            var songRebirth = catalog.Find(0xCAE7648B, "0xCAE7648B");
-            Assert.IsNotNull(songRebirth);
-            Assert.IsTrue(songRebirth.IsSongJinRebirthCampState);
-            Assert.AreEqual(1, songRebirth.missionId);
-            Assert.AreEqual(1, songRebirth.missionStateVar);
-            Assert.AreEqual(2, songRebirth.requiredMissionState);
-            Assert.AreEqual(1, songRebirth.requiredMissionGroup);
-            Assert.AreEqual(1, songRebirth.targetCamp);
-            Assert.AreEqual(1, songRebirth.fightState);
-            Assert.AreEqual(0, songRebirth.punish);
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);
@@ -2807,110 +2792,6 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, host.fightState);
             Assert.AreEqual(0, host.logoutRv);
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1613 * 32, 3185 * 32), host.position);
-        }
-
-        [Test]
-        public void PcTrapActionExecutor_SongJinRebirthCampState_PreservesMissionGroupGuard()
-        {
-            var catalog = new PcTrapActionCatalogFile
-            {
-                entries = new[]
-                {
-                    new PcTrapActionCatalogEntry
-                    {
-                        trapId = 0xCAE7648B,
-                        trapIdHex = "0xCAE7648B",
-                        scriptPath = @"\script\missions\宋金战场pk战\宋军重生点.lua",
-                        actionKind = "SongJinRebirthCampState",
-                        missionId = 1,
-                        missionStateVar = 1,
-                        requiredMissionState = 2,
-                        requiredMissionGroup = 1,
-                        targetCamp = 1,
-                        fightState = 1,
-                        punish = 0,
-                    },
-                    new PcTrapActionCatalogEntry
-                    {
-                        trapId = 0xF672737F,
-                        trapIdHex = "0xF672737F",
-                        scriptPath = @"\script\missions\宋金战场pk战\金军重生点.lua",
-                        actionKind = "SongJinRebirthCampState",
-                        missionId = 1,
-                        missionStateVar = 1,
-                        requiredMissionState = 2,
-                        requiredMissionGroup = 2,
-                        targetCamp = 2,
-                        fightState = 1,
-                        punish = 0,
-                    }
-                }
-            };
-
-            var host = new FakeTrapTravelHost { fightState = 0, curCamp = 0, punish = 9 };
-            host.missionValues[1] = 2;
-            host.missionPlayerGroups[1] = 1;
-            var executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
-
-            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xCAE7648B" }, out var result));
-
-            Assert.IsTrue(result.success);
-            Assert.AreEqual(1, host.fightState);
-            Assert.AreEqual(1, host.curCamp);
-            Assert.AreEqual(0, host.punish);
-            StringAssert.Contains("GetMissionV(1)==2", result.detail);
-
-            var blockedHost = new FakeTrapTravelHost { fightState = 0, curCamp = 0, punish = 9 };
-            blockedHost.missionValues[1] = 2;
-            blockedHost.missionPlayerGroups[1] = 2;
-            executor = new PcTrapActionExecutor(catalog, blockedHost, new FakeTrapActionSideEffects());
-
-            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 0xCAE7648B }, out result));
-
-            Assert.IsTrue(result.success);
-            Assert.AreEqual(0, blockedHost.fightState);
-            Assert.AreEqual(0, blockedHost.curCamp);
-            Assert.AreEqual(9, blockedHost.punish);
-            StringAssert.Contains("no action", result.detail);
-
-            var inactiveHost = new FakeTrapTravelHost { fightState = 0, curCamp = 0, punish = 9 };
-            inactiveHost.missionValues[1] = 0;
-            inactiveHost.missionPlayerGroups[1] = 1;
-            executor = new PcTrapActionExecutor(catalog, inactiveHost, new FakeTrapActionSideEffects());
-
-            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xCAE7648B" }, out result));
-
-            Assert.IsTrue(result.success);
-            Assert.AreEqual(0, inactiveHost.fightState);
-            Assert.AreEqual(0, inactiveHost.curCamp);
-            Assert.AreEqual(9, inactiveHost.punish);
-            StringAssert.Contains("GetMissionV(1)==0", result.detail);
-
-            var waitingHost = new FakeTrapTravelHost { fightState = 0, curCamp = 0, punish = 9 };
-            waitingHost.missionValues[1] = 1;
-            waitingHost.missionPlayerGroups[1] = 1;
-            executor = new PcTrapActionExecutor(catalog, waitingHost, new FakeTrapActionSideEffects());
-
-            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xCAE7648B" }, out result));
-
-            Assert.IsTrue(result.success);
-            Assert.AreEqual(0, waitingHost.fightState);
-            Assert.AreEqual(0, waitingHost.curCamp);
-            Assert.AreEqual(9, waitingHost.punish);
-            StringAssert.Contains("GetMissionV(1)==1", result.detail);
-
-            var jinHost = new FakeTrapTravelHost { fightState = 0, curCamp = 0, punish = 9 };
-            jinHost.missionValues[1] = 2;
-            jinHost.missionPlayerGroups[1] = 2;
-            executor = new PcTrapActionExecutor(catalog, jinHost, new FakeTrapActionSideEffects());
-
-            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xF672737F" }, out result));
-
-            Assert.IsTrue(result.success);
-            Assert.AreEqual(1, jinHost.fightState);
-            Assert.AreEqual(2, jinHost.curCamp);
-            Assert.AreEqual(0, jinHost.punish);
-            StringAssert.Contains("SetCurCamp(2)", result.detail);
         }
 
         [Test]

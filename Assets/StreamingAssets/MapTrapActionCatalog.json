@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T14:31:58Z",
+  "generatedAtUtc": "2026-06-08T14:00:28Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -10653,24 +10653,6 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
-      "trapId": 3404162187,
-      "trapIdHex": "0xCAE7648B",
-      "scriptPath": "\\script\\missions\\宋金战场pk战\\宋军重生点.lua",
-      "sourceRelPath": "script\\missions\\宋金战场pk战\\宋军重生点.lua",
-      "actionKind": "SongJinRebirthCampState",
-      "targetMapId": 0,
-      "targetCellX": 0,
-      "targetCellY": 0,
-      "source": "PC Song/Jin rebirth trap: if GetMissionV(1)==2 and GetMSIdxGroup(1,PIdx2MSDIdx)==camp then SetFightState(1), SetCurCamp(camp), SetPunish(0); no movement.",
-      "missionId": 1,
-      "missionStateVar": 1,
-      "requiredMissionState": 2,
-      "requiredMissionGroup": 1,
-      "targetCamp": 1,
-      "fightState": 1,
-      "punish": 0
-    },
-    {
       "trapId": 3407947926,
       "trapIdHex": "0xCB212896",
       "scriptPath": "\\script\\江南区\\龙泉村\\trap\\龙泉村to武夷山.lua",
@@ -13089,24 +13071,6 @@
       "elseTargetCellX": 1546,
       "elseTargetCellY": 3507,
       "elseNextFightState": 0
-    },
-    {
-      "trapId": 4134695807,
-      "trapIdHex": "0xF672737F",
-      "scriptPath": "\\script\\missions\\宋金战场pk战\\金军重生点.lua",
-      "sourceRelPath": "script\\missions\\宋金战场pk战\\金军重生点.lua",
-      "actionKind": "SongJinRebirthCampState",
-      "targetMapId": 0,
-      "targetCellX": 0,
-      "targetCellY": 0,
-      "source": "PC Song/Jin rebirth trap: if GetMissionV(1)==2 and GetMSIdxGroup(1,PIdx2MSDIdx)==camp then SetFightState(1), SetCurCamp(camp), SetPunish(0); no movement.",
-      "missionId": 1,
-      "missionStateVar": 1,
-      "requiredMissionState": 2,
-      "requiredMissionGroup": 2,
-      "targetCamp": 2,
-      "fightState": 1,
-      "punish": 0
     },
     {
       "trapId": 4135267855,

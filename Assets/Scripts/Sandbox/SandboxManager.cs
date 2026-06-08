@@ -94,8 +94,6 @@ namespace VLTK.Sandbox
         public int CurrentReviveMapId { get; private set; } = 0;
         public int CurrentReviveId { get; private set; } = 0;
         private readonly Dictionary<int, int> _taskTempValues = new();
-        private readonly Dictionary<int, int> _pcMissionValues = new();
-        private readonly Dictionary<int, int> _pcMissionPlayerGroups = new();
         public AssetRegistry AssetRegistry { get; private set; }
         public MapManager MapManager { get; private set; }
         public MapRenderer MapRenderer { get; private set; }
@@ -1218,32 +1216,6 @@ namespace VLTK.Sandbox
 
         public int GetTaskTemp(int taskId)
             => taskId > 0 && _taskTempValues.TryGetValue(taskId, out var value) ? value : 0;
-
-        public int GetPcMissionValue(int missionVarId)
-            => missionVarId > 0 && _pcMissionValues.TryGetValue(missionVarId, out var value) ? value : 0;
-
-        public void SetPcMissionValue(int missionVarId, int value)
-        {
-            if (missionVarId > 0)
-            {
-                if (value == 0) _pcMissionValues.Remove(missionVarId);
-                else _pcMissionValues[missionVarId] = value;
-            }
-            SubsystemLog.Info("Sandbox", $"PC SetMissionV({missionVarId},{value}) source recorded");
-        }
-
-        public int GetPcMissionPlayerGroup(int missionId)
-            => missionId > 0 && _pcMissionPlayerGroups.TryGetValue(missionId, out var group) ? group : 0;
-
-        public void SetPcMissionPlayerGroup(int missionId, int group)
-        {
-            if (missionId > 0)
-            {
-                if (group == 0) _pcMissionPlayerGroups.Remove(missionId);
-                else _pcMissionPlayerGroups[missionId] = group;
-            }
-            SubsystemLog.Info("Sandbox", $"PC mission {missionId} player group recorded as {group}");
-        }
 
         public void SetDeathScript(string scriptPath)
         {
