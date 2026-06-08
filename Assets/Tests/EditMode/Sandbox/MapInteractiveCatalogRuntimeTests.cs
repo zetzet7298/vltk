@@ -92,6 +92,15 @@ namespace VLTK.Tests.Sandbox
             public int originalCamp = 0;
             public int battleRank = 0;
             public int logoutRv = -1;
+            public int pkFlag = -1;
+            public int forbidChangePk = -1;
+            public int punish = -1;
+            public int taskTempId;
+            public int taskTempValue;
+            public string deathScript;
+            public bool leftTeam;
+            public int revPosMapId;
+            public int revPosId;
 
             public bool HasMap(int targetMapId) => hasMap;
             public int GetCurrentMapId() => currentMapId;
@@ -118,6 +127,21 @@ namespace VLTK.Tests.Sandbox
             public void SetFightState(int nextFightState) => fightState = nextFightState;
             public void SetCurCamp(int nextCamp) => curCamp = nextCamp;
             public void SetLogoutRv(int value) => logoutRv = value;
+            public void SetPkFlag(int value) => pkFlag = value;
+            public void ForbidChangePk(int value) => forbidChangePk = value;
+            public void SetPunish(int value) => punish = value;
+            public void SetTaskTemp(int taskId, int value)
+            {
+                taskTempId = taskId;
+                taskTempValue = value;
+            }
+            public void SetDeathScript(string scriptPath) => deathScript = scriptPath;
+            public void LeaveTeam() => leftTeam = true;
+            public void SetRevPos(int mapId, int reviveId)
+            {
+                revPosMapId = mapId;
+                revPosId = reviveId;
+            }
         }
 
         private sealed class FakeTrapActionSideEffects : ITrapActionSideEffects
@@ -610,6 +634,124 @@ namespace VLTK.Tests.Sandbox
             CollectionAssert.IsEmpty(openSideEffects.messages);
             CollectionAssert.AreEqual(new[] { 15 }, openSideEffects.stationIds);
             StringAssert.Contains("GetLocalDate()==202606080900", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_ClearSkillSwitchTrap_TogglesPcFightStateAndPkFlags()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 910,
+                        trapIdHex = "0x0000038E",
+                        scriptPath = @"\script\global\特殊用地\梦境\trap\战斗切换点4.lua",
+                        actionKind = "ClearSkillSwitchTrap",
+                        trapIndex = 4,
+                        ifFightState = 0,
+                        enterCellX = 1581,
+                        enterCellY = 3166,
+                        enterNextFightState = 1,
+                        pkFlag = 0,
+                        forbidChangePk = 1,
+                        punish = 0,
+                        logoutRv = 1,
+                        exitCellX = 1591,
+                        exitCellY = 3174,
+                        exitNextFightState = 0,
+                        exitPkFlag = 1,
+                        exitForbidChangePk = 0,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { fightState = 0 };
+            var executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 910 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(0, host.pkFlag);
+            Assert.AreEqual(1, host.forbidChangePk);
+            Assert.AreEqual(0, host.punish);
+            Assert.AreEqual(1, host.logoutRv);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1581 * 32, 3166 * 32), host.position);
+
+            host = new FakeTrapTravelHost { fightState = 1 };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0x0000038E" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(0, host.fightState);
+            Assert.AreEqual(1, host.pkFlag);
+            Assert.AreEqual(0, host.forbidChangePk);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1591 * 32, 3174 * 32), host.position);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_ClearSkillLeaveGame_DerivesClearMapFromCurrentTestMap()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 911,
+                        trapIdHex = "0x0000038F",
+                        scriptPath = @"\script\global\特殊用地\梦境山洞\trap\梦境山洞to梦境2.lua",
+                        actionKind = "ClearSkillLeaveGame",
+                        trapIndex = 2,
+                        fightState = 1,
+                        pkFlag = 0,
+                        forbidChangePk = 1,
+                        punish = 0,
+                        logoutRv = 1,
+                        setTaskTempId = 100,
+                        setTaskTempValue = 0,
+                        deathScript = "",
+                        reviveSubWorldId = 1,
+                        enterCellX = 1741,
+                        enterCellY = 3264,
+                        clearSkillClearMapIds = new[] { 242, 243, 244, 245, 246, 247, 248 },
+                        clearSkillTestMapBeginIds = new[] { 249, 259, 269, 279, 289, 299, 309 },
+                        clearSkillTestMapCount = 10,
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { currentMapId = 263, originalCamp = 2, fightState = 0 };
+            var executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 911 }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(243, host.mapId);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(0, host.pkFlag);
+            Assert.AreEqual(1, host.forbidChangePk);
+            Assert.AreEqual(0, host.punish);
+            Assert.AreEqual(1, host.logoutRv);
+            Assert.AreEqual(100, host.taskTempId);
+            Assert.AreEqual(0, host.taskTempValue);
+            Assert.AreEqual(2, host.curCamp);
+            Assert.AreEqual(string.Empty, host.deathScript);
+            Assert.IsTrue(host.leftTeam);
+            Assert.AreEqual(243, host.revPosMapId);
+            Assert.AreEqual(1, host.revPosId);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1741 * 32, 3264 * 32), host.position);
+
+            host = new FakeTrapTravelHost { currentMapId = 907 };
+            executor = new PcTrapActionExecutor(catalog, host, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 911 }, out result));
+
+            Assert.IsFalse(result.success);
+            StringAssert.Contains("CSP_GetCityIndexByTestMap", result.detail);
         }
 
         [Test]

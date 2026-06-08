@@ -42,6 +42,13 @@ namespace VLTK.Sandbox
         void SetFightState(int fightState);
         void SetCurCamp(int camp);
         void SetLogoutRv(int value);
+        void SetPkFlag(int value);
+        void ForbidChangePk(int value);
+        void SetPunish(int value);
+        void SetTaskTemp(int taskId, int value);
+        void SetDeathScript(string scriptPath);
+        void LeaveTeam();
+        void SetRevPos(int mapId, int reviveId);
     }
 
     public interface ITrapActionSideEffects
@@ -123,6 +130,63 @@ namespace VLTK.Sandbox
                     _sideEffects.PostMessage(branch.message);
                 result = Success(action,
                     $"GetTask({action.taskId})=={taskValue} -> SetPos({branch.targetCellX},{branch.targetCellY}) -> {branchTarget}");
+                return true;
+            }
+
+            if (action.IsClearSkillSwitchTrap)
+            {
+                int currentFightState = _host.GetFightState();
+                if (currentFightState == action.ifFightState)
+                {
+                    var enterTarget = action.EnterWorldPosition();
+                    if (action.enterNextFightState >= 0)
+                        _host.SetFightState(action.enterNextFightState);
+                    ApplyPcFlagSideEffects(action.pkFlag, action.forbidChangePk, action.punish, action.logoutRv);
+                    _host.SetPos(enterTarget);
+                    result = Success(action,
+                        $"CSP_SwitchTrap({action.trapIndex}) GetFightState()=={currentFightState} -> SetFightState({action.enterNextFightState}) + SetPos({action.enterCellX},{action.enterCellY}) -> {enterTarget}");
+                    return true;
+                }
+
+                var exitTarget = action.ExitWorldPosition();
+                if (action.exitNextFightState >= 0)
+                    _host.SetFightState(action.exitNextFightState);
+                ApplyPcFlagSideEffects(action.exitPkFlag, action.exitForbidChangePk, action.exitPunish, action.exitLogoutRv);
+                _host.SetPos(exitTarget);
+                result = Success(action,
+                    $"CSP_SwitchTrap({action.trapIndex}) GetFightState()=={currentFightState} -> SetFightState({action.exitNextFightState}) + SetPos({action.exitCellX},{action.exitCellY}) -> {exitTarget}");
+                return true;
+            }
+
+            if (action.IsClearSkillLeaveGame)
+            {
+                int currentMapId = _host.GetCurrentMapId();
+                int targetMapId = ResolveClearSkillClearMap(action, currentMapId);
+                if (targetMapId <= 0)
+                {
+                    result = Failure(action, $"CSP_GetCityIndexByTestMap({currentMapId}) target unavailable");
+                    return true;
+                }
+                if (!_host.HasMap(targetMapId))
+                {
+                    result = Failure(action, $"target map {targetMapId} missing from catalog");
+                    return true;
+                }
+
+                int camp = _host.GetCamp();
+                ApplyFightState(action);
+                ApplyPcFlagSideEffects(action.pkFlag, action.forbidChangePk, action.punish, action.logoutRv);
+                if (action.setTaskTempId > 0)
+                    _host.SetTaskTemp(action.setTaskTempId, action.setTaskTempValue);
+                _host.SetCurCamp(camp);
+                _host.SetDeathScript(action.deathScript ?? string.Empty);
+                _host.LeaveTeam();
+                if (action.reviveSubWorldId > 0)
+                    _host.SetRevPos(targetMapId, action.reviveSubWorldId);
+                var leaveTarget = action.EnterWorldPosition();
+                _host.NewWorld(targetMapId, leaveTarget);
+                result = Success(action,
+                    $"LeaveGame({action.trapIndex}) map {currentMapId} -> NewWorld({targetMapId},{action.enterCellX},{action.enterCellY}) -> {leaveTarget}");
                 return true;
             }
 
@@ -417,6 +481,33 @@ namespace VLTK.Sandbox
                 _host.SetFightState(action.fightState);
         }
 
+        private void ApplyPcFlagSideEffects(int pkFlag, int forbidChangePk, int punish, int logoutRv)
+        {
+            if (pkFlag >= 0)
+                _host.SetPkFlag(pkFlag);
+            if (forbidChangePk >= 0)
+                _host.ForbidChangePk(forbidChangePk);
+            if (punish >= 0)
+                _host.SetPunish(punish);
+            if (logoutRv >= 0)
+                _host.SetLogoutRv(logoutRv);
+        }
+
+        private static int ResolveClearSkillClearMap(PcTrapActionCatalogEntry action, int currentMapId)
+        {
+            if (action.clearSkillClearMapIds == null || action.clearSkillTestMapBeginIds == null)
+                return 0;
+            int count = action.clearSkillTestMapCount > 0 ? action.clearSkillTestMapCount : 10;
+            int cityCount = Mathf.Min(action.clearSkillClearMapIds.Length, action.clearSkillTestMapBeginIds.Length);
+            for (int i = 0; i < cityCount; i++)
+            {
+                int begin = action.clearSkillTestMapBeginIds[i];
+                if (currentMapId >= begin && currentMapId < begin + count)
+                    return action.clearSkillClearMapIds[i];
+            }
+            return 0;
+        }
+
         private void PostTrapMessages(PcTrapActionCatalogEntry action)
         {
             if (_sideEffects == null) return;
@@ -606,6 +697,41 @@ namespace VLTK.Sandbox
         public void SetLogoutRv(int value)
         {
             SandboxManager.Instance?.SetLogoutRv(value);
+        }
+
+        public void SetPkFlag(int value)
+        {
+            SandboxManager.Instance?.SetPkFlag(value);
+        }
+
+        public void ForbidChangePk(int value)
+        {
+            SandboxManager.Instance?.ForbidChangePk(value);
+        }
+
+        public void SetPunish(int value)
+        {
+            SandboxManager.Instance?.SetPunish(value);
+        }
+
+        public void SetTaskTemp(int taskId, int value)
+        {
+            SandboxManager.Instance?.SetTaskTemp(taskId, value);
+        }
+
+        public void SetDeathScript(string scriptPath)
+        {
+            SandboxManager.Instance?.SetDeathScript(scriptPath);
+        }
+
+        public void LeaveTeam()
+        {
+            SandboxManager.Instance?.LeaveTeamForPcTrap();
+        }
+
+        public void SetRevPos(int mapId, int reviveId)
+        {
+            SandboxManager.Instance?.SetRevPos(mapId, reviveId);
         }
     }
 }

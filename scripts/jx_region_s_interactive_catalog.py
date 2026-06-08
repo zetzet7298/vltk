@@ -1056,6 +1056,101 @@ def citywar_camp_return_newworld(source: str) -> dict[str, Any] | None:
     }
 
 
+def clearskill_constants(pc_root: Path = PC_ROOT) -> dict[str, Any]:
+    path = server_root(pc_root) / 'script/missions/clearskill/head.lua'
+    try:
+        text = decode_legacy_text(path.read_bytes())
+    except Exception:
+        return {}
+
+    def source_line(name: str) -> str:
+        return next((ln for ln in text.splitlines() if re.search(r'\b' + re.escape(name) + r'\b\s*=', ln)), '')
+
+    def flat_table(name: str) -> list[int]:
+        return [int(v) for v in re.findall(r'\d+', source_line(name))]
+
+    def nested_table(name: str) -> list[list[int]]:
+        rows = re.findall(r'\{([^{}]+)\}', source_line(name))
+        return [[int(v) for v in re.findall(r'\d+', row)] for row in rows]
+
+    revive_match = re.search(r'\bCSP_RevieSWID\s*=\s*(\d+)', text)
+    return {
+        'clearMapTab': flat_table('CSP_ClearMapTab'),
+        'testMapBeginTab': flat_table('CSP_TestMapBeginTab'),
+        'clearHoleTab': nested_table('CSP_ClearHoleTab'),
+        'clearTrapTab': nested_table('CSP_ClearTrapTab'),
+        'reviveSubWorldId': int(revive_match.group(1)) if revive_match else 1,
+        'testMapCount': 10,
+    }
+
+
+def clearskill_switch_trap(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'Include', 'CSP_SwitchTrap'}):
+        return None
+    trap_index = int_args_unique(parse_lua_calls(clean_source, 'CSP_SwitchTrap', limit=2), 1)
+    if trap_index is None:
+        return None
+    constants = clearskill_constants()
+    rows = constants.get('clearTrapTab') or []
+    index = trap_index[0]
+    if index < 1 or index > len(rows) or len(rows[index - 1]) < 4:
+        return None
+    x1, y1, x2, y2 = rows[index - 1][:4]
+    return {
+        'trapIndex': index,
+        'ifFightState': 0,
+        'enterCellX': x1,
+        'enterCellY': y1,
+        'enterNextFightState': 1,
+        'pkFlag': 0,
+        'forbidChangePk': 1,
+        'punish': 0,
+        'logoutRv': 1,
+        'exitCellX': x2,
+        'exitCellY': y2,
+        'exitNextFightState': 0,
+        'exitPkFlag': 1,
+        'exitForbidChangePk': 0,
+    }
+
+
+def clearskill_leave_game(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'Include', 'LeaveGame'}):
+        return None
+    trap_index = int_args_unique(parse_lua_calls(clean_source, 'LeaveGame', limit=2), 1)
+    if trap_index is None:
+        return None
+    constants = clearskill_constants()
+    rows = constants.get('clearHoleTab') or []
+    index = trap_index[0]
+    if index < 1 or index > len(rows) or len(rows[index - 1]) < 2:
+        return None
+    x, y = rows[index - 1][:2]
+    clear_maps = constants.get('clearMapTab') or []
+    test_begins = constants.get('testMapBeginTab') or []
+    if not clear_maps or not test_begins:
+        return None
+    return {
+        'trapIndex': index,
+        'fightState': 1,
+        'pkFlag': 0,
+        'forbidChangePk': 1,
+        'punish': 0,
+        'logoutRv': 1,
+        'setTaskTempId': 100,
+        'setTaskTempValue': 0,
+        'deathScript': '',
+        'reviveSubWorldId': constants.get('reviveSubWorldId', 1),
+        'enterCellX': x,
+        'enterCellY': y,
+        'clearSkillClearMapIds': clear_maps,
+        'clearSkillTestMapBeginIds': test_begins,
+        'clearSkillTestMapCount': constants.get('testMapCount', 10),
+    }
+
+
 def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     if not actions.get('msg2PlayerCalls'):
         return False
@@ -1408,6 +1503,36 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **citywar_return,
             })
             continue
+        clear_switch = clearskill_switch_trap(source)
+        if clear_switch is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'ClearSkillSwitchTrap',
+                'targetMapId': 0,
+                'targetCellX': clear_switch['enterCellX'],
+                'targetCellY': clear_switch['enterCellY'],
+                'source': 'PC clearskill head.lua CSP_SwitchTrap: GetFightState toggles fight/pk/forbid/punish/logout and SetPos via CSP_ClearTrapTab',
+                **clear_switch,
+            })
+            continue
+        clear_leave = clearskill_leave_game(source)
+        if clear_leave is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'ClearSkillLeaveGame',
+                'targetMapId': 0,
+                'targetCellX': clear_leave['enterCellX'],
+                'targetCellY': clear_leave['enterCellY'],
+                'source': 'PC clearskill testhole.lua LeaveGame: derive clear map from current test map group, reset fight/pk/punish/logout/death/revive state, LeaveTeam, NewWorld to CSP_ClearHoleTab',
+                **clear_leave,
+            })
+            continue
         if actions.get('talks'):
             continue
         fight_state_setpos = conditional_fight_state_setpos(source)
@@ -1477,6 +1602,8 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapTaskSetPosMessageActions': sum(1 for e in entries if e['actionKind'] == 'TaskSetPosMessage'),
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
+        'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),
+        'deterministicTrapClearSkillLeaveGameActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillLeaveGame'),
     }
     return entries, coverage
 

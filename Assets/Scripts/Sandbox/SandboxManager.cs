@@ -86,6 +86,12 @@ namespace VLTK.Sandbox
         public int CurrentCamp { get; private set; } = 0;
         public int OriginalCamp { get; private set; } = 0;
         public int CurrentLogoutRv { get; private set; } = 0;
+        public int CurrentPkFlag { get; private set; } = 0;
+        public int CurrentForbidChangePk { get; private set; } = 0;
+        public int CurrentPunish { get; private set; } = 0;
+        public string CurrentDeathScript { get; private set; } = string.Empty;
+        public int CurrentReviveMapId { get; private set; } = 0;
+        public int CurrentReviveId { get; private set; } = 0;
         public AssetRegistry AssetRegistry { get; private set; }
         public MapManager MapManager { get; private set; }
         public MapRenderer MapRenderer { get; private set; }
@@ -1170,6 +1176,49 @@ namespace VLTK.Sandbox
         {
             CurrentLogoutRv = value;
             SubsystemLog.Info("Sandbox", $"PC SetLogoutRV({CurrentLogoutRv}) applied");
+        }
+
+        public void SetPkFlag(int value)
+        {
+            CurrentPkFlag = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC SetPKFlag({CurrentPkFlag}) applied");
+        }
+
+        public void ForbidChangePk(int value)
+        {
+            CurrentForbidChangePk = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC ForbidChangePK({CurrentForbidChangePk}) applied");
+        }
+
+        public void SetPunish(int value)
+        {
+            CurrentPunish = Mathf.Max(0, value);
+            SubsystemLog.Info("Sandbox", $"PC SetPunish({CurrentPunish}) applied");
+        }
+
+        public void SetTaskTemp(int taskId, int value)
+        {
+            if (taskId > 0)
+                TaskFlagService?.SetFlag(taskId, value);
+            SubsystemLog.Info("Sandbox", $"PC SetTaskTemp({taskId},{value}) applied");
+        }
+
+        public void SetDeathScript(string scriptPath)
+        {
+            CurrentDeathScript = scriptPath ?? string.Empty;
+            SubsystemLog.Info("Sandbox", $"PC SetDeathScript({CurrentDeathScript}) applied");
+        }
+
+        public void LeaveTeamForPcTrap()
+        {
+            SubsystemLog.Info("Sandbox", "PC LeaveTeam() recorded for trap action");
+        }
+
+        public void SetRevPos(int mapId, int reviveId)
+        {
+            CurrentReviveMapId = mapId;
+            CurrentReviveId = reviveId;
+            SubsystemLog.Info("Sandbox", $"PC SetRevPos({mapId},{reviveId}) applied");
         }
 
         private void ApplyActiveMapBoundsToPlayer()
