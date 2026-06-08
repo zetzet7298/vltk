@@ -298,6 +298,8 @@ namespace VLTK.Tests.Sandbox
             StringAssert.Contains("RegisterClick(root, \"ChatChannelToggleBtn\", OnChatChannelToggleClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"ChatTabGuild\", () => SelectChatChannel(ChatChannel.Guild))", controller);
             StringAssert.Contains("RegisterClick(root, \"MinimapMarkerBtn\", OnMinimapMarkerClick)", controller);
+            StringAssert.Contains("FlagImage=地图小旗帜.spr", controller, "PC BtnFlag must place a real minimap flag, not only open a generic search panel.");
+            StringAssert.Contains("_lastMoveTarget = target", controller, "PC BtnFlag must persist the flag target used by minimap dots.");
             StringAssert.Contains("RegisterClick(root, \"CaveMapBtn\", OnCaveMapClick)", controller);
             StringAssert.Contains("RegisterClick(root, \"PcShortcutToggleBtn\", OnPcShortcutToggleClick)", controller);
             StringAssert.Contains("RegisterClick(root, $\"PcItemSlot{slot}\", () => OnPcItemShortcutClick(slot))", controller);

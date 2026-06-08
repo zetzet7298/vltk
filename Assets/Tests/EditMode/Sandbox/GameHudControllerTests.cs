@@ -338,8 +338,10 @@ namespace VLTK.Tests.Sandbox
             InvokePrivateMethod("OnMinimapMarkerClick");
             Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
             Assert.AreEqual("Đánh dấu bản đồ", _pcToolTitle.text);
+            Assert.IsTrue(GetPrivateField<Vector2?>("_lastMoveTarget").HasValue, "PC BtnFlag must immediately create a map flag target.");
             var labels = _pcToolList.Query<Label>().ToList();
-            Assert.IsTrue(labels.Exists(l => l.text.Contains("đánh dấu")));
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Cắm cờ")));
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("FlagImage=地图小旗帜.spr")));
         }
 
         [Test]

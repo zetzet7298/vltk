@@ -1956,13 +1956,39 @@ namespace VLTK.UI
 
         private void OnMinimapMarkerClick()
         {
+            var target = _lastMoveTarget ?? ResolveCurrentPlayerWorldForFlag();
+            _lastMoveTarget = target;
+
+            if (_bridge != null)
+            {
+                var snap = _bridge.BuildSnapshot();
+                if (snap.valid && snap.activeMap != null)
+                    UpdateMinimapDots(snap);
+            }
+
             OpenMapPreview();
             if (_mapPreviewCoords != null)
-                _mapPreviewCoords.text = _lastMoveTarget.HasValue
-                    ? $"Đánh dấu: {FormatPcScenePos(_lastMoveTarget.Value)}"
-                    : "Chạm bản đồ lớn để đánh dấu điểm đến";
-            OpenPcToolPanel("Đánh dấu bản đồ", new[] { _mapPreviewCoords?.text ?? "Chạm bản đồ lớn để đánh dấu điểm đến" });
-            SubsystemLog.Info("HUD", "Open minimap marker");
+                _mapPreviewCoords.text = $"Cắm cờ: {FormatPcScenePos(target)}";
+            OpenPcToolPanel("Đánh dấu bản đồ", new[]
+            {
+                $"Đã cắm cờ: {FormatPcScenePos(target)}",
+                "PC: ec10b91e/f8bf2550 [BtnFlag] dùng 小地图－旗帜按钮.spr + FlagImage=地图小旗帜.spr.",
+                "Chạm bản đồ lớn để dời cờ/đặt điểm đến.",
+            });
+            SubsystemLog.Info("HUD", $"Set minimap flag {target} ({FormatPcScenePos(target)})");
+        }
+
+        private Vector2 ResolveCurrentPlayerWorldForFlag()
+        {
+            if (_bridge != null)
+            {
+                var snap = _bridge.BuildSnapshot();
+                if (snap.valid)
+                    return snap.playerPosition;
+            }
+
+            var player = SandboxManager.Instance != null ? SandboxManager.Instance.PlayerController : FindObjectOfType<SandboxPlayerController>();
+            return player != null ? (Vector2)player.transform.position : Vector2.zero;
         }
 
         private void OnToggleMapClick()
