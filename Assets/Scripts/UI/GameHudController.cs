@@ -143,6 +143,13 @@ namespace VLTK.UI
         private int _guildRecruitPage;
         private string _guildRecordTab = "BtnWeekDaily";
         private string _guildSortMode = "rank";
+        private int _mallPage;
+        private int _mallQuantity = 1;
+        private int _mallCartCount;
+        private bool _mallCartOpen;
+        private string _mallSellType = "all";
+        private int _treasureChestBet;
+        private bool _treasureChestSpun;
         private float _defaultRunSpeed;
         private TradeSession _tradeSession;
         private PartyMember _tradeTarget;
@@ -3238,39 +3245,161 @@ namespace VLTK.UI
 
         private void OnTreasureClick()
         {
+            OpenPcTreasureMallPanel("Mở Kỳ Trân Các / Bảo Vật");
+            SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+        }
+
+        private void OpenPcTreasureMallPanel(string statusLine = null)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Bảo Vật";
+            _pcToolList.Clear();
+
             var manager = SandboxManager.Instance;
-            var rows = new List<string>();
-
             var mall = MallPanelService.BuildSnapshot(manager?.MallService, 1, 0);
-            rows.Add($"Kỳ Trân Các: {mall.availableItems}/{mall.totalItems} vật phẩm, đang ưu đãi {mall.onSaleItems}.");
-            if (mall.rows != null)
-            {
-                int shown = 0;
-                foreach (var r in mall.rows)
-                {
-                    rows.Add($"Mall #{r.mallItemId}: {r.itemName} — {r.effectivePrice} {r.currency}, tồn {r.stock}");
-                    if (++shown >= 4) break;
-                }
-            }
-
             int currentMapId = manager?.MapManager?.ActiveMapId ?? 0;
             var playerPos = manager?.PlayerController != null
                 ? (Vector2)manager.PlayerController.transform.position
                 : Vector2.zero;
             var treasure = TreasureHuntPanelService.BuildSnapshot(manager?.TreasureHuntService, 1, currentMapId, playerPos.x, playerPos.y);
-            rows.Add($"Săn kho báu: gần {treasure.nearbyTreasures}/{treasure.totalTreasures} điểm trên map {currentMapId}.");
+
+            if (!string.IsNullOrEmpty(statusLine))
+                AddPcToolRow(statusLine);
+            foreach (var row in TreasureMallPanelService.BuildRows(mall, treasure, _mallPage, _mallQuantity, _mallCartCount, _mallCartOpen, _treasureChestBet))
+                AddPcToolRow(row);
+            if (mall.rows != null)
+            {
+                int shown = 0;
+                foreach (var r in mall.rows)
+                {
+                    AddPcToolRow($"Mall #{r.mallItemId}: {r.itemName} — {r.effectivePrice} {r.currency}, tồn {r.stock}");
+                    if (++shown >= 4) break;
+                }
+            }
             if (treasure.rows != null)
             {
                 int shown = 0;
                 foreach (var r in treasure.rows)
                 {
-                    rows.Add($"Kho #{r.treasureId}: {r.itemName} x{r.itemCount}, cách {r.distance:0}.");
+                    AddPcToolRow($"Kho #{r.treasureId}: {r.itemName} x{r.itemCount}, cách {r.distance:0}.");
                     if (++shown >= 4) break;
                 }
             }
+            foreach (var control in TreasureMallPanelService.PcControls)
+            {
+                var section = control.pcSection;
+                AddPcToolActionRow($"PC {control.pcFile} [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcTreasureMallControlClick(section));
+            }
 
-            OpenPcToolPanel("Bảo Vật", rows);
-            SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcTreasureMallControlClick(string pcSection)
+        {
+            var manager = SandboxManager.Instance;
+            switch (pcSection)
+            {
+                case "PrePaid":
+                    OpenPcTreasureMallPanel("PC [PrePaid]: mở luồng nạp thẻ Kỳ Trân Các.");
+                    break;
+                case "LeftBtn":
+                    _mallPage = Mathf.Max(0, _mallPage - 1);
+                    OpenPcTreasureMallPanel("PC [LeftBtn]: đã lùi trang hàng.");
+                    break;
+                case "RightBtn":
+                    _mallPage++;
+                    OpenPcTreasureMallPanel("PC [RightBtn]: đã sang trang hàng.");
+                    break;
+                case "SellType":
+                    _mallSellType = _mallSellType == "all" ? "sale" : "all";
+                    OpenPcTreasureMallPanel($"PC [SellType]: loại hàng={_mallSellType}.");
+                    break;
+                case "ShoppingCart":
+                    _mallCartOpen = true;
+                    OpenPcTreasureMallPanel("PC [ShoppingCart]: đã mở giỏ hàng.");
+                    break;
+                case "MarketGoods_Buy":
+                    if (TryGetFirstMallItem(manager?.MallService, out var mallItemId) && MallPanelService.TryBuy(manager?.MallService, 1, mallItemId, 0))
+                    {
+                        _mallCartCount = Mathf.Max(1, _mallCartCount + 1);
+                        OpenPcTreasureMallPanel($"PC [MarketGoods_Buy]: đã thêm Mall #{mallItemId} vào giỏ.");
+                    }
+                    else OpenPcTreasureMallPanel("PC [MarketGoods_Buy]: chưa có hàng hợp lệ để mua.");
+                    break;
+                case "GoodsInfo_AddCount":
+                    _mallQuantity = Mathf.Min(99, _mallQuantity + 1);
+                    OpenPcTreasureMallPanel($"PC [GoodsInfo_AddCount]: số lượng {_mallQuantity}.");
+                    break;
+                case "GoodsInfo_DelCount":
+                    _mallQuantity = Mathf.Max(1, _mallQuantity - 1);
+                    OpenPcTreasureMallPanel($"PC [GoodsInfo_DelCount]: số lượng {_mallQuantity}.");
+                    break;
+                case "GoodsInfo_DelItem":
+                    _mallCartCount = Mathf.Max(0, _mallCartCount - 1);
+                    OpenPcTreasureMallPanel($"PC [GoodsInfo_DelItem]: giỏ còn {_mallCartCount} dòng.");
+                    break;
+                case "ConfirmBuy":
+                    OpenPcTreasureMallPanel(_mallCartCount > 0 ? "PC [ConfirmBuy]: đã xác nhận mua giỏ hàng." : "PC [ConfirmBuy]: giỏ hàng trống.");
+                    if (_mallCartCount > 0) _mallCartCount = 0;
+                    break;
+                case "CloseBtn":
+                case "CloseCartBtn":
+                    if (pcSection == "CloseCartBtn")
+                    {
+                        _mallCartOpen = false;
+                        OpenPcTreasureMallPanel("PC [CloseCartBtn]: đã đóng giỏ hàng.");
+                    }
+                    else
+                    {
+                        ClosePcToolPanel();
+                    }
+                    break;
+                case "btn_cathectic1":
+                    _treasureChestBet = 2;
+                    OpenPcTreasureMallPanel("PC [btn_cathectic1]: cược 2 Hồn Nguyệt Linh Lộ.");
+                    break;
+                case "btn_cathectic2":
+                    _treasureChestBet = 10;
+                    OpenPcTreasureMallPanel("PC [btn_cathectic2]: cược 10 Hồn Nguyệt Linh Lộ.");
+                    break;
+                case "btn_cathectic3":
+                    _treasureChestBet = 20;
+                    OpenPcTreasureMallPanel("PC [btn_cathectic3]: cược 20 Hồn Nguyệt Linh Lộ.");
+                    break;
+                case "btn_begin":
+                    _treasureChestSpun = _treasureChestBet > 0;
+                    OpenPcTreasureMallPanel(_treasureChestSpun ? "PC [btn_begin]: đã bắt đầu rút thưởng." : "PC [btn_begin]: cần chọn mức cược trước.");
+                    break;
+                case "btn_award":
+                    OpenPcTreasureMallPanel(_treasureChestSpun ? "PC [btn_award]: đã nhận thưởng rương báu." : "PC [btn_award]: chưa có lượt quay để nhận thưởng.");
+                    _treasureChestSpun = false;
+                    break;
+                case "btn_vigour":
+                    OpenPcTreasureMallPanel("PC [btn_vigour]: đã nhận Hồn Nguyệt Linh Lộ nếu có thưởng tích lũy.");
+                    break;
+                case "btn_close":
+                    _treasureChestBet = 0;
+                    _treasureChestSpun = false;
+                    OpenPcTreasureMallPanel("PC [btn_close]: đã đóng rương báu.");
+                    break;
+            }
+        }
+
+        private static bool TryGetFirstMallItem(MallService mall, out int mallItemId)
+        {
+            mallItemId = 0;
+            if (mall == null || mall.All == null)
+                return false;
+            foreach (var entry in mall.All)
+            {
+                if (entry == null) continue;
+                mallItemId = entry.mallItemId;
+                return true;
+            }
+            return false;
         }
 
         private void SetButtonActive(string name, bool active)

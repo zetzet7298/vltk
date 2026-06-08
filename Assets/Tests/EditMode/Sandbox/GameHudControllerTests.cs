@@ -527,7 +527,7 @@ namespace VLTK.Tests.Sandbox
             InvokeAndAssertPcTool(covered, "PK", "OnPKClick", "PK", "Tự do");
             Assert.IsTrue(_root.Q("BtnPK").ClassListContains("active"));
 
-            InvokeAndAssertPcTool(covered, "Treasure", "OnTreasureClick", "Bảo Vật", "Kỳ Trân Các");
+            InvokeAndAssertPcTool(covered, "Treasure", "OnTreasureClick", "Bảo Vật", "PC 9e5f75d1 [PrePaid] Nạp thẻ");
             InvokeAndAssertPcTool(covered, "Status", "OnStatusClick", CharacterPanelService.Title, "Sinh lực");
 
             covered.Add("Items");
@@ -557,6 +557,39 @@ namespace VLTK.Tests.Sandbox
         }
 
 
+
+
+        [Test]
+        public void PcTreasureMallControls_AreClickableAndExecutePcActions()
+        {
+            InvokePrivateMethod("OnTreasureClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Bảo Vật", _pcToolTitle.text);
+            var actionRows = _pcToolList.Query<VisualElement>(className: "hud-pc-tool-action-row").ToList();
+            Assert.AreEqual(TreasureMallPanelService.PcControls.Count, actionRows.Count, "PC mall/cart/treasure controls must be action rows, not inert text.");
+
+            InvokePrivateMethod("OnPcTreasureMallControlClick", "RightBtn");
+            Assert.AreEqual(1, GetPrivateField<int>("_mallPage"));
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [RightBtn]: đã sang trang hàng")));
+
+            InvokePrivateMethod("OnPcTreasureMallControlClick", "ShoppingCart");
+            Assert.IsTrue(GetPrivateField<bool>("_mallCartOpen"));
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [ShoppingCart]: đã mở giỏ hàng")));
+
+            InvokePrivateMethod("OnPcTreasureMallControlClick", "GoodsInfo_AddCount");
+            Assert.AreEqual(2, GetPrivateField<int>("_mallQuantity"));
+
+            InvokePrivateMethod("OnPcTreasureMallControlClick", "btn_cathectic2");
+            Assert.AreEqual(10, GetPrivateField<int>("_treasureChestBet"));
+
+            InvokePrivateMethod("OnPcTreasureMallControlClick", "btn_begin");
+            Assert.IsTrue(GetPrivateField<bool>("_treasureChestSpun"));
+
+            InvokePrivateMethod("OnPcTreasureMallControlClick", "CloseCartBtn");
+            Assert.IsFalse(GetPrivateField<bool>("_mallCartOpen"));
+        }
 
         [Test]
         public void PcExchangeControls_AreClickableAndExecutePcActions()
