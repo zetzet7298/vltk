@@ -559,6 +559,46 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PcFriendControls_AreClickableAndExecutePcActions()
+        {
+            InvokePrivateMethod("OnFriendClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Bằng hữu", _pcToolTitle.text);
+            var actionRows = _pcToolList.Query<VisualElement>(className: "hud-pc-tool-action-row").ToList();
+            Assert.AreEqual(10, actionRows.Count, "PC 2b9c5056 active controls must be action rows, not inert text.");
+
+            InvokePrivateMethod("OnPcFriendControlClick", "UnitBtnEnemy");
+            Assert.AreEqual("UnitBtnEnemy", GetPrivateField<string>("_friendFilter"));
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("lọc Cừu nhân")));
+
+            InvokePrivateMethod("OnPcFriendControlClick", "GroupBtn");
+            Assert.IsFalse(GetPrivateField<bool>("_friendGroupExpanded"));
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Nhóm bằng hữu đang thu gọn")));
+
+            InvokePrivateMethod("OnPcFriendControlClick", "ScrollDown");
+            Assert.AreEqual(1, GetPrivateField<int>("_friendScrollOffset"));
+            InvokePrivateMethod("OnPcFriendControlClick", "ScrollUp");
+            Assert.AreEqual(0, GetPrivateField<int>("_friendScrollOffset"));
+
+            InvokePrivateMethod("OnPcFriendControlClick", "Invisible");
+            Assert.AreEqual("Đồng hành", _pcToolTitle.text);
+            Assert.IsTrue(GetPrivateField<bool>("_friendInvisible"));
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Đã bật trạng thái")));
+
+            InvokePrivateMethod("OnPcFriendControlClick", "FindBtn");
+            Assert.AreEqual("Thêm bạn hữu", _pcToolTitle.text);
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [FindBtn]")));
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            InvokePrivateMethod("OnPcFriendControlClick", "CloseBtn");
+            Assert.IsTrue(_pcToolPanel.ClassListContains("hidden"));
+        }
+
+        [Test]
         public void PcSystemMenuRows_AreClickableAndExecutePcActions()
         {
             InvokePrivateMethod("OnOptionsClick");

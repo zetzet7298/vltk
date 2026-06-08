@@ -133,6 +133,10 @@ namespace VLTK.UI
         private bool _recEnabled;
         private bool _pkEnabled;
         private bool _offlineMode;
+        private bool _friendGroupExpanded = true;
+        private bool _friendInvisible;
+        private int _friendScrollOffset;
+        private string _friendFilter = "UnitBtnFriend";
         private float _defaultRunSpeed;
         private TradeSession _tradeSession;
         private PartyMember _tradeTarget;
@@ -2145,13 +2149,103 @@ namespace VLTK.UI
         private void OnFriendClick()
         {
             var snap = FriendPanelService.BuildSnapshot(SandboxManager.Instance?.FriendService, 1);
-            var rows = new List<string> { $"Bằng hữu: {snap.friendCount}/{snap.maxFriends}" };
-            foreach (var control in snap.controls)
-                rows.Add($"PC [{control.pcSection}] {control.labelVi}: {control.actionVi}");
-            foreach (var friendRow in snap.friendRows)
-                rows.Add(friendRow);
-            OpenPcToolPanel("Bằng hữu", rows);
+            OpenPcFriendPanel(snap);
             SubsystemLog.Info("HUD", "Open Friend panel");
+        }
+
+        private void OpenPcFriendPanel(FriendPanelSnapshot snap)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Bằng hữu";
+            _pcToolList.Clear();
+
+            AddPcToolRow($"Bằng hữu: {snap.friendCount}/{snap.maxFriends} — lọc {FriendFilterLabel(_friendFilter)} — nhóm {(_friendGroupExpanded ? "mở" : "thu")} — ẩn thân {(_friendInvisible ? "bật" : "tắt")}");
+            if (snap.controls != null)
+            {
+                foreach (var control in snap.controls)
+                {
+                    var section = control.pcSection;
+                    AddPcToolActionRow($"PC [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcFriendControlClick(section));
+                }
+            }
+
+            if (_friendGroupExpanded)
+            {
+                if (snap.friendRows != null)
+                {
+                    int index = 0;
+                    foreach (var friendRow in snap.friendRows)
+                    {
+                        if (index++ < _friendScrollOffset) continue;
+                        AddPcToolRow($"{FriendFilterLabel(_friendFilter)}: {friendRow}");
+                    }
+                }
+            }
+            else
+            {
+                AddPcToolRow("Nhóm bằng hữu đang thu gọn.");
+            }
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcFriendControlClick(string pcSection)
+        {
+            switch (pcSection)
+            {
+                case "GroupBtn":
+                    _friendGroupExpanded = !_friendGroupExpanded;
+                    OnFriendClick();
+                    break;
+                case "UnitBtnFriend":
+                case "UnitBtnBrother":
+                case "UnitBtnEnemy":
+                case "UnitBtnOther":
+                    _friendFilter = pcSection;
+                    _friendScrollOffset = 0;
+                    OnFriendClick();
+                    break;
+                case "FindBtn":
+                    OpenPcToolPanel("Thêm bạn hữu", new[]
+                    {
+                        @"PC [FindBtn] \Spr\Ui3\好友qq\好友－查找.spr",
+                        "Mở tìm/thêm bạn hữu theo FriendService runtime; nhập tên người chơi trong luồng xã giao.",
+                    });
+                    break;
+                case "Invisible":
+                    _friendInvisible = !_friendInvisible;
+                    OpenPcToolPanel("Đồng hành", new[]
+                    {
+                        @"PC [Invisible] \Spr\Ui3\好友qq\好友－隐身.spr",
+                        _friendInvisible ? "Đã bật trạng thái ẩn/đồng hành." : "Đã tắt trạng thái ẩn/đồng hành.",
+                    });
+                    break;
+                case "ScrollUp":
+                    _friendScrollOffset = System.Math.Max(0, _friendScrollOffset - 1);
+                    OnFriendClick();
+                    break;
+                case "ScrollDown":
+                    _friendScrollOffset++;
+                    OnFriendClick();
+                    break;
+                case "CloseBtn":
+                    ClosePcToolPanel();
+                    break;
+            }
+        }
+
+        private static string FriendFilterLabel(string pcSection)
+        {
+            switch (pcSection)
+            {
+                case "UnitBtnBrother": return "Huynh đệ";
+                case "UnitBtnEnemy": return "Cừu nhân";
+                case "UnitBtnOther": return "Khác";
+                default: return "Bạn hữu";
+            }
         }
 
 
