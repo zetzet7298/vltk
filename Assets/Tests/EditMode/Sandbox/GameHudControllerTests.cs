@@ -517,8 +517,7 @@ namespace VLTK.Tests.Sandbox
 
             InvokeAndAssertPcTool(covered, "Horse", "OnHorseClick", "Lên xuống ngựa", "Player runtime");
 
-            covered.Add("Exchange");
-            InvokePrivateMethod("OnExchangeClick");
+            InvokeAndAssertPcTool(covered, "Exchange", "OnExchangeClick", "Giao dịch", "PC [OkBtn] Khóa giao dịch");
             Assert.IsFalse(_tradeInfoPanel.ClassListContains("hidden"));
             StringAssert.Contains("Chưa chọn người chơi", _tradePartnerName.text);
 
@@ -557,6 +556,33 @@ namespace VLTK.Tests.Sandbox
             CollectionAssert.AreEquivalent(HudBottomBarPcSpec.ToolControlBar.Keys, covered);
         }
 
+
+
+        [Test]
+        public void PcExchangeControls_AreClickableAndExecutePcActions()
+        {
+            InvokePrivateMethod("OnExchangeClick");
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.AreEqual("Giao dịch", _pcToolTitle.text);
+            var actionRows = _pcToolList.Query<VisualElement>(className: "hud-pc-tool-action-row").ToList();
+            Assert.AreEqual(ExchangePanelService.PcControls.Count, actionRows.Count, "PC d84aceb8 trade command buttons must be action rows, not inert text.");
+
+            InvokePrivateMethod("OnPcExchangeControlClick", "OkBtn");
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [OkBtn]: chưa có phiên giao dịch")));
+
+            InvokePrivateMethod("OnPcExchangeControlClick", "AddMoney");
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [AddMoney]: chưa có phiên giao dịch")));
+
+            InvokePrivateMethod("OnPcExchangeControlClick", "TradeBtn");
+            labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC [TradeBtn]: đang chờ cả hai bên khóa")));
+
+            InvokePrivateMethod("OnPcExchangeControlClick", "CancelBtn");
+            Assert.IsTrue(_pcToolPanel.ClassListContains("hidden"));
+            Assert.IsTrue(_tradeInfoPanel.ClassListContains("hidden"));
+        }
 
         [Test]
         public void PcTeamControls_AreClickableAndExecutePcActions()

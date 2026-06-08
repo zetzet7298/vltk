@@ -2908,7 +2908,6 @@ namespace VLTK.UI
 
         private void OnExchangeClick()
         {
-            ClosePcToolPanel();
             if (_tradeInfoPanel != null)
             {
                 bool hide = !_tradeInfoPanel.ClassListContains("hidden");
@@ -2919,6 +2918,7 @@ namespace VLTK.UI
                     _tradeEconomy = null;
                     _tradeInfoPanel.AddToClassList("hidden");
                     SetButtonActive("BtnExchange", false);
+                    ClosePcToolPanel();
                 }
                 else
                 {
@@ -2927,9 +2927,91 @@ namespace VLTK.UI
                     BeginExchangeSession(manager?.GameplayLoop?.Economy, manager?.PartyService?.Members);
                     PopulateTradeInfo();
                     SetButtonActive("BtnExchange", _tradeSession != null);
+                    OpenPcExchangePanel("Mở giao dịch người chơi");
                 }
                 SubsystemLog.Info("HUD", hide ? "Close Exchange" : "Open Exchange");
             }
+        }
+
+        private void OpenPcExchangePanel(string statusLine = null)
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Giao dịch";
+            _pcToolList.Clear();
+
+            if (!string.IsNullOrEmpty(statusLine))
+                AddPcToolRow(statusLine);
+            foreach (var row in ExchangePanelService.BuildRows(_tradeSession, _tradeTarget, _tradeEconomy ?? SandboxManager.Instance?.GameplayLoop?.Economy))
+                AddPcToolRow(row);
+            foreach (var control in ExchangePanelService.PcControls)
+            {
+                var section = control.pcSection;
+                AddPcToolActionRow($"PC [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcExchangeControlClick(section));
+            }
+
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+        }
+
+        private void OnPcExchangeControlClick(string pcSection)
+        {
+            switch (pcSection)
+            {
+                case "OkBtn":
+                    if (_tradeSession != null)
+                    {
+                        _tradeSession.Lock(SandboxManager.PlayerActorId);
+                        PopulateTradeInfo();
+                        OpenPcExchangePanel("PC [OkBtn]: đã khóa giao dịch của bản thân.");
+                    }
+                    else
+                    {
+                        OpenPcExchangePanel("PC [OkBtn]: chưa có phiên giao dịch để khóa.");
+                    }
+                    break;
+                case "TradeBtn":
+                    if (_tradeSession != null && _tradeSession.IsReady)
+                    {
+                        OpenPcExchangePanel("PC [TradeBtn]: giao dịch đủ điều kiện xác nhận cuối.");
+                    }
+                    else
+                    {
+                        OpenPcExchangePanel("PC [TradeBtn]: đang chờ cả hai bên khóa giao dịch.");
+                    }
+                    break;
+                case "CancelBtn":
+                    _tradeSession = null;
+                    _tradeTarget = null;
+                    _tradeEconomy = null;
+                    _tradeInfoPanel?.AddToClassList("hidden");
+                    SetButtonActive("BtnExchange", false);
+                    ClosePcToolPanel();
+                    break;
+                case "AddMoney":
+                    AdjustTradeSilver(100);
+                    break;
+                case "ReduceMoney":
+                    AdjustTradeSilver(-100);
+                    break;
+            }
+        }
+
+        private void AdjustTradeSilver(int delta)
+        {
+            if (_tradeSession == null)
+            {
+                OpenPcExchangePanel(delta > 0 ? "PC [AddMoney]: chưa có phiên giao dịch." : "PC [ReduceMoney]: chưa có phiên giao dịch.");
+                return;
+            }
+
+            var economy = _tradeEconomy ?? SandboxManager.Instance?.GameplayLoop?.Economy;
+            int wallet = economy != null ? economy.Wallet.silver : int.MaxValue;
+            int next = Mathf.Clamp(_tradeSession.initiatorSilver + delta, 0, wallet);
+            _tradeSession.SetSilver(SandboxManager.PlayerActorId, next);
+            PopulateTradeInfo();
+            OpenPcExchangePanel(delta > 0 ? $"PC [AddMoney]: đã tăng bạc đặt lên {next}." : $"PC [ReduceMoney]: đã giảm bạc đặt còn {next}.");
         }
 
         private TradeSession BeginExchangeSession(EconomyService economy, IReadOnlyList<PartyMember> members)
