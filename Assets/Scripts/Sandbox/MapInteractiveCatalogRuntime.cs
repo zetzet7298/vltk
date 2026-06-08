@@ -43,6 +43,7 @@ namespace VLTK.Sandbox
         public string serverMapPath;
         public int trapCount;
         public int objectCount;
+        public int[] staticTrapClearMapIds;
         public MapInteractiveTrap[] traps;
         public MapInteractiveObject[] objects;
 
@@ -65,7 +66,19 @@ namespace VLTK.Sandbox
         public int cellY;
         public int numCell;
         public uint trapId;
+        public string trapIdHex;
+        public bool scriptResolved;
+        public string scriptPath;
+        public int[] inactiveMapIds;
         public int reserved;
+
+        public bool IsInactiveForMap(int mapId)
+        {
+            if (inactiveMapIds == null) return false;
+            for (int i = 0; i < inactiveMapIds.Length; i++)
+                if (inactiveMapIds[i] == mapId) return true;
+            return false;
+        }
     }
 
     [Serializable]

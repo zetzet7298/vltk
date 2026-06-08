@@ -90,6 +90,7 @@ namespace VLTK.Sandbox
         public MobileJoystick PlayerJoystick { get; private set; }
         public MapEnemySpawnRuntime EnemyRuntime { get; private set; }
         public MapInteractiveObjectRuntime ObjectRuntime { get; private set; }
+        public MapTrapRuntime TrapRuntime { get; private set; }
         public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
         public TrainingNpcSpawner TrainingSpawner { get; private set; }
         public FemalePlayerVisual FemalePlayerVisual { get; private set; }
@@ -434,9 +435,11 @@ namespace VLTK.Sandbox
                         ApplyActiveMapBoundsToPlayer();
                         EnsureEnemyRuntime();
                         EnsureObjectRuntime();
+                        EnsureTrapRuntime();
                         PlacePlayerOnActiveMap();
                         SpawnEnemiesForActiveMap();
                         RenderObjectsForActiveMap();
+                        BuildTrapsForActiveMap();
                         SpawnTrainingNpcs();
                         ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
@@ -445,6 +448,7 @@ namespace VLTK.Sandbox
                 MapManager.OnMapUnloaded += (mapId) => {
                     EnemyRuntime?.Clear();
                     ObjectRuntime?.Clear();
+                    TrapRuntime?.Clear();
                     MapRenderer.Clear();
                 };
 
@@ -974,6 +978,15 @@ namespace VLTK.Sandbox
             ObjectRuntime = objectGo.AddComponent<MapInteractiveObjectRuntime>();
         }
 
+        private void EnsureTrapRuntime()
+        {
+            if (TrapRuntime != null || worldRoot == null)
+                return;
+            var trapGo = new GameObject("MapTrapRuntime");
+            trapGo.transform.SetParent(worldRoot, false);
+            TrapRuntime = trapGo.AddComponent<MapTrapRuntime>();
+        }
+
         private void SpawnEnemiesForActiveMap()
         {
             if (EnemyRuntime == null || MapManager?.ActiveMap == null)
@@ -988,6 +1001,13 @@ namespace VLTK.Sandbox
             if (ObjectRuntime == null || MapManager?.ActiveMap == null)
                 return;
             ObjectRuntime.RenderForMap(MapManager.ActiveMap);
+        }
+
+        private void BuildTrapsForActiveMap()
+        {
+            if (TrapRuntime == null || MapManager?.ActiveMap == null)
+                return;
+            TrapRuntime.BuildForMap(MapManager.ActiveMap);
         }
 
         private string ResolveRegionSFolderForActiveMap()

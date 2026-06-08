@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import json
+import os
 import re
 import shutil
 import struct
@@ -26,6 +27,7 @@ PC_ROOT = Path('/var/www/vltksource_new/vl_update_27')
 JX_MAP_PORT = UNITY_ROOT / 'harness/.codex/skills/jx-map-port/scripts/jx_map_port.py'
 VLTK_DECODE = Path('/var/www/vltktool/decode_item_texts_vi.py')
 REGION_FILE_RE = re.compile(r'^(\d+)_(\d+)_Region_S\.dat$', re.IGNORECASE)
+KILLBOSSMATCH_MAP_IDS = set(range(907, 917))
 
 
 def load_module(path: Path, name: str):
@@ -242,6 +244,104 @@ def stage_object_templates(templates: dict[int, dict[str, Any]], used_template_i
     return catalog, coverage
 
 
+def server_root(pc_root: Path) -> Path:
+    return pc_root / 'Server 6.0/server/home_jxser_bachkim_6.0/server1'
+
+
+def decode_gbk(raw: bytes) -> str:
+    return raw.decode('gbk', errors='replace')
+
+
+def decode_server_text(raw: bytes) -> str:
+    for enc in ('gb18030', 'gbk', 'utf-8'):
+        try:
+            return raw.decode(enc)
+        except Exception:
+            continue
+    return raw.decode('gb18030', errors='replace')
+
+
+def script_action_summary(source: str) -> dict[str, Any]:
+    new_world = []
+    for match in re.finditer(r'\bNewWorld\s*\(([^)]*)\)', source):
+        args = [part.strip() for part in match.group(1).split(',')]
+        new_world.append(args[:3])
+    set_pos = []
+    for match in re.finditer(r'\bSetPos\s*\(([^)]*)\)', source):
+        args = [part.strip() for part in match.group(1).split(',')]
+        set_pos.append(args[:2])
+    return {
+        'hasMain': re.search(r'function\s+main\s*\(', source) is not None,
+        'newWorldCalls': new_world[:8],
+        'setPosCalls': set_pos[:8],
+        'setsFightState': 'SetFightState' in source,
+        'talks': 'Talk(' in source or 'Msg2Player' in source,
+    }
+
+
+def build_script_hash_index(root: Path) -> dict[int, dict[str, Any]]:
+    root_b = os.fsencode(root)
+    index: dict[int, dict[str, Any]] = {}
+    if not os.path.isdir(root_b):
+        return index
+    for dirpath, _dirnames, filenames in os.walk(root_b):
+        for filename in filenames:
+            if not filename.lower().endswith((b'.lua', b'.txt', b'.ini', b'.cfg', b'.tab')):
+                continue
+            full = os.path.join(dirpath, filename)
+            rel = os.path.relpath(full, root_b).replace(os.sep.encode(), b'\\')
+            source_bytes = b'\\' + rel
+            script_id = jx.g_filename2id(source_bytes)
+            entry = index.setdefault(script_id, {
+                'trapId': script_id,
+                'trapIdHex': f'0x{script_id:08X}',
+                'scriptPath': decode_gbk(source_bytes),
+                'sourceRelPath': decode_gbk(rel),
+                'sourceFile': os.fsdecode(full),
+            })
+            if source_bytes.lower().startswith(b'\\script') and not entry['scriptPath'].lower().startswith('\\script'):
+                entry.update({
+                    'scriptPath': decode_gbk(source_bytes),
+                    'sourceRelPath': decode_gbk(rel),
+                    'sourceFile': os.fsdecode(full),
+                })
+    return index
+
+
+def build_trap_script_catalog(trap_ids: set[int], pc_root: Path) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    root = server_root(pc_root)
+    script_index = build_script_hash_index(root)
+    entries: list[dict[str, Any]] = []
+    resolved = 0
+    for trap_id in sorted(trap_ids):
+        src = script_index.get(trap_id)
+        entry = {
+            'trapId': trap_id,
+            'trapIdHex': f'0x{trap_id:08X}',
+            'resolved': src is not None,
+        }
+        if src:
+            resolved += 1
+            try:
+                text = decode_server_text(Path(src['sourceFile']).read_bytes())
+            except Exception:
+                text = ''
+            entry.update({
+                'scriptPath': src['scriptPath'],
+                'sourceRelPath': src['sourceRelPath'],
+                'actions': script_action_summary(text),
+            })
+        entries.append(entry)
+    coverage = {
+        'uniqueTrapIds': len(trap_ids),
+        'resolvedTrapScripts': resolved,
+        'missingTrapScripts': len(trap_ids) - resolved,
+        'missingTrapScriptIds': [f'0x{e["trapId"]:08X}' for e in entries if not e.get('resolved')],
+        'sourceScriptRoot': str(root / 'script'),
+    }
+    return entries, coverage
+
+
 def sections(data: bytes) -> tuple[int, int, list[tuple[int, int]]]:
     if len(data) < 4:
         return 0, 0, []
@@ -382,8 +482,24 @@ def enrich_object(obj: dict[str, Any], templates: dict[int, dict[str, Any]]) -> 
     return obj
 
 
+def enrich_traps_in_geometries(geometries: list[dict[str, Any]], trap_scripts: dict[int, dict[str, Any]]) -> None:
+    for geometry in geometries:
+        inactive_maps = [mid for mid in geometry.get('mapIds', []) if mid in KILLBOSSMATCH_MAP_IDS]
+        if inactive_maps:
+            geometry['staticTrapClearMapIds'] = inactive_maps
+        for trap in geometry.get('traps', []):
+            trap_id = int(trap.get('trapId', 0))
+            script = trap_scripts.get(trap_id)
+            trap['trapIdHex'] = f'0x{trap_id:08X}'
+            trap['scriptResolved'] = bool(script and script.get('resolved'))
+            if script and script.get('resolved'):
+                trap['scriptPath'] = script.get('scriptPath', '')
+            if inactive_maps:
+                trap['inactiveMapIds'] = inactive_maps
+
+
 def build_catalog(region_root: Path, server_catalog_path: Path,
-                  obj_templates: dict[int, dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any], set[int]]:
+                  obj_templates: dict[int, dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any], set[int], set[int]]:
     server = load_server_catalog(server_catalog_path)
     geometries = []
     total_traps = 0
@@ -429,7 +545,7 @@ def build_catalog(region_root: Path, server_catalog_path: Path,
         'uniqueTrapIds': len(unique_trap_ids),
         'uniqueObjectTemplates': len(unique_obj_templates),
     }
-    return geometries, coverage, used_template_ids
+    return geometries, coverage, used_template_ids, unique_trap_ids
 
 
 def main() -> int:
@@ -457,7 +573,9 @@ def main() -> int:
 
     start = time.time()
     obj_templates = load_objdata_templates(objdata)
-    geometries, coverage, used_template_ids = build_catalog(region_root, server_catalog, obj_templates)
+    geometries, coverage, used_template_ids, used_trap_ids = build_catalog(region_root, server_catalog, obj_templates)
+    trap_scripts, trap_coverage = build_trap_script_catalog(used_trap_ids, pc_root)
+    enrich_traps_in_geometries(geometries, {entry['trapId']: entry for entry in trap_scripts})
     object_templates, object_coverage = stage_object_templates(
         obj_templates, used_template_ids, pc_root, object_sprite_root, args.extract)
     now = utc_now()
@@ -477,6 +595,13 @@ def main() -> int:
         'spriteFolder': 'Generated/ObjectSprites',
         'templates': object_templates,
     }
+    trap_catalog = {
+        'schemaVersion': 1,
+        'generatedAtUtc': now,
+        'sourceScriptRoot': str(server_root(pc_root) / 'script'),
+        'hashRule': 'PC g_FileName2Id signed-char over leading-backslash GBK script path',
+        'entries': trap_scripts,
+    }
     coverage_payload = {
         'schemaVersion': 1,
         'generatedAtUtc': now,
@@ -487,20 +612,27 @@ def main() -> int:
         'sourceObjData': str(objdata),
         **coverage,
         **object_coverage,
+        **trap_coverage,
         'elapsedSeconds': round(time.time() - start, 3),
     }
     catalog_path = catalog_root / 'MapInteractiveCatalog.json'
     object_catalog_path = catalog_root / 'MapObjectTemplateCatalog.json'
+    trap_catalog_path = catalog_root / 'MapTrapScriptCatalog.json'
     coverage_path = catalog_root / 'MapInteractiveCoverage.json'
     object_coverage_path = catalog_root / 'MapObjectSpriteCoverage.json'
+    trap_coverage_path = catalog_root / 'MapTrapScriptCoverage.json'
     write_json(catalog_path, catalog)
     write_json(object_catalog_path, object_catalog)
+    write_json(trap_catalog_path, trap_catalog)
     write_json(coverage_path, coverage_payload)
     write_json(object_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **object_coverage})
+    write_json(trap_coverage_path, {'schemaVersion': 1, 'generatedAtUtc': now, **trap_coverage})
     make_meta(catalog_path)
     make_meta(object_catalog_path)
+    make_meta(trap_catalog_path)
     make_meta(coverage_path)
     make_meta(object_coverage_path)
+    make_meta(trap_coverage_path)
     print(json.dumps(coverage_payload, ensure_ascii=False, indent=2))
     return 0
 

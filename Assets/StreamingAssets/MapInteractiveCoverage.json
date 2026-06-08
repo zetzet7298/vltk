@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T01:05:56Z",
+  "generatedAtUtc": "2026-06-08T01:21:00Z",
   "phase": "phase4_region_s_trap_object_catalog",
   "scope": "PC Region_S trap/object catalog + exact ObjData SPR staging; traps remain invisible metadata/no gameplay placeholder",
   "sourceRegionRoot": "/var/www/vltk-mobile/Assets/StreamingAssets/Generated/MapServerRegions",
@@ -19,5 +19,11 @@
   "stagedObjectSpritePaths": 34,
   "missingObjectSpritePaths": 0,
   "missingObjectSprites": [],
-  "elapsedSeconds": 1.337
+  "resolvedTrapScripts": 816,
+  "missingTrapScripts": 1,
+  "missingTrapScriptIds": [
+    "0xF51BA9A5"
+  ],
+  "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
+  "elapsedSeconds": 1.553
 }
