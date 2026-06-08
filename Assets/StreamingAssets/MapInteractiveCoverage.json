@@ -1,10 +1,11 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T00:46:31Z",
+  "generatedAtUtc": "2026-06-08T01:05:56Z",
   "phase": "phase4_region_s_trap_object_catalog",
-  "scope": "metadata-only PC Region_S trap/object catalog; no placeholder visuals rendered",
+  "scope": "PC Region_S trap/object catalog + exact ObjData SPR staging; traps remain invisible metadata/no gameplay placeholder",
   "sourceRegionRoot": "/var/www/vltk-mobile/Assets/StreamingAssets/Generated/MapServerRegions",
   "sourceServerCatalog": "/var/www/vltk-mobile/Assets/StreamingAssets/MapServerRegionCatalog.json",
+  "sourceObjData": "/var/www/vltk-mobile/Assets/StreamingAssets/Reference/PcObj/objdata.txt",
   "totalGeometries": 332,
   "geometriesWithTraps": 235,
   "geometriesWithObjects": 81,
@@ -12,5 +13,11 @@
   "objectEntries": 453,
   "uniqueTrapIds": 817,
   "uniqueObjectTemplates": 35,
-  "elapsedSeconds": 1.001
+  "objectTemplatesUsed": 35,
+  "objectTemplatesResolved": 35,
+  "uniqueObjectSpritePaths": 34,
+  "stagedObjectSpritePaths": 34,
+  "missingObjectSpritePaths": 0,
+  "missingObjectSprites": [],
+  "elapsedSeconds": 1.337
 }

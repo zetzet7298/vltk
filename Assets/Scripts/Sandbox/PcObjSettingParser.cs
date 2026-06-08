@@ -19,7 +19,16 @@ namespace VLTK.Sandbox
         public string kind;
         public string imageName;
         public int lifeTime;
+        public int layer;
         public int height;
+        public int imageTotalFrame;
+        public int imageCurFrame;
+        public int imageTotalDir;
+        public int imageCurDir;
+        public int imageInterval;
+        public int imageCgXpos;
+        public int imageCgYpos;
+        public int isUnseen;
         public string rawLine;
     }
 
@@ -44,7 +53,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "objsetting.txt");
             if (!File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLines(path, null);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -60,11 +69,26 @@ namespace VLTK.Sandbox
                     kind = cols.Length > 2 ? cols[2].Trim() : string.Empty,
                     imageName = cols.Length > 4 ? cols[4].Trim() : string.Empty,
                     lifeTime = cols.Length > 6 && int.TryParse(cols[6].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int lt) ? lt : 0,
-                    height = cols.Length > 8 && int.TryParse(cols[8].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int h) ? h : 0,
+                    layer = Int(cols, 7),
+                    height = Int(cols, 8),
+                    imageTotalFrame = Int(cols, 21),
+                    imageCurFrame = Int(cols, 22),
+                    imageTotalDir = Int(cols, 23),
+                    imageCurDir = Int(cols, 24),
+                    imageInterval = Int(cols, 25),
+                    imageCgXpos = Int(cols, 26),
+                    imageCgYpos = Int(cols, 27),
+                    isUnseen = Int(cols, 51),
                     rawLine = line
                 });
             }
             return reg;
+        }
+
+        private static int Int(string[] cols, int index)
+        {
+            if (cols == null || index < 0 || index >= cols.Length) return 0;
+            return int.TryParse(cols[index].Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int v) ? v : 0;
         }
     }
 }

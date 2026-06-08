@@ -89,6 +89,7 @@ namespace VLTK.Sandbox
         public MalePlayerVisual PlayerVisual { get; private set; }
         public MobileJoystick PlayerJoystick { get; private set; }
         public MapEnemySpawnRuntime EnemyRuntime { get; private set; }
+        public MapInteractiveObjectRuntime ObjectRuntime { get; private set; }
         public BaLangEnemyNameplateOverlay EnemyNameplateOverlay { get; private set; }
         public TrainingNpcSpawner TrainingSpawner { get; private set; }
         public FemalePlayerVisual FemalePlayerVisual { get; private set; }
@@ -432,8 +433,10 @@ namespace VLTK.Sandbox
                         EnsurePlayerController();
                         ApplyActiveMapBoundsToPlayer();
                         EnsureEnemyRuntime();
+                        EnsureObjectRuntime();
                         PlacePlayerOnActiveMap();
                         SpawnEnemiesForActiveMap();
+                        RenderObjectsForActiveMap();
                         SpawnTrainingNpcs();
                         ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
@@ -441,6 +444,7 @@ namespace VLTK.Sandbox
                 };
                 MapManager.OnMapUnloaded += (mapId) => {
                     EnemyRuntime?.Clear();
+                    ObjectRuntime?.Clear();
                     MapRenderer.Clear();
                 };
 
@@ -961,6 +965,15 @@ namespace VLTK.Sandbox
             TrainingSpawner = enemyGo.AddComponent<TrainingNpcSpawner>();
         }
 
+        private void EnsureObjectRuntime()
+        {
+            if (ObjectRuntime != null || worldRoot == null)
+                return;
+            var objectGo = new GameObject("MapInteractiveObjectRuntime");
+            objectGo.transform.SetParent(worldRoot, false);
+            ObjectRuntime = objectGo.AddComponent<MapInteractiveObjectRuntime>();
+        }
+
         private void SpawnEnemiesForActiveMap()
         {
             if (EnemyRuntime == null || MapManager?.ActiveMap == null)
@@ -968,6 +981,13 @@ namespace VLTK.Sandbox
             // Region_S folder contains server-side NPC spawn data with real PC coordinates.
             var regionSFolder = ResolveRegionSFolderForActiveMap();
             EnemyRuntime.SpawnForMap(MapManager.ActiveMapId, regionSFolder);
+        }
+
+        private void RenderObjectsForActiveMap()
+        {
+            if (ObjectRuntime == null || MapManager?.ActiveMap == null)
+                return;
+            ObjectRuntime.RenderForMap(MapManager.ActiveMap);
         }
 
         private string ResolveRegionSFolderForActiveMap()
