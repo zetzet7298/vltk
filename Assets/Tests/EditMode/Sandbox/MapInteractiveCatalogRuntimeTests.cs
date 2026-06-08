@@ -177,6 +177,8 @@ namespace VLTK.Tests.Sandbox
             public readonly List<string> messages = new();
             public readonly List<int> eventItems = new();
             public readonly List<string> notes = new();
+            public bool openedBox;
+            public int[] ladderIds;
 
             public void PostMessage(string nextMessage)
             {
@@ -185,6 +187,8 @@ namespace VLTK.Tests.Sandbox
             }
             public void AddEventItem(int eventItemId) => eventItems.Add(eventItemId);
             public void AddNote(string note) => notes.Add(note);
+            public void OpenBox() => openedBox = true;
+            public void ShowLadder(int[] nextLadderIds) => ladderIds = nextLadderIds;
         }
 
         [Test]
@@ -220,11 +224,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(166, catalog.Count);
+            Assert.AreEqual(240, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsPickupMessage));
             Assert.AreEqual(142, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
+            Assert.AreEqual(51, catalog.entries.Count(e => e != null && e.IsOpenBox));
+            Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsShowLadder));
             var entry = catalog.Find(@"\script\两湖区\天王帮\洞庭湖底山洞1\trap\洞庭湖底1to洞庭湖底2.lua");
             Assert.IsNotNull(entry);
             Assert.IsTrue(entry.IsNewWorld);
@@ -353,6 +359,61 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(result.hideObject);
             CollectionAssert.AreEqual(new[] { "Bạn thử dùng sức đẩy tảng đá,", "nhưng nó cứ nằm trơ trơ" }, sideEffects.messages);
             StringAssert.Contains("TalkMessage", result.detail);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_OpenBox_AppliesPcBoxAndReviveSideEffects()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\两湖区\巴陵县\obj\巴陵县-储物箱1.lua",
+                        actionKind = "OpenBox",
+                        reviveId = 19,
+                    }
+                }
+            };
+            var host = new FakeTrapTravelHost { currentMapId = 53 };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, host, sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\两湖区\巴陵县\obj\巴陵县-储物箱1.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.IsTrue(sideEffects.openedBox);
+            Assert.AreEqual(53, host.revPosMapId);
+            Assert.AreEqual(19, host.revPosId);
+            StringAssert.Contains("OpenBox", result.detail);
+        }
+
+        [Test]
+        public void PcObjectActionExecutor_ShowLadder_AppliesPcLadderIds()
+        {
+            var catalog = new PcObjectActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcObjectActionCatalogEntry
+                    {
+                        scriptPath = @"\script\中原北区\天忍教\天忍教室外\obj\天忍教-告示牌1.lua",
+                        actionKind = "ShowLadder",
+                        ladderIds = new[] { 2, 12, 23 },
+                    }
+                }
+            };
+            var sideEffects = new FakeObjectActionSideEffects();
+            var executor = new PcObjectActionExecutor(catalog, new FakeTrapTravelHost(), sideEffects);
+            var obj = new MapInteractiveObject { script = @"\script\中原北区\天忍教\天忍教室外\obj\天忍教-告示牌1.lua" };
+
+            Assert.IsTrue(executor.TryExecute(obj, out var result));
+
+            Assert.IsTrue(result.success);
+            CollectionAssert.AreEqual(new[] { 2, 12, 23 }, sideEffects.ladderIds);
+            StringAssert.Contains("ShowLadder", result.detail);
         }
 
         [Test]

@@ -40,11 +40,13 @@ EXPECTED_OBJECT_SPRITES = 34
 EXPECTED_OBJECT_SCRIPT_REFS = 449
 EXPECTED_OBJECT_SCRIPTS = 299
 EXPECTED_RESOLVED_OBJECT_SCRIPTS = 299
-EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 166
+EXPECTED_DETERMINISTIC_OBJECT_ACTIONS = 240
 EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS = 7
 EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS = 16
 EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS = 142
 EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS = 1
+EXPECTED_DETERMINISTIC_OBJECT_OPEN_BOX_ACTIONS = 51
+EXPECTED_DETERMINISTIC_OBJECT_SHOW_LADDER_ACTIONS = 23
 EXPECTED_TRAP_IDS = 817
 EXPECTED_RESOLVED_TRAP_SCRIPTS = 816
 EXPECTED_DETERMINISTIC_TRAP_ACTIONS = 776
@@ -482,10 +484,14 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
     object_pickup_message = sum(1 for e in object_actions if e.get('actionKind') == 'PickupMessage')
     object_say_message = sum(1 for e in object_actions if e.get('actionKind') == 'SayMessage')
     object_talk_message = sum(1 for e in object_actions if e.get('actionKind') == 'TalkMessage')
+    object_open_box = sum(1 for e in object_actions if e.get('actionKind') == 'OpenBox')
+    object_show_ladder = sum(1 for e in object_actions if e.get('actionKind') == 'ShowLadder')
     audit.require(object_new_world == EXPECTED_DETERMINISTIC_OBJECT_NEWWORLD_ACTIONS, 'MapObjectActionCatalog NewWorld count mismatch')
     audit.require(object_pickup_message == EXPECTED_DETERMINISTIC_OBJECT_PICKUP_MESSAGE_ACTIONS, 'MapObjectActionCatalog PickupMessage count mismatch')
     audit.require(object_say_message == EXPECTED_DETERMINISTIC_OBJECT_SAY_MESSAGE_ACTIONS, 'MapObjectActionCatalog SayMessage count mismatch')
     audit.require(object_talk_message == EXPECTED_DETERMINISTIC_OBJECT_TALK_MESSAGE_ACTIONS, 'MapObjectActionCatalog TalkMessage count mismatch')
+    audit.require(object_open_box == EXPECTED_DETERMINISTIC_OBJECT_OPEN_BOX_ACTIONS, 'MapObjectActionCatalog OpenBox count mismatch')
+    audit.require(object_show_ladder == EXPECTED_DETERMINISTIC_OBJECT_SHOW_LADDER_ACTIONS, 'MapObjectActionCatalog ShowLadder count mismatch')
     audit.require(trap_cov.get('uniqueTrapIds') == EXPECTED_TRAP_IDS, 'unique trap id count mismatch')
     audit.require(trap_cov.get('resolvedTrapScripts') == EXPECTED_RESOLVED_TRAP_SCRIPTS, 'resolved trap script count mismatch')
     missing_ids = set(trap_cov.get('missingTrapScriptIds', []))
@@ -572,6 +578,8 @@ def verify_interactive_catalogs(audit: Audit, root: Path) -> None:
         'deterministicObjectPickupMessageActions': object_pickup_message,
         'deterministicObjectSayMessageActions': object_say_message,
         'deterministicObjectTalkMessageActions': object_talk_message,
+        'deterministicObjectOpenBoxActions': object_open_box,
+        'deterministicObjectShowLadderActions': object_show_ladder,
         'trapIds': trap_cov.get('uniqueTrapIds'),
         'resolvedTrapScripts': trap_cov.get('resolvedTrapScripts'),
         'missingTrapScripts': sorted(missing_ids),

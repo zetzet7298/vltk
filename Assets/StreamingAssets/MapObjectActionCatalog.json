@@ -1,9 +1,35 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:05:12Z",
+  "generatedAtUtc": "2026-06-08T07:17:51Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
+    {
+      "scriptPath": "\\script\\global\\特殊用地\\宋金报名点\\obj\\jin_box.lua",
+      "scriptId": 2906710731,
+      "scriptIdHex": "0xAD40E2CB",
+      "sourceRelPath": "script\\global\\特殊用地\\宋金报名点\\obj\\jin_box.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 0
+    },
+    {
+      "scriptPath": "\\script\\global\\特殊用地\\宋金报名点\\obj\\song_box.lua",
+      "scriptId": 3125885983,
+      "scriptIdHex": "0xBA513C1F",
+      "sourceRelPath": "script\\global\\特殊用地\\宋金报名点\\obj\\song_box.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 0
+    },
     {
       "scriptPath": "\\script\\东北区\\临渝关\\obj\\临渝关to汴京.lua",
       "scriptId": 3630343663,
@@ -29,6 +55,19 @@
       "fightState": -1,
       "message": "Đi đến chân núi Trường Bạch",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\东北区\\漠北草原\\obj\\box.lua",
+      "scriptId": 2350743372,
+      "scriptIdHex": "0x8C1D7F4C",
+      "sourceRelPath": "script\\东北区\\漠北草原\\obj\\box.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 0
     },
     {
       "scriptPath": "\\script\\东北区\\漠北草原\\obj\\sign_tofenglindu.lua",
@@ -135,6 +174,49 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\两湖区\\南岳镇\\obj\\南岳镇-储物箱1.lua",
+      "scriptId": 4103943758,
+      "scriptIdHex": "0xF49D364E",
+      "sourceRelPath": "script\\两湖区\\南岳镇\\obj\\南岳镇-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 17
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\南岳镇\\obj\\南岳镇-储物箱2.lua",
+      "scriptId": 4050818550,
+      "scriptIdHex": "0xF17295F6",
+      "sourceRelPath": "script\\两湖区\\南岳镇\\obj\\南岳镇-储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 18
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\南岳镇\\obj\\南岳镇-告示牌1.lua",
+      "scriptId": 964195073,
+      "scriptIdHex": "0x39787301",
+      "sourceRelPath": "script\\两湖区\\南岳镇\\obj\\南岳镇-告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        4,
+        15
+      ]
+    },
+    {
       "scriptPath": "\\script\\两湖区\\南岳镇\\obj\\南岳镇-石碑1.lua",
       "scriptId": 1050097083,
       "scriptIdHex": "0x3E9735BB",
@@ -226,6 +308,23 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-告示牌1.lua",
+      "scriptId": 2622614590,
+      "scriptIdHex": "0x9C51EC3E",
+      "sourceRelPath": "script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        6,
+        17
+      ]
+    },
+    {
       "scriptPath": "\\script\\两湖区\\天王帮\\天王帮\\obj\\天王帮-石碑1.lua",
       "scriptId": 2141292134,
       "scriptIdHex": "0x7FA18666",
@@ -315,6 +414,19 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\两湖区\\巴陵县\\obj\\巴陵县-储物箱1.lua",
+      "scriptId": 356245524,
+      "scriptIdHex": "0x153BE014",
+      "sourceRelPath": "script\\两湖区\\巴陵县\\obj\\巴陵县-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 19
+    },
+    {
       "scriptPath": "\\script\\两湖区\\巴陵县\\obj\\巴陵县-告示牌1.lua",
       "scriptId": 1501591923,
       "scriptIdHex": "0x59807973",
@@ -326,6 +438,25 @@
       "fightState": -1,
       "message": "Nha môn thông cáo",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\巴陵县\\obj\\巴陵县-告示牌2.lua",
+      "scriptId": 1516618779,
+      "scriptIdHex": "0x5A65C41B",
+      "sourceRelPath": "script\\两湖区\\巴陵县\\obj\\巴陵县-告示牌2.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        4,
+        2,
+        3,
+        6,
+        17
+      ]
     },
     {
       "scriptPath": "\\script\\两湖区\\巴陵县\\obj\\巴陵县-石碑1.lua",
@@ -404,6 +535,19 @@
       "fightState": -1,
       "message": "Ba Lăng huyện<---->Vũ Lăng sơn",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\桃花源\\obj\\桃花源-储物箱1.lua",
+      "scriptId": 1076229085,
+      "scriptIdHex": "0x4025F3DD",
+      "sourceRelPath": "script\\两湖区\\桃花源\\obj\\桃花源-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 20
     },
     {
       "scriptPath": "\\script\\两湖区\\桃花源\\obj\\桃花源-路标1.lua",
@@ -609,6 +753,23 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室外\\obj\\天忍教-告示牌1.lua",
+      "scriptId": 819132237,
+      "scriptIdHex": "0x30D2F74D",
+      "sourceRelPath": "script\\中原北区\\天忍教\\天忍教室外\\obj\\天忍教-告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        12,
+        23
+      ]
+    },
+    {
       "scriptPath": "\\script\\中原北区\\天忍教\\天忍教室外\\obj\\天忍教-路标1.lua",
       "scriptId": 3148823989,
       "scriptIdHex": "0xBBAF3DB5",
@@ -664,6 +825,32 @@
       "source": "PC object Lua main(): deterministic read-only Talk(count,\"\",message...) with no conditional/API branch"
     },
     {
+      "scriptPath": "\\script\\中原北区\\朱仙镇\\obj\\朱仙镇_储物箱1.lua",
+      "scriptId": 3186371022,
+      "scriptIdHex": "0xBDEC29CE",
+      "sourceRelPath": "script\\中原北区\\朱仙镇\\obj\\朱仙镇_储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 45
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\朱仙镇\\obj\\朱仙镇_储物箱2.lua",
+      "scriptId": 3195983892,
+      "scriptIdHex": "0xBE7ED814",
+      "sourceRelPath": "script\\中原北区\\朱仙镇\\obj\\朱仙镇_储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 46
+    },
+    {
       "scriptPath": "\\script\\中原北区\\朱仙镇\\obj\\朱仙镇_告示牌1.lua",
       "scriptId": 762261765,
       "scriptIdHex": "0x2D6F3105",
@@ -716,6 +903,77 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\中原北区\\朱仙镇\\obj\\朱仙镇_告示牌5.lua",
+      "scriptId": 588772397,
+      "scriptIdHex": "0x2317F42D",
+      "sourceRelPath": "script\\中原北区\\朱仙镇\\obj\\朱仙镇_告示牌5.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        4,
+        2,
+        3,
+        12,
+        23
+      ]
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱1.lua",
+      "scriptId": 1767172640,
+      "scriptIdHex": "0x6954EA20",
+      "sourceRelPath": "script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 23
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱2.lua",
+      "scriptId": 1703507653,
+      "scriptIdHex": "0x658976C5",
+      "sourceRelPath": "script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 24
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱4.lua",
+      "scriptId": 1648476159,
+      "scriptIdHex": "0x6241BFFF",
+      "sourceRelPath": "script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱4.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 25
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱5.lua",
+      "scriptId": 2129009556,
+      "scriptIdHex": "0x7EE61B94",
+      "sourceRelPath": "script\\中原北区\\汴京\\汴京\\obj\\汴京-储物箱5.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 26
+    },
+    {
       "scriptPath": "\\script\\中原北区\\汴京\\汴京\\obj\\汴京-告示牌1.lua",
       "scriptId": 577905745,
       "scriptIdHex": "0x22722451",
@@ -727,6 +985,24 @@
       "fightState": -1,
       "message": "Biện Kinh <----->Phục Ngưu sơn",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\中原北区\\汴京\\汴京\\obj\\汴京-告示牌2.lua",
+      "scriptId": 1050050806,
+      "scriptIdHex": "0x3E9680F6",
+      "sourceRelPath": "script\\中原北区\\汴京\\汴京\\obj\\汴京-告示牌2.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
     },
     {
       "scriptPath": "\\script\\中原北区\\汴京\\汴京\\obj\\汴京-石碑1.lua",
@@ -968,6 +1244,89 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\中原南区\\扬州\\obj\\扬州-储物箱1.lua",
+      "scriptId": 2136444888,
+      "scriptIdHex": "0x7F578FD8",
+      "sourceRelPath": "script\\中原南区\\扬州\\obj\\扬州-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 34
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\扬州\\obj\\扬州-储物箱2.lua",
+      "scriptId": 2014889954,
+      "scriptIdHex": "0x7818C7E2",
+      "sourceRelPath": "script\\中原南区\\扬州\\obj\\扬州-储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 35
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\扬州\\obj\\扬州-储物箱3.lua",
+      "scriptId": 1958813676,
+      "scriptIdHex": "0x74C11FEC",
+      "sourceRelPath": "script\\中原南区\\扬州\\obj\\扬州-储物箱3.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 36
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\扬州\\obj\\扬州-储物箱4.lua",
+      "scriptId": 1904891894,
+      "scriptIdHex": "0x718A57F6",
+      "sourceRelPath": "script\\中原南区\\扬州\\obj\\扬州-储物箱4.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 37
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\扬州\\obj\\扬州-储物箱5.lua",
+      "scriptId": 1924329456,
+      "scriptIdHex": "0x72B2EFF0",
+      "sourceRelPath": "script\\中原南区\\扬州\\obj\\扬州-储物箱5.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 38
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\扬州\\obj\\扬州-告示牌1.lua",
+      "scriptId": 1970718685,
+      "scriptIdHex": "0x7576C7DD",
+      "sourceRelPath": "script\\中原南区\\扬州\\obj\\扬州-告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
+    },
+    {
       "scriptPath": "\\script\\中原南区\\扬州\\obj\\扬州-路标1.lua",
       "scriptId": 3781007942,
       "scriptIdHex": "0xE15D9A46",
@@ -1006,6 +1365,23 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\武当派-告示牌2.lua",
+      "scriptId": 960995637,
+      "scriptIdHex": "0x3947A135",
+      "sourceRelPath": "script\\中原南区\\武当派\\武当派\\obj\\武当派-告示牌2.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        13,
+        24
+      ]
+    },
+    {
       "scriptPath": "\\script\\中原南区\\武当派\\武当派\\obj\\武当派-石碑1.lua",
       "scriptId": 1189289885,
       "scriptIdHex": "0x46E31F9D",
@@ -1032,6 +1408,32 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\中原南区\\稻香村\\obj\\稻香村_储物箱1.lua",
+      "scriptId": 3791481627,
+      "scriptIdHex": "0xE1FD6B1B",
+      "sourceRelPath": "script\\中原南区\\稻香村\\obj\\稻香村_储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 47
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\稻香村\\obj\\稻香村_储物箱2.lua",
+      "scriptId": 3792640609,
+      "scriptIdHex": "0xE20F1A61",
+      "sourceRelPath": "script\\中原南区\\稻香村\\obj\\稻香村_储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 48
+    },
+    {
       "scriptPath": "\\script\\中原南区\\稻香村\\obj\\稻香村_告示牌.lua",
       "scriptId": 1535172979,
       "scriptIdHex": "0x5B80E173",
@@ -1043,6 +1445,25 @@
       "fightState": -1,
       "message": "Đạo Hương thôn",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\稻香村\\obj\\稻香村_告示牌1.lua",
+      "scriptId": 285521031,
+      "scriptIdHex": "0x1104B487",
+      "sourceRelPath": "script\\中原南区\\稻香村\\obj\\稻香村_告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        4,
+        2,
+        3,
+        13,
+        24
+      ]
     },
     {
       "scriptPath": "\\script\\中原南区\\稻香村\\obj\\稻香村_路标1.lua",
@@ -1144,6 +1565,89 @@
       "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
     },
     {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱1.lua",
+      "scriptId": 207329578,
+      "scriptIdHex": "0x0C5B992A",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 29
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱2.lua",
+      "scriptId": 150496719,
+      "scriptIdHex": "0x08F865CF",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 30
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱3.lua",
+      "scriptId": 85773924,
+      "scriptIdHex": "0x051CCE64",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱3.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 31
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱4.lua",
+      "scriptId": 28355321,
+      "scriptIdHex": "0x01B0AAF9",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱4.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 32
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱5.lua",
+      "scriptId": 500512414,
+      "scriptIdHex": "0x1DD5369E",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-储物箱5.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 33
+    },
+    {
+      "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-告示牌1.lua",
+      "scriptId": 3228305925,
+      "scriptIdHex": "0xC06C0A05",
+      "sourceRelPath": "script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
+    },
+    {
       "scriptPath": "\\script\\中原南区\\襄阳\\襄阳\\obj\\襄阳-路标1.lua",
       "scriptId": 1259910314,
       "scriptIdHex": "0x4B18B4AA",
@@ -1196,6 +1700,45 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\江南区\\临安\\临安\\obj\\临安府储物箱1.lua",
+      "scriptId": 1381645122,
+      "scriptIdHex": "0x525A3B42",
+      "sourceRelPath": "script\\江南区\\临安\\临安\\obj\\临安府储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 67
+    },
+    {
+      "scriptPath": "\\script\\江南区\\临安\\临安\\obj\\临安府储物箱2.lua",
+      "scriptId": 785657224,
+      "scriptIdHex": "0x2ED42D88",
+      "sourceRelPath": "script\\江南区\\临安\\临安\\obj\\临安府储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 68
+    },
+    {
+      "scriptPath": "\\script\\江南区\\临安\\临安\\obj\\临安府储物箱3.lua",
+      "scriptId": 728161502,
+      "scriptIdHex": "0x2B66DCDE",
+      "sourceRelPath": "script\\江南区\\临安\\临安\\obj\\临安府储物箱3.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 69
+    },
+    {
       "scriptPath": "\\script\\江南区\\临安\\临安\\obj\\路标_临安府to罗宵山.lua",
       "scriptId": 2738784331,
       "scriptIdHex": "0xA33E884B",
@@ -1220,6 +1763,19 @@
       "fightState": -1,
       "message": "Đi Vũ Di sơn",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\江南区\\桃花岛\\obj\\桃花岛储物箱.lua",
+      "scriptId": 226646283,
+      "scriptIdHex": "0x0D82590B",
+      "sourceRelPath": "script\\江南区\\桃花岛\\obj\\桃花岛储物箱.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 0
     },
     {
       "scriptPath": "\\script\\江南区\\武夷山\\武夷山\\obj\\路标_武夷山to五毒教.lua",
@@ -1392,6 +1948,32 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\江南区\\龙泉村\\obj\\龙泉村储物箱1.lua",
+      "scriptId": 2727212238,
+      "scriptIdHex": "0xA28DF4CE",
+      "sourceRelPath": "script\\江南区\\龙泉村\\obj\\龙泉村储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 65
+    },
+    {
+      "scriptPath": "\\script\\江南区\\龙泉村\\obj\\龙泉村储物箱2.lua",
+      "scriptId": 3210274343,
+      "scriptIdHex": "0xBF58E627",
+      "sourceRelPath": "script\\江南区\\龙泉村\\obj\\龙泉村储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 66
+    },
+    {
       "scriptPath": "\\script\\西北北区\\昆仑派\\快活林迷宫\\obj\\捡拾_klen_山里红.lua",
       "scriptId": 3532893578,
       "scriptIdHex": "0xD293AD8A",
@@ -1555,6 +2137,97 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\西北北区\\龙门镇\\obj\\龙门镇储物箱1.lua",
+      "scriptId": 1678718026,
+      "scriptIdHex": "0x640F344A",
+      "sourceRelPath": "script\\西北北区\\龙门镇\\obj\\龙门镇储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 55
+    },
+    {
+      "scriptPath": "\\script\\西北北区\\龙门镇\\obj\\龙门镇储物箱2.lua",
+      "scriptId": 1626819905,
+      "scriptIdHex": "0x60F74D41",
+      "sourceRelPath": "script\\西北北区\\龙门镇\\obj\\龙门镇储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 56
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-储物箱1.lua",
+      "scriptId": 3483554963,
+      "scriptIdHex": "0xCFA2D493",
+      "sourceRelPath": "script\\西北南区\\凤翔\\地图obj\\西北南区-凤翔府-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 0
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-储物箱2.lua",
+      "scriptId": 3408795230,
+      "scriptIdHex": "0xCB2E165E",
+      "sourceRelPath": "script\\西北南区\\凤翔\\地图obj\\西北南区-凤翔府-储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 1
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-储物箱3.lua",
+      "scriptId": 3333008153,
+      "scriptIdHex": "0xC6A9AB19",
+      "sourceRelPath": "script\\西北南区\\凤翔\\地图obj\\西北南区-凤翔府-储物箱3.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 2
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-储物箱4.lua",
+      "scriptId": 3256216804,
+      "scriptIdHex": "0xC215ECE4",
+      "sourceRelPath": "script\\西北南区\\凤翔\\地图obj\\西北南区-凤翔府-储物箱4.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 3
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-储物箱5.lua",
+      "scriptId": 3650167215,
+      "scriptIdHex": "0xD99121AF",
+      "sourceRelPath": "script\\西北南区\\凤翔\\地图obj\\西北南区-凤翔府-储物箱5.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 4
+    },
+    {
       "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-告示牌1.lua",
       "scriptId": 2590315557,
       "scriptIdHex": "0x9A651425",
@@ -1566,6 +2239,42 @@
       "fightState": -1,
       "message": "Mấy ngày nay că Khu Mật sứ đến vùng này th̃ sát, nên không cho bất cứ ăn mày nào xuất hiện ngoài đường",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-告示牌2.lua",
+      "scriptId": 2447419872,
+      "scriptIdHex": "0x91E0A9E0",
+      "sourceRelPath": "script\\西北南区\\凤翔\\地图obj\\西北南区-凤翔府-告示牌2.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-告示牌4.lua",
+      "scriptId": 1760046198,
+      "scriptIdHex": "0x68E82C76",
+      "sourceRelPath": "script\\西北南区\\凤翔\\地图obj\\西北南区-凤翔府-告示牌4.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
     },
     {
       "scriptPath": "\\script\\西北南区\\凤翔\\地图Obj\\西北南区-凤翔府-路标1.lua",
@@ -1737,6 +2446,100 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\西北南区\\永乐镇\\obj\\永乐镇_储物箱1.lua",
+      "scriptId": 2658075281,
+      "scriptIdHex": "0x9E6F0291",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\obj\\永乐镇_储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 43
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\永乐镇\\obj\\永乐镇_储物箱2.lua",
+      "scriptId": 2600023527,
+      "scriptIdHex": "0x9AF935E7",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\obj\\永乐镇_储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 44
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌1.lua",
+      "scriptId": 2314644733,
+      "scriptIdHex": "0x89F6ACFD",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        2,
+        3
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌2.lua",
+      "scriptId": 2315345731,
+      "scriptIdHex": "0x8A015F43",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌2.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        2,
+        3
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌3.lua",
+      "scriptId": 2257797513,
+      "scriptIdHex": "0x86934189",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌3.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        2,
+        3
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌4.lua",
+      "scriptId": 2200793311,
+      "scriptIdHex": "0x832D70DF",
+      "sourceRelPath": "script\\西北南区\\永乐镇\\obj\\永乐镇_告示牌4.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        2,
+        3
+      ]
+    },
+    {
       "scriptPath": "\\script\\西北南区\\秦陵\\秦陵\\obj\\西北南区-秦陵-路标4.lua",
       "scriptId": 3416599927,
       "scriptIdHex": "0xCBA52D77",
@@ -1815,6 +2618,40 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-告示牌5.lua",
+      "scriptId": 825136899,
+      "scriptIdHex": "0x312E9703",
+      "sourceRelPath": "script\\西南北区\\唐门\\唐门\\obj\\西南北区-唐门-告示牌5.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        7,
+        18
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\峨嵋派\\峨嵋派\\Obj\\西南北区-峨嵋派-告示牌1.lua",
+      "scriptId": 2712046430,
+      "scriptIdHex": "0xA1A68B5E",
+      "sourceRelPath": "script\\西南北区\\峨嵋派\\峨嵋派\\obj\\西南北区-峨嵋派-告示牌1.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        2,
+        9,
+        20
+      ]
+    },
+    {
       "scriptPath": "\\script\\西南北区\\峨嵋派\\峨嵋派\\Obj\\西南北区-峨嵋派-告示牌3.lua",
       "scriptId": 3153454602,
       "scriptIdHex": "0xBBF5E60A",
@@ -1852,6 +2689,143 @@
       "fightState": -1,
       "message": "Đi Thành Đô",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-储物箱1.lua",
+      "scriptId": 2881498141,
+      "scriptIdHex": "0xABC02C1D",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 5
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-储物箱2.lua",
+      "scriptId": 2805969523,
+      "scriptIdHex": "0xA73FB273",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 6
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-储物箱3.lua",
+      "scriptId": 2719423433,
+      "scriptIdHex": "0xA2171BC9",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-储物箱3.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 7
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-储物箱4.lua",
+      "scriptId": 3104760111,
+      "scriptIdHex": "0xB90EE12F",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-储物箱4.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 8
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-储物箱5.lua",
+      "scriptId": 3026613893,
+      "scriptIdHex": "0xB4667685",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-储物箱5.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 9
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-告示牌2.lua",
+      "scriptId": 142907893,
+      "scriptIdHex": "0x088499F5",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-告示牌2.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-告示牌3.lua",
+      "scriptId": 133984075,
+      "scriptIdHex": "0x07FC6F4B",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-告示牌3.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-告示牌4.lua",
+      "scriptId": 49018017,
+      "scriptIdHex": "0x02EBF4A1",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-告示牌4.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-告示牌5.lua",
+      "scriptId": 432232967,
+      "scriptIdHex": "0x19C35A07",
+      "sourceRelPath": "script\\西南北区\\成都\\成都\\地图obj\\西南北区-成都府-告示牌5.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        3,
+        1,
+        2,
+        3
+      ]
     },
     {
       "scriptPath": "\\script\\西南北区\\成都\\成都\\地图Obj\\西南北区-成都府-路标1.lua",
@@ -1932,6 +2906,45 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\西南北区-江津村-储物箱1.lua",
+      "scriptId": 3333671642,
+      "scriptIdHex": "0xC6B3CADA",
+      "sourceRelPath": "script\\西南北区\\江津村\\地图obj\\西南北区-江津村-储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 10
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\西南北区-江津村-储物箱2.lua",
+      "scriptId": 3721679683,
+      "scriptIdHex": "0xDDD45343",
+      "sourceRelPath": "script\\西南北区\\江津村\\地图obj\\西南北区-江津村-储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 11
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\西南北区-江津村-储物箱3.lua",
+      "scriptId": 3641457580,
+      "scriptIdHex": "0xD90C3BAC",
+      "sourceRelPath": "script\\西南北区\\江津村\\地图obj\\西南北区-江津村-储物箱3.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 12
+    },
+    {
       "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\西南北区-江津村-告示牌1.lua",
       "scriptId": 3688662686,
       "scriptIdHex": "0xDBDC869E",
@@ -1956,6 +2969,27 @@
       "fightState": -1,
       "message": "bến thuyền Giang Tân thôn",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\西南北区-江津村-告示牌4.lua",
+      "scriptId": 2848349385,
+      "scriptIdHex": "0xA9C65CC9",
+      "sourceRelPath": "script\\西南北区\\江津村\\地图obj\\西南北区-江津村-告示牌4.lua",
+      "actionKind": "ShowLadder",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects",
+      "ladderIds": [
+        6,
+        2,
+        3,
+        7,
+        9,
+        18,
+        20
+      ]
     },
     {
       "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\西南北区-江津村-路标7.lua",
@@ -2114,6 +3148,32 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\西南南区\\大理府\\大理府\\obj\\大理府储物箱1.lua",
+      "scriptId": 3004814792,
+      "scriptIdHex": "0xB319D5C8",
+      "sourceRelPath": "script\\西南南区\\大理府\\大理府\\obj\\大理府储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 63
+    },
+    {
+      "scriptPath": "\\script\\西南南区\\大理府\\大理府\\obj\\大理府储物箱2.lua",
+      "scriptId": 2401878776,
+      "scriptIdHex": "0x8F29C2F8",
+      "sourceRelPath": "script\\西南南区\\大理府\\大理府\\obj\\大理府储物箱2.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 64
+    },
+    {
       "scriptPath": "\\script\\西南南区\\大理府\\大理府\\obj\\捡拾_cyl30_碧裳凤蝶.lua",
       "scriptId": 2776426780,
       "scriptIdHex": "0xA57CE91C",
@@ -2243,6 +3303,19 @@
       "fightState": -1,
       "message": "Đi đến Đại Lư",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南南区\\石鼓镇\\obj\\石鼓镇储物箱1.lua",
+      "scriptId": 1979229893,
+      "scriptIdHex": "0x75F8A6C5",
+      "sourceRelPath": "script\\西南南区\\石鼓镇\\obj\\石鼓镇储物箱1.lua",
+      "actionKind": "OpenBox",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "source": "PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects",
+      "reviveId": 59
     },
     {
       "scriptPath": "\\script\\西南南区\\石鼓镇\\obj\\路标_石鼓镇to大理府.lua",

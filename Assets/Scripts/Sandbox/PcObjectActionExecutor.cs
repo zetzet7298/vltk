@@ -23,6 +23,8 @@ namespace VLTK.Sandbox
         void PostMessage(string message);
         void AddEventItem(int eventItemId);
         void AddNote(string note);
+        void OpenBox();
+        void ShowLadder(int[] ladderIds);
     }
 
     public sealed class PcObjectActionExecutor
@@ -119,6 +121,33 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsOpenBox)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+                _sideEffects.OpenBox();
+                if (action.reviveId > 0)
+                    _host.SetRevPos(_host.GetCurrentMapId(), action.reviveId);
+                string revive = action.reviveId > 0 ? $", SetRevPos({action.reviveId})" : string.Empty;
+                result = Success(action, $"OpenBox(){revive}");
+                return true;
+            }
+
+            if (action.IsShowLadder)
+            {
+                if (_sideEffects == null)
+                {
+                    result = Failure(action, "object side-effect host unavailable");
+                    return true;
+                }
+                _sideEffects.ShowLadder(action.ladderIds);
+                result = Success(action, $"ShowLadder({FormatInts(action.ladderIds)})");
+                return true;
+            }
+
             if (action.IsNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -186,6 +215,22 @@ namespace VLTK.Sandbox
             if (string.IsNullOrWhiteSpace(note)) return;
             _notes.Add(note);
             SubsystemLog.Info("MapObject", $"PC AddNote: {note}");
+        }
+
+        public void OpenBox()
+        {
+            SubsystemLog.Info("MapObject", "PC OpenBox() recorded");
+        }
+
+        public void ShowLadder(int[] ladderIds)
+        {
+            SubsystemLog.Info("MapObject", $"PC ShowLadder({FormatInts(ladderIds)}) recorded");
+        }
+
+        private static string FormatInts(int[] values)
+        {
+            if (values == null || values.Length == 0) return "[]";
+            return "[" + string.Join(",", values) + "]";
         }
     }
 

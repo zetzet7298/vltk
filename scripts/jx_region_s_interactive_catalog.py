@@ -1428,6 +1428,42 @@ def is_safe_pickup_message(actions: dict[str, Any]) -> bool:
     return bool(actions.get('addEventItemCalls') or actions.get('addNoteCalls') or actions.get('setPropStateCalls'))
 
 
+def object_open_box_action(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'OpenBox', 'SetRevPos'}):
+        return None
+    if has_lua_control_flow(clean_source):
+        return None
+    if len(parse_lua_calls(clean_source, 'OpenBox', limit=2)) != 1:
+        return None
+    revive_calls = parse_lua_calls(clean_source, 'SetRevPos', limit=2)
+    revive_id = 0
+    if revive_calls:
+        revive = int_args_unique(revive_calls, 1)
+        if revive is None:
+            return None
+        revive_id = revive[0]
+    return {'reviveId': revive_id}
+
+
+def object_show_ladder_action(source: str) -> dict[str, Any] | None:
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'ShowLadder'}):
+        return None
+    if has_lua_control_flow(clean_source):
+        return None
+    calls = parse_lua_calls(clean_source, 'ShowLadder', limit=2)
+    if len(calls) != 1 or not calls[0]:
+        return None
+    ids: list[int] = []
+    for arg in calls[0]:
+        parsed = int_expr(arg)
+        if parsed is None:
+            return None
+        ids.append(parsed)
+    return {'ladderIds': ids}
+
+
 def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     entries: list[dict[str, Any]] = []
     for script in object_scripts:
@@ -1485,6 +1521,38 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
                 'source': 'PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch',
             })
             continue
+        open_box = object_open_box_action(source_text)
+        if open_box is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'OpenBox',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): deterministic OpenBox() with optional one-arg SetRevPos(id), no branch/task/item/faction side effects',
+                **open_box,
+            })
+            continue
+        show_ladder = object_show_ladder_action(source_text)
+        if show_ladder is not None:
+            entries.append({
+                'scriptPath': script.get('scriptPath', ''),
+                'scriptId': script.get('scriptId', 0),
+                'scriptIdHex': script.get('scriptIdHex', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': 'ShowLadder',
+                'targetMapId': 0,
+                'targetCellX': 0,
+                'targetCellY': 0,
+                'fightState': -1,
+                'source': 'PC object Lua main(): deterministic ShowLadder(id...) with no branch/task/item/faction side effects',
+                **show_ladder,
+            })
+            continue
         talk_lines = talk_messages(actions)
         if is_safe_talk_message(actions, source_text):
             entries.append({
@@ -1507,6 +1575,8 @@ def build_object_action_catalog(object_scripts: list[dict[str, Any]]) -> tuple[l
         'deterministicObjectPickupMessageActions': sum(1 for e in entries if e['actionKind'] == 'PickupMessage'),
         'deterministicObjectSayMessageActions': sum(1 for e in entries if e['actionKind'] == 'SayMessage'),
         'deterministicObjectTalkMessageActions': sum(1 for e in entries if e['actionKind'] == 'TalkMessage'),
+        'deterministicObjectOpenBoxActions': sum(1 for e in entries if e['actionKind'] == 'OpenBox'),
+        'deterministicObjectShowLadderActions': sum(1 for e in entries if e['actionKind'] == 'ShowLadder'),
     }
     return entries, coverage
 

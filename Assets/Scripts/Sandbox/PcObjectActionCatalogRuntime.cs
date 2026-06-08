@@ -59,12 +59,16 @@ namespace VLTK.Sandbox
         public int[] eventItemIds;
         public string[] notes;
         public bool setPropState;
+        public int reviveId;
+        public int[] ladderIds;
         public string source;
 
         public bool IsNewWorld => string.Equals(actionKind, "NewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsPickupMessage => string.Equals(actionKind, "PickupMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsSayMessage => string.Equals(actionKind, "SayMessage", StringComparison.OrdinalIgnoreCase);
         public bool IsTalkMessage => string.Equals(actionKind, "TalkMessage", StringComparison.OrdinalIgnoreCase);
+        public bool IsOpenBox => string.Equals(actionKind, "OpenBox", StringComparison.OrdinalIgnoreCase);
+        public bool IsShowLadder => string.Equals(actionKind, "ShowLadder", StringComparison.OrdinalIgnoreCase);
 
         public Vector2 TargetWorldPosition()
             => MapEnemyDatabase.MpsToWorld(targetCellX * 32, targetCellY * 32);
