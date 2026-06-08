@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:17:51Z",
+  "generatedAtUtc": "2026-06-08T07:47:37Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -4616,12 +4616,13 @@
       "trapIdHex": "0x5FA6BE91",
       "scriptPath": "\\script\\missions\\championship\\trap\\trap_placetolinan.lua",
       "sourceRelPath": "script\\missions\\championship\\trap\\trap_placetolinan.lua",
-      "actionKind": "NewWorld",
-      "targetMapId": 176,
-      "targetCellX": 1472,
-      "targetCellY": 3243,
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
       "fightState": -1,
-      "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+      "message": "Đại môn Hoàng cung đã đóng, hãy đến Xa phu rời khỏi đấu trường!",
+      "source": "PC trap Lua main(): deterministic read-only Say(message,0) with no movement/fight/task/item branch"
     },
     {
       "trapId": 1638115500,

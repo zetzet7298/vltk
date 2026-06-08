@@ -308,6 +308,7 @@ def parse_lua_calls(source: str, function_name: str, limit: int = 8) -> list[lis
 
 
 def script_action_summary(source: str) -> dict[str, Any]:
+    source = strip_lua_line_comments(source)
     new_world = [args[:3] for args in parse_lua_calls(source, 'NewWorld')]
     set_pos = [args[:2] for args in parse_lua_calls(source, 'SetPos')]
     set_fight_state = [args[:1] for args in parse_lua_calls(source, 'SetFightState')]
@@ -513,6 +514,8 @@ def clean_user_message(message: str) -> str:
             .replace('ĐƠn', 'Đến')
             .replace('nă cứ', 'nó cứ')
             .replace('quay lai', 'quay lại')
+            .replace('đã đăng, hãy', 'đã đóng, hãy')
+            .replace('Đã đăng, hãy', 'Đã đóng, hãy')
             .replace('  ', ' '))
 
 
@@ -602,7 +605,30 @@ def is_safe_say_message(actions: dict[str, Any]) -> bool:
 
 
 def strip_lua_line_comments(source: str) -> str:
-    return '\n'.join(line.split('--', 1)[0] for line in (source or '').splitlines())
+    lines: list[str] = []
+    for line in (source or '').splitlines():
+        buf: list[str] = []
+        quote = ''
+        i = 0
+        while i < len(line):
+            ch = line[i]
+            if quote:
+                buf.append(ch)
+                if ch == quote and (i == 0 or line[i - 1] != '\\'):
+                    quote = ''
+                i += 1
+                continue
+            if ch in ('"', "'"):
+                quote = ch
+                buf.append(ch)
+                i += 1
+                continue
+            if ch == '-' and i + 1 < len(line) and line[i + 1] == '-':
+                break
+            buf.append(ch)
+            i += 1
+        lines.append(''.join(buf))
+    return '\n'.join(lines)
 
 
 def source_uses_only_calls(source: str, allowed: set[str]) -> bool:

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:34:21Z",
+  "generatedAtUtc": "2026-06-08T07:47:37Z",
   "sourceObjectScriptCatalog": "MapObjectScriptCatalog.json",
   "coordinateRule": "PC object NewWorld cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -567,6 +567,39 @@
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
+      "scriptPath": "\\script\\两湖区\\巴陵县\\obj\\巴陵县-路标3.lua",
+      "scriptId": 2085175749,
+      "scriptIdHex": "0x7C4941C5",
+      "sourceRelPath": "script\\两湖区\\巴陵县\\obj\\巴陵县-路标3.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Ba Lăng huyện<---->Miêu Lĩnh",
+      "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\巴陵县\\obj\\玉佩.lua",
+      "scriptId": 301528705,
+      "scriptIdHex": "0x11F8F681",
+      "sourceRelPath": "script\\两湖区\\巴陵县\\obj\\玉佩.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm thấy miếng Tử Yên Ngọc Bội",
+      "eventItemIds": [
+        182
+      ],
+      "notes": [
+        "Tìm thấy Ngọc Bội "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
       "scriptPath": "\\script\\两湖区\\桃花源\\obj\\桃花源-储物箱1.lua",
       "scriptId": 1076229085,
       "scriptIdHex": "0x4025F3DD",
@@ -715,6 +748,19 @@
       "targetCellY": 0,
       "fightState": -1,
       "message": "Đi Đại Tù động.",
+      "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\两湖区\\神农架\\神农架\\obj\\神农架-路标1.lua",
+      "scriptId": 1019024497,
+      "scriptIdHex": "0x3CBD1471",
+      "sourceRelPath": "script\\两湖区\\神农架\\神农架\\obj\\神农架-路标1.lua",
+      "actionKind": "SayMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Miêu Lĩnh<---->Ba Lăng huyện",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
     },
     {
@@ -3159,6 +3205,46 @@
       "fightState": -1,
       "message": "Đi Kiếm Các Thục Đạo",
       "source": "PC object Lua main(): deterministic read-only Say(message,0) with no Talk/Msg2Player/task/item/object/warp branch"
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\树杈.lua",
+      "scriptId": 2458227798,
+      "scriptIdHex": "0x92859456",
+      "sourceRelPath": "script\\西南北区\\江津村\\地图obj\\树杈.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm thấy chạc cây",
+      "eventItemIds": [
+        177
+      ],
+      "notes": [
+        "Tìm thấy chạc cây "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
+    },
+    {
+      "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\牛皮.lua",
+      "scriptId": 3976201355,
+      "scriptIdHex": "0xED00048B",
+      "sourceRelPath": "script\\西南北区\\江津村\\地图obj\\牛皮.lua",
+      "actionKind": "PickupMessage",
+      "targetMapId": 0,
+      "targetCellX": 0,
+      "targetCellY": 0,
+      "fightState": -1,
+      "message": "Tìm thấy da trâu",
+      "eventItemIds": [
+        178
+      ],
+      "notes": [
+        "Tìm thấy da trâu "
+      ],
+      "setPropState": true,
+      "source": "PC object Lua main(): deterministic SetPropState/AddEventItem/AddNote/Msg2Player with no Talk/Say/GetTask/SetTask/HaveItem/DelItem branch"
     },
     {
       "scriptPath": "\\script\\西南北区\\江津村\\地图Obj\\西南北区-江津村-储物箱1.lua",

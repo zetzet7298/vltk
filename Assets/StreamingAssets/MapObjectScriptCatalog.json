@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:17:51Z",
+  "generatedAtUtc": "2026-06-08T07:47:37Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -1821,10 +1821,6 @@
         "talkCalls": [],
         "sayCalls": [
           [
-            "°ÍÁờẽỉ<ĂêĂê>ẫủÅâẳĩ",
-            "0"
-          ],
-          [
             "Ba Lăng huyện<---->Miêu Lĩnh",
             "0"
           ]
@@ -1887,11 +1883,7 @@
         "addTerminiCalls": [],
         "setProtectTimeCalls": [],
         "addSkillStateCalls": [],
-        "getTaskCalls": [
-          [
-            "1"
-          ]
-        ],
+        "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
         "addItemCalls": [],
@@ -2360,10 +2352,6 @@
         "talkCalls": [],
         "sayCalls": [
           [
-            "ẫủÅâẳĩ<ĂêĂê>°ÍÁờẽỉ",
-            "0"
-          ],
-          [
             "Miêu Lĩnh<---->Ba Lăng huyện",
             "0"
           ]
@@ -2648,12 +2636,7 @@
             "4"
           ]
         ],
-        "setTaskCalls": [
-          [
-            "4",
-            "68"
-          ]
-        ],
+        "setTaskCalls": [],
         "haveItemCalls": [
           [
             "132"
@@ -8019,16 +8002,6 @@
           [
             "1",
             "",
-            "ằỳạỉ´ũ¿êÁậĂÊ"
-          ],
-          [
-            "1",
-            "",
-            "ằỳạỉạỉ±ếÁậĂÊ"
-          ],
-          [
-            "1",
-            "",
             "Mở được cơ quan! Cứu thành công Tiểu Quyên"
           ]
         ],
@@ -8141,16 +8114,6 @@
           [
             "1",
             "",
-            "ằỳạỉ´ũ¿êÁậĂÊ"
-          ],
-          [
-            "1",
-            "",
-            "ằỳạỉạỉ±ếÁậĂÊ"
-          ],
-          [
-            "1",
-            "",
             "Mở được cơ quan! Cứu thành công Tiểu Quyên"
           ]
         ],
@@ -8259,16 +8222,6 @@
           [
             "1",
             "",
-            "ằỳạỉ´ũ¿êÁậĂÊ"
-          ],
-          [
-            "1",
-            "",
-            "ằỳạỉạỉ±ếÁậĂÊ"
-          ],
-          [
-            "1",
-            "",
             "Mở được cơ quan! Cứu thành công Tiểu Quyên"
           ]
         ],
@@ -8374,16 +8327,6 @@
           ]
         ],
         "talkCalls": [
-          [
-            "1",
-            "",
-            "ằỳạỉ´ũ¿êÁậĂÊ"
-          ],
-          [
-            "1",
-            "",
-            "ằỳạỉạỉ±ếÁậĂÊ"
-          ],
           [
             "1",
             "",
@@ -10875,12 +10818,7 @@
             "2"
           ]
         ],
-        "setTaskCalls": [
-          [
-            "2",
-            "67"
-          ]
-        ],
+        "setTaskCalls": [],
         "haveItemCalls": [
           [
             "49"
@@ -11943,11 +11881,7 @@
         "addTerminiCalls": [],
         "setProtectTimeCalls": [],
         "addSkillStateCalls": [],
-        "getTaskCalls": [
-          [
-            "1"
-          ]
-        ],
+        "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
         "addItemCalls": [],
@@ -11999,11 +11933,7 @@
         "addTerminiCalls": [],
         "setProtectTimeCalls": [],
         "addSkillStateCalls": [],
-        "getTaskCalls": [
-          [
-            "1"
-          ]
-        ],
+        "getTaskCalls": [],
         "setTaskCalls": [],
         "haveItemCalls": [],
         "addItemCalls": [],

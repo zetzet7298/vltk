@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T07:17:51Z",
+  "generatedAtUtc": "2026-06-08T07:47:37Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -96,7 +96,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -291,7 +291,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -480,7 +480,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -575,7 +575,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -908,7 +908,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -963,7 +963,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -1805,7 +1805,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -3139,7 +3139,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -3254,7 +3254,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -3540,7 +3540,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -6139,13 +6139,7 @@
       "sourceRelPath": "script\\missions\\championship\\trap\\trap_placetolinan.lua",
       "actions": {
         "hasMain": true,
-        "newWorldCalls": [
-          [
-            "176",
-            "1472",
-            "3243"
-          ]
-        ],
+        "newWorldCalls": [],
         "setPosCalls": [],
         "setsFightState": false,
         "talks": false
@@ -6502,11 +6496,7 @@
             "3361"
           ]
         ],
-        "setPosCalls": [
-          [
-            ""
-          ]
-        ],
+        "setPosCalls": [],
         "setsFightState": false,
         "talks": true
       }
@@ -10893,7 +10883,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -11138,14 +11128,7 @@
             "3191"
           ]
         ],
-        "setPosCalls": [
-          [
-            ""
-          ],
-          [
-            ""
-          ]
-        ],
+        "setPosCalls": [],
         "setsFightState": true,
         "talks": true
       }
@@ -12439,7 +12422,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -12494,7 +12477,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {
@@ -12689,7 +12672,7 @@
         ],
         "setPosCalls": [],
         "setsFightState": true,
-        "talks": true
+        "talks": false
       }
     },
     {

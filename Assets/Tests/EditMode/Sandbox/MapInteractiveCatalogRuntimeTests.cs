@@ -201,8 +201,8 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(catalog);
             Assert.AreEqual(776, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
-            Assert.AreEqual(25, catalog.entries.Count(e => e != null && e.IsMessageOnly));
-            Assert.AreEqual(22, catalog.entries.Count(e => e != null && e.IsSayMessage));
+            Assert.AreEqual(26, catalog.entries.Count(e => e != null && e.IsMessageOnly));
+            Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMsg2Player));
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
@@ -226,13 +226,22 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcObjectActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(240, catalog.Count);
+            Assert.AreEqual(264, catalog.Count);
             Assert.AreEqual(7, catalog.entries.Count(e => e != null && e.IsNewWorld));
-            Assert.AreEqual(16, catalog.entries.Count(e => e != null && e.IsPickupMessage));
-            Assert.AreEqual(142, catalog.entries.Count(e => e != null && e.IsSayMessage));
+            Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsPickupMessage));
+            Assert.AreEqual(144, catalog.entries.Count(e => e != null && e.IsSayMessage));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTalkMessage));
             Assert.AreEqual(51, catalog.entries.Count(e => e != null && e.IsOpenBox));
+            Assert.AreEqual(19, catalog.entries.Count(e => e != null && e.IsFactionOpenBox));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsShowLadder));
+            var sign = catalog.Find(@"\script\两湖区\巴陵县\obj\巴陵县-路标3.lua");
+            Assert.IsNotNull(sign);
+            Assert.IsTrue(sign.IsSayMessage);
+            Assert.AreEqual("Ba Lăng huyện<---->Miêu Lĩnh", sign.message);
+            var pickup = catalog.Find(@"\script\两湖区\巴陵县\obj\玉佩.lua");
+            Assert.IsNotNull(pickup);
+            Assert.IsTrue(pickup.IsPickupMessage);
+            Assert.AreEqual(182, pickup.eventItemIds.Single());
             var entry = catalog.Find(@"\script\两湖区\天王帮\洞庭湖底山洞1\trap\洞庭湖底1to洞庭湖底2.lua");
             Assert.IsNotNull(entry);
             Assert.IsTrue(entry.IsNewWorld);
