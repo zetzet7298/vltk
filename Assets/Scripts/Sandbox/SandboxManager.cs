@@ -96,6 +96,8 @@ namespace VLTK.Sandbox
         private readonly Dictionary<int, int> _taskTempValues = new();
         private readonly Dictionary<int, int> _pcMissionValues = new();
         private readonly Dictionary<int, int> _pcMissionPlayerGroups = new();
+        private readonly Dictionary<int, int> _pcPartnerMasterTaskStates = new();
+        private bool _pcHasSummonedPartner;
         public AssetRegistry AssetRegistry { get; private set; }
         public MapManager MapManager { get; private set; }
         public MapRenderer MapRenderer { get; private set; }
@@ -1243,6 +1245,28 @@ namespace VLTK.Sandbox
                 else _pcMissionPlayerGroups[missionId] = group;
             }
             SubsystemLog.Info("Sandbox", $"PC mission {missionId} player group recorded as {group}");
+        }
+
+        public bool HasPcSummonedPartner()
+            => _pcHasSummonedPartner;
+
+        public void SetPcSummonedPartner(bool hasSummonedPartner)
+        {
+            _pcHasSummonedPartner = hasSummonedPartner;
+            SubsystemLog.Info("Sandbox", $"PC PARTNER_GetCurPartner summoned state recorded as {hasSummonedPartner}");
+        }
+
+        public int GetPcPartnerMasterTaskState(int masterTaskId)
+            => masterTaskId > 0 && _pcPartnerMasterTaskStates.TryGetValue(masterTaskId, out var value) ? value : 0;
+
+        public void SetPcPartnerMasterTaskState(int masterTaskId, int value)
+        {
+            if (masterTaskId > 0)
+            {
+                if (value == 0) _pcPartnerMasterTaskStates.Remove(masterTaskId);
+                else _pcPartnerMasterTaskStates[masterTaskId] = value;
+            }
+            SubsystemLog.Info("Sandbox", $"PC PARTNER_SetTaskValue({masterTaskId},{value}) source recorded");
         }
 
         public void SetDeathScript(string scriptPath)

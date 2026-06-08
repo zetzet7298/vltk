@@ -92,6 +92,8 @@ namespace VLTK.Tests.Sandbox
             public Dictionary<int, int> taskTempValues = new();
             public Dictionary<int, int> missionValues = new();
             public Dictionary<int, int> missionPlayerGroups = new();
+            public bool hasSummonedPartner;
+            public Dictionary<int, int> partnerMasterTaskStates = new();
             public Dictionary<int, int> itemCounts = new();
             public int curCamp = 0;
             public int originalCamp = 0;
@@ -138,6 +140,9 @@ namespace VLTK.Tests.Sandbox
             public int GetTaskTempValue(int taskId) => taskTempValues.TryGetValue(taskId, out var value) ? value : 0;
             public int GetMissionValue(int missionVarId) => missionValues.TryGetValue(missionVarId, out var value) ? value : 0;
             public int GetMissionPlayerGroup(int missionId) => missionPlayerGroups.TryGetValue(missionId, out var group) ? group : 0;
+            public bool HasSummonedPartner() => hasSummonedPartner;
+            public int GetPartnerMasterTaskState(int masterTaskId)
+                => partnerMasterTaskStates.TryGetValue(masterTaskId, out var state) ? state : 0;
             public bool HaveItem(int pcQuestKeyDetailType, int minCount)
                 => minCount <= 0 || (itemCounts.TryGetValue(pcQuestKeyDetailType, out var count) && count >= minCount);
             public bool DelItem(int pcQuestKeyDetailType, int count)
@@ -258,7 +263,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(802, catalog.Count);
+            Assert.AreEqual(804, catalog.Count);
             Assert.AreEqual(532, catalog.entries.Count(e => e != null && e.IsNewWorld));
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(37, catalog.entries.Count(e => e != null && e.IsMessageOnly));
@@ -276,6 +281,8 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskSetTaskFactionGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsTaskItemConsumeFactionGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsSongJinRebirthCampState));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsPartnerBaihuaEntryGate));
+            Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsPartnerBaihuaExitGate));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskMultiItemPromptCallbackNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
@@ -297,6 +304,15 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, songRebirth.targetCamp);
             Assert.AreEqual(1, songRebirth.fightState);
             Assert.AreEqual(0, songRebirth.punish);
+            var baihuaEntry = catalog.Find(0xFF191F35, "0xFF191F35");
+            Assert.IsNotNull(baihuaEntry);
+            Assert.IsTrue(baihuaEntry.IsPartnerBaihuaEntryGate);
+            Assert.AreEqual(1535, baihuaEntry.targetCellX);
+            Assert.AreEqual(3021, baihuaEntry.targetCellY);
+            Assert.AreEqual(1516, baihuaEntry.blockedCellX);
+            Assert.AreEqual(3069, baihuaEntry.blockedCellY);
+            CollectionAssert.AreEqual(new[] { 3, 4, 5, 6 }, baihuaEntry.partnerMasterTaskIds);
+            CollectionAssert.AreEqual(new[] { 5, 6, 5, 3 }, baihuaEntry.partnerMasterTaskMinStates);
             var entry = catalog.entries.FirstOrDefault(e => e != null && e.IsNewWorld);
             Assert.IsNotNull(entry);
             Assert.Greater(entry.targetMapId, 0);
@@ -2911,6 +2927,99 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(2, jinHost.curCamp);
             Assert.AreEqual(0, jinHost.punish);
             StringAssert.Contains("SetCurCamp(2)", result.detail);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_PartnerBaihuaGates_PortPcTaskEntityBranches()
+        {
+            const string blockedMessage = "Phía trước mây mù lượn quanh , kiếm khí hướng tiêu . tựa hồ không phải là ngươi bây giờ có thể đi đích địa phương . ";
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0xFF191F35,
+                        trapIdHex = "0xFF191F35",
+                        scriptPath = @"\script\task\partner\trap\trap_baihuagu1.lua",
+                        actionKind = "PartnerBaihuaEntryGate",
+                        targetCellX = 1535,
+                        targetCellY = 3021,
+                        fightState = 0,
+                        requiresSummonedPartner = true,
+                        partnerMasterTaskIds = new[] { 3, 4, 5, 6 },
+                        partnerMasterTaskMinStates = new[] { 5, 6, 5, 3 },
+                        blockedMessage = blockedMessage,
+                        blockedCellX = 1516,
+                        blockedCellY = 3069,
+                        blockedFightState = 1,
+                    },
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0xFBFEFADD,
+                        trapIdHex = "0xFBFEFADD",
+                        scriptPath = @"\script\task\partner\trap\trap_baihuagu2.lua",
+                        actionKind = "PartnerBaihuaExitGate",
+                        targetCellX = 1516,
+                        targetCellY = 3069,
+                        fightState = 1,
+                    }
+                }
+            };
+
+            var readyHost = new FakeTrapTravelHost { fightState = 1, hasSummonedPartner = true };
+            readyHost.partnerMasterTaskStates[3] = 5;
+            readyHost.partnerMasterTaskStates[4] = 6;
+            readyHost.partnerMasterTaskStates[5] = 5;
+            readyHost.partnerMasterTaskStates[6] = 3;
+            var effects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, readyHost, effects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xFF191F35" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1535 * 32, 3021 * 32), readyHost.position);
+            Assert.AreEqual(0, readyHost.fightState);
+            Assert.IsEmpty(effects.messages);
+            StringAssert.Contains("nCondition==1", result.detail);
+
+            var noPartnerHost = new FakeTrapTravelHost { fightState = 0, hasSummonedPartner = false };
+            noPartnerHost.partnerMasterTaskStates[3] = 5;
+            noPartnerHost.partnerMasterTaskStates[4] = 6;
+            noPartnerHost.partnerMasterTaskStates[5] = 5;
+            noPartnerHost.partnerMasterTaskStates[6] = 3;
+            effects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, noPartnerHost, effects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xFF191F35" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1516 * 32, 3069 * 32), noPartnerHost.position);
+            Assert.AreEqual(1, noPartnerHost.fightState);
+            CollectionAssert.AreEqual(new[] { blockedMessage }, effects.messages);
+
+            var unfinishedHost = new FakeTrapTravelHost { fightState = 0, hasSummonedPartner = true };
+            unfinishedHost.partnerMasterTaskStates[3] = 5;
+            unfinishedHost.partnerMasterTaskStates[4] = 5;
+            unfinishedHost.partnerMasterTaskStates[5] = 5;
+            unfinishedHost.partnerMasterTaskStates[6] = 3;
+            executor = new PcTrapActionExecutor(catalog, unfinishedHost, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapId = 0xFF191F35 }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1516 * 32, 3069 * 32), unfinishedHost.position);
+            Assert.AreEqual(1, unfinishedHost.fightState);
+
+            var exitHost = new FakeTrapTravelHost { fightState = 0 };
+            executor = new PcTrapActionExecutor(catalog, exitHost, new FakeTrapActionSideEffects());
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xFBFEFADD" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1516 * 32, 3069 * 32), exitHost.position);
+            Assert.AreEqual(1, exitHost.fightState);
+            StringAssert.Contains("taskProcess_005_Outside", result.detail);
         }
 
         [Test]

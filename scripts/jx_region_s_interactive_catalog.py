@@ -1358,6 +1358,41 @@ def songjin_rebirth_camp_state(source: str) -> dict[str, Any] | None:
     }
 
 
+def partner_baihua_gate(source: str, script_path: str) -> dict[str, Any] | None:
+    path_lower = script_path.replace('/', '\\').lower()
+    clean_source = strip_lua_line_comments(source)
+    if not source_uses_only_calls(clean_source, {'main', 'Include', 'doTaskEntity'}):
+        return None
+    if path_lower.endswith('\\script\\task\\partner\\trap\\trap_baihuagu1.lua'):
+        if 'taskProcess_005_01:doTaskEntity()' not in clean_source:
+            return None
+        return {
+            'actionKind': 'PartnerBaihuaEntryGate',
+            'targetCellX': 1535,
+            'targetCellY': 3021,
+            'fightState': 0,
+            'requiresSummonedPartner': True,
+            'partnerMasterTaskIds': [3, 4, 5, 6],
+            'partnerMasterTaskMinStates': [5, 6, 5, 3],
+            'blockedMessage': 'Phía trước mây mù lượn quanh , kiếm khí hướng tiêu . tựa hồ không phải là ngươi bây giờ có thể đi đích địa phương . ',
+            'blockedCellX': 1516,
+            'blockedCellY': 3069,
+            'blockedFightState': 1,
+            'source': 'PC partner Baihua taskProcess_005_01: summoned partner + master states 3>=5,4>=6,5>=5,6>=3 gates SetPos(1535,3021), SetFightState(0); otherwise Say + SetPos(1516,3069), SetFightState(1).',
+        }
+    if path_lower.endswith('\\script\\task\\partner\\trap\\trap_baihuagu2.lua'):
+        if 'taskProcess_005_Outside:doTaskEntity()' not in clean_source:
+            return None
+        return {
+            'actionKind': 'PartnerBaihuaExitGate',
+            'targetCellX': 1516,
+            'targetCellY': 3069,
+            'fightState': 1,
+            'source': 'PC partner Baihua taskProcess_005_Outside: deterministic SetPos(1516,3069), SetFightState(1).',
+        }
+    return None
+
+
 def clearskill_constants(pc_root: Path = PC_ROOT) -> dict[str, Any]:
     path = server_root(pc_root) / 'script/missions/clearskill/head.lua'
     try:
@@ -4096,6 +4131,18 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
                 **songjin_rebirth,
             })
             continue
+        partner_baihua = partner_baihua_gate(source, script.get('scriptPath', ''))
+        if partner_baihua is not None:
+            entries.append({
+                'trapId': script['trapId'],
+                'trapIdHex': script['trapIdHex'],
+                'scriptPath': script.get('scriptPath', ''),
+                'sourceRelPath': script.get('sourceRelPath', ''),
+                'actionKind': partner_baihua['actionKind'],
+                'targetMapId': 0,
+                **partner_baihua,
+            })
+            continue
         clear_switch = clearskill_switch_trap(source)
         if clear_switch is not None:
             entries.append({
@@ -4224,6 +4271,8 @@ def build_trap_action_catalog(trap_scripts: list[dict[str, Any]]) -> tuple[list[
         'deterministicTrapCityWarCampGateSetPosActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampGateSetPos'),
         'deterministicTrapCityWarCampReturnNewWorldActions': sum(1 for e in entries if e['actionKind'] == 'CityWarCampReturnNewWorld'),
         'deterministicTrapSongJinRebirthCampStateActions': sum(1 for e in entries if e['actionKind'] == 'SongJinRebirthCampState'),
+        'deterministicTrapPartnerBaihuaEntryGateActions': sum(1 for e in entries if e['actionKind'] == 'PartnerBaihuaEntryGate'),
+        'deterministicTrapPartnerBaihuaExitGateActions': sum(1 for e in entries if e['actionKind'] == 'PartnerBaihuaExitGate'),
         'deterministicTrapClearSkillSwitchTrapActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillSwitchTrap'),
         'deterministicTrapClearSkillLeaveGameActions': sum(1 for e in entries if e['actionKind'] == 'ClearSkillLeaveGame'),
         'deterministicTrapCsArenaLeaveTrapActions': sum(1 for e in entries if e['actionKind'] == 'CsArenaLeaveTrap'),

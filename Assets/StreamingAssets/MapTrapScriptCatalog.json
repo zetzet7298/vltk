@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T14:31:58Z",
+  "generatedAtUtc": "2026-06-08T15:09:45Z",
   "sourceScriptRoot": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
@@ -17437,15 +17437,7 @@
         "setPosCalls": [],
         "setsFightState": false,
         "talks": false
-      },
-      "deferredActionKind": "PartnerTaskEntity",
-      "deferredActionReason": "PC partner-story trap delegates to partner task entity doTaskEntity(); requires the partner task runtime and scripted entity state.",
-      "requiredPcApis": [
-        "Include",
-        "taskProcess_005_01:doTaskEntity",
-        "taskProcess_005_Outside:doTaskEntity"
-      ],
-      "actionPortStatus": "deferred_requires_pc_runtime"
+      }
     },
     {
       "trapId": 4233222052,
@@ -17727,15 +17719,7 @@
         "setPosCalls": [],
         "setsFightState": false,
         "talks": false
-      },
-      "deferredActionKind": "PartnerTaskEntity",
-      "deferredActionReason": "PC partner-story trap delegates to partner task entity doTaskEntity(); requires the partner task runtime and scripted entity state.",
-      "requiredPcApis": [
-        "Include",
-        "taskProcess_005_01:doTaskEntity",
-        "taskProcess_005_Outside:doTaskEntity"
-      ],
-      "actionPortStatus": "deferred_requires_pc_runtime"
+      }
     },
     {
       "trapId": 4288408725,

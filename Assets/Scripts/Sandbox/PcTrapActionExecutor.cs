@@ -40,6 +40,8 @@ namespace VLTK.Sandbox
         int GetTaskTempValue(int taskId);
         int GetMissionValue(int missionVarId);
         int GetMissionPlayerGroup(int missionId);
+        bool HasSummonedPartner();
+        int GetPartnerMasterTaskState(int masterTaskId);
         bool HaveItem(int pcQuestKeyDetailType, int minCount);
         bool DelItem(int pcQuestKeyDetailType, int count);
         int GetCurCamp();
@@ -724,6 +726,39 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsPartnerBaihuaEntryGate)
+            {
+                bool hasPartner = !action.requiresSummonedPartner || _host.HasSummonedPartner();
+                bool tasksReady = PartnerMasterTasksReady(action);
+                if (hasPartner && tasksReady)
+                {
+                    _host.SetPos(target);
+                    ApplyFightState(action);
+                    result = Success(action,
+                        $"taskProcess_005_01 nCondition==1 -> SetPos({action.targetCellX},{action.targetCellY}) -> {target}, SetFightState({action.fightState})");
+                    return true;
+                }
+
+                var blockedTarget = action.BlockedWorldPosition();
+                if (_sideEffects != null && !string.IsNullOrWhiteSpace(action.blockedMessage))
+                    _sideEffects.PostMessage(action.blockedMessage);
+                _host.SetPos(blockedTarget);
+                if (action.blockedFightState >= 0)
+                    _host.SetFightState(action.blockedFightState);
+                result = Success(action,
+                    $"taskProcess_005_01 partner={hasPartner}, masterTasksReady={tasksReady} -> Say(message), SetPos({action.blockedCellX},{action.blockedCellY}) -> {blockedTarget}, SetFightState({action.blockedFightState})");
+                return true;
+            }
+
+            if (action.IsPartnerBaihuaExitGate)
+            {
+                _host.SetPos(target);
+                ApplyFightState(action);
+                result = Success(action,
+                    $"taskProcess_005_Outside -> SetPos({action.targetCellX},{action.targetCellY}) -> {target}, SetFightState({action.fightState})");
+                return true;
+            }
+
             if (action.IsMsg2PlayerNewWorld)
             {
                 if (!_host.HasMap(action.targetMapId))
@@ -1058,6 +1093,22 @@ namespace VLTK.Sandbox
             return action.requiredItemId <= 0 || _host.HaveItem(action.requiredItemId, requiredCount);
         }
 
+        private bool PartnerMasterTasksReady(PcTrapActionCatalogEntry action)
+        {
+            if (action.partnerMasterTaskIds == null || action.partnerMasterTaskMinStates == null)
+                return true;
+            int count = Math.Min(action.partnerMasterTaskIds.Length, action.partnerMasterTaskMinStates.Length);
+            for (int i = 0; i < count; i++)
+            {
+                int taskId = action.partnerMasterTaskIds[i];
+                int minState = action.partnerMasterTaskMinStates[i];
+                if (taskId <= 0) continue;
+                if (_host.GetPartnerMasterTaskState(taskId) < minState)
+                    return false;
+            }
+            return true;
+        }
+
         private bool ConsumeItems(PcTrapActionCatalogEntry action)
         {
             if (action.consumeItemIds != null && action.consumeItemIds.Length > 0)
@@ -1343,6 +1394,12 @@ namespace VLTK.Sandbox
 
         public int GetMissionPlayerGroup(int missionId)
             => SandboxManager.Instance?.GetPcMissionPlayerGroup(missionId) ?? 0;
+
+        public bool HasSummonedPartner()
+            => SandboxManager.Instance?.HasPcSummonedPartner() ?? false;
+
+        public int GetPartnerMasterTaskState(int masterTaskId)
+            => SandboxManager.Instance?.GetPcPartnerMasterTaskState(masterTaskId) ?? 0;
 
         public bool HaveItem(int pcQuestKeyDetailType, int minCount)
         {

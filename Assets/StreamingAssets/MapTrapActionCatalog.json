@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T14:31:58Z",
+  "generatedAtUtc": "2026-06-08T15:09:45Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -13373,6 +13373,18 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 4227791581,
+      "trapIdHex": "0xFBFEFADD",
+      "scriptPath": "\\script\\task\\partner\\trap\\trap_baihuagu2.lua",
+      "sourceRelPath": "script\\task\\partner\\trap\\trap_baihuagu2.lua",
+      "actionKind": "PartnerBaihuaExitGate",
+      "targetMapId": 0,
+      "targetCellX": 1516,
+      "targetCellY": 3069,
+      "fightState": 1,
+      "source": "PC partner Baihua taskProcess_005_Outside: deterministic SetPos(1516,3069), SetFightState(1)."
+    },
+    {
       "trapId": 4233222052,
       "trapIdHex": "0xFC51D7A4",
       "scriptPath": "\\script\\西南北区\\成都\\信相寺后院地道\\trap\\信相寺后院地道to成都.lua",
@@ -13549,6 +13561,35 @@
       "skillStateLevel": 1,
       "skillStateTime": 54,
       "source": "PC trap Lua main(): if GetLevel()>=N then SetFightState/NewWorld/AddTermini/SetProtectTime/AddSkillState else Talk/optional SetPos"
+    },
+    {
+      "trapId": 4279836469,
+      "trapIdHex": "0xFF191F35",
+      "scriptPath": "\\script\\task\\partner\\trap\\trap_baihuagu1.lua",
+      "sourceRelPath": "script\\task\\partner\\trap\\trap_baihuagu1.lua",
+      "actionKind": "PartnerBaihuaEntryGate",
+      "targetMapId": 0,
+      "targetCellX": 1535,
+      "targetCellY": 3021,
+      "fightState": 0,
+      "requiresSummonedPartner": true,
+      "partnerMasterTaskIds": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "partnerMasterTaskMinStates": [
+        5,
+        6,
+        5,
+        3
+      ],
+      "blockedMessage": "Phía trước mây mù lượn quanh , kiếm khí hướng tiêu . tựa hồ không phải là ngươi bây giờ có thể đi đích địa phương . ",
+      "blockedCellX": 1516,
+      "blockedCellY": 3069,
+      "blockedFightState": 1,
+      "source": "PC partner Baihua taskProcess_005_01: summoned partner + master states 3>=5,4>=6,5>=5,6>=3 gates SetPos(1535,3021), SetFightState(0); otherwise Say + SetPos(1516,3069), SetFightState(1)."
     },
     {
       "trapId": 4288408725,

@@ -156,6 +156,10 @@ namespace VLTK.Sandbox
         public int requiredMissionState;
         public int requiredMissionGroup;
         public int targetCamp;
+        public bool requiresSummonedPartner;
+        public int[] partnerMasterTaskIds;
+        public int[] partnerMasterTaskMinStates;
+        public int blockedFightState = -1;
         public int enterCellX;
         public int enterCellY;
         public int enterNextFightState = -1;
@@ -221,6 +225,8 @@ namespace VLTK.Sandbox
         public bool IsCityWarCampGateSetPos => string.Equals(actionKind, "CityWarCampGateSetPos", StringComparison.OrdinalIgnoreCase);
         public bool IsCityWarCampReturnNewWorld => string.Equals(actionKind, "CityWarCampReturnNewWorld", StringComparison.OrdinalIgnoreCase);
         public bool IsSongJinRebirthCampState => string.Equals(actionKind, "SongJinRebirthCampState", StringComparison.OrdinalIgnoreCase);
+        public bool IsPartnerBaihuaEntryGate => string.Equals(actionKind, "PartnerBaihuaEntryGate", StringComparison.OrdinalIgnoreCase);
+        public bool IsPartnerBaihuaExitGate => string.Equals(actionKind, "PartnerBaihuaExitGate", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillSwitchTrap => string.Equals(actionKind, "ClearSkillSwitchTrap", StringComparison.OrdinalIgnoreCase);
         public bool IsClearSkillLeaveGame => string.Equals(actionKind, "ClearSkillLeaveGame", StringComparison.OrdinalIgnoreCase);
         public bool IsCsArenaLeaveTrap => string.Equals(actionKind, "CsArenaLeaveTrap", StringComparison.OrdinalIgnoreCase);
