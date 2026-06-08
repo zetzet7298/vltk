@@ -199,7 +199,7 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcTrapActionCatalogRuntime.LoadFromStreamingAssets();
 
             Assert.IsNotNull(catalog);
-            Assert.AreEqual(777, catalog.Count);
+            Assert.AreEqual(780, catalog.Count);
             Assert.AreEqual(112, catalog.entries.Count(e => e != null && e.IsFightStateSetPos));
             Assert.AreEqual(26, catalog.entries.Count(e => e != null && e.IsMessageOnly));
             Assert.AreEqual(23, catalog.entries.Count(e => e != null && e.IsSayMessage));
@@ -208,6 +208,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsMsg2PlayerNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskOptionalMessageNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsTaskFactionGateNewWorld));
+            Assert.AreEqual(3, catalog.entries.Count(e => e != null && e.IsTaskPromptDefaultNewWorld));
             Assert.AreEqual(1, catalog.entries.Count(e => e != null && e.IsMessageRandomNewWorld));
             Assert.AreEqual(20, catalog.entries.Count(e => e != null && e.IsLevelGateNewWorld));
             Assert.AreEqual(2, catalog.entries.Count(e => e != null && e.IsLevelBracketNewWorld));
@@ -1541,6 +1542,78 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(-1, host.mapId);
             Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1749 * 32, 3081 * 32), host.position);
             CollectionAssert.AreEqual(new[] { "Đây là Thánh động Thiên Nhẫn giáo, những người đã vào không thể trở ra." }, sideEffects.messages);
+        }
+
+        [Test]
+        public void PcTrapActionExecutor_TaskPromptDefaultNewWorld_PromptsForPcTaskBranchesElseWarps()
+        {
+            var catalog = new PcTrapActionCatalogFile
+            {
+                entries = new[]
+                {
+                    new PcTrapActionCatalogEntry
+                    {
+                        trapId = 0xDE60532Au,
+                        trapIdHex = "0xDE60532A",
+                        scriptPath = @"\script\中原北区\伏牛山\伏牛山西\trap\伏牛山西1to天心洞1.lua",
+                        actionKind = "TaskPromptDefaultNewWorld",
+                        taskId = 129,
+                        taskBranches = new[]
+                        {
+                            new PcTrapTaskSetPosBranch
+                            {
+                                values = new[] { 50 },
+                                message = "Vừa đến cửa động, đột nhiên bạn nghe tiếng kêu thảm thương, hình như là tiếng của Chu Vân Tuyền..",
+                            },
+                            new PcTrapTaskSetPosBranch
+                            {
+                                values = new[] { 55 },
+                                message = "Đứng lại! Tiếp chiêu đây!",
+                            },
+                        },
+                        fightState = 1,
+                        targetMapId = 42,
+                        targetCellX = 1584,
+                        targetCellY = 3221,
+                        terminiIds = new[] { 107 },
+                    }
+                }
+            };
+
+            var host = new FakeTrapTravelHost { taskValue = 0 };
+            var sideEffects = new FakeTrapActionSideEffects();
+            var executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xDE60532A" }, out var result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(42, host.mapId);
+            Assert.AreEqual(1, host.fightState);
+            Assert.AreEqual(MapEnemyDatabase.MpsToWorld(1584 * 32, 3221 * 32), host.position);
+            CollectionAssert.AreEqual(new[] { 107 }, sideEffects.terminiIds);
+            CollectionAssert.IsEmpty(sideEffects.messages);
+
+            host = new FakeTrapTravelHost { taskValue = 50 };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xDE60532A" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            Assert.AreEqual(-1, host.fightState);
+            CollectionAssert.AreEqual(new[] { "Vừa đến cửa động, đột nhiên bạn nghe tiếng kêu thảm thương, hình như là tiếng của Chu Vân Tuyền.." }, sideEffects.messages);
+            CollectionAssert.IsEmpty(sideEffects.terminiIds);
+
+            host = new FakeTrapTravelHost { taskValue = 55 };
+            sideEffects = new FakeTrapActionSideEffects();
+            executor = new PcTrapActionExecutor(catalog, host, sideEffects);
+
+            Assert.IsTrue(executor.TryExecute(new TrapDefinition { trapIdHex = "0xDE60532A" }, out result));
+
+            Assert.IsTrue(result.success);
+            Assert.AreEqual(-1, host.mapId);
+            CollectionAssert.AreEqual(new[] { "Đứng lại! Tiếp chiêu đây!" }, sideEffects.messages);
         }
 
         [Test]

@@ -185,6 +185,32 @@ namespace VLTK.Sandbox
                 return true;
             }
 
+            if (action.IsTaskPromptDefaultNewWorld)
+            {
+                int taskValue = _host.GetTaskValue(action.taskId);
+                var branch = FindTaskBranch(action, taskValue);
+                if (branch != null)
+                {
+                    if (_sideEffects != null && !string.IsNullOrWhiteSpace(branch.message))
+                        _sideEffects.PostMessage(branch.message);
+                    result = Success(action,
+                        $"GetTask({action.taskId})=={taskValue} -> prompt-only branch lines={(string.IsNullOrWhiteSpace(branch.message) ? 0 : 1)}");
+                    return true;
+                }
+
+                if (!_host.HasMap(action.targetMapId))
+                {
+                    result = Failure(action, $"target map {action.targetMapId} missing from catalog");
+                    return true;
+                }
+                ApplyFightState(action);
+                _host.NewWorld(action.targetMapId, target);
+                ApplyOptionalSideEffects(action);
+                result = Success(action,
+                    $"GetTask({action.taskId})=={taskValue} -> default enter_cave NewWorld({action.targetMapId},{action.targetCellX},{action.targetCellY}) -> {target}");
+                return true;
+            }
+
             if (action.IsClearSkillSwitchTrap)
             {
                 int currentFightState = _host.GetFightState();

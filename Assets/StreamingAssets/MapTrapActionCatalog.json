@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAtUtc": "2026-06-08T08:19:23Z",
+  "generatedAtUtc": "2026-06-08T08:32:24Z",
   "sourceTrapScriptCatalog": "MapTrapScriptCatalog.json",
   "coordinateRule": "PC NewWorld/SetPos cell coordinates are multiplied by 32 MPS before MapEnemyDatabase.MpsToWorld",
   "entries": [
@@ -3325,6 +3325,36 @@
       "targetCellY": 3391,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 1124881769,
+      "trapIdHex": "0x430C5569",
+      "scriptPath": "\\script\\中原北区\\伏牛山\\伏牛山西\\trap\\伏牛山西3to天心洞3.lua",
+      "sourceRelPath": "script\\中原北区\\伏牛山\\伏牛山西\\trap\\伏牛山西3to天心洞3.lua",
+      "actionKind": "TaskPromptDefaultNewWorld",
+      "source": "PC trap Lua main(): GetTask prompt branches show Say/Talk and do not auto-warp; default branch calls enter_cave SetFightState/NewWorld/AddTermini",
+      "taskId": 129,
+      "taskBranches": [
+        {
+          "values": [
+            50
+          ],
+          "message": "Vừa đến cửa động, đột nhiên bạn nghe tiếng kêu thảm thương, hình như là tiếng của Chu Vân Tuyền.."
+        },
+        {
+          "values": [
+            55
+          ],
+          "message": "Đứng lại! Tiếp chiêu đây!"
+        }
+      ],
+      "targetMapId": 42,
+      "targetCellX": 1676,
+      "targetCellY": 2901,
+      "fightState": 1,
+      "terminiIds": [
+        109
+      ]
     },
     {
       "trapId": 1129648775,
@@ -8690,6 +8720,36 @@
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
     },
     {
+      "trapId": 2915112962,
+      "trapIdHex": "0xADC11802",
+      "scriptPath": "\\script\\中原北区\\伏牛山\\伏牛山西\\trap\\伏牛山西2to天心洞2.lua",
+      "sourceRelPath": "script\\中原北区\\伏牛山\\伏牛山西\\trap\\伏牛山西2to天心洞2.lua",
+      "actionKind": "TaskPromptDefaultNewWorld",
+      "source": "PC trap Lua main(): GetTask prompt branches show Say/Talk and do not auto-warp; default branch calls enter_cave SetFightState/NewWorld/AddTermini",
+      "taskId": 129,
+      "taskBranches": [
+        {
+          "values": [
+            50
+          ],
+          "message": "Vừa đến cửa động, đột nhiên bạn nghe tiếng kêu thảm thương, hình như là tiếng của Chu Vân Tuyền.."
+        },
+        {
+          "values": [
+            55
+          ],
+          "message": "Đứng lại! Tiếp chiêu đây!"
+        }
+      ],
+      "targetMapId": 42,
+      "targetCellX": 1619,
+      "targetCellY": 2894,
+      "fightState": 1,
+      "terminiIds": [
+        108
+      ]
+    },
+    {
       "trapId": 2918011559,
       "trapIdHex": "0xADED52A7",
       "scriptPath": "\\script\\两湖区\\武陵山\\大酋洞迷宫\\trap\\大酋洞迷宫1to武陵山7.lua",
@@ -11369,6 +11429,36 @@
       "targetCellY": 3473,
       "fightState": 1,
       "source": "PC trap Lua main(): deterministic NewWorld with no Talk/Msg2Player branch"
+    },
+    {
+      "trapId": 3730854698,
+      "trapIdHex": "0xDE60532A",
+      "scriptPath": "\\script\\中原北区\\伏牛山\\伏牛山西\\trap\\伏牛山西1to天心洞1.lua",
+      "sourceRelPath": "script\\中原北区\\伏牛山\\伏牛山西\\trap\\伏牛山西1to天心洞1.lua",
+      "actionKind": "TaskPromptDefaultNewWorld",
+      "source": "PC trap Lua main(): GetTask prompt branches show Say/Talk and do not auto-warp; default branch calls enter_cave SetFightState/NewWorld/AddTermini",
+      "taskId": 129,
+      "taskBranches": [
+        {
+          "values": [
+            50
+          ],
+          "message": "Vừa đến cửa động, đột nhiên bạn nghe tiếng kêu thảm thương, hình như là tiếng của Chu Vân Tuyền.."
+        },
+        {
+          "values": [
+            55
+          ],
+          "message": "Đứng lại! Tiếp chiêu đây!"
+        }
+      ],
+      "targetMapId": 42,
+      "targetCellX": 1584,
+      "targetCellY": 3221,
+      "fightState": 1,
+      "terminiIds": [
+        107
+      ]
     },
     {
       "trapId": 3747108953,
