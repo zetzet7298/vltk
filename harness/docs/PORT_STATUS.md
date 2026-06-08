@@ -303,6 +303,23 @@ For each future status row, cite at least one of:
 3. Waypoint/wharf/revive/scroll exact parser/count tests are added and Unity MCP EditMode proof passed; still needs end-to-end travel runtime proof.
 4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
 
+## Port Factory Batch 1 audit queue — 2026-06-09
+
+Current scaffold evidence:
+
+- `d960ca7 chore: scaffold trap action port hooks` only adds partial hook/catalog files for `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter`. The new executor hooks still return `false`, so this is scaffolding, not runtime parity.
+- Harness traces `#44`-`#50` record worktree setup, task claims, main-only Unity MCP policy, and scaffold integration. Trace `#51` records CityWar PC-source inspection only. No accepted worker implementation patch after the scaffold is integrated yet.
+- Therefore no `✅` runtime row is upgraded by Batch 1 until a worker patch is integrated by main and backed by Unity/test/verifier proof.
+
+Conservative row update queue:
+
+| Batch 1 scope | PORT_STATUS row(s) to revisit after integration | Required proof before changing status |
+|---|---|---|
+| `ClearSkillTeamEnterHole` | Deferred trap family list; Region_S trap Lua subset | PC Lua source citation, accepted hook/executor implementation, representative tests, `jx_map_port_verify.py` showing the deferred family resolved, then Unity proof. |
+| `TongMapEntrance` | Deferred trap family list; Guild city war / Tong maps; Region_S trap Lua subset | PC `script/tong` source citation, ownership/ban/expiry/enter-pos semantics tested, verifier deferred count update, then Unity proof. |
+| `CityWarJoinRouter` | Deferred trap family list; City war config; Region_S trap Lua subset | PC city-war source citation, camp routing/current-map behavior tested, verifier deferred count update, then Unity proof. |
+| Travel runtime proof | Waypoints, Wharves, Revive positions, Scroll items | End-to-end service/runtime tests proving consumers use the exact parsed PC data; parser/count tests alone stay `✅ data / 🔄 runtime`. |
+
 ## Harness DB sync audit — 2026-06-08
 
 Command evidence:
