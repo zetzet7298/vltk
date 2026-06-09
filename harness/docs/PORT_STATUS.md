@@ -30,6 +30,7 @@
   - `status=pass_with_known_gaps`, `errors=[]`.
 - Unity console check: only known Addressables GUID conflict noise during this audit.
 - Batch 3b adds a fresh isolated Unity Test Runner artifact for `PortFactorySmoke`: EditMode `2/2 passed` via Unity MCP job `5d7958b697ad4565aab8a1e409430c05`. Existing `VLTK.Tests.EditMode`/PlayMode asmdefs remain gated/stale; this is not a full-suite claim.
+- Batch 4 local integration adds pure model/service/catalog proofs for Translife bonus lookup/diff, Hongbao weighted-open command surface, City Hongbao schema, MissionBattle scoring lookup, ClearSkill lifecycle plan replay, CityWar challenge-token turn-in, ItemExchange rolevalue facts, NPC/Boss `skills1.txt` subset catalog, Tong/faction map catalog, and expanded `PortFactorySmoke`. Current Unity execute proof returned `hongbao=69/1000000/t42+27/costly15/log69; hbType1=1/AddItem/True; hbType2=2/AddGoldItem/True; hbBlocked=InsufficientInventorySpace/None; cityHongbao=67/1010000/4681/10000; battle=5/25/25/idx1:1:75; translife=41/29/7/d15:80:4:1; clearskillInit=True/5/4321; clearskillLeave=True/8/CloseMission; rolevalue=4/35/5000/27/400-4000/True; npcskills=158/158/145/21/13/54/64; tongFactionMap=33/7/11/1712:3330/329:1561:2942`.
 - Exa research timed out twice; DeepWiki fetched UnityCsReference overview. This audit relies on current repo files and PC source-of-truth, not external guesses.
 
 ## Current high-confidence map verifier facts
@@ -68,11 +69,12 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Gold bosses | `Reference/PcNpc/goldboss.txt` | 32 rows | ✅ | 🔄 event/schedule behavior not fully audited |
 | Base skills | `Reference/PcSkill/skills.txt` | 1,216 rows | ✅ | 🔄 skill behavior/formulas/scripts partial |
 | Weapon skills | `Reference/PcSkill/clientweaponskill.txt` | 32 rows | ✅ | 🔄 behavior not audited |
+| NPC/Boss skill catalog | `Reference/PcSkill/npcskills.txt` | 158 rows / 145 NPC-script / 21 boss-name | ✅ catalog / 🔄 runtime | Derived from PC `skills1.txt`; old standalone 43-row claim not source-proven |
 | Thief skills | `Reference/PcSkill/thiefskill.txt` | 4 rows | ✅ | 🔄 behavior not audited |
 | Mod skills local | `Reference/ModSkills.txt` | 1,554 rows | 🔄 | PC `skills1.txt` 1,712 is not fully represented/proven |
 | Missiles local | `Reference/PcMissles.txt`, `Reference/ModMissles.txt` | 441 + 441 rows | 🔄 | old “480 effects” claim not proven |
 | Meridian levels | `Reference/PcMeridian/meridian_level.txt` | 128 rows | ✅ | 🔄 full UX/effect parity not audited |
-| Translife level table | `Reference/PcTask/translife.txt` | 41 rows / levels 160..200 | ✅ data/service | Chuyển Sinh level bonus table only; skill unlock/effect application runtime not proven |
+| Translife level table | `Reference/PcTask/translife.txt` | 41 rows / levels 160..200 | ✅ data/service lookup | Batch 4 adds pure 7-group bonus lookup/diff proof; skill unlock/effect application runtime not proven |
 | Gold equip | `Reference/PcItemFull/goldequip.txt` | 5,346 rows | ✅ | data catalog |
 | Platina equip | `Reference/PcItemFull/platinaequip.txt` | 5,336 rows | ✅ | data catalog |
 | Armor/helm/boot/cuff/belt/ring/amulet/pendant | `PcItemFull/*.txt` | 290/140/40/20/20/10/20/20 | ✅ | data catalog |
@@ -80,15 +82,17 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Magic attributes | `Reference/PcItemFull/magicattrib.txt` | 330 rows | ✅ | old 333 claim false |
 | Compound recipes | `Reference/PcItemFull/atlas_compound.txt` | 1,294 rows | ✅ data / 🔄 craft | craft execution/UI still partial |
 | Quest keys | `Reference/PcItemFull/questkey.txt` | 2,045 rows | ✅ | data/service |
-| Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data / 🔄 service path | parser/service now targets PC `settings/item/hongbao.txt`; weighted claim/item-award/costly/message/log runtime semantics still partial |
-| Item exchange source catalog | `Reference/PcItemExchange` | 7,334 normal / 480 rare / 200 level_exp / 100 level_lead_exp / 35 rolevalue keys | ✅ catalog / 🔄 runtime | Source catalog only; exchange rules/inventory/economics/log side effects not proven |
+| Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data / 🔄 open model | Batch 4 weighted-open model proves PC raw weights, 6-cell preflight, AddItem/AddGoldItem command surface, Costly/Log flags; inventory mutation/UI/server side effects still missing |
+| City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/service | Full PC schema parsed; weighted open/inventory mutation/UI/server side effects not proven |
+| Item exchange source catalog | `Reference/PcItemExchange` | 7,334 normal / 480 rare / 200 level_exp / 100 level_lead_exp / 35 rolevalue keys | ✅ catalog+rolevalue facts / 🔄 runtime | Batch 4 exposes rolevalue typed facts (4 sections, 35 keys, 27 Jxb values, skill=5000); exchange rules/inventory/economics/log side effects not proven |
 | Shop goods/buysell | `Reference/PcShop/goods.txt`, `buysell.txt` | 1,521 + 165 rows | ✅ | catalog; NPC shop UX not fully audited |
 | Lottery | `Reference/PcLottery/lottery.txt` | 254 rows | ✅ | data/service |
 | Adventure | `Reference/PcAdventure/adventure.txt` | 1,037 rows | ✅ | catalog; quest semantics partial |
 | Player task defs | `Reference/PcMission/player_task_def.txt` | 656 rows | ✅ data | mission execution partial |
 | Guild levels | `Reference/PcTong/tong_level_data.txt` | 6 rows | ✅ | guild scripts partial |
 | City war config | `Reference/PcEvent/citywar.ini` | 90 data lines | ✅ data | join/router semantics partial |
-| MissionBattle combo/scores matrix | `Reference/PcBattlefield/MissionBattle/combo.txt`, `scores.txt` | 5 ranks / 25 combo cells / 25 score cells | ✅ data/service subset | Runtime scoring integration, kill/death award flow, mission lifecycle not proven |
+| MissionBattle combo/scores matrix | `Reference/PcBattlefield/MissionBattle/combo.txt`, `scores.txt` | 5 ranks / 25 combo cells / 25 score cells | ✅ data/scoring lookup subset | Batch 4 lookup proves PC title-index/rank scoring facts; kill/death award mutation and mission lifecycle not proven |
+| Tong/faction map catalog | `Reference/PcTong/faction_map.txt` | 33 rows: 4 public / 7 dynamic templates / 11 citymap / 4 building / 7 city altar NPC | ✅ data/service | Batch 4 imports PC `script/tong/addtongnpc.lua` map arrays and `tong_mix.lua` level-10 enter gate; ownership/build/ban/expire/runtime movement not proven |
 | Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / 🔄 runtime | parser preserves exact PC count; `PcMapTravelRuntimeService` lookup proof covers representative IDs/maps; end-to-end travel UX/runtime still partial |
 | Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / 🔄 runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; `PcMapTravelRuntimeService` lookup proof covers service lookup; end-to-end wharf travel UX/runtime still partial |
 | Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / 🔄 runtime | parser preserves section `[949]` `region=1,3` with 1 real coordinate; `PcMapTravelRuntimeService` lookup proof covers default/map revive lookup; in-scene revive behavior still partial |
@@ -100,11 +104,9 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 
 | System | Expected path/evidence | Current state | Status |
 |---|---|---|---:|
-| Faction maps 33 | `Reference/PcTong/faction_map.txt` | missing | ☐ |
 | Special skills 58 | `Reference/PcSkill/specialskills.txt` | missing | ☐ |
-| NPC/Boss skills 43 | `Reference/PcSkill/npcskills.txt` | missing | ☐ |
 | Translife skills 9 | `Reference/PcSkill/translifeskill.txt` | missing; separate `PcTask/translife.txt` level table is loaded/proven | ☐ skills / ✅ level table |
-| Item exchange source catalog | `Reference/PcItemExchange` | top-level `itemexchange_setting` subset present; `rolevalue_log` excluded | ✅ catalog / 🔄 runtime |
+| Item exchange source catalog | `Reference/PcItemExchange` | top-level `itemexchange_setting` subset present; rolevalue typed facts exposed; `rolevalue_log` excluded | ✅ catalog+rolevalue / 🔄 runtime |
 | Hongbao runtime dir | `Reference/PcHongbao` | legacy fallback only; default service path fixed to `PcItemFull/hongbao.txt` | ✅ path fixed / 🔄 runtime |
 | Battlefield data dir | `Reference/PcBattlefield` | `MissionBattle/combo.txt` + `scores.txt` subset present | ✅ subset / 🔄 runtime |
 | Battle script dir | `Reference/PcBattleScript` or `Reference/PcEvent/Battle` | missing | 🔄/☐ |
@@ -137,7 +139,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Ngũ hành mapping | 🔄 | core mapping exists | Full 10-faction PC element audit; known UI/catalog mismatches |
 | Chính/Tà/Trung lập alignment | 🔄/☐ | relation/framework services exist | PC alignment source-of-truth and tests |
 | Faction titles 81 | ✅ data/service | `Reference/PcTitle/factiontitle.txt`, parser/service/tests exist | Visual/effect parity not fully audited |
-| Faction maps 33 | ☐ | expected `faction_map.txt` missing | Add correct PC source + parser + count test |
+| Faction maps 33 | ✅ data/service | `Reference/PcTong/faction_map.txt` 33 rows from PC `script/tong/addtongnpc.lua`; parser/service/count tests present | Prove Tong map ownership/build/ban/expire/runtime movement before `✅ runtime` |
 
 ### 3. Skills / missiles
 
@@ -147,8 +149,9 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Extended skills | 🔄 | local `ModSkills.txt` 1,554 rows | Import/verify PC `skills1.txt` 1,712 rows or document scope |
 | Skill templates 219 | ☐/🔄 | expected source missing; parser path suspect | Copy correct PC `skilltemplate.txt`; parser/test exact 219 |
 | Weapon/thief skill data | ✅ data | 32 + 4 rows | Runtime behavior tests |
+| NPC/Boss skill catalog | ✅ catalog / 🔄 runtime | PC `skills1.txt` subset in `Reference/PcSkill/npcskills.txt`: 158 rows, 145 NPC-script, 21 boss-name, 13 boss-only; old 43-row standalone claim is not PC-proven | Execute skill scripts/AI/combat behavior |
 | 10 faction skill sets | 🔄 | static `SkillSectCatalog` + tests | PC skill tree/script parity and catalog text fixes |
-| Special/NPC/translife skills | ☐/🔄 | expected skill files missing; separate Translife level table now proven at `PcTask/translife.txt` | Add correct skill data/files; do not treat level table as `translifeskill.txt` parity |
+| Special/translife skills | ☐/🔄 | `specialskills.txt` and `translifeskill.txt` still missing; separate Translife level table now proven at `PcTask/translife.txt` | Add correct skill data/files; do not treat level table as `translifeskill.txt` parity |
 | Skill level up | 🔄 | level/progression services exist | PC formula/Lua parity proof |
 | Missile effects | 🔄 | local missile rows 441+441 | Verify correct PC missile count and effect SPR coverage |
 | Skill icons/animations | 🔄 | partial visual services/tests | All-skill icon/animation provenance audit |
@@ -178,8 +181,8 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Compound/recipe | ✅ data / 🔄 craft | 1,294 recipes; craft UI/execution partial | Inventory consume/result execution |
 | Quest items | ✅ data/service | 2,045 quest keys | Full quest usage semantics |
 | Shop/auction/stall/economy | 🔄 | data/services exist | NPC shop UX and server economy behavior parity |
-| Item exchange | ✅ source catalog / 🔄 runtime | Batch 3 imports/parses top-level PC `itemexchange_setting`: normal 7,334 rows, rare 480 rows, level_exp 200 rows, level_lead_exp 100 rows, rolevalue.ini 35 keys; `rolevalue_log` excluded | Implement/verify exchange rules, inventory mutation, role value/evaluate formulas, server log/runtime side effects |
-| Hongbao | ✅ data/service path / 🔄 runtime | `hongbao.txt` 69 rows parsed from `PcItemFull`; default service load points at `Reference/PcItemFull` with legacy fallback | Prove real claim flow: item grant, probability/costly/message/log semantics, inventory mutation, UI/server side effects |
+| Item exchange | ✅ source catalog/rolevalue facts / 🔄 runtime | Batch 3 imports/parses top-level PC `itemexchange_setting`: normal 7,334 rows, rare 480 rows, level_exp 200 rows, level_lead_exp 100 rows, rolevalue.ini 35 keys; Batch 4 exposes typed `rolevalue.ini` facts: 4 sections, 27 Jxb server values, skill=5000, create date 20160301; `rolevalue_log` excluded | Implement/verify exchange rules, inventory mutation, role value/evaluate formulas, server log/runtime side effects |
+| Hongbao | ✅ data/open-model path / 🔄 runtime | `hongbao.txt` 69 rows parsed from `PcItemFull`; Batch 4 proves KBonus-style inclusive raw-weight selection, 6 free-cell preflight, Type 1/2 reward commands, Costly global-news flag, and Log flag | Wire commands to real inventory/item grant, consume item, UI/server side effects, and logs before runtime `✅` |
 | Drop rates | 🔄 | `PcDropRate` has many tables; services exist | Loot behavior parity tests |
 
 ### 6. Missions / quests
@@ -191,7 +194,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Adventure entries 1,037 | ✅ data | exact row count | Runtime quest integration |
 | Task/random/talk/event configs | 🔄 | config services/parsers exist | PC behavior and side-effect tests |
 | Newtask/tollgate/mission arena/maze/qianchong configs | 🔄 | services exist | Full mission flow parity |
-| ClearSkill mission lifecycle constants | 🔄 proof model | Batch 3 proves PC mission id/timer/camp NPC/init/end/onleave/timer constants and operation plans | Wire to real mission host executor, party APIs, scene/runtime proof |
+| ClearSkill mission lifecycle constants | 🔄 proof model/executor | Batch 3 proves PC mission id/timer/camp NPC/init/end/onleave/timer constants and operation plans; Batch 4 replays plans into a host interface and proves call order/result forwarding | Wire host interface to real mission host, party APIs, scene/runtime proof |
 
 ### 7. Events / activities
 
@@ -208,8 +211,8 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Item | Status | Evidence | Required next proof/work |
 |---|---:|---|---|
 | Core combat/damage/projectile/buff/death/PK services | 🔄 | services and tests exist | PC formula/skill/PvP semantic parity |
-| Tống Kim maps/rebirth traps | 🔄 | map alias counts, some rebirth traps ported; Batch 3 MissionBattle combo/scores subset proves 5 ranks and 25/25 matrix cells | Full battlefield state/scoring/join/award behavior |
-| CityWar | 🔄 partial runtime/model/constants proof | `citywar.ini` data exists; `CityWarJoinRouter` routed; Batch 2 model covers join plan branches; Batch 3 constants prove PC card table, card prices, challenge token, task ids/caps/reward constants; transfer-route split model proves NPC route 222/223 vs trap join 221 | Full CityWar mission lifecycle, Tong gate host integration, inventory/life APIs, rewards, capacity gates, and live scene proof still missing |
+| Tống Kim maps/rebirth traps | 🔄 | map alias counts, some rebirth traps ported; Batch 3 MissionBattle combo/scores subset proves 5 ranks and 25/25 matrix cells; Batch 4 scoring lookup proves representative PC title-index/rank scores | Full battlefield state, kill/death award mutation, join/award behavior, mission lifecycle |
+| CityWar | 🔄 partial runtime/model/constants/token proof | `citywar.ini` data exists; `CityWarJoinRouter` routed; Batch 2 model covers join plan branches; Batch 3 constants prove PC card table, card prices, challenge token, task ids/caps/reward constants; transfer-route split model proves NPC route 222/223 vs trap join 221; Batch 4 challenge-token turn-in model proves token tuple, daily cap, exp, task/league/Tong-total command surface | Full CityWar mission lifecycle, Tong gate host integration, real inventory/life APIs, real command execution, rewards, capacity gates, and live scene proof still missing |
 | Quốc Chiến/Hoa Sơn | 🔄/☐ | service hints exist; dedicated source proof weak/missing | Add PC source evidence/runtime tests |
 | Battle scripts 183 | 🔄 indexed/mock | `BattleScriptRuntimeService` simplified/log behavior reported; dirs missing | Full PC battle Lua semantics |
 | Battle awards/double EXP | 🔄 | services exist | PC event/schedule/effect parity |
@@ -221,7 +224,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Guild level data | ✅ data | 6 rows in `tong_level_data.txt` | Runtime behavior parity |
 | Guild creation/fund/contribution/workshop/task/rank/stunt | 🔄 | services/configs exist | PC server behavior and script side effects |
 | Guild scripts 65 | 🔄 indexed/framework | PC `script/tong` Lua not executed; service mostly validate/log/return | Semantic Lua execution or explicit indexed-only status |
-| Guild city war / Tong maps | 🔄 partial hooks/model/constants proof | `TongMapEntrance=8` routed as host-limited hook with Batch 2 default/cn_ib branch model; `CityWarJoinRouter=1` routed/tested as partial runtime/model proof; Batch 3 adds CityWar card/token constants and transfer-route split | Implement/prove PC Tong ownership/ban/expire/product-region/template-map APIs, CityWar gate integration, and Unity runtime behavior before `✅` |
+| Guild city war / Tong maps | 🔄 partial hooks/model/constants/catalog proof | `TongMapEntrance=8` routed as host-limited hook with Batch 2 default/cn_ib branch model; `CityWarJoinRouter=1` routed/tested as partial runtime/model proof; Batch 3 adds CityWar card/token constants and transfer-route split; Batch 4 adds challenge-token turn-in command surface and 33-row Tong/faction map catalog | Implement/prove PC Tong ownership/ban/expire/product-region/template-map APIs, CityWar gate integration, map ownership/build/recharge, real inventory/Tong task APIs, and Unity runtime behavior before `✅` |
 | Party system | 🔄 | party services/panels exist | Full PC team behavior, team trap entry, UI proof |
 
 ### 10. Other systems
@@ -284,9 +287,9 @@ Never restore these without stronger proof:
 - Section 15 server scripts as `✅` complete.
 - Section 14 GBK dirs as semantic `✅`.
 - Mission/event/battle/guild scripts as full runtime `✅` merely because metadata services exist.
-- Faction maps 33 `✅` while `faction_map.txt` is missing.
+- Faction maps 33 as full runtime `✅`; current proof is data/service only, not Tong map ownership/build/ban/expire/runtime movement.
 - Extended skills 1,712 `✅` while local data is 1,554 rows and PC `skills1.txt` full import is unproven.
-- Skill templates 219, special skills 58, NPC skills 43, translife skills 9 as `✅` while expected source files are missing.
+- Skill templates 219, special skills 58, old NPC skills 43 count, translife skills 9 as `✅`; current NPC/Boss skills1 subset proof is 158 data rows only, while special/translife skill files remain missing.
 - Item exchange and hongbao runtime as `✅` while expected runtime dirs are missing/path-mismatched.
 - HUD/UI/GM teleport claims based on dirty or user-owned changes.
 
@@ -314,7 +317,7 @@ Integrated Batch 1 evidence:
 - `d960ca7 chore: scaffold trap action port hooks` was followed by worker patches for the scoped families plus main integration wiring.
 - `PcTrapActionCatalogRuntime.LoadFromStreamingAssets()` now augments `MapTrapActionCatalog.json` with the 13 host-limited deferred entries from `MapTrapScriptCatalog.json`, so loaded runtime catalog count is 817 (`804` deterministic + `13` routed partial actions).
 - `PcMapTravelRuntimeService` adds service-level lookup proof for PC waypoint/wharf/revive/scroll data.
-- Unity compile is clean; Unity Editor execute proof returned `catalog=817 tong=8 clear=4 city=1 travel=225/11/241/2600`. Unity Test Runner discovery returned 0 tests for this project/assembly, so this is not claimed as a Test Runner artifact.
+- Unity compile succeeds on current HEAD; console noise is limited to known Addressables GUID conflict noise plus stale TestResults saving output from scoped test runs. Unity execute proof returned `hongbao=69/1000000/t42+27/costly15/log69; hbType1=1/AddItem/True; hbType2=2/AddGoldItem/True; hbBlocked=InsufficientInventorySpace/None; cityHongbao=67/1010000/4681/10000; battle=5/25/25/idx1:1:75; translife=41/29/7/d15:80:4:1; clearskillInit=True/5/4321; clearskillLeave=True/8/CloseMission; rolevalue=4/35/5000/27/400-4000/True; npcskills=158/158/145/21/13/54/64; tongFactionMap=33/7/11/1712:3330/329:1561:2942`.
 - `jx_map_port_verify.py --include-missing-spr-region-refs --pretty` passes with known map-SPR gaps and still reports the 13 deferred family counts, because the verifier tracks PC-runtime semantic gaps rather than Unity loader augmentation.
 - Therefore no broad `✅ runtime` row is upgraded by Batch 1. Conservative status remains `✅ data / 🔄 runtime` or `🔄 partial hook/runtime`.
 
@@ -332,8 +335,8 @@ Conservative row update queue:
 Integrated Batch 2 evidence:
 
 - Service/model proof commits integrated for travel action lookup, ClearSkill TeamEnterHole/JoinHole, TongMapEntrance, CityWarJoinRouter, map 907 runtime-surface smoke, and Test Runner discovery diagnosis.
-- Unity compile is clean except known Addressables GUID conflict noise. Unity Editor execute proof returned `travel wp225=340/1853/3446 wharf3=2/DataOnly revive949=51264/102368 scroll=2600/DataOnly; clear=True/249/2; tong=cn_ib-banned-non-owner/3; city=True/True/1; map907=True/16/0`.
-- Non-Unity verification passed: `git diff --check`, `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` (`pass_with_known_gaps`), and `cargo test -p harness-cli` (`20 passed`).
+- Unity compile succeeds on current HEAD; console noise is limited to known Addressables GUID conflict noise plus stale TestResults saving output from scoped test runs. Unity execute proof returned `hongbao=69/1000000/t42+27/costly15/log69; hbType1=1/AddItem/True; hbType2=2/AddGoldItem/True; hbBlocked=InsufficientInventorySpace/None; cityHongbao=67/1010000/4681/10000; battle=5/25/25/idx1:1:75; translife=41/29/7/d15:80:4:1; clearskillInit=True/5/4321; clearskillLeave=True/8/CloseMission; rolevalue=4/35/5000/27/400-4000/True; npcskills=158/158/145/21/13/54/64; tongFactionMap=33/7/11/1712:3330/329:1561:2942`.
+- Non-Unity verification passed: `git diff --check`, `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` (`pass_with_known_gaps`, `errors=[]`, 182 known map SPR gaps), `cargo test -p harness-cli` (`20 passed`), and PC-filter byte proof confirms `Reference/PcSkill/npcskills.txt` is the exact CRLF subset of PC `skills1.txt` for 158 NPC/Boss rows. Scoped `PortFactorySmoke` artifact passed `6/6`; full legacy test asmdefs remain gated/stale.
 - Unity Test Runner still has no fresh passing artifact; root cause is the missing `VLTK_ENABLE_TESTS` define constraint. Do not reuse old `1771/1771` or `25/25` claims.
 - Batch 2 does not promote broad rows to `✅ runtime`: proofs are service/model/runtime-surface only until live host/API/scene behavior is exercised.
 
@@ -353,9 +356,9 @@ Conservative Batch 2 queue:
 Integrated Batch 3 evidence:
 
 - Data/service proof commits integrated for Translife level table, Hongbao PC schema/path, ItemExchange source catalog, MissionBattle combo/scores, CityWar card/token constants, ClearSkill lifecycle constants, CityWar transfer-route split, and isolated Test Runner smoke.
-- Unity compile is clean except known Addressables GUID conflict noise. Unity Editor execute proof returned `translife=41; hongbao=69; itemex=7334/480/200/100/35; battle=5/25/25; clearskill=5/4; citycards=14/def1=362; route=True/222/1/2`.
+- Unity compile succeeds on current HEAD; console noise is limited to known Addressables GUID conflict noise plus stale TestResults saving output from scoped test runs. Unity execute proof returned `hongbao=69/1000000/t42+27/costly15/log69; hbType1=1/AddItem/True; hbType2=2/AddGoldItem/True; hbBlocked=InsufficientInventorySpace/None; cityHongbao=67/1010000/4681/10000; battle=5/25/25/idx1:1:75; translife=41/29/7/d15:80:4:1; clearskillInit=True/5/4321; clearskillLeave=True/8/CloseMission; rolevalue=4/35/5000/27/400-4000/True; npcskills=158/158/145/21/13/54/64; tongFactionMap=33/7/11/1712:3330/329:1561:2942`.
 - Unity Test Runner scoped artifact: `PortFactorySmoke` EditMode job `5d7958b697ad4565aab8a1e409430c05` succeeded with `2 passed / 0 failed / 0 skipped`. This proves isolated runner discovery only; stale root test asmdefs remain gated by `VLTK_ENABLE_TESTS`.
-- Non-Unity verification passed: `git diff --check`, `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` (`pass_with_known_gaps`), and `cargo test -p harness-cli` (`20 passed`).
+- Non-Unity verification passed: `git diff --check`, `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` (`pass_with_known_gaps`, `errors=[]`, 182 known map SPR gaps), `cargo test -p harness-cli` (`20 passed`), and PC-filter byte proof confirms `Reference/PcSkill/npcskills.txt` is the exact CRLF subset of PC `skills1.txt` for 158 NPC/Boss rows. Scoped `PortFactorySmoke` artifact passed `6/6`; full legacy test asmdefs remain gated/stale.
 - Batch 3 does not promote broad rows to `✅ runtime`: proofs are data/service/model/test-smoke only until live host/API/scene behavior is exercised.
 
 Conservative Batch 3 queue:
@@ -363,12 +366,38 @@ Conservative Batch 3 queue:
 | Batch 3 scope | Current evidence | Still required before `✅ runtime` |
 |---|---|---|
 | Translife level table | PC `Client 6.0/settings/task/metempsychosis/translife.txt` imported as 41 levels 160..200 | Do not conflate with missing `translifeskill.txt`; prove skill unlock/effect application runtime |
-| Hongbao | PC `settings/item/hongbao.txt` 69 rows parsed via default `PcItemFull` service path | Weighted random select, inventory preflight, Type 1/2 reward grant, costly message/log semantics, UI/server side effects |
-| CityWar constants/routes | PC card table/token/task constants and transfer maps 222/223 to camp join 221 modeled | Full mission lifecycle, Tong host APIs, inventory/life APIs, rewards/capacity/live scene proof |
-| ItemExchange | PC `itemexchange_setting` source catalog imported/parses top-level tables | Exchange formulas/rules, inventory mutation, role value/evaluate, logs/runtime side effects |
-| MissionBattle combo/scores | PC `combo.txt` + `scores.txt` service proves 5 ranks and 25/25 cells | Runtime scoring integration, kill/death awards, mission lifecycle |
-| ClearSkill lifecycle | PC mission timer/camp NPC/init/end/onleave/timer operation model proven | Wire to real mission host executor and scene/team runtime |
-| Test Runner | Isolated `PortFactorySmoke` EditMode 2/2 passed | Keep full legacy tests gated until compile errors are fixed; expand isolated smoke slices gradually |
+| Hongbao | PC `settings/item/hongbao.txt` 69 rows parsed via default `PcItemFull` service path; Batch 4 weighted-open command model proves raw Proba total 1,000,000, Type 1/2 counts, 6-cell preflight, AddItem/AddGoldItem command surfaces, Costly/Log flags | Real inventory mutation, item consumption, global news/log side effects, UI/server integration |
+| CityWar constants/routes/token turn-in | PC card table/token/task constants and transfer maps 222/223 to camp join 221 modeled; Batch 4 challenge-token turn-in plan proves same-date/new-date/cap command surface | Full mission lifecycle, Tong host APIs, real inventory/life APIs, rewards/capacity/live scene proof |
+| ItemExchange | PC `itemexchange_setting` source catalog imported/parses top-level tables; Batch 4 typed `rolevalue.ini` facts expose 4 sections/35 keys/27 Jxb server values | Exchange formulas/rules, inventory mutation, role value/evaluate application, logs/runtime side effects |
+| MissionBattle combo/scores | PC `combo.txt` + `scores.txt` service proves 5 ranks and 25/25 cells; Batch 4 lookup proves Soldier→General `combo=1/score=150` and title-index Captain→Command `combo=1/score=90` | Runtime kill/death score mutation, awards, mission lifecycle |
+| ClearSkill lifecycle | PC mission timer/camp NPC/init/end/onleave/timer operation model proven; Batch 4 executor replays init/onleave/timer/end plans against host interface | Wire to real mission host and scene/team runtime |
+| Test Runner | Isolated `PortFactorySmoke` EditMode 6/6 passed after Batch 4 expansion | Keep full legacy tests gated until compile errors are fixed; isolated smoke is not full-suite health |
+
+
+## Port Factory Batch 4 integration — 2026-06-09
+
+Integrated Batch 4 evidence:
+
+- Local `dev` integrates pure model/service/catalog commits for Translife level bonus lookup/diff, City Hongbao full schema, Hongbao weighted-open command model, MissionBattle scoring lookup, ClearSkill lifecycle plan executor, CityWar challenge-token turn-in, ItemExchange rolevalue facts, NPC/Boss skill catalog, Tong/faction map catalog, and expanded `PortFactorySmoke` smoke.
+- PC source proof used only `/var/www/vltksource_new/vl_update_27`: `translife.txt` = 41 rows/29 headers, `hongbao.txt` = 69 rows/1,000,000 raw Proba/42 Type 1/27 Type 2/15 Costly/69 Log, `chengshidahongbao.txt` = 67 rows, MissionBattle `combo.txt` + `scores.txt` = 5x5, ClearSkill Lua lifecycle files, CityWar `infocenter.lua/head.lua`, ItemExchange `rolevalue.ini`, PC `skills1.txt` NPC/Boss subset, and Tong `addtongnpc.lua` tables.
+- Unity compile succeeds on current HEAD; console noise is limited to known Addressables GUID conflict noise plus stale TestResults saving output from scoped test runs. Unity execute proof returned `hongbao=69/1000000/t42+27/costly15/log69; hbType1=1/AddItem/True; hbType2=2/AddGoldItem/True; hbBlocked=InsufficientInventorySpace/None; cityHongbao=67/1010000/4681/10000; battle=5/25/25/idx1:1:75; translife=41/29/7/d15:80:4:1; clearskillInit=True/5/4321; clearskillLeave=True/8/CloseMission; rolevalue=4/35/5000/27/400-4000/True; npcskills=158/158/145/21/13/54/64; tongFactionMap=33/7/11/1712:3330/329:1561:2942`.
+- Non-Unity verification passed: `git diff --check`, `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` (`pass_with_known_gaps`, `errors=[]`, 182 known map SPR gaps), `cargo test -p harness-cli` (`20 passed`), and PC-filter byte proof confirms `Reference/PcSkill/npcskills.txt` is the exact CRLF subset of PC `skills1.txt` for 158 NPC/Boss rows. Scoped `PortFactorySmoke` artifact passed `6/6`; full legacy test asmdefs remain gated/stale.
+- Batch 4 still does not promote broad rows to `✅ runtime`: reward/inventory mutation, live mission host APIs, battle score mutation, Tong map ownership/build/recharge, NPC skill AI execution, and scene/UI side effects remain unproven.
+
+Conservative Batch 4 queue:
+
+| Batch 4 scope | Current evidence | Still required before `✅ runtime` |
+|---|---|---|
+| Translife level bonus | Pure lookup/diff for all 7 groups over levels 160..200, source/header counts exposed | Apply bonuses to player stats and separately port/prove `translifeskill.txt` unlock/effect logic |
+| Hongbao weighted open | Raw PC weighted selection, 6 free-cell preflight, Type 1 `AddItem`, Type 2 `AddGoldItem`, Costly/Log event flags | Real inventory mutation, item consume, global news/log side effects, UI/server integration |
+| City Hongbao schema | Full `chengshidahongbao.txt` schema parsed as 67 rows with 1,010,000 total weight | Weighted open/service command model and real grant/UI/server side effects |
+| MissionBattle scoring | Rank/title-index lookup proves representative PC combo/score facts | Runtime kill/death score mutation, awards, mission lifecycle |
+| ClearSkill lifecycle executor | Operation plans replay into a host interface with PC call order/result forwarding | Real mission host adapter, party APIs, scene/team runtime proof |
+| CityWar challenge-token turn-in | Pure plan model proves PC token tuple `(6,1,1499)`, same/new-date task handling, daily cap 300, EXP=5,000/token, and command surfaces | Wire to real inventory/Tong/task/exp APIs, logs/messages, mission capacity, and live scene proof |
+| ItemExchange rolevalue facts | Typed `rolevalue.ini` service proves 4 sections/35 keys, 27 Jxb values, skill=5000, createDate=20160301, Jxb range 400..4000 | Implement exchange formulas/rules, inventory mutation, evaluate flow, and server log/runtime side effects |
+| NPC/Boss skills1 subset | Data catalog proves 158 rows, 145 NPC-script rows, 13 boss-name-only rows from PC `settings/skills1.txt`; old standalone 43-count claim is not PC-proven | Execute skill scripts/AI/combat behavior; do not treat data subset as full skill runtime |
+| Tong/faction map catalog | Data catalog proves 33 normalized rows from PC `script/tong/addtongnpc.lua`, including dynamic map 591 enter override `1712,3330` | Tong map ownership/build/ban/expire/runtime movement and host APIs |
+| Test Runner smoke | Isolated `PortFactorySmoke` expanded and passed 6/6 EditMode | Full stale root test assemblies still gated by `VLTK_ENABLE_TESTS` |
 
 ## Harness DB sync audit — 2026-06-08
 
