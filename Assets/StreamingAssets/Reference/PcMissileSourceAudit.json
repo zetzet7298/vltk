@@ -1,0 +1,195 @@
+{
+  "schemaVersion": 1,
+  "auditTask": "b6-missles-source-audit",
+  "runtimeClaim": false,
+  "notes": [
+    "Audit manifest only; it is not used by missile runtime.",
+    "PC source of truth is vl_update_27 Server 6.0 server1/settings/missles.txt and missles1.txt.",
+    "Both PC files share one 57-column schema/header hash."
+  ],
+  "expectedHeaderSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
+  "expectedHeaderColumns": 57,
+  "sources": [
+    {
+      "label": "pc-server-settings/missles.txt",
+      "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/settings/missles.txt",
+      "bytes": 89787,
+      "sha256": "6c5e1720905278e09e7dc7fc8786b6062b07edf2f9ffd2113aec86a5566d7b4a",
+      "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
+      "headerColumns": 57,
+      "physicalLines": 442,
+      "dataRows": 441,
+      "parsedIds": 441,
+      "uniqueIds": 441,
+      "duplicateIdCount": 0,
+      "duplicateMissileIds": [],
+      "minMissileId": 1,
+      "maxMissileId": 441,
+      "dataColumnCounts": [
+        57
+      ]
+    },
+    {
+      "label": "pc-server-settings/missles1.txt",
+      "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/settings/missles1.txt",
+      "bytes": 95797,
+      "sha256": "94b1c29ce689c5432e9c21e39e0d374982df7e13f7f058de08b95677520f83cf",
+      "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
+      "headerColumns": 57,
+      "physicalLines": 468,
+      "dataRows": 467,
+      "parsedIds": 467,
+      "uniqueIds": 466,
+      "duplicateIdCount": 1,
+      "duplicateMissileIds": [
+        408
+      ],
+      "minMissileId": 1,
+      "maxMissileId": 467,
+      "dataColumnCounts": [
+        57
+      ]
+    },
+    {
+      "label": "existing-reference/PcMissles.txt",
+      "path": "Assets/StreamingAssets/Reference/PcMissles.txt",
+      "bytes": 104745,
+      "sha256": "7999eb0b7a892b4eb2f2b43cb577457ce985f5f3d1cf94770bc26a4c90035f8a",
+      "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
+      "headerColumns": 57,
+      "physicalLines": 442,
+      "dataRows": 441,
+      "parsedIds": 441,
+      "uniqueIds": 441,
+      "duplicateIdCount": 0,
+      "duplicateMissileIds": [],
+      "minMissileId": 1,
+      "maxMissileId": 441,
+      "dataColumnCounts": [
+        57
+      ]
+    },
+    {
+      "label": "existing-reference/ModMissles.txt",
+      "path": "Assets/StreamingAssets/Reference/ModMissles.txt",
+      "bytes": 89786,
+      "sha256": "4f79cde57b199747ce1fa65216c46ede3596c8e5c9bafd1b73c8f137269ee66e",
+      "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
+      "headerColumns": 57,
+      "physicalLines": 442,
+      "dataRows": 441,
+      "parsedIds": 441,
+      "uniqueIds": 441,
+      "duplicateIdCount": 0,
+      "duplicateMissileIds": [],
+      "minMissileId": 1,
+      "maxMissileId": 441,
+      "dataColumnCounts": [
+        57
+      ]
+    },
+    {
+      "label": "repo-pcattrib/missles.txt",
+      "path": "Assets/StreamingAssets/Reference/PcAttrib/missles.txt",
+      "bytes": 89787,
+      "sha256": "6c5e1720905278e09e7dc7fc8786b6062b07edf2f9ffd2113aec86a5566d7b4a",
+      "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
+      "headerColumns": 57,
+      "physicalLines": 442,
+      "dataRows": 441,
+      "parsedIds": 441,
+      "uniqueIds": 441,
+      "duplicateIdCount": 0,
+      "duplicateMissileIds": [],
+      "minMissileId": 1,
+      "maxMissileId": 441,
+      "dataColumnCounts": [
+        57
+      ]
+    },
+    {
+      "label": "repo-pcattrib/missles1.txt",
+      "path": "Assets/StreamingAssets/Reference/PcAttrib/missles1.txt",
+      "bytes": 95797,
+      "sha256": "94b1c29ce689c5432e9c21e39e0d374982df7e13f7f058de08b95677520f83cf",
+      "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
+      "headerColumns": 57,
+      "physicalLines": 468,
+      "dataRows": 467,
+      "parsedIds": 467,
+      "uniqueIds": 466,
+      "duplicateIdCount": 1,
+      "duplicateMissileIds": [
+        408
+      ],
+      "minMissileId": 1,
+      "maxMissileId": 467,
+      "dataColumnCounts": [
+        57
+      ]
+    }
+  ],
+  "comparisons": [
+    {
+      "left": "pc-server-settings/missles.txt",
+      "right": "repo-pcattrib/missles.txt",
+      "exactBytes": true
+    },
+    {
+      "left": "pc-server-settings/missles1.txt",
+      "right": "repo-pcattrib/missles1.txt",
+      "exactBytes": true
+    },
+    {
+      "left": "pc-server-settings/missles.txt",
+      "right": "existing-reference/PcMissles.txt",
+      "exactBytes": false,
+      "sameDataRows": true,
+      "sameIdSequence": true,
+      "differingRowByteCount": 440
+    },
+    {
+      "left": "pc-server-settings/missles.txt",
+      "right": "existing-reference/ModMissles.txt",
+      "exactBytes": false,
+      "sameDataRows": true,
+      "sameIdSequence": true,
+      "differingRowByteCount": 5
+    },
+    {
+      "left": "pc-server-settings/missles1.txt",
+      "right": "existing-reference/ModMissles.txt",
+      "exactBytes": false,
+      "sameDataRows": false,
+      "sameIdSequence": false,
+      "idsOnlyInMissles1": [
+        442,
+        443,
+        444,
+        445,
+        446,
+        447,
+        448,
+        449,
+        450,
+        451,
+        452,
+        453,
+        454,
+        455,
+        456,
+        457,
+        458,
+        459,
+        460,
+        461,
+        462,
+        463,
+        464,
+        465,
+        466,
+        467
+      ]
+    }
+  ]
+}
