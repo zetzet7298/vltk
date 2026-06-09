@@ -1,0 +1,490 @@
+[
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/event/zhongqiuhuodong/huashan_lantern.txt"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/maps/huashanqunzhan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/maps/huashanqunzhan/huashanjingji.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/droprate/event/huashan.ini"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/droprate/event/jxanniversary3/huashan.ini"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/global/qsrpec/simcity/maps/thanhthi/987_hoason_nodes.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/global/qsrpec/simcity/maps/thanhthi/987_hoason_preset.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/global/qsrpec/simcity/maps/thanhthi/2_hoasondinh_nodes.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/global/qsrpec/simcity/maps/thanhthi/2_hoasondinh_preset.txt"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/huashan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d\udcc5\udcc9/\udcbb\udcaa\u027d\udcc5\udcc9/obj/signpost_tohuashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d\udcc5\udcc9/\udcbb\udcaa\u027d\udcc5\udcc9/trap/trap_tohuashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d/obj/signpost_tohuashanpai.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d/trap/trap_tohuashanpai.lua"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill1/huashan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill1/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill1/huashan/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill1/huashan/huashin.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill2/huashan.lua"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill-goc/huashan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill-goc/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill-goc/huashan/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill-goc/huashan/huashin.lua"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/dailog.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/missionctrl.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/taskctrl.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/huashanqunzhan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/playerdeath.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/ready/ready.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/leitaimission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/leitaitimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/class.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/leitainewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/commondata.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/playerdeath.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/ready/readynewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/ready/readyclass.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/ready/readymission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/mid_grade/ready/readytimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/leitaimission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/leitaitimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/class.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/leitainewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/commondata.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/playerdeath.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/ready/readynewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/ready/readyclass.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/ready/readymission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/missions/huashanqunzhan/high_grade/ready/readytimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/huashan/npchuashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser_bachkim_6.0/server1/script/huashan/npcfaction.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/event/zhongqiuhuodong/huashan_lantern.txt"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser/server1/settings/maps/huashanqunzhan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/maps/huashanqunzhan/huashanjingji.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/droprate/event/huashan.ini"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/droprate/event/jxanniversary3/huashan.ini"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/global/qsrpec/simcity/maps/thanhthi/987_hoason_nodes.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/global/qsrpec/simcity/maps/thanhthi/987_hoason_preset.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/global/qsrpec/simcity/maps/thanhthi/2_hoasondinh_nodes.txt"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/settings/global/qsrpec/simcity/maps/thanhthi/2_hoasondinh_preset.txt"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser/server1/script/huashan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d\udcc5\udcc9/\udcbb\udcaa\u027d\udcc5\udcc9/obj/signpost_tohuashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d\udcc5\udcc9/\udcbb\udcaa\u027d\udcc5\udcc9/trap/trap_tohuashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d/obj/signpost_tohuashanpai.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/\udcce\udcf7\udcb1\udcb1\udcc4\udccf\udcc7\udcf8/\udcbb\udcaa\u027d/trap/trap_tohuashanpai.lua"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill1/huashan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill1/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill1/huashan/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill1/huashan/huashin.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill2/huashan.lua"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill-goc/huashan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill-goc/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill-goc/huashan/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/skill-goc/huashan/huashin.lua"
+    },
+    {
+        "type": "directory",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/dailog.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/missionctrl.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/taskctrl.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/huashanqunzhan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/playerdeath.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/ready/ready.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/leitaimission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/leitaitimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/class.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/leitainewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/commondata.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/playerdeath.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/ready/readynewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/ready/readyclass.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/ready/readymission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/mid_grade/ready/readytimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/leitaimission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/leitaitimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/class.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/leitainewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/commondata.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/playerdeath.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/ready/readynewworld.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/ready/readyclass.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/ready/readymission.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/missions/huashanqunzhan/high_grade/ready/readytimer.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/huashan/npchuashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Server 6.0/server/home_jxser/server1/script/huashan/npcfaction.lua"
+    },
+    {
+        "type": "directory",
+        "path": "Client 6.0/file/skill/huashan"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/file/skill/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/file/skill/huashan/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/file/skill/huashan/huashin.lua"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/event/zhongqiuhuodong/huashan_lantern.txt"
+    },
+    {
+        "type": "directory",
+        "path": "Client 6.0/settings/maps/huashanqunzhan"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/maps/huashanqunzhan/huashanjingji.txt"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/droprate/event/huashan.ini"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/droprate/event/jxanniversary3/huashan.ini"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/global/qsrpec/simcity/maps/thanhthi/987_hoason_nodes.txt"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/global/qsrpec/simcity/maps/thanhthi/987_hoason_preset.txt"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/global/qsrpec/simcity/maps/thanhthi/2_hoasondinh_nodes.txt"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/settings/global/qsrpec/simcity/maps/thanhthi/2_hoasondinh_preset.txt"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/script/skill1/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/script/skill/huashan.lua"
+    },
+    {
+        "type": "file",
+        "path": "Client 6.0/script/skill2/huashan.lua"
+    }
+]
