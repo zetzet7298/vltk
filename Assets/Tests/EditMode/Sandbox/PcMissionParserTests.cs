@@ -16,6 +16,33 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void PlayerTaskDef_PreservesExactPcDataRowsAndFlags()
+        {
+            var path = Path.Combine(MissionDir, "player_task_def.txt");
+            var rows = PcMissionParser.ParseFile(path);
+            Assert.AreEqual(647, rows.Count, "PC player_task_def.txt has two header rows and 647 nonblank data rows; blank separator rows must not fabricate task ids.");
+            Assert.IsNotNull(rows.Find(e => e.taskIdFirst == 0), "Blank TASK_ID_FIRST data rows must be preserved without fabricated ids.");
+            Assert.IsNull(rows.Find(e => e.taskIdFirst == 158), "Blank separator row between 157 and 160 must not become fabricated task id 158.");
+            Assert.IsNull(rows.Find(e => e.taskIdFirst == 159), "Blank separator rows must be skipped instead of using an id cursor.");
+
+            var marriage = rows.Find(e => e.taskIdFirst == 151);
+            Assert.NotNull(marriage);
+            Assert.AreEqual(151, marriage.taskIdLast);
+            Assert.AreEqual(1, marriage.syncFlag, "SYNC_FLAG from PC row 151 must be preserved.");
+            Assert.AreEqual(0, marriage.clientFlag);
+
+            var clientVisible = rows.Find(e => e.taskIdFirst == 1276);
+            Assert.NotNull(clientVisible);
+            Assert.AreEqual(1, clientVisible.syncFlag);
+            Assert.AreEqual(1, clientVisible.clientFlag, "CLIENT_FLAG from PC row 1276 must be preserved.");
+
+            var range = rows.Find(e => e.taskIdFirst == 4165);
+            Assert.NotNull(range);
+            Assert.AreEqual(4168, range.taskIdLast, "TASK_ID_LAST ranges must still be preserved.");
+            Assert.AreEqual(1, range.syncFlag);
+        }
+
+        [Test]
         public void MissionHasVietnameseName()
         {
             var reg = PcMissionParser.BuildRegistry(MissionDir);

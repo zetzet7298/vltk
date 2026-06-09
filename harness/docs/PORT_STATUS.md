@@ -92,7 +92,7 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Shop goods/buysell | `Reference/PcShop/goods.txt`, `buysell.txt` | 1,521 + 165 rows | ✅ | catalog; NPC shop UX not fully audited |
 | Lottery | `Reference/PcLottery/lottery.txt` | 254 rows | ✅ | data/service |
 | Adventure | `Reference/PcAdventure/adventure.txt` | 1,037 rows | ✅ | catalog; quest semantics partial |
-| Player task defs | `Reference/PcMission/player_task_def.txt` | 656 rows | ✅ data | mission execution partial |
+| Player task defs | `Reference/PcMission/player_task_def.txt` | 647 nonblank data rows after exactly 2 PC header rows | ✅ data | Parser skips blank separator rows without fabricating ids; preserves SYNC_FLAG/CLIENT_FLAG metadata; mission execution partial |
 | Guild levels | `Reference/PcTong/tong_level_data.txt` | 6 rows | ✅ | guild scripts partial |
 | City war config | `Reference/PcEvent/citywar.ini` | 90 data lines | ✅ data | join/router semantics partial |
 | MissionBattle combo/scores matrix | `Reference/PcBattlefield/MissionBattle/combo.txt`, `scores.txt` | 5 ranks / 25 combo cells / 25 score cells | ✅ data/scoring lookup subset | Batch 4 lookup proves PC title-index/rank scoring facts; Batch 5 battle script index catalogs 183 `script/battles` files; kill/death award mutation and mission lifecycle not proven |
@@ -203,7 +203,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Quest framework | 🔄 | `QuestService` exists; hard-coded/sample chains reported | PC mission quest import/execution |
 | Mission script metadata | 🔄 | `MissionScriptService` is metadata/helper, not Lua VM | Implement/verify semantic executor or mark indexed only |
 | Adventure entries 1,037 | ✅ data | exact row count | Runtime quest integration |
-| Player task defs | ✅ data | `player_task_def.txt` 656 rows | mission execution partial |
+| Player task defs | ✅ data | `player_task_def.txt` 647 nonblank data rows after exactly 2 PC header rows; parser skips blank separator rows and preserves SYNC_FLAG/CLIENT_FLAG | mission execution partial |
 | Task/random/talk/event configs | 🔄 | config services/parsers exist | PC behavior and side-effect tests |
 | Newtask/tollgate/mission arena/maze/qianchong configs | 🔄 | services exist | Full mission flow parity |
 | ClearSkill mission lifecycle constants | 🔄 partial runtime/model proof | Batch 3 proves PC mission id/timer/camp NPC/init/end/onleave/timer constants and operation plans; Batch 4 replays plans into a host interface and proves call order/result forwarding | Real host mission/runtime execution and stable SandboxManager wiring are not fully proven; do not mark broad runtime `✅` |

@@ -26,19 +26,17 @@ namespace VLTK.Sandbox
             var rows = new List<PcMissionEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
             var lines = PcItemCommon.ReadServerLines(path);
-            bool headerSkipped = false;
-            int idCursor = 0;
+            int physicalLineNumber = 0;
             foreach (var line in lines)
             {
+                physicalLineNumber++;
+                if (physicalLineNumber <= 2) continue;
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
                 if (cols.Length < 3) continue;
                 int first = PcItemCommon.Int(cols, TaskIdFirstCol);
                 int last = PcItemCommon.Int(cols, TaskIdLastCol);
                 if (last <= 0) last = first;
-                if (first <= 0) first = ++idCursor;
-                else idCursor = last;
                 var entry = new PcMissionEntry
                 {
                     taskIdFirst = first,
