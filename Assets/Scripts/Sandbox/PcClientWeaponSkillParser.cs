@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC settings clientweaponskill.txt parser
-// Source: clientweaponskill.txt (vũ khí skill client-side).
-// Columns: WeaponType  SkillId  SkillName  RequiredLevel  IconPath
+// VLTK Mobile — PC settings/clientweaponskill.txt focused parser.
+// Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/clientweaponskill.txt
+// Columns: Id  WeaponType  SkillId
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -11,11 +11,9 @@ namespace VLTK.Sandbox
 {
     public static class PcClientWeaponSkillParser
     {
-        public const int WeaponTypeCol = 0;
-        public const int SkillIdCol = 1;
-        public const int SkillNameCol = 2;
-        public const int RequiredLevelCol = 3;
-        public const int IconPathCol = 4;
+        public const int IdCol = 0;
+        public const int WeaponTypeCol = 1;
+        public const int SkillIdCol = 2;
 
         public static List<PcClientWeaponSkillEntry> ParseFile(string path)
         {
@@ -28,16 +26,17 @@ namespace VLTK.Sandbox
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
-                if (cols.Length < 2) continue;
-                int w = PcItemCommon.Int(cols, WeaponTypeCol);
-                if (w <= 0) continue;
+                if (cols.Length <= SkillIdCol) continue;
+                int id = PcItemCommon.Int(cols, IdCol);
+                int skillId = PcItemCommon.Int(cols, SkillIdCol);
+                if (id <= 0 || skillId <= 0) continue;
                 rows.Add(new PcClientWeaponSkillEntry
                 {
-                    weaponType = w,
-                    skillId = PcItemCommon.Int(cols, SkillIdCol),
-                    skillName = PcItemCommon.Str(cols, SkillNameCol),
-                    requiredLevel = PcItemCommon.Int(cols, RequiredLevelCol),
-                    iconPath = PcItemCommon.Str(cols, IconPathCol),
+                    id = id,
+                    weaponType = id,
+                    weaponTypeName = PcItemCommon.Str(cols, WeaponTypeCol),
+                    skillId = skillId,
+                    skillName = PcItemCommon.Str(cols, WeaponTypeCol),
                 });
             }
             return rows;
@@ -47,8 +46,9 @@ namespace VLTK.Sandbox
         {
             var reg = new PcClientWeaponSkillRegistry();
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
-            foreach (var f in Directory.GetFiles(dir, "*.txt"))
-                foreach (var s in ParseFile(f)) reg.Register(s);
+            string path = Path.Combine(dir, "clientweaponskill.txt");
+            foreach (var s in ParseFile(path)) reg.Register(s);
+            reg.LinkSkillScripts(Path.Combine(dir, "skills.txt"));
             return reg;
         }
     }
@@ -56,19 +56,39 @@ namespace VLTK.Sandbox
     [System.Serializable]
     public class PcClientWeaponSkillEntry
     {
+        public int id;
         public int weaponType;
+        public string weaponTypeName;
         public int skillId;
         public string skillName;
         public int requiredLevel;
         public string iconPath;
+        public string lvlSetScript;
     }
 
     public sealed class PcClientWeaponSkillRegistry
     {
         private readonly Dictionary<int, PcClientWeaponSkillEntry> _byId = new();
+        private readonly Dictionary<int, List<PcClientWeaponSkillEntry>> _bySkillId = new();
         public int Count => _byId.Count;
-        public void Register(PcClientWeaponSkillEntry e) { if (e == null || e.weaponType <= 0) return; _byId[e.weaponType] = e; }
+        public IReadOnlyList<PcClientWeaponSkillEntry> All => new List<PcClientWeaponSkillEntry>(_byId.Values);
+
+        public void Register(PcClientWeaponSkillEntry e)
+        {
+            if (e == null || e.id <= 0) return;
+            _byId[e.id] = e;
+            if (!_bySkillId.TryGetValue(e.skillId, out var list))
+            {
+                list = new List<PcClientWeaponSkillEntry>();
+                _bySkillId[e.skillId] = list;
+            }
+            list.Add(e);
+        }
+
         public PcClientWeaponSkillEntry Get(int weaponType) => _byId.TryGetValue(weaponType, out var v) ? v : null;
+        public IReadOnlyList<PcClientWeaponSkillEntry> GetBySkillId(int skillId)
+            => _bySkillId.TryGetValue(skillId, out var list) ? list : System.Array.Empty<PcClientWeaponSkillEntry>();
+
         public IReadOnlyList<PcClientWeaponSkillEntry> GetByLevel(int level)
         {
             var list = new List<PcClientWeaponSkillEntry>();
@@ -76,6 +96,12 @@ namespace VLTK.Sandbox
                 if (e.requiredLevel <= level) list.Add(e);
             return list;
         }
-        public IReadOnlyList<PcClientWeaponSkillEntry> All => new List<PcClientWeaponSkillEntry>(_byId.Values);
+
+        public void LinkSkillScripts(string skillsTxtPath)
+        {
+            var scripts = PcSkillSourceLinkParser.ParseSkillScripts(skillsTxtPath);
+            foreach (var entry in _byId.Values)
+                if (scripts.TryGetValue(entry.skillId, out var script)) entry.lvlSetScript = script;
+        }
     }
 }
