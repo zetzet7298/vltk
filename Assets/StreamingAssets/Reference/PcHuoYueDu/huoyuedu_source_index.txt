@@ -1,0 +1,4 @@
+SourceIndex	SourceRoot	RelativePath	Directory	FileName	Extension	IsLua	SizeBytes	LineCount	Sha256
+1	Server 6.0/server/home_jxser/server1/script/huoyuedu	award.lua	.	award.lua	lua	1	1560	57	dc33c1f1597ebab72fa9f45abfc9de7c08c566b8b36511cc18b3d411983ef933
+2	Server 6.0/server/home_jxser/server1/script/huoyuedu	huoyuedu.lua	.	huoyuedu.lua	lua	1	4110	141	bbd9e699e5a0e6219b6f8782836dc0d64f2f7207805abfae53935ab94eae29c8
+3	Server 6.0/server/home_jxser/server1/script/huoyuedu	worldtop10.lua	.	worldtop10.lua	lua	1	1806	48	c7cd3ba747a4cbcbc1438da77d01354282bd26bf9a579ea7ff02bef5d72b5235

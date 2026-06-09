@@ -1,0 +1,2 @@
+SourceIndex	SourceRoot	RelativePath	Directory	FileName	Extension	SizeBytes	LineCount	DataRows	Sha256	HeaderColumns
+1	Server 6.0/server/home_jxser/server1/settings/huoyuedu	huoyuedu.txt	.	huoyuedu.txt	txt	2215	42	41	f553ca042e06ca52b4f968190c39b1369f6a10c64a3dbb2519832aab6f99c244	ActivityId|ActivityName|CountTask|MaxCount|Param1|Param2|Param3|Param4|Param5|Param6|Param7|Param8|Param9|Param10|WeekResetFlag
