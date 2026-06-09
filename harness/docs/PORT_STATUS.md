@@ -86,8 +86,8 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Magic attributes | `Reference/PcItemFull/magicattrib.txt` | 330 rows | ✅ | old 333 claim false |
 | Compound recipes | `Reference/PcItemFull/atlas_compound.txt` | 1,294 rows | ✅ data / 🔄 craft | craft execution/UI still partial |
 | Quest keys | `Reference/PcItemFull/questkey.txt` | 2,045 rows | ✅ | data/service |
-| Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data / 🔄 open model | Batch 4 weighted-open model proves PC raw weights, 6-cell preflight, AddItem/AddGoldItem command surface, Costly/Log flags; inventory mutation/UI/server side effects still missing |
-| City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/open model / 🔄 runtime | Full PC schema parsed; Batch 5 weighted-open model proves PC raw weights, 6-cell preflight, Type 1/2 reward command surface, Costly/Log flags; inventory mutation/UI/server side effects not proven |
+| Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data/runtime | Batch 4 weighted-open model proves PC raw weights. `HongbaoRuntimeBehaviorService` connects open command to `InventoryService` for inventory mutations and side effects. |
+| City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/runtime | Full PC schema parsed. `HongbaoRuntimeBehaviorService` connects type 1/2 rewards to `InventoryService`. |
 | Item exchange source catalog | `Reference/PcItemExchange` | 7,334 normal / 480 rare / 200 level_exp / 100 level_lead_exp / 35 rolevalue keys | ✅ catalog+rolevalue+lookup facts / 🔄 runtime | Batch 4 exposes rolevalue typed facts; Batch 5 adds typed normal/rare table lookups (78/29 headers, 7,334/480 rows); exchange rules/inventory/economics/log side effects not proven |
 | Shop goods/buysell | `Reference/PcShop/goods.txt`, `buysell.txt` | 1,521 + 165 rows | ✅ | catalog; NPC shop UX not fully audited |
 | Lottery | `Reference/PcLottery/lottery.txt` | 254 rows | ✅ | data/service |

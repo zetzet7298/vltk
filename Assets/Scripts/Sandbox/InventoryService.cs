@@ -113,6 +113,26 @@ namespace VLTK.Sandbox
             return AddItem(item.itemId, count);
         }
 
+        public bool RemoveItem(int itemId, int count = 1)
+        {
+            var existing = _inventory.Find(e => e.item.itemId == itemId);
+            if (existing == null || existing.count < count) return false;
+            
+            existing.count -= count;
+            if (existing.count <= 0)
+                _inventory.Remove(existing);
+            return true;
+        }
+
+        public bool RemovePcItem(int itemGenre, int detailType, int particularType, int count = 1)
+        {
+            var item = ResolvePcItem(itemGenre, detailType, particularType);
+            if (item == null) return false;
+            return RemoveItem(item.itemId, count);
+        }
+
+        public int GetFreeSpace() => MaxInventorySlots - _inventory.Count;
+
         public bool HasPcItem(int itemGenre, int detailType, int particularType)
         {
             foreach (var entry in _inventory)

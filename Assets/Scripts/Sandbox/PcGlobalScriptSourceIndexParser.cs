@@ -34,7 +34,7 @@ namespace VLTK.Sandbox
             foreach (var raw in ReadUtf8Lines(path))
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
-                var line = raw.TrimEnd();
+                var line = raw;
                 if (line.StartsWith("#", StringComparison.Ordinal) || line.StartsWith("//", StringComparison.Ordinal)) continue;
                 var cols = line.Split('\t');
                 if (cols.Length <= Sha256Col) continue;
