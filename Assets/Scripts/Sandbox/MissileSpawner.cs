@@ -45,6 +45,18 @@ namespace VLTK.Sandbox
             float speed = speedOverride > 0 ? speedOverride : 300f; // Tốc độ đạn mặc định (PC pixel/sec)
             float duration = 1.5f; // Thời gian bay mặc định (s)
 
+            if (skill.childSkillId > 0 && PcMissileRegistry.TryGet(skill.childSkillId, out var mDef))
+            {
+                if (speedOverride <= 0 && mDef.speed > 0)
+                {
+                    speed = mDef.speed * 18f; // PC speed is pixels per tick (18 ticks/sec)
+                }
+                if (mDef.lifetime > 0)
+                {
+                    duration = mDef.lifetime / 18f; // PC lifetime is in ticks
+                }
+            }
+
             switch (skill.missileForm)
             {
                 case SkillMissileForm.Single:

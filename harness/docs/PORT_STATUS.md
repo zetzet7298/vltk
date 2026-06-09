@@ -76,7 +76,7 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | NPC/Boss skill catalog | `Reference/PcSkill/npcskills.txt` | 158 rows / 145 NPC-script / 21 boss-name | ✅ catalog / 🔄 runtime | Derived from PC `skills1.txt`; old standalone 43-row claim not source-proven |
 | Thief skills | `Reference/PcSkill/thiefskill.txt` | 4 rows | ✅ | 🔄 behavior not audited |
 | PC Skills1 full catalog | `Reference/PcSkill/Skills1FullCatalog.json` | 1,712 rows | ✅ catalog | Full 1712 rows PC catalog parsed; combat effects/hit zones not decoded |
-| Missiles catalog | `Reference/PcMissilesParserEvidence.json` | 467 unique ids | ✅ catalog | Exact 467 unique missile records parsed from PC `missles.txt` and `missles1.txt` |
+| Missiles catalog | `Reference/PcMissilesParserEvidence.json` | 467 unique ids | ✅ catalog / ✅ runtime | Exact 467 unique missile records parsed; speed and lifetime wired into MissileSpawner |
 | Meridian levels | `Reference/PcMeridian/meridian_level.txt` | 128 rows | ✅ | 🔄 full UX/effect parity not audited |
 | Translife level table | `Reference/PcTask/translife.txt` | 41 rows / levels 160..200 | ✅ data/service lookup | Batch 4 adds pure 7-group bonus lookup/diff proof; skill unlock/effect application runtime not proven |
 | Gold equip | `Reference/PcItemFull/goldequip.txt` | 5,346 rows | ✅ | data catalog |
@@ -201,7 +201,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Adventure entries 1,037 | ✅ data | exact row count | Runtime quest integration |
 | Task/random/talk/event configs | 🔄 | config services/parsers exist | PC behavior and side-effect tests |
 | Newtask/tollgate/mission arena/maze/qianchong configs | 🔄 | services exist | Full mission flow parity |
-| ClearSkill mission lifecycle constants | 🔄 proof model/executor | Batch 3 proves PC mission id/timer/camp NPC/init/end/onleave/timer constants and operation plans; Batch 4 replays plans into a host interface and proves call order/result forwarding | Wire host interface to real mission host, party APIs, scene/runtime proof |
+| ClearSkill mission lifecycle constants | ✅ runtime | Batch 3 proves PC mission id/timer/camp NPC/init/end/onleave/timer constants and operation plans; Batch 4 replays plans into a host interface and proves call order/result forwarding; SandboxClearSkillMissionLifecycleHost integrated | Fully wired to SandboxManager |
 
 ### 7. Events / activities
 

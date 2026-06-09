@@ -3,7 +3,10 @@
     "rootNamespace": "VLTK.Tests.PortFactorySmoke",
     "references": [
         "UnityEngine.TestRunner",
-        "UnityEditor.TestRunner"
+        "UnityEditor.TestRunner",
+        "VLTK.Core",
+        "VLTK.Model",
+        "VLTK.Sandbox"
     ],
     "includePlatforms": [
         "Editor"
