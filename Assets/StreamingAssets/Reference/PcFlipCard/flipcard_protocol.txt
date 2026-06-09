@@ -1,0 +1,7 @@
+Key	Value	ValueType	SourceFile	Evidence
+OPT_OPEN_UI	1	int	script/flipcard/flipcard_head.lua	tbFlipCard.OPT_OPEN_UI = 1
+OPT_SET_CELL	2	int	script/flipcard/flipcard_head.lua	tbFlipCard.OPT_SET_CELL = 2
+CLIENT_OPEN_UI_FUNCTION	OpenCardsUi	function	script/flipcard/flipcard_c.lua	ProcessProtocol OPT_OPEN_UI calls OpenCardsUi()
+CLIENT_SET_CELL_FUNCTION	OpenCardBack	function	script/flipcard/flipcard_c.lua	SetCell unpacks nCount,nG,nD,nP and calls OpenCardBack(nIndex,nCount,nG,nD,nP)
+CLIENT_CLICK_PROTOCOL	emSCRIPT_PROTOCOL_FLIP_CARD	protocol	script/flipcard/flipcard_c.lua	OnClick sends ScriptProtocol:SendData("emSCRIPT_PROTOCOL_FLIP_CARD", handle)
+CLIENT_CLOSE_FUNCTION	RemoveOpenCardUiItem	function	script/flipcard/flipcard_c.lua	OnClose calls RemoveOpenCardUiItem(nItemIndex)
