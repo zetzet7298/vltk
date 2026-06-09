@@ -31,7 +31,7 @@
 - Unity console check: only known Addressables GUID conflict noise during this audit.
 - Batch 3b adds a fresh isolated Unity Test Runner artifact for `PortFactorySmoke`: EditMode `2/2 passed` via Unity MCP job `5d7958b697ad4565aab8a1e409430c05`. Existing `VLTK.Tests.EditMode`/PlayMode asmdefs remain gated/stale; this is not a full-suite claim.
 - Batch 4 local integration adds pure model/service/catalog proofs for Translife bonus lookup/diff, Hongbao weighted-open command surface, City Hongbao schema, MissionBattle scoring lookup, ClearSkill lifecycle plan replay, CityWar challenge-token turn-in, ItemExchange rolevalue facts, NPC/Boss `skills1.txt` subset catalog, Tong/faction map catalog, and expanded `PortFactorySmoke`. Current Unity execute proof returned `hongbao=69/1000000/t42+27/costly15/log69; hbType1=1/AddItem/True; hbType2=2/AddGoldItem/True; hbBlocked=InsufficientInventorySpace/None; cityHongbao=67/1010000/4681/10000; battle=5/25/25/idx1:1:75; translife=41/29/7/d15:80:4:1; clearskillInit=True/5/4321; clearskillLeave=True/8/CloseMission; rolevalue=4/35/5000/27/400-4000/True; npcskills=158/158/145/21/13/54/64; tongFactionMap=33/7/11/1712:3330/329:1561:2942`.
-- Batch 5 local integration adds source catalogs/models for FlipCard protocol, City Hongbao weighted-open command surface, PC `skilltemplate.txt` schema, PC battle script file index, server event file index, ItemExchange normal/rare typed lookups, Translife skill source 9-row subset, Tong map enter plan, NPC skill script availability index, and Special skill script 576-row subset. Current Unity execute proof returned `flip=6/0; cityHongbao=67/1010000/13+54/67; skilltemplate=67/220; battleScripts=183/182/10; serverEvents=455/427/28; itemLookup=78/7334/29/480/False; translifeSkill=9; tongEnter=33/11/7/True:1; npcSkillScripts=158/145/49/42/7; special=576/575/84`. Scoped `PortFactorySmoke` passed `10/10`; full legacy test asmdefs remain gated/stale.
+- Batch 5 local integration adds source catalogs/models for FlipCard protocol, City Hongbao weighted-open command surface, PC `skilltemplate.txt` schema, PC battle script file index, server event file index, ItemExchange normal/rare typed lookups, Translife skill source 9-row subset, Tong map enter plan, NPC skill script availability index, and Special skill script 576-row subset. Current Unity execute proof returned `flip=6; cityOpen=67/1010000/13+54/67; skilltemplate=67/318/220; battleScripts=183/182/1/10; serverEvents=455/427/28; itemLookup=78/7334/29/480/False; translifeSkill=9; tongEnter=33/11/7/True/591:1712:3330; npcSkillScripts=158/145/49/42/7; special=576/575/84`. Scoped `PortFactorySmoke` passed `10/10`; full legacy test asmdefs remain gated/stale.
 - Exa research timed out twice; DeepWiki fetched UnityCsReference overview. This audit relies on current repo files and PC source-of-truth, not external guesses.
 
 ## Current high-confidence map verifier facts
@@ -221,7 +221,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Tống Kim maps/rebirth traps | 🔄 | map alias counts, some rebirth traps ported; Batch 3 MissionBattle combo/scores subset proves 5 ranks and 25/25 matrix cells; Batch 4 scoring lookup proves representative PC title-index/rank scores | Full battlefield state, kill/death award mutation, join/award behavior, mission lifecycle |
 | CityWar | 🔄 partial runtime/model/constants/token proof | `citywar.ini` data exists; `CityWarJoinRouter` routed; Batch 2 model covers join plan branches; Batch 3 constants prove PC card table, card prices, challenge token, task ids/caps/reward constants; transfer-route split model proves NPC route 222/223 vs trap join 221; Batch 4 challenge-token turn-in model proves token tuple, daily cap, exp, task/league/Tong-total command surface | Full CityWar mission lifecycle, Tong gate host integration, real inventory/life APIs, real command execution, rewards, capacity gates, and live scene proof still missing |
 | Quốc Chiến/Hoa Sơn | 🔄/☐ | service hints exist; dedicated source proof weak/missing | Add PC source evidence/runtime tests |
-| Battle scripts 183 | 🔄 indexed/mock | `BattleScriptRuntimeService` simplified/log behavior reported; dirs missing | Full PC battle Lua semantics |
+| Battle scripts 183 | ✅ file catalog / 🔄 runtime | `Reference/PcBattleScript/battle_scripts.txt` catalogs PC `script/battles`: 183 files, 182 active Lua, 1 backup, 10 dirs; old settings-file/mock claim corrected | Execute full PC battle Lua semantics and wire runtime mission side effects |
 | Battle awards/double EXP | 🔄 | services exist | PC event/schedule/effect parity |
 
 ### 9. Guild / Tong / party
@@ -421,7 +421,7 @@ Integrated commits on local `dev`:
 - ItemExchange typed table lookup: normal 78 headers/7,334 rows, rare 29 headers/480 rows; `rolevalue_log` remains excluded.
 - Translife skill source: `Reference/PcSkill/translifeskill.txt` = 9 PC `skills.txt` translife4th rows; separate from `PcTask/translife.txt` 41-row level bonus table.
 - Tong map enter plan: level 10 gate and map 591 allowed `SetPos` plan from the 33-row Tong/faction map catalog.
-- NPC skill script index: data-only availability index over 158 NPC/Boss skill rows; Unity proof observed 49 unique scripts, 42 existing/7 missing under current path resolver, no Lua execution claim.
+- NPC skill script index: data-only availability index over 158 NPC/Boss skill rows; Unity proof observed 49 unique scripts, 42 existing/7 missing after legacy GBK/invalid-UTF8 path resolution, no Lua execution claim.
 - Special skill script catalog: `Reference/PcSkill/specialskills.txt` is a byte-preserved subset of PC `skills1.txt` filtered by `LvlSetScript` prefix `\script\skill\special`: 576 rows, 575 unique skill ids, 84 script paths; no standalone 58-row table was found in scoped PC settings/scripts.
 
 Verification evidence:
@@ -431,8 +431,8 @@ Verification evidence:
 - `cargo test -p harness-cli` passed 20/20.
 - PC byte proof confirms `Reference/PcSkill/specialskills.txt` equals the filtered `skills1.txt` subset for 576 rows.
 - Unity compile completed; console still only shows known Addressables GUID conflict noise.
-- Unity execute proof: `flip=6/0; cityHongbao=67/1010000/13+54/67; skilltemplate=67/220; battleScripts=183/182/10; serverEvents=455/427/28; itemLookup=78/7334/29/480/False; translifeSkill=9; tongEnter=33/11/7/True:1; npcSkillScripts=158/145/49/42/7; special=576/575/84`.
-- Scoped `PortFactorySmoke` EditMode job `f84280f3f5af41c98ea30e10f5727e56` passed 10/10. Full legacy test asmdefs remain gated/stale.
+- Unity execute proof: `flip=6; cityOpen=67/1010000/13+54/67; skilltemplate=67/318/220; battleScripts=183/182/1/10; serverEvents=455/427/28; itemLookup=78/7334/29/480/False; translifeSkill=9; tongEnter=33/11/7/True/591:1712:3330; npcSkillScripts=158/145/49/42/7; special=576/575/84`.
+- Scoped `PortFactorySmoke` EditMode job `ea4cb23e83c84f88a9c827d9a84e0d94` passed 10/10. Full legacy test asmdefs remain gated/stale.
 
 Conservative Batch 5 queue:
 
