@@ -1,0 +1,12 @@
+{
+  "eval_id": 2,
+  "eval_name": "enemy-visuals-are-placeholders-have-no-đổ-bóng",
+  "prompt": "Enemy visuals are placeholders, have no đổ bóng, and the nameplate is under the feet. Fix it to match PC, preserve spawn/root and 8-direction animation.",
+  "assertions": [
+    "Uses Region_S as authoritative source and avoids Region_C for real server enemies",
+    "Maps template ids to NpcS.txt with header-row awareness and raw-name cross-check",
+    "Avoids fake placeholder art; reports missing visual assets or creates non-render marker only",
+    "Validates through Unity compile/tests/PlayMode probes and screenshots",
+    "Checks enemy shadow count/sorting and both standing/moving shadow cases"
+  ]
+}
