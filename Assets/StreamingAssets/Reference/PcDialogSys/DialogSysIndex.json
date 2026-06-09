@@ -1,0 +1,37 @@
+{
+  "SourcePath": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/dailogsys",
+  "IndexedAt": "2026-06-09T06:03:59.549388+00:00",
+  "TotalFiles": 5,
+  "Files": [
+    {
+      "FileName": "g_dialog.lua",
+      "RelativePath": "g_dialog.lua",
+      "SizeBytes": 951,
+      "LastWriteTimeUtc": "2009-09-18T17:03:38+00:00"
+    },
+    {
+      "FileName": "dailog.lua",
+      "RelativePath": "dailog.lua",
+      "SizeBytes": 2549,
+      "LastWriteTimeUtc": "2017-09-20T20:35:59+00:00"
+    },
+    {
+      "FileName": "dialogoption.lua",
+      "RelativePath": "dialogoption.lua",
+      "SizeBytes": 1764,
+      "LastWriteTimeUtc": "2014-07-26T15:39:08+00:00"
+    },
+    {
+      "FileName": "composeoption.lua",
+      "RelativePath": "composeoption.lua",
+      "SizeBytes": 2783,
+      "LastWriteTimeUtc": "2011-01-23T00:44:26+00:00"
+    },
+    {
+      "FileName": "dailogsay.lua",
+      "RelativePath": "dailogsay.lua",
+      "SizeBytes": 3776,
+      "LastWriteTimeUtc": "2012-06-27T15:18:18+00:00"
+    }
+  ]
+}
