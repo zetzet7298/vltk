@@ -53,7 +53,7 @@ namespace VLTK.Sandbox
             }
 
             _host.SwitchMapAndPlacePlayer(mapId, worldPosition);
-            SubsystemLog.Info("Travel", $"TravelAction -> map {mapId} {worldPosition} kind={actionResult.Kind}");
+            Debug.Log($"[Travel] TravelAction -> map {mapId} {worldPosition} kind={actionResult.Kind}");
             return GmItemActionResult.Success(actionResult.Message ?? $"Đã chuyển tới map {mapId}.");
         }
     }

@@ -501,7 +501,7 @@ namespace VLTK.Sandbox
                             var revivePos = RevivePosService?.GetDefaultRevivePosition(mapId);
                             if (revivePos != null)
                             {
-                                SubsystemLog.Info("Sandbox", $"Player death event -> revive requested at Map={revivePos.mapId}, Pos=({revivePos.worldPosition.x}, {revivePos.worldPosition.y})");
+                                SubsystemLog.Info("Sandbox", $"Player death event -> revive requested at Map={revivePos.MapId}, Pos=({revivePos.PosX}, {revivePos.PosY})");
                                 // A real implementation would start a timer, show UI, then call PlayerController.PlaceAt() + restore HP/MP.
                             }
                         }
@@ -956,7 +956,7 @@ namespace VLTK.Sandbox
                 {
                     var mapId = MapManager?.ActiveMapId ?? defaultMapId;
                     var revivePos = RevivePosService?.GetDefaultRevivePosition(mapId);
-                    string reviveMsg = revivePos != null ? $" Revive Map={revivePos.mapId} Pos={revivePos.worldPosition}." : "";
+                    string reviveMsg = revivePos != null ? $" Revive Map={revivePos.MapId} Pos={revivePos.PosX + ", " + revivePos.PosY}." : "";
                     SubsystemLog.Info("Gameplay", $"Player chết! Respawn sau 5s.{reviveMsg}");
                 }
                 else

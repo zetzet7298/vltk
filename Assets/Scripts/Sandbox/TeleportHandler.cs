@@ -11,18 +11,18 @@ namespace VLTK.Sandbox
             var wharf = sandbox.WharfService?.GetWharf(wharfId);
             if (wharf == null)
             {
-                SubsystemLog.Warn("Sandbox", $"Wharf {wharfId} not found in WharfService.");
+                Debug.LogWarning($"[Sandbox] Wharf {wharfId} not found in WharfService.");
                 return;
             }
 
-            SubsystemLog.Info("Sandbox", $"Wharf teleport triggered: {wharf.nameVi} -> Map={wharf.toMapId}, Pos=({wharf.toX}, {wharf.toY})");
-            // Find map coords (wharf.toX, wharf.toY are usually in standard script coordinates, divide by 32 for unity world pos)
-            var worldPos = new Vector2(wharf.toX / 32f, wharf.toY / 32f); 
+            Debug.Log($"[Sandbox] Wharf teleport triggered: {wharf.Name} -> Map={wharf.FromMapId}, Pos=({wharf.PosX}, {wharf.PosY})");
+            // Find map coords (wharf.PosX, wharf.PosY are usually in standard script coordinates, divide by 32 for unity world pos)
+            var worldPos = new Vector2(wharf.PosX / 32f, wharf.PosY / 32f);
             
             // Switch Map and Place Player
-            if (sandbox.MapManager?.ActiveMapId != wharf.toMapId)
+            if (sandbox.MapManager?.ActiveMapId != wharf.FromMapId)
             {
-                sandbox.SwitchMapAndPlacePlayer(wharf.toMapId, worldPos);
+                sandbox.SwitchMapAndPlacePlayer(wharf.FromMapId, worldPos);
             }
             else
             {

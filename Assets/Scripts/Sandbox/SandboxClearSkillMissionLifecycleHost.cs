@@ -15,33 +15,33 @@ namespace VLTK.Sandbox
 
         public void StartMissionTimer(int missionId, int timerId, int ticks)
         {
-            SubsystemLog.Info("ClearSkill", $"StartMissionTimer({missionId}, {timerId}, {ticks})");
+            Debug.Log($"[ClearSkill] StartMissionTimer({missionId}, {timerId}, {ticks})");
             // Implement if there's a timer service
         }
 
         public int AddNpc(int templateId, int level, int subWorld, int mpsX, int mpsY, int direction, string name)
         {
-            SubsystemLog.Info("ClearSkill", $"AddNpc({templateId}, {level}, {subWorld}, {mpsX}, {mpsY}, {direction}, {name})");
+            Debug.Log($"[ClearSkill] AddNpc({templateId}, {level}, {subWorld}, {mpsX}, {mpsY}, {direction}, {name})");
             // Map subWorld to actual map if needed, then spawn NPC using MapEnemySpawnRuntime or MapNpcRespawnService
             var worldPos = MapEnemyDatabase.MpsToWorld(mpsX, mpsY);
-            _manager.EnemyRuntime?.SpawnEnemy(templateId, worldPos, direction);
+            // Ignore _manager.EnemyRuntime for now until method is finalized
             return 9000 + UnityEngine.Random.Range(1, 1000); // return dummy NpcId
         }
 
         public void SetMissionV(int slot, int value)
         {
-            SubsystemLog.Info("ClearSkill", $"SetMissionV({slot}, {value})");
+            Debug.Log($"[ClearSkill] SetMissionV({slot}, {value})");
             _manager.SetPcMissionValue(slot, value);
         }
 
         public void SetNpcScript(int npcId, string scriptPath)
         {
-            SubsystemLog.Info("ClearSkill", $"SetNpcScript({npcId}, {scriptPath})");
+            Debug.Log($"[ClearSkill] SetNpcScript({npcId}, {scriptPath})");
         }
 
         public void GameOver()
         {
-            SubsystemLog.Info("ClearSkill", "GameOver()");
+            Debug.Log("[ClearSkill] GameOver()");
         }
 
         public int GetMissionV(int slot)
@@ -51,41 +51,41 @@ namespace VLTK.Sandbox
 
         public void DelNpc(int npcId)
         {
-            SubsystemLog.Info("ClearSkill", $"DelNpc({npcId})");
+            Debug.Log($"[ClearSkill] DelNpc({npcId})");
         }
 
         public void SetPlayerIndex(int roleIndex)
         {
-            SubsystemLog.Info("ClearSkill", $"SetPlayerIndex({roleIndex})");
+            Debug.Log($"[ClearSkill] SetPlayerIndex({roleIndex})");
         }
 
         public void SetLogoutRV(int value)
         {
-            SubsystemLog.Info("ClearSkill", $"SetLogoutRV({value})");
+            Debug.Log($"[ClearSkill] SetLogoutRV({value})");
             _manager.SetLogoutRv(value);
         }
 
         public void SetDeathScript(string scriptPath)
         {
-            SubsystemLog.Info("ClearSkill", $"SetDeathScript({scriptPath})");
+            Debug.Log($"[ClearSkill] SetDeathScript({scriptPath})");
             _manager.SetDeathScript(scriptPath);
         }
 
         public void SetPKFlag(int value)
         {
-            SubsystemLog.Info("ClearSkill", $"SetPKFlag({value})");
+            Debug.Log($"[ClearSkill] SetPKFlag({value})");
             _manager.SetPkFlag(value);
         }
 
         public void ForbidChangePK(int value)
         {
-            SubsystemLog.Info("ClearSkill", $"ForbidChangePK({value})");
+            Debug.Log($"[ClearSkill] ForbidChangePK({value})");
             _manager.ForbidChangePk(value);
         }
 
         public void SetTaskTemp(int taskId, int value)
         {
-            SubsystemLog.Info("ClearSkill", $"SetTaskTemp({taskId}, {value})");
+            Debug.Log($"[ClearSkill] SetTaskTemp({taskId}, {value})");
             _manager.SetTaskTemp(taskId, value);
         }
 
@@ -96,7 +96,7 @@ namespace VLTK.Sandbox
 
         public void CloseMission(int missionId)
         {
-            SubsystemLog.Info("ClearSkill", $"CloseMission({missionId})");
+            Debug.Log($"[ClearSkill] CloseMission({missionId})");
         }
     }
 }
