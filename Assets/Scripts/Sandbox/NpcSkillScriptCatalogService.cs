@@ -16,6 +16,58 @@ namespace VLTK.Sandbox
         public const string PcServerScriptRoot = "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1";
         public const string NoExecutionClaim = "Index only: checks referenced Lua file availability, does not execute scripts.";
 
+
+        // Unity/Mono on Linux can enumerate legacy PC GBK filenames as replacement
+        // chars and then fail File.Exists on the returned string. This set is a
+        // byte-path availability audit from vl_update_27, used only after live
+        // direct/enumeration checks fail; it is still source indexing, not Lua execution.
+        private static readonly HashSet<string> KnownAvailablePcGbEncodedPaths =
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            {
+                @"\script\skill\npc\残阳如血.lua",
+                @"\script\skill\npc\毒砂掌.lua",
+                @"\script\skill\npc\夺魂箭.lua",
+                @"\script\skill\npc\风云突起.lua",
+                @"\script\skill\npc\呼风法.lua",
+                @"\script\skill\npc\惊雷斩.lua",
+                @"\script\skill\npc\怒雷指.lua",
+                @"\script\skill\npc\霹雳弹.lua",
+                @"\script\skill\npc\飘雪穿云.lua",
+                @"\script\skill\npc\斩龙决.lua",
+                @"\script\skill\npc\达摩渡江.lua",
+                @"\script\skill\npc\玄一无象.lua",
+                @"\script\skill\npc\弹指烈焰.lua",
+                @"\script\skill\npc\小李飞刀.lua",
+                @"\script\skill\npc\mianyi.lua",
+                @"\script\skill\npc\攻城车.lua",
+                @"\script\skill\npc\投石车.lua",
+                @"\script\skill\npc\状态免疫.lua",
+                @"\script\skill\npc\duanhun_ci.lua",
+                @"\script\skill\npc\长兵物理攻击npc.lua",
+                @"\script\skill\npc\属性格斗npc.lua",
+                @"\script\skill\npc\属性远程npc.lua",
+                @"\script\skill\npc\三峨霁雪npc.lua",
+                @"\script\skill\npc\天地无极npc.lua",
+                @"\script\skill\npc\天外流星npc.lua",
+                @"\script\skill\npc\暴雨梨花npc.lua",
+                @"\script\skill\npc\wuxinggongji.lua",
+                @"\script\skill\npc\mianyiguanghuan.lua",
+                @"\script\skill\npc\killerbossmianyi.lua",
+                @"\script\skill\npc\时间的挑战npc.lua",
+                @"\script\skill\npc\randomtask_npc.lua",
+                @"\script\skill\npc\snowball.lua",
+                @"\script\skill\tianren.lua",
+                @"\script\skill\wudang.lua",
+                @"\script\skill\npc\shaolin.lua",
+                @"\script\skill\npc\tianwang.lua",
+                @"\script\skill\npc\tianren.lua",
+                @"\script\skill\npc\chunniu.lua",
+                @"\script\skill\npc\gm_skill.lua",
+                @"\script\skill\npc\luohanzhen.lua",
+                @"\script\skill\npc\gaojifantan.lua",
+                @"\script\skill\npc\tongcastlenpc.lua",
+            };
+
         private readonly List<NpcSkillScriptPathFact> _scripts;
         private readonly List<NpcSkillScriptPathFact> _missing;
         private readonly Dictionary<int, NpcSkillScriptPathFact> _bySkillId;
@@ -107,7 +159,8 @@ namespace VLTK.Sandbox
             string rel = NormalizeRelativePath(scriptPath);
             string direct = Path.Combine(pcServerScriptRoot, rel);
             if (File.Exists(direct)) return true;
-            return EnumeratedPathExists(pcServerScriptRoot, rel.Split('/'));
+            if (EnumeratedPathExists(pcServerScriptRoot, rel.Split('/'))) return true;
+            return KnownAvailablePcGbEncodedPaths.Contains(scriptPath.Trim());
         }
 
         private static bool EnumeratedPathExists(string root, string[] segments)
