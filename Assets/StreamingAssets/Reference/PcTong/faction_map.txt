@@ -1,0 +1,34 @@
+SourceTable	SourceIndex	MapId	MapNameRaw	MapKind	EnterX	EnterY	RequiredLevel	NpcTemplateId	NpcX	NpcY	NpcScriptRaw	NpcNameRaw
+aPublicMap	1	586		public_tong_map	1718	3313	10					
+aPublicMap	2	595		public_tong_map	1718	3313	10					
+aPublicMap	3	596		public_tong_map	1718	3313	10					
+aPublicMap	4	597		public_tong_map	1718	3313	10					
+aDynMapCopyName	1	587	S¬n Thµnh	dynamic_template	1718	3313	10					
+aDynMapCopyName	2	588	Miªu C­¬ng	dynamic_template	1718	3313	10					
+aDynMapCopyName	3	589	Sa M¹c	dynamic_template	1718	3313	10					
+aDynMapCopyName	4	590	Kinh S­	dynamic_template	1718	3313	10					
+aDynMapCopyName	5	591	Biªn ¶i	dynamic_template	1712	3330	10					
+aDynMapCopyName	6	593	Giang Nam	dynamic_template	1718	3313	10					
+aDynMapCopyName	7	594	TuyÕt LÜnh	dynamic_template	1718	3313	10					
+citymap	1	586		citymap_member	1718	3313	10					
+citymap	2	587		citymap_member	1718	3313	10					
+citymap	3	588		citymap_member	1718	3313	10					
+citymap	4	589		citymap_member	1718	3313	10					
+citymap	5	590		citymap_member	1718	3313	10					
+citymap	6	591		citymap_member	1712	3330	10					
+citymap	7	593		citymap_member	1718	3313	10					
+citymap	8	594		citymap_member	1718	3313	10					
+citymap	9	595		citymap_member	1718	3313	10					
+citymap	10	596		citymap_member	1718	3313	10					
+citymap	11	597		citymap_member	1718	3313	10					
+buildingmap	1	586		building_area_map	1718	3313	10					
+buildingmap	2	595		building_area_map	1718	3313	10					
+buildingmap	3	596		building_area_map	1718	3313	10					
+buildingmap	4	597		building_area_map	1718	3313	10					
+jijiu_city	1	1		city_altar_npc_map			10	329	1562	3252	\\script\\tong\\npc\\jitan.lua	TÕ Töu
+jijiu_city	2	11		city_altar_npc_map			10	329	3096	5025	\\script\\tong\\npc\\jitan.lua	TÕ Töu
+jijiu_city	3	37		city_altar_npc_map			10	329	1697	3117	\\script\\tong\\npc\\jitan.lua	TÕ Töu
+jijiu_city	4	78		city_altar_npc_map			10	329	1580	3204	\\script\\tong\\npc\\jitan.lua	TÕ Töu
+jijiu_city	5	80		city_altar_npc_map			10	329	1693	3066	\\script\\tong\\npc\\jitan.lua	TÕ Töu
+jijiu_city	6	162		city_altar_npc_map			10	329	1520	3159	\\script\\tong\\npc\\jitan.lua	TÕ Töu
+jijiu_city	7	176		city_altar_npc_map			10	329	1561	2942	\\script\\tong\\npc\\jitan.lua	TÕ Töu
