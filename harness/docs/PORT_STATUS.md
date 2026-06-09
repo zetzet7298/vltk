@@ -76,7 +76,7 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | NPC/Boss skill catalog | `Reference/PcSkill/npcskills.txt` | 158 rows / 145 NPC-script / 21 boss-name | ✅ catalog / 🔄 runtime | Derived from PC `skills1.txt`; old standalone 43-row claim not source-proven |
 | Thief skills | `Reference/PcSkill/thiefskill.txt` | 4 rows | ✅ | 🔄 behavior not audited |
 | PC Skills1 full catalog | `Reference/PcSkill/Skills1FullCatalog.json` | 1,712 rows | ✅ catalog | Full 1712 rows PC catalog parsed; combat effects/hit zones not decoded |
-| Missiles catalog | `Reference/PcMissilesParserEvidence.json` | 467 unique ids | ✅ catalog / ✅ runtime | Exact 467 unique missile records parsed; speed and lifetime wired into MissileSpawner |
+| Missiles catalog | `Reference/PcMissilesParserEvidence.json` + `Reference/PcMissileSourceAudit.json` | PC `missles1.txt`: 467 rows / 466 unique ids; runtime-loaded legacy tables: 441 unique ids | ✅ catalog / 🔄 runtime | Audit manifest has `runtimeClaim=false`: `PcModMissileParser` currently loads `PcMissles.txt` + `ModMissles.txt`, not the full PC `missles1.txt`; speed/lifetime proof is representative only, not full 467-record runtime parity |
 | Meridian levels | `Reference/PcMeridian/meridian_level.txt` | 128 rows | ✅ | 🔄 full UX/effect parity not audited |
 | Translife level table | `Reference/PcTask/translife.txt` | 41 rows / levels 160..200 | ✅ data/service lookup | Batch 4 adds pure 7-group bonus lookup/diff proof; skill unlock/effect application runtime not proven |
 | Gold equip | `Reference/PcItemFull/goldequip.txt` | 5,346 rows | ✅ | data catalog |
@@ -86,8 +86,8 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Magic attributes | `Reference/PcItemFull/magicattrib.txt` | 330 rows | ✅ | old 333 claim false |
 | Compound recipes | `Reference/PcItemFull/atlas_compound.txt` | 1,294 rows | ✅ data / 🔄 craft | craft execution/UI still partial |
 | Quest keys | `Reference/PcItemFull/questkey.txt` | 2,045 rows | ✅ | data/service |
-| Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data/runtime | Batch 4 weighted-open model proves PC raw weights. `HongbaoRuntimeBehaviorService` connects open command to `InventoryService` for inventory mutations and side effects. |
-| City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/runtime | Full PC schema parsed. `HongbaoRuntimeBehaviorService` connects type 1/2 rewards to `InventoryService`. |
+| Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data/open-model path / 🔄 runtime | Batch 4 weighted-open model proves PC raw weights. `HongbaoRuntimeBehaviorService` wires a subset of reward commands to `InventoryService`, but item consumption, logs, global news, UI, and server side effects are not proven full PC runtime. |
+| City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/reward-command path / 🔄 runtime | Full PC schema parsed and type 1/2 reward command path exists, but item consumption/log/news/UI/server side effects are not proven full PC runtime. |
 | Item exchange source catalog | `Reference/PcItemExchange` | 7,334 normal / 480 rare / 200 level_exp / 100 level_lead_exp / 35 rolevalue keys | ✅ catalog+rolevalue+lookup facts / 🔄 runtime | Batch 4 exposes rolevalue typed facts; Batch 5 adds typed normal/rare table lookups (78/29 headers, 7,334/480 rows); exchange rules/inventory/economics/log side effects not proven |
 | Shop goods/buysell | `Reference/PcShop/goods.txt`, `buysell.txt` | 1,521 + 165 rows | ✅ | catalog; NPC shop UX not fully audited |
 | Lottery | `Reference/PcLottery/lottery.txt` | 254 rows | ✅ | data/service |
@@ -100,10 +100,10 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Server event source index | `Reference/PcServerEvent/server_event_index.txt` | 455 files / 427 Lua / 28 CVS metadata | ✅ file catalog / 🔄 runtime | File availability/index only; event semantics, rewards, schedules, UI/server side effects not executed |
 | FlipCard protocol facts | `Reference/PcFlipCard/flipcard_protocol.txt` | 6 constants/functions | ✅ protocol catalog / 🔄 runtime | Protocol/open UI function facts only; card UI/gameplay flow not executed |
 | Tong/faction map catalog | `Reference/PcTong/faction_map.txt` | 33 rows: 4 public / 7 dynamic templates / 11 citymap / 4 building / 7 city altar NPC | ✅ data/service | Batch 4 imports PC `script/tong/addtongnpc.lua` map arrays and `tong_mix.lua` level-10 enter gate; ownership/build/ban/expire/runtime movement not proven |
-| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / ✅ runtime | parser preserves exact PC count; `PcMapTravelRuntimeService` lookup proof covers representative IDs/maps; end-to-end travel UX/runtime is ported. |
-| Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / ✅ runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; `PcMapTravelRuntimeService` lookup proof covers service lookup; end-to-end wharf travel UX/runtime is ported. |
-| Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / ✅ runtime | parser preserves section `[949]` `region=1,3` with 1 real coordinate; `PcMapTravelRuntimeService` lookup proof covers default/map revive lookup; in-scene revive behavior is ported. |
-| Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data / ✅ runtime | `PcMapTravelRuntimeService` proof preserves 2,600 value rows and no fabricated map rows; scroll item consumption/teleport UX is ported. |
+| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / 🔄 action-service runtime | parser preserves exact PC count; `PcMapTravelRuntimeService`/`PcMapTravelActionService` lookup proof covers representative IDs/maps. End-to-end scene travel UX/wiring is not proven for all destination maps. |
+| Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / ☐ teleport runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; current action service returns `DataOnly` because `wharf.txt` preserves service positions but not a proven destination list. |
+| Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / 🔄 generic behavior path | parser preserves section `[949]` `region=1,3` with 1 real coordinate; service lookup and generic teleport host path exist, but in-scene revive lifecycle/wiring is not proven full PC runtime. |
+| Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data / ☐ teleport runtime | `PcMapTravelRuntimeService` proof preserves 2,600 value rows and no fabricated map rows; current action service treats the table as value/data-only unless real map rows are proven. Scroll item consumption/teleport UX is not ported. |
 | Normal Spawn data | `Reference/PcNpc/normal.txt` | 5,384 rows | ✅ data / 🔄 runtime | 5,384 rows verified and integrated into `PcNormalSpawnRuntimeService` (Batch 7). Full AI spawn loop parity still partial. |
 
 ## Missing or path-mismatch evidence
@@ -119,9 +119,9 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Battlefield data dir | `Reference/PcBattlefield` | `MissionBattle/combo.txt` + `scores.txt` subset present | ✅ subset / 🔄 runtime |
 | Battle script dir | `Reference/PcBattleScript` | PC `script/battles` file catalog present: 183 files, 182 active Lua, 1 backup | ✅ catalog / 🔄 runtime |
 | Server event index | `Reference/PcServerEvent` | PC `script/event` file catalog present: 455 files, 427 Lua, 28 CVS metadata | ✅ catalog / 🔄 runtime |
-| VNG event dir | `Reference/PcVngEvent` | ✅ index / 🔄 runtime | PC VNG events indexed (201 scripts) | Execute VNG event mechanics |
+| VNG event dir | `Reference/PcVngEvent` | ✅ index / 🔄 runtime | PC VNG event index currently records `TotalFiles=195`; do not use stale 201-script count without a fresh parser artifact | Execute VNG event mechanics |
 | FlipCard dedicated dir | `Reference/PcFlipCard` | protocol facts present: 6 constants/functions | ✅ protocol catalog / 🔄 runtime |
-| Compensation dir | `Reference/PcCompensation` | ✅ index / 🔄 runtime | PC compensation scripts indexed (9 files) | Execute compensation mechanics |
+| Compensation dir | `Reference/PcCompensation` | ✅ index / 🔄 runtime | PC compensation scripts indexed (9 files); current runtime service is index/lookup only | Execute compensation mechanics |
 | Quoc Chien / Hoa Son dir | `Reference/PcQuocChienHoaSon` | ✅ index / 🔄 runtime | PC Quoc Chien / Hoa Son scripts indexed (122 files) | Execute event mechanics |
 | Tong War dir | `Reference/PcTongWar` | ✅ index / 🔄 runtime | PC Tong/faction war scripts indexed (10 files) | Execute Tong war mechanics |
 
@@ -137,8 +137,8 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Server Region_S extraction | ✅ data / 🔄 gameplay | `MapSpawnCoverage.json` facts above | Spawn AI/scheduling/runtime parity |
 | Region_S object catalog/action executor | 🔄 | 453 object records, 299 deterministic actions | Full object script semantics not globally proven |
 | Region_S trap script resolver/executor | 🔄 partial runtime | 817/817 resolved; runtime catalog loads 804 deterministic + 13 host-limited routed actions. Batch 2 adds standalone PC semantic plan proofs for `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter` | Verifier still reports those 13 as deferred PC-runtime gaps; close real host/API/mission/runtime gaps before broad runtime `✅` |
-| Minimap/click-to-move/bounds | ✅ runtime (map 907) / 🔄 partial (others) | map 907 target clamp + minimap RectTransform offset fix/tests; `Map907RuntimeSmokeService` + in-editor Play Mode smoke prove bounds, minimap roundtrip, player spawn, click-to-move, and controller clamp for Map 907 | Map 907 runtime confirmed; all-map parity remains partial |
-| Waypoint/wharf/revive/scroll runtime | ✅ runtime | exact parser/count tests plus `PcMapTravelRuntimeService`/`PcMapTravelActionService` proof cover representative waypoint 225, wharf 3 SECT data, map 949 revive, scroll 2600 value rows. `PcMapTravelBehaviorService` added to `SandboxManager` for end-to-end teleportation. | |
+| Minimap/click-to-move/bounds | 🔄 runtime (map 907) / 🔄 partial (others) | map 907 target clamp + minimap RectTransform offset fix/tests; `Map907RuntimeSmokeService` proves catalog/bounds/minimap/controller-clamp facts | Click-to-move/player-feel and in-editor scene smoke are still required before broad map-907 runtime `✅`; all-map parity remains partial |
+| Waypoint/wharf/revive/scroll runtime | 🔄 partial runtime | exact parser/count tests plus `PcMapTravelRuntimeService`/`PcMapTravelActionService` proof cover representative waypoint 225, wharf 3 SECT data, map 949 revive, and 2,600 scroll value rows. Generic `PcMapTravelBehaviorService` exists, but wharf/scroll are data-only in current action service and end-to-end Sandbox wiring is not proven complete. | Prove actual scene/UX wiring, destination-map coverage, revive lifecycle, item consumption, and wharf/scroll teleport semantics before runtime `✅` |
 
 ### 2. Factions
 
@@ -147,7 +147,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | 10 faction enum/static runtime | 🔄 | `CombatDefinition`, `CombatFactionExt`, `SkillSectCatalog` exist | Parse/verify against PC faction data; fix UI text/element mismatches |
 | Faction selection UI | 🔄 | `FactionScreen` exists | PC text/layout/selection flow tests |
 | Ngũ hành mapping | 🔄 | core mapping exists | Full 10-faction PC element audit; known UI/catalog mismatches |
-| Chính/Tà/Trung lập alignment | ✅ source / 🔄 runtime | relation/framework services exist; PC `camp` is verified as C++ hardcoded; player relation and PK configs indexed | PC alignment runtime tests |
+| Chính/Tà/Trung lập alignment | 🔄 indexed/source-note / 🔄 runtime | relation/framework services exist; current repo evidence indexes player relation and PK configs, but exact C++ source/member proof for hardcoded PC `camp` must be cited before `✅ source` | PC alignment source citation and runtime tests |
 | Faction titles 81 | ✅ data/service | `Reference/PcTitle/factiontitle.txt`, parser/service/tests exist | Visual/effect parity not fully audited |
 | Faction maps 33 | ✅ data/service | `Reference/PcTong/faction_map.txt` 33 rows from PC `script/tong/addtongnpc.lua`; parser/service/count tests present | Prove Tong map ownership/build/ban/expire/runtime movement before `✅ runtime` |
 
@@ -163,7 +163,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | 10 faction skill sets | 🔄 | static `SkillSectCatalog` + tests | PC skill tree/script parity and catalog text fixes |
 | Special/translife skills | ✅ source catalog / 🔄 runtime | `specialskills.txt` now proves 576 PC `skills1.txt` special-script rows (not old 58); `translifeskill.txt` proves 9 PC `skills.txt` translife4th rows; separate Translife level table remains proven at `PcTask/translife.txt` | Execute/apply skill effects, unlock flow, formulas, scripts, UI/runtime side effects |
 | Skill level up | 🔄 | level/progression services exist | PC formula/Lua parity proof |
-| Missile effects | ✅ catalog / ✅ runtime | 467 exact unique PC records proven; speed/lifetime wired into `MissileSpawner` | Effect SPR rendering and combat side-effects |
+| Missile effects | ✅ catalog / 🔄 runtime | PC `missles1.txt` full catalog is 467 rows / 466 unique ids; current runtime registry loads 441-id legacy `PcMissles.txt` + `ModMissles.txt` tables, with representative speed/lifetime tests only | Load/prove full PC `missles1.txt` runtime coverage, then verify effect SPR rendering and combat side-effects |
 | Skill icons/animations | 🔄 | partial visual services/tests | All-skill icon/animation provenance audit |
 | Skill damage formula | 🔄 | `PcSkillDamageService` and `DamageFormulaService` partial | KNpc/KSkill parity and broader formula tests |
 | Meridian 128 | ✅ data/service | `meridian_level.txt` 128 rows; service/tests | Full effect/UX parity audit |
@@ -193,7 +193,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Shop/auction/stall/economy | 🔄 | data/services exist | NPC shop UX and server economy behavior parity |
 | Item exchange | ✅ source catalog/rolevalue facts / 🔄 runtime | Batch 3 imports/parses top-level PC `itemexchange_setting`: normal 7,334 rows, rare 480 rows, level_exp 200 rows, level_lead_exp 100 rows, rolevalue.ini 35 keys; Batch 4 exposes typed `rolevalue.ini` facts: 4 sections, 27 Jxb server values, skill=5000, create date 20160301; `rolevalue_log` excluded | Implement/verify exchange rules, inventory mutation, role value/evaluate formulas, server log/runtime side effects |
 | Hongbao | ✅ data/open-model path / 🔄 runtime | `hongbao.txt` 69 rows parsed from `PcItemFull`; Batch 4 proves KBonus-style inclusive raw-weight selection, 6 free-cell preflight, Type 1/2 reward commands, Costly global-news flag, and Log flag | Wire commands to real inventory/item grant, consume item, UI/server side effects, and logs before runtime `✅` |
-| City Hongbao data | ✅ data/runtime | `chengshidahongbao.txt` 67 rows / total weight 1,010,000 | Full PC schema parsed. `HongbaoRuntimeBehaviorService` connects type 1/2 rewards to `InventoryService`. |
+| City Hongbao data | ✅ data/reward-command path / 🔄 runtime | `chengshidahongbao.txt` 67 rows / total weight 1,010,000 | Full PC schema parsed and type 1/2 reward command path exists, but item consumption/log/news/UI/server side effects are not proven full PC runtime. |
 | Drop rates | 🔄 | `PcDropRate` has many tables; services exist | Loot behavior parity tests |
 
 ### 6. Missions / quests
@@ -206,7 +206,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Player task defs | ✅ data | `player_task_def.txt` 656 rows | mission execution partial |
 | Task/random/talk/event configs | 🔄 | config services/parsers exist | PC behavior and side-effect tests |
 | Newtask/tollgate/mission arena/maze/qianchong configs | 🔄 | services exist | Full mission flow parity |
-| ClearSkill mission lifecycle constants | ✅ runtime | Batch 3 proves PC mission id/timer/camp NPC/init/end/onleave/timer constants and operation plans; Batch 4 replays plans into a host interface and proves call order/result forwarding; SandboxClearSkillMissionLifecycleHost integrated | Fully wired to SandboxManager |
+| ClearSkill mission lifecycle constants | 🔄 partial runtime/model proof | Batch 3 proves PC mission id/timer/camp NPC/init/end/onleave/timer constants and operation plans; Batch 4 replays plans into a host interface and proves call order/result forwarding | Real host mission/runtime execution and stable SandboxManager wiring are not fully proven; do not mark broad runtime `✅` |
 
 ### 7. Events / activities
 
@@ -214,8 +214,8 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | Activity/HuoYueDu services | 🔄 | services/reference config files exist | Exact PC count/source and runtime parity |
 | Server events 455 | ✅ file catalog / 🔄 runtime | `Reference/PcServerEvent/server_event_index.txt` catalogs 455 PC `script/event` files (427 Lua, 28 CVS metadata) | Parse/execute semantic event Lua, schedules, rewards, and side effects |
-| VNG events/features | ✅ index / 🔄 runtime | PC VNG events indexed (201 scripts) | Add tests and execute |
-| Seasonal/compensation/bingo/flipcard | ✅ index / 🔄 partial runtime | `PcCompensation` integration via `CompensationIndexRuntimeService` (Batch 7) | Add semantic parsers/runtime for event scripts, rewards, UI, and server side effects |
+| VNG events/features | ✅ index / 🔄 runtime | `PcVngEvent/vng_event_index.txt` currently records `TotalFiles=195`; stale 201-script count must be re-proven by parser artifact before use | Add tests and execute |
+| Seasonal/compensation/bingo/flipcard | ✅ index / 🔄 runtime lookup | `PcCompensation` integration via `CompensationIndexRuntimeService` (Batch 7) is index/lookup only; flipcard protocol facts are catalog/UI helper only | Add semantic parsers/runtime for event scripts, rewards, UI, and server side effects |
 | Event scripts | 🔄 indexed only | `EventScriptService` metadata registry | Full Lua semantic execution |
 
 ### 8. Combat / PvP / battles
@@ -299,9 +299,9 @@ Never restore these without stronger proof:
 - Section 14 GBK dirs as semantic `✅`.
 - Mission/event/battle/guild scripts as full runtime `✅` merely because metadata services exist.
 - Faction maps 33 as full runtime `✅`; current proof is data/service only, not Tong map ownership/build/ban/expire/runtime movement.
-- Extended skills 1,712 `✅` while local data is 1,554 rows and PC `skills1.txt` full import is unproven.
-- Skill templates 219, special skills 58, old NPC skills 43 count, translife skills 9 as `✅`; current NPC/Boss skills1 subset proof is 158 data rows only, while special/translife skill files remain missing.
-- Item exchange and hongbao runtime as `✅` while expected runtime dirs are missing/path-mismatched.
+- Extended skills 1,712 as full runtime `✅`; current proof is catalog import only, not behavior/script parity.
+- Skill templates 219 as data rows, special skills 58, and old NPC skills 43 as `✅`; current proven facts are schema metadata, 576 special-script rows, 158 NPC/Boss rows, and 9 translife source rows, all runtime-partial.
+- Item exchange, hongbao, City Hongbao, waypoint/wharf/revive/scroll, and missile effects as broad runtime `✅` without real inventory/economy/teleport/server-side semantics and fresh scene/runtime proof.
 - HUD/UI/GM teleport claims based on dirty or user-owned changes.
 
 ## Completion criteria before future `✅`
@@ -318,7 +318,7 @@ For each future status row, cite at least one of:
 
 1. Map 907 movement bounds/minimap/click-to-move: target clamp/minimap fixes plus `Map907RuntimeSmokeService` prove catalog/bounds/minimap/controller-clamp/trap readiness; still needs player/in-editor feel smoke before marking runtime `✅`.
 2. Continue deferred trap family deepening: Batch 2 added standalone PC semantic plan proofs for `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter`; keep them `🔄 partial runtime/model proof` until verifier + host/API/mission gaps are closed.
-3. Waypoint/wharf/revive/scroll parser/count/action-service proofs are added; end-to-end travel/revive/scroll runtime proof is complete.
+3. Waypoint/wharf/revive/scroll parser/count/action-service proofs are added, but end-to-end travel/revive/scroll runtime proof is **not** complete; wharf and scroll remain data-only until real teleport/item-consumption semantics are proven.
 4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
 
 ## Port Factory Batch 7 integration — 2026-06-09
