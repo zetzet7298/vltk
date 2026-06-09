@@ -20,7 +20,7 @@ namespace VLTK.Tests.Sandbox
             Assert.That(ClearSkillMissionLifecycleConstants.CampNpcMpsX, Is.EqualTo(1582 * 32));
             Assert.That(ClearSkillMissionLifecycleConstants.CampNpcMpsY, Is.EqualTo(3303 * 32));
             Assert.That(ClearSkillMissionLifecycleConstants.CampNpcDirection, Is.EqualTo(1));
-            Assert.That(ClearSkillMissionLifecycleConstants.CurrentSubWorld, Is.EqualTo(-2));
+            Assert.That(ClearSkillMissionLifecycleConstants.RuntimeSubWorldArgument, Is.EqualTo(-2));
             Assert.That(ClearSkillMissionLifecycleConstants.MissionVActiveFlagSlot, Is.EqualTo(1));
             Assert.That(ClearSkillMissionLifecycleConstants.MissionVCampNpcIdSlot, Is.EqualTo(2));
             Assert.That(ClearSkillMissionLifecycleConstants.MissionVFree, Is.EqualTo(0));

@@ -22,7 +22,7 @@ namespace VLTK.Sandbox
         public const int CampNpcMpsX = 1582 * 32;
         public const int CampNpcMpsY = 3303 * 32;
         public const int CampNpcDirection = 1;
-        public const int CurrentSubWorld = -2;
+        public const int RuntimeSubWorldArgument = -2; // sentinel for PC SubWorld runtime variable, not a map id
         public const int MissionVActiveFlagSlot = 1;
         public const int MissionVCampNpcIdSlot = 2;
         public const int MissionVFree = 0;
@@ -37,7 +37,7 @@ namespace VLTK.Sandbox
             return new[]
             {
                 LifecycleOperation.ThreeInts("StartMissionTimer", MissionId, MissionTimerId, PkTimeTicks),
-                LifecycleOperation.SixIntsText("AddNpc", CampNpcTemplateId, CampNpcLevel, CurrentSubWorld, CampNpcMpsX, CampNpcMpsY, CampNpcDirection, CampNpcName),
+                LifecycleOperation.SixIntsText("AddNpc", CampNpcTemplateId, CampNpcLevel, RuntimeSubWorldArgument, CampNpcMpsX, CampNpcMpsY, CampNpcDirection, CampNpcName),
                 LifecycleOperation.TwoInts("SetMissionV", MissionVCampNpcIdSlot, LifecycleOperation.ResultOfPreviousOperation),
                 LifecycleOperation.IntText("SetNpcScript", LifecycleOperation.ResultOfPreviousOperation, CampNpcScript),
                 LifecycleOperation.TwoInts("SetMissionV", MissionVActiveFlagSlot, MissionVActive),
