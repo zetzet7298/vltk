@@ -38,8 +38,8 @@ namespace VLTK.Tests.Sandbox
             var fact = service.GetBySkillId(233);
 
             Assert.IsNotNull(fact);
-            Assert.AreEqual("\\script\\skill\\npc\\残阳如血.lua", fact.ScriptPath);
-            Assert.AreEqual("script/skill/npc/残阳如血.lua", fact.NormalizedRelativePath);
+            Assert.AreEqual("\\script\\skill\\npc\\²ÐÑôÈçÑª.lua", fact.ScriptPath);
+            Assert.AreEqual("script/skill/npc/²ÐÑôÈçÑª.lua", fact.NormalizedRelativePath);
             Assert.IsTrue(fact.IsNpcScriptPath);
             Assert.IsTrue(fact.ExistsUnderPcServerRoot);
             Assert.AreEqual(1, fact.ReferencingSkillCount);
@@ -83,7 +83,7 @@ namespace VLTK.Tests.Sandbox
             CollectionAssert.Contains(missingPaths, "\\script\\skill\\npc\\biaoche_mianyi.lua");
             CollectionAssert.Contains(missingPaths, "\\script\\skill\\biggoldboss.lua");
             CollectionAssert.Contains(missingPaths, "\\script\\skill\\special\\boss_libaiskill.lua");
-            CollectionAssert.DoesNotContain(missingPaths, "\\script\\skill\\npc\\残阳如血.lua");
+            CollectionAssert.DoesNotContain(missingPaths, "\\script\\skill\\npc\\²ÐÑôÈçÑª.lua");
             CollectionAssert.DoesNotContain(missingPaths, "\\script\\skill\\npc\\randomtask_npc.lua");
         }
     }
