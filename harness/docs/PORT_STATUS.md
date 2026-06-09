@@ -84,7 +84,7 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Armor/helm/boot/cuff/belt/ring/amulet/pendant | `PcItemFull/*.txt` | 290/140/40/20/20/10/20/20 | ✅ | data catalog |
 | Melee/range/horse/potion | `PcItemFull/*.txt` | 60/30/350/40 | ✅ | data catalog |
 | Magic attributes | `Reference/PcItemFull/magicattrib.txt` | 330 rows | ✅ | old 333 claim false |
-| Compound recipes | `Reference/PcItemFull/atlas_compound.txt` | 1,294 rows | ✅ data / 🔄 craft | craft execution/UI still partial |
+| Compound recipes | `Reference/PcItemFull/atlas_compound.txt` | 1,294 rows | ✅ data / 🔄 craft-plan | atlas_compound parser now preserves 1,294 rows and PC `atlas.lua` material validation/result shape; `CompoundRecipeService` builds a host-op craft plan (100000 Pay, RNG by source/destination item value, WriteCompoundLog/Remove/AddItemEx operations). Inventory/UI/server side effects still partial. |
 | Quest keys | `Reference/PcItemFull/questkey.txt` | 2,045 rows | ✅ | data/service |
 | Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data/open-model path / 🔄 runtime | Batch 4 weighted-open model proves PC raw weights. `HongbaoRuntimeBehaviorService` wires a subset of reward commands to `InventoryService`, but item consumption, logs, global news, UI, and server side effects are not proven full PC runtime. |
 | City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/reward-command path / 🔄 runtime | Full PC schema parsed and type 1/2 reward command path exists, but item consumption/log/news/UI/server side effects are not proven full PC runtime. |
@@ -188,7 +188,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Core item/equipment data | ✅ data | exact counts in verified data table | Behavior/economy parity by subsystem |
 | Magic attributes | ✅ data | 330 rows; old 333 false | Formula/application parity |
 | Set bonus/enhance/refine | 🔄 | services/tests exist | PC source exact formula audit |
-| Compound/recipe | ✅ data / 🔄 craft | 1,294 recipes; craft UI/execution partial | Inventory consume/result execution |
+| Compound/recipe | ✅ data / 🔄 craft-plan | 1,294 atlas_compound rows parsed; PC `atlas.lua` validation/result and `compound_header.lua` host-op transaction plan modeled (100000 fee, RNG by item value, log/remove/add ops) | Wire real InventoryService item instances, UI, money, server/global-value limits, and log side effects before runtime `✅` |
 | Quest items | ✅ data/service | 2,045 quest keys | Full quest usage semantics |
 | Shop/auction/stall/economy | 🔄 | data/services exist | NPC shop UX and server economy behavior parity |
 | Item exchange | ✅ source catalog/rolevalue facts / 🔄 runtime | Batch 3 imports/parses top-level PC `itemexchange_setting`: normal 7,334 rows, rare 480 rows, level_exp 200 rows, level_lead_exp 100 rows, rolevalue.ini 35 keys; Batch 4 exposes typed `rolevalue.ini` facts: 4 sections, 27 Jxb server values, skill=5000, create date 20160301; `rolevalue_log` excluded | Implement/verify exchange rules, inventory mutation, role value/evaluate formulas, server log/runtime side effects |

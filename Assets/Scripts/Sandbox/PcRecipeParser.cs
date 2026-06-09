@@ -66,7 +66,7 @@ namespace VLTK.Sandbox
                 if (string.IsNullOrWhiteSpace(line)) continue;
                 if (!headerSkipped) { headerSkipped = true; continue; }
                 var cols = line.Split('\t');
-                if (cols.Length < 56) continue;
+                if (cols.Length < 55) continue;
                 var recipe = ParseAtlasCompoundRow(cols);
                 if (recipe != null) reg.Register(recipe);
             }
