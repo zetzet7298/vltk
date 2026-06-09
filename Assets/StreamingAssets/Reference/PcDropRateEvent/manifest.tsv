@@ -1,0 +1,21 @@
+# SourceRoot=Server 6.0/server/home_jxser/server1/settings/droprate/event
+# FileCount=17
+# TotalDropRows=1152
+SourceIndex	RelativePath	Directory	FileName	SizeBytes	Sha256	SectionCount	DropRowCount	MainCount	RandRange	MagicRate	MoneyRate	MoneyScale
+1	diancangshan.ini	.	diancangshan.ini	3792	51a56543a6bba372a0b5689116ebad8f962c80c257ff567ddd7c9f2129c8a35e	65	64	64	1000000	1	10	50
+2	huashan.ini	.	huashan.ini	4067	a8876ff7bbf86b696d638c6966a185e3c3dcb8840dd84784c193ad562fc03861	70	69	69	330000	1	10	50
+3	jianxiashengri/bianjing.ini	jianxiashengri	bianjing.ini	3486	7f723d8c097f7fb83087b128da348f516f6a17514c3ea20a9dcb6b9b7c73d990	61	60	60	330000	1	10	50
+4	jianxiashengri/chengdu.ini	jianxiashengri	chengdu.ini	3486	7f723d8c097f7fb83087b128da348f516f6a17514c3ea20a9dcb6b9b7c73d990	61	60	60	330000	1	10	50
+5	jianxiashengri/dali.ini	jianxiashengri	dali.ini	3486	571d95697329ec831e489a052691997430e48727e202223d3c297460dd59d87b	61	60	60	330000	1	10	50
+6	jianxiashengri/fengxiang.ini	jianxiashengri	fengxiang.ini	3486	571d95697329ec831e489a052691997430e48727e202223d3c297460dd59d87b	61	60	60	330000	1	10	50
+7	jianxiashengri/linan.ini	jianxiashengri	linan.ini	3486	c52e0673893c668d06aa08052b867b5b79c29314b00ac4dccc44b25fe3e2bf82	61	60	60	330000	1	10	50
+8	jianxiashengri/nanyue.ini	jianxiashengri	nanyue.ini	3486	c4734c5e80cf14cae9377af26fe8adcbd6bb1ac110c24cc9640eb39048412d06	61	60	60	330000	1	10	50
+9	jianxiashengri/xiangyan.ini	jianxiashengri	xiangyan.ini	3486	c52e0673893c668d06aa08052b867b5b79c29314b00ac4dccc44b25fe3e2bf82	61	60	60	330000	1	10	50
+10	jianxiashengri/yangzhou.ini	jianxiashengri	yangzhou.ini	3486	c4734c5e80cf14cae9377af26fe8adcbd6bb1ac110c24cc9640eb39048412d06	61	60	60	330000	1	10	50
+11	jxanniversary3/diancangshan.ini	jxanniversary3	diancangshan.ini	5907	873e3050dfdeed6835664057b595cb9f00e74b2ae5c44e8c9d4e91088de1deea	89	88	88	1000000	1	20	50
+12	jxanniversary3/golden_jxanni3.ini	jxanniversary3	golden_jxanni3.ini	3613	c9a23761900b01068d0dcc02b27b0fe7169c69568505be7f33133977b292467a	60	59	59	3000000	1	50	100
+13	jxanniversary3/huashan.ini	jxanniversary3	huashan.ini	5740	1fa3c49b67e0362d018311d487d23260113542b1a45b232005069ef445d08244	89	88	88	330000	1	20	50
+14	jxanniversary3/qingchengshan.ini	jxanniversary3	qingchengshan.ini	5903	41e98a3ee4d37638b783fd188b0fb500c3e626c2219c17ced5b43e930753f086	89	88	88	1000000	1	20	50
+15	jxanniversary3/wuyishan.ini	jxanniversary3	wuyishan.ini	5901	0036f209399eb49e4b191dddc22261db5f495017856760408f3401df1bf35e1d	89	88	88	1000000	1	20	50
+16	qingchengshan.ini	.	qingchengshan.ini	3792	51a56543a6bba372a0b5689116ebad8f962c80c257ff567ddd7c9f2129c8a35e	65	64	64	1000000	1	10	50
+17	wuyishan.ini	.	wuyishan.ini	3788	796e285898e04ae643f10451476e030010e592118728c34319a26ceba22a37ed	65	64	64	1000000	1	10	50
