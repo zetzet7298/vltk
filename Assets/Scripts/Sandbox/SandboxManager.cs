@@ -54,7 +54,7 @@ namespace VLTK.Sandbox
         public bool IsMissingData => status == SandboxServiceDataStatus.MissingData;
     }
 
-    public class SandboxManager : MonoBehaviour
+    public class SandboxManager : MonoBehaviour, IMapTeleportHost
     {
         public const int BaLangHuyenMapId = 79;
         public const int TinSuVuotAiPhongKy120MapId = 389;
