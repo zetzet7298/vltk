@@ -1,11 +1,12 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC settings/npcskills.txt Kỹ Năng Quái / Boss parser
-// Source: npcskills.txt (43 entries, GB2312, tab-separated).
-//   SkillId  SkillName  NpcTemplateId  MinNpcLevel  MaxNpcLevel
-//   Damage  Radius  CoolDownMs
-// Skill quái = skill riêng của từng template NPC / boss, dùng cho AI dùng skill.
+// VLTK Mobile — PC skills1.txt NPC/Boss skill catalog parser.
+// Source of truth: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/settings/skills1.txt
+// The committed npcskills.txt preserves the PC skills1.txt header plus rows where
+// LvlSetScript starts with "\\script\\skill\\npc" or SkillName contains "boss".
+// PC source proves 158 rows (145 NPC-script rows + 13 boss-name-only rows), not 43.
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -13,40 +14,46 @@ namespace VLTK.Sandbox
 {
     public static class PcNpcSkillParser
     {
-        public const int SkillIdCol = 0;
-        public const int SkillNameCol = 1;
-        public const int NpcTemplateCol = 2;
-        public const int MinNpcLevelCol = 3;
-        public const int MaxNpcLevelCol = 4;
-        public const int DamageCol = 5;
-        public const int RadiusCol = 6;
-        public const int CoolDownCol = 7;
+        public const int SkillNameCol = 0;
+        public const int PropertyCol = 1;
+        public const int SkillIdCol = 2;
+        public const int SkillStyleCol = 4;
+        public const int SkillIconCol = 5;
+        public const int AttackRadiusCol = 14;
+        public const int MissilesFormCol = 19;
+        public const int ChildSkillIdCol = 20;
+        public const int ChildSkillLevelCol = 21;
+        public const int ChildSkillNumCol = 22;
+        public const int MaxLevelCol = 53;
+        public const int LvlSetScriptCol = 70;
+        public const int PcSkills1ColumnCount = 115;
 
         public static List<PcNpcSkillEntry> ParseFile(string path)
         {
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return new List<PcNpcSkillEntry>();
+            return ParseLines(PcItemCommon.ReadServerLines(path));
+        }
+
+        public static List<PcNpcSkillEntry> ParseLines(IReadOnlyList<string> lines)
+        {
             var rows = new List<PcNpcSkillEntry>();
-            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var lines = PcItemCommon.ReadServerLines(path);
+            if (lines == null || lines.Count == 0) return rows;
+
             bool headerSkipped = false;
+            int sourceRowNumber = 0;
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                if (!headerSkipped) { headerSkipped = true; continue; }
-                var cols = line.Split('\t');
-                if (cols.Length < 5) continue;
-                int id = PcItemCommon.Int(cols, SkillIdCol);
-                if (id <= 0) continue;
-                rows.Add(new PcNpcSkillEntry
+                if (!headerSkipped)
                 {
-                    skillId = id,
-                    nameRaw = PcItemCommon.Str(cols, SkillNameCol),
-                    npcTemplateId = PcItemCommon.Int(cols, NpcTemplateCol),
-                    minNpcLevel = PcItemCommon.Int(cols, MinNpcLevelCol),
-                    maxNpcLevel = cols.Length > MaxNpcLevelCol ? PcItemCommon.Int(cols, MaxNpcLevelCol) : 0,
-                    damage = cols.Length > DamageCol ? PcItemCommon.Int(cols, DamageCol) : 0,
-                    radius = cols.Length > RadiusCol ? PcItemCommon.Int(cols, RadiusCol) : 0,
-                    coolDownMs = cols.Length > CoolDownCol ? PcItemCommon.Int(cols, CoolDownCol) : 0,
-                });
+                    headerSkipped = true;
+                    continue;
+                }
+
+                sourceRowNumber++;
+                var cols = line.Split('\t');
+                var entry = ParseRow(cols, sourceRowNumber);
+                if (entry != null) rows.Add(entry);
             }
             return rows;
         }
@@ -54,19 +61,68 @@ namespace VLTK.Sandbox
         public static PcNpcSkillRegistry BuildRegistry(string dir)
         {
             var reg = new PcNpcSkillRegistry();
-            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
-            string main = Path.Combine(dir, "npcskills.txt");
-            if (File.Exists(main))
-                foreach (var s in ParseFile(main)) reg.Register(s);
+            if (string.IsNullOrEmpty(dir)) return reg;
+            string main = Directory.Exists(dir) ? Path.Combine(dir, "npcskills.txt") : dir;
+            if (!File.Exists(main)) return reg;
+            foreach (var s in ParseFile(main)) reg.Register(s);
             return reg;
+        }
+
+        private static PcNpcSkillEntry ParseRow(string[] cols, int sourceRowNumber)
+        {
+            if (cols == null || cols.Length <= LvlSetScriptCol) return null;
+            int id = PcItemCommon.Int(cols, SkillIdCol);
+            if (id <= 0) return null;
+
+            string name = PcItemCommon.Str(cols, SkillNameCol);
+            string script = PcItemCommon.Str(cols, LvlSetScriptCol);
+            bool isNpcScript = script.StartsWith("\\script\\skill\\npc", StringComparison.OrdinalIgnoreCase);
+            bool isBossName = name.IndexOf("boss", StringComparison.OrdinalIgnoreCase) >= 0;
+            if (!isNpcScript && !isBossName) return null;
+
+            return new PcNpcSkillEntry
+            {
+                skillId = id,
+                nameRaw = name,
+                propertyRaw = PcItemCommon.Str(cols, PropertyCol),
+                skillStyle = PcItemCommon.Int(cols, SkillStyleCol),
+                skillIcon = PcItemCommon.Str(cols, SkillIconCol),
+                attackRadius = PcItemCommon.Int(cols, AttackRadiusCol),
+                missilesForm = PcItemCommon.Int(cols, MissilesFormCol),
+                childSkillId = PcItemCommon.Int(cols, ChildSkillIdCol),
+                childSkillLevel = PcItemCommon.Int(cols, ChildSkillLevelCol),
+                childSkillNum = PcItemCommon.Int(cols, ChildSkillNumCol),
+                maxLevel = PcItemCommon.Int(cols, MaxLevelCol),
+                levelSetScript = script,
+                isNpcScript = isNpcScript,
+                isBossName = isBossName,
+                sourceColumnCount = cols.Length,
+                sourceRowNumber = sourceRowNumber,
+            };
         }
     }
 
-    [System.Serializable]
+    [Serializable]
     public class PcNpcSkillEntry
     {
         public int skillId;
         public string nameRaw;
+        public string propertyRaw;
+        public int skillStyle;
+        public string skillIcon;
+        public int attackRadius;
+        public int missilesForm;
+        public int childSkillId;
+        public int childSkillLevel;
+        public int childSkillNum;
+        public int maxLevel;
+        public string levelSetScript;
+        public bool isNpcScript;
+        public bool isBossName;
+        public int sourceColumnCount;
+        public int sourceRowNumber;
+
+        // Legacy fields kept so old NpcSkillService callers continue to compile.
         public int npcTemplateId;
         public int minNpcLevel;
         public int maxNpcLevel;
@@ -77,13 +133,26 @@ namespace VLTK.Sandbox
 
     public sealed class PcNpcSkillRegistry
     {
-        private readonly Dictionary<int, PcNpcSkillEntry> _byId = new();
-        private readonly Dictionary<int, List<PcNpcSkillEntry>> _byNpc = new();
-        public int Count => _byId.Count;
+        private readonly Dictionary<int, PcNpcSkillEntry> _byId = new Dictionary<int, PcNpcSkillEntry>();
+        private readonly Dictionary<int, List<PcNpcSkillEntry>> _byNpc = new Dictionary<int, List<PcNpcSkillEntry>>();
+        private readonly List<PcNpcSkillEntry> _all = new List<PcNpcSkillEntry>();
+
+        public int Count => _all.Count;
+        public int NpcScriptCount { get; private set; }
+        public int BossNameCount { get; private set; }
+        public int BossNameOnlyCount => BossNameCount - BothNpcScriptAndBossNameCount;
+        public int BothNpcScriptAndBossNameCount { get; private set; }
+        public IReadOnlyList<PcNpcSkillEntry> All => _all;
+
         public void Register(PcNpcSkillEntry e)
         {
             if (e == null || e.skillId <= 0) return;
+            if (_byId.ContainsKey(e.skillId)) return;
             _byId[e.skillId] = e;
+            _all.Add(e);
+            if (e.isNpcScript) NpcScriptCount++;
+            if (e.isBossName) BossNameCount++;
+            if (e.isNpcScript && e.isBossName) BothNpcScriptAndBossNameCount++;
             if (e.npcTemplateId > 0)
             {
                 if (!_byNpc.TryGetValue(e.npcTemplateId, out var list))
@@ -94,10 +163,12 @@ namespace VLTK.Sandbox
                 list.Add(e);
             }
         }
+
         public PcNpcSkillEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
+
         public IReadOnlyList<PcNpcSkillEntry> GetByNpcTemplate(int templateId)
             => _byNpc.TryGetValue(templateId, out var v)
                 ? (IReadOnlyList<PcNpcSkillEntry>)v
-                : (IReadOnlyList<PcNpcSkillEntry>)System.Array.Empty<PcNpcSkillEntry>();
+                : (IReadOnlyList<PcNpcSkillEntry>)Array.Empty<PcNpcSkillEntry>();
     }
 }
