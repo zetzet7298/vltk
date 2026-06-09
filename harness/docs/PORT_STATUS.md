@@ -146,7 +146,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | 10 faction enum/static runtime | 🔄 | `CombatDefinition`, `CombatFactionExt`, `SkillSectCatalog` exist | Parse/verify against PC faction data; fix UI text/element mismatches |
 | Faction selection UI | 🔄 | `FactionScreen` exists | PC text/layout/selection flow tests |
 | Ngũ hành mapping | 🔄 | core mapping exists | Full 10-faction PC element audit; known UI/catalog mismatches |
-| Chính/Tà/Trung lập alignment | 🔄/☐ | relation/framework services exist | PC alignment source-of-truth and tests |
+| Chính/Tà/Trung lập alignment | ✅ source / 🔄 runtime | relation/framework services exist; PC `camp` is verified as C++ hardcoded; player relation and PK configs indexed | PC alignment runtime tests |
 | Faction titles 81 | ✅ data/service | `Reference/PcTitle/factiontitle.txt`, parser/service/tests exist | Visual/effect parity not fully audited |
 | Faction maps 33 | ✅ data/service | `Reference/PcTong/faction_map.txt` 33 rows from PC `script/tong/addtongnpc.lua`; parser/service/count tests present | Prove Tong map ownership/build/ban/expire/runtime movement before `✅ runtime` |
 
