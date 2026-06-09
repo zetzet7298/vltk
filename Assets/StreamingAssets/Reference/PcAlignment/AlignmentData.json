@@ -1,0 +1,8 @@
+{
+  "indexed_files": [
+    "settings/npc/player/pkpunish.ini",
+    "settings/npc/player/pkrate.ini",
+    "settings/factiontitle.txt"
+  ],
+  "note": "Core Camp/Alignment enum (Chính/Tà/Trung lập) is hardcoded in C++ engine and has no standalone camp.ini config. Player relation matrices are derived from PK/faction logic."
+}
