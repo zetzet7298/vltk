@@ -220,7 +220,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Core combat/damage/projectile/buff/death/PK services | 🔄 | services and tests exist | PC formula/skill/PvP semantic parity |
 | Tống Kim maps/rebirth traps | 🔄 | map alias counts, some rebirth traps ported; Batch 3 MissionBattle combo/scores subset proves 5 ranks and 25/25 matrix cells; Batch 4 scoring lookup proves representative PC title-index/rank scores | Full battlefield state, kill/death award mutation, join/award behavior, mission lifecycle |
 | CityWar | 🔄 partial runtime/model/constants/token proof | `citywar.ini` data exists; `CityWarJoinRouter` routed; Batch 2 model covers join plan branches; Batch 3 constants prove PC card table, card prices, challenge token, task ids/caps/reward constants; transfer-route split model proves NPC route 222/223 vs trap join 221; Batch 4 challenge-token turn-in model proves token tuple, daily cap, exp, task/league/Tong-total command surface | Full CityWar mission lifecycle, Tong gate host integration, real inventory/life APIs, real command execution, rewards, capacity gates, and live scene proof still missing |
-| Quốc Chiến/Hoa Sơn | 🔄/☐ | service hints exist; dedicated source proof weak/missing | Add PC source evidence/runtime tests |
+| Quốc Chiến/Hoa Sơn | ✅ index / 🔄 runtime | PC Quoc Chien / Hoa Son indexed (122 files) | Execute event mechanics |
 | Battle scripts 183 | ✅ file catalog / 🔄 runtime | `Reference/PcBattleScript/battle_scripts.txt` catalogs PC `script/battles`: 183 files, 182 active Lua, 1 backup, 10 dirs; old settings-file/mock claim corrected | Execute full PC battle Lua semantics and wire runtime mission side effects |
 | Battle awards/double EXP | 🔄 | services exist | PC event/schedule/effect parity |
 
