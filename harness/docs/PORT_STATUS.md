@@ -1,6 +1,6 @@
 # PORT_STATUS.md — Evidence Audit PC → Mobile
 
-> **Audit date**: 2026-06-08
+> **Audit date**: 2026-06-09
 > **PC source of truth**: `/var/www/vltksource_new/vl_update_27`
 > **Mobile repo**: `/var/www/vltk-mobile` (`dev` at `0480502` when audit started)
 > **Scope**: toàn bộ codebase/status, không chỉ map.
@@ -31,6 +31,7 @@
 - Unity console check: only known Addressables GUID conflict noise during this audit.
 - Batch 3b adds a fresh isolated Unity Test Runner artifact for `PortFactorySmoke`: EditMode `2/2 passed` via Unity MCP job `5d7958b697ad4565aab8a1e409430c05`. Existing `VLTK.Tests.EditMode`/PlayMode asmdefs remain gated/stale; this is not a full-suite claim.
 - Batch 4 local integration adds pure model/service/catalog proofs for Translife bonus lookup/diff, Hongbao weighted-open command surface, City Hongbao schema, MissionBattle scoring lookup, ClearSkill lifecycle plan replay, CityWar challenge-token turn-in, ItemExchange rolevalue facts, NPC/Boss `skills1.txt` subset catalog, Tong/faction map catalog, and expanded `PortFactorySmoke`. Current Unity execute proof returned `hongbao=69/1000000/t42+27/costly15/log69; hbType1=1/AddItem/True; hbType2=2/AddGoldItem/True; hbBlocked=InsufficientInventorySpace/None; cityHongbao=67/1010000/4681/10000; battle=5/25/25/idx1:1:75; translife=41/29/7/d15:80:4:1; clearskillInit=True/5/4321; clearskillLeave=True/8/CloseMission; rolevalue=4/35/5000/27/400-4000/True; npcskills=158/158/145/21/13/54/64; tongFactionMap=33/7/11/1712:3330/329:1561:2942`.
+- Batch 5 local integration adds source catalogs/models for FlipCard protocol, City Hongbao weighted-open command surface, PC `skilltemplate.txt` schema, PC battle script file index, server event file index, ItemExchange normal/rare typed lookups, Translife skill source 9-row subset, Tong map enter plan, NPC skill script availability index, and Special skill script 576-row subset. Current Unity execute proof returned `flip=6/0; cityHongbao=67/1010000/13+54/67; skilltemplate=67/220; battleScripts=183/182/10; serverEvents=455/427/28; itemLookup=78/7334/29/480/False; translifeSkill=9; tongEnter=33/11/7/True:1; npcSkillScripts=158/145/49/42/7; special=576/575/84`. Scoped `PortFactorySmoke` passed `10/10`; full legacy test asmdefs remain gated/stale.
 - Exa research timed out twice; DeepWiki fetched UnityCsReference overview. This audit relies on current repo files and PC source-of-truth, not external guesses.
 
 ## Current high-confidence map verifier facts
@@ -69,6 +70,9 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Gold bosses | `Reference/PcNpc/goldboss.txt` | 32 rows | ✅ | 🔄 event/schedule behavior not fully audited |
 | Base skills | `Reference/PcSkill/skills.txt` | 1,216 rows | ✅ | 🔄 skill behavior/formulas/scripts partial |
 | Weapon skills | `Reference/PcSkill/clientweaponskill.txt` | 32 rows | ✅ | 🔄 behavior not audited |
+| Special skill script catalog | `Reference/PcSkill/specialskills.txt` | 576 rows / 575 unique skill ids / 84 scripts | ✅ catalog / 🔄 runtime | Derived from PC `skills1.txt` `LvlSetScript` prefix `\script\skill\special`; old standalone 58-row claim not source-proven |
+| Translife skill source | `Reference/PcSkill/translifeskill.txt` | 9 rows | ✅ source catalog / 🔄 runtime | Derived from PC `skills.txt` `translife4th.lua` rows; do not conflate with `PcTask/translife.txt` level bonus table |
+| Skill template schema | `Reference/PcSkill/skilltemplate.txt` | 67 fields / 220 non-empty lines | ✅ schema catalog / 🔄 runtime | PC `skilltemplate.txt` is schema metadata; old 219-row template claim not source-proven |
 | NPC/Boss skill catalog | `Reference/PcSkill/npcskills.txt` | 158 rows / 145 NPC-script / 21 boss-name | ✅ catalog / 🔄 runtime | Derived from PC `skills1.txt`; old standalone 43-row claim not source-proven |
 | Thief skills | `Reference/PcSkill/thiefskill.txt` | 4 rows | ✅ | 🔄 behavior not audited |
 | Mod skills local | `Reference/ModSkills.txt` | 1,554 rows | 🔄 | PC `skills1.txt` 1,712 is not fully represented/proven |
@@ -83,15 +87,18 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Compound recipes | `Reference/PcItemFull/atlas_compound.txt` | 1,294 rows | ✅ data / 🔄 craft | craft execution/UI still partial |
 | Quest keys | `Reference/PcItemFull/questkey.txt` | 2,045 rows | ✅ | data/service |
 | Hongbao data | `Reference/PcItemFull/hongbao.txt` | 69 rows | ✅ data / 🔄 open model | Batch 4 weighted-open model proves PC raw weights, 6-cell preflight, AddItem/AddGoldItem command surface, Costly/Log flags; inventory mutation/UI/server side effects still missing |
-| City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/service | Full PC schema parsed; weighted open/inventory mutation/UI/server side effects not proven |
-| Item exchange source catalog | `Reference/PcItemExchange` | 7,334 normal / 480 rare / 200 level_exp / 100 level_lead_exp / 35 rolevalue keys | ✅ catalog+rolevalue facts / 🔄 runtime | Batch 4 exposes rolevalue typed facts (4 sections, 35 keys, 27 Jxb values, skill=5000); exchange rules/inventory/economics/log side effects not proven |
+| City Hongbao data | `Reference/PcItemFull/chengshidahongbao.txt` | 67 rows / total weight 1,010,000 | ✅ data/open model / 🔄 runtime | Full PC schema parsed; Batch 5 weighted-open model proves PC raw weights, 6-cell preflight, Type 1/2 reward command surface, Costly/Log flags; inventory mutation/UI/server side effects not proven |
+| Item exchange source catalog | `Reference/PcItemExchange` | 7,334 normal / 480 rare / 200 level_exp / 100 level_lead_exp / 35 rolevalue keys | ✅ catalog+rolevalue+lookup facts / 🔄 runtime | Batch 4 exposes rolevalue typed facts; Batch 5 adds typed normal/rare table lookups (78/29 headers, 7,334/480 rows); exchange rules/inventory/economics/log side effects not proven |
 | Shop goods/buysell | `Reference/PcShop/goods.txt`, `buysell.txt` | 1,521 + 165 rows | ✅ | catalog; NPC shop UX not fully audited |
 | Lottery | `Reference/PcLottery/lottery.txt` | 254 rows | ✅ | data/service |
 | Adventure | `Reference/PcAdventure/adventure.txt` | 1,037 rows | ✅ | catalog; quest semantics partial |
 | Player task defs | `Reference/PcMission/player_task_def.txt` | 656 rows | ✅ data | mission execution partial |
 | Guild levels | `Reference/PcTong/tong_level_data.txt` | 6 rows | ✅ | guild scripts partial |
 | City war config | `Reference/PcEvent/citywar.ini` | 90 data lines | ✅ data | join/router semantics partial |
-| MissionBattle combo/scores matrix | `Reference/PcBattlefield/MissionBattle/combo.txt`, `scores.txt` | 5 ranks / 25 combo cells / 25 score cells | ✅ data/scoring lookup subset | Batch 4 lookup proves PC title-index/rank scoring facts; kill/death award mutation and mission lifecycle not proven |
+| MissionBattle combo/scores matrix | `Reference/PcBattlefield/MissionBattle/combo.txt`, `scores.txt` | 5 ranks / 25 combo cells / 25 score cells | ✅ data/scoring lookup subset | Batch 4 lookup proves PC title-index/rank scoring facts; Batch 5 battle script index catalogs 183 `script/battles` files; kill/death award mutation and mission lifecycle not proven |
+| Battle script source catalog | `Reference/PcBattleScript/battle_scripts.txt` | 183 files / 182 active Lua / 1 backup / 10 dirs | ✅ file catalog / 🔄 runtime | File availability/index only; Lua battle semantics not executed |
+| Server event source index | `Reference/PcServerEvent/server_event_index.txt` | 455 files / 427 Lua / 28 CVS metadata | ✅ file catalog / 🔄 runtime | File availability/index only; event semantics, rewards, schedules, UI/server side effects not executed |
+| FlipCard protocol facts | `Reference/PcFlipCard/flipcard_protocol.txt` | 6 constants/functions | ✅ protocol catalog / 🔄 runtime | Protocol/open UI function facts only; card UI/gameplay flow not executed |
 | Tong/faction map catalog | `Reference/PcTong/faction_map.txt` | 33 rows: 4 public / 7 dynamic templates / 11 citymap / 4 building / 7 city altar NPC | ✅ data/service | Batch 4 imports PC `script/tong/addtongnpc.lua` map arrays and `tong_mix.lua` level-10 enter gate; ownership/build/ban/expire/runtime movement not proven |
 | Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / 🔄 runtime | parser preserves exact PC count; `PcMapTravelRuntimeService` lookup proof covers representative IDs/maps; end-to-end travel UX/runtime still partial |
 | Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / 🔄 runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; `PcMapTravelRuntimeService` lookup proof covers service lookup; end-to-end wharf travel UX/runtime still partial |
@@ -104,15 +111,15 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 
 | System | Expected path/evidence | Current state | Status |
 |---|---|---|---:|
-| Special skills 58 | `Reference/PcSkill/specialskills.txt` | missing | ☐ |
-| Translife skills 9 | `Reference/PcSkill/translifeskill.txt` | missing; separate `PcTask/translife.txt` level table is loaded/proven | ☐ skills / ✅ level table |
+| Special skills 58 | `Reference/PcSkill/specialskills.txt` | PC `skills1.txt` special-script subset present: 576 rows; no standalone 58-row table found | ✅ catalog / 🔄 runtime |
+| Translife skills 9 | `Reference/PcSkill/translifeskill.txt` | PC `skills.txt` translife4th subset present: 9 rows; separate `PcTask/translife.txt` level table is loaded/proven | ✅ source / ✅ level table / 🔄 runtime |
 | Item exchange source catalog | `Reference/PcItemExchange` | top-level `itemexchange_setting` subset present; rolevalue typed facts exposed; `rolevalue_log` excluded | ✅ catalog+rolevalue / 🔄 runtime |
 | Hongbao runtime dir | `Reference/PcHongbao` | legacy fallback only; default service path fixed to `PcItemFull/hongbao.txt` | ✅ path fixed / 🔄 runtime |
 | Battlefield data dir | `Reference/PcBattlefield` | `MissionBattle/combo.txt` + `scores.txt` subset present | ✅ subset / 🔄 runtime |
-| Battle script dir | `Reference/PcBattleScript` or `Reference/PcEvent/Battle` | missing | 🔄/☐ |
-| Server event index | `Reference/PcServerEvent` or `Reference/PcEvent/Index` | missing | 🔄/☐ |
+| Battle script dir | `Reference/PcBattleScript` | PC `script/battles` file catalog present: 183 files, 182 active Lua, 1 backup | ✅ catalog / 🔄 runtime |
+| Server event index | `Reference/PcServerEvent` | PC `script/event` file catalog present: 455 files, 427 Lua, 28 CVS metadata | ✅ catalog / 🔄 runtime |
 | VNG event dir | `Reference/PcVngEvent` or `Reference/PcEvent/Vng` | missing | 🔄/☐ |
-| FlipCard dedicated dir | `Reference/PcFlipCard` | missing | 🔄 |
+| FlipCard dedicated dir | `Reference/PcFlipCard` | protocol facts present: 6 constants/functions | ✅ protocol catalog / 🔄 runtime |
 | Compensation dir | `Reference/PcCompensation` | missing | 🔄/☐ |
 
 ## Section-by-section truth matrix
@@ -147,11 +154,11 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | Base skill catalog 1,216 | ✅ data | `PcSkill/skills.txt` 1,216 rows | Full skill behavior/formula/script parity |
 | Extended skills | 🔄 | local `ModSkills.txt` 1,554 rows | Import/verify PC `skills1.txt` 1,712 rows or document scope |
-| Skill templates 219 | ☐/🔄 | expected source missing; parser path suspect | Copy correct PC `skilltemplate.txt`; parser/test exact 219 |
+| Skill templates 219 | ✅ schema catalog / 🔄 runtime | PC `skilltemplate.txt` imported as 67 field sections / 220 non-empty lines; old 219-row table claim not PC-confirmed | Use schema to validate real skill table parsing/runtime; do not mark as 219 data rows |
 | Weapon/thief skill data | ✅ data | 32 + 4 rows | Runtime behavior tests |
 | NPC/Boss skill catalog | ✅ catalog / 🔄 runtime | PC `skills1.txt` subset in `Reference/PcSkill/npcskills.txt`: 158 rows, 145 NPC-script, 21 boss-name, 13 boss-only; old 43-row standalone claim is not PC-proven | Execute skill scripts/AI/combat behavior |
 | 10 faction skill sets | 🔄 | static `SkillSectCatalog` + tests | PC skill tree/script parity and catalog text fixes |
-| Special/translife skills | ☐/🔄 | `specialskills.txt` and `translifeskill.txt` still missing; separate Translife level table now proven at `PcTask/translife.txt` | Add correct skill data/files; do not treat level table as `translifeskill.txt` parity |
+| Special/translife skills | ✅ source catalog / 🔄 runtime | `specialskills.txt` now proves 576 PC `skills1.txt` special-script rows (not old 58); `translifeskill.txt` proves 9 PC `skills.txt` translife4th rows; separate Translife level table remains proven at `PcTask/translife.txt` | Execute/apply skill effects, unlock flow, formulas, scripts, UI/runtime side effects |
 | Skill level up | 🔄 | level/progression services exist | PC formula/Lua parity proof |
 | Missile effects | 🔄 | local missile rows 441+441 | Verify correct PC missile count and effect SPR coverage |
 | Skill icons/animations | 🔄 | partial visual services/tests | All-skill icon/animation provenance audit |
@@ -201,9 +208,9 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Item | Status | Evidence | Required next proof/work |
 |---|---:|---|---|
 | Activity/HuoYueDu services | 🔄 | services/reference config files exist | Exact PC count/source and runtime parity |
-| Server events 455 | 🔄/☐ | PC has Lua; local dedicated event index dirs missing | Add index/source and semantic executor |
+| Server events 455 | ✅ file catalog / 🔄 runtime | `Reference/PcServerEvent/server_event_index.txt` catalogs 455 PC `script/event` files (427 Lua, 28 CVS metadata) | Parse/execute semantic event Lua, schedules, rewards, and side effects |
 | VNG events/features | 🔄/☐ | expected local dirs missing | Add source/index and tests |
-| Seasonal/compensation/bingo/flipcard | 🔄/☐ | services exist but dedicated dirs missing for several | Add data/runtime proof |
+| Seasonal/compensation/bingo/flipcard | 🔄 catalog / ☐ runtime | `PcFlipCard` protocol facts and `PcServerEvent` file index exist; compensation/bingo semantics still not executed | Add semantic parsers/runtime for event scripts, rewards, UI, and server side effects |
 | Event scripts | 🔄 indexed only | `EventScriptService` metadata registry | Full Lua semantic execution |
 
 ### 8. Combat / PvP / battles
@@ -398,6 +405,47 @@ Conservative Batch 4 queue:
 | NPC/Boss skills1 subset | Data catalog proves 158 rows, 145 NPC-script rows, 13 boss-name-only rows from PC `settings/skills1.txt`; old standalone 43-count claim is not PC-proven | Execute skill scripts/AI/combat behavior; do not treat data subset as full skill runtime |
 | Tong/faction map catalog | Data catalog proves 33 normalized rows from PC `script/tong/addtongnpc.lua`, including dynamic map 591 enter override `1712,3330` | Tong map ownership/build/ban/expire/runtime movement and host APIs |
 | Test Runner smoke | Isolated `PortFactorySmoke` expanded and passed 6/6 EditMode | Full stale root test assemblies still gated by `VLTK_ENABLE_TESTS` |
+
+
+## Port factory Batch 5 integration — 2026-06-09
+
+Scope: source/catalog/model-only deepening from PC source under `/var/www/vltksource_new/vl_update_27`; no broad runtime parity promotion.
+
+Integrated commits on local `dev`:
+
+- FlipCard protocol facts: `Reference/PcFlipCard/flipcard_protocol.txt` = 6 protocol/function constants.
+- City Hongbao weighted-open model: 67 rows, total raw Proba 1,010,000, Type 1/2 = 13/54, 6 free-cell preflight, AddItem/AddGoldItem command surfaces.
+- Skill template schema: `Reference/PcSkill/skilltemplate.txt` = 67 field sections, 318 total lines, 220 non-empty lines; old 219-row claim is not PC-confirmed.
+- Battle script source catalog: PC `script/battles` = 183 files, 182 active Lua, 1 backup, 10 directories.
+- Server event source index: PC `script/event` = 455 files, 427 Lua, 28 CVS metadata files.
+- ItemExchange typed table lookup: normal 78 headers/7,334 rows, rare 29 headers/480 rows; `rolevalue_log` remains excluded.
+- Translife skill source: `Reference/PcSkill/translifeskill.txt` = 9 PC `skills.txt` translife4th rows; separate from `PcTask/translife.txt` 41-row level bonus table.
+- Tong map enter plan: level 10 gate and map 591 allowed `SetPos` plan from the 33-row Tong/faction map catalog.
+- NPC skill script index: data-only availability index over 158 NPC/Boss skill rows; Unity proof observed 49 unique scripts, 42 existing/7 missing under current path resolver, no Lua execution claim.
+- Special skill script catalog: `Reference/PcSkill/specialskills.txt` is a byte-preserved subset of PC `skills1.txt` filtered by `LvlSetScript` prefix `\script\skill\special`: 576 rows, 575 unique skill ids, 84 script paths; no standalone 58-row table was found in scoped PC settings/scripts.
+
+Verification evidence:
+
+- `git diff --check` passed.
+- `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` passed with known 182 map SPR gaps and no errors.
+- `cargo test -p harness-cli` passed 20/20.
+- PC byte proof confirms `Reference/PcSkill/specialskills.txt` equals the filtered `skills1.txt` subset for 576 rows.
+- Unity compile completed; console still only shows known Addressables GUID conflict noise.
+- Unity execute proof: `flip=6/0; cityHongbao=67/1010000/13+54/67; skilltemplate=67/220; battleScripts=183/182/10; serverEvents=455/427/28; itemLookup=78/7334/29/480/False; translifeSkill=9; tongEnter=33/11/7/True:1; npcSkillScripts=158/145/49/42/7; special=576/575/84`.
+- Scoped `PortFactorySmoke` EditMode job `f84280f3f5af41c98ea30e10f5727e56` passed 10/10. Full legacy test asmdefs remain gated/stale.
+
+Conservative Batch 5 queue:
+
+| Batch 5 scope | Current evidence | Still required before `✅ runtime` |
+|---|---|---|
+| FlipCard protocol | 6 PC protocol/UI function facts cataloged | Implement/prove actual UI/card protocol flow |
+| City Hongbao weighted open | Pure reward selection/command model | Real inventory mutation, item consume, global news/log side effects, UI/server integration |
+| Skill template schema | 67 field schema sections | Use schema to validate full skill catalogs/runtime formulas |
+| Battle/server event indexes | File catalogs and hashes/counts | Parse/execute relevant Lua semantics, schedules, rewards, and mission lifecycle |
+| ItemExchange lookup | Typed normal/rare lookup services | Exchange formulas, role evaluation, inventory mutation, logs |
+| Translife/special skill source | 9 translife rows and 576 special-script rows | Skill unlock/effect application, script execution/formulas, UI/runtime side effects |
+| Tong map enter | Level-gate and SetPos plan model | Real Tong map ownership/build/ban/expire APIs and runtime movement |
+| NPC skill scripts | Availability index only | Resolve missing paths where possible and execute AI/combat Lua behavior |
 
 ## Harness DB sync audit — 2026-06-08
 
