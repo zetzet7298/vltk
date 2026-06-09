@@ -118,7 +118,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Battlefield data dir | `Reference/PcBattlefield` | `MissionBattle/combo.txt` + `scores.txt` subset present | ✅ subset / 🔄 runtime |
 | Battle script dir | `Reference/PcBattleScript` | PC `script/battles` file catalog present: 183 files, 182 active Lua, 1 backup | ✅ catalog / 🔄 runtime |
 | Server event index | `Reference/PcServerEvent` | PC `script/event` file catalog present: 455 files, 427 Lua, 28 CVS metadata | ✅ catalog / 🔄 runtime |
-| VNG event dir | `Reference/PcVngEvent` or `Reference/PcEvent/Vng` | missing | 🔄/☐ |
+| VNG event dir | `Reference/PcVngEvent` | ✅ index / 🔄 runtime | PC VNG events indexed (201 scripts) | Execute VNG event mechanics |
 | FlipCard dedicated dir | `Reference/PcFlipCard` | protocol facts present: 6 constants/functions | ✅ protocol catalog / 🔄 runtime |
 | Compensation dir | `Reference/PcCompensation` | missing | 🔄/☐ |
 
