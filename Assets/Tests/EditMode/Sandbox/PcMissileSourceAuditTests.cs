@@ -104,15 +104,21 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(PcMissileSourceAudit.CompareFiles(serverMissles1, Path.Combine(PcAttribRoot, "missles1.txt")).exactBytes);
         }
         [Test]
-        public void PcMissleParser_BuildsRegistryWithExactCount()
+        public void PcMissileRegistry_RuntimeLoadsFullMissles1TableAndLateDuplicate408Wins()
         {
-            if (!Directory.Exists(PcServerSettings))
-            {
-                Assert.Ignore("PC source tree is not mounted in this environment.");
-            }
-            
-            var registry = PcMissleParser.BuildRegistry(PcServerSettings);
-            Assert.AreEqual(467, registry.Count, "The verified parser should combine missles.txt and missles1.txt into exactly 467 unique missile records.");
+            string streamingAssets = Path.Combine(RepoRoot, "Assets/StreamingAssets");
+
+            PcMissileRegistry.ClearAndInitialize(streamingAssets);
+
+            Assert.AreEqual(466, PcMissileRegistry.Count, "Runtime registry should load full PC missles1.txt unique-id coverage; id 408 is duplicated in source.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(442, out var missile442), "missles1-only id 442 must resolve at runtime.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(443, out var missile443), "missles1-only id 443 must resolve at runtime.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(467, out var missile467), "missles1-only id 467 must resolve at runtime.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(408, out var missile408), "duplicated id 408 must still resolve.");
+            Assert.AreEqual(32, missile442.speed);
+            Assert.AreEqual(5, missile443.lifetime);
+            Assert.AreEqual(156, missile467.speed);
+            StringAssert.Contains("Truy Phong", missile408.nameNormalized, "Duplicate policy is last-row-wins, matching sequential PC table load semantics.");
         }
     }
 }

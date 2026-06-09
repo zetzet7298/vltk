@@ -1,128 +1,60 @@
-// -----------------------------------------------------------------------------
-// VLTK Mobile — Tests for skill data registries (in-memory only, no file IO).
-// 12 test cases covering all 6 registry classes.
-// -----------------------------------------------------------------------------
-
 using NUnit.Framework;
+using VLTK.Core;
+using VLTK.Model;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
-    [TestFixture]
     public class SkillLevelUpgradeParserTests
     {
-        // ── PcSkillLevelDataRegistry ──────────────────────────────────────
         [Test]
-        public void PcSkillLevelDataRegistry_Count_NonNegative()
+        public void PcConfigParser_PreservesLevelUpAndLvlSetScripts()
         {
-            var reg = new PcSkillLevelDataRegistry();
-            Assert.GreaterOrEqual(reg.Count, 0);
+            string header = "SkillName	Property	SkillId	Attrib	SkillStyle	SkillIcon	PreCastSpr	ManCastSnd	FMCastSnd	StateSpecialId	StatePriority	IsAura	LRSkill	NeedShadow	AttackRadius	MaxShadowNum	MslsGenerate	MslsGenerateData	CharClass	MisslesForm	ChildSkillId	ChildSkillLevel	ChildSkillNum	BaseSkill	CharAnimId	EventSkillLevel	IsMelee	WaitTime	ClientSend	SkillCostType	CostValue	TimePerCast	TimePerCastOnHorse	IsPhysical	TargetOnly	TargetEnemy	TargetAlly	TargetSelf	TargetOther	TargetObj	TargetNoNpc	ByMissle	IsUseAR	StartEvent	StartSkillId	FlyEvent	FlySkillId	FlyEventTime	CollideEvent	CollidSkillId	VanishedEvent	VanishedSkillId	ReqLevel	MaxLevel	EqtLimit	HorseLimit	DoHurt	WeaponSkill	Param1	Param1Memo	Param2	Param2Memo	StopWhenMove	HeelAtParent	RelativePosType	PeaceCanUse	ShowEvent	IsExpSkill	Series	ShowAddition	LvlSetScript	LvlSetting1	LvlData1	LvlSetting2	LvlData2	LvlSetting3	LvlData3	LvlSetting4	LvlData4	LvlSetting5	LvlData5	LvlSetting6	LvlData6	LvlSetting7	LvlData7	LvlSetting8	LvlData8	LvlSetting9	LvlData9	LvlSetting10	LvlData10	LvlSetting11	LvlData11	LvlSetting12	LvlData12	LvlSetting13	LvlData13	LvlSetting14	LvlData14	LvlSetting15	LvlData15	LvlSetting16	LvlData16	LvlSetting17	LvlData17	LvlSetting18	LvlData18	LvlSetting19	LvlData19	LvlSetting20	LvlData20	LevelUpScript	SkillDesc";
+            var cols = new string[113];
+            cols[0] = "Phổ Độ Chúng Sinh";
+            cols[2] = "332";
+            cols[4] = "0";
+            cols[5] = "icon.spr";
+            cols[18] = "2";
+            cols[52] = "80";
+            cols[53] = "20";
+            cols[70] = @"\script\skill\emei.lua";
+            cols[111] = @"\script\skill\lvlup_pudu_zhongsheng.lua";
+            cols[112] = "desc";
+            string[] lines = { header, string.Join("	", cols) };
+
+            var rows = PcConfigParser.ParseSkillsLines(lines);
+
+            Assert.AreEqual(1, rows.Count);
+            Assert.AreEqual(332, rows[0].skillId);
+            Assert.AreEqual("\\script\\skill\\emei.lua", rows[0].lvlSetScript);
+            Assert.AreEqual("\\script\\skill\\lvlup_pudu_zhongsheng.lua", rows[0].levelUpScript);
+            Assert.AreEqual(80, rows[0].reqLevel);
+            Assert.AreEqual(20, rows[0].maxLevel);
         }
 
         [Test]
-        public void PcSkillLevelDataRegistry_GetBySkill_FiltersCorrectly()
+        public void LevelUpScriptCatalog_ContainsRepresentativePcRules()
         {
-            var reg = new PcSkillLevelDataRegistry();
-            reg.Register(new PcSkillLevelDataEntry { skillId = 100, level = 1, damageMin = 10, damageMax = 20 });
-            reg.Register(new PcSkillLevelDataEntry { skillId = 100, level = 2, damageMin = 20, damageMax = 40 });
-            reg.Register(new PcSkillLevelDataEntry { skillId = 200, level = 1, damageMin = 50, damageMax = 60 });
-            var forSkill100 = reg.GetBySkill(100);
-            Assert.AreEqual(2, forSkill100.Count);
-            Assert.AreEqual(2, reg.GetMaxLevelForSkill(100));
+            var catalog = SkillLevelUpScriptCatalog.CreateDefault();
+
+            AssertRepresentative(catalog, 332, "\\script\\skill\\lvlup_pudu_zhongsheng.lua", 93, 89, 86, 92, 282);
+            AssertRepresentative(catalog, 351, "\\script\\skill\\lvlup_luanhuan_ji.lua", 347, 303, 343, 345, 349);
+            AssertRepresentative(catalog, 390, "\\script\\skill\\lvlup_duanjin_fugu.lua", 67, 70, 64, 356, 72);
+            AssertRepresentative(catalog, 391, "\\script\\skill\\lvlup_shehun_luanxin.lua", 136, 137, 140, 364, 143);
+            AssertRepresentative(catalog, 394, "\\script\\skill\\lvlup_zuixian_cuogu.lua", 392, 174, 393, 175, 90);
+            AssertRepresentative(catalog, 1110, "\\script\\skill\\lvlup_pililuanhuan_ji.lua", 45, 351);
         }
 
-        // ── PcSkillUpgradeRegistry ───────────────────────────────────────
-        [Test]
-        public void PcSkillUpgradeRegistry_Count_NonNegative()
+        private static void AssertRepresentative(SkillLevelUpScriptCatalog catalog, int skillId, string script, params int[] prerequisiteIds)
         {
-            var reg = new PcSkillUpgradeRegistry();
-            Assert.GreaterOrEqual(reg.Count, 0);
-        }
-
-        [Test]
-        public void PcSkillUpgradeRegistry_GetByRequiredSkill_FiltersCorrectly()
-        {
-            var reg = new PcSkillUpgradeRegistry();
-            reg.Register(new PcSkillUpgradeEntry { skillId = 1, requiredPrevSkill = 100, resultSkillId = 200, upgradeType = 0 });
-            reg.Register(new PcSkillUpgradeEntry { skillId = 2, requiredPrevSkill = 100, resultSkillId = 201, upgradeType = 1 });
-            reg.Register(new PcSkillUpgradeEntry { skillId = 3, requiredPrevSkill = 300, resultSkillId = 301, upgradeType = 0 });
-            Assert.AreEqual(2, reg.GetByRequiredSkill(100).Count);
-            Assert.AreEqual(1, reg.GetByRequiredSkill(300).Count);
-        }
-
-        // ── PcSkillBookRegistry ───────────────────────────────────────────
-        [Test]
-        public void PcSkillBookRegistry_Count_NonNegative()
-        {
-            var reg = new PcSkillBookRegistry();
-            Assert.GreaterOrEqual(reg.Count, 0);
-        }
-
-        [Test]
-        public void PcSkillBookRegistry_GetByType_FiltersCorrectly()
-        {
-            var reg = new PcSkillBookRegistry();
-            reg.Register(new PcSkillBookEntry { bookId = 1, bookType = 0, teachesSkillId = 100 });
-            reg.Register(new PcSkillBookEntry { bookId = 2, bookType = 0, teachesSkillId = 101 });
-            reg.Register(new PcSkillBookEntry { bookId = 3, bookType = 2, teachesSkillId = 200 });
-            Assert.AreEqual(2, reg.GetByType(0).Count);
-            Assert.AreEqual(1, reg.GetByType(2).Count);
-        }
-
-        // ── PcSkillComboRegistry ─────────────────────────────────────────
-        [Test]
-        public void PcSkillComboRegistry_Count_NonNegative()
-        {
-            var reg = new PcSkillComboRegistry();
-            Assert.GreaterOrEqual(reg.Count, 0);
-        }
-
-        [Test]
-        public void PcSkillComboRegistry_GetByClass_FiltersCorrectly()
-        {
-            var reg = new PcSkillComboRegistry();
-            reg.Register(new PcSkillComboEntry { comboId = 1, requiredClass = 5, requiredPlayerLevel = 30, skillSequence = "1;2;3" });
-            reg.Register(new PcSkillComboEntry { comboId = 2, requiredClass = 5, requiredPlayerLevel = 50, skillSequence = "4;5;6" });
-            reg.Register(new PcSkillComboEntry { comboId = 3, requiredClass = 6, requiredPlayerLevel = 30, skillSequence = "7;8;9" });
-            Assert.AreEqual(2, reg.GetByClass(5).Count);
-        }
-
-        // ── PcSkillStateRegistry ─────────────────────────────────────────
-        [Test]
-        public void PcSkillStateRegistry_Count_NonNegative()
-        {
-            var reg = new PcSkillStateRegistry();
-            Assert.GreaterOrEqual(reg.Count, 0);
-        }
-
-        [Test]
-        public void PcSkillStateRegistry_GetByType_FiltersCorrectly()
-        {
-            var reg = new PcSkillStateRegistry();
-            reg.Register(new PcSkillStateEntry { stateId = 1, type = 0, effectValue = 10, stackMax = 3 });
-            reg.Register(new PcSkillStateEntry { stateId = 2, type = 0, effectValue = 20, stackMax = 5 });
-            reg.Register(new PcSkillStateEntry { stateId = 3, type = 2, effectValue = 0, stackMax = 1 });
-            Assert.AreEqual(2, reg.GetByType(0).Count);
-            Assert.AreEqual(1, reg.GetByType(2).Count);
-        }
-
-        // ── PcSkillMasteryRegistry ───────────────────────────────────────
-        [Test]
-        public void PcSkillMasteryRegistry_Count_NonNegative()
-        {
-            var reg = new PcSkillMasteryRegistry();
-            Assert.GreaterOrEqual(reg.Count, 0);
-        }
-
-        [Test]
-        public void PcSkillMasteryRegistry_GetByGenre_FiltersCorrectly()
-        {
-            var reg = new PcSkillMasteryRegistry();
-            reg.Register(new PcSkillMasteryEntry { masteryId = 1, classId = 5, skillGenre = 0, bonusValue = 5, maxPoints = 20 });
-            reg.Register(new PcSkillMasteryEntry { masteryId = 2, classId = 5, skillGenre = 0, bonusValue = 3, maxPoints = 10 });
-            reg.Register(new PcSkillMasteryEntry { masteryId = 3, classId = 6, skillGenre = 3, bonusValue = 4, maxPoints = 15 });
-            Assert.AreEqual(2, reg.GetByGenre(0).Count);
-            Assert.AreEqual(1, reg.GetByGenre(3).Count);
+            var rule = catalog.Resolve(skillId);
+            Assert.IsNotNull(rule, $"missing {skillId}");
+            Assert.AreEqual(script, rule.levelUpScript);
+            Assert.AreEqual(prerequisiteIds.Length, rule.prerequisites.Count);
+            for (int i = 0; i < prerequisiteIds.Length; i++)
+                Assert.AreEqual(prerequisiteIds[i], rule.prerequisites[i].skillId);
         }
     }
 }

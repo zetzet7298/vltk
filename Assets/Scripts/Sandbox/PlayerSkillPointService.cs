@@ -37,8 +37,12 @@ namespace VLTK.Sandbox
             var skill = _catalog.Resolve(skillId);
             if (skill == null) return false;
 
+            var ruleCatalog = SkillLevelUpScriptCatalog.CreateDefault();
+            var rule = ruleCatalog.Resolve(skillId) ?? ruleCatalog.ResolveScript(skill.levelUpScript);
+            bool usesTranslifePool = rule != null && rule.usesTranslife4PointPool;
+
             // Kiểm tra xem nhân vật có điểm kỹ năng không
-            if (_levelService.SkillPoints < 1)
+            if (!usesTranslifePool && _levelService.SkillPoints < 1)
             {
                 SubsystemLog.Warn("SkillPoint", "Not enough skill points to upgrade.");
                 return false;
@@ -46,20 +50,24 @@ namespace VLTK.Sandbox
 
             // Đồng bộ cấp độ nhân vật và điểm kỹ năng vào progression state để tính level cap chính xác
             _progression.level = _levelService.Level;
-            _progression.fightSkillPoints = _levelService.SkillPoints;
+            if (!usesTranslifePool)
+                _progression.fightSkillPoints = _levelService.SkillPoints;
 
             // Kiểm tra điều kiện nâng cấp trong progression state
-            if (!_progression.CanUpgradeSkill(skill, 1))
+            if (!_progression.CanUpgradeSkill(skill, ruleCatalog, 1))
             {
                 SubsystemLog.Warn("SkillPoint", $"Cannot upgrade skill {skill.DisplayName} (id={skillId})");
                 return false;
             }
 
             // Thực hiện nâng cấp và trừ điểm
-            if (_progression.TryUpgradeSkill(skill, 1))
+            if (_progression.TryUpgradeSkill(skill, ruleCatalog, 1))
             {
-                _levelService.SpendSkillPoints(1);
-                _progression.fightSkillPoints = _levelService.SkillPoints;
+                if (!usesTranslifePool)
+                {
+                    _levelService.SpendSkillPoints(1);
+                    _progression.fightSkillPoints = _levelService.SkillPoints;
+                }
                 SubsystemLog.Info("SkillPoint", $"Upgraded skill {skill.DisplayName} to level {_progression.GetSkillLevel(skillId)}");
                 return true;
             }

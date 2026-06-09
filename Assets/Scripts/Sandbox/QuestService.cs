@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using VLTK.Core;
 using VLTK.Model;
@@ -80,6 +81,19 @@ namespace VLTK.Sandbox
         public List<string> dialogueStart = new();    // Dialogue lines when accepting
         public List<string> dialogueComplete = new(); // Dialogue lines when completing
         public List<string> dialogueProgress = new(); // Dialogue lines during progress
+        public QuestSourceKind sourceKind;
+        public bool isSampleQuest;
+        public int pcTaskIdFirst;
+        public int pcTaskIdLast;
+        public int pcSyncFlag;
+        public int pcClientFlag;
+    }
+
+    public enum QuestSourceKind
+    {
+        Unknown = 0,
+        PcPlayerTaskMetadata = 1,
+        Sample = 2,
     }
 
     /// <summary>Runtime quest state for a player.</summary>
@@ -121,9 +135,11 @@ namespace VLTK.Sandbox
         public IReadOnlyDictionary<int, QuestInstance> ActiveQuests => _activeQuests;
         public IReadOnlyCollection<int> CompletedQuests => _completedQuests;
 
-        public QuestService()
+        public QuestService(bool includeSampleQuests = false)
         {
-            LoadBuiltInQuests();
+            LoadPcPlayerTaskMetadata();
+            if (includeSampleQuests)
+                LoadBuiltInQuests();
         }
 
         // ── Quest Database ──────────────────────────────────────────────
@@ -302,6 +318,52 @@ namespace VLTK.Sandbox
 
         // ── Built-in Quest Catalog ──────────────────────────────────────
 
+        public const string PcMissionRelativeDir = "Reference/PcMission";
+
+        public static string ResolvePcMissionDirectory(string streamingAssetsPath)
+            => Path.Combine(streamingAssetsPath ?? string.Empty, PcMissionRelativeDir);
+
+        public void LoadPcPlayerTaskMetadata(string pcMissionDir = null)
+        {
+            string dir = string.IsNullOrEmpty(pcMissionDir)
+                ? ResolvePcMissionDirectory(Application.streamingAssetsPath)
+                : pcMissionDir;
+            LoadPcPlayerTaskMetadata(PcMissionParser.BuildRegistry(dir));
+        }
+
+        public void LoadPcPlayerTaskMetadata(PcMissionRegistry registry)
+        {
+            if (registry == null) return;
+            foreach (var entry in registry.All)
+            {
+                if (entry == null || entry.taskIdFirst <= 0) continue;
+                var def = CreatePcTaskMetadataQuest(entry);
+                _questDefs[def.questId] = def;
+            }
+        }
+
+        private static QuestDefinition CreatePcTaskMetadataQuest(PcMissionEntry entry)
+        {
+            string name = string.IsNullOrWhiteSpace(entry.nameRaw)
+                ? $"PC Task {entry.taskIdFirst}"
+                : entry.nameRaw;
+            return new QuestDefinition
+            {
+                questId = entry.taskIdFirst,
+                nameRaw = entry.nameRaw,
+                nameVi = name,
+                descriptionVi = entry.describe ?? string.Empty,
+                type = QuestType.SideQuest,
+                minLevel = 1,
+                pcTaskIdFirst = entry.taskIdFirst,
+                pcTaskIdLast = entry.taskIdLast,
+                pcSyncFlag = entry.syncFlag,
+                pcClientFlag = entry.clientFlag,
+                sourceKind = QuestSourceKind.PcPlayerTaskMetadata,
+                isSampleQuest = false,
+            };
+        }
+
         private void LoadBuiltInQuests()
         {
             // Training Quests (Ba Lăng)
@@ -416,6 +478,8 @@ namespace VLTK.Sandbox
                 endNpcTemplateId = endNpc,
                 mapId = mapId,
                 reward = reward,
+                sourceKind = QuestSourceKind.Sample,
+                isSampleQuest = true,
             };
 
             if (objectives != null)

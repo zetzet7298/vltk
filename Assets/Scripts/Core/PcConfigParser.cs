@@ -199,14 +199,18 @@ namespace VLTK.Core
 
         public static List<SkillDefinition> ParseSkills(string path)
         {
+            return ParseSkillsLines(File.ReadAllLines(path));
+        }
+
+        public static List<SkillDefinition> ParseSkillsLines(IReadOnlyList<string> lines)
+        {
             var result = new List<SkillDefinition>();
-            string[] lines = File.ReadAllLines(path);
-            if (lines.Length < 2) return result;
+            if (lines == null || lines.Count < 2) return result;
 
             // Validate header starts with "SkillName"
             string[] header = lines[0].Split(SEP);
 
-            for (int i = 1; i < lines.Length; i++)
+            for (int i = 1; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
                 if (string.IsNullOrEmpty(line)) continue;
@@ -284,7 +288,10 @@ namespace VLTK.Core
                         _ => CombatFactionExt.NoneId
                     };
                 }
+                skill.lvlSetScript = scriptPath;                       // 70 LvlSetScript
                 skill.faction = (CombatFaction)factionId;
+
+                skill.levelUpScript = ColSafe(cols, 111);          // 111 LevelUpScript
 
                 // Vietnamese name: PcSkills.txt names are already Vietnamese-ized
                 skill.nameNormalized = skill.nameRaw?.Trim();

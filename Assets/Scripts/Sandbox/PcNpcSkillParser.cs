@@ -24,7 +24,22 @@ namespace VLTK.Sandbox
         public const int ChildSkillIdCol = 20;
         public const int ChildSkillLevelCol = 21;
         public const int ChildSkillNumCol = 22;
+        public const int IsMeleeCol = 26;
+        public const int SkillCostTypeCol = 30;
+        public const int CostValueCol = 31;
+        public const int TimePerCastCol = 32;
+        public const int IsPhysicalCol = 34;
+        public const int TargetOnlyCol = 35;
+        public const int TargetEnemyCol = 36;
+        public const int TargetAllyCol = 37;
+        public const int TargetSelfCol = 38;
+        public const int TargetOtherCol = 39;
+        public const int TargetObjCol = 40;
+        public const int TargetNoNpcCol = 41;
         public const int MaxLevelCol = 54;
+        public const int HorseLimitCol = 56;
+        public const int DoHurtCol = 57;
+        public const int WeaponSkillCol = 58;
         public const int LvlSetScriptCol = 71;
         public const int PcSkills1ColumnCount = 115;
 
@@ -92,6 +107,21 @@ namespace VLTK.Sandbox
                 childSkillId = PcItemCommon.Int(cols, ChildSkillIdCol),
                 childSkillLevel = PcItemCommon.Int(cols, ChildSkillLevelCol),
                 childSkillNum = PcItemCommon.Int(cols, ChildSkillNumCol),
+                timePerCast = PcItemCommon.Int(cols, TimePerCastCol),
+                skillCostType = PcItemCommon.Int(cols, SkillCostTypeCol),
+                costValue = PcItemCommon.Int(cols, CostValueCol),
+                isPhysical = PcItemCommon.Int(cols, IsPhysicalCol) != 0,
+                isMelee = PcItemCommon.Int(cols, IsMeleeCol) != 0,
+                targetOnly = PcItemCommon.Int(cols, TargetOnlyCol) != 0,
+                targetEnemy = PcItemCommon.Int(cols, TargetEnemyCol) != 0,
+                targetAlly = PcItemCommon.Int(cols, TargetAllyCol) != 0,
+                targetSelf = PcItemCommon.Int(cols, TargetSelfCol) != 0,
+                targetOther = PcItemCommon.Int(cols, TargetOtherCol) != 0,
+                targetObj = PcItemCommon.Int(cols, TargetObjCol) != 0,
+                targetNoNpc = PcItemCommon.Int(cols, TargetNoNpcCol) != 0,
+                horseLimit = PcItemCommon.Int(cols, HorseLimitCol),
+                doHurt = PcItemCommon.Int(cols, DoHurtCol) != 0,
+                weaponSkill = PcItemCommon.Int(cols, WeaponSkillCol) != 0,
                 maxLevel = PcItemCommon.Int(cols, MaxLevelCol),
                 levelSetScript = script,
                 isNpcScript = isNpcScript,
@@ -115,6 +145,21 @@ namespace VLTK.Sandbox
         public int childSkillId;
         public int childSkillLevel;
         public int childSkillNum;
+        public int timePerCast;
+        public int skillCostType;
+        public int costValue;
+        public bool isPhysical;
+        public bool isMelee;
+        public bool targetOnly;
+        public bool targetEnemy;
+        public bool targetAlly;
+        public bool targetSelf;
+        public bool targetOther;
+        public bool targetObj;
+        public bool targetNoNpc;
+        public int horseLimit;
+        public bool doHurt;
+        public bool weaponSkill;
         public int maxLevel;
         public string levelSetScript;
         public bool isNpcScript;

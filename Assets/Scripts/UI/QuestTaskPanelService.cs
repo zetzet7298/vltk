@@ -26,7 +26,7 @@ namespace VLTK.UI
             int availableCount = 0;
             int completedCount = questService != null ? questService.CompletedQuests.Count : 0;
 
-            rows.Add("PC [Task] Player_Task — Nhật ký nhiệm vụ");
+            rows.Add("PC [Task] Player_Task metadata — Nhật ký nhiệm vụ (player_task_def.txt)");
             if (questService != null)
             {
                 foreach (var pair in questService.ActiveQuests)

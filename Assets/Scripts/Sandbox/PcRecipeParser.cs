@@ -1,12 +1,12 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC settings/task/equipex/platina_def.txt recipe (công thức) parser
-// Source: equipex/platina_def.txt (1,294 rows, GB2312, 5 cols).
-//   EQUIPNAME  PLATINAID  GOLDID  TASKRATE  RECOIN
-// Maps a platina (named/cyan) equipment to its gold counterpart for compound/refine.
+// VLTK Mobile — PC recipe parsers.
+// Legacy platina_def support remains for old tests; atlas_compound is the PC
+// craft-plan source used by script/item/compound/atlas.lua.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
 using System.IO;
+
 
 namespace VLTK.Sandbox
 {
@@ -53,6 +53,74 @@ namespace VLTK.Sandbox
             if (File.Exists(tmp))
                 foreach (var s in ParseFile(tmp)) reg.Register(s);
             return reg;
+        }
+
+        public static PcAtlasCompoundRegistry BuildAtlasCompoundRegistry(string path)
+        {
+            var reg = new PcAtlasCompoundRegistry();
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return reg;
+            var lines = PcItemCommon.ReadServerLines(path);
+            bool headerSkipped = false;
+            foreach (var line in lines)
+            {
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                if (!headerSkipped) { headerSkipped = true; continue; }
+                var cols = line.Split('\t');
+                if (cols.Length < 56) continue;
+                var recipe = ParseAtlasCompoundRow(cols);
+                if (recipe != null) reg.Register(recipe);
+            }
+            return reg;
+        }
+
+        private static PcAtlasCompoundRecipe ParseAtlasCompoundRow(string[] cols)
+        {
+            var recipe = new PcAtlasCompoundRecipe
+            {
+                atlasNameRaw = PcItemCommon.Str(cols, 0),
+                atlas = new PcAtlasCompoundItemSpec
+                {
+                    genre = PcItemCommon.Int(cols, 1, -1),
+                    detailType = PcItemCommon.Int(cols, 2, -1),
+                    particular = PcItemCommon.Int(cols, 3, -1),
+                },
+                atlasNoSign = PcItemCommon.Int(cols, 53, -1),
+                materials = new List<PcAtlasCompoundMaterialSpec>(),
+            };
+
+            for (int i = 0; i < 6; i++)
+            {
+                int start = 4 + i * 7;
+                if (string.IsNullOrWhiteSpace(PcItemCommon.Str(cols, start + 1))) continue;
+                recipe.materials.Add(new PcAtlasCompoundMaterialSpec
+                {
+                    nameRaw = PcItemCommon.Str(cols, start),
+                    genre = PcItemCommon.Int(cols, start + 1, -1),
+                    detailType = PcItemCommon.Int(cols, start + 2, -1),
+                    particular = PcItemCommon.Int(cols, start + 3, -1),
+                    level = PcItemCommon.Int(cols, start + 4, -1),
+                    series = PcItemCommon.Int(cols, start + 5, -1),
+                    magicId = PcItemCommon.Int(cols, start + 6, -1),
+                });
+            }
+
+            int quality = PcItemCommon.Int(cols, 47, -1);
+            int detailType = PcItemCommon.Int(cols, 49, -1);
+            recipe.result = new PcAtlasCompoundResultSpec
+            {
+                nameRaw = PcItemCommon.Str(cols, 46),
+                quality = quality,
+                genre = PcItemCommon.Int(cols, 48, -1),
+                detailType = quality == 1 ? detailType - 1 : detailType,
+                particular = PcItemCommon.Int(cols, 50, -1),
+                level = PcItemCommon.Int(cols, 51, -1),
+                series = PcItemCommon.Int(cols, 52, -1),
+                piece = PcItemCommon.Int(cols, 53, -1),
+                pieceSum = PcItemCommon.Int(cols, 54, -1),
+                itemValue = PcItemCommon.Int(cols, 55, -1),
+                compoundParam = "ATLAS",
+            };
+            return recipe;
         }
     }
 

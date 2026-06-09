@@ -24,6 +24,10 @@ namespace VLTK.Sandbox
         public const int IconCol = 5;
         public const int IsAuraCol = 11;
         public const int AttackRadiusCol = 14;
+        public const int ReqLevelCol = 52;
+        public const int MaxLevelCol = 53;
+        public const int LvlSetScriptCol = 70;
+        public const int LevelUpScriptCol = 111;
 
         public static List<PcSkillEntry> ParseFile(string path)
         {
@@ -62,6 +66,10 @@ namespace VLTK.Sandbox
                 iconPath = PcItemCommon.Str(cols, IconCol),
                 isAura = PcItemCommon.Int(cols, IsAuraCol) > 0,
                 attackRadius = PcItemCommon.Int(cols, AttackRadiusCol),
+                reqLevel = PcItemCommon.Int(cols, ReqLevelCol),
+                maxLevel = PcItemCommon.Int(cols, MaxLevelCol),
+                lvlSetScript = PcItemCommon.Str(cols, LvlSetScriptCol),
+                levelUpScript = PcItemCommon.Str(cols, LevelUpScriptCol),
                 warningCount = PcItemCommon.ContainsReplacementChar(name) ? 1 : 0,
             };
         }
@@ -79,6 +87,10 @@ namespace VLTK.Sandbox
         public string iconPath;
         public bool isAura;
         public int attackRadius;
+        public int reqLevel;
+        public int maxLevel;
+        public string lvlSetScript;
+        public string levelUpScript;
         public int warningCount;
     }
 

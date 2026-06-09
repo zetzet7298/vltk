@@ -1,11 +1,12 @@
 {
   "schemaVersion": 1,
   "auditTask": "b6-missles-source-audit",
-  "runtimeClaim": false,
+  "runtimeClaim": true,
   "notes": [
-    "Audit manifest only; it is not used by missile runtime.",
+    "PcMissileRegistry now prefers Reference/PcAttrib/missles1.txt for runtime load when present.",
     "PC source of truth is vl_update_27 Server 6.0 server1/settings/missles.txt and missles1.txt.",
-    "Both PC files share one 57-column schema/header hash."
+    "Both PC files share one 57-column schema/header hash.",
+    "Duplicate-id policy for missles1.txt id 408 is last-row-wins, matching sequential table load into id dictionary."
   ],
   "expectedHeaderSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
   "expectedHeaderColumns": 57,

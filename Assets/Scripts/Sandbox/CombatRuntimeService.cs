@@ -74,6 +74,19 @@ namespace VLTK.Sandbox
 
         public CombatCastReport Cast(CombatActorState caster, CombatActorState target, int skillId, Vector2 targetPoint, CombatRelation relation, ObstacleGrid grid = null)
         {
+            return CastInternal(caster, target, skillId, targetPoint, relation, grid, bypassKnownSkillGate: false, forcedSkillLevel: 0);
+        }
+
+        public CombatCastReport CastNpcPlan(CombatActorState caster, CombatActorState target, NpcBossSkillCastPlan plan, Vector2 targetPoint, CombatRelation relation, ObstacleGrid grid = null)
+        {
+            if (plan.missingScriptGuard)
+                return Reject(new CombatCastReport { reason = CombatCastRejectReason.None }, CombatCastRejectReason.NoSkill, plan.guardReason ?? "npc skill plan guarded");
+            if (!_catalog.Contains(plan.skillId)) _catalog.Register(plan.ToSkillDefinition());
+            return CastInternal(caster, target, plan.skillId, targetPoint, relation, grid, bypassKnownSkillGate: true, forcedSkillLevel: plan.maxLevel > 0 ? plan.maxLevel : 1);
+        }
+
+        private CombatCastReport CastInternal(CombatActorState caster, CombatActorState target, int skillId, Vector2 targetPoint, CombatRelation relation, ObstacleGrid grid, bool bypassKnownSkillGate, int forcedSkillLevel)
+        {
             var report = new CombatCastReport { reason = CombatCastRejectReason.None };
             if (caster == null) return Reject(report, CombatCastRejectReason.InvalidTarget, "missing caster");
             if (!caster.fightMode) return Reject(report, CombatCastRejectReason.NotInFightMode, "PC KNpc::DoSkill returns when player not in fight mode");
@@ -84,10 +97,10 @@ namespace VLTK.Sandbox
 
             // --- KSkillList::CanCast gates ---
             // PC: FindSame returns 0 if skill not in list
-            if (!caster.knownSkills.Contains(skillId)) return Reject(report, CombatCastRejectReason.SkillNotKnown, "KSkillList::FindSame: skill not in list");
+            if (!bypassKnownSkillGate && !caster.knownSkills.Contains(skillId)) return Reject(report, CombatCastRejectReason.SkillNotKnown, "KSkillList::FindSame: skill not in list");
             // PC: CurrentSkillLevel <= 0 → cannot cast (skill must be at least level 1)
-            int skillLevel = ResolveLevel(caster, skill);
-            if (skillLevel <= 0) return Reject(report, CombatCastRejectReason.SkillNotKnown, "KSkillList::CanCast: CurrentSkillLevel <= 0");
+            int skillLevel = forcedSkillLevel > 0 ? forcedSkillLevel : ResolveLevel(caster, skill);
+            if (!bypassKnownSkillGate && skillLevel <= 0) return Reject(report, CombatCastRejectReason.SkillNotKnown, "KSkillList::CanCast: CurrentSkillLevel <= 0");
             // PC: NextCastTime > dwCurrentTime → on cooldown
             if (NextCastTime(caster.actorId, skillId) > CurrentTime) return Reject(report, CombatCastRejectReason.OnCooldown, "KSkillList::CanCast: NextCastTime > CurrentTime");
 
@@ -128,7 +141,7 @@ namespace VLTK.Sandbox
             ApplyActionState(caster, skill, report);
             ApplyStates(caster, target, relation, levelData, report);
             ApplyDamage(caster, target, levelData, report);
-            SpawnProjectiles(skill, caster, castPoint, grid, report);
+            SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
             if (skillId == 357 && skillLevel >= 11)
             {
@@ -231,10 +244,10 @@ namespace VLTK.Sandbox
             }
         }
 
-        private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report)
+        private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report, int forcedSkillLevel = 0)
         {
             if (skill.skillStyle != PcSkillStyle.Missiles || skill.childSkillNum <= 0) return;
-            int skillLevel = ResolveLevel(caster, skill);
+            int skillLevel = forcedSkillLevel > 0 ? forcedSkillLevel : ResolveLevel(caster, skill);
             var kangLong = PcKangLongYouHuiTuning.Applies(skill.skillId) ? PcKangLongYouHuiTuning.AtLevel(skillLevel) : default;
             var modTuning = PcCaiBangModTuning.Applies(skill.skillId) ? PcCaiBangModTuning.AtLevel(skill.skillId, skillLevel) : default;
             bool useKangLong = PcKangLongYouHuiTuning.Applies(skill.skillId);

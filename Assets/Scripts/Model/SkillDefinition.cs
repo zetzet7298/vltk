@@ -67,6 +67,8 @@ namespace VLTK.Model
         public int horseLimit;           // HorseLimit
         public int missilesGenerate;     // MslsGenerate
         public int missilesGenerateData; // MslsGenerateData
+        public string lvlSetScript;      // LvlSetScript (PC Lua tuning script path)
+        public string levelUpScript;     // LevelUpScript (PC Lua upgrade script path)
 
         // Resource references (resolved through the asset registry).
         public SourceAssetId iconSourceId;       // m_szSkillIcon

@@ -149,11 +149,10 @@ namespace VLTK.Tests.EditMode.Sandbox
             var quest = new QuestService();
             var snap = QuestTaskPanelService.BuildSnapshot(quest, 1, 0, 0);
             Assert.GreaterOrEqual(snap.availableCount, 1);
-            StringAssert.Contains("PC [Task] Player_Task", snap.rows[0]);
-            bool hasTrainingQuest = false;
+            StringAssert.Contains("player_task_def.txt", snap.rows[0]);
             foreach (var row in snap.rows)
-                if (row.Contains("Tập Luyện Cơ Bản")) hasTrainingQuest = true;
-            Assert.IsTrue(hasTrainingQuest, "Task button should show QuestService PC quest journal entries, not only daily tasks.");
+                StringAssert.DoesNotContain("Tập Luyện Cơ Bản", row,
+                    "Sample-only quests must not be labelled as PC Player_Task proof by default.");
         }
 
         // ───── DailyTaskPanelService ─────

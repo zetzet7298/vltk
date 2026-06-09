@@ -41,6 +41,44 @@ namespace VLTK.Sandbox
         public PcNpcSkillEntry GetNpcSkill(int id)
             => _registry != null ? _registry.Get(id) : null;
 
+        public NpcBossSkillCastPlan BuildCastPlan(int skillId)
+        {
+            var entry = GetNpcSkill(skillId);
+            if (entry == null) return new NpcBossSkillCastPlan { skillId = skillId, guardReason = "missing npcskills.txt row" };
+            bool missingScript = !string.IsNullOrEmpty(entry.levelSetScript)
+                && !NpcSkillScriptCatalogService.PcScriptFileExists(NpcSkillScriptCatalogService.PcServerScriptRoot, entry.levelSetScript);
+            return new NpcBossSkillCastPlan
+            {
+                canCast = true,
+                skillId = entry.skillId,
+                skillNameRaw = entry.nameRaw,
+                skillStyle = entry.skillStyle,
+                attackRadius = entry.attackRadius,
+                childSkillId = entry.childSkillId,
+                childSkillLevel = entry.childSkillLevel,
+                childSkillNum = entry.childSkillNum,
+                cooldownTicks = entry.timePerCast,
+                skillCostType = entry.skillCostType,
+                costValue = entry.costValue,
+                isPhysical = entry.isPhysical,
+                isMelee = entry.isMelee,
+                targetOnly = entry.targetOnly,
+                targetEnemy = entry.targetEnemy,
+                targetAlly = entry.targetAlly,
+                targetSelf = entry.targetSelf,
+                targetOther = entry.targetOther,
+                targetObj = entry.targetObj,
+                targetNoNpc = entry.targetNoNpc,
+                horseLimit = entry.horseLimit,
+                doHurt = entry.doHurt,
+                weaponSkill = entry.weaponSkill,
+                maxLevel = entry.maxLevel,
+                levelSetScript = entry.levelSetScript,
+                missingScriptGuard = missingScript,
+                guardReason = missingScript ? $"Referenced PC Lua missing under scoped source: {entry.levelSetScript}" : null,
+            };
+        }
+
         public IReadOnlyList<PcNpcSkillEntry> GetByNpcTemplate(int templateId)
             => _registry != null
                 ? _registry.GetByNpcTemplate(templateId)

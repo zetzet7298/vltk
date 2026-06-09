@@ -51,6 +51,73 @@ namespace VLTK.Tests.Sandbox
                 if (!string.IsNullOrEmpty(m.nameRaw)) withName++;
             Assert.Greater(withName, 30);
         }
+
+        [Test]
+        public void PlayerTaskDef_LoadsPcMetadataRowsAndRanges()
+        {
+            var reg = PcMissionParser.BuildRegistry(MissionDir);
+            Assert.AreEqual(645, reg.Count,
+                "PC player_task_def.txt has 645 numeric first-id metadata rows after headers/blank rows.");
+
+            var emei = reg.ResolveId(1);
+            Assert.IsNotNull(emei);
+            Assert.AreEqual("峨嵋派任务", emei.nameRaw);
+            Assert.AreEqual("入门任务、门派任务及出师任务", emei.describe);
+
+            var achievementRange = reg.ResolveId(4140);
+            Assert.IsNotNull(achievementRange);
+            Assert.AreEqual(4126, achievementRange.taskIdFirst);
+            Assert.AreEqual(4150, achievementRange.taskIdLast);
+            Assert.AreEqual("成就系统数据", achievementRange.nameRaw);
+        }
+    }
+
+    public class QuestServicePcImportTests
+    {
+        private static string MissionDir => Path.Combine(Directory.GetCurrentDirectory(), "Assets/StreamingAssets/Reference/PcMission");
+
+        [Test]
+        public void DefaultConstructorLoadsPcPlayerTaskMetadataWithoutSampleQuests()
+        {
+            var quest = new QuestService();
+
+            Assert.GreaterOrEqual(quest.AllQuests.Count, 600);
+            Assert.IsNotNull(quest.GetDefinition(1));
+            Assert.IsNull(quest.GetDefinition(7001),
+                "Built-in sample quest IDs must stay opt-in/test-only by default.");
+
+            var def = quest.GetDefinition(1);
+            Assert.AreEqual(QuestSourceKind.PcPlayerTaskMetadata, def.sourceKind);
+            Assert.IsFalse(def.isSampleQuest);
+            Assert.AreEqual("峨嵋派任务", def.nameRaw);
+            Assert.AreEqual("入门任务、门派任务及出师任务", def.descriptionVi);
+            Assert.AreEqual(1, def.pcTaskIdFirst);
+        }
+
+        [Test]
+        public void ExplicitSampleModeTagsSampleQuestsAndKeepsPcMetadata()
+        {
+            var quest = new QuestService(includeSampleQuests: true);
+
+            Assert.IsNotNull(quest.GetDefinition(1));
+            var sample = quest.GetDefinition(7001);
+            Assert.IsNotNull(sample);
+            Assert.AreEqual(QuestSourceKind.Sample, sample.sourceKind);
+            Assert.IsTrue(sample.isSampleQuest);
+            Assert.AreEqual("[Hàng Ngày] Dọn Quái Ba Lăng", sample.nameVi);
+        }
+
+        [Test]
+        public void CanLoadPcMetadataFromExplicitDirectory()
+        {
+            var quest = new QuestService();
+            quest.LoadPcPlayerTaskMetadata(MissionDir);
+
+            var bossKiller = quest.GetDefinition(1082);
+            Assert.IsNotNull(bossKiller);
+            Assert.AreEqual("Boss杀手任务变量", bossKiller.nameRaw);
+            Assert.AreEqual(QuestSourceKind.PcPlayerTaskMetadata, bossKiller.sourceKind);
+        }
     }
 
     public class PcAdventureParserTests

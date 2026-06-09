@@ -22,6 +22,8 @@ namespace VLTK.Sandbox
         public CombatFaction faction = CombatFaction.None;
         public HashSet<int> knownSkills = new();
         public Dictionary<int, int> skillLevels = new();
+        public int translife4SkillPoints;
+        public int translife4UsedSkillPoints;
 
         // Horse unlock: PC source vltksource_new/vl_update_27/Client 6.0/settings/item/000/horseres.txt
         // Sandbox default: player joins at level 30 (CaiBang quest complete) and unlocks
@@ -179,22 +181,73 @@ namespace VLTK.Sandbox
 
         public bool CanUpgradeSkill(SkillDefinition skill, int addPoint = SkillUpgradePointCost)
         {
-            if (skill == null || !knownSkills.Contains(skill.skillId) || addPoint <= 0 || fightSkillPoints < addPoint)
+            return CanUpgradeSkill(skill, SkillLevelUpScriptCatalog.CreateDefault(), addPoint);
+        }
+
+        public bool CanUpgradeSkill(SkillDefinition skill, SkillLevelUpScriptCatalog rules, int addPoint = SkillUpgradePointCost)
+        {
+            if (skill == null || !knownSkills.Contains(skill.skillId) || addPoint <= 0)
+                return false;
+
+            var rule = ResolveLevelUpRule(skill, rules);
+            int availablePoints = rule != null && rule.usesTranslife4PointPool ? translife4SkillPoints : fightSkillPoints;
+            if (availablePoints < addPoint)
                 return false;
 
             int current = GetSkillLevel(skill.skillId);
             int desired = current + addPoint;
-            return desired <= GetLevelCap(skill);
+            if (desired > GetLevelCap(skill))
+                return false;
+
+            return MeetsLevelUpPrerequisites(rule, current);
         }
 
         public bool TryUpgradeSkill(SkillDefinition skill, int addPoint = SkillUpgradePointCost)
         {
-            if (!CanUpgradeSkill(skill, addPoint))
+            return TryUpgradeSkill(skill, SkillLevelUpScriptCatalog.CreateDefault(), addPoint);
+        }
+
+        public bool TryUpgradeSkill(SkillDefinition skill, SkillLevelUpScriptCatalog rules, int addPoint = SkillUpgradePointCost)
+        {
+            if (!CanUpgradeSkill(skill, rules, addPoint))
                 return false;
 
+            var rule = ResolveLevelUpRule(skill, rules);
             skillLevels[skill.skillId] = GetSkillLevel(skill.skillId) + addPoint;
-            fightSkillPoints -= addPoint;
+            if (rule != null && rule.usesTranslife4PointPool)
+            {
+                translife4SkillPoints -= addPoint;
+                translife4UsedSkillPoints += addPoint;
+            }
+            else
+            {
+                fightSkillPoints -= addPoint;
+            }
             return true;
+        }
+
+        private bool MeetsLevelUpPrerequisites(SkillLevelUpRule rule, int currentLevel)
+        {
+            if (rule == null || rule.prerequisites == null || rule.prerequisites.Count == 0)
+                return true;
+
+            foreach (var req in rule.prerequisites)
+            {
+                int requiredLevel = req.minimumLevel;
+                if (currentLevel <= 15)
+                    requiredLevel = currentLevel + 5;
+                if (requiredLevel < req.minimumLevel)
+                    requiredLevel = req.minimumLevel;
+                if (GetSkillLevel(req.skillId) < requiredLevel)
+                    return false;
+            }
+            return true;
+        }
+
+        private static SkillLevelUpRule ResolveLevelUpRule(SkillDefinition skill, SkillLevelUpScriptCatalog rules)
+        {
+            if (skill == null || rules == null) return null;
+            return rules.Resolve(skill.skillId) ?? rules.ResolveScript(skill.levelUpScript);
         }
     }
 }

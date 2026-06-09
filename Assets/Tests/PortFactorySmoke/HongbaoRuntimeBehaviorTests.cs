@@ -37,6 +37,17 @@ namespace VLTK.Tests.PortFactorySmoke
                 Particular = 300,
                 Msg = "Test city item"
             });
+            cityRegistry.Add(new PcCityHongbaoEntry
+            {
+                Id = 2,
+                Proba = 100,
+                Type = CityHongbaoOpenResultService.PcGoldenType,
+                Genre = 159,
+                Costly = 1,
+                Log = 1,
+                Msg = "<player> mở Đại Hồng Bao thành thị, nhận được 1 <name>",
+                Name = "Định Quốc Thanh Sa Trường Sam"
+            });
             _cityHongbaoData = new CityHongbaoService(cityRegistry);
 
             // Mock database doesn't actually populate definitions by default, but InventoryService allows adding if we provide an ItemContractImporter.
@@ -45,10 +56,14 @@ namespace VLTK.Tests.PortFactorySmoke
             // Actually we can pass null for ItemContractImporter, which makes ResolvePcItem return null, thus failing to add.
             // Let's create a dummy ItemContractImporter or just use the inventory count to verify space.
             var stubDb = new ItemContractImporter();
-            stubDb.LoadRecords(new System.Collections.Generic.List<ItemContractRecord>
+            stubDb.Import(new ItemContractBundle
             {
-                new ItemContractRecord { id = 1001, genre = 6, detail = 1, part = 200 },
-                new ItemContractRecord { id = 1002, genre = 6, detail = 1, part = 300 }
+                items = new System.Collections.Generic.List<VLTK.Model.ItemDefinition>
+                {
+                    new VLTK.Model.ItemDefinition { itemId = 1001, itemGenre = 6, detailType = 1, particularType = 200 },
+                    new VLTK.Model.ItemDefinition { itemId = 1002, itemGenre = 6, detailType = 1, particularType = 300 },
+                    new VLTK.Model.ItemDefinition { itemId = 1535, itemGenre = 6, detailType = 1, particularType = 1535 }
+                }
             });
 
             _inventory = new InventoryService(stubDb);
@@ -81,6 +96,37 @@ namespace VLTK.Tests.PortFactorySmoke
             var result = _service.OpenCityHongbao(50, "Tester");
             Assert.AreEqual(CityHongbaoOpenStatus.RewardSelected, result.Status);
             Assert.IsTrue(_inventory.HasPcItem(6, 1, 300));
+        }
+
+        [Test]
+        public void OpenHongbao_WithOpenedItem_CapturesPcSideEffectCommandsAndConsumesSourceItem()
+        {
+            _inventory.AddPcItem(6, 1, 1535);
+
+            var result = _service.OpenHongbao(50, "Tester", new HongbaoOpenedItemRef(6, 1, 1535));
+
+            Assert.AreEqual(HongbaoOpenStatus.RewardSelected, result.Status);
+            Assert.IsFalse(_inventory.HasPcItem(6, 1, 1535));
+            CollectionAssert.AreEqual(
+                new[] { "ConsumeOpenedItem", "AddItem", "Msg2Player", "WriteLog" },
+                _service.CapturedOperations.ConvertAll(op => op.ApiName));
+        }
+
+        [Test]
+        public void OpenCityHongbao_GoldenCostlyReward_CapturesAddGoldItemNewsAndLog()
+        {
+            _inventory.AddPcItem(6, 1, 1535);
+
+            var result = _service.OpenCityHongbao(101, "Tester", new HongbaoOpenedItemRef(6, 1, 1535));
+
+            Assert.AreEqual(CityHongbaoOpenStatus.RewardSelected, result.Status);
+            Assert.AreEqual(CityHongbaoRewardCommandType.AddGoldItem, result.RewardCommand.CommandType);
+            Assert.IsTrue(result.ShouldEmitGlobalNews);
+            CollectionAssert.AreEqual(
+                new[] { "ConsumeOpenedItem", "AddGoldItem", "Msg2Player", "AddGlobalNews", "WriteLog" },
+                _service.CapturedOperations.ConvertAll(op => op.ApiName));
+            Assert.AreEqual(0, _service.CapturedOperations[1].Args[0]);
+            Assert.AreEqual(159, _service.CapturedOperations[1].Args[1]);
         }
     }
 }

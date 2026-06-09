@@ -38,7 +38,7 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
                 return new List<PcModMissileRow>();
-            return ParseLines(File.ReadAllLines(absolutePath), minMissileId);
+            return ParseLines(PcItemCommon.ReadServerLines(absolutePath), minMissileId);
         }
 
         public static List<PcModMissileRow> ParseLines(IEnumerable<string> lines, int minMissileId = 0)
@@ -110,16 +110,23 @@ namespace VLTK.Sandbox
     {
         private static readonly Dictionary<int, PcMissileEntry> _missiles = new();
         private static bool _initialized;
+        public static int Count => _missiles.Count;
 
         public static void Initialize(string streamingAssetsPath)
         {
             if (_initialized) return;
 
             string refPath = Path.Combine(streamingAssetsPath, "Reference");
+            string missles1File = Path.Combine(refPath, "PcAttrib", "missles1.txt");
             string pcFile = Path.Combine(refPath, "PcMissles.txt");
             string modFile = Path.Combine(refPath, "ModMissles.txt");
 
-            if (File.Exists(pcFile))
+            if (File.Exists(missles1File))
+            {
+                var list = PcModMissileParser.ToMissileEntries(PcModMissileParser.ParseFile(missles1File));
+                foreach (var m in list) _missiles[m.missileId] = m;
+            }
+            else if (File.Exists(pcFile))
             {
                 var list = PcConfigParser.ParseMissiles(pcFile);
                 foreach (var m in list) _missiles[m.missileId] = m;
