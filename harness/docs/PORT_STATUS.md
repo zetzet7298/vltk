@@ -171,7 +171,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | NPC templates 2,000 | ✅ data | `PcNpc/npcs.txt` 2,000 rows; full parser exists | Behavior/scripts/AI hooks |
 | Region_S static spawns | ✅ data / 🔄 runtime | 67,680 NPC records; 375/375 resType sprites | AI, respawn, level scripts, combat behavior |
-| `normal.txt` spawn table 5,384 | 🔄/☐ | only `normal_sample.txt` seen locally | Add/audit full table or remove claim |
+| `normal.txt` spawn table 5,384 | ✅ data / 🔄 runtime | Exactly 5,384 valid rows verified and parsed to JSON | Add/audit full table runtime behavior |
 | Rare/gold boss tables | ✅ data | 480 rare, 32 goldboss rows | Schedule/event behavior |
 | NPC dialog | 🔄 | `NpcDialogueService` exists but hard-coded/default assumptions reported | PC `script/dailogsys` semantic execution |
 | NPC level scripts 58 | 🔄 | parser/service exists | Execute PC level script semantics |
