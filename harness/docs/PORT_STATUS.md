@@ -29,7 +29,7 @@
 - `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty`:
   - `status=pass_with_known_gaps`, `errors=[]`.
 - Unity console check: only known Addressables GUID conflict noise during this audit.
-- No fresh Unity Test Runner result artifact found. Old `1771/1771 EditMode` and `25/25 PlayMode` claims are **unverified** and removed.
+- No fresh passing Unity Test Runner result artifact found. Batch 2 diagnosed discovery: `VLTK.Tests.EditMode`/PlayMode asmdefs are gated by missing `VLTK_ENABLE_TESTS`; a discovery sentinel was added, but this is not a Test Runner pass artifact.
 - Exa research timed out twice; DeepWiki fetched UnityCsReference overview. This audit relies on current repo files and PC source-of-truth, not external guesses.
 
 ## Current high-confidence map verifier facts
@@ -49,12 +49,12 @@ trap scripts/actions: 817/817 script ids resolved; runtime action catalog loads 
 default map: 907 — Vượt ải Nhiếp Thí Trần
 ```
 
-Deferred trap families after Batch 1 merge remain host-limited, not full PC parity:
+Deferred trap families after Batch 2 integration remain host-limited, not full PC parity:
 
 ```text
-ClearSkillTeamEnterHole: 4 routed as partial runtime; captain/team/CSP_CheckValid/mission allocation/AddMSPlayer/SetTempRevPos still incomplete.
-TongMapEntrance: 8 routed as host-limited partial hook; PC Tong ownership/ban/expire/product-region/template-map APIs still incomplete.
-CityWarJoinRouter: 1 routed as partial runtime; Tong gate, mission lifecycle, card expiry, rewards, and full CityWar state still incomplete.
+ClearSkillTeamEnterHole: 4 routed as partial runtime; Batch 2 service model now proves captain/team/CSP_CheckValid/free-map scan/OpenMission/RunMission/AddMSPlayer/SetTempRevPos plan semantics, but real host mission/runtime execution remains incomplete.
+TongMapEntrance: 8 routed as host-limited partial hook; Batch 2 service model proves default/cn_ib banned/expire/near-expiry SetPos/SetFightState/message decisions, but PC Tong ownership/ban/expire/product-region/template-map host APIs remain incomplete.
+CityWarJoinRouter: 1 routed as partial runtime; Batch 2 service model proves mission state, existing ticket, odd/even card, expired card, Tong direct join, and camp join plan semantics, but full mission lifecycle/rewards/live runtime remain incomplete.
 ```
 
 ## Verified data files and exact counts
@@ -117,13 +117,13 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Item | Status | Evidence | Required next proof/work |
 |---|---:|---|---|
 | 1,005 PC map aliases and 332 visual geometries | ✅ | `MapAliasCatalog.json`, `MapGeometryCatalog.json`, verifier pass | Keep generated artifacts reproducible on clean clone |
-| Default map 907 `Vượt ải Nhiếp Thí Trần` | ✅ | `Sandbox.unity defaultMapId: 907`; verifier default map fact | Manual movement/bounds still needs fix/proof |
+| Default map 907 `Vượt ải Nhiếp Thí Trần` | ✅ data/default scene | `Sandbox.unity defaultMapId: 907`; verifier default map fact; `Map907RuntimeSmokeService` proves catalog/name/geometry key | Runtime movement/minimap proof is tracked below; do not treat this row as all-map runtime parity |
 | Region_C visual map art | ✅ known gaps | 95,246 Region_C; 2,785 SPR; 6 source-missing SPR refs documented | Do not fabricate missing refs |
 | Server Region_S extraction | ✅ data / 🔄 gameplay | `MapSpawnCoverage.json` facts above | Spawn AI/scheduling/runtime parity |
 | Region_S object catalog/action executor | 🔄 | 453 object records, 299 deterministic actions | Full object script semantics not globally proven |
-| Region_S trap script resolver/executor | 🔄 partial runtime | 817/817 resolved; runtime catalog now loads 804 deterministic + 13 host-limited routed actions (`ClearSkillTeamEnterHole=4`, `TongMapEntrance=8`, `CityWarJoinRouter=1`) | Verifier still reports those 13 as deferred PC-runtime gaps; close host/API/mission gaps before runtime `✅` |
-| Minimap/click-to-move/bounds | 🔄 | map 907 target clamp + minimap RectTransform offset fix/tests added; Unity MCP EditMode proof 36/36 passed | Need player/in-editor smoke proof for full map 907 movement feel |
-| Waypoint/wharf/revive/scroll runtime | 🔄 | exact parser/count tests plus `PcMapTravelRuntimeService` lookup proof: waypoint/wharf/revive/scroll counts, representative ID/map lookups, and no fabricated scroll map rows | Still needs end-to-end travel/revive/scroll behavior proof in runtime scene before `✅ runtime` |
+| Region_S trap script resolver/executor | 🔄 partial runtime | 817/817 resolved; runtime catalog loads 804 deterministic + 13 host-limited routed actions. Batch 2 adds standalone PC semantic plan proofs for `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter` | Verifier still reports those 13 as deferred PC-runtime gaps; close real host/API/mission/runtime gaps before broad runtime `✅` |
+| Minimap/click-to-move/bounds | 🔄 service/runtime-surface proof | map 907 target clamp + minimap RectTransform offset fix/tests; `Map907RuntimeSmokeService` proves map 907 bounds, minimap roundtrip, controller clamp surface, and 16 resolved traps via Unity execute proof | Need player/in-editor feel smoke before `✅ runtime` for map 907 movement; all-map parity remains partial |
+| Waypoint/wharf/revive/scroll runtime | 🔄 service proof only | exact parser/count tests plus `PcMapTravelRuntimeService`/`PcMapTravelActionService` proof cover representative waypoint 225, wharf 3 SECT data, map 949 revive, scroll 2600 value rows, and no fabricated scroll map teleport | Need end-to-end travel/revive/scroll behavior proof in runtime scene before `✅ runtime` |
 
 ### 2. Factions
 
@@ -205,7 +205,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | Core combat/damage/projectile/buff/death/PK services | 🔄 | services and tests exist | PC formula/skill/PvP semantic parity |
 | Tống Kim maps/rebirth traps | 🔄 | map alias counts, some rebirth traps ported | Full battlefield state/scoring/join/award behavior |
-| CityWar | 🔄 partial runtime | `citywar.ini` data exists; `CityWarJoinRouter` routed/tested for mission state, existing ticket, odd/even city card, no-card return, and camp join side effects | Full CityWar mission lifecycle, Tong gates, ownership/state integration, card expiry, rewards, and Unity runtime proof still missing |
+| CityWar | 🔄 partial runtime/model proof | `citywar.ini` data exists; `CityWarJoinRouter` routed; Batch 2 model covers mission state, existing ticket, odd/even/expired city card, no-card return, Tong direct join, and camp join side effects | Full CityWar mission lifecycle, Tong gate host integration, rewards, capacity gates, and Unity runtime proof still missing |
 | Quốc Chiến/Hoa Sơn | 🔄/☐ | service hints exist; dedicated source proof weak/missing | Add PC source evidence/runtime tests |
 | Battle scripts 183 | 🔄 indexed/mock | `BattleScriptRuntimeService` simplified/log behavior reported; dirs missing | Full PC battle Lua semantics |
 | Battle awards/double EXP | 🔄 | services exist | PC event/schedule/effect parity |
@@ -217,7 +217,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Guild level data | ✅ data | 6 rows in `tong_level_data.txt` | Runtime behavior parity |
 | Guild creation/fund/contribution/workshop/task/rank/stunt | 🔄 | services/configs exist | PC server behavior and script side effects |
 | Guild scripts 65 | 🔄 indexed/framework | PC `script/tong` Lua not executed; service mostly validate/log/return | Semantic Lua execution or explicit indexed-only status |
-| Guild city war / Tong maps | 🔄 partial hooks | `TongMapEntrance=8` routed as host-limited hook; `CityWarJoinRouter=1` routed/tested as partial runtime | Implement/prove PC Tong ownership/ban/expire/template-map APIs, CityWar gate integration, and Unity runtime behavior before `✅` |
+| Guild city war / Tong maps | 🔄 partial hooks/model proof | `TongMapEntrance=8` routed as host-limited hook with Batch 2 default/cn_ib branch model; `CityWarJoinRouter=1` routed/tested as partial runtime/model proof | Implement/prove PC Tong ownership/ban/expire/product-region/template-map APIs, CityWar gate integration, and Unity runtime behavior before `✅` |
 | Party system | 🔄 | party services/panels exist | Full PC team behavior, team trap entry, UI proof |
 
 ### 10. Other systems
@@ -298,9 +298,9 @@ For each future status row, cite at least one of:
 
 ## Immediate map-port priorities
 
-1. Map 907 movement bounds/minimap/click-to-move: target clamp and minimap RectTransform fixes are implemented and Unity MCP EditMode proof passed; still needs player/in-editor feel smoke before marking runtime `✅`.
-2. Verify and deepen Batch 1 routed deferred trap families: `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter`; keep them `🔄 partial runtime` until verifier + host/API/mission gaps are closed.
-3. Waypoint/wharf/revive/scroll parser/count and service lookup tests are added; still needs end-to-end travel/revive/scroll runtime proof.
+1. Map 907 movement bounds/minimap/click-to-move: target clamp/minimap fixes plus `Map907RuntimeSmokeService` prove catalog/bounds/minimap/controller-clamp/trap readiness; still needs player/in-editor feel smoke before marking runtime `✅`.
+2. Continue deferred trap family deepening: Batch 2 added standalone PC semantic plan proofs for `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter`; keep them `🔄 partial runtime/model proof` until verifier + host/API/mission gaps are closed.
+3. Waypoint/wharf/revive/scroll parser/count/action-service proofs are added; still needs end-to-end travel/revive/scroll runtime proof.
 4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
 
 ## Port Factory Batch 1 audit queue — 2026-06-09
@@ -322,6 +322,27 @@ Conservative row update queue:
 | `TongMapEntrance` | Deferred trap family list; Guild city war / Tong maps; Region_S trap Lua subset | Routed as host-limited `🔄 partial hook`; need PC host APIs for product region, map params, Tong ownership/ban/template/expire semantics and runtime proof before `✅`. |
 | `CityWarJoinRouter` | Deferred trap family list; City war config; Region_S trap Lua subset | Routed as `🔄 partial runtime`; need full mission lifecycle, Tong gate/current-map integration, card expiry, rewards, and runtime proof before `✅`. |
 | Travel runtime proof | Waypoints, Wharves, Revive positions, Scroll items | Service lookup proof added; still needs end-to-end travel/revive/scroll behavior proof in runtime scene before `✅ runtime`. |
+
+## Port Factory Batch 2 integration — 2026-06-09
+
+Integrated Batch 2 evidence:
+
+- Service/model proof commits integrated for travel action lookup, ClearSkill TeamEnterHole/JoinHole, TongMapEntrance, CityWarJoinRouter, map 907 runtime-surface smoke, and Test Runner discovery diagnosis.
+- Unity compile is clean except known Addressables GUID conflict noise. Unity Editor execute proof returned `travel wp225=340/1853/3446 wharf3=2/DataOnly revive949=51264/102368 scroll=2600/DataOnly; clear=True/249/2; tong=cn_ib-banned-non-owner/3; city=True/True/1; map907=True/16/0`.
+- Non-Unity verification passed: `git diff --check`, `python3 scripts/jx_map_port_verify.py --include-missing-spr-region-refs --pretty` (`pass_with_known_gaps`), and `cargo test -p harness-cli` (`20 passed`).
+- Unity Test Runner still has no fresh passing artifact; root cause is the missing `VLTK_ENABLE_TESTS` define constraint. Do not reuse old `1771/1771` or `25/25` claims.
+- Batch 2 does not promote broad rows to `✅ runtime`: proofs are service/model/runtime-surface only until live host/API/scene behavior is exercised.
+
+Conservative Batch 2 queue:
+
+| Batch 2 scope | Current evidence | Still required before `✅ runtime` |
+|---|---|---|
+| Travel action lookup | `PcMapTravelActionService` proves waypoint 225, wharf 3 data-only SECT, revive map 949, scroll 2600 value table/no fabricated teleport | In-scene waypoint/wharf/revive/scroll behavior, UI/cost/item-consumption restrictions |
+| ClearSkill TeamEnterHole | PC constants and deterministic plan for captain/CSP/team size/clear map/free test map/OpenMission/RunMission/JoinHole side effects | Real party host, mission allocation, AddMSPlayer/SetTempRevPos execution, scene/runtime proof |
+| TongMapEntrance | PC default/cn_ib plan for banned, expired, near-expiry, SetFightState/SetPos/message branches | Real product-region/map-param/Tong owner/ban/template/expire host APIs and runtime proof |
+| CityWarJoinRouter | PC plan for mission state, existing ticket, card/no-card/expired-card, Tong direct join, camp join side effects | Full mission lifecycle, Tong gate host integration, item inventory/life APIs, rewards/capacity, runtime proof |
+| Map 907 smoke | catalog/name/geometry/bounds/minimap roundtrip/controller-clamp/trap readiness proof | Player/in-editor movement feel smoke and broader all-map parity |
+| Test Runner | root cause diagnosed and sentinel test added | Decide policy (`VLTK_ENABLE_TESTS` define vs asmdef change) and capture fresh passing Test Runner artifact |
 
 ## Harness DB sync audit — 2026-06-08
 
