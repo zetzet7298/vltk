@@ -112,6 +112,14 @@ namespace VLTK.Sandbox
         private static bool _initialized;
         public static int Count => _missiles.Count;
 
+        /// <summary>
+        /// Load runtime missile rows from the full PC missles1.txt source when it is
+        /// staged under Reference/PcAttrib. The PC file contains duplicate id 408;
+        /// sequential dictionary insertion keeps the later row, which is the policy
+        /// used by this runtime registry. Legacy PcMissles/ModMissles remain fallback
+        /// sources for environments without the audited PcAttrib copy.
+        /// </summary>
+
         public static void Initialize(string streamingAssetsPath)
         {
             if (_initialized) return;
