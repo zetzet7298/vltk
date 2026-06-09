@@ -115,7 +115,7 @@ namespace VLTK.Sandbox
                 foreach (var skill in catalog.All)
                 {
                     if (skill == null || string.IsNullOrEmpty(skill.levelSetScript)) continue;
-                    string path = skill.levelSetScript.Trim();
+                    string path = CanonicalizePcScriptPath(skill.levelSetScript.Trim());
                     if (!byPath.TryGetValue(path, out var fact))
                     {
                         fact = new NpcSkillScriptPathFact(path, pcServerScriptRoot);
@@ -151,11 +151,32 @@ namespace VLTK.Sandbox
         }
 
         internal static string NormalizeRelativePath(string scriptPath)
-            => (scriptPath ?? string.Empty).Trim().TrimStart('\\', '/').Replace('\\', '/');
+            => CanonicalizePcScriptPath(scriptPath).TrimStart('\\', '/').Replace('\\', '/');
+
+        internal static string CanonicalizePcScriptPath(string scriptPath)
+        {
+            string value = (scriptPath ?? string.Empty).Trim();
+            bool hasHighByte = false;
+            foreach (char ch in value)
+            {
+                if (ch > 255) return value;
+                if (ch >= 128) hasHighByte = true;
+            }
+            if (!hasHighByte) return value;
+            TryRegisterCodePagesProvider();
+            try
+            {
+                var bytes = new byte[value.Length];
+                for (int i = 0; i < value.Length; i++) bytes[i] = (byte)value[i];
+                return Encoding.GetEncoding("GB18030").GetString(bytes);
+            }
+            catch { return value; }
+        }
 
         internal static bool PcScriptFileExists(string pcServerScriptRoot, string scriptPath)
         {
             if (string.IsNullOrEmpty(pcServerScriptRoot) || string.IsNullOrEmpty(scriptPath)) return false;
+            scriptPath = CanonicalizePcScriptPath(scriptPath);
             string rel = NormalizeRelativePath(scriptPath);
             string direct = Path.Combine(pcServerScriptRoot, rel);
             if (File.Exists(direct)) return true;
