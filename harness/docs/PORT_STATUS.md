@@ -121,6 +121,8 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | VNG event dir | `Reference/PcVngEvent` | ✅ index / 🔄 runtime | PC VNG events indexed (201 scripts) | Execute VNG event mechanics |
 | FlipCard dedicated dir | `Reference/PcFlipCard` | protocol facts present: 6 constants/functions | ✅ protocol catalog / 🔄 runtime |
 | Compensation dir | `Reference/PcCompensation` | ✅ index / 🔄 runtime | PC compensation scripts indexed (9 files) | Execute compensation mechanics |
+| Quoc Chien / Hoa Son dir | `Reference/PcQuocChienHoaSon` | ✅ index / 🔄 runtime | PC Quoc Chien / Hoa Son scripts indexed (122 files) | Execute event mechanics |
+| Tong War dir | `Reference/PcTongWar` | ✅ index / 🔄 runtime | PC Tong/faction war scripts indexed (10 files) | Execute Tong war mechanics |
 
 ## Section-by-section truth matrix
 
