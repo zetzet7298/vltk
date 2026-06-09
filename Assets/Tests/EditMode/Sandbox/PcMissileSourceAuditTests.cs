@@ -103,5 +103,17 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(PcMissileSourceAudit.CompareFiles(serverMissles, Path.Combine(PcAttribRoot, "missles.txt")).exactBytes);
             Assert.IsTrue(PcMissileSourceAudit.CompareFiles(serverMissles1, Path.Combine(PcAttribRoot, "missles1.txt")).exactBytes);
         }
+
+        [Test]
+        public void PcMissleParser_BuildsRegistryWithExactCount()
+        {
+            if (!Directory.Exists(PcServerSettings))
+            {
+                Assert.Ignore("PC source tree is not mounted in this environment.");
+            }
+            
+            var registry = PcMissleParser.BuildRegistry(PcServerSettings);
+            Assert.AreEqual(467, registry.Count, "The verified parser should combine missles.txt and missles1.txt into exactly 467 unique missile records.");
+        }
     }
 }
