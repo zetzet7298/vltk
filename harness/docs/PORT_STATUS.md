@@ -75,8 +75,8 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Skill template schema | `Reference/PcSkill/skilltemplate.txt` | 67 fields / 220 non-empty lines | ✅ schema catalog / 🔄 runtime | PC `skilltemplate.txt` is schema metadata; old 219-row template claim not source-proven |
 | NPC/Boss skill catalog | `Reference/PcSkill/npcskills.txt` | 158 rows / 145 NPC-script / 21 boss-name | ✅ catalog / 🔄 runtime | Derived from PC `skills1.txt`; old standalone 43-row claim not source-proven |
 | Thief skills | `Reference/PcSkill/thiefskill.txt` | 4 rows | ✅ | 🔄 behavior not audited |
-| Mod skills local | `Reference/ModSkills.txt` | 1,554 rows | 🔄 | PC `skills1.txt` 1,712 is not fully represented/proven |
-| Missiles local | `Reference/PcMissles.txt`, `Reference/ModMissles.txt` | 441 + 441 rows | 🔄 | old “480 effects” claim not proven |
+| PC Skills1 full catalog | `Reference/PcSkill/Skills1FullCatalog.json` | 1,712 rows | ✅ catalog | Full 1712 rows PC catalog parsed; combat effects/hit zones not decoded |
+| Missiles catalog | `Reference/PcMissilesParserEvidence.json` | 467 unique ids | ✅ catalog | Exact 467 unique missile records parsed from PC `missles.txt` and `missles1.txt` |
 | Meridian levels | `Reference/PcMeridian/meridian_level.txt` | 128 rows | ✅ | 🔄 full UX/effect parity not audited |
 | Translife level table | `Reference/PcTask/translife.txt` | 41 rows / levels 160..200 | ✅ data/service lookup | Batch 4 adds pure 7-group bonus lookup/diff proof; skill unlock/effect application runtime not proven |
 | Gold equip | `Reference/PcItemFull/goldequip.txt` | 5,346 rows | ✅ | data catalog |
@@ -241,7 +241,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Activity, partner/pet, title, shop, stall, foundry, lottery, flip card, honor, shitu, bonus, trip, guide, world rank, city defence | 🔄 | many services/tests exist | Row-by-row PC source/count/runtime parity not fully audited |
 | Weather/music/audio | 🔄 | services/config parsers exist | Map-specific PC parity and runtime proof |
 | GM tools | 🔄 excluded | user-owned GM teleport/browser changes are out of audit scope | Do not use as port completion proof without explicit user request |
-| Dialog system | 🔄 | service exists | PC dialog Lua execution |
+| Dialog system | ✅ index / 🔄 runtime | PC `script/dailogsys` framework files indexed (5 core Lua scripts) | Specific NPC dialog Lua execution |
 
 ### 11. Player/NPC visuals and SPR runtime
 
