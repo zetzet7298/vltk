@@ -1,0 +1,11 @@
+SourceIndex	SourceRoot	RelativePath	Directory	FileName	Extension	Category	IsLua	IsSettings	SizeBytes	Sha256
+1	Server 6.0/server/home_jxser/server1/script/honor	honor_exit_portal.lua		honor_exit_portal.lua	lua	honor	1	0	957	287c1ef1955af492492ebfc7977f08c00b9be374c3764721193bc1741cefc392
+2	Server 6.0/server/home_jxser/server1/script/honor	honor_head.lua		honor_head.lua	lua	honor	1	0	14691	de9a3121cea3423c03721a0602b0e73ffdbf9c474b711ed4dff50f99e9afda64
+3	Server 6.0/server/home_jxser/server1/script/honor	honor_ladder.lua		honor_ladder.lua	lua	honor	1	0	1766	b2febe1aa02bf4426f7ceb5e5f45542de6ca0f2b872580ac34a44831abf77044
+4	Server 6.0/server/home_jxser/server1/script/honor	honor_master.lua		honor_master.lua	lua	honor	1	0	8268	de64a837fe3dd8a8bef84eb1efd0fbb8c1cdce71e5b9bd31a5c1e103e0de111d
+5	Server 6.0/server/home_jxser/server1/script/honor	honor_newworldscript.lua		honor_newworldscript.lua	lua	honor	1	0	382	8699356136e6396aac2389925ce1612397a4bbb5db504611d046bc6c9986afa2
+6	Server 6.0/server/home_jxser/server1/script/honor	honor_tianzi.lua		honor_tianzi.lua	lua	honor	1	0	4521	1c09410b03e3f92426645d8808116279bfb66b3c3baf59a3d68030ce0c87de73
+7	Server 6.0/server/home_jxser/server1/script/global/worldrank	head.lua		head.lua	lua	worldrank	1	0	861	cf24ff4cfba4930656e88219639ffe984d2bb141804c0cd1a23d4a77459800ad
+8	Server 6.0/server/home_jxser/server1/script/global/worldrank	lib.lua		lib.lua	lua	worldrank	1	0	5316	f8bf03f40111a3f215eab149b3fab0b8d2797f5bf35487b3e49776c8edc6f41a
+9	Server 6.0/server/home_jxser/server1/settings	ranksetting.txt		ranksetting.txt	txt	settings	0	1	1718	57eeb0d4d615184a885bb7dea8ba4063159dec28fbfce16010c4d174e2cfa35c
+10	Client 6.0/settings	ranksetting.txt		ranksetting.txt	txt	settings	0	1	2007	be2ddd5a7c8d60238057d92904eac0d105cbe0dc7e4b1f71be9c26627b0a93ff
