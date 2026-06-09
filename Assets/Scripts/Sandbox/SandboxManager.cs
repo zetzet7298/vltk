@@ -1786,5 +1786,23 @@ namespace VLTK.Sandbox
             // Gameplay loop tick: mana regen, enemy AI, respawn timers
             GameplayLoop?.Tick(Time.deltaTime);
         }
+
+        // ── IMapTeleportHost implementation ──────────────────────────────────
+
+        public bool HasMap(int mapId)
+        {
+            // For now, sandbox only has the default map loaded.
+            // Real implementation would check MapManager or scene loading.
+            return mapId == defaultMapId;
+        }
+
+        public void SwitchMapAndPlacePlayer(int mapId, Vector2 worldPosition)
+        {
+            Debug.Log($"[SandboxManager] Teleport to map {mapId} at ({worldPosition.x:F1}, {worldPosition.y:F1})");
+            if (HasMap(mapId) && PlayerController != null)
+            {
+                PlayerController.PlaceAt(worldPosition, snapCamera: false);
+            }
+        }
     }
 }
