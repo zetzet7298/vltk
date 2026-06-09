@@ -1,0 +1,47 @@
+[
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/vng_event/denbu_baotri_5server/main.lua",
+        "filename": "main.lua",
+        "rel_path": "vng_event/denbu_baotri_5server/main.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/vng_event/denbutrongkhaihoan/main.lua",
+        "filename": "main.lua",
+        "rel_path": "vng_event/denbutrongkhaihoan/main.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/vng_event/denbu_congthanh/congthanh.lua",
+        "filename": "congthanh.lua",
+        "rel_path": "vng_event/denbu_congthanh/congthanh.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/vng_event/denbu_congthanh/head.lua",
+        "filename": "head.lua",
+        "rel_path": "vng_event/denbu_congthanh/head.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/activitysys/config/37/registe.lua",
+        "filename": "registe.lua",
+        "rel_path": "activitysys/config/37/registe.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/activitysys/config/37/head.lua",
+        "filename": "head.lua",
+        "rel_path": "activitysys/config/37/head.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/activitysys/config/37/variables.lua",
+        "filename": "variables.lua",
+        "rel_path": "activitysys/config/37/variables.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/activitysys/config/37/extend.lua",
+        "filename": "extend.lua",
+        "rel_path": "activitysys/config/37/extend.lua"
+    },
+    {
+        "path": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/activitysys/config/37/config.lua",
+        "filename": "config.lua",
+        "rel_path": "activitysys/config/37/config.lua"
+    }
+]
