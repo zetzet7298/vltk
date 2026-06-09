@@ -78,8 +78,8 @@ namespace VLTK.Tests.PortFactorySmoke
                 Status = PcMapTravelActionStatus.Ready, 
                 Kind = PcMapTravelActionKind.WaypointTeleport,
                 TargetMapId = 1,
-                X = 10,
-                Y = 20
+                X = 10 * 32,
+                Y = 20 * 32
             };
             
             var result = service.ExecuteTravelAction(actionResult);
@@ -102,8 +102,8 @@ namespace VLTK.Tests.PortFactorySmoke
                 Status = PcMapTravelActionStatus.Ready, 
                 Kind = PcMapTravelActionKind.ScrollValue,
                 TargetMapId = 2,
-                X = 15,
-                Y = 25
+                X = 15 * 32,
+                Y = 25 * 32
             };
             
             var result = service.ExecuteTravelAction(actionResult);

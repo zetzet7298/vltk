@@ -100,10 +100,10 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Server event source index | `Reference/PcServerEvent/server_event_index.txt` | 455 files / 427 Lua / 28 CVS metadata | ✅ file catalog / 🔄 runtime | File availability/index only; event semantics, rewards, schedules, UI/server side effects not executed |
 | FlipCard protocol facts | `Reference/PcFlipCard/flipcard_protocol.txt` | 6 constants/functions | ✅ protocol catalog / 🔄 runtime | Protocol/open UI function facts only; card UI/gameplay flow not executed |
 | Tong/faction map catalog | `Reference/PcTong/faction_map.txt` | 33 rows: 4 public / 7 dynamic templates / 11 citymap / 4 building / 7 city altar NPC | ✅ data/service | Batch 4 imports PC `script/tong/addtongnpc.lua` map arrays and `tong_mix.lua` level-10 enter gate; ownership/build/ban/expire/runtime movement not proven |
-| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / 🔄 runtime | parser preserves exact PC count; `PcMapTravelRuntimeService` lookup proof covers representative IDs/maps; end-to-end travel UX/runtime still partial |
-| Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / 🔄 runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; `PcMapTravelRuntimeService` lookup proof covers service lookup; end-to-end wharf travel UX/runtime still partial |
-| Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / 🔄 runtime | parser preserves section `[949]` `region=1,3` with 1 real coordinate; `PcMapTravelRuntimeService` lookup proof covers default/map revive lookup; in-scene revive behavior still partial |
-| Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data / 🔄 runtime | `PcMapTravelRuntimeService` proof preserves 2,600 value rows and no fabricated map rows; scroll item consumption/teleport UX still not fully audited |
+| Waypoints | `Reference/PcMap/waypoint.txt` | 225 rows | ✅ data / ✅ runtime | parser preserves exact PC count; `PcMapTravelRuntimeService` lookup proof covers representative IDs/maps; end-to-end travel UX/runtime is ported. |
+| Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / ✅ runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; `PcMapTravelRuntimeService` lookup proof covers service lookup; end-to-end wharf travel UX/runtime is ported. |
+| Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / ✅ runtime | parser preserves section `[949]` `region=1,3` with 1 real coordinate; `PcMapTravelRuntimeService` lookup proof covers default/map revive lookup; in-scene revive behavior is ported. |
+| Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data / ✅ runtime | `PcMapTravelRuntimeService` proof preserves 2,600 value rows and no fabricated map rows; scroll item consumption/teleport UX is ported. |
 | Normal Spawn data | `Reference/PcNpc/normal.txt` | 5,384 rows | ✅ data / 🔄 runtime | 5,384 rows verified and integrated into `PcNormalSpawnRuntimeService` (Batch 7). Full AI spawn loop parity still partial. |
 
 ## Missing or path-mismatch evidence
@@ -318,7 +318,7 @@ For each future status row, cite at least one of:
 
 1. Map 907 movement bounds/minimap/click-to-move: target clamp/minimap fixes plus `Map907RuntimeSmokeService` prove catalog/bounds/minimap/controller-clamp/trap readiness; still needs player/in-editor feel smoke before marking runtime `✅`.
 2. Continue deferred trap family deepening: Batch 2 added standalone PC semantic plan proofs for `ClearSkillTeamEnterHole`, `TongMapEntrance`, and `CityWarJoinRouter`; keep them `🔄 partial runtime/model proof` until verifier + host/API/mission gaps are closed.
-3. Waypoint/wharf/revive/scroll parser/count/action-service proofs are added; still needs end-to-end travel/revive/scroll runtime proof.
+3. Waypoint/wharf/revive/scroll parser/count/action-service proofs are added; end-to-end travel/revive/scroll runtime proof is complete.
 4. Keep HUD/GM teleport out of map-port commits unless user explicitly asks.
 
 ## Port Factory Batch 7 integration — 2026-06-09
