@@ -120,7 +120,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Server event index | `Reference/PcServerEvent` | PC `script/event` file catalog present: 455 files, 427 Lua, 28 CVS metadata | ✅ catalog / 🔄 runtime |
 | VNG event dir | `Reference/PcVngEvent` | ✅ index / 🔄 runtime | PC VNG events indexed (201 scripts) | Execute VNG event mechanics |
 | FlipCard dedicated dir | `Reference/PcFlipCard` | protocol facts present: 6 constants/functions | ✅ protocol catalog / 🔄 runtime |
-| Compensation dir | `Reference/PcCompensation` | missing | 🔄/☐ |
+| Compensation dir | `Reference/PcCompensation` | ✅ index / 🔄 runtime | PC compensation scripts indexed (9 files) | Execute compensation mechanics |
 
 ## Section-by-section truth matrix
 
