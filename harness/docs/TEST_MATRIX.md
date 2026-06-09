@@ -2,10 +2,6 @@
 
 This file maps product behavior to proof.
 
-For this VLTK Mobile harness, `implemented` means the Harness story slice has
-validation evidence. It is not a full PC→Mobile port-completion or parity claim;
-use `docs/PORT_STATUS.md` as the source of truth for PC→Mobile completion.
-
 No product behavior has been defined or implemented yet. Do not mark a row
 implemented until tests or validation evidence exist.
 

@@ -191,6 +191,7 @@ Project-specific source-of-truth additions for this repo:
 - `docs/PORT_STATUS.md` is the port-status truth matrix. Read it before starting any PC→Mobile port task and update it after implementation.
 - Do not mark a `PORT_STATUS.md` row `✅` unless exact code/catalog/source evidence and tests/verifier prove the stated narrow scope. Use `🔄` for parser/service/data-only or partial runtime.
 - PC reference docs live at `/var/www/vltksource_new/docs/port_docs/`.
+- PC source-of-truth includes the canonical unpacked PAK tree `/var/www/vltksource_new/vl_update_27/pak_unpacked`. PAK contents are not image-only; they may include SPR assets, Lua, TXT/INI config, map/runtime data, and other logic. Port/audit agents must inspect both loose PC source and this unpacked tree before declaring behavior/resource missing. Use `/var/www/vltktool/unpak_tool.py` only for exceptional repair/re-unpack cases.
 - Harness durable DB is `/var/www/vltk-mobile/harness/harness.db`.
 - When working from `/var/www/vltk-mobile/harness`, run Harness commands in this directory. Do not create or use `/var/www/vltk-mobile/harness.db` at project root.
 - If running Harness from `/var/www/vltk-mobile`, set `HARNESS_DB=/var/www/vltk-mobile/harness/harness.db` first.
