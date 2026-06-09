@@ -209,8 +209,8 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | Activity/HuoYueDu services | 🔄 | services/reference config files exist | Exact PC count/source and runtime parity |
 | Server events 455 | ✅ file catalog / 🔄 runtime | `Reference/PcServerEvent/server_event_index.txt` catalogs 455 PC `script/event` files (427 Lua, 28 CVS metadata) | Parse/execute semantic event Lua, schedules, rewards, and side effects |
-| VNG events/features | 🔄/☐ | expected local dirs missing | Add source/index and tests |
-| Seasonal/compensation/bingo/flipcard | 🔄 catalog / ☐ runtime | `PcFlipCard` protocol facts and `PcServerEvent` file index exist; compensation/bingo semantics still not executed | Add semantic parsers/runtime for event scripts, rewards, UI, and server side effects |
+| VNG events/features | ✅ index / 🔄 runtime | PC VNG events indexed (201 scripts) | Add tests and execute |
+| Seasonal/compensation/bingo/flipcard | ✅ index / ☐ runtime | `PcFlipCard`, `PcServerEvent`, and `PcCompensation` file indices exist | Add semantic parsers/runtime for event scripts, rewards, UI, and server side effects |
 | Event scripts | 🔄 indexed only | `EventScriptService` metadata registry | Full Lua semantic execution |
 
 ### 8. Combat / PvP / battles
