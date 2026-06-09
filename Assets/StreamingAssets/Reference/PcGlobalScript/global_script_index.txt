@@ -1,0 +1,676 @@
+# VLTK Mobile — PC script/global source index
+# Source of truth: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/global
+# Directory rows preserve PC subdirectories; file rows preserve size/sha256. No Lua runtime semantics are claimed.
+SourceIndex	EntryKind	SourceRoot	RelativePath	Directory	FileName	Extension	IsLua	SizeBytes	Sha256
+1	directory	Server 6.0/server/home_jxser/server1/script/global	cn		cn		0	0	
+2	directory	Server 6.0/server/home_jxser/server1/script/global	general		general		0	0	
+3	directory	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu	general	hotrotanthu		0	0	
+4	directory	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/item	general/hotrotanthu	item		0	0	
+5	directory	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem	general	thunghiem		0	0	
+6	directory	Server 6.0/server/home_jxser/server1/script/global	gm		gm		0	0	
+7	directory	Server 6.0/server/home_jxser/server1/script/global	mel		mel		0	0	
+8	directory	Server 6.0/server/home_jxser/server1/script/global	mel/feature	mel	feature		0	0	
+9	directory	Server 6.0/server/home_jxser/server1/script/global	mel/feature/areatrain	mel/feature	areatrain		0	0	
+10	directory	Server 6.0/server/home_jxser/server1/script/global	mel/feature/taskdaily	mel/feature	taskdaily		0	0	
+11	directory	Server 6.0/server/home_jxser/server1/script/global	mel/mellebao	mel	mellebao		0	0	
+12	directory	Server 6.0/server/home_jxser/server1/script/global	mel/mission	mel	mission		0	0	
+13	directory	Server 6.0/server/home_jxser/server1/script/global	namcung		namcung		0	0	
+14	directory	Server 6.0/server/home_jxser/server1/script/global	namcung/skillsgm	namcung	skillsgm		0	0	
+15	directory	Server 6.0/server/home_jxser/server1/script/global	newworld		newworld		0	0	
+16	directory	Server 6.0/server/home_jxser/server1/script/global	npc		npc		0	0	
+17	directory	Server 6.0/server/home_jxser/server1/script/global	payment		payment		0	0	
+18	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming		pgaming		0	0	
+19	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca	pgaming	cauca		0	0	
+20	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/lib	pgaming/cauca	lib		0	0	
+21	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map	pgaming/cauca	map		0	0	
+22	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/npc	pgaming/cauca	npc		0	0	
+23	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac	pgaming	cobac		0	0	
+24	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua	pgaming/cobac	baucua		0	0	
+25	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs	pgaming/cobac/baucua	logs		0	0	
+26	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/configserver	pgaming	configserver		0	0	
+27	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/doivukhixanh	pgaming	doivukhixanh		0	0	
+28	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/item	pgaming	item		0	0	
+29	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions	pgaming	missions		0	0	
+30	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim	pgaming/missions	bosshoangkim		0	0	
+31	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bossdai	pgaming/missions/bosshoangkim	bossdai		0	0	
+32	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bossdai/lib	pgaming/missions/bosshoangkim/bossdai	lib		0	0	
+33	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bosstieu	pgaming/missions/bosshoangkim	bosstieu		0	0	
+34	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bosstieu/lib	pgaming/missions/bosshoangkim/bosstieu	lib		0	0	
+35	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua	pgaming	nangcapngua		0	0	
+36	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/lib	pgaming/nangcapngua	lib		0	0	
+37	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc	pgaming	npc		0	0	
+38	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua	pgaming/npc	banngua		0	0	
+39	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai	pgaming/npc	chuongmoncacphai		0	0	
+40	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/freepk	pgaming/npc	freepk		0	0	
+41	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc	pgaming/npc	hieuthuoc		0	0	
+42	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/daohoanguyen	pgaming/npc/hieuthuoc	daohoanguyen		0	0	
+43	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/liendau	pgaming/npc/hieuthuoc	liendau		0	0	
+44	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/macbac	pgaming/npc/hieuthuoc	macbac		0	0	
+45	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai	pgaming/npc/hieuthuoc	monphai		0	0	
+46	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/taytuydao	pgaming/npc/hieuthuoc	taytuydao		0	0	
+47	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi	pgaming/npc/hieuthuoc	thanhthi		0	0	
+48	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon	pgaming/npc/hieuthuoc	thon		0	0	
+49	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/tongkim	pgaming/npc/hieuthuoc	tongkim		0	0	
+50	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/visondao	pgaming/npc/hieuthuoc	visondao		0	0	
+51	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa	pgaming/npc	taphoa		0	0	
+52	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/daohoanguyen	pgaming/npc/taphoa	daohoanguyen		0	0	
+53	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai	pgaming/npc/taphoa	monphai		0	0	
+54	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi	pgaming/npc/taphoa	thanhthi		0	0	
+55	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon	pgaming/npc/taphoa	thon		0	0	
+56	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren	pgaming/npc	thoren		0	0	
+57	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/daohoanguyen	pgaming/npc/thoren	daohoanguyen		0	0	
+58	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/macbac	pgaming/npc/thoren	macbac		0	0	
+59	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai	pgaming/npc/thoren	monphai		0	0	
+60	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi	pgaming/npc/thoren	thanhthi		0	0	
+61	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon	pgaming/npc/thoren	thon		0	0	
+62	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/visondao	pgaming/npc/thoren	visondao		0	0	
+63	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu	pgaming/npc	thuyenphu		0	0	
+64	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi	pgaming/npc/thuyenphu	thanhthi		0	0	
+65	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thon	pgaming/npc/thuyenphu	thon		0	0	
+66	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/shop	pgaming	shop		0	0	
+67	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/shop/shopliendau	pgaming/shop	shopliendau		0	0	
+68	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/shop/shoptongkim	pgaming/shop	shoptongkim		0	0	
+69	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/trangbixanh	pgaming	trangbixanh		0	0	
+70	directory	Server 6.0/server/home_jxser/server1/script/global	pgaming/xephang	pgaming	xephang		0	0	
+71	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec		qsrpec		0	0	
+72	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity	qsrpec	simcity		0	0	
+73	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/class	qsrpec/simcity	class		0	0	
+74	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/components	qsrpec/simcity	components		0	0	
+75	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers	qsrpec/simcity	controllers		0	0	
+76	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data	qsrpec/simcity	data		0	0	
+77	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/libs	qsrpec/simcity	libs		0	0	
+78	directory	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins	qsrpec/simcity	plugins		0	0	
+79	directory	Server 6.0/server/home_jxser/server1/script/global	tw		tw		0	0	
+80	directory	Server 6.0/server/home_jxser/server1/script/global	vn		vn		0	0	
+81	directory	Server 6.0/server/home_jxser/server1/script/global	worldrank		worldrank		0	0	
+82	directory	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子		各派接引弟子		0	0	
+83	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地		特殊用地		0	0	
+84	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点	特殊用地	宋金报名点		0	0	
+85	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc	特殊用地/宋金报名点	npc		0	0	
+86	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/obj	特殊用地/宋金报名点	obj		0	0	
+87	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/trap	特殊用地/宋金报名点	trap		0	0	
+88	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境	特殊用地	梦境		0	0	
+89	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/npc	特殊用地/梦境	npc		0	0	
+90	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/obj	特殊用地/梦境	obj		0	0	
+91	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap	特殊用地/梦境	trap		0	0	
+92	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境山洞	特殊用地	梦境山洞		0	0	
+93	directory	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境山洞/trap	特殊用地/梦境山洞	trap		0	0	
+94	file	Server 6.0/server/home_jxser/server1/script/global	addspreadernpc.lua		addspreadernpc.lua	lua	1	2336	ce1ac6e93288d83073af4715d7b98ab78f880311eedee3687d4d8cdd46c43ed4
+95	file	Server 6.0/server/home_jxser/server1/script/global	addxishancunnpc.lua		addxishancunnpc.lua	lua	1	1455	00e0a0c7394b2ef2ce59d9684f46967a45dfa0899a3decdf15c9f5a0c5bf10a4
+96	file	Server 6.0/server/home_jxser/server1/script/global	autochat.lua		autochat.lua	lua	1	304	50f9d92ec7c83ea556c7b7ba4bb58f90ea006a58da01922fccb48554d6fce68e
+97	file	Server 6.0/server/home_jxser/server1/script/global	autoexec.lua		autoexec.lua	lua	1	34417	37f697230aec4fca0865a2373bc6b0a46dc048a4367ba89bef3693764f93849c
+98	file	Server 6.0/server/home_jxser/server1/script/global	autoexec_head.lua		autoexec_head.lua	lua	1	465	0a704155a33194ab8dcd839eb8a920478d69bfb957f88ad824cb8faa8cd5070a
+99	file	Server 6.0/server/home_jxser/server1/script/global	baijuwanhead.lua		baijuwanhead.lua	lua	1	12241	3cf16939c8da916fcc069261275434663000a2fcec08c2bb49c34f4cea797f4a
+100	file	Server 6.0/server/home_jxser/server1/script/global	ban.lua		ban.lua	lua	1	42	3d8261dc0d227f7a3e6eccf6fd285104b974008d7ba9b4ed092fdf4d6ae045dc
+101	file	Server 6.0/server/home_jxser/server1/script/global	chatroom_addtime.lua		chatroom_addtime.lua	lua	1	320	4d985f7d13ecae4bcd105d00e3e6581094f831c0a17130160eacbfd417caae0b
+102	file	Server 6.0/server/home_jxser/server1/script/global	chatroom_create.lua		chatroom_create.lua	lua	1	324	be5b11a1aac53ff27c2ae9ca90fef49e27c27f2cdebc02af89c6f9fbcf23d91b
+103	file	Server 6.0/server/home_jxser/server1/script/global	christmas.lua		christmas.lua	lua	1	14081	8714e56b02477947836e11e7d244746dd3585f1bfe437b9867c9a3f82cbca7f3
+104	file	Server 6.0/server/home_jxser/server1/script/global	christmastree.lua		christmastree.lua	lua	1	2284	32ba81889f735ddcdb5086ae23119d8fd21f3f1a19f695ec9d5ab8d322c4351f
+105	file	Server 6.0/server/home_jxser/server1/script/global	chuangong.lua		chuangong.lua	lua	1	9820	b3827ede8fca4d20c6f54ec2d3b6eb161c7dfea1900f93a30def7e98f182ddb4
+106	file	Server 6.0/server/home_jxser/server1/script/global	chuangong_login.lua		chuangong_login.lua	lua	1	2923	56b8165084912308b0714fd5fdbd8141fc5c342072972668cb5c9be11231538e
+107	file	Server 6.0/server/home_jxser/server1/script/global	client_playerlevelup.lua		client_playerlevelup.lua	lua	1	6293	017992536f5181b60bb2b961c46f8cb01fcf67018e74f84fb214d480531c71e8
+108	file	Server 6.0/server/home_jxser/server1/script/global	cn/extpointfunc_proc.lua	cn	extpointfunc_proc.lua	lua	1	1643	851310532f43bbd03f51abe174f273e28f670c58483434ace585b058f5096d5f
+109	file	Server 6.0/server/home_jxser/server1/script/global	cn/gamebank_head.lua	cn	gamebank_head.lua	lua	1	362	785cc7720d619e9c20697a8e3616a5e833aa4799755265d82092843e83a193fb
+110	file	Server 6.0/server/home_jxser/server1/script/global	cn/gamebank_proc.lua	cn	gamebank_proc.lua	lua	1	8667	754842fd1c8ee3a8805ffb43fe4cc2ba81129a7f365bd2800c07d9eea544fe88
+111	file	Server 6.0/server/home_jxser/server1/script/global	del_horse.lua		del_horse.lua	lua	1	0	e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+112	file	Server 6.0/server/home_jxser/server1/script/global	deletezizhuang_vn.lua		deletezizhuang_vn.lua	lua	1	1479	9fed1c90cccbc92bc2c02de28301a1a8bba79875a2fc59eb1bd2a0f5a2f5fffa
+113	file	Server 6.0/server/home_jxser/server1/script/global	dicegame.lua		dicegame.lua	lua	1	1298	b0fb1358767c289d50f9976e469eed9f6523f72e2d0fafb03235b9290f117b6f
+114	file	Server 6.0/server/home_jxser/server1/script/global	dlgnpc_list.lua		dlgnpc_list.lua	lua	1	3537	8d0e4b7f44ab403b0d674f516f3fda7a93acd5eac14f286b055197f2903b3d6e
+115	file	Server 6.0/server/home_jxser/server1/script/global	equip_system.lua		equip_system.lua	lua	1	2670	5e3296244881071a0ab3457819f5def00958b6f8a3ae6bd180a709951b12e39b
+116	file	Server 6.0/server/home_jxser/server1/script/global	equipenchase_help.lua		equipenchase_help.lua	lua	1	3891	57cccddcda7d771d3fe43f9be5159fcc23c7b9d86961f27aa96ac5c665a4f776
+117	file	Server 6.0/server/home_jxser/server1/script/global	extpointfunc.lua		extpointfunc.lua	lua	1	247	c077476b1a0c08ff6fabba69cfde0e56e5f99166a1b506cc26a8768f2346ae6b
+118	file	Server 6.0/server/home_jxser/server1/script/global	faeshi.lua		faeshi.lua	lua	1	7717	9800606d1d4452b97968a791786479885b67251a6dc95288f71a3c16ae28b14d
+119	file	Server 6.0/server/home_jxser/server1/script/global	fightnpc_list.lua		fightnpc_list.lua	lua	1	1995	f9e37663c37d56da3a299c5d72237ab9bdc2a52e3e6c4b0dfee1de1818fb640c
+120	file	Server 6.0/server/home_jxser/server1/script/global	findboss.lua		findboss.lua	lua	1	16128	bdc093359fb0d99bbb03806f1c1bc78910a78e4f76231ba28de5c71b88b745b3
+121	file	Server 6.0/server/home_jxser/server1/script/global	forbidmap.lua		forbidmap.lua	lua	1	2771	b3db498169b132e7bb30485201f1e12904b3c9bd4e80a2218b5c5291d2ceef89
+122	file	Server 6.0/server/home_jxser/server1/script/global	fuyuan.lua		fuyuan.lua	lua	1	6542	547a80405259c6f074621b4bda2c09a5e524d0d6133a3c234e5ba817c2505e2d
+123	file	Server 6.0/server/home_jxser/server1/script/global	general/doimaupk.lua	general	doimaupk.lua	lua	1	709	15c9c071e7e94876f39433f9d2fbb23079505b4026ae6ee1c04cb0a96d4b4ae1
+124	file	Server 6.0/server/home_jxser/server1/script/global	general/ghephhl.lua	general	ghephhl.lua	lua	1	3047	b0ff72c55048f548dcf151e81ddf44b2d37687cbe4f54e1aae74214b5095311e
+125	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/giaiketnhanvat.lua	general/hotrotanthu	giaiketnhanvat.lua	lua	1	327	146589fa09ec4e237811be0654c2c1d1bf77764a22723a540fa80e82dd0c5d20
+126	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/hotrolandau.lua	general/hotrotanthu	hotrolandau.lua	lua	1	903	ebce62b978e99c60304b2e638ca12d839f3ad0d9a5bb4818f906620ab9d38c84
+127	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/item/settumang.lua	general/hotrotanthu/item	settumang.lua	lua	1	3247	1cb7599a6b00a524d04ed62d68763ab0bed1565070ca4076e9d512fe834ccc1d
+128	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/item/tuinguhanhan.lua	general/hotrotanthu/item	tuinguhanhan.lua	lua	1	2689	3d2b82fa1dc4fd7d037ce5dc110026226e90f1e97fff775434637413bc0b796e
+129	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/item/tuiphiphong.lua	general/hotrotanthu/item	tuiphiphong.lua	lua	1	3281	2fbf06c293255664ebda0832a6a284e176bb82cbb690e8c9ffd065c9fe18437f
+130	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/main.lua	general/hotrotanthu	main.lua	lua	1	1698	c41214f85496e7a7c9c8d91cff92b57b8436c48d86cde0b9363118b765cf2594
+131	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/nhanskillhotro.lua	general/hotrotanthu	nhanskillhotro.lua	lua	1	3083	5ecdbf6c58d0e6f8f4b518a5bf1af49fd284571b3579ffa0c1df7b12e93efbd4
+132	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/phanthuonghotro.lua	general/hotrotanthu	phanthuonghotro.lua	lua	1	12866	ac67fb6b42a0e4d0a51d158f3decd80c07c7ad9268915f714b7a9823cd9da6b3
+133	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/set_tumang.lua	general/hotrotanthu	set_tumang.lua	lua	1	735	5587a998048ba20be35f7629e7e056ae7e80068945da48e993348dd73389597d
+134	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/tuimautanthu.lua	general/hotrotanthu	tuimautanthu.lua	lua	1	564	3df47fe4b332515d7f9a0e9e856d2532c7dc1c6e628dbdc37bff1f34e1c62d14
+135	file	Server 6.0/server/home_jxser/server1/script/global	general/hotrotanthu/vongsangtanthu.lua	general/hotrotanthu	vongsangtanthu.lua	lua	1	644	6c05af1a1f2417ce566e1e87c6966c42277cd1fb711b7ac85112b262b3c73f9e
+136	file	Server 6.0/server/home_jxser/server1/script/global	general/lenhbaitanthu.lua	general	lenhbaitanthu.lua	lua	1	27342	3442264b4ca28f64a0f889efe1bfc8bb79b6ebeaccfff905861b56487d42e5c8
+137	file	Server 6.0/server/home_jxser/server1/script/global	general/loginmessage.lua	general	loginmessage.lua	lua	1	1483	ad11730135c1796431b1215f0252522d2c069fd5e7896ef02a089c2960acb4fd
+138	file	Server 6.0/server/home_jxser/server1/script/global	general/morongruong.lua	general	morongruong.lua	lua	1	1845	2c36c1158cde4d16c651b26d8af08aac413725d96e0408306d74dffa15032a3e
+139	file	Server 6.0/server/home_jxser/server1/script/global	general/nguyenlieuevent12thang.lua	general	nguyenlieuevent12thang.lua	lua	1	22589	94c949b1af943c684eb99183753000ebc262864e418fa0e67ea6178109a8858a
+140	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/chungnhulebao.lua	general/thunghiem	chungnhulebao.lua	lua	1	7332	fce7e7e5d1698cdd7741562cf286d5de850a248bdaeed5b47ab04c4c1822aa20
+141	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/chusalebao.lua	general/thunghiem	chusalebao.lua	lua	1	4214	bc8344facc5c822c437d91aea5f1456cab6a915c891bb6474a7dad9f9060cb49
+142	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/dieukientaobanghoi.lua	general/thunghiem	dieukientaobanghoi.lua	lua	1	384	879468431bb9a157ff759433acf0fe14c513f889d56a71dc971120d1721c8e0e
+143	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/doiten.lua	general/thunghiem	doiten.lua	lua	1	1873	3395dd87b2cc8e3e385b0ebe452bc92cd09da28cbf452911c901e4feca7da015
+144	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/huyenthietlebao.lua	general/thunghiem	huyenthietlebao.lua	lua	1	4262	4c22beb1afaddf8a9f06449d8834961b1440a48eeea904944b9582445f2e999d
+145	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/khongtuoclebao.lua	general/thunghiem	khongtuoclebao.lua	lua	1	7343	21bfe4d16cac9f76fe92406a46263a817e8cd12596e993faec17a5ba58d0615d
+146	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/kynangmonphai.lua	general/thunghiem	kynangmonphai.lua	lua	1	3395	91f6a0d7ce87e37de0c5571b768d54e275a99ac0ca5edace41f4266786cdd1b1
+147	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/main.lua	general/thunghiem	main.lua	lua	1	2160	9d5dd1f79b2eb2e564f5e886a0362c0924a6393cbae7b8727bd9fd275149767a
+148	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/matnganlebao.lua	general/thunghiem	matnganlebao.lua	lua	1	4226	9bc286e41618fb4c3c66fc2e42e0fc0494869d38325440041ca72214984ff83f
+149	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/nguhanhan.lua	general/thunghiem	nguhanhan.lua	lua	1	1764	0a277355b2bbad5aab72561e27cf8fc89b07575c07865516c7fe8b2dcfaf02fe
+150	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/phiphong.lua	general/thunghiem	phiphong.lua	lua	1	2433	bce80f3835dd6dc3698f59e900fe353dbe11286fd230bf269ca2b7ddd5412c43
+151	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/phudunglebao.lua	general/thunghiem	phudunglebao.lua	lua	1	7308	c48bc116d4fd32579feebeb3fffcf352f47103a7f01bc63790b7479931a4768a
+152	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/point.lua	general/thunghiem	point.lua	lua	1	4000	d9a775169113af8a8d7cf930fe82bbc1f0c98e1437d78b045567971fcad13027
+153	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/taytuynhanh.lua	general/thunghiem	taytuynhanh.lua	lua	1	3057	b6086f5dbab4838b0bbd69287a43110315554ecc136331330b919755ef043855
+154	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/thucuoi.lua	general/thunghiem	thucuoi.lua	lua	1	4718	7cea7b94e87f6755b8ee5b94feaa826be05ba409a92febe42d083184902b75ee
+155	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangbihoangkim.lua	general/thunghiem	trangbihoangkim.lua	lua	1	5585	74752ef45a28795389e04a170bec376bc59d718cae4424afe64ec18b1784c009
+156	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangbihoangkim_caocap.lua	general/thunghiem	trangbihoangkim_caocap.lua	lua	1	19266	08e8f3253c5c84dc0f82d77c4232db37d738ada5abbcab791e006bdce0080b72
+157	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangbihoangkimmaxop.lua	general/thunghiem	trangbihoangkimmaxop.lua	lua	1	5049	ce208aab34f83ace4d1b91e306bda04ce8eed0ff607be0174872b00fb0cd8d45
+158	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangbihoangkimmaxopkhoa.lua	general/thunghiem	trangbihoangkimmaxopkhoa.lua	lua	1	5106	345f5ff19bd6e598a0968cad1d91cfbee567ca65475e6b2bb39e1c30bc1dcacd
+159	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangbitim.lua	general/thunghiem	trangbitim.lua	lua	1	6611	fef7743a785dfd7f14cc2958942ad6e22f0deeb6027cbc4d8fb16cfd27899d22
+160	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangbivukhihoangkimmaxop.lua	general/thunghiem	trangbivukhihoangkimmaxop.lua	lua	1	5125	fda1feac6b6908a0b4b1226b61b1e2d6a00c785fd2c85c26e176a5c63846e89e
+161	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangbixanh.lua	general/thunghiem	trangbixanh.lua	lua	1	320	4e17bef6dccbcfffff7faa8b35cad181e54be53baf697ae55c1474ac59b17ec6
+162	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/trangsuc.lua	general/thunghiem	trangsuc.lua	lua	1	1123	4916d8b6229efdb26b5e17febf08310d9d718e7a7646209c9526f1846bef2d03
+163	file	Server 6.0/server/home_jxser/server1/script/global	general/thunghiem/vatphamhotro.lua	general/thunghiem	vatphamhotro.lua	lua	1	1342	e375f6222b65f701992960c947bd42cb77eafaed6a75bb9cf65a245d2705fbf0
+164	file	Server 6.0/server/home_jxser/server1/script/global	general/vongsangchuyensinh.lua	general	vongsangchuyensinh.lua	lua	1	3165	bc1cc55326a23620195ee482c0b7a2a5b436b5b20aba8c82a594da0ca89ef456
+165	file	Server 6.0/server/home_jxser/server1/script/global	global_tiejiang.lua		global_tiejiang.lua	lua	1	5026	0b5cd226e757211b04d398387419173f490ecb68709b94d1b9ac4195ed3e5098
+166	file	Server 6.0/server/home_jxser/server1/script/global	global_zahuodian.lua		global_zahuodian.lua	lua	1	792	f1f339268ef4347e551a708ba689c980b2735f8268af7971b3674e776a54808e
+167	file	Server 6.0/server/home_jxser/server1/script/global	gm/gm_help.lua	gm	gm_help.lua	lua	1	3421	5578b8dee206c86b6af5679c45a62f6c3459ba7296c60ec7bf314033459c4c32
+168	file	Server 6.0/server/home_jxser/server1/script/global	gm/gm_lib.lua	gm	gm_lib.lua	lua	1	1278	2be32f6206d26b62c68f39d2b4008272ef650814e2fe43f317b8e0a719360e0e
+169	file	Server 6.0/server/home_jxser/server1/script/global	gm/gm_script.lua	gm	gm_script.lua	lua	1	102499	64e1e503e83fb4358641e0c96a74d245780a8b0f40fbbebb23298218f4ce7509
+170	file	Server 6.0/server/home_jxser/server1/script/global	gm/gmroleitem1.lua	gm	gmroleitem1.lua	lua	1	101343	df4dbcd3daf3b98de9ea6e1bd833072bc47dec1f0ed31b7bda27f52d8aa47d15
+171	file	Server 6.0/server/home_jxser/server1/script/global	gm/lenhbaiadmintestserver.lua	gm	lenhbaiadmintestserver.lua	lua	1	49002	a012413e3271ef79c30952e309ac572b8e44493b090ad15d1c67246f5c88a6ea
+172	file	Server 6.0/server/home_jxser/server1/script/global	gm/npc_dotim.lua	gm	npc_dotim.lua	lua	1	8161	724530ea68782607c078a5f2412796e5288eebaa76da0fa6c111bb937e5ffdea
+173	file	Server 6.0/server/home_jxser/server1/script/global	gm/npc_thunghiem.lua	gm	npc_thunghiem.lua	lua	1	56028	8088b653b16554f0ae3ec34222a81fd75a969e99df8962bfbf599172b9608ad5
+174	file	Server 6.0/server/home_jxser/server1/script/global	gm/npc_trangbi.lua	gm	npc_trangbi.lua	lua	1	4202	4aaefadc668c06ca8b2b007ff16bf1bfba1830f24e6e4533246ad229569c815d
+175	file	Server 6.0/server/home_jxser/server1/script/global	gm/quanlysukien.lua	gm	quanlysukien.lua	lua	1	1074	ac85d2258bf46b57b0d5ebc2ba9e0811961bc952e040a9106d80e038d5a5ea88
+176	file	Server 6.0/server/home_jxser/server1/script/global	head_qianzhuang.lua		head_qianzhuang.lua	lua	1	2010	ac00b3477a0bb4d10cf4d79f9e3a289d102adf0490d5bfacebc74b1574f66a9f
+177	file	Server 6.0/server/home_jxser/server1/script/global	itemhead.lua		itemhead.lua	lua	1	210	19ca3fd05d0acb88fae9c32ac60c8ac5d9bb784e34cb2b6b0be7a3fd9eb030ea
+178	file	Server 6.0/server/home_jxser/server1/script/global	itemset.lua		itemset.lua	lua	1	78688	5fd9fda6ea81c1bd25cb037d46e5f694a5a21ba95cc7ca63ba7af71fd30762f5
+179	file	Server 6.0/server/home_jxser/server1/script/global	jingli.lua		jingli.lua	lua	1	16082	3ec30e9f2c436c840ea248aa6a412511f4e12b34e1f21f139dc9b412ff348e9e
+180	file	Server 6.0/server/home_jxser/server1/script/global	journeyer_officer_festival2006.lua		journeyer_officer_festival2006.lua	lua	1	6896	bae67cbacc832766eda743a7f035d9e614fdbbd78fc46ee3b0791747808864aa
+181	file	Server 6.0/server/home_jxser/server1/script/global	judgeoffline.lua		judgeoffline.lua	lua	1	14947	454fdec211998068c0949eacdbb78d99317e38530b98f37cfd888a2d228ed2e0
+182	file	Server 6.0/server/home_jxser/server1/script/global	judgeoffline_.lua		judgeoffline_.lua	lua	1	9874	6b772095f9afed40816391e65be9a1924391e80849f6cff85583b7436e37ca96
+183	file	Server 6.0/server/home_jxser/server1/script/global	judgeoffline_limit.lua		judgeoffline_limit.lua	lua	1	9984	c32a7013705ee527ae142537cd622487a552b016b9058f98b95a982458dd70fa
+184	file	Server 6.0/server/home_jxser/server1/script/global	judgeoffline_special.lua		judgeoffline_special.lua	lua	1	1789	23633bbb12aec5ae4bf417ee0c924aa878cf90422a808e6c516e24bdd3ee0165
+185	file	Server 6.0/server/home_jxser/server1/script/global	limitaccount_ip.lua		limitaccount_ip.lua	lua	1	3110	39ed5ee2af808e4488c0f96b4744134beff3207c3901d39537b0dcd8200b596d
+186	file	Server 6.0/server/home_jxser/server1/script/global	localnews.lua		localnews.lua	lua	1	2400	f7e8c90c262d1ed1666064dfd21cba5d4eeb7509f1b6eac4d51a94253d70eae5
+187	file	Server 6.0/server/home_jxser/server1/script/global	login.lua		login.lua	lua	1	7338	dd4acedeadf7fc44b82a66aa2b4ee1cf42cd6536f82ea33cb1cbfcf111f87051
+188	file	Server 6.0/server/home_jxser/server1/script/global	login_head.lua		login_head.lua	lua	1	1086	6c4ad663357aea236a328a97b4b260caa2a34fdcfc126303a4541c2746e74037
+189	file	Server 6.0/server/home_jxser/server1/script/global	login_hint.lua		login_hint.lua	lua	1	8689	5aa765f70de5820918643d36b08e30d895af820f6d04053c31cf20ba8abf1f26
+190	file	Server 6.0/server/home_jxser/server1/script/global	login_old.lua		login_old.lua	lua	1	3355	536e0495794302c24ca7636decc3347240e8594de9f07cabc307dfa2ff8d87bc
+191	file	Server 6.0/server/home_jxser/server1/script/global	logout.lua		logout.lua	lua	1	1347	8a838fb07c544e4b3b7d1c716c61758f0a030b60c82ae925403d3e1be295209e
+192	file	Server 6.0/server/home_jxser/server1/script/global	logout_head.lua		logout_head.lua	lua	1	1194	548577d8becbc8e55a635ed53d77b6e574f5d9f2c020878faf7f881369a87b0c
+193	file	Server 6.0/server/home_jxser/server1/script/global	lottery.lua		lottery.lua	lua	1	2831	2dd350d33a1dfdda13a9e545b2ee29017c1bfcdb9e881cc9dae5741d5555b46d
+194	file	Server 6.0/server/home_jxser/server1/script/global	lottery_gold.lua		lottery_gold.lua	lua	1	32899	43df9316687252f2c77a067a11d32fbae71955ace7b714186984d9311a7ed96a
+195	file	Server 6.0/server/home_jxser/server1/script/global	lottery_payfor.lua		lottery_payfor.lua	lua	1	9132	700227a8bf12840c35dedccc79be0f70ccf4dd691c8a43227e58055db5ce4c2c
+196	file	Server 6.0/server/home_jxser/server1/script/global	map_helper.lua		map_helper.lua	lua	1	17186	f12b0ce2e6160111d8ae65782c8c2b953881d86d2d1c050544cce19ed0901cb1
+197	file	Server 6.0/server/home_jxser/server1/script/global	mask_ani.lua		mask_ani.lua	lua	1	4441	3f96fb2f7c6618cbb904811f0355a430d7ff7fa3d3c445122a6da2cfa1fe9d52
+198	file	Server 6.0/server/home_jxser/server1/script/global	mel/annie.lua	mel	annie.lua	lua	1	4203	3f6084d5831ccc2edb4e5b9bff7151461a9b41b6eb8639433d6c62f7d8e51730
+199	file	Server 6.0/server/home_jxser/server1/script/global	mel/antrangsuchoangkim.lua	mel	antrangsuchoangkim.lua	lua	1	9137	a2456b6fbdc89b3e7744dac90470e87ac31c91c8044f4c52af6cf909c452c270
+200	file	Server 6.0/server/home_jxser/server1/script/global	mel/autoexec.lua	mel	autoexec.lua	lua	1	33813	de9c9c4c470a54e8d2da63a0513d5a326862dbbc6bb6269066959b8de6550647
+201	file	Server 6.0/server/home_jxser/server1/script/global	mel/autoexec_mel.lua	mel	autoexec_mel.lua	lua	1	48805	913e46733af3692748f8a5be00ace2779a94ed29a705bae66082311c21c5a1ad
+202	file	Server 6.0/server/home_jxser/server1/script/global	mel/baivip.lua	mel	baivip.lua	lua	1	5960	f68fb08ff1de3fa831d9a37ec0fb254462ec1248983662f3dbba9e071ed95391
+203	file	Server 6.0/server/home_jxser/server1/script/global	mel/doihkmprac.lua	mel	doihkmprac.lua	lua	1	8093	6c86ea3808f71c0f935047878c9d06e3decbff1af27dae9fab90cd1466f961b4
+204	file	Server 6.0/server/home_jxser/server1/script/global	mel/doitienvan.lua	mel	doitienvan.lua	lua	1	3360	d58726cb6897342579bed66c309a5cd83df11aad7aabb9d90cd9d2c4465ddd45
+205	file	Server 6.0/server/home_jxser/server1/script/global	mel/donganh.lua	mel	donganh.lua	lua	1	3097	2558d8af2baaa9742aad0378fbad65cee176b82605ef3e15796d0f5dfb075492
+206	file	Server 6.0/server/home_jxser/server1/script/global	mel/feature/areatrain/head.lua	mel/feature/areatrain	head.lua	lua	1	11625	be4d41939ce47bac8a5f895b65758301515fa9b676b649ef724392d250d297dd
+207	file	Server 6.0/server/home_jxser/server1/script/global	mel/feature/areatrain/join.lua	mel/feature/areatrain	join.lua	lua	1	4325	e39b06c46c38b0970bd7c3da6668c7131d6e7c6da154477da1ce16c24ab556a3
+208	file	Server 6.0/server/home_jxser/server1/script/global	mel/feature/areatrain/smalltimer.lua	mel/feature/areatrain	smalltimer.lua	lua	1	277	22556dd0b7cc36bf7b3bc774b5211b9beed9bd668348c5b7d9940a89190e244c
+209	file	Server 6.0/server/home_jxser/server1/script/global	mel/feature/shenxingfu.lua	mel/feature	shenxingfu.lua	lua	1	14479	7a86bb18a9462f28ef398181fcbca1d42bb64b589b5939d46ec887c046551dc5
+210	file	Server 6.0/server/home_jxser/server1/script/global	mel/feature/taobaitrain.lua	mel/feature	taobaitrain.lua	lua	1	5009	7a01c3a4e485e3c7f0eb653e49c6dcb9382f3168f019d1c8c9b1b371a9cb634a
+211	file	Server 6.0/server/home_jxser/server1/script/global	mel/feature/taskdaily/head.lua	mel/feature/taskdaily	head.lua	lua	1	3335	2d0ee76b6653c1fa0dfbbd5a9d15a2805e99494d333e369fa56b1916d15b4846
+212	file	Server 6.0/server/home_jxser/server1/script/global	mel/feature/tuihanhtrang1.lua	mel/feature	tuihanhtrang1.lua	lua	1	2001	b01604ea5896409eb98fa8e81d95734c37768156045d92f928a4f946216216e4
+213	file	Server 6.0/server/home_jxser/server1/script/global	mel/lenhbaidatau.lua	mel	lenhbaidatau.lua	lua	1	1678	14a08711ac86d4aa55f0eb068156c361dcb2fbdaa73b8986483b8b614822b381
+214	file	Server 6.0/server/home_jxser/server1/script/global	mel/melbosshk.lua	mel	melbosshk.lua	lua	1	4638	32081088d8a6469b98c9258e226a523a94d5dda7de9e8d1edcf1505dafd05356
+215	file	Server 6.0/server/home_jxser/server1/script/global	mel/mellebao/dongsat.lua	mel/mellebao	dongsat.lua	lua	1	648	cbec41a3311d246987f56fe0770f93e23796798806e4380adca1fa05c4d53496
+216	file	Server 6.0/server/home_jxser/server1/script/global	mel/mellebao/honganh.lua	mel/mellebao	honganh.lua	lua	1	619	9e11d968e1f765703520f09767d206341fb7209606444e8b24de160d203e7923
+217	file	Server 6.0/server/home_jxser/server1/script/global	mel/mellebao/kimphong.lua	mel/mellebao	kimphong.lua	lua	1	1018	6cf18b30f901c27b61fdcb9f271e6c714e90a4f1a5fb71bc96c78e3e98ef2e81
+218	file	Server 6.0/server/home_jxser/server1/script/global	mel/mission/tongkim.lua	mel/mission	tongkim.lua	lua	1	1213	34af60520d345e68eb4d6d6f82a80e7ac2fedea7dd65d4b7bf30b59f9270cc58
+219	file	Server 6.0/server/home_jxser/server1/script/global	mel/nangcapan.lua	mel	nangcapan.lua	lua	1	13329	f4d68a2c8b089cd55880294da3400aac1cc90b999dc529f2e42e9dd48073497a
+220	file	Server 6.0/server/home_jxser/server1/script/global	mel/nangcapphiphong.lua	mel	nangcapphiphong.lua	lua	1	12501	ab9d46ab40dd50ee8a3dfe82ee5ae006b0a13f714007f6350feaae9497ee9f8a
+221	file	Server 6.0/server/home_jxser/server1/script/global	mel/nangcaptrangsuc.lua	mel	nangcaptrangsuc.lua	lua	1	12500	0e8ec44528eee30f58d3111939584da9c93555e348cc7b5895f1f5c11f9eddf3
+222	file	Server 6.0/server/home_jxser/server1/script/global	mel/nguahoangkim.lua	mel	nguahoangkim.lua	lua	1	2805	3da4b9e371177942abbfe2f231c0f29e5691053469f1da7e24aae8278f5b0f8f
+223	file	Server 6.0/server/home_jxser/server1/script/global	mel/phiphonghoangkim.lua	mel	phiphonghoangkim.lua	lua	1	2421	48738bc9254c800f6e0d6de26a69b16470b02c86f29f4c582757b7c5d472fb97
+224	file	Server 6.0/server/home_jxser/server1/script/global	mel/taphoavozer.lua	mel	taphoavozer.lua	lua	1	7336	65f724ecfae2cec603d16b4ffd5b4e5d49c81b37c6f1838ee806046b9d75fad7
+225	file	Server 6.0/server/home_jxser/server1/script/global	mel/testserver.lua	mel	testserver.lua	lua	1	7194	aee9e4c27a7488dc826708428d46b22df076567795e9fd1e8f3b6ec171470e28
+226	file	Server 6.0/server/home_jxser/server1/script/global	mel/thanbidochi.lua	mel	thanbidochi.lua	lua	1	1691	b239f4d6f2b6fd2a40ce5a9d0bd1a75fb58f9b60c402b852c6a6bd215097e2cb
+227	file	Server 6.0/server/home_jxser/server1/script/global	mel/tinsukimbailebao.lua	mel	tinsukimbailebao.lua	lua	1	425	013805ada5751a39bee3bc79690222c639b8a5037058d2daaf6ea539ba98df92
+228	file	Server 6.0/server/home_jxser/server1/script/global	mel/ttlx50.lua	mel	ttlx50.lua	lua	1	297	285025b7d2723c30bbed4e77f4fcb49859f4f27f9c567b2380a136b055ab7ae3
+229	file	Server 6.0/server/home_jxser/server1/script/global	mel/tuimauvozer.lua	mel	tuimauvozer.lua	lua	1	814	d9f95b81146c6cb32ad5456d38f926fe05e767823397c31122b663931d96f764
+230	file	Server 6.0/server/home_jxser/server1/script/global	mel/tuiyte.lua	mel	tuiyte.lua	lua	1	404	4229891950d476baca1f041e591490517d2396452de48f13a07f27d224e42a57
+231	file	Server 6.0/server/home_jxser/server1/script/global	mel/tuyetdinhgioichi.lua	mel	tuyetdinhgioichi.lua	lua	1	2878	16446ba628bd2c86b580808905692fb3ae3a50dbb273db48fb22b14e1e06d4f1
+232	file	Server 6.0/server/home_jxser/server1/script/global	mel/vinhdieu.lua	mel	vinhdieu.lua	lua	1	3122	98c8a74a680e4185f4144bcc1c373256d7b8351cf86915aa9c14af7320571b86
+233	file	Server 6.0/server/home_jxser/server1/script/global	mel/vozer.lua	mel	vozer.lua	lua	1	15963	3ba17b379580573cf42f737efa5e8b72ac182b81d97b52058d49e76384aded78
+234	file	Server 6.0/server/home_jxser/server1/script/global	namcung/skillsgm/hidebody.lua	namcung/skillsgm	hidebody.lua	lua	1	640	0481834370e1db320c6a4d67682998a6ddeba5c47cbda6b7a508ae0ee7f6202b
+235	file	Server 6.0/server/home_jxser/server1/script/global	newworld/citydefence_newworld.lua	newworld	citydefence_newworld.lua	lua	1	363	824d6dc61b0928d90ec2e04aadea410b3a193755a5cddda8a7381afae36d6b20
+236	file	Server 6.0/server/home_jxser/server1/script/global	newworld/donewworldparam.lua	newworld	donewworldparam.lua	lua	1	864	01e446d29843ffefe8a7e09ac895ab575270d19b6f49add448eda10471467527
+237	file	Server 6.0/server/home_jxser/server1/script/global	newworld/zhongqiu_newworld.lua	newworld	zhongqiu_newworld.lua	lua	1	405	dcf0f1f6e8862f3ef76551f5aa8f7c02f7bc76a8e39987a7d640cfa4d1e05319
+238	file	Server 6.0/server/home_jxser/server1/script/global	npc/chuanfu.lua	npc	chuanfu.lua	lua	1	587	7ff20ceaca5ab6f78099ab87973dbade760321288a3e84cb56f2d6b708a4ff85
+239	file	Server 6.0/server/home_jxser/server1/script/global	npc/event.lua	npc	event.lua	lua	1	1072	c906bdbc3322a3d1e1307ca4a16118130cee95ea4dfca4e8210c4c69370333c4
+240	file	Server 6.0/server/home_jxser/server1/script/global	npc/huoke.lua	npc	huoke.lua	lua	1	2777	5e6dece954d84808ddca4c471051834e003348b03a18937f91df89931cbb4607
+241	file	Server 6.0/server/home_jxser/server1/script/global	npc/quanlybanghoi.lua	npc	quanlybanghoi.lua	lua	1	4679	14a4fd769aa928641aa160d14b8040282e722ddeaefd2521588e5cd7802f6baa
+242	file	Server 6.0/server/home_jxser/server1/script/global	npc/yanhua.lua	npc	yanhua.lua	lua	1	1448	d3b1dabefa0c73bba0b866945a38063296252bcfedd9502feeed267093151f04
+243	file	Server 6.0/server/home_jxser/server1/script/global	npc/yaodian.lua	npc	yaodian.lua	lua	1	303	158c66d6ca1e96c1164aa7ce586e2ffde4c26fe5d25d968c6bcfd63e54427080
+244	file	Server 6.0/server/home_jxser/server1/script/global	offline_login.lua		offline_login.lua	lua	1	325	cfaf782185ea1afe959d14c09bd95aee843b665a6d44c8c4b37fd545a0b5db9d
+245	file	Server 6.0/server/home_jxser/server1/script/global	offlineaward.lua		offlineaward.lua	lua	1	10533	fffcad381cb2c5b818c4e3c7c59bd68abc28b301266bed2460bda5acc95c4686
+246	file	Server 6.0/server/home_jxser/server1/script/global	offlinelive.lua		offlinelive.lua	lua	1	10985	d162000dce70ca1736f30debd44d79495241a37a14fb6e062af89ad57d96e706
+247	file	Server 6.0/server/home_jxser/server1/script/global	olympic_saler.lua		olympic_saler.lua	lua	1	1960	46c67c57201b6274272286c31c1237a3cf5da12421d88951d63038c95ac95603
+248	file	Server 6.0/server/home_jxser/server1/script/global	olympics_award.lua		olympics_award.lua	lua	1	2637	be394e0d7da3d976d18bd34aa608f0042433d5de3a40ee1ceb7fd3b9b06b9159
+249	file	Server 6.0/server/home_jxser/server1/script/global	payment/coin.lua	payment	coin.lua	lua	1	5600	b219a2ab98ebc4f0be453cc8303969974cfcd651cbc14d8bc0928fbcffdd9a51
+250	file	Server 6.0/server/home_jxser/server1/script/global	payment/knb.lua	payment	knb.lua	lua	1	5157	6d25e9c3726e9f20b0221df152c041ba11a32d0951865e21a6b86cf7f0cc3201
+251	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/antrangsuchoangkim.lua	pgaming	antrangsuchoangkim.lua	lua	1	8204	40abbe3c3b85fca9cbf1fb01e18b6cd93e758a87f8f77e4bf3f0fcab530a72ef
+252	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/baotriserver.lua	pgaming	baotriserver.lua	lua	1	1162	3fb08d0c26ccf948e12a4b5fd71813bea02495337a5845a6c609d8569cd59f0d
+253	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/addnpccauca.lua	pgaming/cauca	addnpccauca.lua	lua	1	1263	f3d5d0bd84280c471a509df27fb441a48408aec7b7923c85935d95faa4ca5d90
+254	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/cancau.lua	pgaming/cauca	cancau.lua	lua	1	5807	20a41310c8e6cb9fe1055665dd7e7f504a59d2f934f857467f7d0181c72f82b2
+255	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/giundat.lua	pgaming/cauca	giundat.lua	lua	1	1545	9d02f6d33f8e1c792e745d3e200492f58b337a7b5ea2314b6dc970333082d127
+256	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/head.lua	pgaming/cauca	head.lua	lua	1	7166	b3c5befd36d7dbe642952d6c59aab144b6dcd8064fca8ad2d37a174f15dc4cd2
+257	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/item.lua	pgaming/cauca	item.lua	lua	1	2737	a22ce1da84868cf99cb356750331b9a42fa47562923273d4c75739b57629349d
+258	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/lib/inc.lua	pgaming/cauca/lib	inc.lua	lua	1	10673	be5d56a0a6976ed0f354271c308681fa71dbdc6bc404fc56f6977864d87e57ab
+259	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/luoidanhca.lua	pgaming/cauca	luoidanhca.lua	lua	1	6367	a5e4ac0b6aa0bdb0dc493e5235b5cd8088b2548d7a4e7f2c4603e6a67d763ea8
+260	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong1.lua	pgaming/cauca/map	cong1.lua	lua	1	268	2fc301f0985b926674cdf94da242e3a55dc3d594876b098eea7b877351ebb34d
+261	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong10.lua	pgaming/cauca/map	cong10.lua	lua	1	266	b0739accb673b852d3b6a0c4b4579b9cfc14ad363b8ad809179671a39a3a6a72
+262	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong2.lua	pgaming/cauca/map	cong2.lua	lua	1	268	e4e82aae7558c9011042283a265ad65bc114906dacf19ce6d4b9923559d0b781
+263	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong3.lua	pgaming/cauca/map	cong3.lua	lua	1	267	2ae24e107c74405cc1c92aeee1c15fb26d4cffbb5568a2685432a65d26bfca39
+264	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong4.lua	pgaming/cauca/map	cong4.lua	lua	1	267	db6ecb58a90ddbe07904e2fbb40b57a60352c4173a4f7313c5305a4dc2a523e6
+265	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong5.lua	pgaming/cauca/map	cong5.lua	lua	1	267	c14e55864701210382da88d46d8aaf56ba654ea31bf7233fbe65595aab7c24c3
+266	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong6.lua	pgaming/cauca/map	cong6.lua	lua	1	267	9834136b7fe833ec289178f478a1212e459b62ed1823716e7cf9128d8d430ef2
+267	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong7.lua	pgaming/cauca/map	cong7.lua	lua	1	267	3b1d0898b08f74c25c91e1345a5c656129072d9263bfc38d20f5ab3664e6b4a0
+268	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong8.lua	pgaming/cauca/map	cong8.lua	lua	1	267	50c591d954ee7e64449667db3d65427d3bd827605744b7d0e704f055415d7ade
+269	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/cong9.lua	pgaming/cauca/map	cong9.lua	lua	1	267	7548480d0a5377b523470f1a861c8e4e08d7fc2b55be5b5f4e6d7b1aed1fcb6c
+270	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/map/mapcauca.lua	pgaming/cauca/map	mapcauca.lua	lua	1	7664	f3e83719a5b5e5b4dfb3fe0c20601dbed43b97eab7d0326272d733c0055ff676
+271	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/npc/canthulaonhan.lua	pgaming/cauca/npc	canthulaonhan.lua	lua	1	3499	240d25c6b3df9ce0378ecedb1054514b05ed1e6192da5957324702d4cdcf5e72
+272	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/npc/hieuthuoc.lua	pgaming/cauca/npc	hieuthuoc.lua	lua	1	718	d1fd097532238f96470acafed3deeb41ca00b6f2a4f65f35c860743883f2272d
+273	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/npc/ruongchuado1.lua	pgaming/cauca/npc	ruongchuado1.lua	lua	1	51	8c97df16abb44588d68cb93506632ce03a80e572476f3d795dc74d8dcc96d249
+274	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/npc/ruongchuado2.lua	pgaming/cauca/npc	ruongchuado2.lua	lua	1	51	0218caa3fd5187d8c4b058abf65bc4bfe8e83ccda885b3112a632e6e5bd53caf
+275	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cauca/npc/xaphu.lua	pgaming/cauca/npc	xaphu.lua	lua	1	358	f1723c7cf4d698c9016091ecacb9d114776c62621d3313d32c3290691bcc4a77
+276	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/baucua.lua	pgaming/cobac/baucua	baucua.lua	lua	1	22912	14953bd0799e7ecaaf9e3a51c4fc4c2be9099456b42d81356626247d67f0e6d7
+277	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_01_03_2026.log	pgaming/cobac/baucua/logs	baucua_01_03_2026.log	log	0	1944	f5f92142efcee413d4a9e489f900ab79755351bcab621daab6e409dc7b1fc1e2
+278	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_02_03_2026.log	pgaming/cobac/baucua/logs	baucua_02_03_2026.log	log	0	5112	2fa659f12bee616df380dbec3211d4664a89f594a28eb1f408eaf37641fbecbb
+279	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_03_03_2026.log	pgaming/cobac/baucua/logs	baucua_03_03_2026.log	log	0	2088	0b2c7f0e80fdf3a6af3479755fff6f2f087186e0bd2e1171d7df82b40bebc865
+280	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_04_03_2026.log	pgaming/cobac/baucua/logs	baucua_04_03_2026.log	log	0	1296	82886dbf91f0b600ecb76c03cd2fac6319798eef282869e86013f3071263e7fb
+281	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_05_02_2026.log	pgaming/cobac/baucua/logs	baucua_05_02_2026.log	log	0	10152	cb97fd027552b51cb177f78f69bb56ff8b2a8420dc7d662c1dfb821bfa5182b6
+282	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_05_03_2026.log	pgaming/cobac/baucua/logs	baucua_05_03_2026.log	log	0	1800	bae694da7ad0b2a2f160dbb32f672fbcb9decef47704d51a7ef4fa86cf325380
+283	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_05_06_2022.log	pgaming/cobac/baucua/logs	baucua_05_06_2022.log	log	0	72	28752fcd775526b33e3749a4720d584fd669081c013f95d8dbe282e5598eb1f7
+284	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_06_02_2026.log	pgaming/cobac/baucua/logs	baucua_06_02_2026.log	log	0	4176	3f8e8a71cae9ce775bde93c25e626505c922e82520adeb2fe69e8848d7c182a1
+285	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_06_03_2026.log	pgaming/cobac/baucua/logs	baucua_06_03_2026.log	log	0	936	e4ed1e55b1c6a6d80f43108d7545097771ea49c1a84082c3aa097c488346fb7b
+286	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_07_02_2026.log	pgaming/cobac/baucua/logs	baucua_07_02_2026.log	log	0	432	530a954e6c8715238fdfa4940b7c599a0ac5fa9b8fc8aea18f16fa91df4bd4ea
+287	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_08_02_2026.log	pgaming/cobac/baucua/logs	baucua_08_02_2026.log	log	0	3384	ef9d0e64c64c36ac246ffe6370ef479963d834627d375bcd65cc286738215b75
+288	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_08_03_2026.log	pgaming/cobac/baucua/logs	baucua_08_03_2026.log	log	0	1080	acec7ee2332b8f68a58f451f76be9b51249d41eaff82a8cc81e6244a6a7a64e7
+289	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_08_09_2025.log	pgaming/cobac/baucua/logs	baucua_08_09_2025.log	log	0	925	9cf7772a1b79f4fb85cf9996af78d3dc8b8ee718129160f73f3bb4a3edcfd9da
+290	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_09_02_2026.log	pgaming/cobac/baucua/logs	baucua_09_02_2026.log	log	0	936	ed521a1c3adf23b88eb5c5ba38f02d5d07f7e722514f7e73f9ca0095ce53a1e1
+291	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_09_03_2026.log	pgaming/cobac/baucua/logs	baucua_09_03_2026.log	log	0	1872	8dd4b488f056859fe0d45f0847935971a362a1feeb10c827abf39ba720bd15f4
+292	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_10_03_2026.log	pgaming/cobac/baucua/logs	baucua_10_03_2026.log	log	0	1008	f5ab7b87ccd315c3ed6e13f31216377fd6997c9e3702f3c32853c4562c94162b
+293	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_11_02_2026.log	pgaming/cobac/baucua/logs	baucua_11_02_2026.log	log	0	5976	5d01a83a220b4bddf26f2ec86f377387005be07b76c968a10af66de6c248368c
+294	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_11_03_2022.log	pgaming/cobac/baucua/logs	baucua_11_03_2022.log	log	0	200	38ac110ed71c7018b0e26c7a8beb1d570073300e6cd843f948777808a6f8dcec
+295	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_11_03_2026.log	pgaming/cobac/baucua/logs	baucua_11_03_2026.log	log	0	8352	4cd10f2d93b34de82a07a49e0860ea2c10c63079afd0d1968308efc544dfa662
+296	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_12_03_2026.log	pgaming/cobac/baucua/logs	baucua_12_03_2026.log	log	0	4392	b09d64ebfb80c9f509bf0370f0bfedcc7650fe5b5ce09e597a8c63d3341154f2
+297	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_13_03_2026.log	pgaming/cobac/baucua/logs	baucua_13_03_2026.log	log	0	5688	b9a1b5f9b47db62914bc3ddccef6c7295ffe5aeb92ddb192251b4adbdb025afb
+298	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_14_03_2026.log	pgaming/cobac/baucua/logs	baucua_14_03_2026.log	log	0	3024	fad7e934484d0edf507b01b1f656cd1eab968a93a0cda1ddd4bdea1868538104
+299	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_15_03_2026.log	pgaming/cobac/baucua/logs	baucua_15_03_2026.log	log	0	2376	00e7e70cef3833c3b7ab147db8551ec41a70bab461cdb880b5be23e21d66b3c0
+300	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_18_01_2026.log	pgaming/cobac/baucua/logs	baucua_18_01_2026.log	log	0	2350	7d049e38545012d61460beb31a6750238f1ed8e5c9bef62520d3ed20fe9b5fbc
+301	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_19_01_2026.log	pgaming/cobac/baucua/logs	baucua_19_01_2026.log	log	0	1872	94902bf1d2eaf1d8fef7d5d100d6417fe37cccedf21a10bcadcc0824f4a755b9
+302	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_20_01_2026.log	pgaming/cobac/baucua/logs	baucua_20_01_2026.log	log	0	864	df79d83b8c75ab0ced1c069f91324f953ba6d309eb9a80ee318f9837cfdb94ac
+303	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_20_11_2025.log	pgaming/cobac/baucua/logs	baucua_20_11_2025.log	log	0	1224	8c18403c9c739ee896ca9581193f97986e0e80ed9e22d57225ce469de25e3eb3
+304	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_22_01_2026.log	pgaming/cobac/baucua/logs	baucua_22_01_2026.log	log	0	3744	847bb901023551d3a6929e3ef176e3be7cb5d87f689cb80f75fb4b1199de926c
+305	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_22_03_2026.log	pgaming/cobac/baucua/logs	baucua_22_03_2026.log	log	0	1944	f9b836fc35147763fa52fb9ab70853c4b397975e7ca8f079fbfe3ba4ae3e1809
+306	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_22_11_2025.log	pgaming/cobac/baucua/logs	baucua_22_11_2025.log	log	0	144	c75ba34203492ae9ba563fda47f4029777973d8268c082cf5adca3ccfc9a63c9
+307	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_23_02_2026.log	pgaming/cobac/baucua/logs	baucua_23_02_2026.log	log	0	2736	d5bcfc9bddd6f3b0364bee61845f1a19833cb736b9d88e0d95ba40dc48dc1438
+308	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_23_03_2026.log	pgaming/cobac/baucua/logs	baucua_23_03_2026.log	log	0	2736	f8d7b287786b4009e8cea2302311fd5f77856dae37de3939708ab66e819269aa
+309	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_24_01_2026.log	pgaming/cobac/baucua/logs	baucua_24_01_2026.log	log	0	2664	55b79095bfeb8e197200a8059dca8675628f77e936008934a7fd9fe9f8574613
+310	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_24_02_2026.log	pgaming/cobac/baucua/logs	baucua_24_02_2026.log	log	0	2088	6b11aa0bbaf3a861c934a8983582bbcd883e20354abbf887b36201e8f448d852
+311	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_24_03_2026.log	pgaming/cobac/baucua/logs	baucua_24_03_2026.log	log	0	3024	f01b8e03c44866f020bca1512d8bcd343c72f2a51c692a16991e4985fd22fd57
+312	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_24_11_2025.log	pgaming/cobac/baucua/logs	baucua_24_11_2025.log	log	0	2952	f01dab7f5d8b3dba61fed08853012448c4278cf6e1364093ac583cd53312def7
+313	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_25_01_2026.log	pgaming/cobac/baucua/logs	baucua_25_01_2026.log	log	0	2664	0e4328c3e6c8a15bbfde522a4d9c636b01eac79c36326b4ff6c6feb59e199e01
+314	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_25_02_2026.log	pgaming/cobac/baucua/logs	baucua_25_02_2026.log	log	0	3528	392afc869864dab8a46281c71fceea11911f672787f6472b516f814dcd8eb644
+315	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_25_03_2026.log	pgaming/cobac/baucua/logs	baucua_25_03_2026.log	log	0	7056	72e180653e049eaae7543f70aa643f42c55c601d78ea18e70676aae0fe4547c0
+316	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_26_01_2026.log	pgaming/cobac/baucua/logs	baucua_26_01_2026.log	log	0	2376	569a15cd31ad0f5489ff55bb1370484ed74462a2929a9d8697a921f80ad62daf
+317	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_26_02_2026.log	pgaming/cobac/baucua/logs	baucua_26_02_2026.log	log	0	3096	3325f6f7f423ab7d5e4ab3c2828407cafe0e6722b3044e534b013e8a2c92c41c
+318	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_26_11_2025.log	pgaming/cobac/baucua/logs	baucua_26_11_2025.log	log	0	495	659815251146e7e45948c271614dec2b57dd46f033927f9080fd6e614e1394ed
+319	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_27_01_2026.log	pgaming/cobac/baucua/logs	baucua_27_01_2026.log	log	0	5472	118e1dbb419540255c9ee59c4c5fdd32cce2de4607b1ccf14fbbb0c7bf0612de
+320	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_27_02_2026.log	pgaming/cobac/baucua/logs	baucua_27_02_2026.log	log	0	360	73d345617c1b55a10c1e074e75109efd502b3e30e4a7c27584891962fedba5b9
+321	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_28_01_2026.log	pgaming/cobac/baucua/logs	baucua_28_01_2026.log	log	0	4680	df77aa3779e557693eb43f5621b25c0b7a64e4fa29831b4ee287b99ae837739f
+322	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_28_02_2026.log	pgaming/cobac/baucua/logs	baucua_28_02_2026.log	log	0	3384	17629607eb08e911d23b99440c4e5e63442d25e806ef025f016749ec186aa013
+323	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_28_03_2026.log	pgaming/cobac/baucua/logs	baucua_28_03_2026.log	log	0	1368	fa323987299a94e2e6874b9bc9238c24cbd42d7ce25bb4966becde20c90f9ffd
+324	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_28_10_2025.log	pgaming/cobac/baucua/logs	baucua_28_10_2025.log	log	0	1152	5cb76b072544f432c6efad844d13f3d9974ca771bdf182c6109ac14e55cfe911
+325	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_29_01_2026.log	pgaming/cobac/baucua/logs	baucua_29_01_2026.log	log	0	1944	df08e2235d2eb0b12127fa315ad4a50b04abbb7d4f9e292ff44aa02107a9b619
+326	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_29_03_2026.log	pgaming/cobac/baucua/logs	baucua_29_03_2026.log	log	0	1533	17f10f490aec71e578591a3628935265579c1edda8cbc13b7771adcc68d654aa
+327	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_30_01_2026.log	pgaming/cobac/baucua/logs	baucua_30_01_2026.log	log	0	9000	9726088a25d54573573e28029437c3ecb077b5241f5559e00e7569f6dc923b35
+328	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/cobac/baucua/logs/baucua_31_01_2026.log	pgaming/cobac/baucua/logs	baucua_31_01_2026.log	log	0	26352	f71721f379a51472068feea496a179f6f1292336097a6516dcce0baec8721681
+329	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/configserver/configall.lua	pgaming/configserver	configall.lua	lua	1	10950	3d51fc80fb69d083031bdc6a1a72d24304106008a3ed64c2f79cd3abe63737ba
+330	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/configserver/phanthuongeventcacthang.lua	pgaming/configserver	phanthuongeventcacthang.lua	lua	1	32266	ee330c589d669d6c86c83bfd35194b87730e460312f2a01e777f6faf52ae1cf9
+331	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/configserver/phanthuonghoatdong.lua	pgaming/configserver	phanthuonghoatdong.lua	lua	1	24147	b23b67e8eb6a6f97936f6bbab79b70ac6e08ce54d375b2de6108fed02431738a
+332	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/configserver/taskserver.lua	pgaming/configserver	taskserver.lua	lua	1	7842	f5558c49071796a9d651b9cfbe72f944115f9885737eea6e00f3f840d197f1f8
+333	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/doivukhixanh/doivukhixanh.lua	pgaming/doivukhixanh	doivukhixanh.lua	lua	1	1685	251fd8a28866e79aa24f25ac35e2ea1952028c185264631e341354df373140cb
+334	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/doivukhixanh/makeitemblue.lua	pgaming/doivukhixanh	makeitemblue.lua	lua	1	16376	e96f68dd3b0935d243c557203b20b1bf112978ebfecbae7830713e14387d310a
+335	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/inc.lua	pgaming	inc.lua	lua	1	10673	be5d56a0a6976ed0f354271c308681fa71dbdc6bc404fc56f6977864d87e57ab
+336	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/item/camnangvip.lua	pgaming/item	camnangvip.lua	lua	1	55520	adc71a3c4fc0f1aee099d6f587473f454042f4f1e86084adc1b8fb4900be58ec
+337	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/item/ruonghkmplink.lua	pgaming/item	ruonghkmplink.lua	lua	1	445	bccb19558101488468e53bb82b2dbfc1373045e217c66b8e2fdd7166464de749
+338	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/item/ruonghoangkim.lua	pgaming/item	ruonghoangkim.lua	lua	1	19062	9fbf0a21a28cebf1242bc2bbc076c1e786f7953f61c02085972ddfddbd7b8dae
+339	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/item/ruongtranbang.lua	pgaming/item	ruongtranbang.lua	lua	1	7550	5fb267f264627fdd168941e30769b01304486fd1838fb6c7fe61c4ff2b4915cc
+340	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/liendau.lua	pgaming	liendau.lua	lua	1	6235	1bfa4f3bf1dbe9caa2cf02952168e5c01b7a81c34c770d2ee9de03b040babcd0
+341	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bossdai/goldboss_death.lua	pgaming/missions/bosshoangkim/bossdai	goldboss_death.lua	lua	1	6770	7a91486852c859b97fdb221ee4a76180613fdba5e43142b3504509cd748d816e
+342	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bossdai/goldboss_h.lua	pgaming/missions/bosshoangkim/bossdai	goldboss_h.lua	lua	1	45929	65825ebf5c2c32b9e305714c523b281a005d27932f51732229e0c5805a1b5d78
+343	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bossdai/goldboss_main.lua	pgaming/missions/bosshoangkim/bossdai	goldboss_main.lua	lua	1	228	f04b1169d57d66a91f35eb2c2386fa861a6b8dc9de97800b55da46dd6865ddaa
+344	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bossdai/lib/itemhead.lua	pgaming/missions/bosshoangkim/bossdai/lib	itemhead.lua	lua	1	32328	a407dae3465c04aaab271addb133f105705d0545a78f39e75bc686e603250fcd
+345	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bossdai/lib/serverlib.lua	pgaming/missions/bosshoangkim/bossdai/lib	serverlib.lua	lua	1	4706	d9ee01714e55e42fd845a88c03f393a51c91e965798d1bcdcff744a426a43dad
+346	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bosstieu/lib/itemhead.lua	pgaming/missions/bosshoangkim/bosstieu/lib	itemhead.lua	lua	1	32328	a407dae3465c04aaab271addb133f105705d0545a78f39e75bc686e603250fcd
+347	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bosstieu/lib/serverlib.lua	pgaming/missions/bosshoangkim/bosstieu/lib	serverlib.lua	lua	1	4707	1a91156e148f3eb2d260fc82eefb55adf5d9fcd4eca0f9c9a3ffeff1e765d423
+348	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bosstieu/smallboss_death.lua	pgaming/missions/bosshoangkim/bosstieu	smallboss_death.lua	lua	1	3161	0c6d49e873c5af47a5774185a85092e9e701c6ad4622cd827f80187e01a8a5da
+349	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bosstieu/smallboss_h.lua	pgaming/missions/bosshoangkim/bosstieu	smallboss_h.lua	lua	1	7277	6dcbb98e789d8b0f380060d246d269b414117e665c1a6175a57b2b58ddecf3dd
+350	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/missions/bosshoangkim/bosstieu/smallboss_main.lua	pgaming/missions/bosshoangkim/bosstieu	smallboss_main.lua	lua	1	150	518ca5abeac7efab1b9906b1eeda94331bfc722de1317322077bdcf57e708eeb
+351	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapan.lua	pgaming	nangcapan.lua	lua	1	11971	368e7fc877dd60a4db501e3adbd46bda54f789b92425f3f4bb56ddd08fec14fc
+352	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/bacdauthanmadon.lua	pgaming/nangcapngua	bacdauthanmadon.lua	lua	1	176	406d2beb2ee5c72a52a52f515c91b765eb768ce893031f63eb7b815bddb36449
+353	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/bacdauthanmathuat.lua	pgaming/nangcapngua	bacdauthanmathuat.lua	lua	1	33	8c710b6764d119ad27ce1abc8352fea9c2b2756302a4f41661c6fb9d14b26c3f
+354	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/cotuoi1.lua	pgaming/nangcapngua	cotuoi1.lua	lua	1	1291	8c7206db6f565e3377ddbc247d21c4bfddf815ed749a3d07a20dc661f7f65852
+355	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/cotuoi2.lua	pgaming/nangcapngua	cotuoi2.lua	lua	1	1291	41220cbe7a3d9412633c3082acac09c108f25efec1e40ea9856fa2cf6dbd4cc6
+356	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/cotuoi3.lua	pgaming/nangcapngua	cotuoi3.lua	lua	1	1290	7c72f6af345b682a8ce7ab56e4f62d0a444203cc97efa0893b7bbbc6cc7476bb
+357	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/cotuoi4.lua	pgaming/nangcapngua	cotuoi4.lua	lua	1	1291	49d3b3f14bd640c8d2160a495c43152220b4af4890fa10c061b53b28d540919f
+358	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/lib/inc.lua	pgaming/nangcapngua/lib	inc.lua	lua	1	10673	be5d56a0a6976ed0f354271c308681fa71dbdc6bc404fc56f6977864d87e57ab
+359	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/nangcapngua.lua	pgaming/nangcapngua	nangcapngua.lua	lua	1	20733	b9f622884ccf1ba1b7d6b8ca60f0395d77d9086d0daacc21b58ec3d021c75299
+360	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapngua/npcnangcapngua.lua	pgaming/nangcapngua	npcnangcapngua.lua	lua	1	994	e3ad47626850a3d0be3870231c92831e2bbd276aca00644ef8c77d8278cfd1f1
+361	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcapphiphong.lua	pgaming	nangcapphiphong.lua	lua	1	10840	dc4069ce29f3f33dc88e9742cecc2c743004090258ede92d75361c91b0754515
+362	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nangcaptrangsuc.lua	pgaming	nangcaptrangsuc.lua	lua	1	12790	cf5e61ec7613f6deb61ad523cbd3d954ee7739ed87a6a311559b0c78aabe889d
+363	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/nguahoangkim.lua	pgaming	nguahoangkim.lua	lua	1	2805	3da4b9e371177942abbfe2f231c0f29e5691053469f1da7e24aae8278f5b0f8f
+364	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/allbanngua.lua	pgaming/npc/banngua	allbanngua.lua	lua	1	7467	f59c8a938586bdcc9ec527e47c8bf34536f8dcd9cf7ffafbf968801065fc88ed
+365	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/bienkinh.lua	pgaming/npc/banngua	bienkinh.lua	lua	1	759	1a34a7d692a3dd8da4d3f217eeba97407869c1e034668100a20dd0ce965ed953
+366	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/daily.lua	pgaming/npc/banngua	daily.lua	lua	1	794	d96c6f960f6a71312e91ec3a18412e3c0b094fa3a80b317d053ee4b3eb1640f9
+367	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/duongchau.lua	pgaming/npc/banngua	duongchau.lua	lua	1	688	91ad9d875d356ea4058eb3677013d28821b41d5784b3c355c7c882b7fb9b7fc3
+368	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/laman.lua	pgaming/npc/banngua	laman.lua	lua	1	956	3edb3c8a3ad3daf79d2eec3ad31a639a697a57aa3bb6a04232343c9b2216f77e
+369	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/phuongtuong.lua	pgaming/npc/banngua	phuongtuong.lua	lua	1	807	52ad4ca7cf6aab96773331644521a494a9c5de0d158eff443651ce4c399b6724
+370	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/thanhdo.lua	pgaming/npc/banngua	thanhdo.lua	lua	1	726	afbc36637633425f2187cacf015f835196ae0a7e38975aa0465957dc78091531
+371	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/banngua/tuongduong.lua	pgaming/npc/banngua	tuongduong.lua	lua	1	790	8060c912ff05eedf6b58158cc0f7ca1eb7e37a53d3e5fe8d7adbe69b4a8a8e00
+372	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/caibang.lua	pgaming/npc/chuongmoncacphai	caibang.lua	lua	1	11576	8b7162004fafa45dcb89ec0fb078cffd343e694b5eefc987fc95ec36bf87de32
+373	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/conlon.lua	pgaming/npc/chuongmoncacphai	conlon.lua	lua	1	10390	ba86d39c7177a1e28cdabf4abf8005dc0151f31bef0bfd6cd1aab0a19b6ad758
+374	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/duongmon.lua	pgaming/npc/chuongmoncacphai	duongmon.lua	lua	1	18272	a592421665725d04cbbb8a4233dcf609e5e2dd8b78e14130a038b2c2350c014b
+375	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/ngamy.lua	pgaming/npc/chuongmoncacphai	ngamy.lua	lua	1	20033	6809ed84b90403887e41dc41f8b2d12c288015ed940228c54df76c8f46dfee1f
+376	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/ngudoc.lua	pgaming/npc/chuongmoncacphai	ngudoc.lua	lua	1	10009	0c2405989b694fa0a10a3aed94103b16258d0ac800d0cf78d9d9597acb3adbb6
+377	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/thiennhan.lua	pgaming/npc/chuongmoncacphai	thiennhan.lua	lua	1	13830	606de52c1deb56f9f445a880a7ee30d61cc926068e13f8ff36a65a192ecc4f86
+378	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/thienvuong.lua	pgaming/npc/chuongmoncacphai	thienvuong.lua	lua	1	13251	60a75873d8758a2ce34f7b28633c8f73fdd7d8119d57d29a52fae4193de15308
+379	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/thieulam.lua	pgaming/npc/chuongmoncacphai	thieulam.lua	lua	1	13397	f9b8ff9566981ede9eecb1cb137052c290691a28d3f9b9025d8e9168b882b281
+380	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/thuyyen.lua	pgaming/npc/chuongmoncacphai	thuyyen.lua	lua	1	15858	53c9c9816bacdc83b9869ad0d626b24f6b92acccbb4de83611adc7b88a4ab4aa
+381	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/chuongmoncacphai/vodang.lua	pgaming/npc/chuongmoncacphai	vodang.lua	lua	1	16357	3a4ed5aeb86c9e6343593eea9cef45de9ad27f5f6fb59064dccd5806ed708b8a
+382	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/freepk/chuyendoitrangbihkmp.lua	pgaming/npc/freepk	chuyendoitrangbihkmp.lua	lua	1	53130	abab6e8672cd771d671e2c10798ab724583eff643eaae0672509799369c8d3e2
+383	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/freepk/doivatpham.lua	pgaming/npc/freepk	doivatpham.lua	lua	1	20430	181a486231468650facb280069042450c004c78723766f918e880e88871a44b0
+384	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/freepk/vatphamhotro.lua	pgaming/npc/freepk	vatphamhotro.lua	lua	1	7538	07bd6b0362759e4fd0f6b3bb062b188ec4855e22946b3e258af5cdc60d424427
+385	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/giftcode.lua	pgaming/npc	giftcode.lua	lua	1	4762	a2f7a41f553da4ca33bdaa10290941da99906800ef72ce266cf36f09a516c9c6
+386	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hangrong.lua	pgaming/npc	hangrong.lua	lua	1	7696	ce7ca0bd4f700c8286da347b41bbc0c70158ab86dddc94ccf5d8afaa3b9c8d52
+387	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/allhieuthuoc.lua	pgaming/npc/hieuthuoc	allhieuthuoc.lua	lua	1	4324	1a67e55bfb434fe772b0227091d6a6be2ee052f7a4a0a50c89fd7e1da9a9a3d7
+388	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/daohoanguyen/daohoanguyen.lua	pgaming/npc/hieuthuoc/daohoanguyen	daohoanguyen.lua	lua	1	818	66edc2f2f8202c004ad0cff213afe55cbfffa5523ecb8ae6abf66169609345c0
+389	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/liendau/liendau.lua	pgaming/npc/hieuthuoc/liendau	liendau.lua	lua	1	771	af8769a585f48d3d2d84fef40267c0d281f65dd1da42cdb225e9296e1539697a
+390	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/macbac/macbac.lua	pgaming/npc/hieuthuoc/macbac	macbac.lua	lua	1	848	c3ae2dbd87d773238818c437bb9ca26fec38b8694fda70c1c510505071a84855
+391	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/caibang.lua	pgaming/npc/hieuthuoc/monphai	caibang.lua	lua	1	874	318bfe5cbb1d36d886ff075fcb3f8a5bdf9909980072d15b09e222503a33956e
+392	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/conlon.lua	pgaming/npc/hieuthuoc/monphai	conlon.lua	lua	1	859	9511dd6a7c88e2cbc2316825203d72e4ad6bace1ed7dcb2c6940edff467af8d9
+393	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/duongmon.lua	pgaming/npc/hieuthuoc/monphai	duongmon.lua	lua	1	915	7d570a0e50c28b7522beb2ad498e9c051a56761b659d0b1c8e6c8351117e0752
+394	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/ngami.lua	pgaming/npc/hieuthuoc/monphai	ngami.lua	lua	1	1103	deb08633399ef8e18d747e34fc9fc855ac196fdca7c5a57642b38ebac4e2a9a0
+395	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/ngudoc.lua	pgaming/npc/hieuthuoc/monphai	ngudoc.lua	lua	1	926	97dd1bef4bb9965f2d265b3b4b58232a6d490654974198ab8d6f15e19ceb448f
+396	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/thiennhan.lua	pgaming/npc/hieuthuoc/monphai	thiennhan.lua	lua	1	899	d615823e86bd4a5a1fe2fb980b8a3be47eb625a7e49d910087110cc4bddbd569
+397	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/thienvuong.lua	pgaming/npc/hieuthuoc/monphai	thienvuong.lua	lua	1	905	541b0753c3a4d31e671bbd10a99a1e11f8576207836d9c3e2195d64c1f8e1c84
+398	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/thieulam.lua	pgaming/npc/hieuthuoc/monphai	thieulam.lua	lua	1	902	e6b355ca86d8ca2e22a8f9245a1ef11612d165840d338ddfdf124860ca38edf8
+399	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/thuyyen.lua	pgaming/npc/hieuthuoc/monphai	thuyyen.lua	lua	1	854	fa4c7df35f1dfd5483731ee26c2132b3abef4ff40294075e0578e492f0d498cb
+400	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/monphai/vodang.lua	pgaming/npc/hieuthuoc/monphai	vodang.lua	lua	1	957	6f8cb34b019e6caedab3678937ae22c91d20e1ccfcde0e64d9ecfc6906dcf214
+401	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/taytuydao/taytuydao.lua	pgaming/npc/hieuthuoc/taytuydao	taytuydao.lua	lua	1	678	05cb215ad4d77c63888eae90be1610016bedfa36aebb5c4b65dd3fb68b0c84d9
+402	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi/bienkinh.lua	pgaming/npc/hieuthuoc/thanhthi	bienkinh.lua	lua	1	1207	77ebeb184e39873798218218137fea63a683be0ac332bec0797739072dc276a3
+403	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi/daily.lua	pgaming/npc/hieuthuoc/thanhthi	daily.lua	lua	1	1179	de82c2607c4ce663d8f21132942c752f62f9ce68879293b710e09a3fff46c794
+404	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi/duongchau.lua	pgaming/npc/hieuthuoc/thanhthi	duongchau.lua	lua	1	1717	01b6a98997d0f9cbdd0962d409ba8172c7c973f8f6f82e14bed975bb7554e7d9
+405	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi/laman.lua	pgaming/npc/hieuthuoc/thanhthi	laman.lua	lua	1	914	73f890a22a17af1cee24e2abaf9ef5ac2d0b2572dd6e9be1bfc22c03b057f0c0
+406	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi/phuongtuong.lua	pgaming/npc/hieuthuoc/thanhthi	phuongtuong.lua	lua	1	1222	72ed7e77fa3ee7aa87a76b465bb36826860be217be9d0bb0d4d57703dbabfb7d
+407	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi/thanhdo.lua	pgaming/npc/hieuthuoc/thanhthi	thanhdo.lua	lua	1	1152	6276ee812bc9c9cce84813a1a3247748e645666226554eb37b137ee401bece6b
+408	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thanhthi/tuongduong.lua	pgaming/npc/hieuthuoc/thanhthi	tuongduong.lua	lua	1	2923	9ea368ed1b0f0bdd87c61efe7affc8ca9f9041090735477f0c66cdc2b6c02171
+409	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/balanghuyen.lua	pgaming/npc/hieuthuoc/thon	balanghuyen.lua	lua	1	2717	3fdccb9d4979b0450d73c6f695d9d40acc9e9e055089e52b34cb1a883aeb96b0
+410	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/chutientran.lua	pgaming/npc/hieuthuoc/thon	chutientran.lua	lua	1	801	30b8d38fda8f90ecb12d760fadcb2086e3307a853a9f8ebc58bff79fdfc70cfb
+411	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/daohuongthon.lua	pgaming/npc/hieuthuoc/thon	daohuongthon.lua	lua	1	3141	b5484081ba79ac50d6274d5902b634af92115903383cd2f2a14102a85de1eab4
+412	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/giangtanthon.lua	pgaming/npc/hieuthuoc/thon	giangtanthon.lua	lua	1	1563	4ab55685a07cb6aa2d81d6b2d792003ca518cf31cf215a86b51c7d8544a61944
+413	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/longmontran.lua	pgaming/npc/hieuthuoc/thon	longmontran.lua	lua	1	853	9a99f4df7231408774fbfc88e7bb564f3c0388e4f6d7b4090f7ae311b6bf5e8d
+414	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/longtuyenthon.lua	pgaming/npc/hieuthuoc/thon	longtuyenthon.lua	lua	1	1830	d9e0d7a65dbc63101f342a82689de2bae31468003bb748fb174500721a6340a1
+415	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/namnhactran.lua	pgaming/npc/hieuthuoc/thon	namnhactran.lua	lua	1	831	14361ef86ba7673a3a42ac429b0052efff809d5f4426565b9531e6f4dccf8be9
+416	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/thachcotran.lua	pgaming/npc/hieuthuoc/thon	thachcotran.lua	lua	1	844	c9ae09dd5755086994ff48cf4a2a80348ee9e8d12f9a134ea8d659ab293fc397
+417	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/thon/vinhlactran.lua	pgaming/npc/hieuthuoc/thon	vinhlactran.lua	lua	1	860	1393190ef32b082855480dd4b831b7f2fc4bd97fd2a246710e1c95a8c00d16ca
+418	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/tongkim/dangbaovenguyensoai.lua	pgaming/npc/hieuthuoc/tongkim	dangbaovenguyensoai.lua	lua	1	1062	713e878c83a478142a929dd151575e522231cdc6222866684210ae52b0bf42ec
+419	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/tongkim/dangcuusat.lua	pgaming/npc/hieuthuoc/tongkim	dangcuusat.lua	lua	1	1060	838e7bf10a91b77787d2edc306f0d50adb1edbb519936a67e543e3283e9639de
+420	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hieuthuoc/visondao/visondao.lua	pgaming/npc/hieuthuoc/visondao	visondao.lua	lua	1	776	7200b3a29b751c257d9e17285b321d9694b32442d9f0088f3d9b5d216040b9ca
+421	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/hotrotanthu.lua	pgaming/npc	hotrotanthu.lua	lua	1	4678	1d352e54b692d65d36acf0afde41203ccdc6b29e03faff5a93af71b72f1b9504
+422	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/lequan.lua	pgaming/npc	lequan.lua	lua	1	6361	f50f4f85d91dfd7f6ba723106777c970be15ca793a39898ca24c7784b53f4ece
+423	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/lequan1.lua	pgaming/npc	lequan1.lua	lua	1	5835	78723697be1abe34267d7fd266d6885660df339a220423c941174cfdb1702a16
+424	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/alltaphoa.lua	pgaming/npc/taphoa	alltaphoa.lua	lua	1	2847	65ffad5612bcd8267aed68ad9010e6d3353dce6609500b4d0726407456906fa8
+425	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/daohoanguyen/daohoanguyen.lua	pgaming/npc/taphoa/daohoanguyen	daohoanguyen.lua	lua	1	772	6c11bb9be528e4fa7b1409ffe112f24fad21f1d03afb22c590630fc5d313d035
+426	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/caibang.lua	pgaming/npc/taphoa/monphai	caibang.lua	lua	1	864	0d6be37ec6e33a4e14b1d5facf7ee8808b06f66285beb8794176e95f8a18ddfa
+427	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/conlon.lua	pgaming/npc/taphoa/monphai	conlon.lua	lua	1	905	ad490c5e22a574089ad8f0a56ed679e765113de1c9b6fa341122034d6a38ae4d
+428	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/duongmon.lua	pgaming/npc/taphoa/monphai	duongmon.lua	lua	1	862	442d3364be2364f4e95c0a28cc8c4dc67234eb5054d5eda34dd7109d32d53099
+429	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/ngami.lua	pgaming/npc/taphoa/monphai	ngami.lua	lua	1	881	3ad8cb2d2ff27a84b2031f2459ba4c05c0d9891223bba4a87c4f8e54dccede34
+430	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/ngudoc.lua	pgaming/npc/taphoa/monphai	ngudoc.lua	lua	1	892	ba37dd5c35058a045d4822800943c0c4c372adfbcb37a905d54283e0d484b996
+431	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/thiennhan.lua	pgaming/npc/taphoa/monphai	thiennhan.lua	lua	1	860	d27fd3bbaea9d730fdd46b8c12c7fc8c9daa0455c3d00f5c765aafdb0edf6177
+432	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/thienvuong.lua	pgaming/npc/taphoa/monphai	thienvuong.lua	lua	1	891	357274c671fd8f2033217c842616b24c54553fa603d0eb4efbc120d4600252e1
+433	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/thieulam.lua	pgaming/npc/taphoa/monphai	thieulam.lua	lua	1	870	6bd3e6cee99be72f84b618513c2db95a55508745166c25f50706df35c3b1b592
+434	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/thuyyen.lua	pgaming/npc/taphoa/monphai	thuyyen.lua	lua	1	860	2d98a02d16ea54967867e2071cc2babc6a36334668750fbf31be6e8d5690b446
+435	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/monphai/vodang.lua	pgaming/npc/taphoa/monphai	vodang.lua	lua	1	846	01cf5df76de855e851f976b7b6d1031efcf5cb56a03b5de3c14471fe0c0aa3cf
+436	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi/bienkinh.lua	pgaming/npc/taphoa/thanhthi	bienkinh.lua	lua	1	844	8e76881755877dfc8274a2cb3fdfac30c1145ff9091e5b22c21a0d12af82832c
+437	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi/daily.lua	pgaming/npc/taphoa/thanhthi	daily.lua	lua	1	785	a663d339191149ca16879ac9f95c7e28365e3404e67eada7064579a12b1f52cb
+438	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi/duongchau.lua	pgaming/npc/taphoa/thanhthi	duongchau.lua	lua	1	900	4d99805326e12ff967b7baeadfd033366840a437143a0b146b12839daf474271
+439	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi/laman.lua	pgaming/npc/taphoa/thanhthi	laman.lua	lua	1	1390	0f61fda44398777c525f93019a72906b900ee958745d8fe599785baaba3a6a0f
+440	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi/phuongtuong.lua	pgaming/npc/taphoa/thanhthi	phuongtuong.lua	lua	1	784	b42414518bfcd89bd4e44a25f8cde5defe5460f5e3db1072549b8c2a4644c9ae
+441	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi/thanhdo.lua	pgaming/npc/taphoa/thanhthi	thanhdo.lua	lua	1	2484	1898172388fec79d160bf6b9f54f3d02a553a886c16bab2baec173c0b253de2c
+442	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thanhthi/tuongduong.lua	pgaming/npc/taphoa/thanhthi	tuongduong.lua	lua	1	2299	b81446618da8057fc967cf8a9c98f9610634e1fb2df818b0d05d9dd34da9344a
+443	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/balanghuyen.lua	pgaming/npc/taphoa/thon	balanghuyen.lua	lua	1	1982	82e0888b051a94e0740ac9e935d1ff7a793886af6118f5c97b32d12b3cd10971
+444	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/chutientran.lua	pgaming/npc/taphoa/thon	chutientran.lua	lua	1	782	fb00a60410752038e7c00d502abe93d2457f2619d30661fc7a05bac4f1dd365f
+445	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/daohuongthon.lua	pgaming/npc/taphoa/thon	daohuongthon.lua	lua	1	839	57251d0e35a1451bc6c720c18b869676b6bc2671d3bc4135e45bc6c1854b740c
+446	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/giangtanthon.lua	pgaming/npc/taphoa/thon	giangtanthon.lua	lua	1	891	7286a247d7588a35d4fc5f6dbc660af3bf3689d6cff2183cfeada6d9c0852869
+447	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/longmontran.lua	pgaming/npc/taphoa/thon	longmontran.lua	lua	1	770	925d134173b6b6a90d074c8a10d8d1cb588af0f481de77fc3013dfe79c13024a
+448	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/longtuyenthon.lua	pgaming/npc/taphoa/thon	longtuyenthon.lua	lua	1	3819	4a6dc10279427aa66ae579201f084943e9533c74eaf942959f8a1d7749ceccd4
+449	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/namnhactran.lua	pgaming/npc/taphoa/thon	namnhactran.lua	lua	1	763	2656f887c70a23fb03bd26989a6746e3da3a52fbbd1e9ea15e60e82f077e31fc
+450	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/thachcotran.lua	pgaming/npc/taphoa/thon	thachcotran.lua	lua	1	843	ffb8cd7d4a3b75019d586207f762bb7952bf6a3790bcf7e23d1a219a486c57d3
+451	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/taphoa/thon/vinhlactran.lua	pgaming/npc/taphoa/thon	vinhlactran.lua	lua	1	848	fa3bcce026e41336aeca3fe1c68a66a9c86e148aaf6489ce9ace12dc323dfa47
+452	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thaydoingoaitrang.lua	pgaming/npc	thaydoingoaitrang.lua	lua	1	28299	47b23dc9ddbfb733b05ca851e5dee2c6757a95753029c7562aa5fbc2d91473cd
+453	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/allthoren.lua	pgaming/npc/thoren	allthoren.lua	lua	1	2414	332d548c63db752a31bf542e46c4bfec8ab829a619183fceec2063a25c4ef35d
+454	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/daohoanguyen/daohoanguyen.lua	pgaming/npc/thoren/daohoanguyen	daohoanguyen.lua	lua	1	1299	a58865df7a592a49da4826a45c8d4942771d42a3f2f867e910e49a3433544ce8
+455	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/macbac/macbac.lua	pgaming/npc/thoren/macbac	macbac.lua	lua	1	1281	f38a14d05ea625edd472d3e387346724deb67475c5dcf11982120a9cf5967ac0
+456	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/caibang.lua	pgaming/npc/thoren/monphai	caibang.lua	lua	1	902	b30720c94d059aa11cc16f1188c9b05f23ee51084055095eaa1bba143ca7e7b4
+457	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/conlon.lua	pgaming/npc/thoren/monphai	conlon.lua	lua	1	888	fd1747c12b39cf4c9fde758d98c4b304aed3642dd968013312787c9ad86b2b14
+458	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/duongmon.lua	pgaming/npc/thoren/monphai	duongmon.lua	lua	1	889	8b5f7441d82980a0d926dcb32e06c06d9e2c1c5cad569b73e336a47a741bdf09
+459	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/ngami.lua	pgaming/npc/thoren/monphai	ngami.lua	lua	1	878	3f1519242ed0ea09c195159d28af03ea8c2d8448204df43bd4a25f09a3c1ebef
+460	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/ngudoc.lua	pgaming/npc/thoren/monphai	ngudoc.lua	lua	1	904	de82f3913ff6b9b9b3af5b308c6b3d07cd71af8b8a0139fd616d0db410ed7e63
+461	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/thiennhan.lua	pgaming/npc/thoren/monphai	thiennhan.lua	lua	1	869	2bffa3f1191bc9f846987b6cd3836e54fa5191e5a0e97d5ebab395ce06952353
+462	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/thienvuong.lua	pgaming/npc/thoren/monphai	thienvuong.lua	lua	1	861	adb5c1efde14b2372fb0d61d0975ed16e1eca50bd840db045e8cf95947423605
+463	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/thieulam.lua	pgaming/npc/thoren/monphai	thieulam.lua	lua	1	2496	ac4f95d35dca9d0708740d513204286c7e50116f6473c02ec33d6ccaa27d4085
+464	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/thuyyen.lua	pgaming/npc/thoren/monphai	thuyyen.lua	lua	1	1416	ef326aad42d5a9ca81483f04b53743404e97477f06ebb5348b146f36a61fd083
+465	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/monphai/vodang.lua	pgaming/npc/thoren/monphai	vodang.lua	lua	1	887	563411e86c8bfbe8f8d4c20f758201be49a3f98a818109474a4c95cebd77c39c
+466	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi/bienkinh.lua	pgaming/npc/thoren/thanhthi	bienkinh.lua	lua	1	2979	592bdc82b4cea1d74838c654fa71dedced9daab1c23be78f514ad87163b50df8
+467	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi/daily.lua	pgaming/npc/thoren/thanhthi	daily.lua	lua	1	794	c9fea22087e724d2e181b7707807d9c410b35eefc3bce7aed20901d409936559
+468	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi/duongchau.lua	pgaming/npc/thoren/thanhthi	duongchau.lua	lua	1	711	53c1084c64f93cfba9157f4fb16a6d66677e4a9b624f6aaa4ca4485b71e8ebd6
+469	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi/laman.lua	pgaming/npc/thoren/thanhthi	laman.lua	lua	1	836	e5f3dd39fe0e1e00add662a482064c4e033ad7ad3e688a6c1acef2a2e0aac41f
+470	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi/phuongtuong.lua	pgaming/npc/thoren/thanhthi	phuongtuong.lua	lua	1	707	0de7ef00b1dd0c34ba7a98e477624f639ea3154f0b3bae45671cf64e8fa1828f
+471	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi/thanhdo.lua	pgaming/npc/thoren/thanhthi	thanhdo.lua	lua	1	2364	39dd6834fac8696613cec28546bb4bad3f81b32dab0d2b8fc9b89a34c808da16
+472	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thanhthi/tuongduong.lua	pgaming/npc/thoren/thanhthi	tuongduong.lua	lua	1	2519	895177ef3f9e0314bef7bd83185621e0246ab674c2e69a293b3be162f4b87189
+473	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/balanghuyen.lua	pgaming/npc/thoren/thon	balanghuyen.lua	lua	1	826	816003f242d3e6eed986b8e5638b051648c5c05c93b570df6914651d5ee0cbe6
+474	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/chutientran.lua	pgaming/npc/thoren/thon	chutientran.lua	lua	1	701	1c75f63ebb57a4268b87e04550411084e026113e8d73e0b066cde113e5c5f995
+475	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/daohuongthon.lua	pgaming/npc/thoren/thon	daohuongthon.lua	lua	1	682	a2f1c12c07da9e778bcc1dd8b8c25295f697ecb66b9a9bc5394e1ea3df0788a9
+476	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/giangtanthon.lua	pgaming/npc/thoren/thon	giangtanthon.lua	lua	1	2031	3b40e31959df72ba134875537ad19452a7a11c122282c4aa4d2c2a7fc44ab36e
+477	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/longmontran.lua	pgaming/npc/thoren/thon	longmontran.lua	lua	1	705	cd31ae6bad5fcfddc7a679a2fed33739327fec1d18b1561474a325ab96e7f057
+478	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/longtuyenthon.lua	pgaming/npc/thoren/thon	longtuyenthon.lua	lua	1	2323	577d0d1dfd3d146f5c2700131507b94631b889a9bbeb122582d5c8575b2f0e90
+479	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/namnhactran.lua	pgaming/npc/thoren/thon	namnhactran.lua	lua	1	800	f3c7467da1c3c98c2f79b372f7ed7ae27d824b888d2367107b4716c4250ef8c3
+480	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/thachcotran.lua	pgaming/npc/thoren/thon	thachcotran.lua	lua	1	718	e57121cb14f877a0e48c7eef031be842e767021f2651d8e02716853714cc3abf
+481	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/thon/vinhlactran.lua	pgaming/npc/thoren/thon	vinhlactran.lua	lua	1	686	26025841d573adfa0870b8b6a299a660b1f56f70c86d120828917ecb93c09dcc
+482	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thoren/visondao/visondao.lua	pgaming/npc/thoren/visondao	visondao.lua	lua	1	1170	ac4c7e94ad41303b779bf3ff233d6178526ee796a16b7560f5745d18aa349b2a
+483	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thorenthanbi.lua	pgaming/npc	thorenthanbi.lua	lua	1	4628	3db7a9281f38357f37efadb7574daea4a94eed055c61f0609852bb3a564e679c
+484	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi/bienkinh.lua	pgaming/npc/thuyenphu/thanhthi	bienkinh.lua	lua	1	1843	cbc59b6f98c8fd3df0c97a03e75bd48df4e865c5130e68c3f9c9e3914a6b8374
+485	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi/daily.lua	pgaming/npc/thuyenphu/thanhthi	daily.lua	lua	1	1520	a2425d99cd6824174c208cecbc23a68e661c87dd258338701171bcf1e9e5589e
+486	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi/duongchau.lua	pgaming/npc/thuyenphu/thanhthi	duongchau.lua	lua	1	2593	4aca061bc542c8113c4f8b3f0ecf6d53630946764d139800c84d66f6cbe7c0bf
+487	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi/laman.lua	pgaming/npc/thuyenphu/thanhthi	laman.lua	lua	1	1612	45af652576a99a7ef22f97847823d8bfeab0700d775ce82ffa864fcb62314df2
+488	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi/phuongtuong.lua	pgaming/npc/thuyenphu/thanhthi	phuongtuong.lua	lua	1	1588	d1862a55d70b7cd9404ca2f876651fcc6be82bbf0f2c251eef10dd00394e4d45
+489	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi/thanhdo.lua	pgaming/npc/thuyenphu/thanhthi	thanhdo.lua	lua	1	1414	c344c7f6b90f55df9ce9dfe94927c58662b4a2565eabd8e1dbd6d15554f6ecd1
+490	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thanhthi/tuongduong.lua	pgaming/npc/thuyenphu/thanhthi	tuongduong.lua	lua	1	1769	ee5f44264067af80f8b344315505ddb74cbd1ac52015a4e666a059d157fabca4
+491	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thon/balanghuyen.lua	pgaming/npc/thuyenphu/thon	balanghuyen.lua	lua	1	1207	8782d571c973aab52497066f9a07a30cac47705225665e0942276b7bc2eab333
+492	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thon/giangtanthon.lua	pgaming/npc/thuyenphu/thon	giangtanthon.lua	lua	1	941	3bc81a4847c0c4d783a29ad8d4791e111ed6bcecd09f9920fd39fe173b3fc3e7
+493	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/thuyenphu/thon/longmontran.lua	pgaming/npc/thuyenphu/thon	longmontran.lua	lua	1	875	62bdc13740ddb3efd65b18bcd07e4d0c32e0245959ed63e748d9c90973346178
+494	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/tientrang.lua	pgaming/npc	tientrang.lua	lua	1	5418	f6b91e46e12d6ee3ff4fd95006344f3ca1db322dadcddb8b9647813dce6e6d1b
+495	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/tientrang1.lua	pgaming/npc	tientrang1.lua	lua	1	4395	2fbef2cecf7fda3ba68b3260ebc02d6124533ce25d4c862b4b0c65273e173d74
+496	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/npc/tuongtop.lua	pgaming/npc	tuongtop.lua	lua	1	1901	3d68ec57f6a99e3ea2651a582180f3fa020d45b1d16b7543a0517cb60320d161
+497	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/phiphonghoangkim.lua	pgaming	phiphonghoangkim.lua	lua	1	2609	2a5bb28a7885b0c3d3a88e4a4ea864c93d9f36595a0245b4ceaeabdb5c4ab670
+498	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/reloadscript.lua	pgaming	reloadscript.lua	lua	1	2294	32aa09edb2203a087c83739b567029405425375acd60a47e70e62bfae88bb5fe
+499	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/shop/shopliendau/shopliendau.lua	pgaming/shop/shopliendau	shopliendau.lua	lua	1	11140	5352701a643e6a9530f8de03fdc372f2493cf56e1c6d003f44da3e253768482d
+500	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/shop/shoptongkim/banshoptongkim.lua	pgaming/shop/shoptongkim	banshoptongkim.lua	lua	1	1627	b300f07f93f83798a614e2f5fc976f75017d12b95301b3966adb21bb80162bda
+501	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/testserver.lua	pgaming	testserver.lua	lua	1	7608	95a3eda6d12b4769e1e8aa0961addb6f314355077aae43b0da52d3fcb1286af4
+502	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/theatm.lua	pgaming	theatm.lua	lua	1	5154	13da69b5ceb066434b54ba7b3a7fe655af061d218683bcca7bb9de2312127c76
+503	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/trangbixanh/tuychontrangbixanh.lua	pgaming/trangbixanh	tuychontrangbixanh.lua	lua	1	9036	4c81e52e3eb3fd09a87b41de7166c2230c759bb1046f10b8b7ec5e0dd902e953
+504	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/tuyetdinhgioichi.lua	pgaming	tuyetdinhgioichi.lua	lua	1	2856	505c5fc2a5ad5b6c5488216583fe2eab0f760aa2a248f4bf135f2244e5188692
+505	file	Server 6.0/server/home_jxser/server1/script/global	pgaming/xephang/top10_all.lua	pgaming/xephang	top10_all.lua	lua	1	6986	1f58667b88fe1e1569ba729759c82844526dc3f069f08e6488b5d16200d29570
+506	file	Server 6.0/server/home_jxser/server1/script/global	platina_head.lua		platina_head.lua	lua	1	3313	c2d2edd060106dde34adcbd1e4e95338c0c92dc64be3b76c9b01d13543394f72
+507	file	Server 6.0/server/home_jxser/server1/script/global	platina_upgrade.lua		platina_upgrade.lua	lua	1	22133	097d9f54b97f18a33a9c8ce2da98086e053d385d53a68e1ec34aec57e28d76b7
+508	file	Server 6.0/server/home_jxser/server1/script/global	player_default_death.lua		player_default_death.lua	lua	1	563	a4647f2d1b39d9c21c9c1a9e450041d56bff1f731a04c3d857f4da6513d4d723
+509	file	Server 6.0/server/home_jxser/server1/script/global	playerlist.lua		playerlist.lua	lua	1	351	7230bdc9be290c92dd83d2dd0096cdedd4044888973a7d7979beba6e2ea8822f
+510	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/bossmatcocdeah.lua	qsrpec	bossmatcocdeah.lua	lua	1	224	a7faf1e0b920e8a356f97b093f501c7bafd2e3ccf521d6c1b09e390694c56203
+511	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/chuyendoigioiphai.lua	qsrpec	chuyendoigioiphai.lua	lua	1	2516	e51b281b23469c7da407e7789857235745386eb45bbf92d353a4e26b85e94383
+512	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/doimonphai.lua	qsrpec	doimonphai.lua	lua	1	1091	b3f210771714c9dbd5d41790f04aa62763f7f2439a4a0b142fcd2e2e9f073762
+513	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/doiraclayvk.lua	qsrpec	doiraclayvk.lua	lua	1	3315	23d639b5474e104780e7fd70dfd0cb89582353cbacbe68bcfe9e02ac45720f36
+514	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/hoanthanhdatau.lua	qsrpec	hoanthanhdatau.lua	lua	1	1505	4e8265c3e30085bdaa1e8d6061da8de1c4a5d3786b83391b34a16fcb045bf1a6
+515	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/hotroskillqsrpec.lua	qsrpec	hotroskillqsrpec.lua	lua	1	3832	5d6e44d62afae7d2bdd917f5cf88ad83ff16b4f3686642ed5bbcc9f9f78c4f62
+516	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/huongdanlayotptbitim.ini	qsrpec	huongdanlayotptbitim.ini	ini	0	13482	e665e88bc16d9e55139f8c627b135b86d8defd39829c6434e450bd7141bd6268
+517	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/main copy.lua	qsrpec	main copy.lua	lua	1	297	5ef144d95d3e225417a4c7f8051cf9ae6d63ae915be34740e663055ad6a37564
+518	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/main.lua	qsrpec	main.lua	lua	1	1523	c38e59a4141bc500d3e7058b718dc406f83b7f3417245874c499520b2c7e6f2d
+519	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/main11.lua	qsrpec	main11.lua	lua	1	1501	102e6fd8b187eeddfd57f760716f67e3b87b175dcea6abe0e12629994b6233d1
+520	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/nghenhantayvuc.lua	qsrpec	nghenhantayvuc.lua	lua	1	18383	4b5ee066525d9d94a0d7f401500df677905eb855c3614da640905752fa17e7b7
+521	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/npchocskill150.lua	qsrpec	npchocskill150.lua	lua	1	2330	c572b77908d3ec7e2b156664e807bc5a7ac8bcf882d883b3d0ef37ee4e668473
+522	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/class/group_fighter.class.lua	qsrpec/simcity/class	group_fighter.class.lua	lua	1	45513	2c98add151d1030cb9658cbcb4df96259848994414f8f648b1a4a3e12fbe0f44
+523	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/class/group_fighter.timer.child.lua	qsrpec/simcity/class	group_fighter.timer.child.lua	lua	1	324	5485ca73827be9b18c2736b0ca4db73d68e5625f7a5bdac5f7dd5445c9ca48b5
+524	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/class/group_fighter.timer.lua	qsrpec/simcity/class	group_fighter.timer.lua	lua	1	321	ba01f93e1fc0cf279d6cf1ca7495adf3c6f32c6b6f238a53b99c7db5fd8eba89
+525	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/class/sim_citizen.lua	qsrpec/simcity/class	sim_citizen.lua	lua	1	6671	c8a3338d56117afe0119785f534048af7dc2353e35b936d7287bf92aa80adb97
+526	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/class/sim_theosau.lua	qsrpec/simcity/class	sim_theosau.lua	lua	1	1413	9bae7361d250ec8bc96e3a1511c1a9c8b26f1e3ed21abd46fa7489f56eb4a003
+527	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/common.lua	qsrpec/simcity	common.lua	lua	1	1632	1f8dec5fd90b3a2fe615939dd0db675e0e40010bcc61befe159a5c5b20b00a22
+528	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/components/sim.core.lua	qsrpec/simcity/components	sim.core.lua	lua	1	5823	20c923dad5fbe3d2c5a300695465826fa29b5b63cf7f4b4fb8fb7532a61b5fba
+529	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/components/sim.entity.lua	qsrpec/simcity/components	sim.entity.lua	lua	1	11448	9128a253be9de1f3f60f9761b96ce0657c3e13ec25b8040076189624bb8d94de
+530	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/components/sim.fight.lua	qsrpec/simcity/components	sim.fight.lua	lua	1	17718	275d9834aa2be960c137551b5d9615bd0309187fca607248a61a7f1dcbda02d1
+531	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/components/sim.fun.lua	qsrpec/simcity/components	sim.fun.lua	lua	1	6683	8a09130c9a90e1616bb8cfd8616216c49dc74d9d6f05d929363dd257591fa41d
+532	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/components/sim.movement.lua	qsrpec/simcity/components	sim.movement.lua	lua	1	48245	283e0bb00fd885fb385eecacff72633b0b357034216d4a85d023aa7064c65757
+533	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/components/sim.timer.lua	qsrpec/simcity/components	sim.timer.lua	lua	1	371	10e0c29af3eae2d13cc98c55c33a1af90dcd59102f5689cd441ce2b654c81fe4
+534	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/config.lua	qsrpec/simcity	config.lua	lua	1	2431	bc84de8f45cfa0ead71b426b95faf393c541d59af7aae296067b0a275fd22490
+535	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers/batanh.lua	qsrpec/simcity/controllers	batanh.lua	lua	1	608	33ac232056b5c8e0e2fe0e0448152ba1e327530de6c9a25f83d98d334d82a334
+536	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers/keoxe.lua	qsrpec/simcity/controllers	keoxe.lua	lua	1	113	834b87013feb77513d3741cda2bc1dc5da02add10173f93e5b9f6905919e0337
+537	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers/main.lua	qsrpec/simcity/controllers	main.lua	lua	1	200	54c1c56faeb5f1b69a33331471a1d015ce6c1fe1a8acc969f79659f048a53e96
+538	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers/thanhthi.lua	qsrpec/simcity/controllers	thanhthi.lua	lua	1	141	430c8c2de3b180c494462eb299cce35a3084dd0daa05b50274267b22d16d06c2
+539	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers/tieuthiep.lua	qsrpec/simcity/controllers	tieuthiep.lua	lua	1	192	5111084b8252d5364073364b5ccfc07b9ba48b33aeef78af0a0689d4ec93de92
+540	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers/tongkim.lua	qsrpec/simcity/controllers	tongkim.lua	lua	1	184	4f7c7ce4b6c16fac59f429da6214931905da2c96b4ba6defa8bfbbd8cd239166
+541	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/controllers/vatnuoi.lua	qsrpec/simcity/controllers	vatnuoi.lua	lua	1	118	ca5f696c5580a92def3f02f19b12368aafe4af2d734a570f0af8f31bbcd0ac96
+542	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data/index.lua	qsrpec/simcity/data	index.lua	lua	1	393	34efa4a1a48b317489c4f4339110b5b0dfaf1d73a3da08581c869cd4296b4d50
+543	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data/mbienkinh.lua	qsrpec/simcity/data	mbienkinh.lua	lua	1	11114	190947f6bf16984c75b7ec559913757c228652f9be95eb8e5a667b4ff692097d
+544	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data/mdaily.lua	qsrpec/simcity/data	mdaily.lua	lua	1	1822	a1866577686e5d1956c87f3e961f9d65323197887880ddc70823af7d1b96d88a
+545	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data/mlaman.lua	qsrpec/simcity/data	mlaman.lua	lua	1	2593	ec5afc3b8c45e12ad2095232caed9bb47d7d5909e3b3b6a3b36253fd434df1bb
+546	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data/mphuongtuong.lua	qsrpec/simcity/data	mphuongtuong.lua	lua	1	1860	3918f6bb3d1b7af3d3ab1dc92edd65c0fb9c83cc0ba842b4736ae9f62a689df0
+547	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data/mtongkim_nguyensoai.lua	qsrpec/simcity/data	mtongkim_nguyensoai.lua	lua	1	2270	d60b920c864ed79b7ff2460f39aa16f12bd1571dfce9becb92fc4503c6191849
+548	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/data/mtuongduong.lua	qsrpec/simcity/data	mtuongduong.lua	lua	1	8748	ecc7808c58a0b72d8f9c32e34c5bbdb48845c408adcb54791e45784bcbf0cb32
+549	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/head.lua	qsrpec/simcity	head.lua	lua	1	1306	87f737437746ee316f2b65431d82fbf19f03b14d3c9cc10742818b372e394c7c
+550	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/libs/common.lua	qsrpec/simcity/libs	common.lua	lua	1	7479	dd50ef20a6e35661966819229ef27a274bf0f8990090e4fbed735a6bad584493
+551	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/libs/data.lua	qsrpec/simcity/libs	data.lua	lua	1	12562	4c9f8ee705a4337e134ceb7ee105243e5764312443cc0881ab37163569a307f5
+552	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/libs/index.lua	qsrpec/simcity/libs	index.lua	lua	1	195	e9c72f5c35875d8e6d7a90d326d0a0d769159eaca69f6853ccf59d024b3b1104
+553	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/libs/walk.lua	qsrpec/simcity/libs	walk.lua	lua	1	5783	8f154fcb872819c27ae1399fd9814cb85b170c97255faf5841977db2e3ba19e3
+554	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/libs/walk_chientranh.lua	qsrpec/simcity/libs	walk_chientranh.lua	lua	1	19017	c246ffa3286144370e0f5e3886c1eef89be02db196ad36b8e7c3bbcd164843e4
+555	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/main.lua	qsrpec/simcity	main.lua	lua	1	553	93ed504d720b88a9382d176d1088e27b83344efbb28f23ec61d84f9ac77e420d
+556	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/index.lua	qsrpec/simcity/plugins	index.lua	lua	1	616	02872a6b93bcf0d1e77f855337ae0e6d32a90198ad345ddf7b75cfce2b3dedaa
+557	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pbatanh.lua	qsrpec/simcity/plugins	pbatanh.lua	lua	1	5994	2c16185ab8ef57eef0c0460a6b9e84d7a39721bf67ba87fb24f1ea06d2a663a2
+558	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pchat.lua	qsrpec/simcity/plugins	pchat.lua	lua	1	2209	4fe4bb1598fcd2ad710c777e6654ee1a7c87170a63d079d6de9417cf2ebf329d
+559	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pchientranh.lua	qsrpec/simcity/plugins	pchientranh.lua	lua	1	21925	22e270f8b83553dce27cc0c7cb1011c1421f813bd1258173cbd86ef2a33adad3
+560	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pkeoxe.lua	qsrpec/simcity/plugins	pkeoxe.lua	lua	1	8963	4366cb3b8df651811cacb5103ba28155b60595da614e32082252f72e7a7ab4d2
+561	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pname.lua	qsrpec/simcity/plugins	pname.lua	lua	1	9867	0e0a91f3effc7e29aff87a24dadc09fd80cf8b99601a903ef4d1411ea744d4cf
+562	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pngoaitrang.lua	qsrpec/simcity/plugins	pngoaitrang.lua	lua	1	3271	5001f4ffe4127704d3eb2dccdb7840abd02710a20282d4321f0d6fc93bfcbfcc
+563	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pnpcinfo.lua	qsrpec/simcity/plugins	pnpcinfo.lua	lua	1	6387	a99d2341de875ee00201fbb8bec2dae68fddd95e37dc411c413097edc13f17c9
+564	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pthanhthi.lua	qsrpec/simcity/plugins	pthanhthi.lua	lua	1	23430	1265d2f4dec7ae71ab48613b958386e0abac518f175028b36cb3d5a9d24a6fa8
+565	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/ptieuthiep.lua	qsrpec/simcity/plugins	ptieuthiep.lua	lua	1	12013	bbbcba00cbc8e12ff5762a69c37b701c05bec6e7f0ae4080419c40d2b7199421
+566	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/ptongkim.lua	qsrpec/simcity/plugins	ptongkim.lua	lua	1	12957	34c10ef4e5164e2694e51066625e0790436295df5cf28670162fb892e19d27a1
+567	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pvatnuoi.lua	qsrpec/simcity/plugins	pvatnuoi.lua	lua	1	22475	b7f3d05962ef891c8682b23dbbeb3e57fe30d47626a7cdca2980124145e47876
+568	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/simcity/plugins/pworld.lua	qsrpec/simcity/plugins	pworld.lua	lua	1	6030	cab91c9aa6d77d9d78943c0017db78e0475167ffcc5451ed6fce5238c9808b68
+569	file	Server 6.0/server/home_jxser/server1/script/global	qsrpec/trungsingqsrpec.lua	qsrpec	trungsingqsrpec.lua	lua	1	1020	5047f69a50e262fd041d4d15002906f1ffb899e00b0e1329ffd2f2f2fd9fc8b1
+570	file	Server 6.0/server/home_jxser/server1/script/global	recoin_goldenequip.lua		recoin_goldenequip.lua	lua	1	27223	96bfa6b4a8a98243d6dff41f405052916227414a916c5f41407edb0614dbfeae
+571	file	Server 6.0/server/home_jxser/server1/script/global	recordplayerinfo.lua		recordplayerinfo.lua	lua	1	316	d16bfdbc8a80262c46cf13bf51c29b1741eb6f7354d6589ea59eddb73030a43a
+572	file	Server 6.0/server/home_jxser/server1/script/global	rename_head.lua		rename_head.lua	lua	1	792	186f83c0bf5c8267e9eba46013c9a6475ea1bdcc2f5ad247783b7c60fcad0ac8
+573	file	Server 6.0/server/home_jxser/server1/script/global	repute_head.lua		repute_head.lua	lua	1	2511	d31d7b31125d12572adef90cb80b2e2b9897279ab92a5ec9133aff158de9bab7
+574	file	Server 6.0/server/home_jxser/server1/script/global	revive.lua		revive.lua	lua	1	267	f3db9de24384af9a8dd2f0f7ac93ace20473642a55f16b5228424fe2acc5196a
+575	file	Server 6.0/server/home_jxser/server1/script/global	rolename_op.lua		rolename_op.lua	lua	1	1192	8c5ea235a6b7b648f73358235aa5f65dc80fb21fcf983896000397cf12bc536a
+576	file	Server 6.0/server/home_jxser/server1/script/global	santa_claus.lua		santa_claus.lua	lua	1	5253	485c05e045b9614d043ccb37ec968d321d4918eae494622da8333b0566ba0a1d
+577	file	Server 6.0/server/home_jxser/server1/script/global	seasonnpc.lua		seasonnpc.lua	lua	1	36458	a0e293ce18073fdbb4451c4ce434c55bd20a95de45e27f1d69ee206e004856e0
+578	file	Server 6.0/server/home_jxser/server1/script/global	seasonnpc1.lua		seasonnpc1.lua	lua	1	36865	59630332bf9309dedc39dc4f4528a7bcb76c29766d20255bd4b33c27b9a9f0ba
+579	file	Server 6.0/server/home_jxser/server1/script/global	seasonnpc_.lua		seasonnpc_.lua	lua	1	34789	c0ff5436eb6ce63e03b2fb5e77b8c14ec4400cb5dbcfb96ecd1fe2e73a4992f3
+580	file	Server 6.0/server/home_jxser/server1/script/global	seasonnpc_death.lua		seasonnpc_death.lua	lua	1	1074	d3ed24856d755174fe29f137d8b2644d808200e90eccbe4a1fd3467a1a765eed
+581	file	Server 6.0/server/home_jxser/server1/script/global	server_playerlevelup.lua		server_playerlevelup.lua	lua	1	8393	85710a22c8cf1825b26a939782c59c6a01a50e6d6484661ab83eeeba23be57a8
+582	file	Server 6.0/server/home_jxser/server1/script/global	shangchenghead.lua		shangchenghead.lua	lua	1	2536	ca08e45c847ae63b9e2f72ed8733c1fb7edfcdd0b9c48495dc4fde37e8ffe875
+583	file	Server 6.0/server/home_jxser/server1/script/global	shangshanshi.lua		shangshanshi.lua	lua	1	10633	29527813d69aacb6c727d7bad41c040fa9d87e0d385348e116ff3ca5428cac42
+584	file	Server 6.0/server/home_jxser/server1/script/global	shenmi_chapman.lua		shenmi_chapman.lua	lua	1	16237	3ed81a80cd9f66c6069828d957e0a0af249b3937264ef237ae999d601b5cca73
+585	file	Server 6.0/server/home_jxser/server1/script/global	signet_head.lua		signet_head.lua	lua	1	799	9150bc27ae59dd984ed3f6934f8d90db3572710786a4ce3f4054a35e72ae4359
+586	file	Server 6.0/server/home_jxser/server1/script/global	skills_table.lua		skills_table.lua	lua	1	45400	7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3
+587	file	Server 6.0/server/home_jxser/server1/script/global	special_horse.lua		special_horse.lua	lua	1	2630	f9d8bd56f88fd42e074268f80ce2a74c859df54dc3eba27bcad7c9d1d7952bfe
+588	file	Server 6.0/server/home_jxser/server1/script/global	station.lua		station.lua	lua	1	16139	39a3c9b0a9e630ddbdcf0b6e84ee597edc7f03709dd6d53f30d233cdff8efffe
+589	file	Server 6.0/server/home_jxser/server1/script/global	systemconfig.lua		systemconfig.lua	lua	1	3939	390dca069a342453821255d2c1f5398c999c234993716bf057719266f416d3b8
+590	file	Server 6.0/server/home_jxser/server1/script/global	tasklink_head.lua		tasklink_head.lua	lua	1	31424	3ddb8d496cc5b108d4f1fc400fe8f4321f58da123e510b5f49d3e889cd636d20
+591	file	Server 6.0/server/home_jxser/server1/script/global	teamhead.lua		teamhead.lua	lua	1	282	b06481ebb5547b2d36bea859a925b45b4395faf7f9f3b7dc2e557d0af50363c2
+592	file	Server 6.0/server/home_jxser/server1/script/global	testscript.lua		testscript.lua	lua	1	13741	8ec9c3960af51004e6a78fc241b7811fb27857678084da8eaf646e8814728f5b
+593	file	Server 6.0/server/home_jxser/server1/script/global	timerhead.lua		timerhead.lua	lua	1	706	8a074205b7a573610b134a650f5791484215664b8a1017ceee91a8437d6f721f
+594	file	Server 6.0/server/home_jxser/server1/script/global	titlefuncs.lua		titlefuncs.lua	lua	1	1531	0fc343b3df54a7b2c8cefd9aa45d1473955329f157c722cf074c084b5931d5e7
+595	file	Server 6.0/server/home_jxser/server1/script/global	tongcreatesuccess.lua		tongcreatesuccess.lua	lua	1	175	79240549d5d965a03edee9dbf3e6d4eb7b1b451237394540eb427b3dd32c8f42
+596	file	Server 6.0/server/home_jxser/server1/script/global	tonggetdirectorpower.lua		tonggetdirectorpower.lua	lua	1	260	d8e0e6a4e1b36741780534866793e390e82029ab6c6c0142604180e53f6d9da1
+597	file	Server 6.0/server/home_jxser/server1/script/global	tonggetmasterpower.lua		tonggetmasterpower.lua	lua	1	484	aad7d3e146df93a7ec22987f0277958a71a858e5f2c8b1e9582c040e9f36ca6c
+598	file	Server 6.0/server/home_jxser/server1/script/global	tongleavepower.lua		tongleavepower.lua	lua	1	1855	08332c1e6e3eb87a9e725fb0264857800c9dc1c1a59c8354aa926d38e2b61db6
+599	file	Server 6.0/server/home_jxser/server1/script/global	tongleavesuccess.lua		tongleavesuccess.lua	lua	1	113	5e5b0a4064b4a6f77eb3ca43af49fd7b59ddc2c11920b89d8f8581c201b04b3a
+600	file	Server 6.0/server/home_jxser/server1/script/global	tongname_change.lua		tongname_change.lua	lua	1	694	a62a9a383ba771e4e4631959f38af659bb5ed2a4ef3bb15b52c3dddb1fce4739
+601	file	Server 6.0/server/home_jxser/server1/script/global	tongname_query.lua		tongname_query.lua	lua	1	550	64fb2081f9fd0705b6558a74cc7764f67768b7c85f78555e673ca32c164dc35a
+602	file	Server 6.0/server/home_jxser/server1/script/global	topall.lua		topall.lua	lua	1	5721	061bc1aac0cc7578f4abc80c78326e7d5f0c798aad440bec282239f91ad16496
+603	file	Server 6.0/server/home_jxser/server1/script/global	translife.lua		translife.lua	lua	1	3462	548118f39f3fcf092d8cedbd1b5f0dee5e0127c2b76aef373a96b95087a1c02d
+604	file	Server 6.0/server/home_jxser/server1/script/global	tranyeu.lua		tranyeu.lua	lua	1	648	1521d13475165c1135e01c2a0c90b49f7d86af3342100cfaf74d75bf61fc7f72
+605	file	Server 6.0/server/home_jxser/server1/script/global	tw/extpointfunc_proc.lua	tw	extpointfunc_proc.lua	lua	1	1643	851310532f43bbd03f51abe174f273e28f670c58483434ace585b058f5096d5f
+606	file	Server 6.0/server/home_jxser/server1/script/global	tw/gamebank_head.lua	tw	gamebank_head.lua	lua	1	362	785cc7720d619e9c20697a8e3616a5e833aa4799755265d82092843e83a193fb
+607	file	Server 6.0/server/home_jxser/server1/script/global	tw/gamebank_proc.lua	tw	gamebank_proc.lua	lua	1	8667	754842fd1c8ee3a8805ffb43fe4cc2ba81129a7f365bd2800c07d9eea544fe88
+608	file	Server 6.0/server/home_jxser/server1/script/global	vn/extpointfunc_proc.lua	vn	extpointfunc_proc.lua	lua	1	1330	7b50be25d4720626b2ade7e1e3a9741030c512afe1f8a33d403bc95a6287f827
+609	file	Server 6.0/server/home_jxser/server1/script/global	vn/gamebank_head.lua	vn	gamebank_head.lua	lua	1	433	e110cd0a43e524baa4d66c3cb79fe0b0045925825f5593ef825e840e70bcac6d
+610	file	Server 6.0/server/home_jxser/server1/script/global	vn/gamebank_proc.lua	vn	gamebank_proc.lua	lua	1	5154	13da69b5ceb066434b54ba7b3a7fe655af061d218683bcca7bb9de2312127c76
+611	file	Server 6.0/server/home_jxser/server1/script/global	wannianjia.lua		wannianjia.lua	lua	1	1263	fa14e39032acaddbfb591a4133d5977a3dd3f6e215ed00e7e132119a88aa408b
+612	file	Server 6.0/server/home_jxser/server1/script/global	weapon_help.lua		weapon_help.lua	lua	1	2717	f11e2e981fc1c7aff997c4e8392d59153ec581d117717893af9e9e9ee59b9f0c
+613	file	Server 6.0/server/home_jxser/server1/script/global	weapon_ring.lua		weapon_ring.lua	lua	1	3315	7f05124b0a045f350f778cdcf1ab84ec704627492b9ba09514527efa9f8c0730
+614	file	Server 6.0/server/home_jxser/server1/script/global	worldrank/head.lua	worldrank	head.lua	lua	1	861	cf24ff4cfba4930656e88219639ffe984d2bb141804c0cd1a23d4a77459800ad
+615	file	Server 6.0/server/home_jxser/server1/script/global	worldrank/lib.lua	worldrank	lib.lua	lua	1	5316	f8bf03f40111a3f215eab149b3fab0b8d2797f5bf35487b3e49776c8edc6f41a
+616	file	Server 6.0/server/home_jxser/server1/script/global	yuenan_feiyunrenwu.lua		yuenan_feiyunrenwu.lua	lua	1	10134	32732b90a6fd3c3a85355295cf9850116b557e114ba285802efe4cde404614c7
+617	file	Server 6.0/server/home_jxser/server1/script/global	中秋活动.lua		中秋活动.lua	lua	1	72144	8d26e304917105832519e77a36022296685c1a3a67d8932c0388109cf82c2192
+618	file	Server 6.0/server/home_jxser/server1/script/global	原版路人_礼官.lua		原版路人_礼官.lua	lua	1	17551	74042766d950c9e0cdc1416ebe16567c74fb6deef9f2e92c661110a0d8221446
+619	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/丐帮接引弟子.lua	各派接引弟子	丐帮接引弟子.lua	lua	1	8142	33bf862729215013362d7d0b4d38da1e87fbdd66bdb6fb3b419cd6b27ec90005
+620	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/五毒接引弟子.lua	各派接引弟子	五毒接引弟子.lua	lua	1	7822	c760cfab47a042ddea92bf9cbb65ecdb00b9d6c2199b3068e2c632b05de7095f
+621	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/唐门接引弟子.lua	各派接引弟子	唐门接引弟子.lua	lua	1	7157	216b610a8d79d5788058caa769881651f369e9b10f59afe0f412bcace06d8510
+622	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/天忍接引弟子.lua	各派接引弟子	天忍接引弟子.lua	lua	1	7292	735261534927ddd3698451888673d1b4a6d515cf08bec313a03ecc4c2d2e3386
+623	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/天王接引弟子.lua	各派接引弟子	天王接引弟子.lua	lua	1	7740	1e5a6b66f2db7d2c21dd0342cd6df8878df11c92a2be92b952dbaf5102d0da34
+624	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/少林接引弟子.lua	各派接引弟子	少林接引弟子.lua	lua	1	7782	9326b95f95f4835a7c5e428de9533ac3f45b703da4365a3f45a21cd2ed7e2431
+625	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/峨嵋接引弟子.lua	各派接引弟子	峨嵋接引弟子.lua	lua	1	7206	859c814f87584a52130f73002382798f66cecfd369b1ca17dbc5ea4f04b028e8
+626	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/昆仑接引弟子.lua	各派接引弟子	昆仑接引弟子.lua	lua	1	7785	e07d46de55fb89d43161cd794e17de929c41bf9a5cb3550e5a390b2f73ce8533
+627	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/武当接引弟子.lua	各派接引弟子	武当接引弟子.lua	lua	1	7920	dea60d9ee5bec885ba80acae74a5da81dffccba33f40656db7f8e96008458bc9
+628	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/翠烟接引弟子.lua	各派接引弟子	翠烟接引弟子.lua	lua	1	7663	2f86ab451719c18e7fed8312f4864e7e4d01e8b80c56a4d0adca1beb715e9f99
+629	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/轻功_木人模板.lua	各派接引弟子	轻功_木人模板.lua	lua	1	240	b54d8d56b5059c4587622d6a0e3f25e7fe2815e27a25ec44fc9d1a59803f0bea
+630	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/轻功_木桩模板.lua	各派接引弟子	轻功_木桩模板.lua	lua	1	238	6f4162c832b05f40aaee6c4990819661266c671026116457e22ef8162408d5ec
+631	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/轻功_武师模板.lua	各派接引弟子	轻功_武师模板.lua	lua	1	10778	15c856cab46f3a09f657f70e1877b184abe55fb5a49bcac85a0392524d5a589e
+632	file	Server 6.0/server/home_jxser/server1/script/global	各派接引弟子/轻功_沙袋模板.lua	各派接引弟子	轻功_沙袋模板.lua	lua	1	239	3454dec0ecb6bb2ad46f0d18efdf829dd5b713a06338d9507891aaf76bad6653
+633	file	Server 6.0/server/home_jxser/server1/script/global	洗pk的牢头.lua		洗pk的牢头.lua	lua	1	3881	4451e0bfbf2c2a6f2c5514357cc4f2c02529ce529f69bbdf89bbd9de23419f64
+634	file	Server 6.0/server/home_jxser/server1/script/global	洗pk的衙役.lua		洗pk的衙役.lua	lua	1	3764	487cb1f20ebb02d539540f954ed43525b83a9972b282fc65c8059111e50deeb7
+635	file	Server 6.0/server/home_jxser/server1/script/global	洗pk计时器.lua		洗pk计时器.lua	lua	1	668	497ad30c995dc58a6912be14c63110da70b3d0ead0a0973641279ea18bb9ef3e
+636	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/head.lua	特殊用地/宋金报名点/npc	head.lua	lua	1	1013	8cf2d1d875bb784d4ae3d7329aeae6401d11989d7c25c2c1a49a2124067b2059
+637	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/jin_shop.lua	特殊用地/宋金报名点/npc	jin_shop.lua	lua	1	12491	3ce4d78dc623c635e786cb0f1a2ef2d498dc414553b5ded5cecb462447966ca5
+638	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/jin_signup.lua	特殊用地/宋金报名点/npc	jin_signup.lua	lua	1	45	088572844bde92f73f64739f09c95b06eaad37390d59ea08c12d22070144163a
+639	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/jin_transport.lua	特殊用地/宋金报名点/npc	jin_transport.lua	lua	1	1048	dc1b3b045c409b1491c7d48f19deadb014bad4d3fb8fdd0c022a06a938bb72f0
+640	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/song_shop.lua	特殊用地/宋金报名点/npc	song_shop.lua	lua	1	12491	34f2c89b8da7b58128e0865a310dee1dbd246845d5ab8b5be5a505a1b7fa86b1
+641	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/song_signup.lua	特殊用地/宋金报名点/npc	song_signup.lua	lua	1	46	63434327af6267fd6e1591e524c86dd00b6e89e8a8aaca12689c9105bb2db0d3
+642	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/song_transport.lua	特殊用地/宋金报名点/npc	song_transport.lua	lua	1	1045	cbf3a8d3b25a6a374ad6413cc2e7d9016d371632f2613c5459a3ddfbbcfb3101
+643	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/npc/songjin_shophead.lua	特殊用地/宋金报名点/npc	songjin_shophead.lua	lua	1	8367	4b56a3d49f8d1fc4ef80292ea76122d6969e4189886b8b7b4ed51de481db96b5
+644	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/obj/jin_box.lua	特殊用地/宋金报名点/obj	jin_box.lua	lua	1	148	49e7af519c8034c9e2cddf9423f6efb47cdc0d5934ba1bee57faec98d85a2fe2
+645	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/obj/song_box.lua	特殊用地/宋金报名点/obj	song_box.lua	lua	1	150	7afa49bd4dec838e482cf28ca1ae1f5dc3baac17c9f9f90fa651858968e17082
+646	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/trap/jin_trap.lua	特殊用地/宋金报名点/trap	jin_trap.lua	lua	1	234	fb9802cbd27d62e26fec77748394fbd5bf3694747b6f3afaed96c6cbd4007645
+647	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/宋金报名点/trap/song_trap.lua	特殊用地/宋金报名点/trap	song_trap.lua	lua	1	231	562d2083d454dafd39c161ccdc50004cb7ccf082f5cf5abb3f4ac5ef41bf8dab
+648	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/npc/路人_叛僧.lua	特殊用地/梦境/npc	路人_叛僧.lua	lua	1	6468	d9511dc625f8cfa34a7e0b088576a4a2d42c92d5a780b629a882057154fa2c22
+649	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/npc/路人_药贩.lua	特殊用地/梦境/npc	路人_药贩.lua	lua	1	104	5089f3a59cfad33ccb5385f6a81f6cc1926045bdbf302d5774b14ab4bdc98dde
+650	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/obj/地图_储物箱.lua	特殊用地/梦境/obj	地图_储物箱.lua	lua	1	62	5f399cb623e49a43c0815686f37cd26691348c2abba5ea55cf08dd45c31821cd
+651	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/战斗切换点1.lua	特殊用地/梦境/trap	战斗切换点1.lua	lua	1	118	b1e15fa4635d19eb27e876926d6c4a5ec5bc9077816644a5f80c648fadcd5dcf
+652	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/战斗切换点2.lua	特殊用地/梦境/trap	战斗切换点2.lua	lua	1	118	d4d0d8e847fa7fed480d7599b4565e4e118e511b33d293f21db38afa9dd571b3
+653	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/战斗切换点3.lua	特殊用地/梦境/trap	战斗切换点3.lua	lua	1	118	0f3edf67cabbb74ab7e8bc3dde1ab6305e9d8fd2ff4473629b9ad7edc13fbcb6
+654	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/战斗切换点4.lua	特殊用地/梦境/trap	战斗切换点4.lua	lua	1	118	9fa401a191f669ca12d1610916a666d3ce816a5ab3a114701147dfa14db46249
+655	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/梦境to梦境山洞1.lua	特殊用地/梦境/trap	梦境to梦境山洞1.lua	lua	1	177	f9c22b2903c8df9f7f7b7b481dc4bb747ed60ccaaa84710b60149c793c081475
+656	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/梦境to梦境山洞2.lua	特殊用地/梦境/trap	梦境to梦境山洞2.lua	lua	1	179	52eb3cd0059888425f6c98ad35d790f94a4dd357cbab45ea55d07df5b5a5bc47
+657	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/梦境to梦境山洞3.lua	特殊用地/梦境/trap	梦境to梦境山洞3.lua	lua	1	179	65d7948138fc5900e951760bd247c0cde63a4caafef45a7b931158b4a8830b2d
+658	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境/trap/梦境to梦境山洞4.lua	特殊用地/梦境/trap	梦境to梦境山洞4.lua	lua	1	179	fc3a8e36e808c579febc8c1cc17da6280b5be15efcd78416bef0503ec67537dd
+659	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境山洞/trap/梦境山洞to梦境1.lua	特殊用地/梦境山洞/trap	梦境山洞to梦境1.lua	lua	1	175	35a8e7a0faf46831cd4b13a0976b5c780b78d46bbd073952d62244f074e6e46a
+660	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境山洞/trap/梦境山洞to梦境2.lua	特殊用地/梦境山洞/trap	梦境山洞to梦境2.lua	lua	1	173	614af422fadeabe371dbdc8d182577739a9d1f51fbd4c578f43e0eda00abe8fe
+661	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境山洞/trap/梦境山洞to梦境3.lua	特殊用地/梦境山洞/trap	梦境山洞to梦境3.lua	lua	1	173	dbdd7a85e0e4caf582544ae0de97fe0410112e0af0f4e9b8bee272468ce15d73
+662	file	Server 6.0/server/home_jxser/server1/script/global	特殊用地/梦境山洞/trap/梦境山洞to梦境4.lua	特殊用地/梦境山洞/trap	梦境山洞to梦境4.lua	lua	1	173	4aa6d5137cd9e79d83ace22448400070e03fcf2732ece2cdaa7fea3d39028894
+663	file	Server 6.0/server/home_jxser/server1/script/global	算命先生.lua		算命先生.lua	lua	1	4536	db0426cbeebeb513c70d97d35e4f7c8b5a2decc9fd259338f157972b5aa9130c
+664	file	Server 6.0/server/home_jxser/server1/script/global	粽嫂.lua		粽嫂.lua	lua	1	15134	2cab2e2d52ed8fff8d034965a27e51fedf54ca24edf806f6a550f171aedf01fd
+665	file	Server 6.0/server/home_jxser/server1/script/global	路人_城市_铁匠.lua		路人_城市_铁匠.lua	lua	1	689	d122752106a6a2f69f755e00fb58daf061a58b9cee3371e26ed37523bd531719
+666	file	Server 6.0/server/home_jxser/server1/script/global	路人_易容术士.lua		路人_易容术士.lua	lua	1	1296	fec4924e04f1bac719f8b857ae2eda7127bc290fdd86e10751cbf93477f3481e
+667	file	Server 6.0/server/home_jxser/server1/script/global	路人_武林盟传人.lua		路人_武林盟传人.lua	lua	1	6925	8616c0a1dc49108c0f5ac2a5fc3c91a3444468e9d0100eafec2ca3e9b5455325
+668	file	Server 6.0/server/home_jxser/server1/script/global	路人_礼官.lua		路人_礼官.lua	lua	1	53	9395675d59b309bba0b3a8eb49dc4c0df2dff7dbe05ea91bdb1dea886a875089
+669	file	Server 6.0/server/home_jxser/server1/script/global	路人_神秘商人柳乙.lua		路人_神秘商人柳乙.lua	lua	1	2977	f899e216b96d438397960848b157772d6adf3de5881538b7d37cb6beeaf0c638
+670	file	Server 6.0/server/home_jxser/server1/script/global	路人_衙门卫兵.lua		路人_衙门卫兵.lua	lua	1	732	57f8a1eeb17d2f67c80b957d3e69b5c9f374fa4069d1554daf89ecf8460d16f0
+671	file	Server 6.0/server/home_jxser/server1/script/global	送信任务.lua		送信任务.lua	lua	1	4438	371d217d3c15ef46c65b24e66f4b16cf15ce4533daabc0077f907af55923587b
+672	file	Server 6.0/server/home_jxser/server1/script/global	钱庄功能.lua		钱庄功能.lua	lua	1	859	ba1a9aa56773bdeb8a451c17472d6426941439b9f282f3d39483bc77f88db334
