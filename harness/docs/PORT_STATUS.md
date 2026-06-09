@@ -153,14 +153,14 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 | Item | Status | Evidence | Required next proof/work |
 |---|---:|---|---|
 | Base skill catalog 1,216 | ✅ data | `PcSkill/skills.txt` 1,216 rows | Full skill behavior/formula/script parity |
-| Extended skills | 🔄 | local `ModSkills.txt` 1,554 rows | Import/verify PC `skills1.txt` 1,712 rows or document scope |
+| Extended skills | ✅ catalog / 🔄 runtime | PC `skills1.txt` 1,712 rows parsed and proven via `Skills1FullCatalog.json` | Execute behaviors and scripts |
 | Skill templates 219 | ✅ schema catalog / 🔄 runtime | PC `skilltemplate.txt` imported as 67 field sections / 220 non-empty lines; old 219-row table claim not PC-confirmed | Use schema to validate real skill table parsing/runtime; do not mark as 219 data rows |
 | Weapon/thief skill data | ✅ data | 32 + 4 rows | Runtime behavior tests |
 | NPC/Boss skill catalog | ✅ catalog / 🔄 runtime | PC `skills1.txt` subset in `Reference/PcSkill/npcskills.txt`: 158 rows, 145 NPC-script, 21 boss-name, 13 boss-only; old 43-row standalone claim is not PC-proven | Execute skill scripts/AI/combat behavior |
 | 10 faction skill sets | 🔄 | static `SkillSectCatalog` + tests | PC skill tree/script parity and catalog text fixes |
 | Special/translife skills | ✅ source catalog / 🔄 runtime | `specialskills.txt` now proves 576 PC `skills1.txt` special-script rows (not old 58); `translifeskill.txt` proves 9 PC `skills.txt` translife4th rows; separate Translife level table remains proven at `PcTask/translife.txt` | Execute/apply skill effects, unlock flow, formulas, scripts, UI/runtime side effects |
 | Skill level up | 🔄 | level/progression services exist | PC formula/Lua parity proof |
-| Missile effects | 🔄 | local missile rows 441+441 | Verify correct PC missile count and effect SPR coverage |
+| Missile effects | ✅ catalog / ✅ runtime | 467 exact unique PC records proven; speed/lifetime wired into `MissileSpawner` | Effect SPR rendering and combat side-effects |
 | Skill icons/animations | 🔄 | partial visual services/tests | All-skill icon/animation provenance audit |
 | Skill damage formula | 🔄 | `PcSkillDamageService` and `DamageFormulaService` partial | KNpc/KSkill parity and broader formula tests |
 | Meridian 128 | ✅ data/service | `meridian_level.txt` 128 rows; service/tests | Full effect/UX parity audit |
