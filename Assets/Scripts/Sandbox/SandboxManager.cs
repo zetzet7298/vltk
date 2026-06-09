@@ -494,6 +494,17 @@ namespace VLTK.Sandbox
                 if (GameplayLoop != null)
                     GameplayLoop.OnDeath += e =>
                     {
+                        if (e.isPlayer)
+                        {
+                            // Player died -> check for revive pos (RevivePosService using current map or default map)
+                            var mapId = MapManager?.ActiveMapId ?? defaultMapId;
+                            var revivePos = RevivePosService?.GetDefaultRevivePosition(mapId);
+                            if (revivePos != null)
+                            {
+                                SubsystemLog.Info("Sandbox", $"Player death event -> revive requested at Map={revivePos.mapId}, Pos=({revivePos.worldPosition.x}, {revivePos.worldPosition.y})");
+                                // A real implementation would start a timer, show UI, then call PlayerController.PlaceAt() + restore HP/MP.
+                            }
+                        }
                         if (!e.isPlayer && e.victimTemplateId != null)
                             QuestService?.UpdateKillObjective(e.victimTemplateId.Value);
                     };
@@ -942,7 +953,12 @@ namespace VLTK.Sandbox
             GameplayLoop.OnDeath += e =>
             {
                 if (e.isPlayer)
-                    SubsystemLog.Info("Gameplay", $"Player chết! Respawn sau 5s.");
+                {
+                    var mapId = MapManager?.ActiveMapId ?? defaultMapId;
+                    var revivePos = RevivePosService?.GetDefaultRevivePosition(mapId);
+                    string reviveMsg = revivePos != null ? $" Revive Map={revivePos.mapId} Pos={revivePos.worldPosition}." : "";
+                    SubsystemLog.Info("Gameplay", $"Player chết! Respawn sau 5s.{reviveMsg}");
+                }
                 else
                     SubsystemLog.Info("Gameplay", $"{e.victimNameVi} bị giết. +{e.expReward}EXP +{e.silverReward}Bạc");
             };
