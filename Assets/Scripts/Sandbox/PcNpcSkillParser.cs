@@ -24,8 +24,8 @@ namespace VLTK.Sandbox
         public const int ChildSkillIdCol = 20;
         public const int ChildSkillLevelCol = 21;
         public const int ChildSkillNumCol = 22;
-        public const int MaxLevelCol = 53;
-        public const int LvlSetScriptCol = 70;
+        public const int MaxLevelCol = 54;
+        public const int LvlSetScriptCol = 71;
         public const int PcSkills1ColumnCount = 115;
 
         public static List<PcNpcSkillEntry> ParseFile(string path)
