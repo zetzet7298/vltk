@@ -62,7 +62,7 @@
         </ui:VisualElement>
 
         <!-- PC Ui3/icon_bar.ini: right-side 7 icon strip. Visuals are exact SPR frame-0 decodes; layout is mobile-safe beside minimap. -->
-        <ui:VisualElement name="PcIconBar" class="hud-pc-icon-bar">
+        <ui:VisualElement name="PcIconBar" class="hud-pc-icon-bar" style="display: none;">
             <ui:VisualElement name="IconBarArenaBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarArenaBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
             <ui:VisualElement name="IconBarActivityBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarActivityBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
             <ui:VisualElement name="IconBarTreasureBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarTreasureBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
@@ -143,8 +143,8 @@
         </ui:VisualElement>
 
         <!-- Full PC utility set. Mobile UX: one button opens/closes, one switch swaps Tác vụ/Menu beside the minimap. -->
-        <ui:VisualElement name="UtilityToggleBtn" class="hud-utility-toggle-btn"><ui:VisualElement name="UtilityToggleBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilityToggleLabel" text="Mở" class="hud-utility-toggle-label"/></ui:VisualElement>
-        <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock hidden">
+        <ui:VisualElement name="UtilityToggleBtn" class="hud-utility-toggle-btn" style="display: none;"><ui:VisualElement name="UtilityToggleBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilityToggleLabel" text="Mở" class="hud-utility-toggle-label"/></ui:VisualElement>
+        <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock hidden" style="display: none;">
             <ui:VisualElement name="UtilitySwitchBtn" class="hud-utility-switch-btn"><ui:VisualElement name="UtilitySwitchBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilitySwitchLabel" text="Menu" class="hud-utility-switch-label"/></ui:VisualElement>
             <ui:VisualElement name="MobileUtilityActionRow" class="hud-mobile-utility-row">
                 <ui:VisualElement name="BtnSit" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>

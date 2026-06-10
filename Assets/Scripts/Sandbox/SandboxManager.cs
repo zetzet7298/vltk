@@ -1394,7 +1394,7 @@ namespace VLTK.Sandbox
             {
                 // MobileJoystick already in scene (e.g. from Sandbox.unity) — still ensure the
                 // mount toggle button is wired so testers can mount/dismount from the HUD.
-                EnsureMountToggleButton(existing.transform.parent as RectTransform);
+                // EnsureMountToggleButton(existing.transform.parent as RectTransform);
                 return existing;
             }
 
@@ -1446,7 +1446,7 @@ namespace VLTK.Sandbox
             joystick.inputRadius = 55f;
             joystick.deadZone = 0.08f;
             joystick.sensitivity = 1.35f;
-            EnsureMountToggleButton(canvasGo.GetComponent<RectTransform>());
+            // EnsureMountToggleButton(canvasGo.GetComponent<RectTransform>());
             return joystick;
         }
 
@@ -1649,7 +1649,7 @@ namespace VLTK.Sandbox
             }
 
             // Add HUD buttons for panels (on the joystick canvas)
-            EnsureHudButtons();
+            // EnsureHudButtons();
         }
 
         /// <summary>
