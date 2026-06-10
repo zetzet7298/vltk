@@ -54,6 +54,38 @@ namespace VLTK.Sandbox
         {
             _mapManager = SandboxManager.Instance?.MapManager;
 
+            // Setup ScrollView runtime for MapList to make it scrollable and prevent it from overflowing the panel
+            if (listContent != null && listContent.name == "MapList")
+            {
+                var parentRt = listContent.GetComponent<RectTransform>();
+                if (parentRt != null)
+                {
+                    // Reset sizeDelta.y to 0 so the viewport stretches correctly within the panel bounds
+                    parentRt.sizeDelta = new Vector2(parentRt.sizeDelta.x, 0f);
+                }
+
+                var scrollRect = listContent.gameObject.AddComponent<ScrollRect>();
+                listContent.gameObject.AddComponent<RectMask2D>();
+
+                var contentGo = new GameObject("Content");
+                contentGo.transform.SetParent(listContent, false);
+                var contentRt = contentGo.AddComponent<RectTransform>();
+                contentRt.anchorMin = new Vector2(0f, 1f);
+                contentRt.anchorMax = new Vector2(1f, 1f);
+                contentRt.pivot = new Vector2(0.5f, 1f);
+                contentRt.anchoredPosition = Vector2.zero;
+                contentRt.sizeDelta = new Vector2(0f, 0f);
+
+                scrollRect.content = contentRt;
+                scrollRect.horizontal = false;
+                scrollRect.vertical = true;
+                scrollRect.movementType = ScrollRect.MovementType.Clamped;
+
+                // Redirect listContent to the new Content so items are added there
+                listContent = contentRt;
+                _scrollRect = scrollRect;
+            }
+
             if (searchButton != null)
                 searchButton.onClick.AddListener(DoSearch);
 
@@ -64,7 +96,46 @@ namespace VLTK.Sandbox
                 unloadButton.onClick.AddListener(UnloadCurrentMap);
 
             if (searchInput != null)
+            {
+                // Align text nicely to MiddleLeft to prevent it from offseting to the top
+                if (searchInput.textComponent != null)
+                {
+                    searchInput.textComponent.alignment = TextAnchor.MiddleLeft;
+                    searchInput.textComponent.fontSize = 14;
+                }
+
+                // Add search placeholder dynamically since it's missing in the prefab
+                if (searchInput.placeholder == null)
+                {
+                    var placeholderGo = new GameObject("Placeholder");
+                    placeholderGo.transform.SetParent(searchInput.transform, false);
+                    
+                    var placeholderText = placeholderGo.AddComponent<Text>();
+                    placeholderText.text = "Tìm kiếm bản đồ...";
+                    if (searchInput.textComponent != null)
+                    {
+                        placeholderText.font = searchInput.textComponent.font;
+                        placeholderText.fontSize = 14;
+                        placeholderText.alignment = TextAnchor.MiddleLeft;
+                    }
+                    placeholderText.fontStyle = FontStyle.Italic;
+                    placeholderText.color = new Color(0.6f, 0.6f, 0.6f, 0.6f);
+                    
+                    var pRt = placeholderGo.GetComponent<RectTransform>();
+                    if (pRt != null)
+                    {
+                        pRt.anchorMin = Vector2.zero;
+                        pRt.anchorMax = Vector2.one;
+                        pRt.offsetMin = new Vector2(5f, 0f);
+                        pRt.offsetMax = new Vector2(-5f, 0f);
+                    }
+                    searchInput.placeholder = placeholderText;
+                }
+
                 searchInput.onEndEdit.AddListener(_ => DoSearch());
+                // Auto-filter: search dynamically as the user types
+                searchInput.onValueChanged.AddListener(_ => DoSearch());
+            }
 
             if (obstacleToggle != null)
             {
