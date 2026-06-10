@@ -172,22 +172,12 @@
         </ui:VisualElement>
 
         <!-- PC quick item/left-right skill buttons: 1..9 -> ShortcutUseItem, T/P -> mobile skill assignment. -->
-        <ui:VisualElement name="PcShortcutToggleBtn" class="hud-pc-shortcut-toggle-btn"><ui:Label name="PcShortcutToggleLabel" text="1-9" class="hud-pc-shortcut-toggle-label"/></ui:VisualElement>
+        <ui:VisualElement name="PcShortcutToggleBtn" class="hud-pc-shortcut-toggle-btn" style="display: none;"><ui:Label name="PcShortcutToggleLabel" text="1-9" class="hud-pc-shortcut-toggle-label"/></ui:VisualElement>
         <ui:VisualElement name="PcShortcutDock" class="hud-pc-shortcut-dock">
             <ui:VisualElement name="PcShortcutGrid" class="hud-pc-shortcut-grid">
                 <ui:VisualElement name="PcItemSlot0" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-1"/></ui:VisualElement>
                 <ui:VisualElement name="PcItemSlot1" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-2"/></ui:VisualElement>
                 <ui:VisualElement name="PcItemSlot2" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-3"/></ui:VisualElement>
-                <ui:VisualElement name="PcItemSlot3" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-4"/></ui:VisualElement>
-                <ui:VisualElement name="PcItemSlot4" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-5"/></ui:VisualElement>
-                <ui:VisualElement name="PcItemSlot5" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-6"/></ui:VisualElement>
-                <ui:VisualElement name="PcItemSlot6" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-7"/></ui:VisualElement>
-                <ui:VisualElement name="PcItemSlot7" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-8"/></ui:VisualElement>
-                <ui:VisualElement name="PcItemSlot8" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-9"/></ui:VisualElement>
-            </ui:VisualElement>
-            <ui:VisualElement name="PcSkillShortcutRow" class="hud-pc-skill-shortcut-row">
-                <ui:VisualElement name="PcLeftSkillBtn" class="hud-pc-skill-shortcut-btn"><ui:VisualElement class="hud-pc-skill-shortcut-icon left-skill"/><ui:Label text="T" class="hud-pc-skill-shortcut-label"/></ui:VisualElement>
-                <ui:VisualElement name="PcRightSkillBtn" class="hud-pc-skill-shortcut-btn"><ui:VisualElement class="hud-pc-skill-shortcut-icon right-skill"/><ui:Label text="P" class="hud-pc-skill-shortcut-label"/></ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
 

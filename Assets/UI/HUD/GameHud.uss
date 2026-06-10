@@ -1659,6 +1659,7 @@
 /* PC quick shortcuts — small toggle to show/hide the 1-9 item slot bar.
    Keep subtle, PC-style. */
 .hud-pc-shortcut-toggle-btn {
+    display: none;
     position: absolute;
     right: 148px;
     top: 54px;
@@ -1787,32 +1788,38 @@
 
 .hud-pc-shortcut-dock {
     position: absolute;
-    left: 50%;
-    margin-left: -400px; /* Center 800px */
-    bottom: 0px;
-    top: auto; right: auto;
-    width: 800px;
-    height: 106px;
-    /* REMOVED: pc_hud.png was causing dark overlay at 7 o'clock. */
-
-    /* Crop the exact bottom 106 pixels of the 800x600 image */
-    -unity-background-scale-mode: stretch-to-fill;
-    background-color: transparent; border-width: 0px; padding: 0px; border-radius: 0px;
+    right: 6px;
+    top: 175px;
+    left: auto;
+    bottom: auto;
+    width: 136px;
+    height: 44px;
+    background-color: rgba(5, 10, 6, 0.6);
+    border-width: 0px;
+    border-radius: 6px;
+    padding: 4px;
+    z-index: 914;
+    margin-left: 0px;
 }
 .hud-pc-shortcut-grid {
     position: absolute;
-    left: 15px;
-    bottom: 15px;
-    width: 350px;
-    height: 36px;
+    left: 0px;
+    bottom: 0px;
+    top: 0px;
+    right: 0px;
+    width: auto;
+    height: auto;
     flex-direction: row;
     flex-wrap: nowrap;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: space-around;
 }
 .hud-pc-item-slot {
-    width: 36px; height: 36px; margin: 0px; margin-right: 2px;
-    background-color: transparent; border-width: 0px;
+    width: 36px;
+    height: 36px;
+    margin: 0px;
+    background-color: transparent;
+    border-width: 0px;
 }
 .hud-pc-skill-shortcut-row {
     position: absolute;
