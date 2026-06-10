@@ -406,6 +406,17 @@ namespace VLTK.Sandbox
 
         public void BootstrapCombatForTests(AssetRegistry registry = null)
         {
+            if (Instance == null) 
+            {
+                var field = typeof(SandboxManager).GetProperty("Instance").GetSetMethod(true);
+                field?.Invoke(this, new object[] { this });
+            }
+            
+            if (PcSkillsFull == null)
+            {
+                PcSkillsFull = PcSkillRegistry.LoadFromDirectory(System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+            }
+            
             AssetRegistry = registry ?? new AssetRegistry();
             BootstrapCombatRuntime();
         }

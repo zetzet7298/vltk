@@ -27,10 +27,9 @@ namespace VLTK.Sandbox
         private void Awake()
         {
             _overlayRoot = new GameObject("ObstacleOverlay");
-            _overlayRoot.transform.SetParent(transform, false);
-            // Visible by default so the map shows on play.
-            _overlayRoot.SetActive(true);
-            _visible = true;
+            // Hidden by default — overlay is a debug/visualisation aid.
+            _overlayRoot.SetActive(false);
+            _visible = false;
             CreateSharedResources();
         }
 

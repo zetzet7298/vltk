@@ -293,8 +293,6 @@ namespace VLTK.UI
             Label(tabX + 210f, tabY, 60f, 16f, "Môn phái", _chatTab);
             Label(tabX + 280f, tabY, 45f, 16f, "Khác", _chatTab);
 
-            // Chat warning
-            Label(155f, 630f, 430f, 18f, "!! Hãy sử dụng hồi phục", _chatWarn);
 
             // ═══ MINIMAP TEXT ═══
             DrawMinimapCoordinates();

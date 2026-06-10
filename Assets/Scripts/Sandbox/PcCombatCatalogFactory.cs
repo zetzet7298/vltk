@@ -564,7 +564,28 @@ namespace VLTK.Sandbox
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
 
-        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form) => new SkillDefinition { skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, attackRadius=radius, missileForm=form, faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : IsShaolinSkill(id) ? CombatFaction.Shaolin : IsTangMenSkill(id) ? CombatFaction.TangMen : IsEMeiSkill(id) ? CombatFaction.EMei : IsTianWangSkill(id) ? CombatFaction.TianWang : IsWuDuSkill(id) ? CombatFaction.WuDu : IsCuiYanSkill(id) ? CombatFaction.CuiYan : IsTianRenSkill(id) ? CombatFaction.TianRen : IsKunLunSkill(id) ? CombatFaction.KunLun : CombatFaction.None, iconSourceId = Sprite(IconPathForSkill(id)), equipLimit=-2 };
+        private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form)
+        {
+            var iconPath = IconPathForSkill(id);
+
+            // Fetch actual PC text icon path from parsed registries
+            if (SandboxManager.Instance != null && SandboxManager.Instance.PcSkillsFull != null)
+            {
+                var pcSkill = SandboxManager.Instance.PcSkillsFull.Resolve(id);
+                if (pcSkill != null && !string.IsNullOrEmpty(pcSkill.iconPath))
+                {
+                    iconPath = pcSkill.iconPath;
+                }
+            }
+            
+            return new SkillDefinition 
+            { 
+                skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, 
+                attackRadius=radius, missileForm=form, 
+                faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : IsShaolinSkill(id) ? CombatFaction.Shaolin : IsTangMenSkill(id) ? CombatFaction.TangMen : IsEMeiSkill(id) ? CombatFaction.EMei : IsTianWangSkill(id) ? CombatFaction.TianWang : IsWuDuSkill(id) ? CombatFaction.WuDu : IsCuiYanSkill(id) ? CombatFaction.CuiYan : IsTianRenSkill(id) ? CombatFaction.TianRen : IsKunLunSkill(id) ? CombatFaction.KunLun : CombatFaction.None, 
+                iconSourceId = Sprite(iconPath), equipLimit=-2 
+            };
+        }
 
         // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
