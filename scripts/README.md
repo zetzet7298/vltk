@@ -1,6 +1,24 @@
 # Scripts
 
-This directory contains harness automation tools.
+This directory contains harness automation tools plus VLTK PC→Mobile audit/port helper scripts.
+
+## VLTK PC source-of-truth for scripts
+
+Scripts that inspect PC data must read the canonical source combination:
+
+```text
+/var/www/vltksource_new/vl_update_27/Client 6.0
+/var/www/vltksource_new/vl_update_27/Server 6.0
+/var/www/vltksource_new/vl_update_27/pak_unpacked
+```
+
+The unpack manifest is:
+
+```text
+/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json
+```
+
+Do not point new scripts at old temporary unpack trees; they were removed. Use `unpak_tool.py` only for narrow repair/re-unpack cases.
 
 ## Harness CLI
 

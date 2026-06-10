@@ -29,9 +29,9 @@ PC HUD is **data-driven**, but the source layout the original version of this
 skill assumed (`Utility/Run/Ui/ui3/`) **does not exist** in `vltksource_new`. Do
 not trust that path. Verified reality (this is the hard-won correction):
 
-- INI + SPR art live **inside PAK archives**: `/var/www/vltksource_new/vl_update_27/Client 6.0/data/*.pak`
-  (notably `1024.pak` for 1024-res UI, `updatejx08.pak` for patched art, `800.pak` for 800-res).
-- Extract them with `/var/www/vltktool/unpak_tool.py` (PAK index + per-entry decompress).
+- INI + SPR art live in the canonical unpacked PAK source tree first: `/var/www/vltksource_new/vl_update_27/pak_unpacked/vl_update_27/Client 6.0/data/<pak>/...`
+  (notably `1024/` for 1024-res UI, `updatejx08/` for patched art, `800/` for 800-res).
+- Use `/var/www/vltktool/unpak_tool.py` only for exceptional repair/re-unpack cases; normal HUD porting should read the already-unpacked files.
 - Loose INI fragments exist under `Client 6.0/ui` and Lua under `Client 6.0/script/ui`,
   but they are partial. The top-bar INI `顶部控制条.ini` is loose; the bottom-bar INIs
   are inside the PAKs.
@@ -91,8 +91,8 @@ settings in this project. Keep art in UI Toolkit; only use IMGUI/uGUI for text i
 
 ## PAK / SPR extraction workflow
 
-The art you need is almost always inside a PAK, not loose on disk. First read
-`/var/www/vltktool/README.md` and use the existing tools there. Do not write ad-hoc
+The art you need is usually already available in the canonical unpacked PAK tree. First read
+`/var/www/vltksource_new/vl_update_27/pak_unpacked/_SOURCE_OF_TRUTH.txt` and `/var/www/vltktool/README.md`. Do not write ad-hoc
 SPR/PAK scanners unless the tool itself needs a surgical enhancement; broad scans can
 crash the machine and usually produce false confidence.
 
@@ -102,7 +102,7 @@ Pipeline:
    `\spr\UI3\主界面\背包按钮.spr`) and hash with `unpak_tool.file_id_from_bytes`. Scan
    each PAK's index for that uid. If the hash misses, use `resolve_uid.py` or a narrow
    `find_spr_by_image.py --pak <one pak>` query; never scan the whole source tree.
-2. **Decompress the entry** with `/var/www/vltktool/unpak_tool.py` or its library API.
+2. **Prefer already-unpacked files** under `/var/www/vltksource_new/vl_update_27/pak_unpacked`; only decompress with `/var/www/vltktool/unpak_tool.py` if the canonical tree/manifest proves a repair case is needed.
 3. **Decode SPR frames to PNG.** Each SPR holds N frames; use
    `/var/www/vltktool/extract_item_spr.py` to write `*_frame_000.png` etc.
 4. **Copy the PNG into the Unity project** under `Assets/UI/HUD/Art/` (and the mirror

@@ -63,18 +63,19 @@ Reference files gốc từ PC được lưu trong `Assets/StreamingAssets/Refere
 Khi cần tìm hoặc tra cứu bất kỳ **UI, icon, ảnh, SPR, PAK, hay tài nguyên game** nào trong nguồn PC (`/var/www/vltksource_new`):
 
 1. **PHẢI đọc trước** `/var/www/vltktool/README.md` — đặc biệt phần **Ma Trận Tra Cứu Nhanh Cho Agent** — để chọn đúng tool.
-2. **PHẢI dùng tool có sẵn** trong `/var/www/vltktool/` (vd `find_spr_by_image.py`, `resolve_uid.py`, `unpak_tool.py`, `extract_item_spr.py`).
-3. **KHÔNG được tự viết script riêng** để decode/scan SPR/PAK, hash uid, hay match ảnh. Tool đã chuẩn hoá, đã test, có guard chống crash.
-4. **KHÔNG quét toàn bộ source.** Dùng logic (đọc ini/lua, suy ra feature) để **thu hẹp vùng** (1 PAK / 1 folder) trước, rồi mới trỏ tool vào — quét rộng sẽ crash máy.
-5. Nếu tool thiếu tính năng cần thiết → **bổ sung vào tool trong `/var/www/vltktool/`** (surgical edit + test), không tạo script rời.
- 6. **Tra port docs trước khi quét tool** — `/var/www/vltksource_new/docs/port_docs/` là tài liệu đã audit (verified vs source):
-    - `16_client_resources.md` — cây tài nguyên client (PAK, SPR, ui3, settings) + feature nằm ở PAK/folder nào → dùng để **thu hẹp vùng** (point 4).
+2. **PHẢI đọc/cite cây canonical đã unpack trước**: `/var/www/vltksource_new/vl_update_27/pak_unpacked` (manifest `_unpack_summary.json`). Không unpack lại khi file đã có sẵn.
+3. **PHẢI dùng tool có sẵn** trong `/var/www/vltktool/` khi cần tra cứu/preview/repair (vd `find_spr_by_image.py`, `resolve_uid.py`, `extract_item_spr.py`; `unpak_tool.py` chỉ cho repair/re-unpack đặc biệt).
+4. **KHÔNG được tự viết script riêng** để decode/scan SPR/PAK, hash uid, hay match ảnh. Tool đã chuẩn hoá, đã test, có guard chống crash.
+5. **KHÔNG quét toàn bộ source.** Dùng logic (đọc ini/lua trong source loose + pak_unpacked, suy ra feature) để **thu hẹp vùng** (1 PAK / 1 folder) trước, rồi mới trỏ tool vào — quét rộng sẽ crash máy.
+6. Nếu tool thiếu tính năng cần thiết → **bổ sung vào tool trong `/var/www/vltktool/`** (surgical edit + test), không tạo script rời.
+7. **Tra port docs trước khi quét tool** — `/var/www/vltksource_new/docs/port_docs/` là tài liệu đã audit (verified vs source):
+    - `16_client_resources.md` — cây tài nguyên client (PAK, SPR, ui3, settings) + feature nằm ở PAK/folder nào → dùng để **thu hẹp vùng** (point 5).
     - `18_spr_asset_index.md` — SPR asset index/taxonomy. Cây canonical hiện có 75,928 SPR; label map/API có thể cần rebuild trên root mới trước khi dùng tên Việt/taxonomy tự động (`http://localhost:8081/`, chạy bằng `make dev` trong vltktool).
     - `19_pak_spr_taxonomy.md` — taxonomy PAK→SPR, cách map nhóm → folder gốc khi port.
- 7. **Quy tắc provenance (≥99% không bịa)** — mỗi SPR có field `confidence` trong label map:
-    - `high` (39,509): có path engine THẬT (proven từ npcres-table / part-enum / code-ref / named). Port trực tiếp được.
-    - `unidentified` (23,440): hash-only `unknown/<hash>.spr`, KHÔNG resolve được path. **KHÔNG gán công dụng** (Icon/Visual/Object...) vì sẽ sai — chỉ có metadata đo được (pak nguồn, kích thước, frame). Muốn biết là gì → mở preview tool xem, KHÔNG đoán tên/công dụng.
-    - `pak_origin`: LUÔN biết (sự thật cứng từ pak index) — dùng để truy vết.
+8. **Quy tắc provenance (≥99% không bịa)** — nếu label map đã được rebuild và có field `confidence` thì dùng nó như evidence phụ, không thay thế path thật trong `pak_unpacked`:
+    - `high`: có path engine THẬT (proven từ npcres-table / part-enum / code-ref / named). Port trực tiếp được.
+    - `unidentified`: hash-only `unknown/<hash>.spr`, KHÔNG resolve được path. **KHÔNG gán công dụng** (Icon/Visual/Object...) vì sẽ sai — chỉ có metadata đo được (pak nguồn, kích thước, frame). Muốn biết là gì → mở preview tool xem, KHÔNG đoán tên/công dụng.
+    - `pak_origin`: dùng để truy vết, nhưng vẫn cite đường dẫn file thật trong `pak_unpacked` khi port.
 
 
 ## Unity Package Matrix

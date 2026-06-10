@@ -13,13 +13,12 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 - For **asset SPR** (sprite, effect, icon, NPC visual, HUD, item art), the authoritative index is:
   - `/var/www/vltksource_new/docs/port_docs/18_spr_asset_index.md` (source of truth + tool tra cứu)
   - `/var/www/vltksource_new/docs/port_docs/19_pak_spr_taxonomy.md` (phân loại pak/SPR chi tiết)
-  - Label map: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_labels.json (chỉ nếu đã rebuild; nếu chưa có thì dùng tree canonical + vltktool API/rebuild index)` (path → tên Việt + nhóm, 75,928 SPR in canonical unpack tree; label map may need rebuild)
+  - Canonical unpack root: `/var/www/vltksource_new/vl_update_27/pak_unpacked` (75,928 `.spr` files from all source PAKs)
+  - Manifest: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json`
+  - Optional label map: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_labels.json` only if rebuilt for the canonical root; otherwise use the tree + vltktool API/rebuild index.
   - Tra cứu tool/API: `http://localhost:8081/` (`/api/spr`, `/api/categories`)
-- Canonical unpack tree currently contains 75,928 `.spr` files. Use the API/label map only if it has been rebuilt for the canonical root; otherwise inspect the canonical unpack tree and cite exact paths. Never guess sprite filenames.
-- **Trust protocol (per label `confidence` field) — this guarantees ≥99% reliability:**
-  - `confidence: high` (39,500 file ≈ 62.7%): real engine path PROVEN. `resolve_method`: `npcres-table` (26,504 — hash-matched from `settings/npcres/*.txt` NPC animation tables: Stand/Walk/Run/Die/Attack/Magic/Ride columns), `part-enum` (8,542), `named` (2,561), `code-ref` (746), `hash-reverse`/`hash-xprod` (1,140). The `path`/`name_vi` is the actual asset — safe to port directly.
-  - `confidence: unidentified` (23,449 file): hash-only `unknown/<hash>.spr` with NO resolved path. Purpose is UNKNOWN — category is `Chưa định danh`, with only measurable metadata (pak origin, WxH, frame count). NEVER assign a purpose (Icon/Visual/Object...) to these — doing so is fabrication (e.g. a vase/table/chair would be mislabeled "button"). To know what one is, open it in the preview tool. Never invent a filename or purpose.
-  - `pak_origin` (ALWAYS known, hard fact from the pak index): which pak the engine loaded the file from. Cite this for traceability.
+- Use the API/label map only if it has been rebuilt for the canonical root; otherwise inspect the canonical unpack tree and cite exact paths. Never guess sprite filenames.
+- **Trust protocol:** exact file paths in `pak_unpacked` + manifest evidence are primary. If a rebuilt label map exists, its `confidence`/`pak_origin` fields are secondary provenance; do not fabricate names or purposes for unresolved `unknown/<hash>.spr` entries.
 - Player/NPC visuals are split SPR parts (body/head/limbs/weapon, multi-frame, 8-direction). To build a complete character you must combine the part SPR in the same `spr/npcres/<family>/` group — the "Visual nhân vật/NPC" category collects these.
 - Equipment exists in two forms: an **icon** SPR (inventory/UI, small, few frames) and a **runtime visual** (worn on the body, part of the player visual set). Match the form the task needs.
 - Do not read or trust other PC source trees for port decisions unless the user explicitly expands scope.
@@ -36,8 +35,8 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 
 ## Required Workflow
 
-1. Locate the relevant file(s) under `/var/www/vltksource_new/vl_update_27` before editing Unity code.
-   - For SPR assets: query the SPR tool/API or `_labels.json` (see 18_spr_asset_index.md) to get the exact `path` — do not guess sprite filenames.
+1. Locate the relevant file(s) under both loose PC source and `/var/www/vltksource_new/vl_update_27/pak_unpacked` before editing Unity code.
+   - For SPR assets: inspect the canonical unpacked tree first; query the SPR tool/API or rebuilt `_labels.json` (see 18_spr_asset_index.md) only as helper evidence — do not guess sprite filenames.
 2. Compare the PC source/data/asset against the current Unity implementation.
 3. Implement the Unity port using PC values and assets directly where possible.
 4. Verify with Unity compile/tests or runtime checks appropriate to the task.
