@@ -147,8 +147,8 @@ namespace VLTK.Sandbox
             var statusGo = new GameObject("StatusText");
             statusGo.transform.SetParent(transform, false);
             var statusRect = statusGo.AddComponent<RectTransform>();
-            statusRect.anchorMin = new Vector2(0.05f, 0.08f);
-            statusRect.anchorMax = new Vector2(0.3f, 0.15f);
+            statusRect.anchorMin = new Vector2(0.05f, 0.11f);
+            statusRect.anchorMax = new Vector2(0.3f, 0.17f);
             statusRect.sizeDelta = Vector2.zero;
 
             _statusText = statusGo.AddComponent<Text>();
@@ -179,7 +179,7 @@ namespace VLTK.Sandbox
             vRectTrans.anchorMax = Vector2.one;
             vRectTrans.sizeDelta = Vector2.zero;
             viewportGo.AddComponent<Image>().color = new Color(0.05f, 0.07f, 0.10f, 0.9f);
-            viewportGo.AddComponent<Mask>();
+            viewportGo.AddComponent<RectMask2D>();
 
             // Content
             var contentGo = new GameObject("Content");
@@ -332,6 +332,10 @@ namespace VLTK.Sandbox
                 rowGo.transform.SetParent(_contentTrans, false);
                 var rowRect = rowGo.AddComponent<RectTransform>();
                 rowRect.sizeDelta = new Vector2(0, 32); // height of row
+
+                var layoutElement = rowGo.AddComponent<LayoutElement>();
+                layoutElement.minHeight = 32;
+                layoutElement.preferredHeight = 32;
 
                 var bgImg = rowGo.AddComponent<Image>();
                 bgImg.color = item.itemId == _selectedItemId ? new Color(0.2f, 0.35f, 0.6f, 0.7f) : new Color(0.1f, 0.13f, 0.18f, 0.5f);
