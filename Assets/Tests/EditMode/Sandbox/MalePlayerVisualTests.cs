@@ -71,8 +71,8 @@ namespace VLTK.Tests.Sandbox
         public void Catalog_RideIdle_HasFullLayeredHorseAndRider()
         {
             var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Ride, PcWeaponType.EmptyHand).ToList();
-            // 3 horse body parts (HH/HB/HT) + 5 rider parts (BD/HD/HR/LH/RH).
-            Assert.AreEqual(8, parts.Count);
+            // 3 horse body parts (HH/HB/HT) + 5 rider parts (BD/HD/HR/LH/RH) + 1 shadow part (YY).
+            Assert.AreEqual(9, parts.Count);
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseFront));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseMiddle));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseRear));
@@ -81,9 +81,9 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Hair));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftHand));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightHand));
-            // No weapon/shadow when mounted (PC has no mounted weapon/shadow SPRs).
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shadow));
+            // No weapon when mounted.
             Assert.IsFalse(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon));
-            Assert.IsFalse(parts.Any(p => p.kind == PlayerSpritePartKind.Shadow));
             // Mounted idle = RideStand = RD01 for every part.
             Assert.IsTrue(parts.All(p => p.sourcePath.Contains("RD01")),
                 "Mounted idle should use RD01 (RideStand) SPRs for all parts.");
@@ -93,12 +93,13 @@ namespace VLTK.Tests.Sandbox
         public void Catalog_RideMove_UsesHR01GallopForAllParts()
         {
             var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.RideMove, PcWeaponType.EmptyHand).ToList();
-            Assert.AreEqual(8, parts.Count);
+            Assert.AreEqual(9, parts.Count);
             // Mounted move = RideRun = HR01 (gallop), 8-direction.
             Assert.IsTrue(parts.All(p => p.sourcePath.Contains("HR01")),
                 "Mounted move should use HR01 (RideRun gallop) SPRs for all parts.");
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseFront && p.sourcePath.Contains("HH_016")));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Body && p.sourcePath.Contains("BD_050")));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shadow && p.sourcePath.Contains("YY_999")));
         }
 
         [Test]

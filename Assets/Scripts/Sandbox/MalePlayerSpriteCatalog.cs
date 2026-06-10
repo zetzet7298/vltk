@@ -181,6 +181,7 @@ namespace VLTK.Sandbox
         {
             return new PlayerSpritePartSpec[]
             {
+                new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
                 // Horse body — drawn behind/around rider per draw-order (ids 12/13/14).
                 // HH/HT SPR header báo dirs=1 sai → ép expectedDirections=8 (khớp HB) để
                 // animation khóa theo hướng rider, không "tự xoay" qua mọi hướng.

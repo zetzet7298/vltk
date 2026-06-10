@@ -256,7 +256,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | SPR decoder/runtime/atlas core | ✅ core | `SprRuntimeService`, `SprDecoder`, `SprAtlasPacker`, tests exist | Direct PC PAK runtime loading not globally audited |
 | Male/female player visual | 🔄 | visual classes/catalog JSON/tests exist | Full PC equipment/layer/hair/weapon/action coverage |
-| Mount/horse visual | 🔄 | horse/mount services/catalogs/tests exist | Full palette/animation parity |
+| Mount/horse visual | 🔄 | horse/mount services/catalogs/tests exist; mounted shadows for male/female and layered horse parts for female configured and verified | Full palette/animation parity |
 | NPC visual | ✅ staged data / 🔄 runtime | `NpcSpriteCoverage` 375/375 | Full animation/state parity |
 
 ### 12. Client / UI

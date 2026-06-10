@@ -131,7 +131,8 @@ namespace VLTK.Sandbox
 
         public void SetAction(PlayerVisualAction action)
         {
-            if (isMounted) action = PlayerVisualAction.Ride;
+            if (isMounted)
+                action = (action == PlayerVisualAction.Move) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
             currentAction = action;
@@ -147,7 +148,7 @@ namespace VLTK.Sandbox
             _loadedAction = (PlayerVisualAction)(-1);
             if (isMounted)
             {
-                currentAction = PlayerVisualAction.Ride;
+                currentAction = (LastMoveInput.sqrMagnitude > 0.0001f) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
             }
             else
             {

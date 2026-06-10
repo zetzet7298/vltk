@@ -30,6 +30,8 @@ namespace VLTK.Sandbox
         public const int ArmorVariant = 50;
         public const int MountArmorVariant = 050;
         public const int MountAltArmorVariant = 072;
+        public const int MountHorseVariant = 016;
+        public const int MountAltHorseVariant = 018;
         public const int ShadowVariant = 999;
         public const int EmptyWeaponVariant = 0;
         public const int StaffWeaponVariant = 010;
@@ -72,13 +74,14 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Build the SPR part spec list for the female player.
-        /// Same shape as MalePlayerSpriteCatalog.BuildParts, but uses FM_ prefix
-        /// and marks Shadow/LW/RW as not required (no female SPRs for them).
+        /// Same shape as MalePlayerSpriteCatalog.BuildParts, but uses FM_ prefix.
         /// </summary>
         public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon)
         {
             if (action == PlayerVisualAction.Ride)
-                return BuildMountedParts(MountArmorVariant);
+                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MalePlayerSpriteCatalog.MountIdleSuffix);
+            if (action == PlayerVisualAction.RideMove)
+                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MalePlayerSpriteCatalog.MountMoveSuffix);
 
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
@@ -88,8 +91,8 @@ namespace VLTK.Sandbox
             // Female has no separate weapon SPRs — LW/RW are not required.
             const bool leftWeaponRequired = false;
             const bool rightWeaponRequired = false;
-            // Female has no shadow SPR — Shadow is not required.
-            const bool shadowRequired = false;
+            // Female shadow maps to male shadow at runtime, which is required.
+            const bool shadowRequired = true;
 
             return new PlayerSpritePartSpec[]
             {
@@ -105,23 +108,35 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
-        /// Mounted female rider (BD/HD/HR/LH/RH) with HM01 action suffix.
-        /// PC npcres/woman mounts never ship Shadow or LW/RW for HM01.
+        /// Mounted female rider + horse parts. Maps horse parts and shadow to male equivalents,
+        /// and rider parts to female paths.
         /// </summary>
-        public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant)
+        public static PlayerSpritePartSpec[] BuildMountedParts(int riderVariant, int horseVariant, string suffix)
         {
             return new PlayerSpritePartSpec[]
             {
-                new(PlayerSpritePartKind.Body,         "MountBody",    BuildPath("BD", bodyVariant, MountActionSuffix)),
-                new(PlayerSpritePartKind.Head,         "MountHead",    BuildPath("HD", bodyVariant, MountActionSuffix)),
-                new(PlayerSpritePartKind.Hair,         "MountHair",    BuildPath("HR", bodyVariant, MountActionSuffix)),
-                new(PlayerSpritePartKind.LeftHand,     "MountLHand",   BuildPath("LH", bodyVariant, MountActionSuffix)),
-                new(PlayerSpritePartKind.RightHand,    "MountRHand",   BuildPath("RH", bodyVariant, MountActionSuffix)),
+                // Shadow (maps to male shadow)
+                new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
+                // Horse body (maps to male horse body)
+                new(PlayerSpritePartKind.HorseFront,  "HorseFront",   MalePlayerSpriteCatalog.BuildPath("HH", horseVariant, suffix), true, 8),
+                new(PlayerSpritePartKind.HorseMiddle, "HorseMiddle",  MalePlayerSpriteCatalog.BuildPath("HB", horseVariant, suffix), true, 8),
+                new(PlayerSpritePartKind.HorseRear,   "HorseRear",    MalePlayerSpriteCatalog.BuildPath("HT", horseVariant, suffix), true, 8),
+                // Rider
+                new(PlayerSpritePartKind.Body,         "MountBody",    BuildPath("BD", riderVariant, suffix)),
+                new(PlayerSpritePartKind.Head,         "MountHead",    BuildPath("HD", riderVariant, suffix)),
+                new(PlayerSpritePartKind.Hair,         "MountHair",    BuildPath("HR", riderVariant, suffix)),
+                new(PlayerSpritePartKind.LeftHand,     "MountLHand",   BuildPath("LH", riderVariant, suffix)),
+                new(PlayerSpritePartKind.RightHand,    "MountRHand",   BuildPath("RH", riderVariant, suffix)),
             };
         }
 
         public static string BuildPath(string part, int variant, string action)
         {
+            if (part == "YY")
+            {
+                // Female characters reuse male shadow SPRs since female-specific shadow files do not exist.
+                return MalePlayerSpriteCatalog.BuildPath("YY", variant, action);
+            }
             return SourceRoot + @"\FM_" + part + "_" + variant.ToString("D3") + "_" + action + ".spr";
         }
 
