@@ -118,7 +118,7 @@
 .hud-minimap-frame {
     width: 130px;
     height: 130px;
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgb(60,80,60);
     border-radius: 0px;
     background-color: rgba(2,8,4,0.92);
@@ -154,7 +154,7 @@
     height: 8px;
     border-radius: 4px;
     background-color: rgb(255,230,40);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgb(80,20,0);
 }
 
@@ -185,7 +185,7 @@
     font-size: 10px;
     color: rgb(0,255,255);
     background-color: rgba(0,0,0,0.66);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgb(255,0,0);
 }
 
@@ -265,7 +265,7 @@
     width: 520px;
     height: 560px;
     background-color: rgba(5,12,10,0.96);
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgb(180,150,80);
     padding-left: 10px;
     padding-right: 10px;
@@ -293,7 +293,7 @@
     width: 22px;
     height: 22px;
     background-color: rgba(80,20,10,0.95);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgb(230,200,120);
 }
 
@@ -301,7 +301,7 @@
     position: relative;
     width: 500px;
     height: 500px;
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgb(180,150,80);
     background-color: rgba(10,20,12,0.95);
     overflow: hidden;
@@ -568,7 +568,7 @@
     flex-direction: row;
     align-items: center;
     background-color: rgba(0,0,0,0.28);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(0,90,80,0.45);
 }
 
@@ -820,7 +820,7 @@
 }
 
 .hud-buff-cell { width: 24px; height: 30px; margin: 1px; align-items: center; justify-content: flex-start; }
-.hud-buff-icon { width: 20px; height: 20px; border-width: 1px; border-radius: 2px; background-color: rgb(10, 20, 15); -unity-background-scale-mode: scale-to-fit; }
+.hud-buff-icon { width: 20px; height: 20px; border-width: 0px; border-radius: 2px; background-color: rgb(10, 20, 15); -unity-background-scale-mode: scale-to-fit; }
 .hud-buff-border-green { border-color: rgb(55, 231, 63); }
 .hud-buff-border-orange { border-color: rgb(255, 140, 0); }
 .hud-buff-timer { font-size: 7px; color: rgb(55, 231, 63); -unity-text-align: middle-center; height: 10px; margin-top: 1px; -unity-font-style: bold; }
@@ -842,7 +842,7 @@
     flex-direction: row;
     align-items: center;
     background-color: rgba(5, 10, 8, 0.85);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgb(45, 130, 105);
     border-radius: 4px;
     margin-bottom: 4px;
@@ -859,7 +859,7 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-.hud-team-faction-icon { width: 26px; height: 26px; margin-right: 6px; background-color: rgba(0,0,0,0.5); -unity-background-scale-mode: scale-to-fit; }
+.hud-team-faction-icon { width: 26px; height: 26px; margin-right: 6px; background-color: rgba(0,0,0,0.8); border-width: 0px; border-color: #333333; -unity-background-scale-mode: scale-to-fit; }
 .hud-team-member-info { flex-grow: 1; flex-direction: column; }
 .hud-team-member-name { font-size: 10px; color: rgb(165, 255, 203); -unity-font-style: bold; margin-bottom: 2px; max-width: 120px; overflow: hidden; }
 .hud-team-bar-track { height: 5px; width: 73px; background-color: rgba(0, 0, 0, 0.6); margin-bottom: 1px; overflow: hidden; }
@@ -875,7 +875,7 @@
     width: 182px;
     height: 110px;
     background-color: rgba(5, 12, 10, 0.95);
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgb(180, 150, 80);
     border-radius: 4px;
     padding: 6px;
@@ -889,7 +889,7 @@
     height: 14px;
     background-color: rgba(180, 50, 40, 0.85);
     border-radius: 7px;
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgb(220, 220, 220);
 }
 
@@ -906,7 +906,7 @@
     width: 180px;
     height: 80px;
     background-color: rgba(5, 12, 10, 0.95);
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgb(180, 150, 80);
     border-radius: 4px;
     padding: 8px;
@@ -934,7 +934,7 @@
     width: 320px;
     max-height: 240px;
     background-color: rgba(15, 35, 28, 0.97);
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgb(80, 160, 120);
     border-radius: 8px;
     position: absolute;
@@ -947,7 +947,7 @@
 .hud-face-picker-close { width: 20px; height: 20px; background-color: rgba(180, 60, 60, 0.85); border-radius: 10px; }
 .hud-face-picker-list { max-height: 190px; }
 .hud-face-picker-list .unity-scroll-view__content-container { flex-direction: row; flex-wrap: wrap; padding: 4px; }
-.hud-face-item { width: 28px; height: 28px; margin: 2px; align-items: center; justify-content: center; background-color: rgba(20, 50, 40, 0.8); border-width: 1px; border-color: rgb(50, 100, 80); border-radius: 4px; }
+.hud-face-item { width: 28px; height: 28px; margin: 2px; align-items: center; justify-content: center; background-color: rgba(20, 50, 40, 0.8); border-width: 0px; border-color: rgb(50, 100, 80); border-radius: 4px; }
 .hud-face-item-text { font-size: 14px; -unity-text-align: middle-center; }
 
 
@@ -965,7 +965,7 @@
     width: 340px;
     max-height: 440px;
     background-color: rgba(15,35,28,0.97);
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgb(80,160,120);
     border-radius: 8px;
 }
@@ -976,7 +976,7 @@
 .hud-skill-picker-list { height: 380px; max-height: 380px; overflow: hidden; }
 .hud-skill-picker-list .unity-scroll-view__content-container { min-height: 760px; }
 
-.skill-picker-item { flex-direction: row; align-items: center; padding: 8px 12px; margin: 3px 6px; border-width: 1px; border-color: rgb(50,100,80); border-radius: 4px; background-color: rgba(20,50,40,0.8); }
+.skill-picker-item { flex-direction: row; align-items: center; padding: 8px 12px; margin: 3px 6px; border-width: 0px; border-color: rgb(50,100,80); border-radius: 4px; background-color: rgba(20,50,40,0.8); }
 .skill-picker-item:hover { background-color: rgba(40,80,60,0.9); border-color: rgb(100,180,130); }
 .skill-picker-icon { width: 40px; height: 40px; margin-right: 10px; background-size: contain; }
 .skill-picker-info { flex: 1; }
@@ -1070,7 +1070,7 @@
     height: 26px;
     margin: 1px;
     background-color: rgba(2,2,2,0.55);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(42,37,35,0.85);
     align-items: center;
     justify-content: center;
@@ -1089,6 +1089,11 @@
     right: 0px;
     bottom: 0px;
     width: 1280px;
+    height: 106px;
+    background-image: url('project://database/Assets/Screenshots/pc-evidence/pc_hud.png');
+    -unity-background-image-tint-color: white;
+    /* This requires a proper cropped image, but using color as fallback for now */
+    background-color: #212121;
     height: 220px;
     background-color: rgba(0,0,0,0);
     border-width: 0px;
@@ -1104,7 +1109,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.18);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(220,175,80,0.22);
     border-radius: 18px;
     padding-left: 8px;
@@ -1119,8 +1124,8 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.18);
-    border-width: 1px;
-    border-color: rgba(175,140,72,0.34);
+    border-width: 0px;
+    
     border-radius: 13px;
 }
 
@@ -1171,7 +1176,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.10);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(200,160,60,0.35);
     border-radius: 39px;
 }
@@ -1239,7 +1244,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.10);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(200,160,60,0.30);
     border-radius: 24px;
 }
@@ -1260,7 +1265,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(120,20,20,0.76);
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgba(255,170,120,0.78);
     border-radius: 23px;
 }
@@ -1291,7 +1296,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(16,18,16,0.76);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(255,215,95,0.62);
     border-radius: 15px;
 }
@@ -1376,7 +1381,7 @@
     width: 310px;
     max-height: 380px;
     background-color: rgba(12,18,12,0.94);
-    border-width: 2px;
+    border-width: 0px;
     border-color: rgba(206,165,82,0.86);
     border-radius: 10px;
     padding: 8px;
@@ -1472,7 +1477,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(5,10,6,0.88);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(80,130,100,0.50);
     border-radius: 6px;
     padding-left: 6px;
@@ -1556,7 +1561,7 @@
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0.20);
-    border-width: 1px;
+    border-width: 0px;
     border-color: rgba(175,140,72,0.40);
     border-radius: 11px;
 }
@@ -1689,9 +1694,9 @@
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    background-color: rgba(18,27,16,0.88);
-    border-width: 2px;
-    border-color: rgba(242,202,80,0.66);
+    background-color: transparent;
+    border-width: 0px;
+    
     border-radius: 14px;
     padding: 6px;
     z-index: 914;
@@ -1715,9 +1720,9 @@
     margin-bottom: 1px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0.12);
-    border-width: 1px;
-    border-color: rgba(175,140,72,0.34);
+    background-color: transparent;
+    border-width: 0px;
+    
     border-radius: 7px;
 }
 
@@ -1743,9 +1748,9 @@
     margin-bottom: 3px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0.12);
-    border-width: 1px;
-    border-color: rgba(175,140,72,0.34);
+    background-color: transparent;
+    border-width: 0px;
+    
     border-radius: 9px;
 }
 
@@ -1778,3 +1783,48 @@
 .hud-pc-item-slot-icon.slot-9 { background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_9_pc.png'); }
 .hud-pc-skill-shortcut-icon.left-skill { background-image: url('project://database/Assets/UI/HUD/Art/btn_pc_left_skill_slot.png'); }
 .hud-pc-skill-shortcut-icon.right-skill { background-image: url('project://database/Assets/UI/HUD/Art/btn_pc_right_skill_slot.png'); }
+
+.hud-pc-shortcut-dock {
+    position: absolute;
+    left: 50%;
+    margin-left: -400px; /* Center 800px */
+    bottom: 0px;
+    top: auto; right: auto;
+    width: 800px;
+    height: 106px;
+    background-image: url('project://database/Assets/Screenshots/pc-evidence/pc_hud.png');
+    /* Crop the exact bottom 106 pixels of the 800x600 image */
+    -unity-background-scale-mode: stretch-to-fill;
+    background-color: transparent; border-width: 0px; padding: 0px; border-radius: 0px;
+}
+.hud-pc-shortcut-grid {
+    position: absolute;
+    left: 15px;
+    bottom: 15px;
+    width: 350px;
+    height: 36px;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+.hud-pc-item-slot {
+    width: 36px; height: 36px; margin: 0px; margin-right: 2px;
+    background-color: transparent; border-width: 0px;
+}
+.hud-pc-skill-shortcut-row {
+    position: absolute;
+    left: 372px;
+    bottom: 35px;
+    flex-direction: row;
+}
+.hud-pc-skill-shortcut-btn {
+    width: 36px; height: 36px; margin-right: 2px;
+}
+
+.hud-chat-panel {
+    background-color: transparent;
+}
+.hud-chat-input-row, .hud-chat-tab {
+    background-color: transparent !important;
+}

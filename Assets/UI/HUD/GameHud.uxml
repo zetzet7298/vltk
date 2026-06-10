@@ -173,7 +173,7 @@
 
         <!-- PC quick item/left-right skill buttons: 1..9 -> ShortcutUseItem, T/P -> mobile skill assignment. -->
         <ui:VisualElement name="PcShortcutToggleBtn" class="hud-pc-shortcut-toggle-btn"><ui:Label name="PcShortcutToggleLabel" text="1-9" class="hud-pc-shortcut-toggle-label"/></ui:VisualElement>
-        <ui:VisualElement name="PcShortcutDock" class="hud-pc-shortcut-dock hidden">
+        <ui:VisualElement name="PcShortcutDock" class="hud-pc-shortcut-dock">
             <ui:VisualElement name="PcShortcutGrid" class="hud-pc-shortcut-grid">
                 <ui:VisualElement name="PcItemSlot0" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-1"/></ui:VisualElement>
                 <ui:VisualElement name="PcItemSlot1" class="hud-pc-item-slot"><ui:VisualElement class="hud-pc-item-slot-icon slot-2"/></ui:VisualElement>
@@ -192,7 +192,7 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom">
-            <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster">
+            <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster hidden">
                 <ui:VisualElement name="PrimaryAttackBtn" class="hud-primary-attack-btn"><ui:VisualElement name="PrimaryAttackBtnIcon" class="hud-primary-attack-icon"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot0" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-main"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot1" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-left"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="2" class="hud-skill-slot-label"/></ui:VisualElement>
