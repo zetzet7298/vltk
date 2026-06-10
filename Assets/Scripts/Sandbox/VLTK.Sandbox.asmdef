@@ -4,7 +4,8 @@
     "references": [
         "VLTK.Core",
         "VLTK.Model",
-        "VLTK.Sprites"
+        "VLTK.Sprites",
+        "Unity.InputSystem"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

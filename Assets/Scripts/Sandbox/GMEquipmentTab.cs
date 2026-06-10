@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 using VLTK.Core;
 using VLTK.Model;
 
@@ -72,8 +73,7 @@ namespace VLTK.Sandbox
 
             var txt = titleGo.AddComponent<Text>();
             txt.text = "TRANG BỊ NGƯỜI CHƠI (GM PANEL)";
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (txt.font == null) txt.font = Font.CreateDynamicFontFromOSFont("Arial", 16);
+            txt.font = VLTK.Core.VltkFont.Bold;
             txt.fontSize = 16;
             txt.fontStyle = FontStyle.Bold;
             txt.color = new Color(0.9f, 0.95f, 1f, 1f);
@@ -106,8 +106,7 @@ namespace VLTK.Sandbox
             textRect.sizeDelta = new Vector2(-10, -10); // padding
 
             var text = textGo.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (text.font == null) text.font = Font.CreateDynamicFontFromOSFont("Arial", 14);
+            text.font = VltkFont.Regular;
             text.fontSize = 14;
             text.color = Color.white;
             text.alignment = TextAnchor.MiddleLeft;
@@ -181,8 +180,7 @@ namespace VLTK.Sandbox
             statusRect.sizeDelta = Vector2.zero;
 
             _statusText = statusGo.AddComponent<Text>();
-            _statusText.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (_statusText.font == null) _statusText.font = Font.CreateDynamicFontFromOSFont("Arial", 12);
+            _statusText.font = VltkFont.Regular;
             _statusText.fontSize = 12;
             _statusText.color = new Color(0.7f, 0.8f, 0.9f, 1f);
             _statusText.text = "Chưa chọn trang bị";
@@ -250,8 +248,8 @@ namespace VLTK.Sandbox
 
             var txt = go.AddComponent<Text>();
             txt.text = text;
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (txt.font == null) txt.font = Font.CreateDynamicFontFromOSFont("Arial", 12);
+            
+            
             txt.fontSize = 12;
             txt.color = new Color(0.7f, 0.8f, 0.9f, 1f);
             txt.alignment = TextAnchor.MiddleLeft;
@@ -265,11 +263,23 @@ namespace VLTK.Sandbox
             rect.anchorMin = min;
             rect.anchorMax = max;
             rect.sizeDelta = Vector2.zero;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
 
             var img = btnGo.AddComponent<Image>();
             img.color = new Color(0.18f, 0.24f, 0.35f, 1f);
+            img.raycastTarget = true; // Ensure image catches clicks
 
             var btn = btnGo.AddComponent<Button>();
+            btn.targetGraphic = img;
+            // Better color feedback
+            var cb = btn.colors;
+            cb.normalColor = img.color;
+            cb.highlightedColor = new Color(0.28f, 0.36f, 0.52f, 1f);
+            cb.pressedColor = new Color(0.12f, 0.18f, 0.28f, 1f);
+            cb.selectedColor = img.color;
+            cb.fadeDuration = 0.05f;
+            btn.colors = cb;
             btn.onClick.AddListener(action);
 
             var txtGo = new GameObject("Text");
@@ -278,15 +288,17 @@ namespace VLTK.Sandbox
             txtRect.anchorMin = Vector2.zero;
             txtRect.anchorMax = Vector2.one;
             txtRect.sizeDelta = Vector2.zero;
+            txtRect.offsetMin = Vector2.zero;
+            txtRect.offsetMax = Vector2.zero;
 
             var txt = txtGo.AddComponent<Text>();
             txt.text = label;
-            txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            if (txt.font == null) txt.font = Font.CreateDynamicFontFromOSFont("Arial", 13);
+            txt.font = VLTK.Core.VltkFont.Regular;
             txt.fontSize = 13;
             txt.fontStyle = FontStyle.Bold;
             txt.alignment = TextAnchor.MiddleCenter;
             txt.color = Color.white;
+            txt.raycastTarget = false; // CRITICAL: text must not block button clicks
 
             return btn;
         }
@@ -428,11 +440,10 @@ namespace VLTK.Sandbox
 
                 var txt = txtGo.AddComponent<Text>();
                 txt.text = $"[{item.itemId}] {item.DisplayName}  -  ResId: {item.resId}";
-                txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-                if (txt.font == null) txt.font = Font.CreateDynamicFontFromOSFont("Arial", 13);
+                txt.font = VLTK.Core.VltkFont.Regular;
                 txt.fontSize = 13;
-                txt.color = new Color(0.9f, 0.9f, 0.95f, 1f);
                 txt.alignment = TextAnchor.MiddleLeft;
+                txt.color = new Color(0.9f, 0.9f, 0.95f, 1f);
 
                 _itemRows.Add(new ItemRow
                 {

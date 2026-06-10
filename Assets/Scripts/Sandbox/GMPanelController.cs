@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using VLTK.Core;
+
 
 namespace VLTK.Sandbox
 {
@@ -130,7 +132,23 @@ namespace VLTK.Sandbox
 
         private void Update()
         {
-            if (!IsTypingInInput() && Input.GetKeyDown(TOGGLE_KEY))
+            if (IsTypingInInput()) return;
+
+            // Support both InputSystem and legacy Input for keyboard shortcut G
+            bool gPressed = false;
+            try
+            {
+                gPressed = Keyboard.current != null && Keyboard.current.gKey.wasPressedThisFrame;
+            }
+            catch { }
+
+            // Fallback to legacy Input (for Editor without InputSystem focus)
+            if (!gPressed)
+            {
+                try { gPressed = Input.GetKeyDown(KeyCode.G); } catch { }
+            }
+
+            if (gPressed)
             {
                 Toggle();
             }
