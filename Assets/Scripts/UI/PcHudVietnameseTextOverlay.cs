@@ -305,8 +305,8 @@ namespace VLTK.UI
                 activeCh = SandboxManager.Instance.ChatService.ActiveChannel;
             }
 
-            float tabX = 155f;
-            float tabY = 32f;   // top boundary aligned under top bar
+            float tabX = 8f;
+            float tabY = 54f;   // top boundary aligned under top bar
             Label(tabX, tabY, 50f, 16f, "Tất cả", (activeCh == ChatChannel.All) ? _chatTabAllActive : _chatTabAll);
             Label(tabX + 55f, tabY, 35f, 16f, "Mật", (activeCh == ChatChannel.Private) ? _chatTabActive : _chatTab);
             Label(tabX + 95f, tabY, 45f, 16f, "Phòng", (activeCh == ChatChannel.Room) ? _chatTabActive : _chatTab);

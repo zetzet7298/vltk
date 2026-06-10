@@ -442,13 +442,14 @@
     border-color: rgba(0,0,0,0);
 }
 
-/* PC SPR chat channel button visuals */
-#ChatTabAll { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-附近频道选择.png'); }
-#ChatTabPrivate { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-密人频道选择.png'); }
-#ChatTabRoom { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-城市频道选择.png'); }
-#ChatTabGuild { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-好友频道选择.png'); }
-#ChatTabFaction { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-门派频道选择.png'); }
-#ChatTabOther { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-队伍频道选择.png'); }
+#ChatTabAll,
+#ChatTabPrivate,
+#ChatTabRoom,
+#ChatTabGuild,
+#ChatTabFaction,
+#ChatTabOther {
+    background-image: none;
+}
 
 .hud-chat-tab.active {
     background-color: rgba(0,0,0,0);
@@ -459,20 +460,10 @@
    Label is hidden by default because PC button art contains the text.
    Enable if PC art doesn't have Vietnamese text overlay. */
 .hud-chat-tab-label {
-    color: rgb(220,240,230);
-    font-size: 11px;
-    -unity-text-align: middle-center;
+    display: none;
 }
 .hud-chat-rail {
-    position: absolute;
-    left: 0px;
-    bottom: 34px;
-    width: 44px;
-    height: 396px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 885;
+    display: none;
 }
 
 .hud-chat-rail-btn {
