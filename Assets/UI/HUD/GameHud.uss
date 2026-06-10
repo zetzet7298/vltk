@@ -1090,7 +1090,8 @@
     bottom: 0px;
     width: 1280px;
     height: 106px;
-    background-image: url('project://database/Assets/Screenshots/pc-evidence/pc_hud.png');
+    /* REMOVED: pc_hud.png was causing yellow overlay. Buttons use individual SPR assets. */
+
     -unity-background-image-tint-color: white;
     /* This requires a proper cropped image, but using color as fallback for now */
     background-color: #212121;
@@ -1792,7 +1793,8 @@
     top: auto; right: auto;
     width: 800px;
     height: 106px;
-    background-image: url('project://database/Assets/Screenshots/pc-evidence/pc_hud.png');
+    /* REMOVED: pc_hud.png was causing dark overlay at 7 o'clock. */
+
     /* Crop the exact bottom 106 pixels of the 800x600 image */
     -unity-background-scale-mode: stretch-to-fill;
     background-color: transparent; border-width: 0px; padding: 0px; border-radius: 0px;

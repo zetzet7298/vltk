@@ -183,7 +183,7 @@ namespace VLTK.Sandbox
         private InputField _inputField;
         private Transform _tabRoot;
         private Font _font;
-        private bool _isOpen = true;
+        private bool _isOpen = false;
         private float _lastRefresh;
 
         public bool IsOpen => _isOpen;
@@ -244,6 +244,8 @@ namespace VLTK.Sandbox
             try
             {
                 BuildUIInternal();
+                if (_panelRoot != null)
+                    _panelRoot.SetActive(_isOpen);
             }
             catch (Exception ex)
             {
