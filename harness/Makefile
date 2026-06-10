@@ -4,13 +4,17 @@
 SHELL := /usr/bin/env bash
 .SHELLFLAGS := -eu -o pipefail -c
 
-BOARD ?= vltk-port-wave1
-OLD_BOARD ?= vltk-port
+BOARD ?= vltk-port-pakunpacked
+OLD_BOARD ?= vltk-port-wave1
 BATCH ?= 10
 TASK ?=
 PROFILE_RE ?= vltk-(audit|impl)-[0-9]+|vltk-reviewer|vltk-integrator|vltk-test
 WATCH_N ?= 10
 REASON ?= manual
+
+# Current Hermes session may carry HERMES_KANBAN_BOARD from an old board.
+# Makefile commands use explicit BOARD instead, so drop the inherited env var.
+unexport HERMES_KANBAN_BOARD
 
 .PHONY: help board stats list diag logs tail show runs dispatch dryrun dispatch-all \
 	watch monitor procs count sys kill-workers pause-auto resume-auto config-check \
@@ -24,6 +28,7 @@ help: ## Show this help
 	@printf "  make logs TASK=t_c94eae02\n"
 	@printf "  make tail TASK=t_c94eae02\n"
 	@printf "  make pause-auto\n\n"
+	@printf "Default BOARD=$(BOARD) is the clean post-pak_unpacked board. Historical pre-migration board: vltk-port-wave1. Corrupt abandoned board: vltk-port.\n\n"
 
 board: ## Print active helper board name
 	@echo "BOARD=$(BOARD)"

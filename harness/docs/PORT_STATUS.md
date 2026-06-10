@@ -1,8 +1,9 @@
 # PORT_STATUS.md — Evidence Audit PC → Mobile
 
-> **Audit date**: 2026-06-09
-> **PC source of truth**: `/var/www/vltksource_new/vl_update_27`
-> **Mobile repo**: `/var/www/vltk-mobile` (`dev` at `0480502` when audit started)
+> **Audit date**: 2026-06-09; source-of-truth refresh: 2026-06-10
+> **PC source of truth**: loose source under `/var/www/vltksource_new/vl_update_27` **plus** canonical unpacked PAK tree `/var/www/vltksource_new/vl_update_27/pak_unpacked`
+> **Unpack manifest**: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json` — 46/46 real source `.pak` files accounted, 401,281/401,640 unique entries on disk (99.91%); 357 known undecoded entries use unsupported compression `0x11000000`.
+> **Mobile repo**: `/var/www/vltk-mobile` (`dev` at `0480502` when audit started; source-truth alignment commits: `0638487`, `794f7ca`)
 > **Scope**: toàn bộ codebase/status, không chỉ map.
 > **Dirty excluded**: `Assets/Scripts/UI/CharacterPanelService.cs`, `Assets/Scripts/UI/GameHudController.cs`, `harness/item_spr_img/` là HUD/UI WIP của human/parallel work, không dùng làm proof.
 
@@ -16,6 +17,8 @@
 | ⚠️ | Old `PORT_STATUS.md` claim was overbroad or false under this audit. |
 
 **Hard rule:** A parser/service/test skeleton is **not** completion. Mark `✅` only when the row states the exact verified scope, e.g. “data catalog loaded”, not “PC behavior complete”.
+
+**Kanban provenance warning:** board `vltk-port-wave1` is historical/pre-`pak_unpacked` migration. Its 30 audit outputs and blocked implementation tasks may be useful as hints, but they are not sufficient evidence after the 2026-06-10 source-of-truth refresh unless rechecked against `/var/www/vltksource_new/vl_update_27/pak_unpacked`. Board `vltk-port` is abandoned/corrupt. New work should use clean board `vltk-port-pakunpacked` and update this file only with fresh evidence.
 
 ## Audit evidence actually collected
 
