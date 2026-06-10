@@ -158,12 +158,12 @@
     border-color: rgb(80,20,0);
 }
 
-/* PC minimap text: map name in yellow (SelfColor=255,255,0), coords in green */
+/* PC minimap text: map name GREEN (Color=0,255,0), coords GREEN (Color=0,255,0) — from ec10b91e.ini */
 .hud-scene-name {
     width: 130px;
     height: 11px;
     font-size: 9px;
-    color: rgb(255,255,0);
+    color: rgb(0,255,0);
     -unity-text-align: middle-center;
 }
 
