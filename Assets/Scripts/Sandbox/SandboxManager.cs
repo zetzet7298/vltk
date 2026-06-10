@@ -1607,6 +1607,20 @@ namespace VLTK.Sandbox
 
             GmPanel = FindObjectOfType<GMPanelController>(true);
 
+            // Wire scene GMButton to GMPanelController.Toggle() (button is placed in scene at top-right corner)
+            if (GmPanel != null)
+            {
+                var gmButtonGO = GameObject.Find("GMButton");
+                if (gmButtonGO != null)
+                {
+                    var gmBtn = gmButtonGO.GetComponent<UnityEngine.UI.Button>();
+                    if (gmBtn != null && gmBtn.onClick.GetPersistentEventCount() == 0)
+                    {
+                        gmBtn.onClick.AddListener(GmPanel.Toggle);
+                    }
+                }
+            }
+
             // Add HUD buttons for panels (on the joystick canvas)
             EnsureHudButtons();
         }
@@ -1697,10 +1711,8 @@ namespace VLTK.Sandbox
                 new Vector2(-175f, 540f), new Color(0.1f, 0.3f, 0.1f, 0.85f),
                 () => ShopPanel?.Toggle());
 
-            // GM button
-            EnsurePanelButton(canvasTransform, "GmBtn", "GM",
-                new Vector2(-175f, 460f), new Color(0.8f, 0.2f, 0.2f, 0.85f),
-                () => GmPanel?.Toggle());
+            // GM button is in scene (GMButton at top-right corner), wired via FindObjectOfType in EnsureMobileUiPanels.
+            // No need to add a duplicate GmBtn here.
         }
 
         private void EnsurePanelButton(RectTransform parent, string name, string label,

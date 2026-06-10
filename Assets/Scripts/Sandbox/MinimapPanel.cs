@@ -119,7 +119,7 @@ namespace VLTK.Sandbox
             containerRt.anchorMin = new Vector2(0.73f, 0.75f);
             containerRt.anchorMax = new Vector2(1f, 1f);
             containerRt.offsetMin = new Vector2(-8f, -8f);
-            containerRt.offsetMax = new Vector2(-8f, -8f);
+            containerRt.offsetMax = new Vector2(-8f, 0f);
 
             // Border/background
             var borderImg = containerGo.AddComponent<Image>();
@@ -164,17 +164,21 @@ namespace VLTK.Sandbox
             _playerDot = playerDotGo.AddComponent<Image>();
             _playerDot.color = new Color(0.2f, 0.9f, 1f, 1f);
 
-            // Map name label
+            // Map name label — must use offsetMin/Max=0 so it stays inside container
             var nameGo = new GameObject("MapName");
             nameGo.transform.SetParent(containerGo.transform, false);
             var nameRt = nameGo.AddComponent<RectTransform>();
-            nameRt.anchorMin = new Vector2(0.05f, 0.93f);
-            nameRt.anchorMax = new Vector2(0.95f, 1f);
+            nameRt.anchorMin = new Vector2(0f, 0.82f);
+            nameRt.anchorMax = new Vector2(1f, 1f);
+            nameRt.offsetMin = new Vector2(4f, 0f);
+            nameRt.offsetMax = new Vector2(-4f, 0f);
             _mapNameText = nameGo.AddComponent<Text>();
             _mapNameText.font = _font;
-            _mapNameText.fontSize = 18;
+            _mapNameText.fontSize = 12;
             _mapNameText.color = new Color(1f, 0.95f, 0.8f);
             _mapNameText.alignment = TextAnchor.MiddleCenter;
+            _mapNameText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            _mapNameText.verticalOverflow = VerticalWrapMode.Truncate;
 
             // Click-to-move on minimap
             var btnGo = new GameObject("ClickArea");
