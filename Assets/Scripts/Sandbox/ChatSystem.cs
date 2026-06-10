@@ -306,12 +306,22 @@ namespace VLTK.Sandbox
                 tabBtn.targetGraphic = tabImg;
                 var channel = ch;
                 tabBtn.onClick.AddListener(() => { _service.SetChannel(channel); Refresh(); });
-                var tabTxt = tabGo.AddComponent<Text>();
+
+                var txtGo = new GameObject("Label");
+                txtGo.transform.SetParent(tabGo.transform, false);
+                var txtRt = txtGo.AddComponent<RectTransform>();
+                txtRt.anchorMin = Vector2.zero;
+                txtRt.anchorMax = Vector2.one;
+                txtRt.offsetMin = Vector2.zero;
+                txtRt.offsetMax = Vector2.zero;
+
+                var tabTxt = txtGo.AddComponent<Text>();
                 tabTxt.text = ChatService.ChannelNameVi(ch);
                 tabTxt.font = _font;
                 tabTxt.fontSize = 16;
                 tabTxt.color = ChatService.ChannelColor(ch);
                 tabTxt.alignment = TextAnchor.MiddleCenter;
+
                 var le = tabGo.AddComponent<LayoutElement>();
                 le.minWidth = 55f;
                 le.minHeight = 22f;
@@ -366,7 +376,16 @@ namespace VLTK.Sandbox
             var sbBtn = sendBtn.AddComponent<Button>();
             sbBtn.targetGraphic = sbImg;
             sbBtn.onClick.AddListener(SendInput);
-            var sbTxt = sendBtn.AddComponent<Text>();
+
+            var sbTxtGo = new GameObject("Label");
+            sbTxtGo.transform.SetParent(sendBtn.transform, false);
+            var sbTxtRt = sbTxtGo.AddComponent<RectTransform>();
+            sbTxtRt.anchorMin = Vector2.zero;
+            sbTxtRt.anchorMax = Vector2.one;
+            sbTxtRt.offsetMin = Vector2.zero;
+            sbTxtRt.offsetMax = Vector2.zero;
+
+            var sbTxt = sbTxtGo.AddComponent<Text>();
             sbTxt.text = "Gửi";
             sbTxt.font = _font;
             sbTxt.fontSize = 20;
