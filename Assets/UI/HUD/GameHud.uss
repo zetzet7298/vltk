@@ -410,6 +410,7 @@
     flex-direction: row;
     align-items: center;
     z-index: 881;
+    margin-left: 44px;
 }
 
 /* PC e3b06434.dat [OpenChannelBtn]: broad channel-open click proxy at the 7-o'clock chat corner.
@@ -463,12 +464,85 @@
     display: none;
 }
 .hud-chat-rail {
+    position: absolute;
+    left: 0px;
+    bottom: 34px;
+    width: 44px;
+    height: 396px;
+    z-index: 885;
+}
+.hud-chat-size {
+    position: absolute;
+    left: 14px;
+    top: 10px;
+    width: 15px;
+    height: 16px;
+}
+.hud-chat-scroll-up {
+    position: absolute;
+    left: 14px;
+    top: 32px;
+    width: 16px;
+    height: 10px;
+}
+.hud-chat-room-scroll-track {
+    position: absolute;
+    left: 16px;
+    top: 44px;
+    width: 12px;
+    height: 95px;
+    background-image: url('project://database/Assets/UI/HUD/Art/chat_scroll_track_pc.png');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+.hud-chat-scroll-thumb {
+    position: absolute;
+    left: 14px;
+    top: 76px;
+    width: 15px;
+    height: 27px;
+}
+.hud-chat-scroll-down {
+    position: absolute;
+    left: 14px;
+    top: 141px;
+    width: 16px;
+    height: 10px;
+}
+.hud-chat-split {
+    position: absolute;
+    left: 15px;
+    top: 154px;
+    width: 14px;
+    height: 85px;
+}
+.hud-chat-channel-toggle {
+    position: absolute;
+    left: 12px;
+    top: 242px;
+    width: 20px;
+    height: 20px;
+}
+.hud-chat-shadow {
+    position: absolute;
+    left: 14px;
+    top: 266px;
+    width: 15px;
+    height: 16px;
+}
+.hud-chat-move {
+    position: absolute;
+    left: 14px;
+    top: 286px;
+    width: 15px;
+    height: 16px;
+}
+.hud-chat-sys-up,
+.hud-chat-sys-down,
+.hud-chat-sys-open {
     display: none;
 }
 
 .hud-chat-rail-btn {
-    width: 44px;
-    height: 44px;
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0);
@@ -477,19 +551,9 @@
 }
 
 .hud-chat-rail-icon {
+    width: 100%;
+    height: 100%;
     -unity-background-scale-mode: scale-to-fit;
-}
-
-/* PC 7e20a7ac/c9c8a750 [ChatRoom_Scroll]: Left=-15 Top=15 Width=12 Height=95 RepeatImg=1.
-   Exact SPR path (\Spr\Ui3\聊天条\聊天条中部改.spr) is not present in active PAKs, so this uses the verified PC HUD evidence crop. */
-.hud-chat-room-scroll-track {
-    position: absolute;
-    left: 16px;
-    top: 59px;
-    width: 12px;
-    height: 95px;
-    background-image: url('project://database/Assets/UI/HUD/Art/chat_scroll_track_pc.png');
-    -unity-background-scale-mode: stretch-to-fill;
 }
 
 .hud-chat-rail-icon.chat-up,
@@ -565,6 +629,7 @@
     border-left-width: 1px;
     border-right-width: 1px;
     border-color: rgb(15, 12, 10);
+    margin-left: 44px;
 }
 
 
