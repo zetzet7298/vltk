@@ -49,6 +49,9 @@ namespace VLTK.Sandbox.ItemData
             {
                 itemId = itemId,
                 resId = PcItemCommon.Int(cols, 5),
+                itemGenre = PcItemCommon.Int(cols, 1),      // Col 1: ItemGenre (armor.txt=0)
+                detailType = PcItemCommon.Int(cols, 2),     // Col 2: DetailType (armor.txt=2)
+                particularType = PcItemCommon.Int(cols, 3), // Col 3: ParticularType
                 nameRaw = nameRaw,
                 nameNormalized = nameRaw,
                 setId = 0,

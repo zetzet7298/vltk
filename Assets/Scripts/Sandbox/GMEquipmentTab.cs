@@ -20,7 +20,9 @@ namespace VLTK.Sandbox
         private Button _btnHelmet;
         private Button _btnArmor;
         private Button _btnWeapon;
+        private Button _btnMount;
         private Button _btnEquip;
+        private Button _btnUnmount;
 
         private readonly List<ItemRow> _itemRows = new();
 
@@ -117,8 +119,8 @@ namespace VLTK.Sandbox
                 RefreshItemList();
             });
 
-            // Category Buttons
-            _btnHelmet = CreateGMButton("MŨ (NÓN)", new Vector2(0.05f, 0.56f), new Vector2(0.3f, 0.63f), () =>
+            // Category Buttons — shifted up a bit to fit 4 categories + buttons
+            _btnHelmet = CreateGMButton("MŨ (NÓN)", new Vector2(0.05f, 0.62f), new Vector2(0.3f, 0.69f), () =>
             {
                 _activeCategory = "Helmet";
                 _selectedItemId = -1;
@@ -126,7 +128,7 @@ namespace VLTK.Sandbox
                 RefreshItemList();
             });
 
-            _btnArmor = CreateGMButton("ÁO (GIÁP)", new Vector2(0.05f, 0.46f), new Vector2(0.3f, 0.53f), () =>
+            _btnArmor = CreateGMButton("ÁO (GIÁP)", new Vector2(0.05f, 0.53f), new Vector2(0.3f, 0.60f), () =>
             {
                 _activeCategory = "Armor";
                 _selectedItemId = -1;
@@ -134,7 +136,7 @@ namespace VLTK.Sandbox
                 RefreshItemList();
             });
 
-            _btnWeapon = CreateGMButton("VŨ KHÍ", new Vector2(0.05f, 0.36f), new Vector2(0.3f, 0.43f), () =>
+            _btnWeapon = CreateGMButton("VŨ KHÍ", new Vector2(0.05f, 0.44f), new Vector2(0.3f, 0.51f), () =>
             {
                 _activeCategory = "Weapon";
                 _selectedItemId = -1;
@@ -142,14 +144,33 @@ namespace VLTK.Sandbox
                 RefreshItemList();
             });
 
+            _btnMount = CreateGMButton("THÚ CƯỠI", new Vector2(0.05f, 0.35f), new Vector2(0.3f, 0.42f), () =>
+            {
+                _activeCategory = "Mount";
+                _selectedItemId = -1;
+                RefreshCategoryButtons();
+                RefreshItemList();
+            });
+            // Mount button: teal color
+            var mountBtnImg = _btnMount.GetComponent<Image>();
+            if (mountBtnImg != null) mountBtnImg.color = new Color(0.12f, 0.38f, 0.48f, 1f);
+
             // Equip Button
-            _btnEquip = CreateGMButton("TRANG BỊ (LOAD)", new Vector2(0.05f, 0.18f), new Vector2(0.3f, 0.27f), () =>
+            _btnEquip = CreateGMButton("TRANG BỊ (LOAD)", new Vector2(0.05f, 0.22f), new Vector2(0.3f, 0.30f), () =>
             {
                 EquipSelectedItem();
             });
             // Customize equip button style
             var equipImg = _btnEquip.GetComponent<Image>();
             if (equipImg != null) equipImg.color = new Color(0.15f, 0.55f, 0.40f, 1f);
+
+            // Unmount Button (only relevant for Mount category)
+            _btnUnmount = CreateGMButton("XUỐNG NGỰA", new Vector2(0.05f, 0.13f), new Vector2(0.3f, 0.21f), () =>
+            {
+                UnmountPlayer();
+            });
+            var unmountImg = _btnUnmount.GetComponent<Image>();
+            if (unmountImg != null) unmountImg.color = new Color(0.45f, 0.22f, 0.12f, 1f);
 
             // Status Text
             var statusGo = new GameObject("StatusText");
@@ -274,10 +295,15 @@ namespace VLTK.Sandbox
         {
             Color activeColor = new Color(0.25f, 0.45f, 0.8f, 1f);
             Color inactiveColor = new Color(0.18f, 0.24f, 0.35f, 1f);
+            Color mountInactiveColor = new Color(0.12f, 0.38f, 0.48f, 1f);
 
             if (_btnHelmet != null) _btnHelmet.GetComponent<Image>().color = _activeCategory == "Helmet" ? activeColor : inactiveColor;
             if (_btnArmor != null) _btnArmor.GetComponent<Image>().color = _activeCategory == "Armor" ? activeColor : inactiveColor;
             if (_btnWeapon != null) _btnWeapon.GetComponent<Image>().color = _activeCategory == "Weapon" ? activeColor : inactiveColor;
+            if (_btnMount != null) _btnMount.GetComponent<Image>().color = _activeCategory == "Mount" ? activeColor : mountInactiveColor;
+
+            // Show unmount button only for Mount tab
+            if (_btnUnmount != null) _btnUnmount.gameObject.SetActive(_activeCategory == "Mount");
         }
 
         private List<ItemDefinition> GetItemsByCategory(string category)
@@ -326,15 +352,21 @@ namespace VLTK.Sandbox
 
                 bool isEquipment = item.itemGenre == 0;
 
-                if (category == "Helmet" && ((isEquipment && item.detailType == 0) || isMockHelmet))
+                // PC detailType mapping (from Client 6.0/settings/item/ files):
+                // helm.txt=7, armor.txt=2, meleeweapon.txt=0, rangeweapon.txt=1, horse.txt=10
+                if (category == "Helmet" && ((isEquipment && item.detailType == 7) || isMockHelmet))
                 {
                     results.Add(item);
                 }
-                else if (category == "Armor" && ((isEquipment && item.detailType == 1) || isMockArmor))
+                else if (category == "Armor" && ((isEquipment && item.detailType == 2) || isMockArmor))
                 {
                     results.Add(item);
                 }
-                else if (category == "Weapon" && ((isEquipment && (item.detailType == 9 || item.detailType == 10)) || isMockWeapon))
+                else if (category == "Weapon" && ((isEquipment && (item.detailType == 0 || item.detailType == 1)) || isMockWeapon))
+                {
+                    results.Add(item);
+                }
+                else if (category == "Mount" && isEquipment && item.detailType == 10)
                 {
                     results.Add(item);
                 }
@@ -453,20 +485,49 @@ namespace VLTK.Sandbox
                 slot = EquipSlot.Helmet;
             else if (_activeCategory == "Armor")
                 slot = EquipSlot.Armor;
+            else if (_activeCategory == "Mount")
+                slot = EquipSlot.Mount;
             else
                 slot = EquipSlot.Weapon;
 
             try
             {
                 mgr.InventoryService.Equip(slot, _selectedItemId);
-                _statusText.text = $"Đã load trang bị ID: {_selectedItemId} thành công!";
+                var it = mgr.ItemDb?.Resolve(_selectedItemId);
+                string label = slot == EquipSlot.Mount ? "Đã cưỡi" : "Đã load";
+                _statusText.text = $"{label}: {it?.DisplayName ?? _selectedItemId.ToString()} (ResId:{it?.resId})";
                 SubsystemLog.Info("GMEquipmentTab", $"GM equipped item {_selectedItemId} to slot {slot}");
+
+                // For mount: automatically toggle mount ON if not already mounted
+                if (slot == EquipSlot.Mount)
+                {
+                    var pc = mgr.PlayerController;
+                    if (pc != null && pc.visual is MalePlayerVisual mpv && !mpv.IsMounted)
+                        pc.ToggleMount();
+                }
             }
             catch (Exception ex)
             {
                 _statusText.text = "Lỗi khi trang bị!";
                 SubsystemLog.Error("GMEquipmentTab", $"Failed to equip item {_selectedItemId} to slot {slot}: {ex.Message}");
             }
+        }
+
+        private void UnmountPlayer()
+        {
+            var mgr = SandboxManager.Instance;
+            if (mgr == null) { _statusText.text = "Lỗi hệ thống!"; return; }
+
+            // Unmount from equipment service
+            mgr.EquipmentService?.Unequip(PlayerEquipSlot.Mount);
+
+            // Toggle mount OFF if currently mounted
+            var pc = mgr.PlayerController;
+            if (pc != null && pc.visual is MalePlayerVisual mpv && mpv.IsMounted)
+                pc.ToggleMount();
+
+            _statusText.text = "Đã xuống ngựa.";
+            SubsystemLog.Info("GMEquipmentTab", "GM unmounted player");
         }
     }
 }

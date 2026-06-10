@@ -127,36 +127,38 @@ namespace VLTK.Sandbox.ItemData
                 if (it == null) continue;
                 it.itemId = categoryId + (i + 1);
 
-                if (stem != "goldequip" && stem != "platinaequip")
+                // particularType = 1-based row index within the category file (for internal use)
+                it.particularType = it.particularType != 0 ? it.particularType : (i + 1);
+
+                // itemGenre/detailType: parsers now read from cols 1/2/3 (verified from PC source).
+                // Only apply fallback for stems that don't have a full header (goldequip/platinaequip handled separately).
+                // PC source verified detailType per file:
+                //   helm.txt=7, armor.txt=2, ring.txt=3, pendant.txt=7(after fix), cuff.txt=8, belt.txt=6,
+                //   boot.txt=5, amulet.txt=4, meleeweapon.txt=0, rangeweapon.txt=1, horse.txt=10
+                if (it.itemGenre == 0 && it.detailType == 0 && stem != "goldequip" && stem != "platinaequip")
                 {
-                    it.itemGenre = 0; // Equipment
-                    it.particularType = i + 1; // 1-based index (resId trong game PC)
+                    // Fallback only if parser didn't set detailType (e.g. helm all-0 rows)
                     it.detailType = stem switch
                     {
-                        "helm" => 0,
-                        "armor" => 1,
-                        "ring" => 2,
-                        "pendant" => 3, // Dây chuyền
-                        "cuff" => 4,
-                        "belt" => 5,
-                        "boot" => 6,
-                        "amulet" => 8, // Phù
-                        "meleeweapon" => 9,
-                        "rangeweapon" => 10,
-                        "horse" => 11,
-                        _ => 0
+                        "helm"        => 7,
+                        "armor"       => 2,
+                        "ring"        => 3,
+                        "pendant"     => 7,  // Ngọc bội
+                        "cuff"        => 8,  // Tay (Bracers)
+                        "belt"        => 6,  // Đai lưng
+                        "boot"        => 5,  // Giày
+                        "amulet"      => 4,  // Phù
+                        "meleeweapon" => 0,  // Vũ khí cận chiến
+                        "rangeweapon" => 1,  // Vũ khí tầm xa
+                        "horse"       => 10, // Thú cưỡi
+                        _             => 0
                     };
+                }
 
-                    if (stem == "pendant")
-                    {
-                        it.detailType = 7; // Ngọc bội
-                    }
-
-                    if (stem == "potion")
-                    {
-                        it.itemGenre = 4; // Tiêu hao / Dược phẩm
-                        it.detailType = 1;
-                    }
+                if (stem == "potion")
+                {
+                    it.itemGenre = 4; // Tiêu hao / Dược phẩm
+                    it.detailType = 1;
                 }
             }
         }

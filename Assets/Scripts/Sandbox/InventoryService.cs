@@ -14,6 +14,7 @@ namespace VLTK.Sandbox
         Boots = 3,
         Necklace = 4,
         Ring = 5,
+        Mount = 6,   // Thú cưỡi — resId = horse SPR variant from horseres.txt
     }
 
     /// <summary>A stack of an item held in the test inventory.</summary>
@@ -181,6 +182,14 @@ namespace VLTK.Sandbox
                     ? PlayerAppearanceMapper.MapBody(isFemale, item.resId) 
                     : PlayerEquipmentService.ItemToBodyVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Body, variant, itemId);
+            }
+            else if (slot == EquipSlot.Mount)
+            {
+                // item.resId = horse SPR variant (from horseres.txt via PcHorseParser)
+                // Default to variant 16 (普通黄马) if resId not set
+                int horseVariant = item.resId > 0 ? item.resId : MalePlayerSpriteCatalog.MountHorseVariant;
+                _equipment?.Equip(PlayerEquipSlot.Mount, horseVariant, itemId);
+                SubsystemLog.Info("Inventory", $"Equip mount: item={itemId} name={item.DisplayName} horseVariant={horseVariant}");
             }
             return StatPreview();
         }
