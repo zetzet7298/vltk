@@ -138,17 +138,29 @@ namespace VLTK.Sandbox
             _ => "???",
         };
 
+        /// <summary>PC-authentic chat channel text colors from uiconfig.ini SetChannelTextColor.</summary>
         public static Color ChannelColor(ChatChannel channel) => channel switch
         {
-            ChatChannel.World => new Color(1f, 0.9f, 0.5f),
-            ChatChannel.Map => new Color(0.7f, 1f, 0.7f),
-            ChatChannel.Team => new Color(0.5f, 0.8f, 1f),
-            ChatChannel.Faction => new Color(0.9f, 0.6f, 1f),
-            ChatChannel.Private => new Color(1f, 0.7f, 0.7f),
-            ChatChannel.System => new Color(1f, 0.85f, 0.3f),
-            ChatChannel.Room => new Color(0.45f, 1f, 0.85f),
-            ChatChannel.Guild => new Color(0.35f, 0.9f, 0.45f),
-            ChatChannel.Other => new Color(0.95f, 0.95f, 0.65f),
+            // PC: CH_NEARBY "255,255,255"
+            ChatChannel.All => new Color(1f, 1f, 1f),
+            // PC: CH_WORLD "146,255,143"
+            ChatChannel.World => new Color(0.573f, 1f, 0.561f),
+            // PC: CH_TEAM "64,190,255"
+            ChatChannel.Team => new Color(0.251f, 0.745f, 1f),
+            // PC: CH_FACTION "225,210,165"
+            ChatChannel.Faction => new Color(0.882f, 0.824f, 0.647f),
+            // PC: CH_CITY "169,255,224"
+            ChatChannel.Room => new Color(0.663f, 1f, 0.878f),
+            // PC: CH_TONG "255,244,0"
+            ChatChannel.Guild => new Color(1f, 0.957f, 0f),
+            // PC: CH_CHATROOM "255,255,255" (private/whisper)
+            ChatChannel.Private => new Color(1f, 1f, 1f),
+            // PC: CH_SYSTEM "255,0,0"
+            ChatChannel.System => new Color(1f, 0f, 0f),
+            // Map channel uses CH_JABBER "193,193,193"
+            ChatChannel.Map => new Color(0.757f, 0.757f, 0.757f),
+            // Other
+            ChatChannel.Other => new Color(0.757f, 0.757f, 0.757f),
             _ => Color.white,
         };
 

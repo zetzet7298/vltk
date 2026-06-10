@@ -89,21 +89,23 @@
 
 
 
-/* PC 主界面玩家信息窗口.ini [DateTime]: Smooth/Crowd/Block status text. */
+/* PC 主界面玩家信息窗口.ini [DateTime]: network/smooth status text.
+   PC shows "Hoạt động tốt" or similar in green at top-left. */
 .hud-pc-connection-status {
     position: absolute;
-    left: 15px;
+    left: 8px;
     top: 2px;
-    width: 120px;
+    width: 130px;
     height: 13px;
     color: rgb(60,255,160);
-    font-size: 12px;
+    font-size: 11px;
     -unity-text-align: middle-left;
     background-color: rgba(0,0,0,0);
     border-width: 0px;
 }
 
-/* ═══ MINIMAP ═══ */
+/* ═══ MINIMAP — PC 小地图_小.ini style ═══ */
+/* PC minimap has a dark frame with subtle border, map name in yellow, coords in green. */
 .hud-minimap-panel {
     position: absolute;
     right: 6px;
@@ -117,9 +119,9 @@
     width: 130px;
     height: 130px;
     border-width: 1px;
-    border-color: rgb(20,25,20);
+    border-color: rgb(60,80,60);
     border-radius: 0px;
-    background-color: rgba(5,10,5,0.92);
+    background-color: rgba(2,8,4,0.92);
     overflow: hidden;
 }
 
@@ -156,7 +158,15 @@
     border-color: rgb(80,20,0);
 }
 
-.hud-scene-name,
+/* PC minimap text: map name in yellow (SelfColor=255,255,0), coords in green */
+.hud-scene-name {
+    width: 130px;
+    height: 11px;
+    font-size: 9px;
+    color: rgb(255,255,0);
+    -unity-text-align: middle-center;
+}
+
 .hud-scene-pos {
     width: 130px;
     height: 11px;
@@ -188,14 +198,14 @@
     flex-direction: row;
     justify-content: flex-end;
 }
+/* PC minimap buttons — 16x16 SPR art, transparent hitbox for mobile touch */
 .hud-minimap-btn {
-    width: 14px;
-    height: 14px;
+    width: 20px;
+    height: 20px;
     margin-left: 1px;
     margin-right: 1px;
-    background-color: rgb(30,45,40);
-    border-width: 1px;
-    border-color: rgb(15,20,15);
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
     -unity-background-scale-mode: scale-to-fit;
 }
 #MinimapMarkerBtn { background-image: url('project://database/Assets/UI/HUD/Art/btn_minimap_flag_pc.png'); }
@@ -415,6 +425,8 @@
     z-index: 879;
 }
 
+/* PC chat tab styling — channel buttons use PC SPR art (主界面按钮-世界频道选择.png etc).
+   Active tab highlighted with PC-authentic teal-green border. */
 .hud-chat-tab {
     min-width: 46px;
     height: 28px;
@@ -423,23 +435,33 @@
     padding-right: 3px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0.18);
-    background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-附近频道选择.png');
+    background-color: rgba(0,0,0,0);
     -unity-background-scale-mode: scale-to-fit;
-    border-width: 1px;
-    border-color: rgba(0,96,80,0.55);
+    border-width: 0px;
+    border-color: rgba(0,0,0,0);
 }
 
 /* PC SPR chat channel button visuals */
-#ChatTabAll { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-世界频道选择.png'); }
+#ChatTabAll { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-附近频道选择.png'); }
 #ChatTabPrivate { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-密人频道选择.png'); }
 #ChatTabRoom { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-城市频道选择.png'); }
 #ChatTabGuild { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-好友频道选择.png'); }
 #ChatTabFaction { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-门派频道选择.png'); }
 #ChatTabOther { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-队伍频道选择.png'); }
 
-/* PC SPR chat rail controls: QQ main up/down + channel open/close button.
-   Visual art remains exact PC 16x10/20x20; hitboxes are widened for mobile touch. */
+.hud-chat-tab.active {
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+}
+
+/* Chat tab label: PC uses white/cyan text on channel button art.
+   Label is hidden by default because PC button art contains the text.
+   Enable if PC art doesn't have Vietnamese text overlay. */
+.hud-chat-tab-label {
+    color: rgb(220,240,230);
+    font-size: 11px;
+    -unity-text-align: middle-center;
+}
 .hud-chat-rail {
     position: absolute;
     left: 0px;
@@ -540,17 +562,7 @@
     background-color: rgba(0,0,0,0.06);
 }
 
-.hud-chat-tab.active {
-    background-color: rgba(8,48,34,0.82);
-    border-color: rgb(0,205,170);
-}
-
-.hud-chat-tab-label {
-    color: rgb(0,255,210);
-    font-size: 12px;
-    -unity-text-align: middle-center;
-}
-
+/* Chat input row — PC style, semi-transparent dark background */
 .hud-chat-input-row {
     height: 32px;
     flex-direction: row;
@@ -1125,16 +1137,18 @@
 #BottomPanel.hud-mobile-bottom .hud-btn-icon,
 #BottomPanel.hud-mobile-bottom .hud-menu-btn-icon {
     display: flex;
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
     -unity-background-scale-mode: scale-to-fit;
+    opacity: 1;
 }
 
 .hud-treasure-icon {
     display: flex;
-    width: 58px;
-    height: 58px;
+    width: 50px;
+    height: 42px;
     -unity-background-scale-mode: scale-to-fit;
+    opacity: 1;
 }
 
 .hud-combat-action-cluster {
@@ -1146,18 +1160,20 @@
     background-color: rgba(0,0,0,0);
 }
 
+/* Primary attack button — PC art with subtle background, no heavy gold border.
+   Mobile-appropriate size for thumb but styled to match PC visual feel. */
 .hud-primary-attack-btn {
     position: absolute;
     right: 24px;
     bottom: 30px;
-    width: 82px;
-    height: 82px;
+    width: 78px;
+    height: 78px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0.26);
-    border-width: 2px;
-    border-color: rgba(240,200,90,0.55);
-    border-radius: 41px;
+    background-color: rgba(0,0,0,0.10);
+    border-width: 1px;
+    border-color: rgba(200,160,60,0.35);
+    border-radius: 39px;
 }
 
 .hud-primary-attack-icon {
@@ -1167,18 +1183,19 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
+/* Mobile skill slots — transparent containers showing PC skill art.
+   Keep mobile-appropriate touch size but minimal visual chrome. */
 .hud-mobile-skill-slot {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 66px;
+    height: 66px;
     align-items: center;
     justify-content: center;
     background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
     -unity-background-scale-mode: scale-to-fit;
-    background-color: rgba(0,0,0,0.14);
-    border-width: 1px;
-    border-color: rgba(230,190,90,0.45);
-    border-radius: 18px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 12px;
     overflow: hidden;
 }
 
@@ -1212,23 +1229,24 @@
     background-color: rgba(0,0,0,0.38);
 }
 
+/* Deck switch button — cycles A/B skill decks. Subtle PC style. */
 .hud-deck-switch-btn {
     position: absolute;
     right: 202px;
     bottom: 126px;
-    width: 52px;
-    height: 52px;
+    width: 48px;
+    height: 48px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(20,24,20,0.72);
-    border-width: 2px;
-    border-color: rgba(240,200,90,0.58);
-    border-radius: 26px;
+    background-color: rgba(0,0,0,0.10);
+    border-width: 1px;
+    border-color: rgba(200,160,60,0.30);
+    border-radius: 24px;
 }
 
 .hud-deck-switch-label {
     color: rgb(255,232,128);
-    font-size: 20px;
+    font-size: 18px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
 }
@@ -1316,22 +1334,32 @@
     margin-bottom: 1px;
 }
 
+/* Utility buttons — show PC SPR button art directly, transparent hitbox. */
 .hud-mobile-utility-btn {
     width: 48px;
     height: 48px;
     margin-left: 2px;
     margin-right: 2px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 0px;
 }
 
 .hud-mobile-utility-btn.active {
-    background-color: rgba(58,86,38,0.72);
-    border-color: rgba(168,255,112,0.85);
+    background-color: rgba(52,74,34,0.30);
+    border-color: rgba(168,255,112,0.50);
 }
 
 .hud-mobile-treasure-btn {
-    width: 58px;
-    height: 52px;
-    margin-left: 5px;
+    width: 56px;
+    height: 48px;
+    margin-left: 4px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
 }
 
 #BottomPanel.hud-mobile-bottom .hud-btn-icon,
@@ -1394,68 +1422,61 @@
 .hud-pc-tool-row-title { color: rgb(226,244,190); font-size: 13px; -unity-font-style: bold; }
 .hud-pc-tool-row-text { color: rgb(205,218,190); font-size: 12px; white-space: normal; }
 
-/* Mobile UX correction: PC utility buttons live beside the minimap, not in the lower thumb/action lane.
-   One always-visible PC-derived switch cycles: hidden -> action bar -> menu bar -> hidden. */
+/* Mobile UX: PC utility menu access — small subtle toggle beside minimap.
+   PC has hotkey-based access; mobile needs a visible toggle.
+   Keep it minimal so it doesn't distract from PC HUD feel. */
 .hud-utility-toggle-btn {
     position: absolute;
     right: 148px;
     top: 8px;
-    width: 54px;
-    height: 54px;
+    width: 40px;
+    height: 40px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(10,16,10,0.82);
-    border-width: 2px;
-    border-color: rgba(224,180,82,0.72);
-    border-radius: 12px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 0px;
     z-index: 920;
 }
 
 .hud-utility-toggle-btn.active {
-    background-color: rgba(52,74,34,0.86);
-    border-color: rgba(168,255,112,0.88);
+    background-color: rgba(52,74,34,0.30);
+    border-width: 0px;
 }
 
 .hud-utility-toggle-btn .hud-menu-btn-icon {
     position: absolute;
-    left: 10px;
-    top: 5px;
-    width: 34px;
-    height: 34px;
-    opacity: 1;
+    left: 6px;
+    top: 6px;
+    width: 28px;
+    height: 28px;
+    opacity: 0.75;
     -unity-background-scale-mode: scale-to-fit;
 }
 
 .hud-utility-toggle-label {
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    bottom: 1px;
-    height: 15px;
-    color: rgb(255,238,174);
-    font-size: 10px;
-    -unity-font-style: bold;
-    -unity-text-align: middle-center;
-    background-color: rgba(0,0,0,0.36);
+    display: none;
 }
 
+/* Utility dock — opens on toggle, compact PC-style panel beside minimap.
+   PC has hotkeys; mobile shows a small floating panel with action/menu buttons. */
 .hud-mobile-utility-dock {
     position: absolute;
-    right: 204px;
+    right: 192px;
     top: 4px;
     left: auto;
     bottom: auto;
-    width: 372px;
+    width: 360px;
     height: 158px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: rgba(8,14,8,0.84);
-    border-width: 2px;
-    border-color: rgba(206,165,82,0.62);
-    border-radius: 12px;
+    background-color: rgba(5,10,6,0.88);
+    border-width: 1px;
+    border-color: rgba(80,130,100,0.50);
+    border-radius: 6px;
     padding-left: 6px;
-    padding-right: 58px;
+    padding-right: 6px;
     padding-top: 5px;
     padding-bottom: 5px;
     z-index: 910;
@@ -1473,18 +1494,18 @@
     top: 8px;
 }
 
+/* Switch button inside utility dock — cycles action/menu rows. Subtle PC style. */
 .hud-utility-switch-btn {
     position: absolute;
     right: 6px;
     top: 7px;
-    width: 46px;
-    height: 46px;
+    width: 40px;
+    height: 40px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(23,33,18,0.90);
-    border-width: 1px;
-    border-color: rgba(206,165,82,0.68);
-    border-radius: 11px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 0px;
 }
 
 .hud-mobile-utility-dock.menu-mode .hud-utility-switch-btn {
@@ -1492,8 +1513,7 @@
 }
 
 .hud-utility-switch-btn.active {
-    background-color: rgba(52,74,34,0.86);
-    border-color: rgba(168,255,112,0.88);
+    background-color: rgba(52,74,34,0.30);
 }
 
 .hud-utility-switch-btn .hud-menu-btn-icon {
@@ -1587,15 +1607,19 @@
 }
 
 
-/* PC Ui3/icon_bar.ini — 7-icon right strip. 46px touch hitboxes preserve 23/25px PC SPR icons. */
+/* PC Ui3/icon_bar.ini — 7-icon right strip.
+   PC SPR icons are 23-25px squares with built-in cyan/teal frame and dark bg.
+   Do NOT wrap in additional dark bg/gold border — PC art already has its own frame.
+   Touch hitboxes are 46px for mobile but fully transparent. */
 .hud-pc-icon-bar {
     position: absolute;
     right: 148px;
-    top: 128px;
+    top: 100px;
     width: 46px;
     height: 322px;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     z-index: 918;
     background-color: rgba(0,0,0,0);
     border-width: 0px;
@@ -1608,45 +1632,44 @@
     margin-bottom: 0px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(18,27,16,0.62);
-    border-width: 1px;
-    border-color: rgba(242,202,80,0.34);
-    border-radius: 11px;
+    /* Transparent hitbox — PC icon art provides its own frame */
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 0px;
 }
 
 .hud-pc-icon-bar-btn.active {
-    background-color: rgba(52,74,34,0.80);
-    border-color: rgba(168,255,112,0.78);
+    background-color: rgba(52,74,34,0.40);
+    border-color: rgba(168,255,112,0.50);
 }
 
 .hud-pc-icon-bar-icon {
-    width: 25px;
-    height: 25px;
+    /* Native PC SPR size — icons have built-in cyan frame at 23-25px */
+    width: 28px;
+    height: 28px;
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* PC quick shortcuts from 主界面玩家信息窗口.ini: 1..9 ShortcutUseItem + T/P skill assignment.
-   Stitch "Jade Path Legacy" UX: keep this secondary bar in the top-right safe zone,
-   directly left of the minimap, and hide it behind a 54px touch switch. */
+/* PC quick shortcuts — small toggle to show/hide the 1-9 item slot bar.
+   Keep subtle, PC-style. */
 .hud-pc-shortcut-toggle-btn {
     position: absolute;
     right: 148px;
-    top: 68px;
+    top: 54px;
     bottom: auto;
-    width: 54px;
-    height: 54px;
+    width: 40px;
+    height: 40px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(18,27,16,0.88);
-    border-width: 2px;
-    border-color: rgba(242,202,80,0.72);
-    border-radius: 14px;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 0px;
     z-index: 921;
 }
 
 .hud-pc-shortcut-toggle-btn.active {
-    background-color: rgba(52,74,34,0.86);
-    border-color: rgba(168,255,112,0.88);
+    background-color: rgba(52,74,34,0.30);
+    border-width: 0px;
 }
 
 .hud-pc-shortcut-toggle-label {
