@@ -12,6 +12,7 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using VLTK.Model;
+using VLTK.Core;
 
 namespace VLTK.Sandbox
 {
@@ -40,36 +41,17 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
                 return result;
 
-            Encoding encoding;
             try
             {
-                encoding = GetServerEncoding();
+                var lines = PcText.ReadLines(absolutePath, null);
+                if (lines != null)
+                {
+                    result.AddRange(lines);
+                }
             }
-            catch
+            catch (Exception ex)
             {
-                encoding = Encoding.Default;
-            }
-
-            string text;
-            try
-            {
-                text = File.ReadAllText(absolutePath, encoding);
-            }
-            catch (DecoderFallbackException)
-            {
-                encoding = Encoding.GetEncoding("GB2312", new EncoderReplacementFallback(string.Empty), new DecoderReplacementFallback("?"));
-                try { text = File.ReadAllText(absolutePath, encoding); }
-                catch { return result; }
-            }
-
-            if (string.IsNullOrEmpty(text)) return result;
-            if (text.Length > 0 && text[0] == '\ufeff')
-                text = text.Substring(1);
-            var lines = text.Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
-            foreach (var line in lines)
-            {
-                if (line == null) continue;
-                result.Add(line);
+                SubsystemLog.Error("PcItemCommon", $"Lỗi giải mã file {absolutePath}: {ex.Message}");
             }
             return result;
         }
