@@ -312,7 +312,14 @@ namespace VLTK.Sandbox
             tRt.anchorMax = new Vector2(1f, 1f);
             var tBg = titleBar.AddComponent<Image>();
             tBg.color = new Color(0.15f, 0.2f, 0.35f, 0.95f);
-            var tTxt = titleBar.AddComponent<Text>();
+
+            var titleTextGo = new GameObject("TitleText");
+            titleTextGo.transform.SetParent(titleBar.transform, false);
+            var ttRt = titleTextGo.AddComponent<RectTransform>();
+            ttRt.anchorMin = Vector2.zero;
+            ttRt.anchorMax = Vector2.one;
+            ttRt.sizeDelta = Vector2.zero;
+            var tTxt = titleTextGo.AddComponent<Text>();
             tTxt.text = "Đội";
             tTxt.font = _font;
             tTxt.fontSize = 28;

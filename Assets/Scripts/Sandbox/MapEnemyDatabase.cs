@@ -138,6 +138,8 @@ namespace VLTK.Sandbox
             [MapPortManifest.TinSuVuotAiPhongKy120Id] = new Vector2(50624f, -50208f),
             // Vượt ải Nhiếp Thí Trần: killbossmatch/class.lua NewWorld(907,1476,3274).
             [MapPortManifest.VuotAiNhiepThiTranId] = new Vector2(47232f, -52544f),
+            // Đấu trường liên đấu Kiệt xuất: Center of the map geometry
+            [MapPortManifest.DauTruongLienDauId] = new Vector2(53248f, -55296f),
         };
 
         private static readonly Dictionary<int, NpcTemplate> _templateLookup;
