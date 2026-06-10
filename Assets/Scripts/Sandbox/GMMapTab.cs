@@ -42,6 +42,14 @@ namespace VLTK.Sandbox
         private int _batchIndex;
         private List<string> _batchLog = new();
 
+        // Infinite scroll and double-click state
+        private ScrollRect _scrollRect;
+        private float _lastScrollTime;
+        private int _visibleCount = 30;
+        private const int PageSize = 30;
+        private float _lastSelectTime;
+        private int _lastSelectedMapIdForDoubleClick = -1;
+
         private void Start()
         {
             _mapManager = SandboxManager.Instance?.MapManager;
@@ -94,7 +102,27 @@ namespace VLTK.Sandbox
                 _mapManager.OnMapUnloaded += _ => RefreshList();
             }
 
+            _scrollRect = listContent != null ? listContent.GetComponentInParent<ScrollRect>() : null;
+            if (_scrollRect != null)
+            {
+                _scrollRect.onValueChanged.AddListener(OnScrollValueChanged);
+            }
+
             RefreshList();
+        }
+
+        private void OnScrollValueChanged(Vector2 scrollPos)
+        {
+            if (scrollPos.y < 0.1f && _visibleCount < _displayed.Count)
+            {
+                if (Time.time - _lastScrollTime > 0.2f)
+                {
+                    _lastScrollTime = Time.time;
+                    _visibleCount += PageSize;
+                    RebuildListUI();
+                    SubsystemLog.Info("GMMapTab", $"Infinite scroll: loaded more maps (visible: {_visibleCount}/{_displayed.Count})");
+                }
+            }
         }
 
         // M1.8 AC#2/AC#4: toggle minimap preview, resolve artifact, show missing state.
@@ -213,6 +241,7 @@ namespace VLTK.Sandbox
                 if (statusFilter == null || e.conversionStatus == statusFilter)
                     _displayed.Add(e);
             }
+            _visibleCount = PageSize; // reset visible count on refresh
             RebuildListUI();
             UpdateStatus();
         }
@@ -224,7 +253,19 @@ namespace VLTK.Sandbox
 
         public void SelectMap(int mapId)
         {
+            if (_selectedMapId == mapId && _lastSelectedMapIdForDoubleClick == mapId && Time.time - _lastSelectTime < 0.35f)
+            {
+                // Double click detected -> Teleport immediately!
+                _selectedMapId = mapId;
+                UpdateMapInfo();
+                LoadSelectedMap();
+                SubsystemLog.Info("GMMapTab", $"Double-click teleport to map {mapId}");
+                return;
+            }
+
             _selectedMapId = mapId;
+            _lastSelectedMapIdForDoubleClick = mapId;
+            _lastSelectTime = Time.time;
             UpdateMapInfo();
         }
 
@@ -348,8 +389,15 @@ namespace VLTK.Sandbox
                 Destroy(listContent.GetChild(i).gameObject);
 
             var activeId = SandboxManager.Instance?.MapManager?.ActiveMapId ?? -1;
+            int limit = Mathf.Min(_visibleCount, _displayed.Count);
 
-            for (int idx = 0; idx < _displayed.Count; idx++)
+            var contentRt = listContent.GetComponent<RectTransform>();
+            if (contentRt != null)
+            {
+                contentRt.sizeDelta = new Vector2(contentRt.sizeDelta.x, limit * 32f);
+            }
+
+            for (int idx = 0; idx < limit; idx++)
             {
                 var entry = _displayed[idx];
                 var row = new GameObject($"Map_{entry.mapId}");

@@ -337,7 +337,14 @@ namespace VLTK.Sandbox
             var cBtn = closeGo.AddComponent<Button>();
             cBtn.targetGraphic = cImg;
             cBtn.onClick.AddListener(() => Toggle());
-            var cTxt = closeGo.AddComponent<Text>();
+
+            var closeTextGo = new GameObject("CloseText");
+            closeTextGo.transform.SetParent(closeGo.transform, false);
+            var ctRt = closeTextGo.AddComponent<RectTransform>();
+            ctRt.anchorMin = Vector2.zero;
+            ctRt.anchorMax = Vector2.one;
+            ctRt.sizeDelta = Vector2.zero;
+            var cTxt = closeTextGo.AddComponent<Text>();
             cTxt.text = "✕";
             cTxt.font = _font;
             cTxt.fontSize = 22;

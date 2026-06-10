@@ -133,6 +133,7 @@ namespace VLTK.Sandbox
         public FactionPanel FactionPanel { get; private set; }
         public ShopService ShopService { get; private set; }
         public ShopPanel ShopPanel { get; private set; }
+        public GMPanelController GmPanel { get; private set; }
         private InventoryService _inventoryService;
 
         /// <summary>Runtime inventory service (item search/add/equip). Used by the HUD bag window.</summary>
@@ -1604,6 +1605,8 @@ namespace VLTK.Sandbox
                     MinimapPanel.Initialize(MapManager, PlayerController, EnemyRuntime);
             }
 
+            GmPanel = FindObjectOfType<GMPanelController>(true);
+
             // Add HUD buttons for panels (on the joystick canvas)
             EnsureHudButtons();
         }
@@ -1693,6 +1696,11 @@ namespace VLTK.Sandbox
             EnsurePanelButton(canvasTransform, "ShopBtn", "Cửa Hàng",
                 new Vector2(-175f, 540f), new Color(0.1f, 0.3f, 0.1f, 0.85f),
                 () => ShopPanel?.Toggle());
+
+            // GM button
+            EnsurePanelButton(canvasTransform, "GmBtn", "GM",
+                new Vector2(-175f, 460f), new Color(0.8f, 0.2f, 0.2f, 0.85f),
+                () => GmPanel?.Toggle());
         }
 
         private void EnsurePanelButton(RectTransform parent, string name, string label,

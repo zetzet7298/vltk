@@ -235,10 +235,17 @@ namespace VLTK.Sandbox
             var cBtn = closeGo.AddComponent<Button>();
             cBtn.targetGraphic = cImg;
             cBtn.onClick.AddListener(() => Toggle());
-            var cTxt = closeGo.AddComponent<Text>();
+
+            var closeTextGo = new GameObject("CloseText");
+            closeTextGo.transform.SetParent(closeGo.transform, false);
+            var ctRt = closeTextGo.AddComponent<RectTransform>();
+            ctRt.anchorMin = Vector2.zero;
+            ctRt.anchorMax = Vector2.one;
+            ctRt.sizeDelta = Vector2.zero;
+            var cTxt = closeTextGo.AddComponent<Text>();
             cTxt.text = "✕";
             cTxt.font = _font;
-            cTxt.fontSize = 28;
+            cTxt.fontSize = 24;
             cTxt.color = Color.white;
             cTxt.alignment = TextAnchor.MiddleCenter;
 
@@ -272,7 +279,14 @@ namespace VLTK.Sandbox
                 var btn = btnGo.AddComponent<Button>();
                 btn.targetGraphic = btnImg;
                 btn.onClick.AddListener(() => ShowFactionDetail(faction));
-                var btnTxt = btnGo.AddComponent<Text>();
+
+                var btnTextGo = new GameObject("Text");
+                btnTextGo.transform.SetParent(btnGo.transform, false);
+                var btRt = btnTextGo.AddComponent<RectTransform>();
+                btRt.anchorMin = Vector2.zero;
+                btRt.anchorMax = Vector2.one;
+                btRt.sizeDelta = Vector2.zero;
+                var btnTxt = btnTextGo.AddComponent<Text>();
                 btnTxt.text = $"  {info.nameVi} [{info.elementVi}]";
                 btnTxt.font = _font;
                 btnTxt.fontSize = 20;

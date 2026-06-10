@@ -20,7 +20,7 @@ namespace VLTK.Sandbox
         public GameObject panelRoot;
 
         private UnityEngine.UI.Image _backgroundImage;
-        private GameObject _gmPanelGameObject;
+        private bool _initialized;
 
         [Header("Tab Buttons")]
         public GMTabBarController tabBar;
@@ -34,17 +34,27 @@ namespace VLTK.Sandbox
         public GameObject logsPanel;
         public GameObject toolsPanel;
 
-        public GMTab ActiveTab { get; private set; } = GMTab.Overview;
+        public GMTab ActiveTab { get; private set; } = GMTab.Map;
         public bool IsOpen => panelRoot != null && panelRoot.activeSelf;
 
         private const string TOGGLE_KEY = "q";
 
+        private void EnsureInitialized()
+        {
+            if (_initialized) return;
+            _initialized = true;
+            _backgroundImage = GetComponent<UnityEngine.UI.Image>();
+            if (tabBar != null)
+            {
+                tabBar.Initialize(this);
+            }
+        }
+
         private void Awake()
         {
-            _backgroundImage = GetComponent<UnityEngine.UI.Image>();
-            _gmPanelGameObject = gameObject;
+            EnsureInitialized();
             // Start with entire GMPanel hidden
-            _gmPanelGameObject.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         private void Update()
@@ -89,13 +99,14 @@ namespace VLTK.Sandbox
 
         private void SetOpen(bool open)
         {
-            if (_gmPanelGameObject == null) return;
-            _gmPanelGameObject.SetActive(open);
+            EnsureInitialized();
+            gameObject.SetActive(open);
             if (open)
             {
                 if (panelRoot != null) panelRoot.SetActive(true);
                 if (_backgroundImage != null) _backgroundImage.enabled = true;
                 UpdateTabPanels();
+                if (tabBar != null) tabBar.RefreshColors((int)ActiveTab);
                 SubsystemLog.Info("GM", "Panel opened");
             }
             else
