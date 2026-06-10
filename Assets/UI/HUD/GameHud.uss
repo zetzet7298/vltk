@@ -387,7 +387,8 @@
 .hud-chat-panel {
     position: absolute;
     left: 8px;
-    bottom: 92px;
+    top: 24px;
+    bottom: auto;
     width: 430px;
     height: 82px;
     flex-direction: column;
@@ -810,7 +811,7 @@
 /* ═══ BUFF/DEBUFF PANEL ═══ */
 .hud-buff-panel {
     position: absolute;
-    left: 10px;
+    left: 450px;
     top: 24px;   /* ngay dưới top bar 22px + 2px gap */
     width: 240px;
     height: 72px;
@@ -831,7 +832,7 @@
 .hud-team-preview {
     position: absolute;
     left: 10px;
-    top: 88px;
+    top: 120px;
     width: 170px;
     flex-direction: column;
 }
