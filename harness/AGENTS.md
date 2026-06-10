@@ -1,10 +1,13 @@
 # Agent Instructions
 
-## File writes / edits
-
-Khi dùng write hoặc edit, giữ mỗi call nhỏ (≈ ≤150 dòng/lần). File lớn thì chia nhiều lần write/edit tuần tự. Write một phát quá lớn dễ làm đứt stream giữa chừng.
-
 ## Research trước khi làm
+
+## Tools RULES:
+
+- Always use `srcwalk` skill: for best codebase/files/dirs exploration, discover, searching.
+- Always prefer `srcwalk` CLI over read/glob/grep tool.
+- Prefer `fd` over `find`.
+- Prefer `rg` over `grep`.
 
 Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng API/library lạ), **PHẢI dùng exa (`exa_web_search_exa`/`exa_web_fetch_exa`) và deepwiki (`mcp_deepwiki_deepwiki_fetch`) để research** cách làm chuẩn — không đoán, không vá mò. Research xong mới implement. Xong việc thì **commit all change + push**.
 
@@ -69,14 +72,13 @@ Khi cần tìm hoặc tra cứu bất kỳ **UI, icon, ảnh, SPR, PAK, hay tài
 5. **KHÔNG quét toàn bộ source.** Dùng logic (đọc ini/lua trong source loose + pak_unpacked, suy ra feature) để **thu hẹp vùng** (1 PAK / 1 folder) trước, rồi mới trỏ tool vào — quét rộng sẽ crash máy.
 6. Nếu tool thiếu tính năng cần thiết → **bổ sung vào tool trong `/var/www/vltktool/`** (surgical edit + test), không tạo script rời.
 7. **Tra port docs trước khi quét tool** — `/var/www/vltksource_new/docs/port_docs/` là tài liệu đã audit (verified vs source):
-    - `16_client_resources.md` — cây tài nguyên client (PAK, SPR, ui3, settings) + feature nằm ở PAK/folder nào → dùng để **thu hẹp vùng** (point 5).
-    - `18_spr_asset_index.md` — SPR asset index/taxonomy. Cây canonical hiện có 75,928 SPR; label map/API có thể cần rebuild trên root mới trước khi dùng tên Việt/taxonomy tự động (`http://localhost:8081/`, chạy bằng `make dev` trong vltktool).
-    - `19_pak_spr_taxonomy.md` — taxonomy PAK→SPR, cách map nhóm → folder gốc khi port.
+   - `16_client_resources.md` — cây tài nguyên client (PAK, SPR, ui3, settings) + feature nằm ở PAK/folder nào → dùng để **thu hẹp vùng** (point 5).
+   - `18_spr_asset_index.md` — SPR asset index/taxonomy. Cây canonical hiện có 75,928 SPR; label map/API có thể cần rebuild trên root mới trước khi dùng tên Việt/taxonomy tự động (`http://localhost:8081/`, chạy bằng `make dev` trong vltktool).
+   - `19_pak_spr_taxonomy.md` — taxonomy PAK→SPR, cách map nhóm → folder gốc khi port.
 8. **Quy tắc provenance (≥99% không bịa)** — nếu label map đã được rebuild và có field `confidence` thì dùng nó như evidence phụ, không thay thế path thật trong `pak_unpacked`:
-    - `high`: có path engine THẬT (proven từ npcres-table / part-enum / code-ref / named). Port trực tiếp được.
-    - `unidentified`: hash-only `unknown/<hash>.spr`, KHÔNG resolve được path. **KHÔNG gán công dụng** (Icon/Visual/Object...) vì sẽ sai — chỉ có metadata đo được (pak nguồn, kích thước, frame). Muốn biết là gì → mở preview tool xem, KHÔNG đoán tên/công dụng.
-    - `pak_origin`: dùng để truy vết, nhưng vẫn cite đường dẫn file thật trong `pak_unpacked` khi port.
-
+   - `high`: có path engine THẬT (proven từ npcres-table / part-enum / code-ref / named). Port trực tiếp được.
+   - `unidentified`: hash-only `unknown/<hash>.spr`, KHÔNG resolve được path. **KHÔNG gán công dụng** (Icon/Visual/Object...) vì sẽ sai — chỉ có metadata đo được (pak nguồn, kích thước, frame). Muốn biết là gì → mở preview tool xem, KHÔNG đoán tên/công dụng.
+   - `pak_origin`: dùng để truy vết, nhưng vẫn cite đường dẫn file thật trong `pak_unpacked` khi port.
 
 ## Unity Package Matrix
 
@@ -170,6 +172,7 @@ Khi cần tìm hoặc tra cứu bất kỳ **UI, icon, ảnh, SPR, PAK, hay tài
 5. **Collections namespace** — `Unity.Collections` không phải `System.Collections.Generic`
 
 <!-- HARNESS:BEGIN -->
+
 ## Harness
 
 This repo uses Harness. Before work, read:
@@ -184,7 +187,6 @@ This repo uses Harness. Before work, read:
 Use the Rust Harness CLI at `scripts/bin/harness-cli` on macOS/Linux or
 `scripts/bin/harness-cli.exe` on Windows as the main operational tool.
 
-
 ## VLTK Mobile Harness Extension
 
 Project-specific source-of-truth additions for this repo:
@@ -196,6 +198,7 @@ Project-specific source-of-truth additions for this repo:
 - Harness durable DB is `/var/www/vltk-mobile/harness/harness.db`.
 - When working from `/var/www/vltk-mobile/harness`, run Harness commands in this directory. Do not create or use `/var/www/vltk-mobile/harness.db` at project root.
 - If running Harness from `/var/www/vltk-mobile`, set `HARNESS_DB=/var/www/vltk-mobile/harness/harness.db` first.
+
 <!-- HARNESS:END -->
 
 ### Không tự ý tạo các tài liệu markdown trừ khi human cho phép

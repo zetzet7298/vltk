@@ -79,7 +79,7 @@ namespace VLTK.Sandbox.ItemData
                 int categoryId = (CategoryBase + i) * CategoryStride;
                 string path = FindFile(itemDir, stem);
                 var items = ParseForStem(stem, path);
-                ApplyCategoryIds(items, categoryId);
+                ApplyCategoryIds(items, categoryId, stem);
                 Append(result, key, items);
             }
             return result;
@@ -118,7 +118,7 @@ namespace VLTK.Sandbox.ItemData
             }
         }
 
-        private static void ApplyCategoryIds(List<ItemDefinition> items, int categoryId)
+        private static void ApplyCategoryIds(List<ItemDefinition> items, int categoryId, string stem)
         {
             if (items == null) return;
             for (int i = 0; i < items.Count; i++)
@@ -126,6 +126,38 @@ namespace VLTK.Sandbox.ItemData
                 var it = items[i];
                 if (it == null) continue;
                 it.itemId = categoryId + (i + 1);
+
+                if (stem != "goldequip" && stem != "platinaequip")
+                {
+                    it.itemGenre = 0; // Equipment
+                    it.particularType = i + 1; // 1-based index (resId trong game PC)
+                    it.detailType = stem switch
+                    {
+                        "helm" => 0,
+                        "armor" => 1,
+                        "ring" => 2,
+                        "pendant" => 3, // Dây chuyền
+                        "cuff" => 4,
+                        "belt" => 5,
+                        "boot" => 6,
+                        "amulet" => 8, // Phù
+                        "meleeweapon" => 9,
+                        "rangeweapon" => 10,
+                        "horse" => 11,
+                        _ => 0
+                    };
+
+                    if (stem == "pendant")
+                    {
+                        it.detailType = 7; // Ngọc bội
+                    }
+
+                    if (stem == "potion")
+                    {
+                        it.itemGenre = 4; // Tiêu hao / Dược phẩm
+                        it.detailType = 1;
+                    }
+                }
             }
         }
 

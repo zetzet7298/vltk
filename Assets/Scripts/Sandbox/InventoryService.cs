@@ -159,20 +159,27 @@ namespace VLTK.Sandbox
                 return StatPreview();
             }
             _equipped[slot] = item;
+            bool isFemale = _equipment != null && _equipment.IsFemale;
             if (slot == EquipSlot.Weapon)
             {
-                int variant = item.resId > 0 ? item.resId : PlayerEquipmentService.ItemToWeaponVariant(itemId);
+                int variant = item.resId > 0 
+                    ? PlayerAppearanceMapper.MapWeapon(isFemale, item.resId) 
+                    : PlayerEquipmentService.ItemToWeaponVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Weapon, variant, itemId);
-                OnWeaponTypeChanged?.Invoke(PlayerEquipmentService.WeaponVariantToType(variant));
+                OnWeaponTypeChanged?.Invoke(PlayerEquipmentService.GetWeaponType(itemId, variant));
             }
             else if (slot == EquipSlot.Helmet)
             {
-                int variant = item.resId > 0 ? item.resId : PlayerEquipmentService.ItemToHelmetVariant(itemId);
+                int variant = item.resId > 0 
+                    ? PlayerAppearanceMapper.MapHead(isFemale, item.resId) 
+                    : PlayerEquipmentService.ItemToHelmetVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Head, variant, itemId);
             }
             else if (slot == EquipSlot.Armor)
             {
-                int variant = item.resId > 0 ? item.resId : PlayerEquipmentService.ItemToBodyVariant(itemId);
+                int variant = item.resId > 0 
+                    ? PlayerAppearanceMapper.MapBody(isFemale, item.resId) 
+                    : PlayerEquipmentService.ItemToBodyVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Body, variant, itemId);
             }
             return StatPreview();

@@ -4,6 +4,7 @@
 // Proprietary and confidential. See LICENSE and NOTICE.md at the repo root.
 // -----------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using UnityEngine;
 using VLTK.Model;
 
@@ -353,6 +354,54 @@ namespace VLTK.Sandbox
             ApplyActiveEquipmentVariants();
         }
 
+        public void SetGender(bool female)
+        {
+            if (isFemale == female && visual != null)
+                return;
+
+            isFemale = female;
+
+            // Sync with PlayerEquipmentService and re-equip to map to new gender variants
+            if (SandboxManager.Instance != null)
+            {
+                if (SandboxManager.Instance.EquipmentService != null)
+                {
+                    SandboxManager.Instance.EquipmentService.IsFemale = female;
+                }
+                var inv = SandboxManager.Instance.InventoryService;
+                if (inv != null)
+                {
+                    var currentEquipped = new Dictionary<EquipSlot, int>();
+                    foreach (var pair in inv.Equipped)
+                    {
+                        if (pair.Value != null)
+                            currentEquipped[pair.Key] = pair.Value.itemId;
+                    }
+                    foreach (var pair in currentEquipped)
+                    {
+                        inv.Equip(pair.Key, pair.Value);
+                    }
+                }
+            }
+
+            if (visual != null)
+            {
+                var visualMono = visual as MonoBehaviour;
+                if (visualMono != null)
+                {
+                    Destroy(visualMono.gameObject);
+                }
+                visual = null;
+            }
+
+            EnsureVisual();
+
+            if (visual != null)
+            {
+                visual.SetMounted(Mount.IsMounted);
+            }
+        }
+
         private void ApplyActiveEquipmentVariants()
         {
             if (visual == null) return;
@@ -363,7 +412,10 @@ namespace VLTK.Sandbox
                 {
                     visual.SetEquipVariant(slot, eq.GetVariant(slot));
                 }
+                var weaponVariant = eq.GetVariant(PlayerEquipSlot.Weapon);
+                _equippedWeapon = eq.GetCurrentWeaponType();
             }
+            visual.SetWeapon(_equippedWeapon);
         }
 
         /// <summary>

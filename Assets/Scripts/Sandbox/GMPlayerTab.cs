@@ -141,6 +141,19 @@ namespace VLTK.Sandbox
                 return;
             }
 
+            // Adjust gender if faction is restricted
+            if (manager.PlayerController != null)
+            {
+                if (faction == CombatFaction.EMei || faction == CombatFaction.CuiYan)
+                {
+                    manager.PlayerController.SetGender(true); // Female
+                }
+                else if (faction == CombatFaction.Shaolin)
+                {
+                    manager.PlayerController.SetGender(false); // Male
+                }
+            }
+
             // Initialize progression faction
             manager.GrantFactionSkillPanelProgression(faction);
 

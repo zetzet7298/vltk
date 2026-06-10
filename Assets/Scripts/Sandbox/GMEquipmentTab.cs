@@ -51,6 +51,14 @@ namespace VLTK.Sandbox
             RefreshItemList();
         }
 
+        private void OnEnable()
+        {
+            if (_searchInput != null)
+            {
+                RefreshItemList();
+            }
+        }
+
         private void CreateTitle()
         {
             var titleGo = new GameObject("TitleText");
@@ -278,25 +286,55 @@ namespace VLTK.Sandbox
             var mgr = SandboxManager.Instance;
             if (mgr == null || mgr.ItemDb == null) return results;
 
+            bool playerIsFemale = false;
+            if (mgr.PlayerController != null)
+            {
+                playerIsFemale = mgr.PlayerController.isFemale;
+            }
+
             var all = mgr.ItemDb.AllItems;
             foreach (var item in all)
             {
                 if (item.itemGenre == 6 && item.detailType == 1) continue;
 
-                int catId = item.itemId / 100000;
+                // Gender filter: 38 is require_sex (0 = Male, 1 = Female)
+                bool genderMatch = true;
+                if (item.statDeltas != null)
+                {
+                    foreach (var delta in item.statDeltas)
+                    {
+                        if (delta.attrCode == 38)
+                        {
+                            if (delta.value == 0 && playerIsFemale) // Requires Male, but player is Female
+                            {
+                                genderMatch = false;
+                                break;
+                            }
+                            if (delta.value == 1 && !playerIsFemale) // Requires Female, but player is Male
+                            {
+                                genderMatch = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (!genderMatch) continue;
+
                 bool isMockWeapon = (item.itemId >= 1001 && item.itemId <= 1042);
                 bool isMockArmor = (item.itemId >= 2001 && item.itemId <= 2004);
                 bool isMockHelmet = (item.itemId >= 3001 && item.itemId <= 3003);
 
-                if (category == "Helmet" && (catId == 2 || isMockHelmet))
+                bool isEquipment = item.itemGenre == 0;
+
+                if (category == "Helmet" && ((isEquipment && item.detailType == 0) || isMockHelmet))
                 {
                     results.Add(item);
                 }
-                else if (category == "Armor" && (catId == 1 || isMockArmor))
+                else if (category == "Armor" && ((isEquipment && item.detailType == 1) || isMockArmor))
                 {
                     results.Add(item);
                 }
-                else if (category == "Weapon" && (catId == 9 || catId == 10 || isMockWeapon))
+                else if (category == "Weapon" && ((isEquipment && (item.detailType == 9 || item.detailType == 10)) || isMockWeapon))
                 {
                     results.Add(item);
                 }

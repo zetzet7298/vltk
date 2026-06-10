@@ -44,7 +44,10 @@ namespace VLTK.Sandbox
     /// </summary>
     public class PlayerEquipmentService
     {
+        public bool IsFemale { get; set; }
+
         private readonly Dictionary<PlayerEquipSlot, int> _equipped = new();
+        private int _currentWeaponItemId = 0;
 
         /// <summary>Event fired khi equipment thay đổi.</summary>
         public event Action<EquipChangeEvent> OnEquipChanged;
@@ -61,6 +64,11 @@ namespace VLTK.Sandbox
         /// </summary>
         public void Equip(PlayerEquipSlot slot, int variant, int itemId = 0)
         {
+            if (slot == PlayerEquipSlot.Weapon)
+            {
+                _currentWeaponItemId = itemId;
+            }
+
             int old = GetVariant(slot);
             if (old == variant) return;
 
@@ -87,7 +95,7 @@ namespace VLTK.Sandbox
         /// <summary>Map weapon type từ equipment.</summary>
         public PcWeaponType GetCurrentWeaponType()
         {
-            return WeaponVariantToType(GetVariant(PlayerEquipSlot.Weapon));
+            return GetWeaponType(_currentWeaponItemId, GetVariant(PlayerEquipSlot.Weapon));
         }
 
         public static PcWeaponType WeaponVariantToType(int weaponVariant)
@@ -101,6 +109,44 @@ namespace VLTK.Sandbox
                 >= 20 => PcWeaponType.DualWeapon,
                 _ => PcWeaponType.EmptyHand,
             };
+        }
+
+        public static PcWeaponType GetWeaponType(int itemId, int variant)
+        {
+            if (itemId > 0)
+            {
+                var mgr = SandboxManager.Instance;
+                if (mgr != null && mgr.ItemDb != null)
+                {
+                    var item = mgr.ItemDb.Resolve(itemId);
+                    if (item != null)
+                    {
+                        // Mock items
+                        if (item.itemId >= 1001 && item.itemId <= 1042)
+                        {
+                            int v = item.resId;
+                            if (v >= 1 && v <= 9) return PcWeaponType.ShortWeapon;
+                            if (v >= 10 && v <= 19) return PcWeaponType.LongWeapon;
+                            return PcWeaponType.DualWeapon;
+                        }
+
+                        if (item.itemGenre == 0 && item.detailType == 9) // Vũ khí cận chiến
+                        {
+                            int part = item.particularType;
+                            if (part >= 1 && part <= 21) return PcWeaponType.ShortWeapon;
+                            if (part >= 22 && part <= 41) return PcWeaponType.LongWeapon;
+                            if (part >= 42 && part <= 71) return PcWeaponType.DualWeapon;
+                        }
+                        else if (item.itemGenre == 0 && item.detailType == 10) // Vũ khí tầm xa
+                        {
+                            return PcWeaponType.ShortWeapon;
+                        }
+                    }
+                }
+            }
+
+            // Fallback to variant-based check
+            return WeaponVariantToType(variant);
         }
 
         /// <summary>

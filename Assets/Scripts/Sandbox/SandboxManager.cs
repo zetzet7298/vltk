@@ -533,10 +533,20 @@ namespace VLTK.Sandbox
                     if (PlayerController != null && PlayerController.visual != null)
                     {
                         PlayerController.visual.SetEquipVariant(evt.slot, evt.newVariant);
+                        if (evt.slot == PlayerEquipSlot.Weapon)
+                        {
+                            var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
+                            PlayerController.EquipWeapon(wType);
+                        }
                     }
                     if (FemalePlayerVisual != null)
                     {
                         FemalePlayerVisual.SetEquipVariant(evt.slot, evt.newVariant);
+                        if (evt.slot == PlayerEquipSlot.Weapon)
+                        {
+                            var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
+                            FemalePlayerVisual.SetWeapon(wType);
+                        }
                     }
                 };
                 GmAccessService = new GmAccessService();
