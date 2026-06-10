@@ -281,6 +281,8 @@ namespace VLTK.Sandbox
             var all = mgr.ItemDb.AllItems;
             foreach (var item in all)
             {
+                if (item.itemGenre == 6 && item.detailType == 1) continue;
+
                 int catId = item.itemId / 100000;
                 bool isMockWeapon = (item.itemId >= 1001 && item.itemId <= 1042);
                 bool isMockArmor = (item.itemId >= 2001 && item.itemId <= 2004);
