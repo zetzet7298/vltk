@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-06-10T16:28:04.804396+00:00",
+  "generatedAt": "2026-06-10T16:45:12.660514+00:00",
   "source": "StreamingAssets/Reference/ (original: jxwin-kinnox/SourceNew/swrod3/Utility/Run/spr/npcres/man)",
-  "count": 7086,
+  "count": 7842,
   "missing": [],
   "sprites": [
     {
@@ -49605,6 +49605,5298 @@
       "uid": "1ce39975",
       "unityPath": "Assets/StreamingAssets/Sprites/1ce39975.spr",
       "bytes": 310084
+    },
+    {
+      "name": "MA_BD_109_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_ST01.spr",
+      "uid": "82e611ad",
+      "unityPath": "Assets/StreamingAssets/Sprites/82e611ad.spr",
+      "bytes": 245093
+    },
+    {
+      "name": "MA_BD_109_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_ST02.spr",
+      "uid": "9c7c042f",
+      "unityPath": "Assets/StreamingAssets/Sprites/9c7c042f.spr",
+      "bytes": 245445
+    },
+    {
+      "name": "MA_BD_109_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_ST04.spr",
+      "uid": "9b003123",
+      "unityPath": "Assets/StreamingAssets/Sprites/9b003123.spr",
+      "bytes": 187645
+    },
+    {
+      "name": "MA_BD_109_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_ST05.spr",
+      "uid": "949e27a5",
+      "unityPath": "Assets/StreamingAssets/Sprites/949e27a5.spr",
+      "bytes": 190341
+    },
+    {
+      "name": "MA_BD_109_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_ST06.spr",
+      "uid": "96142a27",
+      "unityPath": "Assets/StreamingAssets/Sprites/96142a27.spr",
+      "bytes": 187370
+    },
+    {
+      "name": "MA_BD_109_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_RN01.spr",
+      "uid": "d1b00e1a",
+      "unityPath": "Assets/StreamingAssets/Sprites/d1b00e1a.spr",
+      "bytes": 172639
+    },
+    {
+      "name": "MA_BD_109_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_RN02.spr",
+      "uid": "d2ce349c",
+      "unityPath": "Assets/StreamingAssets/Sprites/d2ce349c.spr",
+      "bytes": 175211
+    },
+    {
+      "name": "MA_BD_109_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_RN03.spr",
+      "uid": "ac443b1e",
+      "unityPath": "Assets/StreamingAssets/Sprites/ac443b1e.spr",
+      "bytes": 177568
+    },
+    {
+      "name": "MA_BD_109_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_RN04.spr",
+      "uid": "a9d22190",
+      "unityPath": "Assets/StreamingAssets/Sprites/a9d22190.spr",
+      "bytes": 177586
+    },
+    {
+      "name": "MA_BD_109_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_AT01.spr",
+      "uid": "aa2601ac",
+      "unityPath": "Assets/StreamingAssets/Sprites/aa2601ac.spr",
+      "bytes": 304951
+    },
+    {
+      "name": "MA_BD_109_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_AT03.spr",
+      "uid": "a0ca3aa0",
+      "unityPath": "Assets/StreamingAssets/Sprites/a0ca3aa0.spr",
+      "bytes": 238529
+    },
+    {
+      "name": "MA_BD_109_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_AT05.spr",
+      "uid": "bfded7a4",
+      "unityPath": "Assets/StreamingAssets/Sprites/bfded7a4.spr",
+      "bytes": 208120
+    },
+    {
+      "name": "MA_BD_109_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_AT07.spr",
+      "uid": "bae2c098",
+      "unityPath": "Assets/StreamingAssets/Sprites/bae2c098.spr",
+      "bytes": 207941
+    },
+    {
+      "name": "MA_BD_109_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_MG01.spr",
+      "uid": "abcfb80c",
+      "unityPath": "Assets/StreamingAssets/Sprites/abcfb80c.spr",
+      "bytes": 261907
+    },
+    {
+      "name": "MA_BD_109_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_MG02.spr",
+      "uid": "a545ae8e",
+      "unityPath": "Assets/StreamingAssets/Sprites/a545ae8e.spr",
+      "bytes": 208431
+    },
+    {
+      "name": "MA_BD_109_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_MG03.spr",
+      "uid": "a6dc5500",
+      "unityPath": "Assets/StreamingAssets/Sprites/a6dc5500.spr",
+      "bytes": 205231
+    },
+    {
+      "name": "MA_BD_109_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_MG04.spr",
+      "uid": "a06a5b82",
+      "unityPath": "Assets/StreamingAssets/Sprites/a06a5b82.spr",
+      "bytes": 226600
+    },
+    {
+      "name": "MA_BD_109_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_109_MG05.spr",
+      "uid": "bde04e04",
+      "unityPath": "Assets/StreamingAssets/Sprites/bde04e04.spr",
+      "bytes": 273718
+    },
+    {
+      "name": "MA_BD_110_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_ST01.spr",
+      "uid": "c0930704",
+      "unityPath": "Assets/StreamingAssets/Sprites/c0930704.spr",
+      "bytes": 333914
+    },
+    {
+      "name": "MA_BD_110_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_ST02.spr",
+      "uid": "c2290d86",
+      "unityPath": "Assets/StreamingAssets/Sprites/c2290d86.spr",
+      "bytes": 333934
+    },
+    {
+      "name": "MA_BD_110_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_ST04.spr",
+      "uid": "d93d277a",
+      "unityPath": "Assets/StreamingAssets/Sprites/d93d277a.spr",
+      "bytes": 260143
+    },
+    {
+      "name": "MA_BD_110_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_ST05.spr",
+      "uid": "da4b2dfc",
+      "unityPath": "Assets/StreamingAssets/Sprites/da4b2dfc.spr",
+      "bytes": 269733
+    },
+    {
+      "name": "MA_BD_110_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_ST06.spr",
+      "uid": "d7c1d07e",
+      "unityPath": "Assets/StreamingAssets/Sprites/d7c1d07e.spr",
+      "bytes": 267392
+    },
+    {
+      "name": "MA_BD_110_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_RN01.spr",
+      "uid": "976d3736",
+      "unityPath": "Assets/StreamingAssets/Sprites/976d3736.spr",
+      "bytes": 258188
+    },
+    {
+      "name": "MA_BD_110_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_RN02.spr",
+      "uid": "90fb3da8",
+      "unityPath": "Assets/StreamingAssets/Sprites/90fb3da8.spr",
+      "bytes": 258284
+    },
+    {
+      "name": "MA_BD_110_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_RN03.spr",
+      "uid": "9271202a",
+      "unityPath": "Assets/StreamingAssets/Sprites/9271202a.spr",
+      "bytes": 255745
+    },
+    {
+      "name": "MA_BD_110_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_RN04.spr",
+      "uid": "6f8fd6ac",
+      "unityPath": "Assets/StreamingAssets/Sprites/6f8fd6ac.spr",
+      "bytes": 250867
+    },
+    {
+      "name": "MA_BD_110_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_AT01.spr",
+      "uid": "ebd33b53",
+      "unityPath": "Assets/StreamingAssets/Sprites/ebd33b53.spr",
+      "bytes": 430656
+    },
+    {
+      "name": "MA_BD_110_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_AT03.spr",
+      "uid": "e6e7d457",
+      "unityPath": "Assets/StreamingAssets/Sprites/e6e7d457.spr",
+      "bytes": 342200
+    },
+    {
+      "name": "MA_BD_110_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_AT05.spr",
+      "uid": "fd8bc14b",
+      "unityPath": "Assets/StreamingAssets/Sprites/fd8bc14b.spr",
+      "bytes": 287632
+    },
+    {
+      "name": "MA_BD_110_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_AT07.spr",
+      "uid": "f89ffa4f",
+      "unityPath": "Assets/StreamingAssets/Sprites/f89ffa4f.spr",
+      "bytes": 296186
+    },
+    {
+      "name": "MA_BD_110_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_MG01.spr",
+      "uid": "e9e555b3",
+      "unityPath": "Assets/StreamingAssets/Sprites/e9e555b3.spr",
+      "bytes": 360617
+    },
+    {
+      "name": "MA_BD_110_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_MG02.spr",
+      "uid": "eb735835",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb735835.spr",
+      "bytes": 283776
+    },
+    {
+      "name": "MA_BD_110_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_MG03.spr",
+      "uid": "e4894eb7",
+      "unityPath": "Assets/StreamingAssets/Sprites/e4894eb7.spr",
+      "bytes": 286145
+    },
+    {
+      "name": "MA_BD_110_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_MG04.spr",
+      "uid": "e6077529",
+      "unityPath": "Assets/StreamingAssets/Sprites/e6077529.spr",
+      "bytes": 313776
+    },
+    {
+      "name": "MA_BD_110_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_110_MG05.spr",
+      "uid": "e39d7bab",
+      "unityPath": "Assets/StreamingAssets/Sprites/e39d7bab.spr",
+      "bytes": 395661
+    },
+    {
+      "name": "MA_BD_111_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_ST01.spr",
+      "uid": "e19c2562",
+      "unityPath": "Assets/StreamingAssets/Sprites/e19c2562.spr",
+      "bytes": 251762
+    },
+    {
+      "name": "MA_BD_111_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_ST02.spr",
+      "uid": "e32a2be4",
+      "unityPath": "Assets/StreamingAssets/Sprites/e32a2be4.spr",
+      "bytes": 251922
+    },
+    {
+      "name": "MA_BD_111_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_ST04.spr",
+      "uid": "fe3ec4d8",
+      "unityPath": "Assets/StreamingAssets/Sprites/fe3ec4d8.spr",
+      "bytes": 214619
+    },
+    {
+      "name": "MA_BD_111_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_ST05.spr",
+      "uid": "fbb4cb5a",
+      "unityPath": "Assets/StreamingAssets/Sprites/fbb4cb5a.spr",
+      "bytes": 213769
+    },
+    {
+      "name": "MA_BD_111_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_ST06.spr",
+      "uid": "f4c2f1dc",
+      "unityPath": "Assets/StreamingAssets/Sprites/f4c2f1dc.spr",
+      "bytes": 213643
+    },
+    {
+      "name": "MA_BD_111_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_RN01.spr",
+      "uid": "346ed5df",
+      "unityPath": "Assets/StreamingAssets/Sprites/346ed5df.spr",
+      "bytes": 190758
+    },
+    {
+      "name": "MA_BD_111_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_RN02.spr",
+      "uid": "31e4d851",
+      "unityPath": "Assets/StreamingAssets/Sprites/31e4d851.spr",
+      "bytes": 187749
+    },
+    {
+      "name": "MA_BD_111_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_RN03.spr",
+      "uid": "3372ced3",
+      "unityPath": "Assets/StreamingAssets/Sprites/3372ced3.spr",
+      "bytes": 188250
+    },
+    {
+      "name": "MA_BD_111_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_RN04.spr",
+      "uid": "0c88f555",
+      "unityPath": "Assets/StreamingAssets/Sprites/0c88f555.spr",
+      "bytes": 192362
+    },
+    {
+      "name": "MA_BD_111_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_AT01.spr",
+      "uid": "08de7f37",
+      "unityPath": "Assets/StreamingAssets/Sprites/08de7f37.spr",
+      "bytes": 331526
+    },
+    {
+      "name": "MA_BD_111_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_AT03.spr",
+      "uid": "07e2682b",
+      "unityPath": "Assets/StreamingAssets/Sprites/07e2682b.spr",
+      "bytes": 262184
+    },
+    {
+      "name": "MA_BD_111_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_AT05.spr",
+      "uid": "02f6052f",
+      "unityPath": "Assets/StreamingAssets/Sprites/02f6052f.spr",
+      "bytes": 230429
+    },
+    {
+      "name": "MA_BD_111_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_AT07.spr",
+      "uid": "199a3e23",
+      "unityPath": "Assets/StreamingAssets/Sprites/199a3e23.spr",
+      "bytes": 225215
+    },
+    {
+      "name": "MA_BD_111_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_MG01.spr",
+      "uid": "0ee6af47",
+      "unityPath": "Assets/StreamingAssets/Sprites/0ee6af47.spr",
+      "bytes": 270581
+    },
+    {
+      "name": "MA_BD_111_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_MG02.spr",
+      "uid": "087d55b9",
+      "unityPath": "Assets/StreamingAssets/Sprites/087d55b9.spr",
+      "bytes": 231301
+    },
+    {
+      "name": "MA_BD_111_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_MG03.spr",
+      "uid": "058b583b",
+      "unityPath": "Assets/StreamingAssets/Sprites/058b583b.spr",
+      "bytes": 231437
+    },
+    {
+      "name": "MA_BD_111_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_MG04.spr",
+      "uid": "07014ebd",
+      "unityPath": "Assets/StreamingAssets/Sprites/07014ebd.spr",
+      "bytes": 253186
+    },
+    {
+      "name": "MA_BD_111_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_111_MG05.spr",
+      "uid": "009f753f",
+      "unityPath": "Assets/StreamingAssets/Sprites/009f753f.spr",
+      "bytes": 307701
+    },
+    {
+      "name": "MA_BD_113_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_ST01.spr",
+      "uid": "a7aa01b9",
+      "unityPath": "Assets/StreamingAssets/Sprites/a7aa01b9.spr",
+      "bytes": 279868
+    },
+    {
+      "name": "MA_BD_113_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_ST02.spr",
+      "uid": "a120343b",
+      "unityPath": "Assets/StreamingAssets/Sprites/a120343b.spr",
+      "bytes": 280045
+    },
+    {
+      "name": "MA_BD_113_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_ST04.spr",
+      "uid": "bc34213f",
+      "unityPath": "Assets/StreamingAssets/Sprites/bc34213f.spr",
+      "bytes": 218867
+    },
+    {
+      "name": "MA_BD_113_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_ST05.spr",
+      "uid": "b942d7b1",
+      "unityPath": "Assets/StreamingAssets/Sprites/b942d7b1.spr",
+      "bytes": 218883
+    },
+    {
+      "name": "MA_BD_113_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_ST06.spr",
+      "uid": "bad8da33",
+      "unityPath": "Assets/StreamingAssets/Sprites/bad8da33.spr",
+      "bytes": 216606
+    },
+    {
+      "name": "MA_BD_113_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_RN01.spr",
+      "uid": "fa642586",
+      "unityPath": "Assets/StreamingAssets/Sprites/fa642586.spr",
+      "bytes": 197880
+    },
+    {
+      "name": "MA_BD_113_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_RN02.spr",
+      "uid": "f7f228f8",
+      "unityPath": "Assets/StreamingAssets/Sprites/f7f228f8.spr",
+      "bytes": 201189
+    },
+    {
+      "name": "MA_BD_113_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_RN03.spr",
+      "uid": "f108df7a",
+      "unityPath": "Assets/StreamingAssets/Sprites/f108df7a.spr",
+      "bytes": 200857
+    },
+    {
+      "name": "MA_BD_113_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_RN04.spr",
+      "uid": "f286c5fc",
+      "unityPath": "Assets/StreamingAssets/Sprites/f286c5fc.spr",
+      "bytes": 200382
+    },
+    {
+      "name": "MA_BD_113_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_AT01.spr",
+      "uid": "ceeb6c58",
+      "unityPath": "Assets/StreamingAssets/Sprites/ceeb6c58.spr",
+      "bytes": 344704
+    },
+    {
+      "name": "MA_BD_113_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_AT03.spr",
+      "uid": "c5ff195c",
+      "unityPath": "Assets/StreamingAssets/Sprites/c5ff195c.spr",
+      "bytes": 273523
+    },
+    {
+      "name": "MA_BD_113_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_AT05.spr",
+      "uid": "c0833250",
+      "unityPath": "Assets/StreamingAssets/Sprites/c0833250.spr",
+      "bytes": 234631
+    },
+    {
+      "name": "MA_BD_113_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_AT07.spr",
+      "uid": "df972f54",
+      "unityPath": "Assets/StreamingAssets/Sprites/df972f54.spr",
+      "bytes": 232956
+    },
+    {
+      "name": "MA_BD_113_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_MG01.spr",
+      "uid": "ccfc5c68",
+      "unityPath": "Assets/StreamingAssets/Sprites/ccfc5c68.spr",
+      "bytes": 295137
+    },
+    {
+      "name": "MA_BD_113_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_MG02.spr",
+      "uid": "ce0a42ea",
+      "unityPath": "Assets/StreamingAssets/Sprites/ce0a42ea.spr",
+      "bytes": 237202
+    },
+    {
+      "name": "MA_BD_113_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_MG03.spr",
+      "uid": "cb80496c",
+      "unityPath": "Assets/StreamingAssets/Sprites/cb80496c.spr",
+      "bytes": 236395
+    },
+    {
+      "name": "MA_BD_113_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_MG04.spr",
+      "uid": "c51e7fee",
+      "unityPath": "Assets/StreamingAssets/Sprites/c51e7fee.spr",
+      "bytes": 258385
+    },
+    {
+      "name": "MA_BD_113_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_113_MG05.spr",
+      "uid": "c6946260",
+      "unityPath": "Assets/StreamingAssets/Sprites/c6946260.spr",
+      "bytes": 308484
+    },
+    {
+      "name": "MA_BD_114_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_ST01.spr",
+      "uid": "449548a2",
+      "unityPath": "Assets/StreamingAssets/Sprites/449548a2.spr",
+      "bytes": 229258
+    },
+    {
+      "name": "MA_BD_114_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_ST02.spr",
+      "uid": "46237f24",
+      "unityPath": "Assets/StreamingAssets/Sprites/46237f24.spr",
+      "bytes": 229212
+    },
+    {
+      "name": "MA_BD_114_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_ST04.spr",
+      "uid": "5d376818",
+      "unityPath": "Assets/StreamingAssets/Sprites/5d376818.spr",
+      "bytes": 170015
+    },
+    {
+      "name": "MA_BD_114_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_ST05.spr",
+      "uid": "5e4d1e9a",
+      "unityPath": "Assets/StreamingAssets/Sprites/5e4d1e9a.spr",
+      "bytes": 173657
+    },
+    {
+      "name": "MA_BD_114_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_ST06.spr",
+      "uid": "5bdb051c",
+      "unityPath": "Assets/StreamingAssets/Sprites/5bdb051c.spr",
+      "bytes": 172936
+    },
+    {
+      "name": "MA_BD_114_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_RN01.spr",
+      "uid": "1b67665a",
+      "unityPath": "Assets/StreamingAssets/Sprites/1b67665a.spr",
+      "bytes": 168319
+    },
+    {
+      "name": "MA_BD_114_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_RN02.spr",
+      "uid": "14fd6cdc",
+      "unityPath": "Assets/StreamingAssets/Sprites/14fd6cdc.spr",
+      "bytes": 168511
+    },
+    {
+      "name": "MA_BD_114_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_RN03.spr",
+      "uid": "160b135e",
+      "unityPath": "Assets/StreamingAssets/Sprites/160b135e.spr",
+      "bytes": 167999
+    },
+    {
+      "name": "MA_BD_114_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_RN04.spr",
+      "uid": "138119d0",
+      "unityPath": "Assets/StreamingAssets/Sprites/138119d0.spr",
+      "bytes": 167040
+    },
+    {
+      "name": "MA_BD_114_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_AT01.spr",
+      "uid": "6fd654d7",
+      "unityPath": "Assets/StreamingAssets/Sprites/6fd654d7.spr",
+      "bytes": 277491
+    },
+    {
+      "name": "MA_BD_114_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_AT03.spr",
+      "uid": "6afa41cb",
+      "unityPath": "Assets/StreamingAssets/Sprites/6afa41cb.spr",
+      "bytes": 215611
+    },
+    {
+      "name": "MA_BD_114_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_AT05.spr",
+      "uid": "618e7acf",
+      "unityPath": "Assets/StreamingAssets/Sprites/618e7acf.spr",
+      "bytes": 185568
+    },
+    {
+      "name": "MA_BD_114_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_AT07.spr",
+      "uid": "7c9217c3",
+      "unityPath": "Assets/StreamingAssets/Sprites/7c9217c3.spr",
+      "bytes": 182704
+    },
+    {
+      "name": "MA_BD_114_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_MG01.spr",
+      "uid": "6dfe84e7",
+      "unityPath": "Assets/StreamingAssets/Sprites/6dfe84e7.spr",
+      "bytes": 229875
+    },
+    {
+      "name": "MA_BD_114_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_MG02.spr",
+      "uid": "6f748b59",
+      "unityPath": "Assets/StreamingAssets/Sprites/6f748b59.spr",
+      "bytes": 183840
+    },
+    {
+      "name": "MA_BD_114_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_MG03.spr",
+      "uid": "6882b1db",
+      "unityPath": "Assets/StreamingAssets/Sprites/6882b1db.spr",
+      "bytes": 183591
+    },
+    {
+      "name": "MA_BD_114_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_MG04.spr",
+      "uid": "6a18a45d",
+      "unityPath": "Assets/StreamingAssets/Sprites/6a18a45d.spr",
+      "bytes": 202548
+    },
+    {
+      "name": "MA_BD_114_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_114_MG05.spr",
+      "uid": "6796aadf",
+      "unityPath": "Assets/StreamingAssets/Sprites/6796aadf.spr",
+      "bytes": 250722
+    },
+    {
+      "name": "MA_BD_115_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_ST01.spr",
+      "uid": "65961600",
+      "unityPath": "Assets/StreamingAssets/Sprites/65961600.spr",
+      "bytes": 265667
+    },
+    {
+      "name": "MA_BD_115_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_ST02.spr",
+      "uid": "672c1c82",
+      "unityPath": "Assets/StreamingAssets/Sprites/672c1c82.spr",
+      "bytes": 265756
+    },
+    {
+      "name": "MA_BD_115_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_ST04.spr",
+      "uid": "62300986",
+      "unityPath": "Assets/StreamingAssets/Sprites/62300986.spr",
+      "bytes": 223858
+    },
+    {
+      "name": "MA_BD_115_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_ST05.spr",
+      "uid": "7f4e3cf8",
+      "unityPath": "Assets/StreamingAssets/Sprites/7f4e3cf8.spr",
+      "bytes": 223943
+    },
+    {
+      "name": "MA_BD_115_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_ST06.spr",
+      "uid": "78c4237a",
+      "unityPath": "Assets/StreamingAssets/Sprites/78c4237a.spr",
+      "bytes": 224544
+    },
+    {
+      "name": "MA_BD_115_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_RN01.spr",
+      "uid": "386007b8",
+      "unityPath": "Assets/StreamingAssets/Sprites/386007b8.spr",
+      "bytes": 203875
+    },
+    {
+      "name": "MA_BD_115_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_RN02.spr",
+      "uid": "35fe0a3a",
+      "unityPath": "Assets/StreamingAssets/Sprites/35fe0a3a.spr",
+      "bytes": 200069
+    },
+    {
+      "name": "MA_BD_115_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_RN03.spr",
+      "uid": "377430bc",
+      "unityPath": "Assets/StreamingAssets/Sprites/377430bc.spr",
+      "bytes": 200708
+    },
+    {
+      "name": "MA_BD_115_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_RN04.spr",
+      "uid": "3082273e",
+      "unityPath": "Assets/StreamingAssets/Sprites/3082273e.spr",
+      "bytes": 205396
+    },
+    {
+      "name": "MA_BD_115_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_AT01.spr",
+      "uid": "8cd055ab",
+      "unityPath": "Assets/StreamingAssets/Sprites/8cd055ab.spr",
+      "bytes": 357582
+    },
+    {
+      "name": "MA_BD_115_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_AT03.spr",
+      "uid": "8be44eaf",
+      "unityPath": "Assets/StreamingAssets/Sprites/8be44eaf.spr",
+      "bytes": 277745
+    },
+    {
+      "name": "MA_BD_115_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_AT05.spr",
+      "uid": "86887ba3",
+      "unityPath": "Assets/StreamingAssets/Sprites/86887ba3.spr",
+      "bytes": 243145
+    },
+    {
+      "name": "MA_BD_115_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_AT07.spr",
+      "uid": "9d9c14a7",
+      "unityPath": "Assets/StreamingAssets/Sprites/9d9c14a7.spr",
+      "bytes": 240705
+    },
+    {
+      "name": "MA_BD_115_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_MG01.spr",
+      "uid": "b2ffa245",
+      "unityPath": "Assets/StreamingAssets/Sprites/b2ffa245.spr",
+      "bytes": 285793
+    },
+    {
+      "name": "MA_BD_115_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_MG02.spr",
+      "uid": "8c75a8c7",
+      "unityPath": "Assets/StreamingAssets/Sprites/8c75a8c7.spr",
+      "bytes": 242788
+    },
+    {
+      "name": "MA_BD_115_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_MG03.spr",
+      "uid": "898c5f39",
+      "unityPath": "Assets/StreamingAssets/Sprites/898c5f39.spr",
+      "bytes": 242816
+    },
+    {
+      "name": "MA_BD_115_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_MG04.spr",
+      "uid": "8b1a45bb",
+      "unityPath": "Assets/StreamingAssets/Sprites/8b1a45bb.spr",
+      "bytes": 264377
+    },
+    {
+      "name": "MA_BD_115_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_115_MG05.spr",
+      "uid": "8490483d",
+      "unityPath": "Assets/StreamingAssets/Sprites/8490483d.spr",
+      "bytes": 326092
+    },
+    {
+      "name": "MA_BD_116_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_ST01.spr",
+      "uid": "0a874c45",
+      "unityPath": "Assets/StreamingAssets/Sprites/0a874c45.spr",
+      "bytes": 270335
+    },
+    {
+      "name": "MA_BD_116_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_ST02.spr",
+      "uid": "041d72c7",
+      "unityPath": "Assets/StreamingAssets/Sprites/041d72c7.spr",
+      "bytes": 270304
+    },
+    {
+      "name": "MA_BD_116_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_ST04.spr",
+      "uid": "03216fbb",
+      "unityPath": "Assets/StreamingAssets/Sprites/03216fbb.spr",
+      "bytes": 206775
+    },
+    {
+      "name": "MA_BD_116_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_ST05.spr",
+      "uid": "1cbf123d",
+      "unityPath": "Assets/StreamingAssets/Sprites/1cbf123d.spr",
+      "bytes": 210489
+    },
+    {
+      "name": "MA_BD_116_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_ST06.spr",
+      "uid": "1e3518bf",
+      "unityPath": "Assets/StreamingAssets/Sprites/1e3518bf.spr",
+      "bytes": 208793
+    },
+    {
+      "name": "MA_BD_116_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_RN01.spr",
+      "uid": "d9517c77",
+      "unityPath": "Assets/StreamingAssets/Sprites/d9517c77.spr",
+      "bytes": 191642
+    },
+    {
+      "name": "MA_BD_116_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_RN02.spr",
+      "uid": "daef62e9",
+      "unityPath": "Assets/StreamingAssets/Sprites/daef62e9.spr",
+      "bytes": 189408
+    },
+    {
+      "name": "MA_BD_116_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_RN03.spr",
+      "uid": "d465696b",
+      "unityPath": "Assets/StreamingAssets/Sprites/d465696b.spr",
+      "bytes": 191900
+    },
+    {
+      "name": "MA_BD_116_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_RN04.spr",
+      "uid": "d1f31fed",
+      "unityPath": "Assets/StreamingAssets/Sprites/d1f31fed.spr",
+      "bytes": 192791
+    },
+    {
+      "name": "MA_BD_116_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_AT01.spr",
+      "uid": "adc7a649",
+      "unityPath": "Assets/StreamingAssets/Sprites/adc7a649.spr",
+      "bytes": 329551
+    },
+    {
+      "name": "MA_BD_116_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_AT03.spr",
+      "uid": "a8d4534d",
+      "unityPath": "Assets/StreamingAssets/Sprites/a8d4534d.spr",
+      "bytes": 258327
+    },
+    {
+      "name": "MA_BD_116_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_AT05.spr",
+      "uid": "a7f84c41",
+      "unityPath": "Assets/StreamingAssets/Sprites/a7f84c41.spr",
+      "bytes": 223520
+    },
+    {
+      "name": "MA_BD_116_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_AT07.spr",
+      "uid": "a28c7945",
+      "unityPath": "Assets/StreamingAssets/Sprites/a28c7945.spr",
+      "bytes": 222201
+    },
+    {
+      "name": "MA_BD_116_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_MG01.spr",
+      "uid": "d3e89659",
+      "unityPath": "Assets/StreamingAssets/Sprites/d3e89659.spr",
+      "bytes": 279799
+    },
+    {
+      "name": "MA_BD_116_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_MG02.spr",
+      "uid": "ad669cdb",
+      "unityPath": "Assets/StreamingAssets/Sprites/ad669cdb.spr",
+      "bytes": 223501
+    },
+    {
+      "name": "MA_BD_116_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_MG03.spr",
+      "uid": "aefc835d",
+      "unityPath": "Assets/StreamingAssets/Sprites/aefc835d.spr",
+      "bytes": 220983
+    },
+    {
+      "name": "MA_BD_116_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_MG04.spr",
+      "uid": "a80a89df",
+      "unityPath": "Assets/StreamingAssets/Sprites/a80a89df.spr",
+      "bytes": 245032
+    },
+    {
+      "name": "MA_BD_116_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_116_MG05.spr",
+      "uid": "a580bc51",
+      "unityPath": "Assets/StreamingAssets/Sprites/a580bc51.spr",
+      "bytes": 299374
+    },
+    {
+      "name": "MA_BD_117_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_ST01.spr",
+      "uid": "2b806da3",
+      "unityPath": "Assets/StreamingAssets/Sprites/2b806da3.spr",
+      "bytes": 291577
+    },
+    {
+      "name": "MA_BD_117_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_ST02.spr",
+      "uid": "251e1025",
+      "unityPath": "Assets/StreamingAssets/Sprites/251e1025.spr",
+      "bytes": 291635
+    },
+    {
+      "name": "MA_BD_117_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_ST04.spr",
+      "uid": "20220d19",
+      "unityPath": "Assets/StreamingAssets/Sprites/20220d19.spr",
+      "bytes": 231285
+    },
+    {
+      "name": "MA_BD_117_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_ST05.spr",
+      "uid": "3db8339b",
+      "unityPath": "Assets/StreamingAssets/Sprites/3db8339b.spr",
+      "bytes": 233988
+    },
+    {
+      "name": "MA_BD_117_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_ST06.spr",
+      "uid": "3f36261d",
+      "unityPath": "Assets/StreamingAssets/Sprites/3f36261d.spr",
+      "bytes": 232383
+    },
+    {
+      "name": "MA_BD_117_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_RN01.spr",
+      "uid": "fe521dd5",
+      "unityPath": "Assets/StreamingAssets/Sprites/fe521dd5.spr",
+      "bytes": 211843
+    },
+    {
+      "name": "MA_BD_117_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_RN02.spr",
+      "uid": "fbe80057",
+      "unityPath": "Assets/StreamingAssets/Sprites/fbe80057.spr",
+      "bytes": 212531
+    },
+    {
+      "name": "MA_BD_117_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_RN03.spr",
+      "uid": "f56636c9",
+      "unityPath": "Assets/StreamingAssets/Sprites/f56636c9.spr",
+      "bytes": 214892
+    },
+    {
+      "name": "MA_BD_117_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_RN04.spr",
+      "uid": "f6fc3d4b",
+      "unityPath": "Assets/StreamingAssets/Sprites/f6fc3d4b.spr",
+      "bytes": 213269
+    },
+    {
+      "name": "MA_BD_117_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_AT01.spr",
+      "uid": "72c144f2",
+      "unityPath": "Assets/StreamingAssets/Sprites/72c144f2.spr",
+      "bytes": 367641
+    },
+    {
+      "name": "MA_BD_117_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_AT03.spr",
+      "uid": "49d571f6",
+      "unityPath": "Assets/StreamingAssets/Sprites/49d571f6.spr",
+      "bytes": 290731
+    },
+    {
+      "name": "MA_BD_117_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_AT05.spr",
+      "uid": "44f96aea",
+      "unityPath": "Assets/StreamingAssets/Sprites/44f96aea.spr",
+      "bytes": 253302
+    },
+    {
+      "name": "MA_BD_117_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_AT07.spr",
+      "uid": "438d07ee",
+      "unityPath": "Assets/StreamingAssets/Sprites/438d07ee.spr",
+      "bytes": 251447
+    },
+    {
+      "name": "MA_BD_117_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_MG01.spr",
+      "uid": "70e9b402",
+      "unityPath": "Assets/StreamingAssets/Sprites/70e9b402.spr",
+      "bytes": 306635
+    },
+    {
+      "name": "MA_BD_117_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_MG02.spr",
+      "uid": "7267ba84",
+      "unityPath": "Assets/StreamingAssets/Sprites/7267ba84.spr",
+      "bytes": 251488
+    },
+    {
+      "name": "MA_BD_117_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_MG03.spr",
+      "uid": "4ffda106",
+      "unityPath": "Assets/StreamingAssets/Sprites/4ffda106.spr",
+      "bytes": 250745
+    },
+    {
+      "name": "MA_BD_117_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_MG04.spr",
+      "uid": "49745478",
+      "unityPath": "Assets/StreamingAssets/Sprites/49745478.spr",
+      "bytes": 276191
+    },
+    {
+      "name": "MA_BD_117_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_117_MG05.spr",
+      "uid": "4a825afa",
+      "unityPath": "Assets/StreamingAssets/Sprites/4a825afa.spr",
+      "bytes": 336664
+    },
+    {
+      "name": "MA_BD_118_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_ST01.spr",
+      "uid": "c882a13c",
+      "unityPath": "Assets/StreamingAssets/Sprites/c882a13c.spr",
+      "bytes": 268852
+    },
+    {
+      "name": "MA_BD_118_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_ST02.spr",
+      "uid": "ca1957be",
+      "unityPath": "Assets/StreamingAssets/Sprites/ca1957be.spr",
+      "bytes": 268758
+    },
+    {
+      "name": "MA_BD_118_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_ST04.spr",
+      "uid": "c12d40b2",
+      "unityPath": "Assets/StreamingAssets/Sprites/c12d40b2.spr",
+      "bytes": 216322
+    },
+    {
+      "name": "MA_BD_118_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_ST05.spr",
+      "uid": "c2bb7734",
+      "unityPath": "Assets/StreamingAssets/Sprites/c2bb7734.spr",
+      "bytes": 219669
+    },
+    {
+      "name": "MA_BD_118_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_ST06.spr",
+      "uid": "dc317db6",
+      "unityPath": "Assets/StreamingAssets/Sprites/dc317db6.spr",
+      "bytes": 218761
+    },
+    {
+      "name": "MA_BD_118_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_RN01.spr",
+      "uid": "9f5d4244",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f5d4244.spr",
+      "bytes": 203484
+    },
+    {
+      "name": "MA_BD_118_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_RN02.spr",
+      "uid": "98eb48c6",
+      "unityPath": "Assets/StreamingAssets/Sprites/98eb48c6.spr",
+      "bytes": 206885
+    },
+    {
+      "name": "MA_BD_118_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_RN03.spr",
+      "uid": "9a617f38",
+      "unityPath": "Assets/StreamingAssets/Sprites/9a617f38.spr",
+      "bytes": 207213
+    },
+    {
+      "name": "MA_BD_118_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_RN04.spr",
+      "uid": "97ff65ba",
+      "unityPath": "Assets/StreamingAssets/Sprites/97ff65ba.spr",
+      "bytes": 207921
+    },
+    {
+      "name": "MA_BD_118_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_AT01.spr",
+      "uid": "93c38c26",
+      "unityPath": "Assets/StreamingAssets/Sprites/93c38c26.spr",
+      "bytes": 356349
+    },
+    {
+      "name": "MA_BD_118_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_AT03.spr",
+      "uid": "6ed7b91a",
+      "unityPath": "Assets/StreamingAssets/Sprites/6ed7b91a.spr",
+      "bytes": 280047
+    },
+    {
+      "name": "MA_BD_118_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_AT05.spr",
+      "uid": "65e4521e",
+      "unityPath": "Assets/StreamingAssets/Sprites/65e4521e.spr",
+      "bytes": 240139
+    },
+    {
+      "name": "MA_BD_118_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_AT07.spr",
+      "uid": "60884f12",
+      "unityPath": "Assets/StreamingAssets/Sprites/60884f12.spr",
+      "bytes": 243414
+    },
+    {
+      "name": "MA_BD_118_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_MG01.spr",
+      "uid": "91d4fc36",
+      "unityPath": "Assets/StreamingAssets/Sprites/91d4fc36.spr",
+      "bytes": 290351
+    },
+    {
+      "name": "MA_BD_118_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_MG02.spr",
+      "uid": "9362e2a8",
+      "unityPath": "Assets/StreamingAssets/Sprites/9362e2a8.spr",
+      "bytes": 237738
+    },
+    {
+      "name": "MA_BD_118_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_MG03.spr",
+      "uid": "6cf8e92a",
+      "unityPath": "Assets/StreamingAssets/Sprites/6cf8e92a.spr",
+      "bytes": 237937
+    },
+    {
+      "name": "MA_BD_118_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_MG04.spr",
+      "uid": "6e769fac",
+      "unityPath": "Assets/StreamingAssets/Sprites/6e769fac.spr",
+      "bytes": 260951
+    },
+    {
+      "name": "MA_BD_118_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_BD_118_MG05.spr",
+      "uid": "6b8c822e",
+      "unityPath": "Assets/StreamingAssets/Sprites/6b8c822e.spr",
+      "bytes": 319997
+    },
+    {
+      "name": "MA_HD_109_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_ST01.spr",
+      "uid": "042784da",
+      "unityPath": "Assets/StreamingAssets/Sprites/042784da.spr",
+      "bytes": 60225
+    },
+    {
+      "name": "MA_HD_109_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_ST02.spr",
+      "uid": "01bd8b5c",
+      "unityPath": "Assets/StreamingAssets/Sprites/01bd8b5c.spr",
+      "bytes": 60561
+    },
+    {
+      "name": "MA_HD_109_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_ST04.spr",
+      "uid": "1c41a450",
+      "unityPath": "Assets/StreamingAssets/Sprites/1c41a450.spr",
+      "bytes": 43759
+    },
+    {
+      "name": "MA_HD_109_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_ST05.spr",
+      "uid": "19dfaad2",
+      "unityPath": "Assets/StreamingAssets/Sprites/19dfaad2.spr",
+      "bytes": 44199
+    },
+    {
+      "name": "MA_HD_109_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_ST06.spr",
+      "uid": "1b565154",
+      "unityPath": "Assets/StreamingAssets/Sprites/1b565154.spr",
+      "bytes": 43939
+    },
+    {
+      "name": "MA_HD_109_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_RN01.spr",
+      "uid": "daf1b40c",
+      "unityPath": "Assets/StreamingAssets/Sprites/daf1b40c.spr",
+      "bytes": 44404
+    },
+    {
+      "name": "MA_HD_109_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_RN02.spr",
+      "uid": "d40fba8e",
+      "unityPath": "Assets/StreamingAssets/Sprites/d40fba8e.spr",
+      "bytes": 44408
+    },
+    {
+      "name": "MA_HD_109_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_RN03.spr",
+      "uid": "d185a100",
+      "unityPath": "Assets/StreamingAssets/Sprites/d185a100.spr",
+      "bytes": 44487
+    },
+    {
+      "name": "MA_HD_109_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_RN04.spr",
+      "uid": "d31c5782",
+      "unityPath": "Assets/StreamingAssets/Sprites/d31c5782.spr",
+      "bytes": 44462
+    },
+    {
+      "name": "MA_HD_109_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_AT01.spr",
+      "uid": "2f60ff29",
+      "unityPath": "Assets/StreamingAssets/Sprites/2f60ff29.spr",
+      "bytes": 71661
+    },
+    {
+      "name": "MA_HD_109_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_AT03.spr",
+      "uid": "2a74e82d",
+      "unityPath": "Assets/StreamingAssets/Sprites/2a74e82d.spr",
+      "bytes": 56458
+    },
+    {
+      "name": "MA_HD_109_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_AT05.spr",
+      "uid": "21188521",
+      "unityPath": "Assets/StreamingAssets/Sprites/21188521.spr",
+      "bytes": 47713
+    },
+    {
+      "name": "MA_HD_109_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_AT07.spr",
+      "uid": "3c2cbe25",
+      "unityPath": "Assets/StreamingAssets/Sprites/3c2cbe25.spr",
+      "bytes": 48466
+    },
+    {
+      "name": "MA_HD_109_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_MG01.spr",
+      "uid": "2d092f39",
+      "unityPath": "Assets/StreamingAssets/Sprites/2d092f39.spr",
+      "bytes": 63971
+    },
+    {
+      "name": "MA_HD_109_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_MG02.spr",
+      "uid": "2e87d5bb",
+      "unityPath": "Assets/StreamingAssets/Sprites/2e87d5bb.spr",
+      "bytes": 48128
+    },
+    {
+      "name": "MA_HD_109_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_MG03.spr",
+      "uid": "281dd83d",
+      "unityPath": "Assets/StreamingAssets/Sprites/281dd83d.spr",
+      "bytes": 48385
+    },
+    {
+      "name": "MA_HD_109_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_MG04.spr",
+      "uid": "25abcebf",
+      "unityPath": "Assets/StreamingAssets/Sprites/25abcebf.spr",
+      "bytes": 49890
+    },
+    {
+      "name": "MA_HD_109_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_109_MG05.spr",
+      "uid": "2721f531",
+      "unityPath": "Assets/StreamingAssets/Sprites/2721f531.spr",
+      "bytes": 63811
+    },
+    {
+      "name": "MA_HD_110_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_ST01.spr",
+      "uid": "da333be0",
+      "unityPath": "Assets/StreamingAssets/Sprites/da333be0.spr",
+      "bytes": 41585
+    },
+    {
+      "name": "MA_HD_110_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_ST02.spr",
+      "uid": "d7492e62",
+      "unityPath": "Assets/StreamingAssets/Sprites/d7492e62.spr",
+      "bytes": 41626
+    },
+    {
+      "name": "MA_HD_110_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_ST04.spr",
+      "uid": "d25ddb66",
+      "unityPath": "Assets/StreamingAssets/Sprites/d25ddb66.spr",
+      "bytes": 30700
+    },
+    {
+      "name": "MA_HD_110_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_ST05.spr",
+      "uid": "afebc1d8",
+      "unityPath": "Assets/StreamingAssets/Sprites/afebc1d8.spr",
+      "bytes": 30769
+    },
+    {
+      "name": "MA_HD_110_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_ST06.spr",
+      "uid": "a961f45a",
+      "unityPath": "Assets/StreamingAssets/Sprites/a961f45a.spr",
+      "bytes": 30790
+    },
+    {
+      "name": "MA_HD_110_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_RN01.spr",
+      "uid": "e88d285d",
+      "unityPath": "Assets/StreamingAssets/Sprites/e88d285d.spr",
+      "bytes": 30570
+    },
+    {
+      "name": "MA_HD_110_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_RN02.spr",
+      "uid": "ea1bdedf",
+      "unityPath": "Assets/StreamingAssets/Sprites/ea1bdedf.spr",
+      "bytes": 30575
+    },
+    {
+      "name": "MA_HD_110_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_RN03.spr",
+      "uid": "e791c551",
+      "unityPath": "Assets/StreamingAssets/Sprites/e791c551.spr",
+      "bytes": 30676
+    },
+    {
+      "name": "MA_HD_110_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_RN04.spr",
+      "uid": "e12fcbd3",
+      "unityPath": "Assets/StreamingAssets/Sprites/e12fcbd3.spr",
+      "bytes": 30566
+    },
+    {
+      "name": "MA_HD_110_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_AT01.spr",
+      "uid": "fd7c0715",
+      "unityPath": "Assets/StreamingAssets/Sprites/fd7c0715.spr",
+      "bytes": 49309
+    },
+    {
+      "name": "MA_HD_110_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_AT03.spr",
+      "uid": "f8003009",
+      "unityPath": "Assets/StreamingAssets/Sprites/f8003009.spr",
+      "bytes": 39019
+    },
+    {
+      "name": "MA_HD_110_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_AT05.spr",
+      "uid": "f7142d0d",
+      "unityPath": "Assets/StreamingAssets/Sprites/f7142d0d.spr",
+      "bytes": 33285
+    },
+    {
+      "name": "MA_HD_110_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_AT07.spr",
+      "uid": "f238c601",
+      "unityPath": "Assets/StreamingAssets/Sprites/f238c601.spr",
+      "bytes": 33790
+    },
+    {
+      "name": "MA_HD_110_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_MG01.spr",
+      "uid": "e3057725",
+      "unityPath": "Assets/StreamingAssets/Sprites/e3057725.spr",
+      "bytes": 44354
+    },
+    {
+      "name": "MA_HD_110_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_MG02.spr",
+      "uid": "fc937da7",
+      "unityPath": "Assets/StreamingAssets/Sprites/fc937da7.spr",
+      "bytes": 33502
+    },
+    {
+      "name": "MA_HD_110_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_MG03.spr",
+      "uid": "fe296019",
+      "unityPath": "Assets/StreamingAssets/Sprites/fe296019.spr",
+      "bytes": 33600
+    },
+    {
+      "name": "MA_HD_110_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_MG04.spr",
+      "uid": "fba7169b",
+      "unityPath": "Assets/StreamingAssets/Sprites/fba7169b.spr",
+      "bytes": 35653
+    },
+    {
+      "name": "MA_HD_110_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_110_MG05.spr",
+      "uid": "f53d1d1d",
+      "unityPath": "Assets/StreamingAssets/Sprites/f53d1d1d.spr",
+      "bytes": 44289
+    },
+    {
+      "name": "MA_HD_111_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_ST01.spr",
+      "uid": "7b3cd989",
+      "unityPath": "Assets/StreamingAssets/Sprites/7b3cd989.spr",
+      "bytes": 34482
+    },
+    {
+      "name": "MA_HD_111_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_ST02.spr",
+      "uid": "744acc0b",
+      "unityPath": "Assets/StreamingAssets/Sprites/744acc0b.spr",
+      "bytes": 34609
+    },
+    {
+      "name": "MA_HD_111_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_ST04.spr",
+      "uid": "735ef90f",
+      "unityPath": "Assets/StreamingAssets/Sprites/735ef90f.spr",
+      "bytes": 25953
+    },
+    {
+      "name": "MA_HD_111_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_ST05.spr",
+      "uid": "4cd4ef81",
+      "unityPath": "Assets/StreamingAssets/Sprites/4cd4ef81.spr",
+      "bytes": 25947
+    },
+    {
+      "name": "MA_HD_111_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_ST06.spr",
+      "uid": "4e629203",
+      "unityPath": "Assets/StreamingAssets/Sprites/4e629203.spr",
+      "bytes": 26042
+    },
+    {
+      "name": "MA_HD_111_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_RN01.spr",
+      "uid": "098ec9bb",
+      "unityPath": "Assets/StreamingAssets/Sprites/098ec9bb.spr",
+      "bytes": 26279
+    },
+    {
+      "name": "MA_HD_111_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_RN02.spr",
+      "uid": "0b04fc3d",
+      "unityPath": "Assets/StreamingAssets/Sprites/0b04fc3d.spr",
+      "bytes": 26265
+    },
+    {
+      "name": "MA_HD_111_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_RN03.spr",
+      "uid": "0492e2bf",
+      "unityPath": "Assets/StreamingAssets/Sprites/0492e2bf.spr",
+      "bytes": 26184
+    },
+    {
+      "name": "MA_HD_111_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_RN04.spr",
+      "uid": "0628e931",
+      "unityPath": "Assets/StreamingAssets/Sprites/0628e931.spr",
+      "bytes": 26260
+    },
+    {
+      "name": "MA_HD_111_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_AT01.spr",
+      "uid": "827d290e",
+      "unityPath": "Assets/StreamingAssets/Sprites/827d290e.spr",
+      "bytes": 42147
+    },
+    {
+      "name": "MA_HD_111_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_AT03.spr",
+      "uid": "9901c202",
+      "unityPath": "Assets/StreamingAssets/Sprites/9901c202.spr",
+      "bytes": 33171
+    },
+    {
+      "name": "MA_HD_111_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_AT05.spr",
+      "uid": "9415ff06",
+      "unityPath": "Assets/StreamingAssets/Sprites/9415ff06.spr",
+      "bytes": 28566
+    },
+    {
+      "name": "MA_HD_111_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_AT07.spr",
+      "uid": "9339e8fa",
+      "unityPath": "Assets/StreamingAssets/Sprites/9339e8fa.spr",
+      "bytes": 28825
+    },
+    {
+      "name": "MA_HD_111_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_MG01.spr",
+      "uid": "8006191e",
+      "unityPath": "Assets/StreamingAssets/Sprites/8006191e.spr",
+      "bytes": 37515
+    },
+    {
+      "name": "MA_HD_111_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_MG02.spr",
+      "uid": "9d9c0f90",
+      "unityPath": "Assets/StreamingAssets/Sprites/9d9c0f90.spr",
+      "bytes": 28470
+    },
+    {
+      "name": "MA_HD_111_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_MG03.spr",
+      "uid": "9f2a3212",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f2a3212.spr",
+      "bytes": 28487
+    },
+    {
+      "name": "MA_HD_111_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_MG04.spr",
+      "uid": "98a03894",
+      "unityPath": "Assets/StreamingAssets/Sprites/98a03894.spr",
+      "bytes": 29912
+    },
+    {
+      "name": "MA_HD_111_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_111_MG05.spr",
+      "uid": "9a3e2f16",
+      "unityPath": "Assets/StreamingAssets/Sprites/9a3e2f16.spr",
+      "bytes": 37777
+    },
+    {
+      "name": "MA_HD_113_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_ST01.spr",
+      "uid": "3938d3b6",
+      "unityPath": "Assets/StreamingAssets/Sprites/3938d3b6.spr",
+      "bytes": 48048
+    },
+    {
+      "name": "MA_HD_113_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_ST02.spr",
+      "uid": "3ab6c628",
+      "unityPath": "Assets/StreamingAssets/Sprites/3ab6c628.spr",
+      "bytes": 47723
+    },
+    {
+      "name": "MA_HD_113_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_ST04.spr",
+      "uid": "315af32c",
+      "unityPath": "Assets/StreamingAssets/Sprites/315af32c.spr",
+      "bytes": 35487
+    },
+    {
+      "name": "MA_HD_113_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_ST05.spr",
+      "uid": "32d0f9ae",
+      "unityPath": "Assets/StreamingAssets/Sprites/32d0f9ae.spr",
+      "bytes": 35410
+    },
+    {
+      "name": "MA_HD_113_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_ST06.spr",
+      "uid": "0c6eec20",
+      "unityPath": "Assets/StreamingAssets/Sprites/0c6eec20.spr",
+      "bytes": 35489
+    },
+    {
+      "name": "MA_HD_113_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_RN01.spr",
+      "uid": "cf8adf88",
+      "unityPath": "Assets/StreamingAssets/Sprites/cf8adf88.spr",
+      "bytes": 35809
+    },
+    {
+      "name": "MA_HD_113_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_RN02.spr",
+      "uid": "c900c20a",
+      "unityPath": "Assets/StreamingAssets/Sprites/c900c20a.spr",
+      "bytes": 35798
+    },
+    {
+      "name": "MA_HD_113_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_RN03.spr",
+      "uid": "ca9ec88c",
+      "unityPath": "Assets/StreamingAssets/Sprites/ca9ec88c.spr",
+      "bytes": 35453
+    },
+    {
+      "name": "MA_HD_113_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_RN04.spr",
+      "uid": "c414ff0e",
+      "unityPath": "Assets/StreamingAssets/Sprites/c414ff0e.spr",
+      "bytes": 35665
+    },
+    {
+      "name": "MA_HD_113_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_AT01.spr",
+      "uid": "407a78a5",
+      "unityPath": "Assets/StreamingAssets/Sprites/407a78a5.spr",
+      "bytes": 57480
+    },
+    {
+      "name": "MA_HD_113_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_AT03.spr",
+      "uid": "5f0e1599",
+      "unityPath": "Assets/StreamingAssets/Sprites/5f0e1599.spr",
+      "bytes": 44679
+    },
+    {
+      "name": "MA_HD_113_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_AT05.spr",
+      "uid": "5a120e9d",
+      "unityPath": "Assets/StreamingAssets/Sprites/5a120e9d.spr",
+      "bytes": 38223
+    },
+    {
+      "name": "MA_HD_113_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_AT07.spr",
+      "uid": "51263b91",
+      "unityPath": "Assets/StreamingAssets/Sprites/51263b91.spr",
+      "bytes": 38469
+    },
+    {
+      "name": "MA_HD_113_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_MG01.spr",
+      "uid": "4602a8b5",
+      "unityPath": "Assets/StreamingAssets/Sprites/4602a8b5.spr",
+      "bytes": 50917
+    },
+    {
+      "name": "MA_HD_113_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_MG02.spr",
+      "uid": "43995f37",
+      "unityPath": "Assets/StreamingAssets/Sprites/43995f37.spr",
+      "bytes": 38521
+    },
+    {
+      "name": "MA_HD_113_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_MG03.spr",
+      "uid": "5d1745a9",
+      "unityPath": "Assets/StreamingAssets/Sprites/5d1745a9.spr",
+      "bytes": 38548
+    },
+    {
+      "name": "MA_HD_113_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_MG04.spr",
+      "uid": "5ead482b",
+      "unityPath": "Assets/StreamingAssets/Sprites/5ead482b.spr",
+      "bytes": 40793
+    },
+    {
+      "name": "MA_HD_113_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_113_MG05.spr",
+      "uid": "583b7ead",
+      "unityPath": "Assets/StreamingAssets/Sprites/583b7ead.spr",
+      "bytes": 50819
+    },
+    {
+      "name": "MA_HD_114_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_ST01.spr",
+      "uid": "5e29107a",
+      "unityPath": "Assets/StreamingAssets/Sprites/5e29107a.spr",
+      "bytes": 32667
+    },
+    {
+      "name": "MA_HD_114_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_ST02.spr",
+      "uid": "5ba706fc",
+      "unityPath": "Assets/StreamingAssets/Sprites/5ba706fc.spr",
+      "bytes": 32644
+    },
+    {
+      "name": "MA_HD_114_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_ST04.spr",
+      "uid": "564b33f0",
+      "unityPath": "Assets/StreamingAssets/Sprites/564b33f0.spr",
+      "bytes": 24456
+    },
+    {
+      "name": "MA_HD_114_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_ST05.spr",
+      "uid": "53c12672",
+      "unityPath": "Assets/StreamingAssets/Sprites/53c12672.spr",
+      "bytes": 24365
+    },
+    {
+      "name": "MA_HD_114_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_ST06.spr",
+      "uid": "2d5f2cf4",
+      "unityPath": "Assets/StreamingAssets/Sprites/2d5f2cf4.spr",
+      "bytes": 24417
+    },
+    {
+      "name": "MA_HD_114_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_RN01.spr",
+      "uid": "6cfb00f7",
+      "unityPath": "Assets/StreamingAssets/Sprites/6cfb00f7.spr",
+      "bytes": 24063
+    },
+    {
+      "name": "MA_HD_114_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_RN02.spr",
+      "uid": "6e713769",
+      "unityPath": "Assets/StreamingAssets/Sprites/6e713769.spr",
+      "bytes": 24072
+    },
+    {
+      "name": "MA_HD_114_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_RN03.spr",
+      "uid": "6b8f3deb",
+      "unityPath": "Assets/StreamingAssets/Sprites/6b8f3deb.spr",
+      "bytes": 24169
+    },
+    {
+      "name": "MA_HD_114_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_RN04.spr",
+      "uid": "6505206d",
+      "unityPath": "Assets/StreamingAssets/Sprites/6505206d.spr",
+      "bytes": 24109
+    },
+    {
+      "name": "MA_HD_114_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_AT01.spr",
+      "uid": "616a7e19",
+      "unityPath": "Assets/StreamingAssets/Sprites/616a7e19.spr",
+      "bytes": 39659
+    },
+    {
+      "name": "MA_HD_114_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_AT03.spr",
+      "uid": "7c7e6b1d",
+      "unityPath": "Assets/StreamingAssets/Sprites/7c7e6b1d.spr",
+      "bytes": 30749
+    },
+    {
+      "name": "MA_HD_114_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_AT05.spr",
+      "uid": "7b020411",
+      "unityPath": "Assets/StreamingAssets/Sprites/7b020411.spr",
+      "bytes": 26316
+    },
+    {
+      "name": "MA_HD_114_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_AT07.spr",
+      "uid": "76163115",
+      "unityPath": "Assets/StreamingAssets/Sprites/76163115.spr",
+      "bytes": 26404
+    },
+    {
+      "name": "MA_HD_114_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_MG01.spr",
+      "uid": "6772ae29",
+      "unityPath": "Assets/StreamingAssets/Sprites/6772ae29.spr",
+      "bytes": 34926
+    },
+    {
+      "name": "MA_HD_114_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_MG02.spr",
+      "uid": "608954ab",
+      "unityPath": "Assets/StreamingAssets/Sprites/608954ab.spr",
+      "bytes": 26353
+    },
+    {
+      "name": "MA_HD_114_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_MG03.spr",
+      "uid": "62075b2d",
+      "unityPath": "Assets/StreamingAssets/Sprites/62075b2d.spr",
+      "bytes": 26588
+    },
+    {
+      "name": "MA_HD_114_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_MG04.spr",
+      "uid": "7f9d41af",
+      "unityPath": "Assets/StreamingAssets/Sprites/7f9d41af.spr",
+      "bytes": 28619
+    },
+    {
+      "name": "MA_HD_114_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_114_MG05.spr",
+      "uid": "792b7421",
+      "unityPath": "Assets/StreamingAssets/Sprites/792b7421.spr",
+      "bytes": 34994
+    },
+    {
+      "name": "MA_HD_115_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_ST01.spr",
+      "uid": "ff2a309d",
+      "unityPath": "Assets/StreamingAssets/Sprites/ff2a309d.spr",
+      "bytes": 38799
+    },
+    {
+      "name": "MA_HD_115_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_ST02.spr",
+      "uid": "f8a0271f",
+      "unityPath": "Assets/StreamingAssets/Sprites/f8a0271f.spr",
+      "bytes": 38614
+    },
+    {
+      "name": "MA_HD_115_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_ST04.spr",
+      "uid": "f7b4d013",
+      "unityPath": "Assets/StreamingAssets/Sprites/f7b4d013.spr",
+      "bytes": 28250
+    },
+    {
+      "name": "MA_HD_115_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_ST05.spr",
+      "uid": "f0c2c695",
+      "unityPath": "Assets/StreamingAssets/Sprites/f0c2c695.spr",
+      "bytes": 28229
+    },
+    {
+      "name": "MA_HD_115_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_ST06.spr",
+      "uid": "f258cd17",
+      "unityPath": "Assets/StreamingAssets/Sprites/f258cd17.spr",
+      "bytes": 28149
+    },
+    {
+      "name": "MA_HD_115_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_RN01.spr",
+      "uid": "8de42e55",
+      "unityPath": "Assets/StreamingAssets/Sprites/8de42e55.spr",
+      "bytes": 28789
+    },
+    {
+      "name": "MA_HD_115_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_RN02.spr",
+      "uid": "8f72d4d7",
+      "unityPath": "Assets/StreamingAssets/Sprites/8f72d4d7.spr",
+      "bytes": 28815
+    },
+    {
+      "name": "MA_HD_115_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_RN03.spr",
+      "uid": "8888db49",
+      "unityPath": "Assets/StreamingAssets/Sprites/8888db49.spr",
+      "bytes": 29120
+    },
+    {
+      "name": "MA_HD_115_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_RN04.spr",
+      "uid": "8a06c1cb",
+      "unityPath": "Assets/StreamingAssets/Sprites/8a06c1cb.spr",
+      "bytes": 28946
+    },
+    {
+      "name": "MA_HD_115_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_AT01.spr",
+      "uid": "066b1cc2",
+      "unityPath": "Assets/StreamingAssets/Sprites/066b1cc2.spr",
+      "bytes": 46216
+    },
+    {
+      "name": "MA_HD_115_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_AT03.spr",
+      "uid": "1d7f09c6",
+      "unityPath": "Assets/StreamingAssets/Sprites/1d7f09c6.spr",
+      "bytes": 35946
+    },
+    {
+      "name": "MA_HD_115_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_AT05.spr",
+      "uid": "180322ba",
+      "unityPath": "Assets/StreamingAssets/Sprites/180322ba.spr",
+      "bytes": 31159
+    },
+    {
+      "name": "MA_HD_115_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_AT07.spr",
+      "uid": "1717dfbe",
+      "unityPath": "Assets/StreamingAssets/Sprites/1717dfbe.spr",
+      "bytes": 31410
+    },
+    {
+      "name": "MA_HD_115_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_MG01.spr",
+      "uid": "047c4cd2",
+      "unityPath": "Assets/StreamingAssets/Sprites/047c4cd2.spr",
+      "bytes": 40909
+    },
+    {
+      "name": "MA_HD_115_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_MG02.spr",
+      "uid": "018a7354",
+      "unityPath": "Assets/StreamingAssets/Sprites/018a7354.spr",
+      "bytes": 30933
+    },
+    {
+      "name": "MA_HD_115_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_MG03.spr",
+      "uid": "030079d6",
+      "unityPath": "Assets/StreamingAssets/Sprites/030079d6.spr",
+      "bytes": 31104
+    },
+    {
+      "name": "MA_HD_115_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_MG04.spr",
+      "uid": "1c9e6c48",
+      "unityPath": "Assets/StreamingAssets/Sprites/1c9e6c48.spr",
+      "bytes": 32554
+    },
+    {
+      "name": "MA_HD_115_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_115_MG05.spr",
+      "uid": "1e1412ca",
+      "unityPath": "Assets/StreamingAssets/Sprites/1e1412ca.spr",
+      "bytes": 40714
+    },
+    {
+      "name": "MA_HD_116_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_ST01.spr",
+      "uid": "1c1578c1",
+      "unityPath": "Assets/StreamingAssets/Sprites/1c1578c1.spr",
+      "bytes": 28291
+    },
+    {
+      "name": "MA_HD_116_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_ST02.spr",
+      "uid": "19a36f43",
+      "unityPath": "Assets/StreamingAssets/Sprites/19a36f43.spr",
+      "bytes": 28514
+    },
+    {
+      "name": "MA_HD_116_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_ST04.spr",
+      "uid": "14b71847",
+      "unityPath": "Assets/StreamingAssets/Sprites/14b71847.spr",
+      "bytes": 21477
+    },
+    {
+      "name": "MA_HD_116_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_ST05.spr",
+      "uid": "11cd0eb9",
+      "unityPath": "Assets/StreamingAssets/Sprites/11cd0eb9.spr",
+      "bytes": 21421
+    },
+    {
+      "name": "MA_HD_116_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_ST06.spr",
+      "uid": "135b353b",
+      "unityPath": "Assets/StreamingAssets/Sprites/135b353b.spr",
+      "bytes": 21341
+    },
+    {
+      "name": "MA_HD_116_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_RN01.spr",
+      "uid": "d2e71679",
+      "unityPath": "Assets/StreamingAssets/Sprites/d2e71679.spr",
+      "bytes": 21018
+    },
+    {
+      "name": "MA_HD_116_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_RN02.spr",
+      "uid": "ac7d1cfb",
+      "unityPath": "Assets/StreamingAssets/Sprites/ac7d1cfb.spr",
+      "bytes": 21008
+    },
+    {
+      "name": "MA_HD_116_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_RN03.spr",
+      "uid": "a98b037d",
+      "unityPath": "Assets/StreamingAssets/Sprites/a98b037d.spr",
+      "bytes": 21143
+    },
+    {
+      "name": "MA_HD_116_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_RN04.spr",
+      "uid": "ab0109ff",
+      "unityPath": "Assets/StreamingAssets/Sprites/ab0109ff.spr",
+      "bytes": 21086
+    },
+    {
+      "name": "MA_HD_116_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_AT01.spr",
+      "uid": "27564846",
+      "unityPath": "Assets/StreamingAssets/Sprites/27564846.spr",
+      "bytes": 34416
+    },
+    {
+      "name": "MA_HD_116_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_AT03.spr",
+      "uid": "227a653a",
+      "unityPath": "Assets/StreamingAssets/Sprites/227a653a.spr",
+      "bytes": 26921
+    },
+    {
+      "name": "MA_HD_116_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_AT05.spr",
+      "uid": "390e1e3e",
+      "unityPath": "Assets/StreamingAssets/Sprites/390e1e3e.spr",
+      "bytes": 23479
+    },
+    {
+      "name": "MA_HD_116_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_AT07.spr",
+      "uid": "34120b32",
+      "unityPath": "Assets/StreamingAssets/Sprites/34120b32.spr",
+      "bytes": 23458
+    },
+    {
+      "name": "MA_HD_116_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_MG01.spr",
+      "uid": "257eb856",
+      "unityPath": "Assets/StreamingAssets/Sprites/257eb856.spr",
+      "bytes": 30899
+    },
+    {
+      "name": "MA_HD_116_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_MG02.spr",
+      "uid": "26f4aec8",
+      "unityPath": "Assets/StreamingAssets/Sprites/26f4aec8.spr",
+      "bytes": 23463
+    },
+    {
+      "name": "MA_HD_116_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_MG03.spr",
+      "uid": "2003554a",
+      "unityPath": "Assets/StreamingAssets/Sprites/2003554a.spr",
+      "bytes": 23188
+    },
+    {
+      "name": "MA_HD_116_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_MG04.spr",
+      "uid": "3d995bcc",
+      "unityPath": "Assets/StreamingAssets/Sprites/3d995bcc.spr",
+      "bytes": 25143
+    },
+    {
+      "name": "MA_HD_116_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_116_MG05.spr",
+      "uid": "3f174e4e",
+      "unityPath": "Assets/StreamingAssets/Sprites/3f174e4e.spr",
+      "bytes": 30915
+    },
+    {
+      "name": "MA_HD_117_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_ST01.spr",
+      "uid": "bd21491a",
+      "unityPath": "Assets/StreamingAssets/Sprites/bd21491a.spr",
+      "bytes": 33784
+    },
+    {
+      "name": "MA_HD_117_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_ST02.spr",
+      "uid": "bebf7f9c",
+      "unityPath": "Assets/StreamingAssets/Sprites/bebf7f9c.spr",
+      "bytes": 33795
+    },
+    {
+      "name": "MA_HD_117_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_ST04.spr",
+      "uid": "b5436890",
+      "unityPath": "Assets/StreamingAssets/Sprites/b5436890.spr",
+      "bytes": 25605
+    },
+    {
+      "name": "MA_HD_117_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_ST05.spr",
+      "uid": "b6d91f12",
+      "unityPath": "Assets/StreamingAssets/Sprites/b6d91f12.spr",
+      "bytes": 25401
+    },
+    {
+      "name": "MA_HD_117_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_ST06.spr",
+      "uid": "b0570594",
+      "unityPath": "Assets/StreamingAssets/Sprites/b0570594.spr",
+      "bytes": 25547
+    },
+    {
+      "name": "MA_HD_117_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_RN01.spr",
+      "uid": "73f3794c",
+      "unityPath": "Assets/StreamingAssets/Sprites/73f3794c.spr",
+      "bytes": 24657
+    },
+    {
+      "name": "MA_HD_117_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_RN02.spr",
+      "uid": "4d096fce",
+      "unityPath": "Assets/StreamingAssets/Sprites/4d096fce.spr",
+      "bytes": 24669
+    },
+    {
+      "name": "MA_HD_117_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_RN03.spr",
+      "uid": "4e871240",
+      "unityPath": "Assets/StreamingAssets/Sprites/4e871240.spr",
+      "bytes": 24999
+    },
+    {
+      "name": "MA_HD_117_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_RN04.spr",
+      "uid": "481d18c2",
+      "unityPath": "Assets/StreamingAssets/Sprites/481d18c2.spr",
+      "bytes": 24693
+    },
+    {
+      "name": "MA_HD_117_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_AT01.spr",
+      "uid": "c450513f",
+      "unityPath": "Assets/StreamingAssets/Sprites/c450513f.spr",
+      "bytes": 40041
+    },
+    {
+      "name": "MA_HD_117_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_AT03.spr",
+      "uid": "c3644a33",
+      "unityPath": "Assets/StreamingAssets/Sprites/c3644a33.spr",
+      "bytes": 31369
+    },
+    {
+      "name": "MA_HD_117_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_AT05.spr",
+      "uid": "de086737",
+      "unityPath": "Assets/StreamingAssets/Sprites/de086737.spr",
+      "bytes": 27123
+    },
+    {
+      "name": "MA_HD_117_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_AT07.spr",
+      "uid": "d51c102b",
+      "unityPath": "Assets/StreamingAssets/Sprites/d51c102b.spr",
+      "bytes": 27147
+    },
+    {
+      "name": "MA_HD_117_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_MG01.spr",
+      "uid": "ca0a88af",
+      "unityPath": "Assets/StreamingAssets/Sprites/ca0a88af.spr",
+      "bytes": 36276
+    },
+    {
+      "name": "MA_HD_117_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_MG02.spr",
+      "uid": "c780bf21",
+      "unityPath": "Assets/StreamingAssets/Sprites/c780bf21.spr",
+      "bytes": 27495
+    },
+    {
+      "name": "MA_HD_117_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_MG03.spr",
+      "uid": "c11ea5a3",
+      "unityPath": "Assets/StreamingAssets/Sprites/c11ea5a3.spr",
+      "bytes": 27101
+    },
+    {
+      "name": "MA_HD_117_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_MG04.spr",
+      "uid": "c294a825",
+      "unityPath": "Assets/StreamingAssets/Sprites/c294a825.spr",
+      "bytes": 28624
+    },
+    {
+      "name": "MA_HD_117_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_117_MG05.spr",
+      "uid": "dc235ea7",
+      "unityPath": "Assets/StreamingAssets/Sprites/dc235ea7.spr",
+      "bytes": 36468
+    },
+    {
+      "name": "MA_HD_118_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_ST01.spr",
+      "uid": "c2234518",
+      "unityPath": "Assets/StreamingAssets/Sprites/c2234518.spr",
+      "bytes": 52007
+    },
+    {
+      "name": "MA_HD_118_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_ST02.spr",
+      "uid": "dfb94b9a",
+      "unityPath": "Assets/StreamingAssets/Sprites/dfb94b9a.spr",
+      "bytes": 52154
+    },
+    {
+      "name": "MA_HD_118_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_ST04.spr",
+      "uid": "da4d649e",
+      "unityPath": "Assets/StreamingAssets/Sprites/da4d649e.spr",
+      "bytes": 38227
+    },
+    {
+      "name": "MA_HD_118_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_ST05.spr",
+      "uid": "d7db6b10",
+      "unityPath": "Assets/StreamingAssets/Sprites/d7db6b10.spr",
+      "bytes": 38437
+    },
+    {
+      "name": "MA_HD_118_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_ST06.spr",
+      "uid": "d1511192",
+      "unityPath": "Assets/StreamingAssets/Sprites/d1511192.spr",
+      "bytes": 38223
+    },
+    {
+      "name": "MA_HD_118_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_RN01.spr",
+      "uid": "90fd6620",
+      "unityPath": "Assets/StreamingAssets/Sprites/90fd6620.spr",
+      "bytes": 39845
+    },
+    {
+      "name": "MA_HD_118_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_RN02.spr",
+      "uid": "920b6ca2",
+      "unityPath": "Assets/StreamingAssets/Sprites/920b6ca2.spr",
+      "bytes": 39860
+    },
+    {
+      "name": "MA_HD_118_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_RN03.spr",
+      "uid": "6f811324",
+      "unityPath": "Assets/StreamingAssets/Sprites/6f811324.spr",
+      "bytes": 39761
+    },
+    {
+      "name": "MA_HD_118_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_RN04.spr",
+      "uid": "691f19a6",
+      "unityPath": "Assets/StreamingAssets/Sprites/691f19a6.spr",
+      "bytes": 39836
+    },
+    {
+      "name": "MA_HD_118_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_AT01.spr",
+      "uid": "e563a14d",
+      "unityPath": "Assets/StreamingAssets/Sprites/e563a14d.spr",
+      "bytes": 62810
+    },
+    {
+      "name": "MA_HD_118_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_AT03.spr",
+      "uid": "e0705a41",
+      "unityPath": "Assets/StreamingAssets/Sprites/e0705a41.spr",
+      "bytes": 50078
+    },
+    {
+      "name": "MA_HD_118_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_AT05.spr",
+      "uid": "ff047745",
+      "unityPath": "Assets/StreamingAssets/Sprites/ff047745.spr",
+      "bytes": 42597
+    },
+    {
+      "name": "MA_HD_118_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_AT07.spr",
+      "uid": "fa286039",
+      "unityPath": "Assets/StreamingAssets/Sprites/fa286039.spr",
+      "bytes": 43382
+    },
+    {
+      "name": "MA_HD_118_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_MG01.spr",
+      "uid": "eb74915d",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb74915d.spr",
+      "bytes": 55571
+    },
+    {
+      "name": "MA_HD_118_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_MG02.spr",
+      "uid": "e48287df",
+      "unityPath": "Assets/StreamingAssets/Sprites/e48287df.spr",
+      "bytes": 42335
+    },
+    {
+      "name": "MA_HD_118_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_MG03.spr",
+      "uid": "e6188a51",
+      "unityPath": "Assets/StreamingAssets/Sprites/e6188a51.spr",
+      "bytes": 42538
+    },
+    {
+      "name": "MA_HD_118_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_MG04.spr",
+      "uid": "e396b0d3",
+      "unityPath": "Assets/StreamingAssets/Sprites/e396b0d3.spr",
+      "bytes": 44223
+    },
+    {
+      "name": "MA_HD_118_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HD_118_MG05.spr",
+      "uid": "fd2ca755",
+      "unityPath": "Assets/StreamingAssets/Sprites/fd2ca755.spr",
+      "bytes": 55705
+    },
+    {
+      "name": "MA_HR_109_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_ST01.spr",
+      "uid": "12bb28da",
+      "unityPath": "Assets/StreamingAssets/Sprites/12bb28da.spr",
+      "bytes": 38563
+    },
+    {
+      "name": "MA_HR_109_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_ST02.spr",
+      "uid": "ec31df5c",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec31df5c.spr",
+      "bytes": 38522
+    },
+    {
+      "name": "MA_HR_109_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_ST04.spr",
+      "uid": "eac5c850",
+      "unityPath": "Assets/StreamingAssets/Sprites/eac5c850.spr",
+      "bytes": 28506
+    },
+    {
+      "name": "MA_HR_109_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_ST05.spr",
+      "uid": "e453fed2",
+      "unityPath": "Assets/StreamingAssets/Sprites/e453fed2.spr",
+      "bytes": 28433
+    },
+    {
+      "name": "MA_HR_109_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_ST06.spr",
+      "uid": "e1e9e554",
+      "unityPath": "Assets/StreamingAssets/Sprites/e1e9e554.spr",
+      "bytes": 28452
+    },
+    {
+      "name": "MA_HR_109_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_RN01.spr",
+      "uid": "a175d992",
+      "unityPath": "Assets/StreamingAssets/Sprites/a175d992.spr",
+      "bytes": 25618
+    },
+    {
+      "name": "MA_HR_109_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_RN02.spr",
+      "uid": "a283cc14",
+      "unityPath": "Assets/StreamingAssets/Sprites/a283cc14.spr",
+      "bytes": 25615
+    },
+    {
+      "name": "MA_HR_109_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_RN03.spr",
+      "uid": "bc19f296",
+      "unityPath": "Assets/StreamingAssets/Sprites/bc19f296.spr",
+      "bytes": 25608
+    },
+    {
+      "name": "MA_HR_109_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_RN04.spr",
+      "uid": "b997f908",
+      "unityPath": "Assets/StreamingAssets/Sprites/b997f908.spr",
+      "bytes": 25627
+    },
+    {
+      "name": "MA_HR_109_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_AT01.spr",
+      "uid": "35e4340f",
+      "unityPath": "Assets/StreamingAssets/Sprites/35e4340f.spr",
+      "bytes": 40234
+    },
+    {
+      "name": "MA_HR_109_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_AT03.spr",
+      "uid": "30882103",
+      "unityPath": "Assets/StreamingAssets/Sprites/30882103.spr",
+      "bytes": 33167
+    },
+    {
+      "name": "MA_HR_109_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_AT05.spr",
+      "uid": "0f9cda07",
+      "unityPath": "Assets/StreamingAssets/Sprites/0f9cda07.spr",
+      "bytes": 27390
+    },
+    {
+      "name": "MA_HR_109_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_AT07.spr",
+      "uid": "0aa0f7fb",
+      "unityPath": "Assets/StreamingAssets/Sprites/0aa0f7fb.spr",
+      "bytes": 27133
+    },
+    {
+      "name": "MA_HR_109_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_MG01.spr",
+      "uid": "3b8d641f",
+      "unityPath": "Assets/StreamingAssets/Sprites/3b8d641f.spr",
+      "bytes": 37431
+    },
+    {
+      "name": "MA_HR_109_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_MG02.spr",
+      "uid": "351b6a91",
+      "unityPath": "Assets/StreamingAssets/Sprites/351b6a91.spr",
+      "bytes": 28713
+    },
+    {
+      "name": "MA_HR_109_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_MG03.spr",
+      "uid": "36911113",
+      "unityPath": "Assets/StreamingAssets/Sprites/36911113.spr",
+      "bytes": 28057
+    },
+    {
+      "name": "MA_HR_109_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_MG04.spr",
+      "uid": "302f0795",
+      "unityPath": "Assets/StreamingAssets/Sprites/302f0795.spr",
+      "bytes": 32884
+    },
+    {
+      "name": "MA_HR_109_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_109_MG05.spr",
+      "uid": "0da50a17",
+      "unityPath": "Assets/StreamingAssets/Sprites/0da50a17.spr",
+      "bytes": 37501
+    },
+    {
+      "name": "MA_HR_111_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_ST01.spr",
+      "uid": "41940825",
+      "unityPath": "Assets/StreamingAssets/Sprites/41940825.spr",
+      "bytes": 40612
+    },
+    {
+      "name": "MA_HR_111_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_ST02.spr",
+      "uid": "43223ea7",
+      "unityPath": "Assets/StreamingAssets/Sprites/43223ea7.spr",
+      "bytes": 40078
+    },
+    {
+      "name": "MA_HR_111_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_ST04.spr",
+      "uid": "5e362b9b",
+      "unityPath": "Assets/StreamingAssets/Sprites/5e362b9b.spr",
+      "bytes": 30205
+    },
+    {
+      "name": "MA_HR_111_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_ST05.spr",
+      "uid": "5b4cde1d",
+      "unityPath": "Assets/StreamingAssets/Sprites/5b4cde1d.spr",
+      "bytes": 30143
+    },
+    {
+      "name": "MA_HR_111_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_ST06.spr",
+      "uid": "54dac49f",
+      "unityPath": "Assets/StreamingAssets/Sprites/54dac49f.spr",
+      "bytes": 30149
+    },
+    {
+      "name": "MA_HR_111_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_RN01.spr",
+      "uid": "146639dd",
+      "unityPath": "Assets/StreamingAssets/Sprites/146639dd.spr",
+      "bytes": 30458
+    },
+    {
+      "name": "MA_HR_111_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_RN02.spr",
+      "uid": "11fc2c5f",
+      "unityPath": "Assets/StreamingAssets/Sprites/11fc2c5f.spr",
+      "bytes": 30467
+    },
+    {
+      "name": "MA_HR_111_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_RN03.spr",
+      "uid": "130ad2d1",
+      "unityPath": "Assets/StreamingAssets/Sprites/130ad2d1.spr",
+      "bytes": 30564
+    },
+    {
+      "name": "MA_HR_111_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_RN04.spr",
+      "uid": "ec80d953",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec80d953.spr",
+      "bytes": 30581
+    },
+    {
+      "name": "MA_HR_111_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_AT01.spr",
+      "uid": "68d5144a",
+      "unityPath": "Assets/StreamingAssets/Sprites/68d5144a.spr",
+      "bytes": 47369
+    },
+    {
+      "name": "MA_HR_111_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_AT03.spr",
+      "uid": "67f9014e",
+      "unityPath": "Assets/StreamingAssets/Sprites/67f9014e.spr",
+      "bytes": 37299
+    },
+    {
+      "name": "MA_HR_111_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_AT05.spr",
+      "uid": "628d3a42",
+      "unityPath": "Assets/StreamingAssets/Sprites/628d3a42.spr",
+      "bytes": 32194
+    },
+    {
+      "name": "MA_HR_111_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_AT07.spr",
+      "uid": "7991d746",
+      "unityPath": "Assets/StreamingAssets/Sprites/7991d746.spr",
+      "bytes": 32018
+    },
+    {
+      "name": "MA_HR_111_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_MG01.spr",
+      "uid": "6efe445a",
+      "unityPath": "Assets/StreamingAssets/Sprites/6efe445a.spr",
+      "bytes": 38475
+    },
+    {
+      "name": "MA_HR_111_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_MG02.spr",
+      "uid": "68744adc",
+      "unityPath": "Assets/StreamingAssets/Sprites/68744adc.spr",
+      "bytes": 32620
+    },
+    {
+      "name": "MA_HR_111_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_MG03.spr",
+      "uid": "6582715e",
+      "unityPath": "Assets/StreamingAssets/Sprites/6582715e.spr",
+      "bytes": 30829
+    },
+    {
+      "name": "MA_HR_111_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_MG04.spr",
+      "uid": "671867d0",
+      "unityPath": "Assets/StreamingAssets/Sprites/671867d0.spr",
+      "bytes": 35601
+    },
+    {
+      "name": "MA_HR_111_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_111_MG05.spr",
+      "uid": "60966a52",
+      "unityPath": "Assets/StreamingAssets/Sprites/60966a52.spr",
+      "bytes": 38549
+    },
+    {
+      "name": "MA_HR_114_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_ST01.spr",
+      "uid": "24aca950",
+      "unityPath": "Assets/StreamingAssets/Sprites/24aca950.spr",
+      "bytes": 53517
+    },
+    {
+      "name": "MA_HR_114_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_ST02.spr",
+      "uid": "263b5fd2",
+      "unityPath": "Assets/StreamingAssets/Sprites/263b5fd2.spr",
+      "bytes": 53831
+    },
+    {
+      "name": "MA_HR_114_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_ST04.spr",
+      "uid": "3ccf48d6",
+      "unityPath": "Assets/StreamingAssets/Sprites/3ccf48d6.spr",
+      "bytes": 39267
+    },
+    {
+      "name": "MA_HR_114_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_ST05.spr",
+      "uid": "3e457f48",
+      "unityPath": "Assets/StreamingAssets/Sprites/3e457f48.spr",
+      "bytes": 39063
+    },
+    {
+      "name": "MA_HR_114_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_ST06.spr",
+      "uid": "3bd365ca",
+      "unityPath": "Assets/StreamingAssets/Sprites/3bd365ca.spr",
+      "bytes": 38830
+    },
+    {
+      "name": "MA_HR_114_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_RN01.spr",
+      "uid": "7b7f59cd",
+      "unityPath": "Assets/StreamingAssets/Sprites/7b7f59cd.spr",
+      "bytes": 34899
+    },
+    {
+      "name": "MA_HR_114_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_RN02.spr",
+      "uid": "74f54c4f",
+      "unityPath": "Assets/StreamingAssets/Sprites/74f54c4f.spr",
+      "bytes": 34863
+    },
+    {
+      "name": "MA_HR_114_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_RN03.spr",
+      "uid": "760372c1",
+      "unityPath": "Assets/StreamingAssets/Sprites/760372c1.spr",
+      "bytes": 34975
+    },
+    {
+      "name": "MA_HR_114_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_RN04.spr",
+      "uid": "73997943",
+      "unityPath": "Assets/StreamingAssets/Sprites/73997943.spr",
+      "bytes": 34906
+    },
+    {
+      "name": "MA_HR_114_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_AT01.spr",
+      "uid": "4fedb8d5",
+      "unityPath": "Assets/StreamingAssets/Sprites/4fedb8d5.spr",
+      "bytes": 53484
+    },
+    {
+      "name": "MA_HR_114_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_AT03.spr",
+      "uid": "4af255c9",
+      "unityPath": "Assets/StreamingAssets/Sprites/4af255c9.spr",
+      "bytes": 44678
+    },
+    {
+      "name": "MA_HR_114_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_AT05.spr",
+      "uid": "41864ecd",
+      "unityPath": "Assets/StreamingAssets/Sprites/41864ecd.spr",
+      "bytes": 36918
+    },
+    {
+      "name": "MA_HR_114_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_AT07.spr",
+      "uid": "5caa7bc1",
+      "unityPath": "Assets/StreamingAssets/Sprites/5caa7bc1.spr",
+      "bytes": 36944
+    },
+    {
+      "name": "MA_HR_114_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_MG01.spr",
+      "uid": "4df6e8e5",
+      "unityPath": "Assets/StreamingAssets/Sprites/4df6e8e5.spr",
+      "bytes": 48339
+    },
+    {
+      "name": "MA_HR_114_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_MG02.spr",
+      "uid": "4f0c9f67",
+      "unityPath": "Assets/StreamingAssets/Sprites/4f0c9f67.spr",
+      "bytes": 40066
+    },
+    {
+      "name": "MA_HR_114_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_MG03.spr",
+      "uid": "489a85d9",
+      "unityPath": "Assets/StreamingAssets/Sprites/489a85d9.spr",
+      "bytes": 37837
+    },
+    {
+      "name": "MA_HR_114_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_MG04.spr",
+      "uid": "4a10885b",
+      "unityPath": "Assets/StreamingAssets/Sprites/4a10885b.spr",
+      "bytes": 44851
+    },
+    {
+      "name": "MA_HR_114_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_114_MG05.spr",
+      "uid": "47aebedd",
+      "unityPath": "Assets/StreamingAssets/Sprites/47aebedd.spr",
+      "bytes": 51537
+    },
+    {
+      "name": "MA_HR_115_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_ST01.spr",
+      "uid": "c5ae7b49",
+      "unityPath": "Assets/StreamingAssets/Sprites/c5ae7b49.spr",
+      "bytes": 46153
+    },
+    {
+      "name": "MA_HR_115_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_ST02.spr",
+      "uid": "c72461cb",
+      "unityPath": "Assets/StreamingAssets/Sprites/c72461cb.spr",
+      "bytes": 46154
+    },
+    {
+      "name": "MA_HR_115_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_ST04.spr",
+      "uid": "ddc81acf",
+      "unityPath": "Assets/StreamingAssets/Sprites/ddc81acf.spr",
+      "bytes": 33684
+    },
+    {
+      "name": "MA_HR_115_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_ST05.spr",
+      "uid": "df460141",
+      "unityPath": "Assets/StreamingAssets/Sprites/df460141.spr",
+      "bytes": 33596
+    },
+    {
+      "name": "MA_HR_115_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_ST06.spr",
+      "uid": "d8dc37c3",
+      "unityPath": "Assets/StreamingAssets/Sprites/d8dc37c3.spr",
+      "bytes": 33578
+    },
+    {
+      "name": "MA_HR_115_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_RN01.spr",
+      "uid": "9878672b",
+      "unityPath": "Assets/StreamingAssets/Sprites/9878672b.spr",
+      "bytes": 31060
+    },
+    {
+      "name": "MA_HR_115_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_RN02.spr",
+      "uid": "95f66dad",
+      "unityPath": "Assets/StreamingAssets/Sprites/95f66dad.spr",
+      "bytes": 31054
+    },
+    {
+      "name": "MA_HR_115_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_RN03.spr",
+      "uid": "970c102f",
+      "unityPath": "Assets/StreamingAssets/Sprites/970c102f.spr",
+      "bytes": 31131
+    },
+    {
+      "name": "MA_HR_115_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_RN04.spr",
+      "uid": "909a06a1",
+      "unityPath": "Assets/StreamingAssets/Sprites/909a06a1.spr",
+      "bytes": 31087
+    },
+    {
+      "name": "MA_HR_115_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_AT01.spr",
+      "uid": "ecef59e8",
+      "unityPath": "Assets/StreamingAssets/Sprites/ecef59e8.spr",
+      "bytes": 51178
+    },
+    {
+      "name": "MA_HR_115_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_AT03.spr",
+      "uid": "ebf372ec",
+      "unityPath": "Assets/StreamingAssets/Sprites/ebf372ec.spr",
+      "bytes": 40987
+    },
+    {
+      "name": "MA_HR_115_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_AT05.spr",
+      "uid": "e6876fe0",
+      "unityPath": "Assets/StreamingAssets/Sprites/e6876fe0.spr",
+      "bytes": 34165
+    },
+    {
+      "name": "MA_HR_115_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_AT07.spr",
+      "uid": "fdab18e4",
+      "unityPath": "Assets/StreamingAssets/Sprites/fdab18e4.spr",
+      "bytes": 33819
+    },
+    {
+      "name": "MA_HR_115_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_MG01.spr",
+      "uid": "12f789f8",
+      "unityPath": "Assets/StreamingAssets/Sprites/12f789f8.spr",
+      "bytes": 45534
+    },
+    {
+      "name": "MA_HR_115_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_MG02.spr",
+      "uid": "ec0dbc7a",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec0dbc7a.spr",
+      "bytes": 34718
+    },
+    {
+      "name": "MA_HR_115_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_MG03.spr",
+      "uid": "e99ba2fc",
+      "unityPath": "Assets/StreamingAssets/Sprites/e99ba2fc.spr",
+      "bytes": 34304
+    },
+    {
+      "name": "MA_HR_115_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_MG04.spr",
+      "uid": "eb11a97e",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb11a97e.spr",
+      "bytes": 39534
+    },
+    {
+      "name": "MA_HR_115_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_115_MG05.spr",
+      "uid": "e4a85ff0",
+      "unityPath": "Assets/StreamingAssets/Sprites/e4a85ff0.spr",
+      "bytes": 46221
+    },
+    {
+      "name": "MA_HR_117_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_ST01.spr",
+      "uid": "8b98bbb6",
+      "unityPath": "Assets/StreamingAssets/Sprites/8b98bbb6.spr",
+      "bytes": 63917
+    },
+    {
+      "name": "MA_HR_117_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_ST02.spr",
+      "uid": "8516ae28",
+      "unityPath": "Assets/StreamingAssets/Sprites/8516ae28.spr",
+      "bytes": 64165
+    },
+    {
+      "name": "MA_HR_117_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_ST04.spr",
+      "uid": "803b5b2c",
+      "unityPath": "Assets/StreamingAssets/Sprites/803b5b2c.spr",
+      "bytes": 47167
+    },
+    {
+      "name": "MA_HR_117_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_ST05.spr",
+      "uid": "9db141ae",
+      "unityPath": "Assets/StreamingAssets/Sprites/9db141ae.spr",
+      "bytes": 46995
+    },
+    {
+      "name": "MA_HR_117_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_ST06.spr",
+      "uid": "9ecf7420",
+      "unityPath": "Assets/StreamingAssets/Sprites/9ecf7420.spr",
+      "bytes": 47047
+    },
+    {
+      "name": "MA_HR_117_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_RN01.spr",
+      "uid": "5e6aa96e",
+      "unityPath": "Assets/StreamingAssets/Sprites/5e6aa96e.spr",
+      "bytes": 42967
+    },
+    {
+      "name": "MA_HR_117_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_RN02.spr",
+      "uid": "5be15fe0",
+      "unityPath": "Assets/StreamingAssets/Sprites/5be15fe0.spr",
+      "bytes": 42958
+    },
+    {
+      "name": "MA_HR_117_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_RN03.spr",
+      "uid": "557f4262",
+      "unityPath": "Assets/StreamingAssets/Sprites/557f4262.spr",
+      "bytes": 42912
+    },
+    {
+      "name": "MA_HR_117_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_RN04.spr",
+      "uid": "56f548e4",
+      "unityPath": "Assets/StreamingAssets/Sprites/56f548e4.spr",
+      "bytes": 42933
+    },
+    {
+      "name": "MA_HR_117_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_AT01.spr",
+      "uid": "d2d8abb5",
+      "unityPath": "Assets/StreamingAssets/Sprites/d2d8abb5.spr",
+      "bytes": 63436
+    },
+    {
+      "name": "MA_HR_117_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_AT03.spr",
+      "uid": "a9ed44a9",
+      "unityPath": "Assets/StreamingAssets/Sprites/a9ed44a9.spr",
+      "bytes": 52255
+    },
+    {
+      "name": "MA_HR_117_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_AT05.spr",
+      "uid": "a4f171ad",
+      "unityPath": "Assets/StreamingAssets/Sprites/a4f171ad.spr",
+      "bytes": 43334
+    },
+    {
+      "name": "MA_HR_117_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_AT07.spr",
+      "uid": "a3856aa1",
+      "unityPath": "Assets/StreamingAssets/Sprites/a3856aa1.spr",
+      "bytes": 44098
+    },
+    {
+      "name": "MA_HR_117_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_MG01.spr",
+      "uid": "d0e2f7eb",
+      "unityPath": "Assets/StreamingAssets/Sprites/d0e2f7eb.spr",
+      "bytes": 57598
+    },
+    {
+      "name": "MA_HR_117_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_MG02.spr",
+      "uid": "d278fa6d",
+      "unityPath": "Assets/StreamingAssets/Sprites/d278fa6d.spr",
+      "bytes": 48633
+    },
+    {
+      "name": "MA_HR_117_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_MG03.spr",
+      "uid": "aff6e0ef",
+      "unityPath": "Assets/StreamingAssets/Sprites/aff6e0ef.spr",
+      "bytes": 45933
+    },
+    {
+      "name": "MA_HR_117_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_MG04.spr",
+      "uid": "a90c9761",
+      "unityPath": "Assets/StreamingAssets/Sprites/a90c9761.spr",
+      "bytes": 53495
+    },
+    {
+      "name": "MA_HR_117_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_117_MG05.spr",
+      "uid": "aa9a9de3",
+      "unityPath": "Assets/StreamingAssets/Sprites/aa9a9de3.spr",
+      "bytes": 62104
+    },
+    {
+      "name": "MA_HR_118_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_ST01.spr",
+      "uid": "a89a8064",
+      "unityPath": "Assets/StreamingAssets/Sprites/a89a8064.spr",
+      "bytes": 85913
+    },
+    {
+      "name": "MA_HR_118_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_ST02.spr",
+      "uid": "aa10b6e6",
+      "unityPath": "Assets/StreamingAssets/Sprites/aa10b6e6.spr",
+      "bytes": 79524
+    },
+    {
+      "name": "MA_HR_118_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_ST04.spr",
+      "uid": "a124a3da",
+      "unityPath": "Assets/StreamingAssets/Sprites/a124a3da.spr",
+      "bytes": 59551
+    },
+    {
+      "name": "MA_HR_118_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_ST05.spr",
+      "uid": "a2b3565c",
+      "unityPath": "Assets/StreamingAssets/Sprites/a2b3565c.spr",
+      "bytes": 62557
+    },
+    {
+      "name": "MA_HR_118_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_ST06.spr",
+      "uid": "bfc95cde",
+      "unityPath": "Assets/StreamingAssets/Sprites/bfc95cde.spr",
+      "bytes": 59193
+    },
+    {
+      "name": "MA_HR_118_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_RN01.spr",
+      "uid": "ff54b0d1",
+      "unityPath": "Assets/StreamingAssets/Sprites/ff54b0d1.spr",
+      "bytes": 54632
+    },
+    {
+      "name": "MA_HR_118_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_RN02.spr",
+      "uid": "f8e2a753",
+      "unityPath": "Assets/StreamingAssets/Sprites/f8e2a753.spr",
+      "bytes": 54575
+    },
+    {
+      "name": "MA_HR_118_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_RN03.spr",
+      "uid": "fa78add5",
+      "unityPath": "Assets/StreamingAssets/Sprites/fa78add5.spr",
+      "bytes": 54482
+    },
+    {
+      "name": "MA_HR_118_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_RN04.spr",
+      "uid": "f7f75057",
+      "unityPath": "Assets/StreamingAssets/Sprites/f7f75057.spr",
+      "bytes": 54556
+    },
+    {
+      "name": "MA_HR_118_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_AT01.spr",
+      "uid": "f3db93d9",
+      "unityPath": "Assets/StreamingAssets/Sprites/f3db93d9.spr",
+      "bytes": 91280
+    },
+    {
+      "name": "MA_HR_118_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_AT03.spr",
+      "uid": "ceef8cdd",
+      "unityPath": "Assets/StreamingAssets/Sprites/ceef8cdd.spr",
+      "bytes": 73258
+    },
+    {
+      "name": "MA_HR_118_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_AT05.spr",
+      "uid": "c5f3b9d1",
+      "unityPath": "Assets/StreamingAssets/Sprites/c5f3b9d1.spr",
+      "bytes": 61516
+    },
+    {
+      "name": "MA_HR_118_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_AT07.spr",
+      "uid": "c08052d5",
+      "unityPath": "Assets/StreamingAssets/Sprites/c08052d5.spr",
+      "bytes": 61923
+    },
+    {
+      "name": "MA_HR_118_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_MG01.spr",
+      "uid": "f1ecc3e9",
+      "unityPath": "Assets/StreamingAssets/Sprites/f1ecc3e9.spr",
+      "bytes": 81930
+    },
+    {
+      "name": "MA_HR_118_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_MG02.spr",
+      "uid": "f37af66b",
+      "unityPath": "Assets/StreamingAssets/Sprites/f37af66b.spr",
+      "bytes": 64174
+    },
+    {
+      "name": "MA_HR_118_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_MG03.spr",
+      "uid": "ccf0fced",
+      "unityPath": "Assets/StreamingAssets/Sprites/ccf0fced.spr",
+      "bytes": 62742
+    },
+    {
+      "name": "MA_HR_118_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_MG04.spr",
+      "uid": "ce0ee36f",
+      "unityPath": "Assets/StreamingAssets/Sprites/ce0ee36f.spr",
+      "bytes": 70023
+    },
+    {
+      "name": "MA_HR_118_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_HR_118_MG05.spr",
+      "uid": "cb84e9e1",
+      "unityPath": "Assets/StreamingAssets/Sprites/cb84e9e1.spr",
+      "bytes": 81548
+    },
+    {
+      "name": "MA_LH_109_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_ST01.spr",
+      "uid": "3ff6e16d",
+      "unityPath": "Assets/StreamingAssets/Sprites/3ff6e16d.spr",
+      "bytes": 52532
+    },
+    {
+      "name": "MA_LH_109_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_ST02.spr",
+      "uid": "390c97ef",
+      "unityPath": "Assets/StreamingAssets/Sprites/390c97ef.spr",
+      "bytes": 52556
+    },
+    {
+      "name": "MA_LH_109_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_ST04.spr",
+      "uid": "341080e3",
+      "unityPath": "Assets/StreamingAssets/Sprites/341080e3.spr",
+      "bytes": 36626
+    },
+    {
+      "name": "MA_LH_109_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_ST05.spr",
+      "uid": "31aeb765",
+      "unityPath": "Assets/StreamingAssets/Sprites/31aeb765.spr",
+      "bytes": 28573
+    },
+    {
+      "name": "MA_LH_109_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_ST06.spr",
+      "uid": "3324bde7",
+      "unityPath": "Assets/StreamingAssets/Sprites/3324bde7.spr",
+      "bytes": 32663
+    },
+    {
+      "name": "MA_LH_109_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_RN01.spr",
+      "uid": "f240ed4f",
+      "unityPath": "Assets/StreamingAssets/Sprites/f240ed4f.spr",
+      "bytes": 35868
+    },
+    {
+      "name": "MA_LH_109_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_RN02.spr",
+      "uid": "cfde93c1",
+      "unityPath": "Assets/StreamingAssets/Sprites/cfde93c1.spr",
+      "bytes": 35951
+    },
+    {
+      "name": "MA_LH_109_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_RN03.spr",
+      "uid": "c9548643",
+      "unityPath": "Assets/StreamingAssets/Sprites/c9548643.spr",
+      "bytes": 29206
+    },
+    {
+      "name": "MA_LH_109_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_RN04.spr",
+      "uid": "cae28cc5",
+      "unityPath": "Assets/StreamingAssets/Sprites/cae28cc5.spr",
+      "bytes": 35894
+    },
+    {
+      "name": "MA_LH_109_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_AT01.spr",
+      "uid": "c737cc57",
+      "unityPath": "Assets/StreamingAssets/Sprites/c737cc57.spr",
+      "bytes": 50362
+    },
+    {
+      "name": "MA_LH_109_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_AT03.spr",
+      "uid": "dddbf94b",
+      "unityPath": "Assets/StreamingAssets/Sprites/dddbf94b.spr",
+      "bytes": 42927
+    },
+    {
+      "name": "MA_LH_109_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_AT05.spr",
+      "uid": "d8ef924f",
+      "unityPath": "Assets/StreamingAssets/Sprites/d8ef924f.spr",
+      "bytes": 34053
+    },
+    {
+      "name": "MA_LH_109_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_AT07.spr",
+      "uid": "d7f38f43",
+      "unityPath": "Assets/StreamingAssets/Sprites/d7f38f43.spr",
+      "bytes": 37073
+    },
+    {
+      "name": "MA_LH_109_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_MG01.spr",
+      "uid": "c4d83c67",
+      "unityPath": "Assets/StreamingAssets/Sprites/c4d83c67.spr",
+      "bytes": 47369
+    },
+    {
+      "name": "MA_LH_109_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_MG02.spr",
+      "uid": "c65622d9",
+      "unityPath": "Assets/StreamingAssets/Sprites/c65622d9.spr",
+      "bytes": 34001
+    },
+    {
+      "name": "MA_LH_109_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_MG03.spr",
+      "uid": "c3ec295b",
+      "unityPath": "Assets/StreamingAssets/Sprites/c3ec295b.spr",
+      "bytes": 35949
+    },
+    {
+      "name": "MA_LH_109_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_MG04.spr",
+      "uid": "dd7adfdd",
+      "unityPath": "Assets/StreamingAssets/Sprites/dd7adfdd.spr",
+      "bytes": 39005
+    },
+    {
+      "name": "MA_LH_109_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_109_MG05.spr",
+      "uid": "def0c25f",
+      "unityPath": "Assets/StreamingAssets/Sprites/def0c25f.spr",
+      "bytes": 52386
+    },
+    {
+      "name": "MA_LH_110_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_ST01.spr",
+      "uid": "cd820949",
+      "unityPath": "Assets/StreamingAssets/Sprites/cd820949.spr",
+      "bytes": 138080
+    },
+    {
+      "name": "MA_LH_110_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_ST02.spr",
+      "uid": "cf183fcb",
+      "unityPath": "Assets/StreamingAssets/Sprites/cf183fcb.spr",
+      "bytes": 136772
+    },
+    {
+      "name": "MA_LH_110_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_ST04.spr",
+      "uid": "ca2c28cf",
+      "unityPath": "Assets/StreamingAssets/Sprites/ca2c28cf.spr",
+      "bytes": 101879
+    },
+    {
+      "name": "MA_LH_110_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_ST05.spr",
+      "uid": "c7badf41",
+      "unityPath": "Assets/StreamingAssets/Sprites/c7badf41.spr",
+      "bytes": 94647
+    },
+    {
+      "name": "MA_LH_110_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_ST06.spr",
+      "uid": "c130c5c3",
+      "unityPath": "Assets/StreamingAssets/Sprites/c130c5c3.spr",
+      "bytes": 98623
+    },
+    {
+      "name": "MA_LH_110_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_RN01.spr",
+      "uid": "805c2601",
+      "unityPath": "Assets/StreamingAssets/Sprites/805c2601.spr",
+      "bytes": 94543
+    },
+    {
+      "name": "MA_LH_110_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_RN02.spr",
+      "uid": "9dea2c83",
+      "unityPath": "Assets/StreamingAssets/Sprites/9dea2c83.spr",
+      "bytes": 94502
+    },
+    {
+      "name": "MA_LH_110_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_RN03.spr",
+      "uid": "9f60d305",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f60d305.spr",
+      "bytes": 94577
+    },
+    {
+      "name": "MA_LH_110_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_RN04.spr",
+      "uid": "98fed987",
+      "unityPath": "Assets/StreamingAssets/Sprites/98fed987.spr",
+      "bytes": 95401
+    },
+    {
+      "name": "MA_LH_110_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_AT01.spr",
+      "uid": "14c36398",
+      "unityPath": "Assets/StreamingAssets/Sprites/14c36398.spr",
+      "bytes": 140626
+    },
+    {
+      "name": "MA_LH_110_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_AT03.spr",
+      "uid": "13d71c9c",
+      "unityPath": "Assets/StreamingAssets/Sprites/13d71c9c.spr",
+      "bytes": 110010
+    },
+    {
+      "name": "MA_LH_110_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_AT05.spr",
+      "uid": "eefb0990",
+      "unityPath": "Assets/StreamingAssets/Sprites/eefb0990.spr",
+      "bytes": 88400
+    },
+    {
+      "name": "MA_LH_110_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_AT07.spr",
+      "uid": "e58f2294",
+      "unityPath": "Assets/StreamingAssets/Sprites/e58f2294.spr",
+      "bytes": 93153
+    },
+    {
+      "name": "MA_LH_110_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_MG01.spr",
+      "uid": "1ad453a8",
+      "unityPath": "Assets/StreamingAssets/Sprites/1ad453a8.spr",
+      "bytes": 119842
+    },
+    {
+      "name": "MA_LH_110_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_MG02.spr",
+      "uid": "1462462a",
+      "unityPath": "Assets/StreamingAssets/Sprites/1462462a.spr",
+      "bytes": 93634
+    },
+    {
+      "name": "MA_LH_110_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_MG03.spr",
+      "uid": "11f84cac",
+      "unityPath": "Assets/StreamingAssets/Sprites/11f84cac.spr",
+      "bytes": 94924
+    },
+    {
+      "name": "MA_LH_110_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_MG04.spr",
+      "uid": "1376732e",
+      "unityPath": "Assets/StreamingAssets/Sprites/1376732e.spr",
+      "bytes": 96558
+    },
+    {
+      "name": "MA_LH_110_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_110_MG05.spr",
+      "uid": "ec8c79a0",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec8c79a0.spr",
+      "bytes": 135874
+    },
+    {
+      "name": "MA_LH_111_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_ST01.spr",
+      "uid": "128d4d2d",
+      "unityPath": "Assets/StreamingAssets/Sprites/128d4d2d.spr",
+      "bytes": 124939
+    },
+    {
+      "name": "MA_LH_111_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_ST02.spr",
+      "uid": "ec1b73af",
+      "unityPath": "Assets/StreamingAssets/Sprites/ec1b73af.spr",
+      "bytes": 123379
+    },
+    {
+      "name": "MA_LH_111_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_ST04.spr",
+      "uid": "eb2f6ca3",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb2f6ca3.spr",
+      "bytes": 92881
+    },
+    {
+      "name": "MA_LH_111_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_ST05.spr",
+      "uid": "e4a51325",
+      "unityPath": "Assets/StreamingAssets/Sprites/e4a51325.spr",
+      "bytes": 81620
+    },
+    {
+      "name": "MA_LH_111_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_ST06.spr",
+      "uid": "e63319a7",
+      "unityPath": "Assets/StreamingAssets/Sprites/e63319a7.spr",
+      "bytes": 87863
+    },
+    {
+      "name": "MA_LH_111_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_RN01.spr",
+      "uid": "215f61ea",
+      "unityPath": "Assets/StreamingAssets/Sprites/215f61ea.spr",
+      "bytes": 84363
+    },
+    {
+      "name": "MA_LH_111_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_RN02.spr",
+      "uid": "22d5146c",
+      "unityPath": "Assets/StreamingAssets/Sprites/22d5146c.spr",
+      "bytes": 84397
+    },
+    {
+      "name": "MA_LH_111_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_RN03.spr",
+      "uid": "3c631aee",
+      "unityPath": "Assets/StreamingAssets/Sprites/3c631aee.spr",
+      "bytes": 83158
+    },
+    {
+      "name": "MA_LH_111_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_RN04.spr",
+      "uid": "39f90160",
+      "unityPath": "Assets/StreamingAssets/Sprites/39f90160.spr",
+      "bytes": 84605
+    },
+    {
+      "name": "MA_LH_111_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_AT01.spr",
+      "uid": "35cdabcc",
+      "unityPath": "Assets/StreamingAssets/Sprites/35cdabcc.spr",
+      "bytes": 127345
+    },
+    {
+      "name": "MA_LH_111_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_AT03.spr",
+      "uid": "30d244c0",
+      "unityPath": "Assets/StreamingAssets/Sprites/30d244c0.spr",
+      "bytes": 96612
+    },
+    {
+      "name": "MA_LH_111_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_AT05.spr",
+      "uid": "0fe671c4",
+      "unityPath": "Assets/StreamingAssets/Sprites/0fe671c4.spr",
+      "bytes": 76639
+    },
+    {
+      "name": "MA_LH_111_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_AT07.spr",
+      "uid": "0a8a6ab8",
+      "unityPath": "Assets/StreamingAssets/Sprites/0a8a6ab8.spr",
+      "bytes": 86404
+    },
+    {
+      "name": "MA_LH_111_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_MG01.spr",
+      "uid": "3bd69bdc",
+      "unityPath": "Assets/StreamingAssets/Sprites/3bd69bdc.spr",
+      "bytes": 101546
+    },
+    {
+      "name": "MA_LH_111_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_MG02.spr",
+      "uid": "356c8e5e",
+      "unityPath": "Assets/StreamingAssets/Sprites/356c8e5e.spr",
+      "bytes": 84074
+    },
+    {
+      "name": "MA_LH_111_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_MG03.spr",
+      "uid": "36fab4d0",
+      "unityPath": "Assets/StreamingAssets/Sprites/36fab4d0.spr",
+      "bytes": 86556
+    },
+    {
+      "name": "MA_LH_111_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_MG04.spr",
+      "uid": "3070bb52",
+      "unityPath": "Assets/StreamingAssets/Sprites/3070bb52.spr",
+      "bytes": 82011
+    },
+    {
+      "name": "MA_LH_111_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_111_MG05.spr",
+      "uid": "0d8ea1d4",
+      "unityPath": "Assets/StreamingAssets/Sprites/0d8ea1d4.spr",
+      "bytes": 122690
+    },
+    {
+      "name": "MA_LH_113_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_ST01.spr",
+      "uid": "d0895274",
+      "unityPath": "Assets/StreamingAssets/Sprites/d0895274.spr",
+      "bytes": 49940
+    },
+    {
+      "name": "MA_LH_113_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_ST02.spr",
+      "uid": "d20758f6",
+      "unityPath": "Assets/StreamingAssets/Sprites/d20758f6.spr",
+      "bytes": 49833
+    },
+    {
+      "name": "MA_LH_113_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_ST04.spr",
+      "uid": "a92b75ea",
+      "unityPath": "Assets/StreamingAssets/Sprites/a92b75ea.spr",
+      "bytes": 35402
+    },
+    {
+      "name": "MA_LH_113_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_ST05.spr",
+      "uid": "aaa1786c",
+      "unityPath": "Assets/StreamingAssets/Sprites/aaa1786c.spr",
+      "bytes": 27928
+    },
+    {
+      "name": "MA_LH_113_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_ST06.spr",
+      "uid": "a43f6eee",
+      "unityPath": "Assets/StreamingAssets/Sprites/a43f6eee.spr",
+      "bytes": 31565
+    },
+    {
+      "name": "MA_LH_113_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_RN01.spr",
+      "uid": "e75b42e1",
+      "unityPath": "Assets/StreamingAssets/Sprites/e75b42e1.spr",
+      "bytes": 63988
+    },
+    {
+      "name": "MA_LH_113_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_RN02.spr",
+      "uid": "e0d14963",
+      "unityPath": "Assets/StreamingAssets/Sprites/e0d14963.spr",
+      "bytes": 34705
+    },
+    {
+      "name": "MA_LH_113_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_RN03.spr",
+      "uid": "e26f7fe5",
+      "unityPath": "Assets/StreamingAssets/Sprites/e26f7fe5.spr",
+      "bytes": 28923
+    },
+    {
+      "name": "MA_LH_113_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_RN04.spr",
+      "uid": "ffe56267",
+      "unityPath": "Assets/StreamingAssets/Sprites/ffe56267.spr",
+      "bytes": 34809
+    },
+    {
+      "name": "MA_LH_113_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_AT01.spr",
+      "uid": "fbc94273",
+      "unityPath": "Assets/StreamingAssets/Sprites/fbc94273.spr",
+      "bytes": 49649
+    },
+    {
+      "name": "MA_LH_113_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_AT03.spr",
+      "uid": "f6dd7f77",
+      "unityPath": "Assets/StreamingAssets/Sprites/f6dd7f77.spr",
+      "bytes": 41764
+    },
+    {
+      "name": "MA_LH_113_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_AT05.spr",
+      "uid": "cde1686b",
+      "unityPath": "Assets/StreamingAssets/Sprites/cde1686b.spr",
+      "bytes": 33607
+    },
+    {
+      "name": "MA_LH_113_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_AT07.spr",
+      "uid": "c8f5056f",
+      "unityPath": "Assets/StreamingAssets/Sprites/c8f5056f.spr",
+      "bytes": 35596
+    },
+    {
+      "name": "MA_LH_113_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_MG01.spr",
+      "uid": "f9d2e1a9",
+      "unityPath": "Assets/StreamingAssets/Sprites/f9d2e1a9.spr",
+      "bytes": 46056
+    },
+    {
+      "name": "MA_LH_113_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_MG02.spr",
+      "uid": "fb68942b",
+      "unityPath": "Assets/StreamingAssets/Sprites/fb68942b.spr",
+      "bytes": 33465
+    },
+    {
+      "name": "MA_LH_113_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_MG03.spr",
+      "uid": "f4e69aad",
+      "unityPath": "Assets/StreamingAssets/Sprites/f4e69aad.spr",
+      "bytes": 34759
+    },
+    {
+      "name": "MA_LH_113_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_MG04.spr",
+      "uid": "f67c812f",
+      "unityPath": "Assets/StreamingAssets/Sprites/f67c812f.spr",
+      "bytes": 38263
+    },
+    {
+      "name": "MA_LH_113_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_113_MG05.spr",
+      "uid": "f38ab7a1",
+      "unityPath": "Assets/StreamingAssets/Sprites/f38ab7a1.spr",
+      "bytes": 50396
+    },
+    {
+      "name": "MA_LH_114_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_ST01.spr",
+      "uid": "71f8a833",
+      "unityPath": "Assets/StreamingAssets/Sprites/71f8a833.spr",
+      "bytes": 81062
+    },
+    {
+      "name": "MA_LH_114_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_ST02.spr",
+      "uid": "73775eb5",
+      "unityPath": "Assets/StreamingAssets/Sprites/73775eb5.spr",
+      "bytes": 81122
+    },
+    {
+      "name": "MA_LH_114_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_ST04.spr",
+      "uid": "4e1b4ba9",
+      "unityPath": "Assets/StreamingAssets/Sprites/4e1b4ba9.spr",
+      "bytes": 56573
+    },
+    {
+      "name": "MA_LH_114_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_ST05.spr",
+      "uid": "4b917e2b",
+      "unityPath": "Assets/StreamingAssets/Sprites/4b917e2b.spr",
+      "bytes": 44378
+    },
+    {
+      "name": "MA_LH_114_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_ST06.spr",
+      "uid": "452f64ad",
+      "unityPath": "Assets/StreamingAssets/Sprites/452f64ad.spr",
+      "bytes": 48685
+    },
+    {
+      "name": "MA_LH_114_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_RN01.spr",
+      "uid": "044b5865",
+      "unityPath": "Assets/StreamingAssets/Sprites/044b5865.spr",
+      "bytes": 55111
+    },
+    {
+      "name": "MA_LH_114_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_RN02.spr",
+      "uid": "01c14ee7",
+      "unityPath": "Assets/StreamingAssets/Sprites/01c14ee7.spr",
+      "bytes": 55036
+    },
+    {
+      "name": "MA_LH_114_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_RN03.spr",
+      "uid": "035f7559",
+      "unityPath": "Assets/StreamingAssets/Sprites/035f7559.spr",
+      "bytes": 45207
+    },
+    {
+      "name": "MA_LH_114_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_RN04.spr",
+      "uid": "1cd57bdb",
+      "unityPath": "Assets/StreamingAssets/Sprites/1cd57bdb.spr",
+      "bytes": 55518
+    },
+    {
+      "name": "MA_LH_114_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_AT01.spr",
+      "uid": "99395832",
+      "unityPath": "Assets/StreamingAssets/Sprites/99395832.spr",
+      "bytes": 76917
+    },
+    {
+      "name": "MA_LH_114_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_AT03.spr",
+      "uid": "97cd7536",
+      "unityPath": "Assets/StreamingAssets/Sprites/97cd7536.spr",
+      "bytes": 67081
+    },
+    {
+      "name": "MA_LH_114_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_AT05.spr",
+      "uid": "92d16e2a",
+      "unityPath": "Assets/StreamingAssets/Sprites/92d16e2a.spr",
+      "bytes": 52475
+    },
+    {
+      "name": "MA_LH_114_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_AT07.spr",
+      "uid": "69e51b2e",
+      "unityPath": "Assets/StreamingAssets/Sprites/69e51b2e.spr",
+      "bytes": 57521
+    },
+    {
+      "name": "MA_LH_114_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_MG01.spr",
+      "uid": "9ec18842",
+      "unityPath": "Assets/StreamingAssets/Sprites/9ec18842.spr",
+      "bytes": 73791
+    },
+    {
+      "name": "MA_LH_114_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_MG02.spr",
+      "uid": "985fbec4",
+      "unityPath": "Assets/StreamingAssets/Sprites/985fbec4.spr",
+      "bytes": 51391
+    },
+    {
+      "name": "MA_LH_114_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_MG03.spr",
+      "uid": "95d5a546",
+      "unityPath": "Assets/StreamingAssets/Sprites/95d5a546.spr",
+      "bytes": 54984
+    },
+    {
+      "name": "MA_LH_114_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_MG04.spr",
+      "uid": "9763abb8",
+      "unityPath": "Assets/StreamingAssets/Sprites/9763abb8.spr",
+      "bytes": 60709
+    },
+    {
+      "name": "MA_LH_114_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_114_MG05.spr",
+      "uid": "90fa5e3a",
+      "unityPath": "Assets/StreamingAssets/Sprites/90fa5e3a.spr",
+      "bytes": 81067
+    },
+    {
+      "name": "MA_LH_115_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_ST01.spr",
+      "uid": "96faa917",
+      "unityPath": "Assets/StreamingAssets/Sprites/96faa917.spr",
+      "bytes": 155036
+    },
+    {
+      "name": "MA_LH_115_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_ST02.spr",
+      "uid": "90715f89",
+      "unityPath": "Assets/StreamingAssets/Sprites/90715f89.spr",
+      "bytes": 153348
+    },
+    {
+      "name": "MA_LH_115_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_ST04.spr",
+      "uid": "6f05488d",
+      "unityPath": "Assets/StreamingAssets/Sprites/6f05488d.spr",
+      "bytes": 114177
+    },
+    {
+      "name": "MA_LH_115_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_ST05.spr",
+      "uid": "68937f0f",
+      "unityPath": "Assets/StreamingAssets/Sprites/68937f0f.spr",
+      "bytes": 105781
+    },
+    {
+      "name": "MA_LH_115_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_ST06.spr",
+      "uid": "6a296581",
+      "unityPath": "Assets/StreamingAssets/Sprites/6a296581.spr",
+      "bytes": 109898
+    },
+    {
+      "name": "MA_LH_115_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_RN01.spr",
+      "uid": "a5b55984",
+      "unityPath": "Assets/StreamingAssets/Sprites/a5b55984.spr",
+      "bytes": 102617
+    },
+    {
+      "name": "MA_LH_115_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_RN02.spr",
+      "uid": "a6c34c06",
+      "unityPath": "Assets/StreamingAssets/Sprites/a6c34c06.spr",
+      "bytes": 102617
+    },
+    {
+      "name": "MA_LH_115_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_RN03.spr",
+      "uid": "a0597378",
+      "unityPath": "Assets/StreamingAssets/Sprites/a0597378.spr",
+      "bytes": 106201
+    },
+    {
+      "name": "MA_LH_115_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_RN04.spr",
+      "uid": "bdd779fa",
+      "unityPath": "Assets/StreamingAssets/Sprites/bdd779fa.spr",
+      "bytes": 103849
+    },
+    {
+      "name": "MA_LH_115_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_AT01.spr",
+      "uid": "be3b8066",
+      "unityPath": "Assets/StreamingAssets/Sprites/be3b8066.spr",
+      "bytes": 154630
+    },
+    {
+      "name": "MA_LH_115_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_AT03.spr",
+      "uid": "b4cfbd5a",
+      "unityPath": "Assets/StreamingAssets/Sprites/b4cfbd5a.spr",
+      "bytes": 118629
+    },
+    {
+      "name": "MA_LH_115_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_AT05.spr",
+      "uid": "b3dc565e",
+      "unityPath": "Assets/StreamingAssets/Sprites/b3dc565e.spr",
+      "bytes": 98646
+    },
+    {
+      "name": "MA_LH_115_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_AT07.spr",
+      "uid": "8ee04352",
+      "unityPath": "Assets/StreamingAssets/Sprites/8ee04352.spr",
+      "bytes": 97068
+    },
+    {
+      "name": "MA_LH_115_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_MG01.spr",
+      "uid": "bfccf076",
+      "unityPath": "Assets/StreamingAssets/Sprites/bfccf076.spr",
+      "bytes": 127883
+    },
+    {
+      "name": "MA_LH_115_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_MG02.spr",
+      "uid": "b95ae6e8",
+      "unityPath": "Assets/StreamingAssets/Sprites/b95ae6e8.spr",
+      "bytes": 102236
+    },
+    {
+      "name": "MA_LH_115_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_MG03.spr",
+      "uid": "bad0ed6a",
+      "unityPath": "Assets/StreamingAssets/Sprites/bad0ed6a.spr",
+      "bytes": 103975
+    },
+    {
+      "name": "MA_LH_115_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_MG04.spr",
+      "uid": "b46e93ec",
+      "unityPath": "Assets/StreamingAssets/Sprites/b46e93ec.spr",
+      "bytes": 101967
+    },
+    {
+      "name": "MA_LH_115_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_115_MG05.spr",
+      "uid": "b1e4866e",
+      "unityPath": "Assets/StreamingAssets/Sprites/b1e4866e.spr",
+      "bytes": 145557
+    },
+    {
+      "name": "MA_LH_116_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_ST01.spr",
+      "uid": "37e442da",
+      "unityPath": "Assets/StreamingAssets/Sprites/37e442da.spr",
+      "bytes": 68320
+    },
+    {
+      "name": "MA_LH_116_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_ST02.spr",
+      "uid": "3172495c",
+      "unityPath": "Assets/StreamingAssets/Sprites/3172495c.spr",
+      "bytes": 68447
+    },
+    {
+      "name": "MA_LH_116_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_ST04.spr",
+      "uid": "0c066250",
+      "unityPath": "Assets/StreamingAssets/Sprites/0c066250.spr",
+      "bytes": 49267
+    },
+    {
+      "name": "MA_LH_116_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_ST05.spr",
+      "uid": "099c68d2",
+      "unityPath": "Assets/StreamingAssets/Sprites/099c68d2.spr",
+      "bytes": 39206
+    },
+    {
+      "name": "MA_LH_116_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_ST06.spr",
+      "uid": "0b2a1f54",
+      "unityPath": "Assets/StreamingAssets/Sprites/0b2a1f54.spr",
+      "bytes": 44888
+    },
+    {
+      "name": "MA_LH_116_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_RN01.spr",
+      "uid": "cab667e2",
+      "unityPath": "Assets/StreamingAssets/Sprites/cab667e2.spr",
+      "bytes": 47773
+    },
+    {
+      "name": "MA_LH_116_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_RN02.spr",
+      "uid": "c7cc6a64",
+      "unityPath": "Assets/StreamingAssets/Sprites/c7cc6a64.spr",
+      "bytes": 47748
+    },
+    {
+      "name": "MA_LH_116_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_RN03.spr",
+      "uid": "c15a10e6",
+      "unityPath": "Assets/StreamingAssets/Sprites/c15a10e6.spr",
+      "bytes": 39859
+    },
+    {
+      "name": "MA_LH_116_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_RN04.spr",
+      "uid": "c2d00758",
+      "unityPath": "Assets/StreamingAssets/Sprites/c2d00758.spr",
+      "bytes": 47930
+    },
+    {
+      "name": "MA_LH_116_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_AT01.spr",
+      "uid": "5f24a179",
+      "unityPath": "Assets/StreamingAssets/Sprites/5f24a179.spr",
+      "bytes": 70397
+    },
+    {
+      "name": "MA_LH_116_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_AT03.spr",
+      "uid": "55c95a7d",
+      "unityPath": "Assets/StreamingAssets/Sprites/55c95a7d.spr",
+      "bytes": 57966
+    },
+    {
+      "name": "MA_LH_116_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_AT05.spr",
+      "uid": "50dd7771",
+      "unityPath": "Assets/StreamingAssets/Sprites/50dd7771.spr",
+      "bytes": 46759
+    },
+    {
+      "name": "MA_LH_116_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_AT07.spr",
+      "uid": "2fe16075",
+      "unityPath": "Assets/StreamingAssets/Sprites/2fe16075.spr",
+      "bytes": 49539
+    },
+    {
+      "name": "MA_LH_116_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_MG01.spr",
+      "uid": "5ccd9089",
+      "unityPath": "Assets/StreamingAssets/Sprites/5ccd9089.spr",
+      "bytes": 63183
+    },
+    {
+      "name": "MA_LH_116_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_MG02.spr",
+      "uid": "5e5b870b",
+      "unityPath": "Assets/StreamingAssets/Sprites/5e5b870b.spr",
+      "bytes": 47706
+    },
+    {
+      "name": "MA_LH_116_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_MG03.spr",
+      "uid": "5bd18d8d",
+      "unityPath": "Assets/StreamingAssets/Sprites/5bd18d8d.spr",
+      "bytes": 49974
+    },
+    {
+      "name": "MA_LH_116_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_MG04.spr",
+      "uid": "556fb00f",
+      "unityPath": "Assets/StreamingAssets/Sprites/556fb00f.spr",
+      "bytes": 52039
+    },
+    {
+      "name": "MA_LH_116_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_116_MG05.spr",
+      "uid": "56e5a681",
+      "unityPath": "Assets/StreamingAssets/Sprites/56e5a681.spr",
+      "bytes": 70350
+    },
+    {
+      "name": "MA_LH_117_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_ST01.spr",
+      "uid": "54f052e8",
+      "unityPath": "Assets/StreamingAssets/Sprites/54f052e8.spr",
+      "bytes": 73653
+    },
+    {
+      "name": "MA_LH_117_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_ST02.spr",
+      "uid": "560e596a",
+      "unityPath": "Assets/StreamingAssets/Sprites/560e596a.spr",
+      "bytes": 73685
+    },
+    {
+      "name": "MA_LH_117_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_ST04.spr",
+      "uid": "2d12726e",
+      "unityPath": "Assets/StreamingAssets/Sprites/2d12726e.spr",
+      "bytes": 51954
+    },
+    {
+      "name": "MA_LH_117_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_ST05.spr",
+      "uid": "2ea878e0",
+      "unityPath": "Assets/StreamingAssets/Sprites/2ea878e0.spr",
+      "bytes": 43672
+    },
+    {
+      "name": "MA_LH_117_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_ST06.spr",
+      "uid": "28266f62",
+      "unityPath": "Assets/StreamingAssets/Sprites/28266f62.spr",
+      "bytes": 48820
+    },
+    {
+      "name": "MA_LH_117_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_RN01.spr",
+      "uid": "eb42421a",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb42421a.spr",
+      "bytes": 51308
+    },
+    {
+      "name": "MA_LH_117_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_RN02.spr",
+      "uid": "e4d8489c",
+      "unityPath": "Assets/StreamingAssets/Sprites/e4d8489c.spr",
+      "bytes": 51363
+    },
+    {
+      "name": "MA_LH_117_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_RN03.spr",
+      "uid": "e6567f1e",
+      "unityPath": "Assets/StreamingAssets/Sprites/e6567f1e.spr",
+      "bytes": 44676
+    },
+    {
+      "name": "MA_LH_117_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_RN04.spr",
+      "uid": "e3ec6590",
+      "unityPath": "Assets/StreamingAssets/Sprites/e3ec6590.spr",
+      "bytes": 51472
+    },
+    {
+      "name": "MA_LH_117_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_AT01.spr",
+      "uid": "7c30b097",
+      "unityPath": "Assets/StreamingAssets/Sprites/7c30b097.spr",
+      "bytes": 77167
+    },
+    {
+      "name": "MA_LH_117_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_AT03.spr",
+      "uid": "7ac4ad8b",
+      "unityPath": "Assets/StreamingAssets/Sprites/7ac4ad8b.spr",
+      "bytes": 63308
+    },
+    {
+      "name": "MA_LH_117_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_AT05.spr",
+      "uid": "71e9468f",
+      "unityPath": "Assets/StreamingAssets/Sprites/71e9468f.spr",
+      "bytes": 51303
+    },
+    {
+      "name": "MA_LH_117_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_AT07.spr",
+      "uid": "4cfd7383",
+      "unityPath": "Assets/StreamingAssets/Sprites/4cfd7383.spr",
+      "bytes": 53313
+    },
+    {
+      "name": "MA_LH_117_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_MG01.spr",
+      "uid": "7dd9e0a7",
+      "unityPath": "Assets/StreamingAssets/Sprites/7dd9e0a7.spr",
+      "bytes": 69189
+    },
+    {
+      "name": "MA_LH_117_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_MG02.spr",
+      "uid": "7f579719",
+      "unityPath": "Assets/StreamingAssets/Sprites/7f579719.spr",
+      "bytes": 51043
+    },
+    {
+      "name": "MA_LH_117_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_MG03.spr",
+      "uid": "78ed9d9b",
+      "unityPath": "Assets/StreamingAssets/Sprites/78ed9d9b.spr",
+      "bytes": 53414
+    },
+    {
+      "name": "MA_LH_117_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_MG04.spr",
+      "uid": "7a7b801d",
+      "unityPath": "Assets/StreamingAssets/Sprites/7a7b801d.spr",
+      "bytes": 58683
+    },
+    {
+      "name": "MA_LH_117_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_117_MG05.spr",
+      "uid": "77f1b69f",
+      "unityPath": "Assets/StreamingAssets/Sprites/77f1b69f.spr",
+      "bytes": 75002
+    },
+    {
+      "name": "MA_LH_118_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_ST01.spr",
+      "uid": "f5f29dd1",
+      "unityPath": "Assets/StreamingAssets/Sprites/f5f29dd1.spr",
+      "bytes": 128454
+    },
+    {
+      "name": "MA_LH_118_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_ST02.spr",
+      "uid": "f7088053",
+      "unityPath": "Assets/StreamingAssets/Sprites/f7088053.spr",
+      "bytes": 128032
+    },
+    {
+      "name": "MA_LH_118_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_ST04.spr",
+      "uid": "f21cbd57",
+      "unityPath": "Assets/StreamingAssets/Sprites/f21cbd57.spr",
+      "bytes": 95005
+    },
+    {
+      "name": "MA_LH_118_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_ST05.spr",
+      "uid": "cfaaa3c9",
+      "unityPath": "Assets/StreamingAssets/Sprites/cfaaa3c9.spr",
+      "bytes": 86891
+    },
+    {
+      "name": "MA_LH_118_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_ST06.spr",
+      "uid": "c921564b",
+      "unityPath": "Assets/StreamingAssets/Sprites/c921564b.spr",
+      "bytes": 92001
+    },
+    {
+      "name": "MA_LH_118_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_RN01.spr",
+      "uid": "884c8a89",
+      "unityPath": "Assets/StreamingAssets/Sprites/884c8a89.spr",
+      "bytes": 86934
+    },
+    {
+      "name": "MA_LH_118_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_RN02.spr",
+      "uid": "85dab10b",
+      "unityPath": "Assets/StreamingAssets/Sprites/85dab10b.spr",
+      "bytes": 86917
+    },
+    {
+      "name": "MA_LH_118_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_RN03.spr",
+      "uid": "8750a78d",
+      "unityPath": "Assets/StreamingAssets/Sprites/8750a78d.spr",
+      "bytes": 87070
+    },
+    {
+      "name": "MA_LH_118_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_RN04.spr",
+      "uid": "80eeaa0f",
+      "unityPath": "Assets/StreamingAssets/Sprites/80eeaa0f.spr",
+      "bytes": 87459
+    },
+    {
+      "name": "MA_LH_118_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_AT01.spr",
+      "uid": "9d328a1b",
+      "unityPath": "Assets/StreamingAssets/Sprites/9d328a1b.spr",
+      "bytes": 127444
+    },
+    {
+      "name": "MA_LH_118_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_AT03.spr",
+      "uid": "9bc6a71f",
+      "unityPath": "Assets/StreamingAssets/Sprites/9bc6a71f.spr",
+      "bytes": 100683
+    },
+    {
+      "name": "MA_LH_118_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_AT05.spr",
+      "uid": "96eb5013",
+      "unityPath": "Assets/StreamingAssets/Sprites/96eb5013.spr",
+      "bytes": 82721
+    },
+    {
+      "name": "MA_LH_118_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_AT07.spr",
+      "uid": "edff4ccc",
+      "unityPath": "Assets/StreamingAssets/Sprites/edff4ccc.spr",
+      "bytes": 86664
+    },
+    {
+      "name": "MA_LH_118_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_MG01.spr",
+      "uid": "82c4dda1",
+      "unityPath": "Assets/StreamingAssets/Sprites/82c4dda1.spr",
+      "bytes": 109081
+    },
+    {
+      "name": "MA_LH_118_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_MG02.spr",
+      "uid": "9c52c023",
+      "unityPath": "Assets/StreamingAssets/Sprites/9c52c023.spr",
+      "bytes": 86774
+    },
+    {
+      "name": "MA_LH_118_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_MG03.spr",
+      "uid": "99e8f6a5",
+      "unityPath": "Assets/StreamingAssets/Sprites/99e8f6a5.spr",
+      "bytes": 87583
+    },
+    {
+      "name": "MA_LH_118_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_MG04.spr",
+      "uid": "9b66fd27",
+      "unityPath": "Assets/StreamingAssets/Sprites/9b66fd27.spr",
+      "bytes": 89674
+    },
+    {
+      "name": "MA_LH_118_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_LH_118_MG05.spr",
+      "uid": "94fce399",
+      "unityPath": "Assets/StreamingAssets/Sprites/94fce399.spr",
+      "bytes": 125688
+    },
+    {
+      "name": "MA_RH_109_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_ST01.spr",
+      "uid": "d04643a5",
+      "unityPath": "Assets/StreamingAssets/Sprites/d04643a5.spr",
+      "bytes": 119580
+    },
+    {
+      "name": "MA_RH_109_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_ST02.spr",
+      "uid": "addc7627",
+      "unityPath": "Assets/StreamingAssets/Sprites/addc7627.spr",
+      "bytes": 119027
+    },
+    {
+      "name": "MA_RH_109_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_ST04.spr",
+      "uid": "a8e0631b",
+      "unityPath": "Assets/StreamingAssets/Sprites/a8e0631b.spr",
+      "bytes": 87162
+    },
+    {
+      "name": "MA_RH_109_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_ST05.spr",
+      "uid": "aa7e699d",
+      "unityPath": "Assets/StreamingAssets/Sprites/aa7e699d.spr",
+      "bytes": 86756
+    },
+    {
+      "name": "MA_RH_109_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_ST06.spr",
+      "uid": "a7f41c1f",
+      "unityPath": "Assets/StreamingAssets/Sprites/a7f41c1f.spr",
+      "bytes": 84692
+    },
+    {
+      "name": "MA_RH_109_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_RN01.spr",
+      "uid": "671073d7",
+      "unityPath": "Assets/StreamingAssets/Sprites/671073d7.spr",
+      "bytes": 80055
+    },
+    {
+      "name": "MA_RH_109_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_RN02.spr",
+      "uid": "60ae6649",
+      "unityPath": "Assets/StreamingAssets/Sprites/60ae6649.spr",
+      "bytes": 82930
+    },
+    {
+      "name": "MA_RH_109_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_RN03.spr",
+      "uid": "62246ccb",
+      "unityPath": "Assets/StreamingAssets/Sprites/62246ccb.spr",
+      "bytes": 84665
+    },
+    {
+      "name": "MA_RH_109_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_RN04.spr",
+      "uid": "7fb2134d",
+      "unityPath": "Assets/StreamingAssets/Sprites/7fb2134d.spr",
+      "bytes": 80192
+    },
+    {
+      "name": "MA_RH_109_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_AT01.spr",
+      "uid": "fb86ae44",
+      "unityPath": "Assets/StreamingAssets/Sprites/fb86ae44.spr",
+      "bytes": 118481
+    },
+    {
+      "name": "MA_RH_109_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_AT03.spr",
+      "uid": "f6ab5b38",
+      "unityPath": "Assets/StreamingAssets/Sprites/f6ab5b38.spr",
+      "bytes": 88933
+    },
+    {
+      "name": "MA_RH_109_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_AT05.spr",
+      "uid": "cdbf743c",
+      "unityPath": "Assets/StreamingAssets/Sprites/cdbf743c.spr",
+      "bytes": 78933
+    },
+    {
+      "name": "MA_RH_109_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_AT07.spr",
+      "uid": "c8436130",
+      "unityPath": "Assets/StreamingAssets/Sprites/c8436130.spr",
+      "bytes": 75102
+    },
+    {
+      "name": "MA_RH_109_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_MG01.spr",
+      "uid": "f9af9e54",
+      "unityPath": "Assets/StreamingAssets/Sprites/f9af9e54.spr",
+      "bytes": 104610
+    },
+    {
+      "name": "MA_RH_109_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_MG02.spr",
+      "uid": "fb2584d6",
+      "unityPath": "Assets/StreamingAssets/Sprites/fb2584d6.spr",
+      "bytes": 74048
+    },
+    {
+      "name": "MA_RH_109_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_MG03.spr",
+      "uid": "f4b38b48",
+      "unityPath": "Assets/StreamingAssets/Sprites/f4b38b48.spr",
+      "bytes": 89917
+    },
+    {
+      "name": "MA_RH_109_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_MG04.spr",
+      "uid": "f1c9b1ca",
+      "unityPath": "Assets/StreamingAssets/Sprites/f1c9b1ca.spr",
+      "bytes": 82518
+    },
+    {
+      "name": "MA_RH_109_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_109_MG05.spr",
+      "uid": "f347a44c",
+      "unityPath": "Assets/StreamingAssets/Sprites/f347a44c.spr",
+      "bytes": 95799
+    },
+    {
+      "name": "MA_RH_110_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_ST01.spr",
+      "uid": "e75676d2",
+      "unityPath": "Assets/StreamingAssets/Sprites/e75676d2.spr",
+      "bytes": 46157
+    },
+    {
+      "name": "MA_RH_110_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_ST02.spr",
+      "uid": "e0ec7d54",
+      "unityPath": "Assets/StreamingAssets/Sprites/e0ec7d54.spr",
+      "bytes": 46569
+    },
+    {
+      "name": "MA_RH_110_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_ST04.spr",
+      "uid": "fff01648",
+      "unityPath": "Assets/StreamingAssets/Sprites/fff01648.spr",
+      "bytes": 30721
+    },
+    {
+      "name": "MA_RH_110_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_ST05.spr",
+      "uid": "f90e1cca",
+      "unityPath": "Assets/StreamingAssets/Sprites/f90e1cca.spr",
+      "bytes": 29664
+    },
+    {
+      "name": "MA_RH_110_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_ST06.spr",
+      "uid": "fa84034c",
+      "unityPath": "Assets/StreamingAssets/Sprites/fa84034c.spr",
+      "bytes": 29013
+    },
+    {
+      "name": "MA_RH_110_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_RN01.spr",
+      "uid": "ba2072b4",
+      "unityPath": "Assets/StreamingAssets/Sprites/ba2072b4.spr",
+      "bytes": 31984
+    },
+    {
+      "name": "MA_RH_110_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_RN02.spr",
+      "uid": "b7be7936",
+      "unityPath": "Assets/StreamingAssets/Sprites/b7be7936.spr",
+      "bytes": 32803
+    },
+    {
+      "name": "MA_RH_110_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_RN03.spr",
+      "uid": "b1346fa8",
+      "unityPath": "Assets/StreamingAssets/Sprites/b1346fa8.spr",
+      "bytes": 30182
+    },
+    {
+      "name": "MA_RH_110_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_RN04.spr",
+      "uid": "b242122a",
+      "unityPath": "Assets/StreamingAssets/Sprites/b242122a.spr",
+      "bytes": 31733
+    },
+    {
+      "name": "MA_RH_110_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_AT01.spr",
+      "uid": "8e9755bc",
+      "unityPath": "Assets/StreamingAssets/Sprites/8e9755bc.spr",
+      "bytes": 45575
+    },
+    {
+      "name": "MA_RH_110_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_AT03.spr",
+      "uid": "85bb4eb0",
+      "unityPath": "Assets/StreamingAssets/Sprites/85bb4eb0.spr",
+      "bytes": 36940
+    },
+    {
+      "name": "MA_RH_110_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_AT05.spr",
+      "uid": "804f7bb4",
+      "unityPath": "Assets/StreamingAssets/Sprites/804f7bb4.spr",
+      "bytes": 31089
+    },
+    {
+      "name": "MA_RH_110_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_AT07.spr",
+      "uid": "9f5314a8",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f5314a8.spr",
+      "bytes": 31716
+    },
+    {
+      "name": "MA_RH_110_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_MG01.spr",
+      "uid": "8cbf85cc",
+      "unityPath": "Assets/StreamingAssets/Sprites/8cbf85cc.spr",
+      "bytes": 41238
+    },
+    {
+      "name": "MA_RH_110_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_MG02.spr",
+      "uid": "8e35884e",
+      "unityPath": "Assets/StreamingAssets/Sprites/8e35884e.spr",
+      "bytes": 29477
+    },
+    {
+      "name": "MA_RH_110_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_MG03.spr",
+      "uid": "8b43bec0",
+      "unityPath": "Assets/StreamingAssets/Sprites/8b43bec0.spr",
+      "bytes": 32335
+    },
+    {
+      "name": "MA_RH_110_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_MG04.spr",
+      "uid": "84d9a542",
+      "unityPath": "Assets/StreamingAssets/Sprites/84d9a542.spr",
+      "bytes": 34890
+    },
+    {
+      "name": "MA_RH_110_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_110_MG05.spr",
+      "uid": "8657abc4",
+      "unityPath": "Assets/StreamingAssets/Sprites/8657abc4.spr",
+      "bytes": 39344
+    },
+    {
+      "name": "MA_RH_111_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_ST01.spr",
+      "uid": "0450be06",
+      "unityPath": "Assets/StreamingAssets/Sprites/0450be06.spr",
+      "bytes": 123695
+    },
+    {
+      "name": "MA_RH_111_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_ST02.spr",
+      "uid": "01eea578",
+      "unityPath": "Assets/StreamingAssets/Sprites/01eea578.spr",
+      "bytes": 123564
+    },
+    {
+      "name": "MA_RH_111_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_ST04.spr",
+      "uid": "1cf35e7c",
+      "unityPath": "Assets/StreamingAssets/Sprites/1cf35e7c.spr",
+      "bytes": 91434
+    },
+    {
+      "name": "MA_RH_111_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_ST05.spr",
+      "uid": "1e0944fe",
+      "unityPath": "Assets/StreamingAssets/Sprites/1e0944fe.spr",
+      "bytes": 88522
+    },
+    {
+      "name": "MA_RH_111_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_ST06.spr",
+      "uid": "1b874b70",
+      "unityPath": "Assets/StreamingAssets/Sprites/1b874b70.spr",
+      "bytes": 88403
+    },
+    {
+      "name": "MA_RH_111_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_RN01.spr",
+      "uid": "db22ae28",
+      "unityPath": "Assets/StreamingAssets/Sprites/db22ae28.spr",
+      "bytes": 82061
+    },
+    {
+      "name": "MA_RH_111_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_RN02.spr",
+      "uid": "d4b954aa",
+      "unityPath": "Assets/StreamingAssets/Sprites/d4b954aa.spr",
+      "bytes": 84659
+    },
+    {
+      "name": "MA_RH_111_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_RN03.spr",
+      "uid": "d6375b2c",
+      "unityPath": "Assets/StreamingAssets/Sprites/d6375b2c.spr",
+      "bytes": 85934
+    },
+    {
+      "name": "MA_RH_111_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_RN04.spr",
+      "uid": "d34d41ae",
+      "unityPath": "Assets/StreamingAssets/Sprites/d34d41ae.spr",
+      "bytes": 83020
+    },
+    {
+      "name": "MA_RH_111_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_AT01.spr",
+      "uid": "2f90bd2f",
+      "unityPath": "Assets/StreamingAssets/Sprites/2f90bd2f.spr",
+      "bytes": 128493
+    },
+    {
+      "name": "MA_RH_111_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_AT03.spr",
+      "uid": "2aa55623",
+      "unityPath": "Assets/StreamingAssets/Sprites/2aa55623.spr",
+      "bytes": 95641
+    },
+    {
+      "name": "MA_RH_111_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_AT05.spr",
+      "uid": "21494327",
+      "unityPath": "Assets/StreamingAssets/Sprites/21494327.spr",
+      "bytes": 81794
+    },
+    {
+      "name": "MA_RH_111_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_AT07.spr",
+      "uid": "3c5d7c1b",
+      "unityPath": "Assets/StreamingAssets/Sprites/3c5d7c1b.spr",
+      "bytes": 80361
+    },
+    {
+      "name": "MA_RH_111_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_MG01.spr",
+      "uid": "2dbaccb5",
+      "unityPath": "Assets/StreamingAssets/Sprites/2dbaccb5.spr",
+      "bytes": 106032
+    },
+    {
+      "name": "MA_RH_111_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_MG02.spr",
+      "uid": "2f30f337",
+      "unityPath": "Assets/StreamingAssets/Sprites/2f30f337.spr",
+      "bytes": 77503
+    },
+    {
+      "name": "MA_RH_111_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_MG03.spr",
+      "uid": "284ef9a9",
+      "unityPath": "Assets/StreamingAssets/Sprites/284ef9a9.spr",
+      "bytes": 93274
+    },
+    {
+      "name": "MA_RH_111_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_MG04.spr",
+      "uid": "25c4ec2b",
+      "unityPath": "Assets/StreamingAssets/Sprites/25c4ec2b.spr",
+      "bytes": 85532
+    },
+    {
+      "name": "MA_RH_111_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_111_MG05.spr",
+      "uid": "275292ad",
+      "unityPath": "Assets/StreamingAssets/Sprites/275292ad.spr",
+      "bytes": 105959
+    },
+    {
+      "name": "MA_RH_113_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_ST01.spr",
+      "uid": "ca6ee987",
+      "unityPath": "Assets/StreamingAssets/Sprites/ca6ee987.spr",
+      "bytes": 50458
+    },
+    {
+      "name": "MA_RH_113_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_ST02.spr",
+      "uid": "c7e49cf9",
+      "unityPath": "Assets/StreamingAssets/Sprites/c7e49cf9.spr",
+      "bytes": 50497
+    },
+    {
+      "name": "MA_RH_113_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_ST04.spr",
+      "uid": "c28889fd",
+      "unityPath": "Assets/StreamingAssets/Sprites/c28889fd.spr",
+      "bytes": 33653
+    },
+    {
+      "name": "MA_RH_113_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_ST05.spr",
+      "uid": "dc06bc7f",
+      "unityPath": "Assets/StreamingAssets/Sprites/dc06bc7f.spr",
+      "bytes": 32348
+    },
+    {
+      "name": "MA_RH_113_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_ST06.spr",
+      "uid": "d99ca2f1",
+      "unityPath": "Assets/StreamingAssets/Sprites/d99ca2f1.spr",
+      "bytes": 31726
+    },
+    {
+      "name": "MA_RH_113_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_RN01.spr",
+      "uid": "9938873f",
+      "unityPath": "Assets/StreamingAssets/Sprites/9938873f.spr",
+      "bytes": 35084
+    },
+    {
+      "name": "MA_RH_113_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_RN02.spr",
+      "uid": "9ab68db1",
+      "unityPath": "Assets/StreamingAssets/Sprites/9ab68db1.spr",
+      "bytes": 36187
+    },
+    {
+      "name": "MA_RH_113_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_RN03.spr",
+      "uid": "97ccb033",
+      "unityPath": "Assets/StreamingAssets/Sprites/97ccb033.spr",
+      "bytes": 32910
+    },
+    {
+      "name": "MA_RH_113_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_RN04.spr",
+      "uid": "915aa6b5",
+      "unityPath": "Assets/StreamingAssets/Sprites/915aa6b5.spr",
+      "bytes": 34858
+    },
+    {
+      "name": "MA_RH_113_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_AT01.spr",
+      "uid": "edaff9fc",
+      "unityPath": "Assets/StreamingAssets/Sprites/edaff9fc.spr",
+      "bytes": 51170
+    },
+    {
+      "name": "MA_RH_113_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_AT03.spr",
+      "uid": "e8b392f0",
+      "unityPath": "Assets/StreamingAssets/Sprites/e8b392f0.spr",
+      "bytes": 40544
+    },
+    {
+      "name": "MA_RH_113_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_AT05.spr",
+      "uid": "e7478ff4",
+      "unityPath": "Assets/StreamingAssets/Sprites/e7478ff4.spr",
+      "bytes": 34947
+    },
+    {
+      "name": "MA_RH_113_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_AT07.spr",
+      "uid": "e26bb8e8",
+      "unityPath": "Assets/StreamingAssets/Sprites/e26bb8e8.spr",
+      "bytes": 35183
+    },
+    {
+      "name": "MA_RH_113_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_MG01.spr",
+      "uid": "13b0290c",
+      "unityPath": "Assets/StreamingAssets/Sprites/13b0290c.spr",
+      "bytes": 46000
+    },
+    {
+      "name": "MA_RH_113_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_MG02.spr",
+      "uid": "eccedf8e",
+      "unityPath": "Assets/StreamingAssets/Sprites/eccedf8e.spr",
+      "bytes": 33150
+    },
+    {
+      "name": "MA_RH_113_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_MG03.spr",
+      "uid": "ee44c200",
+      "unityPath": "Assets/StreamingAssets/Sprites/ee44c200.spr",
+      "bytes": 35666
+    },
+    {
+      "name": "MA_RH_113_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_MG04.spr",
+      "uid": "ebd2c882",
+      "unityPath": "Assets/StreamingAssets/Sprites/ebd2c882.spr",
+      "bytes": 38986
+    },
+    {
+      "name": "MA_RH_113_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_113_MG05.spr",
+      "uid": "e568ff04",
+      "unityPath": "Assets/StreamingAssets/Sprites/e568ff04.spr",
+      "bytes": 44512
+    },
+    {
+      "name": "MA_RH_114_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_ST01.spr",
+      "uid": "eb6fb8bb",
+      "unityPath": "Assets/StreamingAssets/Sprites/eb6fb8bb.spr",
+      "bytes": 80911
+    },
+    {
+      "name": "MA_RH_114_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_ST02.spr",
+      "uid": "e4e5af3d",
+      "unityPath": "Assets/StreamingAssets/Sprites/e4e5af3d.spr",
+      "bytes": 81558
+    },
+    {
+      "name": "MA_RH_114_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_ST04.spr",
+      "uid": "e38a5831",
+      "unityPath": "Assets/StreamingAssets/Sprites/e38a5831.spr",
+      "bytes": 54947
+    },
+    {
+      "name": "MA_RH_114_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_ST05.spr",
+      "uid": "fd004eb3",
+      "unityPath": "Assets/StreamingAssets/Sprites/fd004eb3.spr",
+      "bytes": 52092
+    },
+    {
+      "name": "MA_RH_114_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_ST06.spr",
+      "uid": "fe9e7535",
+      "unityPath": "Assets/StreamingAssets/Sprites/fe9e7535.spr",
+      "bytes": 48673
+    },
+    {
+      "name": "MA_RH_114_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_RN01.spr",
+      "uid": "3e39a452",
+      "unityPath": "Assets/StreamingAssets/Sprites/3e39a452.spr",
+      "bytes": 56037
+    },
+    {
+      "name": "MA_RH_114_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_RN02.spr",
+      "uid": "3bb7aad4",
+      "unityPath": "Assets/StreamingAssets/Sprites/3bb7aad4.spr",
+      "bytes": 58869
+    },
+    {
+      "name": "MA_RH_114_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_RN03.spr",
+      "uid": "34ce5156",
+      "unityPath": "Assets/StreamingAssets/Sprites/34ce5156.spr",
+      "bytes": 52550
+    },
+    {
+      "name": "MA_RH_114_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_RN04.spr",
+      "uid": "364447c8",
+      "unityPath": "Assets/StreamingAssets/Sprites/364447c8.spr",
+      "bytes": 55722
+    },
+    {
+      "name": "MA_RH_114_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_AT01.spr",
+      "uid": "32a8875a",
+      "unityPath": "Assets/StreamingAssets/Sprites/32a8875a.spr",
+      "bytes": 82804
+    },
+    {
+      "name": "MA_RH_114_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_AT03.spr",
+      "uid": "09bcb05e",
+      "unityPath": "Assets/StreamingAssets/Sprites/09bcb05e.spr",
+      "bytes": 65741
+    },
+    {
+      "name": "MA_RH_114_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_AT05.spr",
+      "uid": "0440ad52",
+      "unityPath": "Assets/StreamingAssets/Sprites/0440ad52.spr",
+      "bytes": 56332
+    },
+    {
+      "name": "MA_RH_114_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_AT07.spr",
+      "uid": "03554656",
+      "unityPath": "Assets/StreamingAssets/Sprites/03554656.spr",
+      "bytes": 56359
+    },
+    {
+      "name": "MA_RH_114_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_MG01.spr",
+      "uid": "30b1f76a",
+      "unityPath": "Assets/StreamingAssets/Sprites/30b1f76a.spr",
+      "bytes": 70950
+    },
+    {
+      "name": "MA_RH_114_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_MG02.spr",
+      "uid": "0dcffdec",
+      "unityPath": "Assets/StreamingAssets/Sprites/0dcffdec.spr",
+      "bytes": 53371
+    },
+    {
+      "name": "MA_RH_114_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_MG03.spr",
+      "uid": "0f45e06e",
+      "unityPath": "Assets/StreamingAssets/Sprites/0f45e06e.spr",
+      "bytes": 57619
+    },
+    {
+      "name": "MA_RH_114_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_MG04.spr",
+      "uid": "08d396e0",
+      "unityPath": "Assets/StreamingAssets/Sprites/08d396e0.spr",
+      "bytes": 62133
+    },
+    {
+      "name": "MA_RH_114_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_114_MG05.spr",
+      "uid": "0a699d62",
+      "unityPath": "Assets/StreamingAssets/Sprites/0a699d62.spr",
+      "bytes": 70583
+    },
+    {
+      "name": "MA_RH_115_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_ST01.spr",
+      "uid": "885fb1f4",
+      "unityPath": "Assets/StreamingAssets/Sprites/885fb1f4.spr",
+      "bytes": 154449
+    },
+    {
+      "name": "MA_RH_115_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_ST02.spr",
+      "uid": "85d5a476",
+      "unityPath": "Assets/StreamingAssets/Sprites/85d5a476.spr",
+      "bytes": 153268
+    },
+    {
+      "name": "MA_RH_115_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_ST04.spr",
+      "uid": "80fa516a",
+      "unityPath": "Assets/StreamingAssets/Sprites/80fa516a.spr",
+      "bytes": 112079
+    },
+    {
+      "name": "MA_RH_115_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_ST05.spr",
+      "uid": "827047ec",
+      "unityPath": "Assets/StreamingAssets/Sprites/827047ec.spr",
+      "bytes": 110648
+    },
+    {
+      "name": "MA_RH_115_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_ST06.spr",
+      "uid": "9f8e4a6e",
+      "unityPath": "Assets/StreamingAssets/Sprites/9f8e4a6e.spr",
+      "bytes": 110116
+    },
+    {
+      "name": "MA_RH_115_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_RN01.spr",
+      "uid": "5f29aeac",
+      "unityPath": "Assets/StreamingAssets/Sprites/5f29aeac.spr",
+      "bytes": 101452
+    },
+    {
+      "name": "MA_RH_115_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_RN02.spr",
+      "uid": "58a0552e",
+      "unityPath": "Assets/StreamingAssets/Sprites/58a0552e.spr",
+      "bytes": 105875
+    },
+    {
+      "name": "MA_RH_115_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_RN03.spr",
+      "uid": "5a3e5ba0",
+      "unityPath": "Assets/StreamingAssets/Sprites/5a3e5ba0.spr",
+      "bytes": 107286
+    },
+    {
+      "name": "MA_RH_115_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_RN04.spr",
+      "uid": "57b44e22",
+      "unityPath": "Assets/StreamingAssets/Sprites/57b44e22.spr",
+      "bytes": 103155
+    },
+    {
+      "name": "MA_RH_115_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_AT01.spr",
+      "uid": "d3989d19",
+      "unityPath": "Assets/StreamingAssets/Sprites/d3989d19.spr",
+      "bytes": 153421
+    },
+    {
+      "name": "MA_RH_115_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_AT03.spr",
+      "uid": "aeacb61d",
+      "unityPath": "Assets/StreamingAssets/Sprites/aeacb61d.spr",
+      "bytes": 110664
+    },
+    {
+      "name": "MA_RH_115_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_AT05.spr",
+      "uid": "a5b0a311",
+      "unityPath": "Assets/StreamingAssets/Sprites/a5b0a311.spr",
+      "bytes": 98656
+    },
+    {
+      "name": "MA_RH_115_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_AT07.spr",
+      "uid": "a0455c15",
+      "unityPath": "Assets/StreamingAssets/Sprites/a0455c15.spr",
+      "bytes": 94637
+    },
+    {
+      "name": "MA_RH_115_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_MG01.spr",
+      "uid": "d1a1cd29",
+      "unityPath": "Assets/StreamingAssets/Sprites/d1a1cd29.spr",
+      "bytes": 141926
+    },
+    {
+      "name": "MA_RH_115_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_MG02.spr",
+      "uid": "d33ff3ab",
+      "unityPath": "Assets/StreamingAssets/Sprites/d33ff3ab.spr",
+      "bytes": 95167
+    },
+    {
+      "name": "MA_RH_115_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_MG03.spr",
+      "uid": "acb5e62d",
+      "unityPath": "Assets/StreamingAssets/Sprites/acb5e62d.spr",
+      "bytes": 115176
+    },
+    {
+      "name": "MA_RH_115_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_MG04.spr",
+      "uid": "a9c3ecaf",
+      "unityPath": "Assets/StreamingAssets/Sprites/a9c3ecaf.spr",
+      "bytes": 104837
+    },
+    {
+      "name": "MA_RH_115_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_115_MG05.spr",
+      "uid": "ab599321",
+      "unityPath": "Assets/StreamingAssets/Sprites/ab599321.spr",
+      "bytes": 128056
+    },
+    {
+      "name": "MA_RH_116_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_ST01.spr",
+      "uid": "a95af918",
+      "unityPath": "Assets/StreamingAssets/Sprites/a95af918.spr",
+      "bytes": 67747
+    },
+    {
+      "name": "MA_RH_116_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_ST02.spr",
+      "uid": "aad0ef9a",
+      "unityPath": "Assets/StreamingAssets/Sprites/aad0ef9a.spr",
+      "bytes": 67447
+    },
+    {
+      "name": "MA_RH_116_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_ST04.spr",
+      "uid": "a1e4989e",
+      "unityPath": "Assets/StreamingAssets/Sprites/a1e4989e.spr",
+      "bytes": 47556
+    },
+    {
+      "name": "MA_RH_116_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_ST05.spr",
+      "uid": "a3728f10",
+      "unityPath": "Assets/StreamingAssets/Sprites/a3728f10.spr",
+      "bytes": 45718
+    },
+    {
+      "name": "MA_RH_116_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_ST06.spr",
+      "uid": "bc88b592",
+      "unityPath": "Assets/StreamingAssets/Sprites/bc88b592.spr",
+      "bytes": 45117
+    },
+    {
+      "name": "MA_RH_116_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_RN01.spr",
+      "uid": "fc14e995",
+      "unityPath": "Assets/StreamingAssets/Sprites/fc14e995.spr",
+      "bytes": 47876
+    },
+    {
+      "name": "MA_RH_116_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_RN02.spr",
+      "uid": "f9a29c17",
+      "unityPath": "Assets/StreamingAssets/Sprites/f9a29c17.spr",
+      "bytes": 48610
+    },
+    {
+      "name": "MA_RH_116_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_RN03.spr",
+      "uid": "fb388289",
+      "unityPath": "Assets/StreamingAssets/Sprites/fb388289.spr",
+      "bytes": 45951
+    },
+    {
+      "name": "MA_RH_116_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_RN04.spr",
+      "uid": "f4b6890b",
+      "unityPath": "Assets/StreamingAssets/Sprites/f4b6890b.spr",
+      "bytes": 47682
+    },
+    {
+      "name": "MA_RH_116_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_AT01.spr",
+      "uid": "f09ae5d7",
+      "unityPath": "Assets/StreamingAssets/Sprites/f09ae5d7.spr",
+      "bytes": 69444
+    },
+    {
+      "name": "MA_RH_116_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_AT03.spr",
+      "uid": "cfae9ecb",
+      "unityPath": "Assets/StreamingAssets/Sprites/cfae9ecb.spr",
+      "bytes": 57337
+    },
+    {
+      "name": "MA_RH_116_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_AT05.spr",
+      "uid": "cab28bcf",
+      "unityPath": "Assets/StreamingAssets/Sprites/cab28bcf.spr",
+      "bytes": 47482
+    },
+    {
+      "name": "MA_RH_116_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_AT07.spr",
+      "uid": "c146a4c3",
+      "unityPath": "Assets/StreamingAssets/Sprites/c146a4c3.spr",
+      "bytes": 48722
+    },
+    {
+      "name": "MA_RH_116_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_MG01.spr",
+      "uid": "f6ac355d",
+      "unityPath": "Assets/StreamingAssets/Sprites/f6ac355d.spr",
+      "bytes": 62752
+    },
+    {
+      "name": "MA_RH_116_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_MG02.spr",
+      "uid": "f03a3bdf",
+      "unityPath": "Assets/StreamingAssets/Sprites/f03a3bdf.spr",
+      "bytes": 45639
+    },
+    {
+      "name": "MA_RH_116_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_MG03.spr",
+      "uid": "cdb02e51",
+      "unityPath": "Assets/StreamingAssets/Sprites/cdb02e51.spr",
+      "bytes": 50778
+    },
+    {
+      "name": "MA_RH_116_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_MG04.spr",
+      "uid": "ceced4d3",
+      "unityPath": "Assets/StreamingAssets/Sprites/ceced4d3.spr",
+      "bytes": 53118
+    },
+    {
+      "name": "MA_RH_116_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_116_MG05.spr",
+      "uid": "c844db55",
+      "unityPath": "Assets/StreamingAssets/Sprites/c844db55.spr",
+      "bytes": 63826
+    },
+    {
+      "name": "MA_RH_117_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_ST01.spr",
+      "uid": "4e44ce11",
+      "unityPath": "Assets/StreamingAssets/Sprites/4e44ce11.spr",
+      "bytes": 72776
+    },
+    {
+      "name": "MA_RH_117_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_ST02.spr",
+      "uid": "4bd2f493",
+      "unityPath": "Assets/StreamingAssets/Sprites/4bd2f493.spr",
+      "bytes": 72608
+    },
+    {
+      "name": "MA_RH_117_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_ST04.spr",
+      "uid": "46e6e197",
+      "unityPath": "Assets/StreamingAssets/Sprites/46e6e197.spr",
+      "bytes": 51192
+    },
+    {
+      "name": "MA_RH_117_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_ST05.spr",
+      "uid": "407c9409",
+      "unityPath": "Assets/StreamingAssets/Sprites/407c9409.spr",
+      "bytes": 49547
+    },
+    {
+      "name": "MA_RH_117_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_ST06.spr",
+      "uid": "5d8a9a8b",
+      "unityPath": "Assets/StreamingAssets/Sprites/5d8a9a8b.spr",
+      "bytes": 48988
+    },
+    {
+      "name": "MA_RH_117_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_RN01.spr",
+      "uid": "1d16fe43",
+      "unityPath": "Assets/StreamingAssets/Sprites/1d16fe43.spr",
+      "bytes": 51246
+    },
+    {
+      "name": "MA_RH_117_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_RN02.spr",
+      "uid": "1eace4c5",
+      "unityPath": "Assets/StreamingAssets/Sprites/1eace4c5.spr",
+      "bytes": 51996
+    },
+    {
+      "name": "MA_RH_117_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_RN03.spr",
+      "uid": "183aeb47",
+      "unityPath": "Assets/StreamingAssets/Sprites/183aeb47.spr",
+      "bytes": 48880
+    },
+    {
+      "name": "MA_RH_117_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_RN04.spr",
+      "uid": "15b091b9",
+      "unityPath": "Assets/StreamingAssets/Sprites/15b091b9.spr",
+      "bytes": 51178
+    },
+    {
+      "name": "MA_RH_117_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_AT01.spr",
+      "uid": "9185d196",
+      "unityPath": "Assets/StreamingAssets/Sprites/9185d196.spr",
+      "bytes": 77727
+    },
+    {
+      "name": "MA_RH_117_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_AT03.spr",
+      "uid": "6ca9ca8a",
+      "unityPath": "Assets/StreamingAssets/Sprites/6ca9ca8a.spr",
+      "bytes": 61963
+    },
+    {
+      "name": "MA_RH_117_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_AT05.spr",
+      "uid": "6bbde78e",
+      "unityPath": "Assets/StreamingAssets/Sprites/6bbde78e.spr",
+      "bytes": 51598
+    },
+    {
+      "name": "MA_RH_117_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_AT07.spr",
+      "uid": "66419082",
+      "unityPath": "Assets/StreamingAssets/Sprites/66419082.spr",
+      "bytes": 53910
+    },
+    {
+      "name": "MA_RH_117_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_MG01.spr",
+      "uid": "97ae01a6",
+      "unityPath": "Assets/StreamingAssets/Sprites/97ae01a6.spr",
+      "bytes": 70804
+    },
+    {
+      "name": "MA_RH_117_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_MG02.spr",
+      "uid": "91243418",
+      "unityPath": "Assets/StreamingAssets/Sprites/91243418.spr",
+      "bytes": 49742
+    },
+    {
+      "name": "MA_RH_117_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_MG03.spr",
+      "uid": "92b23a9a",
+      "unityPath": "Assets/StreamingAssets/Sprites/92b23a9a.spr",
+      "bytes": 55190
+    },
+    {
+      "name": "MA_RH_117_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_MG04.spr",
+      "uid": "6fc8211c",
+      "unityPath": "Assets/StreamingAssets/Sprites/6fc8211c.spr",
+      "bytes": 59745
+    },
+    {
+      "name": "MA_RH_117_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_117_MG05.spr",
+      "uid": "6946d79e",
+      "unityPath": "Assets/StreamingAssets/Sprites/6946d79e.spr",
+      "bytes": 70685
+    },
+    {
+      "name": "MA_RH_118_ST01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_ST01.spr",
+      "uid": "6f45ec7f",
+      "unityPath": "Assets/StreamingAssets/Sprites/6f45ec7f.spr",
+      "bytes": 62373
+    },
+    {
+      "name": "MA_RH_118_ST02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_ST02.spr",
+      "uid": "68d392f1",
+      "unityPath": "Assets/StreamingAssets/Sprites/68d392f1.spr",
+      "bytes": 62841
+    },
+    {
+      "name": "MA_RH_118_ST04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_ST04.spr",
+      "uid": "67e78ff5",
+      "unityPath": "Assets/StreamingAssets/Sprites/67e78ff5.spr",
+      "bytes": 44424
+    },
+    {
+      "name": "MA_RH_118_ST05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_ST05.spr",
+      "uid": "617db277",
+      "unityPath": "Assets/StreamingAssets/Sprites/617db277.spr",
+      "bytes": 42276
+    },
+    {
+      "name": "MA_RH_118_ST06.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_ST06.spr",
+      "uid": "628bb8e9",
+      "unityPath": "Assets/StreamingAssets/Sprites/628bb8e9.spr",
+      "bytes": 41576
+    },
+    {
+      "name": "MA_RH_118_RN01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_RN01.spr",
+      "uid": "22179fa1",
+      "unityPath": "Assets/StreamingAssets/Sprites/22179fa1.spr",
+      "bytes": 44981
+    },
+    {
+      "name": "MA_RH_118_RN02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_RN02.spr",
+      "uid": "3fad8223",
+      "unityPath": "Assets/StreamingAssets/Sprites/3fad8223.spr",
+      "bytes": 46123
+    },
+    {
+      "name": "MA_RH_118_RN03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_RN03.spr",
+      "uid": "393b88a5",
+      "unityPath": "Assets/StreamingAssets/Sprites/393b88a5.spr",
+      "bytes": 43237
+    },
+    {
+      "name": "MA_RH_118_RN04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_RN04.spr",
+      "uid": "3ab1bf27",
+      "unityPath": "Assets/StreamingAssets/Sprites/3ab1bf27.spr",
+      "bytes": 44876
+    },
+    {
+      "name": "MA_RH_118_AT01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_AT01.spr",
+      "uid": "b686fff4",
+      "unityPath": "Assets/StreamingAssets/Sprites/b686fff4.spr",
+      "bytes": 67076
+    },
+    {
+      "name": "MA_RH_118_AT03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_AT03.spr",
+      "uid": "8daae8e8",
+      "unityPath": "Assets/StreamingAssets/Sprites/8daae8e8.spr",
+      "bytes": 54019
+    },
+    {
+      "name": "MA_RH_118_AT05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_AT05.spr",
+      "uid": "88be85ec",
+      "unityPath": "Assets/StreamingAssets/Sprites/88be85ec.spr",
+      "bytes": 44986
+    },
+    {
+      "name": "MA_RH_118_AT07.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_AT07.spr",
+      "uid": "8742bee0",
+      "unityPath": "Assets/StreamingAssets/Sprites/8742bee0.spr",
+      "bytes": 46465
+    },
+    {
+      "name": "MA_RH_118_MG01.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_MG01.spr",
+      "uid": "b4af2f04",
+      "unityPath": "Assets/StreamingAssets/Sprites/b4af2f04.spr",
+      "bytes": 60956
+    },
+    {
+      "name": "MA_RH_118_MG02.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_MG02.spr",
+      "uid": "b625d586",
+      "unityPath": "Assets/StreamingAssets/Sprites/b625d586.spr",
+      "bytes": 43520
+    },
+    {
+      "name": "MA_RH_118_MG03.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_MG03.spr",
+      "uid": "b3b3d8f8",
+      "unityPath": "Assets/StreamingAssets/Sprites/b3b3d8f8.spr",
+      "bytes": 47446
+    },
+    {
+      "name": "MA_RH_118_MG04.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_MG04.spr",
+      "uid": "8cc9cf7a",
+      "unityPath": "Assets/StreamingAssets/Sprites/8cc9cf7a.spr",
+      "bytes": 51518
+    },
+    {
+      "name": "MA_RH_118_MG05.spr",
+      "sourcePath": "spr\\npcres\\man\\MA_RH_118_MG05.spr",
+      "uid": "8e47f5fc",
+      "unityPath": "Assets/StreamingAssets/Sprites/8e47f5fc.spr",
+      "bytes": 60805
     }
   ]
 }
