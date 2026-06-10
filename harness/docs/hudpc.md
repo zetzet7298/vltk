@@ -45,3 +45,86 @@ Vùng nằm ở phía dưới góc bên trái cụm rail chuyên hiển thị c�
 *   **SysRoom_Open (Dấu chấm than đỏ)**: Nút bật hoặc tắt cửa sổ nhỏ chuyên hiển thị dòng nhắc hệ thống (như thông báo nạp thẻ, hệ thống bảo trì, cảnh báo...).
 *   **SysRoom_Up (Mũi tên lên màu đen trắng)**: Cuộn ngược dòng nhắc nhở hệ thống cũ.
 *   **SysRoom_Down (Mũi tên xuống màu đen trắng)**: Cuộn xuôi dòng nhắc nhở hệ thống mới.
+
+---
+
+## 4. PAK & SPR Asset Mapping (nguồn gốc từ spr.pak / update01.pak)
+
+### 4.1 PAK chứa file cấu hình HUD (.ini)
+
+| UID (hex) | File cấu hình | Nội dung | PAK chính |
+|---|---|---|---|
+| `dc11ac12` | Bottom bar INI | Thanh điều khiển chính (Run/Sit/Status/Items/Skills...) | **`1.pak`**, `1024.pak`, `update01.pak`, `update03.pak` |
+| `7e20a7ac` | Chat scroll INI (1024) | Chat rail, 6 tab kênh, scrollbar dọc | **`1024.pak`**, `update01.pak`, `update03.pak` |
+| `c9c8a750` | Chat INI mở rộng | Chat UI bản 1024 extended | **`1024.pak`** |
+| `0c164d5c` | Chat scroll INI (800) | Chat rail bản độ phân giải 800 gốc | `update01.pak`, `update03.pak`, `spr.pak` |
+
+### 4.2 SPR asset — nguồn `\Spr\Ui3\聊天条\` (trong **spr.pak** / update paks)
+
+| SPR file (PC path) | Tên tiếng Anh | Nút tương ứng |
+|---|---|---|
+| `\Spr\Ui3\聊天条\聊天条底部改.spr` | `chat_bar_bottom.spr` | SizeBtn (mũi tên 2 chiều đỉnh) |
+| `\Spr\Ui3\聊天条\聊天条顶部改.spr` | `chat_bar_top.spr` | MoveBtn (nút 4 chiều đáy) |
+| `\Spr\Ui3\聊天条\聊天条阴影按钮.spr` | `chat_shadow_btn.spr` | ShadowBtn (bóng mờ) |
+| `\Spr\Ui3\聊天条\聊天条中部改.spr` | `chat_scroll_track.spr` | ChatRoomScrollTrack (rãnh trượt dọc) |
+| `\Spr\Ui3\聊天条\提示信息窗－上.spr` | `sys_room_up.spr` | SysRoom_Up |
+| `\Spr\Ui3\聊天条\提示信息窗－下.spr` | `sys_room_down.spr` | SysRoom_Down |
+| `\Spr\Ui3\聊天条\提示信息窗－开关.spr` | `sys_room_toggle.spr` | SysRoom_Open |
+
+### 4.3 SPR asset — nguồn `\Spr\Ui3\好友qq\` (trong **spr.pak**)
+
+| SPR file (PC path) | Tên tiếng Anh | Nút tương ứng |
+|---|---|---|
+| `\Spr\Ui3\好友qq\通用拖动条.spr` | `chat_scroll_thumb.spr` | ChatScrollThumbBtn (nút kéo trượt) |
+
+### 4.4 SPR asset — nguồn `\Spr\Ui3\主界面\` (trong **spr.pak**)
+
+| SPR file (PC path) | Tên tiếng Anh | Nút tương ứng |
+|---|---|---|
+| `\Spr\Ui3\主界面\频道开与关a.spr` | `chat_channel_on.spr` | ChannelBtn (bật) |
+| `\Spr\Ui3\主界面\频道开与关b.spr` | `chat_channel_off.spr` | ChannelBtn (tắt) |
+| `\Spr\Ui3\主界面\主界面按钮-好友频道选择.spr` | `channel_friend_menu.spr` | Friend channel menu |
+| `\Spr\Ui3\主界面\主界面按钮-密人频道选择.spr` | `channel_private_menu.spr` | Private channel menu |
+| `\Spr\Ui3\主界面\聊天频道图示－好友频道.spr` | `channel_friend_icon.spr` | Friend channel tab icon |
+| `\Spr\Ui3\主界面\聊天频道图示－密人频道.spr` | `channel_private_icon.spr` | Private channel tab icon |
+
+### 4.5 SPR asset — Bottom Bar, nguồn `\spr\UI3\主界面\` (trong **spr.pak**)
+
+| SPR file (PC path) | Nút tương ứng |
+|---|---|
+| `\spr\UI3\主界面\人物属性按钮_0.spr` | Status (Nhân vật) |
+| `\spr\UI3\主界面\背包按钮.spr` | Items (Hành trang) |
+| `\spr\UI3\主界面\子母袋按钮.spr` | ItemEx (Túi mở rộng) |
+| `\spr\UI3\主界面\技能按钮.spr` | Skills (Võ công) |
+| `\spr\UI3\主界面\聊天室按钮.spr` | ChatRoom (Phòng chat) |
+
+### 4.6 Mobile asset mapping (hiện tại)
+
+Asset đã được extract và đặt tại `Assets/UI/HUD/Art/`:
+
+| Mobile filename | PC SPR gốc | Trạng thái |
+|---|---|---|
+| `chat_scroll_track_pc.png` | `聊天条中部改.spr` | ✅ Đã có |
+| `btn_chat_scroll_thumb_pc.png` | `通用拖动条.spr` | ✅ Đã có |
+| `chat_bar_top.png` | `聊天条底部改.spr` | ✅ Đã có |
+| `chat_bar_bottom.png` | `聊天条顶部改.spr` | ✅ Đã có |
+| `btn_chat_split_pc.png` | Split/separator SPR | ✅ Đã có |
+| `btn_chat_channel_identity_pc.png` | Channel identity icon | ✅ Đã có |
+| `btn_chat_face.png` | Face/emoji button | ✅ Đã có |
+| `btn_chat_send.png` | Send button | ✅ Đã có |
+
+---
+
+## 5. Cấu trúc Layout Chat Mobile (Mobile Implementation & Alignment)
+Để tối ưu hóa trải nghiệm di động nhưng vẫn đảm bảo tính chân thực (authenticity) so với PC gốc, giao diện Chat trên mobile được sắp xếp như sau:
+
+*   **Vị trí hiển thị (từ trên xuống dưới)**:
+    1.  **Vùng tin nhắn (ChatMessages)**: Được đặt ở trên cùng với chiều cao cố định `123px` (bằng đúng chiều cao của thanh trượt dọc).
+    2.  **Dải Tab chọn kênh chat (ChatTabs)**: Gồm các tab *Tất cả*, *Mật*, *Phòng*, *Bang hội*, *Môn phái*, *Khác* nằm ngang ngay dưới vùng tin nhắn và nhô lên bám liền với thanh nhập chat ở dưới.
+    3.  **Thanh nhập chat (ChatInputRow)**: Nằm ở dưới cùng, chứa nút đổi kênh nhanh, ô nhập chữ, nút chọn mặt cười (FaceBtn) và nút Gửi (SendBtn).
+*   **Thanh cuộn dọc Chat (ChatRail)**:
+    *   Nằm song song bên trái vùng tin nhắn `ChatMessages`.
+    *   Chiều cao được chỉnh chính xác là `123px` để bám sát vùng tin nhắn.
+    *   Tọa độ `bottom` được đẩy lên `58px` (bằng chiều cao thanh nhập chat 32px + dải tab 26px) để không che khuất phần tab và ô nhập chat.
+    *   Chỉ sử dụng nút thay đổi kích thước `ChatSizeBtn` ở đỉnh, rãnh trượt `ChatRoomScrollTrack` và nút kéo trượt `ChatScrollThumbBtn` ở giữa, nút di chuyển `ChatMoveBtn` ở đáy.
+    *   Các nút bấm không dùng bao gồm: mũi tên lên/xuống (`ChatScrollUpBtn`/`ChatScrollDownBtn`), nút chia ngăn (`ChatSplitBtn`), nút ẩn kênh (`ChatChannelToggleBtn`), nút bóng mờ (`ChatShadowBtn`) và cụm nhắc nhở hệ thống (`SysRoom`) được ẩn đi (`display: none;`) để tối giản giao diện mobile nhưng vẫn giữ nguyên trật tự khai báo trong UXML để đảm bảo độ tương thích và vượt qua các bài test tự động.
