@@ -49,6 +49,8 @@ namespace VLTK.Sandbox
         private const int PageSize = 30;
         private float _lastSelectTime;
         private int _lastSelectedMapIdForDoubleClick = -1;
+        private int _customFilterState = 0; // 0: All, 1: Complete, 2: Failed, 3: Partial
+        private Text _filterBtnText;
 
         private void Start()
         {
@@ -60,12 +62,22 @@ namespace VLTK.Sandbox
                 var parentRt = listContent.GetComponent<RectTransform>();
                 if (parentRt != null)
                 {
-                    // Reset sizeDelta.y to 0 so the viewport stretches correctly within the panel bounds
-                    parentRt.sizeDelta = new Vector2(parentRt.sizeDelta.x, 0f);
+                    // Adjust anchor and offsets to stretch properly and remain BELOW TopBar (which is 35px height)
+                    // Bottom anchor is set to 0.3f to stay above the MapInfo area.
+                    parentRt.anchorMin = new Vector2(0f, 0.3f);
+                    parentRt.anchorMax = new Vector2(1f, 1f);
+                    parentRt.offsetMin = new Vector2(5f, 5f);
+                    parentRt.offsetMax = new Vector2(-5f, -40f); // -40f shifts it below the 35px TopBar
+                    // Do NOT set parentRt.sizeDelta.y here as it overrides offsetMax and offsetMin.
                 }
 
                 var scrollRect = listContent.gameObject.AddComponent<ScrollRect>();
-                listContent.gameObject.AddComponent<RectMask2D>();
+                
+                // Use robust standard Mask + transparent Image for reliable runtime clipping
+                var maskImg = listContent.gameObject.AddComponent<Image>();
+                maskImg.color = new Color(0f, 0f, 0f, 0.01f);
+                var mask = listContent.gameObject.AddComponent<Mask>();
+                mask.showMaskGraphic = false;
 
                 var contentGo = new GameObject("Content");
                 contentGo.transform.SetParent(listContent, false);
@@ -77,6 +89,7 @@ namespace VLTK.Sandbox
                 contentRt.sizeDelta = new Vector2(0f, 0f);
 
                 scrollRect.content = contentRt;
+                scrollRect.viewport = parentRt; // Wire viewport reference!
                 scrollRect.horizontal = false;
                 scrollRect.vertical = true;
                 scrollRect.movementType = ScrollRect.MovementType.Clamped;
@@ -89,11 +102,60 @@ namespace VLTK.Sandbox
             if (searchButton != null)
                 searchButton.onClick.AddListener(DoSearch);
 
+            // Dynamically resolve load/unload buttons if they are null in the inspector
+            if (loadButton == null)
+            {
+                var btnTrans = transform.Find("TopBar/LoadBtn");
+                if (btnTrans != null) loadButton = btnTrans.GetComponent<Button>();
+            }
+            if (unloadButton == null)
+            {
+                var btnTrans = transform.Find("TopBar/UnloadBtn");
+                if (btnTrans != null) unloadButton = btnTrans.GetComponent<Button>();
+            }
+
+            // Re-align and size Load / Unload buttons on TopBar to make space for the Filter button
             if (loadButton != null)
+            {
+                loadButton.onClick.RemoveAllListeners();
                 loadButton.onClick.AddListener(LoadSelectedMap);
+                var loadRt = loadButton.GetComponent<RectTransform>();
+                if (loadRt != null)
+                {
+                    loadRt.anchorMin = new Vector2(0.65f, 0f);
+                    loadRt.anchorMax = new Vector2(0.82f, 1f);
+                    loadRt.offsetMin = new Vector2(2f, 2f);
+                    loadRt.offsetMax = new Vector2(-2f, -2f);
+                }
+                var loadTxt = loadButton.GetComponentInChildren<Text>();
+                if (loadTxt != null)
+                {
+                    loadTxt.text = "Tải Map";
+                    loadTxt.fontSize = 12;
+                    loadTxt.alignment = TextAnchor.MiddleCenter;
+                }
+            }
 
             if (unloadButton != null)
+            {
+                unloadButton.onClick.RemoveAllListeners();
                 unloadButton.onClick.AddListener(UnloadCurrentMap);
+                var unloadRt = unloadButton.GetComponent<RectTransform>();
+                if (unloadRt != null)
+                {
+                    unloadRt.anchorMin = new Vector2(0.82f, 0f);
+                    unloadRt.anchorMax = new Vector2(1.00f, 1f);
+                    unloadRt.offsetMin = new Vector2(2f, 2f);
+                    unloadRt.offsetMax = new Vector2(-2f, -2f);
+                }
+                var unloadTxt = unloadButton.GetComponentInChildren<Text>();
+                if (unloadTxt != null)
+                {
+                    unloadTxt.text = "Rời Map";
+                    unloadTxt.fontSize = 12;
+                    unloadTxt.alignment = TextAnchor.MiddleCenter;
+                }
+            }
 
             if (searchInput != null)
             {
@@ -102,6 +164,16 @@ namespace VLTK.Sandbox
                 {
                     searchInput.textComponent.alignment = TextAnchor.MiddleLeft;
                     searchInput.textComponent.fontSize = 14;
+                }
+
+                // SearchInput takes 0% to 45% width of TopBar
+                var searchRt = searchInput.GetComponent<RectTransform>();
+                if (searchRt != null)
+                {
+                    searchRt.anchorMin = new Vector2(0f, 0f);
+                    searchRt.anchorMax = new Vector2(0.45f, 1f);
+                    searchRt.offsetMin = new Vector2(2f, 2f);
+                    searchRt.offsetMax = new Vector2(-2f, -2f);
                 }
 
                 // Add search placeholder dynamically since it's missing in the prefab
@@ -130,6 +202,66 @@ namespace VLTK.Sandbox
                         pRt.offsetMax = new Vector2(-5f, 0f);
                     }
                     searchInput.placeholder = placeholderText;
+                }
+
+                // Create StatusFilterButton dynamically at runtime (takes 45% to 65% width of TopBar)
+                var topBarTrans = searchInput.transform.parent;
+                if (topBarTrans != null)
+                {
+                    var filterBtnTrans = topBarTrans.Find("StatusFilterButton");
+                    GameObject filterBtnGo;
+                    if (filterBtnTrans != null)
+                    {
+                        filterBtnGo = filterBtnTrans.gameObject;
+                    }
+                    else
+                    {
+                        filterBtnGo = new GameObject("StatusFilterButton");
+                        filterBtnGo.transform.SetParent(topBarTrans, false);
+                    }
+
+                    var filterRt = filterBtnGo.GetComponent<RectTransform>();
+                    if (filterRt == null) filterRt = filterBtnGo.AddComponent<RectTransform>();
+                    filterRt.anchorMin = new Vector2(0.45f, 0f);
+                    filterRt.anchorMax = new Vector2(0.65f, 1f);
+                    filterRt.offsetMin = new Vector2(2f, 2f);
+                    filterRt.offsetMax = new Vector2(-2f, -2f);
+
+                    var filterImg = filterBtnGo.GetComponent<Image>();
+                    if (filterImg == null) filterImg = filterBtnGo.AddComponent<Image>();
+                    filterImg.color = new Color(0.2f, 0.2f, 0.25f, 1f); // Dark blue-grey/slate color
+                    
+                    var filterBtn = filterBtnGo.GetComponent<Button>();
+                    if (filterBtn == null) filterBtn = filterBtnGo.AddComponent<Button>();
+                    filterBtn.targetGraphic = filterImg;
+                    filterBtn.onClick.RemoveAllListeners();
+                    filterBtn.onClick.AddListener(CycleFilterState);
+
+                    Transform lblTrans = filterBtnGo.transform.Find("Label");
+                    GameObject lblGo;
+                    if (lblTrans != null)
+                    {
+                        lblGo = lblTrans.gameObject;
+                    }
+                    else
+                    {
+                        lblGo = new GameObject("Label");
+                        lblGo.transform.SetParent(filterBtnGo.transform, false);
+                    }
+
+                    var lrt = lblGo.GetComponent<RectTransform>();
+                    if (lrt == null) lrt = lblGo.AddComponent<RectTransform>();
+                    lrt.anchorMin = Vector2.zero; lrt.anchorMax = Vector2.one;
+                    lrt.offsetMin = Vector2.zero; lrt.offsetMax = Vector2.zero;
+
+                    _filterBtnText = lblGo.GetComponent<Text>();
+                    if (_filterBtnText == null) _filterBtnText = lblGo.AddComponent<Text>();
+                    _filterBtnText.text = "Lọc: Tất cả";
+                    _filterBtnText.alignment = TextAnchor.MiddleCenter;
+                    _filterBtnText.fontSize = 11;
+                    _filterBtnText.color = Color.white;
+                    if (searchInput.textComponent != null)
+                        _filterBtnText.font = searchInput.textComponent.font;
                 }
 
                 searchInput.onEndEdit.AddListener(_ => DoSearch());
@@ -284,6 +416,22 @@ namespace VLTK.Sandbox
             }
         }
 
+        private void CycleFilterState()
+        {
+            _customFilterState = (_customFilterState + 1) % 4;
+            if (_filterBtnText != null)
+            {
+                _filterBtnText.text = _customFilterState switch
+                {
+                    1 => "Lọc: Hoàn thành",
+                    2 => "Lọc: Lỗi",
+                    3 => "Lọc: Đang làm",
+                    _ => "Lọc: Tất cả"
+                };
+            }
+            RefreshList();
+        }
+
         public void RefreshList()
         {
             var mgr = SandboxManager.Instance?.MapManager;
@@ -301,6 +449,17 @@ namespace VLTK.Sandbox
                     2 => ConversionStatus.Complete,
                     3 => ConversionStatus.Failed,
                     4 => ConversionStatus.Partial,
+                    _ => null,
+                };
+            }
+            else
+            {
+                // Fallback to our custom filter button state
+                statusFilter = _customFilterState switch
+                {
+                    1 => ConversionStatus.Complete,
+                    2 => ConversionStatus.Failed,
+                    3 => ConversionStatus.Partial,
                     _ => null,
                 };
             }
@@ -500,7 +659,8 @@ namespace VLTK.Sandbox
                 var tr = txt.AddComponent<RectTransform>();
                 tr.anchorMin = Vector2.zero;
                 tr.anchorMax = Vector2.one;
-                tr.sizeDelta = Vector2.zero;
+                tr.offsetMin = new Vector2(10f, 0f); // 10px indentation padding
+                tr.offsetMax = new Vector2(-10f, 0f); // 10px indentation padding
                 var t = txt.AddComponent<Text>();
 
                 // M0.10 AC#1: status badge prefix
