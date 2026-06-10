@@ -285,7 +285,7 @@ namespace VLTK.UI
             // ═══ CHAT TABS — PC bottom-left ═══
             // PC chat tabs: Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác
             float tabX = 155f;
-            float tabY = 588f;   // bottom strip=72, chat panel height=60 → 720-72-60 = 588
+            float tabY = 32f;   // top boundary aligned under top bar
             Label(tabX, tabY, 50f, 16f, "Tất cả", _chatTabActive);
             Label(tabX + 55f, tabY, 35f, 16f, "Mật", _chatTab);
             Label(tabX + 95f, tabY, 45f, 16f, "Phòng", _chatTab);
