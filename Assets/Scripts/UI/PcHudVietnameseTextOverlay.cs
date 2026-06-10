@@ -27,6 +27,8 @@ namespace VLTK.UI
         private GUIStyle _skillHint;
         private GUIStyle _chatTab;
         private GUIStyle _chatTabActive;
+        private GUIStyle _chatTabAll;
+        private GUIStyle _chatTabAllActive;
         private GUIStyle _baovatStyle;
         private GUIStyle _levelStyle;
         private GUIStyle _rankStyle;
@@ -106,7 +108,20 @@ namespace VLTK.UI
                 alignment = TextAnchor.MiddleLeft,
                 fontSize = 10,
                 fontStyle = FontStyle.Bold,
-                normal = { textColor = new Color(1f, 1f, 1f, 1f) }
+                normal = { textColor = new Color(0f, 210/255f, 255/255f) }
+            };
+            _chatTabAll = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 10,
+                normal = { textColor = new Color(255/255f, 230/255f, 174/255f) }
+            };
+            _chatTabAllActive = new GUIStyle(GUI.skin.label)
+            {
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 10,
+                fontStyle = FontStyle.Bold,
+                normal = { textColor = new Color(255/255f, 230/255f, 174/255f) }
             };
             _baovatStyle = new GUIStyle(GUI.skin.label)
             {
@@ -284,14 +299,20 @@ namespace VLTK.UI
 
             // ═══ CHAT TABS — PC bottom-left ═══
             // PC chat tabs: Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác
+            var activeCh = ChatChannel.All;
+            if (SandboxManager.Instance != null && SandboxManager.Instance.ChatService != null)
+            {
+                activeCh = SandboxManager.Instance.ChatService.ActiveChannel;
+            }
+
             float tabX = 155f;
             float tabY = 32f;   // top boundary aligned under top bar
-            Label(tabX, tabY, 50f, 16f, "Tất cả", _chatTabActive);
-            Label(tabX + 55f, tabY, 35f, 16f, "Mật", _chatTab);
-            Label(tabX + 95f, tabY, 45f, 16f, "Phòng", _chatTab);
-            Label(tabX + 145f, tabY, 60f, 16f, "Bang hội", _chatTab);
-            Label(tabX + 210f, tabY, 60f, 16f, "Môn phái", _chatTab);
-            Label(tabX + 280f, tabY, 45f, 16f, "Khác", _chatTab);
+            Label(tabX, tabY, 50f, 16f, "Tất cả", (activeCh == ChatChannel.All) ? _chatTabAllActive : _chatTabAll);
+            Label(tabX + 55f, tabY, 35f, 16f, "Mật", (activeCh == ChatChannel.Private) ? _chatTabActive : _chatTab);
+            Label(tabX + 95f, tabY, 45f, 16f, "Phòng", (activeCh == ChatChannel.Room) ? _chatTabActive : _chatTab);
+            Label(tabX + 145f, tabY, 60f, 16f, "Bang hội", (activeCh == ChatChannel.Guild) ? _chatTabActive : _chatTab);
+            Label(tabX + 210f, tabY, 60f, 16f, "Môn phái", (activeCh == ChatChannel.Faction) ? _chatTabActive : _chatTab);
+            Label(tabX + 280f, tabY, 45f, 16f, "Khác", (activeCh == ChatChannel.Other) ? _chatTabActive : _chatTab);
 
 
             // ═══ MINIMAP TEXT ═══

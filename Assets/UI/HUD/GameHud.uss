@@ -568,9 +568,12 @@
     height: 32px;
     flex-direction: row;
     align-items: center;
-    background-color: rgba(0,0,0,0.28);
-    border-width: 0px;
-    border-color: rgba(0,90,80,0.45);
+    background-color: rgba(42, 32, 24, 0.95);
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-color: rgb(15, 12, 10);
 }
 
 
@@ -1835,6 +1838,6 @@
 .hud-chat-panel {
     background-color: transparent;
 }
-.hud-chat-input-row, .hud-chat-tab {
+.hud-chat-tab {
     background-color: transparent !important;
 }
