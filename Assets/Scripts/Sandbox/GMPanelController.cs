@@ -39,7 +39,7 @@ namespace VLTK.Sandbox
         public GMTab ActiveTab { get; private set; } = GMTab.Map;
         public bool IsOpen => panelRoot != null && panelRoot.activeSelf;
 
-        private const string TOGGLE_KEY = "q";
+        private const string TOGGLE_KEY = "g";
 
         private GameObject _equipmentPanel;
 
@@ -123,8 +123,9 @@ namespace VLTK.Sandbox
         private void Awake()
         {
             EnsureInitialized();
-            // Start with entire GMPanel hidden
-            gameObject.SetActive(false);
+            // Start with inner panel hidden, keep GMPanel active for shortcut detection
+            if (panelRoot != null) panelRoot.SetActive(false);
+            if (_backgroundImage != null) _backgroundImage.enabled = false;
         }
 
         private void Update()
@@ -170,11 +171,10 @@ namespace VLTK.Sandbox
         private void SetOpen(bool open)
         {
             EnsureInitialized();
-            gameObject.SetActive(open);
+            if (panelRoot != null) panelRoot.SetActive(open);
+            if (_backgroundImage != null) _backgroundImage.enabled = open;
             if (open)
             {
-                if (panelRoot != null) panelRoot.SetActive(true);
-                if (_backgroundImage != null) _backgroundImage.enabled = true;
                 UpdateTabPanels();
                 if (tabBar != null) tabBar.RefreshColors((int)ActiveTab);
                 SubsystemLog.Info("GM", "Panel opened");

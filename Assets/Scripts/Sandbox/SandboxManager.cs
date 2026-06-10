@@ -1626,6 +1626,7 @@ namespace VLTK.Sandbox
             // Wire scene GMButton to GMPanelController.Toggle() (button is placed in scene at top-right corner)
             if (GmPanel != null)
             {
+                GmPanel.gameObject.SetActive(true);
                 var gmButtonGO = GameObject.Find("GMButton");
                 if (gmButtonGO != null)
                 {
