@@ -396,6 +396,22 @@ namespace VLTK.Sandbox
                 );
             }
 
+            if (category == "Mount")
+            {
+                var unique = new List<ItemDefinition>();
+                var keys = new HashSet<string>();
+                foreach (var item in results)
+                {
+                    string k = $"{item.DisplayName}_{item.resId}";
+                    if (!keys.Contains(k))
+                    {
+                        keys.Add(k);
+                        unique.Add(item);
+                    }
+                }
+                results = unique;
+            }
+
             results.Sort((a, b) => a.itemId.CompareTo(b.itemId));
             return results;
         }

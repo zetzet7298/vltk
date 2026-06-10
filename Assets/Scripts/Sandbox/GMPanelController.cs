@@ -197,10 +197,40 @@ namespace VLTK.Sandbox
                 UpdateTabPanels();
                 if (tabBar != null) tabBar.RefreshColors((int)ActiveTab);
                 SubsystemLog.Info("GM", "Panel opened");
+
+                // Hide Chat panel and button to prevent overlapping/blocking clicks
+                var mgr = SandboxManager.Instance;
+                if (mgr != null)
+                {
+                    if (mgr.ChatPanel != null)
+                    {
+                        mgr.ChatPanel.gameObject.SetActive(false);
+                    }
+                    var uiRoot = mgr.ChatPanel != null && mgr.ChatPanel.transform.parent != null
+                        ? mgr.ChatPanel.transform.parent.parent
+                        : null;
+                    var chatBtn = uiRoot != null ? uiRoot.Find("SandboxCanvas/ChatBtn")?.gameObject : null;
+                    if (chatBtn != null) chatBtn.SetActive(false);
+                }
             }
             else
             {
                 SubsystemLog.Info("GM", "Panel closed");
+
+                // Restore Chat panel and button
+                var mgr = SandboxManager.Instance;
+                if (mgr != null)
+                {
+                    if (mgr.ChatPanel != null)
+                    {
+                        mgr.ChatPanel.gameObject.SetActive(true);
+                    }
+                    var uiRoot = mgr.ChatPanel != null && mgr.ChatPanel.transform.parent != null
+                        ? mgr.ChatPanel.transform.parent.parent
+                        : null;
+                    var chatBtn = uiRoot != null ? uiRoot.Find("SandboxCanvas/ChatBtn")?.gameObject : null;
+                    if (chatBtn != null) chatBtn.SetActive(true);
+                }
             }
         }
 
