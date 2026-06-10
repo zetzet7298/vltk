@@ -494,7 +494,7 @@ namespace VLTK.Sandbox
                 // Load PC item data via batch loader (14 categories, ~10k+ items)
                 // and script items from magicscript.txt (GM token 6/1/4890).
                 var importer = PcItemBatchLoader.ImportInto(
-                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItem"));
+                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull"));
                 PcMagicScriptItemParser.ImportInto(
                     System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull"), importer);
                 ItemDb = new ItemDatabase(importer);

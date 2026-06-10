@@ -31,7 +31,7 @@ namespace VLTK.Sandbox
 
         public static ItemTypeService LoadFromStreamingAssets()
         {
-            string root = Path.Combine(Application.streamingAssetsPath, "Reference/PcItem");
+            string root = Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
             var reg = PcItemTypeParser.BuildRegistry(root);
             return new ItemTypeService(reg);
         }

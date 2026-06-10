@@ -175,6 +175,7 @@ namespace VLTK.Sandbox
             if (_backgroundImage != null) _backgroundImage.enabled = open;
             if (open)
             {
+                transform.SetAsLastSibling();
                 UpdateTabPanels();
                 if (tabBar != null) tabBar.RefreshColors((int)ActiveTab);
                 SubsystemLog.Info("GM", "Panel opened");
