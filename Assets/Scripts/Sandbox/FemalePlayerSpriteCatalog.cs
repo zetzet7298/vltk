@@ -74,19 +74,17 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Build the SPR part spec list for the female player.
-        /// Same shape as MalePlayerSpriteCatalog.BuildParts, but uses FM_ prefix.
         /// </summary>
-        public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon)
+        public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon, int bodyVariant = ArmorVariant, int headVariant = ArmorVariant, int weaponVariant = EmptyWeaponVariant, int hairVariant = ArmorVariant, int horseVariant = MountHorseVariant)
         {
             if (action == PlayerVisualAction.Ride)
-                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MalePlayerSpriteCatalog.MountIdleSuffix);
+                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MalePlayerSpriteCatalog.MountIdleSuffix);
             if (action == PlayerVisualAction.RideMove)
-                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MalePlayerSpriteCatalog.MountMoveSuffix);
+                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MalePlayerSpriteCatalog.MountMoveSuffix);
 
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
-            int rwVariant = WeaponSprVariant[wIdx];
-            int lwVariant = (weapon == PcWeaponType.DualWeapon) ? WeaponSprVariant[(int)PcWeaponType.DualWeapon] : EmptyWeaponVariant;
+            int lwVariant = (weapon == PcWeaponType.DualWeapon) ? weaponVariant : EmptyWeaponVariant;
 
             // Female has no separate weapon SPRs — LW/RW are not required.
             const bool leftWeaponRequired = false;
@@ -97,13 +95,13 @@ namespace VLTK.Sandbox
             return new PlayerSpritePartSpec[]
             {
                 new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix),          shadowRequired),
-                new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", ArmorVariant, suffix)),
+                new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", headVariant, suffix)),
+                new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", hairVariant, suffix)),
+                new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix),             leftWeaponRequired),
-                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, suffix),             rightWeaponRequired),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", weaponVariant, suffix),             rightWeaponRequired),
             };
         }
 
@@ -111,7 +109,7 @@ namespace VLTK.Sandbox
         /// Mounted female rider + horse parts. Maps horse parts and shadow to male equivalents,
         /// and rider parts to female paths.
         /// </summary>
-        public static PlayerSpritePartSpec[] BuildMountedParts(int riderVariant, int horseVariant, string suffix)
+        public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant, int headVariant, int hairVariant, int horseVariant, string suffix)
         {
             return new PlayerSpritePartSpec[]
             {
@@ -122,11 +120,11 @@ namespace VLTK.Sandbox
                 new(PlayerSpritePartKind.HorseMiddle, "HorseMiddle",  MalePlayerSpriteCatalog.BuildPath("HB", horseVariant, suffix), true, 8),
                 new(PlayerSpritePartKind.HorseRear,   "HorseRear",    MalePlayerSpriteCatalog.BuildPath("HT", horseVariant, suffix), true, 8),
                 // Rider
-                new(PlayerSpritePartKind.Body,         "MountBody",    BuildPath("BD", riderVariant, suffix)),
-                new(PlayerSpritePartKind.Head,         "MountHead",    BuildPath("HD", riderVariant, suffix)),
-                new(PlayerSpritePartKind.Hair,         "MountHair",    BuildPath("HR", riderVariant, suffix)),
-                new(PlayerSpritePartKind.LeftHand,     "MountLHand",   BuildPath("LH", riderVariant, suffix)),
-                new(PlayerSpritePartKind.RightHand,    "MountRHand",   BuildPath("RH", riderVariant, suffix)),
+                new(PlayerSpritePartKind.Body,         "MountBody",    BuildPath("BD", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.Head,         "MountHead",    BuildPath("HD", headVariant, suffix)),
+                new(PlayerSpritePartKind.Hair,         "MountHair",    BuildPath("HR", hairVariant, suffix)),
+                new(PlayerSpritePartKind.LeftHand,     "MountLHand",   BuildPath("LH", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.RightHand,    "MountRHand",   BuildPath("RH", bodyVariant, suffix)),
             };
         }
 

@@ -135,9 +135,11 @@ namespace VLTK.Sandbox
         public ShopPanel ShopPanel { get; private set; }
         public GMPanelController GmPanel { get; private set; }
         private InventoryService _inventoryService;
+        private PlayerEquipmentService _equipmentService;
 
         /// <summary>Runtime inventory service (item search/add/equip). Used by the HUD bag window.</summary>
         public InventoryService InventoryService => _inventoryService;
+        public PlayerEquipmentService EquipmentService => _equipmentService;
         public GmAccessService GmAccessService { get; private set; }
         public GmTestServerItemService GmTestServerItemService { get; private set; }
 
@@ -525,7 +527,18 @@ namespace VLTK.Sandbox
                     };
 
                 // Initialize item inventory from the same PC item importer used by ItemDb.
-                _inventoryService = new InventoryService(importer, null);
+                _equipmentService = new PlayerEquipmentService();
+                _inventoryService = new InventoryService(importer, _equipmentService);
+                _equipmentService.OnEquipChanged += (evt) => {
+                    if (PlayerController != null && PlayerController.visual != null)
+                    {
+                        PlayerController.visual.SetEquipVariant(evt.slot, evt.newVariant);
+                    }
+                    if (FemalePlayerVisual != null)
+                    {
+                        FemalePlayerVisual.SetEquipVariant(evt.slot, evt.newVariant);
+                    }
+                };
                 GmAccessService = new GmAccessService();
                 GmTestServerItemService = new GmTestServerItemService(this, _inventoryService, GmAccessService);
 

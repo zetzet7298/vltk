@@ -134,25 +134,20 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Build the SPR part spec list for a given action + weapon type, matching PC KNpcRes::SetAction.
-        /// When action is <see cref="PlayerVisualAction.Ride"/>, returns the mounted rider
-        /// (BD/HD/HB) layered set with HM01 suffix; weapons and shadow are skipped because
-        /// PC npcres/man has no mounted Shadow/LW/RW/Hair/LHand/RHand SPRs.
         /// </summary>
-        public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon)
+        public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon, int bodyVariant = ArmorVariant, int headVariant = ArmorVariant, int weaponVariant = EmptyWeaponVariant, int hairVariant = ArmorVariant, int horseVariant = MountHorseVariant)
         {
             if (action == PlayerVisualAction.Ride)
-                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MountIdleSuffix);
+                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MountIdleSuffix);
             if (action == PlayerVisualAction.RideMove)
-                return BuildMountedParts(MountArmorVariant, MountHorseVariant, MountMoveSuffix);
+                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MountMoveSuffix);
 
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
             string rightWeaponSuffix = (weapon == PcWeaponType.ShortWeapon && action == PlayerVisualAction.Magic)
                 ? "MG03" // PC 男主角右手武器.txt: MeleeWMagic uses MA_RW_001_MG03.spr.
                 : suffix;
-            int rwVariant = WeaponSprVariant[wIdx];
-            // Long staff has no left weapon SPR — use empty hand for left
-            int lwVariant = (weapon == PcWeaponType.DualWeapon) ? WeaponSprVariant[(int)PcWeaponType.DualWeapon] : EmptyWeaponVariant;
+            int lwVariant = (weapon == PcWeaponType.DualWeapon) ? weaponVariant : EmptyWeaponVariant;
 
             // Long staff has no left weapon SPR — only right hand holds the staff.
             // Dual weapons would have both. For other types, left weapon is empty (still has SPR).
@@ -161,39 +156,34 @@ namespace VLTK.Sandbox
             return new PlayerSpritePartSpec[]
             {
                 new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
-                new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", ArmorVariant, suffix)),
-                new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", ArmorVariant, suffix)),
+                new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", headVariant, suffix)),
+                new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", hairVariant, suffix)),
+                new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix), leftWeaponRequired),
-                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", rwVariant, rightWeaponSuffix)),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", weaponVariant, rightWeaponSuffix)),
             };
         }
 
         /// <summary>
-        /// Build the full mounted layered set: horse body (HH/HB/HT = parts 12/13/14)
-        /// + rider (BD/HD/HR/LH/RH). Suffix is RD01 (idle/RideStand) or HR01 (move/RideRun),
-        /// both 8-direction. PC tables 男主角马前/马中/马后 map HH/HB/HT to the horse body;
-        /// 男主角 BD/HD/HR/LH/RH ride columns supply the rider. No Shadow/Weapon when mounted.
+        /// Build the full mounted layered set with dynamic rider and horse parts.
         /// </summary>
-        public static PlayerSpritePartSpec[] BuildMountedParts(int riderVariant, int horseVariant, string suffix)
+        public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant, int headVariant, int hairVariant, int horseVariant, string suffix)
         {
             return new PlayerSpritePartSpec[]
             {
                 new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
                 // Horse body — drawn behind/around rider per draw-order (ids 12/13/14).
-                // HH/HT SPR header báo dirs=1 sai → ép expectedDirections=8 (khớp HB) để
-                // animation khóa theo hướng rider, không "tự xoay" qua mọi hướng.
                 new(PlayerSpritePartKind.HorseFront,  "HorseFront",  BuildPath("HH", horseVariant, suffix), true, 8),
                 new(PlayerSpritePartKind.HorseMiddle, "HorseMiddle", BuildPath("HB", horseVariant, suffix), true, 8),
                 new(PlayerSpritePartKind.HorseRear,   "HorseRear",   BuildPath("HT", horseVariant, suffix), true, 8),
                 // Rider.
-                new(PlayerSpritePartKind.Body,        "MountBody",   BuildPath("BD", riderVariant, suffix)),
-                new(PlayerSpritePartKind.Head,        "MountHead",   BuildPath("HD", riderVariant, suffix)),
-                new(PlayerSpritePartKind.Hair,        "MountHair",   BuildPath("HR", riderVariant, suffix)),
-                new(PlayerSpritePartKind.LeftHand,    "MountLeftHand",  BuildPath("LH", riderVariant, suffix)),
-                new(PlayerSpritePartKind.RightHand,   "MountRightHand", BuildPath("RH", riderVariant, suffix)),
+                new(PlayerSpritePartKind.Body,        "MountBody",   BuildPath("BD", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.Head,        "MountHead",   BuildPath("HD", headVariant, suffix)),
+                new(PlayerSpritePartKind.Hair,        "MountHair",   BuildPath("HR", hairVariant, suffix)),
+                new(PlayerSpritePartKind.LeftHand,    "MountLeftHand",  BuildPath("LH", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.RightHand,   "MountRightHand", BuildPath("RH", bodyVariant, suffix)),
             };
         }
 

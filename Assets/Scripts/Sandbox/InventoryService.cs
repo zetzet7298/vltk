@@ -161,18 +161,18 @@ namespace VLTK.Sandbox
             _equipped[slot] = item;
             if (slot == EquipSlot.Weapon)
             {
-                int variant = PlayerEquipmentService.ItemToWeaponVariant(itemId);
+                int variant = item.resId > 0 ? item.resId : PlayerEquipmentService.ItemToWeaponVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Weapon, variant, itemId);
                 OnWeaponTypeChanged?.Invoke(PlayerEquipmentService.WeaponVariantToType(variant));
             }
             else if (slot == EquipSlot.Helmet)
             {
-                int variant = PlayerEquipmentService.ItemToHelmetVariant(itemId);
+                int variant = item.resId > 0 ? item.resId : PlayerEquipmentService.ItemToHelmetVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Head, variant, itemId);
             }
             else if (slot == EquipSlot.Armor)
             {
-                int variant = PlayerEquipmentService.ItemToBodyVariant(itemId);
+                int variant = item.resId > 0 ? item.resId : PlayerEquipmentService.ItemToBodyVariant(itemId);
                 _equipment?.Equip(PlayerEquipSlot.Body, variant, itemId);
             }
             return StatPreview();

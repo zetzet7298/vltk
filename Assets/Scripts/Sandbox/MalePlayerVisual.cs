@@ -41,6 +41,19 @@ namespace VLTK.Sandbox
         [Header("Diagnostics")]
         public bool logMissingParts = true;
 
+        [Header("Equipment Variants")]
+        public int armorVariant = 19;
+        public int headVariant = 19;
+        public int hairVariant = 19;
+        public int weaponVariant = 0;
+        public int mountHorseVariant = 16;
+
+        private int _loadedArmorVariant = -1;
+        private int _loadedHeadVariant = -1;
+        private int _loadedHairVariant = -1;
+        private int _loadedWeaponVariant = -1;
+        private int _loadedHorseVariant = -1;
+
         private readonly Dictionary<PlayerSpritePartKind, PartRuntime> _parts = new();
         private PlayerVisualAction _loadedAction = (PlayerVisualAction)(-1);
         private PcWeaponType _loadedWeapon = (PcWeaponType)(-1);
@@ -189,6 +202,30 @@ namespace VLTK.Sandbox
             ApplySorting();
         }
 
+        public void SetEquipVariant(PlayerEquipSlot slot, int variant)
+        {
+            switch (slot)
+            {
+                case PlayerEquipSlot.Body:
+                    armorVariant = variant;
+                    break;
+                case PlayerEquipSlot.Head:
+                    headVariant = variant;
+                    break;
+                case PlayerEquipSlot.Hair:
+                    hairVariant = variant;
+                    break;
+                case PlayerEquipSlot.Weapon:
+                    weaponVariant = variant;
+                    break;
+                case PlayerEquipSlot.Mount:
+                    mountHorseVariant = variant;
+                    break;
+            }
+            RefreshActionParts(force: true);
+            ApplyFrame(0f);
+        }
+
         public void Tick(float deltaTime)
         {
             RefreshActionParts(force: false);
@@ -198,7 +235,10 @@ namespace VLTK.Sandbox
 
         public void RefreshActionParts(bool force = false)
         {
-            if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon)
+            if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon &&
+                _loadedArmorVariant == armorVariant && _loadedHeadVariant == headVariant &&
+                _loadedHairVariant == hairVariant && _loadedWeaponVariant == weaponVariant &&
+                _loadedHorseVariant == mountHorseVariant)
                 return;
 
             // Disable ALL existing part children (including orphans from prior actions
@@ -212,7 +252,7 @@ namespace VLTK.Sandbox
             LoadedPartCount = 0;
             HasAllRequiredParts = true;
             _lastMissingRequiredParts.Clear();
-            var specs = MalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
+            var specs = MalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon, armorVariant, headVariant, weaponVariant, hairVariant, mountHorseVariant);
             foreach (var spec in specs)
             {
                 var runtime = GetOrCreatePart(spec);
@@ -243,6 +283,11 @@ namespace VLTK.Sandbox
 
             _loadedAction = currentAction;
             _loadedWeapon = currentWeapon;
+            _loadedArmorVariant = armorVariant;
+            _loadedHeadVariant = headVariant;
+            _loadedHairVariant = hairVariant;
+            _loadedWeaponVariant = weaponVariant;
+            _loadedHorseVariant = mountHorseVariant;
             ApplySorting();
         }
 

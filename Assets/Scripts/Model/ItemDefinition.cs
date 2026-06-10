@@ -31,6 +31,7 @@ namespace VLTK.Model
     public class ItemDefinition
     {
         public int itemId;
+        public int resId;
         public string nameRaw;
         public string nameNormalized;
         public int setId;             // 0 = not part of a set

@@ -47,6 +47,7 @@ namespace VLTK.Sandbox.ItemData
             var item = new ItemDefinition
             {
                 itemId = itemId,
+                resId = PcItemCommon.Int(cols, 5),
                 nameRaw = nameRaw,
                 nameNormalized = nameRaw,
                 setId = 0,

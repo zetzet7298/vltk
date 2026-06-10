@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using VLTK.Core;
 
 namespace VLTK.Sandbox
@@ -12,6 +13,7 @@ namespace VLTK.Sandbox
         Assets,
         Logs,
         Tools,
+        Equipment,
     }
 
     public class GMPanelController : MonoBehaviour
@@ -39,15 +41,83 @@ namespace VLTK.Sandbox
 
         private const string TOGGLE_KEY = "q";
 
+        private GameObject _equipmentPanel;
+
         private void EnsureInitialized()
         {
             if (_initialized) return;
             _initialized = true;
             _backgroundImage = GetComponent<UnityEngine.UI.Image>();
+            
+            SetupEquipmentTabDynamically();
+
             if (tabBar != null)
             {
                 tabBar.Initialize(this);
             }
+        }
+
+        private void SetupEquipmentTabDynamically()
+        {
+            if (tabBar == null || tabBar.tabs == null || tabBar.tabs.Length == 0) return;
+
+            // 1. Clone the last button (Tools tab button)
+            var lastEntry = tabBar.tabs[tabBar.tabs.Length - 1];
+            if (lastEntry.button == null) return;
+
+            var newButtonGo = Instantiate(lastEntry.button.gameObject, lastEntry.button.transform.parent);
+            newButtonGo.name = "TabButton_Equipment";
+
+            // Update text of cloned button
+            var txt = newButtonGo.GetComponentInChildren<Text>();
+            if (txt != null) txt.text = "Trang bị";
+
+            var btn = newButtonGo.GetComponent<Button>();
+            btn.onClick.RemoveAllListeners(); // Clear cloned listeners
+
+            // Create new TabEntry
+            var newEntry = new GMTabBarController.TabEntry
+            {
+                label = "Trang bị",
+                button = btn,
+                index = 7 // GMTab.Equipment
+            };
+
+            // Expand tabBar.tabs array
+            var newTabs = new GMTabBarController.TabEntry[tabBar.tabs.Length + 1];
+            for (int i = 0; i < tabBar.tabs.Length; i++)
+            {
+                newTabs[i] = tabBar.tabs[i];
+            }
+            newTabs[tabBar.tabs.Length] = newEntry;
+            tabBar.tabs = newTabs;
+
+            // 2. Clone/Create the Panel under same parent as toolsPanel
+            var templatePanel = toolsPanel != null ? toolsPanel : playerPanel;
+            if (templatePanel == null) return;
+
+            _equipmentPanel = new GameObject("Panel_Equipment");
+            _equipmentPanel.transform.SetParent(templatePanel.transform.parent, false);
+
+            var rect = _equipmentPanel.AddComponent<RectTransform>();
+            var tempRect = templatePanel.GetComponent<RectTransform>();
+            if (tempRect != null)
+            {
+                rect.anchorMin = tempRect.anchorMin;
+                rect.anchorMax = tempRect.anchorMax;
+                rect.anchoredPosition = tempRect.anchoredPosition;
+                rect.sizeDelta = tempRect.sizeDelta;
+                rect.pivot = tempRect.pivot;
+            }
+            else
+            {
+                rect.anchorMin = Vector2.zero;
+                rect.anchorMax = Vector2.one;
+                rect.sizeDelta = Vector2.zero;
+            }
+
+            _equipmentPanel.AddComponent<GMEquipmentTab>();
+            _equipmentPanel.SetActive(false);
         }
 
         private void Awake()
@@ -88,7 +158,7 @@ namespace VLTK.Sandbox
 
         public void SwitchTab(int tabIndex)
         {
-            if (tabIndex >= 0 && tabIndex < 7)
+            if (tabIndex >= 0 && tabIndex < 8)
             {
                 ActiveTab = (GMTab)tabIndex;
                 UpdateTabPanels();
@@ -124,6 +194,7 @@ namespace VLTK.Sandbox
             SetPanelActive(assetsPanel, ActiveTab == GMTab.Assets);
             SetPanelActive(logsPanel, ActiveTab == GMTab.Logs);
             SetPanelActive(toolsPanel, ActiveTab == GMTab.Tools);
+            SetPanelActive(_equipmentPanel, ActiveTab == GMTab.Equipment);
         }
 
         private void SetPanelActive(GameObject panel, bool active)

@@ -36,6 +36,7 @@ namespace VLTK.Sandbox
         void SetMounted(bool mounted);
         void SetWeapon(PcWeaponType weapon);
         void SetDirection(int nextDirection);
+        void SetEquipVariant(PlayerEquipSlot slot, int variant);
         void Tick(float deltaTime);
     }
 }

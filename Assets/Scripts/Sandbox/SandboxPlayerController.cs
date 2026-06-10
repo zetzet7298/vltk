@@ -329,6 +329,7 @@ namespace VLTK.Sandbox
             if (visual != null)
             {
                 visual.playAutomatically = false;
+                ApplyActiveEquipmentVariants();
                 return;
             }
 
@@ -348,6 +349,20 @@ namespace VLTK.Sandbox
                 var mv = go.AddComponent<MalePlayerVisual>();
                 mv.playAutomatically = false;
                 visual = mv;
+            }
+            ApplyActiveEquipmentVariants();
+        }
+
+        private void ApplyActiveEquipmentVariants()
+        {
+            if (visual == null) return;
+            if (SandboxManager.Instance != null && SandboxManager.Instance.EquipmentService != null)
+            {
+                var eq = SandboxManager.Instance.EquipmentService;
+                foreach (PlayerEquipSlot slot in System.Enum.GetValues(typeof(PlayerEquipSlot)))
+                {
+                    visual.SetEquipVariant(slot, eq.GetVariant(slot));
+                }
             }
         }
 

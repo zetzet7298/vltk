@@ -43,6 +43,19 @@ namespace VLTK.Sandbox
         [Header("Diagnostics")]
         public bool logMissingParts = true;
 
+        [Header("Equipment Variants")]
+        public int armorVariant = 50;
+        public int headVariant = 50;
+        public int hairVariant = 50;
+        public int weaponVariant = 0;
+        public int mountHorseVariant = 16;
+
+        private int _loadedArmorVariant = -1;
+        private int _loadedHeadVariant = -1;
+        private int _loadedHairVariant = -1;
+        private int _loadedWeaponVariant = -1;
+        private int _loadedHorseVariant = -1;
+
         private readonly Dictionary<PlayerSpritePartKind, PartRuntime> _parts = new();
         private PlayerVisualAction _loadedAction = (PlayerVisualAction)(-1);
         private PcWeaponType _loadedWeapon = (PcWeaponType)(-1);
@@ -175,6 +188,30 @@ namespace VLTK.Sandbox
             ApplySorting();
         }
 
+        public void SetEquipVariant(PlayerEquipSlot slot, int variant)
+        {
+            switch (slot)
+            {
+                case PlayerEquipSlot.Body:
+                    armorVariant = variant;
+                    break;
+                case PlayerEquipSlot.Head:
+                    headVariant = variant;
+                    break;
+                case PlayerEquipSlot.Hair:
+                    hairVariant = variant;
+                    break;
+                case PlayerEquipSlot.Weapon:
+                    weaponVariant = variant;
+                    break;
+                case PlayerEquipSlot.Mount:
+                    mountHorseVariant = variant;
+                    break;
+            }
+            RefreshActionParts(force: true);
+            ApplyFrame(0f);
+        }
+
         public void Tick(float deltaTime)
         {
             RefreshActionParts(force: false);
@@ -184,7 +221,10 @@ namespace VLTK.Sandbox
 
         public void RefreshActionParts(bool force = false)
         {
-            if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon)
+            if (!force && _loadedAction == currentAction && _loadedWeapon == currentWeapon &&
+                _loadedArmorVariant == armorVariant && _loadedHeadVariant == headVariant &&
+                _loadedHairVariant == hairVariant && _loadedWeaponVariant == weaponVariant &&
+                _loadedHorseVariant == mountHorseVariant)
                 return;
 
             for (int i = transform.childCount - 1; i >= 0; i--)
@@ -196,12 +236,12 @@ namespace VLTK.Sandbox
             LoadedPartCount = 0;
             HasAllRequiredParts = true;
             _lastMissingRequiredParts.Clear();
-            var specs = FemalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon);
+            var specs = FemalePlayerSpriteCatalog.BuildParts(currentAction, currentWeapon, armorVariant, headVariant, weaponVariant, hairVariant, mountHorseVariant);
             foreach (var spec in specs)
             {
                 var runtime = GetOrCreatePart(spec);
                 runtime.spec = spec;
-                runtime.clip = LoadClip(spec.sourcePath);
+                runtime.clip = LoadClip(spec.sourcePath, spec.expectedDirections);
                 bool ok = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
                 runtime.renderer.enabled = ok;
                 runtime.renderer.gameObject.SetActive(ok);
@@ -225,6 +265,11 @@ namespace VLTK.Sandbox
 
             _loadedAction = currentAction;
             _loadedWeapon = currentWeapon;
+            _loadedArmorVariant = armorVariant;
+            _loadedHeadVariant = headVariant;
+            _loadedHairVariant = hairVariant;
+            _loadedWeaponVariant = weaponVariant;
+            _loadedHorseVariant = mountHorseVariant;
             ApplySorting();
         }
 
@@ -278,14 +323,14 @@ namespace VLTK.Sandbox
                 runtime.renderer.sortingOrder = baseOrder + FemalePlayerSpriteCatalog.SortingOffset(runtime.spec.kind, direction);
         }
 
-        private ClipRuntime LoadClip(string sourcePath)
+        private ClipRuntime LoadClip(string sourcePath, int expectedDirections = 0)
         {
             if (string.IsNullOrEmpty(sourcePath)) return null;
 
             string root = string.IsNullOrEmpty(spritesRootOverride)
                 ? Path.Combine(Application.streamingAssetsPath, "Sprites")
                 : spritesRootOverride;
-            string cacheKey = $"{root}|{sourcePath}|ppu={pixelsPerUnit:F3}|ref={referencePixel.x:F1},{referencePixel.y:F1}";
+            string cacheKey = $"{root}|{sourcePath}|ppu={pixelsPerUnit:F3}|ref={referencePixel.x:F1},{referencePixel.y:F1}|dir={expectedDirections}";
             if (ClipCache.TryGetValue(cacheKey, out var cached))
             {
                 if (IsClipAlive(cached)) return cached;
@@ -306,8 +351,10 @@ namespace VLTK.Sandbox
                 return null;
             }
 
-            int directions = Mathf.Max(1, decoded.header.directions);
             int totalFrames = decoded.frames.Length;
+            int directions = Mathf.Max(1, decoded.header.directions);
+            if (expectedDirections > 1 && totalFrames % expectedDirections == 0)
+                directions = expectedDirections;
             int framesPerDirection = Mathf.Max(1, totalFrames / directions);
             if (totalFrames % directions != 0) directions = 1;
 
