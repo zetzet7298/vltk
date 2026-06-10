@@ -1589,6 +1589,8 @@ namespace VLTK.Sandbox
             }
 
             // Minimap Panel (separate canvas since it uses a different layout)
+            // DISABLED: uGUI MinimapPanel conflicts with the authentic PC UI Toolkit Minimap.
+            /*
             if (MinimapPanel == null && uiRoot != null)
             {
                 var minimapCanvas = new GameObject("MinimapCanvas");
@@ -1604,6 +1606,7 @@ namespace VLTK.Sandbox
                 if (PlayerController != null)
                     MinimapPanel.Initialize(MapManager, PlayerController, EnemyRuntime);
             }
+            */
 
             GmPanel = FindObjectOfType<GMPanelController>(true);
 
