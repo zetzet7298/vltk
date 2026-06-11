@@ -10,6 +10,30 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 ## Source Of Truth
 
 
+
+
+## When to escalate to `reverse-engineering`
+
+Load/use the `reverse-engineering` skill when the port is blocked by **engine/format/binary behavior**, not ordinary TXT/INI/Lua data:
+
+- A PC table references a path, but hash lookup and `pak_unpacked` lookup disagree.
+- The asset exists only as `unknown/<uid>.spr` and path resolution is the blocker.
+- UTF-8/Vietnamese-friendly parsing produces mojibake for GB2312/GBK paths.
+- Need to understand or prove PAK/SPR/WOR/Region binary layout, UID hashing, compression flags, frame offsets, palette/frame order, direction buckets, or engine draw semantics.
+- Need to inspect client/engine binaries (`engine.dll`, client exe, native DLL/SO) to recover an algorithm such as `g_FileName2Id`.
+- PC runtime visibly does something but source TXT/Lua/C# does not explain it.
+
+Do **not** escalate for routine data ports where the source table and assets already resolve; use the domain skill directly.
+
+### Reverse-engineering workflow for VLTK resource blockers
+
+1. Pick a small evidence pair: known PC path/loose file/screenshot ↔ candidate `unknown/<uid>.spr` or runtime output.
+2. Prove binary/content equivalence when possible (`cmp`, size/header/frame count, decoded preview), not just similar names.
+3. Test encoding/path/hash variants with a script and record the expected UID/file path.
+4. Validate the hypothesis against at least 2–3 different paths from different folders/PAKs.
+5. Patch the Unity/tool resolver only after the verifier passes, then copy exact assets into `Assets/StreamingAssets/...`.
+6. Update the relevant port skill/status with the new invariant so the mistake is not repeated.
+
 ## PC resource resolution doctrine (PAK/SPR/TXT) — mandatory
 
 Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, skill icon, missile/effect SPR):
