@@ -706,7 +706,12 @@ namespace VLTK.UI
                 return;
             }
 
-            var png = HudArtPathResolver.ResolveUserFacingPngPath(artPath, name);
+            string png;
+            if (PcSkillIconArtResolver.IsPcSkillIconName(name, out var skillId) && PcSkillIconArtResolver.TryResolveSkillIconPng(skillId, out var pcIconPng))
+                png = pcIconPng;
+            else
+                png = HudArtPathResolver.ResolveUserFacingPngPath(artPath, name);
+
             if (coroutineHost != null)
             {
                 LoadTextureIntoElement(coroutineHost, png, name, tex =>

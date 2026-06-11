@@ -171,7 +171,9 @@ namespace VLTK.UI
             {
                 if (_caiBangIconTextures.ContainsKey(skillId) && _caiBangIconTextures[skillId] != null)
                     continue;
-                _caiBangIconTextures[skillId] = LoadTexture(HudArtPathResolver.ResolvePngPath(HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art"), $"cai_bang_skill_{skillId}"));
+                _caiBangIconTextures[skillId] = LoadTexture(PcSkillIconArtResolver.TryResolveSkillIconPng(skillId, out var pcIconPng)
+                    ? pcIconPng
+                    : HudArtPathResolver.ResolvePngPath(HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art"), $"cai_bang_skill_{skillId}"));
             }
         }
 
