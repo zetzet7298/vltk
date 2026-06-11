@@ -766,10 +766,10 @@ def verify_default_map(audit: Audit, root: Path) -> None:
                       f'MapPortManifest.{const_name} must match PC MapAliasCatalog mapId {map_id}')
     audit.require('QuangChauId' not in manifest_text and 'Quảng Châu' not in manifest_text,
                   'MapPortManifest must not include synthetic Quảng Châu: scoped PC maplist.ini has no 广州 entry')
-    audit.require('public const int BaLangHuyenMapId = 79;' in text,
-                  'SandboxManager must keep Ba Lăng Huyện constant at mapId 79')
+    audit.require('public const int BaLangHuyenMapId = 53;' in text,
+                  'SandboxManager must keep Ba Lăng Huyện constant at mapId 53')
     audit.require('public int defaultMapId = BaLangHuyenMapId;' in text,
-                  'SandboxManager defaultMapId must point to Ba Lăng Huyện map 79')
+                  'SandboxManager defaultMapId must point to Ba Lăng Huyện map 53')
     enemy_runtime = (root / 'Assets/Scripts/Sandbox/MapEnemySpawnRuntime.cs').read_text(encoding='utf-8', errors='ignore')
     killboss = root / 'Assets/Scripts/Sandbox/VuotAiKillBossMatchSpawns.cs'
     killboss_text = killboss.read_text(encoding='utf-8', errors='ignore') if killboss.is_file() else ''
@@ -778,7 +778,7 @@ def verify_default_map(audit: Audit, root: Path) -> None:
     audit.require('public static readonly int[] BossTemplateIds = { 1481, 1485, 1488, 1483, 1482, 1480, 1489, 1486, 1487, 1484 }' in killboss_text,
                   'Vượt ải killbossmatch boss template roster must match PC class.lua tbNpc order')
     audit.facts['defaultMap'] = {
-        'mapId': 79,
+        'mapId': 53,
         'nameVi': 'Ba Lăng huyện',
     }
 

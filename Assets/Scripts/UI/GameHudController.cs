@@ -422,8 +422,8 @@ namespace VLTK.UI
                 int slot = i;
                 RegisterClick(root, $"PcItemSlot{slot}", () => OnPcItemShortcutClick(slot));
             }
-            RegisterClick(root, "PcLeftSkillBtn", () => OnPcSkillShortcutClick(0));
-            RegisterClick(root, "PcRightSkillBtn", () => OnPcSkillShortcutClick(1));
+            RegisterClick(root, "PcLeftSkillBtn", () => OnPcSkillShortcutClick(0, 1));
+            RegisterClick(root, "PcRightSkillBtn", () => OnPcSkillShortcutClick(1, 0));
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
@@ -1964,29 +1964,28 @@ namespace VLTK.UI
             return true;
         }
 
-        private void OnPcSkillShortcutClick(int slot)
+        private void OnPcSkillShortcutClick(int pcSlot, int mobileSlot)
         {
-            int mobileSlot = Mathf.Clamp(slot, 0, 1);
             var combatSlots = FindObjectOfType<CombatSkillSlotController>();
             if (combatSlots != null)
             {
                 combatSlots.OpenSkillPicker(mobileSlot);
-                OpenPcToolPanel(mobileSlot == 0 ? "Kỹ năng trái" : "Kỹ năng phải", new[]
+                OpenPcToolPanel(pcSlot == 0 ? "Kỹ năng trái" : "Kỹ năng phải", new[]
                 {
-                    $"PC 主界面玩家信息窗口.ini: {(mobileSlot == 0 ? "ImediaLeftSkill" : "ImediaRightSkill")}",
+                    $"PC 主界面玩家信息窗口.ini: {(pcSlot == 0 ? "ImediaLeftSkill" : "ImediaRightSkill")}",
                     $"Mobile: mở bảng gán kỹ năng cho ô {mobileSlot + 1}.",
                 });
             }
             else
             {
                 OpenSkillPanel();
-                OpenPcToolPanel(mobileSlot == 0 ? "Kỹ năng trái" : "Kỹ năng phải", new[]
+                OpenPcToolPanel(pcSlot == 0 ? "Kỹ năng trái" : "Kỹ năng phải", new[]
                 {
                     "CombatSkillSlotController chưa sẵn sàng.",
                     "Đã mở bảng Võ công để chọn/nâng kỹ năng.",
                 });
             }
-            SubsystemLog.Info("HUD", mobileSlot == 0 ? "Open left skill assignment" : "Open right skill assignment");
+            SubsystemLog.Info("HUD", pcSlot == 0 ? "Open left skill assignment" : "Open right skill assignment");
         }
 
         private void OnMinimapMarkerClick()

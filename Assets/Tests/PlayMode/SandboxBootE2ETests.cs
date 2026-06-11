@@ -110,8 +110,8 @@ namespace VLTK.Tests.PlayMode
             Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.defaultMapId);
             Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.MapManager.ActiveMapId);
             Assert.AreEqual("Ba Lăng huyện", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
-            Assert.AreEqual(new Vector2(48128f, -53248f), mgr.PlayerController.mapBoundsMin);
-            Assert.AreEqual(new Vector2(60928f, -46592f), mgr.PlayerController.mapBoundsMax);
+            Assert.AreEqual(new Vector2(41984f, -55808f), mgr.PlayerController.mapBoundsMin);
+            Assert.AreEqual(new Vector2(58880f, -45568f), mgr.PlayerController.mapBoundsMax);
         }
 
         // --- Map load / switch / unload lifecycle through the live runtime ---

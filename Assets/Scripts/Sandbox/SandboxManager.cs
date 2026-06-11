@@ -56,7 +56,7 @@ namespace VLTK.Sandbox
 
     public class SandboxManager : MonoBehaviour, IMapTeleportHost
     {
-        public const int BaLangHuyenMapId = 79;
+        public const int BaLangHuyenMapId = 53;
         public const int TinSuVuotAiPhongKy120MapId = 389;
         public const int VuotAiNhiepThiTranMapId = 907;
         public const int ThachThucThoiGianSoCap1MapId = 464;

@@ -394,6 +394,7 @@ namespace VLTK.UI
         private void BeginSlotPress(int slot, int pointerId, Vector2 screenPos)
         {
             if (slot != PrimaryAttackPseudoSlot && (slot < 0 || slot >= MobileSkillSlotCount)) return;
+            SubsystemLog.Info("CombatTouch", $"BeginSlotPress: slot={slot}, pointerId={pointerId}, pos={screenPos}");
             _pressedSlot = slot;
             _pressedPointerId = pointerId;
             _startPointerPos = screenPos;
@@ -412,10 +413,17 @@ namespace VLTK.UI
 
         private IEnumerator OpenPickerAfterLongPress(int slot, int pointerId)
         {
+            SubsystemLog.Info("CombatTouch", $"OpenPickerAfterLongPress coroutine started for slot={slot}");
             yield return new WaitForSeconds(LongPressMs / 1000f);
-            if (!_slotPointerDown || _aimingDrag || _pressedSlot != slot || _pressedPointerId != pointerId) yield break;
+            SubsystemLog.Info("CombatTouch", $"OpenPickerAfterLongPress timer expired: slot={slot}, _slotPointerDown={_slotPointerDown}, _aimingDrag={_aimingDrag}, _pressedSlot={_pressedSlot}, _pressedPointerId={_pressedPointerId}");
+            if (!_slotPointerDown || _aimingDrag || _pressedSlot != slot || _pressedPointerId != pointerId)
+            {
+                SubsystemLog.Info("CombatTouch", "OpenPickerAfterLongPress condition failed, yield break");
+                yield break;
+            }
             _longPressOpened = true;
             ReleasePressedSlotCapture(pointerId);
+            SubsystemLog.Info("CombatTouch", $"OpenPickerAfterLongPress opening skill picker for slot={slot}");
             OpenSkillPicker(slot == PrimaryAttackPseudoSlot ? 0 : slot);
         }
 
@@ -427,6 +435,7 @@ namespace VLTK.UI
                 int skillId = _pressedSlot == PrimaryAttackPseudoSlot ? GetAssignedSkill(0) : GetAssignedSkill(_pressedSlot);
                 if (distance > SlotDragCancelThreshold && skillId > 0)
                 {
+                    SubsystemLog.Info("CombatTouch", $"OnSlotMove: aiming drag started. dist={distance}, slot={_pressedSlot}");
                     _aimingDrag = true;
                     ShowCancelCastZone();
                 }
@@ -437,6 +446,7 @@ namespace VLTK.UI
         private void OnSlotUp(PointerUpEvent evt)
         {
             int slot = _pressedSlot;
+            SubsystemLog.Info("CombatTouch", $"OnSlotUp: slot={slot}, pointerId={evt.pointerId}, _longPressOpened={_longPressOpened}, _aimingDrag={_aimingDrag}");
             ReleasePressedSlotCapture(evt.pointerId);
             _slotPointerDown = false;
             _pressedSlot = -1;
@@ -479,6 +489,7 @@ namespace VLTK.UI
 
         private void OnSlotCancel(PointerCancelEvent evt)
         {
+            SubsystemLog.Info("CombatTouch", $"OnSlotCancel: _pressedSlot={_pressedSlot}, _aimingDrag={_aimingDrag}");
             // Mobile devices can fire PointerCancel during capture changes. Keep the
             // press alive for long-press unless we were actually aiming; then cancel aim.
             if (_aimingDrag)
@@ -500,6 +511,7 @@ namespace VLTK.UI
 
         private void ResetPressState()
         {
+            SubsystemLog.Info("CombatTouch", "ResetPressState called");
             _slotPointerDown = false;
             _pressedSlot = -1;
             _pressedPointerId = -1;
