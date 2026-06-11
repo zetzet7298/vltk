@@ -829,7 +829,7 @@ namespace VLTK.UI
                 Vector2 facingDir = PcDirection8Way.ToVector2(facing);
                 float forwardDistance = skill.attackRadius > 0 ? skill.attackRadius : 150f;
                 Vector2 forwardTarget = casterPos + facingDir * forwardDistance;
-                effectService?.PlaySkillCast(skill, casterPos, forwardTarget, 1);
+                effectService?.PlaySkillCast(skill, casterPos, forwardTarget, skillLevel);
                 SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} — no enemy in range");
             }
         }
