@@ -7,15 +7,18 @@ using VLTK.Sprites;
 namespace VLTK.Sandbox
 {
     /// <summary>
-    /// PC-accurate skill effect visual renderer for Cái Bang combat skills.
-    /// Plays PreCastSpr animation on caster, spawns missile projectile sprites,
-    /// and renders impact effects. Visuals sourced exclusively from JXWin PC data.
+    /// PC-accurate skill effect visual renderer for ALL combat skills.
+    /// Data-driven: reads missles1.txt + skills.txt -> auto-maps every skill's visual.
+    /// Plays PreCastSpr animation, spawns missile projectile sprites, renders impact.
+    /// No more per-faction hardcoded switch-cases — everything from PC data.
     /// </summary>
     public class SkillEffectVisualService
     {
         private readonly SprRuntimeService _sprService;
         private readonly SkillCatalog _catalog;
         private readonly List<ActiveSkillEffect> _activeEffects = new();
+        private readonly PcSkillVisualAutoMapper _autoMapper = new();
+        private bool _autoMapperReady;
 
         public SkillEffectVisualService(SprRuntimeService sprService)
             : this(sprService, null) { }
@@ -26,6 +29,135 @@ namespace VLTK.Sandbox
             _catalog = catalog;
         }
 
+
+        /// <summary>
+        /// Ensure the data-driven auto-mapper is initialized.
+        /// Lazy-init so it works even when constructed before StreamingAssets is ready.
+        /// </summary>
+        private void EnsureAutoMapperReady()
+        {
+            if (_autoMapperReady) return;
+            try
+            {
+                _autoMapper.Initialize(UnityEngine.Application.streamingAssetsPath);
+                if (_catalog != null) _autoMapper.PreCacheAll(_catalog);
+            }
+            catch (Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"[SkillVisual] AutoMapper init failed: {ex.Message}");
+            }
+            _autoMapperReady = true;
+        }
+
+        /// <summary>
+        /// Data-driven visual configuration: auto-resolves skill visual from PC missles1.txt.
+        /// Replaces hardcoded per-faction Configure*Visuals switch-cases.
+        /// Flow: skill.childSkillId -> missile -> SPR paths + anim info + light color.
+        /// </summary>
+        private void ConfigureDataDrivenVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+        {
+            EnsureAutoMapperReady();
+
+            var config = _autoMapper.GetVisualConfig(skill);
+            if (config == null) return;
+
+            // Apply faction default color
+            fx.color = config.lightColor;
+
+            // PreCast visual
+            if (config.hasPreCast && !string.IsNullOrEmpty(config.preCastSprPath))
+            {
+                var preCastKey = PcSkillVisualAutoMapper.SprPathToKey(config.preCastSprPath);
+                if (!string.IsNullOrEmpty(preCastKey))
+                {
+                    SetupPcPreCast(fx, preCastKey, 16, 1, 1);
+                }
+            }
+
+            // Stationary area effect (MoveKind=0)
+            if (config.isStationary)
+            {
+                if (config.HasFlightVisual)
+                {
+                    var key = PcSkillVisualAutoMapper.SprPathToKey(config.flightSprPath);
+                    SetupPcStationaryEffect(fx, key,
+                        config.flightFrames,
+                        System.Math.Max(1, config.flightDirections),
+                        System.Math.Max(1, config.flightIntervalTicks),
+                        config.lightColor);
+                }
+                else if (config.HasExplodeVisual)
+                {
+                    var key = PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath);
+                    SetupPcStationaryEffect(fx, key,
+                        config.explodeFrames,
+                        System.Math.Max(1, config.explodeDirections),
+                        System.Math.Max(1, config.explodeIntervalTicks),
+                        config.lightColor);
+                }
+                return;
+            }
+
+            // Flight missile visual
+            if (config.HasFlightVisual)
+            {
+                var flightKey = PcSkillVisualAutoMapper.SprPathToKey(config.flightSprPath);
+                string explodeKey = config.HasExplodeVisual
+                    ? PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath)
+                    : null;
+
+                SetupPcMissile(fx,
+                    flightKey,
+                    config.flightFrames,
+                    System.Math.Max(1, config.flightDirections),
+                    System.Math.Max(1, config.flightIntervalTicks),
+                    config.missileSpeed,
+                    config.missileLifetime,
+                    explodeKey,
+                    config.explodeFrames,
+                    System.Math.Max(1, config.explodeDirections),
+                    System.Math.Max(1, config.explodeIntervalTicks),
+                    config.lightColor);
+
+                // Multi-missile spread for fan/surround forms
+                if (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround)
+                {
+                    int count = System.Math.Max(1, skill.childSkillNum);
+                    if (skill.missileForm == SkillMissileForm.Surround)
+                        SetupSurroundMissiles(fx, count);
+                    else
+                        SetupPcCircleOutwardMissiles(fx, count);
+                }
+                return;
+            }
+
+            // Explosion-only (no flight) — common for buff/aura skills
+            if (config.HasExplodeVisual)
+            {
+                var key = PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath);
+                SetupPcStationaryEffect(fx, key,
+                    config.explodeFrames,
+                    System.Math.Max(1, config.explodeDirections),
+                    System.Math.Max(1, config.explodeIntervalTicks),
+                    config.lightColor);
+                return;
+            }
+
+            // Melee: no missile, just show impact at target
+            if (config.isMelee)
+            {
+                fx.preCastDuration = Mathf.Max(0.1f, skill.timePerCast > 0 ? skill.timePerCast * 0.055f : 0.15f);
+                fx.impactDuration = 0.3f;
+                return;
+            }
+
+            // Has missile data but no SPR resolved — use speed/timing from PC data
+            if (config.missileSpeed > 0)
+            {
+                fx.missileSpeed = config.SpeedWorldPerSec;
+                fx.missileDuration = config.FlightDurationSeconds;
+            }
+        }
         public int ActiveEffectCount => _activeEffects.Count;
 
         /// <summary>
@@ -141,16 +273,16 @@ namespace VLTK.Sandbox
             effect.missileDistance = Vector2.Distance(casterPos, targetPos);
             effect.missileDuration = effect.missileDistance / Mathf.Max(0.1f, effect.missileSpeed);
             effect.currentMissilePos = casterPos;
+            // PC data-driven visual: auto-resolve from missles1.txt
+            ConfigureDataDrivenVisuals(skill, effect, skillLevel);
 
-            // PC-specific visual parameters from Skills.txt/Missles.txt.
+            // Legacy per-faction overrides (kept for specific CaiBang multi-missile spread)
+            // These will only override if the data-driven setup didn't already configure visuals
             ConfigureCaiBangVisuals(skill, effect, skillLevel);
-            ConfigureWuDangVisuals(skill, effect, skillLevel);
-            ConfigureShaolinVisuals(skill, effect, skillLevel);
-            ConfigureTangMenVisuals(skill, effect, skillLevel);
-            ConfigureEMeiVisuals(skill, effect, skillLevel);
-            ConfigureTianWangVisuals(skill, effect, skillLevel);
-            ConfigureWuDuVisuals(skill, effect, skillLevel);
-            ConfigureCuiYanVisuals(skill, effect, skillLevel);
+
+
+
+
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
@@ -435,8 +567,8 @@ namespace VLTK.Sandbox
                     SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
                     break;
                 default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
+                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
+                    // Legacy hardcode does not override for this skill.
                     break;
             }
         }
@@ -474,8 +606,8 @@ namespace VLTK.Sandbox
                     SetupPcMissile(fx, "883bff8c", 1, 1, 1, 26, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
                     break;
                 default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
+                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
+                    // Legacy hardcode does not override for this skill.
                     break;
             }
         }
@@ -929,8 +1061,8 @@ namespace VLTK.Sandbox
                     SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
                     break;
                 default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
+                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
+                    // Legacy hardcode does not override for this skill.
                     break;
             }
         }
@@ -967,8 +1099,8 @@ namespace VLTK.Sandbox
                     SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
                     break;
                 default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
+                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
+                    // Legacy hardcode does not override for this skill.
                     break;
             }
         }
@@ -1012,8 +1144,8 @@ namespace VLTK.Sandbox
                     SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
                     break;
                 default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
+                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
+                    // Legacy hardcode does not override for this skill.
                     break;
             }
         }
@@ -1053,8 +1185,8 @@ namespace VLTK.Sandbox
                     SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, waterColor);
                     break;
                 default:
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
+                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
+                    // Legacy hardcode does not override for this skill.
                     break;
             }
         }
