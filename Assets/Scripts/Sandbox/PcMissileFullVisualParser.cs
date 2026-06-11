@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Text;
+
 using UnityEngine;
 using VLTK.Core;
 
@@ -150,14 +152,30 @@ namespace VLTK.Sandbox
         /// Parse missles1.txt (57 columns) into full visual entries.
         /// Returns registry ready for lookup.
         /// </summary>
-        public static PcMissileFullVisualRegistry ParseFromFile(string path)
+public static PcMissileFullVisualRegistry ParseFromFile(string path)
         {
             var reg = new PcMissileFullVisualRegistry();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return reg;
 
             string[] lines;
-            try { lines = PcItemCommon.ReadServerLines(path).ToArray(); }
-            catch { try { lines = File.ReadAllLines(path); } catch { return reg; } }
+            try
+            {
+                // missles/missles1 store SPR paths as GB2312/GBK Chinese paths
+                // (e.g. \spr\skill\丐帮\mag_gb_01_投石问路.spr).  PcText's
+                // Vietnamese-friendly decoding can mojibake those path bytes,
+                // which then hashes to non-existent UIDs and makes combat VFX
+                // fall back to dots/rings.  For visual asset lookup, preserve
+                // the PC Chinese path by decoding this table as GB2312 directly.
+                var encoding = Encoding.GetEncoding(PcItemCommon.GbkFallbackEncoding);
+                lines = File.ReadAllText(path, encoding)
+                    .Replace("\r\n", "\n")
+                    .Replace('\r', '\n')
+                    .Split('\n');
+            }
+            catch
+            {
+                try { lines = File.ReadAllLines(path); } catch { return reg; }
+            }
 
             if (lines.Length < 2) return reg;
 

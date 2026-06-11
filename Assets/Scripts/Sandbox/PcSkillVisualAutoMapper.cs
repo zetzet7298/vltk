@@ -240,18 +240,16 @@ namespace VLTK.Sandbox
         /// the UID hash used in StreamingAssets/Sprites/{uid}.spr.
         /// The SprRuntimeService handles this resolution at render time.
         /// </summary>
-        public static string SprPathToKey(string pcPath)
+public static string SprPathToKey(string pcPath)
         {
             if (string.IsNullOrEmpty(pcPath)) return null;
 
-            // Normalize: remove leading backslashes, convert \ to /
-            var key = pcPath.TrimStart('\\', '/').Replace('\\', '/');
-
-            // Remove .spr extension for lookup
-            if (key.EndsWith(".spr", StringComparison.OrdinalIgnoreCase))
-                key = key.Substring(0, key.Length - 4);
-
-            return key;
+            // Mobile StreamingAssets/Sprites stores PC SPRs by PAK UID hex.
+            // Use the same signed-byte JX FileNameHash as SprRuntimeService;
+            // returning a normalized path such as "spr/skill/..." makes
+            // SkillEffectWorldOverlay.LoadPcSprites miss the file and fall back
+            // to procedural dots/rings.
+            return VLTK.Sprites.SprRuntimeService.ComputePathUidHex(pcPath, signedBytes: true);
         }
 
         /// <summary>

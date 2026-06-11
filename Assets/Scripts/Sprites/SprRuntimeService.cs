@@ -242,7 +242,7 @@ namespace VLTK.Sprites
             return null;
         }
 
-        private IEnumerable<string> EnumerateSpriteRoots()
+private IEnumerable<string> EnumerateSpriteRoots()
         {
             if (!string.IsNullOrEmpty(_spritesRoot))
                 yield return _spritesRoot;
@@ -250,6 +250,12 @@ namespace VLTK.Sprites
             var streamingRoot = Path.GetDirectoryName(_spritesRoot);
             if (!string.IsNullOrEmpty(streamingRoot))
             {
+                // Skill icon SPRs are kept isolated from map/NPC/object sprites but
+                // must still be resolvable by their original PC SPR path/UID.
+                var skillIconsRoot = Path.Combine(_spritesRoot, "SkillIcons");
+                if (!string.Equals(skillIconsRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
+                    yield return skillIconsRoot;
+
                 var generatedRoot = Path.Combine(streamingRoot, "Generated", "MapSprites");
                 if (!string.Equals(generatedRoot, _spritesRoot, StringComparison.OrdinalIgnoreCase))
                     yield return generatedRoot;
@@ -262,7 +268,7 @@ namespace VLTK.Sprites
             }
         }
 
-        private static byte[] FindSprDataInRoot(string root, string sanitizedKey, string originalName)
+private static byte[] FindSprDataInRoot(string root, string sanitizedKey, string originalName)
         {
             if (string.IsNullOrEmpty(root))
                 return null;
@@ -287,10 +293,27 @@ namespace VLTK.Sprites
                     return File.ReadAllBytes(uidPath);
             }
 
-            string hashedUid = ComputePathUidHex(originalName);
+            // JX PC PAK FileNameHash uses signed bytes for CJK path bytes.
+            // The old unsigned path hash resolves many ASCII SPRs but misses
+            // skill/Ui paths such as \spr\Ui\技能图标\icon_sk_ty_at.spr
+            // (PC UID c4454165, unsigned bedc5b69). Try the PC-accurate
+            // signed hash first so missile/effect SPRs do not fall back to
+            // procedural dots/rings.
+            string signedUid = ComputePathUidHex(originalName, signedBytes: true);
+            if (!string.IsNullOrEmpty(signedUid) &&
+                signedUid != sanitizedKey &&
+                signedUid != uidFromPath)
+            {
+                var signedPath = Path.Combine(root, $"{signedUid}.spr");
+                if (File.Exists(signedPath))
+                    return File.ReadAllBytes(signedPath);
+            }
+
+            string hashedUid = ComputePathUidHex(originalName, signedBytes: false);
             if (!string.IsNullOrEmpty(hashedUid) &&
                 hashedUid != sanitizedKey &&
-                hashedUid != uidFromPath)
+                hashedUid != uidFromPath &&
+                hashedUid != signedUid)
             {
                 var hashedPath = Path.Combine(root, $"{hashedUid}.spr");
                 if (File.Exists(hashedPath))
@@ -412,7 +435,7 @@ namespace VLTK.Sprites
             return normalized;
         }
 
-        public static uint ComputePathUid(string path, string encodingName = "GB2312")
+public static uint ComputePathUid(string path, string encodingName = "GB2312", bool signedBytes = true)
         {
             var normalized = NormalizeResourcePath(path);
             if (string.IsNullOrEmpty(normalized)) return 0;
@@ -430,20 +453,21 @@ namespace VLTK.Sprites
             uint value = 0;
             for (int i = 0; i < bytes.Length; i++)
             {
-                uint b = bytes[i];
-                if (b >= 65 && b <= 90)
-                    b += 32;
+                int signed = bytes[i] >= 128 ? bytes[i] - 256 : bytes[i];
+                int c = signedBytes ? signed : bytes[i];
+                if (c >= 65 && c <= 90)
+                    c += 32;
 
                 uint index = (uint)(i + 1);
-                value = ((value + index * b) % 0x8000000B) * 0xFFFFFFEF;
+                value = unchecked(((uint)(((long)value + (long)index * c) % 0x8000000B)) * 0xFFFFFFEFu);
             }
 
-            return value ^ 0x12345678;
+            return value ^ 0x12345678u;
         }
 
-        public static string ComputePathUidHex(string path, string encodingName = "GB2312")
+public static string ComputePathUidHex(string path, string encodingName = "GB2312", bool signedBytes = true)
         {
-            uint uid = ComputePathUid(path, encodingName);
+            uint uid = ComputePathUid(path, encodingName, signedBytes);
             return uid == 0 ? null : uid.ToString("x8");
         }
     }
