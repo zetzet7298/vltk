@@ -422,8 +422,8 @@ namespace VLTK.UI
                 int slot = i;
                 RegisterClick(root, $"PcItemSlot{slot}", () => OnPcItemShortcutClick(slot));
             }
-            RegisterClick(root, "PcLeftSkillBtn", () => OnPcSkillShortcutClick(0, 1));
-            RegisterClick(root, "PcRightSkillBtn", () => OnPcSkillShortcutClick(1, 0));
+            RegisterClick(root, "PcLeftSkillBtn", () => OnPcSkillShortcutClick(0));
+            RegisterClick(root, "PcRightSkillBtn", () => OnPcSkillShortcutClick(1));
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
@@ -1964,8 +1964,9 @@ namespace VLTK.UI
             return true;
         }
 
-        private void OnPcSkillShortcutClick(int pcSlot, int mobileSlot)
+        private void OnPcSkillShortcutClick(int pcSlot)
         {
+            int mobileSlot = pcSlot == 0 ? 1 : 0;
             var combatSlots = FindObjectOfType<CombatSkillSlotController>();
             if (combatSlots != null)
             {

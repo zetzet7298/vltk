@@ -431,8 +431,14 @@ namespace VLTK.UI
         {
             if (_slotPointerDown && !_longPressOpened && _pressedSlot != -1)
             {
+                if (_pressedSlot == PrimaryAttackPseudoSlot)
+                {
+                    evt.StopPropagation();
+                    return;
+                }
+
                 float distance = Vector2.Distance((Vector2)evt.position, _startPointerPos);
-                int skillId = _pressedSlot == PrimaryAttackPseudoSlot ? GetAssignedSkill(0) : GetAssignedSkill(_pressedSlot);
+                int skillId = GetAssignedSkill(_pressedSlot);
                 if (distance > SlotDragCancelThreshold && skillId > 0)
                 {
                     SubsystemLog.Info("CombatTouch", $"OnSlotMove: aiming drag started. dist={distance}, slot={_pressedSlot}");
