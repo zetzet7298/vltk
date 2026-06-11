@@ -42,7 +42,7 @@ namespace VLTK.UI
         private readonly Dictionary<ActiveSkillEffect, RuntimeEffectVisual> _visuals = new();
         private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
         private Material _lineMaterial;
-        private Material _spriteMaterial;
+        
         private Sprite _dotSprite;
         private Camera _cam;
         private float _cachedOrthoSize;
@@ -68,18 +68,7 @@ namespace VLTK.UI
                     ?? Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default")
                     ?? Shader.Find("Unlit/Color");
                 _lineMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
-            if (_spriteMaterial == null)
-            {
-                var shader = Shader.Find("Mobile/Particles/Additive");
-                if (shader == null) shader = Shader.Find("Particles/Standard Unlit");
-                if (shader == null) shader = Shader.Find("Legacy Shaders/Particles/Additive");
-                if (shader != null)
-                {
-                    _spriteMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
-                    if (_spriteMaterial.HasProperty("_Mode"))
-                        _spriteMaterial.SetFloat("_Mode", 3f); // Transparent Additive in standard
-                }
-            }
+
 
             }
             if (_dotSprite == null)
