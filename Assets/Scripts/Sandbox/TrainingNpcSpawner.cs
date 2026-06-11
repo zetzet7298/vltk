@@ -14,7 +14,7 @@ namespace VLTK.Sandbox
     /// <summary>
     /// Spawns 5 training NPCs (2 bao cát, 2 cọc gỗ, 1 mộc nhân) in a pentagon formation
     /// around a center point with maximum HP.
-    /// PC source: template IDs 413 (木桩/Cọc gỗ), 414 (木人/Mộc nhân), 415 (沙袋/Bao cát)
+    /// PC source: template IDs 415 (Cọc gỗ), 416 (Mộc nhân), 417 (Bao cát)
     /// from NpcS.txt and Region_S.dat.
     /// </summary>
     public sealed class TrainingNpcSpawner : MonoBehaviour
@@ -29,9 +29,9 @@ namespace VLTK.Sandbox
         [Header("Override center with player position on spawn")]
         public bool usePlayerPosition = false;
 
-        private const int TEMPLATE_COC_GOC = 413;
-        private const int TEMPLATE_MOC_NHAN = 414;
-        private const int TEMPLATE_BAO_CAT = 415;
+        private const int TEMPLATE_COC_GOC = 415;
+        private const int TEMPLATE_MOC_NHAN = 416;
+        private const int TEMPLATE_BAO_CAT = 417;
 
         private const int MAX_HP = 9999;
 
@@ -87,7 +87,7 @@ namespace VLTK.Sandbox
             go.transform.SetParent(_npcRoot, false);
             go.transform.position = new Vector3(worldPos.x, worldPos.y, 0f);
 
-            // Body visual — use PC corpse SPR for training objects
+            // Body visual — PC training objects use corpse SPRs: spr/obj/corpse/enemy178..180_corpse.spr
             string sprResType = templateId switch
             {
                 TEMPLATE_COC_GOC => "enemy178",
@@ -98,7 +98,7 @@ namespace VLTK.Sandbox
             var bodyGo = new GameObject("Body");
             bodyGo.transform.SetParent(go.transform, false);
             var sr = bodyGo.AddComponent<SpriteRenderer>();
-            sr.sprite = LoadRealTrainingSprite(sprResType);
+            sr.sprite = LoadTrainingSprite(templateId);
             sr.sortingOrder = MapRenderer.PlayerSortingOrder - 10;
 
             // Shadow below body
@@ -231,7 +231,7 @@ namespace VLTK.Sandbox
             if (SpriteCache.TryGetValue(templateId, out var cached))
                 return cached;
 
-            // Use PC corpse SPR for training objects
+            // Use PC corpse SPR for training objects (source: canonical Client 6.0/data/spr/spr/obj/corpse)
             string sprResType = templateId switch
             {
                 TEMPLATE_COC_GOC => "enemy178",
