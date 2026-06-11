@@ -80,7 +80,7 @@ namespace VLTK.Sandbox
         public Transform servicesRoot;
 
         [Header("Boot")]
-        public int defaultMapId = LamDuQuanMapId;
+        public int defaultMapId = BaLangHuyenMapId;
         public bool loadDefaultMapOnBoot = true;
 
         public static SandboxManager Instance { get; private set; }

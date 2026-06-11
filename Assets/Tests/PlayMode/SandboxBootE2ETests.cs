@@ -102,16 +102,16 @@ namespace VLTK.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator E2E_DefaultMap_IsLamDuQuan()
+        public IEnumerator E2E_DefaultMap_IsBaLangHuyen()
         {
             yield return BootSandbox();
 
             var mgr = SandboxManager.Instance;
-            Assert.AreEqual(SandboxManager.LamDuQuanMapId, mgr.defaultMapId);
-            Assert.AreEqual(SandboxManager.LamDuQuanMapId, mgr.MapManager.ActiveMapId);
-            Assert.AreEqual("Lâm Du Quan", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
-            Assert.AreEqual(new Vector2(50176f, -61440f), mgr.PlayerController.mapBoundsMin);
-            Assert.AreEqual(new Vector2(66048f, -50176f), mgr.PlayerController.mapBoundsMax);
+            Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.defaultMapId);
+            Assert.AreEqual(SandboxManager.BaLangHuyenMapId, mgr.MapManager.ActiveMapId);
+            Assert.AreEqual("Ba Lăng huyện", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
+            Assert.AreEqual(new Vector2(48128f, -53248f), mgr.PlayerController.mapBoundsMin);
+            Assert.AreEqual(new Vector2(60928f, -46592f), mgr.PlayerController.mapBoundsMax);
         }
 
         // --- Map load / switch / unload lifecycle through the live runtime ---
