@@ -42,6 +42,7 @@ namespace VLTK.UI
         private readonly Dictionary<ActiveSkillEffect, RuntimeEffectVisual> _visuals = new();
         private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
         private Material _lineMaterial;
+        private Material _spriteMaterial;
         private Sprite _dotSprite;
         private Camera _cam;
         private float _cachedOrthoSize;
@@ -67,6 +68,19 @@ namespace VLTK.UI
                     ?? Shader.Find("Universal Render Pipeline/2D/Sprite-Lit-Default")
                     ?? Shader.Find("Unlit/Color");
                 _lineMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+            if (_spriteMaterial == null)
+            {
+                var shader = Shader.Find("Mobile/Particles/Additive");
+                if (shader == null) shader = Shader.Find("Particles/Standard Unlit");
+                if (shader == null) shader = Shader.Find("Legacy Shaders/Particles/Additive");
+                if (shader != null)
+                {
+                    _spriteMaterial = new Material(shader) { hideFlags = HideFlags.HideAndDontSave };
+                    if (_spriteMaterial.HasProperty("_Mode"))
+                        _spriteMaterial.SetFloat("_Mode", 3f); // Transparent Additive in standard
+                }
+            }
+
             }
             if (_dotSprite == null)
                 _dotSprite = CreateDotSprite();
@@ -137,6 +151,7 @@ namespace VLTK.UI
             missileGo.transform.SetParent(root.transform, false);
             var sr = missileGo.AddComponent<SpriteRenderer>();
             sr.sprite = fx.HasPcMissileSprite ? FirstValidPcSprite(fx.pcMissileSpriteKey) : _dotSprite;
+            if (_spriteMaterial != null) sr.material = _spriteMaterial;
             sr.sortingOrder = sortingOrder + 2;
             sr.color = Color.white;
 
@@ -149,7 +164,8 @@ namespace VLTK.UI
                     extra.transform.SetParent(root.transform, false);
                     var extraSr = extra.AddComponent<SpriteRenderer>();
                     extraSr.sprite = FirstValidPcSprite(fx.pcMissileSpriteKey);
-                    extraSr.sortingOrder = sortingOrder + 2;
+                    if (_spriteMaterial != null) extraSr.material = _spriteMaterial;
+            extraSr.sortingOrder = sortingOrder + 2;
                     extraSr.color = Color.white;
                     extraSr.enabled = false;
                     pcMissiles.Add(extraSr);
@@ -160,6 +176,7 @@ namespace VLTK.UI
             impactGo.transform.SetParent(root.transform, false);
             var impactSr = impactGo.AddComponent<SpriteRenderer>();
             impactSr.sprite = fx.HasPcImpactSprite ? FirstValidPcSprite(fx.pcImpactSpriteKey) : null;
+            if (_spriteMaterial != null) impactSr.material = _spriteMaterial;
             impactSr.sortingOrder = sortingOrder + 3;
             impactSr.color = Color.white;
             impactSr.enabled = false;
@@ -168,6 +185,7 @@ namespace VLTK.UI
             preCastGo.transform.SetParent(root.transform, false);
             var preCastSr = preCastGo.AddComponent<SpriteRenderer>();
             preCastSr.sprite = fx.HasPcPreCastSprite ? FirstValidPcSprite(fx.pcPreCastSpriteKey) : null;
+            if (_spriteMaterial != null) preCastSr.material = _spriteMaterial;
             preCastSr.sortingOrder = sortingOrder + 3;
             preCastSr.color = Color.white;
             preCastSr.enabled = false;
