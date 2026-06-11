@@ -8,7 +8,10 @@
         "VLTK.Core",
         "VLTK.Model",
         "Network",
-        "Unity.Mathematics"
+        "Unity.Mathematics",
+        "VLTK.UI",
+        "VLTK.Resources",
+        "VLTK.Sprites"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using VLTK.UI;
 
-namespace VLTK.Tests.Sandbox
+namespace VLTK.Tests.PortFactorySmoke
 {
     /// <summary>
     /// Locks the mobile HUD to PC-derived visual pixels while allowing a mobile-first layout.

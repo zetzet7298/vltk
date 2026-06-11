@@ -91,7 +91,7 @@ namespace VLTK.UI
         public string artFolder = "UI/HUD/Art";
 
         private VisualElement _hpFill, _mpFill, _staminaFill, _expFill;
-        private VisualElement _topBarPanel, _bottomPanel, _minimapPanel, _chatPanel;
+        private VisualElement _topBarPanel, _bottomPanel, _minimapPanel, _chatPanel, _chatInputRow;
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
@@ -331,6 +331,7 @@ namespace VLTK.UI
             _bottomPanel = root.Q("BottomPanel");
             _minimapPanel = root.Q("MinimapPanel");
             _chatPanel = root.Q("ChatBar");
+            _chatInputRow = root.Q("ChatInputRow");
 
             _hpFill = root.Q("HpBarFill");
             _mpFill = root.Q("MpBarFill");
@@ -846,6 +847,13 @@ namespace VLTK.UI
             {
                 _chatPanel.style.left = safeX;
                 _chatPanel.style.bottom = safeY + 176f;
+            }
+            if (_chatInputRow != null)
+            {
+                _chatInputRow.style.position = Position.Absolute;
+                _chatInputRow.style.left = safeX + 28f;
+                _chatInputRow.style.bottom = safeY + 10f;
+                _chatInputRow.style.width = 410f;
             }
             if (_minimapPanel != null)
             {

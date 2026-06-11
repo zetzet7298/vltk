@@ -150,7 +150,7 @@ namespace VLTK.Tests.Sandbox
         }
     }
 
-    public class ShopConfigServiceTests
+    public class PcShopRegistryTests
     {
         private static string ShopDir => Path.Combine(
             Directory.GetCurrentDirectory(), "Assets/StreamingAssets/Reference/PcShop");
@@ -159,33 +159,29 @@ namespace VLTK.Tests.Sandbox
         public void LoadFromStreamingAssets_LoadsShops()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
-            Assert.GreaterOrEqual(svc.Count, 100, "PC buysell.txt có 1,521 cửa hàng");
+            Assert.GreaterOrEqual(reg.Count, 100, "PC buysell.txt có 1,521 cửa hàng");
         }
 
         [Test]
         public void Count_Positive()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
-            Assert.Greater(svc.Count, 0);
+            Assert.Greater(reg.Count, 0);
         }
 
         [Test]
         public void GetShop_ReturnsById()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
-            Assert.IsNotNull(svc.GetShop(1));
+            Assert.IsNotNull(reg.Get(1));
         }
 
         [Test]
         public void GetAllShops_NotEmpty()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            var svc = new ShopConfigService(reg);
             int n = 0;
-            foreach (var s in svc.GetAllShops()) { if (s != null) n++; }
+            foreach (var s in reg.All) { if (s != null) n++; }
             Assert.Greater(n, 0);
         }
     }

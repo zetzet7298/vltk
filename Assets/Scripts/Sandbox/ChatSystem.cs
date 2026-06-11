@@ -269,16 +269,16 @@ namespace VLTK.Sandbox
             _panelRoot.transform.SetParent(transform, false);
 
             var mainRt = _panelRoot.AddComponent<RectTransform>();
-            mainRt.anchorMin = new Vector2(0f, 0.65f);
-            mainRt.anchorMax = new Vector2(0.45f, 1f);
+            mainRt.anchorMin = new Vector2(0f, 0.05f);
+            mainRt.anchorMax = new Vector2(0.45f, 0.40f);
             mainRt.offsetMin = new Vector2(8f, 8f);
-            mainRt.offsetMax = new Vector2(-8f, -28f);
+            mainRt.offsetMax = new Vector2(-8f, -8f);
 
             // Semi-transparent background. raycastTarget=false để touch xuyên qua xuống
             // joystick (chat panel ở góc dưới-trái trùng chỗ joystick). Tab/input vẫn
             // có raycast riêng nên vẫn bấm được.
             var bg = _panelRoot.AddComponent<Image>();
-            bg.color = new Color(0.02f, 0.02f, 0.05f, 0.65f);
+            bg.color = new Color(0f, 0f, 0f, 0f);
             bg.raycastTarget = false;
 
             // Tab bar
@@ -301,7 +301,7 @@ namespace VLTK.Sandbox
                 var tabGo = new GameObject($"Tab_{ch}");
                 tabGo.transform.SetParent(_tabRoot, false);
                 var tabImg = tabGo.AddComponent<Image>();
-                tabImg.color = new Color(0.1f, 0.1f, 0.15f, 0.8f);
+                tabImg.color = new Color(0f, 0f, 0f, 0f);
                 var tabBtn = tabGo.AddComponent<Button>();
                 tabBtn.targetGraphic = tabImg;
                 var channel = ch;
@@ -348,7 +348,7 @@ namespace VLTK.Sandbox
             inputRt.anchorMin = new Vector2(0f, 0f);
             inputRt.anchorMax = new Vector2(1f, 0.12f);
             var inputBg = inputBar.AddComponent<Image>();
-            inputBg.color = new Color(0.05f, 0.05f, 0.08f, 0.9f);
+            inputBg.color = new Color(0f, 0f, 0f, 0f);
 
             var inputField = new GameObject("InputField");
             inputField.transform.SetParent(inputBar.transform, false);

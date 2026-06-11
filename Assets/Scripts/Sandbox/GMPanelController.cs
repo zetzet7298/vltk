@@ -44,6 +44,7 @@ namespace VLTK.Sandbox
         private const string TOGGLE_KEY = "g";
 
         private GameObject _equipmentPanel;
+        private GameObject _joystickGo;
 
         private void EnsureInitialized()
         {
@@ -198,6 +199,40 @@ namespace VLTK.Sandbox
                 if (tabBar != null) tabBar.RefreshColors((int)ActiveTab);
                 SubsystemLog.Info("GM", "Panel opened");
 
+                // Hide joystick to prevent blocking left equipment buttons
+                var joystick = UnityEngine.Object.FindAnyObjectByType<MobileJoystick>();
+                if (joystick != null)
+                {
+                    _joystickGo = joystick.gameObject;
+                    _joystickGo.SetActive(false);
+                }
+
+                // Hide UI Toolkit HUD to prevent blocking clicks on the left buttons (especially ChatInputRow/ChatBar)
+                var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
+                if (hudType != null)
+                {
+                    var hud = UnityEngine.Object.FindAnyObjectByType(hudType) as MonoBehaviour;
+                    if (hud != null)
+                    {
+                        var uiDoc = hud.GetComponent<UnityEngine.UIElements.UIDocument>();
+                        if (uiDoc != null)
+                        {
+                            uiDoc.enabled = false;
+                        }
+                    }
+                }
+
+                // Hide IMGUI HUD Overlay
+                var overlayType = System.Type.GetType("VLTK.UI.PcHudVietnameseTextOverlay, Assembly-CSharp");
+                if (overlayType != null)
+                {
+                    var overlay = UnityEngine.Object.FindAnyObjectByType(overlayType) as MonoBehaviour;
+                    if (overlay != null)
+                    {
+                        overlay.enabled = false;
+                    }
+                }
+
                 // Hide Chat panel and button to prevent overlapping/blocking clicks
                 var mgr = SandboxManager.Instance;
                 if (mgr != null)
@@ -216,6 +251,39 @@ namespace VLTK.Sandbox
             else
             {
                 SubsystemLog.Info("GM", "Panel closed");
+
+                // Restore joystick
+                if (_joystickGo != null)
+                {
+                    _joystickGo.SetActive(true);
+                    _joystickGo = null;
+                }
+
+                // Restore UI Toolkit HUD
+                var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
+                if (hudType != null)
+                {
+                    var hud = UnityEngine.Object.FindAnyObjectByType(hudType) as MonoBehaviour;
+                    if (hud != null)
+                    {
+                        var uiDoc = hud.GetComponent<UnityEngine.UIElements.UIDocument>();
+                        if (uiDoc != null)
+                        {
+                            uiDoc.enabled = true;
+                        }
+                    }
+                }
+
+                // Restore IMGUI HUD Overlay
+                var overlayType = System.Type.GetType("VLTK.UI.PcHudVietnameseTextOverlay, Assembly-CSharp");
+                if (overlayType != null)
+                {
+                    var overlay = UnityEngine.Object.FindAnyObjectByType(overlayType) as MonoBehaviour;
+                    if (overlay != null)
+                    {
+                        overlay.enabled = true;
+                    }
+                }
 
                 // Restore Chat panel and button
                 var mgr = SandboxManager.Instance;

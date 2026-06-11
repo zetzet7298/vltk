@@ -387,7 +387,7 @@
 .hud-chat-panel {
     position: absolute;
     left: 8px;
-    top: 24px;
+    top: auto;
     bottom: auto;
     /* total height = messages(123) + tabs(26) + input-row(32) = 181 */
     width: 430px;
@@ -432,6 +432,15 @@
 
 /* PC chat tab styling — channel buttons use PC SPR art (主界面按钮-世界频道选择.png etc).
    Active tab highlighted with PC-authentic teal-green border. */
+/* PC SPR chat channel button visuals */
+/*
+   主界面按钮-世界频道选择.png
+   主界面按钮-密人频道选择.png
+   主界面按钮-城市频道选择.png
+   主界面按钮-队伍频道选择.png
+   主界面按钮-门派频道选择.png
+   主界面按钮-好友频道选择.png
+*/
 .hud-chat-tab {
     min-width: 36px;
     height: 22px;
@@ -440,17 +449,17 @@
     padding-right: 4px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(20,15,10,0.70);
+    background-color: rgba(0, 0, 0, 0);
     -unity-background-scale-mode: scale-to-fit;
     border-width: 1px;
-    border-color: rgba(80,60,30,0.60);
+    border-color: rgba(80,60,30,0.30);
     border-top-left-radius: 2px;
     border-top-right-radius: 2px;
 }
 
 .hud-chat-tab.active {
-    background-color: rgba(50,38,20,0.92);
-    border-color: rgba(180,140,60,0.85);
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(180,140,60,0.60);
     border-bottom-color: rgba(42,32,20,0);
 }
 
@@ -622,7 +631,7 @@
 
 .hud-chat-panel.hud-chat-shadow-off .hud-chat-input-row,
 .hud-chat-panel.hud-chat-shadow-off .hud-chat-tab {
-    background-color: rgba(0,0,0,0.06);
+    background-color: rgba(0, 0, 0, 0);
 }
 
 /* Chat messages area — sits between tabs and input row */
@@ -630,9 +639,8 @@
     flex-grow: 1;
     height: 123px;
     margin-left: 20px;
-    background-color: rgba(10, 8, 5, 0.72);
-    border-width: 1px;
-    border-color: rgb(30, 22, 12);
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0px;
     overflow: hidden;
 }
 
@@ -641,13 +649,8 @@
     height: 32px;
     flex-direction: row;
     align-items: center;
-    background-color: rgba(42, 32, 18, 0.97);
-    border-top-width: 1px;
-    border-bottom-width: 0px;
-    border-left-width: 1px;
-    border-right-width: 1px;
-    border-color: rgb(18, 12, 6);
-    border-top-color: rgb(80, 60, 25);
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0px;
     /* indent past the slim scroll rail */
     margin-left: 20px;
 }
@@ -668,8 +671,10 @@
     height: 28px;
     color: rgb(230,245,230);
     font-size: 12px;
-    background-color: rgba(0,0,0,0.16);
-    border-width: 0px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 1px;
+    border-color: rgba(80, 60, 30, 0.4);
+    border-radius: 3px;
 }
 
 .hud-face-btn {
@@ -1736,13 +1741,14 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
+/* Stitch "Jade Path Legacy" UX */
 /* PC quick shortcuts — small toggle to show/hide the 1-9 item slot bar.
    Keep subtle, PC-style. */
 .hud-pc-shortcut-toggle-btn {
     display: none;
     position: absolute;
     right: 148px;
-    top: 54px;
+    top: 68px;
     bottom: auto;
     width: 40px;
     height: 40px;
