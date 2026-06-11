@@ -30,6 +30,7 @@ namespace VLTK.UI
         private const long LongPressMs = 450;
         private const float SlotDragCancelThreshold = 45f;
         private const float PickerTapMoveThreshold = 12f;
+        private const int PrimaryAttackPseudoSlot = -2;
 
         private readonly VisualElement[] _skillSlots = new VisualElement[MobileSkillSlotCount];
         private readonly VisualElement[] _skillIcons = new VisualElement[MobileSkillSlotCount];
@@ -158,9 +159,12 @@ namespace VLTK.UI
                 _primaryAttackBtn.pickingMode = PickingMode.Position;
                 _primaryAttackBtn.RegisterCallback<PointerDownEvent>(evt =>
                 {
-                    TriggerPrimaryAttack();
+                    BeginSlotPress(PrimaryAttackPseudoSlot, evt.pointerId, evt.position);
                     evt.StopPropagation();
                 });
+                _primaryAttackBtn.RegisterCallback<PointerMoveEvent>(OnSlotMove);
+                _primaryAttackBtn.RegisterCallback<PointerUpEvent>(OnSlotUp);
+                _primaryAttackBtn.RegisterCallback<PointerCancelEvent>(OnSlotCancel);
             }
 
             _deckSwitchBtn = root.Q("DeckSwitchBtn");
@@ -379,11 +383,17 @@ namespace VLTK.UI
                 evt.StopImmediatePropagation();
                 return;
             }
+
+            if (_primaryAttackBtn != null && _primaryAttackBtn.worldBound.Contains(pos))
+            {
+                BeginSlotPress(PrimaryAttackPseudoSlot, evt.pointerId, evt.position);
+                evt.StopImmediatePropagation();
+            }
         }
 
         private void BeginSlotPress(int slot, int pointerId, Vector2 screenPos)
         {
-            if (slot < 0 || slot >= MobileSkillSlotCount) return;
+            if (slot != PrimaryAttackPseudoSlot && (slot < 0 || slot >= MobileSkillSlotCount)) return;
             _pressedSlot = slot;
             _pressedPointerId = pointerId;
             _startPointerPos = screenPos;
@@ -391,7 +401,12 @@ namespace VLTK.UI
             _longPressOpened = false;
             _aimingDrag = false;
             HideCancelCastZone();
-            _skillSlots[slot]?.CapturePointer(pointerId);
+
+            if (slot == PrimaryAttackPseudoSlot)
+                _primaryAttackBtn?.CapturePointer(pointerId);
+            else
+                _skillSlots[slot]?.CapturePointer(pointerId);
+
             StartCoroutine(OpenPickerAfterLongPress(slot, pointerId));
         }
 
@@ -401,15 +416,16 @@ namespace VLTK.UI
             if (!_slotPointerDown || _aimingDrag || _pressedSlot != slot || _pressedPointerId != pointerId) yield break;
             _longPressOpened = true;
             ReleasePressedSlotCapture(pointerId);
-            OpenSkillPicker(slot);
+            OpenSkillPicker(slot == PrimaryAttackPseudoSlot ? 0 : slot);
         }
 
         private void OnSlotMove(PointerMoveEvent evt)
         {
-            if (_slotPointerDown && !_longPressOpened && _pressedSlot >= 0)
+            if (_slotPointerDown && !_longPressOpened && _pressedSlot != -1)
             {
                 float distance = Vector2.Distance((Vector2)evt.position, _startPointerPos);
-                if (distance > SlotDragCancelThreshold && GetAssignedSkill(_pressedSlot) > 0)
+                int skillId = _pressedSlot == PrimaryAttackPseudoSlot ? GetAssignedSkill(0) : GetAssignedSkill(_pressedSlot);
+                if (distance > SlotDragCancelThreshold && skillId > 0)
                 {
                     _aimingDrag = true;
                     ShowCancelCastZone();
@@ -426,19 +442,33 @@ namespace VLTK.UI
             _pressedSlot = -1;
             _pressedPointerId = -1;
 
-            if (_aimingDrag && slot >= 0)
+            if (_aimingDrag && slot != -1)
             {
                 bool cancelled = IsInCancelCastZone((Vector2)evt.position);
                 if (!cancelled)
-                    TriggerSkillSlot(slot, GetAssignedSkill(slot));
+                {
+                    if (slot == PrimaryAttackPseudoSlot)
+                        TriggerPrimaryAttack();
+                    else
+                        TriggerSkillSlot(slot, GetAssignedSkill(slot));
+                }
                 else
-                    SubsystemLog.Info("Combat", $"Cancel aim deck {ActiveDeckName()} slot {slot}");
+                {
+                    SubsystemLog.Info("Combat", $"Cancel aim deck {ActiveDeckName()} slot {(slot == PrimaryAttackPseudoSlot ? "Primary" : slot.ToString())}");
+                }
             }
-            else if (!_longPressOpened && slot >= 0)
+            else if (!_longPressOpened && slot != -1)
             {
-                int skillId = GetAssignedSkill(slot);
-                if (skillId > 0) TriggerSkillSlot(slot, skillId);
-                else OpenSkillPicker(slot);
+                if (slot == PrimaryAttackPseudoSlot)
+                {
+                    TriggerPrimaryAttack();
+                }
+                else
+                {
+                    int skillId = GetAssignedSkill(slot);
+                    if (skillId > 0) TriggerSkillSlot(slot, skillId);
+                    else OpenSkillPicker(slot);
+                }
             }
 
             _longPressOpened = false;
@@ -462,7 +492,9 @@ namespace VLTK.UI
         private void ReleasePressedSlotCapture(int pointerId)
         {
             int slot = _pressedSlot;
-            if (slot >= 0 && slot < MobileSkillSlotCount)
+            if (slot == PrimaryAttackPseudoSlot)
+                _primaryAttackBtn?.ReleasePointer(pointerId);
+            else if (slot >= 0 && slot < MobileSkillSlotCount)
                 _skillSlots[slot]?.ReleasePointer(pointerId);
         }
 
