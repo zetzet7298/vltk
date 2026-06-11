@@ -141,7 +141,21 @@ namespace VLTK.Sandbox
                 marker.mpsX = sp.mpsX;
                 marker.mpsY = sp.mpsY;
                 marker.script = sp.script;
-                marker.missingVisual = "SPR not staged";
+                
+                // Render training objects (cọc gỗ/mộc nhân/bao cát) with corpse SPR
+                var template = MapEnemyDatabase.GetTemplate(sp.templateId);
+                if (template != null && (sp.templateId == 413 || sp.templateId == 414 || sp.templateId == 415))
+                {
+                    string sprPath = MapEnemyDatabase.BuildNpcSprPath(template.spriteClipRef, "st");
+                    var visual = go.AddComponent<PcNpcVisual>();
+                    visual.Configure(sprPath, sprPath);
+                    marker.missingVisual = null;
+                }
+                else
+                {
+                    marker.missingVisual = "SPR not staged";
+                }
+                
                 trainerMarkerCount++;
             }
         }

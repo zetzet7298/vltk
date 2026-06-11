@@ -87,11 +87,18 @@ namespace VLTK.Sandbox
             go.transform.SetParent(_npcRoot, false);
             go.transform.position = new Vector3(worldPos.x, worldPos.y, 0f);
 
-            // Body visual — shaped sprite per NPC type (PC training objects have no SPRs)
+            // Body visual — use PC corpse SPR for training objects
+            string sprResType = templateId switch
+            {
+                TEMPLATE_COC_GOC => "enemy178",
+                TEMPLATE_MOC_NHAN => "enemy179",
+                TEMPLATE_BAO_CAT => "enemy180",
+                _ => null
+            };
             var bodyGo = new GameObject("Body");
             bodyGo.transform.SetParent(go.transform, false);
             var sr = bodyGo.AddComponent<SpriteRenderer>();
-            sr.sprite = LoadTrainingSprite(templateId);
+            sr.sprite = LoadRealTrainingSprite(sprResType);
             sr.sortingOrder = MapRenderer.PlayerSortingOrder - 10;
 
             // Shadow below body
@@ -198,32 +205,55 @@ namespace VLTK.Sandbox
 
         private static readonly Dictionary<int, Sprite> SpriteCache = new Dictionary<int, Sprite>();
 
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticCache()
+        {
+            SpriteCache.Clear();
+        }
+
+        private Sprite LoadRealTrainingSprite(string sprResType)
+        {
+            if (string.IsNullOrEmpty(sprResType))
+                return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
+
+            string sprPath = MapEnemyDatabase.BuildNpcSprPath(sprResType, "st");
+            var svc = new VLTK.Sprites.SprRuntimeService();
+            var sprite = svc.ResolveSprite(sprPath);
+            if (sprite != null)
+                return sprite;
+
+            // Fallback to colored square
+            return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
+        }
+
         private static Sprite LoadTrainingSprite(int templateId)
         {
             if (SpriteCache.TryGetValue(templateId, out var cached))
                 return cached;
 
-            string filename = templateId switch
+            // Use PC corpse SPR for training objects
+            string sprResType = templateId switch
             {
-                TEMPLATE_COC_GOC => "coc_go",
-                TEMPLATE_MOC_NHAN => "moc_nhan",
-                TEMPLATE_BAO_CAT => "bao_cat",
+                TEMPLATE_COC_GOC => "enemy178",
+                TEMPLATE_MOC_NHAN => "enemy179",
+                TEMPLATE_BAO_CAT => "enemy180",
                 _ => null
             };
 
-            if (filename == null)
-                return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
+            if (sprResType != null)
+            {
+                var svc = new VLTK.Sprites.SprRuntimeService();
+                string sprPath = MapEnemyDatabase.BuildNpcSprPath(sprResType, "st");
+                var sprite = svc.ResolveSprite(sprPath);
+                if (sprite != null)
+                {
+                    SpriteCache[templateId] = sprite;
+                    return sprite;
+                }
+            }
 
-            string path = System.IO.Path.Combine(Application.streamingAssetsPath, "TrainingSprites", filename + ".png");
-            if (!System.IO.File.Exists(path))
-                return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
-
-            var data = System.IO.File.ReadAllBytes(path);
-            var tex = new Texture2D(128, 128, TextureFormat.RGBA32, false);
-            tex.LoadImage(data);
-            var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1f, 0, SpriteMeshType.FullRect);
-            SpriteCache[templateId] = sprite;
-            return sprite;
+            // Fallback to colored square
+            return MakeColoredSprite(128, new Color(0.5f, 0.45f, 0.35f, 1f));
         }
         private static Sprite MakeColoredSprite(int size, Color color)
         {

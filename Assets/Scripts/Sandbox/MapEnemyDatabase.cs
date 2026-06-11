@@ -187,6 +187,11 @@ namespace VLTK.Sandbox
             _templateLookup.TryGetValue(templateId, out var t);
             return t;
         }
+        
+        public static NpcTemplate GetTemplate(int templateId)
+        {
+            return Resolve(templateId);
+        }
 
         public static void RegisterAllForMap(int mapId, NpcTemplateRegistry registry)
         {
@@ -292,6 +297,13 @@ namespace VLTK.Sandbox
 
         private static IEnumerable<string> CandidateNpcSprPaths(string resType, string requestedAction)
         {
+            // Training objects (enemy178/179/180) only have corpse SPR
+            if (resType == "enemy178" || resType == "enemy179" || resType == "enemy180")
+            {
+                yield return $@"spr\obj\corpse\{resType}_corpse.spr";
+                yield break;
+            }
+            
             if (!string.IsNullOrWhiteSpace(requestedAction))
                 yield return BuildNpcSprPathExact(resType, requestedAction);
             if (resType.StartsWith("passerby", StringComparison.OrdinalIgnoreCase))
