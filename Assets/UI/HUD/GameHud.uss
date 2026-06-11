@@ -1286,8 +1286,30 @@
     -unity-background-scale-mode: scale-to-fit;
     background-color: rgba(0,0,0,0);
     border-width: 0px;
-    border-radius: 12px;
+    border-radius: 33px;
     overflow: hidden;
+}
+
+.hud-combat-run-btn {
+    position: absolute;
+    right: 122px;
+    bottom: -6px;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+    -unity-background-scale-mode: scale-to-fit;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.hud-combat-run-icon {
+    width: 32px;
+    height: 32px;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .hud-skill-slot-main  { right: 100px; bottom: 20px; }

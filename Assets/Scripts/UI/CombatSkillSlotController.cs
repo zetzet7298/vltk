@@ -57,6 +57,7 @@ namespace VLTK.UI
         private bool _longPressOpened;
         private bool _aimingDrag;
         private bool _initialized;
+        private VisualElement _boundRoot;
 
         private Vector2 _pickerPressPos;
         private bool _pickerPointerDown;
@@ -79,6 +80,33 @@ namespace VLTK.UI
             BindElements();
         }
 
+        private void Update()
+        {
+            EnsureRuntimeReady();
+        }
+
+        private void EnsureRuntimeReady()
+        {
+            if (_initialized && !IsBoundToCurrentVisualTree())
+            {
+                _initialized = false;
+            }
+
+            if (!_initialized)
+            {
+                BindElements();
+            }
+        }
+
+        private bool IsBoundToCurrentVisualTree()
+        {
+            var doc = GetComponent<UIDocument>();
+            var root = doc?.rootVisualElement?.Q("GameHud");
+            if (root == null || _boundRoot == null || !ReferenceEquals(root, _boundRoot))
+                return false;
+            return true;
+        }
+
         /// <summary>Initialize with catalog and progression data.</summary>
         public void Initialize(SkillCatalog catalog, PlayerProgressionState progression)
         {
@@ -89,16 +117,23 @@ namespace VLTK.UI
 
         private void BindElements()
         {
-            if (_initialized) return;
+            var doc = GetComponent<UIDocument>();
+            var root = doc?.rootVisualElement?.Q("GameHud");
+
+            if (_initialized)
+            {
+                if (root != null && _boundRoot != null && ReferenceEquals(root, _boundRoot))
+                {
+                    return;
+                }
+                _initialized = false;
+            }
 
             EnsureDeckArrays();
             ImportLegacySlotsIfNeeded();
             FillDefaultDeckIfEmpty();
 
-            var doc = GetComponent<UIDocument>();
             if (doc == null || doc.rootVisualElement == null) return;
-
-            var root = doc.rootVisualElement.Q("GameHud");
             if (root == null) return;
 
             for (int i = 0; i < MobileSkillSlotCount; i++)
@@ -205,6 +240,7 @@ namespace VLTK.UI
                 _skillPickerList.RegisterCallback<WheelEvent>(evt => evt.StopPropagation());
             }
 
+            _boundRoot = root;
             _initialized = true;
             RefreshSlotVisuals();
         }
@@ -364,6 +400,7 @@ namespace VLTK.UI
             yield return new WaitForSeconds(LongPressMs / 1000f);
             if (!_slotPointerDown || _aimingDrag || _pressedSlot != slot || _pressedPointerId != pointerId) yield break;
             _longPressOpened = true;
+            ReleasePressedSlotCapture(pointerId);
             OpenSkillPicker(slot);
         }
 

@@ -158,7 +158,6 @@
             <ui:VisualElement name="UtilitySwitchBtn" class="hud-utility-switch-btn"><ui:VisualElement name="UtilitySwitchBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilitySwitchLabel" text="Menu" class="hud-utility-switch-label"/></ui:VisualElement>
             <ui:VisualElement name="MobileUtilityActionRow" class="hud-mobile-utility-row">
                 <ui:VisualElement name="BtnSit" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnRun" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnHorse" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnExchange" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnRec" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
@@ -200,12 +199,13 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom">
-            <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster hidden">
+            <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster">
                 <ui:VisualElement name="PrimaryAttackBtn" class="hud-primary-attack-btn"><ui:VisualElement name="PrimaryAttackBtnIcon" class="hud-primary-attack-icon"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot0" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-main"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot1" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-left"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="2" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot2" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-top"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="3" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot3" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-upper"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="4" class="hud-skill-slot-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnRun" class="hud-combat-run-btn"><ui:VisualElement name="BtnRunIcon" class="hud-combat-run-icon"/></ui:VisualElement>
                 <ui:VisualElement name="DeckSwitchBtn" class="hud-deck-switch-btn"><ui:Label name="DeckSwitchLabel" text="A" class="hud-deck-switch-label"/></ui:VisualElement>
                 <ui:VisualElement name="CancelCastZone" class="hud-cancel-cast-zone hidden"><ui:Label text="Hủy" class="hud-cancel-cast-label"/></ui:VisualElement>
             </ui:VisualElement>
