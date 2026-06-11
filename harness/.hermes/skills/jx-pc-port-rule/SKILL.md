@@ -9,6 +9,19 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 
 ## Source Of Truth
 
+
+## PC resource resolution doctrine (PAK/SPR/TXT) — mandatory
+
+Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, skill icon, missile/effect SPR):
+
+1. **Use canonical unpack first.** Search `/var/www/vltksource_new/vl_update_27/pak_unpacked` and cite the real file/manifest. Do not re-unpack a full PAK unless repairing a proven gap.
+2. **`unknown/<uid>.spr` is valid PC source.** It means the PAK entry was extracted by UID but the human path was not resolved. Do not conclude “missing” just because a named path was not resolved.
+3. **Decode PC tables with the encoding required by the table.** Missile/skill/resource paths containing Chinese must be read as GB2312/GBK. A Vietnamese-friendly or UTF-8 fallback can mojibake paths such as `\spr\skill\丐帮\...`, producing wrong hashes and fake missing assets.
+4. **Use the PC signed-byte FileNameHash for PAK UID lookup.** Normalize slashes to `\`, encode path as GB2312/GBK, lowercase ASCII A-Z only, then treat bytes >=128 as signed (`b-256`) before the `0x8000000B / 0xFFFFFFEF / xor 0x12345678` hash. Evidence: `\spr\Ui\技能图标\icon_sk_ty_at.spr` hashes to `c4454165` (PC) while the old unsigned hash `bedc5b69` misses.
+5. **Runtime must not point outside `vltk-mobile`.** If a PC asset is needed, copy the exact SPR/PNG/data file into `Assets/StreamingAssets/...` or another project asset folder, then load that project-local copy.
+6. **If signed hash still misses, verify all likely PAK roots before declaring missing.** For combat effects, inspect `data/skills/unknown`; for HUD, inspect `data/1024`, `data/800`, `data/updatejx*`; for generic SPR, inspect `data/spr/unknown` plus loose `Client 6.0/spr`.
+7. **Never assign purpose to unidentified hash-only SPR by guess.** Use path evidence, table reference, binary/content match, or visual preview evidence.
+
 - Treat `/var/www/vltksource_new/vl_update_27` as the only PC game source of truth.
 - For **asset SPR** (sprite, effect, icon, NPC visual, HUD, item art), the authoritative index is:
   - `/var/www/vltksource_new/docs/port_docs/18_spr_asset_index.md` (source of truth + tool tra cứu)

@@ -18,6 +18,17 @@ Use for Unity work involving skill/võ công UI, skill data mapping, upgrade log
 
 ## Hard rules
 
+
+## Resource/hash guard learned from combat visual port
+
+Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `jx-pc-port-rule` → **PC resource resolution doctrine**:
+
+- Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
+- PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
+- For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Verify with real file existence/decode/render evidence before claiming parity or missing source.
+
 - Do not invent skill list, order, Vietnamese names, icons, sprites, descriptions, upgrade gates, or UI layout.
 - Treat PC `jxwin` data/assets as source of truth. Current Unity code is implementation, not proof.
 - Map by `skillId`, never by grid row/index alone. Grid index can place slot; `skillId` must drive icon/name/level/detail/add-point behavior.

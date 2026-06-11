@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Unsigned JX runtime path-UID hash.
+"""JX path UID helper for staged player SPRs.
 
-Matches SprRuntimeService.ComputePathUid (C#). This is the RUNTIME file-naming
-hash, NOT the signed g_FileName2Id pak-lookup hash (see jx-map-port for that one).
-Player part paths are ASCII-only so signed/unsigned agree, but the staged file
-names must be produced by THIS function to line up with what the C# runtime
-re-derives at load time.
+Current project runtime SprRuntimeService.ComputePathUid defaults to PC signed-byte
+FileNameHash and also supports the legacy unsigned variant with signedBytes:false.
+Most player part paths are ASCII-only, so signed/unsigned agree. For any future
+Chinese/GBK player/NPC part path, use the signed-byte PC hash or the runtime will
+miss real unknown/<uid>.spr assets.
 
 Usage:
     python3 uid.py 'spr\\npcres\\man\\MA_BD_019_ST01.spr'

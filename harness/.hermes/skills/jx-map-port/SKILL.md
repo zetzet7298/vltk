@@ -22,6 +22,17 @@ client paks using the **correct** filename hash and the **correct** isometric pr
 
 ## The things that make this work (read first)
 
+
+## Resource/hash guard learned from combat visual port
+
+Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `jx-pc-port-rule` → **PC resource resolution doctrine**:
+
+- Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
+- PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
+- For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Verify with real file existence/decode/render evidence before claiming parity or missing source.
+
 ### 1. Signed-byte path hash
 
 Every JX pak (`maps.pak`, `spr.pak`, `update*.pak`, …) keys its entries by a hash of
@@ -44,8 +55,9 @@ value ^= 0x12345678
 With this hash, **every** region path and **every** referenced art name resolves.
 `scripts/jx_map_port.py` already implements it — you almost never need to touch it.
 
-> Note: the C# `SprRuntimeService.ComputePathUid` in the project uses the *unsigned*
-> variant. That is fine and intentional — it's only used as a private naming scheme
+> Update: `SprRuntimeService.ComputePathUid` now defaults to the PC signed-byte
+> variant and can still compute the old unsigned variant via `signedBytes:false`. Do
+> not reintroduce unsigned-only lookup for CJK paths; it makes real PAK assets look missing.
 > between the extractor and the runtime (extractor writes `{ComputePathUid}.spr`, C#
 > re-derives the same name from the imageName). It must NOT be used to look inside paks.
 

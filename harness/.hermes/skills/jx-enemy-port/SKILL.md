@@ -10,6 +10,17 @@ Use this skill to port or fix enemies and PC trainer/object spawns for a map usi
 
 ## Core rule
 
+
+## Resource/hash guard learned from combat visual port
+
+Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `jx-pc-port-rule` → **PC resource resolution doctrine**:
+
+- Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
+- PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
+- For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Verify with real file existence/decode/render evidence before claiming parity or missing source.
+
 Prefer PC data over guesses. Do not invent sprites or spawn positions if the PC source is available. If art/data is missing, skip or report that exact missing asset rather than showing placeholders as final output.
 
 ## Key files in current implementation
