@@ -2155,7 +2155,7 @@ MonoBehaviour:
   worldRoot: {fileID: 757446985}
   debugRoot: {fileID: 1851502985}
   servicesRoot: {fileID: 1119100609}
-  defaultMapId: 397
+  defaultMapId: 319
   loadDefaultMapOnBoot: 1
 --- !u!4 &992100489
 Transform:

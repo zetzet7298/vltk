@@ -140,6 +140,8 @@ namespace VLTK.Sandbox
             [MapPortManifest.VuotAiNhiepThiTranId] = new Vector2(47232f, -52544f),
             // Đấu trường liên đấu Kiệt xuất: Center of the map geometry
             [MapPortManifest.DauTruongLienDauId] = new Vector2(53248f, -55296f),
+            // Lâm Du Quan default spawn point
+            [MapPortManifest.LamDuQuanId] = new Vector2(50500f, -12400f),
         };
 
         private static readonly Dictionary<int, NpcTemplate> _templateLookup;

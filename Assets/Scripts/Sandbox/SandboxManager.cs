@@ -61,6 +61,7 @@ namespace VLTK.Sandbox
         public const int VuotAiNhiepThiTranMapId = 907;
         public const int ThachThucThoiGianSoCap1MapId = 464;
         public const int DauTruongLienDauMapId = 397;
+        public const int LamDuQuanMapId = 319;
 
         public const int PlayerActorId = 1;
 
@@ -79,7 +80,7 @@ namespace VLTK.Sandbox
         public Transform servicesRoot;
 
         [Header("Boot")]
-        public int defaultMapId = DauTruongLienDauMapId;
+        public int defaultMapId = LamDuQuanMapId;
         public bool loadDefaultMapOnBoot = true;
 
         public static SandboxManager Instance { get; private set; }

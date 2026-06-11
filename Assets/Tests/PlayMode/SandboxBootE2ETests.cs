@@ -102,16 +102,16 @@ namespace VLTK.Tests.PlayMode
         }
 
         [UnityTest]
-        public IEnumerator E2E_DefaultMap_IsVuotAiNhiepThiTran()
+        public IEnumerator E2E_DefaultMap_IsLamDuQuan()
         {
             yield return BootSandbox();
 
             var mgr = SandboxManager.Instance;
-            Assert.AreEqual(SandboxManager.VuotAiNhiepThiTranMapId, mgr.defaultMapId);
-            Assert.AreEqual(SandboxManager.VuotAiNhiepThiTranMapId, mgr.MapManager.ActiveMapId);
-            Assert.AreEqual("Vượt ải Nhiếp Thí Trần", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
-            Assert.AreEqual(new Vector2(39424f, -56320f), mgr.PlayerController.mapBoundsMin);
-            Assert.AreEqual(new Vector2(54272f, -49152f), mgr.PlayerController.mapBoundsMax);
+            Assert.AreEqual(SandboxManager.LamDuQuanMapId, mgr.defaultMapId);
+            Assert.AreEqual(SandboxManager.LamDuQuanMapId, mgr.MapManager.ActiveMapId);
+            Assert.AreEqual("Lâm Du Quan", MapPortManifest.GetNameVi(mgr.MapManager.ActiveMapId));
+            Assert.AreEqual(new Vector2(50176f, -61440f), mgr.PlayerController.mapBoundsMin);
+            Assert.AreEqual(new Vector2(66048f, -50176f), mgr.PlayerController.mapBoundsMax);
         }
 
         // --- Map load / switch / unload lifecycle through the live runtime ---
