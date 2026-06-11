@@ -151,7 +151,6 @@ namespace VLTK.UI
             missileGo.transform.SetParent(root.transform, false);
             var sr = missileGo.AddComponent<SpriteRenderer>();
             sr.sprite = fx.HasPcMissileSprite ? FirstValidPcSprite(fx.pcMissileSpriteKey) : _dotSprite;
-            if (_spriteMaterial != null) sr.material = _spriteMaterial;
             sr.sortingOrder = sortingOrder + 2;
             sr.color = Color.white;
 
@@ -164,8 +163,7 @@ namespace VLTK.UI
                     extra.transform.SetParent(root.transform, false);
                     var extraSr = extra.AddComponent<SpriteRenderer>();
                     extraSr.sprite = FirstValidPcSprite(fx.pcMissileSpriteKey);
-                    if (_spriteMaterial != null) extraSr.material = _spriteMaterial;
-            extraSr.sortingOrder = sortingOrder + 2;
+                    extraSr.sortingOrder = sortingOrder + 2;
                     extraSr.color = Color.white;
                     extraSr.enabled = false;
                     pcMissiles.Add(extraSr);
@@ -176,7 +174,6 @@ namespace VLTK.UI
             impactGo.transform.SetParent(root.transform, false);
             var impactSr = impactGo.AddComponent<SpriteRenderer>();
             impactSr.sprite = fx.HasPcImpactSprite ? FirstValidPcSprite(fx.pcImpactSpriteKey) : null;
-            if (_spriteMaterial != null) impactSr.material = _spriteMaterial;
             impactSr.sortingOrder = sortingOrder + 3;
             impactSr.color = Color.white;
             impactSr.enabled = false;
@@ -185,7 +182,6 @@ namespace VLTK.UI
             preCastGo.transform.SetParent(root.transform, false);
             var preCastSr = preCastGo.AddComponent<SpriteRenderer>();
             preCastSr.sprite = fx.HasPcPreCastSprite ? FirstValidPcSprite(fx.pcPreCastSpriteKey) : null;
-            if (_spriteMaterial != null) preCastSr.material = _spriteMaterial;
             preCastSr.sortingOrder = sortingOrder + 3;
             preCastSr.color = Color.white;
             preCastSr.enabled = false;
