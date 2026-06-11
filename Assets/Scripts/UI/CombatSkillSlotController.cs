@@ -824,7 +824,12 @@ namespace VLTK.UI
             else
             {
                 var effectService = manager.SkillEffectVisual;
-                effectService?.PlaySkillCast(skill, casterPos, casterPos + new Vector2(0, -50f), 1);
+                // No target: shoot forward in player's facing direction (PC: KNpc fires toward facing dir)
+                int facing = player.visual != null ? player.visual.GetCurrentDirection() : 0;
+                Vector2 facingDir = PcDirection8Way.ToVector2(facing);
+                float forwardDistance = skill.attackRadius > 0 ? skill.attackRadius : 150f;
+                Vector2 forwardTarget = casterPos + facingDir * forwardDistance;
+                effectService?.PlaySkillCast(skill, casterPos, forwardTarget, 1);
                 SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} — no enemy in range");
             }
         }
@@ -1006,4 +1011,32 @@ namespace VLTK.UI
             };
         }
     }
+
+    /// <summary>
+    /// PC 8-way direction to Unity Vector2 converter.
+    /// PC direction: 0=S, 1=SW, 2=W, 3=NW, 4=N, 5=NE, 6=E, 7=SE.
+    /// Used to compute forward target when no enemy is locked.
+    /// </summary>
+    public static class PcDirection8Way
+    {
+        private static readonly Vector2[] Directions = new Vector2[]
+        {
+            new Vector2(0, -1),   // 0 = S (down)
+            new Vector2(-1, -1),  // 1 = SW
+            new Vector2(-1, 0),   // 2 = W
+            new Vector2(-1, 1),   // 3 = NW
+            new Vector2(0, 1),    // 4 = N (up)
+            new Vector2(1, 1),    // 5 = NE
+            new Vector2(1, 0),    // 6 = E (right)
+            new Vector2(1, -1),   // 7 = SE
+        };
+
+        /// <summary>Convert PC 8-way direction index to normalized Vector2.</summary>
+        public static Vector2 ToVector2(int pcDirection)
+        {
+            if (pcDirection < 0 || pcDirection >= Directions.Length) pcDirection = 0;
+            return Directions[pcDirection].normalized;
+        }
+    }
+
 }
