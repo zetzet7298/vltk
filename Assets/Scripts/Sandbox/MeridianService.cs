@@ -1,9 +1,12 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — ST-XX Meridian Service (Kinh Mạch runtime)
-// Wraps PcMeridianRegistry. Player state = Dictionary<acupointId, level 0-9>.
+// Wraps PcMeridianRegistry. The PC file is 8 meridians (经脉ID 1-8) × 16 acupoints
+// each (穴位ID = per-meridian tier 1-16) = 128 acupoints. An acupoint is therefore
+// identified by the COMPOSITE (meridianId, level); the level alone is NOT unique.
+// Player state = Dictionary<(meridian, level), playerTier 0-9>.
 // TryUpgrade: roll vs entry.successRate (scaled from /10000). On fail drop to
-// entry.fallbackLevel. On success level++ clamped to 9. Req level = acupointId
-// (the PC file uses acupointId as the level — meridian unlocks scale by level).
+// entry.fallbackLevel. On success tier++ clamped to 9. Req player level = acupoint
+// level (穴位ID「同时也是等级」 — meridian unlocks scale by level).
 // Vietnamese logs: "Huyền Khí", "Kinh Mạch", "Huyệt Đạo", "Đột Phá", "Thất Bại".
 // -----------------------------------------------------------------------------
 
@@ -25,20 +28,21 @@ namespace VLTK.Sandbox
     }
 
     /// <summary>
-    /// Service quản lý hệ thống Kinh Mạch (128 huyệt đạo, 12+ mạch).
+    /// Service quản lý hệ thống Kinh Mạch (128 huyệt đạo = 8 mạch × 16 cấp).
     /// PC source: meridian_level.txt (successRate scaled by 10000, fallback level
-    /// on fail, level unlock = acupointId).
+    /// on fail, level unlock = acupoint level). Huyệt đạo được định danh bằng
+    /// cặp (mạch, cấp) — chỉ số cấp lặp lại giữa các mạch nên không thể key đơn.
     /// </summary>
     public class MeridianService
     {
         public const int MaxAcupointLevel = 9;
 
         private PcMeridianRegistry _registry;
-        private readonly Dictionary<int, int> _acupointLevels = new();
+        private readonly Dictionary<(int meridianId, int level), int> _acupointLevels = new();
         private System.Random _rng = new System.Random();
 
         /// <summary>Sự kiện khi huyệt đạo được đột phá (thành công hoặc thất bại).</summary>
-        public event Action<int, int, UpgradeResult> MeridianUpgradeResult; // (acupointId, newLevel, result)
+        public event Action<int, int, int, UpgradeResult> MeridianUpgradeResult; // (meridianId, level, newTier, result)
 
         public int Count => _registry != null ? _registry.Count : 0;
 
@@ -56,8 +60,9 @@ namespace VLTK.Sandbox
 
         // ── Query APIs ────────────────────────────────────────────────
 
-        public PcMeridianEntry GetAcupoint(int acupointId)
-            => _registry != null ? _registry.GetAcupoint(acupointId) : null;
+        /// <summary>Tra cứu huyệt đạo theo cặp (mạch, cấp).</summary>
+        public PcMeridianEntry GetAcupoint(int meridianId, int level)
+            => _registry != null ? _registry.GetAcupoint(meridianId, level) : null;
 
         public IReadOnlyList<PcMeridianEntry> GetMeridianPoints(int meridianId)
             => _registry != null
@@ -65,93 +70,83 @@ namespace VLTK.Sandbox
                 : (IReadOnlyList<PcMeridianEntry>)Array.Empty<PcMeridianEntry>();
 
         public IEnumerable<int> GetMeridianIds()
-        {
-            if (_registry == null) yield break;
-            // De-duplicate meridianIds by walking each acupoint
-            var seen = new HashSet<int>();
-            for (int id = 1; id <= _registry.MaxAcupointId; id++)
-            {
-                var e = _registry.GetAcupoint(id);
-                if (e != null && seen.Add(e.meridianId))
-                    yield return e.meridianId;
-            }
-        }
+            => _registry != null ? _registry.MeridianIds : (IEnumerable<int>)Array.Empty<int>();
 
         // ── Player Progress APIs ──────────────────────────────────────
 
-        public int GetPlayerAcupointLevel(int acupointId)
-            => _acupointLevels.TryGetValue(acupointId, out var lv) ? lv : 0;
+        public int GetPlayerAcupointLevel(int meridianId, int level)
+            => _acupointLevels.TryGetValue((meridianId, level), out var lv) ? lv : 0;
 
-        public void SetPlayerAcupointLevel(int acupointId, int level)
+        public void SetPlayerAcupointLevel(int meridianId, int level, int tier)
         {
-            if (level < 0) level = 0;
-            if (level > MaxAcupointLevel) level = MaxAcupointLevel;
-            _acupointLevels[acupointId] = level;
+            if (tier < 0) tier = 0;
+            if (tier > MaxAcupointLevel) tier = MaxAcupointLevel;
+            _acupointLevels[(meridianId, level)] = tier;
         }
 
         /// <summary>
         /// Kiểm tra nhân vật đã đạt cấp yêu cầu để tu luyện huyệt đạo hay chưa.
-        /// PC file maps acupointId to required player level (each acupoint unlocks
-        /// at the same numeric level as its ID — e.g. huyệt 10 mở ở cấp 10).
+        /// PC file maps acupoint level (穴位ID) to required player level (each acupoint
+        /// unlocks at the same numeric level as its tier — e.g. huyệt cấp 10 mở ở cấp 10).
         /// </summary>
-        public bool IsPrereqMet(int acupointId, int playerLevel)
+        public bool IsPrereqMet(int meridianId, int level, int playerLevel)
         {
             if (_registry == null) return false;
-            var entry = _registry.GetAcupoint(acupointId);
+            var entry = _registry.GetAcupoint(meridianId, level);
             if (entry == null) return false;
-            return playerLevel >= acupointId;
+            return playerLevel >= level;
         }
 
         /// <summary>
-        /// Thử đột phá huyệt đạo. successRate tính theo /10000 (e.g. 8000 = 80%).
+        /// Thử đột phá huyệt đạo (mạch, cấp). successRate tính theo /10000 (e.g. 8000 = 80%).
         /// Random number vs rate → Success hoặc Failed. Thất bại tụt về
         /// entry.fallbackLevel. Thành công +1 (max 9).
         /// </summary>
-        public UpgradeResult TryUpgrade(int acupointId, int playerLevel)
+        public UpgradeResult TryUpgrade(int meridianId, int level, int playerLevel)
         {
             if (_registry == null) return UpgradeResult.NotFound;
-            var entry = _registry.GetAcupoint(acupointId);
+            var entry = _registry.GetAcupoint(meridianId, level);
             if (entry == null)
             {
-                SubsystemLog.Warn("Meridian", $"Huyệt đạo {acupointId} không tồn tại.");
+                SubsystemLog.Warn("Meridian", $"Huyệt đạo mạch {meridianId} cấp {level} không tồn tại.");
                 return UpgradeResult.NotFound;
             }
-            if (!IsPrereqMet(acupointId, playerLevel))
+            if (!IsPrereqMet(meridianId, level, playerLevel))
             {
                 SubsystemLog.Info("Meridian",
-                    $"Nhân vật cấp {playerLevel} chưa đủ tu luyện huyệt {acupointId} (cần cấp {acupointId}).");
+                    $"Nhân vật cấp {playerLevel} chưa đủ tu luyện huyệt mạch {meridianId} cấp {level} (cần cấp {level}).");
                 return UpgradeResult.PrereqLevel;
             }
-            int current = GetPlayerAcupointLevel(acupointId);
+            int current = GetPlayerAcupointLevel(meridianId, level);
             if (current >= MaxAcupointLevel)
             {
-                SubsystemLog.Info("Meridian", $"Huyệt đạo {acupointId} đã đạt cấp tối đa ({MaxAcupointLevel}).");
+                SubsystemLog.Info("Meridian", $"Huyệt đạo mạch {meridianId} cấp {level} đã đạt cấp tối đa ({MaxAcupointLevel}).");
                 return UpgradeResult.MaxLevel;
             }
 
             int roll = _rng.Next(0, 10000);
             UpgradeResult result;
-            int newLevel;
+            int newTier;
             if (roll < entry.successRate)
             {
-                newLevel = current + 1;
-                if (newLevel > MaxAcupointLevel) newLevel = MaxAcupointLevel;
-                _acupointLevels[acupointId] = newLevel;
+                newTier = current + 1;
+                if (newTier > MaxAcupointLevel) newTier = MaxAcupointLevel;
+                _acupointLevels[(meridianId, level)] = newTier;
                 result = UpgradeResult.Success;
                 SubsystemLog.Info("Meridian",
-                    $"Đột phá thành công huyệt {acupointId} ({entry.nameRaw}): cấp {current} → {newLevel}.");
+                    $"Đột phá thành công huyệt mạch {meridianId} cấp {level} ({entry.nameRaw}): {current} → {newTier}.");
             }
             else
             {
-                newLevel = entry.fallbackLevel;
-                if (newLevel < 0) newLevel = 0;
-                if (newLevel > MaxAcupointLevel) newLevel = MaxAcupointLevel;
-                _acupointLevels[acupointId] = newLevel;
+                newTier = entry.fallbackLevel;
+                if (newTier < 0) newTier = 0;
+                if (newTier > MaxAcupointLevel) newTier = MaxAcupointLevel;
+                _acupointLevels[(meridianId, level)] = newTier;
                 result = UpgradeResult.Failed;
                 SubsystemLog.Info("Meridian",
-                    $"Thất bại đột phá huyệt {acupointId} ({entry.nameRaw}): tụt về cấp {newLevel}.");
+                    $"Thất bại đột phá huyệt mạch {meridianId} cấp {level} ({entry.nameRaw}): tụt về cấp {newTier}.");
             }
-            MeridianUpgradeResult?.Invoke(acupointId, newLevel, result);
+            MeridianUpgradeResult?.Invoke(meridianId, level, newTier, result);
             return result;
         }
 

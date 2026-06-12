@@ -156,7 +156,10 @@ namespace VLTK.Tests.Sandbox
         public void LoadDirectory_RegistersAllMeridianPoints()
         {
             var reg = PcMeridianParser.BuildRegistry(Dir);
-            Assert.GreaterOrEqual(reg.Count, 100, "Meridian should have ~128 points");
+            // 8 meridians × 16 levels = 128. Composite (meridian, level) key must
+            // preserve every row; a single-int key collapses the table to 16.
+            Assert.AreEqual(128, reg.Count, "Meridian must have all 128 points (8 × 16)");
+            Assert.AreEqual(16, reg.MaxLevelFor(1), "Meridian 1 tops out at level 16");
         }
     }
 
