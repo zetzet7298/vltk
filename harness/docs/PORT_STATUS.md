@@ -412,8 +412,28 @@ re-running affected tests, not by weakening them):
 | `48e77f156` | RandomTask/Shop/Tong/Partner count expectations corrected to PC ground truth (buysell=166→159 shops, tong=7→5 levels, partner=5→4 chars; fabricated 1521/33/10 removed) | 4 parser/count tests | #10 partial |
 | `a31831c08` | 3 self-contradicting service-logic asserts fixed vs production (VngEvent requiredVip filter, Hongbao no claim-dedup, SjBattle fallback threshold rejects low level) | VngEvent, Hongbao, SjBattle | #10 partial |
 
+### Fixes landed (2026-06-12, batch #10 cont.) — 72 → 62 failures
+
+Continued root-cause sweep. Real EditMode failures dropped 72 → 62 (job `187cffbbb…`,
+`total=2283 passed=2215 failed=62 skipped=6`), verified by re-running affected tests, not weakened.
+
+| Commit | Fix | Tests recovered | Backlog |
+| --- | --- | --- | --- |
+| `337e0ea18` | ObjData TCVN3 decode + TaskRandom level-range bounds | ObjData/TaskRandom cluster | #10 |
+| `fa0b6dd98` | PcNpcSFull synthetic id (npcs.txt keyed by Name, no template-id col — synthesize stable id) | NpcSFull | #10 |
+| `1e5436308` | PcMapTravel drift (worldY sign convention, BaLang validator is ground truth: -3328 correct) | PcMapTravel | #10 |
+| `0bb920a4c` | PcSkillSourceLink GB2312 explicit + first-non-empty LvlSetScript (row#2 col70 no longer clobbers) | WeaponThief skill-source | #10 |
+| `5045a17ea` | Missile: missles1.txt TCVN3 runtime load via `PcText.ReadLinesTcvn3` (tab-safe; GBK ate tab → col shift → speed -40960 vs 156); dropped phantom id 445 from `ExistingModMisslesTxt` expected array (source jumps 444→446) | 2 missile tests | #10 |
+| `a610d5556` | HUD: minimap flag-click panel surfaces canonical `Cắm cờ` action token (was `Đã cắm cờ`, past-tense mid-sentence, did not contain action token) | MinimapPcButtons_ExposeFlagMarkerActionOnly | #10 |
+
+**Newly triaged this batch (verified root cause, logged backlog, left red — model-level):**
+- `PcHorseParser` column off-by-one: col0 is Name (名称) not ItemGenre; real distinct keys (ItemGenre,Detail,Particular)=(0,10,0..34), so `GetHorse(i,0,0)` never matches → `IntegrationTests` horse valid=0. Parser + test-lookup must change together. Backlog #15.
+- `PcMapListFullParser` assumes 8-col TSV but `maplist.ini` is INI `key=value` (1005 maps, per-id `N_name=`/`N_MapPos=`/`N_MapType=City/Field`); tab-split skips every line → registry Count=0 → `GetMap(id)` null. INI-section rewrite + MapType string→enum needed. Backlog #16.
+- `PcIconBarButtons_OpenRuntimeBackedPanels` NRE: `BuildIconBarRows` dereferences `SandboxManager.Instance` runtime services that are null under EditMode (no booted manager). Test-harness/runtime model-level.
+- `SandboxManagerFastBootTests`: `ActiveBootProfile` stays `Full` (expected `FastEditor`) — `InitializeSubsystems` skipped because a stale `Instance` from a prior test trips the Awake guard; test-isolation/runtime model-level. Backlog #18.
+
 **Still open (harder PROD-GAPs, left red — not faked green):**
-- Visual SPR cluster (Female/Male/Mount `Visual_LoadsXxx`, ~40 tests): woman LW/RW paths hash to UIDs (48fa4044/b4196106) that collide with unrelated staged SPRs (0 manifest refs them as woman weapons; PC ground truth: woman has only BD/HD/HR/LH/RH). Staging/hash-collision model fix. Backlog #13.
+- Visual SPR cluster (Female/Male/Mount `Visual_LoadsXxx`, 39 tests): model-level, NOT staging-orphan. **Disproven 2026-06-12**: deleting the orphan SPRs `48fa4044`/`b4196106` (= unsigned-GB2312 hashes of `spr\npcres\woman\FM_LW_000_RN01.spr` / `FM_RW_000_RN01.spr`, which do not exist in PC `npcres/woman` — verified 440 files = BD/HD/HR/LH/RH ×88, no LW/RW/YY; `npcres/man` likewise has no MA_LW/MA_RW) left `LoadedPartCount` unchanged (still 6/7), proving the `*_FromStagedSprFiles` runtime does NOT resolve parts from `StreamingAssets/Sprites/<uid>.spr`. The +1/+2 over-count comes from the visual builder's part-count counting non-required spec slots. Real fix is in the visual part-count model (gate by `spec.required` against per-gender PC tag availability), not staging. Backlog #13.
 - Meridian model refactor: `acupointId` is actually a per-meridian level (1–16) × 8 meridians = 128; registry collapses to 16. Composite-key refactor needed. Backlog #6.
 - `TitlePanelService` is a full stub (every method returns empty/false). Backlog #7.
 - SPR path-UID signed/unsigned decision (ComputePathUidHex bc9bc73d vs on-disk bccbbad2). Backlog #11.
