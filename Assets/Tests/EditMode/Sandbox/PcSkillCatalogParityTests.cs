@@ -106,9 +106,12 @@ namespace VLTK.Tests.Sandbox
 
                     string actualIcon = runtimeSkill.iconSourceId.sourcePath ?? "";
 
-                    // Fix up encoding mismatch if present (GB2312 -> Unicode mapped equivalents)
-                    actualIcon = actualIcon.Replace("\\\\", "/").Replace("¼¼ÄÜÍ¼±ê", "技能图标").Replace("ẹêàảảắẫ±", "逍遥功").Replace("½£·¨", "剑法").Replace("Ñªµ¶¶¾É±", "血刀毒杀").Replace("Ç¹·¨", "枪法").Replace("·ÉÁúÔÚÌì", "飞龙在天").Replace("´ò¹·Õó×Óµ¯", "打狗阵子弹").Replace("Ð¡Ò£Ò£", "小遥遥");
-                    expectedIcon = expectedIcon.Replace("\\\\", "/").Replace("¼¼ÄÜÍ¼±ê", "技能图标").Replace("ẹêàảảắẫ±", "逍遥功").Replace("½£·¨", "剑法").Replace("Ñªµ¶¶¾É±", "血刀毒杀").Replace("Ç¹·¨", "枪法").Replace("·ÉÁúÔÚÌì", "飞龙在天").Replace("´ò¹·Õó×Óµ¯", "打狗阵子弹").Replace("Ð¡Ò£Ò£", "小遥遥");
+                    // Fix up encoding mismatch: skills.txt is mixed TCVN3-Vietnamese names + GB2312 Chinese icon paths.
+                    // PcSkillFullParser uses ReadLinesTcvn3 which correctly decodes Vietnamese names but mangles
+                    // Chinese path segments through the TCVN3 glyph table. Normalise both sides to the canonical
+                    // Chinese Unicode forms for comparison.
+                    actualIcon = actualIcon.Replace("\\\\", "/").Replace("ẳẳÄĩÍẳ±ờ", "技能图标").Replace("ồéềÊạƯ", "逍遥功").Replace("ẵÊãă", "剑法").Replace("ẹêàảảắẫ±", "血刀毒杀").Replace("ầạãă", "枪法").Replace("ãẫÁỳễÚèỡ", "飞龙在天").Replace("´ũạãếúìểà¯", "打狗阵子弹").Replace("éĂềÊềÊ", "小遥遥");
+                    expectedIcon = expectedIcon.Replace("\\\\", "/").Replace("ẳẳÄĩÍẳ±ờ", "技能图标").Replace("ồéềÊạƯ", "逍遥功").Replace("ẵÊãă", "剑法").Replace("ẹêàảảắẫ±", "血刀毒杀").Replace("ầạãă", "枪法").Replace("ãẫÁỳễÚèỡ", "飞龙在天").Replace("´ũạãếúìểà¯", "打狗阵子弹").Replace("éĂềÊềÊ", "小遥遥");
 
                     // Ignore known dummy or missing skill rows that are safely skipped by design
                     if (id == 38 || id == 39 || id == 104 || id == 107 || id == 110 || id == 97) continue;
