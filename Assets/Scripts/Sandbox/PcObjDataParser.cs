@@ -65,7 +65,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "objdata.txt");
             if (!File.Exists(path)) return reg;
-            var lines = PcText.ReadLines(path, null);
+            var lines = PcText.ReadLinesTcvn3(path);
             bool headerSkipped = false;
             foreach (var raw in lines)
             {

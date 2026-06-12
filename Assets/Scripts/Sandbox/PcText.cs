@@ -44,6 +44,19 @@ namespace VLTK.Sandbox
             return SplitLines(text);
         }
 
+        /// <summary>
+        /// Read a file that is KNOWN to be TCVN3 Vietnamese (Western ANSI bytes whose
+        /// high chars are TCVN3 glyph codes). Skips encoding auto-detection entirely so
+        /// content that also forms clean GBK hanzi (which Score() biases toward) is not
+        /// mis-decoded as Chinese. Use only for verified-TCVN3 tables (e.g. objdata.txt).
+        /// </summary>
+        public static string[] ReadLinesTcvn3(string absolutePath)
+        {
+            var raw = File.ReadAllBytes(absolutePath);
+            var western = TryDecode(raw, TryEncoding("windows-1252"));
+            return SplitLines(Tcvn3ToUnicode(western));
+        }
+
         private static string TryDecodeStrict(byte[] bytes, Encoding enc)
         {
             try { return enc.GetString(bytes); }
