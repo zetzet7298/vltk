@@ -5,7 +5,7 @@ high-stakes port. The governing principle: **a skill's prose is a claim, not pro
 "already implements", and baked counts drift. Verify with the live system. Every bug found in the
 2026-06-12 audit was a case of code/data/path contradicting the prose around it.
 
-## The five checks (run all; each is fast)
+## The checks (run all; 1-5 are fast, 6 is the 100% binary bar)
 
 ### 1. Empty-section scan (structural rot)
 Guard-block inserts can clobber a skill's intro and leave a heading with no body. Detect:
@@ -34,7 +34,15 @@ its docstring → it will miss real `unknown/<uid>.spr` CJK assets. The correct 
 `c = b-256 if b>=128 else b` applied BEFORE the A-Z lowercase step, then
 `value = ((value + idx*c) % 0x8000000B) * 0xFFFFFFEF & 0xFFFFFFFF`, final `value ^ 0x12345678`.
 Ground truth lives in C# `SprRuntimeService.ComputePathUid(..., signedBytes:true)` (default SIGNED;
-`ResolveSpr` tries uidFromPath → signed → unsigned).
+`ResolveSpr` tries uidFromPath → signed → unsigned). The ultimate ground truth is the engine
+binary itself — see check 6.
+
+**Indentation trap (hit 7 vltktool files at once):** the most common real bug is `return value ^
+0x12345678` indented INSIDE the `for ... enumerate` loop instead of at function scope, so the
+helper returns after the FIRST byte and every UID is wrong. Detect by comparing the `for` indent
+to the `return ... 0x12345678` indent — if the return is more-indented, it's inside the loop.
+Sweep ALL hash helpers, not just one (`resolve_*.py`, `data_controller_export_editable.py`,
+`stage_*` had copy-paste forks). The fix is a one-space dedent; verify each with the evidence pair.
 
 ### 3. Manifest read (counts drift)
 Never cite a baked "N/M, X failed" number. Read the live manifest:
@@ -60,6 +68,39 @@ for legacy inverted output; `--file` for one SPR, `--frame N` for one frame). Re
 scripts with a thin wrapper that requires an explicit `--file`/narrow `--src` and refuses a
 whole-root scan. Find a SPR's uid/path first via signed-byte hash + pak index, or vltktool
 resolvers (`resolve_uid.py`, `find_spr_by_image.py --pak <one pak>`).
+
+### 6. Binary verification against the real engine (the 100% bar)
+
+When prose says "reverse-engineered from engine.dll @0xRVA" or cites a magic constant, prove it
+against the binary instead of trusting the claim. The PC client DLLs are at
+`/var/www/vltksource_new/vl_update_27/Client 6.0/` (`engine.dll`, `represent3.dll` — PE i386,
+baddr `0x10000000`). `engine.dll` ships **full MSVC-mangled export symbols** (1362 exports), so
+RVAs are exact, not guesses. radare2 5.5.0 is available.
+
+```bash
+cd "/var/www/vltksource_new/vl_update_27/Client 6.0"
+rabin2 -I engine.dll                              # confirm PE i386, baddr 0x10000000, msvc
+rabin2 -E engine.dll | grep -iE "pak|codec|filename2id"   # locate symbols -> exact RVA
+r2 -2 -q -c "s 0x10025c60; af; pdf" engine.dll    # disassemble g_FileName2Id
+r2 -2 -q -c "/v4 887" represent3.dll              # find immediate 0x377 (Z-projection)
+```
+
+Proven anchors (re-confirm, don't assume): `g_FileName2Id@0x10025c60` uses `movsx edx,dl` =
+the signed-byte proof; `g_InitCodec@0x10005b40` only `new`s `KCodecLzo` (NRV2B), so every
+*compressed* entry is NRV2B regardless of method label; `KCodecLzo::Decode@0x100060f0` `cmp cl,0x11`
+is the LZO literal-run marker on the data stream, NOT a PAK flag; Z-projection
+`screenY = sceneY/2 - (sceneZ*887)>>10` is verbatim at `represent3.dll:0x1000d08a`
+(`imul edi,edi,0x377; sar edi,0xa; sar eax,1; sub eax,edi`).
+
+Empirical decode proof (don't stop at disassembly): parse a real PAK in Python and decode entries
+end-to-end. Method distribution across all 46 paks = 403560 entries (matches manifest):
+`0x20`=252000, `0x01`=149697, `0x00`=1506, `0x11`=352 (raw SPR), `0x10`=5 (dmjx01 fragment-table
+only). NRV2D/NRV2E (`0x02/03/04/30/40`) never occur in this dataset — keep their rows but flag as
+dead. The 5 `0x10` dmjx01 entries are a fragment container (`u32 fragment_count, u32 table_offset`,
+then `count × (u32 off, u32 out_size, u32 flag)`); each chunk decompresses by its own flag, concat
+= the SPR. `unpak_tool.py::decompress_entry` tries the fragment parse before NRV2B for `0x10` — all
+5 decode to exact dsize with magic `SPR\x00`. Cross-check `uid.py` against a Python reimpl of the
+exact `g_FileName2Id` asm: both must agree once a leading `\` is normalized.
 
 ## Fix discipline
 - Re-read each file immediately before editing — these skills can have a concurrent writer this

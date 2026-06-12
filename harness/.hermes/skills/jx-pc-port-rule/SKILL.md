@@ -131,6 +131,11 @@ For the full executable audit procedure (the five verify-by-execution checks tha
 empty-section scan, signed-byte uid evidence pair, manifest read, dead-path stat, ad-hoc-scanner
 check) plus the fix discipline, see [`references/skill-audit-playbook.md`](references/skill-audit-playbook.md).
 
+To audit whether the **project port status itself** is true (Harness matrix vs `docs/PORT_STATUS.md`,
+no-op `verify_command`, test asmdefs gated off by an undefined define symbol, stale pak counts,
+catalog-count re-verification), use the `vltk-port-status-audit` skill — that is a different job
+from porting a feature or auditing these skills.
+
 ## If Source Is Missing
 
 - Say exactly what was searched under `/var/www/vltksource_new/vl_update_27`.
