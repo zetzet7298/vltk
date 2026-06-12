@@ -79,6 +79,24 @@ Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, s
 4. Verify with Unity compile/tests or runtime checks appropriate to the task.
 5. Report which PC source files/assets were used.
 
+## PAK/SPR Format Internals
+
+For deep PAK binary layout, compression methods, and engine function mapping, see
+[`references/pak-format-internals.md`](references/pak-format-internals.md).
+
+**Critical pitfall — compression method `0x11000000`:** Entries flagged `0x11000000` in the PAK
+index are **raw SPR byte streams stored without UCL decompression** (start with `SPR\x00`).
+Do NOT call libucl/NRV2B on these — it will segfault or corrupt output. Just save bytes directly.
+The `decompressed_size` field is the RGBA memory size, not the data size. Current simple SPR parser
+validates 333/352; 19 large/edge SPR files still need decoder tolerance work but extraction remains
+raw-copy correct. Affects 352 entries across resource/skills/spr/update*/vltkdata/vng00/update3 PAKs.
+
+**Critical pitfall — `dmjx01.pak` method `0x10000000` fragmented entries:** 5 entries use a
+KCodec fragment-table wrapper: `u32 fragment_count`, `u32 table_offset`, payload chunks, then
+`fragment_count × {u32 offset, u32 out_size, u32 flag}` tail records. Calling libucl on the
+whole payload segfaults. Decompress each chunk by its own flag and concatenate; verified UIDs:
+`8ced40ec`, `9514cffa`, `a4728732`, `c99c13bd`, `e53792c4`.
+
 ## If Source Is Missing
 
 - Say exactly what was searched under `/var/www/vltksource_new/vl_update_27`.

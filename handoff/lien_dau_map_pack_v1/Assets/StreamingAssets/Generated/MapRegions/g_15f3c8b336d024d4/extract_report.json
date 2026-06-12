@@ -1,0 +1,15 @@
+{
+  "geometryKey": "g_15f3c8b336d024d4",
+  "pcMapPath": "特殊用地\\联赛比赛用地",
+  "writtenRegions": 826,
+  "plannedRegions": 826,
+  "imageNameCount": 10,
+  "stagedSprites": 9,
+  "failedSprites": [
+    {
+      "name": "\\system\\spr\\RegionTileDefault.spr",
+      "reason": "missing"
+    }
+  ],
+  "invalid": []
+}

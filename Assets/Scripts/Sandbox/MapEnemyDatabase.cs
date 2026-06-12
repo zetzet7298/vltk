@@ -297,13 +297,10 @@ namespace VLTK.Sandbox
 
         private static IEnumerable<string> CandidateNpcSprPaths(string resType, string requestedAction)
         {
-            // Training objects (enemy178/179/180) only have corpse SPR
-            if (resType == "enemy178" || resType == "enemy179" || resType == "enemy180")
-            {
-                yield return $@"spr\obj\corpse\{resType}_corpse.spr";
-                yield break;
-            }
-            
+            // Training objects (enemy178/179/180) use the PC stand visual from
+            // spr\npcres\enemy\<resType>\<resType>_st.spr. In the canonical unpack tree
+            // those entries are hash-only unknown/<uid>.spr (c24f790e/874e5077/11188c82),
+            // so do not fall back to spr/obj/corpse here: corpse art is the wrong in-world visual.
             if (!string.IsNullOrWhiteSpace(requestedAction))
                 yield return BuildNpcSprPathExact(resType, requestedAction);
             if (resType.StartsWith("passerby", StringComparison.OrdinalIgnoreCase))

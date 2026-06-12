@@ -109,10 +109,8 @@ namespace VLTK.Sandbox
 
         public void Clear()
         {
-            if (enemyRoot != null)
-                Destroy(enemyRoot.gameObject);
-            if (pcObjectRoot != null)
-                Destroy(pcObjectRoot.gameObject);
+            DestroyExistingChild(enemyRoot, "MapEnemies");
+            DestroyExistingChild(pcObjectRoot, "MapPcObjects");
             enemyRoot = new GameObject("MapEnemies").transform;
             enemyRoot.SetParent(transform, false);
             pcObjectRoot = new GameObject("MapPcObjects").transform;
@@ -121,6 +119,21 @@ namespace VLTK.Sandbox
             trainerMarkerCount = 0;
             _entries.Clear();
             _registry = null;
+        }
+
+
+        private void DestroyExistingChild(Transform cachedRoot, string childName)
+        {
+            var root = cachedRoot != null ? cachedRoot : transform.Find(childName);
+            while (root != null)
+            {
+                var go = root.gameObject;
+                if (Application.isPlaying)
+                    Destroy(go);
+                else
+                    DestroyImmediate(go);
+                root = transform.Find(childName);
+            }
         }
 
         private void SpawnTrainerMarkers(List<RegionSSpawnEntry> spawns)
@@ -142,13 +155,13 @@ namespace VLTK.Sandbox
                 marker.mpsY = sp.mpsY;
                 marker.script = sp.script;
                 
-                // Render training objects (cọc gỗ/mộc nhân/bao cát) with corpse SPR
+                // Render training objects (cọc gỗ/mộc nhân/bao cát) with PC stand SPRs.
                 var template = MapEnemyDatabase.GetTemplate(sp.templateId);
                 if (template != null && (sp.templateId == 413 || sp.templateId == 414 || sp.templateId == 415))
                 {
-                    string sprPath = MapEnemyDatabase.BuildNpcSprPath(template.spriteClipRef, "st");
+                    string sprPath = $@"spr\npcres\enemy\{template.spriteClipRef}\{template.spriteClipRef}_st.spr";
                     var visual = go.AddComponent<PcNpcVisual>();
-                    visual.Configure(sprPath, sprPath);
+                    visual.Configure(sprPath, sprPath, new Vector2(160f, 192f));
                     marker.missingVisual = null;
                 }
                 else

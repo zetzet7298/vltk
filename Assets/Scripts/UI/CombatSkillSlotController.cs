@@ -901,7 +901,7 @@ namespace VLTK.UI
             if (target?.enemyBehaviour == null) yield break;
             if (fx == null)
             {
-                target.enemyBehaviour.SetLife(hp);
+                target.enemyBehaviour.SetLife(hp, showDamage: true);
                 yield break;
             }
 
@@ -910,7 +910,7 @@ namespace VLTK.UI
 
             if (target.enemyBehaviour != null)
             {
-                target.enemyBehaviour.SetLife(hp);
+                target.enemyBehaviour.SetLife(hp, showDamage: true);
 
                 if (skillId == 357 && skillLevel >= 11)
                 {
@@ -932,7 +932,7 @@ namespace VLTK.UI
                             {
                                 float dist = Vector2.Distance(target.position, enemy.position);
                                 if (dist <= 3.0f)
-                                    enemy.enemyBehaviour.SetLife(Mathf.Max(0, enemy.currentLife - aoeDamage));
+                                    enemy.enemyBehaviour.SetLife(Mathf.Max(0, enemy.currentLife - aoeDamage), showDamage: true);
                             }
                         }
                     }
@@ -944,25 +944,31 @@ namespace VLTK.UI
         {
             var enemies = new List<EnemyRuntimeInfo>();
             var runtime = SandboxManager.Instance?.EnemyRuntime;
-            if (runtime == null) return enemies;
-
-            var spawns = runtime.GetActiveEnemies();
-            if (spawns != null)
+            if (runtime != null)
             {
-                foreach (var spawn in spawns)
+                var spawns = runtime.GetActiveEnemies();
+                if (spawns != null)
                 {
-                    enemies.Add(new EnemyRuntimeInfo
+                    foreach (var spawn in spawns)
                     {
-                        enemyId = spawn.enemyId,
-                        displayName = spawn.displayName,
-                        position = spawn.position,
-                        alive = spawn.alive,
-                        currentLife = spawn.currentLife,
-                        maxLife = spawn.maxLife,
-                        enemyBehaviour = spawn.enemyBehaviour,
-                    });
+                        enemies.Add(new EnemyRuntimeInfo
+                        {
+                            enemyId = spawn.enemyId,
+                            displayName = spawn.displayName,
+                            position = spawn.position,
+                            alive = spawn.alive,
+                            currentLife = spawn.currentLife,
+                            maxLife = spawn.maxLife,
+                            enemyBehaviour = spawn.enemyBehaviour,
+                        });
+                    }
                 }
             }
+
+            var trainingSpawns = SandboxManager.Instance?.TrainingSpawner?.GetActiveEnemies();
+            if (trainingSpawns != null)
+                enemies.AddRange(trainingSpawns);
+
             return enemies;
         }
 

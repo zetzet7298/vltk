@@ -25,6 +25,17 @@ female avatar and any equipment/mount swap.
 
 ## Mental model (read first)
 
+
+## Resource/hash guard learned from combat visual port
+
+Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `jx-pc-port-rule` → **PC resource resolution doctrine**:
+
+- Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
+- PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
+- For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Verify with real file existence/decode/render evidence before claiming parity or missing source.
+
 A JX character is NOT one sprite. It is a stack of independent part SPRs that share a
 common canvas and reference pixel. Each part SPR holds **all 8 directions** of one
 action (e.g. body-idle, body-run). To draw a frame you pick the part's sprite for the

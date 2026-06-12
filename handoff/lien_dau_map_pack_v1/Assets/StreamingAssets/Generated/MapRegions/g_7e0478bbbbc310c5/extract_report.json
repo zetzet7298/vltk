@@ -1,0 +1,15 @@
+{
+  "geometryKey": "g_7e0478bbbbc310c5",
+  "pcMapPath": "特殊用地\\武林大会专用\\武林大会会场",
+  "writtenRegions": 176,
+  "plannedRegions": 176,
+  "imageNameCount": 68,
+  "stagedSprites": 67,
+  "failedSprites": [
+    {
+      "name": "\\system\\spr\\RegionTileDefault.spr",
+      "reason": "missing"
+    }
+  ],
+  "invalid": []
+}

@@ -1,0 +1,9 @@
+{
+  "spr_root": "/var/www/vltk-mobile/Assets/StreamingAssets/Sprites/SkillIconsPc",
+  "out_root": "/var/www/vltk-mobile/Assets/StreamingAssets/UI/HUD/Art/PcSkillIcons",
+  "total_spr": 228,
+  "ok_spr": 228,
+  "error_spr": 0,
+  "frames_written": 645,
+  "errors": []
+}

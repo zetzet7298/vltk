@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "generatedAtUtc": "2026-06-11T11:45:56Z",
+  "sourceMaplist": "/var/www/vltksource_new/vl_update_27/Client 6.0/settings/maplist.ini",
+  "isPartialRun": false,
+  "totalAliases": 2,
+  "aliases": [
+    {
+      "mapId": 396,
+      "nameVi": "Hội trường liên đấu Kiệt xuất (1)",
+      "pcMapPath": "特殊用地\\武林大会专用\\武林大会会场",
+      "geometryKey": "g_7e0478bbbbc310c5",
+      "primaryMapId": 396,
+      "mapType": "",
+      "mapPosX": 0,
+      "mapPosY": 0
+    },
+    {
+      "mapId": 397,
+      "nameVi": "Đấu trường liên đấu Kiệt xuất (1)",
+      "pcMapPath": "特殊用地\\联赛比赛用地",
+      "geometryKey": "g_15f3c8b336d024d4",
+      "primaryMapId": 397,
+      "mapType": "",
+      "mapPosX": 0,
+      "mapPosY": 0
+    }
+  ],
+  "packageNote": "Pruned handoff package: lien dau maps only."
+}

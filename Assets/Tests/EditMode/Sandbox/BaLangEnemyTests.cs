@@ -2,6 +2,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
+using VLTK.Model;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
@@ -122,6 +123,118 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(10, spawns.Count(s => s.templateId == 413 && s.nameRaw == "木桩"));
             Assert.AreEqual(10, spawns.Count(s => s.templateId == 414 && s.nameRaw == "木人"));
             Assert.AreEqual(10, spawns.Count(s => s.templateId == 415 && s.nameRaw == "沙袋"));
+        }
+
+        [Test]
+        public void TrainingNpcSpawner_UsesPcStandSpritesForTrainingObjects()
+        {
+            var root = new GameObject("training-spawner-test");
+            try
+            {
+                var spawner = root.AddComponent<TrainingNpcSpawner>();
+                spawner.usePlayerPosition = false;
+                spawner.centerX = 0f;
+                spawner.centerY = 0f;
+                spawner.radius = 10f;
+                spawner.Spawn();
+
+                var visuals = root.GetComponentsInChildren<PcNpcVisual>(true);
+                Assert.AreEqual(5, visuals.Length);
+
+                var expectedPaths = new[]
+                {
+                    @"spr\npcres\enemy\enemy178\enemy178_st.spr",
+                    @"spr\npcres\enemy\enemy178\enemy178_st.spr",
+                    @"spr\npcres\enemy\enemy179\enemy179_st.spr",
+                    @"spr\npcres\enemy\enemy180\enemy180_st.spr",
+                    @"spr\npcres\enemy\enemy180\enemy180_st.spr",
+                }.OrderBy(p => p).ToArray();
+                var actualPaths = visuals.Select(v => v.standSourcePath).OrderBy(p => p).ToArray();
+                CollectionAssert.AreEqual(expectedPaths, actualPaths);
+
+                foreach (var visual in visuals)
+                {
+                    Assert.AreEqual(visual.standSourcePath, visual.walkSourcePath);
+                    Assert.IsTrue(visual.HasAnyClip, visual.standSourcePath);
+                    var spriteRenderer = visual.transform.Find("NpcSprite")?.GetComponent<SpriteRenderer>();
+                    Assert.IsNotNull(spriteRenderer, visual.standSourcePath);
+                    Assert.IsNotNull(spriteRenderer.sprite, visual.standSourcePath);
+                    Assert.IsNull(visual.transform.Find("Body"), "Training NPCs must not use the old one-frame Body placeholder.");
+                    Assert.IsNull(visual.transform.Find("Shadow"), "Training NPCs must not use the old procedural Shadow placeholder.");
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [Test]
+        public void TrainingNpcSpawner_ExposesTrainingObjectsAsHighHpCombatTargets()
+        {
+            var root = new GameObject("training-target-test");
+            try
+            {
+                var spawner = root.AddComponent<TrainingNpcSpawner>();
+                spawner.usePlayerPosition = false;
+                spawner.centerX = 0f;
+                spawner.centerY = 0f;
+                spawner.radius = 10f;
+                spawner.Spawn();
+
+                var enemies = spawner.GetActiveEnemies();
+                Assert.AreEqual(5, enemies.Count);
+                Assert.IsTrue(enemies.All(e => e.alive));
+                Assert.IsTrue(enemies.All(e => e.enemyBehaviour != null));
+                Assert.IsTrue(enemies.All(e => e.currentLife == e.maxLife));
+                Assert.IsTrue(enemies.All(e => e.maxLife >= 999999));
+                CollectionAssert.AreEquivalent(new[] { "Bao cát", "Bao cát", "Cọc gỗ", "Cọc gỗ", "Mộc nhân" },
+                    enemies.Select(e => e.displayName).ToArray());
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
+        }
+
+        [Test]
+        public void EnemyAi_SetLifeWithDamageFlag_SpawnsRedPcDamageNumber()
+        {
+            var root = new GameObject("damage-popup-root");
+            var enemy = new GameObject("damage-popup-enemy");
+            enemy.transform.SetParent(root.transform, false);
+            try
+            {
+                var ai = enemy.AddComponent<BaLangEnemyAi>();
+                ai.Initialize(new NpcInstance
+                {
+                    instanceId = 1000,
+                    template = new NpcTemplate
+                    {
+                        templateId = 413,
+                        nameNormalized = "Cọc gỗ",
+                        maxLife = 100,
+                    },
+                    worldPosition = Vector2.zero,
+                }, null);
+
+                ai.SetLife(62, showDamage: true);
+
+                var popup = root.GetComponentInChildren<PcDamageNumber>(true);
+                Assert.IsNotNull(popup);
+                Assert.AreEqual(38, popup.Damage);
+
+                var text = popup.GetComponent<TextMesh>();
+                Assert.IsNotNull(text);
+                Assert.AreEqual("38", text.text);
+                Assert.Greater(text.color.r, 0.9f);
+                Assert.Less(text.color.g, 0.2f);
+                Assert.Less(text.color.b, 0.1f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(root);
+            }
         }
 
         [Test]

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "package": "lien_dau_map_pack_v1",
+  "createdAtUtc": "2026-06-11T11:45:56Z",
+  "sourceUnityRoot": "/var/www/vltk-mobile",
+  "pcSourceRoot": "/var/www/vltksource_new/vl_update_27",
+  "maps": [
+    {
+      "mapId": 396,
+      "nameVi": "Hội trường liên đấu Kiệt xuất (1)",
+      "pcName": "武林大会会场",
+      "pcMapPath": "特殊用地\\武林大会专用\\武林大会会场",
+      "geometryKey": "g_7e0478bbbbc310c5",
+      "regionC": 176,
+      "regionS": 122,
+      "imageNameCount": 68,
+      "bounds": {
+        "x": 44544,
+        "y": -51200,
+        "width": 9216,
+        "height": 6144
+      }
+    },
+    {
+      "mapId": 397,
+      "nameVi": "Đấu trường liên đấu Kiệt xuất (1)",
+      "pcName": "联赛比赛用地",
+      "pcMapPath": "特殊用地\\联赛比赛用地",
+      "geometryKey": "g_15f3c8b336d024d4",
+      "regionC": 826,
+      "regionS": 826,
+      "imageNameCount": 10,
+      "bounds": {
+        "x": 38912,
+        "y": -62464,
+        "width": 28672,
+        "height": 14336
+      }
+    }
+  ],
+  "copiedRegions": {
+    "MapRegions/g_7e0478bbbbc310c5": 176,
+    "MapServerRegions/g_7e0478bbbbc310c5": 122,
+    "MapRegions/g_15f3c8b336d024d4": 826,
+    "MapServerRegions/g_15f3c8b336d024d4": 826
+  },
+  "spriteRefs": 76,
+  "copiedSprites": 75,
+  "missingSprites": [
+    {
+      "ref": "\\system\\spr\\RegionTileDefault.spr",
+      "candidates": [
+        "system_spr_regiontiledefault",
+        "91332ee4"
+      ]
+    }
+  ],
+  "knownGaps": [
+    "\\system\\spr\\RegionTileDefault.spr is PC engine fallback; not present in scoped PC paks"
+  ],
+  "legalNotice": "Package contains PC-derived JX/VLTK map data/assets if Generated files are delivered. Buyer must have rights to use original IP, or use only runtime/tooling/custom recreated assets."
+}

@@ -25,6 +25,17 @@ trust PC source + current Unity code + runtime probes, then update this skill.
 
 ## First principle
 
+
+## Resource/hash guard learned from combat visual port
+
+Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `jx-pc-port-rule` → **PC resource resolution doctrine**:
+
+- Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
+- PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
+- For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Verify with real file existence/decode/render evidence before claiming parity or missing source.
+
 PC HUD is **data-driven**, but the source layout the original version of this
 skill assumed (`Utility/Run/Ui/ui3/`) **does not exist** in `vltksource_new`. Do
 not trust that path. Verified reality (this is the hard-won correction):

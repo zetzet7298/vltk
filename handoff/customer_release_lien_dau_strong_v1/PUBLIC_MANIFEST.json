@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "product": "LienDauMaps.StrongPack",
+  "version": "1.0.0",
+  "createdAtUtc": "2026-06-11T12:04:47Z",
+  "payload": "LienDauMaps.vltkmap",
+  "encryption": "AES-256-GCM",
+  "compression": "zip-deflate-before-encryption",
+  "maps": [
+    {
+      "mapId": 396,
+      "nameVi": "Hội trường liên đấu Kiệt xuất (1)"
+    },
+    {
+      "mapId": 397,
+      "nameVi": "Đấu trường liên đấu Kiệt xuất (1)"
+    }
+  ],
+  "runtimeContract": "Requires licensed VLTK map runtime/loader. Raw catalogs/regions/sprites are encrypted and not distributed as loose files.",
+  "payloadSha256": "c093ab03b823b5f0e39aacc37d8232d4dbd7acd6b0b0c8cee6604604e65e2d90"
+}

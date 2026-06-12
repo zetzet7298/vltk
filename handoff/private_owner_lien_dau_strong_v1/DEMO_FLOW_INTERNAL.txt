@@ -1,0 +1,27 @@
+INTERNAL DEMO FLOW - do not send if you want minimal customer package
+
+Best demo option: live screen-share or recorded video from our Unity project.
+
+Flow:
+1. Open Unity project /var/www/vltk-mobile.
+2. Open scene Assets/Scenes/Sandbox.unity.
+3. Enter Play Mode.
+4. Use GM/map selection or debug loader to load map 397.
+5. Show: Đấu trường liên đấu loaded, camera/player movement, no gray placeholder.
+6. Load map 396.
+7. Show: Hội trường liên đấu loaded.
+8. Show encrypted customer package folder separately:
+   - only LienDauMaps.vltkmap
+   - no raw Region_C/Region_S/SPR loose files.
+9. Explain: after payment, customer gets runtime loader/license/key/integration.
+
+Talk track:
+- "Đây là bản map đã port chạy runtime."
+- "Đây là gói bàn giao dạng encrypted, khách không thấy raw data/source."
+- "Runtime/key chỉ cấp theo hợp đồng, nên kỹ thuật nội bộ được giữ lại."
+
+Acceptance proof to capture:
+- screenshot map 397
+- screenshot map 396
+- console line: Catalog ready / map loaded
+- package checksum

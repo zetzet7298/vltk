@@ -1,0 +1,16 @@
+Chào bạn,
+
+Bên mình đã chuẩn bị gói demo/bàn giao cho 2 map:
+
+- Hội trường liên đấu Kiệt xuất (map 396)
+- Đấu trường liên đấu Kiệt xuất (map 397)
+
+Gói bàn giao được đóng dạng encrypted payload `LienDauMaps.vltkmap`, không gửi raw Region/Sprite/source rời. Để chạy trong Unity, gói cần runtime loader/integration do bên mình cung cấp theo scope hợp đồng.
+
+Bên mình có thể demo live hoặc gửi video trước. Sau khi chốt scope/thanh toán cọc, bên mình có thể:
+
+1. Tích hợp trực tiếp vào project Unity của bạn; hoặc
+2. Cung cấp trial build có watermark/hết hạn; hoặc
+3. Bàn giao runtime/key/license theo hợp đồng.
+
+Lưu ý: nếu dùng dữ liệu/art gốc JX/VLTK trong sản phẩm thương mại, bên bạn cần có quyền sử dụng IP gốc hoặc xác nhận trách nhiệm pháp lý phần đó.

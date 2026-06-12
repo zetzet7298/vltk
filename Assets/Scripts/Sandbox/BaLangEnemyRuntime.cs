@@ -75,6 +75,78 @@ namespace VLTK.Sandbox
         }
     }
 
+    public sealed class PcDamageNumber : MonoBehaviour
+    {
+        public const float DefaultLifetimeSeconds = 0.85f;
+
+        public int Damage { get; private set; }
+
+        private TextMesh _text;
+        private Color _color;
+        private Vector3 _startPosition;
+        private float _age;
+
+        public static PcDamageNumber Spawn(Vector3 worldPosition, int damage, Transform parent)
+        {
+            if (damage <= 0) return null;
+
+            var go = new GameObject($"PcDamageNumber_{damage}");
+            if (parent != null)
+                go.transform.SetParent(parent, true);
+            go.transform.position = worldPosition;
+
+            var popup = go.AddComponent<PcDamageNumber>();
+            popup.Initialize(damage);
+            return popup;
+        }
+
+        private void Initialize(int damage)
+        {
+            Damage = damage;
+            _startPosition = transform.position;
+            _color = new Color(1f, 0.08f, 0.02f, 1f);
+
+            _text = gameObject.AddComponent<TextMesh>();
+            _text.text = damage.ToString();
+            _text.fontSize = 48;
+            _text.characterSize = 0.42f;
+            _text.anchor = TextAnchor.MiddleCenter;
+            _text.alignment = TextAlignment.Center;
+            _text.color = _color;
+
+            var mr = gameObject.GetComponent<MeshRenderer>();
+            if (mr != null)
+                mr.sortingOrder = MapRenderer.PlayerSortingOrder + 3600;
+        }
+
+        private void Update()
+        {
+            Tick(Time.deltaTime);
+        }
+
+        public void Tick(float deltaTime)
+        {
+            _age += Mathf.Max(0f, deltaTime);
+            float t = Mathf.Clamp01(_age / DefaultLifetimeSeconds);
+            transform.position = _startPosition + new Vector3(0f, 58f * t, 0f);
+
+            if (_text != null)
+            {
+                var c = _color;
+                c.a = Mathf.Lerp(1f, 0f, Mathf.Clamp01((t - 0.35f) / 0.65f));
+                _text.color = c;
+            }
+
+            if (_age >= DefaultLifetimeSeconds)
+            {
+                if (Application.isPlaying)
+                    Destroy(gameObject);
+                else
+                    DestroyImmediate(gameObject);
+            }
+        }
+    }
+
     public sealed class BaLangEnemyAi : MonoBehaviour
     {
         public NpcInstance instance;
@@ -107,8 +179,24 @@ namespace VLTK.Sandbox
 
         public void SetLife(int currentLife)
         {
+            SetLife(currentLife, false);
+        }
+
+        public void SetLife(int currentLife, bool showDamage)
+        {
+            int previousLife = CurrentLife;
             CurrentLife = Mathf.Clamp(currentLife, 0, Mathf.Max(1, MaxLife));
             _healthBar?.SetLife(CurrentLife);
+            if (showDamage && CurrentLife < previousLife)
+                PcDamageNumber.Spawn(DamagePopupPosition(), previousLife - CurrentLife, transform.parent);
+        }
+
+        private Vector3 DamagePopupPosition()
+        {
+            var sr = _visual != null ? _visual.GetComponentInChildren<SpriteRenderer>() : GetComponentInChildren<SpriteRenderer>();
+            if (sr != null && sr.sprite != null)
+                return new Vector3(transform.position.x, sr.bounds.max.y + 10f, -12f);
+            return transform.position + new Vector3(0f, 78f, -12f);
         }
 
         private void Update()

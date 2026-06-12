@@ -2157,6 +2157,10 @@ MonoBehaviour:
   servicesRoot: {fileID: 1119100609}
   defaultMapId: 53
   loadDefaultMapOnBoot: 1
+  bootProfile: 0
+  useFastEditorBoot: 1
+  loadOptionalServicesInFastEditorBoot: 0
+  loadDefaultMapInFastEditorBoot: 1
 --- !u!4 &992100489
 Transform:
   m_ObjectHideFlags: 0

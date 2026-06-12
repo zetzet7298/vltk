@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "facts": {
+    "projectMap396": {
+      "regionC": 176,
+      "regionS": 122,
+      "imageNames": 68,
+      "geometryKey": "g_7e0478bbbbc310c5"
+    },
+    "projectMap397": {
+      "regionC": 826,
+      "regionS": 826,
+      "imageNames": 10,
+      "geometryKey": "g_15f3c8b336d024d4"
+    },
+    "stageVerifierExitCode": 0,
+    "stageVerifier": {
+      "status": "PASS",
+      "errors": [],
+      "warnings": [
+        "known missing sprites accepted: ['\\\\system\\\\spr\\\\RegionTileDefault.spr']"
+      ],
+      "facts": {
+        "root": "/var/www/vltk-mobile/handoff/lien_dau_map_pack_v1",
+        "spriteFiles": 75,
+        "maps": {
+          "g_7e0478bbbbc310c5": {
+            "mapId": 396,
+            "regionC": 176,
+            "regionS": 122,
+            "imageNames": 68
+          },
+          "g_15f3c8b336d024d4": {
+            "mapId": 397,
+            "regionC": 826,
+            "regionS": 826,
+            "imageNames": 10
+          }
+        }
+      }
+    },
+    "encryptedPayloadBytes": 13110505,
+    "encryptedPayloadSha256": "c093ab03b823b5f0e39aacc37d8232d4dbd7acd6b0b0c8cee6604604e65e2d90",
+    "customerZipBytes": 13115709,
+    "customerZipSha256": "7eb33901d19a3fdbded0e1be92303e05b49822c9d26eac56f2d1fe06a4b3c407",
+    "decryptedZipBytes": 13109827,
+    "decryptedFileCount": 4070
+  }
+}

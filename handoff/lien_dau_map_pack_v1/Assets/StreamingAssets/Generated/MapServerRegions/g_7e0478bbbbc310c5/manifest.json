@@ -1,0 +1,1201 @@
+{
+  "geometryKey": "g_7e0478bbbbc310c5",
+  "pcMapPath": "特殊用地\\武林大会专用\\武林大会会场",
+  "serverMapPath": "特殊用地\\武林大会专用\\武林大会会场",
+  "primaryMapId": 396,
+  "mapIds": [
+    396,
+    398,
+    400,
+    402,
+    404,
+    406,
+    408,
+    410,
+    412,
+    414,
+    527,
+    528,
+    529,
+    530,
+    531,
+    532,
+    533,
+    534,
+    540,
+    542,
+    544,
+    546,
+    548,
+    550,
+    552,
+    554,
+    556,
+    558,
+    560,
+    561,
+    562,
+    563,
+    564,
+    565,
+    566,
+    567,
+    568,
+    569,
+    570,
+    571,
+    572,
+    573,
+    574,
+    575,
+    576,
+    577,
+    578,
+    579,
+    651,
+    652,
+    653,
+    654,
+    655,
+    656,
+    657,
+    658,
+    659,
+    660,
+    661,
+    662,
+    663,
+    664,
+    665,
+    666,
+    667,
+    668,
+    669,
+    670,
+    671,
+    672,
+    673,
+    674,
+    675,
+    676,
+    677,
+    678,
+    679,
+    680,
+    681,
+    682,
+    683,
+    684,
+    991,
+    993
+  ],
+  "source": "PC server PACK/MPS Region_S via g_FileName2Id signed-byte hash",
+  "serverRegionFolder": "Generated/MapServerRegions/g_7e0478bbbbc310c5",
+  "status": "extracted",
+  "regions": [
+    {
+      "col": 87,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 88,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 88,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 88,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 89,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 89,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 89,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 89,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 89,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 89,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 89,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 95,
+      "size": 2160,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 6,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 90,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 95,
+      "size": 2200,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 11,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 96,
+      "size": 2192,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 10,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 91,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 88,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 96,
+      "size": 2136,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 3,
+      "objCount": 0
+    },
+    {
+      "col": 92,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 88,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 93,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 98,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 94,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 88,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 98,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 95,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 98,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 96,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 98,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 97,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 98,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 88,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 89,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 91,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 97,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 99,
+      "row": 99,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 100,
+      "row": 90,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 100,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 100,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 100,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 100,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 101,
+      "row": 92,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 101,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 101,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 101,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 102,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 102,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 102,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 102,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 103,
+      "row": 93,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 103,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 103,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 103,
+      "row": 96,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 104,
+      "row": 94,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 104,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    },
+    {
+      "col": 105,
+      "row": 95,
+      "size": 2100,
+      "sectionCount": 6,
+      "npcCount": 0,
+      "trapCount": 0,
+      "objCount": 0
+    }
+  ],
+  "regionCount": 122,
+  "npcCount": 0,
+  "trapCount": 30,
+  "objCount": 0,
+  "attemptedCells": 248,
+  "rescueScanUsed": false
+}

@@ -1,0 +1,19 @@
+LienDauMaps StrongPack v1 - Proof Summary
+
+Verification status: PASS on seller machine.
+
+Maps included:
+- 396: Hội trường liên đấu Kiệt xuất (1)
+- 397: Đấu trường liên đấu Kiệt xuất (1)
+
+Package protection:
+- Raw map data is not shipped as loose files.
+- Payload file: LienDauMaps.vltkmap
+- Encryption: AES-256-GCM
+- Runtime/loader/license required to run.
+
+Customer package checksum:
+See LienDauMaps.vltkmap.sha256 and CHECKSUMS.sha256.
+
+Commercial/IP note:
+Buyer must have rights to use any JX/VLTK-derived data/assets in commercial products.

@@ -18,7 +18,15 @@ namespace VLTK.Tests.EditMode.Sandbox
         [Test]
         public void PcSkillIconResolver_LoadsKnownDecodedIcons()
         {
-            Assert.IsTrue(PcSkillIconArtResolver.TryResolveSkillIconPng(2, out var iconPath));
+            AssertDecodedIcon(2);
+            AssertDecodedIcon(714);
+            AssertDecodedIcon(1073);
+            AssertDecodedIcon(1074);
+        }
+
+        private static void AssertDecodedIcon(int skillId)
+        {
+            Assert.IsTrue(PcSkillIconArtResolver.TryResolveSkillIconPng(skillId, out var iconPath), $"skillId={skillId}");
             Assert.IsTrue(File.Exists(iconPath), iconPath);
 
             var data = File.ReadAllBytes(iconPath);
