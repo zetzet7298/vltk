@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using NUnit.Framework;
 using VLTK.Sandbox;
@@ -96,9 +97,12 @@ namespace VLTK.Tests.Sandbox
         public void IsExpired_TrueForPastTimestamp()
         {
             var svc = BuildService();
-            // duration 1s; chờ sleep không cần — inject thẳng listing đã expired
-            var l = svc.ListItem(9005, 500, 1, "Seller E", 100, 500, -10);
-            Assert.IsTrue(svc.IsExpired(9005), "Duration âm → expire ngay");
+            // Tạo listing hợp lệ rồi đẩy expireTime về quá khứ (production từ chối
+            // duration <= 0, nên không inject duration âm nữa — set timestamp trực tiếp).
+            var l = svc.ListItem(9005, 500, 1, "Seller E", 100, 500, 60);
+            Assert.IsNotNull(l, "Listing hợp lệ phải tạo được");
+            l.expireTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - 1000;
+            Assert.IsTrue(svc.IsExpired(9005), "Listing quá hạn → IsExpired true");
         }
 
         [Test]

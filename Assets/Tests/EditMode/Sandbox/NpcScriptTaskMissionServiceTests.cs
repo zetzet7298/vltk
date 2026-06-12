@@ -114,7 +114,7 @@ namespace VLTK.Tests.Sandbox
             });
             reg.Register(new PcDailyTaskEntry
             {
-                taskId = 3, taskType = 1, minLevel = 1, maxLevel = 100,
+                taskId = 3, taskType = 1, minLevel = 51, maxLevel = 100,
             });
             var svc = new DailyTaskService(reg);
             var at15 = svc.GetTasksForLevel(15);
