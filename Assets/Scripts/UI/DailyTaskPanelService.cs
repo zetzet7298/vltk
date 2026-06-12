@@ -85,7 +85,16 @@ namespace VLTK.UI
         {
             if (svc == null || taskId <= 0)
                 return false;
-            return svc.Accept(taskId, int.MaxValue);
+            // PC dailytask.txt mỗi nhiệm vụ có dải cấp [minLevel, maxLevel]. Panel chỉ
+            // cầm playerId nên dùng cấp mở khóa của chính nhiệm vụ (minLevel) — nằm trong
+            // dải hợp lệ — thay vì int.MaxValue (sẽ vượt maxLevel và bị từ chối oan).
+            var entry = svc.GetDailyTask(taskId);
+            if (entry == null)
+                return false;
+            int acceptLevel = entry.minLevel > 0 ? entry.minLevel : 1;
+            if (entry.maxLevel > 0 && acceptLevel > entry.maxLevel)
+                acceptLevel = entry.maxLevel;
+            return svc.Accept(taskId, acceptLevel);
         }
 
         public static bool TryComplete(DailyTaskService svc, int playerId, int taskId)

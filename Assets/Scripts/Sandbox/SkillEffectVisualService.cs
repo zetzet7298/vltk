@@ -280,6 +280,15 @@ namespace VLTK.Sandbox
             // These will only override if the data-driven setup didn't already configure visuals
             ConfigureCaiBangVisuals(skill, effect, skillLevel);
 
+            // WuDang per-skill visual override. The auto-mapper hashes the missles1.txt SPR
+            // paths to UIDs that were NOT the keys used when the WuDang SPRs were extracted
+            // into StreamingAssets/Sprites (e.g. wd_01 → c9ba5bf1, but the extracted file is
+            // 5698379e). ConfigureWuDangVisuals carries the verified extracted keys
+            // (42ed0184/5698379e/55542141/7bcefae7/8de48699 all present on disk), so it must
+            // run to point the runtime at real assets instead of missing procedural fallbacks.
+            // Switch is keyed on WuDang ids only → no-op for other factions.
+            ConfigureWuDangVisuals(skill, effect, skillLevel);
+
 
 
 
