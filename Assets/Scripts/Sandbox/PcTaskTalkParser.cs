@@ -78,7 +78,7 @@ namespace VLTK.Sandbox
         private static void ParseFile(PcTaskTalkRegistry reg, string path, string source)
         {
             if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
