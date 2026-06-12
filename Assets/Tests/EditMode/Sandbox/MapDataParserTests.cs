@@ -194,10 +194,16 @@ namespace VLTK.Tests.Sandbox
             Directory.CreateDirectory(nested);
             try
             {
-                File.WriteAllText(Path.Combine(nested, "maplist_test.ini"), "MapId\tName\tType\n1001\tBa Lang\t3\n");
+                // maplist.ini is an INI section, not TSV: "N=path", "N_name=",
+                // "N_MapPos=x,y", "N_MapType=City|Field|...".
+                File.WriteAllText(Path.Combine(nested, "maplist_test.ini"),
+                    "[List]\n1001=Region\\BaLang\n1001_name=Ba Lang\n1001_MapPos=12,34\n1001_MapType=Field\n");
                 var reg = PcMapListFullParser.BuildRegistry(root);
                 Assert.IsNotNull(reg.Get(1001));
                 Assert.AreEqual(PcMapListFullParser.TypeField, reg.Get(1001).type);
+                Assert.AreEqual("Ba Lang", reg.Get(1001).nameRaw);
+                Assert.AreEqual(12, reg.Get(1001).mapPosX);
+                Assert.AreEqual(34, reg.Get(1001).mapPosY);
             }
             finally
             {
