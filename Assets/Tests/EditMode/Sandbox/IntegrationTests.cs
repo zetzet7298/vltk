@@ -94,9 +94,11 @@ namespace VLTK.Tests.Sandbox
             if (horseCount == 0) { Assert.Ignore("Horse data rỗng"); return; }
 
             int valid = 0;
-            for (int i = 1; i <= 500 && valid < 10; i++)
+            // PC horse.txt key space (verified): ItemGenre=0, DetailType=10,
+            // ParticularType=0..34. Lookups must use that key, not a running id.
+            for (int particular = 0; particular <= 34 && valid < 10; particular++)
             {
-                var h = horse.GetHorse(i, 0, 0);
+                var h = horse.GetHorse(0, 10, particular);
                 if (h != null) { valid++; }
             }
             Assert.Greater(valid, 0, "Phải có ngựa để test");
