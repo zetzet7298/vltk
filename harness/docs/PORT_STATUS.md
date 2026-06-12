@@ -265,7 +265,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 |---|---:|---|---|
 | Mobile HUD baseline | 🔄 | committed services/tests exist; current HUD files dirty and excluded | Rerun tests/smoke after human HUD WIP is resolved |
 | HUD PC art | 🔄 | partial PC-derived subset exists | Not 100% PC HUD art/layout parity; verify asset provenance row-by-row |
-| Minimap/quest/inventory/map/chat/party/faction/shop panels | 🔄 | panels/services exist | Full PC behavior/UI parity not globally proven |
+| Minimap/quest/inventory/map/chat/party/faction/shop panels | 🔄 | panels/services exist | Chat panel aligned to input row, scroll rail aligned to messages, channel identity icon dynamically switches. Full PC behavior/UI parity not globally proven |
 | Touch input/camera rig | 🔄 | services exist | runtime/mobile tests needed |
 | Client skill scripts 722 | 🔄 indexed | service/tests exist | semantic script execution not proven |
 | Vietnamese text | 🔄 | many labels exist | full localization audit missing |

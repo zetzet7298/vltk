@@ -91,7 +91,7 @@ namespace VLTK.UI
         public string artFolder = "UI/HUD/Art";
 
         private VisualElement _hpFill, _mpFill, _staminaFill, _expFill;
-        private VisualElement _topBarPanel, _bottomPanel, _minimapPanel, _chatPanel, _chatInputRow;
+        private VisualElement _topBarPanel, _bottomPanel, _minimapPanel, _chatPanel, _chatInputRow, _chatChannelIdentityBtn;
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
@@ -332,7 +332,7 @@ namespace VLTK.UI
             _minimapPanel = root.Q("MinimapPanel");
             _chatPanel = root.Q("ChatBar");
             _chatInputRow = root.Q("ChatInputRow");
-
+            _chatChannelIdentityBtn = root.Q("ChatChannelIdentityBtn");
             _hpFill = root.Q("HpBarFill");
             _mpFill = root.Q("MpBarFill");
             _staminaFill = root.Q("StaminaBarFill");
@@ -470,7 +470,7 @@ namespace VLTK.UI
             RegisterClick(root, "ChatTabFaction", () => SelectChatChannel(ChatChannel.Faction));
             RegisterClick(root, "ChatTabOther", () => SelectChatChannel(ChatChannel.Other));
             HighlightChatTab(_selectedChatChannel);
-
+            UpdateChatChannelIdentityIcon(_selectedChatChannel);
             if (_faceBtn != null)
             {
                 _faceBtn.pickingMode = PickingMode.Position;
@@ -851,7 +851,7 @@ namespace VLTK.UI
             if (_chatPanel != null)
             {
                 _chatPanel.style.left = safeX;
-                _chatPanel.style.bottom = safeY + 176f;
+                _chatPanel.style.bottom = safeY + 42f;
             }
             if (_chatInputRow != null)
             {
@@ -2791,6 +2791,7 @@ namespace VLTK.UI
             var chat = SandboxManager.Instance?.ChatService;
             chat?.SetChannel(channel);
             HighlightChatTab(channel);
+            UpdateChatChannelIdentityIcon(channel);
             _chatInput?.Focus();
             SubsystemLog.Info("HUD", $"Select chat channel {ChatService.ChannelNameVi(channel)}");
         }
@@ -2800,6 +2801,47 @@ namespace VLTK.UI
             if (_boundRoot == null) return;
             foreach (var pair in ChatTabButtons())
                 _boundRoot.Q(pair.buttonName)?.EnableInClassList("active", pair.channel == channel);
+        }
+
+        private void UpdateChatChannelIdentityIcon(ChatChannel channel)
+        {
+            if (_chatChannelIdentityBtn == null) return;
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-all");
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-world");
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-private");
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-team");
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-faction");
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-room");
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-guild");
+            _chatChannelIdentityBtn.RemoveFromClassList("hud-chat-channel-identity-other");
+
+            switch (channel)
+            {
+                case ChatChannel.All:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-all");
+                    break;
+                case ChatChannel.World:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-world");
+                    break;
+                case ChatChannel.Private:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-private");
+                    break;
+                case ChatChannel.Team:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-team");
+                    break;
+                case ChatChannel.Faction:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-faction");
+                    break;
+                case ChatChannel.Room:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-room");
+                    break;
+                case ChatChannel.Guild:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-guild");
+                    break;
+                default:
+                    _chatChannelIdentityBtn.AddToClassList("hud-chat-channel-identity-other");
+                    break;
+            }
         }
 
         private static (string buttonName, ChatChannel channel)[] ChatTabButtons() => new[]

@@ -389,9 +389,9 @@
     left: 8px;
     top: auto;
     bottom: auto;
-    /* total height = messages(123) + tabs(26) + input-row(32) = 181 */
+    /* total height = messages(123) + tabs(26) = 149 */
     width: 430px;
-    height: 181px;
+    height: 149px;
     flex-direction: column;
     justify-content: flex-end;
     z-index: 880;
@@ -486,8 +486,8 @@
 .hud-chat-rail {
     position: absolute;
     left: 0px;
-    /* align bottom of rail with bottom of tabs (input-row(32) + tabs(26) = 58) */
-    bottom: 58px;
+    /* align bottom of rail with bottom of tabs (tabs(26) = 26) */
+    bottom: 26px;
     width: 18px;
     /* track height matches ChatMessages height (SizeBtn(14) + Track(95) + MoveBtn(14) = 123) */
     height: 123px;
@@ -1945,3 +1945,13 @@
 .hud-chat-tab {
     background-color: transparent !important;
 }
+
+/* Chat channel identity button background graphics dynamically switched in code */
+.hud-chat-channel-identity-all { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-附近频道选择.png') !important; }
+.hud-chat-channel-identity-world { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-世界频道选择.png') !important; }
+.hud-chat-channel-identity-private { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-密人频道选择.png') !important; }
+.hud-chat-channel-identity-team { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-队伍频道选择.png') !important; }
+.hud-chat-channel-identity-faction { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-门派频道选择.png') !important; }
+.hud-chat-channel-identity-room { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-城市频道选择.png') !important; }
+.hud-chat-channel-identity-guild { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-好友频道选择.png') !important; }
+.hud-chat-channel-identity-other { background-image: url('project://database/Assets/UI/HUD/Art/主界面按钮-好友频道选择.png') !important; }
