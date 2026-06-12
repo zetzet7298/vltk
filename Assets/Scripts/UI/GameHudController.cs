@@ -2011,7 +2011,7 @@ namespace VLTK.UI
                 _mapPreviewCoords.text = $"Cắm cờ: {FormatPcScenePos(target)}";
             OpenPcToolPanel("Đánh dấu bản đồ", new[]
             {
-                $"Đã cắm cờ: {FormatPcScenePos(target)}",
+                $"Cắm cờ: {FormatPcScenePos(target)}",
                 "PC: ec10b91e/f8bf2550 [BtnFlag] dùng 小地图－旗帜按钮.spr + FlagImage=地图小旗帜.spr.",
                 "Chạm bản đồ lớn để dời cờ/đặt điểm đến.",
             });
