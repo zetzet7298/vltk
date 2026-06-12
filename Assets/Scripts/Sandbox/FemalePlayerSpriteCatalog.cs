@@ -89,12 +89,14 @@ namespace VLTK.Sandbox
             // Female has no separate weapon SPRs — LW/RW are not required.
             const bool leftWeaponRequired = false;
             const bool rightWeaponRequired = false;
-            // Female shadow maps to male shadow at runtime, which is required.
-            const bool shadowRequired = true;
+            // npcres/woman has NO shadow SPR on disk (verified: 440 files, tags
+            // BD/HD/HR/LH/RH only, no FM_YY_*). The path falls back to the male
+            // shadow but the slot must NOT be required for the female set.
+            const bool shadowRequired = false;
 
             return new PlayerSpritePartSpec[]
             {
-                new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix),          shadowRequired),
+                new(PlayerSpritePartKind.Shadow,      "Shadow",       FemaleShadowPath(suffix),                        shadowRequired),
                 new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", headVariant, suffix)),
                 new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", hairVariant, suffix)),
@@ -137,6 +139,14 @@ namespace VLTK.Sandbox
             }
             return SourceRoot + @"\FM_" + part + "_" + variant.ToString("D3") + "_" + action + ".spr";
         }
+
+        /// <summary>
+        /// Female shadow path. npcres/woman has no FM_YY_* shadow SPR on disk, so
+        /// this is a placeholder kept under the FM_ prefix for catalog consistency;
+        /// the slot is marked not required and never loaded at runtime.
+        /// </summary>
+        public static string FemaleShadowPath(string action)
+            => SourceRoot + @"\FM_YY_" + ShadowVariant.ToString("D3") + "_" + action + ".spr";
 
         public static int DirectionFromMove(Vector2 move)
         {
