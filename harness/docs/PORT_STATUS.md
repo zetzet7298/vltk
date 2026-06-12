@@ -362,6 +362,39 @@ the runtime/parity gaps `PORT_STATUS` marks `🔄` — now confirmed by executio
 "35/35 implemented + pass" in Harness was hollow: the real suite is 2180/2283 with 97 genuine
 runtime failures. Closing those 97 is the concrete runtime-parity backlog.
 
+### Triage of the 97 failures (2026-06-12) — TEST-DRIFT vs PROD-GAP
+
+Each failure was read against the real production code and the actual shipped reference file to
+decide whether the **test expectation is wrong** (TEST-DRIFT — fix the test to match reality
+without weakening intent) or **production is wrong** (PROD-GAP — leave the test red, fix the code).
+Logged as Harness backlog #6–#13.
+
+**PROD-GAP (code is wrong — tests stay red until fixed):**
+
+| Cluster | Tests | Root cause | Backlog |
+| --- | --- | --- | --- |
+| GBK→TCVN3 mojibake | ~8 + 151/154 parity rows | `PcText.DecodeBest.Score()` weights Vietnamese TCVN3 +8/char vs CJK hanzi +3/char, so GB2312 files mis-decode (`宝箱1`→`±Ưẽọ1`). GB2312/CP936 is available; the correct candidate is just out-scored. One-line rebalance fixes all. | #12 |
+| Meridian collapse | 3 | `meridian_level.txt` has 128 acupoint rows (8×16); service returns 16. | #6 |
+| Title/FactionTitle loader | ~8 | `factiontitle.txt` (80) + `playertitle.txt` (363) exist and are populated, loader returns 0. Likely shares the GB2312 decode root. | #7 |
+| Mission parser | 2 | `player_task_def.txt` has 645 numeric rows; parser registers 634 (drops 11). | #8 |
+| CoverageSmoke | 2 | 64 `*Service` types lack a public parameterless ctor; `Activator.CreateInstance()` throws. 171/235 already follow the dual-ctor convention (`HongbaoService` is the template). | #9 |
+| Visual staging | ~10 of 41 | Female SPRs entirely unstaged (`female_*_sprites.json` empty), male `MA_RW_000_ST04/ST05` + `MA_LW_000_ST06` missing from manifest (only ST01–03 staged; body variants exist so filenames are correct → extraction incomplete). | #13 |
+
+**TEST-DRIFT (test expectation is wrong — fix the test, do not weaken assertions):**
+
+| Cluster | Tests | Why the test is wrong | Backlog |
+| --- | --- | --- | --- |
+| Count vs shipped stub | Shop (≥500 vs 165 shipped), Tong (≥30 vs 6), Partner (≥10 vs 4) | Tests demand full PC-source counts but only stub reference files ship. | #10 |
+| NpcSFull template id | 1 | `npcs.txt` is keyed by Name and has no template-id column; asserting `templateId>0` contradicts the schema. | #10 |
+| Self-contradicting service-logic asserts | 8 | Auction (negative duration now rejected by design), DailyTask/RandomTask (level 15 legitimately matches 2 incl. open-range), Hongbao/VngEvent/SjBattle (assertion contradicts its own inline comment), Meridian.TryUpgrade + Perf.TryUpgrade (compares wrong entry / uses empty registry). | #10 |
+| Mount layer count | ~24 of 41 | Catalog was redesigned 3-part→9-part layered horse+rider; `MountVisualTests` + female 5-part asserts still encode the old contract and now contradict `MalePlayerVisualTests`. | #10 |
+
+**Unresolved decision:** `SprRuntimeServiceTests` CJK path-UID expects `bccbbad2` (the on-disk
+staged filename, **unsigned** GB2312 hash) but the C# default `signedBytes:true` yields `bc9bc73d`
+(which has no file on disk). Note the two-hash distinction: `engine.dll g_FileName2Id` (internal
+PAK lookup) is **signed**, the **staged-filename** hash is **unsigned**. Decide whether to flip the
+staged-lookup overload default or make callers pass `signedBytes:false`. Backlog #11.
+
 ## Completion criteria before future `✅`
 
 For each future status row, cite at least one of:
