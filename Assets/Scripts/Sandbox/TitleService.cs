@@ -169,6 +169,14 @@ namespace VLTK.Sandbox
                 ? _factionReg.GetFactionTitles(factionId)
                 : (IReadOnlyList<PcFactionTitleEntry>)Array.Empty<PcFactionTitleEntry>();
 
+        /// <summary>Toàn bộ danh hiệu nhân vật (theo thứ tự PC playertitle.txt).</summary>
+        public IReadOnlyList<PcPlayerTitleEntry> AllPlayerTitles
+            => _playerReg != null ? _playerReg.All : (IReadOnlyList<PcPlayerTitleEntry>)Array.Empty<PcPlayerTitleEntry>();
+
+        /// <summary>Toàn bộ danh hiệu môn phái (theo thứ tự PC factiontitle.txt).</summary>
+        public IReadOnlyList<PcFactionTitleEntry> AllFactionTitles
+            => _factionReg != null ? _factionReg.All : (IReadOnlyList<PcFactionTitleEntry>)Array.Empty<PcFactionTitleEntry>();
+
         public bool IsPlayerTitleUnlocked(int titleId) => _unlockedPlayerTitles.Contains(titleId);
         public bool IsFactionTitleUnlocked(int titleId) => _unlockedFactionTitles.Contains(titleId);
     }
