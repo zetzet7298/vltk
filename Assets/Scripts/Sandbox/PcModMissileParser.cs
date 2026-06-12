@@ -131,7 +131,13 @@ namespace VLTK.Sandbox
 
             if (File.Exists(missles1File))
             {
-                var list = PcModMissileParser.ToMissileEntries(PcModMissileParser.ParseFile(missles1File));
+                // missles1.txt is TCVN3 Vietnamese (Western ANSI bytes + TCVN3 glyph codes).
+                // DecodeBest picks GBK (the names form clean-ish hanzi) which consumes the
+                // tab separators around high bytes, shifting columns right by one (Speed col11
+                // reads col12 -> garbage like -40960). Read it on the explicit TCVN3 path so
+                // tabs stay intact and names render as real Vietnamese.
+                var rows = PcModMissileParser.ParseLines(PcText.ReadLinesTcvn3(missles1File));
+                var list = PcModMissileParser.ToMissileEntries(rows);
                 foreach (var m in list) _missiles[m.missileId] = m;
             }
             else if (File.Exists(pcFile))

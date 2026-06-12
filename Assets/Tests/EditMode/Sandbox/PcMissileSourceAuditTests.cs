@@ -87,7 +87,9 @@ namespace VLTK.Tests.Sandbox
 
             Assert.IsFalse(versusMissles1.sameDataRowCount);
             Assert.IsFalse(versusMissles1.sameIdSequence);
-            CollectionAssert.AreEqual(new[] { 442, 443, 444, 445, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467 }, versusMissles1.idsOnlyInLeft);
+            // Ground truth: missles1.txt id sequence jumps 444 -> 446 (no 445). The
+            // ids-only-in-left set is the 25 missles1-exclusive ids, not 26.
+            CollectionAssert.AreEqual(new[] { 442, 443, 444, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467 }, versusMissles1.idsOnlyInLeft);
         }
 
         [Test]
