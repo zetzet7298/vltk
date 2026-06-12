@@ -32,7 +32,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "partner_event.ini");
             if (!File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             PcPartnerEventEntry current = null;
             foreach (var raw in lines)
             {
