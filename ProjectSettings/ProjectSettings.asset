@@ -674,7 +674,9 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Standalone: 
+    Android: VLTK_ENABLE_TESTS
+    Standalone: VLTK_ENABLE_TESTS
+    iPhone: VLTK_ENABLE_TESTS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

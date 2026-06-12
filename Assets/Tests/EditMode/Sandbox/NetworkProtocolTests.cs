@@ -89,7 +89,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void MessageRouter_Unregister_Unknown_ReturnsFalse()
         {
-            bool removed = MessageRouter.Unregister((ushort)99999);
+            bool removed = MessageRouter.Unregister((ushort)60000);
             Assert.IsFalse(removed, "Unregister opCode chưa đăng ký phải trả về false");
         }
 

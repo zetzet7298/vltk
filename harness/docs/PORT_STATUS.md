@@ -333,6 +333,35 @@ To raise a story to a truthful `✅`/runtime claim: define `VLTK_ENABLE_TESTS`, 
 EditMode/PlayMode suite via Unity Test Runner, capture the artifact, and set a `verify_command`
 that actually executes that suite — not `true`/`echo`.
 
+### First real EditMode run after enabling the suite (2026-06-12)
+
+`VLTK_ENABLE_TESTS` was defined (Standalone/Android/iOS) and the suite was un-gated for the first
+time. Two findings:
+
+**(a) The suite did not even compile.** 67 `error CS` across 7 bit-rotted test files referenced
+production APIs that had since been renamed/removed (e.g. `PcAdventureEntry.advId` → `.id`,
+`MapListFullService.Get` → `.GetMap`, `ItemDetailService.GetItemDetail` → `.GetDetail`,
+`CompoundRecipeService.Count` → `.RegisteredCount`, `GmItemActionResult.isSuccess` → `.success`,
+a missing `using VLTK.Sandbox;`, a `99999`→`ushort` overflow, and `PcRareSpawn/PcGoldBoss` schema
+drift). These were fixed at the test call-sites only (no production code touched; absent APIs
+marked `Assert.Ignore` + TODO, not silently dropped). This is the real reason the suite was gated
+off: it was abandoned when the production API moved.
+
+**(b) Once compiling, the real result is NOT green.** Unity Test Runner (job `29fe63c1…`,
+artifact `TestResults.xml`, 112s):
+
+```text
+EditMode total=2283  passed=2180  failed=97  skipped=6   (result=Failed)
+```
+
+Failure clusters (97): player/mount visual SPR staging 41 (FemalePlayerVisual 20, MalePlayerVisual
+14, MountVisual 7), Title/faction-title 5, `Pc*Parser` 9, UIPanelService 5, plus ~37 spread across
+services (Auction expire, CoverageSmoke 235→171 instantiable, DailyTask/RandomTask level filter,
+Meridian, Hongbao event, Inventory equip, Quest PC import, perf budgets, etc.). These are exactly
+the runtime/parity gaps `PORT_STATUS` marks `🔄` — now confirmed by execution, not assumed. So
+"35/35 implemented + pass" in Harness was hollow: the real suite is 2180/2283 with 97 genuine
+runtime failures. Closing those 97 is the concrete runtime-parity backlog.
+
 ## Completion criteria before future `✅`
 
 For each future status row, cite at least one of:

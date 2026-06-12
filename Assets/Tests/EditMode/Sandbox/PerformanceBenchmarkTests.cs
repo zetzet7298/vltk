@@ -62,9 +62,9 @@ namespace VLTK.Tests.Sandbox
             for (int i = 0; i < 1000; i++)
             {
                 _ = titleSvc?.GetPlayerTitle(validId);
-                _ = mapSvc?.Get(1);
-                _ = achSvc?.Get(validId);
-                _ = lotterySvc?.Get(validId);
+                _ = mapSvc?.GetMap(1);
+                _ = achSvc?.GetAchievement(validId);
+                _ = lotterySvc?.GetLottery(validId.ToString());
             }
             _sw.Stop();
             Assert.Less(_sw.ElapsedMilliseconds, 1000, $"1000 lần lookup trong <1s (mất {_sw.ElapsedMilliseconds}ms)");
@@ -146,7 +146,7 @@ namespace VLTK.Tests.Sandbox
                 // Build snapshot giả lập bằng cách enumerate
                 foreach (var e in advSvc.GetAllAdventures())
                 {
-                    if (e != null) sum += e.advId;
+                    if (e != null) sum += e.id;
                 }
             }
             _sw.Stop();

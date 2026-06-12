@@ -36,7 +36,7 @@ namespace VLTK.Tests.Sandbox
 
             var response = service.ExecuteTravelAction(null);
 
-            Assert.IsFalse(response.isSuccess);
+            Assert.IsFalse(response.success);
             Assert.AreEqual(GmItemActionStatus.Invalid, response.status);
             Assert.IsFalse(host.Called);
         }
@@ -56,7 +56,7 @@ namespace VLTK.Tests.Sandbox
 
             var response = service.ExecuteTravelAction(actionResult);
 
-            Assert.IsFalse(response.isSuccess);
+            Assert.IsFalse(response.success);
             Assert.AreEqual(GmItemActionStatus.Blocked, response.status);
             Assert.IsFalse(host.Called);
         }
@@ -76,7 +76,7 @@ namespace VLTK.Tests.Sandbox
 
             var response = service.ExecuteTravelAction(actionResult);
 
-            Assert.IsFalse(response.isSuccess);
+            Assert.IsFalse(response.success);
             Assert.AreEqual(GmItemActionStatus.NotPorted, response.status);
             Assert.IsFalse(host.Called);
         }
@@ -98,7 +98,7 @@ namespace VLTK.Tests.Sandbox
 
             var response = service.ExecuteTravelAction(actionResult);
 
-            Assert.IsTrue(response.isSuccess);
+            Assert.IsTrue(response.success);
             Assert.IsTrue(host.Called);
             Assert.AreEqual(53, host.MapId);
 
@@ -123,7 +123,7 @@ namespace VLTK.Tests.Sandbox
 
             var response = service.ExecuteTravelAction(actionResult);
 
-            Assert.IsTrue(response.isSuccess);
+            Assert.IsTrue(response.success);
             Assert.IsTrue(host.Called);
             Assert.AreEqual(907, host.MapId);
 

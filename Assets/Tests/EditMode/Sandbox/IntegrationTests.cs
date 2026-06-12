@@ -24,7 +24,7 @@ namespace VLTK.Tests.Sandbox
             foreach (var entry in adv.GetAllAdventures())
             {
                 if (entry == null) continue;
-                Assert.Greater(entry.advId, 0, "Adventure ID phải > 0");
+                Assert.Greater(entry.id, 0, "Adventure ID phải > 0");
                 Assert.GreaterOrEqual(entry.mapId, 0, "Map ID phải >= 0");
                 tested++;
                 if (tested >= 50) break;
@@ -71,14 +71,14 @@ namespace VLTK.Tests.Sandbox
             int mapsChecked = 0;
             for (int id = 1; id <= 2000 && mapsChecked < 20; id++)
             {
-                var map = mapSvc.Get(id);
+                var map = mapSvc.GetMap(id);
                 if (map != null) { mapsChecked++; }
             }
             Assert.Greater(mapsChecked, 0, "Phải có map để test");
 
             if (bfSvc != null)
             {
-                int bfs = bfSvc.GetBattlefieldsForMap(0)?.Count ?? 0;
+                int bfs = bfSvc.GetAllBattlefields()?.Count ?? 0;
                 Assert.GreaterOrEqual(bfs, 0, "Battlefield list phải hợp lệ");
             }
         }
@@ -96,7 +96,7 @@ namespace VLTK.Tests.Sandbox
             int valid = 0;
             for (int i = 1; i <= 500 && valid < 10; i++)
             {
-                var h = horse.GetHorse(i);
+                var h = horse.GetHorse(i, 0, 0);
                 if (h != null) { valid++; }
             }
             Assert.Greater(valid, 0, "Phải có ngựa để test");
@@ -119,13 +119,13 @@ namespace VLTK.Tests.Sandbox
             int valid = 0;
             for (int i = 1; i <= 5000 && valid < 10; i++)
             {
-                var it = item.GetItemDetail(i);
+                var it = item.GetDetail(i);
                 if (it != null) valid++;
             }
             Assert.Greater(valid, 0, "Phải có item để test");
             if (compound != null)
             {
-                Assert.GreaterOrEqual(compound.Count, 0, "Recipe count phải >= 0");
+                Assert.GreaterOrEqual(compound.RegisteredCount, 0, "Recipe count phải >= 0");
             }
         }
 
@@ -139,7 +139,7 @@ namespace VLTK.Tests.Sandbox
             int valid = 0;
             for (int i = 1; i <= 5000 && valid < 10; i++)
             {
-                var s = skill.GetSkillLevelData(i, 1);
+                var s = skill.GetLevelData(i, 1);
                 if (s != null) valid++;
             }
             Assert.GreaterOrEqual(valid, 0, "Skill lookup phải hợp lệ");
