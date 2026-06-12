@@ -76,13 +76,18 @@ namespace VLTK.Sandbox
 
     public sealed class PcMissionRegistry
     {
+        private readonly List<PcMissionEntry> _all = new();
         private readonly Dictionary<int, PcMissionEntry> _byFirst = new();
         private readonly Dictionary<int, PcMissionEntry> _byId = new();
-        public int Count => _byFirst.Count;
+        // Count reflects every parsed row. Some first-ids repeat legitimately
+        // (e.g. tournament 预选赛/决赛 reuse the same TASK_ID_FIRST), so dedup by
+        // first-id would drop valid task definitions — keep them all in _all.
+        public int Count => _all.Count;
 
         public void Register(PcMissionEntry e)
         {
             if (e == null || e.taskIdFirst <= 0) return;
+            _all.Add(e);
             _byFirst[e.taskIdFirst] = e;
             for (int id = e.taskIdFirst; id <= e.taskIdLast; id++)
                 _byId[id] = e;
@@ -90,6 +95,6 @@ namespace VLTK.Sandbox
 
         public PcMissionEntry GetByFirstId(int id) => _byFirst.TryGetValue(id, out var v) ? v : null;
         public PcMissionEntry ResolveId(int id) => _byId.TryGetValue(id, out var v) ? v : null;
-        public IEnumerable<PcMissionEntry> All => _byFirst.Values;
+        public IEnumerable<PcMissionEntry> All => _all;
     }
 }
