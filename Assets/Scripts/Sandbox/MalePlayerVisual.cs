@@ -258,10 +258,19 @@ namespace VLTK.Sandbox
                 var runtime = GetOrCreatePart(spec);
                 runtime.spec = spec;
                 runtime.clip = LoadClip(spec.sourcePath, spec.expectedDirections);
-                bool ok = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
-                runtime.renderer.enabled = ok;
-                runtime.renderer.gameObject.SetActive(ok);
-                if (ok)
+                bool loaded = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
+                // Part-count model (NOT staging): a slot only counts toward
+                // LoadedPartCount and renders when the PC art genuinely exists for
+                // this gender/config, which the catalog encodes via spec.required.
+                // A non-required slot whose {uid}.spr happens to resolve (e.g. an
+                // orphan staged from an out-of-scope tree) must NOT inflate the
+                // count nor paint a phantom layer. This keeps the invariant
+                // LoadedPartCount == number of visible part renderers, independent
+                // of which SPR files are present on disk.
+                bool show = loaded && spec.required;
+                runtime.renderer.enabled = show;
+                runtime.renderer.gameObject.SetActive(show);
+                if (show)
                     LoadedPartCount++;
                 else if (spec.required)
                 {
