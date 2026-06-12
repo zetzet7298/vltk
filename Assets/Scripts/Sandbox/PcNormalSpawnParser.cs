@@ -87,7 +87,7 @@ namespace VLTK.Sandbox
         public static List<SpawnPoint> ParseFile(string path)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return new List<SpawnPoint>();
-            var lines = PcItemCommon.ReadServerLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             return ParseLines(lines, "normal.txt");
         }
 

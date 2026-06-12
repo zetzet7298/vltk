@@ -15,7 +15,7 @@ namespace VLTK.Sandbox
         {
             var rows = new List<PcAuctionConfigEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var lines = PcItemCommon.ReadServerLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             string section = string.Empty;
             foreach (var raw in lines)
             {

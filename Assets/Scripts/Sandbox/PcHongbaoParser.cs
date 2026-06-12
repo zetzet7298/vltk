@@ -29,8 +29,8 @@ namespace VLTK.Sandbox
         {
             var rows = new List<PcHongbaoEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var lines = PcItemCommon.ReadServerLines(path);
-            if (lines.Count == 0) return rows;
+            var lines = PcText.ReadLinesTcvn3(path);
+            if (lines.Length == 0) return rows;
             bool headerSkipped = false;
             bool legacySchema = false;
             int rowId = 0;
