@@ -242,10 +242,17 @@ namespace VLTK.Sandbox
                 var runtime = GetOrCreatePart(spec);
                 runtime.spec = spec;
                 runtime.clip = LoadClip(spec.sourcePath, spec.expectedDirections);
-                bool ok = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
-                runtime.renderer.enabled = ok;
-                runtime.renderer.gameObject.SetActive(ok);
-                if (ok)
+                bool loaded = runtime.clip != null && runtime.clip.sprites != null && runtime.clip.sprites.Length > 0;
+                // Part-count model (NOT staging): npcres/woman canonically has only
+                // BD/HD/HR/LH/RH art — no Shadow/LW/RW. Those slots are spec.required
+                // = false. A non-required slot whose {uid}.spr happens to resolve
+                // (orphan FM_LW/FM_RW staged from an out-of-scope tree) must NOT
+                // inflate LoadedPartCount nor paint a phantom layer. Gate by
+                // spec.required so the count reflects the real per-gender layer set.
+                bool show = loaded && spec.required;
+                runtime.renderer.enabled = show;
+                runtime.renderer.gameObject.SetActive(show);
+                if (show)
                     LoadedPartCount++;
                 else if (spec.required)
                 {
