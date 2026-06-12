@@ -395,6 +395,24 @@ staged filename, **unsigned** GB2312 hash) but the C# default `signedBytes:true`
 PAK lookup) is **signed**, the **staged-filename** hash is **unsigned**. Decide whether to flip the
 staged-lookup overload default or make callers pass `signedBytes:false`. Backlog #11.
 
+### Fixes landed (2026-06-12) — 97 → 86 failures
+
+Real EditMode failures dropped from 97 to 86 via four root-cause PROD-GAP fixes (verified by
+re-running the affected tests, not by weakening them):
+
+| Commit | Fix | Tests recovered | Backlog |
+| --- | --- | --- | --- |
+| `319ce3b27` | `PcText.Score()` rebalanced VN+4 / CJK+8 — GBK files decode as hanzi again (validated on 198 ref files: 7 GBK corrected, 0 Vietnamese regressed) | ObjectSetting, NormalSpawn, QuestImport, SkillCatalogParity (151 rows), ThiefSkill-count | #12 closed |
+| `f5d22a8dc` | `PcFactionTitleParser` column map corrected (RANKID/RANKSTR/FACTION; was reading id from name col → 0 rows) | TitleServiceTests (4), PcFactionTitleParserTests | #7 partial |
+| `4bc729843` | `PcMissionRegistry` keeps all 645 rows (was deduping 11 tournament tasks that share TASK_ID_FIRST) | PcMissionParserTests, QuestServicePcImportTests | #8 closed |
+| `9eb2fc019` | parameterless ctor added to 64 registry-only services | both CoverageSmokeTests (was 171/235 + 64 throwing) | #9 closed |
+
+**Still open (harder PROD-GAPs, left red — not faked green):**
+- Meridian model refactor: `acupointId` is actually a per-meridian level (1–16) × 8 meridians = 128; registry collapses to 16. Needs composite-key refactor through MeridianService + PC-source inspection. Backlog #6.
+- `TitlePanelService` is a full stub (every method returns empty/false). Story ST-06.1 marked implemented but UI service unimplemented. Backlog #7.
+- Female player/mount SPRs unstaged + male ST04/05/06 weapon suffixes missing. Backlog #13.
+- TEST-DRIFT batch (~50 tests): counts vs shipped stubs, self-contradicting service-logic asserts, mount 3→9 layer redesign. Backlog #10.
+
 ## Completion criteria before future `✅`
 
 For each future status row, cite at least one of:
