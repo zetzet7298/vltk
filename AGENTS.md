@@ -132,3 +132,39 @@ follow these rules.
   pass in a real artifact. `true`/`echo` verify commands do not count.
 - Offline workers `kanban_block` with `review-required:` for the integration
   worker to pick up; they do not self-certify "compiles" or "tests pass".
+
+### Encoding / decode golden rules (the #1 systemic bug class)
+
+The single biggest source of runtime bugs in this port is wrong text decoding of
+`Reference/*.{txt,ini}` files. Audited 2026-06-12: of 353 shipped reference files,
+**221 are Vietnamese-localized TCVN3** (Western/windows-1252 bytes whose high chars
+are TCVN3 glyph codes), 119 are ASCII, 12 are UTF-8, and only **1 is genuinely
+Chinese GB2312** (`PcItemFull/helmres.txt`). Bugs found this way: maplist names,
+meridian 118/13 (lost rows from swallowed tabs), title 335/363 + mojibake.
+
+1. **`PcText.ReadLines(path, null)` / `PcItemCommon.ReadServerLines` use
+   `DecodeBest` auto-detect, whose `Score()` is biased toward CJK (hanzi weight 8 >
+   Vietnamese 4).** On a TCVN3 file, certain Vietnamese high-bytes get read as GBK
+   lead bytes and swallow the following `0x09` TAB → column shift → lost/garbled
+   rows. For a file KNOWN to be Vietnamese-TCVN3, call `PcText.ReadLinesTcvn3(path)`
+   (forces windows-1252 + TCVN3, skips auto-detect). One-line swap.
+2. **Not every file is Vietnamese.** Some are genuinely Chinese (GB2312) or mixed
+   asset-path tables. Forcing TCVN3 on a Chinese file corrupts it — the exact
+   inverse bug. Classify per-file before swapping.
+3. **`DecodeBest` replication in Python LIES.** The offline replica picked TCVN3
+   for title #7 but the real Editor picked GB2312 (335/363 + mojibake). To verify
+   an encoding OFFLINE you MUST force-decode both ways — windows-1252+TCVN3 vs
+   GB2312/GB18030 — count replacement chars / inspect sample names, and pick the
+   clean one. Never trust a `DecodeBest` reimplementation, and never trust a raw
+   latin1/byte split (it shows clean counts even when the real decode breaks).
+4. The integration-lane Editor is the final arbiter: a decode fix is only proven
+   when the parser's EditMode tests go green in a real Test Runner artifact.
+
+### Root-cause over patch (applies to all lanes)
+
+When a card's premise turns out to be wrong (e.g. "all 14 files are TCVN3" when
+11 are actually Chinese), do NOT blindly execute the card. Scope it down, leave
+evidence in a `kanban_comment`, fix only what is provably correct, and spawn
+follow-up cards for the rest. A worker that corrupts data by obeying a wrong card
+is worse than one that stops and reports. This is the same "no false green"
+principle applied at implementation time.
