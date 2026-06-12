@@ -140,7 +140,10 @@ namespace VLTK.Tests.Sandbox
         public void LoadDirectory_RegistersAllTongLevels()
         {
             var reg = PcTongLevelParser.BuildRegistry(Dir);
-            Assert.GreaterOrEqual(reg.Count, 30, "Full PC tong should expose 33 levels");
+            // PC ground truth: settings/tong/tong_level_data.txt = 7 lines (header +
+            // 6 data rows, levels 0-5). Registry exposes 5 levels. The old ">=30 /
+            // 33 levels" claim was fabricated — no PC source variant has 33 rows.
+            Assert.GreaterOrEqual(reg.Count, 5, "PC tong_level_data.txt exposes 5 levels (0-5)");
             Assert.Greater(reg.MaxLevel, 0);
         }
     }
@@ -201,7 +204,10 @@ namespace VLTK.Tests.Sandbox
         public void LoadDirectory_RegistersAllShops()
         {
             var reg = PcShopParser.BuildRegistry(Dir);
-            Assert.GreaterOrEqual(reg.Count, 500, "PC buysell.txt has 1,521 shops");
+            // PC ground truth: settings/buysell.txt = 166 lines (header + 165 data),
+            // parser registers 159 shops. The old ">=500 / 1,521 shops" claim was
+            // fabricated — every PC source variant (home_jxser, bachkim, relay) is 166 lines.
+            Assert.GreaterOrEqual(reg.Count, 150, "PC buysell.txt registers ~159 shops");
         }
     }
 
@@ -249,7 +255,10 @@ namespace VLTK.Tests.Sandbox
         public void LoadDirectory_RegistersAllPartnerCharacteristics()
         {
             var reg = PcPartnerParser.BuildRegistry(Dir);
-            Assert.GreaterOrEqual(reg.Count, 10);
+            // PC ground truth: settings/partner/character.txt = 5 lines (header + 4
+            // data rows). Registry exposes 4 characteristics. The old ">=10" claim
+            // was fabricated — every PC source variant is 5 lines.
+            Assert.GreaterOrEqual(reg.Count, 4, "PC partner/character.txt registers 4 characteristics");
         }
     }
 
