@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC settings/factiontitle.txt faction title parser
 // Source: factiontitle.txt (81 entries, GB2312).
-//   TitleName  FactionId  TitleId  TitleLevel  ...
+//   RANKID  RANKSTR  FACTION   (col0=id, col1=name, col2=factionId)
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;
@@ -25,9 +25,9 @@ namespace VLTK.Sandbox
                 if (cols.Length < 3) continue;
                 rows.Add(new PcFactionTitleEntry
                 {
-                    titleId = PcItemCommon.Int(cols, 1),
-                    factionId = PcItemCommon.Int(cols, 0),
-                    nameRaw = PcItemCommon.Str(cols, 2),
+                    titleId = PcItemCommon.Int(cols, 0),
+                    factionId = PcItemCommon.Int(cols, 2),
+                    nameRaw = PcItemCommon.Str(cols, 1),
                     titleLevel = cols.Length > 3 ? PcItemCommon.Int(cols, 3) : 0,
                 });
             }
