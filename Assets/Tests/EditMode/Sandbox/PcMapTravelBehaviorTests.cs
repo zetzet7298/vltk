@@ -102,8 +102,10 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(host.Called);
             Assert.AreEqual(53, host.MapId);
 
-            // MpsToWorld(100 * 32, 200 * 32) -> (3200, -6400)
-            Assert.AreEqual(new Vector2(3200f, -6400f), host.WorldPosition);
+            // MpsToWorld(100*32, 200*32) = MpsToWorld(3200, 6400).
+            // regionRow = 6400/1024 = 6; worldY = -(6400 - 6*512) = -(6400-3072) = -3328.
+            // (Region-row offset per BaLangEnemyTests, validated against Region_S data.)
+            Assert.AreEqual(new Vector2(3200f, -3328f), host.WorldPosition);
         }
 
         [Test]
@@ -127,8 +129,9 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(host.Called);
             Assert.AreEqual(907, host.MapId);
 
-            // MpsToWorld(3200, 6400) -> (3200, -6400)
-            Assert.AreEqual(new Vector2(3200f, -6400f), host.WorldPosition);
+            // MpsToWorld(3200, 6400) with region-row offset:
+            // regionRow = 6400/1024 = 6; worldY = -(6400 - 6*512) = -3328.
+            Assert.AreEqual(new Vector2(3200f, -3328f), host.WorldPosition);
         }
     }
 }
