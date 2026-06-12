@@ -4,13 +4,15 @@ All of this is already implemented in the project (`MapRenderer.cs`, `RegionPars
 `GroundLayerParser.cs`, `BuildinObjParser.cs`). This file documents *why* it works so you
 can debug or port the renderer elsewhere.
 
-> Provenance caveat: the formulas below were originally recovered from JX engine C++
-> (`KScenePlaceRegionC.{h,cpp}`, `Represent3/KRepresentShell3.cpp`). Those `.cpp` files are
-> NOT present in the in-scope source `/var/www/vltksource_new/vl_update_27` (only
-> `represent3.dll` ships there) — they came from the out-of-scope `jxwin-kinnox` tree. The
-> constants are validated against runtime behavior and the working Unity port, so trust the
-> numbers; just don't expect to `grep` those paths under `vltksource_new`. If you must
-> re-derive from binary, escalate to `reverse-engineering` against `represent3.dll`.
+> Provenance: the formulas below were recovered from JX engine C++
+> (`KScenePlaceRegionC.{h,cpp}`, `Represent3/KRepresentShell3.cpp`). Those `.cpp` source
+> files are NOT in-scope under `/var/www/vltksource_new/vl_update_27` (only `represent3.dll`
+> ships there) — but the key constant is now **binary-verified** against that DLL. The
+> Z-projection `screenY = sceneY/2 - (sceneZ*887)>>10` appears verbatim at
+> `represent3.dll:0x1000d08a` as `imul edi,edi,0x377` (887) followed by `sar edi,0xa` (>>10)
+> and `sar eax,1` (sceneY/2), then `sub eax,edi`. Two more sites (`0x1000c55e`, `0x1000d00e`)
+> use the same `imul …,0x377; sar …,0xa`. Trust the numbers; to re-derive anything deeper,
+> open `represent3.dll` (PE i386, baddr 0x10000000) in radare2.
 
 ## Region scene geometry
 

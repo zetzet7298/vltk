@@ -3,6 +3,37 @@
 Reverse-engineered from `engine.dll` (PE i386, MSVC 8, ImageBase `0x10000000`) in
 `/var/www/vltksource_new/vl_update_27/Client 6.0/engine.dll`.
 
+## Verified symbol RVAs (radare2 on the real engine.dll, 2026-06-12)
+
+`engine.dll` ships with full MSVC-mangled export symbols (1362 exports), so these are exact,
+not guesses. Confirmed with `rabin2 -E` + `r2 -c "s <rva>; af; pdf"`:
+
+| Symbol | RVA (file) | VA (baddr 0x10000000) | What it proves |
+|---|---|---|---|
+| `?g_FileName2Id@@YAKPBD@Z` | `0x25c60` | `0x10025c60` | the PAK path-hash; `movsx edx,dl` = **signed byte** |
+| `?g_InitCodec@@YAXPAPAVKCodec@@H@Z` | `0x5b40` | `0x10005b40` | only ever instantiates `KCodecLzo` (NRV2B) |
+| `?Decode@KCodec@@UAEHPAUTCodeInfo@@@Z` | `0x5b10` | `0x10005b10` | base codec virtual Decode |
+| `?Decode@KCodecLzo@@UAEHPAUTCodeInfo@@@Z` | `0x60f0` | `0x100060f0` | NRV2B decode; `cmp cl,0x11` is the LZO literal-run marker on the **data stream**, NOT a PAK flag |
+| `?Open@KPakData@@QAEHPAD@Z` | `0x279d0` | `0x100279d0` | PAK open |
+| `?Search@KPakData@@QAEHPADPAK1@Z` | `0x27870` | `0x10027870` | UID lookup in index |
+| `?Decode@KPakData@@QAEHPAUTCodeInfo@@@Z` | `0x27950` | `0x10027950` | thunk → KCodec vtable slot 2 |
+| `?Pack@KPakTool@@QAEHPAD0H@Z` | `0x28250` | `0x10028250` | single-file pack |
+| `?UnPack@KPakTool@@QAEHPAD0@Z` | `0x284a0` | `0x100284a0` | single-file unpack |
+
+**`g_FileName2Id` disassembly (the signed-byte proof).** The exact instruction stream at
+`0x10025c60`: lowercase `A-Z` (`sub al,0x41; cmp al,0x19; ja; add dl,0x20`), `/`→`\`
+(`cmp dl,0x2f; mov dl,0x5c`), then **`movsx edx, dl`** (sign-extend → bytes ≥0x80 become
+negative, i.e. `b-256`), `imul` by 1-based index, `add` accumulator, `div 0x8000000B` (mod),
+`neg/shl 4/sub` (= `rem * 0xFFFFFFEF`), final `xor 0x12345678`. This is byte-for-byte the
+algorithm in `jx_map_port.py` / `uid.py`. Cross-checked: a Python reimpl of this exact asm
+and `uid.py` both yield `c4454165` for `\spr\Ui\技能图标\icon_sk_ty_at.spr` and `45488ea8`
+for `\spr\npcres\man\MA_BD_019_ST01.spr` (after both normalize a leading `\`).
+
+**`g_InitCodec`** at `0x10005b40` only `new`s a `KCodecLzo` (12-byte object, vtable
+`0x1003f510`) when its selector is set; there is no second codec class. So every *compressed*
+PAK entry is decompressed by NRV2B regardless of the method label — which is why the
+"BZIP2/FRAGMENT" rows below are noted as misnamed.
+
 ## PAK File Layout
 
 ```
@@ -37,18 +68,27 @@ compressed_sz = flags & 0x00FFFFFF
 
 ## Compression Methods
 
-| Method         | Value       | Decompressor            | Notes                         |
-|----------------|-------------|-------------------------|-------------------------------|
-| TYPE_NONE      | `0x00000000`| None (stored as-is)     |                               |
-| TYPE_UCL_OLD   | `0x01000000`| `ucl_nrv2b_decompress_8`| Most common (~90% of entries) |
-| TYPE_UCL       | `0x10000000`| `ucl_nrv2b_decompress_8`| New variant                   |
-| TYPE_BZIP2_OLD | `0x02000000`| `ucl_nrv2b_decompress_8`| Misnamed; still NRV2B         |
-| TYPE_BZIP2     | `0x20000000`| `ucl_nrv2b_decompress_8`| Misnamed; still NRV2B         |
-| TYPE_FRAGMENT_OLD | `0x03000000`| `ucl_nrv2d_decompress_8`| NRV2D variant              |
-| TYPE_FRAGMENT  | `0x30000000`| `ucl_nrv2d_decompress_8`| NRV2D variant                 |
-| TYPE_FRAGMENTA_OLD | `0x04000000`| `ucl_nrv2e_decompress_8`| NRV2E variant             |
-| TYPE_FRAGMENTA | `0x40000000`| `ucl_nrv2e_decompress_8`| NRV2E variant                 |
-| **0x11_RAW**   | `0x11000000`| **None — save as-is**   | SPR files stored uncompressed |
+`method = flags & 0xFF000000`. Table below; the **Count** column is the measured distribution
+across all 46 source paks (403,560 entries total, verified 2026-06-12 — matches the manifest).
+
+| Method         | Value       | Decompressor            | Count   | Notes                         |
+|----------------|-------------|-------------------------|---------|-------------------------------|
+| TYPE_BZIP2     | `0x20000000`| `ucl_nrv2b_decompress_8`| 252,000 | Misnamed; still NRV2B. Most common |
+| TYPE_UCL_OLD   | `0x01000000`| `ucl_nrv2b_decompress_8`| 149,697 | NRV2B                         |
+| TYPE_NONE      | `0x00000000`| None (stored as-is)     | 1,506   | Stored                        |
+| **0x11_RAW**   | `0x11000000`| **None — save as-is**   | 352     | Raw SPR stored uncompressed   |
+| **0x10_FRAG**  | `0x10000000`| **fragment table** (see below) | 5 | dmjx01.pak only; NOT a plain NRV2B stream |
+| TYPE_UCL       | `0x10000000`| `ucl_nrv2b_decompress_8`| (0 plain)| Label collides with 0x10_FRAG; in this dataset every 0x10 entry is a fragment table, so try the fragment parse first, then fall back to NRV2B |
+| TYPE_BZIP2_OLD | `0x02000000`| `ucl_nrv2b_decompress_8`| 0       | Not present in this dataset   |
+| TYPE_FRAGMENT_OLD | `0x03000000`| `ucl_nrv2d_decompress_8`| 0    | Not present; would be NRV2D if it appeared |
+| TYPE_FRAGMENT  | `0x30000000`| `ucl_nrv2d_decompress_8`| 0       | Not present                   |
+| TYPE_FRAGMENTA_OLD | `0x04000000`| `ucl_nrv2e_decompress_8`| 0   | Not present; NRV2E            |
+| TYPE_FRAGMENTA | `0x40000000`| `ucl_nrv2e_decompress_8`| 0       | Not present                   |
+
+Measured reality: only **5 distinct methods actually occur** (`0x20`, `0x01`, `0x00`, `0x11`,
+`0x10`). The NRV2D/NRV2E rows are kept for completeness but are dead in this client — and note
+`g_InitCodec` only builds `KCodecLzo` (NRV2B), so if a `0x30/0x40` entry ever turned up, the
+NRV2D/NRV2E mapping would need re-confirming against the binary rather than trusted blindly.
 
 ### Method 0x11000000 — Raw SPR (critical discovery)
 
@@ -86,6 +126,13 @@ table_offset:
 Each chunk must be decompressed using its own `flag` method/size and then concatenated. Calling
 libucl/NRV2B on the whole top-level payload segfaults. Verified fixed UIDs:
 `8ced40ec`, `9514cffa`, `a4728732`, `c99c13bd`, `e53792c4`.
+
+**Binary-verified (2026-06-12)** by parsing `dmjx01.pak` directly: all 5 UIDs are present in the
+index with method `0x10000000`. Cracking `8ced40ec` (csize 92097, dsize 132112): header reads
+`fragment_count=17`, `table_offset=0x166f5`; the 17 tail records sum `out_size` to exactly
+`132112 == dsize`, and the first record's `flag` carries its own per-chunk method (`0x0` stored,
+`0x20000000` NRV2B, …). This confirms the container layout and the "decompress-per-chunk-then-
+concat" rule, not a single NRV2B stream. `e53792c4` parses identically (same 17-record shape).
 
 ## Engine Key Functions (radare2 symbols)
 

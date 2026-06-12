@@ -127,6 +127,10 @@ load one, sanity-check these recurring hazards before relying on it:
 When you find one of these, patch the offending skill/script immediately rather than working
 around it — that is the whole point of these being maintained skills.
 
+For the full executable audit procedure (the five verify-by-execution checks that catch these:
+empty-section scan, signed-byte uid evidence pair, manifest read, dead-path stat, ad-hoc-scanner
+check) plus the fix discipline, see [`references/skill-audit-playbook.md`](references/skill-audit-playbook.md).
+
 ## If Source Is Missing
 
 - Say exactly what was searched under `/var/www/vltksource_new/vl_update_27`.
