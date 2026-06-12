@@ -35,7 +35,7 @@ namespace VLTK.Sandbox
         public static List<PcTranslifeSkillSourceEntry> ParseFile(string path)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return new List<PcTranslifeSkillSourceEntry>();
-            return ParseLines(PcItemCommon.ReadServerLines(path));
+            return ParseLines(PcText.ReadLinesTcvn3(path));
         }
 
         public static List<PcTranslifeSkillSourceEntry> ParseLines(IReadOnlyList<string> lines)

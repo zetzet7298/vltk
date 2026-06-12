@@ -27,7 +27,7 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
                 return PcSkills1FullCatalog.Empty;
-            return ParseLines(PcMapListParser.ReadLines(absolutePath));
+            return ParseLines(PcText.ReadLinesTcvn3(absolutePath));
         }
 
         public static PcSkills1FullCatalog ParseLines(IReadOnlyList<string> lines)
