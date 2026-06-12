@@ -38,7 +38,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "tong_setting.ini");
             if (!File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             var groups = new Dictionary<int, Dictionary<string, string>>();
             foreach (var raw in lines)
             {

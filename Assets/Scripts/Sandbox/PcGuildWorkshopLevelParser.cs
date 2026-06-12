@@ -67,7 +67,7 @@ namespace VLTK.Sandbox
             var metaPath = Path.Combine(absoluteDir, "workshops.txt");
             if (!File.Exists(metaPath)) return reg;
 
-            var lines = PcMapListParser.ReadLines(metaPath);
+            var lines = PcText.ReadLinesTcvn3(metaPath);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -99,7 +99,7 @@ namespace VLTK.Sandbox
                 var levelPath = Path.Combine(absoluteDir, $"{kvp.Value}_level_data.txt");
                 if (!File.Exists(levelPath)) continue;
 
-                var levelLines = PcMapListParser.ReadLines(levelPath);
+                var levelLines = PcText.ReadLinesTcvn3(levelPath);
                 foreach (var raw in levelLines)
                 {
                     if (string.IsNullOrWhiteSpace(raw)) continue;
