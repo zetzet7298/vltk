@@ -34,7 +34,11 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "stringresource.txt");
             if (!File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            // stringresource.txt ships as Vietnamese TCVN3 (windows-1252 bytes + TCVN3 glyph
+            // codes). Auto-detect (DecodeBest) is GBK-biased and mis-decodes the localized
+            // text column into hanzi/mojibake; force the deterministic TCVN3 path. See
+            // kanban t_278a9ad8 systemic decode audit.
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
