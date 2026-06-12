@@ -395,9 +395,9 @@ staged filename, **unsigned** GB2312 hash) but the C# default `signedBytes:true`
 PAK lookup) is **signed**, the **staged-filename** hash is **unsigned**. Decide whether to flip the
 staged-lookup overload default or make callers pass `signedBytes:false`. Backlog #11.
 
-### Fixes landed (2026-06-12) — 97 → 79 failures
+### Fixes landed (2026-06-12) — 97 → 72 failures
 
-Real EditMode failures dropped from 97 to 79 via root-cause fixes (verified by
+Real EditMode failures dropped from 97 to 72 via root-cause fixes (verified by
 re-running affected tests, not by weakening them):
 
 | Commit | Fix | Tests recovered | Backlog |
@@ -409,6 +409,8 @@ re-running affected tests, not by weakening them):
 | `e6c55cece` | Auction+DailyTask fixtures aligned to real production contract (no weakening) | IsExpired_TrueForPastTimestamp, GetTasksForLevel_FiltersCorrectly | #10 partial |
 | `75638c5b5` | MapPanelService GetMapsByType/GetMapIconPath + NpcDialog snapshot id implemented | MapPanel x2, NpcDialog null-snapshot | #10 partial |
 | `8686e508f` | FemalePlayerSpriteCatalog shadow not-required + FM_ shadow path (verified vs PC npcres/woman) | Catalog_ShadowAndWeapons_AreNotRequired, Catalog_EmptyHandMove_HasFullFemaleLayerSet | #13 partial |
+| `48e77f156` | RandomTask/Shop/Tong/Partner count expectations corrected to PC ground truth (buysell=166→159 shops, tong=7→5 levels, partner=5→4 chars; fabricated 1521/33/10 removed) | 4 parser/count tests | #10 partial |
+| `a31831c08` | 3 self-contradicting service-logic asserts fixed vs production (VngEvent requiredVip filter, Hongbao no claim-dedup, SjBattle fallback threshold rejects low level) | VngEvent, Hongbao, SjBattle | #10 partial |
 
 **Still open (harder PROD-GAPs, left red — not faked green):**
 - Visual SPR cluster (Female/Male/Mount `Visual_LoadsXxx`, ~40 tests): woman LW/RW paths hash to UIDs (48fa4044/b4196106) that collide with unrelated staged SPRs (0 manifest refs them as woman weapons; PC ground truth: woman has only BD/HD/HR/LH/RH). Staging/hash-collision model fix. Backlog #13.
