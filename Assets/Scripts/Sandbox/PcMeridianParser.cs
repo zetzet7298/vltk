@@ -30,7 +30,18 @@ namespace VLTK.Sandbox
         {
             var rows = new List<PcMeridianEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var lines = PcItemCommon.ReadServerLines(path);
+            // meridian_level.txt is a Vietnamese-localized TCVN3 file (Western ANSI bytes
+            // whose high chars are TCVN3 glyph codes). It must NOT go through the
+            // auto-detecting DecodeBest() path (PcItemCommon.ReadServerLines -> PcText
+            // .ReadLines(path, null)): that scorer is biased toward GBK/hanzi, and ~22 rows
+            // contain a Vietnamese high byte (e.g. 0xb6/0xad/0xd7) immediately followed by a
+            // 0x09 TAB. The .NET GBK decoder treats <leadByte><0x09> as a single 2-byte unit
+            // and SWALLOWS the tab -> column shift -> meridianId reads garbage. That is exactly
+            // how the table collapsed to Count=118 / 13 meridians / meridian1=14 levels instead
+            // of the correct 128 acupoints (8 meridians × 16 levels). ReadLinesTcvn3 forces
+            // windows-1252 + TCVN3 and skips auto-detect, so every tab survives. (Same GBK↔TCVN3
+            // mojibake family as objdata.txt / backlog #12.)
+            var lines = PcText.ReadLinesTcvn3(path);
             bool headerSkipped = false;
             foreach (var line in lines)
             {
