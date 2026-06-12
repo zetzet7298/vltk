@@ -2,7 +2,7 @@
 
 > **Audit date**: 2026-06-09; source-of-truth refresh: 2026-06-10
 > **PC source of truth**: loose source under `/var/www/vltksource_new/vl_update_27` **plus** canonical unpacked PAK tree `/var/www/vltksource_new/vl_update_27/pak_unpacked`
-> **Unpack manifest**: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json` — 46/46 real source `.pak` files accounted, 401,281/401,640 unique entries on disk (99.91%); 357 known undecoded entries use unsupported compression `0x11000000`.
+> **Unpack manifest**: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json` — read live, do not bake counts. Current manifest (re-verified 2026-06-12): `pak_count=46`, `total_entries=403560`, `total_exported=403560`, `total_failed=0`, `partial=0`, all 46 items `status=ok` (incl. `dmjx01.pak` 1621/1621). The earlier "401,281/401,640, 357 undecoded `0x11000000`" line was a pre-repair snapshot and is now stale: method `0x11000000` (352 entries) is raw-SPR stored-as-is (byte-copied, not undecoded), and the 5 `dmjx01` `0x10000000` fragment-table entries were repaired. Method distribution across all 46 paks: `0x20`=252000, `0x01`=149697, `0x00`=1506, `0x11`=352, `0x10`=5 (binary-verified vs engine.dll/represent3.dll 2026-06-12).
 > **Mobile repo**: `/var/www/vltk-mobile` (`dev` at `0480502` when audit started; source-truth alignment commits: `0638487`, `794f7ca`)
 > **Scope**: toàn bộ codebase/status, không chỉ map.
 > **Dirty excluded**: `Assets/Scripts/UI/CharacterPanelService.cs`, `Assets/Scripts/UI/GameHudController.cs`, `harness/item_spr_img/` là HUD/UI WIP của human/parallel work, không dùng làm proof.
@@ -107,7 +107,7 @@ These are **data/catalog facts only** unless the “Runtime parity” column say
 | Wharves | `Reference/PcMap/wharf.txt` | 11 rows / 16 SECT slots | ✅ data / ☐ teleport runtime | parser preserves row 3 `COUNT=1` with 2 real SECT slots; current action service returns `DataOnly` because `wharf.txt` preserves service positions but not a proven destination list. |
 | Revive positions | `Reference/PcMap/revivepos.ini` | 139 map sections / 241 coordinate rows | ✅ data / 🔄 generic behavior path | parser preserves section `[949]` `region=1,3` with 1 real coordinate; service lookup and generic teleport host path exist, but in-scene revive lifecycle/wiring is not proven full PC runtime. |
 | Scrolls | `Reference/PcMap/scroll.txt` | 2,600 rows | ✅ data / ☐ teleport runtime | `PcMapTravelRuntimeService` proof preserves 2,600 value rows and no fabricated map rows; current action service treats the table as value/data-only unless real map rows are proven. Scroll item consumption/teleport UX is not ported. |
-| Normal Spawn data | `Reference/PcNpc/normal.txt` | 5,384 rows | ✅ data / 🔄 runtime | 5,384 rows verified and integrated into `PcNormalSpawnRuntimeService` (Batch 7). Full AI spawn loop parity still partial. |
+| Normal Spawn data | `Reference/PcNormalSpawn/normal.json` | 5,384 rows | ✅ data / 🔄 runtime | 5,385 JSON array elements = 1 GBK header row + 5,384 data rows; loaded by `PcNormalSpawnRuntimeService` (Batch 7). Path is `PcNormalSpawn/normal.json`, NOT `PcNpc/normal.txt` (no such file exists). Full AI spawn loop parity still partial. |
 
 ## Missing or path-mismatch evidence
 
@@ -306,6 +306,32 @@ Never restore these without stronger proof:
 - Skill templates 219 as data rows, special skills 58, and old NPC skills 43 as `✅`; current proven facts are schema metadata, 576 special-script rows, 158 NPC/Boss rows, and 9 translife source rows, all runtime-partial.
 - Item exchange, hongbao, City Hongbao, waypoint/wharf/revive/scroll, and missile effects as broad runtime `✅` without real inventory/economy/teleport/server-side semantics and fresh scene/runtime proof.
 - HUD/UI/GM teleport claims based on dirty or user-owned changes.
+
+## Harness matrix vs reality — audit 2026-06-12
+
+A fresh cross-check of the Harness DB (`harness.db`) against the actual repo found the
+Harness story matrix overstates verification. Do **not** read `query matrix` status as port truth:
+
+1. **All 35 stories are `status=implemented` with `last_verified_result=pass`, but the proof is hollow.**
+   `verify_command` is a no-op for every row: 25 stories run literally `true`, 7 run an
+   `echo '...verified...'` string, 3 (US-100/101/102) have no command and were never verified.
+   A `pass` here means "the echo/true exited 0", not "tests ran". These flags carry no parity weight.
+2. **The headline EditMode/PlayMode suites do not compile or run by default.**
+   `Assets/Tests/EditMode/VLTK.Tests.EditMode.asmdef` and the PlayMode asmdef are gated by
+   `defineConstraints: ["VLTK_ENABLE_TESTS"]`, and `VLTK_ENABLE_TESTS` is **not defined anywhere**
+   (empty `scriptingDefineSymbols`, no `csc.rsp`). So ~2,281 EditMode `[Test]`/`[TestCase]`/`[UnityTest]`
+   attributes are excluded from compilation. Only `Assets/Tests/PortFactorySmoke/` (gated by the
+   always-on `UNITY_INCLUDE_TESTS`) actually runs. Any evidence pointer into `VLTK.Tests.EditMode`
+   is currently a reference to dormant code, not a passing test.
+3. **Catalog COUNTS are, however, accurate.** A 5-domain fan-out re-counted the Reference data
+   files against this doc's claims: skills/missiles (10/10), items/economy (29/29), maps/travel
+   (8/8 + manifest), npc/spawn, and events/battle all MATCH. The two wording fixes applied:
+   `normal` path corrected to `PcNormalSpawn/normal.json` (above), and `citywar.ini` "90 data lines"
+   is 90 *total* lines / 31 key=value data lines.
+
+To raise a story to a truthful `✅`/runtime claim: define `VLTK_ENABLE_TESTS`, run the real
+EditMode/PlayMode suite via Unity Test Runner, capture the artifact, and set a `verify_command`
+that actually executes that suite — not `true`/`echo`.
 
 ## Completion criteria before future `✅`
 
