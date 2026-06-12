@@ -38,7 +38,7 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath))
                 return new List<PcModMissileRow>();
-            return ParseLines(PcItemCommon.ReadServerLines(absolutePath), minMissileId);
+            return ParseLines(PcText.ReadLinesTcvn3(absolutePath), minMissileId);
         }
 
         public static List<PcModMissileRow> ParseLines(IEnumerable<string> lines, int minMissileId = 0)
