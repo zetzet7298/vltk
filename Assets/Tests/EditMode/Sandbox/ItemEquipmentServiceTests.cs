@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — Item/Equipment/Spawn services EditMode tests
 // 13 services: Gold/Platina/Horse/Potion/MagicScript/MagicAttrib/Scroll/
-//              CaveList/GoldBoss/ChangeFeatureData/GlobalConfig/NormalSpawn/RareSpawn
+//              CaveList/GoldBoss/ChangeFeatureData/GlobalConfig/NormalSpawn/RareEnchant
 // Mỗi service có 2 test: load không throw + filter hoạt động đúng.
 // -----------------------------------------------------------------------------
 
@@ -226,21 +226,33 @@ namespace VLTK.Tests.Sandbox
             foreach (var e in result) Assert.AreEqual(1, e.mapId, "Mọi entry phải có mapId=1");
         }
 
-        // ----- RareSpawnService -----
+        // ----- RareEnchantService -----
         [Test]
-        public void RareSpawnService_LoadFromStreamingAssets_MatchesCommittedData()
+        public void RareEnchantService_LoadFromStreamingAssets_MatchesCommittedData()
         {
-            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => RareSpawnService.LoadFromStreamingAssets());
+            ServiceStreamingAssetTestUtil.AssertLoadMatchesCommittedData(() => RareEnchantService.LoadFromStreamingAssets());
         }
 
         [Test]
-        public void RareSpawnService_GetByMap_FiltersCorrectly()
+        public void RareEnchantService_GroupsByMagicId()
         {
-            var reg = PcRareSpawnParser.BuildRegistry(NpcDir);
-            var svc = new RareSpawnService();
-            svc.AttachRegistry(reg);
-            var result = svc.GetByMap(1);
-            foreach (var e in result) Assert.AreEqual(1, e.mapId, "Mọi entry phải có mapId=1");
+            // rare.txt is a magic-attribute / weapon-enchant roll table, not a spawn
+            // table. Verify the table indexes rows by MAGIC_ID instead of mapId.
+            var table = PcRareEnchantParser.BuildTable(NpcDir);
+            var svc = new RareEnchantService();
+            svc.AttachTable(table);
+            if (svc.Count == 0)
+            {
+                Assert.Inconclusive("No committed rare.txt rows under PcNpc; nothing to group.");
+                return;
+            }
+            Assert.Greater(svc.MagicIdCount, 0, "Loaded rows must index at least one MAGIC_ID");
+            foreach (var row in svc.All)
+            {
+                var tiers = svc.GetByMagicId(row.magicId);
+                Assert.IsTrue(tiers.Exists(t => ReferenceEquals(t, row) || t.magicId == row.magicId),
+                    $"Row with magicId={row.magicId} must be retrievable via GetByMagicId");
+            }
         }
     }
 }
