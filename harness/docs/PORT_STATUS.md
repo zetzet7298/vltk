@@ -499,3 +499,30 @@ Sync verdict:
 - `PORT_STATUS.md` remains the port-completion authority. It intentionally marks many domains `🔄/☐` even when Harness story rows are `implemented`, because story rows prove older implementation slices, not full PC data/visual/Lua parity.
 - Do **not** use `scripts/harness query matrix` alone to claim port completeness or `% complete`.
 - Backlog #3 records the required Harness follow-up: align matrix semantics with this truth matrix or add explicit story notes/status categories distinguishing “story slice implemented” from “PC parity complete”.
+
+### Harness matrix ↔ real-suite sync (2026-06-12)
+
+After the first real EditMode run exposed 62 failures, the Harness `story` proof flags were
+synced to execution truth so the matrix stops over-claiming. Method: each failing test-class
+from `TestResults.xml` (job `187cffbbb…`, 2215/2283) was mapped to the stories whose `evidence`
+column cites it; any such story that still claimed `unit_proof=1`/`integration_proof=1` had both
+flags reset to `0`, `last_verified_result='fail'`, and a dated note added naming the failing class.
+
+9 stories were corrected:
+
+| Story | Failing evidence test | Action |
+| --- | --- | --- |
+| ST-00.2 | SprRuntimeServiceTests | proof→0, result=fail |
+| ST-02.1 | MalePlayerVisualTests | proof→0, result=fail |
+| ST-02.1.1 | FemalePlayerVisualTests | proof→0, result=fail |
+| ST-02.1.2 | FemalePlayerVisualTests | proof→0, **status implemented→in_progress** |
+| ST-02.1.3 | MountVisualTests | proof→0, result=fail |
+| ST-02.1.4 | MountVisualTests | proof→0, **status implemented→in_progress** |
+| ST-04.1.1 | WuDangCombatCatalogTests | proof→0, result=fail |
+| ST-05.3 | InventoryServiceTests | proof→0, result=fail |
+| ST-06.1 | GameHudControllerTests | proof→0, result=fail |
+
+Resulting DB totals: `status` implemented 28→26 / in_progress 7→9; proof flags `unit` 35→26,
+`integration` 35→26 (`e2e`=2, `platform`=0 unchanged). Invariant now holds: **no story claims
+unit/integration proof while a test-class named in its own evidence is failing.** These flags
+must only return to `1` when the named test goes green in a real Test Runner artifact.
