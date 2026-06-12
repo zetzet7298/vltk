@@ -186,3 +186,5 @@ Assets/Screenshots/*.png.meta
 # Agent git worktrees
 # ─────────────────────────────────────────────────
 .worktrees/
+harness-be/
+backend/
