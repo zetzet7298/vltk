@@ -79,3 +79,56 @@ Use the Harness CLI from `/var/www/vltk-mobile/harness` unless explicitly direct
 - Use Addressables/runtime catalogs instead of new `Resources.Load<T>()` usage.
 - Use Input System, not legacy `Input.GetAxis` / `Input.GetKey`.
 - Do not mark a port row complete unless exact PC evidence, mobile implementation, and verifier/test proof cover the stated narrow scope.
+
+## Parallel multi-agent work rules (MANDATORY)
+
+This repo is ported by multiple Hermes workers running in parallel. To avoid
+corrupting the shared Unity Editor or thrashing the machine, every worker MUST
+follow these rules.
+
+### Two lanes — know which one you are
+
+1. **Offline lane** (profiles `vltk-fixer`, `vltk-fixer2`, …): parser / model /
+   service / logic work in C#. You have NO Unity MCP tools and you do NOT open a
+   Unity Editor. You verify by reading PC source and reasoning about parser
+   output, NOT by compiling in Unity. Commit to your own branch/worktree and
+   hand off; the integration worker compiles and runs tests.
+2. **Integration lane** (profile `vltk-unity`, exactly ONE worker): owns the
+   single running Unity Editor and all `mcp_unityMCP_*` tools. Merges offline
+   branches, triggers recompile, reads the console, runs the Test Runner, closes
+   compile/test failures, updates `docs/PORT_STATUS.md`.
+
+### The one-Editor rule
+
+- There is exactly ONE Unity Editor per project path (Unity lockfile enforces
+  it). NEVER start a second Editor on `/var/www/vltk-mobile`. NEVER close the
+  running Editor — it is a long-lived compile/test daemon.
+- Offline-lane workers MUST NOT call any `mcp_unityMCP_*` tool and MUST NOT run
+  `Unity -projectPath …`. If you think you need Unity, you are in the wrong lane;
+  hand off to the integration worker instead.
+- Offline `dotnet build` of the Unity-generated csproj does NOT work (hybrid
+  mscorlib + netstandard 2.1 → ~928 phantom errors). Do not waste time on it.
+  The integration worker's Editor is the only compile oracle.
+
+### Worktree isolation (no code conflicts)
+
+- Every implementation worker works in its own git worktree on its own branch
+  (`port/<domain>`), never directly on `dev`. This is how parallel workers avoid
+  clobbering each other and the main branch.
+- Do not edit files outside your worktree. Do not touch another worker's branch.
+
+### Machine-safety limits
+
+- Max ~4 offline workers running concurrently. RAM (not CPU) is the bottleneck:
+  the Editor holds ~7GB and the box swaps past that. More workers = swap thrash =
+  slower, with OOM-kill risk that loses in-progress work.
+- Do NOT scan the whole PC source tree or run repo-wide SPR/PAK decoding (it
+  crashes the box). Narrow to one PAK/folder first per the resource rules above.
+
+### Definition of done (no false green)
+
+- A card is DONE only when the integration worker has compiled the merged code
+  in the real Editor with zero new CS errors AND the relevant Test Runner tests
+  pass in a real artifact. `true`/`echo` verify commands do not count.
+- Offline workers `kanban_block` with `review-required:` for the integration
+  worker to pick up; they do not self-certify "compiles" or "tests pass".
