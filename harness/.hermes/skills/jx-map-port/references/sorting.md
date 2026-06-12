@@ -6,7 +6,11 @@ port achieves equivalent results with three mechanisms working together.
 
 ## The original engine: KIpoTree spatial binary tree
 
-Source: `jxwin-kinnox/.../Scene/KIpoTree.cpp`, `KIpotBranch.cpp`, `KIpotLeaf.cpp`.
+Source: `KIpoTree.cpp`, `KIpotBranch.cpp`, `KIpotLeaf.cpp` (recovered from the out-of-scope
+`jxwin-kinnox` engine tree — these `.cpp` files are NOT under
+`/var/www/vltksource_new/vl_update_27`; the in-scope client ships only `represent3.dll`).
+The behavior below is validated against the working Unity port, so trust it; to re-derive
+from binary, escalate to `reverse-engineering` against `represent3.dll`.
 
 ### Tree structure
 - Each branch has a split line (`m_oHeadPoint → m_oEndPoint`) and two child slots.

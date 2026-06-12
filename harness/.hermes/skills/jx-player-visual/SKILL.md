@@ -25,6 +25,13 @@ female avatar and any equipment/mount swap.
 
 ## Mental model (read first)
 
+A JX character is NOT one sprite — it is a stack of independent part SPRs (shadow, body, head,
+hair, hands, weapons, and when mounted, horse) sharing one canvas and reference pixel. Each part
+SPR holds all 8 directions of one action. To draw a frame: pick the part's sprite for
+`direction * framesPerDirection + frame`, offset it from the shared reference pixel, and set its
+`sortingOrder` from the per-direction draw-order table. Get this model right and male, female,
+equipment, and mount all fall out of the same code — only part filenames and variant numbers
+change. The detailed version is in the section below.
 
 ## Resource/hash guard learned from combat visual port
 
@@ -59,7 +66,7 @@ The male avatar is fully working. Read these before writing anything new:
 | `Assets/Scripts/Sandbox/PlayerMountService.cs` | Mount state machine (None→Mounting→Mounted→Dismounting), 0.5s transitions, `IsMounted`, `SpeedMultiplier`. |
 | `Assets/Scripts/Sandbox/MountToggleButton.cs` | HUD Lên/Xuống Ngựa button; label auto-flips from `Mount.IsMounted`. |
 | `Assets/Scripts/Sandbox/SandboxManager.cs` | Auto-spawns player + joystick + camera on map load; `PlacePlayerOnActiveMap()` centers on `MapRenderer.ContentBounds`. |
-| `Assets/Scripts/Sprites/SprRuntimeService.cs` | `ComputePathUidHex` (UNSIGNED variant) — runtime SPR file naming. |
+| `Assets/Scripts/Sprites/SprRuntimeService.cs` | `ComputePathUidHex` (defaults SIGNED, `signedBytes:false` for legacy unsigned) — runtime SPR file naming + pak-accurate lookup. |
 | `Assets/Scripts/Sprites/SprDecoder.cs` | SPR -> texture/frames/offsets. |
 | `Assets/StreamingAssets/male_player_sprites.json` | Manifest: name -> uid -> staged file. |
 | `Assets/Tests/EditMode/Sandbox/MalePlayerVisualTests.cs` | Catalog/direction/load/move tests. |
@@ -137,21 +144,25 @@ Mounted system section).
 
 ## The two hashes (do not mix them up)
 
-There are TWO different path-hash functions in this project. Mixing them = 0 matches
-or wrong files. Both lowercase ASCII `A-Z` and run the same `value` recurrence; they
-differ ONLY in how each path byte is treated:
+There are TWO uses of a path hash in this project. Both lowercase ASCII `A-Z` and run the
+same `value` recurrence; they differ ONLY in how a path byte `>= 0x80` is treated (signed
+`b-256` vs unsigned 0..255):
 
 1. **Pak lookup hash (`g_FileName2Id`, SIGNED byte).** Used to find an entry inside
-   `maps.pak` / `spr.pak`. High bytes (Chinese GBK, >=0x80) are treated as signed
-   (`b - 256`). This is the `jx-map-port` skill's hash. Use it ONLY to read from paks.
-2. **Runtime file-naming hash (`ComputePathUid`, UNSIGNED byte).** Used by
-   `SprRuntimeService.ComputePathUidHex` to name staged files `{uid}.spr`. ASCII-only
-   player paths (`spr\npcres\man\MA_BD_019_ST01.spr`) contain no high bytes, so signed
-   vs unsigned is irrelevant here — but the staging script MUST use the SAME unsigned
-   function as the C# runtime so the names line up.
+   `maps.pak` / `spr.pak`. High bytes (Chinese GBK, `>=0x80`) are treated as signed
+   (`b - 256`). This is the `jx-map-port` skill's hash. Use it to read from paks.
+2. **Runtime file-naming hash (`ComputePathUid`).** Used by
+   `SprRuntimeService.ComputePathUidHex` to name staged files `{uid}.spr`. The C# default
+   is now **SIGNED** (`signedBytes:true`), and `ResolveSpr` tries uidFromPath → signed →
+   unsigned. ASCII-only player paths (`spr\npcres\man\MA_BD_019_ST01.spr`) have no high
+   bytes, so signed == unsigned there — but for any CJK part path you MUST use the signed
+   variant or the lookup misses real `unknown/<uid>.spr` assets. The legacy unsigned-named
+   staged files still resolve via the final unsigned fallback.
 
-Verified: `spr\npcres\man\MA_BD_019_ST01.spr` -> unsigned uid `45488ea8`, which matches
-the manifest and the file the runtime loads. `scripts/uid.py` is the reference impl.
+Verified: `spr\npcres\man\MA_BD_019_ST01.spr` -> uid `45488ea8` (signed == unsigned for this
+ASCII path), matching the manifest and the file the runtime loads. CJK evidence:
+`\spr\Ui\技能图标\icon_sk_ty_at.spr` -> signed `c4454165`, unsigned `bedc5b69`. `scripts/uid.py`
+is the reference impl (signed by default; `--unsigned` for the legacy variant).
 
 ## Staging pipeline (get art into the build)
 
@@ -369,6 +380,6 @@ so they still click). Touches then fall through to the joystick.
 
 - `references/extending.md` — generalize male classes to female / equipment / mount.
 - `references/draw-order.md` — the full Dir1..Dir8 part-id tables + how `SortingOffset` reads them.
-- `scripts/uid.py` — unsigned runtime uid (matches C#).
+- `scripts/uid.py` — PC signed-byte uid by default (matches C# `ComputePathUid`); `--unsigned` for the legacy staged-naming variant.
 - `scripts/stage_player_spr.py` — stage a folder of part SPRs + update manifest.
 - `scripts/verify_player.cs` — execute_code body for the 6 verification checks.

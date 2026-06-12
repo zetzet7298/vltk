@@ -2,9 +2,15 @@
 
 All of this is already implemented in the project (`MapRenderer.cs`, `RegionParser.cs`,
 `GroundLayerParser.cs`, `BuildinObjParser.cs`). This file documents *why* it works so you
-can debug or port the renderer elsewhere. Source of truth:
-`jxwin-kinnox/.../Core/Src/Scene/KScenePlaceRegionC.{h,cpp}` and
-`jxwin-kinnox/.../Represent/Represent3/KRepresentShell3.cpp`.
+can debug or port the renderer elsewhere.
+
+> Provenance caveat: the formulas below were originally recovered from JX engine C++
+> (`KScenePlaceRegionC.{h,cpp}`, `Represent3/KRepresentShell3.cpp`). Those `.cpp` files are
+> NOT present in the in-scope source `/var/www/vltksource_new/vl_update_27` (only
+> `represent3.dll` ships there) — they came from the out-of-scope `jxwin-kinnox` tree. The
+> constants are validated against runtime behavior and the working Unity port, so trust the
+> numbers; just don't expect to `grep` those paths under `vltksource_new`. If you must
+> re-derive from binary, escalate to `reverse-engineering` against `represent3.dll`.
 
 ## Region scene geometry
 

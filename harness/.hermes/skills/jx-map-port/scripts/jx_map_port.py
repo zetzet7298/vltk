@@ -64,8 +64,15 @@ def g_filename2id(path_bytes):
     return v ^ 0x12345678
 
 def compute_path_uid(name, enc="gb2312"):
-    """C# SprRuntimeService.ComputePathUid (UNSIGNED, lowercase) -> staged filename.
-    This is only the private extractor<->runtime naming scheme, never a pak lookup."""
+    """Legacy UNSIGNED-byte staged-filename hash (extractor<->runtime naming only).
+
+    This names staged copies `{uid}.spr`; it is NEVER a pak lookup (use file_id_from_bytes
+    for that). C# `SprRuntimeService.ComputePathUid` now DEFAULTS to the signed-byte variant,
+    and `ResolveSpr` tries uidFromPath -> signed -> unsigned, so existing unsigned-named
+    staged files are still found as the final fallback. Kept unsigned here to avoid renaming
+    the already-staged asset set; for pure-ASCII art names signed==unsigned anyway. If you
+    ever re-stage CJK-named art, prefer matching the C# signed default to keep names aligned.
+    """
     s = name.strip().replace('/', '\\')
     if not s.startswith('\\'):
         s = '\\' + s

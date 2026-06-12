@@ -1,5 +1,13 @@
 # pak_unpacked Audit / Repair Notes — 2026-06-11
 
+> **HISTORICAL SNAPSHOT — superseded.** This file documents an intermediate state where
+> `dmjx01.pak` was still partial/segfaulting. A later re-unpack (manifest `updated_at`
+> 2026-06-11 23:25) finished the repair: the live `_unpack_summary.json` now reports
+> **46 paks, 403560/403560 exported, 0 failed, 0 partial, `dmjx01.pak` ok 1621/1621**
+> (verified: 1621 files on disk). Treat the live manifest as truth; keep this note only for
+> the methodology and the format-gotcha history below. Do NOT cite the "dmjx01 partial /
+> segfault 1621" numbers as current.
+
 Use this when deciding whether to delete/rebuild `/var/www/vltksource_new/vl_update_27/pak_unpacked` or repair it incrementally.
 
 ## Verdict

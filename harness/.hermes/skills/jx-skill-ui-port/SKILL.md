@@ -18,6 +18,11 @@ Use for Unity work involving skill/võ công UI, skill data mapping, upgrade log
 
 ## Hard rules
 
+Strict PC provenance: never invent skill list, order, Vietnamese names, icons, sprites,
+descriptions, upgrade gates, or UI layout. Prove the icon ↔ name ↔ level ↔ detail mapping by
+`skillId` (never by grid row/index) before editing. PC `jxwin` `Skills.txt` + `UiSkills*.ini`
++ real SPR are the source of truth; current Unity code is implementation, not proof. The full
+rule list:
 
 ## Resource/hash guard learned from combat visual port
 
@@ -71,8 +76,8 @@ Start here for current project:
   - `/var/www/vltksource_new/vl_update_27/SwordOnline/Sources/Core/Src/KPlayer.cpp`
   - `/var/www/vltksource_new/vl_update_27/SwordOnline/Sources/Core/Src/KSkills.cpp`
 - PC asset source:
-  - `/var/www/vhst/survivors/external-data/vltklinux/data/spr.pak`
-  - `/var/www/vltktool/` helpers for PAK/SPR extraction.
+  - Canonical unpacked PAK tree: `/var/www/vltksource_new/vl_update_27/pak_unpacked` (skill SPR icons live under the SPR trees here; `\spr\Ui\技能图标\...` group). Manifest `_unpack_summary.json`.
+  - `/var/www/vltktool/` helpers for PAK/SPR lookup/extraction (read its README first; do not write ad-hoc scanners).
 
 Important PC asset caveat: Chinese PAK paths may require signed-byte hashing. Unsigned-byte lookup can fail even for correct paths.
 
@@ -82,7 +87,7 @@ Important PC asset caveat: Chinese PAK paths may require signed-byte hashing. Un
 
 - Restate target faction/panel/skill IDs and bug symptoms.
 - Use `git status`, `git diff`, and recent commits to understand pending work before editing.
-- Search semantically first (`semble search`) when finding Unity code; use exact grep/Python scans for PC names, IDs, paths.
+- Use `srcwalk` (the repo's required code-navigation tool) to find Unity symbols/files/flows; use `rg` for exact PC names, IDs, paths. Prefer `srcwalk`/`rg`/`fd` over raw grep/find per AGENTS.md.
 - For named skills, build a mini evidence table:
 
 | Vietnamese | PC Chinese | SkillId | PC icon path | Unity PNG/path | Notes |

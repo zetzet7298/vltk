@@ -10,6 +10,12 @@ Use this skill to port or fix enemies and PC trainer/object spawns for a map usi
 
 ## Core rule
 
+Enemies and trainer/object spawns come from **PC server `Region_S.dat` + `NpcS.txt`**, not
+guesses. Authoritative chain: `Region_S.dat` (spawn template id + MPS coordinates + per-spawn
+series) → `NpcS.txt` row (name, `NpcResType`, `Life`, AI fields) → staged real SPR visual.
+Preserve PC coordinates and template ids exactly; localize names to Vietnamese; never invent
+a sprite or a spawn position. If the exact visual asset is missing, place an invisible PC-coord
+marker rather than a placeholder, or skip and report — do not show fake art as final output.
 
 ## Resource/hash guard learned from combat visual port
 

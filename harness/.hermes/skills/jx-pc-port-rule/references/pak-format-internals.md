@@ -66,9 +66,9 @@ offset form a self-contained SPR:
 directly. The `decompressed_size` field is the in-memory size when decoded to RGBA, not the
 actual data size.
 
-Extraction verified by byte-preserving raw copy: 352/352 start with `SPR\x00`. The current simple
-`parse_frames()` validator parses 333/352; 19 large/edge SPR files need decoder tolerance work but
-must still be copied raw, not decompressed.
+Extraction verified by byte-preserving raw copy: 352/352 start with `SPR\x00`. The live manifest
+reports all of them exported. A *simple* `parse_frames()` validator may not fully parse every
+large/edge SPR, but the raw byte-copy is correct regardless — never run libucl on them.
 
 ### Method 0x10000000 — KCodec fragment table (dmjx01.pak edge case)
 

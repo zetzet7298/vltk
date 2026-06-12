@@ -9,8 +9,9 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 
 ## Source Of Truth
 
-
-
+- The ONLY PC game source of truth is `/var/www/vltksource_new/vl_update_27` (loose tree + canonical `pak_unpacked`). Never substitute another PC tree (e.g. `jxwin-kinnox`, `/var/www/vhst/survivors/...`, old VMDK mounts) for port decisions unless the user explicitly expands scope.
+- The authoritative count/status for `pak_unpacked` is the live manifest `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json` — read it, do not trust extraction counts hardcoded in any SKILL/reference/AGENTS doc (they drift between re-unpack runs). As of the latest run: 46 paks, exported 403560/403560, failed 0, partial 0, `dmjx01.pak` ok 1621/1621.
+- Unity code, generated assets, old extracted files, screenshots, and prior guesses are implementation clues only — never proof. Prove against PC source/data/asset.
 
 ## When to escalate to `reverse-engineering`
 
@@ -50,7 +51,7 @@ Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, s
 - For **asset SPR** (sprite, effect, icon, NPC visual, HUD, item art), the authoritative index is:
   - `/var/www/vltksource_new/docs/port_docs/18_spr_asset_index.md` (source of truth + tool tra cứu)
   - `/var/www/vltksource_new/docs/port_docs/19_pak_spr_taxonomy.md` (phân loại pak/SPR chi tiết)
-  - Canonical unpack root: `/var/www/vltksource_new/vl_update_27/pak_unpacked` (75,928 `.spr` files from all source PAKs)
+  - Canonical unpack root: `/var/www/vltksource_new/vl_update_27/pak_unpacked` (~75k `.spr` files from all source PAKs; for the exact live count read the manifest, do not trust a number baked here)
   - Manifest: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json`
   - Optional label map: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_labels.json` only if rebuilt for the canonical root; otherwise use the tree + vltktool API/rebuild index.
   - Tra cứu tool/API: `http://localhost:8081/` (`/api/spr`, `/api/categories`)
@@ -87,15 +88,44 @@ For deep PAK binary layout, compression methods, and engine function mapping, se
 **Critical pitfall — compression method `0x11000000`:** Entries flagged `0x11000000` in the PAK
 index are **raw SPR byte streams stored without UCL decompression** (start with `SPR\x00`).
 Do NOT call libucl/NRV2B on these — it will segfault or corrupt output. Just save bytes directly.
-The `decompressed_size` field is the RGBA memory size, not the data size. Current simple SPR parser
-validates 333/352; 19 large/edge SPR files still need decoder tolerance work but extraction remains
-raw-copy correct. Affects 352 entries across resource/skills/spr/update*/vltkdata/vng00/update3 PAKs.
+The `decompressed_size` field is the RGBA memory size, not the data size. The full re-unpack
+treats these as raw byte-copies and the live manifest reports them all exported (see Source Of
+Truth for the authoritative count). A few large/edge SPR files may still trip a *simple* SPR
+frame-validator, but the raw extraction is byte-correct regardless. Affects 352 entries across
+resource/skills/spr/update*/vltkdata/vng00/update3 PAKs.
 
 **Critical pitfall — `dmjx01.pak` method `0x10000000` fragmented entries:** 5 entries use a
 KCodec fragment-table wrapper: `u32 fragment_count`, `u32 table_offset`, payload chunks, then
 `fragment_count × {u32 offset, u32 out_size, u32 flag}` tail records. Calling libucl on the
 whole payload segfaults. Decompress each chunk by its own flag and concatenate; verified UIDs:
 `8ced40ec`, `9514cffa`, `a4728732`, `c99c13bd`, `e53792c4`.
+
+## Known rot patterns in these port skills (verify, don't trust blindly)
+
+These JX port skills (`jx-map-port`, `jx-hud-port`, `jx-enemy-port`, `jx-player-visual`,
+`jx-skill-ui-port`) are maintained by incremental patching and drift over time. When you
+load one, sanity-check these recurring hazards before relying on it:
+
+1. **uid/hash helpers that *claim* signed-byte but don't implement it.** A docstring saying
+   "PC signed-byte FileNameHash" does NOT prove the code does `c = b-256 if b>=128`. Verify
+   with the canonical evidence pair: `\spr\Ui\技能图标\icon_sk_ty_at.spr` (GB2312) must hash
+   to `c4454165` (signed); `bedc5b69` means the helper is unsigned and will miss CJK PAK
+   assets. `jx_map_port.py` implements signed correctly; check any other uid helper.
+2. **The C# runtime hash default is SIGNED.** `SprRuntimeService.ComputePathUid(..., bool
+   signedBytes = true)` defaults to signed and `ResolveSpr` tries uidFromPath → signed →
+   unsigned. Skill text that calls `ComputePathUid` "UNSIGNED" is stale wording; for
+   ASCII-only paths signed==unsigned so it doesn't break, but don't repeat the wrong claim.
+3. **Hardcoded extraction counts drift.** Any "N/M entries, X failed" number baked into a
+   SKILL.md or reference is a snapshot, not truth. Re-read the manifest (see Source Of Truth).
+4. **Dead source paths.** Scripts/skills sometimes hardcode trees that no longer exist on
+   disk (`jxwin-kinnox/...`, `vhst/survivors/.../spr.pak`). `os.path.exists` before trusting;
+   real PC source is always under `/var/www/vltksource_new/vl_update_27`.
+5. **Ad-hoc SPR/PAK scanners.** Per AGENTS rules, do not write your own SPR decoder or
+   `rglob('*.spr')` over the whole source — use `/var/www/vltktool/` tools and narrow the
+   region first. A skill's prose may say this correctly while its bundled script violates it.
+
+When you find one of these, patch the offending skill/script immediately rather than working
+around it — that is the whole point of these being maintained skills.
 
 ## If Source Is Missing
 

@@ -25,6 +25,13 @@ trust PC source + current Unity code + runtime probes, then update this skill.
 
 ## First principle
 
+Match the PC client; do not redesign from memory. Source of truth, in order: (1) the actual
+pixels of `pc-evidence/pc_hud.png`, (2) INI coordinates extracted from the PAKs, (3) the real
+SPR art. The HUD is data-driven, but the old `Utility/Run/Ui/ui3/` layout this skill once
+assumed does NOT exist in `vltksource_new` — INI + SPR live in the canonical unpacked PAK tree
+(`pak_unpacked/.../Client 6.0/data/<pak>/`). Never trust a vision model over the raw pixels
+(see "Pixel-truth verification"), and verify every change against live Unity runtime
+hit-testing because this checklist can go stale.
 
 ## Resource/hash guard learned from combat visual port
 

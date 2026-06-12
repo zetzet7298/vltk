@@ -22,6 +22,19 @@ client paks using the **correct** filename hash and the **correct** isometric pr
 
 ## The things that make this work (read first)
 
+Four PC-derived invariants make a ported map match the original. Get any one wrong and the
+map looks broken in a way that is hard to diagnose, so read these before touching code:
+
+1. **Signed-byte path hash** (`g_FileName2Id`) — the ONLY way region/art paths resolve in the
+   paks; CJK paths need signed bytes (`b-256` for `b>=128`). Details in section 1 below.
+2. **Z-projection** `screenY = sceneY/2 - sceneZ*(887/1024)` — omitting the Z term breaks tall
+   structures (dark gaps through gates/roofs). Section 2.
+3. **Spatial-tree (KIpoTree) draw order**, not naive Y-sort — preserved via a file-order
+   `sortingOrder` counter for builtins. Section 3.
+4. **Per-object-type sprite pivots** (ground top-left, cover bottom-center, builtin top-left).
+   Section 4.
+
+Minimap/HUD parity (section 5) is part of "the map is done", not a separate task.
 
 ## Resource/hash guard learned from combat visual port
 
@@ -58,8 +71,12 @@ With this hash, **every** region path and **every** referenced art name resolves
 > Update: `SprRuntimeService.ComputePathUid` now defaults to the PC signed-byte
 > variant and can still compute the old unsigned variant via `signedBytes:false`. Do
 > not reintroduce unsigned-only lookup for CJK paths; it makes real PAK assets look missing.
-> between the extractor and the runtime (extractor writes `{ComputePathUid}.spr`, C#
-> re-derives the same name from the imageName). It must NOT be used to look inside paks.
+>
+> Note the two distinct uses of a path hash: (a) **PAK lookup** — find an entry inside a
+> `.pak` by UID (must use the signed-byte `g_FileName2Id`); (b) **staged-file naming** — the
+> extractor writes `{ComputePathUid}.spr` and the C# runtime re-derives the same name from
+> the imageName so it finds the staged copy. Same recurrence, both default to signed now;
+> the staging name is NOT used to look inside paks.
 
 ### 2. The Z-projection formula (critical for tall structures)
 
