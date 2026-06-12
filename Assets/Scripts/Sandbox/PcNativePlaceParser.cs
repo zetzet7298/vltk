@@ -37,7 +37,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir) || !Directory.Exists(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "nativeplacelist.ini");
             if (!File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
 
             // INI: sections like [0], [1], ... each containing Id=, Name=, Img=, Frame=, Desc=
             var current = new Dictionary<string, string>();

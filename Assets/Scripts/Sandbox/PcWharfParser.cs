@@ -78,7 +78,7 @@ namespace VLTK.Sandbox
         {
             var reg = new PcWharfRegistry();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
