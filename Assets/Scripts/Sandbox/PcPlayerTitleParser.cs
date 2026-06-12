@@ -24,7 +24,19 @@ namespace VLTK.Sandbox
         {
             var rows = new List<PcPlayerTitleEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var lines = PcItemCommon.ReadServerLines(path);
+            // playertitle.txt is a Vietnamese-localized TCVN3 file (Western ANSI bytes
+            // whose high chars are TCVN3 glyph codes). It must NOT go through the
+            // auto-detecting DecodeBest() path (PcItemCommon.ReadServerLines -> PcText
+            // .ReadLines(path, null)): in the REAL Editor that scorer is biased toward
+            // GB2312/hanzi and mis-decodes ~28 rows whose Vietnamese high byte is
+            // immediately followed by a 0x09 TAB. The .NET GB2312 decoder treats
+            // <leadByte><0x09> as a single 2-byte unit and SWALLOWS the tab -> column
+            // shift -> TitleId reads garbage -> rows dropped (363 collapses to 335) and
+            // the surviving names render as mojibake. ReadLinesTcvn3 forces windows-1252
+            // + TCVN3 with no auto-detect, so every tab survives and all 363 titles load
+            // with clean Vietnamese names. (Same GBK<->TCVN3 mojibake family as the
+            // accepted meridian fix, commit ecd0b2294 / PcMeridianParser.)
+            var lines = PcText.ReadLinesTcvn3(path);
             bool headerSkipped = false;
             foreach (var line in lines)
             {

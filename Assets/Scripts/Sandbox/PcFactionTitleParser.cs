@@ -15,7 +15,11 @@ namespace VLTK.Sandbox
         {
             var rows = new List<PcFactionTitleEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
-            var lines = PcItemCommon.ReadServerLines(path);
+            // factiontitle.txt is the same Vietnamese-localized TCVN3 file family as
+            // playertitle.txt. Force windows-1252 + TCVN3 (no auto-detect) so the
+            // GB2312-biased DecodeBest scorer cannot eat tabs / mojibake the names in
+            // the real Editor. (Same fix family as the meridian commit ecd0b2294.)
+            var lines = PcText.ReadLinesTcvn3(path);
             bool headerSkipped = false;
             foreach (var line in lines)
             {
