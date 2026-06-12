@@ -58,7 +58,7 @@ namespace VLTK.Sandbox
                 var path = Path.Combine(absoluteDir, fileName);
                 if (!File.Exists(path)) continue;
 
-                var lines = PcMapListParser.ReadLines(path);
+                var lines = PcText.ReadLinesTcvn3(path);
                 foreach (var raw in lines)
                 {
                     if (string.IsNullOrWhiteSpace(raw)) continue;
