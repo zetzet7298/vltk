@@ -297,7 +297,10 @@ namespace VLTK.Tests.Sandbox
                 tierId = 1, tier = SongJinTier.Cao, minLevel = 90, maxLevel = 150,
             });
             var svc = new SjBattleService(reg);
-            Assert.That(svc.CanJoinTier(SongJinTier.Cao, 30), Is.True); // fallback threshold
+            // Cao tier requires minLevel=90; player level 30 is below it and below the
+            // fallback threshold (30 + Cao*30 = 90), so a low-level player is rejected.
+            Assert.That(svc.CanJoinTier(SongJinTier.Cao, 30), Is.False, "Cấp 30 < ngưỡng Cao (90) → bị từ chối");
+            // So tier has no registered entry; fallback threshold = 30 + So*30 = 30, so level 30 qualifies.
             Assert.That(svc.CanJoinTier(SongJinTier.So, 30), Is.True);
         }
 

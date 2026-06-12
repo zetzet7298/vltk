@@ -67,7 +67,10 @@ namespace VLTK.Tests.Sandbox
             svc.OnHongbaoClaimed += id => fired++;
             Assert.IsTrue(svc.Claim(1, 50));
             Assert.AreEqual(1, fired);
-            Assert.IsFalse(svc.Claim(1, 10), "minLevel=0 maxLevel=0 → luôn claim được");
+            // minLevel=0 maxLevel=0 → luôn claim được. Production không dedup claim,
+            // nên claim lần 2 vẫn thành công (và fire event lần nữa).
+            Assert.IsTrue(svc.Claim(1, 10), "minLevel=0 maxLevel=0 → luôn claim được");
+            Assert.AreEqual(2, fired);
         }
     }
 
