@@ -395,10 +395,10 @@ staged filename, **unsigned** GB2312 hash) but the C# default `signedBytes:true`
 PAK lookup) is **signed**, the **staged-filename** hash is **unsigned**. Decide whether to flip the
 staged-lookup overload default or make callers pass `signedBytes:false`. Backlog #11.
 
-### Fixes landed (2026-06-12) — 97 → 86 failures
+### Fixes landed (2026-06-12) — 97 → 79 failures
 
-Real EditMode failures dropped from 97 to 86 via four root-cause PROD-GAP fixes (verified by
-re-running the affected tests, not by weakening them):
+Real EditMode failures dropped from 97 to 79 via root-cause fixes (verified by
+re-running affected tests, not by weakening them):
 
 | Commit | Fix | Tests recovered | Backlog |
 | --- | --- | --- | --- |
@@ -406,12 +406,16 @@ re-running the affected tests, not by weakening them):
 | `f5d22a8dc` | `PcFactionTitleParser` column map corrected (RANKID/RANKSTR/FACTION; was reading id from name col → 0 rows) | TitleServiceTests (4), PcFactionTitleParserTests | #7 partial |
 | `4bc729843` | `PcMissionRegistry` keeps all 645 rows (was deduping 11 tournament tasks that share TASK_ID_FIRST) | PcMissionParserTests, QuestServicePcImportTests | #8 closed |
 | `9eb2fc019` | parameterless ctor added to 64 registry-only services | both CoverageSmokeTests (was 171/235 + 64 throwing) | #9 closed |
+| `e6c55cece` | Auction+DailyTask fixtures aligned to real production contract (no weakening) | IsExpired_TrueForPastTimestamp, GetTasksForLevel_FiltersCorrectly | #10 partial |
+| `75638c5b5` | MapPanelService GetMapsByType/GetMapIconPath + NpcDialog snapshot id implemented | MapPanel x2, NpcDialog null-snapshot | #10 partial |
+| `8686e508f` | FemalePlayerSpriteCatalog shadow not-required + FM_ shadow path (verified vs PC npcres/woman) | Catalog_ShadowAndWeapons_AreNotRequired, Catalog_EmptyHandMove_HasFullFemaleLayerSet | #13 partial |
 
 **Still open (harder PROD-GAPs, left red — not faked green):**
-- Meridian model refactor: `acupointId` is actually a per-meridian level (1–16) × 8 meridians = 128; registry collapses to 16. Needs composite-key refactor through MeridianService + PC-source inspection. Backlog #6.
-- `TitlePanelService` is a full stub (every method returns empty/false). Story ST-06.1 marked implemented but UI service unimplemented. Backlog #7.
-- Female player/mount SPRs unstaged + male ST04/05/06 weapon suffixes missing. Backlog #13.
-- TEST-DRIFT batch (~50 tests): counts vs shipped stubs, self-contradicting service-logic asserts, mount 3→9 layer redesign. Backlog #10.
+- Visual SPR cluster (Female/Male/Mount `Visual_LoadsXxx`, ~40 tests): woman LW/RW paths hash to UIDs (48fa4044/b4196106) that collide with unrelated staged SPRs (0 manifest refs them as woman weapons; PC ground truth: woman has only BD/HD/HR/LH/RH). Staging/hash-collision model fix. Backlog #13.
+- Meridian model refactor: `acupointId` is actually a per-meridian level (1–16) × 8 meridians = 128; registry collapses to 16. Composite-key refactor needed. Backlog #6.
+- `TitlePanelService` is a full stub (every method returns empty/false). Backlog #7.
+- SPR path-UID signed/unsigned decision (ComputePathUidHex bc9bc73d vs on-disk bccbbad2). Backlog #11.
+- Remaining TEST-DRIFT (Shop/Tong/Partner counts, NpcSFull, GameHud minimap buttons). Backlog #10.
 
 ## Completion criteria before future `✅`
 
