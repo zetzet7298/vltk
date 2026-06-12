@@ -77,7 +77,7 @@ namespace VLTK.Sandbox
             var rows = new List<PcCityHongbaoEntry>();
             if (string.IsNullOrEmpty(absolutePath) || !File.Exists(absolutePath)) return rows;
 
-            var lines = PcMapListParser.ReadLines(absolutePath);
+            var lines = PcText.ReadLinesTcvn3(absolutePath);
             bool headerSkipped = false;
             int seqId = 0;
             foreach (var raw in lines)
