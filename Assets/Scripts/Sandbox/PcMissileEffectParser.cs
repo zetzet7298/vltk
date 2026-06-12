@@ -38,7 +38,7 @@ namespace VLTK.Sandbox
             var rows = new List<PcMissileEffectEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
             string[] lines;
-            try { lines = PcItemCommon.ReadServerLines(path).ToArray(); }
+            try { lines = PcText.ReadLinesTcvn3(path); }
             catch { try { lines = File.ReadAllLines(path); } catch { return rows; } }
             bool headerSkipped = false;
             foreach (var line in lines)

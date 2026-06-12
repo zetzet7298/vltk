@@ -46,7 +46,7 @@ namespace VLTK.Sandbox
         public static List<PcNpcSkillEntry> ParseFile(string path)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return new List<PcNpcSkillEntry>();
-            return ParseLines(PcMapListParser.ReadLines(path));
+            return ParseLines(PcText.ReadLinesTcvn3(path));
         }
 
         public static List<PcNpcSkillEntry> ParseLines(IReadOnlyList<string> lines)
