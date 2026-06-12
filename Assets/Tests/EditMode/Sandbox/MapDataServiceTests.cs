@@ -17,6 +17,34 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void MapListFullService_LoadFromStreamingAssets_PopulatesRepresentativeMaps()
+        {
+            var svc = MapListFullService.LoadFromStreamingAssets();
+            // maplist.ini holds 1,005 maps; the registry must be populated, not
+            // empty (the TSV-assuming parser used to load 0 — PORT_STATUS #16).
+            Assert.Greater(svc.Count, 900, "Registry phải nạp ~1005 map từ maplist.ini, không phải 0.");
+
+            // Representative ids from the committed maplist.ini:
+            //   1  = City (Phượng Tường),  2 = Field (Hoa Sơn), 4 = Cave.
+            var m1 = svc.GetMap(1);
+            Assert.IsNotNull(m1, "GetMap(1) phải trả về map, không null.");
+            Assert.AreEqual(PcMapListFullParser.TypeCity, m1.type);
+            Assert.IsNotEmpty(m1.nameRaw ?? string.Empty);
+
+            var m2 = svc.GetMap(2);
+            Assert.IsNotNull(m2);
+            Assert.AreEqual(PcMapListFullParser.TypeField, m2.type);
+
+            var m4 = svc.GetMap(4);
+            Assert.IsNotNull(m4);
+            Assert.AreEqual(PcMapListFullParser.TypeCave, m4.type);
+
+            // At least one city and one battlefield must be categorized.
+            Assert.Greater(svc.GetCities().Count, 0, "Phải có ít nhất 1 thành phố.");
+            Assert.Greater(svc.GetBattlefields().Count, 0, "Phải có ít nhất 1 chiến trường.");
+        }
+
+        [Test]
         public void MapListFullService_GetCities_NonNull()
         {
             var svc = new MapListFullService();

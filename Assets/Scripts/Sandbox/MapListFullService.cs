@@ -12,13 +12,18 @@ namespace VLTK.Sandbox
 {
     public class MapListFullService
     {
+        // StreamingAssets-relative directory holding the committed maplist.ini.
+        // Reflected on by ServiceStreamingAssetTestUtil to confirm the load
+        // matches committed data.
+        public const string DefaultStreamingDir = "Reference/PcMap";
+
         private readonly PcMapListFullRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
         public MapListFullService() { _reg = new PcMapListFullRegistry(); }
         public MapListFullService(PcMapListFullRegistry reg) { _reg = reg ?? new PcMapListFullRegistry(); }
 
-        public static MapListFullService LoadFromStreamingAssets(string subDir = "Reference/PcMap")
+        public static MapListFullService LoadFromStreamingAssets(string subDir = DefaultStreamingDir)
         {
             var path = Path.Combine(Application.streamingAssetsPath, subDir);
             return new MapListFullService(PcMapListFullParser.BuildRegistry(path));
@@ -35,6 +40,7 @@ namespace VLTK.Sandbox
         public IReadOnlyList<PcMapListFullEntry> GetTongMaps() => _reg.GetTongMaps();
         public IReadOnlyList<PcMapListFullEntry> GetBattlefields() => _reg.GetBattlefieldMaps();
         public IReadOnlyList<PcMapListFullEntry> GetInstances() => _reg.GetInstanceMaps();
+        public IReadOnlyList<PcMapListFullEntry> GetOthers() => _reg.GetOtherMaps();
         public IReadOnlyList<PcMapListFullEntry> GetAllMaps() => _reg.All;
 
         public bool IsBattlefield(int mapId) { var e = _reg.Get(mapId); return e != null && e.isBattlefield; }
