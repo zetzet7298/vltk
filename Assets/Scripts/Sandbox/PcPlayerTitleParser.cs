@@ -17,6 +17,8 @@ namespace VLTK.Sandbox
         public const int FaceIdCol = 3;
         public const int AuraSkillCol = 4;
         public const int AuraLevelCol = 5;
+        public const int MemoCol = 16;       // PC playertitle.txt col 16 = Memo
+        public const int TitlePriorityCol = 17; // PC playertitle.txt col 17 = TitlePriority
 
         public static List<PcPlayerTitleEntry> ParseFile(string path)
         {
@@ -40,6 +42,8 @@ namespace VLTK.Sandbox
                     faceId = PcItemCommon.Int(cols, FaceIdCol),
                     auraSkill = PcItemCommon.Int(cols, AuraSkillCol),
                     auraLevel = PcItemCommon.Int(cols, AuraLevelCol),
+                    memo = PcItemCommon.Str(cols, MemoCol),
+                    titlePriority = PcItemCommon.Int(cols, TitlePriorityCol),
                 });
             }
             return rows;
@@ -49,8 +53,12 @@ namespace VLTK.Sandbox
         {
             var reg = new PcPlayerTitleRegistry();
             if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
-            foreach (var f in Directory.GetFiles(dir, "*.txt"))
-                foreach (var s in ParseFile(f)) reg.Register(s);
+            // PC player titles live only in playertitle.txt (363 rows). Do NOT scan
+            // every *.txt — factiontitle.txt shares the directory and must stay
+            // owned by PcFactionTitleParser.
+            string main = Path.Combine(dir, "playertitle.txt");
+            if (File.Exists(main))
+                foreach (var s in ParseFile(main)) reg.Register(s);
             return reg;
         }
     }
@@ -64,13 +72,23 @@ namespace VLTK.Sandbox
         public int faceId;
         public int auraSkill;
         public int auraLevel;
+        public string memo;
+        public int titlePriority;
     }
 
     public sealed class PcPlayerTitleRegistry
     {
         private readonly Dictionary<int, PcPlayerTitleEntry> _byId = new();
+        private readonly List<PcPlayerTitleEntry> _ordered = new();
         public int Count => _byId.Count;
-        public void Register(PcPlayerTitleEntry e) { if (e == null || e.titleId <= 0) return; _byId[e.titleId] = e; }
+        public void Register(PcPlayerTitleEntry e)
+        {
+            if (e == null || e.titleId <= 0) return;
+            if (!_byId.ContainsKey(e.titleId)) _ordered.Add(e);
+            _byId[e.titleId] = e;
+        }
         public PcPlayerTitleEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
+        /// <summary>Toàn bộ danh hiệu theo thứ tự PC (thứ tự dòng trong playertitle.txt).</summary>
+        public IReadOnlyList<PcPlayerTitleEntry> All => _ordered;
     }
 }

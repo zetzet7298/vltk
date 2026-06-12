@@ -58,10 +58,12 @@ namespace VLTK.Sandbox
     {
         private readonly Dictionary<int, PcFactionTitleEntry> _byId = new();
         private readonly Dictionary<int, List<PcFactionTitleEntry>> _byFaction = new();
+        private readonly List<PcFactionTitleEntry> _ordered = new();
         public int Count => _byId.Count;
         public void Register(PcFactionTitleEntry e)
         {
             if (e == null || e.titleId <= 0) return;
+            if (!_byId.ContainsKey(e.titleId)) _ordered.Add(e);
             _byId[e.titleId] = e;
             if (!_byFaction.TryGetValue(e.factionId, out var list))
             {
@@ -73,5 +75,7 @@ namespace VLTK.Sandbox
         public PcFactionTitleEntry Get(int id) => _byId.TryGetValue(id, out var v) ? v : null;
         public IReadOnlyList<PcFactionTitleEntry> GetFactionTitles(int faction)
             => _byFaction.TryGetValue(faction, out var v) ? v : (IReadOnlyList<PcFactionTitleEntry>)System.Array.Empty<PcFactionTitleEntry>();
+        /// <summary>Toàn bộ danh hiệu môn phái theo thứ tự PC (thứ tự dòng trong factiontitle.txt).</summary>
+        public IReadOnlyList<PcFactionTitleEntry> All => _ordered;
     }
 }

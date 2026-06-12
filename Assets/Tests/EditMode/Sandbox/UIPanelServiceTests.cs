@@ -52,6 +52,59 @@ namespace VLTK.Tests.EditMode.Sandbox
             Assert.AreEqual(order.Count, set.Count);
         }
 
+        [Test]
+        public void TitlePanelService_BuildSnapshot_SurfacesRealPcTitles()
+        {
+            // Dựng TitleService thật từ PC playertitle.txt (363 danh hiệu).
+            var dir = System.IO.Path.Combine(
+                System.IO.Directory.GetCurrentDirectory(),
+                "Assets/StreamingAssets/Reference/PcTitle");
+            var player = PcPlayerTitleParser.BuildRegistry(dir);
+            var faction = PcFactionTitleParser.BuildRegistry(dir);
+            var svc = new TitleService(player, faction);
+
+            var snap = TitlePanelService.BuildSnapshot(svc, playerLevel: 80);
+            Assert.IsNotNull(snap);
+            Assert.AreEqual(363, snap.totalTitles, "Panel phải surface đủ 363 danh hiệu PC");
+            Assert.AreEqual(363, snap.rows.Count);
+            Assert.AreEqual(0, snap.unlockedTitles);
+            // Chưa trang bị → equippedTitleId = 0.
+            Assert.AreEqual(0, snap.equippedTitleId);
+
+            // Mở khóa + trang bị danh hiệu #1, panel phải phản ánh.
+            Assert.IsTrue(svc.UnlockPlayerTitle(1));
+            Assert.IsTrue(TitlePanelService.TryEquip(svc, 0, 1));
+            var snap2 = TitlePanelService.BuildSnapshot(svc, playerLevel: 80, selectedTitleId: 1);
+            Assert.AreEqual(1, snap2.equippedTitleId);
+            Assert.IsFalse(string.IsNullOrEmpty(snap2.equippedTitleName));
+            Assert.AreEqual(1, snap2.unlockedTitles);
+            Assert.IsTrue(snap2.selectedRow.HasValue);
+            Assert.AreEqual(1, snap2.selectedRow.Value.titleId);
+            Assert.IsTrue(snap2.selectedRow.Value.isEquipped);
+            Assert.IsTrue(snap2.selectedRow.Value.isUnlocked);
+
+            // Gỡ trang bị.
+            Assert.IsTrue(TitlePanelService.TryUnEquip(svc, 0));
+            Assert.AreEqual(0, svc.ActivePlayerTitleId);
+        }
+
+        [Test]
+        public void TitlePanelService_TryEquip_RejectsLockedAndInvalid()
+        {
+            Assert.IsFalse(TitlePanelService.TryEquip(null, 0, 1));
+            var svc = new TitleService(new PcPlayerTitleRegistry(), new PcFactionTitleRegistry());
+            // Chưa mở khóa → không trang bị được.
+            Assert.IsFalse(TitlePanelService.TryEquip(svc, 0, 1));
+            Assert.IsFalse(TitlePanelService.TryEquip(svc, 0, 0));
+        }
+
+        [Test]
+        public void TitlePanelService_RarityName_NonEmpty()
+        {
+            Assert.IsFalse(string.IsNullOrEmpty(TitlePanelService.RarityName(TitlePanelService.RarityWhite)));
+            Assert.IsFalse(string.IsNullOrEmpty(TitlePanelService.RarityName(TitlePanelService.RarityGold)));
+        }
+
         // ───── MeridianPanelService ─────
         [Test]
         public void MeridianPanelService_BuildSnapshot_DoesNotThrow_WithNullService()
