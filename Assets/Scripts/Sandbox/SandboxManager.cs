@@ -363,7 +363,7 @@ namespace VLTK.Sandbox
         public ChangeFeatureDataService ChangeFeatureDataService { get; private set; }
         public GlobalConfigService GlobalConfigService { get; private set; }
         public NormalSpawnService NormalSpawnService { get; private set; }
-        public RareSpawnService RareSpawnService { get; private set; }
+        public RareEnchantService RareEnchantService { get; private set; }
         public WharfService WharfService { get; private set; }
         public WaypointService WaypointService { get; private set; }
         public AutoPathRouteService AutoPathRouteService { get; private set; }
@@ -820,7 +820,7 @@ namespace VLTK.Sandbox
                     ChangeFeatureDataService = LoadOptionalStreamingService(nameof(ChangeFeatureDataService), () => ChangeFeatureDataService.LoadFromStreamingAssets());
                     GlobalConfigService = LoadOptionalStreamingService(nameof(GlobalConfigService), () => GlobalConfigService.LoadFromStreamingAssets());
                     NormalSpawnService = LoadOptionalStreamingService(nameof(NormalSpawnService), () => NormalSpawnService.LoadFromStreamingAssets());
-                    RareSpawnService = LoadOptionalStreamingService(nameof(RareSpawnService), () => RareSpawnService.LoadFromStreamingAssets());
+                    RareEnchantService = LoadOptionalStreamingService(nameof(RareEnchantService), () => RareEnchantService.LoadFromStreamingAssets());
                     WharfService = LoadOptionalStreamingService(nameof(WharfService), () => WharfService.LoadFromStreamingAssets());
                     WaypointService = LoadOptionalStreamingService(nameof(WaypointService), () => WaypointService.LoadFromStreamingAssets());
                     AutoPathRouteService = LoadOptionalStreamingService(nameof(AutoPathRouteService), () => AutoPathRouteService.LoadFromStreamingAssets());
