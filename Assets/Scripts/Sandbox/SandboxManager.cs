@@ -129,6 +129,8 @@ namespace VLTK.Sandbox
         public bool useFastEditorBoot = true;
         public bool loadOptionalServicesInFastEditorBoot = false;
         public bool loadDefaultMapInFastEditorBoot = true;
+        public bool skipMapVisualsInFastEditorBoot = true;
+        public bool skipItemLoadingInFastEditorBoot = false;
         public bool cacheReferenceDataInFastEditorBoot = true;
         public bool logBootTimings = true;
         public int bootTimingLogThresholdMs = 50;
@@ -525,7 +527,15 @@ namespace VLTK.Sandbox
                 MapManager.OnMapLoaded += (mapId) => {
                     if (MapManager.ActiveMap != null)
                     {
-                        MapRenderer.LoadMapRegions(MapManager.ActiveMap);
+                        bool skipVisuals = ActiveBootProfile == SandboxBootProfile.FastEditor && skipMapVisualsInFastEditorBoot;
+                        if (!skipVisuals)
+                            MapRenderer.LoadMapRegions(MapManager.ActiveMap);
+                        else
+                        {
+                            // Apply bounds from map definition so camera/player work without visuals
+                            MapRenderer.ApplyBoundsFromDefinition(MapManager.ActiveMap);
+                            SubsystemLog.Info("SandboxBoot", "FastEditor: skipped map visual rendering.");
+                        }
                         EnsurePlayerController();
                         ApplyActiveMapBoundsToPlayer();
                         EnsureEnemyRuntime();
@@ -551,17 +561,26 @@ namespace VLTK.Sandbox
 
                 // ── New Subsystems ──────────────────────────────────
                 QuestService = new QuestService();
-                // Load PC item data via batch loader (14 categories, ~10k+ items)
-                // and script items from magicscript.txt (GM token 6/1/4890).
-                var itemDir = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
-                var importer = LoadItemImporterForBoot(itemDir);
-                ItemDb = new ItemDatabase(importer);
-                LootService = new LootDropService(ItemDb);
-                var dropRegistry = LoadDropRateRegistryForBoot(
-                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
-                LootService.AttachRegistry(dropRegistry);
-                PcSkillsFull = LoadPcSkillRegistryForBoot(
-                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+                ItemContractImporter importer = null;
+                bool skipItems = ActiveBootProfile == SandboxBootProfile.FastEditor && skipItemLoadingInFastEditorBoot;
+                if (!skipItems)
+                {
+                    // Load PC item data via batch loader (14 categories, ~10k+ items)
+                    // and script items from magicscript.txt (GM token 6/1/4890).
+                    var itemDir = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
+                    importer = LoadItemImporterForBoot(itemDir);
+                    ItemDb = new ItemDatabase(importer);
+                    LootService = new LootDropService(ItemDb);
+                    var dropRegistry = LoadDropRateRegistryForBoot(
+                        System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
+                    LootService.AttachRegistry(dropRegistry);
+                    PcSkillsFull = LoadPcSkillRegistryForBoot(
+                        System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+                }
+                else
+                {
+                    SubsystemLog.Info("SandboxBoot", "FastEditor: skipped item/drop/skill loading.");
+                }
                 AudioService = new AudioService();
                 if (servicesRoot != null)
                     AudioService.Initialize(servicesRoot);
@@ -587,29 +606,33 @@ namespace VLTK.Sandbox
 
                 // Initialize item inventory from the same PC item importer used by ItemDb.
                 _equipmentService = new PlayerEquipmentService();
-                _inventoryService = new InventoryService(importer, _equipmentService);
-                _equipmentService.OnEquipChanged += (evt) => {
-                    if (PlayerController != null && PlayerController.visual != null)
-                    {
-                        PlayerController.visual.SetEquipVariant(evt.slot, evt.newVariant);
-                        if (evt.slot == PlayerEquipSlot.Weapon)
+                if (importer != null)
+                {
+                    _inventoryService = new InventoryService(importer, _equipmentService);
+                    _equipmentService.OnEquipChanged += (evt) => {
+                        if (PlayerController != null && PlayerController.visual != null)
                         {
-                            var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
-                            PlayerController.EquipWeapon(wType);
+                            PlayerController.visual.SetEquipVariant(evt.slot, evt.newVariant);
+                            if (evt.slot == PlayerEquipSlot.Weapon)
+                            {
+                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
+                                PlayerController.EquipWeapon(wType);
+                            }
                         }
-                    }
-                    if (FemalePlayerVisual != null)
-                    {
-                        FemalePlayerVisual.SetEquipVariant(evt.slot, evt.newVariant);
-                        if (evt.slot == PlayerEquipSlot.Weapon)
+                        if (FemalePlayerVisual != null)
                         {
-                            var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
-                            FemalePlayerVisual.SetWeapon(wType);
+                            FemalePlayerVisual.SetEquipVariant(evt.slot, evt.newVariant);
+                            if (evt.slot == PlayerEquipSlot.Weapon)
+                            {
+                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
+                                FemalePlayerVisual.SetWeapon(wType);
+                            }
                         }
-                    }
-                };
+                    };
+                }
                 GmAccessService = new GmAccessService();
-                GmTestServerItemService = new GmTestServerItemService(this, _inventoryService, GmAccessService);
+                if (_inventoryService != null)
+                    GmTestServerItemService = new GmTestServerItemService(this, _inventoryService, GmAccessService);
 
                 // Initialize Chat system
                 ChatService = new ChatService();

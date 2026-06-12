@@ -235,6 +235,19 @@ namespace VLTK.Sandbox
                 $"Rendered {rendered} regions; focus center={ContentBounds.center} size={ContentBounds.size}");
         }
 
+        /// <summary>
+        /// Apply bounds from map definition without rendering region visuals.
+        /// Used by FastEditor boot to skip 5+ second map render.
+        /// </summary>
+        public void ApplyBoundsFromDefinition(MapDefinition mapDef)
+        {
+            if (mapDef == null) return;
+            _loadedMapId = mapDef.catalogEntry.mapId;
+            ApplyFullMapBounds(mapDef);
+            SubsystemLog.Info("MapRenderer",
+                $"Bounds applied without visuals: map={_loadedMapId}, bounds={ContentBounds.size}");
+        }
+
         private void ApplyFullMapBounds(MapDefinition mapDef)
         {
             var r = mapDef?.sourceBoundsRect;
