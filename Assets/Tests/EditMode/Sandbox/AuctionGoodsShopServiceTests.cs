@@ -163,7 +163,10 @@ namespace VLTK.Tests.Sandbox
         public void LoadFromStreamingAssets_LoadsShops()
         {
             var reg = PcShopParser.BuildRegistry(ShopDir);
-            Assert.GreaterOrEqual(reg.Count, 100, "PC buysell.txt có 1,521 cửa hàng");
+            // PC ground truth: settings/buysell.txt = 166 lines (header + 165 data),
+            // parser registers ~159 shops. The old "1,521 cửa hàng" comment reused a
+            // fabricated count (see PcShopParserTests) — buysell is 166 lines everywhere.
+            Assert.GreaterOrEqual(reg.Count, 100, "PC buysell.txt registers ~159 cửa hàng");
         }
 
         [Test]
