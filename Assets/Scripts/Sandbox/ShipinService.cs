@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcShipinRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public ShipinService() : this(null) { }
+
         public ShipinService(PcShipinRegistry reg) { _reg = reg ?? new PcShipinRegistry(); }
 
         public static ShipinService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

@@ -22,6 +22,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public TripService() : this(null) { }
+
         public TripService(PcTripRegistry registry)
         {
             _registry = registry ?? new PcTripRegistry();

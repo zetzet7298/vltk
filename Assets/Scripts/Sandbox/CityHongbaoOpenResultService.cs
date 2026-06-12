@@ -20,7 +20,8 @@ namespace VLTK.Sandbox
 
         private readonly List<PcCityHongbaoEntry> _entries = new List<PcCityHongbaoEntry>();
 
-        public CityHongbaoOpenResultService(IEnumerable<PcCityHongbaoEntry> entries)
+public CityHongbaoOpenResultService() : this(null) { }
+                public CityHongbaoOpenResultService(IEnumerable<PcCityHongbaoEntry> entries)
         {
             if (entries == null) return;
             foreach (var entry in entries)

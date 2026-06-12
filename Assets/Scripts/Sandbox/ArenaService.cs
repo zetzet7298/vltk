@@ -22,6 +22,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public ArenaService() : this(null) { }
+
         public ArenaService(PcArenaRegistry registry)
         {
             _registry = registry ?? new PcArenaRegistry();

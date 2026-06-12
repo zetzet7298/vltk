@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcSuiteCountRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public SuiteActivateCountService() : this(null) { }
+
         public SuiteActivateCountService(PcSuiteCountRegistry reg) { _reg = reg ?? new PcSuiteCountRegistry(); }
 
         public static SuiteActivateCountService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

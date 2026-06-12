@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcNativePlaceRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public NativePlaceService() : this(null) { }
+
         public NativePlaceService(PcNativePlaceRegistry reg) { _reg = reg ?? new PcNativePlaceRegistry(); }
 
         public static NativePlaceService LoadFromStreamingAssets(string subDir = "Reference/PcMap")

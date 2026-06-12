@@ -20,6 +20,8 @@ namespace VLTK.Sandbox
         public IReadOnlyList<PcSpecialSkillEntry> All
             => _registry != null ? _registry.All : (IReadOnlyList<PcSpecialSkillEntry>)System.Array.Empty<PcSpecialSkillEntry>();
 
+        public SpecialSkillCatalogService() : this(null) { }
+
         public SpecialSkillCatalogService(PcSpecialSkillRegistry registry)
         {
             _registry = registry ?? new PcSpecialSkillRegistry();

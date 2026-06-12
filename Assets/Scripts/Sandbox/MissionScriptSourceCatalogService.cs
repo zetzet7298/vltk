@@ -26,6 +26,8 @@ namespace VLTK.Sandbox
         public IReadOnlyList<PcMissionScriptSourceEntry> All
             => _catalog != null ? _catalog.All : (IReadOnlyList<PcMissionScriptSourceEntry>)System.Array.Empty<PcMissionScriptSourceEntry>();
 
+        public MissionScriptSourceCatalogService() : this(null) { }
+
         public MissionScriptSourceCatalogService(PcMissionScriptSourceCatalog catalog)
         {
             _catalog = catalog ?? new PcMissionScriptSourceCatalog();

@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcFusionRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public FusionService() : this(null) { }
+
         public FusionService(PcFusionRegistry reg) { _reg = reg ?? new PcFusionRegistry(); }
 
         public static FusionService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

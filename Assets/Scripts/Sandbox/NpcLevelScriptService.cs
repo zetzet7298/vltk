@@ -34,6 +34,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public NpcLevelScriptService() : this(null) { }
+
         public NpcLevelScriptService(PcNpcLevelScriptRegistry registry)
         {
             _registry = registry ?? new PcNpcLevelScriptRegistry();

@@ -22,6 +22,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public MetempsychosisTaskService() : this(null) { }
+
         public MetempsychosisTaskService(PcMetempsychosisTaskRegistry registry)
         {
             _registry = registry ?? new PcMetempsychosisTaskRegistry();

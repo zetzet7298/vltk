@@ -18,6 +18,8 @@ namespace VLTK.Sandbox
 
         private readonly PcSkillTemplateCatalog _catalog;
 
+        public SkillTemplateCatalogService() : this(null) { }
+
         public SkillTemplateCatalogService(PcSkillTemplateCatalog catalog)
         {
             _catalog = catalog ?? new PcSkillTemplateCatalog();

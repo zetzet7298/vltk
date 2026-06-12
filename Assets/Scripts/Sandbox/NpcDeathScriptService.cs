@@ -27,6 +27,8 @@ namespace VLTK.Sandbox
 
         public int Count => _registry?.Count ?? 0;
 
+        public NpcDeathScriptService() : this(null) { }
+
         public NpcDeathScriptService(PcNpcDeathScriptRegistry registry)
         {
             _registry = registry ?? new PcNpcDeathScriptRegistry();

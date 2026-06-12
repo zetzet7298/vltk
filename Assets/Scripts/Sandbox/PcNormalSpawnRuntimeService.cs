@@ -42,6 +42,8 @@ namespace VLTK.Sandbox
         /// <summary>Level of the first data row (col[7]) — sanity anchor.</summary>
         public int FirstLevel { get; }
 
+        public PcNormalSpawnRuntimeService() : this(null) { }
+
         public PcNormalSpawnRuntimeService(PcNormalSpawnRegistry registry)
         {
             _registry = registry ?? new PcNormalSpawnRegistry();

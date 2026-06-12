@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcRevivePosRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public RevivePosService() : this(null) { }
+
         public RevivePosService(PcRevivePosRegistry reg) { _reg = reg ?? new PcRevivePosRegistry(); }
 
         public static RevivePosService LoadFromStreamingAssets(string subDir = "Reference/PcMap")

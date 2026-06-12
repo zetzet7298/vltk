@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcTaxRateRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public TaxRateService() : this(null) { }
+
         public TaxRateService(PcTaxRateRegistry reg) { _reg = reg ?? new PcTaxRateRegistry(); }
 
         public static TaxRateService LoadFromStreamingAssets(string subDir = "Reference")

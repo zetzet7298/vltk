@@ -28,6 +28,8 @@ namespace VLTK.Sandbox
         public const string DefaultStreamingDir = "Reference/PcFlipCard";
         private readonly PcFlipCardProtocolRegistry _registry;
         public int Count => _registry != null ? _registry.Count : 0;
+        public FlipCardProtocolService() : this(null) { }
+
         public FlipCardProtocolService(PcFlipCardProtocolRegistry registry) { _registry = registry ?? new PcFlipCardProtocolRegistry(); }
         public PcFlipCardProtocolEntry Get(string key) => _registry.Get(key);
         public bool TryGetInt(string key, out int value) => _registry.TryGetInt(key, out value);

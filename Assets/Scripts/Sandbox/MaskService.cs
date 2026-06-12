@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcMaskRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public MaskService() : this(null) { }
+
         public MaskService(PcMaskRegistry reg) { _reg = reg ?? new PcMaskRegistry(); }
 
         public static MaskService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

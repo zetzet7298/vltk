@@ -24,6 +24,8 @@ namespace VLTK.Sandbox
         public IReadOnlyList<PcTranslifeSkillSourceEntry> All
             => _registry != null ? _registry.All : (IReadOnlyList<PcTranslifeSkillSourceEntry>)System.Array.Empty<PcTranslifeSkillSourceEntry>();
 
+        public TranslifeSkillSourceService() : this(null) { }
+
         public TranslifeSkillSourceService(PcTranslifeSkillSourceRegistry registry)
         {
             _registry = registry ?? new PcTranslifeSkillSourceRegistry();

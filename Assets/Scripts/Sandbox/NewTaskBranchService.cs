@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcNewTaskBranchRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public NewTaskBranchService() : this(null) { }
+
         public NewTaskBranchService(PcNewTaskBranchRegistry reg) { _reg = reg ?? new PcNewTaskBranchRegistry(); }
 
         public static NewTaskBranchService LoadFromStreamingAssets(string subDir = "Reference/PcTask/newtask/branch")

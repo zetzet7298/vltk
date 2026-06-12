@@ -20,7 +20,8 @@ namespace VLTK.Sandbox
 
         private readonly List<PcHongbaoEntry> _entries = new List<PcHongbaoEntry>();
 
-        public HongbaoOpenResultService(IEnumerable<PcHongbaoEntry> entries)
+public HongbaoOpenResultService() : this(null) { }
+                public HongbaoOpenResultService(IEnumerable<PcHongbaoEntry> entries)
         {
             if (entries == null) return;
             foreach (var entry in entries)

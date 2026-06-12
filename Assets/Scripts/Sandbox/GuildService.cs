@@ -46,6 +46,8 @@ namespace VLTK.Sandbox
         public int Count => _registry.Count;
         public int MaxLevel => _registry.MaxLevel;
 
+        public GuildService() : this(null) { }
+
         public GuildService(PcTongLevelRegistry registry)
         {
             _registry = registry ?? new PcTongLevelRegistry();

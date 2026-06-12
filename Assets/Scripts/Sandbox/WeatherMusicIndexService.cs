@@ -19,7 +19,8 @@ namespace VLTK.Sandbox
         private readonly Dictionary<string, PcWeatherMusicEntry> _byKey = new Dictionary<string, PcWeatherMusicEntry>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, PcWeatherMusicEntry> _byFile = new Dictionary<string, PcWeatherMusicEntry>(StringComparer.OrdinalIgnoreCase);
 
-        public WeatherMusicIndexService(IEnumerable<PcWeatherMusicEntry> rows)
+public WeatherMusicIndexService() : this(null) { }
+                public WeatherMusicIndexService(IEnumerable<PcWeatherMusicEntry> rows)
         {
             if (rows == null) return;
             foreach (var row in rows)

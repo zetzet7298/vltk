@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcAutoPathRouteRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public AutoPathRouteService() : this(null) { }
+
         public AutoPathRouteService(PcAutoPathRouteRegistry reg) { _reg = reg ?? new PcAutoPathRouteRegistry(); }
 
         public static AutoPathRouteService LoadFromStreamingAssets(string subDir = "Reference/PcMap")

@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcWaypointRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public WaypointService() : this(null) { }
+
         public WaypointService(PcWaypointRegistry reg) { _reg = reg ?? new PcWaypointRegistry(); }
 
         public static WaypointService LoadFromStreamingAssets(string subDir = "Reference/PcMap")

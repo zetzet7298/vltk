@@ -27,6 +27,8 @@ namespace VLTK.Sandbox
         public int Count => _registry?.Count ?? 0;
         public int ClaimedCount => _claimedBonuses.Count;
 
+        public BonusOnlineService() : this(null) { }
+
         public BonusOnlineService(PcBonusOnlineRegistry registry)
         {
             _registry = registry ?? new PcBonusOnlineRegistry();

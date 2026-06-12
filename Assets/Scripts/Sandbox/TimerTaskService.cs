@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcTimerTaskRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public TimerTaskService() : this(null) { }
+
         public TimerTaskService(PcTimerTaskRegistry reg) { _reg = reg ?? new PcTimerTaskRegistry(); }
 
         public static TimerTaskService LoadFromStreamingAssets(string subDir = "Reference")

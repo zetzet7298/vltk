@@ -27,6 +27,8 @@ namespace VLTK.Sandbox
         public int CompletedCount => _completedAdventures.Count;
         public float CompletionRatio => Count == 0 ? 0f : (float)CompletedCount / Count;
 
+        public AdventureService() : this(null) { }
+
         public AdventureService(PcAdventureRegistry registry)
         {
             _registry = registry ?? new PcAdventureRegistry();

@@ -14,6 +14,8 @@ namespace VLTK.Sandbox
         private readonly PcPlatinaMagicRateRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public PlatinaMagicRateService() : this(null) { }
+
         public PlatinaMagicRateService(PcPlatinaMagicRateRegistry reg) { _reg = reg ?? new PcPlatinaMagicRateRegistry(); }
 
         public static PlatinaMagicRateService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")

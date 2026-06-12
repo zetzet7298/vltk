@@ -27,6 +27,8 @@ namespace VLTK.Sandbox
         public IReadOnlyList<PcLibScriptSourceEntry> All
             => _catalog != null ? _catalog.All : (IReadOnlyList<PcLibScriptSourceEntry>)Array.Empty<PcLibScriptSourceEntry>();
 
+        public LibScriptSourceCatalogService() : this(null) { }
+
         public LibScriptSourceCatalogService(PcLibScriptSourceCatalog catalog)
         {
             _catalog = catalog ?? new PcLibScriptSourceCatalog();

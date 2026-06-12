@@ -13,6 +13,8 @@ namespace VLTK.Sandbox
         private readonly PcBrokenEquipRegistry _reg;
         public int Count => _reg?.Count ?? 0;
 
+        public BrokenEquipService() : this(null) { }
+
         public BrokenEquipService(PcBrokenEquipRegistry reg) { _reg = reg ?? new PcBrokenEquipRegistry(); }
 
         public static BrokenEquipService LoadFromStreamingAssets(string subDir = "Reference/PcItemFull")
