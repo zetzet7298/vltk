@@ -190,6 +190,7 @@ namespace VLTK.Sandbox
             if (currentWeapon == weapon)
                 return;
             currentWeapon = weapon;
+            weaponVariant = MalePlayerSpriteCatalog.GetWeaponSprVariant(weapon);
             _loadedAction = (PlayerVisualAction)(-1);
             RefreshActionParts(force: true);
             ApplyFrame(0f);

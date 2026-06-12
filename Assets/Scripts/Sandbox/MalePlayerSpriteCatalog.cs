@@ -119,6 +119,16 @@ namespace VLTK.Sandbox
             DualWeaponVariant,   // DualWeapon (双剑类1 = LW/RW_013)
         };
 
+        /// <summary>
+        /// Resolve the PC SPR variant index for a given weapon equip category.
+        /// Used by MalePlayerVisual.SetWeapon to keep weaponVariant in sync.
+        /// </summary>
+        public static int GetWeaponSprVariant(PcWeaponType weapon) => WeaponSprVariant[(int)weapon];
+
+        // Sentinel value: when weaponVariant equals this, BuildParts auto-resolves
+        // from the weapon type via WeaponSprVariant.
+        private const int AutoWeaponVariant = int.MinValue;
+
         // PC draw-order table: Settings/NpcRes/男主角贴图顺序表.txt, Dir1..Dir8.
         private static readonly int[][] DrawOrderByDirection =
         {
@@ -135,19 +145,30 @@ namespace VLTK.Sandbox
         /// <summary>
         /// Build the SPR part spec list for a given action + weapon type, matching PC KNpcRes::SetAction.
         /// </summary>
-        public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon, int bodyVariant = ArmorVariant, int headVariant = ArmorVariant, int weaponVariant = EmptyWeaponVariant, int hairVariant = ArmorVariant, int horseVariant = MountHorseVariant)
+        public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon, int bodyVariant = ArmorVariant, int headVariant = ArmorVariant, int weaponVariant = AutoWeaponVariant, int hairVariant = ArmorVariant, int horseVariant = MountHorseVariant)
         {
+            // Mounted actions use mount outfit (050/072) by default.
+            // When caller passes the non-mounted default, auto-upgrade to MountArmorVariant.
+            int mountBody = (bodyVariant == ArmorVariant) ? MountArmorVariant : bodyVariant;
+            int mountHead = (headVariant == ArmorVariant) ? MountArmorVariant : headVariant;
+            int mountHair = (hairVariant == ArmorVariant) ? MountArmorVariant : hairVariant;
+
             if (action == PlayerVisualAction.Ride)
-                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MountIdleSuffix);
+                return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountIdleSuffix);
             if (action == PlayerVisualAction.RideMove)
-                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MountMoveSuffix);
+                return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountMoveSuffix);
+
+            // Auto-resolve weapon variant from weapon type when caller passes the sentinel default.
+            int effectiveWeaponVariant = (weaponVariant == AutoWeaponVariant)
+                ? WeaponSprVariant[(int)weapon]
+                : weaponVariant;
 
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];
             string rightWeaponSuffix = (weapon == PcWeaponType.ShortWeapon && action == PlayerVisualAction.Magic)
                 ? "MG03" // PC 男主角右手武器.txt: MeleeWMagic uses MA_RW_001_MG03.spr.
                 : suffix;
-            int lwVariant = (weapon == PcWeaponType.DualWeapon) ? weaponVariant : EmptyWeaponVariant;
+            int lwVariant = (weapon == PcWeaponType.DualWeapon) ? effectiveWeaponVariant : EmptyWeaponVariant;
 
             // Long staff has no left weapon SPR — only right hand holds the staff.
             // Dual weapons would have both. For other types, left weapon is empty (still has SPR).
@@ -162,7 +183,7 @@ namespace VLTK.Sandbox
                 new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix), leftWeaponRequired),
-                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", weaponVariant, rightWeaponSuffix)),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", effectiveWeaponVariant, rightWeaponSuffix)),
             };
         }
 
