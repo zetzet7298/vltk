@@ -98,7 +98,7 @@ namespace VLTK.Sandbox
         private static void ParseEvents(PcTaskEventRegistry reg, string path)
         {
             if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -121,7 +121,7 @@ namespace VLTK.Sandbox
         private static void ParseTypes(PcTaskEventRegistry reg, string path)
         {
             if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;
@@ -144,7 +144,7 @@ namespace VLTK.Sandbox
         private static void ParseIds(PcTaskEventRegistry reg, string path)
         {
             if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;

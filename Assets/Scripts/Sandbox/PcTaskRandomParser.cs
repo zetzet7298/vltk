@@ -94,7 +94,7 @@ namespace VLTK.Sandbox
         private static void ParseEntityFile(PcTaskRandomRegistry reg, string path, string source)
         {
             if (!File.Exists(path)) return;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 if (string.IsNullOrWhiteSpace(raw)) continue;

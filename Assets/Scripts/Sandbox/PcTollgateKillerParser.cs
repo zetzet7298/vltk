@@ -37,7 +37,7 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(absoluteDir)) return reg;
             var path = Path.Combine(absoluteDir, "killer.txt");
             if (!File.Exists(path)) return reg;
-            var lines = PcMapListParser.ReadLines(path);
+            var lines = PcText.ReadLinesTcvn3(path);
             foreach (var raw in lines)
             {
                 var line = raw.Trim();
