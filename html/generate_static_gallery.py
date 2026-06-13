@@ -467,7 +467,7 @@ html_content = """<!DOCTYPE html>
             </div>
             <!-- Search Bar -->
             <div class="w-full md:w-80">
-                <input type="text" id="searchInput" onkeyup="filterContent()" placeholder="Tìm kiếm đối tượng..." 
+                <input type="text" id="searchInput" oninput="filterContent()" placeholder="Tìm kiếm đối tượng..." 
                        class="w-full bg-gray-950 border border-gray-600 rounded-lg py-2 px-4 text-white focus:outline-none focus:border-amber-500 transition">
             </div>
         </div>
