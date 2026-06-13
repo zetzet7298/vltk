@@ -164,6 +164,19 @@ ASCII path), matching the manifest and the file the runtime loads. CJK evidence:
 `\spr\Ui\技能图标\icon_sk_ty_at.spr` -> signed `c4454165`, unsigned `bedc5b69`. `scripts/uid.py`
 is the reference impl (signed by default; `--unsigned` for the legacy variant).
 
+## Offline/Python Composite Sprite Assembly (for Static Gallery / Tooling)
+
+When generating a static web gallery or preview tool where layered Unity rendering is not available, you can assemble the complete character sprite into a single PNG in Python:
+1. **Extract variant & parts**: From the body path (e.g., `ma_bd_001_st01.spr`), parse the gender (`ma`/`fm`) and variant (`001`). Locate corresponding part files: head (`hd`), hair (`hr`), left hand (`lh`), right hand (`rh`).
+2. **Decode frame metadata**: Open each SPR, parse the frame count and offsets. The frame's visual offsets (`offsetX`, `offsetY`) are stored at bytes 4-5 and 6-7 of the frame blob as signed 16-bit integers (`<h`).
+3. **Compute global bounding box**:
+   - `min_x = min(offset_x)`, `max_x = max(offset_x + width)`
+   - `min_y = min(offset_y)`, `max_y = max(offset_y + height)`
+   - Composite width = `max_x - min_x`, composite height = `max_y - min_y`.
+4. **Z-Order Drawing**: Create a transparent canvas and draw the parts from back to front (e.g., for front-facing idle direction 0):
+   - Hair (`hr` - if present) -> Body (`bd`) -> Left Hand (`lh`) -> Right Hand (`rh`) -> Head (`hd`).
+   - Draw coordinate: `dest_x = offset_x + local_x - min_x`, `dest_y = offset_y + local_y - min_y`.
+
 ## Staging pipeline (get art into the build)
 
 The runtime reads `Assets/StreamingAssets/Sprites/{uid}.spr`. To stage a part set:

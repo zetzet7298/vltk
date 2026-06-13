@@ -276,6 +276,17 @@ set_active_instance(instance="MyProject@abc123")
 | `isPlaying=True` but `time=190s`, Instance=null | Recompile during PlayMode broke singleton; game runs on old domain | Stop, verify compile done, Play fresh |
 | Coroutine result not visible after `Thread.Sleep` in execute_code | `Thread.Sleep` blocks main thread; coroutines can't tick during sleep | Use two separate execute_code calls: trigger in call 1, read results in call 2 |
 
+### Integration-lane review gates for Kanban Unity work
+
+When a Kanban worker lands a Unity implementation in an offline/worktree lane, it may legitimately stop at `review-required` instead of marking the task done. Do **not** treat that as a crash. For this project, the orchestrator should actively inspect the handoff, then either:
+
+1. accept it as an implementation handoff and `kanban complete` the task so the `vltk-unity` integration lane can merge/compile/test in the real Editor; or
+2. reject it with a specific follow-up/fix task.
+
+A worker handoff is acceptable to release to `vltk-unity` when it includes: branch + commit, exact changed files, explicit non-goals, offline-runtime preservation notes, and a clear list of real Unity compile/test steps for the integration lane. Keep proof flags **off** until `vltk-unity` has real Unity Editor output.
+
+For a concrete FS-01 example, see [`references/fs01-backend-integration-kanban.md`](references/fs01-backend-integration-kanban.md).
+
 ### Reading compile errors via LogEntries reflection
 
 Unity MCP's `read_console` may not surface script compile errors depending on timing. Use this pattern instead:

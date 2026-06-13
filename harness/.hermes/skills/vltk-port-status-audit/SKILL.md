@@ -103,6 +103,23 @@ That distinction is the whole point — it tells the user the port data is sound
 
 When auditing whether the Python backend can be connected to Unity, separate **REST domain backend readiness** from **realtime MMO server readiness**. A FastAPI backend with account/role/player/item/skill/map/combat REST endpoints and green unit/integration/E2E tests is enough to start Phase 1 client integration, but it is not a complete realtime game server until websocket/UDP session handling, server ticks, AOI/interest management, server-owned entities, movement input, and snapshot broadcast exist and are tested. See `references/backend-readiness-review.md` for the concrete review commands, test evidence to collect, and phase decision checklist.
 
+For the Harness + Kanban setup pattern used to start Unity↔backend Phase 1 (FS-01 tracking story, `vltk-fullstack-backend` board, fan-out/fan-in task graph, and worker-spawn pitfalls), see `references/fullstack-backend-integration-kanban.md`. The **pinned backend auth contract** (FS-02A: `accName` not `account`, `password` plaintext not MD5-uppercase, MD5-IN-HOA storage parity, no bearer/JWT) lives in `references/fs02-auth-contract.md` — read it before writing any Unity login code or any audit that touches `/v1/account/*`.
+
+## Full-stack client↔backend Kanban kickoff
+
+For VLTK full-stack integration, use a separate Kanban board rather than mixing with the existing PC-resource port board. Recommended shape:
+
+1. Add a Harness tracking story first (example `FS-01`) and keep all proof flags red until real backend + Unity test artifacts exist. If the initial `verify_command` is a placeholder/no-op, immediately add a backlog item to replace it with a real verifier.
+2. Create a board like `vltk-fullstack-backend` with default workdir `/var/www/vltk-mobile`.
+3. Fan out three independent discovery cards:
+   - backend contract audit (`vltkmobile-be`, `dir:/var/www/vltk-mobile/backend`);
+   - Unity backend-client architecture discovery (`vltk-fixer`, worktree branch);
+   - Harness proof/verify-command design (`vltk-fixer2`, worktree branch).
+4. Gate implementation on those parents: minimal Unity REST health+map smoke first, preserving offline/mock runtime.
+5. Gate integration on implementation: `vltk-unity` merges, starts/checks backend health, refreshes Unity, runs scoped EditMode/PlayMode evidence, updates Harness only with real outputs.
+
+Do not connect gameplay broadly before the health/map slice proves the client abstraction and verifier path. This keeps backend authority introduction reversible and prevents false-green Harness rows.
+
 ## PlayMode runtime verification is now available
 
 As of 2026-06-13, the game runs in PlayMode with full boot (profile=Full):

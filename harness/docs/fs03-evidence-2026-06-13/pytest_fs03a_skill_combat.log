@@ -1,0 +1,49 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.3, pluggy-1.6.0 -- /var/www/vltk-mobile/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /var/www/vltk-mobile/backend
+configfile: pyproject.toml
+plugins: cov-7.1.0, anyio-4.13.0, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 38 items
+
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_cast_zero_cost_does_not_change_resources PASSED [  2%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_cast_horse_limit_blocks_when_skill_prohibits_horse PASSED [  5%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_cast_succeeds_within_max_level_then_level_up PASSED [  7%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_damage_calc_cold_armor_absorbs_full PASSED [ 10%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_damage_calc_reflect_uses_range_percent_for_cold PASSED [ 13%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_damage_calc_damage2mana_drains_to_target_pool PASSED [ 15%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_status_tick_armor_timers_decay_to_zero PASSED [ 18%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_status_tick_freeze_odd_tick_controls PASSED [ 21%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_status_tick_confuse_ended_flag_on_last_frame PASSED [ 23%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_status_tick_sitting_bonus_regen_on_game_update_time PASSED [ 26%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_status_tick_hot_applies_every_game_update_time PASSED [ 28%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_status_tick_burn_dot_self_damage PASSED [ 31%]
+tests/integration/modules/skill/test_fs03a_skill_combat_flow.py::test_full_combat_loop_cast_then_damage_then_status PASSED [ 34%]
+tests/integration/modules/skill/test_skill.py::test_learn_skill_and_list PASSED [ 36%]
+tests/integration/modules/skill/test_skill.py::test_learn_duplicate_rejected PASSED [ 39%]
+tests/integration/modules/skill/test_skill.py::test_learn_unknown_skill_rejected PASSED [ 42%]
+tests/integration/modules/skill/test_skill.py::test_level_up_skill PASSED [ 44%]
+tests/integration/modules/skill/test_skill.py::test_level_up_unlearned_rejected PASSED [ 47%]
+tests/integration/modules/skill/test_skill_cast_authoritative.py::test_cast_deducts_mana_real PASSED [ 50%]
+tests/integration/modules/skill/test_skill_cast_authoritative.py::test_cast_rejected_when_not_enough_mana PASSED [ 52%]
+tests/integration/modules/skill/test_skill_cast_authoritative.py::test_cast_cooldown_enforced_server_side PASSED [ 55%]
+tests/integration/modules/skill/test_skill_cast_authoritative.py::test_cast_allowed_after_cooldown PASSED [ 57%]
+tests/integration/modules/skill/test_skill_cast_authoritative.py::test_cast_unlearned_skill_rejected PASSED [ 60%]
+tests/integration/modules/skill/test_skill_cast_authoritative.py::test_cast_without_player_state_rejected PASSED [ 63%]
+tests/integration/modules/combat/test_combat.py::test_create_and_get_battle PASSED [ 65%]
+tests/integration/modules/combat/test_combat.py::test_join_and_list_participants PASSED [ 68%]
+tests/integration/modules/combat/test_combat.py::test_update_score_and_resolve_ranking PASSED [ 71%]
+tests/integration/modules/combat/test_combat.py::test_damage_calc_parity_armor_then_resist PASSED [ 73%]
+tests/integration/modules/combat/test_combat.py::test_damage_calc_mana_shield_breaks PASSED [ 76%]
+tests/integration/modules/combat/test_combat.py::test_damage_calc_reflect_to_attacker PASSED [ 78%]
+tests/integration/modules/combat/test_combat.py::test_status_tick_poison_dot_and_decay PASSED [ 81%]
+tests/integration/modules/combat/test_combat.py::test_status_tick_poison_applies_damage PASSED [ 84%]
+tests/integration/modules/combat/test_combat.py::test_status_tick_stun_controls PASSED [ 86%]
+tests/integration/modules/combat/test_combat.py::test_status_tick_regen_every_game_update_time PASSED [ 89%]
+tests/integration/modules/combat/test_combat.py::test_pk_check_safe_zone_blocks PASSED [ 92%]
+tests/integration/modules/combat/test_combat.py::test_pk_check_battlefield_enemy_allowed PASSED [ 94%]
+tests/integration/modules/combat/test_combat.py::test_record_kill_awards_parity_score PASSED [ 97%]
+tests/integration/modules/combat/test_combat.py::test_record_kill_same_camp_rejected PASSED [100%]
+
+============================= 38 passed in 57.01s ==============================

@@ -16,19 +16,49 @@ history or contents. Reversibility first.
 
 ## Pre-commit checklist (run before `git add -A` / "commit all")
 
-1. **Detect embedded repos** (the gitlink trap):
+1. **Detect embedded repos** (the gitlink trap) without accidentally staging them:
+   1. **Detect embedded repos** (the gitlink trap) without accidentally staging them:
+      1. **Detect embedded repos** (the gitlink trap) without accidentally staging them:
+         ```bash
+         # Dry-run first; do not use plain `git add -A` just to look for warnings.
+         git add -A -n 2>&1 | grep -i "embedded git repository" || true
+         # Proactively list nested repos/worktrees:
+         /usr/bin/find . -maxdepth 4 -name .git -not -path './.git' -print 2>/dev/null
+         ```
+         If a subdir has its own `.git`, staging it from the parent creates a **gitlink** — the parent
+         records only a commit hash, NOT the files. A clone of the parent gets an empty directory. This
+         silently "loses" the nested repo's code from the parent's perspective. **Un-stage it:**
+         ```bash
+         git rm --cached <subdir> >/dev/null 2>&1; git reset -q <subdir>
+         ```
+         After staging, verify no gitlink is present by checking the staged raw modes exactly:
+         ```bash
+         if git diff --cached --raw | awk '$1 ~ /^:160000/ || $2 == "160000" {bad=1; print} END{exit bad?0:1}'; then
+           echo 'BLOCKED: gitlink staged' >&2
+           exit 1
+         fi
+         ```
+         Do not use a loose condition like `$2 ~ /^160000/` against the raw diff without understanding
+         the field layout; it can misclassify normal `100644` file edits as blocked. The nested repo must
+         be committed in ITS OWN repository, never as a gitlink in the parent.
+      ```bash
+      if git diff --cached --raw | awk '$1 ~ /^:160000/ || $2 == "160000" {bad=1; print} END{exit bad?0:1}'; then
+        echo 'BLOCKED: gitlink staged' >&2
+        exit 1
+      fi
+      ```
+      Do not use a loose condition like `$2 ~ /^160000/` against the raw diff without understanding
+      the field layout; it can misclassify normal `100644` file edits as blocked. The nested repo must
+      be committed in ITS OWN repository, never as a gitlink in the parent.
    ```bash
-   git add -A 2>&1 | grep -i "embedded git repository"   # git warns if you stage a nested repo
-   # or proactively:
-   find . -name .git -maxdepth 3 -not -path './.git' 2>/dev/null
+   if git diff --cached --raw | awk '$1 ~ /^:160000/ || $2 == "160000" {bad=1; print} END{exit bad?0:1}'; then
+     echo 'BLOCKED: gitlink staged' >&2
+     exit 1
+   fi
    ```
-   If a subdir has its own `.git`, staging it from the parent creates a **gitlink** — the parent
-   records only a commit hash, NOT the files. A clone of the parent gets an empty directory. This
-   silently "loses" the nested repo's code from the parent's perspective. **Un-stage it:**
-   ```bash
-   git rm --cached <subdir> >/dev/null 2>&1; git reset -q <subdir>
-   ```
-   The nested repo must be committed in ITS OWN repository, never as a gitlink in the parent.
+   Do not use a loose condition like `$2 ~ /^160000/` against the raw diff without understanding
+   the field layout; it can misclassify normal `100644` file edits as blocked. The nested repo must
+   be committed in ITS OWN repository, never as a gitlink in the parent.
 
 2. **Block secrets**: confirm nothing sensitive is staged.
    ```bash
@@ -61,6 +91,40 @@ A repo with **no remote** (e.g. `backend/` had 11 commits and zero remotes) has 
 backup at all — bundle it immediately, then sort out the remote. A 221 MB working dir is usually
 venv/log/data behind `.gitignore`; the bundle of real source history is tiny (hundreds of KB).
 
+## Emergency recovery of deleted files via state.db
+
+If an untracked file (such as a user-uploaded requirement file, a plan, or code) got deleted by a destructive git command (e.g. `git reset --hard` or `git checkout`), you can recover its exact content from the Hermes persistent SQLite state database!
+
+Hermes caches all message payloads (including tool invocation inputs and outputs) in `state.db`. If you recently read the file using `read_file` or processed it, the entire content is stored in the database.
+
+### Recovery script (Python)
+
+Run a Python script to search for the deleted file path in the `messages` table of the active profile's `state.db` and write its contents back to disk:
+
+```python
+import sqlite3
+import json
+
+db_path = "/home/zet/.hermes/profiles/vltkmobile/state.db"
+conn = sqlite3.connect(db_path)
+cursor = conn.cursor()
+
+# Search for the target filename or contents in the messages table
+cursor.execute("SELECT id, content FROM messages WHERE content LIKE '%thong_tin_hinh_anh_cac_object.md%'")
+rows = cursor.fetchall()
+for row_id, content_json in rows:
+    try:
+        data = json.loads(content_json)
+        # If the content matches the tool response, extract and write
+        if "content" in data and "Mô tả" in data["content"]:
+            print(f"Found match in row {row_id}!")
+            with open("/var/www/vltk-mobile/html/thong_tin_hinh_anh_cac_object.md", "w") as f:
+                f.write(data["content"])
+            break
+    except Exception as e:
+        continue
+```
+
 ## gh CLI vs SSH (auth reality in this workspace)
 
 - SSH to GitHub works here (`git@github.com:zetzet7298/vltk.git` pushes fine) — so pushing to an
@@ -79,3 +143,57 @@ When the bulk commit legitimately spans unrelated areas (it shouldn't, but "comm
 list each area in the body and explicitly note what you deliberately LEFT OUT and why (e.g.
 "backend/ is a separate repo with its own .env and is intentionally left untracked — must be
 committed in its own repository, not as a gitlink").
+
+## Multi-repo push discipline in this workspace
+
+When the user says "commit all change và push" in the VLTK workspace, check all known sibling/nested
+repos, not only the current repo:
+
+```bash
+git -C /var/www/vltk-mobile status --short --branch
+git -C /var/www/vltk-mobile/backend status --short --branch
+git -C /var/www/vltk-mobile/backend/cores status --short --branch
+git -C /var/www/vltk-mobile/harness-be status --short --branch
+```
+
+- Commit dirty work in each repo separately, respecting that repo's own `AGENTS.md` and `.gitignore`.
+- If a nested repo is clean but `ahead N`, push it too when the user requested "push all"; do not
+  fabricate a new commit just to have something to commit.
+- Report each repo's final branch tracking line (`## branch...origin/branch`) and remote HEAD commit.
+- Never add `/var/www/vltk-mobile/backend`, `backend/cores`, or `harness-be` from the parent repo.
+
+## Multi-repo push discipline in this workspace
+
+When the user says "commit all change và push" in the VLTK workspace, check all known sibling/nested
+repos, not only the current repo:
+
+```bash
+git -C /var/www/vltk-mobile status --short --branch
+git -C /var/www/vltk-mobile/backend status --short --branch
+git -C /var/www/vltk-mobile/backend/cores status --short --branch
+git -C /var/www/vltk-mobile/harness-be status --short --branch
+```
+
+- Commit dirty work in each repo separately, respecting that repo's own `AGENTS.md` and `.gitignore`.
+- If a nested repo is clean but `ahead N`, push it too when the user requested "push all"; do not
+  fabricate a new commit just to have something to commit.
+- Report each repo's final branch tracking line (`## branch...origin/branch`) and remote HEAD commit.
+- Never add `/var/www/vltk-mobile/backend`, `backend/cores`, or `harness-be` from the parent repo.
+
+## Multi-repo push discipline in this workspace
+
+When the user says "commit all change và push" in the VLTK workspace, check all known sibling/nested
+repos, not only the current repo:
+
+```bash
+git -C /var/www/vltk-mobile status --short --branch
+git -C /var/www/vltk-mobile/backend status --short --branch
+git -C /var/www/vltk-mobile/backend/cores status --short --branch
+git -C /var/www/vltk-mobile/harness-be status --short --branch
+```
+
+- Commit dirty work in each repo separately, respecting that repo's own `AGENTS.md` and `.gitignore`.
+- If a nested repo is clean but `ahead N`, push it too when the user requested "push all"; do not
+  fabricate a new commit just to have something to commit.
+- Report each repo's final branch tracking line (`## branch...origin/branch`) and remote HEAD commit.
+- Never add `/var/www/vltk-mobile/backend`, `backend/cores`, or `harness-be` from the parent repo.
