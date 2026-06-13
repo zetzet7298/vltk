@@ -1,0 +1,12 @@
+INFO:     Started server process [1258230]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8020 (Press CTRL+C to quit)
+INFO:     127.0.0.1:41270 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41272 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:34824 - "GET /v1/map HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51846 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51858 - "GET /v1/map?map_type=City HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51868 - "GET /v1/map/1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41786 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41802 - "GET /openapi.json HTTP/1.1" 200 OK
