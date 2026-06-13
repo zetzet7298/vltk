@@ -59,5 +59,17 @@ namespace VLTK.Backend
         public Task<BackendResponse<MapListResponse>> ListMapsAsync(
             string mapType = null, CancellationToken ct = default)
             => Backend.ListMapsAsync(mapType, ct);
+
+        public Task<BackendResponse<SceneResponse>> EnterMapAsync(
+            EnterMapRequest request, CancellationToken ct = default)
+            => Backend.EnterMapAsync(request, ct);
+
+        public Task<BackendResponse<SceneResponse>> GetMapPositionAsync(
+            int roleId, CancellationToken ct = default)
+            => Backend.GetMapPositionAsync(roleId, ct);
+
+        public Task<BackendResponse<ItemListResponse>> ListItemsAsync(
+            int roleId, CancellationToken ct = default)
+            => Backend.ListItemsAsync(roleId, ct);
     }
 }
