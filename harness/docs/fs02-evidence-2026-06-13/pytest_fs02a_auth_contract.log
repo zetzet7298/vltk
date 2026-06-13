@@ -1,0 +1,25 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.3, pytest-9.0.3, pluggy-1.6.0 -- /var/www/vltk-mobile/backend/.venv/bin/python
+cachedir: .pytest_cache
+rootdir: /var/www/vltk-mobile/backend
+configfile: pyproject.toml
+plugins: cov-7.1.0, anyio-4.13.0, asyncio-1.4.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 14 items
+
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_login_accepts_camelcase_accname_and_plaintext_password PASSED [  7%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_login_accepts_both_camelcase_and_snake_case PASSED [ 14%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_login_rejects_extra_field PASSED [ 21%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_password_stored_as_md5_uppercase_hex_32_chars PASSED [ 28%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_login_with_md5_of_password_fails PASSED [ 35%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_login_does_not_require_authorization_header PASSED [ 42%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_login_response_has_no_token_field PASSED [ 50%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_wrong_password_returns_401 PASSED [ 57%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_unknown_account_returns_401_same_as_wrong_password PASSED [ 64%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_banned_account_returns_403 PASSED [ 71%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_logout_writes_logout_date_and_returns_200 PASSED [ 78%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_logout_unknown_account_returns_401 PASSED [ 85%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_full_happy_path_create_account_login_list_roles_get_player_state PASSED [ 92%]
+tests/integration/modules/account/test_fs02a_auth_contract.py::test_happy_path_stored_password_is_md5_upper PASSED [100%]
+
+============================= 14 passed in 17.23s ==============================
