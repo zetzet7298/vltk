@@ -379,9 +379,17 @@ if npcs_path.exists():
             }
             
             # Categorize
-            if is_boss == "1" or "boss" in name.lower() or "đại vương" in name.lower() or "chúa" in name.lower():
+            name_lower = name.lower()
+            is_boss_flag = (
+                "boss" in name_lower or 
+                name_lower.startswith("boss") or 
+                is_boss in ["8", "12", "25", "30"] or 
+                "đại vương" in name_lower
+            )
+            
+            if is_boss_flag:
                 boss_list.append(item_info)
-            elif kind == "0":
+            elif kind in ["0", "4", "5"]:
                 monster_list.append(item_info)
             else:
                 npc_list.append(item_info)
@@ -489,9 +497,10 @@ html_content = """<!DOCTYPE html>
 
 # Generate buttons for equip/item subcategories
 categories = list(equip_data.keys()) + ["Quest Items", "Magic Items"]
-for cat in categories:
+for idx, cat in enumerate(categories):
+    active_classes = "bg-amber-600 text-white" if idx == 0 else "bg-gray-800 hover:bg-gray-700 text-gray-400"
     html_content += f"""
-                <button onclick="filterItems('{cat}')" class="item-cat-btn bg-gray-800 hover:bg-gray-700 active:bg-amber-600 px-4 py-2 rounded-full text-sm font-semibold transition">{cat}</button>"""
+                <button onclick="filterItems('{cat}')" class="item-cat-btn {active_classes} px-4 py-2 rounded-full text-sm font-semibold transition">{cat}</button>"""
 
 html_content += """
             </div>
@@ -551,9 +560,9 @@ html_content += """
         <div id="tab-npcs" class="tab-content">
             <!-- Inner tabs for npc categories -->
             <div class="flex gap-2 mb-6">
-                <button onclick="filterNpcs('NPC')" class="npc-cat-btn bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-full text-sm font-semibold transition">Thương nhân / NPC</button>
-                <button onclick="filterNpcs('Boss')" class="npc-cat-btn bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-full text-sm font-semibold transition">Boss Hoàng Kim</button>
-                <button onclick="filterNpcs('Monster')" class="npc-cat-btn bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-full text-sm font-semibold transition">Quái vật / Thú dữ</button>
+                <button onclick="filterNpcs('NPC')" class="npc-cat-btn bg-amber-600 text-white px-4 py-2 rounded-full text-sm font-semibold transition">Thương nhân / NPC</button>
+                <button onclick="filterNpcs('Boss')" class="npc-cat-btn bg-gray-800 hover:bg-gray-700 text-gray-400 px-4 py-2 rounded-full text-sm font-semibold transition">Boss Hoàng Kim</button>
+                <button onclick="filterNpcs('Monster')" class="npc-cat-btn bg-gray-800 hover:bg-gray-700 text-gray-400 px-4 py-2 rounded-full text-sm font-semibold transition">Quái vật / Thú dữ</button>
             </div>
 
             <!-- NPCs Grid -->
@@ -655,18 +664,18 @@ html_content += """
 
         function getActiveItemCategory() {
             let activeBtn = document.querySelector('.item-cat-btn.bg-amber-600');
-            return activeBtn ? activeBtn.innerText : null;
+            return activeBtn ? activeBtn.innerText : 'Áo giáp';
         }
 
         function getActiveNpcCategory() {
             let activeBtn = document.querySelector('.npc-cat-btn.bg-amber-600');
             if (activeBtn) {
                 let text = activeBtn.innerText;
-                if (text.includes('Thương nhân')) return 'NPC';
+                if (text.includes('NPC') || text.includes('Thương nhân')) return 'NPC';
                 if (text.includes('Boss')) return 'Boss';
-                if (text.includes('Quái vật')) return 'Monster';
+                if (text.includes('Quái vật') || text.includes('Thú dữ')) return 'Monster';
             }
-            return null;
+            return 'NPC';
         }
 
         function filterItems(category) {
@@ -687,7 +696,12 @@ html_content += """
         function filterNpcs(category) {
             // Update button styles
             document.querySelectorAll('.npc-cat-btn').forEach(btn => {
-                if (btn.innerText.includes(category) || (category === 'NPC' && btn.innerText.includes('Thương nhân'))) {
+                let isMatch = false;
+                if (category === 'NPC' && (btn.innerText.includes('NPC') || btn.innerText.includes('Thương nhân'))) isMatch = true;
+                if (category === 'Boss' && btn.innerText.includes('Boss')) isMatch = true;
+                if (category === 'Monster' && (btn.innerText.includes('Quái vật') || btn.innerText.includes('Thú dữ'))) isMatch = true;
+                
+                if (isMatch) {
                     btn.classList.add('bg-amber-600', 'text-white');
                     btn.classList.remove('bg-gray-800', 'text-gray-400');
                 } else {
