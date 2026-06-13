@@ -307,6 +307,52 @@ namespace VLTK.Backend.Mock
             });
         }
 
+        // ---- FS-04B ----
+
+        public Task<BackendResponse<SceneResponse>> MoveAsync(
+            MoveRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", "MoveRequest is null"));
+            }
+            if (request.roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", $"roleId phải > 0; got {request.roleId}"));
+            }
+            if (request.posX < 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", $"posX phải >= 0; got {request.posX}"));
+            }
+            if (request.posY < 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", $"posY phải >= 0; got {request.posY}"));
+            }
+            // Mock: trả về SceneResponse với posX/posY echo từ request để
+            // caller thấy dữ liệu đã được "server" xác nhận. mapId giữ
+            // mặc định 1 (Phượng Tường, parity với GetMapPosition mock) vì
+            // mock không truy được scene thật của role; rest mới parity với
+            // server thật (giữ mapId cũ).
+            var data = new SceneResponse
+            {
+                id = request.roleId, // scene id tạm bằng roleId cho đơn giản
+                roleId = request.roleId,
+                mapId = 1,
+                posX = request.posX,
+                posY = request.posY,
+            };
+            return Task.FromResult(new BackendResponse<SceneResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
+
 
 // ---- FS-03B (skill read + cast — mock) ----
 

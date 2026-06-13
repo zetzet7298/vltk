@@ -11,6 +11,8 @@
 //   - EnterMapAsync(EnterMapRequest)  → SceneResponse (POST /v1/map/enter)
 //   - GetMapPositionAsync(roleId)     → SceneResponse (GET /v1/map/position/{id})
 //   - ListItemsAsync(roleId)          → ItemListResponse (GET /v1/item/by-role/{id})
+// Slice FS-04B bổ sung movement (KNpc::SetPos parity):
+//   - MoveAsync(MoveRequest)          → SceneResponse (POST /v1/movement)
 //
 // Mọi method đều trả về BackendResponse<T> để khi backend trả 4xx/5xx với body
 // JSON hợp lệ, caller vẫn nhận được code/message thay vì exception.
@@ -26,7 +28,11 @@ namespace VLTK.Backend
     /// Hợp đồng backend. Mở rộng dần qua các slice:
     ///   FS-01D: GetHealthAsync, ListMapsAsync
     ///   FS-02B: LoginAsync, ListRolesAsync, GetPlayerStateAsync
-    ///   (FS-02C+ sẽ bổ sung: CreateRoleAsync, AddExpAsync, TransLifeAsync, …)
+    ///   FS-02C: EnterMapAsync, GetMapPositionAsync, ListItemsAsync
+    ///   FS-03B: ListSkillsAsync, LearnSkillAsync, LevelUpSkillAsync,
+    ///           CastSkillCheckAsync, CastSkillAsync
+    ///   FS-03C: CalcDamageAsync, StatusTickAsync, CheckPkAsync
+    ///   FS-04B: MoveAsync
     /// </summary>
     public interface IGameBackend
     {
@@ -114,6 +120,24 @@ namespace VLTK.Backend
         /// </summary>
         Task<BackendResponse<ItemListResponse>> ListItemsAsync(
             int roleId, CancellationToken ct = default);
+
+        // ---- FS-04B (movement — runtime position update) ----
+
+        /// <summary>
+        /// Gọi POST /v1/movement với body JSON <c>{roleId, posX, posY}</c>.
+        /// Server cập nhật toạ độ runtime của nhân vật (KNpc::SetPos parity —
+        /// KNpc.cpp:5496) mà KHÔNG đổi mapId. Khác EnterMapAsync ở chỗ
+        /// movement không mang mapId: nếu role chưa có scene (chưa gọi
+        /// EnterMapAsync), server trả 404 vì không thể tự tạo scene mới.
+        ///
+        /// Mã lỗi phổ biến:
+        ///   200 → success, data chứa vị trí mới (giữ nguyên mapId cũ)
+        ///   404 → role chưa có scene (chưa enter_map)
+        ///   422 → body thiếu field hoặc vi phạm ràng buộc
+        ///         (roleId&lt;1, posX/posY&lt;0)
+        /// </summary>
+        Task<BackendResponse<SceneResponse>> MoveAsync(
+            MoveRequest request, CancellationToken ct = default);
 
         // ---- FS-03B (skill read + cast) ----
 
