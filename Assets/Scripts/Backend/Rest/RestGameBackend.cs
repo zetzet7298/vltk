@@ -12,6 +12,9 @@
 //   - POST /v1/combat/damage/calc  (KNpc::CalcDamage parity — server mutate target)
 //   - POST /v1/combat/status/tick  (KNpc::ProcessState parity — 1 frame server tick)
 //   - POST /v1/combat/pk/check     (PK hợp lệ server-side; client KHÔNG tự quyết)
+//
+// Slice FS-04C (movement runtime sync — server-authoritative):
+//   - POST /v1/movement            (KNpc::SetPos parity — server update toạ độ runtime)
 // -----------------------------------------------------------------------------
 
 using System;
@@ -214,6 +217,44 @@ namespace VLTK.Backend.Rest
                 queryParams: null,
                 bodyJson: bodyJson,
                 isEnvelope: true, // /v1/combat/pk/check trả DataResponse[PkCheckResponse]
+                ct: ct);
+        }
+
+        // ----------------------------------------------------------------
+        // FS-04C — Movement (server-authoritative, parity KNpc::SetPos)
+        // ----------------------------------------------------------------
+
+        public Task<BackendResponse<SceneResponse>> UpdatePositionAsync(
+            UpdatePositionRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", "UpdatePositionRequest is null"));
+            }
+            if (request.roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            if (request.posX < 0 || request.posY < 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "validation_error",
+                    $"posX/posY phải >= 0; got ({request.posX},{request.posY})"));
+            }
+            // Server là NGUỒN CHÂN LÝ duy nhất cho vị trí runtime — parity
+            // KNpc.cpp:5496 KNpc::SetPos(int nX, int nY) vốn ghi vào struct
+            // Npc[] toàn cục. Client KHÔNG tự quyết toạ độ cuối; chỉ gửi vị
+            // trí dự đoán rồi đợi server confirm.
+            string url = Config.ResolveApiUrl("movement");
+            string bodyJson = JsonConvert.SerializeObject(request);
+            return ExecuteAsync<SceneResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: bodyJson,
+                isEnvelope: true, // /v1/movement trả DataResponse[SceneResponse]
                 ct: ct);
         }
 

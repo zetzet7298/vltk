@@ -129,5 +129,11 @@ namespace VLTK.Backend
         public Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
             PkCheckRequest request, CancellationToken ct = default)
             => Backend.CheckPkAsync(request, ct);
+
+        // ---- FS-04C (movement runtime sync) ----
+
+        public Task<BackendResponse<SceneResponse>> UpdatePositionAsync(
+            UpdatePositionRequest request, CancellationToken ct = default)
+            => Backend.UpdatePositionAsync(request, ct);
     }
 }
