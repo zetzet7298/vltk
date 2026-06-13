@@ -163,5 +163,19 @@ namespace VLTK.Backend
         /// </summary>
         Task<BackendResponse<SkillCastResponse>> CastSkillAsync(
             SkillCastRequest req, CancellationToken ct = default);
+
+        // ---- FS-03C (combat: damage calc + status tick + pk check) ----
+
+        /// <summary>Gọi POST /v1/combat/damage/calc (SERVER-AUTHORITATIVE).</summary>
+        Task<BackendResponse<DamageCalcResponse>> CalcDamageAsync(
+            DamageCalcRequest request, CancellationToken ct = default);
+
+        /// <summary>Gọi POST /v1/combat/status/tick — tiến 1 frame trạng thái.</summary>
+        Task<BackendResponse<StatusTickResponse>> StatusTickAsync(
+            StatusTickRequest request, CancellationToken ct = default);
+
+        /// <summary>Gọi POST /v1/combat/pk/check — kiểm tra PK hợp lệ.</summary>
+        Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
+            PkCheckRequest request, CancellationToken ct = default);
     }
 }
