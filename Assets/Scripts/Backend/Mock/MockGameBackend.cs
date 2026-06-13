@@ -6,10 +6,10 @@
 //   - Runtime offline (SandboxManager không cần thay đổi khi useMock=true)
 //   - EditMode test không cần server thật
 //
-// Mock auth flow: trả về LoginResponse với accName echo, một role seeded
-// (`Vo_Si_Test`), và PlayerStateResponse với stat Kim mặc định (35/25/25/15).
-// Mock map flow: EnterMap/GetMapPosition trả về SceneResponse với mapId=1
-// (Phượng Tường), posX/posY=1500/1500. ListItems trả về 2 vật phẩm cứng.
+// Slice FS-03C (combat — server-authoritative):
+//   - POST /v1/combat/damage/calc  (mock dùng simple subtract + flat 50% damage)
+//   - POST /v1/combat/status/tick  (mock decrement poison/freeze state time)
+//   - POST /v1/combat/pk/check     (mock City = safe, Battlefield = OK)
 // -----------------------------------------------------------------------------
 
 using System;
@@ -33,8 +33,6 @@ namespace VLTK.Backend.Mock
         {
             Config = config != null ? config : throw new ArgumentNullException(nameof(config));
         }
-
-        // ---- FS-01D ----
 
         public Task<BackendResponse<HealthResponse>> GetHealthAsync(CancellationToken ct = default)
         {
@@ -97,110 +95,6 @@ namespace VLTK.Backend.Mock
                 data = data,
             });
         }
-
-        // ---- FS-02B ----
-
-        public Task<BackendResponse<LoginResponse>> LoginAsync(
-            string accName,
-            string password,
-            string otp = null,
-            string clientIp = null,
-            CancellationToken ct = default)
-        {
-            // Mock: trả về LoginResponse với accName echo, không validate
-            // password (mock chỉ cần trả về đúng shape cho caller sử dụng).
-            if (string.IsNullOrEmpty(accName))
-            {
-                return Task.FromResult(BackendResponse<LoginResponse>.Failure(
-                    "validation_error", "accName không được rỗng"));
-            }
-            if (string.IsNullOrEmpty(password))
-            {
-                return Task.FromResult(BackendResponse<LoginResponse>.Failure(
-                    "validation_error", "password không được rỗng"));
-            }
-            var data = new LoginResponse
-            {
-                accName = accName,
-                serviceFlag = 0,
-                extPoint = 0,
-            };
-            return Task.FromResult(new BackendResponse<LoginResponse>
-            {
-                code = "200",
-                message = "Mock",
-                data = data,
-            });
-        }
-
-        public Task<BackendResponse<RoleListResponse>> ListRolesAsync(
-            string accName, CancellationToken ct = default)
-        {
-            if (string.IsNullOrEmpty(accName))
-            {
-                return Task.FromResult(BackendResponse<RoleListResponse>.Failure(
-                    "validation_error", "accName không được rỗng"));
-            }
-            // Mock: trả về 1 role seeded (id=1, Kim) cho account bất kỳ.
-            // Trong thực tế, account chưa tạo role sẽ trả về roles=[]; mock giữ
-            // 1 role để caller test thấy đủ luồng List → GetPlayer.
-            var role = new RoleResponse
-            {
-                id = 1,
-                roleName = "Vo_Si_Mock",
-                account = accName,
-                faction = 0,
-                factionName = "Thiếu Lâm",
-                level = 1,
-            };
-            var data = new RoleListResponse
-            {
-                account = accName,
-                roles = new List<RoleResponse> { role },
-            };
-            return Task.FromResult(new BackendResponse<RoleListResponse>
-            {
-                code = "200",
-                message = "Mock",
-                data = data,
-            });
-        }
-
-        public Task<BackendResponse<PlayerStateResponse>> GetPlayerStateAsync(
-            int roleId, CancellationToken ct = default)
-        {
-            if (roleId <= 0)
-            {
-                return Task.FromResult(BackendResponse<PlayerStateResponse>.Failure(
-                    "validation_error", "roleId phải > 0"));
-            }
-            // Stat Kim mặc định (35/25/25/15) — parity với backend task_head.lua:79-82.
-            var data = new PlayerStateResponse
-            {
-                id = 1,
-                roleId = roleId,
-                level = 1,
-                exp = 0,
-                transLife = 0,
-                freePoint = 0,
-                magicPoint = 0,
-                strength = 35,
-                dexterity = 25,
-                vitality = 25,
-                spirit = 15,
-                series = 0,
-                money = 0,
-                repute = 0,
-            };
-            return Task.FromResult(new BackendResponse<PlayerStateResponse>
-            {
-                code = "200",
-                message = "Mock",
-                data = data,
-            });
-        }
-
-        // ---- FS-02C ----
 
         public Task<BackendResponse<SceneResponse>> EnterMapAsync(
             EnterMapRequest request, CancellationToken ct = default)
@@ -307,35 +201,71 @@ namespace VLTK.Backend.Mock
             });
         }
 
-        // ---- FS-03B (skill read + cast — mock) ----
+        // ----------------------------------------------------------------
+        // FS-03C — Combat (server-authoritative mock)
+        // ----------------------------------------------------------------
 
-        public Task<BackendResponse<PlayerSkillListResponse>> ListSkillsAsync(
-            int roleId, CancellationToken ct = default)
+        public Task<BackendResponse<DamageCalcResponse>> CalcDamageAsync(
+            DamageCalcRequest request, CancellationToken ct = default)
         {
-            if (roleId <= 0)
+            if (request == null)
             {
-                return Task.FromResult(BackendResponse<PlayerSkillListResponse>.Failure(
-                    "validation_error", "roleId phải > 0"));
+                return Task.FromResult(BackendResponse<DamageCalcResponse>.Failure(
+                    "invalid_arg", "DamageCalcRequest is null"));
             }
-            // Mock: trả 1 skill seeded (id=1, Kim Ba, parity với FS-03A
-            // evidence 06_skill_by_role.json) để caller test đủ luồng
-            // List → Cast.
-            var skill = new PlayerSkillResponse
+            if (request.target == null)
             {
-                id = 1,
-                roleId = roleId,
-                skillId = 22,
-                level = 1,
-                isActive = true,
-                skillName = "Kim Ba",
-                maxLevel = 20,
-            };
-            var data = new PlayerSkillListResponse
+                return Task.FromResult(BackendResponse<DamageCalcResponse>.Failure(
+                    "invalid_arg", "DamageCalcRequest.target is null"));
+            }
+            // Mock damage: dùng atkMax (đơn giản hóa) - armor (nếu có) - resist
+            // % rồi cap ở 0. KHÔNG phải parity KNpc.cpp thật (chỉ Rest mới parity);
+            // mock chỉ để test happy path + cấu trúc response.
+            int raw = request.atkMax > 0 ? request.atkMax : request.atkMin;
+            int armor;
+            switch (request.damageKind)
             {
-                roleId = roleId,
-                skills = new List<PlayerSkillResponse> { skill },
+                case 1: armor = request.target.coldArmor; break;
+                case 2: armor = request.target.fireArmor; break;
+                case 3: armor = request.target.lightArmor; break;
+                case 4: armor = request.target.poisonArmor; break;
+                default: armor = request.target.physicsArmor; break;
+            }
+            int resist;
+            switch (request.damageKind)
+            {
+                case 1: resist = request.target.coldResist; break;
+                case 2: resist = request.target.fireResist; break;
+                case 3: resist = request.target.lightResist; break;
+                case 4: resist = request.target.poisonResist; break;
+                default: resist = request.target.physicsResist; break;
+            }
+            int armorLeft = System.Math.Max(0, armor - raw);
+            int damageAfterArmor = System.Math.Max(0, raw - armor);
+            int damageAfterResist = damageAfterArmor * (100 - resist) / 100;
+            // Mutate target: trừ armor theo kind, trừ life. KHÔNG tự trừ mana
+            // shield (mock chỉ để test field round-trip).
+            switch (request.damageKind)
+            {
+                case 0: request.target.physicsArmor = armorLeft; break;
+                case 1: request.target.coldArmor = armorLeft; break;
+                case 2: request.target.fireArmor = armorLeft; break;
+                case 3: request.target.lightArmor = armorLeft; break;
+                case 4: request.target.poisonArmor = armorLeft; break;
+            }
+            request.target.life = System.Math.Max(0, request.target.life - damageAfterResist);
+            var data = new DamageCalcResponse
+            {
+                damage = damageAfterResist,
+                manaAbsorbed = 0,
+                armorAbsorbed = System.Math.Min(armor, raw),
+                manaShieldBroke = false,
+                targetDied = request.target.life <= 0,
+                reflectToAttacker = 0,
+                reflectKind = 5, // magic default
+                target = request.target,
             };
-            return Task.FromResult(new BackendResponse<PlayerSkillListResponse>
+            return Task.FromResult(new BackendResponse<DamageCalcResponse>
             {
                 code = "200",
                 message = "Mock",
@@ -343,37 +273,83 @@ namespace VLTK.Backend.Mock
             });
         }
 
-        public Task<BackendResponse<PlayerSkillResponse>> LearnSkillAsync(
-            SkillLearnRequest req, CancellationToken ct = default)
+        public Task<BackendResponse<StatusTickResponse>> StatusTickAsync(
+            StatusTickRequest request, CancellationToken ct = default)
         {
-            if (req == null)
+            if (request == null)
             {
-                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
-                    "validation_error", "req không được null"));
+                return Task.FromResult(BackendResponse<StatusTickResponse>.Failure(
+                    "invalid_arg", "StatusTickRequest is null"));
             }
-            if (req.roleId <= 0)
+            if (request.target == null || request.status == null)
             {
-                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
-                    "validation_error", "roleId phải > 0"));
+                return Task.FromResult(BackendResponse<StatusTickResponse>.Failure(
+                    "invalid_arg", "StatusTickRequest.target/status is null"));
             }
-            if (req.skillId <= 0)
+            // Mock: poison time-- + burn time--; controlled=true nếu freeze/stun
+            // còn time>0. KHÔNG tính DoT thật — đó là việc của server (Rest mới
+            // parity KNpc.cpp:783-816).
+            var dotResults = new List<DotResult>();
+            if (request.status.poisonState != null && request.status.poisonState.time > 0)
             {
-                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
-                    "validation_error", "skillId phải > 0"));
+                request.status.poisonState.time -= 1;
+                // Mock DoT: value0 dmg (poisonSource nếu có)
+                int dotDmg = request.status.poisonState.value0;
+                request.target.life = System.Math.Max(0, request.target.life - dotDmg);
+                dotResults.Add(new DotResult
+                {
+                    damage = dotDmg,
+                    manaAbsorbed = 0,
+                    armorAbsorbed = 0,
+                    manaShieldBroke = false,
+                    targetDied = request.target.life <= 0,
+                    reflectToAttacker = 0,
+                    reflectKind = 4, // poison
+                });
             }
-            // Mock: trả về PlayerSkillResponse với level=1, parity với FS-03A
-            // evidence 05_skill_learn.json.
-            var data = new PlayerSkillResponse
+            if (request.status.freezeState != null && request.status.freezeState.time > 0)
             {
-                id = 1,
-                roleId = req.roleId,
-                skillId = req.skillId,
-                level = 1,
-                isActive = true,
-                skillName = "Skill " + req.skillId,
-                maxLevel = 20,
+                request.status.freezeState.time -= 1;
+            }
+            if (request.status.burnState != null && request.status.burnState.time > 0)
+            {
+                request.status.burnState.time -= 1;
+            }
+            if (request.status.confuseState != null && request.status.confuseState.time > 0)
+            {
+                request.status.confuseState.time -= 1;
+            }
+            if (request.status.stunState != null && request.status.stunState.time > 0)
+            {
+                request.status.stunState.time -= 1;
+            }
+            if (request.status.lifeState != null && request.status.lifeState.time > 0)
+            {
+                request.status.lifeState.time -= 1;
+            }
+            if (request.status.manaState != null && request.status.manaState.time > 0)
+            {
+                request.status.manaState.time -= 1;
+            }
+            if (request.status.drunkState != null && request.status.drunkState.time > 0)
+            {
+                request.status.drunkState.time -= 1;
+            }
+            bool controlled = (request.status.freezeState != null && request.status.freezeState.time > 0)
+                || (request.status.stunState != null && request.status.stunState.time > 0);
+            bool confuseEnded = request.status.confuseState != null
+                && request.status.confuseState.time == 0;
+            var data = new StatusTickResponse
+            {
+                controlled = controlled,
+                confuseEnded = confuseEnded,
+                dotResults = dotResults,
+                auraCastSkillId = request.activeAuraId,
+                auraCastLevel = request.activeAuraLevel,
+                target = request.target,
+                status = request.status,
             };
-            return Task.FromResult(new BackendResponse<PlayerSkillResponse>
+            return Task.FromResult(new BackendResponse<StatusTickResponse>
             {
                 code = "200",
                 message = "Mock",
@@ -381,127 +357,46 @@ namespace VLTK.Backend.Mock
             });
         }
 
-        public Task<BackendResponse<PlayerSkillResponse>> LevelUpSkillAsync(
-            int roleId, int skillId, CancellationToken ct = default)
+        public Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
+            PkCheckRequest request, CancellationToken ct = default)
         {
-            if (roleId <= 0)
+            if (request == null)
             {
-                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
-                    "validation_error", "roleId phải > 0"));
+                return Task.FromResult(BackendResponse<PkCheckResponse>.Failure(
+                    "invalid_arg", "PkCheckRequest is null"));
             }
-            if (skillId <= 0)
+            if (string.IsNullOrEmpty(request.mapType))
             {
-                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
-                    "validation_error", "skillId phải > 0"));
+                return Task.FromResult(BackendResponse<PkCheckResponse>.Failure(
+                    "invalid_arg", "PkCheckRequest.mapType is null/empty"));
             }
-            // Mock: trả về PlayerSkillResponse với level=2, parity với FS-03A
-            // evidence 07_skill_level_up.json.
-            var data = new PlayerSkillResponse
+            // Mock policy: City/Capital = safe zone, Battlefield = OK, Field/other
+            // = cảnh báo nhưng vẫn cho đánh. KHÔNG parity với server (chỉ Rest
+            // mới parity combat_resolve.pk_allowed_check).
+            string mt = request.mapType;
+            bool isCity = mt == "City" || mt == "Capital";
+            bool isBattlefield = mt == "Battlefield";
+            bool isSafeZone = isCity;
+            bool mapPkAllowed = !isCity;
+            bool canAttack = mapPkAllowed && !isSafeZone && (request.attackerCamp != request.targetCamp);
+            string reason = null;
+            if (isSafeZone)
             {
-                id = 1,
-                roleId = roleId,
-                skillId = skillId,
-                level = 2,
-                isActive = true,
-                skillName = "Skill " + skillId,
-                maxLevel = 20,
+                reason = "Vùng an toàn — cấm PK";
+            }
+            else if (request.attackerCamp == request.targetCamp)
+            {
+                canAttack = false;
+                reason = "Cùng phe — không thể PK";
+            }
+            var data = new PkCheckResponse
+            {
+                canAttack = canAttack,
+                mapPkAllowed = mapPkAllowed,
+                isSafeZone = isSafeZone,
+                reason = reason,
             };
-            return Task.FromResult(new BackendResponse<PlayerSkillResponse>
-            {
-                code = "200",
-                message = "Mock",
-                data = data,
-            });
-        }
-
-        public Task<BackendResponse<SkillCastCheckResponse>> CastSkillCheckAsync(
-            SkillCastCheckRequest req, CancellationToken ct = default)
-        {
-            if (req == null)
-            {
-                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
-                    "validation_error", "req không được null"));
-            }
-            if (req.roleId <= 0)
-            {
-                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
-                    "validation_error", "roleId phải > 0"));
-            }
-            if (req.skillId <= 0)
-            {
-                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
-                    "validation_error", "skillId phải > 0"));
-            }
-            if (req.nowMs < 1)
-            {
-                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
-                    "validation_error", "nowMs phải >= 1"));
-            }
-            // Mock: skill 210 → costType=1 (mana), costValue=50, delay=0;
-            // parity với FS-03A evidence 09_skill_cast_check.json.
-            int costType = 1, costValue = 50, delayPerCast = 0;
-            if (req.skillId == 22)
-            {
-                costType = 0; // Kim Ba: costType=0, costValue=0
-                costValue = 0;
-            }
-            var data = new SkillCastCheckResponse
-            {
-                skillId = req.skillId,
-                canCast = true,
-                reason = null,
-                costType = costType,
-                costValue = costValue,
-                delayPerCast = delayPerCast,
-                nextCastTime = 0, // stateless check: input.lastCastMs nếu có
-            };
-            return Task.FromResult(new BackendResponse<SkillCastCheckResponse>
-            {
-                code = "200",
-                message = "Mock",
-                data = data,
-            });
-        }
-
-        public Task<BackendResponse<SkillCastResponse>> CastSkillAsync(
-            SkillCastRequest req, CancellationToken ct = default)
-        {
-            if (req == null)
-            {
-                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
-                    "validation_error", "req không được null"));
-            }
-            if (req.roleId <= 0)
-            {
-                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
-                    "validation_error", "roleId phải > 0"));
-            }
-            if (req.skillId <= 0)
-            {
-                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
-                    "validation_error", "skillId phải > 0"));
-            }
-            if (req.nowMs < 1)
-            {
-                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
-                    "validation_error", "nowMs phải >= 1"));
-            }
-            // Mock: trả cast=true, costType=1 mana=50, currentLife=1000,
-            // currentMana=250 (300-50 server-authoritative), parity với
-            // FS-03A evidence 10_skill_cast.json.
-            var data = new SkillCastResponse
-            {
-                skillId = req.skillId,
-                cast = true,
-                costType = 1,
-                costPaid = 50,
-                currentLife = 1000,
-                currentMana = 250,
-                currentStamina = 0,
-                nextCastTime = req.nowMs,
-                effects = new List<SkillCastEffect>(),
-            };
-            return Task.FromResult(new BackendResponse<SkillCastResponse>
+            return Task.FromResult(new BackendResponse<PkCheckResponse>
             {
                 code = "200",
                 message = "Mock",
