@@ -114,5 +114,54 @@ namespace VLTK.Backend
         /// </summary>
         Task<BackendResponse<ItemListResponse>> ListItemsAsync(
             int roleId, CancellationToken ct = default);
+
+        // ---- FS-03B (skill read + cast) ----
+
+        /// <summary>
+        /// Gọi GET /v1/skill/by-role/{roleId}. Trả về danh sách skill đã học
+        /// của role (mảng rỗng nếu roleId chưa học skill nào).
+        /// </summary>
+        Task<BackendResponse<PlayerSkillListResponse>> ListSkillsAsync(
+            int roleId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/learn với body JSON
+        /// <c>{roleId, skillId, charLevel, faction}</c>. Mã lỗi phổ biến:
+        ///   404 "Kỹ năng không có trong bảng định nghĩa" — skillId lạ
+        ///   409 "Nhân vật đã học kỹ năng này" — duplicate
+        ///   422 "Chưa đủ cấp độ yêu cầu" — charLevel &lt; template.req_level
+        /// </summary>
+        Task<BackendResponse<PlayerSkillResponse>> LearnSkillAsync(
+            SkillLearnRequest req, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/by-role/{roleId}/level-up/{skillId}. Nâng cấp
+        /// skill đã học (+1 level). Mã lỗi phổ biến:
+        ///   404 "Nhân vật chưa học kỹ năng này"
+        ///   422 "Kỹ năng đã đạt cấp tối đa"
+        /// </summary>
+        Task<BackendResponse<PlayerSkillResponse>> LevelUpSkillAsync(
+            int roleId, int skillId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/cast/check (STATELESS pre-flight). Server KHÔNG
+        /// đụng DB — dùng current* + gate fields từ client để validate. Dùng
+        /// trước khi gọi CastSkillAsync để UI gate mượt, nhưng vẫn phải
+        /// reconcile với /cast vì server-authoritative lấy resource/cooldown
+        /// thật từ DB (parity FS-03A contract §4.1, H-SK2/H-SK3).
+        /// </summary>
+        Task<BackendResponse<SkillCastCheckResponse>> CastSkillCheckAsync(
+            SkillCastCheckRequest req, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/cast (SERVER-AUTHORITATIVE). Server đọc
+        /// currentMana/Life/Stamina + last_cast_ms từ DB, KHÔNG nhận từ client
+        /// (chống spoof). Client gửi gate context (onHorse/relation/distance/
+        /// weaponType/equipState/nowMs) + skillId. Response chứa currentLife/
+        /// Mana/Stamina SAU cast + effects[] nội suy — client PHẢI dùng số
+        /// server trả, không tự tính (parity FS-03A contract §5 "Predict-reconcile").
+        /// </summary>
+        Task<BackendResponse<SkillCastResponse>> CastSkillAsync(
+            SkillCastRequest req, CancellationToken ct = default);
     }
 }

@@ -93,5 +93,41 @@ namespace VLTK.Backend
         public Task<BackendResponse<ItemListResponse>> ListItemsAsync(
             int roleId, CancellationToken ct = default)
             => Backend.ListItemsAsync(roleId, ct);
+
+        // ---- FS-03B (skill read + cast) ----
+
+        public Task<BackendResponse<PlayerSkillListResponse>> ListSkillsAsync(
+            int roleId, CancellationToken ct = default)
+            => Backend.ListSkillsAsync(roleId, ct);
+
+        public Task<BackendResponse<PlayerSkillResponse>> LearnSkillAsync(
+            SkillLearnRequest req, CancellationToken ct = default)
+            => Backend.LearnSkillAsync(req, ct);
+
+        public Task<BackendResponse<PlayerSkillResponse>> LevelUpSkillAsync(
+            int roleId, int skillId, CancellationToken ct = default)
+            => Backend.LevelUpSkillAsync(roleId, skillId, ct);
+
+        public Task<BackendResponse<SkillCastCheckResponse>> CastSkillCheckAsync(
+            SkillCastCheckRequest req, CancellationToken ct = default)
+            => Backend.CastSkillCheckAsync(req, ct);
+
+        public Task<BackendResponse<SkillCastResponse>> CastSkillAsync(
+            SkillCastRequest req, CancellationToken ct = default)
+            => Backend.CastSkillAsync(req, ct);
+
+        // ---- FS-03C (combat: damage calc + status tick + pk check) ----
+
+        public Task<BackendResponse<DamageCalcResponse>> CalcDamageAsync(
+            DamageCalcRequest request, CancellationToken ct = default)
+            => Backend.CalcDamageAsync(request, ct);
+
+        public Task<BackendResponse<StatusTickResponse>> StatusTickAsync(
+            StatusTickRequest request, CancellationToken ct = default)
+            => Backend.StatusTickAsync(request, ct);
+
+        public Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
+            PkCheckRequest request, CancellationToken ct = default)
+            => Backend.CheckPkAsync(request, ct);
     }
 }

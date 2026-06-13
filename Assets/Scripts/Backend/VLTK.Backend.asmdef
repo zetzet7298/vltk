@@ -3,6 +3,7 @@
     "rootNamespace": "VLTK.Backend",
     "references": [
         "VLTK.Core",
+        "VLTK.Sprites",
         "Newtonsoft.Json"
     ],
     "includePlatforms": [],
