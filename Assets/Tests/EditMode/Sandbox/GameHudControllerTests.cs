@@ -153,6 +153,9 @@ namespace VLTK.Tests.Sandbox
             _pcShortcutDock.Add(new VisualElement { name = "PcLeftSkillBtn" });
             _pcShortcutDock.Add(new VisualElement { name = "PcRightSkillBtn" });
 
+            foreach (string name in new[] { "IconBarArenaBtn", "IconBarActivityBtn", "IconBarTreasureBtn", "IconBarShopBtn", "IconBarPetBtn", "IconBarLoginPrizeBtn", "IconBarFuncPrizeBtn" })
+                _root.Add(new Button { name = name });
+
             _skillPanel = new VisualElement { name = "CaiBangSkillPanel" };
             _skillPanel.AddToClassList("hidden");
             _skillSummary = new Label { name = "CaiBangSkillSummary" };

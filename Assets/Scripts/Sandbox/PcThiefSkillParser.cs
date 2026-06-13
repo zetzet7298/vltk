@@ -33,16 +33,28 @@ namespace VLTK.Sandbox
         {
             var rows = new List<PcThiefSkillEntry>();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+
+            // thiefskill.txt is mixed-encoding: name cols are TCVN3, SPR/sound/icon cols are GBK.
+            // Read raw bytes and decode each column with the correct encoding.
+            RegisterCodePages();
+            var gbk = System.Text.Encoding.GetEncoding("GB18030");
             var lines = PcText.ReadLinesTcvn3(path);
+            var rawLines = File.ReadAllBytes(path);
             bool headerSkipped = false;
+            int rawOffset = 0;
+
             foreach (var line in lines)
             {
                 if (string.IsNullOrWhiteSpace(line)) continue;
-                if (!headerSkipped) { headerSkipped = true; continue; }
+                if (!headerSkipped) { headerSkipped = true; rawOffset = SkipRawLine(rawLines, rawOffset); continue; }
+
+                // Decode SPR columns from raw bytes (GB18030)
                 var cols = line.Split('\t');
-                if (cols.Length <= SkillIdCol) continue;
+                var rawCols = SplitRawLine(rawLines, ref rawOffset);
+                if (cols.Length <= SkillIdCol) { rawOffset = SkipRawLine(rawLines, rawOffset); continue; }
                 int skillId = PcItemCommon.Int(cols, SkillIdCol);
                 if (skillId <= 0) continue;
+
                 rows.Add(new PcThiefSkillEntry
                 {
                     skillId = skillId,
@@ -55,16 +67,73 @@ namespace VLTK.Sandbox
                     skillCostType = PcItemCommon.Int(cols, SkillCostTypeCol),
                     param1 = PcItemCommon.Int(cols, Param1Col),
                     param2 = PcItemCommon.Int(cols, Param2Col),
-                    movie = PcItemCommon.Str(cols, MovieCol),
+                    movie = DecodeGbkCol(rawCols, MovieCol, gbk) ?? PcItemCommon.Str(cols, MovieCol),
                     targetMovieInfo = PcItemCommon.Str(cols, TargetMovieInfoCol),
-                    skillSound = PcItemCommon.Str(cols, SkillSoundCol),
-                    targetMovie = PcItemCommon.Str(cols, TargetMovieCol),
-                    skillIcon = PcItemCommon.Str(cols, SkillIconCol),
+                    skillSound = DecodeGbkCol(rawCols, SkillSoundCol, gbk) ?? PcItemCommon.Str(cols, SkillSoundCol),
+                    targetMovie = DecodeGbkCol(rawCols, TargetMovieCol, gbk) ?? PcItemCommon.Str(cols, TargetMovieCol),
+                    skillIcon = DecodeGbkCol(rawCols, SkillIconCol, gbk) ?? PcItemCommon.Str(cols, SkillIconCol),
                     cost = PcItemCommon.Int(cols, CostCol),
                     desc = PcItemCommon.Str(cols, DescCol),
                 });
             }
             return rows;
+        }
+
+        private static void RegisterCodePages()
+        {
+            try
+            {
+                var pt = System.Type.GetType("System.Text.CodePagesEncodingProvider, System.Text.Encoding.CodePages");
+                var prov = pt?.GetProperty("Instance")?.GetValue(null, null) as System.Text.EncodingProvider;
+                if (prov != null) System.Text.Encoding.RegisterProvider(prov);
+            }
+            catch { }
+        }
+
+        private static int SkipRawLine(byte[] data, int offset)
+        {
+            while (offset < data.Length && data[offset] != (byte)'\n') offset++;
+            return offset < data.Length ? offset + 1 : data.Length;
+        }
+
+        private static byte[][] SplitRawLine(byte[] data, ref int offset)
+        {
+            var result = new List<byte[]>();
+            int start = offset;
+            while (offset < data.Length)
+            {
+                if (data[offset] == (byte)'\t')
+                {
+                    result.Add(data[start..offset]);
+                    start = offset + 1;
+                    offset++;
+                }
+                else if (data[offset] == (byte)'\r' || data[offset] == (byte)'\n')
+                {
+                    break;
+                }
+                else
+                {
+                    offset++;
+                }
+            }
+            result.Add(data[start..(offset < data.Length ? offset : data.Length)]);
+            // advance past line ending
+            while (offset < data.Length && (data[offset] == (byte)'\r' || data[offset] == (byte)'\n')) offset++;
+            return result.ToArray();
+        }
+
+        private static string DecodeGbkCol(byte[][] rawCols, int col, System.Text.Encoding gbk)
+        {
+            if (col >= rawCols.Length) return null;
+            var bytes = rawCols[col];
+            if (bytes == null || bytes.Length == 0) return null;
+            try
+            {
+                var decoded = gbk.GetString(bytes);
+                return string.IsNullOrEmpty(decoded) ? null : decoded;
+            }
+            catch { return null; }
         }
 
         public static PcThiefSkillRegistry BuildRegistry(string dir)

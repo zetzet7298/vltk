@@ -79,6 +79,19 @@ namespace VLTK.Sandbox
             }
         }
 
+        private void Reset()
+        {
+            EnsureTrapContactBody();
+        }
+
+#if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+                EnsureTrapContactBody();
+        }
+#endif
+
         private void OnEnable()
         {
             if (joystick != null)
