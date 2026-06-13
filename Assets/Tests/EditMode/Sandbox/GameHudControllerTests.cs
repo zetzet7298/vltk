@@ -981,5 +981,80 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(HudArtPathResolver.CanCheckDirectory(generatedRoot));
         }
 
+        // ── CTS-03 minimal-setup contract tests ─────────────────────────────────
+        // These verify that GameHudController.OnIconBarClick / BuildIconBarRows do
+        // NOT throw a NullReferenceException when SandboxManager.Instance is null
+        // (the "no booted manager" EditMode scenario the previous fix was guarding
+        // against). The contract from CTS-03 is: even without runtime services,
+        // OnIconBarClick must still open the PcToolPanel with a deterministic
+        // "service chưa sẵn sàng" placeholder, and the icon-bar buttons must still
+        // receive their "active" class toggling so the UI test fixture sees the
+        // expected state.
+
+        [Test]
+        public void OnIconBarClick_NullSandboxManager_DoesNotThrow_AndOpensPanelWithServiceProbeLines()
+        {
+            // Defensive: even if a prior test left a SandboxManager.Instance, force
+            // it to null so this test exercises the "no booted manager" path that
+            // CTS-03 is hardening. (Cf. PORT_STATUS note from CTS-02: the Awake
+            // guard trips on stale Instance in EditMode test isolation, so the
+            // fastest way to reach the "null manager" branch is to clear Instance.)
+            var instanceProp = typeof(SandboxManager)
+                .GetProperty("Instance", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+            instanceProp?.GetSetMethod(true)?.Invoke(null, new object[] { null });
+            Assert.IsNull(SandboxManager.Instance,
+                "SandboxManager.Instance must be null for this test to exercise the null-manager branch.");
+
+            // Must not throw. Index 0 (Đấu trường) historically crashed when the
+            // BuildIconBarRows dereferenced manager.ArenaService without the
+            // `manager?.` null guard.
+            Assert.DoesNotThrow(() => InvokePrivateMethod("OnIconBarClick", 0),
+                "OnIconBarClick(0) must not throw when SandboxManager.Instance is null.");
+
+            // Panel must still be visible and populated with the deterministic
+            // service-probe lines (with count=0 fallback) so the user always sees
+            // the PC source and per-index header even when the runtime service is
+            // not booted.
+            Assert.IsFalse(_pcToolPanel.ClassListContains("hidden"));
+            Assert.Greater(_pcToolList.contentContainer.childCount, 1);
+            var labels = _pcToolList.Query<Label>().ToList();
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("PC source: Ui3/icon_bar.ini")),
+                "Icon-bar placeholder row must still cite the PC source path.");
+            Assert.IsTrue(labels.Exists(l => l.text.Contains("Đấu trường PC loaded: 0")),
+                "Icon-bar must render the per-index service-probe line (count=0 fallback) " +
+                "even when SandboxManager is null. This is the contract that makes the " +
+                "existing PcIconBarButtons_OpenRuntimeBackedPanels test stable.");
+        }
+
+        [Test]
+        public void OnIconBarClick_NullSandboxManager_AllIndices_RenderServicePlaceholder()
+        {
+            // Defensive: clear SandboxManager.Instance so this test exercises the
+            // null-manager branch regardless of test ordering.
+            var instanceProp = typeof(SandboxManager)
+                .GetProperty("Instance", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+            instanceProp?.GetSetMethod(true)?.Invoke(null, new object[] { null });
+
+            for (int i = 0; i < 7; i++)
+            {
+                int index = i;
+                Assert.DoesNotThrow(() => InvokePrivateMethod("OnIconBarClick", index),
+                    $"OnIconBarClick({index}) must not throw when SandboxManager.Instance is null.");
+                var labels = _pcToolList.Query<Label>().ToList();
+                Assert.IsTrue(labels.Exists(l => l.text.Contains("PC source: Ui3/icon_bar.ini")),
+                    $"Icon-bar panel for index {index} must cite the PC source path.");
+            }
+        }
+
+        [Test]
+        public void OnIconBarClick_NullBoundRoot_DoesNotThrow()
+        {
+            // No bound root means no UI to toggle, but the click must still resolve
+            // gracefully (rather than NRE on _boundRoot.Q()).
+            SetPrivateField("_boundRoot", null);
+            Assert.DoesNotThrow(() => InvokePrivateMethod("OnIconBarClick", 0),
+                "OnIconBarClick must tolerate a null _boundRoot (test or stripped fixture).");
+        }
+
     }
 }

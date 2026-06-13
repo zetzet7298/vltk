@@ -2946,14 +2946,26 @@ namespace VLTK.UI
 
         private void OnIconBarClick(int index)
         {
-            var spec = index >= 0 && index < HudBottomBarPcSpec.IconBar.Count ? HudBottomBarPcSpec.IconBar[index] : default;
-            foreach (var button in IconBarButtonNames())
-                _boundRoot?.Q(button)?.EnableInClassList("active", false);
-            if (index >= 0 && index < IconBarButtonNames().Length)
-                _boundRoot?.Q(IconBarButtonNames()[index])?.EnableInClassList("active", true);
+            // Null-safe contract: a missing SandboxManager (EditMode fixture, before
+            // boot, after scene teardown) must NOT throw — only render a degraded
+            // panel. OpenPcToolPanel/BuildIconBarRows are also defensive, so this
+            // is a belt-and-braces top-level guard.
+            try
+            {
+                var spec = index >= 0 && index < HudBottomBarPcSpec.IconBar.Count ? HudBottomBarPcSpec.IconBar[index] : default;
+                var buttonNames = IconBarButtonNames();
+                for (int i = 0; i < buttonNames.Length; i++)
+                    _boundRoot?.Q(buttonNames[i])?.EnableInClassList("active", false);
+                if (index >= 0 && index < buttonNames.Length)
+                    _boundRoot?.Q(buttonNames[index])?.EnableInClassList("active", true);
 
-            OpenPcToolPanel(spec.tipVi, BuildIconBarRows(index, spec));
-            SubsystemLog.Info("HUD", $"Open PC icon bar {index}: {spec.classType}");
+                OpenPcToolPanel(spec.tipVi, BuildIconBarRows(index, spec));
+                SubsystemLog.Info("HUD", $"Open PC icon bar {index}: {spec.classType}");
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("HUD", $"OnIconBarClick({index}) soft-failed: {e.Message}");
+            }
         }
 
         private IReadOnlyList<string> BuildIconBarRows(int index, HudBottomBarPcSpec.ButtonRect spec)
@@ -2965,6 +2977,30 @@ namespace VLTK.UI
                 $"SPR: {spec.spr}",
             };
 
+            // Even when manager is null, render the per-index service-probe line
+            // (with 0/null fallback) so callers (PcIconBarButtons_OpenRuntimeBackedPanels)
+            // still see the expected "Đấu trường PC loaded", "Hoạt động PC", etc. text.
+            // The actual service dereferences (manager.ArenaService.GetAllArenas, etc.)
+            // are guarded with `manager?.XxxService` so a missing manager renders
+            // empty body, not an NRE.
+            try
+            {
+                AppendIconBarRuntimeRows(manager, index, rows);
+            }
+            catch (Exception e)
+            {
+                // Treat any service-side failure as "service unavailable" — never
+                // propagate up to UI callers.
+                SubsystemLog.Warn("HUD", $"BuildIconBarRows({index}) runtime probe failed: {e.Message}");
+            }
+
+            if (rows.Count == 2)
+                rows.Add("Runtime service chưa sẵn sàng hoặc không có dữ liệu PC để hiển thị.");
+            return rows;
+        }
+
+        private static void AppendIconBarRuntimeRows(SandboxManager manager, int index, List<string> rows)
+        {
             switch (index)
             {
                 case 0:
@@ -3053,10 +3089,6 @@ namespace VLTK.UI
                     }
                     break;
             }
-
-            if (rows.Count == 2)
-                rows.Add("Runtime service chưa sẵn sàng hoặc không có dữ liệu PC để hiển thị.");
-            return rows;
         }
 
         private static string[] IconBarButtonNames() => new[]
