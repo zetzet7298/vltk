@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using VLTK.Backend.Combat;
 using VLTK.Backend.Dto;
+using VLTK.Backend.Movement;
 
 namespace VLTK.Backend
 {
@@ -90,6 +91,14 @@ namespace VLTK.Backend
                  "Bỏ tick nếu muốn gọi thủ công.")]
         public bool runCombatDemoOnComplete = true;
 
+        [Header("Movement sync (FS-04D)")]
+        [Tooltip("GameObject player avatar (chứa SandboxPlayerController). Sau " +
+                 "khi enter map thành công, runner sẽ AddComponent " +
+                 "MovementSyncMonoBehaviour lên GO này rồi BindBackend để bắt " +
+                 "đầu đồng bộ vị trí runtime. Bắt buộc gán trong Inspector; " +
+                 "null = skip (không tạo sync).")]
+        public GameObject playerObject;
+
         /// <summary>BackendClient thực sự dùng để gọi API (cho diagnostics/UI).</summary>
         public BackendClient Client { get; private set; }
 
@@ -101,6 +110,12 @@ namespace VLTK.Backend
 
         /// <summary>Thông báo lỗi cuối cùng (null nếu thành công).</summary>
         public string LastError { get; private set; }
+
+        /// <summary>MovementSyncMonoBehaviour đã tạo sau enter map (null nếu chưa tạo).</summary>
+        public MovementSyncMonoBehaviour MovementSync { get; private set; }
+
+        /// <summary>Role ID đang sync (set sau khi enter map thành công).</summary>
+        public int SyncedRoleId { get; private set; }
 
         /// <summary>True nếu RunCombatDemoAsync() đã xong (cả khi lỗi).</summary>
         public bool IsCombatDemoCompleted { get; private set; }
@@ -212,6 +227,13 @@ namespace VLTK.Backend
                 }
                 Debug.Log($"[BackendClientRunner] enter map OK: roleId={enter.data.roleId} " +
                           $"mapId={enter.data.mapId} pos=({enter.data.posX},{enter.data.posY})");
+
+                // FS-04D: tạo MovementSyncMonoBehaviour lên playerObject (nếu
+                // được gán). Driver bắt đầu sync vị trí runtime → server sau
+                // mỗi syncInterval. Nếu playerObject null thì skip (không
+                // throw) để không block luồng smoke chính.
+                SyncedRoleId = enter.data.roleId;
+                TryCreateMovementSync(SyncedRoleId);
 
                 LastError = null;
             }
@@ -360,6 +382,61 @@ namespace VLTK.Backend
             CombatFeedbackBus.Raise(evt);
             FeedbackEventCount++;
             Debug.Log($"[BackendClientRunner] feedback publish: {evt}");
+        }
+
+        // ===================================================================
+        // FS-04D — Movement sync wiring
+        // ===================================================================
+
+        /// <summary>
+        /// Tạo + bind <see cref="MovementSyncMonoBehaviour"/> lên
+        /// <see cref="playerObject"/>. Idempotent: nếu GO đã có component thì
+        /// dùng lại, chỉ re-bind với roleId mới. Skip khi playerObject null
+        /// (chỉ log warning, không throw) — Runner vẫn chạy tiếp luồng
+        /// combat demo / harness tests.
+        /// </summary>
+        /// <param name="roleId">roleId &gt; 0 lấy từ enter map response.</param>
+        public void TryCreateMovementSync(int roleId)
+        {
+            if (playerObject == null)
+            {
+                Debug.LogWarning("[BackendClientRunner] TryCreateMovementSync: " +
+                                 "playerObject chưa gán trong Inspector; skip.");
+                MovementSync = null;
+                return;
+            }
+            if (Client == null)
+            {
+                Debug.LogError("[BackendClientRunner] TryCreateMovementSync: " +
+                               "Client null — gọi RunAsync() trước.");
+                MovementSync = null;
+                return;
+            }
+            if (roleId <= 0)
+            {
+                Debug.LogError($"[BackendClientRunner] TryCreateMovementSync: " +
+                               $"roleId={roleId} phải > 0; skip.");
+                MovementSync = null;
+                return;
+            }
+
+            // Idempotent: dùng lại component nếu đã có.
+            if (MovementSync == null)
+            {
+                MovementSync = playerObject.GetComponent<MovementSyncMonoBehaviour>();
+                if (MovementSync == null)
+                {
+                    MovementSync = playerObject.AddComponent<MovementSyncMonoBehaviour>();
+                    Debug.Log($"[BackendClientRunner] added MovementSyncMonoBehaviour " +
+                              $"to '{playerObject.name}'.");
+                }
+            }
+
+            MovementSync.BindBackend(Client, roleId);
+            Debug.Log($"[BackendClientRunner] MovementSync bound: " +
+                      $"roleId={roleId} player='{playerObject.name}' " +
+                      $"interval={MovementSync.syncInterval}s " +
+                      $"threshold={MovementSync.reconciliationThreshold}");
         }
     }
 }
