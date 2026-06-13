@@ -14,6 +14,9 @@
 // Slice FS-04B bổ sung movement (KNpc::SetPos parity):
 //   - MoveAsync(MoveRequest)          → SceneResponse (POST /v1/movement)
 //
+// Slice FS-04C mở rộng với movement runtime sync (KNpc::SetPos parity):
+//   - UpdatePositionAsync(req)        → SceneResponse (POST /v1/movement)
+//
 // Mọi method đều trả về BackendResponse<T> để khi backend trả 4xx/5xx với body
 // JSON hợp lệ, caller vẫn nhận được code/message thay vì exception.
 // -----------------------------------------------------------------------------
@@ -201,5 +204,22 @@ namespace VLTK.Backend
         /// <summary>Gọi POST /v1/combat/pk/check — kiểm tra PK hợp lệ.</summary>
         Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
             PkCheckRequest request, CancellationToken ct = default);
+
+        // ---- FS-04C (movement runtime sync) ----
+
+        /// <summary>
+        /// Gọi POST /v1/movement với body JSON <c>{roleId, posX, posY}</c>.
+        /// Server cập nhật toạ độ runtime của nhân vật (parity KNpc::SetPos
+        /// trong KNpc.cpp:5496) và trả về SceneResponse với vị trí SAU
+        /// update. KHÔNG đổi mapId — movement chỉ reconcile trong scene hiện
+        /// tại.
+        ///
+        /// Mã lỗi phổ biến (FS-04A evidence):
+        ///   200 → success, data != null
+        ///   404 → role chưa có scene (chưa gọi POST /v1/map/enter)
+        ///   422 → posX/posY âm hoặc thiếu field bắt buộc
+        /// </summary>
+        Task<BackendResponse<SceneResponse>> UpdatePositionAsync(
+            UpdatePositionRequest request, CancellationToken ct = default);
     }
 }

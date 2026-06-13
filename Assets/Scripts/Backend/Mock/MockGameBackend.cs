@@ -758,5 +758,48 @@ namespace VLTK.Backend.Mock
                 data = data,
             });
         }
+
+        // ----------------------------------------------------------------
+        // FS-04C — Movement (mock parity)
+        // ----------------------------------------------------------------
+
+        public Task<BackendResponse<SceneResponse>> UpdatePositionAsync(
+            UpdatePositionRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", "UpdatePositionRequest is null"));
+            }
+            if (request.roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            if (request.posX < 0 || request.posY < 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "validation_error",
+                    $"posX/posY phải >= 0; got ({request.posX},{request.posY})"));
+            }
+            // Mock: echo posX/posY từ request, mapId giả lập = 1 (Phượng Tường
+            // — default city để MovementSyncService.EditMode test có mapId cố
+            // định để assert). Parity với KNpc::SetPos (chỉ set nX, nY) — mock
+            // KHÔNG parity validation ngoài grid bounds (Rest mới parity).
+            var data = new SceneResponse
+            {
+                id = unchecked(request.roleId * 1000 + 1),
+                roleId = request.roleId,
+                mapId = 1,
+                posX = request.posX,
+                posY = request.posY,
+            };
+            return Task.FromResult(new BackendResponse<SceneResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
     }
 }
