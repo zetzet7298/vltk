@@ -8,6 +8,9 @@
 //   - GET  /health
 //   - GET  /v1/map
 //
+// Slice FS-04B (movement — runtime position update, KNpc::SetPos parity):
+//   - POST /v1/movement  (roleId/posX/posY, KHÔNG mapId — ghi đè pos, giữ mapId)
+//
 // Slice FS-03C (combat — server-authoritative):
 //   - POST /v1/combat/damage/calc  (KNpc::CalcDamage parity — server mutate target)
 //   - POST /v1/combat/status/tick  (KNpc::ProcessState parity — 1 frame server tick)
@@ -130,6 +133,49 @@ namespace VLTK.Backend.Rest
                 queryParams: null,
                 bodyJson: null,
                 isEnvelope: true, // /v1/item/by-role/{id} trả DataResponse[ItemListResponse]
+                ct: ct);
+        }
+
+        // ----------------------------------------------------------------
+        // FS-04B — Movement (runtime position update, KNpc::SetPos parity)
+        // ----------------------------------------------------------------
+
+        public Task<BackendResponse<SceneResponse>> MoveAsync(
+            MoveRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", "MoveRequest is null"));
+            }
+            // Backend Pydantic ràng buộc: roleId >= 1, posX/posY >= 0.
+            // Match ràng buộc client-side để tránh 1 round-trip 422 vô ích.
+            if (request.roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", $"roleId phải > 0; got {request.roleId}"));
+            }
+            if (request.posX < 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", $"posX phải >= 0; got {request.posX}"));
+            }
+            if (request.posY < 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", $"posY phải >= 0; got {request.posY}"));
+            }
+            // POST /v1/movement — body=MoveRequest (roleId/posX/posY, KHÔNG mapId).
+            // MapId được server giữ nguyên từ scene hiện tại (KNpc::SetPos chỉ
+            // ghi m_MapX/m_MapY, không gọi NewWorld).
+            string url = Config.ResolveApiUrl("movement");
+            string bodyJson = JsonConvert.SerializeObject(request);
+            return ExecuteAsync<SceneResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: bodyJson,
+                isEnvelope: true, // /v1/movement trả DataResponse[SceneResponse]
                 ct: ct);
         }
 

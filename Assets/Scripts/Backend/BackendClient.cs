@@ -94,6 +94,12 @@ namespace VLTK.Backend
             int roleId, CancellationToken ct = default)
             => Backend.ListItemsAsync(roleId, ct);
 
+        // ---- FS-04B (movement — runtime position update) ----
+
+        public Task<BackendResponse<SceneResponse>> MoveAsync(
+            MoveRequest request, CancellationToken ct = default)
+            => Backend.MoveAsync(request, ct);
+
         // ---- FS-03B (skill read + cast) ----
 
         public Task<BackendResponse<PlayerSkillListResponse>> ListSkillsAsync(
