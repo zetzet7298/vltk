@@ -235,56 +235,58 @@ namespace VLTK.Sandbox
         private static IEnumerable<string> PcUtf8ReplacementFromLegacyBytes(string value)
         {
             if (string.IsNullOrEmpty(value)) yield break;
-            byte[] bytes;
-            if (!TryGetSingleByteChars(value, out bytes)) yield break;
+            var candidates = PcText.Tcvn3ToBytesMultiple(value);
+            if (candidates == null) yield break;
 
             var utf8Replacement = new UTF8Encoding(false, false);
-            string candidate;
-            try { candidate = utf8Replacement.GetString(bytes); }
-            catch { yield break; }
-            if (!string.IsNullOrEmpty(candidate) && !string.Equals(candidate, value, StringComparison.Ordinal))
-                yield return candidate;
-        }
-
-        private static IEnumerable<string> PcDecodedLegacyByteCandidates(string value)
-        {
-            if (string.IsNullOrEmpty(value)) yield break;
-            byte[] bytes;
-            if (!TryGetSingleByteChars(value, out bytes)) yield break;
-
-            TryRegisterCodePagesProvider();
-            foreach (var name in new[] { "GB18030", "GB2312", "GBK", "windows-936" })
+            foreach (var bytes in candidates)
             {
-                Encoding enc;
-                try { enc = Encoding.GetEncoding(name); }
-                catch { continue; }
+                bool hasHighByte = false;
+                for (int i = 0; i < bytes.Length; i++)
+                {
+                    if (bytes[i] > 127) hasHighByte = true;
+                }
+                if (!hasHighByte) continue;
+
                 string candidate;
-                try { candidate = enc.GetString(bytes); }
+                try { candidate = utf8Replacement.GetString(bytes); }
                 catch { continue; }
                 if (!string.IsNullOrEmpty(candidate) && !string.Equals(candidate, value, StringComparison.Ordinal))
                     yield return candidate;
             }
         }
 
-        private static bool TryGetSingleByteChars(string value, out byte[] bytes)
+        private static IEnumerable<string> PcDecodedLegacyByteCandidates(string value)
         {
-            bytes = null;
-            if (string.IsNullOrEmpty(value)) return false;
-            bytes = new byte[value.Length];
-            bool hasHighByte = false;
-            for (int i = 0; i < value.Length; i++)
+            if (string.IsNullOrEmpty(value)) yield break;
+
+            TryRegisterCodePagesProvider();
+            var candidates = PcText.Tcvn3ToBytesMultiple(value);
+            if (candidates == null) yield break;
+
+            foreach (var bytes in candidates)
             {
-                char ch = value[i];
-                if (ch > 255)
+                bool hasHighByte = false;
+                for (int i = 0; i < bytes.Length; i++)
                 {
-                    bytes = null;
-                    return false;
+                    if (bytes[i] > 127) hasHighByte = true;
                 }
-                if (ch > 127) hasHighByte = true;
-                bytes[i] = (byte)ch;
+                if (!hasHighByte) continue;
+
+                foreach (var name in new[] { "GB18030", "GB2312", "GBK", "windows-936" })
+                {
+                    Encoding enc;
+                    try { enc = Encoding.GetEncoding(name); }
+                    catch { continue; }
+                    string candidate;
+                    try { candidate = enc.GetString(bytes); }
+                    catch { continue; }
+                    if (!string.IsNullOrEmpty(candidate) && !string.Equals(candidate, value, StringComparison.Ordinal))
+                        yield return candidate;
+                }
             }
-            return hasHighByte;
         }
+
 
         private static void TryRegisterCodePagesProvider()
         {

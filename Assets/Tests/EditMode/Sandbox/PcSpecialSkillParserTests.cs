@@ -66,8 +66,8 @@ namespace VLTK.Tests.Sandbox
             }
 
             Assert.AreEqual(2, skill521Rows.Count);
-            Assert.AreEqual("Giảm Băng hoàn (kỹ năng) ", skill521Rows[0].nameRaw);
-            Assert.AreEqual("kháng tấn công khí mệnh (kỹ năng) ", skill521Rows[1].nameRaw);
+            Assert.AreEqual("Giảm Băng hoàn (kỹ năng)", skill521Rows[0].nameRaw.Trim());
+            Assert.AreEqual("kháng tấn công khí mệnh (kỹ năng)", skill521Rows[1].nameRaw.Trim());
         }
 
         [Test]

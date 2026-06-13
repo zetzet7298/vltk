@@ -8,6 +8,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 namespace VLTK.Sandbox
 {
@@ -114,6 +115,40 @@ namespace VLTK.Sandbox
                     chars[i] = (char)Tcvn3Table[code];
             }
             return new string(chars);
+        }
+
+        public static byte[][] Tcvn3ToBytesMultiple(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return null;
+            var choices = new List<byte[]>();
+            foreach (char ch in text)
+            {
+                var bytes = new List<byte>();
+                if (ch <= 255)
+                    bytes.Add((byte)ch);
+                for (int i = 0; i < Tcvn3Table.Length; i++)
+                    if (Tcvn3Table[i] == ch && !bytes.Contains((byte)i))
+                        bytes.Add((byte)i);
+                if (bytes.Count == 0) return null;
+                choices.Add(bytes.ToArray());
+            }
+
+            var results = new List<byte[]> { new byte[0] };
+            foreach (var opts in choices)
+            {
+                if (results.Count * opts.Length > 4096) return results.ToArray();
+                var next = new List<byte[]>();
+                foreach (var prefix in results)
+                foreach (var b in opts)
+                {
+                    var arr = new byte[prefix.Length + 1];
+                    Buffer.BlockCopy(prefix, 0, arr, 0, prefix.Length);
+                    arr[prefix.Length] = b;
+                    next.Add(arr);
+                }
+                results = next;
+            }
+            return results.ToArray();
         }
 
         private static int Score(string text)
