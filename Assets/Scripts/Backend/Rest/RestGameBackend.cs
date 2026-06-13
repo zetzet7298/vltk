@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using UnityEngine;
+using UnityEngine.Networking;
 using VLTK.Backend.Dto;
 using VLTK.Core;
 

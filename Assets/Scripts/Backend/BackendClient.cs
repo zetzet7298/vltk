@@ -26,11 +26,15 @@ namespace VLTK.Backend
         /// <summary>
         /// Khởi tạo BackendClient. Nếu config.useMock=true, dùng MockGameBackend;
         /// ngược lại dùng RestGameBackend với UnityWebRequestHttpTransport.
+        ///
+        /// Lưu ý: KHÔNG tự động apply StreamingAssets override tại đây — để test có
+        /// thể truyền config cụ thể mà không bị runtime JSON ghi đè. Caller muốn
+        /// dùng override phải gọi <see cref="BackendConfig.ApplyStreamingAssetsOverrideIfPresent"/>
+        /// trước khi tạo BackendClient (ví dụ sau khi <see cref="BackendConfig.LoadOrDefault"/>).
         /// </summary>
         public BackendClient(BackendConfig config)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
-            config.ApplyStreamingAssetsOverrideIfPresent();
             Backend = config.useMock
                 ? (IGameBackend)new MockGameBackend(config)
                 : new RestGameBackend(config, new UnityWebRequestHttpTransport());
@@ -38,12 +42,12 @@ namespace VLTK.Backend
 
         /// <summary>
         /// Khởi tạo với transport chỉ định (dùng cho test inject FakeHttpTransport).
+        /// Cũng KHÔNG auto-apply StreamingAssets override (xem ctor 1-arg).
         /// </summary>
         public BackendClient(BackendConfig config, IHttpTransport transport)
         {
             if (config == null) throw new ArgumentNullException(nameof(config));
             if (transport == null) throw new ArgumentNullException(nameof(transport));
-            config.ApplyStreamingAssetsOverrideIfPresent();
             Backend = config.useMock
                 ? (IGameBackend)new MockGameBackend(config)
                 : new RestGameBackend(config, transport);
