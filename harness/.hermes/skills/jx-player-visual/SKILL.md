@@ -168,6 +168,7 @@ is the reference impl (signed by default; `--unsigned` for the legacy variant).
 
 When generating a static web gallery or preview tool where layered Unity rendering is not available, you can assemble the complete character sprite into a single PNG in Python:
 1. **Extract variant & parts**: From the body path (e.g., `ma_bd_001_st01.spr`), parse the gender (`ma`/`fm`) and variant (`001`). Locate corresponding part files: head (`hd`), hair (`hr`), left hand (`lh`), right hand (`rh`).
+   - **⚠ Path classification pitfall**: When detecting if a path is male or female, do NOT use `"man/" in path.lower()` directly because `"woman/"` contains `"man/"` as a substring and will cause female characters to be classified as male (resulting in wrong part resolutions). Use `"/man/" in path.lower() or "\\man\\" in path.lower()` instead, or check for `"woman"` first.
 2. **Decode frame metadata**: Open each SPR, parse the frame count and offsets. The frame's visual offsets (`offsetX`, `offsetY`) are stored at bytes 4-5 and 6-7 of the frame blob as signed 16-bit integers (`<h`).
 3. **Compute global bounding box**:
    - `min_x = min(offset_x)`, `max_x = max(offset_x + width)`

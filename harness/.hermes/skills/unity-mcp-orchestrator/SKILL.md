@@ -264,6 +264,75 @@ set_active_instance(instance="MyProject@abc123")
 # 3. All subsequent calls route to that instance
 ```
 
+### Unity batchmode license trap (Kanban workers)
+
+**Symptom:** A Kanban worker in a worktree tries to run Unity tests via:
+```bash
+/home/zet/Unity/Hub/Editor/6000.4.7f1/Editor/Unity \
+  -batchmode -nographics -projectPath . -runTests \
+  -testPlatform EditMode -testResults results.xml -quit
+```
+and gets **"No valid Unity Editor license"** or a silent exit with no test
+results. The worker then spends 20-45 minutes grepping for `.ulf` files,
+checking `Unity.Licensing.Client.log`, running `dotnet Unity.Licensing.Client.dll --showEntitlements`, etc.
+
+**Root cause:** When a Unity Editor instance is already running (e.g., the
+Docker MCP-for-Unity bridge or a foreground Editor), the Unity license is
+already checked out. A second `Unity -batchmode` process in a worktree
+cannot acquire the license and fails silently.
+
+**Fix — worker task body should include this note:**
+> Do NOT run `Unity -batchmode` in your worktree. The license is already
+> held by the running Editor. Instead: (1) Use MCP tools
+> (`mcp_unityMCP_refresh_unity`, `mcp_unityMCP_read_console`,
+> `mcp_unityMCP_run_tests`) to compile and test through the running Editor.
+> (2) If MCP is not available in your profile, commit + push your branch
+> without running tests. The integration lane (vltk-unity) will verify
+> compile + test in the real Editor. Just write correct code and push.
+
+**Fix — orchestrator rescue:** If the worker is already stuck, `reclaim`
+the task, check the worktree for uncommitted code, commit + push via
+`execute_code`/`subprocess`, and `complete` the task with a rescue note.
+See the "code rescue" pattern in the `kanban-orchestrator` skill.
+
+### MCP Unity contention (multiple workers)
+
+**Symptom:** When 2+ Kanban workers try to use MCP Unity tools
+simultaneously, they get `TimeoutError`, `"session not ready"`, or
+`"ping not answered"`. The MCP-for-Unity bridge handles one request at a
+time.
+
+**Fix:** Only one worker profile should have MCP Unity access. In the VLTK
+project, this is `vltk-unity` (the integration lane). Implementation
+workers (`vltk-fixer`, `vltk-fixer2`) should NOT have MCP Unity configured
+— they write code and push branches; `vltk-unity` merges, compiles, and
+tests via MCP.
+
+If a worker has MCP access and is blocked by contention, comment on the
+task: "MCP Unity is busy with another worker. Commit your code + push
+branch. Integration lane will verify."
+
+### PlayMode test infinite hang
+
+**Symptom:** Unity PlayMode tests (especially those with coroutines like
+`SandboxBootE2ETests`) can run for 45+ minutes at 113% CPU without
+completing. The log shows endless `CoroutineRunner/WrapEnumeratorForChecks`
+stack traces. The test runner process does not exit on its own.
+
+**Root cause:** PlayMode tests that instantiate full game subsystems
+(MapManager, SandboxManager, NPC spawn) in a headless/Docker environment
+can deadlock on asset loading or coroutine dependencies that expect a
+rendering context.
+
+**Fix:**
+1. Check if the process is actually progressing: `ps -p <pid> -o pid,stat,etime,pcpu`
+2. If CPU is high but no test output for 10+ minutes, it's hung.
+3. Kill the Unity process: `kill <pid>`
+4. Defer PlayMode verification to a foreground Editor session or a
+   dedicated PlayMode integration task.
+5. EditMode tests (2383/2383 in this project) are the reliable gate.
+   PlayMode is a stretch goal that can run on demand.
+
 ## Error Recovery
 
 | Symptom | Cause | Solution |
