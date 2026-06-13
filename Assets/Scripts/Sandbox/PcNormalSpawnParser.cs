@@ -87,7 +87,9 @@ namespace VLTK.Sandbox
         public static List<SpawnPoint> ParseFile(string path)
         {
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return new List<SpawnPoint>();
-            var lines = PcText.ReadLinesTcvn3(path);
+            // normal.txt is genuinely Chinese GB2312 (item equipment data, not Vietnamese TCVN3).
+            // DecodeBest auto-detects GB18030 for Chinese content.
+            var lines = PcText.ReadLines(path, null);
             return ParseLines(lines, "normal.txt");
         }
 

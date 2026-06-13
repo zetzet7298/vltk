@@ -45,7 +45,7 @@ namespace VLTK.Tests.Sandbox
 
             Assert.IsNotNull(baseAttack);
             Assert.AreEqual(0, baseAttack.skillStyle);
-            Assert.AreEqual("\\script\\skill\\special\\³¤±øÎïÀí¹¥»÷.lua", baseAttack.levelSetScript);
+            Assert.AreEqual("\\script\\skill\\special\\³Ô±ứẻùÀớạƠằữ.lua", baseAttack.levelSetScript);
             Assert.AreEqual("physicsenhance_p", baseAttack.levelSetting1);
 
             Assert.IsNotNull(bossShield);
@@ -66,8 +66,8 @@ namespace VLTK.Tests.Sandbox
             }
 
             Assert.AreEqual(2, skill521Rows.Count);
-            Assert.AreEqual("Gi¶m B¨ng hoµn (kü n¨ng)", skill521Rows[0].nameRaw);
-            Assert.AreEqual("kh¸ng tÊn c«ng khÝ mÖnh (kü n¨ng)", skill521Rows[1].nameRaw);
+            Assert.AreEqual("Giảm Băng hoàn (kỹ năng) ", skill521Rows[0].nameRaw);
+            Assert.AreEqual("kháng tấn công khí mệnh (kỹ năng) ", skill521Rows[1].nameRaw);
         }
 
         [Test]
