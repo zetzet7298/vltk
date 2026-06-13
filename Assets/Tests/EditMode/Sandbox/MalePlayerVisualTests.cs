@@ -12,11 +12,27 @@ namespace VLTK.Tests.Sandbox
 {
     /// <summary>
     /// Male player port smoke tests: verifies the PC SPR part catalog, 8-way move
-    /// directions, staged StreamingAssets, weapon type switching, and staff equipment.
+    /// directions, runtime-staged weapon fixtures, weapon type switching, and
+    /// staff equipment.
+    ///
+    /// CTS-06: every test routes the visual's SPR loader to a per-fixture temp
+    /// directory populated by <see cref="MalePlayerSprStaging.StageForTests"/>.
+    /// The catalog-level tests still rely on <see cref="MalePlayerSpriteCatalog"/>
+    /// directly (no SPR bytes needed), so they pass without a visual.
     /// </summary>
     public class MalePlayerVisualTests
     {
         private GameObject _go;
+        private string _stagingRoot;
+
+        [SetUp]
+        public void SetUp()
+        {
+            // Stage every male-player weapon/action combination into a unique
+            // temp dir so each test fixture is hermetic. The visual's
+            // spritesRootOverride is set per-test after AddComponent.
+            _stagingRoot = MalePlayerSprStaging.StageForTests();
+        }
 
         [TearDown]
         public void TearDown()
@@ -24,6 +40,16 @@ namespace VLTK.Tests.Sandbox
             if (_go != null)
                 Object.DestroyImmediate(_go);
             _go = null;
+            MalePlayerSprStaging.CleanupTempDir(_stagingRoot);
+            _stagingRoot = null;
+        }
+
+        private MalePlayerVisual CreateVisual(string name)
+        {
+            _go = new GameObject(name);
+            var visual = _go.AddComponent<MalePlayerVisual>();
+            visual.spritesRootOverride = _stagingRoot;
+            return visual;
         }
 
         [Test]
@@ -142,8 +168,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_LoadsAllRequiredMoveParts_EmptyHand()
         {
-            _go = new GameObject("MaleVisualTest");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual("MaleVisualTest");
             visual.playAutomatically = false;
             visual.SetMoveInput(Vector2.right);
 
@@ -159,8 +184,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_LoadsStaffIdleParts_FromStagedSprFiles()
         {
-            _go = new GameObject("MaleStaffIdleTest");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual("MaleStaffIdleTest");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.LongWeapon);
 
@@ -175,8 +199,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_LoadsStaffMagicParts_FromStagedSprFiles()
         {
-            _go = new GameObject("MaleStaffMagicTest");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual("MaleStaffMagicTest");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.LongWeapon);
             visual.SetAction(PlayerVisualAction.Magic);
@@ -196,8 +219,7 @@ namespace VLTK.Tests.Sandbox
         [TestCase(PlayerVisualAction.Attack)]
         public void Visual_LoadsShortWeaponParts_FromPakStagedSprFiles(PlayerVisualAction action)
         {
-            _go = new GameObject($"MaleShortWeapon{action}Test");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual($"MaleShortWeapon{action}Test");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.ShortWeapon);
             visual.SetAction(action);
@@ -215,8 +237,7 @@ namespace VLTK.Tests.Sandbox
         [TestCase(PlayerVisualAction.Attack)]
         public void Visual_LoadsDualWeaponParts_FromPakStagedSprFiles(PlayerVisualAction action)
         {
-            _go = new GameObject($"MaleDualWeapon{action}Test");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual($"MaleDualWeapon{action}Test");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.DualWeapon);
             visual.SetAction(action);
@@ -239,8 +260,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_LoadsEmptyHandMagicParts_FromStagedSprFiles()
         {
-            _go = new GameObject("MaleMagicVisualTest");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual("MaleMagicVisualTest");
             visual.playAutomatically = false;
             visual.SetAction(PlayerVisualAction.Magic);
 
@@ -252,8 +272,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_LoadsStaffAttackParts_FromStagedSprFiles()
         {
-            _go = new GameObject("MaleStaffAttackTest");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual("MaleStaffAttackTest");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.LongWeapon);
             visual.SetAction(PlayerVisualAction.Attack);
@@ -267,8 +286,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_LoadsEmptyHandAttackParts_FromPakStagedSprFiles()
         {
-            _go = new GameObject("MaleEmptyHandAttackTest");
-            var visual = _go.AddComponent<MalePlayerVisual>();
+            var visual = CreateVisual("MaleEmptyHandAttackTest");
             visual.playAutomatically = false;
             visual.SetAction(PlayerVisualAction.Attack);
 
@@ -285,6 +303,11 @@ namespace VLTK.Tests.Sandbox
             var controller = _go.AddComponent<SandboxPlayerController>();
             controller.followCameraEnabled = false;
             controller.allowKeyboardFallback = false;
+            // Awake already auto-created a child visual; route it at the staged
+            // fixture dir so the forced refresh inside EquipWeapon resolves parts
+            // from the test fixture instead of the global StreamingAssets/Sprites.
+            if (controller.visual is MalePlayerVisual maleV)
+                maleV.spritesRootOverride = _stagingRoot;
 
             Assert.AreEqual(PcWeaponType.EmptyHand, controller.EquippedWeapon);
 
@@ -300,6 +323,8 @@ namespace VLTK.Tests.Sandbox
             var controller = _go.AddComponent<SandboxPlayerController>();
             controller.followCameraEnabled = false;
             controller.allowKeyboardFallback = false;
+            if (controller.visual is MalePlayerVisual maleV)
+                maleV.spritesRootOverride = _stagingRoot;
             controller.EquipWeapon(PcWeaponType.LongWeapon);
 
             controller.SetMoveInput(Vector2.right);
@@ -317,6 +342,8 @@ namespace VLTK.Tests.Sandbox
             var controller = _go.AddComponent<SandboxPlayerController>();
             controller.followCameraEnabled = false;
             controller.allowKeyboardFallback = false;
+            if (controller.visual is MalePlayerVisual maleV)
+                maleV.spritesRootOverride = _stagingRoot;
             controller.EquipWeapon(PcWeaponType.LongWeapon);
 
             controller.SetMoveInput(Vector2.right);
@@ -336,6 +363,8 @@ namespace VLTK.Tests.Sandbox
             controller.allowKeyboardFallback = false;
             controller.moveSpeed = 10f;
             controller.clampToMapBounds = false; // unit test: movement logic only
+            if (controller.visual is MalePlayerVisual maleV)
+                maleV.spritesRootOverride = _stagingRoot;
 
             controller.SetMoveInput(Vector2.right);
             controller.SimulateMove(0.5f);
