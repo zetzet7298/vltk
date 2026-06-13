@@ -193,3 +193,11 @@ backend/
 # Static HTML Gallery
 # ─────────────────────────────────────────────────
 html/
+
+# ─────────────────────────────────────────────────
+# FS-01 full-stack proof artifacts (verify-fs01.sh output)
+# The integration worker writes pytest logs, health smoke JSON, OpenAPI,
+# EditMode/PlayMode Test Runner XML, and a manual artifact to this dir.
+# Real artifacts stay on disk for review; never commit.
+# ─────────────────────────────────────────────────
+tests/
