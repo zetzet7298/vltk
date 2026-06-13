@@ -5,6 +5,11 @@
 // với IsSuccess=true và data hợp lệ. Dùng cho:
 //   - Runtime offline (SandboxManager không cần thay đổi khi useMock=true)
 //   - EditMode test không cần server thật
+//
+// Slice FS-03C (combat — server-authoritative):
+//   - POST /v1/combat/damage/calc  (mock dùng simple subtract + flat 50% damage)
+//   - POST /v1/combat/status/tick  (mock decrement poison/freeze state time)
+//   - POST /v1/combat/pk/check     (mock City = safe, Battlefield = OK)
 // -----------------------------------------------------------------------------
 
 using System;
@@ -189,6 +194,209 @@ namespace VLTK.Backend.Mock
                 items = items,
             };
             return Task.FromResult(new BackendResponse<ItemListResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
+
+        // ----------------------------------------------------------------
+        // FS-03C — Combat (server-authoritative mock)
+        // ----------------------------------------------------------------
+
+        public Task<BackendResponse<DamageCalcResponse>> CalcDamageAsync(
+            DamageCalcRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<DamageCalcResponse>.Failure(
+                    "invalid_arg", "DamageCalcRequest is null"));
+            }
+            if (request.target == null)
+            {
+                return Task.FromResult(BackendResponse<DamageCalcResponse>.Failure(
+                    "invalid_arg", "DamageCalcRequest.target is null"));
+            }
+            // Mock damage: dùng atkMax (đơn giản hóa) - armor (nếu có) - resist
+            // % rồi cap ở 0. KHÔNG phải parity KNpc.cpp thật (chỉ Rest mới parity);
+            // mock chỉ để test happy path + cấu trúc response.
+            int raw = request.atkMax > 0 ? request.atkMax : request.atkMin;
+            int armor;
+            switch (request.damageKind)
+            {
+                case 1: armor = request.target.coldArmor; break;
+                case 2: armor = request.target.fireArmor; break;
+                case 3: armor = request.target.lightArmor; break;
+                case 4: armor = request.target.poisonArmor; break;
+                default: armor = request.target.physicsArmor; break;
+            }
+            int resist;
+            switch (request.damageKind)
+            {
+                case 1: resist = request.target.coldResist; break;
+                case 2: resist = request.target.fireResist; break;
+                case 3: resist = request.target.lightResist; break;
+                case 4: resist = request.target.poisonResist; break;
+                default: resist = request.target.physicsResist; break;
+            }
+            int armorLeft = System.Math.Max(0, armor - raw);
+            int damageAfterArmor = System.Math.Max(0, raw - armor);
+            int damageAfterResist = damageAfterArmor * (100 - resist) / 100;
+            // Mutate target: trừ armor theo kind, trừ life. KHÔNG tự trừ mana
+            // shield (mock chỉ để test field round-trip).
+            switch (request.damageKind)
+            {
+                case 0: request.target.physicsArmor = armorLeft; break;
+                case 1: request.target.coldArmor = armorLeft; break;
+                case 2: request.target.fireArmor = armorLeft; break;
+                case 3: request.target.lightArmor = armorLeft; break;
+                case 4: request.target.poisonArmor = armorLeft; break;
+            }
+            request.target.life = System.Math.Max(0, request.target.life - damageAfterResist);
+            var data = new DamageCalcResponse
+            {
+                damage = damageAfterResist,
+                manaAbsorbed = 0,
+                armorAbsorbed = System.Math.Min(armor, raw),
+                manaShieldBroke = false,
+                targetDied = request.target.life <= 0,
+                reflectToAttacker = 0,
+                reflectKind = 5, // magic default
+                target = request.target,
+            };
+            return Task.FromResult(new BackendResponse<DamageCalcResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
+
+        public Task<BackendResponse<StatusTickResponse>> StatusTickAsync(
+            StatusTickRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<StatusTickResponse>.Failure(
+                    "invalid_arg", "StatusTickRequest is null"));
+            }
+            if (request.target == null || request.status == null)
+            {
+                return Task.FromResult(BackendResponse<StatusTickResponse>.Failure(
+                    "invalid_arg", "StatusTickRequest.target/status is null"));
+            }
+            // Mock: poison time-- + burn time--; controlled=true nếu freeze/stun
+            // còn time>0. KHÔNG tính DoT thật — đó là việc của server (Rest mới
+            // parity KNpc.cpp:783-816).
+            var dotResults = new List<DotResult>();
+            if (request.status.poisonState != null && request.status.poisonState.time > 0)
+            {
+                request.status.poisonState.time -= 1;
+                // Mock DoT: value0 dmg (poisonSource nếu có)
+                int dotDmg = request.status.poisonState.value0;
+                request.target.life = System.Math.Max(0, request.target.life - dotDmg);
+                dotResults.Add(new DotResult
+                {
+                    damage = dotDmg,
+                    manaAbsorbed = 0,
+                    armorAbsorbed = 0,
+                    manaShieldBroke = false,
+                    targetDied = request.target.life <= 0,
+                    reflectToAttacker = 0,
+                    reflectKind = 4, // poison
+                });
+            }
+            if (request.status.freezeState != null && request.status.freezeState.time > 0)
+            {
+                request.status.freezeState.time -= 1;
+            }
+            if (request.status.burnState != null && request.status.burnState.time > 0)
+            {
+                request.status.burnState.time -= 1;
+            }
+            if (request.status.confuseState != null && request.status.confuseState.time > 0)
+            {
+                request.status.confuseState.time -= 1;
+            }
+            if (request.status.stunState != null && request.status.stunState.time > 0)
+            {
+                request.status.stunState.time -= 1;
+            }
+            if (request.status.lifeState != null && request.status.lifeState.time > 0)
+            {
+                request.status.lifeState.time -= 1;
+            }
+            if (request.status.manaState != null && request.status.manaState.time > 0)
+            {
+                request.status.manaState.time -= 1;
+            }
+            if (request.status.drunkState != null && request.status.drunkState.time > 0)
+            {
+                request.status.drunkState.time -= 1;
+            }
+            bool controlled = (request.status.freezeState != null && request.status.freezeState.time > 0)
+                || (request.status.stunState != null && request.status.stunState.time > 0);
+            bool confuseEnded = request.status.confuseState != null
+                && request.status.confuseState.time == 0;
+            var data = new StatusTickResponse
+            {
+                controlled = controlled,
+                confuseEnded = confuseEnded,
+                dotResults = dotResults,
+                auraCastSkillId = request.activeAuraId,
+                auraCastLevel = request.activeAuraLevel,
+                target = request.target,
+                status = request.status,
+            };
+            return Task.FromResult(new BackendResponse<StatusTickResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
+
+        public Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
+            PkCheckRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<PkCheckResponse>.Failure(
+                    "invalid_arg", "PkCheckRequest is null"));
+            }
+            if (string.IsNullOrEmpty(request.mapType))
+            {
+                return Task.FromResult(BackendResponse<PkCheckResponse>.Failure(
+                    "invalid_arg", "PkCheckRequest.mapType is null/empty"));
+            }
+            // Mock policy: City/Capital = safe zone, Battlefield = OK, Field/other
+            // = cảnh báo nhưng vẫn cho đánh. KHÔNG parity với server (chỉ Rest
+            // mới parity combat_resolve.pk_allowed_check).
+            string mt = request.mapType;
+            bool isCity = mt == "City" || mt == "Capital";
+            bool isBattlefield = mt == "Battlefield";
+            bool isSafeZone = isCity;
+            bool mapPkAllowed = !isCity;
+            bool canAttack = mapPkAllowed && !isSafeZone && (request.attackerCamp != request.targetCamp);
+            string reason = null;
+            if (isSafeZone)
+            {
+                reason = "Vùng an toàn — cấm PK";
+            }
+            else if (request.attackerCamp == request.targetCamp)
+            {
+                canAttack = false;
+                reason = "Cùng phe — không thể PK";
+            }
+            var data = new PkCheckResponse
+            {
+                canAttack = canAttack,
+                mapPkAllowed = mapPkAllowed,
+                isSafeZone = isSafeZone,
+                reason = reason,
+            };
+            return Task.FromResult(new BackendResponse<PkCheckResponse>
             {
                 code = "200",
                 message = "Mock",

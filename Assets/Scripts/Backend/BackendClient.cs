@@ -71,5 +71,17 @@ namespace VLTK.Backend
         public Task<BackendResponse<ItemListResponse>> ListItemsAsync(
             int roleId, CancellationToken ct = default)
             => Backend.ListItemsAsync(roleId, ct);
+
+        public Task<BackendResponse<DamageCalcResponse>> CalcDamageAsync(
+            DamageCalcRequest request, CancellationToken ct = default)
+            => Backend.CalcDamageAsync(request, ct);
+
+        public Task<BackendResponse<StatusTickResponse>> StatusTickAsync(
+            StatusTickRequest request, CancellationToken ct = default)
+            => Backend.StatusTickAsync(request, ct);
+
+        public Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
+            PkCheckRequest request, CancellationToken ct = default)
+            => Backend.CheckPkAsync(request, ct);
     }
 }

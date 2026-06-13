@@ -6,10 +6,20 @@
 //   - GET  /health              (root, không thuộc /v1)
 //   - GET  /v1/map              (danh mục bản đồ thế giới)
 //
+// Slice FS-02B (auth):
+//   - POST /v1/account/login
+//   - GET  /v1/role/by-account/{account_id}
+//   - GET  /v1/player/{role_id}
+//
 // Slice FS-02C (expand):
 //   - POST /v1/map/enter        (vào/đổi bản đồ, body=EnterMapRequest)
 //   - GET  /v1/map/position/{id} (lấy vị trí nhân vật)
 //   - GET  /v1/item/by-role/{id} (liệt kê túi đồ)
+//
+// Slice FS-03C (combat — server-authoritative):
+//   - POST /v1/combat/damage/calc  (KNpc::CalcDamage parity — server mutate target)
+//   - POST /v1/combat/status/tick  (KNpc::ProcessState parity — 1 frame server tick)
+//   - POST /v1/combat/pk/check     (PK hợp lệ server-side; client KHÔNG tự quyết)
 //
 // Mọi method đều trả về BackendResponse<T> để khi backend trả 4xx/5xx với body
 // JSON hợp lệ, caller vẫn nhận được code/message thay vì exception.
@@ -22,8 +32,7 @@ using VLTK.Backend.Dto;
 namespace VLTK.Backend
 {
     /// <summary>
-    /// Hợp đồng backend tối thiểu cho FS-01D. Mở rộng dần trong các slice sau
-    /// (login, role list, player state, item list, skill cast).
+    /// Hợp đồng backend tối thiểu cho FS-01D. Mở rộng dần trong các slice sau.
     /// </summary>
     public interface IGameBackend
     {
@@ -67,5 +76,36 @@ namespace VLTK.Backend
         /// </summary>
         Task<BackendResponse<ItemListResponse>> ListItemsAsync(
             int roleId, CancellationToken ct = default);
+
+        // ----------------------------------------------------------------
+        // FS-03C — Combat (server-authoritative)
+        // ----------------------------------------------------------------
+
+        /// <summary>
+        /// Gọi POST /v1/combat/damage/calc (body=DamageCalcRequest). Server
+        /// là NGUỒN CHÂN LÝ DUY NHẤT cho damage — KHÔNG tự tính local.
+        /// Server MUTATE target tại chỗ, trả về damage + state sau.
+        /// Caller dùng <see cref="ServerAuthorityEnforcer.ApplyServerState"/>
+        /// để thay thế state local bằng state server trả.
+        /// </summary>
+        Task<BackendResponse<DamageCalcResponse>> CalcDamageAsync(
+            DamageCalcRequest request, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/combat/status/tick (body=StatusTickRequest). Server
+        /// tiến 1 frame ProcessState (parity KNpc.cpp:612-863), mutate target
+        /// + status tại chỗ, trả về control flags + dotResults + state sau.
+        /// Client KHÔNG tự tick status local.
+        /// </summary>
+        Task<BackendResponse<StatusTickResponse>> StatusTickAsync(
+            StatusTickRequest request, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/combat/pk/check (body=PkCheckRequest). Server quyết
+        /// định có được phép đánh player khác hay không (vùng an toàn / khác
+        /// phe / battle). Client LUÔN phải gọi trước khi damage.
+        /// </summary>
+        Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
+            PkCheckRequest request, CancellationToken ct = default);
     }
 }

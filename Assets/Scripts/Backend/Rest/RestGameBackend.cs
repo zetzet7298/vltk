@@ -8,10 +8,10 @@
 //   - GET  /health
 //   - GET  /v1/map
 //
-// Slice FS-02C (expand):
-//   - POST /v1/map/enter             (body=EnterMapRequest → SceneResponse)
-//   - GET  /v1/map/position/{role_id} (→ SceneResponse)
-//   - GET  /v1/item/by-role/{role_id} (→ ItemListResponse)
+// Slice FS-03C (combat — server-authoritative):
+//   - POST /v1/combat/damage/calc  (KNpc::CalcDamage parity — server mutate target)
+//   - POST /v1/combat/status/tick  (KNpc::ProcessState parity — 1 frame server tick)
+//   - POST /v1/combat/pk/check     (PK hợp lệ server-side; client KHÔNG tự quyết)
 // -----------------------------------------------------------------------------
 
 using System;
@@ -130,6 +130,90 @@ namespace VLTK.Backend.Rest
                 queryParams: null,
                 bodyJson: null,
                 isEnvelope: true, // /v1/item/by-role/{id} trả DataResponse[ItemListResponse]
+                ct: ct);
+        }
+
+        // ----------------------------------------------------------------
+        // FS-03C — Combat (server-authoritative)
+        // ----------------------------------------------------------------
+
+        public Task<BackendResponse<DamageCalcResponse>> CalcDamageAsync(
+            DamageCalcRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<DamageCalcResponse>.Failure(
+                    "invalid_arg", "DamageCalcRequest is null"));
+            }
+            if (request.target == null)
+            {
+                return Task.FromResult(BackendResponse<DamageCalcResponse>.Failure(
+                    "invalid_arg", "DamageCalcRequest.target is null"));
+            }
+            // Server là NGUỒN CHÂN LÝ duy nhất cho damage. Client KHÔNG tự tính.
+            // Gửi toàn bộ context (atkMin/atkMax/kind/melee/return/pkRate/target/
+            // attacker/seed) — server mutate target tại chỗ và trả về damage +
+            // state sau.
+            string url = Config.ResolveApiUrl("combat/damage/calc");
+            string bodyJson = JsonConvert.SerializeObject(request);
+            return ExecuteAsync<DamageCalcResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: bodyJson,
+                isEnvelope: true, // /v1/combat/damage/calc trả DataResponse[DamageCalcResponse]
+                ct: ct);
+        }
+
+        public Task<BackendResponse<StatusTickResponse>> StatusTickAsync(
+            StatusTickRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<StatusTickResponse>.Failure(
+                    "invalid_arg", "StatusTickRequest is null"));
+            }
+            if (request.target == null || request.status == null)
+            {
+                return Task.FromResult(BackendResponse<StatusTickResponse>.Failure(
+                    "invalid_arg", "StatusTickRequest.target/status is null"));
+            }
+            // Server tiến 1 frame ProcessState (KNpc.cpp:612-863), mutate target
+            // + status tại chỗ. Client KHÔNG tự tick status local.
+            string url = Config.ResolveApiUrl("combat/status/tick");
+            string bodyJson = JsonConvert.SerializeObject(request);
+            return ExecuteAsync<StatusTickResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: bodyJson,
+                isEnvelope: true, // /v1/combat/status/tick trả DataResponse[StatusTickResponse]
+                ct: ct);
+        }
+
+        public Task<BackendResponse<PkCheckResponse>> CheckPkAsync(
+            PkCheckRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<PkCheckResponse>.Failure(
+                    "invalid_arg", "PkCheckRequest is null"));
+            }
+            if (string.IsNullOrEmpty(request.mapType))
+            {
+                return Task.FromResult(BackendResponse<PkCheckResponse>.Failure(
+                    "invalid_arg", "PkCheckRequest.mapType is null/empty"));
+            }
+            // Server quyết định có được phép đánh (vùng an toàn/khác phe/battle).
+            // Client LUÔN gọi trước khi damage.
+            string url = Config.ResolveApiUrl("combat/pk/check");
+            string bodyJson = JsonConvert.SerializeObject(request);
+            return ExecuteAsync<PkCheckResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: bodyJson,
+                isEnvelope: true, // /v1/combat/pk/check trả DataResponse[PkCheckResponse]
                 ct: ct);
         }
 
