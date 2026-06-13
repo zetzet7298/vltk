@@ -1363,6 +1363,24 @@ namespace VLTK.Sandbox
             // Region_S folder contains server-side NPC spawn data with real PC coordinates.
             var regionSFolder = ResolveRegionSFolderForActiveMap();
             EnemyRuntime.SpawnForMap(MapManager.ActiveMapId, regionSFolder);
+
+            // Bridge spawned enemies into GameplayLoop so combat/AI can interact with them.
+            if (GameplayLoop != null)
+            {
+                int bridged = 0;
+                foreach (var entry in EnemyRuntime.Entries)
+                {
+                    int templateId = entry.template?.templateId ?? 0;
+                    string nameVi   = entry.template?.DisplayName ?? "Quái";
+                    int level       = Mathf.Max(1, entry.level);
+                    var pos         = entry.worldPosition;
+                    // Use instanceId as actorId; offset by 10000 to avoid collision with player (id=1).
+                    int actorId     = 10000 + entry.instanceId;
+                    GameplayLoop.RegisterEnemy(actorId, nameVi, templateId, level, pos);
+                    bridged++;
+                }
+                SubsystemLog.Info("MapEnemy", $"GameplayLoop: bridged {bridged} enemies từ EnemyRuntime.");
+            }
         }
 
         private void RenderObjectsForActiveMap()
@@ -2153,6 +2171,13 @@ namespace VLTK.Sandbox
             }
 
             // Gameplay loop tick: mana regen, enemy AI, respawn timers
+            // Sync player combat position from scene controller so range checks work correctly.
+            if (GameplayLoop?.Player != null && PlayerController != null)
+            {
+                var wpos = (Vector2)PlayerController.transform.position;
+                GameplayLoop.Player.worldPos = wpos;
+                GameplayLoop.Player.combat.position = wpos;
+            }
             GameplayLoop?.Tick(Time.deltaTime);
         }
 
