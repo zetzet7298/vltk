@@ -4,9 +4,108 @@
 
 User-facing responses must be Vietnamese. If PC JX source text is Chinese, port/user-facing text must be Vietnamese.
 
+## Project scope — full-stack VLTK Mobile
+
+This project is now a **full-stack game port**, not only a Unity mobile client.
+
+| Path | Role |
+|---|---|
+| `/var/www/vltk-mobile` | Unity mobile client, assets, Harness, port-status authority. |
+| `/var/www/vltk-mobile/backend` | Python/FastAPI game server backend ported from the PC game server. |
+| `/var/www/vltktool` | Shared tooling for PAK/SPR/reference-resource lookup and repair. |
+| `/var/www/vltksource_new/vl_update_27` | PC source-of-truth for both client resources and server behavior. |
+
+When a task touches gameplay behavior, data authority, persistence, economy, combat, missions, NPC AI, account/role/player state, skills, items, maps, events, guild/Tong, or realtime/network protocol, agents must consider **both sides**:
+
+1. Unity client implementation under `/var/www/vltk-mobile/Assets/...`.
+2. Backend game-server implementation under `/var/www/vltk-mobile/backend/app/...`.
+3. Original PC source/data/assets under `/var/www/vltksource_new/vl_update_27`.
+
+Do not assume the Unity client is the only place to fix a bug. If the missing logic belongs to the authoritative game server, port/fix it in `backend` and then wire the Unity client to consume it.
+
+## Backend game server rules
+
+The backend is a separate game-server codebase inside this workspace:
+
+```text
+/var/www/vltk-mobile/backend
+```
+
+It is ported from the **PC VLTK game server** source under:
+
+```text
+/var/www/vltksource_new/vl_update_27/Server 6.0
+/var/www/vltksource_new/vl_update_27/jx_linux_y
+/var/www/vltksource_new/vl_update_27/pak_unpacked
+```
+
+When working on backend files, always read and follow the nearest backend instructions first:
+
+```text
+/var/www/vltk-mobile/backend/AGENTS.md
+```
+
+Backend-specific defaults from that file:
+
+- Framework: FastAPI DDD.
+- Database: PostgreSQL.
+- Runtime port: `8020`.
+- Public comments/docstrings: Vietnamese.
+- Module structure: `domain/`, `application/`, `infrastructure/`, `api/`.
+- Run backend tests with the backend venv, usually:
+
+```bash
+cd /var/www/vltk-mobile/backend
+.venv/bin/python -m pytest tests/unit -q
+.venv/bin/python -m pytest tests/integration -q
+.venv/bin/python -m pytest tests/e2e -q
+```
+
+### Backend is authoritative, but not automatically complete
+
+Treat backend logic as the intended authority for:
+
+- account/login/session/role selection;
+- persisted player state, level/EXP/resources/currency/repute;
+- inventory/equipment/item use/shop/economy;
+- skill learn/cast/cooldown/resource cost/effects;
+- combat rules, PK checks, status ticks, battle scoring;
+- tasks/missions/events/social/Tong data and side effects;
+- future realtime server tick, AOI/interest management, NPC/enemy ownership, and snapshots.
+
+However, backend port coverage may still be incomplete compared with the PC game server. Before claiming parity, verify against PC `Server 6.0`/`jx_linux_y`/Lua/TXT/INI/binary behavior and add tests. A backend API/service existing is not proof of full PC semantic parity.
+
+### Client/backend integration rule
+
+For new full-stack features:
+
+1. Identify the PC behavior/source first.
+2. Decide ownership:
+   - **Backend** owns authoritative state/validation/economy/combat outcomes/persistence.
+   - **Unity client** owns rendering, local input, camera/UI, animation/effects presentation, prediction/interpolation.
+3. Port/fix backend behavior first when the PC server was authoritative.
+4. Expose or update the API/protocol contract.
+5. Then wire Unity through an abstraction (mock/local vs real backend) rather than hard-coding server calls into UI/render components.
+6. Verify both sides: backend pytest for server behavior; Unity Editor/Test Runner for client integration.
+
+Do not duplicate authoritative formulas in Unity unless explicitly needed for prediction/display; if duplicated, mark it as client-side prediction and reconcile with backend results.
+
+### Reverse-engineering is required support for server parity blockers
+
+Load/use the `reverse-engineering` skill whenever backend/client parity is blocked by compiled PC behavior or binary formats, including:
+
+- C++ engine behavior not explained by Lua/TXT/INI;
+- packet/protocol/opcode/session behavior from Gateway/Bishop/S3Relay/GameServer binaries;
+- RoleData/item/skill/combat serialization or native structs;
+- formulas only visible in `KNpc.cpp`, `KSkill`, `KItem`, engine DLLs, or disassembly;
+- PAK/SPR/WOR/Region binary layout, path UID hashing, compression flags, encoding ambiguity;
+- PC runtime behavior that source scripts reference but do not fully define.
+
+For routine table/Lua ports where source is readable, use the relevant JX/VLTK port skill first. Escalate to `reverse-engineering` only when source-level evidence is insufficient.
+
 ## PC source-of-truth for porting
 
-Before any PC→Mobile port/audit task, inspect the PC source under:
+Before any PC→Mobile/backend port/audit task, inspect the PC source under:
 
 ```text
 /var/www/vltksource_new
@@ -33,13 +132,7 @@ Manifest/audit:
 /var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json
 ```
 
-Current audit baseline:
-
-```text
-46/46 real source .pak files accounted for
-401,281 / 401,640 unique entries present on disk (99.91%)
-357 known undecoded entries: unsupported compression method 0x11000000
-```
+Current live manifest baseline must be read from `_unpack_summary.json` before use. Do **not** trust old baked counts. As last verified in the project notes, the repaired canonical tree had 46 PAKs, `total_exported=403560/403560`, `total_failed=0`; method `0x11000000` entries are raw SPR byte-copies, not undecoded failures.
 
 Rules:
 

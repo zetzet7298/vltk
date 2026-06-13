@@ -8,6 +8,10 @@ description: >-
 
 Use this skill to port or fix enemies and PC trainer/object spawns for a map using the same pattern proven on **Ba Lăng huyện / 巴陵县 (Map_79)**. Goal: PC-derived data, PC coordinates, real SPR visuals when available, reusable player-style enemy shadows, readable PC-style overhead name/HP UI, and deterministic Unity validation.
 
+## Reference files
+
+- [`references/gameplay-combat-bridge.md`](references/gameplay-combat-bridge.md) — Full session evidence: bridge pattern (both EnemyRuntime→GameplayLoop AND TriggerSkillSlot→GameplayLoop), field name traps, HP scale mismatch fix, Thread.Sleep coroutine trap, verified combat results (skill slot kills → EXP/silver), debug probe code, Cái Bang skill reference table.
+
 ## Core rule
 
 Enemies and trainer/object spawns come from **PC server `Region_S.dat` + `NpcS.txt`**, not
@@ -370,6 +374,157 @@ return $"enemies={ais.Length} anchored={anchored} above={above} sprite={sprite} 
 11. Add/extend EditMode tests.
 12. Run compile, tests, PlayMode probe, screenshot.
 
+## Combat/GameplayLoop bridge — connecting visual enemies to combat engine
+
+This is a critical architectural gap: `MapEnemySpawnRuntime` spawns 812 visual enemies on the scene but `GameplayLoopService` knows nothing about them until you explicitly bridge them.
+
+### The problem
+
+`MapEnemySpawnRuntime.SpawnForMap()` creates GameObjects with SPR visuals, AI, nameplates etc.
+`GameplayLoopService` maintains its own `_actors` dictionary and `_enemies` list used by combat.
+These two systems are **completely parallel** — visual enemies are NOT in the combat engine by default.
+
+`gl.Enemies.Count == 0` even when 812 monsters are visible on screen.
+
+### The fix: bridge in `SpawnEnemiesForActiveMap()`
+
+After `EnemyRuntime.SpawnForMap()` completes, loop through `EnemyRuntime.Entries` and register each in GameplayLoop:
+
+```csharp
+private void SpawnEnemiesForActiveMap()
+{
+    if (EnemyRuntime == null || MapManager?.ActiveMap == null) return;
+    var regionSFolder = ResolveRegionSFolderForActiveMap();
+    EnemyRuntime.SpawnForMap(MapManager.ActiveMapId, regionSFolder);
+
+    // Bridge spawned enemies into GameplayLoop for combat/AI
+    if (GameplayLoop != null)
+    {
+        int bridged = 0;
+        foreach (var entry in EnemyRuntime.Entries)
+        {
+            int templateId = entry.template?.templateId ?? 0;   // NOT .id
+            string nameVi  = entry.template?.DisplayName ?? "Quái";  // NOT .nameVi
+            int level      = Mathf.Max(1, entry.level);
+            var pos        = entry.worldPosition;
+            int actorId    = 10000 + entry.instanceId;  // offset to avoid collision with player (id=1)
+            GameplayLoop.RegisterEnemy(actorId, nameVi, templateId, level, pos);
+            bridged++;
+        }
+        SubsystemLog.Info("MapEnemy", $"GameplayLoop: bridged {bridged} enemies từ EnemyRuntime.");
+    }
+}
+```
+
+**Key field name traps:**
+- `NpcTemplate` uses `templateId` (NOT `id`) and `DisplayName` property (NOT `nameVi` field)
+- `BaLangNpcEntry` has `worldPosition`, `level`, `instanceId`, `template`, `series`, `facing`
+
+### Player position sync — range check requires real-time position
+
+`GameplayLoopService` stores `_player.combat.position` but this is set once at spawn and never updated. All skill range checks use `combat.position`, so player can't hit anything unless they're still at the spawn point.
+
+**Fix: sync every frame in `SandboxManager.Update()`:**
+
+```csharp
+// Right before GameplayLoop.Tick():
+if (GameplayLoop?.Player != null && PlayerController != null)
+{
+    var wpos = (Vector2)PlayerController.transform.position;
+    GameplayLoop.Player.worldPos = wpos;
+    GameplayLoop.Player.combat.position = wpos;
+}
+GameplayLoop?.Tick(Time.deltaTime);
+```
+
+When teleporting player via `execute_code` for combat tests, also manually sync:
+```csharp
+sm.PlayerController?.PlaceAt(newPos, snapCamera: false);
+var player = gl.Player;
+if (player != null) { player.worldPos = newPos; player.combat.position = newPos; }
+// THEN cast skill immediately — don't wait for next frame
+```
+
+### Skill selection for Cái Bang
+
+Skill catalog has 511 entries but not all are attack skills. Key lookup:
+- Skill ids 115/116 = passive stance skills (`skillStyle=PassivityNpcState`, `targetEnemy=False`) — cast succeeds but `damageResults=0`
+- Skill 117 = "Ném Đá Hỏi Đường" (`targetEnemy=True`, `skillStyle=Missiles`, `attackRadius=384`) — first real attack skill
+- `success=False, reason=SkillNotKnown` → skill id not in player's `knownSkills`
+- `success=False, reason=OutOfRange` → player too far, need dist < attackRadius (384 for sk117)
+- `success=False, reason=OnCooldown` → wait or `gl.Combat?.AdvanceTime(100)` to skip
+- `success=True, dmgResults=0` → skill cast OK but no damage (passive/buff/self-target)
+
+### TriggerSkillSlot → GameplayLoop HP bridge
+
+`CombatSkillSlotController.TriggerSkillSlot` is a third parallel system with its own HP. When a skill button is tapped:
+
+1. `TriggerSkillSlot` → `CombatRuntime.Cast` → `CombatCastReport`
+2. A coroutine `ApplyLiveEnemyHpAtImpact` fires after FX impact
+3. `target.enemyBehaviour.SetLife(hp)` updates visual HP only
+4. `GameplayActor.combat.currentLife` is untouched → EXP/silver/respawn never fire
+
+**actorId mapping:** `GameplayActor.actorId = 10000 + EnemyRuntimeInfo.enemyId` (where `enemyId == BaLangNpcEntry.instanceId`)
+
+**Fix:** in `ApplyLiveEnemyHpAtImpact`, after `SetLife(hp)`:
+
+```csharp
+var glEnemy = SandboxManager.Instance?.GameplayLoop?.GetActor(10000 + target.enemyId);
+if (glEnemy != null && !glEnemy.isDead)
+{
+    int visualDmg = target.maxLife > 0 ? target.currentLife - hp : 0;
+    if (visualDmg > 0)
+    {
+        int glDmg = target.maxLife > 0
+            ? Mathf.RoundToInt((float)visualDmg / target.maxLife * glEnemy.combat.maxLife)
+            : visualDmg;
+        glEnemy.combat.currentLife = Mathf.Max(0, glEnemy.combat.currentLife - glDmg);
+        if (glEnemy.combat.currentLife <= 0)
+            SandboxManager.Instance?.GameplayLoop?.ProcessActorDeathPublic(
+                glEnemy, SandboxManager.Instance?.GameplayLoop?.Player);
+    }
+}
+```
+
+Also expose `ProcessActorDeath` as public wrapper in `GameplayLoopService`:
+```csharp
+public void ProcessActorDeathPublic(GameplayActor victim, GameplayActor killer)
+    => ProcessActorDeath(victim, killer);
+```
+
+**HP scale:** visual MaxLife ≠ GL MaxLife. Use ratio: `glDmg = visualDmg / visualMaxLife * glMaxLife`. Never directly assign.
+
+**Verified:** TriggerSkillSlot(2, 117) on Hươu đốm → visual HP: 100→0, GL HP: 140→0, silver +25, EXP +250, Lv1→Lv2.
+
+
+
+```
+PlayerCastSkill(117, meoVangId) → success=True, hp 280→180, dmg=100
+Kill 5/5: Mèo vàng (hp=280), Heo trắng (hp=160/240), Hươu đốm (hp=120)
+Post-kill economy: silver=1150, EXP=940, level up to Lv3
+Respawn: 812/812 live after 30s (respawnDelay field on GameplayActor)
+```
+
+### Debug probe pattern for combat verification
+
+```csharp
+// Paste into execute_code:
+var sm = VLTK.Sandbox.SandboxManager.Instance;
+var gl = sm?.GameplayLoop;
+var player = gl?.Player;
+var playerPos = sm.PlayerController != null ? (Vector2)sm.PlayerController.transform.position : Vector2.zero;
+// Sync position manually for test:
+if (player != null) { player.worldPos = playerPos; player.combat.position = playerPos; }
+var nearest = gl.FindNearestEnemy(playerPos, 9999f);
+int hpB = nearest?.combat?.currentLife ?? 0;
+var r = gl.PlayerCastSkill(117, nearest?.actorId ?? 0);
+int hpA = nearest?.combat?.currentLife ?? 0;
+return $"enemies={gl.Enemies.Count} fightMode={player?.combat?.fightMode} " +
+       $"skill117: success={r?.success} reason={r?.reason} " +
+       $"{nearest?.nameVi} hp={hpB}→{hpA} dmg={hpB-hpA} dead={nearest?.isDead}\n" +
+       gl.GetStatusSummary();
+```
+
 ## Common traps
 
 - Using `Region_C` instead of `Region_S` gives critters/decor, not real PC server enemies.
@@ -381,3 +536,13 @@ return $"enemies={ais.Length} anchored={anchored} above={above} sprite={sprite} 
 - Creating invisible marker objects is acceptable for authoritative coordinates; make it explicit they are markers, not final visual parity.
 - Enemy shadows are SPR layers, not lighting. Reuse player shadow assets and sorting rather than adding Unity lights/shaders.
 - Fast Enter Play can preserve static singletons and movement state. Reset statics via `SubsystemRegistration` and clear player input/target before default spawn probes.
+- **Visual enemies ≠ combat enemies.** `MapEnemySpawnRuntime` and `GameplayLoopService` are completely separate. Always bridge them in `SpawnEnemiesForActiveMap()` or `Enemies.Count` stays 0 even with 812 visible monsters.
+- **`NpcTemplate.id` doesn't exist** — use `templateId`. `nameVi` doesn't exist — use `DisplayName`.
+- **`player.combat.position` never updates automatically.** Must sync from `PlayerController.transform.position` every frame in `Update()`, otherwise all skill range checks fail even at dist=150.
+- **Recompile during PlayMode = broken state.** Domain reload destroys singletons. `SandboxManager.Instance` returns null even though FindObjectsByType finds it. Always Stop → patch → play fresh.
+- **Skill 0 / non-Cái Bang skill ids** always fail with `SkillNotKnown` or `FactionMismatch`. Check `player.combat.knownSkills` list and use actual faction skill ids (Cái Bang starts at 115).
+- `PlaceAt()` + `PlayerCastSkill()` in the same frame: `combat.position` hasn't synced yet (sync happens next `Update()`). Manually set `player.worldPos` and `player.combat.position` after `PlaceAt()` when testing from `execute_code`.
+- **`TriggerSkillSlot` and `GameplayLoopService` are ALSO separate HP systems.** `CombatSkillSlotController.TriggerSkillSlot` uses its own `CombatRuntime.Cast` and applies damage to visual `BaLangNpcEntry` HP — but `GameplayActor.combat.currentLife` is untouched. Kill a visual enemy and EXP/silver don't fire. Fix: in `ApplyLiveEnemyHpAtImpact`, look up `GameplayLoop.GetActor(10000 + target.enemyId)` and apply ratio-scaled damage. actorId mapping: `GameplayActor.actorId = 10000 + BaLangNpcEntry.instanceId = 10000 + EnemyRuntimeInfo.enemyId`.
+- **HP scale mismatch between visual and GL.** Visual `maxLife` ≠ GL `maxLife` (different formulas). Never directly assign `gl.combat.currentLife = visualHp`. Use: `glDmg = Mathf.RoundToInt((float)visualDmg / visualMaxLife * glMaxLife)`.
+- **`Thread.Sleep` blocks Unity coroutines.** `ApplyLiveEnemyHpAtImpact` is a Coroutine. Calling `Thread.Sleep(1000)` in `execute_code` freezes the main thread — coroutines cannot tick, so HP reads immediately after sleep still show the old value. Use two separate `execute_code` calls instead: trigger in call 1, read results in call 2.
+- **`EnemyRuntime.GetActiveEnemies()` allocates a new `List<>` every call.** Don't call it per-frame in `Update()`. Use `EnemyRuntime.Entries` (returns `IReadOnlyList<BaLangNpcEntry>`) for no-alloc iteration, or call `GetActiveEnemies()` only when needed (test probes, one-off queries).

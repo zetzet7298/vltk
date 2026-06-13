@@ -40,6 +40,12 @@ history or contents. Reversibility first.
 3. **Don't commit local DBs**: `harness.db` / `*.db-wal` / `*.db-shm` are gitignored on purpose
    (durable backlog lives in them locally). Confirm they're not in the staged set.
 
+4. **Untrack large generated assets/directories (e.g., html/ static galleries)**:
+   When generating HTML galleries, asset dumps, or local visual audit tools, they should typically be ignored to keep the repository clean.
+   - Add the target folder (e.g., `html/`) to `.gitignore`.
+   - If the folder was already tracked/committed, run `git rm -r --cached <dir>` to remove it from Git's index while preserving the files locally on disk.
+   - Commit the deletion from tracking alongside the updated `.gitignore` to prevent future agents/runs from staging those files.
+
 ## Bundle-backup: the zero-risk move before ANY risky repo operation
 
 Before re-homing a repo, rewriting history, changing remotes, or any operation you're unsure about,

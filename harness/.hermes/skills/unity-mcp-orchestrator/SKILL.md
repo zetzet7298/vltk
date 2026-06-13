@@ -272,6 +272,96 @@ set_active_instance(instance="MyProject@abc123")
 | "stale_file" error | File changed since SHA | Re-fetch SHA with `get_sha`, retry |
 | Connection lost | Domain reload | Wait ~5s, reconnect |
 | Commands fail silently | Wrong instance | Check `set_active_instance` |
+| `SandboxManager.Instance` = null after recompile during PlayMode | Domain reload killed singleton | Stop + re-enter PlayMode clean |
+| `isPlaying=True` but `time=190s`, Instance=null | Recompile during PlayMode broke singleton; game runs on old domain | Stop, verify compile done, Play fresh |
+| Coroutine result not visible after `Thread.Sleep` in execute_code | `Thread.Sleep` blocks main thread; coroutines can't tick during sleep | Use two separate execute_code calls: trigger in call 1, read results in call 2 |
+
+### Reading compile errors via LogEntries reflection
+
+Unity MCP's `read_console` may not surface script compile errors depending on timing. Use this pattern instead:
+
+```csharp
+// In execute_code:
+var logEntriesType = System.Type.GetType("UnityEditor.LogEntries,UnityEditor");
+var getCount = logEntriesType.GetMethod("GetCount", ...);
+var startGetting = logEntriesType.GetMethod("StartGettingEntries", ...);
+var getEntry = logEntriesType.GetMethod("GetEntryInternal", ...);
+var endGetting = logEntriesType.GetMethod("EndGettingEntries", ...);
+// mode=0x42800 = script compile error; filter by "error CS" or "Assets/" in message
+```
+
+Or force recompile and check immediately:
+```csharp
+UnityEditor.Compilation.CompilationPipeline.RequestScriptCompilation();
+// wait 15-20s, then check isCompiling=False
+// Then read all log entries, filter mode & (0x100|0x01) for errors
+```
+
+### Recompile-during-PlayMode pitfall
+
+**Never** call `CompilationPipeline.RequestScriptCompilation()` while PlayMode is active. Unity will:
+1. Trigger a domain reload mid-game
+2. Destroy all singleton `Instance` references
+3. Leave `isPlaying=True` but game in a broken half-state
+4. `SandboxManager.Instance` returns null even though `FindObjectsByType<SandboxManager>()` finds it
+
+**Correct flow for code changes + PlayMode verify:**
+1. Stop PlayMode (`manage_editor(action="stop")`)
+2. Patch file
+3. `AssetDatabase.Refresh()` via `execute_code` — triggers auto-recompile
+4. Wait `isCompiling=False`
+5. `manage_editor(action="play")`
+6. Wait 35-45s for Full profile boot
+7. Probe `SandboxManager.Instance != null` before using
+
+## PlayMode Gameplay Verification (VLTK project)
+
+When you need to verify that the game actually runs (terrain renders, NPCs spawn, player moves, HUD works):
+
+### Boot profile pitfall: `useFastEditorBoot`
+
+`SandboxManager.useFastEditorBoot` defaults to `true` in the codebase. When `true`, the Full profile's `FastEditor` override **silently skips**:
+- Map terrain rendering (`MapRenderer.LoadMapRegions`)
+- NPC/enemy spawning (`SpawnEnemiesForActiveMap`)
+- Item/drop/skill loading
+- Most optional StreamingAssets service batches
+
+The game will still boot without errors but show a flat void (no terrain) and no enemies. **Always check this first** if PlayMode shows empty terrain. Look for console log `[SandboxBoot] FastEditor: skipped map visual rendering.`
+
+To fix: change `useFastEditorBoot` default to `false` in `SandboxManager.cs`, or set it at runtime via `execute_code`.
+
+### Console log analysis workflow
+
+```
+1. read_console(action="clear", types=["all"])           # Clear old noise
+2. manage_editor(action="play")                           # Enter PlayMode
+3. Wait 15-20s for full boot (31s observed for Full profile)
+4. read_console(action="get", count=50, format="plain", types=["all"])
+5. Check for: MapRenderer "Rendered N regions", MapEnemy "spawned N enemies", 
+   any errors. Cursor through pages if needed.
+6. manage_camera(action="screenshot", include_image=True) # Visual verification
+7. vision_analyze the screenshot for terrain, NPCs, UI issues
+8. manage_editor(action="stop")
+```
+
+Key log lines to verify boot health:
+- `[MapRenderer] Rendered N regions` — terrain loaded
+- `[MapEnemy] Map X: spawned N enemies` — NPC spawn working
+- `[SandboxBoot] profile=Full, total=Nms` — full boot completed
+- `[SandboxBoot] FastEditor: skipped` — **BAD**: indicates FastEditor boot
+
+### What "working" looks like (as of 2026-06-13)
+
+Map 53 (Ba Lăng huyện), Full profile boot:
+- 618 regions rendered, 812 enemies spawned from PC Region_S
+- 140 traps active, 11 objects rendered, 5 training NPCs
+- Player: male, mounted on horse, 8-way SPR (8 parts × 120 frames × 8 dirs)
+- Enemy visuals: ani061/063/049 (animals), enemy178/179/180 (NPC), MA_YY (human)
+- HUD: HP/MP/Stamina bars, minimap, chat, skill buttons — all functional
+- Boot time: ~31s in Editor, 0 errors
+- Memory: ~2100MB (needs optimization for mobile)
+
+For detailed session evidence and the full boot log transcript, see [`references/playmode-boot-verification.md`](references/playmode-boot-verification.md).
 
 ## Reference Files
 
@@ -280,3 +370,4 @@ For detailed schemas and examples:
 - **[tools-reference.md](references/tools-reference.md)**: Complete tool documentation with all parameters
 - **[resources-reference.md](references/resources-reference.md)**: All available resources and their data
 - **[workflows.md](references/workflows.md)**: Extended workflow examples and patterns
+- **[playmode-boot-verification.md](references/playmode-boot-verification.md)**: PlayMode gameplay verification evidence and boot log transcript

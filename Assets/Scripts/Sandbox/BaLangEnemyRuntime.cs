@@ -278,6 +278,8 @@ namespace VLTK.Sandbox
         public int level;    // per-spawn level from Region_S
         public int facing;   // curFrame from Region_S
         public int instanceId;
+        /// <summary>Live scene AI component — set after spawn for runtime position sync.</summary>
+        public BaLangEnemyAi enemyBehaviour;
     }
 
     public sealed class BaLangEnemySpawnRuntime : MonoBehaviour

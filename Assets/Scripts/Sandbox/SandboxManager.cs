@@ -2179,6 +2179,21 @@ namespace VLTK.Sandbox
                 GameplayLoop.Player.combat.position = wpos;
             }
 
+            // Sync live enemy scene positions → GameplayLoop so AI distance checks work.
+            // Uses Entries (no alloc) with cached enemyBehaviour reference.
+            if (GameplayLoop != null && EnemyRuntime != null)
+            {
+                foreach (var entry in EnemyRuntime.Entries)
+                {
+                    if (entry.enemyBehaviour == null) continue;
+                    var glActor = GameplayLoop.GetActor(10000 + entry.instanceId);
+                    if (glActor == null || glActor.isDead) continue;
+                    var scenePos = (Vector2)entry.enemyBehaviour.transform.position;
+                    glActor.worldPos = scenePos;
+                    glActor.combat.position = scenePos;
+                }
+            }
+
             GameplayLoop?.Tick(Time.deltaTime);
         }
 

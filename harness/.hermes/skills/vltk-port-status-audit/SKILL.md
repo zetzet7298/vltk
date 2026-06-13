@@ -99,6 +99,27 @@ Data layer (catalog counts) can be 100% accurate while the verification layer is
 the two separately: "counts MATCH across all domains; verification is no-op / suite gated off."
 That distinction is the whole point — it tells the user the port data is sound but the *proof* isn't.
 
+## Backend readiness reviews
+
+When auditing whether the Python backend can be connected to Unity, separate **REST domain backend readiness** from **realtime MMO server readiness**. A FastAPI backend with account/role/player/item/skill/map/combat REST endpoints and green unit/integration/E2E tests is enough to start Phase 1 client integration, but it is not a complete realtime game server until websocket/UDP session handling, server ticks, AOI/interest management, server-owned entities, movement input, and snapshot broadcast exist and are tested. See `references/backend-readiness-review.md` for the concrete review commands, test evidence to collect, and phase decision checklist.
+
+## PlayMode runtime verification is now available
+
+As of 2026-06-13, the game runs in PlayMode with full boot (profile=Full):
+- EditMode suite: **2291/2291 passed** (0 failures)
+- PlayMode: terrain renders (618 regions map 53), 812 enemies spawn, HUD works, player visual + mount functional
+- Key enabler: `useFastEditorBoot = false` in `SandboxManager.cs` (was `true`, which silently skipped terrain/NPCs/items)
+
+When auditing runtime claims, you can now verify in PlayMode directly:
+1. `manage_editor(action="play")` → wait ~31s for full boot
+2. `read_console` → check for `[MapRenderer] Rendered N regions` and `[MapEnemy] spawned N enemies`
+3. `manage_camera(action="screenshot", include_image=True)` → visual proof
+4. `vision_analyze` → verify terrain, NPC visibility, UI state
+
+The FastEditor boot pitfall: if console shows `[SandboxBoot] FastEditor: skipped map visual rendering`, the game booted in FastEditor mode (no terrain, no NPCs, no items). Fix by ensuring `useFastEditorBoot = false`.
+
+For the full boot log and screenshot evidence, see `unity-mcp-orchestrator/references/playmode-boot-verification.md`.
+
 ## After un-gating: driving the RED suite down without faking green
 
 Once you (or a prior session) define the gating symbol and the suite actually runs, the audit turns

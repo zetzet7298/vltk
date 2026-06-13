@@ -210,6 +210,8 @@ namespace VLTK.Sandbox
                 };
                 var ai = go.AddComponent<BaLangEnemyAi>();
                 ai.Initialize(npcInstance, plate);
+                // Store reference for runtime position sync (enemy AI moves → GL worldPos tracks).
+                entry.enemyBehaviour = ai;
 
                 liveEnemyCount++;
                 if (!ContainsChinese(displayName))
