@@ -7,6 +7,12 @@
 //   - LoginAsync(account, password)   → LoginResponse  (POST /v1/account/login)
 //   - ListRolesAsync(account)         → RoleListResponse (GET /v1/role/by-account/{acc})
 //   - GetPlayerStateAsync(roleId)     → PlayerStateResponse (GET /v1/player/by-role/{id})
+// Slice FS-03B mở rộng với skill (read + cast):
+//   - ListSkillsAsync(roleId)         → PlayerSkillListResponse (GET /v1/skill/by-role/{roleId})
+//   - LearnSkillAsync(req)            → PlayerSkillResponse (POST /v1/skill/learn)
+//   - LevelUpSkillAsync(roleId, skillId) → PlayerSkillResponse (POST .../level-up/{skillId})
+//   - CastSkillCheckAsync(req)        → SkillCastCheckResponse (POST /v1/skill/cast/check, stateless)
+//   - CastSkillAsync(req)             → SkillCastResponse (POST /v1/skill/cast, server-authoritative)
 //
 // Mọi method đều trả về BackendResponse<T> để khi backend trả 4xx/5xx với body
 // JSON hợp lệ, caller vẫn nhận được code/message thay vì exception.
@@ -22,6 +28,8 @@ namespace VLTK.Backend
     /// Hợp đồng backend. Mở rộng dần qua các slice:
     ///   FS-01D: GetHealthAsync, ListMapsAsync
     ///   FS-02B: LoginAsync, ListRolesAsync, GetPlayerStateAsync
+    ///   FS-03B: ListSkillsAsync, LearnSkillAsync, LevelUpSkillAsync,
+    ///           CastSkillCheckAsync, CastSkillAsync
     ///   (FS-02C+ sẽ bổ sung: CreateRoleAsync, AddExpAsync, TransLifeAsync, …)
     /// </summary>
     public interface IGameBackend
@@ -87,5 +95,59 @@ namespace VLTK.Backend
         /// </summary>
         Task<BackendResponse<PlayerStateResponse>> GetPlayerStateAsync(
             int roleId, CancellationToken ct = default);
+
+        // ---- FS-03B (skill read + cast) ----
+
+        /// <summary>
+        /// Gọi GET /v1/skill/by-role/{roleId}. Trả về danh sách skill đã học
+        /// của role (mảng rỗng nếu roleId chưa học skill nào).
+        /// </summary>
+        Task<BackendResponse<PlayerSkillListResponse>> ListSkillsAsync(
+            int roleId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/learn với body JSON
+        /// <c>{roleId, skillId, charLevel, faction}</c>. Mã lỗi phổ biến:
+        ///   404 "Kỹ năng không có trong bảng định nghĩa" — skillId lạ
+        ///   409 "Nhân vật đã học kỹ năng này" — duplicate
+        ///   422 "Chưa đủ cấp độ yêu cầu" — charLevel &lt; template.req_level
+        /// </summary>
+        Task<BackendResponse<PlayerSkillResponse>> LearnSkillAsync(
+            SkillLearnRequest req, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/by-role/{roleId}/level-up/{skillId}. Nâng cấp
+        /// skill đã học (+1 level). Mã lỗi phổ biến:
+        ///   404 "Nhân vật chưa học kỹ năng này"
+        ///   422 "Kỹ năng đã đạt cấp tối đa"
+        /// </summary>
+        Task<BackendResponse<PlayerSkillResponse>> LevelUpSkillAsync(
+            int roleId, int skillId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/cast/check (STATELESS pre-flight). Server KHÔNG
+        /// đụng DB — dùng current* + gate fields từ client để validate. Dùng
+        /// trước khi gọi <see cref="CastSkillAsync"/> để UI gate mượt, nhưng
+        /// vẫn phải reconcile với /cast vì server-authoritative lấy resource/
+        /// cooldown thật từ DB (parity FS-03A contract §4.1, H-SK2/H-SK3).
+        /// </summary>
+        Task<BackendResponse<SkillCastCheckResponse>> CastSkillCheckAsync(
+            SkillCastCheckRequest req, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi POST /v1/skill/cast (SERVER-AUTHORITATIVE). Server đọc currentMana/
+        /// Life/Stamina + last_cast_ms từ DB, KHÔNG nhận từ client (chống spoof).
+        /// Client gửi gate context (onHorse/relation/distance/weaponType/equipState/
+        /// nowMs) + skillId. Response chứa currentLife/Mana/Stamina SAU cast +
+        /// effects[] nội suy — client PHẢI dùng số server trả, không tự tính
+        /// (parity FS-03A contract §5 "Predict-reconcile").
+        /// Mã lỗi phổ biến:
+        ///   404 "Nhân vật chưa học kỹ năng này" / "Không tìm thấy trạng thái nhân vật"
+        ///   409 "Không thể thi triển kỹ năng lúc này" — gate fail
+        ///   409 "Kỹ năng đang trong thời gian hồi" — cooldown
+        ///   409 "Không đủ tài nguyên để thi triển kỹ năng" — resource
+        /// </summary>
+        Task<BackendResponse<SkillCastResponse>> CastSkillAsync(
+            SkillCastRequest req, CancellationToken ct = default);
     }
 }

@@ -12,6 +12,12 @@
 //     POST /v1/account/login              (auth — body JSON, password PLAINTEXT)
 //     GET  /v1/role/by-account/{accName}  (path param URL-encoded)
 //     GET  /v1/player/by-role/{roleId}    (path param int)
+//   FS-03B:
+//     GET  /v1/skill/by-role/{roleId}                          (list skill đã học)
+//     POST /v1/skill/learn                                     (học skill mới)
+//     POST /v1/skill/by-role/{roleId}/level-up/{skillId}       (nâng cấp skill)
+//     POST /v1/skill/cast/check                                (stateless pre-flight)
+//     POST /v1/skill/cast                                      (server-authoritative)
 //
 // Slice tiếp theo sẽ thêm CreateRoleAsync, AddExpAsync, TransLifeAsync, …
 // -----------------------------------------------------------------------------
@@ -152,6 +158,157 @@ namespace VLTK.Backend.Rest
                 url: url,
                 queryParams: null,
                 bodyJson: null,
+                isEnvelope: true,
+                ct: ct);
+        }
+
+        // ---- FS-03B (skill read + cast) ----
+
+        public Task<BackendResponse<PlayerSkillListResponse>> ListSkillsAsync(
+            int roleId, CancellationToken ct = default)
+        {
+            if (roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillListResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            string url = Config.ResolveApiUrl("skill/by-role/" + roleId.ToString());
+            return ExecuteAsync<PlayerSkillListResponse>(
+                method: "GET",
+                url: url,
+                queryParams: null,
+                bodyJson: null,
+                isEnvelope: true,
+                ct: ct);
+        }
+
+        public Task<BackendResponse<PlayerSkillResponse>> LearnSkillAsync(
+            SkillLearnRequest req, CancellationToken ct = default)
+        {
+            if (req == null)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "req không được null"));
+            }
+            if (req.roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            if (req.skillId <= 0)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "skillId phải > 0"));
+            }
+            if (req.charLevel < 1 || req.charLevel > 200)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "charLevel phải trong [1..200]"));
+            }
+            // faction: -1 (chưa nhập phái) hoặc 0..9 — Pydantic cũng chấp nhận -1.
+            if (req.faction < -1 || req.faction > 9)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "faction phải trong [-1..9]"));
+            }
+            string url = Config.ResolveApiUrl("skill/learn");
+            return ExecuteAsync<PlayerSkillResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: req.ToJson(),
+                isEnvelope: true,
+                ct: ct);
+        }
+
+        public Task<BackendResponse<PlayerSkillResponse>> LevelUpSkillAsync(
+            int roleId, int skillId, CancellationToken ct = default)
+        {
+            if (roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            if (skillId <= 0)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "skillId phải > 0"));
+            }
+            // /v1/skill/by-role/{roleId}/level-up/{skillId} — path params int.
+            string url = Config.ResolveApiUrl(
+                "skill/by-role/" + roleId.ToString() + "/level-up/" + skillId.ToString());
+            return ExecuteAsync<PlayerSkillResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: null, // body rỗng — toàn bộ state nằm trong URL
+                isEnvelope: true,
+                ct: ct);
+        }
+
+        public Task<BackendResponse<SkillCastCheckResponse>> CastSkillCheckAsync(
+            SkillCastCheckRequest req, CancellationToken ct = default)
+        {
+            if (req == null)
+            {
+                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
+                    "validation_error", "req không được null"));
+            }
+            if (req.roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            if (req.skillId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
+                    "validation_error", "skillId phải > 0"));
+            }
+            // nowMs >= 1 (parity backend Pydantic constraint).
+            if (req.nowMs < 1)
+            {
+                return Task.FromResult(BackendResponse<SkillCastCheckResponse>.Failure(
+                    "validation_error", "nowMs phải >= 1"));
+            }
+            string url = Config.ResolveApiUrl("skill/cast/check");
+            return ExecuteAsync<SkillCastCheckResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: req.ToJson(),
+                isEnvelope: true,
+                ct: ct);
+        }
+
+        public Task<BackendResponse<SkillCastResponse>> CastSkillAsync(
+            SkillCastRequest req, CancellationToken ct = default)
+        {
+            if (req == null)
+            {
+                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
+                    "validation_error", "req không được null"));
+            }
+            if (req.roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            if (req.skillId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
+                    "validation_error", "skillId phải > 0"));
+            }
+            if (req.nowMs < 1)
+            {
+                return Task.FromResult(BackendResponse<SkillCastResponse>.Failure(
+                    "validation_error", "nowMs phải >= 1"));
+            }
+            string url = Config.ResolveApiUrl("skill/cast");
+            return ExecuteAsync<SkillCastResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: req.ToJson(),
                 isEnvelope: true,
                 ct: ct);
         }
