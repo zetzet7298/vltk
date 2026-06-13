@@ -7,6 +7,10 @@
 //   - LoginAsync(account, password)   → LoginResponse  (POST /v1/account/login)
 //   - ListRolesAsync(account)         → RoleListResponse (GET /v1/role/by-account/{acc})
 //   - GetPlayerStateAsync(roleId)     → PlayerStateResponse (GET /v1/player/by-role/{id})
+// Slice FS-02C mở rộng với enter map + position + items:
+//   - EnterMapAsync(EnterMapRequest)  → SceneResponse (POST /v1/map/enter)
+//   - GetMapPositionAsync(roleId)     → SceneResponse (GET /v1/map/position/{id})
+//   - ListItemsAsync(roleId)          → ItemListResponse (GET /v1/item/by-role/{id})
 //
 // Mọi method đều trả về BackendResponse<T> để khi backend trả 4xx/5xx với body
 // JSON hợp lệ, caller vẫn nhận được code/message thay vì exception.
@@ -86,6 +90,29 @@ namespace VLTK.Backend
         /// state (chưa gọi POST /v1/player).
         /// </summary>
         Task<BackendResponse<PlayerStateResponse>> GetPlayerStateAsync(
+            int roleId, CancellationToken ct = default);
+
+        // ---- FS-02C (enter map + position + items) ----
+
+        /// <summary>
+        /// Gọi POST /v1/map/enter (body=EnterMapRequest). Server đổi nhân vật
+        /// sang bản đồ mới và trả về SceneResponse (id/roleId/mapId/posX/posY).
+        /// </summary>
+        Task<BackendResponse<SceneResponse>> EnterMapAsync(
+            EnterMapRequest request, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi GET /v1/map/position/{roleId}. Trả về SceneResponse vị trí hiện
+        /// tại của nhân vật; null/empty roleId → trả Failure("invalid_arg").
+        /// </summary>
+        Task<BackendResponse<SceneResponse>> GetMapPositionAsync(
+            int roleId, CancellationToken ct = default);
+
+        /// <summary>
+        /// Gọi GET /v1/item/by-role/{roleId}. Trả về ItemListResponse (roleId +
+        /// danh sách ItemResponse). roleId phải &gt; 0; nếu không → Failure.
+        /// </summary>
+        Task<BackendResponse<ItemListResponse>> ListItemsAsync(
             int roleId, CancellationToken ct = default);
     }
 }
