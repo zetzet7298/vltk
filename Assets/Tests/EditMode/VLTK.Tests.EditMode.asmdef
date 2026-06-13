@@ -9,7 +9,8 @@
         "VLTK.Sandbox",
         "VLTK.UI",
         "VLTK.Resources",
-        "VLTK.Sprites"
+        "VLTK.Sprites",
+        "VLTK.Backend"
     ],
     "includePlatforms": [
         "Editor"
