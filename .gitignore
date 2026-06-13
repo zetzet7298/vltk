@@ -188,3 +188,8 @@ Assets/Screenshots/*.png.meta
 .worktrees/
 harness-be/
 backend/
+
+# ─────────────────────────────────────────────────
+# Static HTML Gallery
+# ─────────────────────────────────────────────────
+html/
