@@ -106,5 +106,29 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(service.Get(1872));
             Assert.AreEqual("\\script\\skill\\special\\xiancaolu.lua", service.Get(1872).levelSetScript);
         }
+
+        // CTS-01: assert a known Vietnamese skill name from PcSkill/specialskills.txt
+        // is loaded by PcSpecialSkillParser (ReadLinesTcvn3) without mojibake.
+        // Skill #1 = "Công kích vật lý" — Vietnamese diacritics must round-trip
+        // cleanly and contain no U+FFFD replacement char.
+        [Test]
+        public void VietnameseSkillName_LoadsFromSpecialskills_WithoutMojibake()
+        {
+            var rows = PcSpecialSkillParser.ParseFile(SpecialSkillPath);
+            Assert.IsTrue(rows.Count > 0, "Specialskills file must yield at least 1 row");
+
+            PcSpecialSkillEntry skill1 = null;
+            foreach (var r in rows)
+            {
+                if (r != null && r.skillId == 1) { skill1 = r; break; }
+            }
+            Assert.IsNotNull(skill1, "specialskills.txt must contain skill id=1");
+
+            string name = skill1.nameRaw ?? string.Empty;
+            Assert.IsFalse(name.Contains('\uFFFD'),
+                "nameRaw must not contain U+FFFD (mojibake); got '" + name + "'");
+            Assert.IsTrue(name.Contains("Công kích vật lý"),
+                "nameRaw must contain the expected Vietnamese 'Công kích vật lý'; got '" + name.Trim() + "'");
+        }
     }
 }

@@ -161,6 +161,30 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, rows.Count);
         }
 
+        // CTS-01: normal.txt is genuinely Chinese GB2312 (item equipment data,
+        // not Vietnamese TCVN3 — see PcNormalSpawnParser comment). The
+        // "no-mojibake" guarantee therefore applies to the Chinese name column.
+        // Assert the first row's name "梦龙之正黄僧帽" decodes cleanly and contains
+        // no U+FFFD replacement char, proving the GBK path is still byte-clean
+        // (the CTS-01 systemic #12 wave tried TCVN3 here, but the file is hanzi,
+        // so it was reverted in wave4 — see commit 8d429d831).
+        [Test]
+        public void ChineseItemName_LoadsFromNormalSample_WithoutMojibake()
+        {
+            var path = LocateSamplePath();
+            if (path == null) { Assert.Inconclusive("missing normal_sample.txt"); return; }
+
+            var rows = PcNormalSpawnParser.ParseFile(path);
+            Assert.IsTrue(rows.Count > 0, "normal_sample.txt must yield at least 1 row");
+
+            string name = rows[0].nameRaw ?? string.Empty;
+            Assert.IsFalse(name.Contains('\uFFFD'),
+                "nameRaw must not contain U+FFFD (mojibake); got '" + name + "'");
+            Assert.AreEqual("梦龙之正黄僧帽", name,
+                "First row's name must match the canonical Chinese form; " +
+                "normal.txt is GB2312, not TCVN3 — do NOT force TCVN3 here.");
+        }
+
         private static string LocateSamplePath()
         {
             var repoRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
