@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using VLTK.Model;
@@ -100,6 +102,70 @@ namespace VLTK.Tests.Sandbox
             Assert.That(level30.First(MagicAttributeKind.AttackSpeedV).value1, Is.EqualTo(65));
             Assert.That(level30.First(MagicAttributeKind.ManaMaxP).value1, Is.EqualTo(245));
             Assert.That(level30.First(MagicAttributeKind.LightingEnhanceP).value1, Is.EqualTo(100));
+        }
+
+
+        // CTS-04: catalog drives from PC source via PcSkillFullParser (ReadLinesTcvn3,
+        // TCVN3, not GBK auto-detect). Verify all 16 PC WuDang skill IDs (151-166)
+        // are present in the TCVN3-decoded PC skills.txt, with non-mojibake
+        // Vietnamese names (no U+FFFD replacement char).
+        [Test]
+        public void WuDangSkillIds_ArePresentInPcSourceTcvn3Catalog()
+        {
+            var dir = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Assets/StreamingAssets/Reference/PcSkill");
+            var reg = PcSkillRegistry.LoadFromDirectory(dir);
+            Assert.GreaterOrEqual(reg.Count, 1, "PcSkillRegistry must load at least 1 row from skills.txt");
+
+            var wuDangIds = new[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166 };
+            foreach (var id in wuDangIds)
+            {
+                var s = reg.Resolve(id);
+                Assert.IsNotNull(s, $"PC source must contain WuDang skill id={id} (loaded via ReadLinesTcvn3)");
+
+                string name = s.nameNormalized ?? string.Empty;
+                Assert.IsFalse(name.Contains('\uFFFD'),
+                    $"nameRaw must not contain U+FFFD (mojibake); got {name} for id={id} — " +
+                    "do NOT switch ReadLinesTcvn3 back to GBK auto-detect for skills.txt");
+                Assert.IsTrue(name.Length > 0,
+                    $"name must be non-empty for id={id} (skills.txt is TCVN3 Vietnamese)");
+            }
+        }
+
+
+        // CTS-04: skill ids match between PcCombatCatalogFactory and the canonical
+        // PC source (PcSkillFullParser). Both sides must agree on 151-166, proving
+        // the runtime catalog is in lockstep with the PC reference rather than a
+        // hand-maintained copy that could drift.
+        [Test]
+        public void WuDangFactorySkillIds_MatchPcSourceRegistry()
+        {
+            var dir = Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Assets/StreamingAssets/Reference/PcSkill");
+            var reg = PcSkillRegistry.LoadFromDirectory(dir);
+
+            var factoryIds = PcCombatCatalogFactory.CreateWuDangSkills()
+                .Select(s => s.skillId)
+                .OrderBy(id => id)
+                .ToArray();
+
+            // Walk the WuDang PC id range (151-166) and collect everything the
+            // PC source registry can resolve. PcSkillRegistry has no public key
+            // collection, so we go through Resolve() instead of touching private state.
+            var pcSourceIds = new List<int>();
+            for (int id = PcCombatCatalogFactory.WuDangMinSkillId;
+                     id <= PcCombatCatalogFactory.WuDangMaxSkillId;
+                     id++)
+            {
+                if (reg.Resolve(id) != null) pcSourceIds.Add(id);
+            }
+
+            Assert.That(factoryIds, Is.EquivalentTo(pcSourceIds),
+                "PcCombatCatalogFactory.CreateWuDangSkills() ids must match the PC source " +
+                "registry's WuDang range (151-166). Drift = someone added/removed a skill " +
+                "in one place but not the other.");
         }
     }
 }
