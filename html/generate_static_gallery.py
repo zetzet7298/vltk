@@ -18,7 +18,11 @@ ITEMS_IMG_DIR = IMAGES_DIR / "items"
 NPCS_IMG_DIR = IMAGES_DIR / "npcs"
 CHARS_IMG_DIR = IMAGES_DIR / "characters"
 
-# Create directories
+# Clean up existing images folder to remove old non-ascii names
+if IMAGES_DIR.exists():
+    shutil.rmtree(IMAGES_DIR)
+
+# Re-create directories
 ITEMS_IMG_DIR.mkdir(parents=True, exist_ok=True)
 NPCS_IMG_DIR.mkdir(parents=True, exist_ok=True)
 CHARS_IMG_DIR.mkdir(parents=True, exist_ok=True)
@@ -111,8 +115,23 @@ def extract_frame_0(spr_path_str, out_png_path_str):
         ex.write_png_rgba(out_png_path, width, height, rgba)
         return True
     except Exception as e:
-        # print(f"Error extracting {spr_path_str}: {e}")
         return False
+
+# Category to ASCII Slug mapping to avoid URL encoding issues on web servers
+category_slugs = {
+    "Áo giáp": "ao_giap",
+    "Nón": "non",
+    "Giày": "giay",
+    "Bao tay": "bao_tay",
+    "Đai lưng": "dai_lung",
+    "Dây chuyền": "day_chuyen",
+    "Nhẫn": "nhan",
+    "Ngọc bội": "ngoc_boi",
+    "Vũ khí cận chiến": "vu_khi_can_chien",
+    "Vũ khí tầm xa": "vu_khi_tam_xa",
+    "Quest Items": "quest_items",
+    "Magic Items": "magic_items",
+}
 
 # ==================== STEP 1: PARSE CONFIGS ====================
 print("Parsing equipment configurations...")
@@ -158,7 +177,8 @@ for cat_name, rel in equip_files.items():
             
         # Try resolving and extracting
         spr_disk = resolve_spr_path(spr_logical)
-        png_rel_path = f"items/{cat_name}_L{level}_{idx}.png"
+        slug = category_slugs.get(cat_name, "item")
+        png_rel_path = f"items/{slug}_L{level}_{idx}.png"
         png_abs_path = IMAGES_DIR / png_rel_path
         
         success = False
@@ -386,15 +406,6 @@ print(f"Loaded: NPCs={len(npc_list)}, Bosses={len(boss_list)}, Monsters={len(mon
 # ==================== STEP 3: PLAYER CHARACTERS ====================
 print("Processing player characters...")
 player_chars = []
-# Male Selection Screen & Novices
-# Novices: MA_BD_001_ST01.spr, FM_BD_001_ST01.spr
-# Sects/Elements:
-# Kim: MA_BD_002_ST01 (Male), FM_BD_002_ST01 (Female)
-# Mộc: MA_BD_004_ST01, FM_BD_004_ST01
-# Thủy: MA_BD_006_ST01, FM_BD_006_ST01
-# Hỏa: MA_BD_008_ST01, FM_BD_008_ST01
-# Thổ: MA_BD_010_ST01, FM_BD_010_ST01
-
 char_sprites = {
     "Nam Tân Thủ (Novice)": ("spr/npcres/man/ma_bd_001_st01.spr", "Tân Thủ"),
     "Nữ Tân Thủ (Novice)": ("spr/npcres/woman/fm_bd_001_st01.spr", "Tân Thủ"),
@@ -637,17 +648,28 @@ html_content += """
             // Show active tab
             document.getElementById(tabId).classList.add('active');
             document.getElementById('btn-' + tabId).classList.add('active');
+            
+            // Trigger filter update to respect the newly active tab
+            filterContent();
+        }
+
+        function getActiveItemCategory() {
+            let activeBtn = document.querySelector('.item-cat-btn.bg-amber-600');
+            return activeBtn ? activeBtn.innerText : null;
+        }
+
+        function getActiveNpcCategory() {
+            let activeBtn = document.querySelector('.npc-cat-btn.bg-amber-600');
+            if (activeBtn) {
+                let text = activeBtn.innerText;
+                if (text.includes('Thương nhân')) return 'NPC';
+                if (text.includes('Boss')) return 'Boss';
+                if (text.includes('Quái vật')) return 'Monster';
+            }
+            return null;
         }
 
         function filterItems(category) {
-            // Filter grid items by data-category
-            document.querySelectorAll('.item-card').forEach(c => {
-                if (c.getAttribute('data-category') === category) {
-                    c.style.display = 'flex';
-                } else {
-                    c.style.display = 'none';
-                }
-            });
             // Update button styles
             document.querySelectorAll('.item-cat-btn').forEach(btn => {
                 if (btn.innerText === category) {
@@ -658,17 +680,11 @@ html_content += """
                     btn.classList.add('bg-gray-800', 'text-gray-400');
                 }
             });
+            // Apply filtering
+            filterContent();
         }
 
         function filterNpcs(category) {
-            // Filter grid npcs by data-category
-            document.querySelectorAll('.npc-card').forEach(c => {
-                if (c.getAttribute('data-category') === category) {
-                    c.style.display = 'flex';
-                } else {
-                    c.style.display = 'none';
-                }
-            });
             // Update button styles
             document.querySelectorAll('.npc-cat-btn').forEach(btn => {
                 if (btn.innerText.includes(category) || (category === 'NPC' && btn.innerText.includes('Thương nhân'))) {
@@ -679,38 +695,49 @@ html_content += """
                     btn.classList.add('bg-gray-800', 'text-gray-400');
                 }
             });
+            // Apply filtering
+            filterContent();
         }
 
         function filterContent() {
             let input = document.getElementById('searchInput').value.toLowerCase();
+            let activeTabBtn = document.querySelector('.tab-btn.active');
+            if (!activeTabBtn) return;
             
-            // Filter items, npcs, characters by name
-            document.querySelectorAll('.item-card').forEach(c => {
-                let name = c.getAttribute('data-name').toLowerCase();
-                if (name.includes(input)) {
-                    c.style.display = 'flex';
-                } else {
-                    c.style.display = 'none';
-                }
-            });
-
-            document.querySelectorAll('.npc-card').forEach(c => {
-                let name = c.getAttribute('data-name').toLowerCase();
-                if (name.includes(input)) {
-                    c.style.display = 'flex';
-                } else {
-                    c.style.display = 'none';
-                }
-            });
-
-            document.querySelectorAll('.char-card').forEach(c => {
-                let name = c.getAttribute('data-name').toLowerCase();
-                if (name.includes(input)) {
-                    c.style.display = 'flex';
-                } else {
-                    c.style.display = 'none';
-                }
-            });
+            let activeTab = activeTabBtn.id;
+            
+            if (activeTab === 'btn-tab-items') {
+                let activeCat = getActiveItemCategory();
+                document.querySelectorAll('.item-card').forEach(c => {
+                    let name = c.getAttribute('data-name').toLowerCase();
+                    let cat = c.getAttribute('data-category');
+                    if (cat === activeCat && (input === '' || name.includes(input))) {
+                        c.style.display = 'flex';
+                    } else {
+                        c.style.display = 'none';
+                    }
+                });
+            } else if (activeTab === 'btn-tab-npcs') {
+                let activeCat = getActiveNpcCategory();
+                document.querySelectorAll('.npc-card').forEach(c => {
+                    let name = c.getAttribute('data-name').toLowerCase();
+                    let cat = c.getAttribute('data-category');
+                    if (cat === activeCat && (input === '' || name.includes(input))) {
+                        c.style.display = 'flex';
+                    } else {
+                        c.style.display = 'none';
+                    }
+                });
+            } else if (activeTab === 'btn-tab-characters') {
+                document.querySelectorAll('.char-card').forEach(c => {
+                    let name = c.getAttribute('data-name').toLowerCase();
+                    if (input === '' || name.includes(input)) {
+                        c.style.display = 'flex';
+                    } else {
+                        c.style.display = 'none';
+                    }
+                });
+            }
         }
 
         // Initialize defaults
