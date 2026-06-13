@@ -126,7 +126,7 @@ namespace VLTK.Sandbox
         public int defaultMapId = BaLangHuyenMapId;
         public bool loadDefaultMapOnBoot = true;
         public SandboxBootProfile bootProfile = SandboxBootProfile.Full;
-        public bool useFastEditorBoot = true;
+        public bool useFastEditorBoot = false;
         public bool loadOptionalServicesInFastEditorBoot = false;
         public bool loadDefaultMapInFastEditorBoot = true;
         public bool skipMapVisualsInFastEditorBoot = true;
