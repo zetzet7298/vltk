@@ -5,6 +5,9 @@
 // với IsSuccess=true và data hợp lệ. Dùng cho:
 //   - Runtime offline (SandboxManager không cần thay đổi khi useMock=true)
 //   - EditMode test không cần server thật
+//
+// Mock auth flow: trả về LoginResponse với accName echo, một role seeded
+// (`Vo_Si_Test`), và PlayerStateResponse với stat Kim mặc định (35/25/25/15).
 // -----------------------------------------------------------------------------
 
 using System;
@@ -28,6 +31,8 @@ namespace VLTK.Backend.Mock
         {
             Config = config != null ? config : throw new ArgumentNullException(nameof(config));
         }
+
+        // ---- FS-01D ----
 
         public Task<BackendResponse<HealthResponse>> GetHealthAsync(CancellationToken ct = default)
         {
@@ -84,6 +89,108 @@ namespace VLTK.Backend.Mock
                 maps = maps,
             };
             return Task.FromResult(new BackendResponse<MapListResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
+
+        // ---- FS-02B ----
+
+        public Task<BackendResponse<LoginResponse>> LoginAsync(
+            string accName,
+            string password,
+            string otp = null,
+            string clientIp = null,
+            CancellationToken ct = default)
+        {
+            // Mock: trả về LoginResponse với accName echo, không validate
+            // password (mock chỉ cần trả về đúng shape cho caller sử dụng).
+            if (string.IsNullOrEmpty(accName))
+            {
+                return Task.FromResult(BackendResponse<LoginResponse>.Failure(
+                    "validation_error", "accName không được rỗng"));
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                return Task.FromResult(BackendResponse<LoginResponse>.Failure(
+                    "validation_error", "password không được rỗng"));
+            }
+            var data = new LoginResponse
+            {
+                accName = accName,
+                serviceFlag = 0,
+                extPoint = 0,
+            };
+            return Task.FromResult(new BackendResponse<LoginResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
+
+        public Task<BackendResponse<RoleListResponse>> ListRolesAsync(
+            string accName, CancellationToken ct = default)
+        {
+            if (string.IsNullOrEmpty(accName))
+            {
+                return Task.FromResult(BackendResponse<RoleListResponse>.Failure(
+                    "validation_error", "accName không được rỗng"));
+            }
+            // Mock: trả về 1 role seeded (id=1, Kim) cho account bất kỳ.
+            // Trong thực tế, account chưa tạo role sẽ trả về roles=[]; mock giữ
+            // 1 role để caller test thấy đủ luồng List → GetPlayer.
+            var role = new RoleResponse
+            {
+                id = 1,
+                roleName = "Vo_Si_Mock",
+                account = accName,
+                faction = 0,
+                factionName = "Thiếu Lâm",
+                level = 1,
+            };
+            var data = new RoleListResponse
+            {
+                account = accName,
+                roles = new List<RoleResponse> { role },
+            };
+            return Task.FromResult(new BackendResponse<RoleListResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = data,
+            });
+        }
+
+        public Task<BackendResponse<PlayerStateResponse>> GetPlayerStateAsync(
+            int roleId, CancellationToken ct = default)
+        {
+            if (roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<PlayerStateResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+            // Stat Kim mặc định (35/25/25/15) — parity với backend task_head.lua:79-82.
+            var data = new PlayerStateResponse
+            {
+                id = 1,
+                roleId = roleId,
+                level = 1,
+                exp = 0,
+                transLife = 0,
+                freePoint = 0,
+                magicPoint = 0,
+                strength = 35,
+                dexterity = 25,
+                vitality = 25,
+                spirit = 15,
+                series = 0,
+                money = 0,
+                repute = 0,
+            };
+            return Task.FromResult(new BackendResponse<PlayerStateResponse>
             {
                 code = "200",
                 message = "Mock",

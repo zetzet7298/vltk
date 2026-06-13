@@ -4,10 +4,16 @@
 // IHttpTransport — nhờ đó EditMode test có thể thay thế bằng FakeHttpTransport
 // (xem VLTK.Backend.Tests).
 //
-// Slice FS-01D chỉ có 2 endpoint:
-//   - GET  /health  (root, không có /v1)
-//   - GET  /v1/map  (danh mục bản đồ)
-// Endpoint nào ngoài 2 này chưa được port; mở rộng dần trong các slice sau.
+// Endpoints hiện có:
+//   FS-01D:
+//     GET  /health                        (root, không có /v1)
+//     GET  /v1/map                        (danh mục bản đồ)
+//   FS-02B:
+//     POST /v1/account/login              (auth — body JSON, password PLAINTEXT)
+//     GET  /v1/role/by-account/{accName}  (path param URL-encoded)
+//     GET  /v1/player/by-role/{roleId}    (path param int)
+//
+// Slice tiếp theo sẽ thêm CreateRoleAsync, AddExpAsync, TransLifeAsync, …
 // -----------------------------------------------------------------------------
 
 using System;
@@ -41,6 +47,8 @@ namespace VLTK.Backend.Rest
             _transport = transport != null ? transport : throw new ArgumentNullException(nameof(transport));
         }
 
+        // ---- FS-01D ----
+
         public Task<BackendResponse<HealthResponse>> GetHealthAsync(CancellationToken ct = default)
         {
             string url = Config.ResolveRootUrl("health");
@@ -68,6 +76,83 @@ namespace VLTK.Backend.Rest
                 queryParams: q,
                 bodyJson: null,
                 isEnvelope: true, // /v1/map trả DataResponse[MapListResponse]
+                ct: ct);
+        }
+
+        // ---- FS-02B ----
+
+        public Task<BackendResponse<LoginResponse>> LoginAsync(
+            string accName,
+            string password,
+            string otp = null,
+            string clientIp = null,
+            CancellationToken ct = default)
+        {
+            // Validate tối thiểu trước khi gửi để tránh round-trip vô ích và
+            // để test/mocking thấy được lỗi ngay tại facade thay vì đợi backend
+            // trả 422.
+            if (string.IsNullOrEmpty(accName))
+            {
+                return Task.FromResult(BackendResponse<LoginResponse>.Failure(
+                    "validation_error", "accName không được rỗng"));
+            }
+            if (string.IsNullOrEmpty(password))
+            {
+                return Task.FromResult(BackendResponse<LoginResponse>.Failure(
+                    "validation_error", "password không được rỗng"));
+            }
+
+            string url = Config.ResolveApiUrl("account/login");
+            var req = new LoginRequest(accName, password, otp, clientIp);
+            return ExecuteAsync<LoginResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: req.ToJson(),
+                isEnvelope: true, // /v1/account/login trả DataResponse[LoginResponse]
+                ct: ct);
+        }
+
+        public Task<BackendResponse<RoleListResponse>> ListRolesAsync(
+            string accName, CancellationToken ct = default)
+        {
+            if (string.IsNullOrEmpty(accName))
+            {
+                return Task.FromResult(BackendResponse<RoleListResponse>.Failure(
+                    "validation_error", "accName không được rỗng"));
+            }
+
+            // Path param URL-encoded để accName có ký tự đặc biệt (Unicode
+            // tiếng Việt, dấu cách, ký tự reserved) vẫn parse đúng ở FastAPI.
+            string url = Config.ResolveApiUrl(
+                "role/by-account/" + UnityWebRequest.EscapeURL(accName));
+            return ExecuteAsync<RoleListResponse>(
+                method: "GET",
+                url: url,
+                queryParams: null,
+                bodyJson: null,
+                isEnvelope: true,
+                ct: ct);
+        }
+
+        public Task<BackendResponse<PlayerStateResponse>> GetPlayerStateAsync(
+            int roleId, CancellationToken ct = default)
+        {
+            if (roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<PlayerStateResponse>.Failure(
+                    "validation_error", "roleId phải > 0"));
+            }
+
+            // roleId là int từ server, không cần EscapeURL nhưng vẫn nên qua
+            // ToString() để giữ format nhất quán.
+            string url = Config.ResolveApiUrl("player/by-role/" + roleId.ToString());
+            return ExecuteAsync<PlayerStateResponse>(
+                method: "GET",
+                url: url,
+                queryParams: null,
+                bodyJson: null,
+                isEnvelope: true,
                 ct: ct);
         }
 
