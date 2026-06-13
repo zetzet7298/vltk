@@ -12,6 +12,10 @@
 //     POST /v1/account/login              (auth — body JSON, password PLAINTEXT)
 //     GET  /v1/role/by-account/{accName}  (path param URL-encoded)
 //     GET  /v1/player/by-role/{roleId}    (path param int)
+//   FS-02C:
+//     POST /v1/map/enter                  (body=EnterMapRequest → SceneResponse)
+//     GET  /v1/map/position/{role_id}     (→ SceneResponse)
+//     GET  /v1/item/by-role/{role_id}     (→ ItemListResponse)
 //
 // Slice tiếp theo sẽ thêm CreateRoleAsync, AddExpAsync, TransLifeAsync, …
 // -----------------------------------------------------------------------------
@@ -153,6 +157,66 @@ namespace VLTK.Backend.Rest
                 queryParams: null,
                 bodyJson: null,
                 isEnvelope: true,
+                ct: ct);
+        }
+
+        // ---- FS-02C ----
+
+        public Task<BackendResponse<SceneResponse>> EnterMapAsync(
+            EnterMapRequest request, CancellationToken ct = default)
+        {
+            if (request == null)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", "EnterMapRequest is null"));
+            }
+            string url = Config.ResolveApiUrl("map/enter");
+            // Backend dùng CamelCaseModel + extra="forbid" → serialize bằng
+            // Newtonsoft với camelCase (mặc định) để field khớp alias của
+            // backend. Null request đã được chặn ở trên.
+            string bodyJson = JsonConvert.SerializeObject(request);
+            return ExecuteAsync<SceneResponse>(
+                method: "POST",
+                url: url,
+                queryParams: null,
+                bodyJson: bodyJson,
+                isEnvelope: true, // /v1/map/enter trả DataResponse[SceneResponse]
+                ct: ct);
+        }
+
+        public Task<BackendResponse<SceneResponse>> GetMapPositionAsync(
+            int roleId, CancellationToken ct = default)
+        {
+            if (roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<SceneResponse>.Failure(
+                    "invalid_arg", $"roleId phải > 0; got {roleId}"));
+            }
+            string url = Config.ResolveApiUrl($"map/position/{roleId}");
+            return ExecuteAsync<SceneResponse>(
+                method: "GET",
+                url: url,
+                queryParams: null,
+                bodyJson: null,
+                isEnvelope: true, // /v1/map/position/{id} trả DataResponse[SceneResponse]
+                ct: ct);
+        }
+
+        public Task<BackendResponse<ItemListResponse>> ListItemsAsync(
+            int roleId, CancellationToken ct = default)
+        {
+            if (roleId <= 0)
+            {
+                return Task.FromResult(BackendResponse<ItemListResponse>.Failure(
+                    "invalid_arg", $"roleId phải > 0; got {roleId}"));
+            }
+            string url = Config.ResolveApiUrl($"item/by-role/{roleId}");
+            return ExecuteAsync<ItemListResponse>(
+                method: "GET",
+                url: url,
+                queryParams: null,
+                bodyJson: null,
+                isEnvelope: true, // /v1/item/by-role/{id} trả DataResponse[ItemListResponse]
                 ct: ct);
         }
 
