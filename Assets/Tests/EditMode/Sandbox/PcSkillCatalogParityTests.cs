@@ -133,5 +133,23 @@ namespace VLTK.Tests.Sandbox
                 Debug.Log($"Passed PC parity icon test for all {count} sect skills.");
             }
         }
+
+        // CTS-01: assert a known Vietnamese skill name from PcSkill/skills.txt is
+        // loaded by PcSkillFullParser (ReadLinesTcvn3) without mojibake. The
+        // TCVN3 decode of skill #1 yields "Công kích vật lý" — Vietnamese diacritics
+        // must round-trip cleanly and contain no U+FFFD replacement char.
+        [Test]
+        public void VietnameseSkillName_LoadsFromPcSkillFull_WithoutMojibake()
+        {
+            Assert.IsNotNull(_pcSkillsFull, "Setup must load PcSkillRegistry from Reference/PcSkill");
+            var row = _pcSkillsFull.Resolve(1);
+            Assert.IsNotNull(row, "PcSkillFull must contain skill id=1 from skills.txt");
+
+            string name = row.nameRaw ?? string.Empty;
+            Assert.IsFalse(name.Contains('\uFFFD'),
+                "nameRaw must not contain U+FFFD (mojibake); got '" + name + "'");
+            Assert.IsTrue(name.Contains("Công kích vật lý"),
+                "nameRaw must contain the expected Vietnamese 'Công kích vật lý'; got '" + name.Trim() + "'");
+        }
     }
 }
