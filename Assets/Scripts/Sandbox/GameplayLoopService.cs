@@ -411,6 +411,10 @@ namespace VLTK.Sandbox
                 ProcessActorDeath(target, attacker);
         }
 
+        /// <summary>Public wrapper để CombatSkillSlotController bridge death event khi damage apply từ visual layer.</summary>
+        public void ProcessActorDeathPublic(GameplayActor victim, GameplayActor killer)
+            => ProcessActorDeath(victim, killer);
+
         private void ProcessActorDeath(GameplayActor victim, GameplayActor killer)
         {
             victim.deathTimestamp = _gameTime;

@@ -912,6 +912,25 @@ namespace VLTK.UI
             {
                 target.enemyBehaviour.SetLife(hp, showDamage: true);
 
+                // Bridge damage into GameplayLoop so EXP/silver/respawn fire correctly.
+                // Mapping: GameplayActor.actorId = 10000 + BaLangNpcEntry.instanceId (enemyId).
+                // hp = remaining HP in visual scale; compute damage dealt and apply to GL actor.
+                var glEnemy = SandboxManager.Instance?.GameplayLoop?.GetActor(10000 + target.enemyId);
+                if (glEnemy != null && !glEnemy.isDead)
+                {
+                    // Visual damage = (maxLife - hp) as fraction of maxLife, applied to GL maxLife
+                    int visualDmg = target.maxLife > 0 ? target.currentLife - hp : 0; // hp is new value
+                    if (visualDmg > 0)
+                    {
+                        int glDmg = target.maxLife > 0
+                            ? Mathf.RoundToInt((float)visualDmg / target.maxLife * glEnemy.combat.maxLife)
+                            : visualDmg;
+                        glEnemy.combat.currentLife = Mathf.Max(0, glEnemy.combat.currentLife - glDmg);
+                        if (glEnemy.combat.currentLife <= 0)
+                            SandboxManager.Instance?.GameplayLoop?.ProcessActorDeathPublic(glEnemy, SandboxManager.Instance?.GameplayLoop?.Player);
+                    }
+                }
+
                 if (skillId == 357 && skillLevel >= 11)
                 {
                     var manager = SandboxManager.Instance;

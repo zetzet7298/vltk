@@ -2178,6 +2178,7 @@ namespace VLTK.Sandbox
                 GameplayLoop.Player.worldPos = wpos;
                 GameplayLoop.Player.combat.position = wpos;
             }
+
             GameplayLoop?.Tick(Time.deltaTime);
         }
 
