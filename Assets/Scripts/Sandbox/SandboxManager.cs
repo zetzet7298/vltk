@@ -485,29 +485,73 @@ namespace VLTK.Sandbox
 
         private void InitializeSubsystems()
         {
+            // CTS-03: Initialize() null-safety + ordering. A missing dependency
+            // catalog (RegionCatalog, ItemDb, MapManager.Catalog, AssetRegistry)
+            // must NOT crash startup — SandboxManager must still become
+            // "initialized" with whatever is available so HUD/services that read
+            // via `manager?.XxxService?.Foo` keep working instead of NRE.
+            //
+            // Ordering:
+            //   1. Always-create BootReport if missing (InitSubsystem reads it).
+            //   2. Always-create subsystem root GameObjects (so child spawns find a parent).
+            //   3. Always-create AssetRegistry (UI services may read from it on Awake).
+            //   4. Always-construct MapManager (cheap; can be empty if LoadCatalog fails).
+            //   5. Try/catch each catalog/service so a single failure does not abort
+            //      the rest. Errors are recorded to BootReport + logged as warnings.
+            //   6. Set IsInitialized = true so HUD wiring proceeds regardless of
+            //      catalog completeness.
             var bootWatch = Stopwatch.StartNew();
             ActiveBootProfile = ResolveBootProfile();
+            // BootReport may already exist (Awake created it). If a caller invokes
+            // InitializeSubsystems directly without going through Awake (e.g. an
+            // EditMode test fixture or a custom boot orchestrator), create a fresh
+            // one so downstream steps that call BootReport.Record do not NRE.
+            if (BootReport == null) BootReport = new SandboxBootReport();
             BootReport?.Start(ActiveBootProfile);
 
-            InitSubsystem(SubsystemKind.Game, "Game", ref gameRoot);
-            InitSubsystem(SubsystemKind.Camera, "Camera", ref cameraRoot);
-            InitSubsystem(SubsystemKind.UI, "UI", ref uiRoot);
-            InitSubsystem(SubsystemKind.World, "World", ref worldRoot);
-            InitSubsystem(SubsystemKind.Debug, "Debug", ref debugRoot);
-            InitSubsystem(SubsystemKind.Services, "Services", ref servicesRoot);
+            try { InitSubsystem(SubsystemKind.Game, "Game", ref gameRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Game) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.Camera, "Camera", ref cameraRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Camera) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.UI, "UI", ref uiRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(UI) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.World, "World", ref worldRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(World) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.Debug, "Debug", ref debugRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Debug) failed: {e.Message}"); }
+            try { InitSubsystem(SubsystemKind.Services, "Services", ref servicesRoot); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"InitSubsystem(Services) failed: {e.Message}"); }
 
             IsInitialized = true;
 
-            EnsureSandboxCamera();
+            try { EnsureSandboxCamera(); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"EnsureSandboxCamera failed: {e.Message}"); }
 
             // M0.6: create shared registry, pass to all systems that need resource lookup
+            // (no try/catch — AssetRegistry construction is in-memory and cannot fail under
+            // normal use; if it ever does, the exception is informative and the test that
+            // called us gets a clear stack trace).
             AssetRegistry = new AssetRegistry();
-            TimedBootStep("BootstrapCombatRuntime", BootstrapCombatRuntime);
+            try { TimedBootStep("BootstrapCombatRuntime", BootstrapCombatRuntime); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"BootstrapCombatRuntime failed: {e.Message}"); }
 
-            MapManager = new MapManager(AssetRegistry);
-            TimedBootStep("MapManager.LoadCatalog", MapManager.LoadCatalog);
+            // MapManager + LoadCatalog wrapped together — if LoadCatalog throws on a
+            // missing/corrupt catalog, we keep the empty MapManager so subsequent
+            // `manager.MapManager != null` checks still hold.
+            try
+            {
+                MapManager = new MapManager(AssetRegistry);
+                try { TimedBootStep("MapManager.LoadCatalog", MapManager.LoadCatalog); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"MapManager.LoadCatalog failed: {e.Message}"); }
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"MapManager construction failed: {e.Message}");
+                MapManager = null;
+            }
 
-            // M1.2: Load region catalog
+            // M1.2: Load region catalog. SafeLoadOptionalCatalog returns null instead
+            // of throwing; we already handled that below in the original code path.
             var regionCat = LoadRegionCatalogForBoot();
             if (regionCat != null)
             {
@@ -560,29 +604,42 @@ namespace VLTK.Sandbox
                 EnsurePlayerController();
 
                 // ── New Subsystems ──────────────────────────────────
-                QuestService = new QuestService();
+                try { QuestService = new QuestService(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"new QuestService failed: {e.Message}"); }
                 ItemContractImporter importer = null;
                 bool skipItems = ActiveBootProfile == SandboxBootProfile.FastEditor && skipItemLoadingInFastEditorBoot;
                 if (!skipItems)
                 {
                     // Load PC item data via batch loader (14 categories, ~10k+ items)
                     // and script items from magicscript.txt (GM token 6/1/4890).
-                    var itemDir = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
-                    importer = LoadItemImporterForBoot(itemDir);
-                    ItemDb = new ItemDatabase(importer);
-                    LootService = new LootDropService(ItemDb);
-                    var dropRegistry = LoadDropRateRegistryForBoot(
-                        System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
-                    LootService.AttachRegistry(dropRegistry);
-                    PcSkillsFull = LoadPcSkillRegistryForBoot(
-                        System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+                    try
+                    {
+                        var itemDir = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
+                        importer = LoadItemImporterForBoot(itemDir);
+                        ItemDb = new ItemDatabase(importer);
+                        LootService = new LootDropService(ItemDb);
+                        var dropRegistry = LoadDropRateRegistryForBoot(
+                            System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
+                        LootService.AttachRegistry(dropRegistry);
+                        PcSkillsFull = LoadPcSkillRegistryForBoot(
+                            System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+                    }
+                    catch (Exception e)
+                    {
+                        SubsystemLog.Warn("Sandbox", $"Item/drop/skill loading failed: {e.Message}");
+                        importer = null;
+                        ItemDb = null;
+                        LootService = null;
+                        PcSkillsFull = null;
+                    }
                 }
                 else
                 {
                     SubsystemLog.Info("SandboxBoot", "FastEditor: skipped item/drop/skill loading.");
                 }
-                AudioService = new AudioService();
-                if (servicesRoot != null)
+                try { AudioService = new AudioService(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"new AudioService failed: {e.Message}"); }
+                if (servicesRoot != null && AudioService != null)
                     AudioService.Initialize(servicesRoot);
 
                 // Wire quest events to combat loot
@@ -911,14 +968,17 @@ namespace VLTK.Sandbox
                     };
 
                 // Build mobile UI panels
-                EnsureMobileUiPanels();
+                try { EnsureMobileUiPanels(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"EnsureMobileUiPanels failed: {e.Message}"); }
 
                 // Place player at training pentagon center immediately so it never
                 // appears at (0,0) before the map finishes loading.
-                PlacePlayerAtDefaultSpawn();
+                try { PlacePlayerAtDefaultSpawn(); }
+                catch (Exception e) { SubsystemLog.Warn("Sandbox", $"PlacePlayerAtDefaultSpawn failed: {e.Message}"); }
 
-                if (ShouldLoadDefaultMapOnBoot(ActiveBootProfile) && MapManager.Catalog.ContainsKey(defaultMapId))
-                    TimedBootStep("MapManager.LoadMap", () => MapManager.LoadMap(defaultMapId));
+                if (ShouldLoadDefaultMapOnBoot(ActiveBootProfile) && MapManager != null && MapManager.Catalog.ContainsKey(defaultMapId))
+                    try { TimedBootStep("MapManager.LoadMap", () => MapManager.LoadMap(defaultMapId)); }
+                    catch (Exception e) { SubsystemLog.Warn("Sandbox", $"MapManager.LoadMap({defaultMapId}) failed: {e.Message}"); }
             }
 
             bootWatch.Stop();
@@ -929,7 +989,9 @@ namespace VLTK.Sandbox
                 $"profile={ActiveBootProfile} in {bootWatch.ElapsedMilliseconds}ms " +
                 $"at {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
 
-            OnBootComplete?.Invoke(BootReport);
+            // Wrapped to ensure subscribers cannot crash SandboxManager boot.
+            try { OnBootComplete?.Invoke(BootReport); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"OnBootComplete subscriber threw: {e.Message}"); }
         }
 
 
