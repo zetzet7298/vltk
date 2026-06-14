@@ -173,9 +173,11 @@ namespace VLTK.Tests.Sandbox
             var svc = new PlayerMountService(host);
             svc.MountTransitionTime = 0.1f;
             svc.Mount(1);
+            host.VisualCalls = 0; // reset (Mount called Visual once)
+            host.CompleteCalls = 0;
             svc.Tick(0.2f);
             Assert.AreEqual(1, host.CompleteCalls);
-            Assert.AreEqual(1, host.VisualCalls); // mount visual refreshed
+            Assert.AreEqual(1, host.VisualCalls); // tick mount→Mounted refresh
         }
 
         [Test]

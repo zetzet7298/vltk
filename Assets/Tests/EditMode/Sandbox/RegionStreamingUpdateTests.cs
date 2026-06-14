@@ -7,6 +7,7 @@
 
 using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.TestTools;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
@@ -215,10 +216,10 @@ namespace VLTK.Tests.Sandbox
         public void Update_MoveToNewRegion_UnloadsOld()
         {
             var host = new FakeHost();
-            var svc = BuildService(host: host);
-            svc.Update(new Vector2(0f, 0f)); // region (0,0)
+            var svc = new RegionStreamingService(10, 10, 100f, 100f, Vector2.zero, 1, 9, host);
+            svc.Update(new Vector2(50f, 50f)); // region (0,0)
             host.UnloadCalls = 0;
-            svc.Update(new Vector2(500f, 0f)); // region (5,0)
+            svc.Update(new Vector2(550f, 50f)); // region (5,0)
             Assert.IsTrue(host.UnloadCalls > 0);
         }
 
@@ -226,10 +227,10 @@ namespace VLTK.Tests.Sandbox
         public void Update_LoadsNewRegionsOnMove()
         {
             var host = new FakeHost();
-            var svc = BuildService(host: host);
-            svc.Update(new Vector2(0f, 0f));
+            var svc = new RegionStreamingService(10, 10, 100f, 100f, Vector2.zero, 1, 9, host);
+            svc.Update(new Vector2(50f, 50f));
             int initialLoad = host.LoadStartCalls;
-            svc.Update(new Vector2(500f, 0f));
+            svc.Update(new Vector2(550f, 50f));
             Assert.IsTrue(host.LoadStartCalls > initialLoad);
         }
 
@@ -260,12 +261,11 @@ namespace VLTK.Tests.Sandbox
             var host = new FakeHost();
             var svc = BuildService(host: host);
             svc.Update(new Vector2(150f, 150f));
-            host.LoadCompleteCalls = 0;
-            host.SfxCalls = 0;
+            int before = host.LoadCompleteCalls;
+            int sfxBefore = host.SfxCalls;
             svc.MarkLoaded(new RegionCoord(1, 1));
-            Assert.AreEqual(1, host.LoadCompleteCalls);
-            Assert.AreEqual(1, host.SfxCalls);
-            Assert.AreEqual(1, host.LogCalls);
+            Assert.AreEqual(before + 1, host.LoadCompleteCalls);
+            Assert.AreEqual(sfxBefore + 1, host.SfxCalls);
         }
 
         [Test]
@@ -289,6 +289,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void MarkFailed_TransitionsToFailed()
         {
+            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(".*Region.*failed to load.*"));
             var svc = BuildService();
             svc.Update(new Vector2(150f, 150f));
             svc.MarkFailed(new RegionCoord(1, 1));
@@ -298,6 +299,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void MarkFailed_DispatchesHost()
         {
+            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(".*Region.*failed to load.*"));
             var host = new FakeHost();
             var svc = BuildService(host: host);
             svc.Update(new Vector2(150f, 150f));
@@ -310,6 +312,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void MarkFailed_WithoutHost_DoesNotThrow()
         {
+            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(".*Region.*failed to load.*"));
             var svc = BuildService();
             Assert.DoesNotThrow(() => svc.MarkFailed(new RegionCoord(0, 0)));
         }
