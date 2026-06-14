@@ -33,6 +33,7 @@ namespace VLTK.Sandbox
         public const string LogTag = "Attrib";
 
         private PcAttribConstRegistry _registry;
+        private IAttribConstHost _host;
         private readonly Dictionary<string, List<PcAttribConstEntry>> _sectionIndex = new();
 
         /// <summary>Sự kiện khi toàn bộ thuộc tính load xong.</summary>
@@ -40,17 +41,39 @@ namespace VLTK.Sandbox
 
         public int Count => _registry != null ? _registry.Count : 0;
 
-        public AttribConstService() { }
-
-        public AttribConstService(PcAttribConstRegistry registry)
+        public AttribConstService() : this(null, null) { }
+        public AttribConstService(PcAttribConstRegistry registry) : this(registry, null) { }
+        public AttribConstService(PcAttribConstRegistry registry, IAttribConstHost host)
         {
+            _host = host;
             AttachRegistry(registry);
         }
+
+        public void AttachHost(IAttribConstHost host) { _host = host; }
 
         public void AttachRegistry(PcAttribConstRegistry registry)
         {
             _registry = registry ?? new PcAttribConstRegistry();
             RebuildIndex();
+            if (_host != null)
+            {
+                int totalEntries = 0;
+                int sectionCount = 0;
+                if (_registry != null)
+                {
+                    foreach (var s in _registry.GetAll())
+                    {
+                        sectionCount++;
+                        totalEntries += s.data.Count + s.extras.Count;
+                    }
+                }
+                _host.OnAttribRegistryAttached(sectionCount, totalEntries);
+                _host.OnAttribLoaded(sectionCount, totalEntries, 0);
+                _host.SaveAttribCache(sectionCount, totalEntries);
+                _host.PlayAttribSFX("load");
+                _host.LogAttribEvent("<all>", "<all>", $"Load {sectionCount} section(s), {totalEntries} entries");
+                _host.ShowAttribUI("<all>", totalEntries);
+            }
         }
 
         private void RebuildIndex()
@@ -116,14 +139,24 @@ namespace VLTK.Sandbox
 
         public IReadOnlyList<PcAttribConstEntry> GetSection(string section)
         {
-            if (string.IsNullOrEmpty(section)) return Array.Empty<PcAttribConstEntry>();
+            if (string.IsNullOrEmpty(section))
+            {
+                _host?.OnAttribSectionMissing(section);
+                return Array.Empty<PcAttribConstEntry>();
+            }
             if (!_sectionIndex.TryGetValue(section, out var list))
             {
                 // Lazy build
                 BuildSection(section);
                 _sectionIndex.TryGetValue(section, out list);
             }
-            return list ?? (IReadOnlyList<PcAttribConstEntry>)Array.Empty<PcAttribConstEntry>();
+            if (list == null)
+            {
+                _host?.OnAttribSectionMissing(section);
+                return Array.Empty<PcAttribConstEntry>();
+            }
+            _host?.OnAttribSectionQueried(section, list.Count);
+            return list;
         }
 
         public IEnumerable<string> GetAllSections()
@@ -135,11 +168,20 @@ namespace VLTK.Sandbox
 
         public string GetValue(string section, string key)
         {
-            if (_registry == null) return null;
+            if (_registry == null) { _host?.OnAttribKeyMissing(section, key); return null; }
             var sec = _registry.Get(section);
-            if (sec == null) return null;
-            if (sec.data.TryGetValue(key ?? string.Empty, out var v)) return v;
-            if (sec.extras.TryGetValue(key ?? string.Empty, out v)) return v;
+            if (sec == null) { _host?.OnAttribKeyMissing(section, key); return null; }
+            if (sec.data.TryGetValue(key ?? string.Empty, out var v))
+            {
+                _host?.OnAttribKeyQueried(section, key, v);
+                return v;
+            }
+            if (sec.extras.TryGetValue(key ?? string.Empty, out v))
+            {
+                _host?.OnAttribKeyQueried(section, key, v);
+                return v;
+            }
+            _host?.OnAttribKeyMissing(section, key);
             return null;
         }
 
@@ -159,7 +201,13 @@ namespace VLTK.Sandbox
             var sec = _registry.Get(section);
             if (sec == null) return -1;
             if (sec.data.TryGetValue(key ?? string.Empty, out var v))
-                return int.TryParse(v, out int n) ? n : -1;
+            {
+                if (int.TryParse(v, out int n))
+                {
+                    _host?.OnMagicCodeResolved(section, key, n);
+                    return n;
+                }
+            }
             return -1;
         }
 
