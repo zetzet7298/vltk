@@ -3,6 +3,7 @@
 // Quản lý danh sách bạn bè, thân mật, tin nhắn.
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -36,11 +37,24 @@ namespace VLTK.Sandbox
         private readonly Dictionary<int, Dictionary<int, FriendEntry>> _byPlayer = new();
         private readonly Dictionary<int, List<string>> _messages = new();
         private int _nextFriendId = 1;
+        private IFriendHost _host;
 
         public int Count => _registry?.Count ?? 0;
 
-        public FriendService() { }
-        public FriendService(PcFriendRegistry reg) { _registry = reg ?? new PcFriendRegistry(); }
+        public event Action<int, int> OnFriendAdded; // (playerId, friendId)
+        public event Action<int, int> OnFriendRemoved;
+        public event Action<int, int, int> OnIntimacyChanged; // (playerId, friendId, newIntimacy)
+        public event Action<int, int> OnMessageSent;
+
+        public FriendService() : this(null, null) { }
+        public FriendService(PcFriendRegistry reg) : this(reg, null) { }
+        public FriendService(PcFriendRegistry reg, IFriendHost host)
+        {
+            _registry = reg ?? new PcFriendRegistry();
+            _host = host;
+        }
+
+        public void AttachHost(IFriendHost host) { _host = host; }
         public void AttachRegistry(PcFriendRegistry reg)
         {
             _registry = reg ?? new PcFriendRegistry();
@@ -79,8 +93,9 @@ namespace VLTK.Sandbox
             // Check duplicate
             foreach (var f in dict.Values)
                 if (f.friendPlayerId == friendId) return false;
+            if (dict.Count >= MaxFriends) return false;
             int id = _nextFriendId++;
-            dict[id] = new FriendEntry
+            var entry = new FriendEntry
             {
                 friendId = id,
                 friendPlayerId = friendId,
@@ -91,6 +106,15 @@ namespace VLTK.Sandbox
                 lastLoginSec = System.DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
                 intimacy = 0,
             };
+            dict[id] = entry;
+            OnFriendAdded?.Invoke(playerId, friendId);
+            if (_host != null)
+            {
+                _host.OnFriendAdded(playerId, friendId, id, entry.friendName);
+                _host.PlayFriendSFX(playerId, "add");
+                _host.LogFriendEvent(playerId, $"Thêm bạn: {entry.friendName}");
+                _host.SaveFriendList(playerId, dict.Count);
+            }
             return true;
         }
 
@@ -99,9 +123,25 @@ namespace VLTK.Sandbox
         {
             if (!_byPlayer.TryGetValue(playerId, out var dict)) return false;
             int? keyToRemove = null;
+            int? friendRecordId = null;
             foreach (var kv in dict)
-                if (kv.Value.friendPlayerId == friendId) { keyToRemove = kv.Key; break; }
-            if (keyToRemove.HasValue) return dict.Remove(keyToRemove.Value);
+                if (kv.Value.friendPlayerId == friendId) { keyToRemove = kv.Key; friendRecordId = kv.Value.friendId; break; }
+            if (keyToRemove.HasValue)
+            {
+                bool removed = dict.Remove(keyToRemove.Value);
+                if (removed)
+                {
+                    OnFriendRemoved?.Invoke(playerId, friendId);
+                    if (_host != null)
+                    {
+                        _host.OnFriendRemoved(playerId, friendId, friendRecordId ?? 0);
+                        _host.PlayFriendSFX(playerId, "remove");
+                        _host.LogFriendEvent(playerId, $"Xóa bạn: player {friendId}");
+                        _host.SaveFriendList(playerId, dict.Count);
+                    }
+                }
+                return removed;
+            }
             return false;
         }
 
@@ -130,11 +170,37 @@ namespace VLTK.Sandbox
             {
                 if (f.friendPlayerId == friendId)
                 {
+                    int prev = f.intimacy;
                     f.intimacy = System.Math.Max(0, f.intimacy + amount);
+                    int delta = f.intimacy - prev;
+                    OnIntimacyChanged?.Invoke(playerId, friendId, f.intimacy);
+                    if (_host != null)
+                    {
+                        _host.OnIntimacyChanged(playerId, friendId, f.intimacy, delta);
+                        _host.LogFriendEvent(playerId, $"Thân mật với player {friendId}: {f.intimacy} ({delta:+#;-#;0})");
+                        _host.SaveFriendList(playerId, dict.Count);
+                    }
                     return f.intimacy;
                 }
             }
             return 0;
+        }
+
+        /// <summary>Đặt trạng thái online cho friend (online/offline notification).</summary>
+        public bool SetOnline(int playerId, int friendId, bool isOnline, long lastLoginSec = 0)
+        {
+            if (!_byPlayer.TryGetValue(playerId, out var dict)) return false;
+            foreach (var f in dict.Values)
+            {
+                if (f.friendPlayerId == friendId)
+                {
+                    f.isOnline = isOnline;
+                    if (lastLoginSec > 0) f.lastLoginSec = lastLoginSec;
+                    _host?.OnFriendOnlineStatusChanged(playerId, friendId, isOnline, f.lastLoginSec);
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>Top N bạn thân theo intimacy giảm dần.</summary>
@@ -155,7 +221,10 @@ namespace VLTK.Sandbox
                 list = new List<string>();
                 _messages[friendId] = list;
             }
-            list.Add($"{playerId}:{msg}");
+            string formatted = $"{playerId}:{msg}";
+            list.Add(formatted);
+            OnMessageSent?.Invoke(playerId, friendId);
+            _host?.OnMessageSent(playerId, friendId, formatted);
             return true;
         }
 
