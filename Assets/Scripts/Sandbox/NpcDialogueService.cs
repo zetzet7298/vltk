@@ -33,7 +33,7 @@ namespace VLTK.Sandbox
     /// </summary>
     public class NpcDialogueService
     {
-        private readonly TaskFlagService _taskService;
+        private TaskFlagService _taskService; // mutable for late-attach
         private readonly Dictionary<int, List<DialogueNode>> _npcDialogues = new();
         private INpcDialogueHost _host;
         private int _currentNpcTemplateId = 0;
