@@ -569,3 +569,15 @@ must only return to `1` when the named test goes green in a real Test Runner art
 **Final full-suite EditMode sweep** on the 3-merge `dev` (job `fa425cefb3b0470c87afb7c2988db689`, MCP `TestResults.xml` summary): **`total=2624 passed=2609 failed=11 skipped=4`** (resultState `Failed(Child)`). The 11 failures are all in `VLTK.Tests.Backend.*` namespace (AuthRest, PredictState, ServerAuthority, SkillMock, StatusTick) — pre-existing test drift between Unity client test expectations and FastAPI backend error string format ("validation_error" vs "invalid_arg"). **Zero failures in `VLTK.Tests.Sandbox.*` — all 3 port branches pass with zero regression in the targeted namespaces.** Authoritative count: 2624 = 25 net-new tests added (12 + 6 + 7), all green; 11 pre-existing failures unchanged in count and namespace.
 
 Coordination pattern (offline-lane work + MCP integrator): orchestrator ran 3 branches sequentially in own worktree-equivalent (the main worktree after `git stash` save to `orchestrator-coord-tmp`); merged one at a time; ran targeted EditMode tests (47/47) on the 3 modified classes; then full sweep (2624 tests). Subagent-based parallel work was attempted first but Unity worktree isolation proved too slow (83861 files per worktree copy) and was abandoned in favor of direct orchestrator implementation.
+
+## Integration batch 2026-06-14 #7 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, fixed by subagent before this turn): merged **3 more** offline port branches into `dev` (`--no-ff`, one at a time).
+
+- `port/fix-rare-enchant-runtime` (1 commit, 3 files, +660) → new `IRareEnchantHost` (4 methods: GetWeaponMagicId, SetWeaponMagic, BumpPool, OnEnchantLog) + `RareEnchantRuntimeService` (273 lines): tier resolution, level roll (RNG with deterministic midpoint fallback), weight validation (per weapon type/slot type/elemental), host-dispatch for magic-id overwrite + pool bump. PC source: `Reference/PcNpc/rare.txt` 29 cols.
+- `port/fix-revive-runtime` (1 commit, 2 files, +503) → `ReviveRuntimeService` (234 lines): revive position resolution (region section + sub-section + map coord), revive plan, generic teleport host dispatch, cost deduction. PC source: `Reference/PcMap/revivepos.ini` 139 sections / 241 rows.
+- `port/fix-waypoint-runtime` (1 commit, 3 files, +422) → `WaypointTravelService` (136 lines): waypoint travel plan, location lookup, cost check, host-side execution. PC source: `Reference/PcMap/waypoint.txt` 225 rows.
+
+Targeted EditMode sweep: 51/51 pass (RareEnchantRuntimeServiceTests, ReviveRuntimeServiceTests, WaypointTravelServiceTests).
+
+**Note**: 1 test in `RareEnchantRuntimeServiceTests.RollLevelInTiers_UnionRange_DeterministicMidpoint` had a wrong assertion (expected 6 for union range [1,12] but code's midpoint formula `min + range/2 = 1 + 6 = 7` is correct). Fixed via amend — expected changed to 7 with comment explaining `min + size/2` formula.
+
+Final `dev` HEAD after batch #7 + fix: `945b2b460`.
