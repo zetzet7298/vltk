@@ -333,6 +333,26 @@ namespace VLTK.UI
             _chatPanel = root.Q("ChatBar");
             _chatInputRow = root.Q("ChatInputRow");
             _chatChannelIdentityBtn = root.Q("ChatChannelIdentityBtn");
+
+            // CHAT POSITION — hard-set center at bind time. Don't rely on
+            // SizeRootToScreen for chat because that path may not run, or PC
+            // safe-area padding (safeX) re-anchors it left. We want chat dead
+            // center horizontally, anchored to bottom.
+            if (_chatPanel != null)
+            {
+                _chatPanel.style.position = Position.Absolute;
+                _chatPanel.style.left = Length.Percent(50f);
+                _chatPanel.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
+                _chatPanel.style.bottom = 8f;
+            }
+            if (_chatInputRow != null)
+            {
+                _chatInputRow.style.position = Position.Absolute;
+                _chatInputRow.style.left = Length.Percent(50f);
+                _chatInputRow.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
+                _chatInputRow.style.bottom = 0f;
+                _chatInputRow.style.width = 410f;
+            }
             _hpFill = root.Q("HpBarFill");
             _mpFill = root.Q("MpBarFill");
             _staminaFill = root.Q("StaminaBarFill");
@@ -850,18 +870,14 @@ namespace VLTK.UI
             }
             if (_chatPanel != null)
             {
-                // Center horizontally; bottom anchored to safe-area bottom.
-                _chatPanel.style.left = Length.Percent(50f);
-                _chatPanel.style.right = StyleKeyword.Auto;
-                _chatPanel.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
-                _chatPanel.style.bottom = safeY + 42f;
+                // Position already set at BindElements() — center horizontally,
+                // anchored to bottom of safe area. Safe-area padding (safeY) only.
+                _chatPanel.style.bottom = safeY + 8f;
             }
             if (_chatInputRow != null)
             {
                 _chatInputRow.style.position = Position.Absolute;
-                _chatInputRow.style.left = Length.Percent(50f);
-                _chatInputRow.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
-                _chatInputRow.style.bottom = safeY + 10f;
+                _chatInputRow.style.bottom = safeY;
                 _chatInputRow.style.width = 410f;
             }
             if (_minimapPanel != null)
