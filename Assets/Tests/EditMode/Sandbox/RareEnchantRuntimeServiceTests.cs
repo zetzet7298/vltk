@@ -192,9 +192,9 @@ namespace VLTK.Tests.Sandbox
                 MakeEntry(42, 1, 5, wSword: 1),
                 MakeEntry(42, 4, 12, wSword: 1),
             };
-            var rt = new RareEnchantRuntimeService(null, null, seed: 42);
-            // union: [1, 12], mid = 6
-            Assert.AreEqual(6, rt.RollLevelInTiers(tiers));
+            var rt = new RareEnchantRuntimeService(null, null); // null seed = deterministic midpoint path
+            // union: [1, 12], size=12, midpoint formula = min + size/2 = 7
+            Assert.AreEqual(7, rt.RollLevelInTiers(tiers));
         }
 
         // --- ApplyEnchant (host dispatch) ------------------------------------
