@@ -47,25 +47,42 @@ namespace VLTK.Sandbox
         private int _karma;       // Sát khí (>0 = đỏ tên)
         private int _bangId;      // Bang hội ID (0 = chưa gia nhập)
         private int _factionId;
+        private int _actorId = 0; // 0 = uninitialized
+        private IPkCombatHost _host;
 
         public PkMode Mode => _mode;
         public int Karma => _karma;
         public bool IsRedName => _karma > 0;
+        public int ActorId => _actorId;
 
         public event Action<PkMode> OnPkModeChanged;
         public event Action<int> OnKarmaChanged;
 
-        public PkCombatService(int factionId, int bangId = 0)
+        public PkCombatService() : this(0, 0, 0, null) { }
+        public PkCombatService(int factionId, int bangId) : this(factionId, bangId, 0, null) { }
+        public PkCombatService(int factionId, int bangId, int actorId) : this(factionId, bangId, actorId, null) { }
+        public PkCombatService(int factionId, int bangId, int actorId, IPkCombatHost host)
         {
             _factionId = factionId;
             _bangId = bangId;
+            _actorId = actorId;
+            _host = host;
         }
+
+        public void AttachHost(IPkCombatHost host) { _host = host; }
 
         /// <summary>Chuyển chế độ PK.</summary>
         public void SetPkMode(PkMode mode)
         {
+            PkMode oldMode = _mode;
             _mode = mode;
             OnPkModeChanged?.Invoke(mode);
+            if (_host != null)
+            {
+                _host.OnPkModeChanged(oldMode, mode);
+                _host.LogPkEvent(_actorId, $"Chuyển chế độ PK: {ModeNameVi(oldMode)} → {ModeNameVi(mode)}");
+                _host.SaveKarma(_actorId, _karma, mode);
+            }
             SubsystemLog.Info("PK", $"Chế độ PK: {ModeNameVi(mode)}");
         }
 
@@ -123,6 +140,10 @@ namespace VLTK.Sandbox
                     break;
             }
 
+            _host?.OnAttackResolved(attacker.actorId, target.actorId, result.canAttack,
+                result.reasonVi, result.penalty, result.karmaChange);
+            if (result.canAttack) _host?.PlayPkSFX(attacker.actorId, target.actorId, _mode.ToString());
+
             return result;
         }
 
@@ -131,8 +152,18 @@ namespace VLTK.Sandbox
         {
             if (pkResult.karmaChange > 0)
             {
+                int prevKarma = _karma;
                 _karma += pkResult.karmaChange;
+                bool wasRed = prevKarma > 0;
+                bool nowRed = _karma > 0;
                 OnKarmaChanged?.Invoke(_karma);
+                if (_host != null)
+                {
+                    _host.OnKarmaChanged(_karma, pkResult.karmaChange, nowRed);
+                    if (!wasRed && nowRed) _host.OnBecameRedName(_actorId, _karma);
+                    _host.SaveKarma(_actorId, _karma, _mode);
+                    _host.LogPkEvent(_actorId, $"Sát khí +{pkResult.karmaChange}, hiện tại: {_karma}");
+                }
                 SubsystemLog.Info("PK", $"Sát khí +{pkResult.karmaChange}, hiện tại: {_karma}");
             }
         }
@@ -140,8 +171,16 @@ namespace VLTK.Sandbox
         /// <summary>Giảm sát khí theo thời gian (offline/online).</summary>
         public void ReduceKarma(int amount)
         {
+            int prevKarma = _karma;
             _karma = Mathf.Max(0, _karma - amount);
             OnKarmaChanged?.Invoke(_karma);
+            if (_host != null)
+            {
+                _host.OnKarmaChanged(_karma, -amount, _karma > 0);
+                // Detect red-name clear
+                if (prevKarma > 0 && _karma == 0) _host.OnClearedRedName(_actorId);
+                _host.SaveKarma(_actorId, _karma, _mode);
+            }
         }
 
         private static string ModeNameVi(PkMode mode) => mode switch
