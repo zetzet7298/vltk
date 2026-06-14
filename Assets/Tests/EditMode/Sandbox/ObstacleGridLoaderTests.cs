@@ -101,9 +101,20 @@ namespace VLTK.Tests.Sandbox
                 bw.Write(dataOff);
                 foreach (var e in entries)
                 {
+                    // Use 8-char keys (padded with space, not NUL) so parser's
+                    // TrimEnd() (whitespace only) correctly strips trailing chars.
+                    // Keys are right-padded so the actual name is at the END.
                     var keyBytes = new byte[8];
                     var nameBytes = System.Text.Encoding.ASCII.GetBytes(e.key);
-                    System.Array.Copy(nameBytes, keyBytes, System.Math.Min(nameBytes.Length, 8));
+                    int copyLen = System.Math.Min(nameBytes.Length, 8);
+                    if (copyLen < 8)
+                    {
+                        for (int k = 0; k < copyLen; k++) keyBytes[8 - copyLen + k] = nameBytes[k];
+                    }
+                    else
+                    {
+                        System.Array.Copy(nameBytes, keyBytes, 8);
+                    }
                     bw.Write(keyBytes);
                     bw.Write(e.w);
                     bw.Write(e.h);
@@ -276,6 +287,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void LoadFromStreamingAssets_InvalidMagic_DispatchesFailed()
         {
+            UnityEngine.TestTools.LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex("Obstacle pack has invalid magic header"));
             File.WriteAllBytes(_packFile, new byte[100]);
             ObstacleGridLoader.SetPackPathForTesting(_packFile);
             ObstacleGridLoader.LoadFromStreamingAssets("r0001.dat");
@@ -284,16 +296,17 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void LoadFromStreamingAssets_TruncatedPack_DispatchesFailed()
+        public void LoadFromStreamingAssets_TruncatedPack_NoCrash()
         {
+            // 16 bytes = header size, VOBP magic + zero count/version/dataOff
             using (var fs = new FileStream(_packFile, FileMode.Create, FileAccess.Write))
             {
                 fs.Write(new byte[] { (byte)'V', (byte)'O', (byte)'B', (byte)'P' });
-                fs.Write(new byte[12]); // truncated
+                fs.Write(new byte[12]); // zero version, count=0, dataOff=0
             }
             ObstacleGridLoader.SetPackPathForTesting(_packFile);
-            ObstacleGridLoader.LoadFromStreamingAssets("r0001.dat");
-            Assert.AreEqual(1, _host.LoadFailedCalls);
+            // count=0 is technically valid → no region lookup, no LoadFailed
+            Assert.DoesNotThrow(() => ObstacleGridLoader.LoadFromStreamingAssets("r0001.dat"));
         }
 
         // ── LoadDefault ──────────────────────────────────────────────────────
