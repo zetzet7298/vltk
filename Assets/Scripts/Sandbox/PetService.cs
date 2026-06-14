@@ -3,6 +3,7 @@
 // Quản lý pet chi tiết: đói, thân mật, kỹ năng pet.
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,10 +36,18 @@ namespace VLTK.Sandbox
         public const int HungryThreshold = 30;
 
         private readonly Dictionary<int, PetDetailEntry> _pets = new();
+        private IPetHost _host;
 
         public int Count => _pets.Count;
 
-        public PetService() { }
+        public event Action<int, int> OnPetCreated; // (playerId, petId)
+        public event Action<int> OnPetFed;
+        public event Action<int, int> OnPetTrained; // (playerId, skillId)
+
+        public PetService() : this(null) { }
+        public PetService(IPetHost host) { _host = host; }
+
+        public void AttachHost(IPetHost host) { _host = host; }
 
         /// <summary>Khởi tạo pet cho player (helper cho tests).</summary>
         public PetDetailEntry CreatePet(int playerId, int petId, string name, string spritePath)
@@ -56,6 +65,14 @@ namespace VLTK.Sandbox
                 skills = string.Empty,
             };
             _pets[playerId] = p;
+            OnPetCreated?.Invoke(playerId, petId);
+            if (_host != null)
+            {
+                _host.OnPetCreated(playerId, petId, p.name, p.hunger, p.intimacy);
+                _host.PlayPetSFX(playerId, petId, "spawn");
+                _host.LogPetEvent(playerId, petId, $"Tạo pet {p.name} cho player {playerId}");
+                _host.SavePetState(playerId, petId, p.level, p.exp, p.hunger, p.intimacy);
+            }
             return p;
         }
 
@@ -71,6 +88,14 @@ namespace VLTK.Sandbox
             if (foodId <= 0) return false;
             if (!_pets.TryGetValue(playerId, out var p)) return false;
             p.hunger = System.Math.Min(MaxHunger, p.hunger + 25);
+            OnPetFed?.Invoke(playerId);
+            if (_host != null)
+            {
+                _host.OnPetFed(playerId, p.petId, foodId, p.hunger);
+                _host.PlayPetSFX(playerId, p.petId, "feed");
+                _host.LogPetEvent(playerId, p.petId, $"Cho pet ăn food {foodId}, hunger={p.hunger}");
+                _host.SavePetState(playerId, p.petId, p.level, p.exp, p.hunger, p.intimacy);
+            }
             return true;
         }
 
@@ -79,7 +104,12 @@ namespace VLTK.Sandbox
         {
             if (skillId <= 0) return false;
             if (!_pets.TryGetValue(playerId, out var p)) return false;
-            if (p.hunger < HungryThreshold) return false; // pet đói không học được
+            if (p.hunger < HungryThreshold)
+            {
+                _host?.OnPetHungry(playerId, p.petId, p.hunger, HungryThreshold);
+                _host?.LogPetEvent(playerId, p.petId, $"Pet đói (hunger={p.hunger}), không huấn luyện được");
+                return false; // pet đói không học được
+            }
             var list = new List<string>();
             if (!string.IsNullOrEmpty(p.skills)) list.AddRange(p.skills.Split(','));
             string sid = skillId.ToString();
@@ -90,6 +120,14 @@ namespace VLTK.Sandbox
             {
                 p.exp = 0;
                 p.level++;
+            }
+            OnPetTrained?.Invoke(playerId, skillId);
+            if (_host != null)
+            {
+                _host.OnPetTrained(playerId, p.petId, skillId, p.level, p.exp);
+                _host.PlayPetSFX(playerId, p.petId, "train");
+                _host.LogPetEvent(playerId, p.petId, $"Huấn luyện skill {skillId} cho pet, level={p.level}");
+                _host.SavePetState(playerId, p.petId, p.level, p.exp, p.hunger, p.intimacy);
             }
             return true;
         }
@@ -110,7 +148,10 @@ namespace VLTK.Sandbox
         public void AddIntimacy(int playerId, int amount)
         {
             if (!_pets.TryGetValue(playerId, out var p)) return;
-            p.intimacy = System.Math.Min(MaxIntimacy, System.Math.Max(0, p.intimacy + amount));
+            int newIntimacy = System.Math.Min(MaxIntimacy, System.Math.Max(0, p.intimacy + amount));
+            p.intimacy = newIntimacy;
+            _host?.OnPetIntimacyChanged(playerId, p.petId, newIntimacy);
+            _host?.SavePetState(playerId, p.petId, p.level, p.exp, p.hunger, p.intimacy);
         }
 
         public static PetService LoadFromStreamingAssets() => new PetService();
