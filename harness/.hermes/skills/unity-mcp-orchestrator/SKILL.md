@@ -333,6 +333,64 @@ rendering context.
 5. EditMode tests (2383/2383 in this project) are the reliable gate.
    PlayMode is a stretch goal that can run on demand.
 
+### USS + runtime C# both must change for UI layout
+
+**Symptom:** You change a USS property (e.g. `left: 50%` on `.hud-chat-panel`
+to center a UI panel). Refresh Unity, even verify in the UI Builder — looks
+correct. But at runtime in PlayMode or a built player, the element is still
+in the old position. The USS change had no effect.
+
+**Root cause:** A C# controller (often a `MonoBehaviour` driving the HUD,
+e.g. `GameHudController.ApplySafeAreaLayout()`) sets `visualElement.style.X = Y`
+**every frame** in a layout/safe-area method. This per-frame assignment
+overrides the USS value because the inline style takes precedence over the
+stylesheet. USS values become "fallback defaults" that are never visible at runtime.
+
+**Real example from this project** (three commits to fix one chat panel:
+`4c71a6aeb` → `e52b0d67f` → `d9f190bb0`):
+```csharp
+// GameHudController.cs:851  (runtime, called every frame)
+if (_chatPanel != null) {
+    _chatPanel.style.left = safeX;           // ← forced bottom-left
+    _chatPanel.style.bottom = safeY + 42f;   // ← set bottom
+}
+```
+The original USS change (`left: 50%` on `.hud-chat-panel`) had no runtime
+effect. A second change to `GameHudController.cs` was required, then a
+third to also center the `hud-chat-tabs` row (which had `margin-left: 20px`
+indenting it from the left for a PC-layout scroll rail that no longer made
+sense after the panel moved).
+
+**Fix — before claiming a UI layout change is done:**
+1. Grep for the visual element's id/name in C# controllers:
+   ```
+   grep -rn "_chatPanel\.style\." Assets/Scripts/
+   grep -rn 'style\.\(left\|top\|right\|bottom\|translate\|position\)' \
+     Assets/Scripts/ | grep -iE "panel|tab|bar|button"
+   ```
+2. Look for methods named `ApplySafeArea*`, `ApplyLayout*`,
+   `UpdateLayout*`, `OnResolutionChanged*` — these are the override sites.
+3. Fix the same property in BOTH places. Order doesn't matter; both must
+   be consistent.
+4. Also check child elements (`_chatInputRow`, `_chatTabs` for the same
+   parent) — a layout change on the parent often orphans children that
+   were positioned with hardcoded `margin-left: 20px` for the old parent
+   location.
+5. Verify in PlayMode (not just UI Builder) — PlayMode uses the live C#
+   layout path. UI Builder only shows the USS.
+
+**Fix — preemptive comment for workers** (paste into every Unity HUD
+layout task body):
+> If you change UI positioning, ALSO grep `Assets/Scripts/` for
+> `style.left|top|right|bottom|translate` and update the runtime C# in
+> the matching `*Layout()`/`ApplySafeArea*()` method. USS alone is
+> silently overridden each frame.
+
+**Session evidence:** see
+[`references/uss-vs-runtime-csharp-override.md`](references/uss-vs-runtime-csharp-override.md)
+for the three-commit timeline that fixed one chat panel and the exact
+grep pattern that found the runtime override.
+
 ## Error Recovery
 
 | Symptom | Cause | Solution |
@@ -344,6 +402,24 @@ rendering context.
 | `SandboxManager.Instance` = null after recompile during PlayMode | Domain reload killed singleton | Stop + re-enter PlayMode clean |
 | `isPlaying=True` but `time=190s`, Instance=null | Recompile during PlayMode broke singleton; game runs on old domain | Stop, verify compile done, Play fresh |
 | Coroutine result not visible after `Thread.Sleep` in execute_code | `Thread.Sleep` blocks main thread; coroutines can't tick during sleep | Use two separate execute_code calls: trigger in call 1, read results in call 2 |
+
+### Preemptive worker warnings (proven pattern)
+
+**Before** dispatching Kanban worker tasks that touch Unity code, add a preemptive comment to
+each task with the 3 known traps. This is the single highest-leverage action — it reduced stuck
+workers from 4/5 (FS-03) to 0/5 (FS-04).
+
+```
+hermes kanban comment <task_id> "⚠️ ORCHESTRATOR RULE:
+(1) KHÔNG chạy Unity -batchmode — license bị Editor đang chạy giữ.
+(2) KHÔNG chạy PlayMode test — sẽ hang trong CoroutineRunner.
+(3) Dùng MCP tools (mcp_unityMCP_refresh_unity, read_console) để verify compile.
+(4) Code xong → git add + commit + push branch → complete task."
+```
+
+Add this comment BEFORE `hermes kanban dispatch`. Workers read task comments on startup and
+follow them. Without the warning, workers waste 20-45 min debugging batchmode license failures
+or hang indefinitely on PlayMode tests.
 
 ### Integration-lane review gates for Kanban Unity work
 

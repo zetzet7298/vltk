@@ -65,5 +65,6 @@
         "UserSettings/": true,
         "temp/": true,
         "Temp/": true
-    }
+    },
+    "liveServer.settings.port": 5501
 }

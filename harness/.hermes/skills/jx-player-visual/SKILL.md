@@ -297,6 +297,118 @@ via `SimulateMove`, tick past 0.5s (≥6 × 0.1s) before asserting `Mounted` —
 reads `Mounting`. `SimulateMove` does NOT call MonoBehaviour `Update()`, so the button
 label won't refresh in a code-only test; call `Update` manually or trust real frames.
 
+## Equipment ResID → SPR variant parity audit (do not fabricate)
+
+When the task is "show me character wearing X armor and Y helm" — whether for the
+Unity renderer pipeline or for the static HTML gallery — you **must** verify the
+exact SPR variant file before claiming parity. PC JX has a ResID wrap pattern (see
+below) that catches people who hand-roll mappings. The cost of getting it wrong
+is a static gallery or in-game character whose visual is one variant off — and
+the user will spot it.
+
+Source of truth (canonical, on `/var/www/vltksource_new/vl_update_27/Client 6.0/settings/`):
+
+- `item/004/armor.txt` — cols 0=name, 1=?, 2=?, 3=Particular, 5=ResID, 11=Level
+- `item/004/helm.txt`  — same shape
+- `npcres/ÄÐÖ÷½ÇÇûÌå.txt` (male body) and `npcres/Å®Ö÷½ÇÇûÌå.txt` (female body) — row N → `MA_BD_<var>_ST01.spr` / `FM_BD_<var>_ST01.spr`
+- `npcres/<gender>Í·²¿.txt` (head), `<gender>·¢ÐÍ.txt` (hair), `<gender>×óÊÖ.txt` / `ÓÒÊÖ.txt` (hands) — same row-N pattern
+
+### The ResID wrap pattern (the #1 trap)
+
+`npcres/.../*ÇûÌå.txt` (body) row 22 → `MA_BD_001_ST01.spr` (NOT `MA_BD_022_ST01.spr`).
+The ResID column in `armor.txt` wraps at 22 — ResID 22..42 all map to variants 001..021.
+Concretely: `ResID_armor=22` → variant `001`, `23` → `002`, `24` → `003`, `25` → `004`.
+Picking the raw ResID as the variant produces a non-existent SPR file and a silent
+fallback to the wrong character. Hand-rolled `char_sprites` dicts in
+`generate_static_gallery.py` had this exact bug — `Nam hệ Kim` was rendering
+`ma_bd_002_st01.spr` when it should have been `ma_bd_001_st01.spr`.
+
+### helm.txt only has Particular 0–13; female characters share male helms
+
+`helm.txt` rows: 0-13. `armor.txt` rows: 0-28. P=14-27 are gendered-female armor with
+no dedicated helm row. PC handles this by giving female characters the same helm
+as the male sect-mate (Nữ Thiếu Lâm P=21 → male Thiếu Lâm helm P=0). If your
+gallery renders an unhelmeted female character for P=14-27, the fix is to
+fall back to the male `helm_part = P - 14` (or maintain an explicit
+`female_helm_part` per sect).
+
+### Some ResIDs have no SPR file — accept the gap, do not invent
+
+Verified: `npcres/Å®Ö÷½ÇÍ·²¿.txt` row 29 has empty FN (no female helm at ResID 29),
+and `npcres/ÄÐÖ÷½ÇÍ·²¿.txt` row 31 has empty FN (no male helm at ResID 31). The set
+`Cái Bang Nữ` cấp 8-10 và `Thiên Vương Nam` cấp 9-10 cannot render with a helm in
+PC JX. Do not invent a substitute SPR; either render without helm or skip the card
+and document the gap.
+
+### Tân Thủ (Novice / MainMan / MainLady) is NOT a ResID lookup — trap that catches you twice
+
+The MainMan/MainLady avatar (the character before the player joins a sect) is built
+from a **fixed** variant set, NOT from the equipment `armor.txt`/`helm.txt` ResID
+system. If you look up `Particular 6 / 20` (the Tân Thủ row in `armor.txt`), you get
+`ResID 22` → variant `001` = `MA_BD_001_ST01.spr`, which is **Sa Di phục** (Thiếu Lâm
+KIM) — NOT Tân Thủ. The Tân Thủ visual in PC is composite of 7 dedicated parts:
+
+| part | male | female | variant | part id | notes |
+|------|------|--------|---------|---------|-------|
+| Shadow | `MA_YY_999_ST01` | `FM_YY_999_ST01` | `999` | -1 | palette is **grayscale only** (4 colors) — DO NOT use it as a stand-alone visual |
+| Body | `MA_BD_019_ST01` | `FM_BD_019_ST01` | `019` | 5 | on-foot rider body |
+| Head | `MA_HD_019_ST01` | `FM_HD_019_ST01` | `019` | 0 | |
+| Hair | `MA_HR_019_ST01` | (n/a — female 019 has no HR file) | `019` | 1 | |
+| Left Hand | `MA_LH_019_ST01` | `FM_LH_019_ST01` | `019` | 6 | |
+| Right Hand | `MA_RH_019_ST01` | `FM_RH_019_ST01` | `019` | 7 | |
+| Weapon (empty) | `MA_LW_000_ST01` | `FM_LW_000_ST01` | `000` | 8 | variant 000 = empty-hand |
+
+Z-order front-facing: `YY_999` (back) → `HR_019` → `BD_019` → `LH_019` → `RH_019` → `HD_019` → `LW_000` (front).
+
+What Tân Thủ actually looks like (verified by composite render, June 2026):
+- **Male**: blue áo + white quần, topknot, **no hat**, no weapon in hands, sword slung on back.
+- **Female**: white áo + red yếm + gold váy, topknot with red ruy-băng, **no hat**, no weapon in hands.
+
+DO NOT map Tân Thủ through `extract_composite_character_v2(gender, 22, 28, ...)` —
+that gives you Sa Di (a KIM-sect character wearing monk cloth + Bố Cân helm).
+That was the bug in `generate_static_gallery.py`'s `char_sprites` loop. The fix
+is a dedicated `extract_composite_novice(gender, out)` that composites the 6-7
+parts above. The ResID-22-only branch in `char_sprites` should be reserved for
+sect characters, with Tân Thủ detected by name (or a sentinel) and routed
+through `extract_composite_novice` instead.
+
+### `MA_YY_999_*.spr` is the SHADOW layer, not the character — palette gives it away
+
+The 46 files `MA_YY_999_<action>NN.spr` (`ST01..ST06`, `WK01..WK04`, `AT01..AT07`,
+`HA01..HA02`, `HD01`, `HR01`, `HW01`, `HM01`, `HI01`, `RD01..RD03`, `ZZ01`, `JP01`,
+`MG01..MG05`, `IJ01..IJ04`, `DE01..DE04`, `RN01..RN04`) are listed in
+`settings/npcres/Ö÷½Ç¶¯×÷ÒõÓ°¶ÔÓ¦±í.txt` (Main character animation shadow
+correspondence) — the table name has `ÒõÓ°` = shadow. The `YY` part code = `影`
+= shadow. Their palette is **grayscale only** (4 distinct RGB entries, the rest
+zeros), because they are silhouettes / masks that the engine paints with the
+character's main palette at composite time. If you decode `MA_YY_999_ST01.spr`
+and you see a dark blurry shape that doesn't look like a clothed human, that is
+correct — it's a shadow. Don't try to "fix" the palette or use it as a full
+character. The real character parts are `MA_BD_019_ST01` + `MA_HD_019_ST01` + etc.
+
+`settings/npcres/Ö÷½Ç(eP÷pSa°(Ga¦±í.txt` (`CharacterName` table) and
+`Ö÷½Ç¶¯×÷ÒõÓ°¶ÔÓ¦±í.txt` (`MainMan` / `MainLady` table) are the two reverse-
+engineering entry points for "what is Tân Thủ made of":
+- `CharacterName` table maps `MainMan` → `MA_YY_999_ST01.spr` (the shadow filename)
+- `Ö÷½Ç¶¯×÷ÒõÓ°¶ÔÓ¦±í.txt` confirms the rest of the part set follows the
+  `MA_<PART>_999_<ACTION>` shadow naming, with the rider parts using variant `019`.
+
+### Auto-derive sect from `goldequip.txt` Particular, not from set-prefix name
+
+Earlier `gold_set_sects` dicts hard-coded sect by name prefix — redundant, drift-
+prone, and they got the prefix→sect mapping wrong for several sets (e.g. `Vô Gian`
+was tagged Đường Môn but its actual Particular=7 means Sa Ni, a Nga My item).
+The Particular column in `goldequip.txt` IS the sect identifier — use it:
+`P=0` Thiếu Lâm, `P=4` Thiên Vương, `P=2` Đường Môn, `P=3` Ngũ Độc, `P=7` Nga My nam,
+`P=10` Nga My nữ, `P=12` Thúy Yên, `P=5` Cái Bang nam, `P=13` Cái Bang nữ/Thiên Nhẫn,
+`P=1` Võ Đang/Côn Lôn nam, `P=8` Võ Đang/Côn Lôn nữ. P=14-28 are gold-set duplicates
+of P=0-13 with different item names/levels.
+
+**Full verified table (Particular → ResID → môn phái → Ngũ Hành → variant) lives
+in `references/jx-pc-equipment-resid-mapping.md`.** That file is the canonical
+source for static gallery / tool work; the Unity renderer just needs the
+ResID-to-variant wrap, which `load_npcres_mapping` + `get_var` already do.
+
 ## Workflow
 
 For a new avatar / equipment swap / new action:
@@ -394,6 +506,30 @@ so they still click). Touches then fall through to the joystick.
 
 - `references/extending.md` — generalize male classes to female / equipment / mount.
 - `references/draw-order.md` — the full Dir1..Dir8 part-id tables + how `SortingOffset` reads them.
+- `references/jx-pc-equipment-resid-mapping.md` — canonical Particular→ResID→môn phái→variant table.
 - `scripts/uid.py` — PC signed-byte uid by default (matches C# `ComputePathUid`); `--unsigned` for the legacy staged-naming variant.
 - `scripts/stage_player_spr.py` — stage a folder of part SPRs + update manifest.
 - `scripts/verify_player.cs` — execute_code body for the 6 verification checks.
+
+### Where to look when "what does the PC actually do for X" is the question
+
+When auditing any "show me the visual for X" task, the canonical PC entry
+points under `settings/npcres/` (GBK-encoded filenames) are:
+
+- `人物类型.txt` (人物类型.txt) — master row table: maps NPC id → display name → art path.
+- `Ö÷½Ç(eP÷pSa°(Ga¦±í.txt` (CharacterName) — animation set per character: maps
+  `MainMan` / `MainLady` / faction name → list of (filename, frame_count, direction_count) tuples.
+- `Ö÷½Ç¶¯×÷ÒõÓ°¶ÔÓ¦±í.txt` (Main character animation shadow correspondence) —
+  per-character animation timeline: which action file plays in which order.
+  Use this to discover composite part sets (e.g. Tân Thủ = 7 parts).
+- `ÄÐÖ÷½ÇÇûÌå.txt` / `Å®Ö÷½ÇÇûÌå.txt` (Male/Female body) — row N → `MA_BD_<var>_ST01.spr`.
+- `ÄÐÖ÷½ÇÍ·²¿.txt` / `Å®Ö÷½ÇÍ·²¿.txt` (Male/Female head) — same row-N pattern for helm.
+- `ÄÐÖ÷½Ç·¢ÐÍ.txt` / `Å®Ö÷½Ç·¢ÐÍ.txt` (Male/Female hair) — same pattern.
+- `ÄÐÖ÷½Ç×óÊÖ.txt` / `Å®Ö÷½Ç×óÊÖ.txt` (left hand), `ÓÒÊÖ.txt` / `ÓÒÊÖ.txt` (right hand) — same pattern.
+
+The inverse-mapping path: any of the 46 `MA_YY_999_*.spr` files → grep
+`settings/npcres/*.txt` for the filename → you'll find which character
+references it (and from there, which composite parts make up that character).
+Reverse: if you have the part code + variant you want, search `settings/npcres/*.txt`
+for the variant number to find the row, then look up the body/head/hair/hand/wep
+row at the same index.

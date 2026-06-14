@@ -80,6 +80,39 @@ Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, s
 4. Verify with Unity compile/tests or runtime checks appropriate to the task.
 5. Report which PC source files/assets were used.
 
+### Visual parity audit (player/NPC/equipment visual tasks)
+
+When the task is "show character wearing X armor with Y helm" — for any visual
+port (Unity renderer, static gallery, preview tool, export pipeline) — a
+passing compile/render is NOT proof of parity. The image has to actually look
+like the PC visual. Run this 4-step audit before claiming a visual is done:
+
+1. **ResID-to-variant wrap check.** `npcres/<gender>ÇûÌå.txt` row 22 →
+   `MA_BD_001_ST01.spr` (NOT `MA_BD_022_ST01.spr`). Hand-rolled `ResID = variant`
+   lookups are wrong; always read the actual mapping file. See
+   `jx-player-visual` → "Equipment ResID → SPR variant parity audit" and
+   `references/jx-pc-equipment-resid-mapping.md` for the verified table.
+2. **SPR file existence check.** The npcres `*.txt` may have empty FN fields
+   for some ResIDs (e.g. female ResID=29, male ResID=31 — no SPR file). If the
+   target variant is missing, report the gap and either skip the card or
+   render without that part. Do NOT invent a substitute.
+3. **helm.txt vs armor.txt scope check.** `helm.txt` has Particular 0-13 only;
+   `armor.txt` has 0-28. P=14-27 are gendered-female armor that must reuse
+   the male sect-mate's helm (`helm_part = P - 14`). A character that
+   renders unhelmeted for a female P=14-27 is wrong, not "PC-faithful no-helm".
+4. **Visual diff if you can render.** When the static gallery can render both
+   the old and the new visual, side-by-side compare. For Unity, render to
+   `RenderTexture` and diff vs PC screenshot. The first bug caught by this
+   kind of audit was: `char_sprites` hard-coded `ma_bd_002_st01.spr` for
+   "Hệ Kim" when ResID=22 → variant 001 — entire body shape was off.
+
+User-facing phrasing matters: when the user says "visual chưa đúng, không
+match với trang bị, cần audit, lấy cho đúng, không bịa" the response is to
+**prove** the visual is right with the audit above, not to "patch it to
+something plausible" and ship. The PC mapping files are the single source of
+truth; if you cannot derive the correct visual from them, say so.
+
+
 ## PAK/SPR Format Internals
 
 For deep PAK binary layout, compression methods, and engine function mapping, see
