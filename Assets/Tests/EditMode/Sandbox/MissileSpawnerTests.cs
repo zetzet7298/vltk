@@ -69,12 +69,12 @@ namespace VLTK.Tests.Sandbox
             public void SaveMissileLog(int skillId, int missileCount, SkillMissileForm form) { SaveCalls++; }
         }
 
-        private static SkillDefinition MakeSkill(int skillId, SkillMissileForm form, int childSkillId = 0, float attackRadius = 200f)
+        private static SkillDefinition MakeSkill(int skillId, SkillMissileForm form, int childSkillId = 0, int attackRadius = 200)
         {
             return new SkillDefinition
             {
                 skillId = skillId,
-                nameVi = $"Skill{skillId}",
+                nameRaw = $"Skill{skillId}",
                 missileForm = form,
                 childSkillId = childSkillId,
                 attackRadius = attackRadius,
