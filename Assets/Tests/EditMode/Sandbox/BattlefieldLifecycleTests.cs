@@ -29,6 +29,7 @@ namespace VLTK.Tests.Sandbox
             public int LastMapId;
             public int LastWinningTeam;
             public int LastReward;
+            public System.Collections.Generic.Dictionary<int, int> RewardByTeam = new();
             public int AssignedTeam = 1;
 
             public void OnBattlefieldOpening(int mapId, int minLevel, int maxLevel, long secondsUntilOpen)
@@ -51,6 +52,7 @@ namespace VLTK.Tests.Sandbox
             {
                 RewardCalls++;
                 LastReward = score;
+                RewardByTeam[team] = score;
             }
             public void OnBattlefieldEnded(int mapId, int winningTeam, int challengerScore, int defenderScore)
             {
@@ -375,7 +377,10 @@ namespace VLTK.Tests.Sandbox
             host.RewardCalls = 0; host.LastReward = 0;
             svc.EndBattle(1, 1); // team 1 wins
             Assert.AreEqual(2, host.RewardCalls); // 2 teams get reward calls
-            Assert.Greater(host.LastReward, 0); // winning team got 3*100=300
+            // Winning team (1) gets previousPlayers * 100 = 3 * 100 = 300.
+            Assert.AreEqual(300, host.RewardByTeam[1]);
+            // Losing team (2) gets 0.
+            Assert.AreEqual(0, host.RewardByTeam[2]);
         }
 
         // ── AttachHost ──────────────────────────────────────────────────────
