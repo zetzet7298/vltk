@@ -77,11 +77,13 @@ namespace VLTK.Tests.Sandbox
         {
             long required = PlayerStatService.GetExpRequired(5);
             var svc = new PlayerLevelService(5);
+            int beforePotential = svc.PotentialPoints; // 4*5=20 pre-granted
+            int beforeSkill = svc.SkillPoints; // 4 pre-granted
             svc.AddExp(required);
             Assert.AreEqual(6, svc.Level);
             Assert.AreEqual(0, svc.CurrentExp);
-            Assert.AreEqual(5, svc.PotentialPoints);
-            Assert.AreEqual(1, svc.SkillPoints);
+            Assert.AreEqual(beforePotential + 5, svc.PotentialPoints);
+            Assert.AreEqual(beforeSkill + 1, svc.SkillPoints);
         }
 
         [Test]
