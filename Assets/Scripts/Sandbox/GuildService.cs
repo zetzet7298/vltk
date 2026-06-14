@@ -27,11 +27,18 @@ namespace VLTK.Sandbox
         public const string LogTag = "Guild";
 
         private readonly PcTongLevelRegistry _registry;
+        private readonly IGuildHost _host;
+        private readonly Dictionary<int, GuildMemberRole> _members = new();
+
+        public const int MinGuildNameLength = 3;
+        public const int MaxGuildNameLength = 12;
 
         private int _guildLevel = 1;
         private int _guildFunds;
         private int _guildBuild;
         private string _guildName = string.Empty;
+        private string _founderName = string.Empty;
+        private bool _isCreated;
 
         /// <summary>Event kích hoạt khi bang nâng cấp cấp (oldLevel, newLevel).</summary>
         public event Action<int, int> OnGuildUpgraded;
@@ -46,11 +53,118 @@ namespace VLTK.Sandbox
         public int Count => _registry.Count;
         public int MaxLevel => _registry.MaxLevel;
 
-        public GuildService() : this(null) { }
+        public bool IsCreated => _isCreated;
+        public string FounderName => _founderName ?? string.Empty;
+        public int MemberCount => _members.Count;
+        public IReadOnlyDictionary<int, GuildMemberRole> Members => _members;
+        public const int CreateCost = 1000; // PC: tạo bang tốn 1000 lượng
 
-        public GuildService(PcTongLevelRegistry registry)
+        public event Action<string, string> OnGuildCreatedEvent; // (guildName, founderName)
+        public event Action<string, string> OnGuildDisbandedEvent; // (guildName, leaderName)
+        public event Action<int, GuildMemberRole> OnMemberJoinedEvent; // (playerId, role)
+        public event Action<int, GuildMemberRole> OnMemberLeftEvent; // (playerId, previousRole)
+
+        public GuildService() : this(null, null) { }
+
+        public GuildService(PcTongLevelRegistry registry) : this(registry, null) { }
+
+        public GuildService(PcTongLevelRegistry registry, IGuildHost host)
         {
             _registry = registry ?? new PcTongLevelRegistry();
+            _host = host;
+        }
+
+        public void AttachHost(IGuildHost host) { /* host is fixed at ctor; kept for API symmetry */ }
+
+        // ── Lifecycle ────────────────────────────────────────────────────────
+
+        public enum GuildCreationResult
+        {
+            Success,
+            AlreadyCreated,
+            InvalidName,
+            InsufficientFunds,
+        }
+
+        /// <summary>Tạo bang mới với tên và bang chủ. PC: tong_apply.lua + Pay 1000.</summary>
+        public GuildCreationResult CreateGuild(string guildName, string founderName, int founderId, int availableMoney)
+        {
+            if (_isCreated) return GuildCreationResult.AlreadyCreated;
+            if (string.IsNullOrEmpty(guildName) || guildName.Length < MinGuildNameLength
+                || guildName.Length > MaxGuildNameLength)
+                return GuildCreationResult.InvalidName;
+            if (availableMoney < CreateCost) return GuildCreationResult.InsufficientFunds;
+
+            // Trừ tiền player qua host (PC Pay)
+            if (_host != null && !_host.TryDeductPlayerMoney(founderName, CreateCost))
+                return GuildCreationResult.InsufficientFunds;
+
+            _guildName = guildName;
+            _founderName = founderName ?? string.Empty;
+            _guildLevel = 1;
+            _guildFunds = 0;
+            _guildBuild = 0;
+            _members.Clear();
+            _members[founderId] = GuildMemberRole.Leader;
+            _isCreated = true;
+
+            SubsystemLog.Info(LogTag, $"Tạo bang '{guildName}' bởi {founderName}");
+            OnGuildCreatedEvent?.Invoke(_guildName, _founderName);
+            if (_host != null)
+            {
+                _host.OnGuildCreated(_guildName, _founderName);
+                _host.OnMemberJoined(_guildName, _founderName, GuildMemberRole.Leader);
+            }
+            return GuildCreationResult.Success;
+        }
+
+        /// <summary>Giải tán bang (chỉ bang chủ mới có quyền). PC: tong_disband.lua.</summary>
+        public bool DisbandGuild(int leaderId)
+        {
+            if (!_isCreated) return false;
+            if (!_members.TryGetValue(leaderId, out var role) || role != GuildMemberRole.Leader)
+                return false;
+            string oldName = _guildName;
+            string oldLeader = _founderName;
+            _isCreated = false;
+            _guildName = string.Empty;
+            _founderName = string.Empty;
+            _members.Clear();
+            SubsystemLog.Info(LogTag, $"Giải tán bang '{oldName}' bởi {oldLeader}");
+            OnGuildDisbandedEvent?.Invoke(oldName, oldLeader);
+            if (_host != null) _host.OnGuildDisbanded(oldName, oldLeader);
+            return true;
+        }
+
+        /// <summary>Thêm thành viên vào bang (chỉ Leader/ Elder mới có quyền).</summary>
+        public bool AddMember(int playerId, string playerName, GuildMemberRole role, int inviterId)
+        {
+            if (!_isCreated) return false;
+            if (_members.ContainsKey(playerId)) return false;
+            if (!_members.TryGetValue(inviterId, out var inviterRole)) return false;
+            if (inviterRole != GuildMemberRole.Leader && inviterRole != GuildMemberRole.Elder)
+                return false;
+
+            _members[playerId] = role;
+            SubsystemLog.Info(LogTag, $"{playerName} gia nhập bang '{_guildName}'");
+            OnMemberJoinedEvent?.Invoke(playerId, role);
+            if (_host != null) _host.OnMemberJoined(_guildName, playerName, role);
+            return true;
+        }
+
+        /// <summary>Rời bang hoặc bị kick. PC: tong_leave.lua / tong_kick.lua.</summary>
+        public bool RemoveMember(int playerId, string playerName)
+        {
+            if (!_isCreated) return false;
+            if (!_members.TryGetValue(playerId, out var role)) return false;
+            // Bang chủ không thể tự rời; phải disband
+            if (role == GuildMemberRole.Leader) return false;
+
+            _members.Remove(playerId);
+            SubsystemLog.Info(LogTag, $"{playerName} rời bang '{_guildName}'");
+            OnMemberLeftEvent?.Invoke(playerId, role);
+            if (_host != null) _host.OnMemberLeft(_guildName, playerName, role);
+            return true;
         }
 
         /// <summary>Tra cứu dữ liệu cấp bang (cấp 1 → 33).</summary>
