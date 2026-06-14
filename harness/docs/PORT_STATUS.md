@@ -697,3 +697,20 @@ Final `dev` HEAD: `0b8f58edb` (~75 commits since `0ed7d017c` baseline).
 **Final full-suite EditMode sweep** (job `6a8518a8592241328ea98abc881467b1`, MCP `TestResults.xml`): **`total=3156 passed=3140 failed=12 skipped=4`**. 12 Backend pre-existing failures (validation_error vs invalid_arg drift) — same set as previous batches, no new failures. **Zero Sandbox regression across 21 port branches**. **Authoritative test delta**: 3070 → 3156 = +86 net new tests.
 
 Final `dev` HEAD: `40be804c7` (~92 commits since `0ed7d017c` baseline).
+
+## Integration batch 2026-06-14 #14 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +93 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-economy-host-apis` (1 commit, 3 files, +483/-2) → new `IEconomyHost` (8 methods: OnCurrencyChanged, OnStashDeposit, OnStashWithdraw, OnStashFull, OnShopBuy, OnShopSell, OnTradeSessionCreated, SaveEconomyState). `EconomyService` ctor accepts IEconomyHost. NEW ctors (default, 1-arg, 2-arg-with-defaults, 3-arg) for backward compat. NEW `_nextTradeId` counter + unique trade id. SpendSilver/EarnSilver/SpendGold/EarnGold: dispatch OnCurrencyChanged + SaveEconomyState. DepositToStash: dispatch OnStashDeposit (or OnStashFull when full). WithdrawFromStash: dispatch OnStashWithdraw. CreateTradeSession: assign unique tradeId + dispatch OnTradeSessionCreated. BuyFromShop/SellToShop: dispatch OnShopBuy/OnShopSell. 30 tests.
+- `port/fix-pet-host-apis` (1 commit, 3 files, +474/-3) → new `IPetHost` (8 methods: OnPetCreated, OnPetFed, OnPetTrained, OnPetHungry, OnPetIntimacyChanged, PlayPetSFX, LogPetEvent, SavePetState). `PetService` ctor accepts IPetHost. NEW events OnPetCreated + OnPetFed + OnPetTrained. CreatePet host dispatch: OnPetCreated + PlayPetSFX(spawn) + LogPetEvent + SavePetState. TryFeed host dispatch: OnPetFed + PlayPetSFX(feed) + LogPetEvent + SavePetState. TryTrain: when hungry (hunger<threshold) dispatch OnPetHungry + LogPetEvent, return false. When success: OnPetTrained + PlayPetSFX(train) + LogPetEvent + SavePetState. AddIntimacy host dispatch: OnPetIntimacyChanged + SavePetState. 27 tests.
+- `port/fix-battle-award-host-apis` (1 commit, 3 files, +434/-2) → new `IBattleAwardHost` (8 methods: OnAwardReceived, PlayAwardSFX, ShowAwardNotice, BroadcastTopRank, GrantSilver, GrantExp, GrantItem, SaveAwardHistory). `BattleAwardService` ctor accepts IBattleAwardHost. NEW event OnAwardGranted. NEW method GrantAward(playerId, awardId) - dispatches OnAwardReceived + PlayAwardSFX + ShowAwardNotice + GrantSilver (if > 0) + GrantExp (if > 0) + GrantItem (if > 0) + BroadcastTopRank (if rank==1) + SaveAwardHistory. NEW method GrantAwardByRank(playerId, battleType, rank). 22 tests (renamed to `BattleAwardGrantTests` to avoid class collision with existing `FinalSystemServiceTests.BattleAwardServiceTests`).
+
+**Coordination fixes during integration** (6 commits):
+- `BattleAwardServiceTests` class name collision with `FinalSystemServiceTests.BattleAwardServiceTests` (same namespace). Renamed to `BattleAwardGrantTests` and deleted the duplicate.
+- `EconomyService` ctor with 2-arg `(int maxStashSlots, int initialSilver)` broke 3 pre-existing tests that used 1-arg `new EconomyService(...)` and `new EconomyService(initialSilver: 1234)`. Added 1-arg ctor `(int maxStashSlots)` and 2-arg ctor with default values `(int maxStashSlots = 100, int initialSilver = 0)` for full backward compat.
+- PetService needed `using System;` for Action delegate in events.
+
+**Targeted EditMode sweep** (job `c401e5e375684244bae7de9ff6dbfff9`): **93/93 pass** for batch #14.
+
+**Final full-suite EditMode sweep** (job `85f7bd9c25a547089156ddec98afee37`, MCP `TestResults.xml`): **`total=3249 passed=3234 failed=11 skipped=4`**. 11 Backend pre-existing failures (validation_error vs invalid_arg drift), same set as previous batches. **Zero Sandbox regression across 24 port branches**. **Authoritative test delta**: 3156 → 3249 = +93 net new tests.
+
+Final `dev` HEAD: `ae41d5b93` (~104 commits since `0ed7d017c` baseline).
