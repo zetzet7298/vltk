@@ -119,7 +119,7 @@ namespace VLTK.Tests.Sandbox
         {
             return new MapDefinition
             {
-                catalogEntry = new MapCatalogEntry { mapId = id, settingSourceId = sourceId ?? $"map{id}" },
+                catalogEntry = new MapCatalogEntry { mapId = id, settingSourceId = new SourceAssetId { sourcePath = sourceId ?? $"map{id}" } },
                 sourceBoundsRect = rect,
                 minimapRef = ref_,
             };
