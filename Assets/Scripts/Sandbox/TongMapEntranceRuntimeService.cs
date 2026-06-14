@@ -153,6 +153,92 @@ namespace VLTK.Sandbox
             var date = string.IsNullOrWhiteSpace(expireDateText) ? "không rõ" : expireDateText;
             return "Khu vực bang hội của quý bang đã sắp đến kỳ hạn " + date + "!";
         }
+
+        // -----------------------------------------------------------------
+        // Host-driven entry (PC source: faction_map.txt 33 rows + script/tong/
+        // addtongnpc.lua + tong_mix.lua level-10 gate). This wraps the plan-mode
+        // Evaluate() and dispatches the resulting actions to ITongMapHost.
+        // -----------------------------------------------------------------
+        private readonly ITongMapHost _host;
+
+        public TongMapEntranceRuntimeService() : this(null) { }
+
+        public TongMapEntranceRuntimeService(ITongMapHost host)
+        {
+            _host = host;
+        }
+
+        /// <summary>
+        /// Quyết định nhập cảnh theo host state. Returns (allowed, reasonVi).
+        /// Reason taxonomy:
+        ///   - PublicMap: map không phải Tong map.
+        ///   - Owner: player thuộc tong đang sở hữu map.
+        ///   - Banned: tong bị cấm (PC TONG_GetTongMapBan).
+        ///   - Expired: thời hạn sở hữu đã hết (PC tongmap_check_expire).
+        ///   - LevelTooLow: không đạt yêu cầu level (PC tong_mix.lua level-10).
+        ///   - Allowed: đủ điều kiện.
+        /// </summary>
+        public TongMapEnterDecision CanPlayerEnter(int mapId, string player, int level, int tongId, long now)
+        {
+            if (_host == null) return new TongMapEnterDecision(false, "NoHost");
+
+            // Map công cộng (owner = 0) hoặc map không phải Tong map.
+            int owner = _host.GetTongOwner(mapId);
+            if (owner == 0) return new TongMapEnterDecision(true, "PublicMap");
+
+            // Owner tong → được vào.
+            if (owner == tongId && _host.IsPlayerInTong(player, tongId))
+                return new TongMapEnterDecision(true, "Owner");
+
+            // Banned (PC TONG_GetTongMapBan).
+            if (_host.IsTongBanned(tongId, mapId))
+                return new TongMapEnterDecision(false, "Banned");
+
+            // Expired (PC tongmap_check_expire + tongmap_get_expire_date).
+            long expire = _host.GetTongExpireTime(tongId, mapId);
+            if (expire > 0 && now > expire)
+                return new TongMapEnterDecision(false, "Expired");
+
+            // Level gate (PC tong_mix.lua: minimum level 10 to enter Tong map).
+            if (!_host.CanEnterTongMap(mapId, level, tongId))
+                return new TongMapEnterDecision(false, "LevelTooLow");
+
+            return new TongMapEnterDecision(true, "Allowed");
+        }
+
+        /// <summary>
+        /// Thực thi nhập cảnh: kiểm tra CanPlayerEnter, nếu cho phép gọi
+        /// host.SetPos + host.SetFightState. Nếu từ chối chỉ gọi host.SendMessage.
+        /// Returns true nếu cho phép (đã dispatch SetPos+SetFightState),
+        /// false nếu từ chối (đã dispatch SendMessage).
+        /// </summary>
+        public bool EnterTongMap(int mapId, string player, int level, int tongId,
+            int x, int y, bool fighting, long now)
+        {
+            var decision = CanPlayerEnter(mapId, player, level, tongId, now);
+            if (!decision.Allowed)
+            {
+                string denyMsg = DenyMessage(decision.ReasonVi);
+                _host?.SendMessage(player, denyMsg);
+                return false;
+            }
+
+            _host?.SetPos(player, x, y);
+            _host?.SetFightState(player, fighting);
+            return true;
+        }
+
+        private static string DenyMessage(string reason)
+        {
+            switch (reason)
+            {
+                case "Banned": return BanMessage;
+                case "Expired": return ExpiredMessage;
+                case "LevelTooLow": return "Cấp độ chưa đủ để vào khu vực bang hội!";
+                case "NoHost": return "Host không khả dụng.";
+                default: return "Không thể vào khu vực bang hội!";
+            }
+        }
     }
 
     public sealed class TongMapEntranceRequest
