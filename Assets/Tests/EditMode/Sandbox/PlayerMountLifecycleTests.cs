@@ -50,9 +50,10 @@ namespace VLTK.Tests.Sandbox
             public void OnDismountStarted(int horseType, float transitionTime) { DismountStartCalls++; }
             public void OnDismountCompleted() { DismountCompleteCalls++; }
             public void LogMountEvent(int horseType, string message) { LogCalls++; }
-            public void SaveMountState(int horseType, MountState state, bool isMounted)
+            public void SaveMountState(int playerId, int horseType, MountState state, bool isMounted)
             {
                 SaveCalls++;
+                LastPlayerId = playerId;
                 LastSaveIsMounted = isMounted;
             }
         }

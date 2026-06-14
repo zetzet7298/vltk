@@ -35,6 +35,6 @@ namespace VLTK.Sandbox
         void LogMountEvent(int horseType, string message);
 
         /// <summary>Lưu mount state vào DB player (PC SaveMountState).</summary>
-        void SaveMountState(int horseType, MountState state, bool isMounted);
+        void SaveMountState(int playerId, int horseType, MountState state, bool isMounted);
     }
 }
