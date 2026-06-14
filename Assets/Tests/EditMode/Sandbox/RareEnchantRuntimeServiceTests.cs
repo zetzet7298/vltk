@@ -18,8 +18,14 @@ namespace VLTK.Tests.Sandbox
 
         private static PcRareEnchantEntry MakeEntry(
             int magicId, int min, int max,
-            int wSword = 0, int wBlade = 0, int wArmor = 0, int wHelm = 0,
-            int wMetal = 0, int wFire = 0)
+            int wSword = 0, int wBlade = 0, int wWand = 0, int wSpear = 0,
+            int wHammer = 0, int wDualBlades = 0, int wDarts = 0, int wKnife = 0,
+            int wCrossbow = 0,
+            int wArmor = 0, int wRing = 0, int wNecklace = 0, int wAmulet = 0,
+            int wBoot = 0, int wBelt = 0, int wHelm = 0, int wCuff = 0,
+            int wSachet = 0, int wPendant = 0,
+            int wMetal = 0, int wWood = 0, int wWater = 0, int wFire = 0,
+            int wEarth = 0)
         {
             return new PcRareEnchantEntry
             {
@@ -27,8 +33,13 @@ namespace VLTK.Tests.Sandbox
                 magicId = magicId,
                 magP1Min = min,
                 magP1Max = max,
-                wSword = wSword, wBlade = wBlade, wArmor = wArmor, wHelm = wHelm,
-                wMetal = wMetal, wFire = wFire,
+                wSword = wSword, wBlade = wBlade, wWand = wWand, wSpear = wSpear,
+                wHammer = wHammer, wDualBlades = wDualBlades, wDarts = wDarts,
+                wKnife = wKnife, wCrossbow = wCrossbow,
+                wArmor = wArmor, wRing = wRing, wNecklace = wNecklace, wAmulet = wAmulet,
+                wBoot = wBoot, wBelt = wBelt, wHelm = wHelm, wCuff = wCuff,
+                wSachet = wSachet, wPendant = wPendant,
+                wMetal = wMetal, wWood = wWood, wWater = wWater, wFire = wFire, wEarth = wEarth,
             };
         }
 
