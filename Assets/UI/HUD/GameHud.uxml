@@ -158,11 +158,11 @@
         <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock hidden">
             <!-- Tab strip -->
             <ui:VisualElement name="MobileUtilityTabStrip" class="hud-mobile-utility-tab-strip">
-                <ui:VisualElement name="UtilityTabCharBtn" class="hud-mobile-utility-tab tab-active"><ui:Label name="UtilityTabCharText" text="CHAR" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="UtilityTabBagBtn" class="hud-mobile-utility-tab"><ui:Label name="UtilityTabBagText" text="BAG" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="UtilityTabSocialBtn" class="hud-mobile-utility-tab"><ui:Label name="UtilityTabSocialText" text="SOC" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="UtilityTabActivityBtn" class="hud-mobile-utility-tab"><ui:Label name="UtilityTabActivityText" text="ACT" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="UtilityTabSystemBtn" class="hud-mobile-utility-tab"><ui:Label name="UtilityTabSystemText" text="SYS" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabCharBtn" class="hud-mobile-utility-tab tab-active"><ui:VisualElement name="UtilityTabCharBtnIcon" class="hud-mobile-utility-tab-icon"/><ui:Label name="UtilityTabCharText" text="CHAR" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabBagBtn" class="hud-mobile-utility-tab"><ui:VisualElement name="UtilityTabBagBtnIcon" class="hud-mobile-utility-tab-icon"/><ui:Label name="UtilityTabBagText" text="BAG" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabSocialBtn" class="hud-mobile-utility-tab"><ui:VisualElement name="UtilityTabSocialBtnIcon" class="hud-mobile-utility-tab-icon"/><ui:Label name="UtilityTabSocialText" text="SOC" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabActivityBtn" class="hud-mobile-utility-tab"><ui:VisualElement name="UtilityTabActivityBtnIcon" class="hud-mobile-utility-tab-icon"/><ui:Label name="UtilityTabActivityText" text="ACT" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabSystemBtn" class="hud-mobile-utility-tab"><ui:VisualElement name="UtilityTabSystemBtnIcon" class="hud-mobile-utility-tab-icon"/><ui:Label name="UtilityTabSystemText" text="SYS" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
             </ui:VisualElement>
 
             <!-- Tab 0: Nhân vật — thuộc tính, võ công, nhiệm vụ -->

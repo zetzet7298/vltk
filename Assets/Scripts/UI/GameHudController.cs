@@ -216,6 +216,13 @@ namespace VLTK.UI
             // (already upright, unlike SPR-decoded icons).
             { "UtilityToggleBtn", "btn_options" },
             { "UtilitySwitchBtn", "btn_options" },
+            // Mobile v2 categorized dock tabs use exact PC-derived icons:
+            // character/status, bag, team/social, activity strip, options/system.
+            { "UtilityTabCharBtn", "btn_status" },
+            { "UtilityTabBagBtn", "btn_items" },
+            { "UtilityTabSocialBtn", "btn_team" },
+            { "UtilityTabActivityBtn", "icon_bar_activity" },
+            { "UtilityTabSystemBtn", "btn_options" },
             { "BtnRun", "btn_run" },
             { "BtnSit", "btn_sit" },
             { "BtnHorse", "btn_horse" },
