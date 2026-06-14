@@ -54,6 +54,11 @@ namespace VLTK.Sandbox
         private const float RateDecayPerLevel = 0.07f; // Giảm 7% mỗi level
         private const int MaxEnhanceLevel = 16;        // PC max +16
         private const int MaxRefineLevel = 10;
+        private IEnhanceRefineHost _host;
+
+        public EnhanceRefineService() : this(null) { }
+        public EnhanceRefineService(IEnhanceRefineHost host) { _host = host; }
+        public void AttachHost(IEnhanceRefineHost host) { _host = host; }
 
         /// <summary>Cường hóa vật phẩm.</summary>
         public EnhanceResult Enhance(ItemDefinition item, int currentEnhanceLevel, int playerSilver)
@@ -68,6 +73,7 @@ namespace VLTK.Sandbox
             if (playerSilver < cost)
             {
                 SubsystemLog.Warn("Enhance", $"Không đủ Bạc ({cost} cần)");
+                _host?.OnEnhanceInsufficientSilver(item.itemId, cost, playerSilver);
                 return result;
             }
 
@@ -97,6 +103,17 @@ namespace VLTK.Sandbox
                 }
             }
 
+            if (_host != null)
+            {
+                if (result.success)
+                    _host.OnEnhanceSuccess(item.itemId, result.oldLevel, result.newLevel, result.silverCost);
+                else
+                    _host.OnEnhanceFailed(item.itemId, currentEnhanceLevel, result.newLevel, result.itemDestroyed);
+                _host.ShowEnhanceRefineUI(item.itemId, result.newLevel, 0);
+                _host.LogEnhanceRefineEvent(item.itemId, result.newLevel, 0, result.success ? "Cường hoá thành công" : "Cường hoá thất bại");
+                _host.PlayEnhanceSFX(item.itemId, result.success ? "enhance_success" : "enhance_fail");
+                _host.SaveItemEnhanceState(item.itemId, result.newLevel, 0);
+            }
             return result;
         }
 
@@ -123,11 +140,35 @@ namespace VLTK.Sandbox
                 SubsystemLog.Warn("Refine", "Tinh luyện thất bại.");
             }
 
+            if (_host != null)
+            {
+                if (result.success)
+                    _host.OnRefineSuccess(item.itemId, result.oldRefineLevel, result.newRefineLevel, result.bonusAttrCode, result.bonusValue);
+                else
+                    _host.OnRefineFailed(item.itemId, currentRefineLevel, targetAttrCode);
+                _host.ShowEnhanceRefineUI(item.itemId, 0, result.newRefineLevel);
+                _host.LogEnhanceRefineEvent(item.itemId, 0, result.newRefineLevel, result.success ? "Tinh luyện thành công" : "Tinh luyện thất bại");
+                _host.PlayEnhanceSFX(item.itemId, result.success ? "refine_success" : "refine_fail");
+                _host.SaveItemEnhanceState(item.itemId, 0, result.newRefineLevel);
+            }
             return result;
         }
 
         /// <summary>Tạo phần thưởng nhiệm vụ dựa trên difficulty và playerLevel.</summary>
-        public static EnhanceQuestReward GenerateQuestReward(int questDifficulty, int playerLevel)
+        public EnhanceQuestReward GenerateQuestReward(int questDifficulty, int playerLevel)
+        {
+            var reward = GenerateQuestRewardInternal(questDifficulty, playerLevel);
+            _host?.OnQuestRewardGenerated(questDifficulty, playerLevel, reward.itemIds.Count);
+            return reward;
+        }
+
+        /// <summary>Static version for back-compat.</summary>
+        public static EnhanceQuestReward GenerateQuestRewardStatic(int questDifficulty, int playerLevel)
+        {
+            return GenerateQuestRewardInternal(questDifficulty, playerLevel);
+        }
+
+        private static EnhanceQuestReward GenerateQuestRewardInternal(int questDifficulty, int playerLevel)
         {
             var reward = new EnhanceQuestReward
             {
