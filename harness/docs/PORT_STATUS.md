@@ -751,3 +751,23 @@ Final `dev` HEAD: `94230a176` (~118 commits since `0ed7d017c` baseline).
 **Final full-suite EditMode sweep** (job `16f28ad74694486d9e7ab1a86aea43b1`, MCP `TestResults.xml`): **`total=3450 passed=3435 failed=11 skipped=4`**. 11 Backend pre-existing failures. **Zero Sandbox regression across 33 port branches**. **Authoritative test delta**: 3368 → 3450 = +82 net new tests.
 
 Final `dev` HEAD: `ec4072f2c` (~127 commits since `0ed7d017c` baseline).
+
+## Integration batch 2026-06-14 #17 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +91 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-quest-item-host-apis` (1 commit, 3 files, +539/-2) → new `IQuestItemHost` (8 methods: OnQuestItemReceived, OnQuestItemRemoved, OnQuestItemInsufficient, OnQuestItemCleared, ShowQuestItemUI, LogQuestItemEvent, PlayItemSFX, SaveQuestItemState). `QuestItemService` ctor accepts IQuestItemHost. AttachHost. AddQuestItem host dispatch: OnQuestItemReceived + LogQuestItemEvent + PlayItemSFX(receive) + ShowQuestItemUI + SaveQuestItemState. RemoveQuestItem: when insufficient dispatch OnQuestItemInsufficient; when success dispatch OnQuestItemRemoved + LogQuestItemEvent + PlayItemSFX(use) + ShowQuestItemUI + SaveQuestItemState. Clear: track cleared count + dispatch OnQuestItemCleared + ShowQuestItemUI + SaveQuestItemState + PlayItemSFX(clear). 30 tests.
+- `port/fix-pc-task-event-host-apis` (1 commit, 3 files, +424/-4) → new `IPcTaskEventHost` (8 methods: OnParseStart, OnParseComplete, OnParseFailed, OnRegistryBuilt, ShowTaskLogUI, LogTaskEvent, PlayTaskLogSFX, SaveTaskLog). `PcTaskEventParser` (static class) gets static AttachHost + _host field in the parser class (not registry). BuildRegistry: stopwatch + dispatch OnParseFailed (empty dir / dir not found) + OnRegistryBuilt (with eventCount, typeCount, idCount, duration) + ShowTaskLogUI + SaveTaskLog. ParseEvents/Types/Ids: each dispatch OnParseStart + OnParseComplete (with entry count + duration). File not found dispatches OnParseFailed. 18 tests.
+- `port/fix-missile-spawner-host-apis` (1 commit, 3 files, +388/-1) → new `IMissileSpawnerHost` (8 methods: OnSpawnStart, OnSpawnComplete, OnMissileHit, OnMissileBatchSpawned, ShowSkillEffect, LogMissileEvent, PlayMissileSFX, SaveMissileLog). `MissileSpawner` ctor accepts IMissileSpawnerHost. AttachHost. SpawnMissiles dispatches: OnSpawnStart + at end (if spawned > 0): OnSpawnComplete + OnMissileBatchSpawned + ShowSkillEffect + LogMissileEvent + PlayMissileSFX + SaveMissileLog. UpdateMissiles: when hit, dispatches OnMissileHit. 22 tests.
+
+**Coordination fixes during integration** (6 commits):
+- `QuestItemServiceTests` class name collision with `QuestAdventureGuildServiceTests.QuestItemServiceTests` (same namespace). Renamed to `QuestItemHostServiceTests`.
+- `IMissileSpawnerHost` interface needs `using VLTK.Model;` for `SkillMissileForm` enum.
+- `IMissileSpawnerHost` host field was placed on wrong class (PcTaskEventRegistry) — static methods in PcTaskEventParser couldn't access it. Moved to PcTaskEventParser.
+- `PcTaskEventParserTests` calls `PcTaskEventRegistry.BuildRegistry` — actually it's on `PcTaskEventParser`. Updated tests to use correct type.
+- `MissileSpawnerTests` used `nameVi` (doesn't exist on SkillDefinition, should be `nameRaw`) and `float attackRadius` (should be `int`).
+- `MissileSpawner` Fan/Surround default count tests: `childCount=1` (default) triggers `int count = childCount > 0 ? childCount : 3` so count=1, not 3. Tests updated to use `childCount=0` to trigger default fallback.
+
+**Targeted EditMode sweep** (job `eeee6bbd89434a5f974b2fa7cd614c05`): 5 tests (initial pre-rename) → full sweep after fixes.
+
+**Final full-suite EditMode sweep** (job `5c2500f99ab84fb8a62cb68e48966f38`, MCP `TestResults.xml`): **`total=3541 passed=3526 failed=11 skipped=4`**. 11 Backend pre-existing failures. **Zero Sandbox regression across 36 port branches**. **Authoritative test delta**: 3450 → 3541 = +91 net new tests.
+
+Final `dev` HEAD: `9751c2801` (~139 commits since `0ed7d017c` baseline).
