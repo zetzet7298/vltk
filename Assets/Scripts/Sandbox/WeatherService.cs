@@ -18,14 +18,29 @@ namespace VLTK.Sandbox
         public const string DefaultStreamingDir = "Reference/PcWeather";
 
         private PcWeatherRegistry _registry;
+        private IWeatherHost _host;
+        private int _lastAppliedMapId = -1;
+        private int _lastAppliedWeather = -1;
 
         /// <summary>Event khi load xong toàn bộ catalog thời tiết.</summary>
         public event Action OnWeatherLoaded;
 
-        public int Count => _registry != null ? _registry.Count : 0;
+        /// <summary>Event khi đổi thời tiết runtime cho map (mapId, weatherType).</summary>
+        public event Action<int, int> OnWeatherChanged;
 
-        public WeatherService() { }
-        public WeatherService(PcWeatherRegistry registry) { AttachRegistry(registry); }
+        public int Count => _registry != null ? _registry.Count : 0;
+        public int LastAppliedMapId => _lastAppliedMapId;
+        public int LastAppliedWeather => _lastAppliedWeather;
+
+        public WeatherService() : this(null, null) { }
+        public WeatherService(PcWeatherRegistry registry) : this(registry, null) { }
+        public WeatherService(PcWeatherRegistry registry, IWeatherHost host)
+        {
+            _host = host;
+            AttachRegistry(registry);
+        }
+
+        public void AttachHost(IWeatherHost host) { _host = host; }
 
         public void AttachRegistry(PcWeatherRegistry registry)
         {
@@ -44,6 +59,35 @@ namespace VLTK.Sandbox
 
         public IEnumerable<PcWeatherEntry> GetAllWeather()
             => _registry != null ? _registry.All : (IEnumerable<PcWeatherEntry>)Array.Empty<PcWeatherEntry>();
+
+        /// <summary>Resolve + dispatch thời tiết cho map tại giờ hiện tại. Trả về entry áp dụng (hoặc null).</summary>
+        public PcWeatherEntry ResolveAndApply(int mapId, int hour)
+        {
+            var entry = GetWeatherForMap(mapId, hour);
+            if (entry == null) return null;
+            int oldWeather = _lastAppliedWeather;
+            _lastAppliedMapId = mapId;
+            _lastAppliedWeather = entry.weatherType;
+            OnWeatherChanged?.Invoke(mapId, entry.weatherType);
+            if (_host != null)
+            {
+                _host.ApplyWeatherEffect(mapId, entry.weatherType, entry.effectId, entry.probability);
+                _host.PlayAmbientSFX(mapId, entry.weatherType);
+                _host.SetFogColor(mapId, entry.weatherType);
+                _host.SetSkyColor(mapId, entry.weatherType);
+                _host.ShowWeatherNotice(mapId, entry.weatherType);
+                _host.LogWeatherChange(mapId, oldWeather, entry.weatherType);
+            }
+            return entry;
+        }
+
+        /// <summary>Clear thời tiết hiện tại (khi rời map hoặc reset).</summary>
+        public void ClearWeather(int mapId)
+        {
+            _lastAppliedMapId = -1;
+            _lastAppliedWeather = -1;
+            if (_host != null) _host.ClearWeatherEffect(mapId);
+        }
 
         public static WeatherService LoadFromStreamingAssets(string subdir = null)
         {
