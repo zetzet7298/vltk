@@ -70,7 +70,7 @@ namespace VLTK.Tests.Sandbox
             return new CombatActorState
             {
                 actorId = id,
-                faction = (Faction)factionId,
+                faction = (CombatFaction)factionId,
                 partyId = partyId,
                 currentLife = hp,
                 maxLife = hp,
