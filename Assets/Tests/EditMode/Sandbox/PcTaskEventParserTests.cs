@@ -67,13 +67,13 @@ namespace VLTK.Tests.Sandbox
             _tmpDir = Path.Combine(Application.temporaryCachePath, "test_taskevent_" + System.Guid.NewGuid().ToString("N"));
             Directory.CreateDirectory(_tmpDir);
             _host = new FakeHost();
-            PcTaskEventRegistry.AttachHost(_host);
+            PcTaskEventParser.AttachHost(_host);
         }
 
         [TearDown]
         public void TearDown()
         {
-            PcTaskEventRegistry.AttachHost(null);
+            PcTaskEventParser.AttachHost(null);
             try { if (Directory.Exists(_tmpDir)) Directory.Delete(_tmpDir, true); } catch { }
         }
 
@@ -83,7 +83,7 @@ namespace VLTK.Tests.Sandbox
         public void AttachHost_Stores()
         {
             var host = new FakeHost();
-            PcTaskEventRegistry.AttachHost(host);
+            PcTaskEventParser.AttachHost(host);
             PcTaskEventRegistry.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, host.RegistryBuiltCalls);
         }
@@ -322,7 +322,7 @@ namespace VLTK.Tests.Sandbox
         {
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"), "1\tE1\tT1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"), "100\tN1\t1\tT1\t1\tX1\n");
-            PcTaskEventRegistry.AttachHost(null);
+            PcTaskEventParser.AttachHost(null);
             Assert.DoesNotThrow(() => PcTaskEventRegistry.BuildRegistry(_tmpDir));
         }
 

@@ -42,10 +42,7 @@ namespace VLTK.Sandbox
 
     public sealed class PcTaskEventRegistry
     {
-        private static IPcTaskEventHost _host;
-
-        /// <summary>Set/clear host để dispatch side-effects (UI, SFX, log, save).</summary>
-        public static void AttachHost(IPcTaskEventHost host) { _host = host; }
+        // host field is in PcTaskEventParser (the static methods class) — see below.
 
         private readonly Dictionary<int, PcTaskEventEntry> _events = new Dictionary<int, PcTaskEventEntry>();
         private readonly Dictionary<string, PcTaskTypeEntry> _types = new Dictionary<string, PcTaskTypeEntry>();
@@ -83,6 +80,11 @@ namespace VLTK.Sandbox
 
     public static class PcTaskEventParser
     {
+        private static IPcTaskEventHost _host;
+
+        /// <summary>Set/clear host để dispatch side-effects (UI, SFX, log, save).</summary>
+        public static void AttachHost(IPcTaskEventHost host) { _host = host; }
+
         private static string TryStr(string[] cols, int idx)
             => (idx < cols.Length) ? (cols[idx] ?? string.Empty).Trim() : string.Empty;
 
