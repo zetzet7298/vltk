@@ -1975,12 +1975,21 @@
     border-radius: 6px 6px 0 0;
     margin-left: 1px;
     margin-right: 1px;
+    color: rgb(255,245,205);
+    font-size: 14px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
 }
 
 .hud-mobile-utility-tab.tab-active {
-    background-color: rgba(52,74,34,0.55);
+    background-color: rgba(52,74,34,0.80);
     border-bottom-width: 2px;
     border-bottom-color: rgba(168,255,112,0.85);
+    color: rgb(255,255,220);
 }
 
 .hud-mobile-utility-tab-label {
@@ -2065,37 +2074,82 @@
 }
 
 /* Final v2 readability overrides. Keep after legacy PC rules so tab labels and item
-   labels win over the old duplicate utility-button declarations. */
+   labels win over the old duplicate utility-button declarations. Large/high-contrast
+   because 900px screenshots and mobile DPI made the previous 14px labels look blank. */
 .hud-mobile-utility-dock {
-    width: 420px;
-    height: 196px;
+    width: 520px;
+    height: 250px;
+    background-color: rgba(5,10,6,0.96);
+    border-width: 2px;
+    border-color: rgb(220,175,80);
 }
 
 .hud-mobile-utility-tab-strip {
-    height: 38px;
-    margin-bottom: 8px;
+    height: 52px;
+    margin-bottom: 10px;
+}
+
+.hud-mobile-utility-tab {
+    height: 48px;
+    min-width: 92px;
+    font-size: 22px;
+    color: rgb(255,255,255);
+    background-color: rgb(34,56,28);
+    border-width: 2px;
+    border-color: rgb(220,175,80);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.hud-mobile-utility-tab.tab-active {
+    background-color: rgb(72,112,42);
+    color: rgb(255,255,180);
+    border-color: rgb(168,255,112);
 }
 
 .hud-mobile-utility-tab-label {
-    font-size: 14px;
-    color: rgb(255,245,205);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    font-size: 22px;
+    color: rgb(255,255,255);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    background-color: rgba(0,0,0,0.25);
+}
+
+.hud-mobile-utility-tab-panel {
+    padding-top: 8px;
 }
 
 .hud-mobile-utility-btn,
 .hud-mobile-treasure-btn {
-    width: 64px;
-    height: 56px;
-    margin-left: 4px;
-    margin-right: 4px;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    width: 88px;
+    height: 74px;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 6px;
+    margin-bottom: 6px;
     overflow: hidden;
+    background-color: rgba(0,0,0,0.32);
+    border-width: 1px;
+    border-color: rgba(220,175,80,0.45);
+}
+
+.hud-mobile-utility-btn .hud-menu-btn-icon,
+.hud-mobile-utility-btn .hud-btn-icon,
+.hud-mobile-utility-btn .hud-pc-icon-bar-icon,
+.hud-mobile-treasure-btn .hud-treasure-icon {
+    width: 42px;
+    height: 42px;
 }
 
 .hud-mobile-utility-btn-label {
-    height: 16px;
-    font-size: 10px;
+    height: 22px;
+    font-size: 14px;
     bottom: 0px;
-    color: rgb(255,245,205);
-    background-color: rgba(0,0,0,0.70);
+    color: rgb(255,255,220);
+    background-color: rgba(0,0,0,0.82);
 }
