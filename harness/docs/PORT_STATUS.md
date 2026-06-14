@@ -296,7 +296,7 @@ These old `✅` claims must stay downgraded until files/runtime are added and te
 
 | Item | Status | Evidence | Required next proof/work |
 |---|---:|---|---|
-| Mobile HUD baseline | 🔄 | committed services/tests exist; current HUD files dirty and excluded | Rerun tests/smoke after human HUD WIP is resolved |
+| Mobile HUD baseline | 🔄 | tabbed categorized dock (5 tabs: Nhân vật/Hành trang/Xã hội/Hoạt động/Hệ thống) + combat quick arc (mount/sit/PK beside skills) committed on `dev` (commits e65d85c2, 114e8abb, bf816b96); GameHudControllerTests 35/35 green (UtilityToggle_OpenCloseAndCyclesTabs, PkCluster_HasMountRunSitQuickButtonsBesideSkills, TabbedDock_DistributesAllPcButtonsAcrossFiveTabs); runtime screenshot confirms combat cluster + visible menu toggle + hidden dock. PC icon-bar 7 buttons merged into Hoạt động tab | PortFactorySmoke HUD authenticity tests gated behind undefined `UNITY_INCLUDE_TESTS` symbol → need symbol enabled to run; icon-bar OnIconBarClick still routes to OpenPcToolPanel text stub (not real panel services); remaining OnXxxClick stubs (Task/Friend/Options) need real panel routing |
 | HUD PC art | 🔄 | partial PC-derived subset exists | Not 100% PC HUD art/layout parity; verify asset provenance row-by-row |
 | Minimap/quest/inventory/map/chat/party/faction/shop panels | 🔄 | panels/services exist | Chat panel aligned to input row, scroll rail aligned to messages, channel identity icon dynamically switches. Full PC behavior/UI parity not globally proven |
 | Touch input/camera rig | 🔄 | services exist | runtime/mobile tests needed |
