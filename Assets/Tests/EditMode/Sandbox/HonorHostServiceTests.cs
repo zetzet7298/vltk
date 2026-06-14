@@ -73,7 +73,7 @@ namespace VLTK.Tests.Sandbox
             var reg = new PcHonorRegistry();
             foreach (var e in entries)
             {
-                reg.Add(new PcHonorEntry
+                reg.Register(new PcHonorEntry
                 {
                     honorId = e.id,
                     requiredPoints = e.required,

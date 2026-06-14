@@ -155,17 +155,17 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>Tạo phần thưởng nhiệm vụ dựa trên difficulty và playerLevel.</summary>
-        public EnhanceQuestReward GenerateQuestReward(int questDifficulty, int playerLevel)
+        public static EnhanceQuestReward GenerateQuestReward(int questDifficulty, int playerLevel)
+        {
+            return GenerateQuestRewardInternal(questDifficulty, playerLevel);
+        }
+
+        /// <summary>Instance version (dispatches host OnQuestRewardGenerated).</summary>
+        public EnhanceQuestReward GenerateQuestRewardWithHost(int questDifficulty, int playerLevel)
         {
             var reward = GenerateQuestRewardInternal(questDifficulty, playerLevel);
             _host?.OnQuestRewardGenerated(questDifficulty, playerLevel, reward.itemIds.Count);
             return reward;
-        }
-
-        /// <summary>Static version for back-compat.</summary>
-        public static EnhanceQuestReward GenerateQuestRewardStatic(int questDifficulty, int playerLevel)
-        {
-            return GenerateQuestRewardInternal(questDifficulty, playerLevel);
         }
 
         private static EnhanceQuestReward GenerateQuestRewardInternal(int questDifficulty, int playerLevel)

@@ -243,7 +243,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_Difficulty1_1Item()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(1, 10);
+            var reward = svc.GenerateQuestRewardWithHost(1, 10);
             Assert.AreEqual(1, reward.itemIds.Count);
         }
 
@@ -251,7 +251,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_Difficulty2_2Items()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(2, 10);
+            var reward = svc.GenerateQuestRewardWithHost(2, 10);
             Assert.AreEqual(2, reward.itemIds.Count);
         }
 
@@ -259,7 +259,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_Difficulty3_3Items()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(3, 10);
+            var reward = svc.GenerateQuestRewardWithHost(3, 10);
             Assert.AreEqual(3, reward.itemIds.Count);
         }
 
@@ -267,7 +267,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_Difficulty5_4Items()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(5, 10);
+            var reward = svc.GenerateQuestRewardWithHost(5, 10);
             Assert.AreEqual(4, reward.itemIds.Count);
         }
 
@@ -275,7 +275,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_Difficulty0_0Items()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(0, 10);
+            var reward = svc.GenerateQuestRewardWithHost(0, 10);
             Assert.AreEqual(0, reward.itemIds.Count);
         }
 
@@ -283,7 +283,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_ExpFormula()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(3, 20);
+            var reward = svc.GenerateQuestRewardWithHost(3, 20);
             Assert.AreEqual(3L * 20 * 50L, reward.exp);
         }
 
@@ -291,7 +291,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_SilverFormula()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(3, 20);
+            var reward = svc.GenerateQuestRewardWithHost(3, 20);
             Assert.AreEqual(3 * 20 * 5, reward.silver);
         }
 
@@ -299,7 +299,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_SkillPoints_HighDifficulty()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(3, 20);
+            var reward = svc.GenerateQuestRewardWithHost(3, 20);
             Assert.AreEqual(1, reward.skillPoints);
         }
 
@@ -307,7 +307,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_SkillPoints_LowDifficulty()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(2, 20);
+            var reward = svc.GenerateQuestRewardWithHost(2, 20);
             Assert.AreEqual(0, reward.skillPoints);
         }
 
@@ -316,7 +316,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new EnhanceRefineService(host);
-            svc.GenerateQuestReward(3, 20);
+            svc.GenerateQuestRewardWithHost(3, 20);
             Assert.AreEqual(1, host.RewardGenCalls);
             Assert.AreEqual(3, host.LastQuestDifficulty);
             Assert.AreEqual(20, host.LastPlayerLevel);
@@ -334,7 +334,7 @@ namespace VLTK.Tests.Sandbox
         public void GenerateQuestReward_Description_Set()
         {
             var svc = new EnhanceRefineService();
-            var reward = svc.GenerateQuestReward(3, 20);
+            var reward = svc.GenerateQuestRewardWithHost(3, 20);
             Assert.IsNotNull(reward.descriptionVi);
             Assert.IsTrue(reward.descriptionVi.Length > 0);
         }
@@ -347,7 +347,7 @@ namespace VLTK.Tests.Sandbox
             var svc = new EnhanceRefineService();
             Assert.DoesNotThrow(() => svc.Enhance(MakeItem(1), 0, 100));
             Assert.DoesNotThrow(() => svc.Refine(MakeItem(1), 0, 1));
-            Assert.DoesNotThrow(() => svc.GenerateQuestReward(2, 10));
+            Assert.DoesNotThrow(() => svc.GenerateQuestRewardWithHost(2, 10));
         }
 
         [Test]
