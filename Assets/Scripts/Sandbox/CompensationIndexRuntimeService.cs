@@ -76,7 +76,15 @@ namespace VLTK.Sandbox
             }
 
             _host?.OnLoadStart("<json>");
-            var entries = JsonUtility.FromJson<CompensationIndexList>(json);
+            CompensationIndexList entries = null;
+            try
+            {
+                entries = JsonUtility.FromJson<CompensationIndexList>(json);
+            }
+            catch (System.ArgumentException)
+            {
+                // JsonUtility throws on raw arrays — fall through to wrapped parse
+            }
             if (entries?.items == null)
             {
                 // JsonUtility wraps arrays poorly — try array parse via wrapper
