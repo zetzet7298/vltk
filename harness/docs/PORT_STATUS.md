@@ -640,3 +640,19 @@ Actually `67/67 pass` from `progress.completed=67 progress.total=67` — so 67 t
 **Final full-suite EditMode sweep** (job `57825801a4bc4a5583f94c621874e751`, MCP `TestResults.xml`): **`total=2895 passed=2880 failed=11 skipped=4`**. Same 11 pre-existing `VLTK.Tests.Backend.*` failures (validation_error vs invalid_arg drift); 0 Sandbox regression. **Authoritative test delta**: 2828 → 2895 = +67 net new tests.
 
 Final `dev` HEAD: `ce1b68e50` (15+ commits since 0ed7d017c baseline).
+
+## Integration batch 2026-06-14 #11 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +87 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-city-defence-host-apis` (1 commit, 3 files, +464/-2) → new `ICityDefenceHost` (7 methods: SpawnDefenderNpc, OnWaveStarted, PlayWaveStartEffect, SetDefenderBuff, ShowDefenceNotice, LogDefenceEvent, GrantWaveReward). `CityDefenceService` ctor accepts ICityDefenceHost, NEW per-wave state `_waveStartedAt[(mapId, waveIndex)]` + event `OnWaveCompleted` + new methods (CompleteWave, IsWaveActive, ActiveWaveCount). TriggerWave host dispatch: lookup matching entry, call SpawnDefenderNpc + SetDefenderBuff (only if npcId+npcCount > 0), OnWaveStarted + PlayWaveStartEffect + ShowDefenceNotice + LogDefenceEvent. CompleteWave gates on `_waveStartedAt.ContainsKey` (no reward if wave not triggered). PC: settings/maps/newcitydefence/*.txt + lua wave_event. 26 tests.
+- `port/fix-honor-host-apis` (1 commit, 3 files, +543/-3) → new `IHonorHost` (7 methods: GrantTitle, ActivateAura, ShowHonorNotice, OnHonorAchieved, PlayHonorSFX, LogHonorEvent, SaveHonorProgress). `HonorService` ctor accepts IHonorHost, NEW per-player state `_playerAchieved[playerId]` set + `_playerPoints[playerId]` map + event `OnPlayerHonorAchieved` + new methods (AddPoints, AchieveHonor, HasAchieved, GetPlayerPoints, GetAchievedCount). PC: settings/honor.txt + lua honor_event. 32 tests.
+- `port/fix-adventure-host-apis` (1 commit, 3 files, +462/-2) → new `IAdventureHost` (7 methods: ShowMapPin, OnAdventureCompleted, GrantAdventureReward, UpdateProgress, LogAdventureEvent, OnAllAdventuresCompleted, SaveAdventureProgress). `AdventureService` ctor accepts IAdventureHost, NEW per-call PlayerId + MarkCompletedFor method + new event OnAllCompleted + GetMapAdventureCount. MarkCompleted host dispatch: ShowMapPin(true) + OnAdventureCompleted + LogAdventureEvent + UpdateProgress(completed/total/ratio) + SaveAdventureProgress; if extra0/extra1 has reward item/count, dispatch GrantAdventureReward; 100% completion fires OnAllCompleted event (host-independent) + dispatches OnAllAdventuresCompleted. PC: settings/adventure.txt + lua adventure_event. 27 tests.
+
+**Coordination fixes during integration**:
+- `AdventureService.MarkCompleted_AllDone` event was fired inside `if (_host != null)` block, so tests with no host didn't see the event → hoisted `OnAllCompleted?.Invoke()` outside the host block (host dispatch of OnAllAdventuresCompleted remains inside the host check)
+- `CityDefenceService.CompleteWave` rewarded even when wave was never triggered → added `if (!_waveStartedAt.ContainsKey) return` guard so only active waves grant reward
+
+**Targeted EditMode sweep** (job `26e5bc1236734fd8891ae91d7ae00faf`): **87/87 pass** for batch #11 (CityDefenceWaveTests 26, HonorAchieveTests 32, AdventureCompleteTests 27 + 2 related).
+
+**Final full-suite EditMode sweep** (job `b5fc535064df4d6fb82f2fa1f668258e`, MCP `TestResults.xml`): **`total=2982 passed=2967 failed=11 skipped=4`**. Same 11 pre-existing `VLTK.Tests.Backend.*` failures (validation_error vs invalid_arg drift); 0 Sandbox regression. **Authoritative test delta**: 2895 → 2982 = +87 net new tests.
+
+Final `dev` HEAD: `bcc15c5b4` (60+ commits since `0ed7d017c` baseline).
