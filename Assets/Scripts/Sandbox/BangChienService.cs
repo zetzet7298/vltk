@@ -66,6 +66,11 @@ namespace VLTK.Sandbox
             _defenderScore = 0;
             _isActive = true;
             SubsystemLog.Info(LogTag, $"Bang Chiến bắt đầu: Bang {challengerBangId} vs Bang {defenderBangId}");
+            if (_host != null)
+            {
+                _host.OnBangChienStarting(challengerBangId, defenderBangId);
+                _host.LogBangChienEvent($"Bang Chiến bắt đầu: Bang {challengerBangId} vs Bang {defenderBangId}");
+            }
         }
 
         public void RecordKill(bool isChallengerKill)
