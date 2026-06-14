@@ -76,10 +76,16 @@ namespace VLTK.Tests.Sandbox
         private static PcAttribConstRegistry MakeRegistry()
         {
             var reg = new PcAttribConstRegistry();
-            reg.AddOrUpdate("MagicDesc", "Fire", "100");
-            reg.AddOrUpdate("MagicDesc", "Ice", "200");
-            reg.AddOrUpdate("RoleValue", "InitGold", "1000");
-            reg.AddOrUpdate("GameSetting", "MaxLevel", "120");
+            var magic = new PcAttribConstSection { name = "MagicDesc" };
+            magic.data["Fire"] = "100";
+            magic.data["Ice"] = "200";
+            reg.Register(magic);
+            var role = new PcAttribConstSection { name = "RoleValue" };
+            role.data["InitGold"] = "1000";
+            reg.Register(role);
+            var game = new PcAttribConstSection { name = "GameSetting" };
+            game.data["MaxLevel"] = "120";
+            reg.Register(game);
             return reg;
         }
 
@@ -274,7 +280,9 @@ namespace VLTK.Tests.Sandbox
         public void GetInt_NonNumeric_Fallback()
         {
             var reg = new PcAttribConstRegistry();
-            reg.AddOrUpdate("Test", "Bad", "NotANumber");
+            var sec = new PcAttribConstSection { name = "Test" };
+            sec.data["Bad"] = "NotANumber";
+            reg.Register(sec);
             var svc = new AttribConstService(reg);
             Assert.AreEqual(99, svc.GetInt("Test", "Bad", 99));
         }

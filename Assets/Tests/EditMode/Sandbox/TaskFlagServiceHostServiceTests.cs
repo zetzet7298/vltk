@@ -398,8 +398,8 @@ namespace VLTK.Tests.Sandbox
             var host = new FakeHost();
             var svc = new TaskFlagService(host);
             var reg = new PcTaskFlagRegistry();
-            reg.Add(new PcTaskFlagEntry { flagId = 1, taskName = "T1" });
-            reg.Add(new PcTaskFlagEntry { flagId = 2, taskName = "T2" });
+            reg.Register(new PcTaskFlagEntry { flagId = 1, flagName = "T1" });
+            reg.Register(new PcTaskFlagEntry { flagId = 2, flagName = "T2" });
             svc.AttachCatalog(reg);
             Assert.AreEqual(1, host.CatalogAttachedCalls);
             Assert.AreEqual(2, host.LastFlagCount);
