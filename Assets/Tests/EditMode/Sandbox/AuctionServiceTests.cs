@@ -299,10 +299,9 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = BuildService(host);
-            // Use tiny duration
+            // Use duration 1s and wait > 1s so timestamp passes
             svc.ListItem(1, 100, 1, "X", 50, 200, 1);
-            // Wait briefly so timestamp passes
-            System.Threading.Thread.Sleep(50);
+            System.Threading.Thread.Sleep(1500);
             var expired = svc.ExpireDueListings();
             Assert.AreEqual(1, expired.Count);
             Assert.AreEqual(1, host.ExpiredCalls);

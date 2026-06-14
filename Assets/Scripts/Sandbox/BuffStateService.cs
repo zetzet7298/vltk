@@ -97,6 +97,12 @@ namespace VLTK.Sandbox
                 }
 
                 OnBuffAdded?.Invoke(actorId, instance);
+                if (_host != null)
+                {
+                    _host.ShowStateEffect(actorId, skill.skillId, skillLevel, durationSeconds, isHapticEffect);
+                    _host.PlayStateSFX(actorId, skill.skillId, isHapticEffect);
+                    _host.LogStateNotice(actorId, skill.skillId, skillLevel, true);
+                }
                 SubsystemLog.Info("BuffState", $"Applied buff {skill.DisplayName} on actor {actorId} (duration={durationSeconds}s)");
             }
         }
