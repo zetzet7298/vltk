@@ -595,3 +595,24 @@ Final `dev` HEAD after batch #7 + fix: `945b2b460`.
 **Final full-suite EditMode sweep** (job `7565e8c627ad4c82b141ef431e0d2cd7`, MCP `TestResults.xml` summary): **`total=2750 passed=2735 failed=11 skipped=4`** (resultState `Failed(Child)`). Same 11 pre-existing `VLTK.Tests.Backend.*` failures (validation_error vs invalid_arg drift); 0 Sandbox regression. **Authoritative test delta**: 2624 → 2750 = +126 net new tests (12 + 51 + 23 + 22 + 26 = 134 added; some pre-existing tests now show in new bundles). 
 
 Final `dev` HEAD: `da8e108bd` (5 commits: 3 port + 3 merge + 1 fix + 3 coord fixes + 1 amend + 1 doc batch #7 = 12 commits since 0ed7d017c).
+
+## Integration batch 2026-06-14 #9 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +78 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-auction-host-apis` (1 commit, 3 files, +487/-3) → new `IAuctionHost` (8 methods: OnItemListed, OnOutBid, OnBidWon, OnItemSold, OnListingExpired, OnListingCancelled, TryDeductPlayerMoney, GrantPlayerMoney). `AuctionService` ctor accepts IAuctionHost. Host dispatch on ListItem (broadcast), CancelListing (refund item), PlaceBid (refund previous bidder, dispatch outbid + bid-won, also when IsExpired), Buyout (deduct buyer + grant seller + refund previous bidder, dispatch item-sold), new ExpireDueListings() (quét listing hết hạn, dispatch OnExpired + OnListingExpired). PC: settings/auction.ini Main + NotifyString. 24 tests.
+- `port/fix-weather-host-apis` (1 commit, 3 files, +404/-2) → new `IWeatherHost` (7 methods: ApplyWeatherEffect, PlayAmbientSFX, ClearWeatherEffect, SetFogColor, SetSkyColor, ShowWeatherNotice, LogWeatherChange) + `WeatherType` enum (Sunny/Rain/Snow/Fog/Storm). `WeatherService` ctor accepts IWeatherHost, adds OnWeatherChanged event, LastAppliedMapId/LastAppliedWeather state, ResolveAndApply(mapId, hour) dispatches 6 host callbacks in order, ClearWeather(mapId) dispatches ClearWeatherEffect. PC: settings/weather/weather.ini + weather.txt + lua weather_cycle. 19 tests.
+- `port/fix-buff-state-host-apis` (1 commit, 3 files, +444) → new `IBuffStateHost` (5 methods: ShowStateEffect, HideStateEffect, PlayStateSFX, TriggerHapticFeedback, LogStateNotice). `BuffStateService` ctor accepts IBuffStateHost, host dispatch on ApplyBuff (ShowStateEffect + PlayStateSFX + LogStateNotice), RemoveBuff (HideStateEffect + LogStateNotice with added=false), TriggerHapticFeedback split (with actor+skill context for host, fallback to Handheld.Vibrate when no host). Haptic detection unchanged (state 22 or skill 20). PC: KNpc::AddState / m_StateSpecial + lua state_notify. 25 tests.
+
+**Test class collisions fixed**:
+- `AuctionServiceTests` → `AuctionLifecycleTests` (existing AuctionServiceTests in AuctionGoodsShopServiceTests.cs is for LoadFromStreamingAssets)
+- `WeatherServiceTests` → `WeatherResolveTests` (existing WeatherServiceTests in WeatherMusicGuildActivityServiceTests.cs)
+
+**Coordination fixes during integration**:
+- AuctionService lost `_host` field declaration during multi-op edit → re-added in separate commit
+- BuffStateService.ApplyBuff missed host dispatch block during edit → re-added
+- `ExpireDueListings` test sleep 50ms → 1500ms (1s duration + buffer)
+
+**Targeted EditMode sweep**: 78/78 pass (AuctionLifecycleTests 24, WeatherResolveTests 19, BuffStateServiceTests 25, +10 related).
+
+**Final full-suite EditMode sweep** (job `7587c1a01a9e4534887f30563b98b581`, MCP `TestResults.xml`): **`total=2828 passed=2813 failed=11 skipped=4`** (resultState `Failed(Child)`). Same 11 pre-existing `VLTK.Tests.Backend.*` failures (validation_error vs invalid_arg drift); 0 Sandbox regression. **Authoritative test delta**: 2750 → 2828 = +78 net new tests (24+19+25+10 related).
+
+Final `dev` HEAD: `bab1f4566` (15+ commits since 0ed7d017c baseline).
