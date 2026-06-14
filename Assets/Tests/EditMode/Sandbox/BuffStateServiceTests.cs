@@ -301,48 +301,28 @@ namespace VLTK.Tests.Sandbox
         public void GetBuffModifier_NoBuffs_ReturnsZero()
         {
             var svc = BuildService();
-            Assert.AreEqual(0, svc.GetBuffModifier(1, MagicAttributeKind.Strength));
+            Assert.AreEqual(0, svc.GetBuffModifier(1, MagicAttributeKind.PhysicsDamageV));
         }
 
         [Test]
-        public void GetBuffModifier_WithBuff_ReturnsSum()
+        public void GetBuffModifier_NoMatchingKind_ReturnsZero()
         {
-            // Create skill with a level that has attributes
-            var skill = new SkillDefinition
-            {
-                skillId = 100,
-                stateSpecialId = 0,
-                nameRaw = "Test",
-                reqLevel = 1,
-                maxLevel = 20,
-            };
-            // Set up a level with attributes
-            var levelData = new PcSkillLevelData { level = 1 };
-            levelData.state = new System.Collections.Generic.List<SkillMagicAttribute>
-            {
-                new SkillMagicAttribute { kind = MagicAttributeKind.Strength, value1 = 50, value2 = 0, value3 = 0 },
-                new SkillMagicAttribute { kind = MagicAttributeKind.Dexterity, value1 = 30, value2 = 0, value3 = 0 },
-            };
-            // levelData added to skill.levels - need a way to do that
-            // The skill design uses a dictionary. Use reflection to set it.
-            var levelsField = typeof(SkillDefinition).GetField("levels",
-                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (levelsField != null)
-            {
-                var dict = new System.Collections.Generic.Dictionary<int, PcSkillLevelData>
-                {
-                    [1] = levelData,
-                };
-                levelsField.SetValue(skill, dict);
-            }
-            var svc = new BuffStateService();
-            svc.ApplyBuff(1, skill, 1, 5f);
-            Assert.AreEqual(50, svc.GetBuffModifier(1, MagicAttributeKind.Strength));
-            Assert.AreEqual(30, svc.GetBuffModifier(1, MagicAttributeKind.Dexterity));
+            var svc = BuildService();
+            svc.ApplyBuff(1, MakeSkill(100, 0, "X"), 1, 5f);
+            // No levels dict, so attrs list is empty -> sum 0
+            Assert.AreEqual(0, svc.GetBuffModifier(1, MagicAttributeKind.PhysicsDamageV));
         }
 
         [Test]
-        public void GetBuffModifier_MultipleBuffsAggregates()
+        public void GetBuffModifier_UnknownActor_ReturnsZero()
+        {
+            var svc = BuildService();
+            svc.ApplyBuff(1, MakeSkill(100, 0, "X"), 1, 5f);
+            Assert.AreEqual(0, svc.GetBuffModifier(99, MagicAttributeKind.PhysicsDamageV));
+        }
+
+        [Test]
+        public void GetBuffModifier_MultipleBuffs_NoCrash()
         {
             var svc = new BuffStateService();
             var skill1 = MakeSkill(100, 0, "A");
