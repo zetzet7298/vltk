@@ -13,7 +13,7 @@ using VLTK.Sandbox;
 namespace VLTK.Tests.Sandbox
 {
     [TestFixture]
-    public class EnhanceRefineServiceTests
+    public class EnhanceRefineHostServiceTests
     {
         // ── Host fake ────────────────────────────────────────────────────────
 

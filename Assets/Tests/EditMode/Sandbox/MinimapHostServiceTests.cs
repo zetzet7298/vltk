@@ -13,7 +13,7 @@ using VLTK.Sandbox;
 namespace VLTK.Tests.Sandbox
 {
     [TestFixture]
-    public class MinimapServiceTests
+    public class MinimapHostServiceTests
     {
         // ── Host fake ────────────────────────────────────────────────────────
 
