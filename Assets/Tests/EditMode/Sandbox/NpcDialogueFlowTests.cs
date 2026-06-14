@@ -79,8 +79,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void Constructor_DefaultCtor_NullTaskService()
+        public void Constructor_DefaultCtor_AllowsAttachTaskLater()
         {
+            // Default ctor: service is constructed (no host, no task). AttachHost path.
             var svc = new NpcDialogueService();
             Assert.IsNotNull(svc);
         }
@@ -210,12 +211,12 @@ namespace VLTK.Tests.Sandbox
         public void StartDialogue_AllOptionsShownWhenConditionsMet()
         {
             var task = new TaskFlagService();
-            // Set quest 1000 to complete (3 = đã trả)
-            task.SetFlag(1000, 3, 5, 5, "Test quest");
+            // Set quest 1000 to complete (2 = đã hoàn thành chờ trả)
+            task.SetFlag(1000, 2, 5, 5, "Test quest");
             var svc = new NpcDialogueService(task);
             var node = svc.StartDialogue(500, 1);
-            // Option 1 (nhận) bị filter (flag=3 != 0)
-            // Option 2 (trả) xuất hiện vì IsTaskComplete true
+            // Option 1 (nhận) bị filter (flag=2 != 0)
+            // Option 2 (trả) xuất hiện vì IsTaskComplete (flag==2) true
             bool hasTra = false;
             foreach (var opt in node.options)
             {
@@ -290,8 +291,8 @@ namespace VLTK.Tests.Sandbox
             var result = svc.SelectOption(500, 1, opt);
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.nodeId);
-            // SFX called once for option
-            Assert.AreEqual(1, host.SfxCalls);
+            // SFX: 1 from StartDialogue + 1 from SelectOption top block (OnDialogueOpened for new node doesn't re-fire SFX)
+            Assert.AreEqual(2, host.SfxCalls);
             // OnDialogueOpened called again for the new node
             Assert.AreEqual(2, host.OpenCalls); // 1 initial + 1 from select
         }

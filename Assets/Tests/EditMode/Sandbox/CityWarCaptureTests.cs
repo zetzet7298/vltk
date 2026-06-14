@@ -36,6 +36,8 @@ namespace VLTK.Tests.Sandbox
             public long LastCaptureTimestamp;
             public string LastCityName;
             public string LastMessage;
+            public System.Collections.Generic.Dictionary<int, int> RewardByCity = new();
+            public System.Collections.Generic.Dictionary<int, int> RewardCountByCity = new();
 
             public void OnCityOwnerChanged(int cityId, int oldOwnerFaction, int newOwnerFaction, string cityName)
             {
@@ -57,6 +59,8 @@ namespace VLTK.Tests.Sandbox
                 RewardCalls++;
                 LastRewardItem = rewardItem;
                 LastRewardCount = rewardCount;
+                RewardByCity[cityId] = rewardItem;
+                RewardCountByCity[cityId] = rewardCount;
             }
             public void LogCityWarEvent(int cityId, int oldOwner, int newOwner, string message)
             {
@@ -404,7 +408,11 @@ namespace VLTK.Tests.Sandbox
             svc.SetCaptureReward(2, 200, 10);
             svc.CaptureCity(1, 1);
             svc.CaptureCity(2, 2);
-            Assert.AreEqual(100, host.LastRewardItem); // host.LastRewardItem is from last call
+            Assert.AreEqual(100, host.RewardByCity[1]);
+            Assert.AreEqual(5, host.RewardCountByCity[1]);
+            Assert.AreEqual(200, host.RewardByCity[2]);
+            Assert.AreEqual(10, host.RewardCountByCity[2]);
+            Assert.AreEqual(2, host.RewardCalls);
         }
 
         // ── Helper ──────────────────────────────────────────────────────────
