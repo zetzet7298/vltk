@@ -156,7 +156,8 @@ namespace VLTK.Tests.Sandbox
         public void SpawnMissiles_Fan_DefaultCount3()
         {
             var svc = new MissileSpawner();
-            var spawned = svc.SpawnMissiles(MakeSkill(1, SkillMissileForm.Fan), Vector2.zero, new Vector2(100, 0));
+            // childCount=0 → Fan branch falls back to default 3
+            var spawned = svc.SpawnMissiles(MakeSkill(1, SkillMissileForm.Fan), Vector2.zero, new Vector2(100, 0), childCount: 0);
             Assert.AreEqual(3, spawned.Count);
         }
 
@@ -172,7 +173,8 @@ namespace VLTK.Tests.Sandbox
         public void SpawnMissiles_Surround_DefaultCount8()
         {
             var svc = new MissileSpawner();
-            var spawned = svc.SpawnMissiles(MakeSkill(1, SkillMissileForm.Surround), Vector2.zero, new Vector2(100, 0));
+            // childCount=0 → Surround branch falls back to default 8
+            var spawned = svc.SpawnMissiles(MakeSkill(1, SkillMissileForm.Surround), Vector2.zero, new Vector2(100, 0), childCount: 0);
             Assert.AreEqual(8, spawned.Count);
         }
 
