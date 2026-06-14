@@ -15,11 +15,16 @@ namespace VLTK.Sandbox
     public class MinimapService
     {
         private readonly IAssetRegistry _registry;
+        private IMinimapHost _host;
 
-        public MinimapService(IAssetRegistry registry)
+        public MinimapService(IAssetRegistry registry) : this(registry, null) { }
+        public MinimapService(IAssetRegistry registry, IMinimapHost host)
         {
             _registry = registry;
+            _host = host;
         }
+
+        public void AttachHost(IMinimapHost host) { _host = host; }
 
         /// <summary>
         /// AC#1/AC#4 — resolve the minimap artifact for a map definition through the
@@ -34,6 +39,8 @@ namespace VLTK.Sandbox
                 SubsystemLog.Warn("Minimap", "ResolveArtifact called with null map");
                 return null;
             }
+            int mapId = map.catalogEntry?.mapId ?? 0;
+            string settingSourceId = map.catalogEntry?.settingSourceId;
 
             var minimap = map.minimapRef;
             if (minimap == null)
@@ -48,6 +55,12 @@ namespace VLTK.Sandbox
                 map.minimapRef = minimap;
                 SubsystemLog.Warn("Minimap",
                     $"Map {map.catalogEntry?.mapId} has no minimap ref; marked missing");
+                _host?.OnMapNoMinimapRef(mapId, settingSourceId);
+                _host?.OnMinimapMissing(mapId, settingSourceId, "no minimap ref");
+                _host?.ShowMinimapUI(mapId, null, true);
+                _host?.LogMinimapEvent(mapId, $"Map {mapId} không có minimap ref");
+                _host?.PlayMinimapSFX(mapId, "missing");
+                _host?.SaveMinimapState(mapId, settingSourceId, null);
                 return minimap;
             }
 
@@ -57,12 +70,22 @@ namespace VLTK.Sandbox
                 minimap.status = MinimapArtifactStatus.Registered;
                 if (string.IsNullOrEmpty(minimap.artifactPath))
                     minimap.artifactPath = entry.unityAssetPath;
+                _host?.OnMinimapResolved(mapId, minimap.sourceId?.ToKey(), minimap.artifactPath);
+                _host?.ShowMinimapUI(mapId, minimap.artifactPath, false);
+                _host?.LogMinimapEvent(mapId, $"Minimap đã tải: {minimap.artifactPath}");
+                _host?.PlayMinimapSFX(mapId, "load");
+                _host?.SaveMinimapState(mapId, minimap.sourceId?.ToKey(), minimap.artifactPath);
             }
             else
             {
                 minimap.status = MinimapArtifactStatus.Missing;
                 SubsystemLog.Warn("Minimap",
                     $"Minimap artifact missing for source {minimap.sourceId?.ToKey() ?? "<null>"}");
+                _host?.OnMinimapMissing(mapId, minimap.sourceId?.ToKey(), "asset not found");
+                _host?.ShowMinimapUI(mapId, null, true);
+                _host?.LogMinimapEvent(mapId, $"Minimap artifact missing");
+                _host?.PlayMinimapSFX(mapId, "missing");
+                _host?.SaveMinimapState(mapId, minimap.sourceId?.ToKey(), null);
             }
 
             return minimap;
@@ -89,6 +112,8 @@ namespace VLTK.Sandbox
             // Flip Y: world bottom (v=0) → minimap bottom; world top → minimap top.
             // UV origin for most UI RawImages is bottom-left, so no flip needed; but
             // marker RectTransforms anchor top-left, so callers can use (u, 1-v).
+            int mapId = map?.catalogEntry?.mapId ?? 0;
+            _host?.OnWorldToMinimap(mapId, worldPos.x, worldPos.y, u, v);
             return new Vector2(u, v);
         }
 
@@ -116,7 +141,10 @@ namespace VLTK.Sandbox
 
             float u = Mathf.Clamp01(pixel.x / minimapSize.x);
             float v = Mathf.Clamp01(1f - (pixel.y / minimapSize.y));
-            return new Vector2(rect.x + rect.width * u, rect.y + rect.height * v);
+            int mapId = map?.catalogEntry?.mapId ?? 0;
+            var world = new Vector2(rect.x + rect.width * u, rect.y + rect.height * v);
+            _host?.OnMinimapToWorld(mapId, pixel.x, pixel.y, world.x, world.y);
+            return world;
         }
 
         /// <summary>
