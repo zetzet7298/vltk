@@ -48,8 +48,8 @@ namespace VLTK.Sandbox
 
         public EconomyService() : this(100, 0, null) { }
         public EconomyService(int maxStashSlots) : this(maxStashSlots, 0, null) { }
+        // Reuse the 2-arg ctor with default values for `new EconomyService(initialSilver: 1234)` calls
         public EconomyService(int maxStashSlots, int initialSilver) : this(maxStashSlots, initialSilver, null) { }
-        public EconomyService(int maxStashSlots = 100, int initialSilver = 0) : this(maxStashSlots, initialSilver, null) { }
         public EconomyService(int maxStashSlots, int initialSilver, IEconomyHost host)
         {
             _maxStashSlots = maxStashSlots;
