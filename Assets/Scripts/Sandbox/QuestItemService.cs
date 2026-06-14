@@ -20,6 +20,7 @@ namespace VLTK.Sandbox
 
         private readonly PcQuestItemRegistry _registry;
         private readonly Dictionary<int, int> _inventory = new();
+        private IQuestItemHost _host;
 
         /// <summary>Event kích hoạt khi số lượng vật phẩm thay đổi (itemId, oldCount, newCount).</summary>
         public event Action<int, int, int> OnQuestItemChanged;
@@ -36,10 +37,15 @@ namespace VLTK.Sandbox
         }
         public int CatalogCount => _registry.Count;
 
-        public QuestItemService(PcQuestItemRegistry registry)
+        public QuestItemService() : this(null, null) { }
+        public QuestItemService(PcQuestItemRegistry registry) : this(registry, null) { }
+        public QuestItemService(PcQuestItemRegistry registry, IQuestItemHost host)
         {
             _registry = registry ?? new PcQuestItemRegistry();
+            _host = host;
         }
+
+        public void AttachHost(IQuestItemHost host) { _host = host; }
 
         /// <summary>Mã hoá (genre, detail, particular) thành 1 itemId duy nhất.</summary>
         public static int EncodeItemId(int genre, int detail, int particular)
@@ -82,6 +88,14 @@ namespace VLTK.Sandbox
             _inventory[itemId] = newCount;
             SubsystemLog.Info(LogTag, $"Nhận vật phẩm nhiệm vụ #{itemId}: {old} → {newCount}");
             OnQuestItemChanged?.Invoke(itemId, old, newCount);
+            if (_host != null)
+            {
+                _host.OnQuestItemReceived(itemId, old, newCount, count);
+                _host.LogQuestItemEvent(itemId, old, newCount);
+                _host.PlayItemSFX(itemId, "receive");
+                _host.ShowQuestItemUI(_inventory.Count, TotalQuantity);
+                _host.SaveQuestItemState(_inventory.Count, TotalQuantity);
+            }
             return newCount;
         }
 
@@ -90,12 +104,24 @@ namespace VLTK.Sandbox
         {
             if (count <= 0) return true;
             int old = GetQuestItemCount(itemId);
-            if (old < count) return false;
+            if (old < count)
+            {
+                _host?.OnQuestItemInsufficient(itemId, count, old);
+                return false;
+            }
             int newCount = old - count;
             if (newCount <= 0) _inventory.Remove(itemId);
             else _inventory[itemId] = newCount;
             SubsystemLog.Info(LogTag, $"Sử dụng vật phẩm nhiệm vụ #{itemId}: {old} → {newCount}");
             OnQuestItemChanged?.Invoke(itemId, old, newCount);
+            if (_host != null)
+            {
+                _host.OnQuestItemRemoved(itemId, old, newCount, count);
+                _host.LogQuestItemEvent(itemId, old, newCount);
+                _host.PlayItemSFX(itemId, "use");
+                _host.ShowQuestItemUI(_inventory.Count, TotalQuantity);
+                _host.SaveQuestItemState(_inventory.Count, TotalQuantity);
+            }
             return true;
         }
 
@@ -163,8 +189,16 @@ namespace VLTK.Sandbox
         public void Clear()
         {
             var keys = new List<int>(_inventory.Keys);
+            int clearedCount = _inventory.Count;
             _inventory.Clear();
             foreach (var k in keys) OnQuestItemChanged?.Invoke(k, 0, 0);
+            if (_host != null)
+            {
+                _host.OnQuestItemCleared(clearedCount);
+                _host.ShowQuestItemUI(0, 0);
+                _host.SaveQuestItemState(0, 0);
+                _host.PlayItemSFX(0, "clear");
+            }
         }
 
         /// <summary>Load từ StreamingAssets/Reference/PcItemFull.</summary>
