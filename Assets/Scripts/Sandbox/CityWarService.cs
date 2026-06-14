@@ -35,20 +35,32 @@ namespace VLTK.Sandbox
         public const int NeutralFaction = 0;
 
         private PcCityWarRegistry _registry;
+        private ICityWarHost _host;
+        // Per-city capture reward map: cityId -> (itemId, count). Defaults to 0.
+        private readonly Dictionary<int, (int itemId, int count)> _captureRewards = new();
         private readonly Dictionary<int, CityWarState> _cityStates = new();
         private bool _indexed;
 
         /// <summary>Sự kiện khi một thành bị chiếm. (cityId, oldOwner, newOwner)</summary>
         public event Action<int, int, int> OnCityCaptured;
+        /// <summary>Sự kiện khi defender count thay đổi. (cityId, count)</summary>
+        public event Action<int, int> OnDefenderChanged;
 
         public int Count => _cityStates.Count;
 
-        public CityWarService() { }
-
-        public CityWarService(PcCityWarRegistry registry)
+        public CityWarService() : this(null, null) { }
+        public CityWarService(PcCityWarRegistry registry) : this(registry, null) { }
+        public CityWarService(PcCityWarRegistry registry, ICityWarHost host)
         {
+            _host = host;
             AttachRegistry(registry);
         }
+
+        public void AttachHost(ICityWarHost host) { _host = host; }
+
+        /// <summary>Thiết lập phần thưởng cho từng thành khi chiếm thành công.</summary>
+        public void SetCaptureReward(int cityId, int rewardItem, int rewardCount)
+            => _captureRewards[cityId] = (rewardItem, rewardCount);
 
         public void AttachRegistry(PcCityWarRegistry registry)
         {
@@ -154,6 +166,19 @@ namespace VLTK.Sandbox
             string factionName = FactionName(newOwnerFaction);
             SubsystemLog.Info(LogTag, $"Thành {s.nameVi} (id={cityId}) bị chiếm bởi {factionName}");
             OnCityCaptured?.Invoke(cityId, oldOwner, newOwnerFaction);
+            if (_host != null)
+            {
+                _host.OnCityOwnerChanged(cityId, oldOwner, newOwnerFaction, s.nameVi);
+                _host.ShowCityMarker(cityId, newOwnerFaction, s.nameVi);
+                _host.PlayCaptureSFX(cityId, newOwnerFaction);
+                _host.LogCityWarEvent(cityId, oldOwner, newOwnerFaction,
+                    $"Thành {s.nameVi} (id={cityId}) bị chiếm bởi {factionName}");
+                _host.UpdateLeaderboard(cityId, newOwnerFaction, s.defenderCount, s.captureTimestamp);
+                if (_captureRewards.TryGetValue(cityId, out var reward) && reward.itemId > 0 && reward.count > 0)
+                {
+                    _host.GrantCaptureReward(cityId, newOwnerFaction, reward.itemId, reward.count);
+                }
+            }
             return true;
         }
 
@@ -163,18 +188,28 @@ namespace VLTK.Sandbox
             if (s == null) return false;
             s.defenderCount += count;
             if (s.defenderCount < 0) s.defenderCount = 0;
+            OnDefenderChanged?.Invoke(cityId, s.defenderCount);
+            if (_host != null)
+            {
+                _host.UpdateDefenderNpcs(cityId, s.ownerFaction, s.defenderCount);
+                _host.UpdateLeaderboard(cityId, s.ownerFaction, s.defenderCount, s.captureTimestamp);
+            }
             return true;
         }
 
         public void ResetAll()
         {
+            int total = _cityStates.Count;
+            int neutral = 0;
             foreach (var s in _cityStates.Values)
             {
                 s.ownerFaction = NeutralFaction;
                 s.captureTimestamp = 0L;
                 s.defenderCount = 0;
+                neutral++;
             }
             SubsystemLog.Info(LogTag, "Reset toàn bộ trạng thái Thành Chiến");
+            _host?.OnCityWarReset(total, neutral);
         }
 
         private static string FactionName(int factionId)
