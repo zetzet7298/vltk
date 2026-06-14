@@ -1952,14 +1952,16 @@ namespace VLTK.UI
 
         public int CurrentUtilityBarMode => _utilityBarMode;
 
-        /// <summary>Show one tab panel and hide the others; update the tab-strip active state.</summary>
+        /// <summary>Show one tab panel and hide the others; update the tab-strip active state.
+        /// Queries _boundRoot directly (not the cached arrays) so the tab strip works even before
+        /// BindElements has populated the caches (e.g. unit-test fixtures). </summary>
         private void SelectUtilityTab(int tabIndex)
         {
             _activeUtilityTab = Mathf.Clamp(tabIndex, 0, UtilityTabPanelNames.Length - 1);
             for (int i = 0; i < UtilityTabPanelNames.Length; i++)
             {
-                _utilityTabPanels[i]?.EnableInClassList("hidden", i != _activeUtilityTab);
-                _utilityTabButtons[i]?.EnableInClassList("tab-active", i == _activeUtilityTab);
+                _boundRoot?.Q(UtilityTabPanelNames[i])?.EnableInClassList("hidden", i != _activeUtilityTab);
+                _boundRoot?.Q(UtilityTabButtonNames[i])?.EnableInClassList("tab-active", i == _activeUtilityTab);
             }
         }
 
