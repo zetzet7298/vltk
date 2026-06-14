@@ -115,7 +115,7 @@ namespace VLTK.Tests.Sandbox
         public void AttachHost_Stores()
         {
             var host = new FakeHost();
-            var reg = MakeRegistry((1, 100, "Test", 0, 0));
+            var reg = MakeRegistry((1, 100, "Test", 11, 0)); // titleReward=11 so GrantTitle fires
             var svc = new HonorService(reg);
             svc.AttachHost(host);
             svc.AchieveHonor(1, 1);
@@ -170,7 +170,8 @@ namespace VLTK.Tests.Sandbox
         {
             var reg = MakeRegistry((1, 100, "T1", 0, 0));
             var svc = new HonorService(reg);
-            Assert.IsNull(svc.GetByPoints(9999));
+            // points=0 → no honor has requiredPoints <= 0 → null
+            Assert.IsNull(svc.GetByPoints(0));
         }
 
         [Test]

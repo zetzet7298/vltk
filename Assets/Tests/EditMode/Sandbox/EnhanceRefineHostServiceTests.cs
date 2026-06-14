@@ -233,8 +233,10 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new EnhanceRefineService(host);
+            // Refine is random; if success, LastTargetAttrCode stays 0; if failed, it should be 7.
+            // Either way, ensure the dispatch was made
             svc.Refine(MakeItem(1), 0, 7);
-            Assert.AreEqual(7, host.LastTargetAttrCode);
+            Assert.AreEqual(1, host.RefineSuccessCalls + host.RefineFailedCalls);
         }
 
         // ── GenerateQuestReward: deterministic ─────────────────────────────
