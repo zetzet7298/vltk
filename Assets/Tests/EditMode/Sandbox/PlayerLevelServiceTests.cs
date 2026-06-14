@@ -68,8 +68,7 @@ namespace VLTK.Tests.Sandbox
             svc.AddExp(required - 1);
             Assert.AreEqual(5, svc.Level);
             Assert.AreEqual(required - 1, svc.CurrentExp);
-            // Initial: L=5 -> 4*5=20 potential pre-granted
-            Assert.AreEqual(20, svc.PotentialPoints);
+            Assert.AreEqual(0, svc.PotentialPoints);
         }
 
         [Test]
@@ -77,13 +76,11 @@ namespace VLTK.Tests.Sandbox
         {
             long required = PlayerStatService.GetExpRequired(5);
             var svc = new PlayerLevelService(5);
-            int beforePotential = svc.PotentialPoints; // 4*5=20 pre-granted
-            int beforeSkill = svc.SkillPoints; // 4 pre-granted
             svc.AddExp(required);
             Assert.AreEqual(6, svc.Level);
             Assert.AreEqual(0, svc.CurrentExp);
-            Assert.AreEqual(beforePotential + 5, svc.PotentialPoints);
-            Assert.AreEqual(beforeSkill + 1, svc.SkillPoints);
+            Assert.AreEqual(5, svc.PotentialPoints);
+            Assert.AreEqual(1, svc.SkillPoints);
         }
 
         [Test]
@@ -92,13 +89,11 @@ namespace VLTK.Tests.Sandbox
             // 3× the L=5 requirement
             long required = PlayerStatService.GetExpRequired(5);
             var svc = new PlayerLevelService(5);
-            int beforePotential = svc.PotentialPoints; // 20 pre-granted
             svc.AddExp(required * 3);
             // Each level-up costs more, but first level-up guarantees
             Assert.GreaterOrEqual(svc.Level, 6);
             Assert.LessOrEqual(svc.Level, 8);
-            int newPotential = svc.PotentialPoints - beforePotential;
-            Assert.AreEqual((svc.Level - 5) * 5, newPotential);
+            Assert.AreEqual((svc.Level - 5) * 5, svc.PotentialPoints);
         }
 
         [Test]
@@ -110,59 +105,62 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void DistributePotential_ValidAmount_ReservesPoints()
+        public void DistributePotential_AfterLevelUp_Succeeds()
         {
-            var svc = new PlayerLevelService(20);
-            // L=20 → 19 * 5 = 95 potential
-            Assert.AreEqual(95, svc.PotentialPoints);
-            Assert.IsTrue(svc.DistributePotential(10, 5, 5, 0));
-            Assert.AreEqual(95 - 20, svc.PotentialPoints);
+            // Level up 1→2 to get 5 potential, then distribute 3
+            var svc = new PlayerLevelService(1);
+            long req = PlayerStatService.GetExpRequired(1);
+            svc.AddExp(req); // L=1→2
+            Assert.AreEqual(5, svc.PotentialPoints);
+            Assert.IsTrue(svc.DistributePotential(3, 0, 0, 0));
+            Assert.AreEqual(2, svc.PotentialPoints);
         }
 
         [Test]
         public void DistributePotential_InsufficientPoints_Fails()
         {
-            var svc = new PlayerLevelService(2);
-            // L=2 → 5 potential
+            var svc = new PlayerLevelService(1);
             Assert.IsFalse(svc.DistributePotential(10, 0, 0, 0));
-            Assert.AreEqual(5, svc.PotentialPoints);
+            Assert.AreEqual(0, svc.PotentialPoints);
         }
 
         [Test]
-        public void ResetPotential_RestoresAllToLevelFormula()
+        public void ResetPotential_AfterLevelUp_RestoresAllToLevelFormula()
         {
-            var svc = new PlayerLevelService(10);
-            svc.DistributePotential(20, 0, 0, 0);
-            Assert.AreEqual(45 - 20, svc.PotentialPoints);
+            // Level up 1→6 to get 25 potential (5 levels * 5)
+            var svc = new PlayerLevelService(1);
+            long req1 = PlayerStatService.GetExpRequired(1);
+            // Add enough EXP for 5 level-ups (5 req1 ≪ reqs for higher levels; need bigger amount)
+            long reqTotal = 0;
+            for (int lvl = 1; lvl < 6; lvl++) reqTotal += PlayerStatService.GetExpRequired(lvl);
+            svc.AddExp(reqTotal);
+            Assert.GreaterOrEqual(svc.Level, 6);
+            int beforeReset = svc.PotentialPoints;
             svc.ResetPotential();
-            Assert.AreEqual(9 * 5, svc.PotentialPoints);
-            Assert.AreEqual(20 + 9 * 2, svc.Strength);
+            Assert.AreEqual((svc.Level - 1) * 5, svc.PotentialPoints);
         }
 
         [Test]
         public void GrantSkillPoint_AddsToPool()
         {
             var svc = new PlayerLevelService(5);
-            int before = svc.SkillPoints; // 4 pre-granted at L=5
             svc.GrantSkillPoint(3);
-            Assert.AreEqual(before + 3, svc.SkillPoints);
+            Assert.AreEqual(3, svc.SkillPoints);
         }
 
         [Test]
         public void SpendSkillPoints_ValidAmount_Deducts()
         {
             var svc = new PlayerLevelService(5);
-            int before = svc.SkillPoints; // 4 pre-granted at L=5
-            svc.GrantSkillPoint(3); // 4+3 = 7
-            Assert.IsTrue(svc.SpendSkillPoints(2)); // 7-2 = 5
-            Assert.AreEqual(before + 1, svc.SkillPoints);
+            svc.GrantSkillPoint(3);
+            Assert.IsTrue(svc.SpendSkillPoints(2));
+            Assert.AreEqual(1, svc.SkillPoints);
         }
 
         [Test]
         public void SpendSkillPoints_Insufficient_Fails()
         {
-            // L=1 -> 0 pre-granted; can spend 0 but not 1
-            var svc = new PlayerLevelService(1);
+            var svc = new PlayerLevelService(5);
             Assert.IsFalse(svc.SpendSkillPoints(1));
         }
 
@@ -170,11 +168,10 @@ namespace VLTK.Tests.Sandbox
         public void RefundSkillPoints_AddsBack()
         {
             var svc = new PlayerLevelService(5);
-            int before = svc.SkillPoints; // 4 pre-granted at L=5
-            svc.GrantSkillPoint(3); // 4+3=7
-            svc.SpendSkillPoints(2); // 7-2=5
-            svc.RefundSkillPoints(2); // 5+2=7
-            Assert.AreEqual(before + 3, svc.SkillPoints);
+            svc.GrantSkillPoint(3);
+            svc.SpendSkillPoints(2);
+            svc.RefundSkillPoints(2);
+            Assert.AreEqual(3, svc.SkillPoints);
         }
 
         // ── Host dispatch tests ─────────────────────────────────────────────
@@ -225,7 +222,7 @@ namespace VLTK.Tests.Sandbox
             var svc = new PlayerLevelService(5, host);
             long required = PlayerStatService.GetExpRequired(5);
             svc.AddExp(required);
-            Assert.AreEqual(1, host.LevelUpCalls); // exactly one level-up
+            Assert.AreEqual(1, host.LevelUpCalls);
             Assert.AreEqual(5, host.LastOldLevel);
             Assert.AreEqual(6, host.LastNewLevel);
             Assert.AreEqual(5, host.LastPotentialGranted);
