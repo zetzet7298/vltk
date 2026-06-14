@@ -33,6 +33,15 @@ namespace VLTK.Sandbox
 
         public bool resetHandleOnRelease = true;
 
+        [Header("Knob Smoothing")]
+        [Tooltip("Làm mượt chuyển động handle (knob) khi kéo để giảm jitter tay. 0 = 1:1 theo ngón. 0.25..0.4 = buttery smooth.")]
+        [Range(0f, 0.95f)]
+        public float knobSmoothing = 0.3f;
+
+        [Tooltip("Làm mượt vị trí handle khi thả ngón (snap về giữa). 0.18..0.3 = đàn hồi nhẹ.")]
+        [Range(0f, 0.95f)]
+        public float returnSmoothing = 0.2f;
+
         [Header("Output")]
         [SerializeField]
         private Vector2 rawInput;
@@ -104,8 +113,7 @@ public void OnDrag(PointerEventData eventData)
             touchInput.JoystickDeadZone = deadZone;
             moveInput = touchInput.JoystickToMove(rawInput);
 
-            if (handle != null)
-                handle.anchoredPosition = rawInput * radius;
+            // Handle chạy tới _handleTarget; Update() lerp mượt. smoothing=0 → 1:1 tức thì.
 
             onMove.Invoke(moveInput);
         }
@@ -116,10 +124,34 @@ public void OnDrag(PointerEventData eventData)
             rawInput = Vector2.zero;
             moveInput = Vector2.zero;
 
-            if (resetHandleOnRelease)
-                CenterHandle();
-
+            // Không snap tức thì — Update() lerp về giữa với returnSmoothing
+            // tạo hiệu ứng đàn hồi nhẹ khi thả ngón.
             onMove.Invoke(moveInput);
+        }
+
+        private Vector2 _handleTarget = Vector2.zero;
+
+        // Cập nhật mỗi frame: lerp handle tới target để chuyển động mượt,
+        // giảm jitter do tay rung. (Best practice: animate knob smoothly.)
+        private void Update()
+        {
+            if (handle == null)
+                return;
+
+            Vector2 target = IsPressed ? rawInput * radius : Vector2.zero;
+            _handleTarget = target;
+            float t = IsPressed ? knobSmoothing : returnSmoothing;
+
+            if (t <= 0f)
+            {
+                handle.anchoredPosition = target;
+            }
+            else
+            {
+                // Frame-rate independent lerp.
+                float k = 1f - Mathf.Pow(1f - (1f - t), Time.unscaledDeltaTime * 60f);
+                handle.anchoredPosition = Vector2.Lerp(handle.anchoredPosition, target, k);
+            }
         }
 
         public void CenterHandle()

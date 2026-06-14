@@ -1796,9 +1796,14 @@ namespace VLTK.Sandbox
             background.anchorMax = new Vector2(0f, 0f);
             background.pivot = new Vector2(0.5f, 0.5f);
             background.anchoredPosition = new Vector2(120f, 120f);
-            background.sizeDelta = new Vector2(150f, 150f);
+            // Vòng đế joystick — sprite ngọc-bích thật (fallback procedural khi thiếu art).
+            background.sizeDelta = new Vector2(220f, 220f);
             var bgImage = backgroundGo.AddComponent<Image>();
-            bgImage.sprite = CreateUiDiscSprite(new Color(0.15f, 0.85f, 0.25f, 0.28f), new Color(0.70f, 1f, 0.70f, 0.65f));
+            var joystickBase = LoadJoystickArt("UI/VirtualJoystick/joystick_base");
+            bgImage.sprite = joystickBase != null
+                ? joystickBase
+                : CreateUiDiscSprite(new Color(0.15f, 0.85f, 0.25f, 0.28f), new Color(0.70f, 1f, 0.70f, 0.65f));
+            bgImage.preserveAspect = true;
 
             var handleGo = new GameObject("Handle");
             handleGo.transform.SetParent(backgroundGo.transform, false);
@@ -1807,15 +1812,21 @@ namespace VLTK.Sandbox
             handle.anchorMax = new Vector2(0.5f, 0.5f);
             handle.pivot = new Vector2(0.5f, 0.5f);
             handle.anchoredPosition = Vector2.zero;
-            handle.sizeDelta = new Vector2(74f, 74f);
+            // Núm joystick — sprite ngọc-bích thật (fallback procedural khi thiếu art).
+            handle.sizeDelta = new Vector2(110f, 110f);
             var handleImage = handleGo.AddComponent<Image>();
-            handleImage.sprite = CreateUiDiscSprite(new Color(0.12f, 0.95f, 0.30f, 0.78f), new Color(0.85f, 1f, 0.85f, 0.95f));
+            var joystickHandle = LoadJoystickArt("UI/VirtualJoystick/joystick_handle");
+            handleImage.sprite = joystickHandle != null
+                ? joystickHandle
+                : CreateUiDiscSprite(new Color(0.12f, 0.95f, 0.30f, 0.78f), new Color(0.85f, 1f, 0.85f, 0.95f));
+            handleImage.preserveAspect = true;
 
             var joystick = backgroundGo.AddComponent<MobileJoystick>();
             joystick.background = background;
             joystick.handle = handle;
-            joystick.radius = 58f;
-            joystick.inputRadius = 55f;
+            // radius (bán kính di chuyển visible của handle) & inputRadius khớp vòng đế 220px.
+            joystick.radius = 92f;
+            joystick.inputRadius = 86f;
             joystick.deadZone = 0.08f;
             joystick.sensitivity = 1.35f;
             // EnsureMountToggleButton(canvasGo.GetComponent<RectTransform>());
@@ -1856,6 +1867,37 @@ namespace VLTK.Sandbox
             var toggle = btnGo.AddComponent<MountToggleButton>();
             toggle.Bind(PlayerController, txt);
             btn.onClick.AddListener(toggle.OnClick);
+        }
+
+        // Cache sprite art joystick đã load từ Resources (load 1 lần).
+        private static Sprite _joystickBaseArt;
+        private static Sprite _joystickHandleArt;
+
+        /// <summary>
+        /// Load sprite joystick từ <c>Resources/UI/VirtualJoystick</c>. Trả về <c>null</c>
+        /// khi thiếu art (caller sẽ fallback sang procedural disc). Cache tĩnh để
+        /// không load lại nhiều lần khi build lại HUD.
+        /// </summary>
+        private static Sprite LoadJoystickArt(string resourcesPath)
+        {
+            if (string.IsNullOrEmpty(resourcesPath))
+                return null;
+
+            if (resourcesPath.EndsWith("base", System.StringComparison.Ordinal))
+            {
+                if (_joystickBaseArt == null)
+                    _joystickBaseArt = Resources.Load<Sprite>(resourcesPath);
+                return _joystickBaseArt;
+            }
+
+            if (resourcesPath.EndsWith("handle", System.StringComparison.Ordinal))
+            {
+                if (_joystickHandleArt == null)
+                    _joystickHandleArt = Resources.Load<Sprite>(resourcesPath);
+                return _joystickHandleArt;
+            }
+
+            return Resources.Load<Sprite>(resourcesPath);
         }
 
         private static Sprite CreateUiDiscSprite(Color fill, Color ring)
