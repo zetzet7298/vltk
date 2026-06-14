@@ -72,10 +72,11 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void Constructor_NullTaskService_Throws()
+        public void Constructor_NullTaskService_AllowedAttachLater()
         {
-            Assert.Throws<System.ArgumentNullException>(
-                () => new NpcDialogueService(null));
+            // Null task service is allowed at ctor; can be attached later via AttachTaskService
+            var svc = new NpcDialogueService(null);
+            Assert.IsNotNull(svc);
         }
 
         [Test]
@@ -216,13 +217,13 @@ namespace VLTK.Tests.Sandbox
             var svc = new NpcDialogueService(task);
             var node = svc.StartDialogue(500, 1);
             // Option 1 (nhận) bị filter (flag=2 != 0)
-            // Option 2 (trả) xuất hiện vì IsTaskComplete (flag==2) true
-            bool hasTra = false;
+            // Option 2 (Hoàn thành nhiệm vụ - Báo cáo) xuất hiện vì IsTaskComplete (flag==2) true
+            bool hasBaoCao = false;
             foreach (var opt in node.options)
             {
-                if (opt.textVi != null && opt.textVi.Contains("trả")) hasTra = true;
+                if (opt.textVi != null && opt.textVi.Contains("Báo cáo")) hasBaoCao = true;
             }
-            Assert.IsTrue(hasTra);
+            Assert.IsTrue(hasBaoCao);
         }
 
         // ── SelectOption ────────────────────────────────────────────────────

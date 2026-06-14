@@ -43,17 +43,15 @@ namespace VLTK.Sandbox
         public event Action OnDialogueEnded;
         public event Action<int, int> OnNpcTemplateUsed; // (npcTemplateId, playerLevel)
 
-        public NpcDialogueService() : this(null) { }
-        public NpcDialogueService(TaskFlagService taskService)
-        {
-            _taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
-        }
-
+        public NpcDialogueService() : this((TaskFlagService)null, null) { }
+        public NpcDialogueService(TaskFlagService taskService) : this(taskService, null) { }
         public NpcDialogueService(TaskFlagService taskService, INpcDialogueHost host)
         {
-            _taskService = taskService ?? throw new ArgumentNullException(nameof(taskService));
+            _taskService = taskService; // null allowed; quest options simply won't filter
             _host = host;
         }
+
+        public void AttachTaskService(TaskFlagService taskService) { _taskService = taskService; }
 
         public void AttachHost(INpcDialogueHost host) { _host = host; }
 
