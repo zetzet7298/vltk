@@ -100,8 +100,8 @@ namespace VLTK.Tests.Sandbox
         public void CreateGuild_AlreadyCreated_Fails()
         {
             var svc = BuildService();
-            svc.CreateGuild("A", "X", 1, 5000);
-            var r = svc.CreateGuild("B", "Y", 2, 5000);
+            Assert.AreEqual(GuildService.GuildCreationResult.Success, svc.CreateGuild("Bang HopLe", "X", 1, 5000));
+            var r = svc.CreateGuild("BangKhac", "Y", 2, 5000);
             Assert.AreEqual(GuildService.GuildCreationResult.AlreadyCreated, r);
         }
 
@@ -301,7 +301,11 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void TryUpgrade_NotEnoughFunds_Fails()
         {
-            var svc = BuildService();
+            // Build a registry with at least 2 levels so MaxLevel=2 (otherwise any target > 0 returns MaxLevel)
+            var reg = new PcTongLevelRegistry();
+            reg.Register(new PcTongLevelEntry { level = 1, requiredFunds = 0, requiredBuild = 0 });
+            reg.Register(new PcTongLevelEntry { level = 2, requiredFunds = 1000, requiredBuild = 0 });
+            var svc = new GuildService(reg, null);
             svc.CreateGuild("Bang P", "Leader1", 1, 5000);
             var r = svc.TryUpgrade(2, 0);
             Assert.AreEqual(GuildUpgradeResult.NotEnoughFunds, r);

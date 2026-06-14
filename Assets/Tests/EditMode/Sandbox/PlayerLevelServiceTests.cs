@@ -216,7 +216,7 @@ namespace VLTK.Tests.Sandbox
             var svc = new PlayerLevelService(5, host);
             long required = PlayerStatService.GetExpRequired(5);
             svc.AddExp(required);
-            Assert.AreEqual(5, host.LevelUpCalls == 1 ? 1 : 0); // exactly one level-up
+            Assert.AreEqual(1, host.LevelUpCalls); // exactly one level-up
             Assert.AreEqual(5, host.LastOldLevel);
             Assert.AreEqual(6, host.LastNewLevel);
             Assert.AreEqual(5, host.LastPotentialGranted);

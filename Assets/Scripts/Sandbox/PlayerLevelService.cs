@@ -56,6 +56,10 @@ namespace VLTK.Sandbox
         {
             _host = host;
             _level = Mathf.Clamp(initialLevel, 1, MaxPlayerLevel);
+            // PC: nhân vật sinh ra ở cấp L sẽ nhận (L-1) potential + skill points.
+            int levelsGained = _level - 1;
+            _potentialPoints = levelsGained * PotentialPointsPerLevel;
+            _skillPoints = levelsGained * SkillPointsPerLevel;
             // Reset basic attributes according to level
             Strength = 20 + (_level - 1) * 2;
             Dexterity = 20 + (_level - 1) * 1;
