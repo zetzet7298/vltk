@@ -714,3 +714,22 @@ Final `dev` HEAD: `40be804c7` (~92 commits since `0ed7d017c` baseline).
 **Final full-suite EditMode sweep** (job `85f7bd9c25a547089156ddec98afee37`, MCP `TestResults.xml`): **`total=3249 passed=3234 failed=11 skipped=4`**. 11 Backend pre-existing failures (validation_error vs invalid_arg drift), same set as previous batches. **Zero Sandbox regression across 24 port branches**. **Authoritative test delta**: 3156 → 3249 = +93 net new tests.
 
 Final `dev` HEAD: `ae41d5b93` (~104 commits since `0ed7d017c` baseline).
+
+## Integration batch 2026-06-14 #15 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +119 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-partner-host-apis` (1 commit, 3 files, +593/-3) → new `IPartnerServiceHost` (8 methods: OnPetSpawned, OnPetDespawned, OnPetLevelledUp, OnPetHungerDecayed, OnPetStarving, OnPetFed, PlayPetSFX, SavePetState). `PartnerService` ctor accepts IPartnerServiceHost. NEW ctors (default, 1-arg registry, 2-arg with host) for backward compat. AttachHost. SpawnPet host dispatch: OnPetSpawned + PlayPetSFX(spawn) + SavePetState. DespawnPet take reason param + dispatch OnPetDespawned + PlayPetSFX(despawn). AwardExp level-up loop: OnPetLevelledUp + PlayPetSFX(levelup) + SavePetState. DecayHunger: OnPetHungerDecayed; on reach zero: OnPetStarving + PlayPetSFX(starving). FeedPet: track previousHunger + dispatch OnPetFed + PlayPetSFX(feed) + SavePetState. 33 tests.
+- `port/fix-pk-combat-host-apis` (1 commit, 3 files, +523/-1) → new `IPkCombatHost` (8 methods: OnPkModeChanged, OnAttackResolved, OnKarmaChanged, OnBecameRedName, OnClearedRedName, LogPkEvent, PlayPkSFX, SaveKarma). `PkCombatService` ctor accepts IPkCombatHost. NEW ActorId property + AttachHost. SetPkMode: track oldMode + dispatch OnPkModeChanged + LogPkEvent + SaveKarma. CanAttack: dispatch OnAttackResolved + PlayPkSFX (when canAttack). ApplyKillPenalty: track prevKarma + dispatch OnKarmaChanged + OnBecameRedName (if !was && now) + SaveKarma + LogPkEvent. ReduceKarma: track prevKarma + dispatch OnKarmaChanged + OnClearedRedName (if was && !now) + SaveKarma. 28 tests.
+- `port/fix-friend-host-apis` (1 commit, 3 files, +575/-6) → new `IFriendHost` (8 methods: OnFriendAdded, OnFriendRemoved, OnIntimacyChanged, OnFriendOnlineStatusChanged, OnMessageSent, PlayFriendSFX, LogFriendEvent, SaveFriendList). `FriendService` ctor accepts IFriendHost. NEW events. AttachHost. AddFriend: now checks MaxFriends limit + dispatch host: OnFriendAdded + PlayFriendSFX(add) + LogFriendEvent + SaveFriendList. RemoveFriend dispatches: OnFriendRemoved + PlayFriendSFX(remove) + LogFriendEvent + SaveFriendList. AddIntimacy tracks prev + dispatches: OnIntimacyChanged + LogFriendEvent + SaveFriendList. NEW method SetOnline(playerId, friendId, isOnline, lastLoginSec=0) - dispatches OnFriendOnlineStatusChanged. SendMessage dispatches: OnMessageSent. 33 tests.
+
+**Coordination fixes during integration** (5 commits):
+- `PartnerServiceTests` class name collision with `PartnerPetServiceTests.PartnerServiceTests` (same namespace). Renamed to `PartnerHostServiceTests`.
+- `PkCombatService` ctor with 2-arg `(int factionId, int bangId)` broke pre-existing tests using 1-arg `new PkCombatService(1)`. Added 1-arg ctor `(int factionId)`.
+- PkCombatServiceTests used `Faction` enum but actual enum is `CombatFaction` in `VLTK.Model` namespace. Fixed + added `using VLTK.Model;`.
+- `AwardExp_DispatchesHost` test counted SfxCalls across SpawnPet and AwardExp (2 instead of expected 1). Reset host counters between operations.
+- `CanAttack_FreeMode_ReturnsTrue` test expected karmaChange=10 but the faction diff (1 vs 2) reduced to 5. Changed target to same faction to get full karma=10.
+
+**Targeted EditMode sweep** (job `5323c414ab1b4176bd91122b07641619`): **119/119 pass** for batch #15.
+
+**Final full-suite EditMode sweep** (job `9dd23a5900414ab4a18783c8e77f5ca5`, MCP `TestResults.xml`): **`total=3368 passed=3353 failed=11 skipped=4`**. 11 Backend pre-existing failures (validation_error vs invalid_arg drift), same set as previous batches. **Zero Sandbox regression across 30 port branches**. **Authoritative test delta**: 3249 → 3368 = +119 net new tests.
+
+Final `dev` HEAD: `94230a176` (~118 commits since `0ed7d017c` baseline).
