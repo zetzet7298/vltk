@@ -12,7 +12,7 @@ using VLTK.Sandbox;
 namespace VLTK.Tests.Sandbox
 {
     [TestFixture]
-    public class AuctionServiceTests
+    public class AuctionLifecycleTests
     {
         // ── Host fake ────────────────────────────────────────────────────────
 

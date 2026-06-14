@@ -12,7 +12,7 @@ using VLTK.Sandbox;
 namespace VLTK.Tests.Sandbox
 {
     [TestFixture]
-    public class WeatherServiceTests
+    public class WeatherResolveTests
     {
         // ── Host fake ────────────────────────────────────────────────────────
 
