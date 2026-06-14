@@ -656,3 +656,22 @@ Final `dev` HEAD: `ce1b68e50` (15+ commits since 0ed7d017c baseline).
 **Final full-suite EditMode sweep** (job `b5fc535064df4d6fb82f2fa1f668258e`, MCP `TestResults.xml`): **`total=2982 passed=2967 failed=11 skipped=4`**. Same 11 pre-existing `VLTK.Tests.Backend.*` failures (validation_error vs invalid_arg drift); 0 Sandbox regression. **Authoritative test delta**: 2895 → 2982 = +87 net new tests.
 
 Final `dev` HEAD: `bcc15c5b4` (60+ commits since `0ed7d017c` baseline).
+
+## Integration batch 2026-06-14 #12 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +88 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-npc-dialogue-host-apis` (1 commit, 3 files, +490/-0) → new `INpcDialogueHost` (7 methods: OnDialogueOpened, OnDialogueClosed, OnDialogueOptions, PlayDialogueSFX, LogDialogueEvent, PlayNpcGreeting, DispatchQuestOption). `NpcDialogueService` ctor accepts INpcDialogueHost. NEW per-call CurrentNpcTemplateId + CurrentPlayerLevel + OnNpcTemplateUsed event. NEW ctor (TaskFlagService, INpcDialogueHost). StartDialogue host dispatch: OnDialogueOpened + OnDialogueOptions + PlayNpcGreeting + PlayDialogueSFX + LogDialogueEvent. SelectOption: detects quest keyword (nhận/trả) in textVi → DispatchQuestOption + PlayDialogueSFX. CloseDialogue resets current NPC + dispatches OnDialogueClosed. 4 NPC types covered (Dã Tẩu, Võ Sư, Xa Phu, default). 30 tests.
+- `port/fix-player-equipment-host-apis` (1 commit, 3 files, +392/-0) → new `IPlayerEquipmentHost` (8 methods: RefreshVisual, PlayEquipSFX, OnWeaponChanged, OnArmorChanged, OnHelmetChanged, OnMountChanged, LogEquipEvent, SaveEquipmentState). `PlayerEquipmentService` ctor accepts IPlayerEquipmentHost. NEW ctor () + AttachHost. Equip host dispatch: RefreshVisual + PlayEquipSFX + LogEquipEvent + SaveEquipmentState always; switch on slot dispatches OnWeaponChanged/OnArmorChanged/OnHelmetChanged/OnMountChanged. PC: NpcRes/npcres/man + man order table. 26 tests.
+- `port/fix-city-war-host-apis` (1 commit, 3 files, +497/-3) → new `ICityWarHost` (8 methods: OnCityOwnerChanged, UpdateDefenderNpcs, ShowCityMarker, PlayCaptureSFX, GrantCaptureReward, LogCityWarEvent, UpdateLeaderboard, OnCityWarReset). `CityWarService` ctor accepts ICityWarHost. NEW per-city capture reward map `_captureRewards[cityId] -> (itemId, count)` + SetCaptureReward method. NEW event OnDefenderChanged. CaptureCity host dispatch: OnCityOwnerChanged + ShowCityMarker + PlayCaptureSFX + LogCityWarEvent + UpdateLeaderboard + GrantCaptureReward (if reward configured). AddDefender host dispatch: UpdateDefenderNpcs + UpdateLeaderboard + fires OnDefenderChanged. ResetAll host dispatch: OnCityWarReset(total, neutral). PC: settings/event/citywar.ini + lua citywar_event. 30 tests.
+
+**Coordination fixes during integration** (3 commits):
+- `CityWarCaptureTests.SetCaptureReward_MultipleCities` used `host.LastRewardItem` (overwritten each call). Add `RewardByCity` + `RewardCountByCity` dicts to FakeHost for per-city tracking.
+- `NpcDialogueFlowTests.SelectOption_TargetNode_DispatchesHost` expected SFX=1 but actual=2: StartDialogue calls PlayDialogueSFX once in OnDialogueOpened block, then SelectOption calls PlayDialogueSFX once at top. (The new-node OnDialogueOpened does not re-fire SFX.) Fixed expected count to 2.
+- `NpcDialogueFlowTests.StartDialogue_AllOptionsShownWhenConditionsMet` used `text.Contains("trả")` but the option text is "Hoàn thành nhiệm vụ (Báo cáo)" — changed to check `Báo cáo`.
+- `NpcDialogueService` default ctor was throwing via `this(null)` chain. Allow null task service; add `AttachTaskService` method for late-binding. Updated `Constructor_NullTaskService_Throws` test to `Constructor_NullTaskService_AllowedAttachLater`.
+- Made `_taskService` field non-readonly so `AttachTaskService` can reassign it.
+
+**Targeted EditMode sweep** (job `400542c1c5e245bebbbcccc33e951952`): **88/88 pass** for batch #12.
+
+**Final full-suite EditMode sweep** (job `b6ca957472ca4204835314e8ede0ad96`, MCP `TestResults.xml`): **`total=3070 passed=3055 failed=11 skipped=4`**. Same 11 pre-existing `VLTK.Tests.Backend.*` failures (validation_error vs invalid_arg drift); 0 Sandbox regression. **Authoritative test delta**: 2982 → 3070 = +88 net new tests.
+
+Final `dev` HEAD: `0b8f58edb` (~75 commits since `0ed7d017c` baseline).
