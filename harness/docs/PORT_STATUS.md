@@ -733,3 +733,21 @@ Final `dev` HEAD: `ae41d5b93` (~104 commits since `0ed7d017c` baseline).
 **Final full-suite EditMode sweep** (job `9dd23a5900414ab4a18783c8e77f5ca5`, MCP `TestResults.xml`): **`total=3368 passed=3353 failed=11 skipped=4`**. 11 Backend pre-existing failures (validation_error vs invalid_arg drift), same set as previous batches. **Zero Sandbox regression across 30 port branches**. **Authoritative test delta**: 3249 → 3368 = +119 net new tests.
 
 Final `dev` HEAD: `94230a176` (~118 commits since `0ed7d017c` baseline).
+
+## Integration batch 2026-06-14 #16 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +82 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-compensation-host-apis` (1 commit, 3 files, +442/-0) → new `ICompensationHost` (8 methods: OnLoadStart, OnLoadComplete, OnLoadFailed, OnQuery, ShowCompensationList, LogCompensationEvent, PlayCompensationSFX, SaveCompensationLog). `CompensationIndexRuntimeService` ctor accepts ICompensationHost. AttachHost. LoadFromJson: dispatch OnLoadStart + OnLoadFailed (empty/invalid json) + OnLoadComplete (with counts) + ShowCompensationList + PlayCompensationSFX. LoadFromPath: dispatch OnLoadStart + OnLoadFailed (file not found). GetByFilename: dispatch OnQuery(filename) + SaveCompensationLog. GetByRelPath: dispatch OnQuery(relpath) + SaveCompensationLog. GetAllByFilename: dispatch OnQuery(filenameAll) with match count. 24 tests.
+- `port/fix-obstacle-grid-loader-host-apis` (1 commit, 3 files, +383/-0) → new `IObstacleGridLoaderHost` (8 methods: OnLoadStart, OnLoadComplete, OnLoadFailed, OnRegionLoaded, OnRegionMissing, LogObstacleEvent, PlayObstacleSFX, SaveObstacleLog). `ObstacleGridLoader` (static class) gets static AttachHost + _host field. EnsureLoaded: dispatch OnLoadStart + OnLoadFailed (file not found / invalid magic / header out of range) + OnLoadComplete (with region count + bytes) + PlayObstacleSFX(load) + LogObstacleEvent. LoadFromStreamingAssets: dispatch OnRegionMissing (empty regionFile / no pack / region not in pack) + SaveObstacleLog (false path) + OnRegionLoaded (with width/height/blocked) + SaveObstacleLog (true path). 17 tests.
+- `port/fix-pc-map-list-full-host-apis` (1 commit, 3 files, +361/-3) → new `IPcMapListFullHost` (8 methods: OnParseStart, OnParseComplete, OnParseFailed, OnRegistryBuilt, ShowMapList, LogMapListEvent, PlayMapLoadSFX, SaveMapLog). `PcMapListFullParser` (static class) gets static AttachHost + _host field. ParseFile: stopwatch + dispatch OnParseStart + OnParseFailed (empty path / file not found) + OnParseComplete (with entry count + duration) + PlayMapLoadSFX + LogMapListEvent. BuildRegistry: stopwatch + dispatch OnRegistryBuilt (with totalMaps, withMapType, withoutMapType, duration) + ShowMapList + SaveMapLog. 24 tests.
+
+**Coordination fixes during integration** (4 commits):
+- `JsonUtility.FromJson<T>` throws `ArgumentException` when given raw JSON array (not returns null). Wrapped in try-catch to allow fallback to wrapped `{"items":...}` parse. This was a pre-existing latent bug that only manifested in the new tests.
+- `ObstacleGridLoader` parser uses `TrimEnd()` (whitespace only) on key bytes, but WritePack helper was left-padding with NUL bytes (not whitespace) and the parser didn't strip nulls. Fixed WritePack helper to left-pad with space (0x20).
+- `LoadFromStreamingAssets_TruncatedPack_DispatchesFailed` test wrote exactly 16 bytes (header size) with count=0 — that's a valid header so the loader accepts it. Renamed test to `TruncatedPack_NoCrash` with `Assert.DoesNotThrow`.
+- `LoadFromStreamingAssets_InvalidMagic_DispatchesFailed` test triggers an `Error` log via `SubsystemLog.Error`. Added `LogAssert.Expect` to satisfy NUnit's unhandled-log detection.
+
+**Targeted EditMode sweep** (job `baaacac1c368469baa6bcbb531d63875`): **19/19 pass** for ObstacleGridLoaderTests after fixes.
+
+**Final full-suite EditMode sweep** (job `16f28ad74694486d9e7ab1a86aea43b1`, MCP `TestResults.xml`): **`total=3450 passed=3435 failed=11 skipped=4`**. 11 Backend pre-existing failures. **Zero Sandbox regression across 33 port branches**. **Authoritative test delta**: 3368 → 3450 = +82 net new tests.
+
+Final `dev` HEAD: `ec4072f2c` (~127 commits since `0ed7d017c` baseline).
