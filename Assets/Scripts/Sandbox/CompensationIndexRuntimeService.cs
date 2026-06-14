@@ -33,6 +33,7 @@ namespace VLTK.Sandbox
         private readonly List<CompensationIndexEntry> _entries = new();
         private readonly Dictionary<string, CompensationIndexEntry> _byFilename = new(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, CompensationIndexEntry> _byRelPath = new(StringComparer.OrdinalIgnoreCase);
+        private ICompensationHost _host;
 
         /// <summary>Total number of indexed compensation files.</summary>
         public int Count => _entries.Count;
@@ -42,6 +43,11 @@ namespace VLTK.Sandbox
 
         /// <summary>All indexed entries in insertion order.</summary>
         public IReadOnlyList<CompensationIndexEntry> AllEntries => _entries;
+
+        public CompensationIndexRuntimeService() : this(null) { }
+        public CompensationIndexRuntimeService(ICompensationHost host) { _host = host; }
+
+        public void AttachHost(ICompensationHost host) { _host = host; }
 
         /// <summary>
         /// Load from StreamingAssets using Unity's streaming path.
@@ -65,9 +71,11 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(json))
             {
                 SubsystemLog.Warn(LogTag, "Cannot load from empty JSON");
+                _host?.OnLoadFailed("<json>", "empty json");
                 return;
             }
 
+            _host?.OnLoadStart("<json>");
             var entries = JsonUtility.FromJson<CompensationIndexList>(json);
             if (entries?.items == null)
             {
@@ -80,11 +88,15 @@ namespace VLTK.Sandbox
             if (entries?.items == null || entries.items.Length == 0)
             {
                 SubsystemLog.Warn(LogTag, "Parsed 0 entries from CompensationIndex JSON");
+                _host?.OnLoadFailed("<json>", "0 entries");
                 return;
             }
 
             BuildIndex(entries.items);
             IsLoaded = true;
+            _host?.OnLoadComplete(_entries.Count, _byFilename.Count, _byRelPath.Count);
+            _host?.ShowCompensationList(_entries.Count, _entries.Count);
+            _host?.PlayCompensationSFX("load");
             SubsystemLog.Info(LogTag, $"Loaded {_entries.Count} compensation index entries");
         }
 
@@ -96,9 +108,11 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(fullPath) || !File.Exists(fullPath))
             {
                 SubsystemLog.Warn(LogTag, $"Index file not found: {fullPath}");
+                _host?.OnLoadFailed(fullPath ?? "<null>", "file not found");
                 return;
             }
 
+            _host?.OnLoadStart(fullPath);
             string json = File.ReadAllText(fullPath);
             LoadFromJson(json);
         }
@@ -111,6 +125,8 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(filename)) return null;
             _byFilename.TryGetValue(filename, out var entry);
+            _host?.OnQuery("filename", filename, entry != null, entry != null ? 1 : 0);
+            _host?.SaveCompensationLog("filename", filename, entry != null ? 1 : 0);
             return entry;
         }
 
@@ -122,6 +138,8 @@ namespace VLTK.Sandbox
         {
             if (string.IsNullOrEmpty(relPath)) return null;
             _byRelPath.TryGetValue(relPath, out var entry);
+            _host?.OnQuery("relpath", relPath, entry != null, entry != null ? 1 : 0);
+            _host?.SaveCompensationLog("relpath", relPath, entry != null ? 1 : 0);
             return entry;
         }
 
@@ -138,6 +156,7 @@ namespace VLTK.Sandbox
                 if (string.Equals(entry.filename, filename, StringComparison.OrdinalIgnoreCase))
                     result.Add(entry);
             }
+            _host?.OnQuery("filenameAll", filename, result.Count > 0, result.Count);
             return result;
         }
 
