@@ -244,6 +244,200 @@ namespace VLTK.Sandbox
             return plan;
         }
 
+
+        // -----------------------------------------------------------------
+        // ExecutePlan — apply ItemExchangePlan.Commands vào IItemExchangeInventory.
+        // PC source: Server 6.0/script/misc/itemexchangevalue/itemexchangevalue.lua
+        // + itemexchange_setting/{normal,rare,level_exp,rolevalue}.*
+        //
+        // Dispatch theo ApiName:
+        //   WriteLog            → inv.WriteLog(TextArg)
+        //   RemoveItemByIndex   → inv.TakeItem(IntArgs[0])
+        //   AddGoldItem         → inv.GiveItem(genre, detail, particular, level=1, count, magicLevel)
+        //   AddItem             → inv.GiveItem(genre, detail, particular, level, count)
+        //   AddItemEx           → inv.GiveItem(genre, detail, particular, level, count, magicLevel)
+        //   GiveGold            → inv.GiveGold(amount)
+        //   ConsumeItem         → inv.ConsumeItem(itemIndex=0, count) (jinglian)
+        //   SetItemMagicLevel   → inv.SetItemMagicLevel(itemIndex, newMagicLevel)
+        //   SyncItem            → inv.SyncItem(itemIndex)
+        //   SetItemBindState    → inv.SetItemBindState(itemIndex, bindState)
+        //
+        // Pre-flight: đếm số ô GiveItem/GiveGold sẽ chiếm; nếu vượt FreeBagCells
+        // thì trả false NGAY TRƯỚC khi remove gì (PC semantic: preflight inventory).
+        // Rollback: nếu GiveItem fail sau khi RemoveItemByIndex đã thành công,
+        // hoàn trả các item đã remove theo thứ tự ngược.
+        // -----------------------------------------------------------------
+        public bool ExecutePlan(ItemExchangePlan plan, IItemExchangeInventory inv, out string error)
+        {
+            error = string.Empty;
+            if (plan == null) { error = "null plan"; return false; }
+            if (!plan.Success) { error = plan.FailureReason; return false; }
+            if (inv == null) { error = "null inventory"; return false; }
+            if (plan.Commands == null || plan.Commands.Count == 0) return true;
+
+            // --- Pre-flight: đếm ô yêu cầu ---
+            int giveCount = 0;
+            foreach (var cmd in plan.Commands)
+            {
+                if (cmd.ApiName == "AddGoldItem") giveCount++;
+                else if (cmd.ApiName == "AddItem") giveCount++;
+                else if (cmd.ApiName == "AddItemEx") giveCount++;
+                else if (cmd.ApiName == "GiveGold") giveCount++;
+            }
+            if (giveCount > inv.FreeBagCells())
+            {
+                error = $"InsufficientBagCells: cần {giveCount}, có {inv.FreeBagCells()}";
+                return false;
+            }
+
+            // --- Execute commands với rollback tracking ---
+            var takenItems = new System.Collections.Generic.List<(int index, int count)>();
+            try
+            {
+                foreach (var cmd in plan.Commands)
+                {
+                    switch (cmd.ApiName)
+                    {
+                        case "WriteLog":
+                            inv.WriteLog(cmd.TextArg ?? string.Empty);
+                            break;
+
+                        case "RemoveItemByIndex":
+                            {
+                                int idx = IntArg(cmd, 0);
+                                if (!inv.TakeItem(idx))
+                                {
+                                    RollbackTakes(inv, takenItems);
+                                    error = $"RemoveItemByIndex({idx}) failed: thiếu item";
+                                    return false;
+                                }
+                                takenItems.Add((idx, 1));
+                            }
+                            break;
+
+                        case "AddGoldItem":
+                            {
+                                // [arg0, genre, detail, particular, count, _, _, _, magicLevel]
+                                int genre = IntArg(cmd, 1);
+                                int detail = IntArg(cmd, 2);
+                                int particular = IntArg(cmd, 3);
+                                int count = IntArg(cmd, 4);
+                                int magicLevel = IntArg(cmd, 8);
+                                if (!inv.GiveItem(genre, detail, particular, 1, count, magicLevel))
+                                {
+                                    RollbackTakes(inv, takenItems);
+                                    error = $"AddGoldItem({genre}/{detail}/{particular}) failed";
+                                    return false;
+                                }
+                            }
+                            break;
+
+                        case "AddItem":
+                            {
+                                int genre = IntArg(cmd, 0);
+                                int detail = IntArg(cmd, 1);
+                                int particular = IntArg(cmd, 2);
+                                int level = IntArg(cmd, 3);
+                                int count = IntArg(cmd, 4);
+                                if (!inv.GiveItem(genre, detail, particular, level, count))
+                                {
+                                    RollbackTakes(inv, takenItems);
+                                    error = $"AddItem({genre}/{detail}/{particular}) failed";
+                                    return false;
+                                }
+                            }
+                            break;
+
+                        case "AddItemEx":
+                            {
+                                int genre = IntArg(cmd, 0);
+                                int detail = IntArg(cmd, 1);
+                                int particular = IntArg(cmd, 2);
+                                int level = IntArg(cmd, 3);
+                                int count = IntArg(cmd, 4);
+                                int magicLevel = IntArg(cmd, 5);
+                                if (!inv.GiveItem(genre, detail, particular, level, count, magicLevel))
+                                {
+                                    RollbackTakes(inv, takenItems);
+                                    error = $"AddItemEx({genre}/{detail}/{particular}) failed";
+                                    return false;
+                                }
+                            }
+                            break;
+
+                        case "GiveGold":
+                            {
+                                int amount = IntArg(cmd, 0);
+                                if (!inv.GiveGold(amount))
+                                {
+                                    RollbackTakes(inv, takenItems);
+                                    error = $"GiveGold({amount}) failed";
+                                    return false;
+                                }
+                            }
+                            break;
+
+                        case "ConsumeItem":
+                            {
+                                // PC PutIn: [consumeCount, ...] — trừ energy theo count.
+                                int consume = IntArg(cmd, 0);
+                                if (!inv.ConsumeItem(0, consume))
+                                {
+                                    error = $"ConsumeItem({consume}) failed";
+                                    return false;
+                                }
+                            }
+                            break;
+
+                        case "SetItemMagicLevel":
+                            {
+                                int idx = IntArg(cmd, 0);
+                                int newMagicLevel = IntArg(cmd, 2);
+                                inv.SetItemMagicLevel(idx, newMagicLevel);
+                            }
+                            break;
+
+                        case "SyncItem":
+                            inv.SyncItem(IntArg(cmd, 0));
+                            break;
+
+                        case "SetItemBindState":
+                            inv.SetItemBindState(IntArg(cmd, 0), IntArg(cmd, 1));
+                            break;
+
+                        default:
+                            // Unknown command — skip gracefully (forward-compat).
+                            SubsystemLog.Warn(LogTag, $"ExecutePlan: unknown ApiName '{cmd.ApiName}' — skipped");
+                            break;
+                    }
+                }
+                return true;
+            }
+            catch (System.Exception e)
+            {
+                RollbackTakes(inv, takenItems);
+                error = $"exception: {e.Message}";
+                return false;
+            }
+        }
+
+        private static void RollbackTakes(IItemExchangeInventory inv, System.Collections.Generic.List<(int index, int count)> taken)
+        {
+            // Hoàn trả theo thứ tự ngược để khôi phục gần đúng thứ tự gốc.
+            for (int i = taken.Count - 1; i >= 0; i--)
+            {
+                try { inv.GiveItem(0, 0, taken[i].index, 1, taken[i].count); }
+                catch { /* best-effort rollback; log only */ }
+            }
+            taken.Clear();
+        }
+
+        private static int IntArg(ItemExchangeHostCommand cmd, int index)
+        {
+            return (cmd.IntArgs != null && index >= 0 && index < cmd.IntArgs.Count)
+                ? cmd.IntArgs[index] : 0;
+        }
+
         public static ItemExchangeLingpaiDefinition FindLingpaiDefinition(string name)
         {
             if (string.IsNullOrWhiteSpace(name)) return null;
