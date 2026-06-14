@@ -27,6 +27,10 @@ namespace VLTK.Sandbox
 {
     public static class PcMapListFullParser
     {
+        private static IPcMapListFullHost _host;
+
+        /// <summary>Set/clear host để dispatch side-effects (UI, SFX, log, save).</summary>
+        public static void AttachHost(IPcMapListFullHost host) { _host = host; }
         // MapType enum values. The first eight match the historical numbering so
         // existing services/tests keep compiling. TypeInstance has no source in
         // maplist.ini (instances are defined elsewhere) and is retained only for
@@ -68,7 +72,13 @@ namespace VLTK.Sandbox
         public static List<PcMapListFullEntry> ParseFile(string path)
         {
             var rows = new List<PcMapListFullEntry>();
-            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return rows;
+            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            {
+                _host?.OnParseFailed(path ?? "<null>", string.IsNullOrEmpty(path) ? "empty path" : "file not found");
+                return rows;
+            }
+            var sw = System.Diagnostics.Stopwatch.StartNew();
+            _host?.OnParseStart(path);
 
             var lines = PcItemCommon.ReadServerLines(path);
             // Preserve first-seen order so callers get maps in id order as they
@@ -134,6 +144,10 @@ namespace VLTK.Sandbox
                 // subkeys without a path are ignored.
                 if (e.hasPath) rows.Add(e);
             }
+            sw.Stop();
+            _host?.OnParseComplete(path, rows.Count, (int)sw.ElapsedMilliseconds);
+            _host?.PlayMapLoadSFX("parse");
+            _host?.LogMapListEvent($"Parsed {rows.Count} map entries from {path} in {sw.ElapsedMilliseconds}ms");
             return rows;
         }
 
@@ -152,18 +166,33 @@ namespace VLTK.Sandbox
 
         public static PcMapListFullRegistry BuildRegistry(string dir)
         {
+            var sw = System.Diagnostics.Stopwatch.StartNew();
             var reg = new PcMapListFullRegistry();
-            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir)) return reg;
+            if (string.IsNullOrEmpty(dir) || !Directory.Exists(dir))
+            {
+                _host?.OnRegistryBuilt(0, 0, 0, sw.ElapsedMilliseconds);
+                _host?.ShowMapList(0, 0);
+                return reg;
+            }
             // Use the explicit file-name family to avoid sweeping unrelated
             // .txt/.ini files in the directory tree. Skip *_sample.ini so the
             // small UTF-8 preview copies do not clobber real entries.
+            int withMapType = 0, withoutMapType = 0;
             foreach (var f in Directory.GetFiles(dir, "maplist*.ini", SearchOption.AllDirectories))
             {
                 var name = Path.GetFileNameWithoutExtension(f);
                 if (name != null && name.EndsWith("_sample", System.StringComparison.OrdinalIgnoreCase))
                     continue;
-                foreach (var s in ParseFile(f)) reg.Register(s);
+                foreach (var s in ParseFile(f)) {
+                    reg.Register(s);
+                    if (s.type == PcMapListFullParser.TypeOther) withoutMapType++;
+                    else withMapType++;
+                }
             }
+            sw.Stop();
+            _host?.OnRegistryBuilt(reg.Count, withMapType, withoutMapType, sw.ElapsedMilliseconds);
+            _host?.ShowMapList(reg.Count, reg.Count);
+            _host?.SaveMapLog(reg.Count, withMapType, withoutMapType);
             return reg;
         }
     }
