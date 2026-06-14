@@ -410,11 +410,13 @@
 .hud-chat-tabs {
     height: 18px;
     flex-direction: row;
-    align-items: flex-end;
+    align-items: center;
+    justify-content: center;
     z-index: 881;
-    /* indent past the slim scroll rail */
-    margin-left: 20px;
-    padding-left: 2px;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 /* PC e3b06434.dat [OpenChannelBtn]: broad channel-open click proxy at the 7-o'clock chat corner.
