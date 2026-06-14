@@ -45,12 +45,18 @@ namespace VLTK.Sandbox
     public class PlayerEquipmentService
     {
         public bool IsFemale { get; set; }
+        private IPlayerEquipmentHost _host;
 
         private readonly Dictionary<PlayerEquipSlot, int> _equipped = new();
         private int _currentWeaponItemId = 0;
 
         /// <summary>Event fired khi equipment thay đổi.</summary>
         public event Action<EquipChangeEvent> OnEquipChanged;
+
+        public PlayerEquipmentService() : this(null) { }
+        public PlayerEquipmentService(IPlayerEquipmentHost host) { _host = host; }
+
+        public void AttachHost(IPlayerEquipmentHost host) { _host = host; }
 
         /// <summary>Get current variant cho một slot.</summary>
         public int GetVariant(PlayerEquipSlot slot)
@@ -81,6 +87,30 @@ namespace VLTK.Sandbox
                 newVariant = variant,
                 itemId = itemId,
             });
+
+            if (_host != null)
+            {
+                _host.RefreshVisual(slot, old, variant, itemId);
+                _host.PlayEquipSFX(slot, itemId);
+                _host.LogEquipEvent(slot, old, variant, itemId);
+                _host.SaveEquipmentState(itemId, slot, variant);
+                // Slot-specific dispatch
+                switch (slot)
+                {
+                    case PlayerEquipSlot.Weapon:
+                        _host.OnWeaponChanged(_currentWeaponItemId, itemId, variant);
+                        break;
+                    case PlayerEquipSlot.Body:
+                        _host.OnArmorChanged(old, variant, itemId);
+                        break;
+                    case PlayerEquipSlot.Head:
+                        _host.OnHelmetChanged(old, variant, itemId);
+                        break;
+                    case PlayerEquipSlot.Mount:
+                        _host.OnMountChanged(old, variant, itemId);
+                        break;
+                }
+            }
 
             SubsystemLog.Info("Equipment",
                 $"Equipped slot {slot}: variant {old} → {variant} (item={itemId})");
