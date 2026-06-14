@@ -35,6 +35,8 @@ namespace VLTK.Sandbox
         private readonly CurrencyWallet _wallet = new();
         private readonly List<StashSlot> _stash = new();
         private readonly int _maxStashSlots;
+        private IEconomyHost _host;
+        private int _nextTradeId = 1;
 
         public CurrencyWallet Wallet => _wallet;
         public IReadOnlyList<StashSlot> Stash => _stash;
@@ -44,11 +46,16 @@ namespace VLTK.Sandbox
         public event Action<int, int> OnSilverChanged; // (newAmount, delta)
         public event Action<int, int> OnGoldChanged;
 
-        public EconomyService(int maxStashSlots = 100, int initialSilver = 0)
+        public EconomyService() : this(100, 0, null) { }
+        public EconomyService(int maxStashSlots, int initialSilver) : this(maxStashSlots, initialSilver, null) { }
+        public EconomyService(int maxStashSlots, int initialSilver, IEconomyHost host)
         {
             _maxStashSlots = maxStashSlots;
             _wallet.silver = initialSilver;
+            _host = host;
         }
+
+        public void AttachHost(IEconomyHost host) { _host = host; }
 
         // ── Currency ───────────────────────────────────────────────────────
 
@@ -57,6 +64,8 @@ namespace VLTK.Sandbox
             if (_wallet.silver < amount) return false;
             _wallet.silver -= amount;
             OnSilverChanged?.Invoke(_wallet.silver, -amount);
+            _host?.OnCurrencyChanged(_wallet.silver, _wallet.gold, _wallet.huyenTinh);
+            _host?.SaveEconomyState(_wallet.silver, _wallet.gold, _wallet.huyenTinh, _stash.Count, _maxStashSlots);
             return true;
         }
 
@@ -64,6 +73,8 @@ namespace VLTK.Sandbox
         {
             _wallet.silver += amount;
             OnSilverChanged?.Invoke(_wallet.silver, amount);
+            _host?.OnCurrencyChanged(_wallet.silver, _wallet.gold, _wallet.huyenTinh);
+            _host?.SaveEconomyState(_wallet.silver, _wallet.gold, _wallet.huyenTinh, _stash.Count, _maxStashSlots);
         }
 
         public bool SpendGold(int amount)
@@ -71,6 +82,7 @@ namespace VLTK.Sandbox
             if (_wallet.gold < amount) return false;
             _wallet.gold -= amount;
             OnGoldChanged?.Invoke(_wallet.gold, -amount);
+            _host?.OnCurrencyChanged(_wallet.silver, _wallet.gold, _wallet.huyenTinh);
             return true;
         }
 
@@ -78,6 +90,7 @@ namespace VLTK.Sandbox
         {
             _wallet.gold += amount;
             OnGoldChanged?.Invoke(_wallet.gold, amount);
+            _host?.OnCurrencyChanged(_wallet.silver, _wallet.gold, _wallet.huyenTinh);
         }
 
         // ── Stash ──────────────────────────────────────────────────────────
@@ -89,6 +102,7 @@ namespace VLTK.Sandbox
             if (_stash.Count >= _maxStashSlots)
             {
                 SubsystemLog.Warn("Stash", "Kho đồ đã đầy!");
+                _host?.OnStashFull(_maxStashSlots);
                 return false;
             }
 
@@ -104,6 +118,7 @@ namespace VLTK.Sandbox
             }
 
             SubsystemLog.Info("Stash", $"Lưu vào kho: Item {itemId} x{count}");
+            _host?.OnStashDeposit(itemId, count, _stash.Count, _maxStashSlots);
             return true;
         }
 
@@ -118,6 +133,7 @@ namespace VLTK.Sandbox
                 _stash.Remove(slot);
 
             SubsystemLog.Info("Stash", $"Lấy từ kho: Item {itemId} x{count}");
+            _host?.OnStashWithdraw(itemId, count, _stash.Count);
             return true;
         }
 
@@ -126,13 +142,16 @@ namespace VLTK.Sandbox
         /// <summary>Tạo yêu cầu giao dịch.</summary>
         public TradeSession CreateTradeSession(int initiatorId, int targetId)
         {
-            return new TradeSession
+            int tradeId = _nextTradeId++;
+            var session = new TradeSession
             {
                 initiatorId = initiatorId,
                 targetId = targetId,
                 initiatorLocked = false,
                 targetLocked = false,
             };
+            _host?.OnTradeSessionCreated(tradeId, initiatorId, targetId);
+            return session;
         }
 
         // ── Shop (NPC Buy/Sell) ────────────────────────────────────────────
@@ -144,6 +163,7 @@ namespace VLTK.Sandbox
             if (!SpendSilver(totalCost)) return false;
 
             SubsystemLog.Info("Shop", $"Mua Item {itemId} x{count} với {totalCost} Bạc");
+            _host?.OnShopBuy(itemId, count, totalCost);
             return true;
         }
 
@@ -153,6 +173,7 @@ namespace VLTK.Sandbox
             int sellPrice = (unitPrice * count) / 2;
             EarnSilver(sellPrice);
             SubsystemLog.Info("Shop", $"Bán Item {itemId} x{count} được {sellPrice} Bạc");
+            _host?.OnShopSell(itemId, count, sellPrice);
             return sellPrice;
         }
     }
