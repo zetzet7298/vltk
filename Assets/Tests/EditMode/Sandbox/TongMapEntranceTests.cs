@@ -236,5 +236,123 @@ namespace VLTK.Tests.Sandbox
             public void AddNote(string note) { }
             public void ApplyCityWarRankEffect(int rank) { }
         }
+        // --- Host-driven entry tests (CanPlayerEnter + EnterTongMap) ---
+
+        /// <summary>Fake ITongMapHost for CanPlayerEnter/EnterTongMap tests.</summary>
+        private sealed class FakeTongMapHost : ITongMapHost
+        {
+            public int OwnerTongId = 0;
+            public bool Banned = false;
+            public long ExpireTime = 0;
+            public bool PlayerInTong = true;
+            public bool CanEnter = true;
+            public bool FightStateResult = true;
+            public bool SetPosResult = true;
+            public int SetPosCalls = 0;
+            public int SetFightStateCalls = 0;
+            public int SendMessageCalls = 0;
+            public System.Collections.Generic.List<string> SentMessages = new();
+
+            public int GetTongOwner(int mapId) => OwnerTongId;
+            public bool IsTongBanned(int tongId, int mapId) => Banned;
+            public long GetTongExpireTime(int tongId, int mapId) => ExpireTime;
+            public bool IsPlayerInTong(string player, int tongId) => PlayerInTong;
+            public bool CanEnterTongMap(int mapId, int level, int tongId) => CanEnter;
+            public bool SetFightState(string player, bool fighting) { SetFightStateCalls++; return FightStateResult; }
+            public bool SetPos(string player, int x, int y) { SetPosCalls++; return SetPosResult; }
+            public bool SendMessage(string player, string message) { SendMessageCalls++; SentMessages.Add(message); return true; }
+        }
+
+        [Test]
+        public void CanPlayerEnter_PublicMap_AllowsAnyone()
+        {
+            var host = new FakeTongMapHost { OwnerTongId = 0 };
+            var svc = new TongMapEntranceRuntimeService(host);
+
+            var d = svc.CanPlayerEnter(mapId: 907, "hero", level: 1, tongId: 5, now: 0);
+
+            Assert.IsTrue(d.Allowed);
+            Assert.AreEqual("PublicMap", d.ReasonVi);
+        }
+
+        [Test]
+        public void CanPlayerEnter_OwnerTong_AllowsOwner()
+        {
+            var host = new FakeTongMapHost { OwnerTongId = 5, PlayerInTong = true };
+            var svc = new TongMapEntranceRuntimeService(host);
+
+            var d = svc.CanPlayerEnter(mapId: 949, "hero", level: 10, tongId: 5, now: 0);
+
+            Assert.IsTrue(d.Allowed);
+            Assert.AreEqual("Owner", d.ReasonVi);
+        }
+
+        [Test]
+        public void CanPlayerEnter_BannedTong_Denies()
+        {
+            var host = new FakeTongMapHost { OwnerTongId = 5, Banned = true, PlayerInTong = false };
+            var svc = new TongMapEntranceRuntimeService(host);
+
+            var d = svc.CanPlayerEnter(mapId: 949, "intruder", level: 100, tongId: 7, now: 0);
+
+            Assert.IsFalse(d.Allowed);
+            Assert.AreEqual("Banned", d.ReasonVi);
+        }
+
+        [Test]
+        public void CanPlayerEnter_ExpiredTong_Denies()
+        {
+            var host = new FakeTongMapHost { OwnerTongId = 5, ExpireTime = 1000, PlayerInTong = false };
+            var svc = new TongMapEntranceRuntimeService(host);
+
+            var d = svc.CanPlayerEnter(mapId: 949, "intruder", level: 100, tongId: 7, now: 2000);
+
+            Assert.IsFalse(d.Allowed);
+            Assert.AreEqual("Expired", d.ReasonVi);
+        }
+
+        [Test]
+        public void CanPlayerEnter_LevelTooLow_Denies()
+        {
+            var host = new FakeTongMapHost { OwnerTongId = 5, CanEnter = false, PlayerInTong = false };
+            var svc = new TongMapEntranceRuntimeService(host);
+
+            var d = svc.CanPlayerEnter(mapId: 949, "lowbie", level: 5, tongId: 7, now: 0);
+
+            Assert.IsFalse(d.Allowed);
+            Assert.AreEqual("LevelTooLow", d.ReasonVi);
+        }
+
+        [Test]
+        public void EnterTongMap_OnSuccess_CallsSetPosAndSetFightState()
+        {
+            var host = new FakeTongMapHost { OwnerTongId = 5, PlayerInTong = true };
+            var svc = new TongMapEntranceRuntimeService(host);
+
+            bool ok = svc.EnterTongMap(mapId: 949, "hero", level: 10, tongId: 5,
+                x: 100, y: 200, fighting: true, now: 0);
+
+            Assert.IsTrue(ok);
+            Assert.AreEqual(1, host.SetPosCalls, "SetPos called once on success.");
+            Assert.AreEqual(1, host.SetFightStateCalls, "SetFightState called once on success.");
+            Assert.AreEqual(0, host.SendMessageCalls, "No denial message on success.");
+        }
+
+        [Test]
+        public void EnterTongMap_OnDeny_CallsSendMessageNotSetPos()
+        {
+            var host = new FakeTongMapHost { OwnerTongId = 5, Banned = true, PlayerInTong = false };
+            var svc = new TongMapEntranceRuntimeService(host);
+
+            bool ok = svc.EnterTongMap(mapId: 949, "intruder", level: 100, tongId: 7,
+                x: 100, y: 200, fighting: false, now: 0);
+
+            Assert.IsFalse(ok);
+            Assert.AreEqual(0, host.SetPosCalls, "No SetPos on denial.");
+            Assert.AreEqual(0, host.SetFightStateCalls, "No SetFightState on denial.");
+            Assert.AreEqual(1, host.SendMessageCalls, "Denial message sent.");
+            StringAssert.Contains("Cấm", host.SentMessages[0]);
+        }
+
     }
 }
