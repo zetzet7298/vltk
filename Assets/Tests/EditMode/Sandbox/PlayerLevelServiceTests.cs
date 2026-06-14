@@ -154,7 +154,8 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SpendSkillPoints_Insufficient_Fails()
         {
-            var svc = new PlayerLevelService(5);
+            // L=1 -> 0 pre-granted; can spend 0 but not 1
+            var svc = new PlayerLevelService(1);
             Assert.IsFalse(svc.SpendSkillPoints(1));
         }
 
