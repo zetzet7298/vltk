@@ -383,12 +383,13 @@
 .hud-cb-page-tab-active { background-color: rgba(255,220,90,0.10); }
 
 
-/* ═══ CHAT AREA — PC bottom-left channel tabs + face/send buttons ═══ */
+/* ═══ CHAT AREA — centered at the bottom of the screen ═══ */
 .hud-chat-panel {
     position: absolute;
-    left: 8px;
+    left: 50%;
     top: auto;
-    bottom: auto;
+    bottom: 8px;
+    translate: -50% 0;
     /* total height = messages(123) + tabs(26) = 149 */
     width: 430px;
     height: 141px;
