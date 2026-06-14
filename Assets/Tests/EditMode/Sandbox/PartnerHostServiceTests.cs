@@ -11,7 +11,7 @@ using VLTK.Sandbox;
 namespace VLTK.Tests.Sandbox
 {
     [TestFixture]
-    public class PartnerServiceTests
+    public class PartnerHostServiceTests
     {
         // ── Host fake ────────────────────────────────────────────────────────
 
