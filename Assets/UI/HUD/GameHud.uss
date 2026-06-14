@@ -1206,22 +1206,7 @@
     border-width: 0px;
 }
 
-.hud-mobile-utility-dock {
-    position: absolute;
-    left: 320px;
-    bottom: 18px;
-    width: 520px;
-    height: 64px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0,0,0,0.18);
-    border-width: 0px;
-    border-color: rgba(220,175,80,0.22);
-    border-radius: 18px;
-    padding-left: 8px;
-    padding-right: 8px;
-}
+/* .hud-mobile-utility-dock consolidated near end of file (mobile v2 tabbed dock). */
 
 .hud-mobile-utility-btn {
     width: 52px;
@@ -1313,8 +1298,8 @@
 
 .hud-combat-run-btn {
     position: absolute;
-    right: 122px;
-    bottom: -6px;
+    right: 260px;
+    bottom: 4px;
     width: 48px;
     height: 48px;
     align-items: center;
@@ -1445,19 +1430,7 @@
 }
 
 /* Full PC utility set: 17 PC HUD buttons in two mobile-safe rows. */
-.hud-mobile-utility-dock {
-    left: 274px;
-    bottom: 8px;
-    width: 628px;
-    height: 116px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding-left: 8px;
-    padding-right: 8px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
+/* old two-row utility dock position removed; v2 dock uses one consolidated rule. */
 
 .hud-mobile-utility-row {
     height: 52px;
@@ -1596,39 +1569,7 @@
 
 /* Utility dock — opens on toggle, compact PC-style panel beside minimap.
    PC has hotkeys; mobile shows a small floating panel with action/menu buttons. */
-.hud-mobile-utility-dock {
-    position: absolute;
-    right: 192px;
-    top: 4px;
-    left: auto;
-    bottom: auto;
-    width: 360px;
-    height: 158px;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(5,10,6,0.88);
-    border-width: 0px;
-    border-color: rgba(80,130,100,0.50);
-    border-radius: 6px;
-    padding-left: 6px;
-    padding-right: 6px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    z-index: 910;
-}
-
-.hud-mobile-utility-dock.action-mode {
-    width: 430px;
-    height: 62px;
-    top: 8px;
-}
-
-.hud-mobile-utility-dock.menu-mode {
-    width: 350px;
-    height: 112px;
-    top: 8px;
-}
+/* old top-right action/menu utility dock rules removed; v2 uses tabbed dock only. */
 
 /* Switch button inside utility dock — cycles action/menu rows. Subtle PC style. */
 .hud-utility-switch-btn {
@@ -1817,21 +1758,10 @@
 }
 
 .hud-pc-shortcut-dock {
-    position: absolute;
-    right: 204px;
-    top: 74px;
-    bottom: auto;
-    width: 236px;
-    height: 158px;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
-    border-width: 0px;
-    
-    border-radius: 14px;
-    padding: 6px;
-    z-index: 914;
+    /* Kept as a placeholder; the authoritative position is the consolidated block below
+       to avoid the duplicate-rule CSS conflict that previously rendered a 236x158 ghost
+       panel in the upper-right. */
+    display: none;
 }
 
 .hud-pc-shortcut-grid {
@@ -2005,9 +1935,12 @@
 }
 
 /* Arc to the LEFT of the skill cluster, stacked so mount/run/sit/PK cluster within thumb sweep. */
-.hud-combat-mount-btn { right: 178px; bottom: -6px; }
-.hud-combat-sit-btn   { right: 230px; bottom: 8px; }
-.hud-combat-pk-btn    { right: 246px; bottom: 60px; }
+/* Quick-action column to the FAR LEFT of the skill cluster, within bounds.
+   Skill slots occupy right:28-178 bottom:20-122; quick actions use right:260
+   so Run/Mount/Sit/PK never overlap skills and remain reachable by thumb. */
+.hud-combat-mount-btn { right: 260px; bottom: 56px; }
+.hud-combat-sit-btn   { right: 260px; bottom: 108px; }
+.hud-combat-pk-btn    { right: 260px; bottom: 160px; }
 
 .hud-combat-mount-btn .hud-combat-quick-icon { background-image: url('project://database/Assets/UI/HUD/Art/btn_horse.png'); }
 .hud-combat-sit-btn .hud-combat-quick-icon   { background-image: url('project://database/Assets/UI/HUD/Art/btn_sit.png'); }
@@ -2026,19 +1959,22 @@
     align-items: stretch;
     justify-content: space-around;
     width: 100%;
-    height: 26px;
-    margin-bottom: 4px;
+    height: 34px;
+    margin-bottom: 6px;
     border-bottom-width: 1px;
-    border-bottom-color: rgba(206,165,82,0.45);
+    border-bottom-color: rgba(206,165,82,0.65);
 }
 
 .hud-mobile-utility-tab {
     flex: 1 1 0;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0.12);
-    border-width: 0px;
-    border-radius: 4px 4px 0 0;
+    background-color: rgba(12,24,10,0.72);
+    border-width: 1px;
+    border-color: rgba(206,165,82,0.32);
+    border-radius: 6px 6px 0 0;
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .hud-mobile-utility-tab.tab-active {
@@ -2048,8 +1984,10 @@
 }
 
 .hud-mobile-utility-tab-label {
-    color: rgb(235,228,190);
-    font-size: 9px;
+    width: 100%;
+    height: 100%;
+    color: rgb(245,236,196);
+    font-size: 13px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
     white-space: nowrap;
@@ -2079,24 +2017,85 @@
     position: absolute;
     left: 0px;
     right: 0px;
-    bottom: -14px;
-    color: rgb(232,226,196);
+    bottom: 0px;
+    height: 14px;
+    color: rgb(245,236,196);
     font-size: 9px;
     -unity-text-align: middle-center;
     white-space: nowrap;
+    background-color: rgba(0,0,0,0.58);
 }
 
-/* Dock tweaks: tab layout needs column direction + extra height for labels. */
+/* Dock tweaks: single authoritative v2 rule.
+   Opens BELOW the minimap/tool row so the expanded panel does not float over
+   the top-right HUD. Older duplicate dock rules above were removed. */
 .hud-mobile-utility-dock {
-    flex-direction: column;
+    position: absolute;
+    right: 8px;
+    top: 174px;
+    left: auto;
+    bottom: auto;
     width: 372px;
     height: 168px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: rgba(5,10,6,0.92);
+    border-width: 1px;
+    border-color: rgba(206,165,82,0.55);
+    border-radius: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
     padding-top: 4px;
     padding-bottom: 6px;
+    z-index: 910;
 }
 
 /* Icon-bar buttons inside tab use the same 46px tile but keep native SPR frame. */
 .hud-mobile-utility-tab-panel .hud-pc-icon-bar-icon {
     width: 30px;
     height: 30px;
+}
+
+/* CRITICAL hidden-state override: .hud-mobile-utility-dock has 4 size declarations above
+   with equal specificity to .hidden, so they clobber display:none. This later, equally-
+   specific two-class selector restores the hide behavior so the dock starts collapsed. */
+.hud-mobile-utility-dock.hidden {
+    display: none;
+}
+
+/* Final v2 readability overrides. Keep after legacy PC rules so tab labels and item
+   labels win over the old duplicate utility-button declarations. */
+.hud-mobile-utility-dock {
+    width: 420px;
+    height: 196px;
+}
+
+.hud-mobile-utility-tab-strip {
+    height: 38px;
+    margin-bottom: 8px;
+}
+
+.hud-mobile-utility-tab-label {
+    font-size: 14px;
+    color: rgb(255,245,205);
+}
+
+.hud-mobile-utility-btn,
+.hud-mobile-treasure-btn {
+    width: 64px;
+    height: 56px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    overflow: hidden;
+}
+
+.hud-mobile-utility-btn-label {
+    height: 16px;
+    font-size: 10px;
+    bottom: 0px;
+    color: rgb(255,245,205);
+    background-color: rgba(0,0,0,0.70);
 }
