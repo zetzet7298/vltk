@@ -23,14 +23,20 @@ namespace VLTK.Sandbox
         // 1000..9999 would collide; ProjectileService also uses its own
         // _nextId, but MissileSpawner writes the field directly so we own it.
         private int _nextMissileId = 1;
+        private IMissileSpawnerHost _host;
 
         /// <summary>Event kích hoạt khi đạn bắn trúng đích.</summary>
         public event Action<ProjectileInstance, CombatActorState> OnMissileHit;
 
-        public MissileSpawner(ProjectileService projectileService)
+        public MissileSpawner() : this(new ProjectileService(), null) { }
+        public MissileSpawner(ProjectileService projectileService) : this(projectileService, null) { }
+        public MissileSpawner(ProjectileService projectileService, IMissileSpawnerHost host)
         {
             _projectileService = projectileService ?? throw new ArgumentNullException(nameof(projectileService));
+            _host = host;
         }
+
+        public void AttachHost(IMissileSpawnerHost host) { _host = host; }
 
         /// <summary>
         /// Tạo và bay đạn theo cấu hình của skill.
@@ -40,6 +46,7 @@ namespace VLTK.Sandbox
         {
             var spawned = new List<ProjectileInstance>();
             if (skill == null) return spawned;
+            _host?.OnSpawnStart(skill.skillId, childCount, skill.missileForm);
 
             // Lấy thông số đạn từ catalog hoặc default
             float speed = speedOverride > 0 ? speedOverride : 300f; // Tốc độ đạn mặc định (PC pixel/sec)
@@ -112,6 +119,15 @@ namespace VLTK.Sandbox
                     break;
             }
 
+            if (spawned.Count > 0)
+            {
+                _host?.OnSpawnComplete(skill.skillId, spawned.Count, speed, duration);
+                _host?.OnMissileBatchSpawned(skill.skillId, spawned.Count, skill.missileForm);
+                _host?.ShowSkillEffect(skill.skillId, skill.missileForm);
+                _host?.LogMissileEvent(skill.skillId, spawned.Count, skill.missileForm);
+                _host?.PlayMissileSFX(skill.skillId, skill.missileForm);
+                _host?.SaveMissileLog(skill.skillId, spawned.Count, skill.missileForm);
+            }
             return spawned;
         }
 
@@ -140,6 +156,7 @@ namespace VLTK.Sandbox
                     {
                         p.alive = false; // Tiêu diệt đạn
                         OnMissileHit?.Invoke(p, target);
+                        _host?.OnMissileHit(p.instanceId, target.actorId, 0);
                         break;
                     }
                 }
