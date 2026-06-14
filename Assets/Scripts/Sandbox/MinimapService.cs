@@ -40,7 +40,7 @@ namespace VLTK.Sandbox
                 return null;
             }
             int mapId = map.catalogEntry?.mapId ?? 0;
-            string settingSourceId = map.catalogEntry?.settingSourceId;
+            string settingSourceId = map.catalogEntry?.settingSourceId?.ToKey();
 
             var minimap = map.minimapRef;
             if (minimap == null)
