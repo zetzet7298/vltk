@@ -124,7 +124,7 @@ namespace VLTK.Tests.Sandbox
         {
             return new MinimapRef
             {
-                sourceId = new SourceAssetId { category = "minimap", path = sourceId },
+                sourceId = new SourceAssetId { sourcePath = sourceId },
                 artifactPath = artifactPath,
                 status = status,
             };
@@ -197,7 +197,7 @@ namespace VLTK.Tests.Sandbox
             var reg = new FakeRegistry();
             reg.Register(new AssetRegistryEntry
             {
-                sourceId = new SourceAssetId { category = "minimap", path = "minimap/r001" },
+                sourceId = new SourceAssetId { sourcePath = "minimap/r001" },
                 unityAssetPath = "Assets/Minimaps/r001.png",
                 status = AssetStatus.Available,
             });
@@ -215,7 +215,7 @@ namespace VLTK.Tests.Sandbox
             var reg = new FakeRegistry();
             reg.Register(new AssetRegistryEntry
             {
-                sourceId = new SourceAssetId { category = "minimap", path = "minimap/r001" },
+                sourceId = new SourceAssetId { sourcePath = "minimap/r001" },
                 unityAssetPath = "Assets/Minimaps/r001.png",
                 status = AssetStatus.Available,
             });
@@ -420,7 +420,7 @@ namespace VLTK.Tests.Sandbox
         {
             var svc = new MinimapService(new FakeRegistry());
             var map = MakeMap(1, new Rect(0, 0, 100, 100));
-            map.minimapRef = new MinimapRef { sourceId = new SourceAssetId { category = "minimap", path = "abc" } };
+            map.minimapRef = new MinimapRef { sourceId = new SourceAssetId { sourcePath = "abc" } };
             Assert.AreEqual("abc", svc.GetMissingSourceId(map)?.ToKey());
         }
 
