@@ -8,6 +8,8 @@
 
 namespace VLTK.Sandbox
 {
+    using UnityEngine;
+
     /// <summary>
     /// Host-side callbacks cho PathfindingService. Implement bởi UI/Debug/Nav/Chat.
     /// </summary>
