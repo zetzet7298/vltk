@@ -46,6 +46,8 @@ namespace VLTK.Sandbox
         private int _horseType;
         private float _mountTransitionTime = 0.5f;
         private float _transitionTimer;
+        private IPlayerMountHost _host;
+        private int _playerId = 0;
 
         /// <summary>Current mount state.</summary>
         public MountState State => _state;
@@ -61,6 +63,14 @@ namespace VLTK.Sandbox
 
         /// <summary>Event fired khi mount state thay đổi.</summary>
         public event Action<MountChangeEvent> OnMountChanged;
+
+        public int PlayerId { get => _playerId; set => _playerId = value; }
+        public float MountTransitionTime { get => _mountTransitionTime; set => _mountTransitionTime = value; }
+
+        public PlayerMountService() : this(null) { }
+        public PlayerMountService(IPlayerMountHost host) { _host = host; }
+
+        public void AttachHost(IPlayerMountHost host) { _host = host; }
 
         // ── Public API ─────────────────────────────────────────────────────
 
@@ -85,6 +95,15 @@ namespace VLTK.Sandbox
                 speedMultiplier = SpeedMultiplier,
             });
 
+            if (_host != null)
+            {
+                _host.RefreshMountVisual(horseType, _state, SpeedMultiplier);
+                _host.PlayMountSFX(horseType, true);
+                _host.OnMountStarted(horseType, _mountTransitionTime);
+                _host.LogMountEvent(horseType, $"Bắt đầu cưỡi ngựa loại {horseType}");
+                _host.SaveMountState(_playerId, horseType, _state, false);
+            }
+
             SubsystemLog.Info("Mount", $"Mounting horse type {horseType}");
         }
 
@@ -96,6 +115,7 @@ namespace VLTK.Sandbox
             if (_state != MountState.Mounted) return;
 
             var oldState = _state;
+            int dismountHorseType = _horseType;
             _state = MountState.Dismounting;
             _transitionTimer = _mountTransitionTime;
 
@@ -106,6 +126,15 @@ namespace VLTK.Sandbox
                 horseType = _horseType,
                 speedMultiplier = 1.0f,
             });
+
+            if (_host != null)
+            {
+                _host.RefreshMountVisual(_horseType, _state, 1.0f);
+                _host.PlayMountSFX(_horseType, false);
+                _host.OnDismountStarted(dismountHorseType, _mountTransitionTime);
+                _host.LogMountEvent(dismountHorseType, $"Bắt đầu xuống ngựa loại {dismountHorseType}");
+                _host.SaveMountState(_playerId, dismountHorseType, _state, true);
+            }
 
             SubsystemLog.Info("Mount", "Dismounting");
         }
@@ -129,6 +158,12 @@ namespace VLTK.Sandbox
                         horseType = _horseType,
                         speedMultiplier = SpeedMultiplier,
                     });
+                    if (_host != null)
+                    {
+                        _host.RefreshMountVisual(_horseType, _state, SpeedMultiplier);
+                        _host.OnMountCompleted(_horseType, SpeedMultiplier);
+                        _host.SaveMountState(_playerId, _horseType, _state, true);
+                    }
                 }
             }
             else if (_state == MountState.Dismounting)
@@ -137,6 +172,7 @@ namespace VLTK.Sandbox
                 if (_transitionTimer <= 0f)
                 {
                     var old = _state;
+                    int dismountHorseType = _horseType;
                     _state = MountState.None;
                     _horseType = 0;
                     OnMountChanged?.Invoke(new MountChangeEvent
@@ -146,6 +182,12 @@ namespace VLTK.Sandbox
                         horseType = 0,
                         speedMultiplier = 1.0f,
                     });
+                    if (_host != null)
+                    {
+                        _host.OnDismountCompleted();
+                        _host.LogMountEvent(dismountHorseType, "Hoàn tất xuống ngựa");
+                        _host.SaveMountState(_playerId, 0, _state, false);
+                    }
                 }
             }
         }
