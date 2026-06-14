@@ -47,6 +47,7 @@ namespace VLTK.Sandbox
         public event Action<int, int> OnGoldChanged;
 
         public EconomyService() : this(100, 0, null) { }
+        public EconomyService(int maxStashSlots) : this(maxStashSlots, 0, null) { }
         public EconomyService(int maxStashSlots, int initialSilver) : this(maxStashSlots, initialSilver, null) { }
         public EconomyService(int maxStashSlots, int initialSilver, IEconomyHost host)
         {
