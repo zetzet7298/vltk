@@ -299,24 +299,19 @@ namespace VLTK.UI
             // Number only: "Hạng" is baked into top_status_strip.png.
             Label(642f, 2f, 28f, 12f, GetRankText(), _rankStyle);
 
-            // ═══ CHAT TABS — PC bottom-left ═══
-            // PC chat tabs: Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác
+            // ═══ CHAT TABS — disabled (moved to UI Toolkit centered chat panel) ═══
+            // The 6 channel tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) are now
+            // rendered by GameHud.uxml ChatTabs element inside the centered chat panel
+            // (hud-chat-panel: left:50% + translate:-50% 0). Drawing them here via IMGUI
+            // at PC layout (tabX=76, tabY=662) would double-over the centered tabs and
+            // strand them at bottom-left.
+            // Keep channel-state read so a future re-enable can drop in without re-wiring.
             var activeCh = ChatChannel.All;
             if (SandboxManager.Instance != null && SandboxManager.Instance.ChatService != null)
             {
                 activeCh = SandboxManager.Instance.ChatService.ActiveChannel;
             }
-
-            float tabX = 76f;
-            float tabY = 662f;
-            float tabW = 60f;
-            float tabH = 16f;
-            Label(tabX, tabY, tabW, tabH, "Tất cả", (activeCh == ChatChannel.All) ? _chatTabAllActive : _chatTabAll);
-            Label(tabX + 62f, tabY, tabW, tabH, "Mật", (activeCh == ChatChannel.Private) ? _chatTabActive : _chatTab);
-            Label(tabX + 124f, tabY, tabW, tabH, "Phòng", (activeCh == ChatChannel.Room) ? _chatTabActive : _chatTab);
-            Label(tabX + 186f, tabY, tabW, tabH, "Bang hội", (activeCh == ChatChannel.Guild) ? _chatTabActive : _chatTab);
-            Label(tabX + 248f, tabY, tabW, tabH, "Môn phái", (activeCh == ChatChannel.Faction) ? _chatTabActive : _chatTab);
-            Label(tabX + 310f, tabY, tabW, tabH, "Khác", (activeCh == ChatChannel.Other) ? _chatTabActive : _chatTab);
+            // (legacy IMGUI tab labels removed — see comment above)
 
 
             // ═══ MINIMAP TEXT ═══
