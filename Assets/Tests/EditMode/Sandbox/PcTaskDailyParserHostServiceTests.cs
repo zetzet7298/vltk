@@ -192,12 +192,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void BuildRegistry_DispatchesParseStart_6x()
+        public void BuildRegistry_DispatchesParseStart_OnlyForExistingFiles()
         {
-            // gather + kill + talk + talk_old + gather_pos + talk_pos = 6
+            // Only gather.txt exists → only ParseGather dispatches ParseStart
             File.WriteAllText(Path.Combine(_tmpDir, "gather.txt"), "1\tA\t100\tM1\tX\t1\t1\t1\t10\n");
             PcTaskDailyParser.BuildRegistry(_tmpDir);
-            Assert.AreEqual(6, _host.ParseStartCalls);
+            Assert.AreEqual(1, _host.ParseStartCalls);
         }
 
         [Test]

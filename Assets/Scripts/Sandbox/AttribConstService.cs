@@ -55,18 +55,19 @@ namespace VLTK.Sandbox
         {
             _registry = registry ?? new PcAttribConstRegistry();
             RebuildIndex();
+            int totalEntries = 0;
+            int sectionCount = 0;
+            if (_registry != null)
+            {
+                foreach (var s in _registry.GetAll())
+                {
+                    sectionCount++;
+                    totalEntries += s.data.Count + s.extras.Count;
+                }
+            }
+            OnAttribLoaded?.Invoke();
             if (_host != null)
             {
-                int totalEntries = 0;
-                int sectionCount = 0;
-                if (_registry != null)
-                {
-                    foreach (var s in _registry.GetAll())
-                    {
-                        sectionCount++;
-                        totalEntries += s.data.Count + s.extras.Count;
-                    }
-                }
                 _host.OnAttribRegistryAttached(sectionCount, totalEntries);
                 _host.OnAttribLoaded(sectionCount, totalEntries, 0);
                 _host.SaveAttribCache(sectionCount, totalEntries);

@@ -130,13 +130,14 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new AttribConstService(null, host);
+            // ctor calls AttachRegistry(null) which dispatches 1×, then test calls again with real registry
             svc.AttachRegistry(MakeRegistry());
-            Assert.AreEqual(1, host.RegistryAttachedCalls);
-            Assert.AreEqual(1, host.LoadedCalls);
-            Assert.AreEqual(1, host.SaveCalls);
-            Assert.AreEqual(1, host.SfxCalls);
-            Assert.AreEqual(1, host.LogCalls);
-            Assert.AreEqual(1, host.ShowCalls);
+            Assert.AreEqual(2, host.RegistryAttachedCalls);
+            Assert.AreEqual(2, host.LoadedCalls);
+            Assert.AreEqual(2, host.SaveCalls);
+            Assert.AreEqual(2, host.SfxCalls);
+            Assert.AreEqual(2, host.LogCalls);
+            Assert.AreEqual(2, host.ShowCalls);
             Assert.AreEqual("load", host.LastSfxAction);
             Assert.AreEqual(3, host.LastSectionCount);
         }
