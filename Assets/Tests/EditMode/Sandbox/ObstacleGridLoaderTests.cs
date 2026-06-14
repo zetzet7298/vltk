@@ -101,20 +101,14 @@ namespace VLTK.Tests.Sandbox
                 bw.Write(dataOff);
                 foreach (var e in entries)
                 {
-                    // Use 8-char keys (padded with space, not NUL) so parser's
-                    // TrimEnd() (whitespace only) correctly strips trailing chars.
-                    // Keys are right-padded so the actual name is at the END.
+                    // Keys are left-justified with SPACE padding (not NUL) so the
+                    // parser's TrimEnd() (whitespace only) correctly strips the
+                    // trailing spaces and recovers the name.
                     var keyBytes = new byte[8];
                     var nameBytes = System.Text.Encoding.ASCII.GetBytes(e.key);
                     int copyLen = System.Math.Min(nameBytes.Length, 8);
-                    if (copyLen < 8)
-                    {
-                        for (int k = 0; k < copyLen; k++) keyBytes[8 - copyLen + k] = nameBytes[k];
-                    }
-                    else
-                    {
-                        System.Array.Copy(nameBytes, keyBytes, 8);
-                    }
+                    for (int k = 0; k < 8; k++) keyBytes[k] = 0x20; // space
+                    System.Array.Copy(nameBytes, 0, keyBytes, 0, copyLen);
                     bw.Write(keyBytes);
                     bw.Write(e.w);
                     bw.Write(e.h);
