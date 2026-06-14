@@ -85,6 +85,13 @@ namespace VLTK.Sandbox
             int winner = _challengerScore > _defenderScore ? _challengerBangId :
                          _defenderScore > _challengerScore ? _defenderBangId : 0;
             OnBangChienEnded?.Invoke(winner, _challengerScore, _defenderScore);
+            if (_host != null)
+            {
+                _host.GrantBangChienReward(_challengerBangId, winner == _challengerBangId, _challengerScore, 0);
+                _host.GrantBangChienReward(_defenderBangId, winner == _defenderBangId, _defenderScore, 0);
+                _host.OnBangChienEnded(winner, _challengerScore, _defenderScore);
+                _host.LogBangChienEvent($"Bang Chiến kết thúc: {_challengerScore}-{_defenderScore}. Winner: Bang {winner}");
+            }
             SubsystemLog.Info(LogTag, $"Bang Chiến kết thúc: {_challengerScore}-{_defenderScore}. Winner: Bang {winner}");
             return winner;
         }

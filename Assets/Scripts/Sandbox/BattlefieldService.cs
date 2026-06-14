@@ -128,8 +128,18 @@ namespace VLTK.Sandbox
                 state.startTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 state.endTimestamp = state.startTimestamp + entry.duration;
                 state.isActive = true;
+                if (_host != null)
+                {
+                    _host.OnBattlefieldOpening(mapId, entry.minLevel, entry.maxLevel, entry.duration);
+                    _host.LogBattlefieldEvent(mapId, $"Chiến trường {entry.nameVi} mở (cấp {entry.minLevel}-{entry.maxLevel})");
+                }
             }
             OnPlayerJoined?.Invoke(mapId, state.currentPlayers);
+            if (_host != null)
+            {
+                int playerTeam = _host.AssignPlayerTeam(mapId, 0, 0);
+                _host.OnPlayerJoinedBattlefield(mapId, 0, playerTeam, state.currentPlayers);
+            }
             SubsystemLog.Info(LogTag, $"Player vào {entry.nameVi}: tổng {state.currentPlayers}/{entry.maxPlayers}");
             return true;
         }

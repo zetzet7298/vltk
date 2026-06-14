@@ -321,11 +321,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void GetOpenDay_Day3_ZeroResultsForPartialMask()
+        public void GetOpenDay_Day3_OneMatchForAllDailyEntry()
         {
-            // 0b0000011 = days 0,1 only. Day 3 is 0.
+            // 0b0000011 = days 0,1 only. 0b1111111 = all days.
+            // Day 3 matches the all-days entry (1) but not the partial one.
             var svc = BuildService();
-            Assert.AreEqual(0, svc.GetOpenDay(3).Count);
+            Assert.AreEqual(1, svc.GetOpenDay(3).Count);
         }
 
         [Test]
