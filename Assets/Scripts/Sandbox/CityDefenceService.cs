@@ -87,6 +87,8 @@ namespace VLTK.Sandbox
         /// <summary>Đánh dấu wave đã hoàn thành, phát thưởng cho player.</summary>
         public void CompleteWave(int mapId, int waveIndex, int playerId)
         {
+            // Chỉ cấp thưởng khi wave thực sự đang active (đã trigger trước đó)
+            if (!_waveStartedAt.ContainsKey((mapId, waveIndex))) return;
             _waveStartedAt.Remove((mapId, waveIndex));
             OnWaveCompleted?.Invoke(mapId, waveIndex);
             if (_host != null)

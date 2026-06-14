@@ -79,12 +79,12 @@ namespace VLTK.Sandbox
                         int count = entry?.extra1 != null && int.TryParse(entry.extra1, out int c) ? c : 1;
                         _host.GrantAdventureReward(_playerId, advId, rewardId, count);
                     }
-                    // 100% hoàn thành
-                    if (CompletedCount >= Count)
-                    {
-                        _host.OnAllAdventuresCompleted(_playerId, Count);
-                        OnAllCompleted?.Invoke();
-                    }
+                }
+                // 100% hoàn thành (fire bên ngoài host block để không phụ thuộc host)
+                if (CompletedCount >= Count)
+                {
+                    OnAllCompleted?.Invoke();
+                    if (_host != null) _host.OnAllAdventuresCompleted(_playerId, Count);
                 }
                 return true;
             }
