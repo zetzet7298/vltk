@@ -54,6 +54,7 @@ namespace VLTK.Sandbox
         // petId → instance
         private readonly Dictionary<int, PetInstance> _activePets = new();
         private int _nextPetId = 1;
+        private IPartnerServiceHost _host;
 
         private readonly PcPartnerRegistry _registry;
         // level → exp needed (level * 100 simple formula)
@@ -69,11 +70,16 @@ namespace VLTK.Sandbox
         public IEnumerable<PetInstance> AllActivePets => _activePets.Values;
         public PcPartnerRegistry Registry => _registry;
 
-        public PartnerService(PcPartnerRegistry registry)
+        public PartnerService() : this(null, null) { }
+        public PartnerService(PcPartnerRegistry registry) : this(registry, null) { }
+        public PartnerService(PcPartnerRegistry registry, IPartnerServiceHost host)
         {
             _registry = registry ?? new PcPartnerRegistry();
+            _host = host;
             BuildDefaultLevelExp();
         }
+
+        public void AttachHost(IPartnerServiceHost host) { _host = host; }
 
         private void BuildDefaultLevelExp()
         {
@@ -103,15 +109,28 @@ namespace VLTK.Sandbox
             inst.currentHp = inst.maxHp;
             _activePets[id] = inst;
             PetSpawned?.Invoke(id);
+            if (_host != null)
+            {
+                _host.OnPetSpawned(id, templateId, inst.level, inst.nameVi, inst.maxHp, inst.currentHp);
+                _host.PlayPetSFX(id, "spawn");
+                _host.SavePetState(id, templateId, inst.level, inst.exp, inst.hunger, inst.currentHp, inst.maxHp);
+            }
             SubsystemLog.Info("Partner", $"Spawn thú cưng: id={id} template={templateId} level={inst.level}");
             return inst;
         }
 
         /// <summary>Despawn thú cưng.</summary>
-        public bool DespawnPet(int petId)
+        public bool DespawnPet(int petId, string reason = null)
         {
-            if (!_activePets.Remove(petId)) return false;
+            if (!_activePets.TryGetValue(petId, out var pet)) return false;
+            int templateId = pet.templateId;
+            _activePets.Remove(petId);
             PetDespawned?.Invoke(petId);
+            if (_host != null)
+            {
+                _host.OnPetDespawned(petId, templateId, reason ?? "user");
+                _host.PlayPetSFX(petId, "despawn");
+            }
             SubsystemLog.Info("Partner", $"Despawn thú cưng: id={petId}");
             return true;
         }
@@ -140,6 +159,12 @@ namespace VLTK.Sandbox
                 pet.maxHp = 100 + (pet.level - 1) * 20;
                 pet.currentHp = pet.maxHp; // heal on level up
                 PetLevelledUp?.Invoke(pet.petId);
+                if (_host != null)
+                {
+                    _host.OnPetLevelledUp(pet.petId, pet.level, pet.maxHp, pet.currentHp, pet.exp);
+                    _host.PlayPetSFX(pet.petId, "levelup");
+                    _host.SavePetState(pet.petId, pet.templateId, pet.level, pet.exp, pet.hunger, pet.currentHp, pet.maxHp);
+                }
                 SubsystemLog.Info("Partner", $"Pet {pet.petId} lên cấp {pet.level}");
             }
         }
@@ -151,10 +176,16 @@ namespace VLTK.Sandbox
             if (pet == null) return;
             pet.hunger = Mathf.Max(0, pet.hunger - amount);
             HungerDecayed?.Invoke(petId);
+            _host?.OnPetHungerDecayed(petId, pet.hunger);
             if (pet.hunger == 0 && pet.state != PetState.Starving)
             {
                 pet.state = PetState.Starving;
                 PetStarving?.Invoke(petId);
+                if (_host != null)
+                {
+                    _host.OnPetStarving(petId, pet.templateId, pet.hunger);
+                    _host.PlayPetSFX(petId, "starving");
+                }
                 SubsystemLog.Warn("Partner", $"Pet {petId} đang đói!");
             }
         }
@@ -164,9 +195,16 @@ namespace VLTK.Sandbox
         {
             var pet = GetPet(petId);
             if (pet == null) return;
+            int prevHunger = pet.hunger;
             pet.hunger = Mathf.Min(100, pet.hunger + amount);
             if (pet.hunger > 0 && pet.state == PetState.Starving)
                 pet.state = PetState.Following;
+            if (_host != null)
+            {
+                _host.OnPetFed(petId, pet.hunger, prevHunger);
+                _host.PlayPetSFX(petId, "feed");
+                _host.SavePetState(petId, pet.templateId, pet.level, pet.exp, pet.hunger, pet.currentHp, pet.maxHp);
+            }
         }
 
         /// <summary>Clear tất cả pets (test/reset).</summary>
