@@ -317,10 +317,12 @@ namespace VLTK.Tests.Sandbox
             var host = new FakeHost();
             var svc = new PartnerService(null, host);
             var pet = svc.SpawnPet(101);
+            host.SfxCalls = 0; // reset for AwardExp
+            host.SaveCalls = 0;
             svc.AwardExp(pet.petId, 100);
             Assert.AreEqual(1, host.LevelUpCalls);
             Assert.AreEqual(1, host.SfxCalls);
-            Assert.IsTrue(host.SaveCalls >= 1);
+            Assert.AreEqual(1, host.SaveCalls);
         }
 
         [Test]

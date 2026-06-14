@@ -204,8 +204,9 @@ namespace VLTK.Tests.Sandbox
         {
             var svc = new PkCombatService(1, 0, 1);
             svc.SetPkMode(PkMode.Free);
+            // attacker faction 1, target faction 1 (same faction) → full karma penalty 10
             var a = MakeActor(1, 1);
-            var t = MakeActor(2, 2);
+            var t = MakeActor(2, 1);
             var r = svc.CanAttack(a, t);
             Assert.IsTrue(r.canAttack);
             Assert.AreEqual(PkPenaltyType.KarmaIncrease, r.penalty);
