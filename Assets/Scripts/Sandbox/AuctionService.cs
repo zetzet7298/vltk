@@ -48,6 +48,7 @@ namespace VLTK.Sandbox
         public const string LogTag = "Auction";
 
         private PcAuctionConfigRegistry _config;
+        private IAuctionHost _host;
         private readonly Dictionary<int, AuctionListing> _activeListings = new();
 
         public event Action<AuctionListing> OnListed;
