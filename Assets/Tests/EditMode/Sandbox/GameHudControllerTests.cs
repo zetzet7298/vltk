@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
@@ -142,6 +143,13 @@ namespace VLTK.Tests.Sandbox
             _utilityDock.Add(_utilityActionRow);
             _utilityDock.Add(_utilityMenuRowA);
             _utilityDock.Add(_utilityMenuRowB);
+            // MOBILE HUD v2: 5 tab-strip buttons + 5 tab panels + combat-critical quick buttons.
+            foreach (string tabBtn in new[] { "UtilityTabCharBtn", "UtilityTabBagBtn", "UtilityTabSocialBtn", "UtilityTabActivityBtn", "UtilityTabSystemBtn" })
+                _utilityDock.Add(new VisualElement { name = tabBtn });
+            foreach (string panel in new[] { "UtilityTabChar", "UtilityTabBag", "UtilityTabSocial", "UtilityTabActivity", "UtilityTabSystem" })
+                _utilityDock.Add(new VisualElement { name = panel });
+            foreach (string quick in new[] { "BtnMountQuick", "BtnSitQuick", "BtnPKQuick" })
+                _root.Add(new VisualElement { name = quick });
 
             _pcShortcutToggleBtn = new VisualElement { name = "PcShortcutToggleBtn" };
             _pcShortcutToggleLabel = new Label { name = "PcShortcutToggleLabel" };
@@ -419,7 +427,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void UtilityToggle_OpenCloseAndSwitchTogglesActionMenu()
+        public void UtilityToggle_OpenCloseAndCyclesTabs()
         {
             Assert.AreEqual(0, _hud.CurrentUtilityBarMode);
             Assert.IsTrue(_utilityDock.ClassListContains("hidden"));
@@ -427,41 +435,55 @@ namespace VLTK.Tests.Sandbox
             InvokePrivateMethod("OnUtilityToggleClick");
             Assert.AreEqual(1, _hud.CurrentUtilityBarMode);
             Assert.IsFalse(_utilityDock.ClassListContains("hidden"));
-            Assert.IsTrue(_utilityDock.ClassListContains("action-mode"));
-            Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
-            Assert.IsFalse(_utilityActionRow.ClassListContains("hidden"));
-            Assert.IsTrue(_utilityMenuRowA.ClassListContains("hidden"));
-            Assert.IsTrue(_utilityMenuRowB.ClassListContains("hidden"));
             Assert.IsTrue(_utilityToggleBtn.ClassListContains("active"));
-            Assert.IsFalse(_utilitySwitchBtn.ClassListContains("active"));
             Assert.AreEqual("Ẩn", _utilityToggleLabel.text);
-            Assert.AreEqual("Menu", _utilitySwitchLabel.text);
+
+            // Tab strip: switching cycles through the 5 categorized tabs.
+            var tabCharBtn = _utilityDock.Q("UtilityTabCharBtn");
+            var tabBagBtn = _utilityDock.Q("UtilityTabBagBtn");
+            Assert.IsTrue(tabCharBtn.ClassListContains("tab-active"));
+            Assert.IsFalse(tabBagBtn.ClassListContains("tab-active"));
 
             InvokePrivateMethod("OnUtilitySwitchClick");
-            Assert.AreEqual(2, _hud.CurrentUtilityBarMode);
-            Assert.IsFalse(_utilityDock.ClassListContains("action-mode"));
-            Assert.IsTrue(_utilityDock.ClassListContains("menu-mode"));
-            Assert.IsTrue(_utilityActionRow.ClassListContains("hidden"));
-            Assert.IsFalse(_utilityMenuRowA.ClassListContains("hidden"));
-            Assert.IsFalse(_utilityMenuRowB.ClassListContains("hidden"));
-            Assert.IsTrue(_utilitySwitchBtn.ClassListContains("active"));
-            Assert.AreEqual("Ẩn", _utilityToggleLabel.text);
-            Assert.AreEqual("Tác", _utilitySwitchLabel.text);
-
-            InvokePrivateMethod("OnUtilitySwitchClick");
-            Assert.AreEqual(1, _hud.CurrentUtilityBarMode);
-            Assert.IsTrue(_utilityDock.ClassListContains("action-mode"));
-            Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
-            Assert.IsFalse(_utilitySwitchBtn.ClassListContains("active"));
-            Assert.AreEqual("Menu", _utilitySwitchLabel.text);
+            Assert.IsFalse(tabCharBtn.ClassListContains("tab-active"));
+            Assert.IsTrue(tabBagBtn.ClassListContains("tab-active"));
 
             InvokePrivateMethod("OnUtilityToggleClick");
             Assert.AreEqual(0, _hud.CurrentUtilityBarMode);
             Assert.IsTrue(_utilityDock.ClassListContains("hidden"));
-            Assert.IsFalse(_utilityDock.ClassListContains("action-mode"));
-            Assert.IsFalse(_utilityDock.ClassListContains("menu-mode"));
             Assert.IsFalse(_utilityToggleBtn.ClassListContains("active"));
             Assert.AreEqual("Mở", _utilityToggleLabel.text);
+        }
+
+        [Test]
+        public void PkCluster_HasMountRunSitQuickButtonsBesideSkills()
+        {
+            // Combat-critical quick actions (mount/sit/PK) must live in the skill cluster for thumb reach during PK/farm.
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            StringAssert.Contains("name=\"BtnMountQuick\"", uxml, "Mount quick button must be in the combat cluster.");
+            StringAssert.Contains("name=\"BtnSitQuick\"", uxml, "Sit quick button must be in the combat cluster.");
+            StringAssert.Contains("name=\"BtnPKQuick\"", uxml, "PK quick button must be in the combat cluster.");
+
+            // Each quick button reuses the PC handler (mount/sit/PK).
+            var controller = File.ReadAllText(Path.Combine(Application.dataPath, "Scripts/UI/GameHudController.cs"));
+            StringAssert.Contains("RegisterClick(root, \"BtnMountQuick\", OnHorseClick)", controller);
+            StringAssert.Contains("RegisterClick(root, \"BtnSitQuick\", OnSitClick)", controller);
+            StringAssert.Contains("RegisterClick(root, \"BtnPKQuick\", OnPKClick)", controller);
+        }
+
+        [Test]
+        public void TabbedDock_DistributesAllPcButtonsAcrossFiveTabs()
+        {
+            var uxml = File.ReadAllText(Path.Combine(Application.dataPath, "UI/HUD/GameHud.uxml"));
+            // 5 tab panels exist.
+            foreach (string panel in new[] { "UtilityTabChar", "UtilityTabBag", "UtilityTabSocial", "UtilityTabActivity", "UtilityTabSystem" })
+                StringAssert.Contains($"name=\"{panel}\"", uxml, panel + " tab panel must exist.");
+            // Tab strip has 5 tab buttons.
+            foreach (string btn in new[] { "UtilityTabCharBtn", "UtilityTabBagBtn", "UtilityTabSocialBtn", "UtilityTabActivityBtn", "UtilityTabSystemBtn" })
+                StringAssert.Contains($"name=\"{btn}\"", uxml, btn + " tab-strip button must exist.");
+            // Icon-bar 7 buttons are merged into the Hoạt động tab (not a separate right-side strip).
+            StringAssert.Contains("name=\"UtilityTabActivity\"", uxml);
+            StringAssert.Contains("name=\"IconBarArenaBtn\"", uxml);
         }
 
         [Test]

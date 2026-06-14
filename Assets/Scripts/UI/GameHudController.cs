@@ -128,6 +128,15 @@ namespace VLTK.UI
         private ScrollView _pcToolList;
         private Label _pcToolTitle;
         private int _utilityBarMode;
+        // MOBILE HUD v2 — 5-tab categorized dock state.
+        // Tabs: 0=Nhân vật, 1=Hành trang, 2=Xã hội, 3=Hoạt động, 4=Hệ thống.
+        private readonly VisualElement[] _utilityTabPanels = new VisualElement[5];
+        private readonly VisualElement[] _utilityTabButtons = new VisualElement[5];
+        private int _activeUtilityTab;
+        private static readonly string[] UtilityTabPanelNames =
+            { "UtilityTabChar", "UtilityTabBag", "UtilityTabSocial", "UtilityTabActivity", "UtilityTabSystem" };
+        private static readonly string[] UtilityTabButtonNames =
+            { "UtilityTabCharBtn", "UtilityTabBagBtn", "UtilityTabSocialBtn", "UtilityTabActivityBtn", "UtilityTabSystemBtn" };
         private bool _isRunning = true;
         private bool _isSitting;
         private bool _recEnabled;
@@ -224,6 +233,9 @@ namespace VLTK.UI
             { "BtnOptions", "btn_options" },
             { "BtnPK", "btn_pk" },
             { "BtnTreasure", "btn_treasure" },
+            { "BtnMountQuick", "btn_horse" },
+            { "BtnSitQuick", "btn_sit" },
+            { "BtnPKQuick", "btn_pk" },
             { "PrimaryAttackBtn", "btn_primary_attack" },
             { "IconBarArenaBtn", "icon_bar_arena" },
             { "IconBarActivityBtn", "icon_bar_activity" },
@@ -422,6 +434,12 @@ namespace VLTK.UI
             _pcToolClose = root.Q("PcToolClose");
             _pcToolList = root.Q<ScrollView>("PcToolList");
             _pcToolTitle = root.Q<Label>("PcToolTitle");
+            // MOBILE HUD v2: cache the 5 tab panels + tab-strip buttons.
+            for (int i = 0; i < UtilityTabPanelNames.Length; i++)
+            {
+                _utilityTabPanels[i] = root.Q(UtilityTabPanelNames[i]);
+                _utilityTabButtons[i] = root.Q(UtilityTabButtonNames[i]);
+            }
             var chatRoomScrollTrack = root.Q("ChatRoomScrollTrack");
             if (chatRoomScrollTrack != null)
                 chatRoomScrollTrack.pickingMode = PickingMode.Ignore;
@@ -436,6 +454,16 @@ namespace VLTK.UI
 
             RegisterClick(root, "UtilityToggleBtn", OnUtilityToggleClick);
             RegisterClick(root, "UtilitySwitchBtn", OnUtilitySwitchClick);
+            // Tab-strip clicks switch the active categorized group.
+            for (int i = 0; i < UtilityTabButtonNames.Length; i++)
+            {
+                int tab = i;
+                RegisterClick(root, UtilityTabButtonNames[i], () => SelectUtilityTab(tab));
+            }
+            // Combat-critical quick actions mounted beside the skill slots (PK/farm thumb-reach).
+            RegisterClick(root, "BtnMountQuick", OnHorseClick);
+            RegisterClick(root, "BtnSitQuick", OnSitClick);
+            RegisterClick(root, "BtnPKQuick", OnPKClick);
             RegisterClick(root, "PcShortcutToggleBtn", OnPcShortcutToggleClick);
             for (int i = 0; i < 9; i++)
             {
@@ -1890,44 +1918,50 @@ namespace VLTK.UI
 
         private void OnUtilityToggleClick()
         {
-            int nextMode = _utilityBarMode == 0 ? 1 : 0;
-            if (nextMode != 0)
+            // v2: dock is now tabbed. Toggle simply shows/hides; opening resets to tab 0 (Nhân vật).
+            bool willShow = _utilityDock == null || _utilityDock.ClassListContains("hidden");
+            if (willShow)
+            {
                 ApplyPcShortcutDock(false);
-            ApplyUtilityBarMode(nextMode);
-            SubsystemLog.Info("HUD", nextMode == 0 ? "Hide utility bar" : "Show action utility bar");
+                SelectUtilityTab(0);
+            }
+            ApplyUtilityBarMode(willShow ? 1 : 0);
+            SubsystemLog.Info("HUD", willShow ? "Show utility dock (tabbed)" : "Hide utility dock");
         }
 
         private void OnUtilitySwitchClick()
         {
-            int nextMode = _utilityBarMode == 2 ? 1 : 2;
-            ApplyPcShortcutDock(false);
-            ApplyUtilityBarMode(nextMode);
-            SubsystemLog.Info("HUD", nextMode == 1 ? "Switch to action utility bar" : "Switch to menu utility bar");
+            // Legacy switch button kept for binding compatibility. Cycle to the next tab.
+            SelectUtilityTab((_activeUtilityTab + 1) % UtilityTabPanelNames.Length);
+            SubsystemLog.Info("HUD", $"Switch utility tab -> {UtilityTabPanelNames[_activeUtilityTab]}");
         }
 
         private void ApplyUtilityBarMode(int mode)
         {
-            _utilityBarMode = Mathf.Clamp(mode, 0, 2);
-            bool showAction = _utilityBarMode == 1;
-            bool showMenu = _utilityBarMode == 2;
+            _utilityBarMode = Mathf.Clamp(mode, 0, 1);
             bool showDock = _utilityBarMode != 0;
 
             _utilityDock?.EnableInClassList("hidden", !showDock);
-            _utilityDock?.EnableInClassList("action-mode", showAction);
-            _utilityDock?.EnableInClassList("menu-mode", showMenu);
-            _utilityActionRow?.EnableInClassList("hidden", !showAction);
-            _utilityMenuRowA?.EnableInClassList("hidden", !showMenu);
-            _utilityMenuRowB?.EnableInClassList("hidden", !showMenu);
             _boundRoot?.Q("UtilityToggleBtn")?.EnableInClassList("active", showDock);
-            _boundRoot?.Q("UtilitySwitchBtn")?.EnableInClassList("active", showMenu);
 
             if (_utilityToggleLabel != null)
                 _utilityToggleLabel.text = showDock ? "Ẩn" : "Mở";
             if (_utilitySwitchLabel != null)
-                _utilitySwitchLabel.text = showMenu ? "Tác" : "Menu";
+                _utilitySwitchLabel.text = "Menu";
         }
 
         public int CurrentUtilityBarMode => _utilityBarMode;
+
+        /// <summary>Show one tab panel and hide the others; update the tab-strip active state.</summary>
+        private void SelectUtilityTab(int tabIndex)
+        {
+            _activeUtilityTab = Mathf.Clamp(tabIndex, 0, UtilityTabPanelNames.Length - 1);
+            for (int i = 0; i < UtilityTabPanelNames.Length; i++)
+            {
+                _utilityTabPanels[i]?.EnableInClassList("hidden", i != _activeUtilityTab);
+                _utilityTabButtons[i]?.EnableInClassList("tab-active", i == _activeUtilityTab);
+            }
+        }
 
         private void OnPcShortcutToggleClick()
         {
@@ -2125,6 +2159,7 @@ namespace VLTK.UI
             if (_isSitting)
                 SandboxManager.Instance?.PlayerController?.ResetMovementState();
             SetButtonActive("BtnSit", _isSitting);
+            SetButtonActive("BtnSitQuick", _isSitting);
             OpenPcToolPanel("Ngồi", _isSitting ? new[] { "Đang ngồi tĩnh tọa", "Di chuyển hoặc chạm lại để đứng dậy." } : new[] { "Đã đứng dậy." });
             SubsystemLog.Info("HUD", _isSitting ? "Sit enabled" : "Sit disabled");
         }
@@ -2139,6 +2174,7 @@ namespace VLTK.UI
                 else
                     player.Mount.Mount(player.defaultHorseId > 0 ? player.defaultHorseId : 5);
                 SetButtonActive("BtnHorse", player.Mount.State == MountState.Mounted || player.Mount.State == MountState.Mounting);
+                SetButtonActive("BtnMountQuick", player.Mount.State == MountState.Mounted || player.Mount.State == MountState.Mounting);
                 SubsystemLog.Info("HUD", player.Mount.IsMounted ? "Dismount Horse" : "Mount Horse");
             }
             else
@@ -3213,6 +3249,7 @@ namespace VLTK.UI
             var pk = SandboxManager.Instance?.GameplayLoop?.PkRules;
             pk?.SetPkMode(_pkEnabled ? PkMode.Free : PkMode.Peace);
             SetButtonActive("BtnPK", _pkEnabled);
+            SetButtonActive("BtnPKQuick", _pkEnabled);
             OpenPcToolPanel("PK", new[] { _pkEnabled ? "PK: Tự do" : "PK: Hòa bình" });
             SubsystemLog.Info("HUD", _pkEnabled ? "Enable PK Free" : "Disable PK / Peace");
         }

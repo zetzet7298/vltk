@@ -1788,7 +1788,6 @@
 /* PC quick shortcuts — small toggle to show/hide the 1-9 item slot bar.
    Keep subtle, PC-style. */
 .hud-pc-shortcut-toggle-btn {
-    display: none;
     position: absolute;
     right: 148px;
     top: 68px;
@@ -1976,3 +1975,126 @@
 .hud-chat-channel-identity-room { background-image: url('project://database/Assets/UI/HUD/Art/聊天频道图示－城市频道.png') !important; }
 .hud-chat-channel-identity-guild { background-image: url('project://database/Assets/UI/HUD/Art/聊天频道图示－好友频道.png') !important; }
 .hud-chat-channel-identity-other { background-image: url('project://database/Assets/UI/HUD/Art/聊天频道图示－好友频道.png') !important; }
+
+/* ═══════════════════════════════════════════════════════════════════
+   MOBILE HUD v2 — tabbed categorized dock + combat quick arc
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* Combat-critical quick actions (PK/farm): mount + sit + PK arc beside skill slots.
+   Thumb-reach from PrimaryAttackBtn; sized like run button for consistent muscle memory. */
+.hud-combat-quick-btn {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+    -unity-background-scale-mode: scale-to-fit;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.hud-combat-quick-icon {
+    width: 32px;
+    height: 32px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* Arc to the LEFT of the skill cluster, stacked so mount/run/sit/PK cluster within thumb sweep. */
+.hud-combat-mount-btn { right: 178px; bottom: -6px; }
+.hud-combat-sit-btn   { right: 230px; bottom: 8px; }
+.hud-combat-pk-btn    { right: 246px; bottom: 60px; }
+
+.hud-combat-mount-btn .hud-combat-quick-icon { background-image: url('project://database/Assets/UI/HUD/Art/btn_horse.png'); }
+.hud-combat-sit-btn .hud-combat-quick-icon   { background-image: url('project://database/Assets/UI/HUD/Art/btn_sit.png'); }
+.hud-combat-pk-btn .hud-combat-quick-icon    { background-image: url('project://database/Assets/UI/HUD/Art/btn_pk.png'); }
+
+.hud-combat-quick-btn.active {
+    background-color: rgba(58,86,38,0.72);
+    border-color: rgba(168,255,112,0.85);
+    border-width: 1px;
+}
+
+/* ═══ Tabbed dock: 5 categorized groups (Nhân vật / Hành trang / Xã hội / Hoạt động / Hệ thống) ═══ */
+
+.hud-mobile-utility-tab-strip {
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: space-around;
+    width: 100%;
+    height: 26px;
+    margin-bottom: 4px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(206,165,82,0.45);
+}
+
+.hud-mobile-utility-tab {
+    flex: 1 1 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.12);
+    border-width: 0px;
+    border-radius: 4px 4px 0 0;
+}
+
+.hud-mobile-utility-tab.tab-active {
+    background-color: rgba(52,74,34,0.55);
+    border-bottom-width: 2px;
+    border-bottom-color: rgba(168,255,112,0.85);
+}
+
+.hud-mobile-utility-tab-label {
+    color: rgb(235,228,190);
+    font-size: 9px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+.hud-mobile-utility-tab.tab-active .hud-mobile-utility-tab-label {
+    color: rgb(255,250,220);
+}
+
+/* Tab panels: wrap buttons in a grid so each tab shows its group compactly. */
+.hud-mobile-utility-tab-panel {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    flex: 1 1 auto;
+    padding-top: 4px;
+}
+
+.hud-mobile-utility-tab-panel.hidden {
+    display: none;
+}
+
+/* Button label under each icon so players learn each button's meaning. */
+.hud-mobile-utility-btn-label {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    bottom: -14px;
+    color: rgb(232,226,196);
+    font-size: 9px;
+    -unity-text-align: middle-center;
+    white-space: nowrap;
+}
+
+/* Dock tweaks: tab layout needs column direction + extra height for labels. */
+.hud-mobile-utility-dock {
+    flex-direction: column;
+    width: 372px;
+    height: 168px;
+    padding-top: 4px;
+    padding-bottom: 6px;
+}
+
+/* Icon-bar buttons inside tab use the same 46px tile but keep native SPR frame. */
+.hud-mobile-utility-tab-panel .hud-pc-icon-bar-icon {
+    width: 30px;
+    height: 30px;
+}

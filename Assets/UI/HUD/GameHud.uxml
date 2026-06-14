@@ -61,16 +61,10 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- PC Ui3/icon_bar.ini: right-side 7 icon strip. Visuals are exact SPR frame-0 decodes; layout is mobile-safe beside minimap. -->
-        <ui:VisualElement name="PcIconBar" class="hud-pc-icon-bar" style="display: none;">
-            <ui:VisualElement name="IconBarArenaBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarArenaBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
-            <ui:VisualElement name="IconBarActivityBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarActivityBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
-            <ui:VisualElement name="IconBarTreasureBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarTreasureBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
-            <ui:VisualElement name="IconBarShopBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarShopBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
-            <ui:VisualElement name="IconBarPetBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarPetBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
-            <ui:VisualElement name="IconBarLoginPrizeBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarLoginPrizeBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
-            <ui:VisualElement name="IconBarFuncPrizeBtn" class="hud-pc-icon-bar-btn"><ui:VisualElement name="IconBarFuncPrizeBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
-        </ui:VisualElement>
+        <!-- PC Ui3/icon_bar.ini: 7 icon strip. Buttons MOVED into UtilityTabActivity (tab Hoạt động)
+             to group all event/feature entries by meaning. Wrapper kept empty + hidden to avoid
+             duplicate element names and preserve legacy binding compatibility. -->
+        <ui:VisualElement name="PcIconBar" class="hud-pc-icon-bar" style="display: none;"/>
 
         <!-- ═══ MAP PREVIEW (large, tap minimap to open) ═══ -->
         <ui:VisualElement name="MapPreviewOverlay" class="hud-map-preview-overlay hidden">
@@ -152,36 +146,76 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Full PC utility set. Mobile UX: one button opens/closes, one switch swaps Tác vụ/Menu beside the minimap. -->
-        <ui:VisualElement name="UtilityToggleBtn" class="hud-utility-toggle-btn" style="display: none;"><ui:VisualElement name="UtilityToggleBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilityToggleLabel" text="Mở" class="hud-utility-toggle-label"/></ui:VisualElement>
-        <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock hidden" style="display: none;">
-            <ui:VisualElement name="UtilitySwitchBtn" class="hud-utility-switch-btn"><ui:VisualElement name="UtilitySwitchBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilitySwitchLabel" text="Menu" class="hud-utility-switch-label"/></ui:VisualElement>
-            <ui:VisualElement name="MobileUtilityActionRow" class="hud-mobile-utility-row">
-                <ui:VisualElement name="BtnSit" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnHorse" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnExchange" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnRec" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnPK" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTreasure" class="hud-mobile-treasure-btn"><ui:VisualElement name="BtnTreasureIcon" class="hud-treasure-icon"/></ui:VisualElement>
+        <!-- ═══ MOBILE HUD: combat cluster always-on + tabbed categorized menu dock ═══ -->
+        <!-- Menu toggle (top-right): opens the 5-tab categorized dock. PC uses hotkeys; mobile needs a visible toggle. -->
+        <ui:VisualElement name="UtilityToggleBtn" class="hud-utility-toggle-btn"><ui:VisualElement name="UtilityToggleBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilityToggleLabel" text="Mở" class="hud-utility-toggle-label"/></ui:VisualElement>
+
+        <!-- Legacy switch button (kept for RegisterClick binding compatibility; tab strip is the new UX). -->
+        <ui:VisualElement name="UtilitySwitchBtn" class="hud-utility-switch-btn" style="display: none;"><ui:VisualElement name="UtilitySwitchBtnIcon" class="hud-menu-btn-icon"/><ui:Label name="UtilitySwitchLabel" text="Menu" class="hud-utility-switch-label"/></ui:VisualElement>
+
+        <!-- Tabbed categorized dock: 5 functional groups so players find commands by meaning.
+             Nhân vật / Hành trang / Xã hội / Hoạt động / Hệ thống. -->
+        <ui:VisualElement name="MobileUtilityDock" class="hud-mobile-utility-dock hidden">
+            <!-- Tab strip -->
+            <ui:VisualElement name="MobileUtilityTabStrip" class="hud-mobile-utility-tab-strip">
+                <ui:VisualElement name="UtilityTabCharBtn" class="hud-mobile-utility-tab tab-active"><ui:Label text="Nhân vật" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabBagBtn" class="hud-mobile-utility-tab"><ui:Label text="Hành trang" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabSocialBtn" class="hud-mobile-utility-tab"><ui:Label text="Xã hội" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabActivityBtn" class="hud-mobile-utility-tab"><ui:Label text="Hoạt động" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="UtilityTabSystemBtn" class="hud-mobile-utility-tab"><ui:Label text="Hệ thống" class="hud-mobile-utility-tab-label"/></ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="MobileUtilityMenuRowA" class="hud-mobile-utility-row">
-                <ui:VisualElement name="BtnStatus" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItems" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItemEx" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSkills" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTask" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTaskIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+
+            <!-- Tab 0: Nhân vật — thuộc tính, võ công, nhiệm vụ -->
+            <ui:VisualElement name="UtilityTabChar" class="hud-mobile-utility-tab-panel">
+                <ui:VisualElement name="BtnStatus" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-menu-btn-icon"/><ui:Label text="Nhân vật" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnSkills" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/><ui:Label text="Võ công" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTask" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTaskIcon" class="hud-menu-btn-icon"/><ui:Label text="Nhiệm vụ" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
             </ui:VisualElement>
-            <ui:VisualElement name="MobileUtilityMenuRowB" class="hud-mobile-utility-row">
-                <ui:VisualElement name="BtnFriend" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFriendIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTeam" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnFaction" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnChatRoom" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnOptions" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnOptionsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+
+            <!-- Tab 1: Hành trang — túi đồ, hành lý, bảo vật (mall), giao dịch -->
+            <ui:VisualElement name="UtilityTabBag" class="hud-mobile-utility-tab-panel hidden">
+                <ui:VisualElement name="BtnItems" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/><ui:Label text="Túi đồ" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnItemEx" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-menu-btn-icon"/><ui:Label text="Hành lý" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTreasure" class="hud-mobile-treasure-btn"><ui:VisualElement name="BtnTreasureIcon" class="hud-treasure-icon"/><ui:Label text="Bảo Vật" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnExchange" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/><ui:Label text="Giao dịch" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
             </ui:VisualElement>
+
+            <!-- Tab 2: Xã hội — bằng hữu, đội, bang phái, phòng chat -->
+            <ui:VisualElement name="UtilityTabSocial" class="hud-mobile-utility-tab-panel hidden">
+                <ui:VisualElement name="BtnFriend" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFriendIcon" class="hud-menu-btn-icon"/><ui:Label text="Bằng hữu" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTeam" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/><ui:Label text="Đội ngũ" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnFaction" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/><ui:Label text="Bang phái" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnChatRoom" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-menu-btn-icon"/><ui:Label text="Phòng chat" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Tab 3: Hoạt động — đấu trường, sự kiện, rương báu, cửa hàng, thú cưng, điểm danh, thưởng (PC icon_bar 7 nút) -->
+            <ui:VisualElement name="UtilityTabActivity" class="hud-mobile-utility-tab-panel hidden">
+                <ui:VisualElement name="IconBarArenaBtn" class="hud-mobile-utility-btn"><ui:VisualElement name="IconBarArenaBtnIcon" class="hud-pc-icon-bar-icon"/><ui:Label text="Đấu trường" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="IconBarActivityBtn" class="hud-mobile-utility-btn"><ui:VisualElement name="IconBarActivityBtnIcon" class="hud-pc-icon-bar-icon"/><ui:Label text="Sự kiện" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="IconBarTreasureBtn" class="hud-mobile-utility-btn"><ui:VisualElement name="IconBarTreasureBtnIcon" class="hud-pc-icon-bar-icon"/><ui:Label text="Rương báu" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="IconBarShopBtn" class="hud-mobile-utility-btn"><ui:VisualElement name="IconBarShopBtnIcon" class="hud-pc-icon-bar-icon"/><ui:Label text="Cửa hàng" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="IconBarPetBtn" class="hud-mobile-utility-btn"><ui:VisualElement name="IconBarPetBtnIcon" class="hud-pc-icon-bar-icon"/><ui:Label text="Thú cưng" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="IconBarLoginPrizeBtn" class="hud-mobile-utility-btn"><ui:VisualElement name="IconBarLoginPrizeBtnIcon" class="hud-pc-icon-bar-icon"/><ui:Label text="Điểm danh" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="IconBarFuncPrizeBtn" class="hud-mobile-utility-btn"><ui:VisualElement name="IconBarFuncPrizeBtnIcon" class="hud-pc-icon-bar-icon"/><ui:Label text="Thưởng" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Tab 4: Hệ thống — tùy chọn, quay phim + tác vụ combat (ngồi/ngựa/PK) -->
+            <ui:VisualElement name="UtilityTabSystem" class="hud-mobile-utility-tab-panel hidden">
+                <ui:VisualElement name="BtnSit" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/><ui:Label text="Ngồi" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnHorse" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/><ui:Label text="Cưỡi ngựa" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnPK" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/><ui:Label text="PK" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnRec" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/><ui:Label text="Quay phim" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+                <ui:VisualElement name="BtnOptions" class="hud-mobile-utility-btn"><ui:VisualElement name="BtnOptionsIcon" class="hud-menu-btn-icon"/><ui:Label text="Hệ thống" class="hud-mobile-utility-btn-label"/></ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- Legacy empty rows (kept for binding/test compatibility; tab panels are the active UX). -->
+            <ui:VisualElement name="MobileUtilityActionRow" class="hud-mobile-utility-row" style="display: none;"/>
+            <ui:VisualElement name="MobileUtilityMenuRowA" class="hud-mobile-utility-row" style="display: none;"/>
+            <ui:VisualElement name="MobileUtilityMenuRowB" class="hud-mobile-utility-row" style="display: none;"/>
         </ui:VisualElement>
 
         <!-- PC quick item/left-right skill buttons: 1..9 -> ShortcutUseItem, T/P -> mobile skill assignment. -->
-        <ui:VisualElement name="PcShortcutToggleBtn" class="hud-pc-shortcut-toggle-btn" style="display: none;"><ui:Label name="PcShortcutToggleLabel" text="1-9" class="hud-pc-shortcut-toggle-label"/></ui:VisualElement>
+        <ui:VisualElement name="PcShortcutToggleBtn" class="hud-pc-shortcut-toggle-btn"><ui:Label name="PcShortcutToggleLabel" text="1-9" class="hud-pc-shortcut-toggle-label"/></ui:VisualElement>
         <ui:VisualElement name="PcShortcutDock" class="hud-pc-shortcut-dock hidden">
             <ui:VisualElement name="PcLeftSkillBtn" class="hud-pc-skill-btn"/>
             <ui:VisualElement name="PcRightSkillBtn" class="hud-pc-skill-btn"/>
@@ -206,6 +240,10 @@
                 <ui:VisualElement name="SkillSlot2" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-top"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="3" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot3" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-upper"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="4" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="BtnRun" class="hud-combat-run-btn"><ui:VisualElement name="BtnRunIcon" class="hud-combat-run-icon"/></ui:VisualElement>
+                <!-- Combat-critical quick actions (PK/farm): mount + sit arc beside skill slots for thumb reach. -->
+                <ui:VisualElement name="BtnMountQuick" class="hud-combat-quick-btn hud-combat-mount-btn"><ui:VisualElement name="BtnMountQuickIcon" class="hud-combat-quick-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnSitQuick" class="hud-combat-quick-btn hud-combat-sit-btn"><ui:VisualElement name="BtnSitQuickIcon" class="hud-combat-quick-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnPKQuick" class="hud-combat-quick-btn hud-combat-pk-btn"><ui:VisualElement name="BtnPKQuickIcon" class="hud-combat-quick-icon"/></ui:VisualElement>
                 <ui:VisualElement name="DeckSwitchBtn" class="hud-deck-switch-btn"><ui:Label name="DeckSwitchLabel" text="A" class="hud-deck-switch-label"/></ui:VisualElement>
                 <ui:VisualElement name="CancelCastZone" class="hud-cancel-cast-zone hidden"><ui:Label text="Hủy" class="hud-cancel-cast-label"/></ui:VisualElement>
             </ui:VisualElement>
