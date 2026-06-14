@@ -29,9 +29,14 @@ namespace VLTK.Sandbox
     public class TaskFlagService
     {
         private readonly Dictionary<int, TaskData> _flags = new();
+        private ITaskFlagHost _host;
 
         /// <summary>Event kích hoạt khi trạng thái nhiệm vụ thay đổi.</summary>
         public event Action<int, int> OnTaskStatusChanged; // (taskId, status)
+
+        public TaskFlagService() : this(null) { }
+        public TaskFlagService(ITaskFlagHost host) { _host = host; }
+        public void AttachHost(ITaskFlagHost host) { _host = host; }
 
         /// <summary>
         /// Đặt giá trị flag cho một nhiệm vụ.
@@ -49,6 +54,19 @@ namespace VLTK.Sandbox
             task.progress = progress;
             if (targetCount > 0) task.targetCount = targetCount;
             if (!string.IsNullOrEmpty(desc)) task.descriptionVi = desc;
+
+            if (_host != null)
+            {
+                _host.OnTaskFlagSet(taskId, oldStatus, status, progress, task.targetCount);
+                if (status == 2)
+                    _host.OnTaskComplete(taskId, progress, task.targetCount);
+                else if (status == 3)
+                    _host.OnTaskRewarded(taskId);
+                _host.ShowTaskUI(taskId, status, progress, task.targetCount);
+                _host.LogTaskFlagEvent(taskId, status, $"Task {taskId} status: {oldStatus} → {status}");
+                _host.PlayTaskSFX(taskId, status, status == 3 ? "reward" : (status == 2 ? "complete" : "update"));
+                _host.SaveTaskFlagState(taskId, status, progress, task.targetCount);
+            }
 
             if (oldStatus != status)
             {
@@ -86,7 +104,11 @@ namespace VLTK.Sandbox
         /// </summary>
         public bool CanAcceptTask(int taskId, int playerLevel, int reqLevel, int prerequisiteTaskId = 0)
         {
-            if (playerLevel < reqLevel) return false;
+            if (playerLevel < reqLevel)
+            {
+                _host?.OnTaskAcceptDenied(taskId, playerLevel, reqLevel);
+                return false;
+            }
             if (GetFlag(taskId) > 0) return false; // Đã nhận hoặc đã làm xong
 
             // Kiểm tra nhiệm vụ tiên quyết
@@ -110,7 +132,9 @@ namespace VLTK.Sandbox
         public string SerializeToSave()
         {
             var list = new List<TaskData>(_flags.Values);
-            return JsonUtility.ToJson(new TaskSaveWrapper { tasks = list });
+            string json = JsonUtility.ToJson(new TaskSaveWrapper { tasks = list });
+            _host?.OnSerialized(json, list.Count);
+            return json;
         }
 
         /// <summary>
@@ -124,9 +148,17 @@ namespace VLTK.Sandbox
             {
                 var wrapper = JsonUtility.FromJson<TaskSaveWrapper>(json);
                 _flags.Clear();
-                foreach (var task in wrapper.tasks)
+                if (wrapper?.tasks != null)
                 {
-                    _flags[task.taskId] = task;
+                    foreach (var task in wrapper.tasks)
+                    {
+                        _flags[task.taskId] = task;
+                    }
+                    _host?.OnDeserialized(wrapper.tasks.Count);
+                }
+                else
+                {
+                    _host?.OnDeserialized(0);
                 }
             }
             catch (Exception ex)
@@ -153,6 +185,7 @@ namespace VLTK.Sandbox
         {
             _catalog = reg ?? new PcTaskFlagRegistry();
             SubsystemLog.Info(LogTag, $"Đã tải {_catalog.Count} cờ nhiệm vụ");
+            _host?.OnCatalogAttached(_catalog.Count);
         }
 
         public PcTaskFlagEntry GetFlagMeta(int flagId)
