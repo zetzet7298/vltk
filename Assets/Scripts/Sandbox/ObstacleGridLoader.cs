@@ -43,6 +43,10 @@ namespace VLTK.Sandbox
         private static Dictionary<string, IndexEntry> _index;
         private static bool _loadAttempted;
         private static string _packPathOverride;
+        private static IObstacleGridLoaderHost _host;
+
+        /// <summary>Set/clear host để dispatch side-effects (UI, SFX, log, save).</summary>
+        public static void AttachHost(IObstacleGridLoaderHost host) { _host = host; }
 
         /// <summary>Test/diagnostic hook: point the loader at a specific pack file.</summary>
         public static void SetPackPathForTesting(string fullPath)
@@ -68,9 +72,11 @@ namespace VLTK.Sandbox
             _loadAttempted = true;
 
             var path = PackPath;
+            _host?.OnLoadStart(path);
             if (!File.Exists(path))
             {
                 SubsystemLog.Warn("ObstacleLoader", $"Obstacle pack not found: {path}");
+                _host?.OnLoadFailed(path, "file not found");
                 return;
             }
 
@@ -82,6 +88,7 @@ namespace VLTK.Sandbox
                     bytes[2] != Magic[2] || bytes[3] != Magic[3])
                 {
                     SubsystemLog.Error("ObstacleLoader", "Obstacle pack has invalid magic header");
+                    _host?.OnLoadFailed(path, "invalid magic header");
                     return;
                 }
 
@@ -93,6 +100,7 @@ namespace VLTK.Sandbox
                     HEADER_SIZE + (long)count * INDEX_ENTRY_SIZE > bytes.Length)
                 {
                     SubsystemLog.Error("ObstacleLoader", $"Obstacle pack header out of range (v{version}, count={count})");
+                    _host?.OnLoadFailed(path, "header out of range");
                     return;
                 }
 
@@ -115,12 +123,16 @@ namespace VLTK.Sandbox
 
                 _packBytes = bytes;
                 _index = index;
+                _host?.OnLoadComplete(count, bytes.Length);
+                _host?.PlayObstacleSFX("load");
+                _host?.LogObstacleEvent($"Loaded obstacle pack v{version}: {count} regions ({bytes.Length:N0} bytes)");
                 SubsystemLog.Info("ObstacleLoader",
                     $"Loaded obstacle pack v{version}: {count} regions ({bytes.Length:N0} bytes)");
             }
             catch (Exception ex)
             {
                 SubsystemLog.Error("ObstacleLoader", $"Failed to read obstacle pack: {ex.Message}");
+                _host?.OnLoadFailed(path, ex.Message);
                 _packBytes = null;
                 _index = null;
             }
@@ -136,17 +148,24 @@ namespace VLTK.Sandbox
             if (string.IsNullOrEmpty(regionFile))
             {
                 SubsystemLog.Warn("ObstacleLoader", "LoadFromStreamingAssets: null/empty regionFile");
+                _host?.OnRegionMissing(regionFile ?? "<null>", "<null>");
                 return null;
             }
 
             EnsureLoaded();
             if (_index == null || _packBytes == null)
+            {
+                _host?.OnRegionMissing(regionFile, Path.GetFileNameWithoutExtension(regionFile) ?? "<null>");
+                _host?.SaveObstacleLog(regionFile, false, 0);
                 return null;
+            }
 
             var stem = Path.GetFileNameWithoutExtension(regionFile);
             if (!_index.TryGetValue(stem, out var entry))
             {
                 SubsystemLog.Warn("ObstacleLoader", $"Region not in obstacle pack: {stem} — marked missing");
+                _host?.OnRegionMissing(regionFile, stem);
+                _host?.SaveObstacleLog(regionFile, false, 0);
                 return null;
             }
 
@@ -174,6 +193,8 @@ namespace VLTK.Sandbox
                 cells = cells,
             };
 
+            _host?.OnRegionLoaded(regionFile, entry.width, entry.height, entry.blocked);
+            _host?.SaveObstacleLog(regionFile, true, cells.Length);
             SubsystemLog.Info("ObstacleLoader",
                 $"Loaded obstacle grid for {regionFile}: {entry.blocked}/{expected} blocked");
             return grid;
