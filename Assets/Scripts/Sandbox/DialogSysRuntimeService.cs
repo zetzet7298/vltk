@@ -63,6 +63,9 @@ namespace VLTK.Sandbox
         public const string JsonIndexPath = "Reference/PcDialogSys/DialogSysIndex.json";
         public const string SourceIndexRelativeDir = "Reference/PcDialogSys";
 
+        private IDialogHost _host;
+        public void AttachHost(IDialogHost host) { _host = host; }
+
         // Tên các script PC core — phải khớp DialogSysIndex.json
         public const string ScriptGDialog = "g_dialog.lua";
         public const string ScriptDailog = "dailog.lua";
@@ -173,6 +176,14 @@ namespace VLTK.Sandbox
                     result.saySurfaces.Add(s);
             }
 
+            // Host dispatch
+            if (_host != null)
+            {
+                _host.ShowDialog(result.npcName, result.dialogClass, result.titleMsg);
+                foreach (var s in result.optionSurfaces) _host.AddOptionSurface(s);
+                foreach (var s in result.saySurfaces) _host.AddSaySurface(s);
+                _host.LogDialogNotice(result.npcName, result.titleMsg);
+            }
             return result;
         }
 
@@ -200,6 +211,12 @@ namespace VLTK.Sandbox
                 titleMsg = title ?? string.Empty
             };
             if (options != null) result.optionSurfaces.AddRange(options);
+            // Host dispatch
+            if (_host != null)
+            {
+                _host.ShowDialog("", result.dialogClass, result.titleMsg);
+                foreach (var s in result.optionSurfaces) _host.AddOptionSurface(s);
+            }
             return result;
         }
 
