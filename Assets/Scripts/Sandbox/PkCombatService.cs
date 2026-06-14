@@ -59,6 +59,7 @@ namespace VLTK.Sandbox
         public event Action<int> OnKarmaChanged;
 
         public PkCombatService() : this(0, 0, 0, null) { }
+        public PkCombatService(int factionId) : this(factionId, 0, 0, null) { }
         public PkCombatService(int factionId, int bangId) : this(factionId, bangId, 0, null) { }
         public PkCombatService(int factionId, int bangId, int actorId) : this(factionId, bangId, actorId, null) { }
         public PkCombatService(int factionId, int bangId, int actorId, IPkCombatHost host)
