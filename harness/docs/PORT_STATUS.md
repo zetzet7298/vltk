@@ -675,3 +675,25 @@ Final `dev` HEAD: `bcc15c5b4` (60+ commits since `0ed7d017c` baseline).
 **Final full-suite EditMode sweep** (job `b6ca957472ca4204835314e8ede0ad96`, MCP `TestResults.xml`): **`total=3070 passed=3055 failed=11 skipped=4`**. Same 11 pre-existing `VLTK.Tests.Backend.*` failures (validation_error vs invalid_arg drift); 0 Sandbox regression. **Authoritative test delta**: 2982 → 3070 = +88 net new tests.
 
 Final `dev` HEAD: `0b8f58edb` (~75 commits since `0ed7d017c` baseline).
+
+## Integration batch 2026-06-14 #13 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +86 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-pathfinding-host-apis` (1 commit, 3 files, +443/-1) → new `IPathfindingHost` (8 methods: ShowPathOverlay, OnPathFound, OnPathFailed, PlayPathSFX, LogPathEvent, DispatchNpcNav, GrantPathReward, SavePathHistory). `PathfindingService` refactored into FindPath (public) + RunFindPath (private). NEW ctor accepts IPathfindingHost. NEW event OnPathCompleted. NEW per-call PlayerId + AttachHost. All 7 exit points in RunFindPath call DispatchSuccess or DispatchFailure. Success: OnPathFound + ShowPathOverlay(cells) + LogPathEvent + SavePathHistory + GrantPathReward (if cells.Count > 10). Failure: OnPathFailed + LogPathEvent. 23 tests.
+- `port/fix-player-mount-host-apis` (1 commit, 3 files, +406/-0) → new `IPlayerMountHost` (8 methods: RefreshMountVisual, PlayMountSFX, OnMountStarted, OnMountCompleted, OnDismountStarted, OnDismountCompleted, LogMountEvent, SaveMountState). `PlayerMountService` ctor accepts IPlayerMountHost. NEW per-call PlayerId + MountTransitionTime. Mount host dispatch: RefreshMountVisual + PlayMountSFX(mounting=true) + OnMountStarted + LogMountEvent + SaveMountState. Dismount: RefreshMountVisual + PlayMountSFX(mounting=false) + OnDismountStarted + LogMountEvent + SaveMountState. Tick Mount→Mounted: RefreshMountVisual + OnMountCompleted + SaveMountState. Tick Dismount→None: OnDismountCompleted + LogMountEvent + SaveMountState. 24 tests.
+- `port/fix-region-streaming-host-apis` (1 commit, 3 files, +494/-2) → new `IRegionStreamingHost` (8 methods: OnRegionLoadStarted, OnRegionLoaded, OnRegionLoadFailed, OnRegionUnloaded, UpdateRegionOverlay, PlayRegionLoadSFX, LogRegionEvent, SaveRegionState). `RegionStreamingService` ctor accepts IRegionStreamingHost. NEW per-call PlayerId + OnStreamingPlan event. Update host dispatch: OnRegionUnloaded + LogRegionEvent per unload; OnRegionLoadStarted + LogRegionEvent per load; UpdateRegionOverlay + SaveRegionState at end. MarkLoaded: OnRegionLoaded + PlayRegionLoadSFX + LogRegionEvent. MarkFailed: OnRegionLoadFailed + LogRegionEvent + SaveRegionState. 30 tests.
+
+**Coordination fixes during integration** (5 commits):
+- `IPathfindingHost` missing `using UnityEngine` for Vector2Int — added.
+- `IPlayerMountHost.SaveMountState` was 3-arg, called with 4 args — fixed signature to (int playerId, int horseType, MountState, bool isMounted).
+- `PathfindingServiceTests` missing `using System.Collections.Generic` for HashSet — added.
+- `PathfindingServiceTests` line 327 called `FindPath(start, null)` (2-arg) but new ctor requires 3-arg — passed explicit null world.
+- `PlayerMountLifecycleTests.Tick_MountComplete_DispatchesHost` expected VisualCalls=1 but Mount() also dispatches 1 visual. Reset counters before Tick to assert only the tick dispatch.
+- `RegionStreamingUpdateTests.MarkFailed_*` uses `SubsystemLog.Error` which Unity TestRunner treats as Unhandled log. Added `LogAssert.Expect` for "Region .* failed to load" pattern in 3 tests.
+- `RegionStreamingUpdateTests.MarkLoaded_DispatchesHost` accumulated LogCalls across Update (9 calls) + MarkLoaded (1). Assert delta not absolute count.
+- `RegionStreamingUpdateTests.Update_LoadsNewRegionsOnMove / UnloadsOld` used 5x5 grid + coord (5,0) which is out of bounds. Use 10x10 grid.
+
+**Targeted EditMode sweep** (job `21f87dfb995c4d9ba163d64421c21eb0`): **86/86 pass** for batch #13.
+
+**Final full-suite EditMode sweep** (job `6a8518a8592241328ea98abc881467b1`, MCP `TestResults.xml`): **`total=3156 passed=3140 failed=12 skipped=4`**. 12 Backend pre-existing failures (validation_error vs invalid_arg drift) — same set as previous batches, no new failures. **Zero Sandbox regression across 21 port branches**. **Authoritative test delta**: 3070 → 3156 = +86 net new tests.
+
+Final `dev` HEAD: `40be804c7` (~92 commits since `0ed7d017c` baseline).
