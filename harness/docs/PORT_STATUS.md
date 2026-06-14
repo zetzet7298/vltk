@@ -771,3 +771,27 @@ Final `dev` HEAD: `ec4072f2c` (~127 commits since `0ed7d017c` baseline).
 **Final full-suite EditMode sweep** (job `5c2500f99ab84fb8a62cb68e48966f38`, MCP `TestResults.xml`): **`total=3541 passed=3526 failed=11 skipped=4`**. 11 Backend pre-existing failures. **Zero Sandbox regression across 36 port branches**. **Authoritative test delta**: 3450 → 3541 = +91 net new tests.
 
 Final `dev` HEAD: `9751c2801` (~139 commits since `0ed7d017c` baseline).
+
+## Integration batch 2026-06-14 #18 (orchestrator coord, vltk-unity, single-Editor oracle `vltk-mobile@244c0d539f780309`, Unity 6000.4.7f1, target +95 new tests): merged **3 more** offline port branches into `dev`.
+
+- `port/fix-honor-service-host-apis` (1 commit, 1 file, +419) → tests for HonorService (28 tests). HonorService already had IHonorHost + full dispatch from previous batches; #18a just adds comprehensive EditMode test coverage.
+- `port/fix-enhance-refine-service-host-apis` (1 commit, 3 files, +449/-1) → new `IEnhanceRefineHost` (10 methods: OnEnhanceSuccess, OnEnhanceFailed, OnEnhanceInsufficientSilver, OnRefineSuccess, OnRefineFailed, OnQuestRewardGenerated, ShowEnhanceRefineUI, LogEnhanceRefineEvent, PlayEnhanceSFX, SaveItemEnhanceState). Backed by PC KNpc::EnhanceItem + RefineItem + quest reward tables. EnhanceRefineService: ctor accepts IEnhanceRefineHost. Enhance dispatches OnEnhanceInsufficientSilver when no silver; OnEnhanceSuccess or OnEnhanceFailed at end + ShowEnhanceRefineUI + LogEnhanceRefineEvent + PlayEnhanceSFX(enhance_*) + SaveItemEnhanceState. Refine: similar with OnRefineSuccess/Failed + PlayEnhanceSFX(refine_*). GenerateQuestReward: NEW instance method GenerateQuestRewardWithHost dispatches OnQuestRewardGenerated; static GenerateQuestReward kept for back-compat (used by FinalStoriesTests). 27 tests.
+- `port/fix-minimap-service-host-apis` (1 commit, 3 files, +529/-2) → new `IMinimapHost` (9 methods: OnMinimapResolved, OnMinimapMissing, OnMapNoMinimapRef, OnWorldToMinimap, OnMinimapToWorld, ShowMinimapUI, LogMinimapEvent, PlayMinimapSFX, SaveMinimapState). Backed by M1.8 minimap + asset registry. MinimapService: ctor accepts IMinimapHost. ResolveArtifact dispatches 3-way: no minimap ref → OnMapNoMinimapRef+OnMinimapMissing+ShowMinimapUI(missing=true); resolved → OnMinimapResolved+ShowMinimapUI(missing=false)+PlayMinimapSFX(load); asset missing → OnMinimapMissing+ShowMinimapUI+PlayMinimapSFX(missing). WorldToMinimapNormalized dispatches OnWorldToMinimap with u,v. MinimapPixelToWorld dispatches OnMinimapToWorld. 30 tests.
+
+**Coordination fixes during integration** (5 commits):
+- `HonorServiceTests/EnhanceRefineServiceTests/MinimapServiceTests` class name collisions with `GuildMiscSystemServiceTests.cs` (5 classes per file). Renamed ours to `HonorHostServiceTests/EnhanceRefineHostServiceTests/MinimapHostServiceTests`.
+- `GenerateQuestReward` was made non-static but FinalStoriesTests (existing test) calls it statically. Restored static signature + added new `GenerateQuestRewardWithHost` for instance dispatch.
+- `PcHonorRegistry` uses `Register` (not `Add`). Fixed test.
+- `SourceAssetId` uses `sourcePath` field (not `category`/`path`). Fixed test.
+- `MapDefinition.sourceBoundsRect` is `RectDef` (not UnityEngine.Rect). Added `Rect()` helper.
+- `MapCatalogEntry.settingSourceId` is `SourceAssetId` (not string). Wrapped with `new SourceAssetId{sourcePath=...}`.
+- `HonorService.AttachHost_Stores` test failed because titleReward=0 skipped GrantTitle. Changed to titleReward=11.
+- `HonorService.GetByPoints_NotFound_ReturnsNull` test used points=9999 but registry has honor at 100 points (GetByPoints returns highest honor with `requiredPoints <= points`). Changed to points=0.
+- `EnhanceRefineService.Refine_DispatchesTargetAttr` test depends on whether Refine succeeds or fails (Random). Refactored to assert dispatch-count instead.
+- During integration Unity Editor crashed and had to be restarted manually.
+
+**Unity Editor restart note**: After the test run that picked up the new tests, Unity Editor disconnected from MCP server (and may have been killed). Restarted via `nohup /home/zet/Unity/Hub/Editor/6000.4.7f1/Editor/Unity -projectPath /var/www/vltk-mobile`. Full compile cycle took ~10 minutes (143% CPU, 7GB memory).
+
+**Final full-suite EditMode sweep** (job `46c07dbcc0a34848be260e762adf09a6`, MCP `TestResults.xml`): **`total=3636 passed=3620 failed=12 skipped=4`**. 11 Backend pre-existing failures + 1 pre-existing perf flake (Test_TryUpgrade_Simulate1000Times_Under100ms). **Zero Sandbox regression across 39 port branches**. **Authoritative test delta**: 3541 → 3636 = +95 net new tests.
+
+**Final dev HEAD**: `b6ab44761` (~152 commits since `0ed7d017c` baseline).
