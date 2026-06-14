@@ -153,14 +153,14 @@ namespace VLTK.Tests.Sandbox
         public void GetAllBattlefields_ReturnsAll()
         {
             var svc = BuildService();
-            Assert.AreEqual(2, svc.Count(svc.GetAllBattlefields()));
+            Assert.AreEqual(2, Count(svc.GetAllBattlefields()));
         }
 
         [Test]
         public void GetAllBattlefields_NoRegistry_ReturnsEmpty()
         {
             var svc = new BattlefieldService();
-            Assert.AreEqual(0, svc.Count(svc.GetAllBattlefields()));
+            Assert.AreEqual(0, Count(svc.GetAllBattlefields()));
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace VLTK.Tests.Sandbox
         public void GetAllStates_ReturnsAll()
         {
             var svc = BuildService();
-            Assert.AreEqual(2, svc.Count(svc.GetAllStates()));
+            Assert.AreEqual(2, Count(svc.GetAllStates()));
         }
 
         // ── CanJoin ─────────────────────────────────────────────────────────
