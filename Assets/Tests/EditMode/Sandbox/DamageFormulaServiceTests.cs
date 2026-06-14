@@ -139,6 +139,144 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(30, preview2);
         }
 
+        // --- AC#4: PC CalcDamage typed armor + magic bypass (KNpc.cpp:2125-2292) ---
+
+        [Test]
+        public void Compute_PhysicsArmor_AbsorbsPhysicsDamageOnly()
+        {
+            var svc = new DamageFormulaService();
+            // Fire attack vs physics-only armor: physics armor must NOT mitigate fire.
+            var def = new DefenderStats { physicsArmor = 100, fireArmor = 0 };
+            var r = svc.Compute(Atk(150, 150, DamageType.Fire), def, rolledOverride: 150);
+            Assert.AreEqual(150, r.afterArmor, "Fire damage should bypass physics armor.");
+            Assert.AreEqual(150, r.finalDamage);
+        }
+
+        [Test]
+        public void Compute_ColdArmor_AbsorbsColdDamageOnly()
+        {
+            var svc = new DamageFormulaService();
+            var def = new DefenderStats { coldArmor = 100 };
+            var r = svc.Compute(Atk(150, 150, DamageType.Cold), def, rolledOverride: 150);
+            Assert.AreEqual(50, r.afterArmor);
+            Assert.AreEqual(50, r.finalDamage);
+        }
+
+        [Test]
+        public void Compute_FireArmor_AbsorbsFireDamageOnly()
+        {
+            var svc = new DamageFormulaService();
+            var def = new DefenderStats { fireArmor = 80 };
+            var r = svc.Compute(Atk(120, 120, DamageType.Fire), def, rolledOverride: 120);
+            Assert.AreEqual(40, r.afterArmor);
+            Assert.AreEqual(40, r.finalDamage);
+        }
+
+        [Test]
+        public void Compute_LightArmor_AbsorbsLightDamageOnly()
+        {
+            var svc = new DamageFormulaService();
+            var def = new DefenderStats { lightArmor = 50 };
+            var r = svc.Compute(Atk(100, 100, DamageType.Light), def, rolledOverride: 100);
+            Assert.AreEqual(50, r.afterArmor);
+        }
+
+        [Test]
+        public void Compute_PoisonArmor_AbsorbsPoisonDamageOnly()
+        {
+            var svc = new DamageFormulaService();
+            var def = new DefenderStats { poisonArmor = 60 };
+            var r = svc.Compute(Atk(80, 80, DamageType.Poison), def, rolledOverride: 80);
+            Assert.AreEqual(20, r.afterArmor);
+            Assert.AreEqual(20, r.finalDamage);
+        }
+
+        [Test]
+        public void Compute_MagicDamage_BypassesAllArmorPools()
+        {
+            var svc = new DamageFormulaService();
+            // PC: KNpc.cpp:2285 `case damage_magic: nRes = 0;` — no armor pool applied.
+            var def = new DefenderStats { physicsArmor = 9999, fireArmor = 9999, manaShield = 0, resist = 0 };
+            var r = svc.Compute(Atk(150, 150, DamageType.Magic), def, rolledOverride: 150);
+            Assert.AreEqual(150, r.afterArmor, "Magic bypasses all typed armor pools.");
+            Assert.AreEqual(150, r.finalDamage, "Magic has no resist mitigation either.");
+        }
+
+        [Test]
+        public void Compute_ArmorAlias_StillWorksOnPhysicsDamage()
+        {
+            var svc = new DamageFormulaService();
+            // Legacy single armor field (set via Def(armor: 100)) still mitigates physics.
+            var r = svc.Compute(Atk(150, 150, DamageType.Physics), Def(armor: 100), rolledOverride: 150);
+            Assert.AreEqual(50, r.afterArmor);
+        }
+
+        // --- AC#5: signed random (KNpc.cpp:2136-2141) ---
+
+        [Test]
+        public void Compute_SignedRandom_HandlesNegativeRange()
+        {
+            // PC: when nDamageRange < 0, nDamage = nMax + g_Random(-nDamageRange).
+            // min=200, max=100 → range=-100; we inject Roll=max (deterministic).
+            var svc = new DamageFormulaService { Roll = (lo, hi) => lo };
+            var r = svc.Compute(Atk(200, 100, DamageType.Magic), Def(), rolledOverride: null);
+            // Roll(min, min) returns 100 (the max) → dmg = 100.
+            Assert.AreEqual(100, r.rolledBase);
+            Assert.AreEqual(100, r.finalDamage);
+        }
+
+        // --- AC#6: melee/range damage return (KNpc.cpp:2318-2333) ---
+
+        [Test]
+        public void Compute_MeleeDamageReturn_AppliesToMeleeAttacker()
+        {
+            var svc = new DamageFormulaService();
+            // 100 final dmg, 20% melee return → 20 damage returned to melee attacker.
+            var def = new DefenderStats { meleeDmgRetPercent = 20 };
+            var r = svc.Compute(Atk(100, 100, DamageType.Magic, melee: true), def, rolledOverride: 100);
+            Assert.AreEqual(20, r.meleeReturnDamage);
+            Assert.AreEqual(0, r.rangeReturnDamage);
+        }
+
+        [Test]
+        public void Compute_RangeDamageReturn_AppliesToRangedAttacker()
+        {
+            var svc = new DamageFormulaService();
+            var def = new DefenderStats { rangeDmgRetPercent = 30 };
+            var r = svc.Compute(Atk(100, 100, DamageType.Magic, melee: false), def, rolledOverride: 100);
+            Assert.AreEqual(30, r.rangeReturnDamage);
+            Assert.AreEqual(0, r.meleeReturnDamage);
+        }
+
+        // --- AC#7: damage2mana (KNpc.cpp:2345) ---
+
+        [Test]
+        public void Compute_Damage2Mana_GrantsManaFromDamageTaken()
+        {
+            var svc = new DamageFormulaService();
+            // PC: m_CurrentMana += m_CurrentDamage2Mana * nDamage / 100;
+            var def = new DefenderStats { damage2ManaPercent = 25 };
+            var r = svc.Compute(Atk(100, 100, DamageType.Magic), def, rolledOverride: 100);
+            Assert.AreEqual(100, r.finalDamage);
+            Assert.AreEqual(25, r.damage2ManaGain);
+        }
+
+        // --- AC#8: PK damage rate (KNpc.cpp:2336-2337) ---
+
+        [Test]
+        public void Compute_PkDamageRate_AppliesOnlyInPvp()
+        {
+            var svcPve = new DamageFormulaService { IsPvp = false };
+            var def = new DefenderStats { pkDamageRatePercent = 50 };
+            var rPve = svcPve.Compute(Atk(100, 100, DamageType.Magic), def, rolledOverride: 100);
+            Assert.AreEqual(100, rPve.finalDamage, "PvE: PK rate ignored.");
+
+            var svcPvp = new DamageFormulaService { IsPvp = true };
+            var rPvp = svcPvp.Compute(Atk(100, 100, DamageType.Magic), def, rolledOverride: 100);
+            Assert.AreEqual(50, rPvp.finalDamage, "PvP: PK rate halved.");
+        }
+
+
         // --- AC#3: source evidence gap recorded before implementation ---
 
         [Test]
