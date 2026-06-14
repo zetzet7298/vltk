@@ -5,6 +5,8 @@
 // PC surfaces: SpawnMissileSFX, Msg2Player, UpdateSkillUI, SaveMissileLog.
 // -----------------------------------------------------------------------------
 
+using VLTK.Model;
+
 namespace VLTK.Sandbox
 {
     /// <summary>
