@@ -68,7 +68,8 @@ namespace VLTK.Tests.Sandbox
             svc.AddExp(required - 1);
             Assert.AreEqual(5, svc.Level);
             Assert.AreEqual(required - 1, svc.CurrentExp);
-            Assert.AreEqual(0, svc.PotentialPoints);
+            // Initial: L=5 -> 4*5=20 potential pre-granted
+            Assert.AreEqual(20, svc.PotentialPoints);
         }
 
         [Test]
@@ -89,11 +90,13 @@ namespace VLTK.Tests.Sandbox
             // 3× the L=5 requirement
             long required = PlayerStatService.GetExpRequired(5);
             var svc = new PlayerLevelService(5);
+            int beforePotential = svc.PotentialPoints; // 20 pre-granted
             svc.AddExp(required * 3);
             // Each level-up costs more, but first level-up guarantees
             Assert.GreaterOrEqual(svc.Level, 6);
             Assert.LessOrEqual(svc.Level, 8);
-            Assert.AreEqual((svc.Level - 5) * 5, svc.PotentialPoints);
+            int newPotential = svc.PotentialPoints - beforePotential;
+            Assert.AreEqual((svc.Level - 5) * 5, newPotential);
         }
 
         [Test]
@@ -138,17 +141,19 @@ namespace VLTK.Tests.Sandbox
         public void GrantSkillPoint_AddsToPool()
         {
             var svc = new PlayerLevelService(5);
+            int before = svc.SkillPoints; // 4 pre-granted at L=5
             svc.GrantSkillPoint(3);
-            Assert.AreEqual(3, svc.SkillPoints);
+            Assert.AreEqual(before + 3, svc.SkillPoints);
         }
 
         [Test]
         public void SpendSkillPoints_ValidAmount_Deducts()
         {
             var svc = new PlayerLevelService(5);
-            svc.GrantSkillPoint(3);
-            Assert.IsTrue(svc.SpendSkillPoints(2));
-            Assert.AreEqual(1, svc.SkillPoints);
+            int before = svc.SkillPoints; // 4 pre-granted at L=5
+            svc.GrantSkillPoint(3); // 4+3 = 7
+            Assert.IsTrue(svc.SpendSkillPoints(2)); // 7-2 = 5
+            Assert.AreEqual(before + 1, svc.SkillPoints);
         }
 
         [Test]
@@ -163,10 +168,11 @@ namespace VLTK.Tests.Sandbox
         public void RefundSkillPoints_AddsBack()
         {
             var svc = new PlayerLevelService(5);
-            svc.GrantSkillPoint(3);
-            svc.SpendSkillPoints(2);
-            svc.RefundSkillPoints(2);
-            Assert.AreEqual(3, svc.SkillPoints);
+            int before = svc.SkillPoints; // 4 pre-granted at L=5
+            svc.GrantSkillPoint(3); // 4+3=7
+            svc.SpendSkillPoints(2); // 7-2=5
+            svc.RefundSkillPoints(2); // 5+2=7
+            Assert.AreEqual(before + 3, svc.SkillPoints);
         }
 
         // ── Host dispatch tests ─────────────────────────────────────────────
