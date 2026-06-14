@@ -326,7 +326,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void GenerateQuestReward_Static()
         {
-            var reward = EnhanceRefineService.GenerateQuestRewardStatic(2, 10);
+            var reward = EnhanceRefineService.GenerateQuestReward(2, 10);
             Assert.AreEqual(2, reward.itemIds.Count);
         }
 

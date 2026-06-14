@@ -110,7 +110,12 @@ namespace VLTK.Tests.Sandbox
             public ValidationResult Validate() => new ValidationResult();
         }
 
-        private static MapDefinition MakeMap(int id, Rect rect, MinimapRef ref_ = null, string sourceId = null)
+        private static RectDef Rect(float x, float y, float w, float h)
+        {
+            return new RectDef { x = x, y = y, width = w, height = h };
+        }
+
+        private static MapDefinition MakeMap(int id, RectDef rect, MinimapRef ref_ = null, string sourceId = null)
         {
             return new MapDefinition
             {
@@ -153,7 +158,7 @@ namespace VLTK.Tests.Sandbox
             var host = new FakeHost();
             var svc = new MinimapService(new FakeRegistry());
             svc.AttachHost(host);
-            svc.ResolveArtifact(MakeMap(1, new Rect(0, 0, 100, 100)));
+            svc.ResolveArtifact(MakeMap(1, Rect(0, 0, 100, 100)));
             // No minimap ref → OnMapNoMinimapRef is dispatched
             Assert.AreEqual(1, host.NoRefCalls);
         }
@@ -172,7 +177,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new MinimapService(new FakeRegistry(), host);
-            var map = MakeMap(1, new Rect(0, 0, 100, 100));
+            var map = MakeMap(1, Rect(0, 0, 100, 100));
             var mmRef = svc.ResolveArtifact(map);
             Assert.IsNotNull(mmRef);
             Assert.AreEqual(MinimapArtifactStatus.Missing, mmRef.status);
@@ -183,7 +188,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new MinimapService(new FakeRegistry(), host);
-            var map = MakeMap(1, new Rect(0, 0, 100, 100));
+            var map = MakeMap(1, Rect(0, 0, 100, 100));
             svc.ResolveArtifact(map);
             Assert.AreEqual(1, host.NoRefCalls);
             Assert.AreEqual(1, host.MissingCalls);
@@ -203,7 +208,7 @@ namespace VLTK.Tests.Sandbox
             });
             var host = new FakeHost();
             var svc = new MinimapService(reg, host);
-            var map = MakeMap(1, new Rect(0, 0, 100, 100), MakeRef("minimap/r001"));
+            var map = MakeMap(1, Rect(0, 0, 100, 100), MakeRef("minimap/r001"));
             var mmRef = svc.ResolveArtifact(map);
             Assert.AreEqual(MinimapArtifactStatus.Registered, mmRef.status);
             Assert.AreEqual("Assets/Minimaps/r001.png", mmRef.artifactPath);
@@ -221,7 +226,7 @@ namespace VLTK.Tests.Sandbox
             });
             var host = new FakeHost();
             var svc = new MinimapService(reg, host);
-            var map = MakeMap(1, new Rect(0, 0, 100, 100), MakeRef("minimap/r001"));
+            var map = MakeMap(1, Rect(0, 0, 100, 100), MakeRef("minimap/r001"));
             svc.ResolveArtifact(map);
             Assert.AreEqual(1, host.ResolvedCalls);
             Assert.AreEqual(1, host.MissingCalls == 0 ? 1 : 0);  // 0 means resolved, not missing
@@ -232,7 +237,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new MinimapService(new FakeRegistry(), host);
-            var map = MakeMap(1, new Rect(0, 0, 100, 100), MakeRef("minimap/unknown"));
+            var map = MakeMap(1, Rect(0, 0, 100, 100), MakeRef("minimap/unknown"));
             svc.ResolveArtifact(map);
             Assert.AreEqual(1, host.MissingCalls);
             Assert.AreEqual(0, host.ResolvedCalls);
@@ -253,7 +258,7 @@ namespace VLTK.Tests.Sandbox
         public void WorldToMinimapNormalized_ZeroRect_Center()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var n = svc.WorldToMinimapNormalized(MakeMap(1, new Rect(0, 0, 0, 0)), Vector2.zero);
+            var n = svc.WorldToMinimapNormalized(MakeMap(1, Rect(0, 0, 0, 0)), Vector2.zero);
             Assert.AreEqual(0.5f, n.x);
         }
 
@@ -261,7 +266,7 @@ namespace VLTK.Tests.Sandbox
         public void WorldToMinimapNormalized_Center()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var n = svc.WorldToMinimapNormalized(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(50, 50));
+            var n = svc.WorldToMinimapNormalized(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(50, 50));
             Assert.AreEqual(0.5f, n.x);
             Assert.AreEqual(0.5f, n.y);
         }
@@ -270,7 +275,7 @@ namespace VLTK.Tests.Sandbox
         public void WorldToMinimapNormalized_TopLeft()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var n = svc.WorldToMinimapNormalized(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(0, 0));
+            var n = svc.WorldToMinimapNormalized(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(0, 0));
             Assert.AreEqual(0f, n.x);
             Assert.AreEqual(0f, n.y);
         }
@@ -279,7 +284,7 @@ namespace VLTK.Tests.Sandbox
         public void WorldToMinimapNormalized_BottomRight()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var n = svc.WorldToMinimapNormalized(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(100, 100));
+            var n = svc.WorldToMinimapNormalized(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(100, 100));
             Assert.AreEqual(1f, n.x);
             Assert.AreEqual(1f, n.y);
         }
@@ -288,7 +293,7 @@ namespace VLTK.Tests.Sandbox
         public void WorldToMinimapNormalized_ClampsOutside()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var n = svc.WorldToMinimapNormalized(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(200, 200));
+            var n = svc.WorldToMinimapNormalized(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(200, 200));
             Assert.AreEqual(1f, n.x);
             Assert.AreEqual(1f, n.y);
         }
@@ -298,7 +303,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new MinimapService(new FakeRegistry(), host);
-            svc.WorldToMinimapNormalized(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(50, 50));
+            svc.WorldToMinimapNormalized(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(50, 50));
             Assert.AreEqual(1, host.WorldToMinimapCalls);
             Assert.AreEqual(0.5f, host.LastU);
             Assert.AreEqual(0.5f, host.LastV);
@@ -310,7 +315,7 @@ namespace VLTK.Tests.Sandbox
         public void WorldToMinimapPixel_Center()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var p = svc.WorldToMinimapPixel(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(50, 50), new Vector2(200, 200));
+            var p = svc.WorldToMinimapPixel(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(50, 50), new Vector2(200, 200));
             Assert.AreEqual(100f, p.x);
             Assert.AreEqual(100f, p.y);
         }
@@ -320,7 +325,7 @@ namespace VLTK.Tests.Sandbox
         {
             var svc = new MinimapService(new FakeRegistry());
             // Top-left world coord → bottom-left of minimap (y inverted)
-            var p = svc.WorldToMinimapPixel(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(0, 100), new Vector2(200, 200));
+            var p = svc.WorldToMinimapPixel(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(0, 100), new Vector2(200, 200));
             Assert.AreEqual(0f, p.x);
             Assert.AreEqual(0f, p.y); // top of world = top of minimap (y=0)
         }
@@ -339,7 +344,7 @@ namespace VLTK.Tests.Sandbox
         public void MinimapPixelToWorld_ZeroSize_Zero()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var w = svc.MinimapPixelToWorld(MakeMap(1, new Rect(0, 0, 100, 100)), Vector2.zero, Vector2.zero);
+            var w = svc.MinimapPixelToWorld(MakeMap(1, Rect(0, 0, 100, 100)), Vector2.zero, Vector2.zero);
             Assert.AreEqual(Vector2.zero, w);
         }
 
@@ -347,7 +352,7 @@ namespace VLTK.Tests.Sandbox
         public void MinimapPixelToWorld_Center()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var w = svc.MinimapPixelToWorld(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(100, 100), new Vector2(200, 200));
+            var w = svc.MinimapPixelToWorld(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(100, 100), new Vector2(200, 200));
             Assert.AreEqual(50f, w.x);
             Assert.AreEqual(50f, w.y);
         }
@@ -357,7 +362,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new MinimapService(new FakeRegistry(), host);
-            svc.MinimapPixelToWorld(MakeMap(1, new Rect(0, 0, 100, 100)), new Vector2(100, 100), new Vector2(200, 200));
+            svc.MinimapPixelToWorld(MakeMap(1, Rect(0, 0, 100, 100)), new Vector2(100, 100), new Vector2(200, 200));
             Assert.AreEqual(1, host.MinimapToWorldCalls);
         }
 
@@ -367,7 +372,7 @@ namespace VLTK.Tests.Sandbox
         public void MinimapNormalizedToWorld_Zero()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var w = svc.MinimapNormalizedToWorld(MakeMap(1, new Rect(10, 20, 100, 100)), new Vector2(0, 0));
+            var w = svc.MinimapNormalizedToWorld(MakeMap(1, Rect(10, 20, 100, 100)), new Vector2(0, 0));
             Assert.AreEqual(10f, w.x);
             Assert.AreEqual(120f, w.y); // y inverted → 20+100=120
         }
@@ -393,7 +398,7 @@ namespace VLTK.Tests.Sandbox
         public void IsMissing_NoRef_True()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var map = MakeMap(1, new Rect(0, 0, 100, 100));
+            var map = MakeMap(1, Rect(0, 0, 100, 100));
             Assert.IsTrue(svc.IsMissing(map));
         }
 
@@ -401,7 +406,7 @@ namespace VLTK.Tests.Sandbox
         public void IsMissing_Registered_False()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var map = MakeMap(1, new Rect(0, 0, 100, 100));
+            var map = MakeMap(1, Rect(0, 0, 100, 100));
             map.minimapRef = new MinimapRef { status = MinimapArtifactStatus.Registered };
             Assert.IsFalse(svc.IsMissing(map));
         }
@@ -410,7 +415,7 @@ namespace VLTK.Tests.Sandbox
         public void IsMissing_Missing_True()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var map = MakeMap(1, new Rect(0, 0, 100, 100));
+            var map = MakeMap(1, Rect(0, 0, 100, 100));
             map.minimapRef = new MinimapRef { status = MinimapArtifactStatus.Missing };
             Assert.IsTrue(svc.IsMissing(map));
         }
@@ -419,7 +424,7 @@ namespace VLTK.Tests.Sandbox
         public void GetMissingSourceId_FromRef()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var map = MakeMap(1, new Rect(0, 0, 100, 100));
+            var map = MakeMap(1, Rect(0, 0, 100, 100));
             map.minimapRef = new MinimapRef { sourceId = new SourceAssetId { sourcePath = "abc" } };
             Assert.AreEqual("abc", svc.GetMissingSourceId(map)?.ToKey());
         }
@@ -428,7 +433,7 @@ namespace VLTK.Tests.Sandbox
         public void GetMissingSourceId_FromCatalog()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var map = MakeMap(1, new Rect(0, 0, 100, 100), sourceId: "catalogSrc");
+            var map = MakeMap(1, Rect(0, 0, 100, 100), sourceId: "catalogSrc");
             Assert.AreEqual("catalogSrc", svc.GetMissingSourceId(map)?.ToKey());
         }
 
@@ -445,7 +450,7 @@ namespace VLTK.Tests.Sandbox
         public void MinimapService_WithoutHost_DoesNotThrow()
         {
             var svc = new MinimapService(new FakeRegistry());
-            var map = MakeMap(1, new Rect(0, 0, 100, 100));
+            var map = MakeMap(1, Rect(0, 0, 100, 100));
             Assert.DoesNotThrow(() => svc.ResolveArtifact(map));
             Assert.DoesNotThrow(() => svc.WorldToMinimapNormalized(map, Vector2.zero));
             Assert.DoesNotThrow(() => svc.WorldToMinimapPixel(map, Vector2.zero, new Vector2(100, 100)));
