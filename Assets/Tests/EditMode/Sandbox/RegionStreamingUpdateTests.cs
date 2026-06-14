@@ -303,9 +303,10 @@ namespace VLTK.Tests.Sandbox
             var host = new FakeHost();
             var svc = BuildService(host: host);
             svc.Update(new Vector2(150f, 150f));
+            int beforeSave = host.SaveCalls;
             svc.MarkFailed(new RegionCoord(1, 1));
             Assert.AreEqual(1, host.LoadFailedCalls);
-            Assert.AreEqual(1, host.SaveCalls);
+            Assert.AreEqual(beforeSave + 1, host.SaveCalls);
             Assert.AreEqual(RegionStreamState.Failed, host.LastSaveState);
         }
 
@@ -375,6 +376,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void GetStateColor_Failed_Red()
         {
+            LogAssert.Expect(LogType.Error, new System.Text.RegularExpressions.Regex(".*Region.*failed to load.*"));
             var svc = BuildService();
             svc.Update(new Vector2(150f, 150f));
             svc.MarkFailed(new RegionCoord(1, 1));
