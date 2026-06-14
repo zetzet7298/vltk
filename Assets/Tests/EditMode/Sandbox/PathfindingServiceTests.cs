@@ -324,7 +324,7 @@ namespace VLTK.Tests.Sandbox
             var svc = new PathfindingService();
             int fired = 0;
             svc.OnPathCompleted += r => fired++;
-            svc.FindPath(new Vector2Int(0, 0), null);
+            svc.FindPath(new Vector2Int(0, 0), new Vector2Int(1, 1), null);
             Assert.AreEqual(1, fired);
         }
 
