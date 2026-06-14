@@ -80,38 +80,60 @@ namespace VLTK.Sandbox
     {
         private readonly bool _allowDiagonal;
         private readonly int _maxExpansions;
+        private IPathfindingHost _host;
+        private int _playerId = 0;
 
-        public PathfindingService(bool allowDiagonal = false, int maxExpansions = 100000)
+        /// <summary>Sự kiện khi tìm thấy path (success).</summary>
+        public event Action<PathResult> OnPathCompleted;
+
+        public int PlayerId { get => _playerId; set => _playerId = value; }
+
+        public PathfindingService() : this(false, 100000, null) { }
+        public PathfindingService(bool allowDiagonal = false, int maxExpansions = 100000) : this(allowDiagonal, maxExpansions, null) { }
+        public PathfindingService(bool allowDiagonal, int maxExpansions, IPathfindingHost host)
         {
             _allowDiagonal = allowDiagonal;
             _maxExpansions = Mathf.Max(1, maxExpansions);
+            _host = host;
         }
 
+        public void AttachHost(IPathfindingHost host) { _host = host; }
+
         public PathResult FindPath(Vector2Int start, Vector2Int goal, IWalkabilityProvider world)
+        {
+            _host?.PlayPathSFX(start, goal);
+            return RunFindPath(start, goal, world);
+        }
+
+        private PathResult RunFindPath(Vector2Int start, Vector2Int goal, IWalkabilityProvider world)
         {
             var result = new PathResult();
             if (world == null)
             {
                 result.failureReason = "No walkability provider";
                 SubsystemLog.Warn("Pathfind", result.failureReason);
+                DispatchFailure(start, goal, result);
                 return result;
             }
             if (!world.InSearchBounds(start.x, start.y) || !world.CanWalk(start.x, start.y))
             {
                 result.failureReason = $"Start {start} is blocked or out of bounds";
                 SubsystemLog.Warn("Pathfind", result.failureReason);
+                DispatchFailure(start, goal, result);
                 return result;
             }
             if (!world.InSearchBounds(goal.x, goal.y) || !world.CanWalk(goal.x, goal.y))
             {
                 result.failureReason = $"Goal {goal} is blocked or out of bounds";
                 SubsystemLog.Warn("Pathfind", result.failureReason);
+                DispatchFailure(start, goal, result);
                 return result;
             }
             if (start == goal)
             {
                 result.found = true;
                 result.cells.Add(start);
+                DispatchSuccess(start, goal, result);
                 return result;
             }
 
@@ -139,6 +161,7 @@ namespace VLTK.Sandbox
                 {
                     result.failureReason = "Search budget exceeded";
                     SubsystemLog.Warn("Pathfind", result.failureReason);
+                    DispatchFailure(start, goal, result);
                     return result;
                 }
 
@@ -146,6 +169,7 @@ namespace VLTK.Sandbox
                 {
                     Reconstruct(cameFrom, cur, result);
                     result.found = true;
+                    DispatchSuccess(start, goal, result);
                     return result;
                 }
 
@@ -166,7 +190,29 @@ namespace VLTK.Sandbox
 
             result.failureReason = $"No path from {start} to {goal}";
             SubsystemLog.Warn("Pathfind", result.failureReason);
+            DispatchFailure(start, goal, result);
             return result;
+        }
+
+        private void DispatchSuccess(Vector2Int start, Vector2Int goal, PathResult result)
+        {
+            OnPathCompleted?.Invoke(result);
+            if (_host != null)
+            {
+                _host.OnPathFound(start, goal, result.cells.Count, result.expandedNodes);
+                _host.ShowPathOverlay(result.cells.ToArray(), start, goal);
+                _host.LogPathEvent(start, goal, $"Tìm thấy đường từ {start} đến {goal}: {result.cells.Count} ô");
+                _host.SavePathHistory(_playerId, start, goal, result.cells.Count);
+                // Phần thưởng nếu path dài > 10 ô
+                if (result.cells.Count > 10) _host.GrantPathReward(_playerId, result.cells.Count, result.expandedNodes);
+            }
+        }
+
+        private void DispatchFailure(Vector2Int start, Vector2Int goal, PathResult result)
+        {
+            OnPathCompleted?.Invoke(result);
+            _host?.OnPathFailed(start, goal, result.failureReason, result.expandedNodes);
+            _host?.LogPathEvent(start, goal, $"Không tìm thấy đường từ {start} đến {goal}: {result.failureReason}");
         }
 
         private void Reconstruct(Dictionary<Vector2Int, Vector2Int> cameFrom, Vector2Int goal, PathResult result)
