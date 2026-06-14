@@ -84,7 +84,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             PcTaskEventParser.AttachHost(host);
-            PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, host.RegistryBuiltCalls);
         }
 
@@ -93,7 +93,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void BuildRegistry_NullDir_DispatchesFailed()
         {
-            var reg = PcTaskEventRegistry.BuildRegistry(null);
+            var reg = PcTaskEventParser.BuildRegistry(null);
             Assert.AreEqual(0, reg.Count);
             Assert.AreEqual(1, _host.ParseFailedCalls);
             Assert.AreEqual("empty dir", _host.LastReason);
@@ -102,7 +102,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void BuildRegistry_EmptyDir_DispatchesFailed()
         {
-            var reg = PcTaskEventRegistry.BuildRegistry("");
+            var reg = PcTaskEventParser.BuildRegistry("");
             Assert.AreEqual(0, reg.Count);
             Assert.AreEqual(1, _host.ParseFailedCalls);
         }
@@ -110,7 +110,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void BuildRegistry_NonexistentDir_DispatchesFailed()
         {
-            var reg = PcTaskEventRegistry.BuildRegistry("/tmp/nonexistent_dir_" + System.Guid.NewGuid());
+            var reg = PcTaskEventParser.BuildRegistry("/tmp/nonexistent_dir_" + System.Guid.NewGuid());
             Assert.AreEqual(0, reg.Count);
             Assert.AreEqual(1, _host.ParseFailedCalls);
             Assert.AreEqual("dir not found", _host.LastReason);
@@ -119,7 +119,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void BuildRegistry_NonexistentDir_DispatchesRegistryBuilt()
         {
-            PcTaskEventRegistry.BuildRegistry("/tmp/nonexistent_dir_" + System.Guid.NewGuid());
+            PcTaskEventParser.BuildRegistry("/tmp/nonexistent_dir_" + System.Guid.NewGuid());
             Assert.AreEqual(1, _host.RegistryBuiltCalls);
             Assert.AreEqual(0, _host.LastEventCount);
         }
@@ -129,7 +129,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void BuildRegistry_EmptyDir_RegistryBuilt()
         {
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(0, reg.Count);
             Assert.AreEqual(1, _host.RegistryBuiltCalls);
         }
@@ -141,7 +141,7 @@ namespace VLTK.Tests.Sandbox
                 "1\tEvent1\tDescription1\n" +
                 "2\tEvent2\tDescription2\n" +
                 "3\tEvent3\tDescription3\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(3, reg.EventCount);
         }
 
@@ -151,7 +151,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_type.txt"),
                 "T1\tcond1\tentity1\taward1\ttalk1\n" +
                 "T2\tcond2\tentity2\taward2\ttalk2\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(2, reg.TypeCount);
         }
 
@@ -161,7 +161,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"),
                 "100\tTaskA\t1\tT1\t1\tTaskTextA\n" +
                 "200\tTaskB\t2\tT2\t0\tTaskTextB\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(2, reg.IdCount);
         }
 
@@ -171,7 +171,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"), "1\tE1\tT1\n2\tE2\tT2\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_type.txt"), "T1\tc1\te1\ta1\tt1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"), "100\tN1\t1\tT1\t1\tX1\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(2, reg.EventCount);
             Assert.AreEqual(1, reg.TypeCount);
             Assert.AreEqual(1, reg.IdCount);
@@ -183,7 +183,7 @@ namespace VLTK.Tests.Sandbox
         {
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"), "1\tE1\tT1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"), "100\tN1\t1\tT1\t1\tX1\n");
-            PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, _host.RegistryBuiltCalls);
             Assert.AreEqual(1, _host.LastEventCount);
             Assert.AreEqual(0, _host.LastTypeCount);
@@ -198,7 +198,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"), "1\tE1\tT1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_type.txt"), "T1\tc1\te1\ta1\tt1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"), "100\tN1\t1\tT1\t1\tX1\n");
-            PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(3, _host.ParseStartCalls);
         }
 
@@ -208,7 +208,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"), "1\tE1\tT1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_type.txt"), "T1\tc1\te1\ta1\tt1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"), "100\tN1\t1\tT1\t1\tX1\n");
-            PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(3, _host.ParseCompleteCalls);
         }
 
@@ -220,7 +220,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"),
                 "EventID\tEventName\tEventText\n" +
                 "1\tRealEvent\tRealDescription\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.EventCount);
         }
 
@@ -230,7 +230,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"),
                 "abc\tInvalidEvent\tInvalidDescription\n" +
                 "1\tRealEvent\tRealDescription\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.EventCount);
         }
 
@@ -240,7 +240,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"),
                 "1\n" +  // just 1 column, skipped
                 "1\tE1\tT1\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.EventCount);
         }
 
@@ -249,14 +249,14 @@ namespace VLTK.Tests.Sandbox
         {
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"),
                 "\n\n1\tE1\tT1\n\n2\tE2\tT2\n\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(2, reg.EventCount);
         }
 
         [Test]
         public void ParseEvents_DispatchesFailed_WhenNoFile()
         {
-            PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            PcTaskEventParser.BuildRegistry(_tmpDir);
             // No files → 3 ParseFailed (one for each)
             Assert.AreEqual(3, _host.ParseFailedCalls);
         }
@@ -269,7 +269,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_type.txt"),
                 "T1\tcond1\n" +  // only 2 cols
                 "T2\tc2\te2\ta2\tt2\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.TypeCount);
         }
 
@@ -279,7 +279,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_type.txt"),
                 "TaskType\tConditionFile\tEntityFile\tAwardFile\tTalkFile\n" +
                 "T1\tc1\te1\ta1\tt1\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.TypeCount);
         }
 
@@ -291,7 +291,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"),
                 "TaskID\tTaskName\tEventID\tTaskType\tCanCancel\tTaskText\n" +
                 "100\tN1\t1\tT1\t1\tX1\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.IdCount);
         }
 
@@ -301,7 +301,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"),
                 "xyz\tN0\t1\tT1\t1\tX0\n" +
                 "100\tN1\t1\tT1\t1\tX1\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.IdCount);
         }
 
@@ -311,7 +311,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"),
                 "100\n" +  // just 1 col
                 "200\tN2\t1\tT1\t1\tX2\n");
-            var reg = PcTaskEventRegistry.BuildRegistry(_tmpDir);
+            var reg = PcTaskEventParser.BuildRegistry(_tmpDir);
             Assert.AreEqual(1, reg.IdCount);
         }
 
@@ -323,7 +323,7 @@ namespace VLTK.Tests.Sandbox
             File.WriteAllText(Path.Combine(_tmpDir, "task_event.txt"), "1\tE1\tT1\n");
             File.WriteAllText(Path.Combine(_tmpDir, "task_id.txt"), "100\tN1\t1\tT1\t1\tX1\n");
             PcTaskEventParser.AttachHost(null);
-            Assert.DoesNotThrow(() => PcTaskEventRegistry.BuildRegistry(_tmpDir));
+            Assert.DoesNotThrow(() => PcTaskEventParser.BuildRegistry(_tmpDir));
         }
 
         // ── Count properties ────────────────────────────────────────────────
