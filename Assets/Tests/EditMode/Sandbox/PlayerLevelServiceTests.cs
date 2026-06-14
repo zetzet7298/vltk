@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------------
 
 using NUnit.Framework;
+using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
