@@ -1561,30 +1561,32 @@
    Keep it minimal so it doesn't distract from PC HUD feel. */
 .hud-utility-toggle-btn {
     position: absolute;
-    right: 148px;
-    top: 8px;
-    width: 40px;
-    height: 40px;
+    right: 178px;
+    top: 6px;
+    width: 48px;
+    height: 48px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0,0,0,0);
-    border-width: 0px;
-    border-radius: 0px;
+    background-color: rgba(5,10,6,0.72);
+    border-width: 1px;
+    border-color: rgba(206,165,82,0.55);
+    border-radius: 8px;
     z-index: 920;
 }
 
 .hud-utility-toggle-btn.active {
-    background-color: rgba(52,74,34,0.30);
-    border-width: 0px;
+    background-color: rgba(52,74,34,0.72);
+    border-color: rgba(168,255,112,0.85);
+    border-width: 1px;
 }
 
 .hud-utility-toggle-btn .hud-menu-btn-icon {
     position: absolute;
-    left: 6px;
-    top: 6px;
-    width: 28px;
-    height: 28px;
-    opacity: 0.75;
+    left: 8px;
+    top: 8px;
+    width: 32px;
+    height: 32px;
+    opacity: 1;
     -unity-background-scale-mode: scale-to-fit;
 }
 
