@@ -383,7 +383,7 @@
 .hud-cb-page-tab-active { background-color: rgba(255,220,90,0.10); }
 
 
-/* ═══ CHAT AREA — centered at the bottom of the screen ═══ */
+/* ═══ CHAT AREA — runtime C# (GameHudController.ApplySafeAreaLayout) sets left/translate per frame; USS is the fallback default ═══ */
 .hud-chat-panel {
     position: absolute;
     left: 50%;

@@ -850,13 +850,17 @@ namespace VLTK.UI
             }
             if (_chatPanel != null)
             {
-                _chatPanel.style.left = safeX;
+                // Center horizontally; bottom anchored to safe-area bottom.
+                _chatPanel.style.left = Length.Percent(50f);
+                _chatPanel.style.right = StyleKeyword.Auto;
+                _chatPanel.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
                 _chatPanel.style.bottom = safeY + 42f;
             }
             if (_chatInputRow != null)
             {
                 _chatInputRow.style.position = Position.Absolute;
-                _chatInputRow.style.left = safeX + 28f;
+                _chatInputRow.style.left = Length.Percent(50f);
+                _chatInputRow.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
                 _chatInputRow.style.bottom = safeY + 10f;
                 _chatInputRow.style.width = 410f;
             }
