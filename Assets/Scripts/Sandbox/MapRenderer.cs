@@ -71,6 +71,27 @@ namespace VLTK.Sandbox
         private const int RegionSceneWidth = 512;
         private const int GroundCell = 32;
 
+        // Local TestData/Regions/Map_NN_C/ folder mapId remap. The pipeline that
+        // generated the local BLH / vượt ải / Phong Kỳ / Lâm Du Quan region folders
+        // used different mapIds than the canonical PC maplist.ini (which is what
+        // MapPortManifest and the rest of the mobile code follow). Without this
+        // remap, MapRenderer looks for TestData/Regions/Map_53_C/ for Ba Lăng
+        // huyện (which doesn't exist on disk) and falls through to
+        // "No test region data available" — leaving the map unrendered.
+        //
+        // The local pipeline source for 巴陵县 is documented in
+        // Assets/StreamingAssets/TestData/Regions/Map_79_coverage.json
+        // (mapId 79, displayName 巴陵县, source jxwin-kinnox/.../两湖区/巴陵县).
+        //
+        // When the local catalog is regenerated to match PC maplist.ini, this
+        // remap can be deleted.
+        private static readonly Dictionary<int, int> LocalDataMapIdOverrides = new Dictionary<int, int>
+            {
+                // 巴陵县 (Ba Lăng huyện / BLH): PC maplist.ini says 53, local
+                // data folder is Map_79_C/ (621 region files).
+                [53] = 79,
+            };
+
         // sortingOrder is a 16-bit field (-32768..32767). The map spans screen-Y up to
         // ~100000, so the old "screenY*2 clamped to ±32000" scheme overflowed AND
         // saturated thousands of objects at the same ceiling value, leaving their relative
@@ -92,9 +113,16 @@ namespace VLTK.Sandbox
         private void LoadSampleRegions(MapDefinition mapDef)
         {
             // Prefer generated bulk-port regions, then legacy client-projected test regions.
+            // The data-folder mapId may differ from the catalog mapId (see
+            // LocalDataMapIdOverrides above); resolve the actual on-disk folder id
+            // before building the path so map visuals don't silently fall through
+            // to "No test region data available" for known mismatches.
+            int dataMapId = mapDef.catalogEntry.mapId;
+            if (LocalDataMapIdOverrides.TryGetValue(dataMapId, out var overrideId))
+                dataMapId = overrideId;
             var generatedDir = ResolveRegionFolder(mapDef.catalogEntry?.regionFolder);
-            var clientDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}_C");
-            var legacyDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{mapDef.catalogEntry.mapId}");
+            var clientDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{dataMapId}_C");
+            var legacyDir = Path.Combine(Application.streamingAssetsPath, "TestData", "Regions", $"Map_{dataMapId}");
             var regionsDir = Directory.Exists(generatedDir) ? generatedDir : clientDir;
             if (!Directory.Exists(regionsDir))
                 regionsDir = legacyDir;
