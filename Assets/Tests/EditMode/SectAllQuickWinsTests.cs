@@ -554,6 +554,75 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0f, caster.position.y, 1.0f, "Caster Y phải snap tới target 0");
         }
 
+        [Test]
+        public void CaiBang_357_CloseRange_Lunge_Step()
+        {
+            // [SECT-DASH] §2.1.2 Phase 3.2: PC close-range lunge step (16 PC pixel max).
+            // Cast 357 từ (0, 0) tới (30, 0) — dist = 30 (close range, MIN_LUNGE_RANGE=8 < dist < MIN_JUMP_RANGE=64)
+            // Expect: caster tiến 1 bước ~16 units tới (16, 0) — "sâu xé" mục tiêu (visual feel).
+            // PC: KNpc.cpp DoJump gọi ở dist ∈ (8, 64] với LUNGE_STEP=16 PC pixel.
+            var caster = new CombatActorState
+            {
+                actorId = 1,
+                faction = CombatFaction.CaiBang,
+                position = new Vector2(0, 0),
+                currentMana = 1000,
+                maxMana = 1000,
+                currentLife = 1000,
+                maxLife = 1000,
+                knownSkills = new HashSet<int> { 357 },
+                skillLevels = new Dictionary<int, int> { { 357, 20 } },
+            };
+            var target = new CombatActorState
+            {
+                actorId = 2,
+                faction = CombatFaction.Shaolin,
+                position = new Vector2(30, 0),
+                currentLife = 10000,
+                maxLife = 10000,
+            };
+            var report = _runtime.Cast(caster, target, 357, target.position, CombatRelation.Enemy, grid: null);
+            Assert.IsTrue(report.success, "Cast 357 close range phải success: " + report.detail);
+            // Caster phải tiến 16 units về phía target, không snap tới (30) vì dist < MIN_JUMP_RANGE=64
+            Assert.AreEqual(16f, caster.position.x, 0.5f, "Close-range lunge: caster X = 16 (lunge step 16, dist 30 - 8 = 22 clamped to 16)");
+            Assert.AreEqual(0f, caster.position.y, 0.5f, "Caster Y = 0");
+            // dashVisualsEnabled phải = true để SkillEffectVisualService play lunge animation
+            var s = _catalog.Resolve(357);
+            Assert.IsTrue(s.dashVisualsEnabled, "dashVisualsEnabled phải true ở close range để visual layer play lunge anim");
+        }
+
+        [Test]
+        public void CaiBang_357_Adjacent_NoLunge()
+        {
+            // [SECT-DASH] §2.1.2: PC KNpc.cpp DoJump skip nếu dist <= MIN_LUNGE_RANGE (8 PC pixel).
+            // Cast 357 từ (0, 0) tới (5, 0) — dist = 5 (< 8): quá sát, không lunge, chỉ swing.
+            var caster = new CombatActorState
+            {
+                actorId = 1,
+                faction = CombatFaction.CaiBang,
+                position = new Vector2(0, 0),
+                currentMana = 1000,
+                maxMana = 1000,
+                currentLife = 1000,
+                maxLife = 1000,
+                knownSkills = new HashSet<int> { 357 },
+                skillLevels = new Dictionary<int, int> { { 357, 20 } },
+            };
+            var target = new CombatActorState
+            {
+                actorId = 2,
+                faction = CombatFaction.Shaolin,
+                position = new Vector2(5, 0),
+                currentLife = 10000,
+                maxLife = 10000,
+            };
+            var report = _runtime.Cast(caster, target, 357, target.position, CombatRelation.Enemy, grid: null);
+            Assert.IsTrue(report.success, "Cast 357 adjacent phải success: " + report.detail);
+            // Caster position KHÔNG đổi (vì dist=5 < 8 lunge threshold)
+            Assert.AreEqual(0f, caster.position.x, 0.1f, "Adjacent: caster X = 0 (no lunge)");
+            Assert.AreEqual(0f, caster.position.y, 0.1f, "Adjacent: caster Y = 0");
+        }
+
         // =========================================================================
         // Phase 4 — StartEvent runtime generalizer
         // =========================================================================

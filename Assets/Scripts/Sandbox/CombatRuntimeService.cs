@@ -130,24 +130,37 @@ namespace VLTK.Sandbox
             // [SECT-DASH] §2.1 G1 + §2.4.2 G1: PC Melee_Jump / Melee_JumpAndAttack (KNpc.cpp line 1834-1873)
             //   cho skill Melee có meleeType ∈ {Jump, JumpAndAttack}. Player JUMP tới target trước khi attack.
             // PC NewJump: nếu dist > MIN_JUMP_RANGE (64 PC pixel), nhảy tới castPoint + clamp obstacle.
-            //   Ở close range (< MIN_JUMP_RANGE), skip jump, chỉ chém melee bình thường.
+            //   Ở close range (< MIN_JUMP_RANGE), PC KNpc.cpp vẫn gọi DoJump với min dist 8 PC pixel
+            //   (LUNGE_STEP 16 PC pixel) — player tiến 1 bước nhỏ để "chém" target.
+            //   Nếu dist <= 8 (quá sát), skip lunge — chỉ swing melee bình thường.
             // Mobile MVP (đợt 1 Phase 3): snap caster.position tới castPoint (lerp đầy đủ là Phase 4 follow-up).
-            //   Ghi nhận dashOrigin để visual follow caster khi dash (placeholder cho SkillEffectVisualService).
+            //   Đợt 2 (Phase 3.2 — user report): thêm close-range LUNGE_STEP=16 để visual feel đúng PC.
             if (skill.meleeType == PcMeleeType.Jump || skill.meleeType == PcMeleeType.JumpAndAttack)
             {
-                float minJumpRange = 64f * RangeWorldPerPcUnit; // PC MIN_JUMP_RANGE = 64 PC pixel (default 64f khi RangeWorldPerPcUnit=1)
+                float minJumpRange = 64f * RangeWorldPerPcUnit;   // PC MIN_JUMP_RANGE = 64 PC pixel
+                float minLungeRange = 8f * RangeWorldPerPcUnit;   // PC MIN_LUNGE_RANGE = 8 PC pixel (bỏ qua nếu dist quá gần)
+                float maxLungeStep = 16f * RangeWorldPerPcUnit;   // PC LUNGE_STEP = 16 PC pixel (bước tiến tối đa ở close range)
                 if (dist > minJumpRange)
                 {
-                    // Ghi nhận vị trí gốc để visual follow caster.
+                    // Long range: full dash snap tới castPoint.
                     skill.dashOrigin = caster.position;
                     skill.dashVisualsEnabled = true;
-                    // Snap caster tới castPoint (PC NewJump + DoJump). TODO Phase 4: lerp + obstacle check.
-                    // Hiện tại: snap trực tiếp để visual feel đúng, lerp làm phase tiếp.
                     caster.position = castPoint;
-                    // Cập nhật castPoint = caster.position mới (đã ở đích).
-                    castPoint = caster.position;
                 }
-                // Đóng range: giữ caster.position nguyên (PC: chỉ chém melee, không jump).
+                else if (dist > minLungeRange)
+                {
+                    // Close range: small lunge forward (PC: KNpc::DoJump bước tiến tối đa 16 PC pixel)
+                    //   Player "sâu xé" tới target — visual feel giống dash rút gọn.
+                    Vector2 toTarget = castPoint - caster.position;
+                    Vector2 dir = toTarget.normalized;
+                    float lunge = Mathf.Min(maxLungeStep, dist - minLungeRange);
+                    skill.dashOrigin = caster.position;
+                    skill.dashVisualsEnabled = true;
+                    caster.position += dir * lunge;
+                }
+                // Quá gần (dist <= 8): giữ caster.position nguyên, chỉ swing melee (PC behavior).
+                // Cập nhật castPoint = caster.position mới (attack happens at new pos).
+                castPoint = caster.position;
             }
 
             // --- KNpc::Cost gate ---
