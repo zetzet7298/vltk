@@ -124,7 +124,7 @@ namespace VLTK.UI
         private VisualElement _utilityDock, _utilityActionRow, _utilityMenuRowA, _utilityMenuRowB;
         private VisualElement _pcShortcutDock, _pcShortcutToggleBtn;
         private Label _utilityToggleLabel, _utilitySwitchLabel, _pcShortcutToggleLabel;
-        private VisualElement _pcToolPanel, _pcToolClose, _pcToolPanelBg;
+        private VisualElement _pcToolPanel, _pcToolClose, _pcToolPanelBg, _pcToolTabs;
         private ScrollView _pcToolList;
         private Label _pcToolTitle;
 
@@ -141,6 +141,7 @@ namespace VLTK.UI
             { "Nhiệm vụ", null },                                        // 任务面板: PC uses shared quest window, no dedicated bg in toolbar flow
             { "Bằng hữu", null },                                        // 好友: dedicated bg not extracted in this pass
             { "Tổ đội", "panel_team_bg" },                               // 组队招募界面底版
+            { "Bang phái", "panel_guild_bg" },                           // 帮会底图
             { "Phòng chat", null },                                      // 聊天主窗口: complex multi-part, bg not single SPR
         };
         // PC window sizes (INI [Main] Width/Height) for panels that have a bg SPR, used to size
@@ -462,6 +463,7 @@ namespace VLTK.UI
             _pcShortcutToggleLabel = root.Q<Label>("PcShortcutToggleLabel");
             _pcToolPanel = root.Q("PcToolPanel");
             _pcToolPanelBg = root.Q("PcToolPanelBg");
+            _pcToolTabs = root.Q("PcToolTabs");
             _pcToolClose = root.Q("PcToolClose");
             _pcToolList = root.Q<ScrollView>("PcToolList");
             _pcToolTitle = root.Q<Label>("PcToolTitle");
@@ -2229,6 +2231,17 @@ namespace VLTK.UI
             if (_pcToolTitle != null)
                 _pcToolTitle.text = CharacterPanelService.Title;
             ApplyPcToolPanelBackground(CharacterPanelService.Title);
+            // PC character panel has 4 sub-pages: 属性 / 装备 / 经脉 / 江湖评价.
+            // Wire the tab strip to OnPcCharacterControlClick so clicking a tab switches page,
+            // matching the PC 分页.spr tab behavior. Active tab mirrors _characterPage state.
+            PopulatePcToolTabs(new System.Collections.Generic.List<(string, string, bool)>
+            {
+                ("BtnAttribPage",  "Thuộc tính", _characterPage == "BtnAttribPage"),
+                ("BtnEquipPage",   "Trang bị",  _characterPage == "BtnEquipPage"),
+                ("BtnJudgePage",   "Đánh giá",  _characterPage == "BtnJudgePage"),
+                ("BtnMeridianPage","Kinh mạch", _characterPage == "BtnMeridianPage"),
+            });
+            PcToolTabClickHandler = OnPcCharacterControlClick;
             _pcToolList.Clear();
 
             var manager = SandboxManager.Instance;
@@ -3678,6 +3691,7 @@ namespace VLTK.UI
             if (_pcToolTitle != null)
                 _pcToolTitle.text = title ?? string.Empty;
             ApplyPcToolPanelBackground(title);
+            ClearPcToolTabs();
             _pcToolList.Clear();
             if (rows != null)
             {
@@ -3689,6 +3703,47 @@ namespace VLTK.UI
             _pcToolPanel.RemoveFromClassList("hidden");
             _pcToolPanel.BringToFront();
         }
+
+        // Clears the tab strip (used by default open path; dedicated openers that populate
+        // tabs must call ClearPcToolTabs() first too — handled by OpenPcToolPanel above).
+        private void ClearPcToolTabs()
+        {
+            if (_pcToolTabs == null) return;
+            _pcToolTabs.Clear();
+        }
+
+        // Populates the PC tab strip with per-page tabs (Character panel: 4 pages; others
+        // as needed). Each tab is composited from common_tab.spr with a Vietnamese label
+        // and a pcSection key wired to the panel's per-tab click handler.
+        // activeSection (nullable) marks the currently selected tab with the 'active' class
+        // so its label renders in the PC select color (OverColor=SelectColor from INI).
+        public void PopulatePcToolTabs(IReadOnlyList<(string pcSection, string labelVi, bool active)> tabs)
+        {
+            if (_pcToolTabs == null || tabs == null) return;
+            _pcToolTabs.Clear();
+            foreach (var (section, label, active) in tabs)
+            {
+                var tab = new VisualElement();
+                tab.AddToClassList("hud-pc-tool-tab");
+                if (active) tab.AddToClassList("active");
+                tab.pickingMode = PickingMode.Position;
+                var lbl = new Label(label ?? string.Empty);
+                lbl.AddToClassList("hud-pc-tool-tab-label");
+                tab.Add(lbl);
+                var sectionKey = section; // capture
+                tab.RegisterCallback<PointerDownEvent>(evt =>
+                {
+                    PcToolTabClickHandler?.Invoke(sectionKey);
+                    evt.StopPropagation();
+                });
+                _pcToolTabs.Add(tab);
+            }
+        }
+
+        // Override in dedicated panel openers to route tab clicks to the correct handler
+        // (e.g. OnPcCharacterControlClick for Character tabs). Default: no-op so the tab
+        // click doesn't crash panels that don't override.
+        public System.Action<string> PcToolTabClickHandler;
 
         // Loads the per-panel PC background SPR (frame0) onto PcToolPanelBg and resizes the
         // panel toward the PC INI window size (capped to fit mobile). When no bg maps to the

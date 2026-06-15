@@ -260,13 +260,16 @@
         </ui:VisualElement>
 
         <!-- PC HUD tool panel: opened by Status/ItemEx/Task/Friend/Faction/ChatRoom/Options/Rec.
-             Background element loaded with per-panel PC SPR (skill/items/guild/team/system bg) by title. -->
+             Background element loaded with per-panel PC SPR (skill/items/guild/team/system bg) by title.
+             Tab strip below header holds per-page PC tab buttons (common_tab.spr) for panels
+             that have sub-pages (e.g. Character: 属性/装备/经脉/江湖评价). -->
         <ui:VisualElement name="PcToolPanel" class="hud-pc-tool-panel hidden">
             <ui:VisualElement name="PcToolPanelBg" class="hud-pc-tool-panel-bg"/>
             <ui:VisualElement name="PcToolHeader" class="hud-pc-tool-header">
                 <ui:Label name="PcToolTitle" text="" class="hud-pc-tool-title"/>
                 <ui:VisualElement name="PcToolClose" class="hud-pc-tool-close"/>
             </ui:VisualElement>
+            <ui:VisualElement name="PcToolTabs" class="hud-pc-tool-tabs"/>
             <ui:ScrollView name="PcToolList" class="hud-pc-tool-list"/>
         </ui:VisualElement>
 
