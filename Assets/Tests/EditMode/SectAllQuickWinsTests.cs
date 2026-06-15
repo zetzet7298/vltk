@@ -49,22 +49,29 @@ namespace VLTK.Tests.Sandbox
         }
 
         // =========================================================================
-        // G1 — Cái Bang dash (Phase 3)
+        // [SECT-ALL fix 2026-06-15] PC source evidence (skills.txt + gaibang.lua):
+        //   skill 357 (Phi Long Tại Thiên): IsMelee=0, ByMissle=1, MslsGenerate=5 → MISSILE skill
+        //   skill 128 (Kháng Long Hữu Hối): IsMelee=0, ByMissle=0, MslsGenerate=0 → CAST skill (no melee, no missile)
+        //   => Cả 2 KHÔNG phải melee, KHÔNG có dash/lunge.
+        // Tests cũ (JumpAndAttack) dựa trên hiểu sai commit e194a242a — đã xóa.
         // =========================================================================
         [Test]
-        public void CaiBang_357_PhiLongTaiThien_MeleeType_JumpAndAttack()
+        public void CaiBang_357_PhiLongTaiThien_IsMissile_NotMelee()
         {
+            // PC source: skills.txt skill 357 IsMelee=0, ByMissle=1 → MISSILE skill, không melee
             var s = _catalog.Resolve(357);
             Assert.NotNull(s, "Cái Bang 357 must be registered");
-            Assert.AreEqual(PcMeleeType.JumpAndAttack, s.meleeType, "Phi Long Tại Thiên phải JUMP_AND_ATTACK");
+            Assert.AreEqual(PcMeleeType.None, s.meleeType, "Phi Long Tại Thiên PHẢI None (PC IsMelee=0) — không melee, không dash");
+            Assert.IsTrue(s.byMissile, "Phi Long PHẢI ByMissle=1 (PC source: missile skill)");
         }
 
         [Test]
-        public void CaiBang_128_KhangLongVoHuy_MeleeType_JumpAndAttack()
+        public void CaiBang_128_KhangLongHuuHoi_IsNotMelee()
         {
+            // PC source: skills.txt skill 128 IsMelee=0, ByMissle=0 → CAST skill, không melee
             var s = _catalog.Resolve(128);
             Assert.NotNull(s, "Cái Bang 128 must be registered");
-            Assert.AreEqual(PcMeleeType.JumpAndAttack, s.meleeType, "Kháng Long Vô Hủ phải JUMP_AND_ATTACK");
+            Assert.AreEqual(PcMeleeType.None, s.meleeType, "Kháng Long Hữu Hối PHẢI None (PC IsMelee=0) — không melee");
         }
 
         // =========================================================================
@@ -521,106 +528,37 @@ namespace VLTK.Tests.Sandbox
         }
 
         // =========================================================================
-        // Phase 3 — Cái Bang 357 runtime dash
+        // [SECT-ALL fix 2026-06-15] Phi Long = MISSILE skill (PC IsMelee=0, ByMissle=1).
+        // Tests cũ (Dash/Lunge/Adjacent) dựa trên hiểu sai — đã xóa.
+        // Test đúng PC: cast 357 KHÔNG di chuyển caster (player đứng yên cast, missile bay).
         // =========================================================================
         [Test]
-        public void CaiBang_357_Dash_Caster_Snaps_To_Target()
+        public void CaiBang_357_Cast_DoesNot_MoveCaster()
         {
-            // Cast 357 từ (0, 0) tới (300, 0) — dist = 300 > MIN_JUMP_RANGE 64
+            // PC source: skills.txt 357 IsMelee=0 → không melee, không dash.
+            // Cast tại bất kỳ khoảng cách nào, caster PHẢI đứng yên (missile bay thay).
             var caster = new CombatActorState
             {
                 actorId = 1,
-                faction = CombatFaction.CaiBang, // Cast check: skill.faction=4 → caster must match
+                faction = CombatFaction.CaiBang,
                 position = new Vector2(0, 0),
-                currentMana = 1000,
-                maxMana = 1000,
-                currentLife = 1000,
-                maxLife = 1000,
+                currentMana = 1000, maxMana = 1000,
+                currentLife = 1000, maxLife = 1000,
                 knownSkills = new HashSet<int> { 357 },
                 skillLevels = new Dictionary<int, int> { { 357, 20 } },
             };
             var target = new CombatActorState
             {
                 actorId = 2,
-                faction = CombatFaction.Shaolin, // enemy
+                faction = CombatFaction.Shaolin,
                 position = new Vector2(300, 0),
-                currentLife = 10000,
-                maxLife = 10000,
+                currentLife = 10000, maxLife = 10000,
             };
             var report = _runtime.Cast(caster, target, 357, target.position, CombatRelation.Enemy, grid: null);
             Assert.IsTrue(report.success, "Cast 357 phải success: " + report.detail);
-            // Caster position phải snap tới target (300, 0) — Phase 3 NewJump runtime
-            Assert.AreEqual(300f, caster.position.x, 1.0f, "Caster X phải snap tới target 300");
-            Assert.AreEqual(0f, caster.position.y, 1.0f, "Caster Y phải snap tới target 0");
-        }
-
-        [Test]
-        public void CaiBang_357_CloseRange_Lunge_Step()
-        {
-            // [SECT-DASH] §2.1.2 Phase 3.2: PC close-range lunge step (16 PC pixel max).
-            // Cast 357 từ (0, 0) tới (30, 0) — dist = 30 (close range, MIN_LUNGE_RANGE=8 < dist < MIN_JUMP_RANGE=64)
-            // Expect: caster tiến 1 bước ~16 units tới (16, 0) — "sâu xé" mục tiêu (visual feel).
-            // PC: KNpc.cpp DoJump gọi ở dist ∈ (8, 64] với LUNGE_STEP=16 PC pixel.
-            var caster = new CombatActorState
-            {
-                actorId = 1,
-                faction = CombatFaction.CaiBang,
-                position = new Vector2(0, 0),
-                currentMana = 1000,
-                maxMana = 1000,
-                currentLife = 1000,
-                maxLife = 1000,
-                knownSkills = new HashSet<int> { 357 },
-                skillLevels = new Dictionary<int, int> { { 357, 20 } },
-            };
-            var target = new CombatActorState
-            {
-                actorId = 2,
-                faction = CombatFaction.Shaolin,
-                position = new Vector2(30, 0),
-                currentLife = 10000,
-                maxLife = 10000,
-            };
-            var report = _runtime.Cast(caster, target, 357, target.position, CombatRelation.Enemy, grid: null);
-            Assert.IsTrue(report.success, "Cast 357 close range phải success: " + report.detail);
-            // Caster phải tiến 16 units về phía target, không snap tới (30) vì dist < MIN_JUMP_RANGE=64
-            Assert.AreEqual(16f, caster.position.x, 0.5f, "Close-range lunge: caster X = 16 (lunge step 16, dist 30 - 8 = 22 clamped to 16)");
-            Assert.AreEqual(0f, caster.position.y, 0.5f, "Caster Y = 0");
-            // dashVisualsEnabled phải = true để SkillEffectVisualService play lunge animation
-            var s = _catalog.Resolve(357);
-            Assert.IsTrue(s.dashVisualsEnabled, "dashVisualsEnabled phải true ở close range để visual layer play lunge anim");
-        }
-
-        [Test]
-        public void CaiBang_357_Adjacent_NoLunge()
-        {
-            // [SECT-DASH] §2.1.2: PC KNpc.cpp DoJump skip nếu dist <= MIN_LUNGE_RANGE (8 PC pixel).
-            // Cast 357 từ (0, 0) tới (5, 0) — dist = 5 (< 8): quá sát, không lunge, chỉ swing.
-            var caster = new CombatActorState
-            {
-                actorId = 1,
-                faction = CombatFaction.CaiBang,
-                position = new Vector2(0, 0),
-                currentMana = 1000,
-                maxMana = 1000,
-                currentLife = 1000,
-                maxLife = 1000,
-                knownSkills = new HashSet<int> { 357 },
-                skillLevels = new Dictionary<int, int> { { 357, 20 } },
-            };
-            var target = new CombatActorState
-            {
-                actorId = 2,
-                faction = CombatFaction.Shaolin,
-                position = new Vector2(5, 0),
-                currentLife = 10000,
-                maxLife = 10000,
-            };
-            var report = _runtime.Cast(caster, target, 357, target.position, CombatRelation.Enemy, grid: null);
-            Assert.IsTrue(report.success, "Cast 357 adjacent phải success: " + report.detail);
-            // Caster position KHÔNG đổi (vì dist=5 < 8 lunge threshold)
-            Assert.AreEqual(0f, caster.position.x, 0.1f, "Adjacent: caster X = 0 (no lunge)");
-            Assert.AreEqual(0f, caster.position.y, 0.1f, "Adjacent: caster Y = 0");
+            // Caster KHÔNG di chuyển (PC: missile skill, player đứng yên cast)
+            Assert.AreEqual(0f, caster.position.x, 0.1f, "Caster X = 0 (missile skill, no dash)");
+            Assert.AreEqual(0f, caster.position.y, 0.1f, "Caster Y = 0 (missile skill, no dash)");
         }
 
         // =========================================================================

@@ -164,16 +164,15 @@ namespace VLTK.Sandbox
             }, skillStyle: PcSkillStyle.Missiles),
 
             // 128 Kháng Long Hữu Hối: damage (kanglong_youhui)
-            // [SECT-QUICKWIN] §2.1 G1: PC caibang.lua::kanglong_youhui has MeleeType=Melee_JumpAndAttack (PC KNpc.cpp line 1834-1891).
-            // Mobile trước fix: meleeType=None → bị chặn dash runtime, caster chỉ swing melee bình thường.
-            // Sau fix: meleeType=JumpAndAttack → Phase 3 NewJump snap tới target.
+            // [SECT-ALL fix 2026-06-15] PC source: skills.txt 128 IsMelee=0, ByMissle=0 → CAST skill, không melee.
+            //   Comment cũ (commit e194a242a) nói "MeleeType=Melee_JumpAndAttack" là ĐỌC SAI PC source. Đã revert.
             DamageSkillNew(128, "Kháng Long Hữu Hối", "Kháng Long Hữu Hối", 50, 20, 512, 48, SkillMissileForm.Fan, 15, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (20, 536, "")), 0, Link(lv, (1, 10, ""), (20, 536, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 50, "")), 0, 0),
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
                 horseLimit: 1,
-                meleeType: PcMeleeType.JumpAndAttack), // G1: PC KNpc::Melee_JumpAndAttack — dash + dragon missile
+                meleeType: PcMeleeType.None), // [SECT-ALL] PC IsMelee=0 → không melee, không dash
 
             // 129 Hóa Hiểm Vi Di: buff
             UtilitySkill(129, "Hóa Hiểm Vi Di", "Hóa Hiểm Vi Di", 20, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, levelData:(lv)=>{
@@ -214,18 +213,24 @@ namespace VLTK.Sandbox
                 return d;
             }),
 
-            // 357 Phi Long Tại Thiên [SECT-DASH §2.1 G1]
-            // PC gaibang.lua::feilong_zaitian = Melee + JUMP (KNpc::Melee_JumpAndAttack).
-            //   Trước fix: skillStyle=Missiles (chỉ missile, player đứng yên — user complaint
-            //     "phi long tới mục tiêu ở cự ly gần, không sâu xé").
-            //   Sau fix: meleeType=JumpAndAttack — runtime NewJump + DoJumpAttack như PC.
+            // 357 Phi Long Tại Thiên [SECT-ALL fix 2026-06-15]
+            // PC source EVIDENCE (đọc từ vl_update_27/Client 6.0/settings/skills.txt + file/skill/gaibang.lua):
+            //   skills.txt skill 357: IsMelee=0, ByMissle=1, MslsGenerate=5, ChildSkillId=166, CharAnimId=11
+            //   gaibang.lua::feilong_zaitian:
+            //     missle_speed_v={1,20→20,24}, skill_misslenum_v={1,1→20,4}, skill_attackradius={1,448→20,512}
+            //     skill_collideevent → skill 389 (explosion chain)
+            //   missles.txt id 166 (Phi Long missile):
+            //     SPR: \spr\skill\丐帮\mag_gb_05_亢龙有悔.spr, explosion SPR: mag_gb_bz5_爆炸效果.spr
+            //   => PHI LONG LÀ SKILL MISSILE (cast + projectile), KHÔNG CÓ DASH/LUNGE.
+            // BUG TRƯỚC: commit e194a242a ép meleeType=JumpAndAttack do đọc sai gaibang.lua.
+            //   → Fix: revert về missile thuần (PcMeleeType.None). Player đứng yên cast, missile bay tới target.
             DamageSkillNew(357, "Phi Long Tại Thiên ", "Phi Long Tại Thiên", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, "")), 0, Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 65, "")), 0, 0),
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1,
-                meleeType: PcMeleeType.JumpAndAttack), // G1: PC KNpc::Melee_JumpAndAttack — player JUMPS + dragon missile
+                meleeType: PcMeleeType.None), // [SECT-ALL] PC source: IsMelee=0 → không melee, không dash
 
             DamageSkillNew(359, "Thiên Hạ Vô Cẩu ", "Thiên Hạ Vô Cẩu (player)", 80, 20, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),
@@ -550,7 +555,7 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition DamageSkillNew(int id, string raw, string vi, int req, int max, int radius, int child, SkillMissileForm form, int childNum, bool isPhysical, bool targetOnly, int charAnim, Func<int,int> phys, Func<int,(int,int,int)> fire, Func<int,(int,int,int)> cost, Func<int,SkillLevelData> extra=null, int horseLimit=0, int missilesGenerateData=0, PcMeleeType meleeType=PcMeleeType.None)
         {
-            var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData; s.meleeType = meleeType;
+            var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.byMissile = true; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData; s.meleeType = meleeType;
             s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };

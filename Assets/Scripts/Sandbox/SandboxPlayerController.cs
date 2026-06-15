@@ -59,9 +59,11 @@ namespace VLTK.Sandbox
         public bool HasMoveTarget { get; private set; }
         public float targetArriveDistance = 8f;
 
-        // [SECT-ALL] Dash state machine cho melee skill (Phi Long Tại Thiên, etc.).
+        // [SECT-ALL] Dash state machine cho melee skill THẬT SỰ (Cái Bang Bổng Pháp, etc.).
         // PC source: KNpc::DoRunAttack (0x0809b9c0) sets m_214=0x12 (LUNGE_STATE) cho close-range.
         // KNpc::NewJump (0x08099fd0) dùng TestMovePos + stores distance ở m_1834 cho long-range.
+        // [SECT-ALL fix 2026-06-15]: Phi Long (357) KHÔNG dùng dash — PC IsMelee=0, ByMissle=1.
+        //   Comment cũ ghi "cho Phi Long" là sai (commit e194a242a đọc sai gaibang.lua). Đã sửa.
         // Client engine reads state + distance để chạy sprite animation. Mobile port equivalent:
         // lerp position từ dashStartPos → dashTargetPos trong dashDuration, KHÔNG teleport.
         // [SECT-ALL] TODO(PC-runtime): dashDuration không có trong PC source. Server chỉ set state,
