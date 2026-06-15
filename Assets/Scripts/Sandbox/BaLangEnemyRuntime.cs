@@ -177,11 +177,6 @@ namespace VLTK.Sandbox
             _healthBar?.SetLife(CurrentLife);
         }
 
-        // [SECT-ALL] Bug fix (companion to SetLife death hide): respawn timer.
-        // Khi CurrentLife=0, _deathTimestamp được set; sau 5s respawn → show lại + reset HP.
-        private float _deathTimestamp = -1f;
-        public float deathRespawnDelay = 5f;
-
         public void SetLife(int currentLife)
         {
             SetLife(currentLife, false);
@@ -194,23 +189,6 @@ namespace VLTK.Sandbox
             _healthBar?.SetLife(CurrentLife);
             if (showDamage && CurrentLife < previousLife)
                 PcDamageNumber.Spawn(DamagePopupPosition(), previousLife - CurrentLife, transform.parent);
-
-            // [SECT-ALL] Bug fix (user report 2026-06-15): NPC die nhưng sprite vẫn hiển thị.
-            // Root cause thật: SetLife chỉ update CurrentLife + health bar, KHÔNG hide visual.
-            // Khi player cast skill 357 / chém NPC, damage đi qua CombatRuntimeService → BaLangEnemyAi.SetLife()
-            // → CurrentLife=0 nhưng sprite (NpcSprite/NpcShadow/Nameplate) vẫn active. User thấy xác chết đứng.
-            // Fix: ẩn children (sprite/shadow/nameplate/health bar) nhưng GIỮ parent activeSelf=true.
-            // QUAN TRỌNG: KHÔNG SetActive(false) parent — nếu không, MonoBehaviour.Update() không chạy
-            // trên inactive GameObject → respawn timer (Tick) không bao giờ trigger.
-            // PC JX1: corpse tồn tại vài giây rồi despawn (handled bằng corpseIdx sprite).
-            // Mobile MVP: hide children thẳng (Phase 5 follow-up sẽ thay bằng death anim sprite).
-            if (CurrentLife <= 0 && previousLife > 0)
-            {
-                _deathTimestamp = Time.time;
-                foreach (Transform child in transform)
-                    if (child.gameObject.activeSelf)
-                        child.gameObject.SetActive(false);
-            }
         }
 
         private Vector3 DamagePopupPosition()
@@ -228,30 +206,9 @@ namespace VLTK.Sandbox
 
         public void Tick(float deltaTime, float now)
         {
-            // [SECT-ALL] Respawn check (companion to death hide in SetLife).
-            // PHẢI đặt TRƯỚC early return template check, nếu không respawn không bao giờ
-            // trigger cho NPC có template.aiMode=0 (trainer) hoặc walkSpeed=0 (statue/object).
-            if (_deathTimestamp > 0f && now - _deathTimestamp >= deathRespawnDelay)
-            {
-                _deathTimestamp = -1f;
-                CurrentLife = MaxLife;
-                if (!gameObject.activeSelf) gameObject.SetActive(true);
-                foreach (Transform child in transform)
-                    if (!child.gameObject.activeSelf) child.gameObject.SetActive(true);
-                _healthBar?.SetLife(CurrentLife);
-                return; // skip this frame after respawn to avoid double-tick
-            }
-            // Skip AI tick khi đang chết
-            if (_deathTimestamp > 0f) return;
-
             var template = instance?.template;
             if (template == null || template.aiMode <= 0 || template.walkSpeed <= 0)
                 return;
-            if (_deathTimestamp > 0f)
-            {
-                if (Time.frameCount % 60 == 0) UnityEngine.Debug.Log($"[DEAD-TICK] {name} ts={_deathTimestamp:F1} now={now:F1} diff={now - _deathTimestamp:F1}");
-                return;
-            }
 
             if (!HasMoveTarget && now >= _nextThink)
                 ChooseNextTarget(now);
