@@ -419,6 +419,21 @@ namespace VLTK.Sandbox
         {
             victim.deathTimestamp = _gameTime;
 
+            // [SECT-ALL] Bug fix (user report 2026-06-15): target die nhưng body vẫn hiện diện.
+            // Root cause: runtime cũ set currentLife=0 + deathTimestamp nhưng KHÔNG disable view GameObject.
+            //   → NPC sprite vẫn render tại death position 5-10s (cho tới khi respawn timer reset HP).
+            // PC gốc (KNpc::OnDeath): play corpse anim rồi despawn body, respawn sau timer.
+            // Mobile MVP fix: SetActive(false) view ngay khi chết, SetActive(true) lúc respawn.
+            //   Phase 5 follow-up: thay bằng death animation SPR (corpseIdx từ PcFullNpcParser.cs line 35) trước khi hide.
+            if (victim.view != null) victim.view.SetActive(false);
+            // Dừng AI tick + auto-target: target die rồi không cho AI tiếp tục chase
+            victim.nextAttackTime = float.MaxValue;
+            if (victim.combat != null)
+            {
+                victim.combat.fightMode = false;
+                victim.combat.knownSkills?.Clear(); // Tránh cast skill ở dead state
+            }
+
             bool isPlayer = victim.isPlayer;
             long expReward = 0;
             int silverReward = 0;
@@ -481,6 +496,11 @@ namespace VLTK.Sandbox
             actor.deathTimestamp = -1f;
             actor.combat.currentLife = actor.combat.maxLife;
             actor.combat.currentMana = actor.combat.maxMana;
+
+            // [SECT-ALL] Bug fix (companion to ProcessActorDeath): respawn phải show view lại.
+            // Đối xứng với SetActive(false) ở ProcessActorDeath, nếu không respawn sẽ không có sprite.
+            if (actor.view != null) actor.view.SetActive(true);
+            if (actor.combat != null) actor.combat.fightMode = true;
 
             OnRespawn?.Invoke(new GameplayRespawnEvent
             {
