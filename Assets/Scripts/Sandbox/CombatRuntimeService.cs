@@ -179,6 +179,23 @@ namespace VLTK.Sandbox
                 SpawnProjectiles(subSkill, caster, castPoint, grid, report);
             }
 
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.4-2.9 G6: event chain generalizer.
+            // PC pattern: skill_startevent / skill_collideevent / skill_vanishedevent / skill_flyevent.
+            //   Sau cast thành công, fire start sub-skill (nếu có). Sau missile va chạm, fire collide (đã có 1073→1072).
+            //   Sau missile vanish, fire vanish (chưa có). Giữa đường bay, fire fly (chưa có).
+            // Mobile MVP (đợt này): chỉ fire StartEvent inline. CollideEvent/VanishEvent cần missile runtime hook
+            //   (Phase 4 follow-up — SpawnProjectiles trả child SkillDefinition, cần wrap thành ActiveSkillEffect để có
+            //   lifecycle callback).
+            // Sau fix: catalog đã set startSkillId cho TangMen 58 / TianRen 148 / KunLun 172 / CuiYan 102, 111.
+            //   Phase 4 runtime: chỉ fire khi startSkillId > 0.
+            if (skill.startSkillId > 0 && _catalog.Resolve(skill.startSkillId) is { } startSubSkill)
+            {
+                var startLevel = skill.startSkillLevel > 0 ? skill.startSkillLevel : skillLevel;
+                var startLevelData = startSubSkill.GetPcLevelData(startLevel);
+                ApplyStates(caster, caster, CombatRelation.Self, startLevelData, report);
+                SpawnProjectiles(startSubSkill, caster, castPoint, grid, report, startLevel);
+            }
+
             _nextCastTime[(caster.actorId, skillId)] = CurrentTime + Mathf.Max(0, skill.timePerCast);
             report.success = true;
             report.detail = "cast ok";
