@@ -93,6 +93,7 @@ namespace VLTK.Model
         LifeReplenishV,
         StealStaminaP,
         LifeMaxP,
+        LifeMaxYanP, // [SECT-QUICKWIN] Gap baocao-all-sect-skills.md: Yan (smoke) variant for life max buff (TianRen 36, 150, 1075, 1076)
         FireEnhanceP,
         FastWalkRunP,
     }

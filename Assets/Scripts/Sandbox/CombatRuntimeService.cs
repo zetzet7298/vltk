@@ -135,7 +135,7 @@ namespace VLTK.Sandbox
             //   Ghi nhận dashOrigin để visual follow caster khi dash (placeholder cho SkillEffectVisualService).
             if (skill.meleeType == PcMeleeType.Jump || skill.meleeType == PcMeleeType.JumpAndAttack)
             {
-                const float minJumpRange = 64f * RangeWorldPerPcUnit; // PC MIN_JUMP_RANGE = 64 PC pixel
+                float minJumpRange = 64f * RangeWorldPerPcUnit; // PC MIN_JUMP_RANGE = 64 PC pixel (default 64f khi RangeWorldPerPcUnit=1)
                 if (dist > minJumpRange)
                 {
                     // Ghi nhận vị trí gốc để visual follow caster.
