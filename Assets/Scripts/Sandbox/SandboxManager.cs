@@ -87,6 +87,39 @@ namespace VLTK.Sandbox
         public bool IsSkipped => status == SandboxServiceDataStatus.SkippedForFastBoot;
     }
 
+    /// <summary>
+    /// VLTK Mobile — Sandbox runtime owner. Bootstraps the world, the
+    /// HUD, services, and the active map. Holds a <see cref="SandboxBootProfile"/>
+    /// that decides how much of the PC parity surface is brought up at
+    /// editor play time.
+    /// <para>
+    /// ── Dev workflow (the "skip map for fast iteration" pattern) ──
+    /// </para>
+    /// <para>
+    /// For most dev work (HUD, input, services, networking, gameplay
+    /// systems, UI) you do NOT need the BLH pentagon terrain, 618
+    /// region files, or 812 enemy spawns loaded. The default scene
+    /// here uses <c>useFastEditorBoot=true</c> + <c>skipMapVisualsInFastEditorBoot=true</c>
+    /// so PlayMode boots in ~2-3s (sandbox skeleton + UI + active
+    /// map metadata, no region/enemy load).
+    /// </para>
+    /// <para>
+    /// When you need to see the actual BLH terrain / verify a region
+    /// file / screenshot the visual / test enemy spawn rendering,
+    /// un-tick <c>useFastEditorBoot</c> in the Inspector and re-enter
+    /// PlayMode. Boot will take ~30s (618 regions + 812 enemies) but
+    /// the Full profile runs the real pipeline. Re-tick the flag
+    /// when you are done to keep subsequent dev iterations fast.
+    /// </para>
+    /// <para>
+    /// This is intentionally serialized to the scene so the
+    /// setting is shared across the team — keep it on FastEditor
+    /// for everyday dev. The visual-load-balh and coord-scene-pos
+    /// commits left both Full-profile boot artifacts in the scene
+    /// after a one-off verification pass; this class documents the
+    /// toggle so nobody has to re-derive the trade-off.
+    /// </para>
+    /// </summary>
     public class SandboxManager : MonoBehaviour, IMapTeleportHost
     {
         public const int BaLangHuyenMapId = 53;
@@ -122,17 +155,38 @@ namespace VLTK.Sandbox
         public Transform debugRoot;
         public Transform servicesRoot;
 
-        [Header("Boot")]
+        [Header("Boot — dev workflow toggle (see SandboxManager class doc)")]
+        [Tooltip("Map id loaded on boot. Default is Ba Lăng huyện (PC map 53) — the BLH training pentagon.")]
         public int defaultMapId = BaLangHuyenMapId;
+        [Tooltip("Master switch: if true, SandboxManager.Run() calls LoadDefaultMapOnBoot (slow path). " +
+                 "Turn OFF for tasks that don't need the world loaded (HUD, services, networking, input).")]
         public bool loadDefaultMapOnBoot = true;
+        [Tooltip("Explicit boot profile override. Full loads every subsystem including the map regions and enemy spawns (~30s on BLH). " +
+                 "FastEditor loads only the skeleton + active-map metadata + UI (~2-3s) — use this for dev iteration.")]
         public SandboxBootProfile bootProfile = SandboxBootProfile.Full;
+        [Tooltip("★ THE toggle the team uses for fast dev iteration. " +
+                 "Tick to boot in ~2-3s (skeleton + UI + map metadata, NO region files, NO enemy spawns). " +
+                 "Un-tick to boot in ~30s (Full profile, BLH terrain + 618 regions + 812 enemies render). " +
+                 "Default in the scene is ON (fast); flip OFF in Inspector when you need to see the visual.")]
         public bool useFastEditorBoot = false;
+        [Tooltip("When useFastEditorBoot is on, also load optional service batches (skill CDB, item CDB extras, etc). " +
+                 "Leave OFF for fastest boot.")]
         public bool loadOptionalServicesInFastEditorBoot = false;
+        [Tooltip("When useFastEditorBoot is on, still load the active map's metadata (so the player can teleport / see map name) " +
+                 "without the heavy region/enemy load. Leave ON so MapManager / MapTravel stay functional.")]
         public bool loadDefaultMapInFastEditorBoot = true;
+        [Tooltip("When useFastEditorBoot is on, also skip the MapRenderer.LoadMapRegions call (618 region files). " +
+                 "This is the single biggest boot-time saving — ~25s on BLH. Leave ON for fastest dev boot.")]
         public bool skipMapVisualsInFastEditorBoot = true;
+        [Tooltip("When useFastEditorBoot is on, also skip the item table load. Safe to leave ON for dev.")]
         public bool skipItemLoadingInFastEditorBoot = false;
+        [Tooltip("When useFastEditorBoot is on, cache parsed PC reference data (NpcS, Skill, etc.) in memory " +
+                 "across boots. Saves ~1-2s on the next play. Leave ON.")]
         public bool cacheReferenceDataInFastEditorBoot = true;
+        [Tooltip("Log a [SandboxBoot] line per subsystem step + a final summary table. Cheap, leave ON.")]
         public bool logBootTimings = true;
+        [Tooltip("Subsystem boot steps slower than this threshold (ms) get a ⚠ marker in the log. " +
+                 "50ms catches hitch sources without spamming.")]
         public int bootTimingLogThresholdMs = 50;
 
         public static SandboxManager Instance { get; private set; }

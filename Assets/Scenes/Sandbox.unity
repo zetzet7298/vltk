@@ -2158,10 +2158,10 @@ MonoBehaviour:
   defaultMapId: 53
   loadDefaultMapOnBoot: 1
   bootProfile: 0
-  useFastEditorBoot: 0
+  useFastEditorBoot: 1
   loadOptionalServicesInFastEditorBoot: 0
   loadDefaultMapInFastEditorBoot: 1
-  skipMapVisualsInFastEditorBoot: 0
+  skipMapVisualsInFastEditorBoot: 1
   skipItemLoadingInFastEditorBoot: 1
   cacheReferenceDataInFastEditorBoot: 1
   logBootTimings: 1
