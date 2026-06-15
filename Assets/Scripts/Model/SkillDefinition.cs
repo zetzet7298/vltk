@@ -67,6 +67,14 @@ namespace VLTK.Model
         public int horseLimit;           // HorseLimit
         public int missilesGenerate;     // MslsGenerate
         public int missilesGenerateData; // MslsGenerateData
+        // [SECT-DASH] Gap report baocao-all-sect-skills.md §2.1 G1: thêm MeleeType cho Cái Bang dash.
+        // PC KNpc::CastMeleeSkill switch (line 1834-1891) có 5 nhánh: AttackWithBlur, Jump, JumpAndAttack,
+        //   RunAndAttack, ManyAttack. Mobile trước fix không phân biệt được — mọi melee thành instant swing.
+        // Sau fix: 357/128 set meleeType=JumpAndAttack để runtime NewJump + DoJumpAttack như PC.
+        public PcMeleeType meleeType;    // PC MeleeType (default AttackWithBlur cho Melee, None cho khác)
+        public int maxShadowNum;         // MaxShadowNum — multi-shadow cho melee nhiều hit
+        public bool dashVisualsEnabled;  // Cờ runtime: có show visual follow caster khi dash không
+        public Vector2 dashOrigin;       // Lưu vị trí bắt đầu dash (set khi dash start)
         public string lvlSetScript;      // LvlSetScript (PC Lua tuning script path)
         public string levelUpScript;     // LevelUpScript (PC Lua upgrade script path)
 

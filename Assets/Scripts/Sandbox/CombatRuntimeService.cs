@@ -127,6 +127,29 @@ namespace VLTK.Sandbox
             if (attackRadius > 0 && dist > attackRadius * RangeWorldPerPcUnit)
                 return Reject(report, CombatCastRejectReason.OutOfRange, $"KNpc::DoSkill: distance {dist:F1} > AttackRadius {attackRadius}");
 
+            // [SECT-DASH] §2.1 G1 + §2.4.2 G1: PC Melee_Jump / Melee_JumpAndAttack (KNpc.cpp line 1834-1873)
+            //   cho skill Melee có meleeType ∈ {Jump, JumpAndAttack}. Player JUMP tới target trước khi attack.
+            // PC NewJump: nếu dist > MIN_JUMP_RANGE (64 PC pixel), nhảy tới castPoint + clamp obstacle.
+            //   Ở close range (< MIN_JUMP_RANGE), skip jump, chỉ chém melee bình thường.
+            // Mobile MVP (đợt 1 Phase 3): snap caster.position tới castPoint (lerp đầy đủ là Phase 4 follow-up).
+            //   Ghi nhận dashOrigin để visual follow caster khi dash (placeholder cho SkillEffectVisualService).
+            if (skill.meleeType == PcMeleeType.Jump || skill.meleeType == PcMeleeType.JumpAndAttack)
+            {
+                const float minJumpRange = 64f * RangeWorldPerPcUnit; // PC MIN_JUMP_RANGE = 64 PC pixel
+                if (dist > minJumpRange)
+                {
+                    // Ghi nhận vị trí gốc để visual follow caster.
+                    skill.dashOrigin = caster.position;
+                    skill.dashVisualsEnabled = true;
+                    // Snap caster tới castPoint (PC NewJump + DoJump). TODO Phase 4: lerp + obstacle check.
+                    // Hiện tại: snap trực tiếp để visual feel đúng, lerp làm phase tiếp.
+                    caster.position = castPoint;
+                    // Cập nhật castPoint = caster.position mới (đã ở đích).
+                    castPoint = caster.position;
+                }
+                // Đóng range: giữ caster.position nguyên (PC: chỉ chém melee, không jump).
+            }
+
             // --- KNpc::Cost gate ---
             // PC: Cost(attrib_mana, GetSkillCost()) — checks & deducts mana
             var levelData = skill.GetPcLevelData(skillLevel);
