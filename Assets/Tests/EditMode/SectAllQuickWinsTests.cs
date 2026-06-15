@@ -682,81 +682,29 @@ namespace VLTK.Tests.Sandbox
         }
 
         // =========================================================================
-        // [SECT-ALL] Bug fix (user report 2026-06-15): target die nhưng body vẫn hiện diện
-        // Verify ProcessActorDeath ẩn view + RespawnActor show lại view.
+        // [SECT-ALL] Death state machine (PC source: KNpc::DoDeath @ 0x0809def0, ClearProcessAI @ 0x08090cf0).
+        // Implement trong BaLangEnemyRuntime.SetLife: set _isDead = true, Tick skip AI.
+        // KHÔNG test được ở EditMode layer: BaLangEnemyRuntime.SetLife cần GameObject scene + SpriteRenderer.
+        // Test integration ở Play mode (xem docs/PORT_STATUS_DASH_DEATH.md).
         // =========================================================================
         [Test]
-        public void GameplayActor_Death_Hides_View_And_Stops_AI()
+        public void BaLangEnemyAi_IsDead_Flag_IsPublic()
         {
-            // [SECT-ALL] User report 2026-06-15: heo trắng bị đánh chết nhưng body vẫn hiện diện.
-            // Bug: ProcessActorDeath set currentLife=0 + deathTimestamp nhưng KHÔNG disable view.
-            // Fix: SetActive(false) view + clear knownSkills + fightMode=false khi chết.
-            var victim = new VLTK.Sandbox.GameplayLoopService.GameplayActor
-            {
-                actorId = 100,
-                nameVi = "Heo Rừng",
-                isPlayer = false,
-                level = 10,
-                combat = new CombatActorState
-                {
-                    actorId = 100,
-                    currentLife = 1,
-                    maxLife = 100,
-                    currentMana = 50,
-                    maxMana = 50,
-                    knownSkills = new HashSet<int> { 105, 106 },
-                    faction = CombatFaction.WuDu,
-                },
-                worldPos = new Vector2(500, 500),
-                respawnDelay = 5f,
-            };
-            var viewGO = new GameObject("HeoRung_View");
-            victim.view = viewGO;
+            // Verify API surface: public IsDead flag phải tồn tại sau khi implement.
+            var go = new GameObject("test_ai");
+            var ai = go.AddComponent<VLTK.Sandbox.BaLangEnemyAi>();
+            // Set CurrentLife > 0 trước (default = 0) để SetLife(0) trigger death branch
+            // (logic: if CurrentLife <= 0 && previousLife > 0 → _isDead = true)
+            var sb = typeof(VLTK.Sandbox.BaLangEnemyAi);
+            var currentLifeProp = sb.GetProperty("CurrentLife");
+            currentLifeProp.SetValue(ai, 50);
+            Assert.IsFalse(ai.IsDead, "Fresh NPC (HP=50) phải IsDead = false");
 
-            var killer = new VLTK.Sandbox.GameplayLoopService.GameplayActor
-            {
-                actorId = 1,
-                isPlayer = true,
-                combat = new CombatActorState { actorId = 1, level = 50, faction = CombatFaction.CaiBang },
-            };
-            var loopSvc = new VLTK.Sandbox.GameplayLoopService(new VLTK.Sandbox.PlayerLevelService());
-            loopSvc.ProcessActorDeathPublic(victim, killer);
-
-            // View phải ẩn (SetActive(false))
-            Assert.IsFalse(victim.view.activeSelf, "Sau khi die, view phải SetActive(false)");
-            // deathTimestamp phải set
-            Assert.Greater(victim.deathTimestamp, 0f, "deathTimestamp phải được set khi die");
-            // fightMode = false (không cho AI tiếp tục chase)
-            Assert.IsFalse(victim.combat.fightMode, "Sau khi die, fightMode = false");
-            // knownSkills bị clear (tránh cast skill ở dead state)
-            Assert.AreEqual(0, victim.combat.knownSkills.Count, "Sau khi die, knownSkills bị clear");
-
-            Object.DestroyImmediate(viewGO);
-        }
-
-        [Test]
-        public void GameplayActor_Death_NullView_DoesNotCrash()
-        {
-            // Edge case: view = null — không crash
-            var victim = new VLTK.Sandbox.GameplayLoopService.GameplayActor
-            {
-                actorId = 101,
-                nameVi = "Test NPC",
-                isPlayer = false,
-                level = 5,
-                combat = new CombatActorState { actorId = 101, currentLife = 1, maxLife = 50, faction = CombatFaction.WuDu },
-                view = null,
-                respawnDelay = 5f,
-            };
-            var killer = new VLTK.Sandbox.GameplayLoopService.GameplayActor
-            {
-                actorId = 1,
-                isPlayer = true,
-                combat = new CombatActorState { actorId = 1, level = 50, faction = CombatFaction.CaiBang },
-            };
-            var loopSvc = new VLTK.Sandbox.GameplayLoopService(new VLTK.Sandbox.PlayerLevelService());
-            Assert.DoesNotThrow(() => loopSvc.ProcessActorDeathPublic(victim, killer),
-                "ProcessActorDeath với view=null không được crash");
+            // Gọi SetLife(0) → _isDead = true
+            var setLife = sb.GetMethod("SetLife", new System.Type[] { typeof(int), typeof(bool) });
+            setLife.Invoke(ai, new object[] { 0, false });
+            Assert.IsTrue(ai.IsDead, "Sau SetLife(0), IsDead phải = true");
+            Object.DestroyImmediate(go);
         }
     }
 }

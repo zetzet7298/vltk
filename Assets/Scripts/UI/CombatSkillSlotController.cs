@@ -803,6 +803,19 @@ namespace VLTK.UI
 
                     if (report.success)
                     {
+                        // [SECT-ALL] PC source-based dash (no teleport).
+                        // PC source: KNpc::DoRunAttack (0x0809b9c0) close-range lunge, state 0x12.
+                        //            KNpc::NewJump (0x08099fd0) long-range, TestMovePos + m_1834 distance.
+                        // Mobile port: dùng SandboxPlayerController.BeginDash() lerp từ vị trí hiện tại
+                        //              tới caster.position trong skill.dashDurationSeconds.
+                        // [SECT-ALL] TODO(PC-runtime): dashDurationSeconds là 0 cho tất cả skill hiện tại
+                        //   (PC source chỉ set state + distance, duration thuộc client engine animation).
+                        //   Khi duration > 0 → dash mượt. Khi duration <= 0 → skip dash (no source → no fake).
+                        if (skill.dashDurationSeconds > 0f)
+                            player.BeginDash(caster.position, skill.dashDurationSeconds);
+                        else
+                            SubsystemLog.Warn("Combat", $"Cast {skill.DisplayName} (id={skillId}): dashDurationSeconds=0 — PC source does not provide duration, dash SKIPPED (TODO: PC runtime observation needed).");
+
                         var effectService = manager.SkillEffectVisual;
                         BaLangEnemyAi liveTarget = target.enemyBehaviour;
                         System.Func<Vector2> currentTargetPos = liveTarget != null

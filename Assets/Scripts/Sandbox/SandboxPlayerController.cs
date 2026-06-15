@@ -59,6 +59,30 @@ namespace VLTK.Sandbox
         public bool HasMoveTarget { get; private set; }
         public float targetArriveDistance = 8f;
 
+        // [SECT-ALL] Dash state machine cho melee skill (Phi Long Tại Thiên, etc.).
+        // PC source: KNpc::DoRunAttack (0x0809b9c0) sets m_214=0x12 (LUNGE_STATE) cho close-range.
+        // KNpc::NewJump (0x08099fd0) dùng TestMovePos + stores distance ở m_1834 cho long-range.
+        // Client engine reads state + distance để chạy sprite animation. Mobile port equivalent:
+        // lerp position từ dashStartPos → dashTargetPos trong dashDuration, KHÔNG teleport.
+        // [SECT-ALL] TODO(PC-runtime): dashDuration không có trong PC source. Server chỉ set state,
+        // duration thuộc client engine animation. Cần PC runtime video để verify duration chính xác.
+        // Caller (CombatSkillSlotController) phải truyền duration; hiện đang dùng placeholder.
+        private Vector2 dashStartPos;
+        private Vector2 dashTargetPos;
+        private float dashStartTime = -1f;
+        private float dashDuration = 0f;
+        public bool IsDashing => dashStartTime >= 0f;
+        public Vector2 DashStartPos => dashStartPos;
+        public Vector2 DashTargetPos => dashTargetPos;
+        public float DashProgress
+        {
+            get
+            {
+                if (dashStartTime < 0f || dashDuration <= 0f) return 1f;
+                return Mathf.Clamp01((Time.time - dashStartTime) / dashDuration);
+            }
+        }
+
         private const float TrapContactRadius = 16f;
 
         private PlayerVisualAction? _forcedVisualAction;
@@ -225,6 +249,35 @@ namespace VLTK.Sandbox
                 visual.SetAction(action.Value);
         }
 
+        /// <summary>
+        /// Bắt đầu dash từ vị trí hiện tại tới <paramref name="worldTarget"/> trong <paramref name="duration"/> giây.
+        /// PC source: KNpc::DoRunAttack (close-range, state 0x12) / KNpc::NewJump (long-range, TestMovePos).
+        /// Dash chiếm quyền điều khiển — joystick + click-to-move bị bơ qua trong khi dash.
+        /// </summary>
+        public void BeginDash(Vector2 worldTarget, float duration)
+        {
+            if (clampToMapBounds)
+                worldTarget = new Vector2(
+                    Mathf.Clamp(worldTarget.x, mapBoundsMin.x, mapBoundsMax.x),
+                    Mathf.Clamp(worldTarget.y, mapBoundsMin.y, mapBoundsMax.y));
+            dashStartPos = (Vector2)transform.position;
+            dashTargetPos = worldTarget;
+            dashStartTime = Time.time;
+            dashDuration = Mathf.Max(0.01f, duration);
+            // Clear normal movement để dash có toàn quyền
+            MoveInput = Vector2.zero;
+            LastMoveDelta = Vector2.zero;
+            HasMoveTarget = false;
+            Mount.Tick(0f);
+        }
+
+        /// <summary>Cancel dash hiện tại (dùng khi bị stun, knockback, etc.).</summary>
+        public void CancelDash()
+        {
+            dashStartTime = -1f;
+            dashDuration = 0f;
+        }
+
         public void ResetMovementState()
         {
             MoveInput = Vector2.zero;
@@ -238,6 +291,31 @@ namespace VLTK.Sandbox
         public void SimulateMove(float deltaTime)
         {
             float dt = Mathf.Max(0f, deltaTime);
+
+            // [SECT-ALL] Dash state machine (PC source: DoRunAttack/NewJump).
+            // Nếu đang dash, lerp position từ dashStartPos → dashTargetPos theo dashDuration.
+            // Dash chiếm toàn quyền — bỏ qua joystick + click-to-move cho tới khi xong.
+            if (dashStartTime >= 0f)
+            {
+                float t = (Time.time - dashStartTime) / dashDuration;
+                if (t >= 1f)
+                {
+                    transform.position = new Vector3(dashTargetPos.x, dashTargetPos.y, transform.position.z);
+                    dashStartTime = -1f;  // dash xong
+                    EnsureVisual();
+                    if (visual != null) visual.Tick(0f);
+                }
+                else
+                {
+                    var lerped = Vector2.Lerp(dashStartPos, dashTargetPos, t);
+                    transform.position = new Vector3(lerped.x, lerped.y, transform.position.z);
+                    EnsureVisual();
+                    if (visual != null) visual.Tick(dt);
+                    FollowCamera(dt, immediate: false);
+                }
+                return;  // skip normal movement logic khi đang dash
+            }
+
             Vector2 input = Vector2.ClampMagnitude(MoveInput, 1f);
             if (HasMoveTarget)
             {

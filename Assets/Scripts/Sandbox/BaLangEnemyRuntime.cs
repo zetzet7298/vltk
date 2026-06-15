@@ -189,7 +189,32 @@ namespace VLTK.Sandbox
             _healthBar?.SetLife(CurrentLife);
             if (showDamage && CurrentLife < previousLife)
                 PcDamageNumber.Spawn(DamagePopupPosition(), previousLife - CurrentLife, transform.parent);
+
+            // [SECT-ALL] Death state machine (PC source: KNpc::DoDeath @ 0x0809def0).
+            // PC behavior khi chết:
+            //   1. Set m_214 = 0xa (DEATH_STATE) — line 0x0809df84
+            //   2. Call KNpc::ClearProcessAI() (0x08090cf0) — stop AI loop
+            //   3. Swap sprite sang CorpseIdx (no SPR data in available source — TODO)
+            //   4. Play m_DeathFrame animation rồi despawn sau N frame
+            //   5. Sau delay (PC source không có explicit delay — TODO), Revive() tại vị trí gốc
+            // Mobile port MVP (chỉ những gì có PC source):
+            //   ✓ Set IsDead = true
+            //   ✓ nextAttackTime = infinity (tương đương ClearProcessAI: AI tick bỏ qua)
+            //   ✗ Corpse sprite swap — TODO, CorpseIdx field có nhưng SPR mapping không accessible
+            //   ✗ Despawn timing — TODO, m_DeathFrame count không accessible
+            //   ✗ Respawn delay + position — TODO, KNpc::Revive flow tồn tại nhưng delay constant không có
+            if (CurrentLife <= 0 && previousLife > 0)
+            {
+                _isDead = true;
+                // ClearProcessAI equivalent: Tick() sẽ skip AI khi _isDead = true.
+                // (nextAttackTime ở GameplayActor layer, không access được từ visual layer)
+            }
         }
+
+        // [SECT-ALL] Death state flag (PC source: KNpc m_214 = 0xa / DEATH_STATE).
+        // Public cho Combat layer / GameplayLoop đọc.
+        private bool _isDead;
+        public bool IsDead => _isDead;
 
         private Vector3 DamagePopupPosition()
         {
@@ -206,6 +231,12 @@ namespace VLTK.Sandbox
 
         public void Tick(float deltaTime, float now)
         {
+            // [SECT-ALL] PC source: ClearProcessAI (0x08090cf0) semantics.
+            // Khi KNpc die, AI loop bị stop. Mobile port tương đương: skip toàn bộ AI logic
+            // khi _isDead = true. KHÔNG hide visual — PC swap sang CorpseIdx sprite (TODO,
+            // CorpseIdx field có trong binary nhưng SPR mapping không accessible trong source tree).
+            if (_isDead) return;
+
             var template = instance?.template;
             if (template == null || template.aiMode <= 0 || template.walkSpeed <= 0)
                 return;

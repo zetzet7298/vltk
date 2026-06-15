@@ -76,6 +76,13 @@ namespace VLTK.Model
         public int maxShadowNum;         // MaxShadowNum — multi-shadow cho melee nhiều hit
         public bool dashVisualsEnabled;  // Cờ runtime: có show visual follow caster khi dash không
         public Vector2 dashOrigin;       // Lưu vị trí bắt đầu dash (set khi dash start)
+        // [SECT-ALL] TODO(PC-runtime): dashDurationSeconds KHÔNG có trong PC source.
+        // PC server (KNpc::DoRunAttack/NewJump ở jx_linux_y) chỉ set state + distance;
+        // animation duration thuộc client engine (cần PC runtime video để verify).
+        // Mobile port: caller (CombatSkillSlotController) đọc field này để chạy BeginDash.
+        //   - > 0: dash mượt theo PC state machine
+        //   - <= 0: skip dash (PC source không provide duration → không implement)
+        public float dashDurationSeconds; // 0 = no dash (PC source doesn't provide duration)
         // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.4.2 G6 + §2.8.2 G6: event chain anchors.
         // PC tianren.lua/tangmen.lua/emei.lua khai báo:
         //   skill_startevent[1] (1/0 → 1/1) trigger sub-skill khi cast start
