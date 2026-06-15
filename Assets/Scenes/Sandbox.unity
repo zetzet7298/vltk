@@ -2158,12 +2158,14 @@ MonoBehaviour:
   defaultMapId: 53
   loadDefaultMapOnBoot: 1
   bootProfile: 0
-  useFastEditorBoot: 1
+  useFastEditorBoot: 0
   loadOptionalServicesInFastEditorBoot: 0
   loadDefaultMapInFastEditorBoot: 1
-  skipMapVisualsInFastEditorBoot: 1
+  skipMapVisualsInFastEditorBoot: 0
   skipItemLoadingInFastEditorBoot: 1
   cacheReferenceDataInFastEditorBoot: 1
+  logBootTimings: 1
+  bootTimingLogThresholdMs: 50
 --- !u!4 &992100489
 Transform:
   m_ObjectHideFlags: 0
@@ -4112,6 +4114,8 @@ MonoBehaviour:
   sensitivity: 1.35
   deadZone: 0.08
   resetHandleOnRelease: 1
+  knobSmoothing: 0.3
+  returnSmoothing: 0.2
   rawInput: {x: 0, y: 0}
   moveInput: {x: 0, y: 0}
   onMove:
