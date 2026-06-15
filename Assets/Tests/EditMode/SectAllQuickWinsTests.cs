@@ -691,8 +691,11 @@ namespace VLTK.Tests.Sandbox
             // [SECT-ALL] User report 2026-06-15: heo trắng bị đánh chết nhưng body vẫn hiện diện.
             // Bug: ProcessActorDeath set currentLife=0 + deathTimestamp nhưng KHÔNG disable view.
             // Fix: SetActive(false) view + clear knownSkills + fightMode=false khi chết.
-            var victim = new VLTK.Sandbox.GameplayActor(100, "Heo Rừng", false)
+            var victim = new VLTK.Sandbox.GameplayLoopService.GameplayActor
             {
+                actorId = 100,
+                nameVi = "Heo Rừng",
+                isPlayer = false,
                 level = 10,
                 combat = new CombatActorState
                 {
@@ -710,17 +713,19 @@ namespace VLTK.Tests.Sandbox
             var viewGO = new GameObject("HeoRung_View");
             victim.view = viewGO;
 
-            var killer = new VLTK.Sandbox.GameplayActor(1, "Player", true)
+            var killer = new VLTK.Sandbox.GameplayLoopService.GameplayActor
             {
+                actorId = 1,
+                isPlayer = true,
                 combat = new CombatActorState { actorId = 1, level = 50, faction = CombatFaction.CaiBang },
             };
-            var loopSvc = new VLTK.Sandbox.GameplayLoopService(_catalog);
+            var loopSvc = new VLTK.Sandbox.GameplayLoopService(new VLTK.Sandbox.PlayerLevelService());
             loopSvc.ProcessActorDeathPublic(victim, killer);
 
             // View phải ẩn (SetActive(false))
             Assert.IsFalse(victim.view.activeSelf, "Sau khi die, view phải SetActive(false)");
-            // deathTimestamp phải set (gameTime ban đầu = 0 nên >= 0 là pass)
-            Assert.GreaterOrEqual(victim.deathTimestamp, 0f, "deathTimestamp phải được set khi die (>= 0)");
+            // deathTimestamp phải set
+            Assert.Greater(victim.deathTimestamp, 0f, "deathTimestamp phải được set khi die");
             // fightMode = false (không cho AI tiếp tục chase)
             Assert.IsFalse(victim.combat.fightMode, "Sau khi die, fightMode = false");
             // knownSkills bị clear (tránh cast skill ở dead state)
@@ -733,18 +738,23 @@ namespace VLTK.Tests.Sandbox
         public void GameplayActor_Death_NullView_DoesNotCrash()
         {
             // Edge case: view = null — không crash
-            var victim = new VLTK.Sandbox.GameplayActor(101, "Test NPC", false)
+            var victim = new VLTK.Sandbox.GameplayLoopService.GameplayActor
             {
+                actorId = 101,
+                nameVi = "Test NPC",
+                isPlayer = false,
                 level = 5,
                 combat = new CombatActorState { actorId = 101, currentLife = 1, maxLife = 50, faction = CombatFaction.WuDu },
                 view = null,
                 respawnDelay = 5f,
             };
-            var killer = new VLTK.Sandbox.GameplayActor(1, "Player", true)
+            var killer = new VLTK.Sandbox.GameplayLoopService.GameplayActor
             {
+                actorId = 1,
+                isPlayer = true,
                 combat = new CombatActorState { actorId = 1, level = 50, faction = CombatFaction.CaiBang },
             };
-            var loopSvc = new VLTK.Sandbox.GameplayLoopService(_catalog);
+            var loopSvc = new VLTK.Sandbox.GameplayLoopService(new VLTK.Sandbox.PlayerLevelService());
             Assert.DoesNotThrow(() => loopSvc.ProcessActorDeathPublic(victim, killer),
                 "ProcessActorDeath với view=null không được crash");
         }
