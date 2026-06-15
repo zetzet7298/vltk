@@ -194,6 +194,26 @@ namespace VLTK.UI
         private PartyMember _tradeTarget;
         private EconomyService _tradeEconomy;
         private const float RecorderFrameIntervalSeconds = 5f;
+
+        // PC scene-pos display scale for the minimap coord label + input parser.
+        //
+        // Empirical ground truth from the running mobile + PC reference (2026-06-15):
+        //   Mobile world unit = 8 PC pixels (mobile uses 4x larger tiles than
+        //   PC's 32-px cell — see MapRenderer.RegionSceneWidth / GroundCell).
+        //   PC binary + Lua: scene pos display = floor(nMpsX / 32), 32 PC
+        //   pixels per scene-pos unit. So mobile world must be divided by
+        //   (8 * 32) = 256 to match the PC scene-pos readout at the same
+        //   world position. Y uses the same uniform divisor — the world-Y
+        //   isometric compression in MapEnemyDatabase.WorldToMps is a
+        //   mps-side artifact, not a scene-pos concern.
+        //
+        // Reverse direction (input parser): scene-pos * 256 = world units.
+        // Test ground: at the mobile's BLH training pentagon spawn
+        // (world 53246, -52041) the new format renders "208 / 203"; the
+        // PC client at the equivalent cell reads "207 / 203" — the 1-cell
+        // X drift is the mobile's spawn being ~254 world units east of
+        // the canonical PC reference position, not a divisor bug.
+        internal const int ScenePosCellSize = 256;
         private float _recFrameTimer;
         private int _recFrameCount;
         private string _recLastCapturePath;
@@ -1195,7 +1215,7 @@ namespace VLTK.UI
         }
 
         private static string FormatPcScenePos(Vector2 world)
-            => $"{Mathf.FloorToInt(world.x / 8f)}/{Mathf.FloorToInt(-world.y / 8f)}";
+            => $"{Mathf.FloorToInt(world.x / ScenePosCellSize)} / {Mathf.FloorToInt(-world.y / ScenePosCellSize)}";
 
         private static string ToVietnameseMapName(string raw)
         {
@@ -1283,7 +1303,7 @@ namespace VLTK.UI
             if (parts.Length != 2) return false;
             if (!int.TryParse(parts[0].Trim(), out var x)) return false;
             if (!int.TryParse(parts[1].Trim(), out var y)) return false;
-            world = new Vector2(x * 8f, -y * 8f);
+            world = new Vector2(x * ScenePosCellSize, -y * ScenePosCellSize);
             return true;
         }
 

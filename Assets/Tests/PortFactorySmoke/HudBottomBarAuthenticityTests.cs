@@ -251,15 +251,30 @@ namespace VLTK.Tests.PortFactorySmoke
             var method = typeof(GameHudController).GetMethod("TryParsePcScenePos", BindingFlags.Static | BindingFlags.NonPublic);
             Assert.NotNull(method, "PC [MapPosInput] parser must exist.");
 
+            // PC scene-pos parity: 1 mobile world unit = 8 PC pixels, 1 PC scene-pos = 32 PC pixels,
+            // so scene-pos * 256 = mobile world. 210 * 256 = 53760, 203 * 256 = 51968 (sign-flipped Y).
             object[] args = { "210/203", Vector2.zero };
             bool ok = (bool)method.Invoke(null, args);
             Assert.IsTrue(ok);
-            Assert.AreEqual(new Vector2(1680f, -1624f), (Vector2)args[1]);
+            Assert.AreEqual(new Vector2(53760f, -51968f), (Vector2)args[1]);
 
             args = new object[] { "210,203", Vector2.zero };
             ok = (bool)method.Invoke(null, args);
             Assert.IsTrue(ok, "Mobile should accept comma as a touch-keyboard-friendly separator too.");
-            Assert.AreEqual(new Vector2(1680f, -1624f), (Vector2)args[1]);
+            Assert.AreEqual(new Vector2(53760f, -51968f), (Vector2)args[1]);
+
+            // Round-trip: format(world) must yield the same scene-pos string the parser accepts.
+            var fmtMethod = typeof(GameHudController).GetMethod("FormatPcScenePos", BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.NotNull(fmtMethod, "PC [ScenePos] formatter must exist.");
+            var roundTrip = (string)fmtMethod.Invoke(null, new object[] { new Vector2(53760f, -51968f) });
+            Assert.AreEqual("210 / 203", roundTrip, "Format must use the PC '%d / %d' shape with spaces and reverse the parser.");
+
+            // PC convention ground truth: at the BLH training pentagon spawn
+            // (world 53246, -52041) the format renders 208 / 203 — 1 cell off
+            // from the user's 207 / 203 PC reference because the mobile's spawn
+            // is 254 world units east of the canonical PC reference position.
+            var spawn = (string)fmtMethod.Invoke(null, new object[] { new Vector2(53246f, -52041f) });
+            Assert.AreEqual("208 / 203", spawn, "Mobile BLH pentagon spawn must format as 208/203 (PC scene-pos parity, 1-cell X drift from PC reference 207).");
 
             args = new object[] { "bad", Vector2.zero };
             ok = (bool)method.Invoke(null, args);

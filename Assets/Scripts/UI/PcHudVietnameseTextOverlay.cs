@@ -427,8 +427,13 @@ namespace VLTK.UI
             if (player == null) return;
 
             var pos = (Vector2)player.transform.position;
-            VLTK.Sandbox.BaLangEnemyDatabase.WorldToMps(pos.x, pos.y, out int mpsX, out int mpsY);
-            var coord = $"{mpsX}/{mpsY}";
+            // PC scene-pos parity: mobile world = 8 PC pixels, scene pos = floor(PC pixel / 32)
+            // so the on-screen coord is world / (8 * 32) = world / 256. Same shape as
+            // GameHudController.FormatPcScenePos but inlined here so this legacy GUI overlay
+            // (OnGUI path, not UI Toolkit) doesn't need to reach into the HUD controller.
+            int sceneX = Mathf.FloorToInt(pos.x / VLTK.UI.GameHudController.ScenePosCellSize);
+            int sceneY = Mathf.FloorToInt(-pos.y / VLTK.UI.GameHudController.ScenePosCellSize);
+            var coord = $"{sceneX} / {sceneY}";
             var mapManager = VLTK.Sandbox.SandboxManager.Instance?.MapManager;
             var rawMapName = mapManager?.ActiveMap?.catalogEntry?.displayNameRaw
                 ?? mapManager?.ActiveMap?.catalogEntry?.displayNameNormalized
