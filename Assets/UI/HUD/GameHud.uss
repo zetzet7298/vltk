@@ -1490,6 +1490,31 @@
     z-index: 950;
 }
 
+/* PC per-panel background SPR (frame0). Sits behind header/list. */
+.hud-pc-tool-panel-bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    -unity-background-scale-mode: scale-to-fit;
+    opacity: 1;
+    border-radius: 10px;
+    -unity-background-image-tint-color: rgba(255,255,255,1);
+}
+/* When a PC bg is applied, the panel's own dark fill is dropped so the PC art reads as the
+   real panel chrome; header/list lift above the bg layer. */
+.hud-pc-tool-panel--sized {
+    background-color: rgba(0,0,0,0);
+}
+.hud-pc-tool-panel--sized .hud-pc-tool-header,
+.hud-pc-tool-panel--sized .hud-pc-tool-list {
+    position: relative;
+}
+.hud-pc-tool-panel--sized .hud-pc-tool-header {
+    background-color: rgba(0,0,0,0.35);
+}
+
 .hud-pc-tool-header {
     height: 30px;
     flex-direction: row;
@@ -1503,6 +1528,15 @@
     color: rgb(255,232,156);
     font-size: 15px;
     -unity-font-style: bold;
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-basis: 0;
+    margin-right: 6px;
+    margin-left: 4px;
+    height: 22px;
+    min-width: 60px;
+    white-space: nowrap;
+    -unity-text-align: middle-left;
 }
 
 .hud-pc-tool-close {

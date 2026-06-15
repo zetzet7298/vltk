@@ -259,8 +259,10 @@
         <ui:VisualElement name="TeamPreview" class="hud-team-preview hidden">
         </ui:VisualElement>
 
-        <!-- PC HUD tool panel: opened by Status/ItemEx/Task/Friend/Faction/ChatRoom/Options/Rec. -->
+        <!-- PC HUD tool panel: opened by Status/ItemEx/Task/Friend/Faction/ChatRoom/Options/Rec.
+             Background element loaded with per-panel PC SPR (skill/items/guild/team/system bg) by title. -->
         <ui:VisualElement name="PcToolPanel" class="hud-pc-tool-panel hidden">
+            <ui:VisualElement name="PcToolPanelBg" class="hud-pc-tool-panel-bg"/>
             <ui:VisualElement name="PcToolHeader" class="hud-pc-tool-header">
                 <ui:Label name="PcToolTitle" text="" class="hud-pc-tool-title"/>
                 <ui:VisualElement name="PcToolClose" class="hud-pc-tool-close"/>

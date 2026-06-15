@@ -124,9 +124,32 @@ namespace VLTK.UI
         private VisualElement _utilityDock, _utilityActionRow, _utilityMenuRowA, _utilityMenuRowB;
         private VisualElement _pcShortcutDock, _pcShortcutToggleBtn;
         private Label _utilityToggleLabel, _utilitySwitchLabel, _pcShortcutToggleLabel;
-        private VisualElement _pcToolPanel, _pcToolClose;
+        private VisualElement _pcToolPanel, _pcToolClose, _pcToolPanelBg;
         private ScrollView _pcToolList;
         private Label _pcToolTitle;
+
+        // PC per-panel background SPR (frame0) keyed by the Vietnamese panel title passed to
+        // OpenPcToolPanel. SPRs extracted from PC ui4 主界面 folders (JX-UI source). When a
+        // title maps to a real PC bg, OpenPcToolPanel loads it onto PcToolPanelBg and resizes
+        // the panel toward the PC INI window size (scaled to fit mobile). Titles with no PC bg
+        // (or missing source, e.g. char-panel bg not present in the JX-UI dump) keep the plain
+        // dark fallback — never invent art.
+        private static readonly Dictionary<string, string> PcToolPanelBgArt = new()
+        {
+            { CharacterPanelService.Title, null },                       // 角色信息底板 — source gap: not in JX-UI dump
+            { "Túi hành trang", "panel_items_bg" },                       // 收费区物品底 (ItemEx/Items)
+            { "Nhiệm vụ", null },                                        // 任务面板: PC uses shared quest window, no dedicated bg in toolbar flow
+            { "Bằng hữu", null },                                        // 好友: dedicated bg not extracted in this pass
+            { "Tổ đội", "panel_team_bg" },                               // 组队招募界面底版
+            { "Phòng chat", null },                                      // 聊天主窗口: complex multi-part, bg not single SPR
+        };
+        // PC window sizes (INI [Main] Width/Height) for panels that have a bg SPR, used to size
+        // the mobile panel proportionally. Null => keep default USS size.
+        private static readonly Dictionary<string, Vector2> PcToolPanelPcSize = new()
+        {
+            { "Túi hành trang", new Vector2(223, 458) },   // 随身物品.ini
+            { "Tổ đội", new Vector2(404, 253) },          // 队伍管理.ini
+        };
         private int _utilityBarMode;
         // MOBILE HUD v2 — 5-tab categorized dock state.
         // Tabs: 0=Nhân vật, 1=Hành trang, 2=Xã hội, 3=Hoạt động, 4=Hệ thống.
@@ -438,6 +461,7 @@ namespace VLTK.UI
             _utilitySwitchLabel = root.Q<Label>("UtilitySwitchLabel");
             _pcShortcutToggleLabel = root.Q<Label>("PcShortcutToggleLabel");
             _pcToolPanel = root.Q("PcToolPanel");
+            _pcToolPanelBg = root.Q("PcToolPanelBg");
             _pcToolClose = root.Q("PcToolClose");
             _pcToolList = root.Q<ScrollView>("PcToolList");
             _pcToolTitle = root.Q<Label>("PcToolTitle");
@@ -2204,6 +2228,7 @@ namespace VLTK.UI
                 return;
             if (_pcToolTitle != null)
                 _pcToolTitle.text = CharacterPanelService.Title;
+            ApplyPcToolPanelBackground(CharacterPanelService.Title);
             _pcToolList.Clear();
 
             var manager = SandboxManager.Instance;
@@ -2328,6 +2353,7 @@ namespace VLTK.UI
                 return;
             if (_pcToolTitle != null)
                 _pcToolTitle.text = "Bằng hữu";
+            ApplyPcToolPanelBackground("Bằng hữu");
             _pcToolList.Clear();
 
             AddPcToolRow($"Bằng hữu: {snap.friendCount}/{snap.maxFriends} — lọc {FriendFilterLabel(_friendFilter)} — nhóm {(_friendGroupExpanded ? "mở" : "thu")} — ẩn thân {(_friendInvisible ? "bật" : "tắt")}");
@@ -2445,6 +2471,7 @@ namespace VLTK.UI
                 return;
             if (_pcToolTitle != null)
                 _pcToolTitle.text = "Tổ đội";
+            ApplyPcToolPanelBackground("Tổ đội");
             _pcToolList.Clear();
 
             if (!string.IsNullOrEmpty(statusLine))
@@ -2957,6 +2984,7 @@ namespace VLTK.UI
                 return;
             if (_pcToolTitle != null)
                 _pcToolTitle.text = "Phòng chat";
+            ApplyPcToolPanelBackground("Phòng chat");
             _pcToolList.Clear();
 
             AddPcToolRow($"PC [Channels] Default={snap.defaultChannel} ({snap.defaultSendNameVi})");
@@ -3649,6 +3677,7 @@ namespace VLTK.UI
                 return;
             if (_pcToolTitle != null)
                 _pcToolTitle.text = title ?? string.Empty;
+            ApplyPcToolPanelBackground(title);
             _pcToolList.Clear();
             if (rows != null)
             {
@@ -3659,6 +3688,51 @@ namespace VLTK.UI
                 AddPcToolRow("Không có dữ liệu.");
             _pcToolPanel.RemoveFromClassList("hidden");
             _pcToolPanel.BringToFront();
+        }
+
+        // Loads the per-panel PC background SPR (frame0) onto PcToolPanelBg and resizes the
+        // panel toward the PC INI window size (capped to fit mobile). When no bg maps to the
+        // title (or the source SPR is unavailable), clears the bg and restores default size.
+        // Never invents art — a null/missing entry keeps the plain dark fallback.
+        private void ApplyPcToolPanelBackground(string title)
+        {
+            if (_pcToolPanelBg == null)
+                return;
+
+            string artName = null;
+            if (!string.IsNullOrEmpty(title) && PcToolPanelBgArt.TryGetValue(title, out var mapped))
+                artName = mapped;
+
+            // Clear any previous bg first (covers the no-art / fallback case).
+            _pcToolPanelBg.style.backgroundImage = new StyleBackground(StyleKeyword.Null);
+            _pcToolPanel.EnableInClassList("hud-pc-tool-panel--sized", false);
+
+            if (string.IsNullOrEmpty(artName))
+                return;
+
+            var artPath = HudArtPathResolver.ResolveArtRoot(artFolder);
+            var png = HudArtPathResolver.ResolveUserFacingPngPath(artPath, artName);
+            // Guard against source gaps (dict may carry a planned name whose file was never
+            // extracted from PAK): if the PNG is missing, keep the plain dark fallback.
+            if (!System.IO.File.Exists(png))
+            {
+                SubsystemLog.Warn("HUD", $"PcToolPanel bg '{artName}' not found on disk; using dark fallback.");
+                return;
+            }
+            LoadTextureIntoElement(this, png, artName, tex =>
+            {
+                _pcToolPanelBg.style.backgroundImage = new StyleBackground(tex);
+                _pcToolPanelBg.style.backgroundSize = new BackgroundSize(Length.Percent(100f), Length.Percent(100f));
+            });
+
+            // Resize panel toward PC window size when known, capped to mobile-safe bounds.
+            if (!string.IsNullOrEmpty(title) && PcToolPanelPcSize.TryGetValue(title, out var pcSize))
+            {
+                float scale = Mathf.Min(310f / pcSize.x, 380f / pcSize.y);
+                _pcToolPanel.style.width = Mathf.Min(pcSize.x * scale, 310f);
+                _pcToolPanel.style.maxHeight = Mathf.Min(pcSize.y * scale, 380f);
+                _pcToolPanel.EnableInClassList("hud-pc-tool-panel--sized", true);
+            }
         }
 
         private void AddPcToolRow(string text)
