@@ -269,9 +269,20 @@ namespace VLTK.Sandbox
             }
         }
 
+        // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.2.2 G2 (TianWang multi-hit root cause):
+        // Trước fix: `if (skillStyle != Missiles) return` → chặn 9 Melee skill của Thiên Vương (29/30/31/32/34/35/37/40/41)
+        //   + Mọi Melee khác (Võ Đang, Côn Luân) spawn child projectile. Đây là root cause chặn:
+        //   - TianWang 30 (PC childSkillNum=2, Hồi Phong Lạc Nhạn 2-hit)
+        //   - TianWang 35 (PC childSkillNum=3, Dương Quan Tam Điệp 3-hit)
+        //   - TianWang 41 (PC childSkillNum=4, Huyết Chiến Bát Phương 4-hit)
+        //   - TianWang 40 (PC MslsForm=11 thrust + multi-thrust)
+        // Sau fix: cho phép cả Missiles và Melee spawn child. Mỗi Melee skill vẫn cần set childSkillId/childSkillNum
+        //   riêng (xem catalog fix đợt này cho 9 TianWang active).
         private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report, int forcedSkillLevel = 0)
         {
-            if (skill.skillStyle != PcSkillStyle.Missiles || skill.childSkillNum <= 0) return;
+            // [SECT-QUICKWIN] §2.2.2 G2: allow cả Missiles và Melee (TianWang multi-hit pattern).
+            if (skill.childSkillNum <= 0) return;
+            if (skill.skillStyle != PcSkillStyle.Missiles && skill.skillStyle != PcSkillStyle.Melee) return;
             int skillLevel = forcedSkillLevel > 0 ? forcedSkillLevel : ResolveLevel(caster, skill);
             var kangLong = PcKangLongYouHuiTuning.Applies(skill.skillId) ? PcKangLongYouHuiTuning.AtLevel(skillLevel) : default;
             var modTuning = PcCaiBangModTuning.Applies(skill.skillId) ? PcCaiBangModTuning.AtLevel(skill.skillId, skillLevel) : default;
