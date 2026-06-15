@@ -260,12 +260,13 @@ namespace VLTK.Tests.Sandbox
             var host = new FakeHost();
             var svc = new AssetLoadBudgetService(host);
             svc.BeginLoad("map/x", 100);
-            int baselineLog = host.LogCalls; // 1 from Begin
+            int baseLog = host.LogCalls;
+            int baseSfx = host.SFXCalls;
             svc.FailLoad("map/x", "Network timeout");
             Assert.AreEqual(1, host.FailedCalls);
-            Assert.AreEqual(baselineLog + 1, host.LogCalls);
+            Assert.AreEqual(baseLog + 1, host.LogCalls);
             Assert.AreEqual("fail", host.LastLogEventType);
-            Assert.AreEqual(1, host.SFXCalls);
+            Assert.AreEqual(baseSfx + 1, host.SFXCalls);
             Assert.AreEqual("fail", host.LastSFXAction);
         }
 
