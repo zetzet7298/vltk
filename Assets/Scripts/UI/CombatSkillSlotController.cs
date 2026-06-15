@@ -803,6 +803,16 @@ namespace VLTK.UI
 
                     if (report.success)
                     {
+                        // [SECT-ALL] Bug fix (user report 2026-06-15): Phi Long Tại Thiên close-range
+                        //   visual lunge không hiển thị. Root cause: CombatRuntimeService.Cast() update
+                        //   caster.position (snap full / lunge 16) nhưng SandboxPlayerController.SimulateMove
+                        //   chỉ đọc MoveInput/MoveTarget — KHÔNG đọc caster.position. → Visual Player
+                        //   GameObject transform.position không đổi dù runtime đã move caster.
+                        // Fix: gọi PlaceAt(caster.position) ngay sau Cast success để visual sync
+                        //   với runtime. PlaceAt cũng clear MoveInput/HasMoveTarget (xem line 234-236
+                        //   → ResetMovementState) → tránh joystick kéo caster về vị trí cũ.
+                        player.PlaceAt(caster.position, snapCamera: false);
+
                         var effectService = manager.SkillEffectVisual;
                         BaLangEnemyAi liveTarget = target.enemyBehaviour;
                         System.Func<Vector2> currentTargetPos = liveTarget != null
