@@ -422,9 +422,17 @@ namespace VLTK.Sandbox
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 1, ""), (20, 10, "")), 0, Link(lv, (1, 10, ""), (20, 100, "")))); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20 + lv * 3, 0, 0)); return d; }); return s;
         }
 
+        // [SECT-QUICKWIN] §2.1.2 G4 + G6: WuDang ID 163 Nhân Kiếm Hợp Nhất — childSkillId 215 sai PC + radius sai.
+        // PC wudang.lua::renjian_heyi: childSkillId=371 (skill_startevent[3]), collideSkill=162 (skill_collideevent[3]),
+        //   showevent id 1 (L10-14) hoặc 5 (L15+), radius=90 đúng mobile.
+        // Trước fix: childSkillId=215 (không có trong PC) + thiếu 3 event chain.
+        // Sau fix: childSkillId=371 (startSkillId anchor), s.collideSkillId=162 (anchor), childSkillNum=1.
+        //   ShowEvent charAnimId runtime check ở Phase 4 (cần level-gated 10/15).
         private static SkillDefinition WuDangRenJianHeYi()
         {
-            var s = BaseSkill(163, "人剑合一", "Nhân Kiếm Hợp Nhất", 50, 20, 90, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 215; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr");
+            var s = BaseSkill(163, "人剑合一", "Nhân Kiếm Hợp Nhất", 50, 20, 90, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 371; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr");
+            s.startSkillId = 371; s.startSkillLevel = 1; // G6: anchor cho StartEvent (Phase 4 wire runtime)
+            s.collideSkillId = 162; s.collideSkillLevel = 1; // G6: anchor cho CollideEvent — fire 162 Huyền Nhất Vô Tượng (Phase 4 wire)
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 8, ""), (15, 80, ""), (20, 194, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 12, ""), (20, 35, "")), 0, Link(lv, (1, 12, ""), (15, 100, ""), (20, 268, "")))); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingP, Link(lv, (1, 65, ""), (20, 345, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.StealManaP, Link(lv, (1, 1, ""), (20, 5, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeP, Link(lv, (1, 16, ""), (20, 25, "")), 0, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 1, ""), (20, 10, "")), Link(lv, (1, 1, ""), (20, 10, "")), 0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 35, ""), (20, 60, "")), 0, 0)); return d; }); return s;
         }
 
