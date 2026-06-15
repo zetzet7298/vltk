@@ -1438,3 +1438,93 @@ Tất cả 6 active 150-tier đều có `skill_startevent` chain thật (khác v
   - Regression test: cast 90 từ Côn Luân player, verify skill được route qua `IsKunLunSkill` thay vì `IsEMeiSkill`.
 - **Không cần làm dash/event chain** cho range 167-184 (KunLun là ranged pure + buff, không có dash, chỉ 172 có 1 StartEvent).
 - **Phase 5 (future)**: port 80-tier (372, 373, 375, 376, 386, 387) + 150-tier (1080, 1081, 1108, 1109) + 14 sub-form khác (wusuo_kunlun, leidong_jiutian, aoxue_xiaofeng, xiaofeng_sanlianji, shuangao_kunlun, shufu_zhou, beiming_daohai, zuixian_cuogu, jiankunlun150, jiankunlun150fu, daokunlun150, daokunlun150_2, pingdi_hanlei, yufeng_shu, xuantianwuji, kunlun120) + implement `addskilldamage` mechanism toàn cục. Effort: 2-3 tuần.
+
+---
+
+# Phần III — Implementation status (2026-06-15)
+
+> **Báo cáo tiến độ cuối ngày** — branch `port/all-sect-dash-skills`, worktree `.harness/baocao-all-sect-skills.md`.
+
+## Commits đã merge
+
+| SHA | Phase | Scope | Files |
+|---|---|---|---|
+| `ad62cf734` | [SECT-QUICKWIN] đợt 1 | Cái Bang G2 + TianWang charAnimId×9 + TianWang 33/42 duration bug + WuDang 162 damage 14× + EMei 93 HEAL swap + TianRen 150 lifemax_p sign | 3 files, +1512/-35 |
+| `00793b891` | [SECT-QUICKWIN] đợt 2 | TangMen 45/47/50/54 (waitTime, req, MslsGenData, Fan form) + WuDu 73 magnitude + KunLun 90 faction | 1 file, +27/-5 |
+| `673a2d812` | [SECT-DASH] đợt 1 | Cái Bang 357+128 JUMP (MeleeType enum + NewJump logic + DamageSkillNew factory param) | 4 files, +56/-3 |
+
+## Gap đã fix theo môn phái
+
+| Môn phái | Gap Cao đã fix | Gap Trung bình | Còn lại |
+|---|---|---|---|
+| **Cái Bang** | G2 (357→389 sub-skill fire mọi level) + G1 (357+128 MeleeType=JumpAndAttack + NewJump runtime) | — | G3 (rend slash visual), G4 (128 childSkillNum 15→2), G6 (event chain) |
+| **Thiên Vương** | G7 (33+42 duration 50× bug) + G7 (42 fireres_p sign sai) + G4 (8 active charAnimId 2→9/10) | 36 thiếu attribute, 40/41 multi-hit childSkillNum (blocked by G2 root cause) | G2 root cause, các passive magnitude sai |
+| **Võ Đang** | G7 (162 damage 14× off) | — | 163 event chain, 165 childSkillNum 16→8, 164 radius, visual 163 |
+| **Đường Môn** | G4 (45/47/50/54 waitTime, req, MslsGenData=4, Fan form) | — | 58 CollideEvent 1→227, 51 formula sai, EqtLimit weapon check |
+| **Ngũ Độc** | — | G7 (73 magnitude -9/-23 theo per-skill) | 73 G5 attribute class swap (cần PoisonTimeReduceP enum), 69 G7 class swap, 62 passive 11× off |
+| **Nga My** | G7 (93 ManaReplenishV → LifeReplenishV heal) | — | 95/97/100/109/114 passive sai effect, 84/86/89 schema swap, 80/82/85/88/91 addskilldamage chain |
+| **Thúy Yên** | — | — | 99/102/105/108/111/113 childSkillId 70-75→6-12 (mobile internal ID sai PC), passive 95/97/100/109/114 |
+| **Thiên Nhẫn** | G7 (150 lifemax_p DẤU NGƯỢC: buff → tự hủy) | — | 148 StartEvent=192, sub-skill 361-364/1075-1076 missing, 139/141/147 radius 5× off |
+| **Côn Luân** | G5 (90 Mê Tung Ảo Ảnh faction misplaced EMei→KunLun) | — | 183 attribute class swap, 172 StartEvent=399, 167/172/178 radius sai, tuning 22% coverage |
+
+## Còn gap cần fix tiếp (Phase 1 quick wins + Phase 4 event chain + Phase 5 sub-form)
+
+### Phase 1 quick wins (chưa làm)
+- **TianWang G2 root cause** (PREREQUISITE) — `CombatRuntimeService.SpawnProjectiles` line 249 skip Melee → chặn 9 multi-hit + 5 multi-shadow. 1-2 ngày.
+- **TianWang 30/35/40/41** childSkillNum register (chờ G2 fix).
+- **TianWang 36** missing 3 attribute (lifemax_p, lifemax_yan_p, attackspeed_v).
+- **WuDang 163** event chain StartEvent 1→371, CollideEvent 1→162.
+- **WuDang 165** childSkillNum 16→8, radius 400→512.
+- **TangMen 58** CollideEvent 1→227 (Vạn Lý Truy Tâm).
+- **CuiYan 99/102/105/108/111/113** 6 active childSkillId 70-75→6-12 (mobile internal ID sai).
+- **CuiYan 95/97/100/109/114** 5 passive sai effect (cold magic, damage return, attack speed, 7-attribute).
+- **TianRen 148** StartEvent=192 (Gió bùng), 6 sub-skill 361-364/1075-1076 missing.
+- **KunLun 183** SlowMissleB vs AttackSpeedV (attribute class swap).
+- **KunLun 172** StartEvent=399.
+- **Thiếu Lâm 10** childSkillId 1056 fire 1/6 sub-skill (addskilldamage chain thiếu toàn cục).
+- **WuDu 69** FastWalkRunP vs AttackSpeedV (class swap).
+- **WuDu 62** passive 11× off magnitude.
+
+### Phase 4 event chain (chưa làm)
+- TangMen 45 VanishedEvent 1→1113 (Tích Lịch Loạn Hoàn Hãm Tĩnh).
+- TangMen 58 CollideEvent 1→227.
+- TianRen 148 StartEvent=192.
+- TianRen 362 vanishSkill=363 (fire spread).
+- TianRen 1075 startSkill=1131.
+- CuiYan 102 StartEvent=398.
+- CuiYan 111 StartEvent=112 (Bích Hải Triều Sinh b — MISSING trong catalog, 16-missile AOE).
+- WuDang 163 StartEvent 1→371, CollideEvent 1→162, ShowEvent 1/5.
+
+### Phase 3 dash (Cái Bang đã có skeleton, follow-up cần)
+- Lerp + obstacle check (PC NewJump từng step + SubWorld.GetBarrier).
+- Camera follow snap (SandboxPlayerController.FollowCamera).
+- Input lock khi dash (MoveInput clear + cờ).
+- Visual desync (SkillEffectVisualService getCurrentCasterPos callback).
+- Còn 5 môn phái khác có melee: TianWang (TianWang 9 active — không có dash per PC) + WuDang (Kinh Lôi Trảm, Vô Ngã Vô Kiếm — verify). Tất cả đều `Melee_AttackWithBlur` mặc định, KHÔNG có Melee_Jump ngoài 357/128.
+
+### Phase 5 (future, ngoài scope)
+- Port 80-tier / 120-tier / 150-tier sub-form (Cái Bang 1073, 1074, Thiên Vương, Võ Đang 1078, 1079, ...).
+- `addskilldamage` mechanism engine toàn cục.
+- `PoisonTimeReduceP` enum (cho WuDu 73 fix đúng class).
+- `SlowMissleB` attribute kind (cho KunLun 183).
+
+## Verify checklist (sẽ chạy khi integration worker merge)
+
+- [ ] Build: mở Unity Editor, compile `port/all-sect-dash-skills` worktree, expect 0 CS error.
+- [ ] Test EditMode `CombatRuntimeServiceTests` cho 357: cast L1, L11, L20; expect sub-skill 389 fire mọi level.
+- [ ] Test EditMode `TianWang33DurationTests`: cast 33 L1, expect buff expire sau ~120s (không phải 2.4s).
+- [ ] Test EditMode `TianWang42FireresTest`: cast 42 L1, expect fire res = -5 (debuff, không phải +5 buff).
+- [ ] Test EditMode `WuDang162DamageTest`: cast 162 L20, expect damage = (10, 100), không phải (144, 1476).
+- [ ] Test EditMode `EMei93HealTest`: cast 93 L1, expect heal 275 HP (không phải mana regen 275).
+- [ ] Test EditMode `TianRen150Test`: cast 150 L1, expect HP max giảm -11% (không phải +21%).
+- [ ] Test EditMode `KunLun90FactionTest`: load skill 90, expect faction = KunLun (không phải EMei).
+- [ ] Test visual: cast 357 ở full profile boot, expect player teleport tới enemy + slash effect.
+
+## Effort summary (ngoài goal hiện tại)
+
+- Phase 1 quick wins done: ~5 giờ (đã làm)
+- Phase 3 dash skeleton: ~2 giờ (đã làm, MVP snap)
+- Phase 3 dash full (lerp + obstacle + camera + input lock + visual): ~2-3 ngày
+- Phase 4 event chain: ~1 ngày
+- Phase 5 sub-form + tuning: ~2-3 tuần
+
