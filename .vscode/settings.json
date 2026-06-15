@@ -1,5 +1,5 @@
 {
-    "dotnet.defaultSolution": "vltk-mobile.slnx",
+    "dotnet.defaultSolution": "vltk-mobile.sln",
     "dotnet.dotnetPath": "/usr/bin/dotnet",
     "dotrush.roslyn.dotnetSdkDirectory": "/usr/lib/dotnet/sdk/8.0.128",
     "dotrush.msbuildProperties": {
