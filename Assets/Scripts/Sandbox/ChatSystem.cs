@@ -47,16 +47,25 @@ namespace VLTK.Sandbox
         private readonly List<ChatMessage> _history = new();
         private readonly int _maxHistory = 200;
         private ChatChannel _activeChannel = ChatChannel.All;
+        private IChatServiceHost _host;
 
         public event Action<ChatMessage> OnMessageReceived;
         public event Action<ChatChannel> OnChannelChanged;
         public IReadOnlyList<ChatMessage> History => _history;
         public ChatChannel ActiveChannel => _activeChannel;
 
+        public ChatService() { }
+        public ChatService(IChatServiceHost host) { _host = host; }
+        public void AttachHost(IChatServiceHost host) { _host = host; }
+
         /// <summary>Send a player message to a channel.</summary>
         public void SendPlayerMessage(ChatChannel channel, string senderName, string text)
         {
-            if (string.IsNullOrWhiteSpace(text)) return;
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                _host?.OnEmptyMessageRejected((int)channel, senderName);
+                return;
+            }
 
             var msg = new ChatMessage
             {
@@ -70,6 +79,13 @@ namespace VLTK.Sandbox
             _history.Add(msg);
             TrimHistory();
             OnMessageReceived?.Invoke(msg);
+            if (_host != null)
+            {
+                _host.OnPlayerMessageSent((int)channel, senderName, text);
+                _host.LogChatEvent("player_send", (int)channel, $"{senderName}: {text}");
+                _host.PlayChatSFX("send", (int)channel);
+                _host.SaveChatLog((int)channel, text, msg.timestamp);
+            }
         }
 
         /// <summary>Post a system message.</summary>
@@ -86,6 +102,13 @@ namespace VLTK.Sandbox
             _history.Add(msg);
             TrimHistory();
             OnMessageReceived?.Invoke(msg);
+            if (_host != null)
+            {
+                _host.OnSystemMessagePosted(text);
+                _host.LogChatEvent("system_post", (int)ChatChannel.System, text);
+                _host.PlayChatSFX("system", (int)ChatChannel.System);
+                _host.SaveChatLog((int)ChatChannel.System, text, msg.timestamp);
+            }
         }
 
         /// <summary>Post a combat log message.</summary>
@@ -102,12 +125,26 @@ namespace VLTK.Sandbox
             _history.Add(msg);
             TrimHistory();
             OnMessageReceived?.Invoke(msg);
+            if (_host != null)
+            {
+                _host.OnCombatLogPosted(text);
+                _host.LogChatEvent("combat_log", (int)ChatChannel.System, text);
+                _host.PlayChatSFX("combat", (int)ChatChannel.System);
+                _host.SaveChatLog((int)ChatChannel.System, text, msg.timestamp);
+            }
         }
 
         public void SetChannel(ChatChannel channel)
         {
             _activeChannel = channel;
             OnChannelChanged?.Invoke(channel);
+            if (_host != null)
+            {
+                _host.OnChannelChanged((int)channel, ChannelNameVi(channel));
+                _host.LogChatEvent("channel_changed", (int)channel, ChannelNameVi(channel));
+                _host.PlayChatSFX("channel", (int)channel);
+                _host.ShowChatUI((int)channel);
+            }
         }
 
         /// <summary>Get messages for the active channel (or all if All).</summary>
@@ -120,6 +157,8 @@ namespace VLTK.Sandbox
                 if (_activeChannel == ChatChannel.All || msg.channel == _activeChannel || msg.channel == ChatChannel.System)
                     result.Insert(0, msg);
             }
+            if (_host != null)
+                _host.OnFilteredMessagesQueried(result.Count, (int)_activeChannel, maxCount);
             return result;
         }
 
