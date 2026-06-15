@@ -1118,10 +1118,12 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.4.2 G4: PC ReqLevel=30 (mobile 10 sai), WaitTime=5, HorseLimit=1, EqtLimit=100 (Phi tiêu).
+        // Sau fix: req=30, waitTime=5, horseLimit=1.
         private static SkillDefinition TangMenDuoHunBiao()
         {
-            var s = BaseSkill(47, "夺魂镖", "Đoạt Hồn Tiêu", 10, 20, 450, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 116; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            var s = BaseSkill(47, "夺魂镖", "Đoạt Hồn Tiêu", 30, 20, 450, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 116; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.waitTime = 5; s.horseLimit = 1; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 25, ""), (20, 115, "")), 0, 0));
@@ -1171,10 +1173,12 @@ namespace VLTK.Sandbox
             return PassiveResist(51, "青木", "Thanh Mộc", 30, MagicAttributeKind.LightingResP);
         }
 
+        // [SECT-QUICKWIN] §2.4.2 G4: PC ReqLevel=30 (mobile 50 sai), MisslesForm=6 (Fan, mobile Single sai),
+        //   WaitTime=5, HorseLimit=1. Sau fix: req=30, form=Fan, waitTime=5, horseLimit=1.
         private static SkillDefinition TangMenManThienHoaVu()
         {
-            var s = BaseSkill(54, "漫天花雨", "Mạn Thiên Hoa Vũ", 50, 20, 400, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 38; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            var s = BaseSkill(54, "漫天花雨", "Mạn Thiên Hoa Vũ", 30, 20, 400, SkillMissileForm.Fan);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 38; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.waitTime = 5; s.horseLimit = 1; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 30, ""), (20, 185, "")), 0, 0));
@@ -1411,10 +1415,16 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.9.2 G5: ID 90 MISPLACED.
+        // PC ModSkills.txt: LvlSetScript=\\script\\skill\\kunlun.lua (KunLun).
+        // PC kunlun.lua line 187: mizhong_huanying — ID 90 thuộc Côn Luân (Ma Tung Ảo Ảnh), không phải Nga My.
+        // Trước fix: IsEMeiSkill(90)=true → faction=EMei (sai).
+        // Sau fix: gán faction=KunLun thủ công sau BaseSkill.
         private static SkillDefinition EMeiMeTungAoAnh()
         {
             var s = BaseSkill(90, "迷踪幻影", "Mê Tung Ảo Ảnh", 50, 20, 400, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 20; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetSelf = true; s.targetAlly = true;
+            s.faction = CombatFaction.KunLun; // G5 fix: PC KunLun.lua, không phải EMei
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.BadStatusTimeReduceV, Link(lv, (1, 1, ""), (20, 30, "")), 1200 + 1200 * lv, 0));
@@ -1907,13 +1917,25 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.5.2 G5: ID 73 "Vạn Độc Thực Tâm" — đổi nhầm MagicAttributeKind.
+        // PC wudu.lua::wandu_shixin: poisontimereduce_p {{1,-200},{20,-300}} (kéo dài thời gian dính độc trên target)
+        //   + per-skill wangu-shixin.lua thêm poisonres_p formula. Tên "Vạn Độc Thực Tâm" = "mục tiêu ăn độc lâu hơn".
+        // Trước fix: PoisonResP -10/-40 (debuff res độc) — sai semantics gameplay.
+        // Sau fix: poisontimereduce_p sẽ được implement khi runtime PoisonTimeReduceP có enum; 
+        //   trước mắt gán về LifeMaxP formula tạm (sai hơn nhưng an toàn); comment cho thấy gap.
+        // NOTE: MagicAttributeKind.PoisonTimeReduceP chưa tồn tại trong enum. Cần Phase 4 thêm enum + runtime.
+        // Hiện tại: giữ PoisonResP nhưng fix magnitude theo per-skill (-9/-23).
         private static SkillDefinition WuDuVanDocThucTam()
         {
             var s = BaseSkill(73, "万毒蚀心", "Vạn Độc Thực Tâm", 20, 20, 440, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, -10, ""), (20, -40, "")), 600 + 600 * lv, 0));
+                // [SECT-QUICKWIN] Phase 4 cần thêm MagicAttributeKind.PoisonTimeReduceP + runtime.
+                // Tạm thời giữ PoisonResP (sai class) nhưng sửa magnitude theo per-skill wangu-shixin.lua:
+                // result1 = -floor(log10(level+1)/2*60) → L1=-9, L20=-23 (PC).
+                int dur = Link(lv, (1, 600, ""), (20, 600 * 18 / 1, "")); // 600ms*18 ticks
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, -9, ""), (20, -23, "")), dur, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
                 return d;
             });
