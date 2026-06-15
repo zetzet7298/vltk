@@ -143,15 +143,17 @@ namespace VLTK.Sandbox
             ApplyDamage(caster, target, levelData, report);
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
-            if (skillId == 357 && skillLevel >= 11)
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.1 G2:
+            // PC Phi Long 357 → Long Chiến Ư Dật 389 (sub-skill slash) fires
+            // ở MỌI level khi missile collide (skill_collideevent[3]={{1,0},{10,0},{10,1},{20,1}}}).
+            // Trước fix: chỉ fire khi L>=11 — mất slash ở L1-10 → user nói
+            // "phi long tới mục tiêu ở cự ly gần, không sâu xé".
+            // Sau fix: fire mọi level — sâu xé luôn damage + projectile.
+            if (skillId == 357 && _catalog.Resolve(389) is { } subSkill)
             {
-                var subSkill = _catalog.Resolve(389);
-                if (subSkill != null)
-                {
-                    var subLevelData = subSkill.GetPcLevelData(skillLevel);
-                    ApplyDamage(caster, target, subLevelData, report);
-                    SpawnProjectiles(subSkill, caster, castPoint, grid, report);
-                }
+                var subLevelData = subSkill.GetPcLevelData(skillLevel);
+                ApplyDamage(caster, target, subLevelData, report);
+                SpawnProjectiles(subSkill, caster, castPoint, grid, report);
             }
 
             _nextCastTime[(caster.actorId, skillId)] = CurrentTime + Mathf.Max(0, skill.timePerCast);
