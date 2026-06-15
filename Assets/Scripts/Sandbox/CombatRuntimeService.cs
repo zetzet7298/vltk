@@ -320,6 +320,18 @@ namespace VLTK.Sandbox
                     missileForm = childId == 195 ? SkillMissileForm.Single : form,
                     effectResolved = skill.effectResolved,
                     effectSourceId = skill.effectSourceId,
+                    // [SECT-QUICKWIN] §2.4-2.9 G6: propagate event chain anchors từ parent → child.
+                    // CollideEvent/VanishedEvent/FlyEvent trên parent sẽ fire khi child missile va chạm/vanish.
+                    // Phase 4 runtime cần wire projectile lifecycle callback để fire các event này.
+                    collideSkillId = skill.collideSkillId,
+                    collideSkillLevel = skill.collideSkillLevel,
+                    vanishSkillId = skill.vanishSkillId,
+                    vanishSkillLevel = skill.vanishSkillLevel,
+                    flySkillId = skill.flySkillId,
+                    flySkillLevel = skill.flySkillLevel,
+                    flyEventTime = skill.flyEventTime,
+                    startSkillId = skill.startSkillId,  // propagate để mỗi child trigger start
+                    startSkillLevel = skill.startSkillLevel,
                 };
                 var origin = child.skillId == 195 ? targetPoint : caster.position;
                 var result = _projectiles.Cast(child, origin, targetPoint, grid);
