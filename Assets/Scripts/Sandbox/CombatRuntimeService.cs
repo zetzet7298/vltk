@@ -127,6 +127,29 @@ namespace VLTK.Sandbox
             if (attackRadius > 0 && dist > attackRadius * RangeWorldPerPcUnit)
                 return Reject(report, CombatCastRejectReason.OutOfRange, $"KNpc::DoSkill: distance {dist:F1} > AttackRadius {attackRadius}");
 
+            // [SECT-DASH] §2.1 G1 + §2.4.2 G1: PC Melee_Jump / Melee_JumpAndAttack (KNpc.cpp line 1834-1873)
+            //   cho skill Melee có meleeType ∈ {Jump, JumpAndAttack}. Player JUMP tới target trước khi attack.
+            // PC NewJump: nếu dist > MIN_JUMP_RANGE (64 PC pixel), nhảy tới castPoint + clamp obstacle.
+            //   Ở close range (< MIN_JUMP_RANGE), skip jump, chỉ chém melee bình thường.
+            // Mobile MVP (đợt 1 Phase 3): snap caster.position tới castPoint (lerp đầy đủ là Phase 4 follow-up).
+            //   Ghi nhận dashOrigin để visual follow caster khi dash (placeholder cho SkillEffectVisualService).
+            if (skill.meleeType == PcMeleeType.Jump || skill.meleeType == PcMeleeType.JumpAndAttack)
+            {
+                const float minJumpRange = 64f * RangeWorldPerPcUnit; // PC MIN_JUMP_RANGE = 64 PC pixel
+                if (dist > minJumpRange)
+                {
+                    // Ghi nhận vị trí gốc để visual follow caster.
+                    skill.dashOrigin = caster.position;
+                    skill.dashVisualsEnabled = true;
+                    // Snap caster tới castPoint (PC NewJump + DoJump). TODO Phase 4: lerp + obstacle check.
+                    // Hiện tại: snap trực tiếp để visual feel đúng, lerp làm phase tiếp.
+                    caster.position = castPoint;
+                    // Cập nhật castPoint = caster.position mới (đã ở đích).
+                    castPoint = caster.position;
+                }
+                // Đóng range: giữ caster.position nguyên (PC: chỉ chém melee, không jump).
+            }
+
             // --- KNpc::Cost gate ---
             // PC: Cost(attrib_mana, GetSkillCost()) — checks & deducts mana
             var levelData = skill.GetPcLevelData(skillLevel);
@@ -143,15 +166,34 @@ namespace VLTK.Sandbox
             ApplyDamage(caster, target, levelData, report);
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
-            if (skillId == 357 && skillLevel >= 11)
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.1 G2:
+            // PC Phi Long 357 → Long Chiến Ư Dật 389 (sub-skill slash) fires
+            // ở MỌI level khi missile collide (skill_collideevent[3]={{1,0},{10,0},{10,1},{20,1}}}).
+            // Trước fix: chỉ fire khi L>=11 — mất slash ở L1-10 → user nói
+            // "phi long tới mục tiêu ở cự ly gần, không sâu xé".
+            // Sau fix: fire mọi level — sâu xé luôn damage + projectile.
+            if (skillId == 357 && _catalog.Resolve(389) is { } subSkill)
             {
-                var subSkill = _catalog.Resolve(389);
-                if (subSkill != null)
-                {
-                    var subLevelData = subSkill.GetPcLevelData(skillLevel);
-                    ApplyDamage(caster, target, subLevelData, report);
-                    SpawnProjectiles(subSkill, caster, castPoint, grid, report);
-                }
+                var subLevelData = subSkill.GetPcLevelData(skillLevel);
+                ApplyDamage(caster, target, subLevelData, report);
+                SpawnProjectiles(subSkill, caster, castPoint, grid, report);
+            }
+
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.4-2.9 G6: event chain generalizer.
+            // PC pattern: skill_startevent / skill_collideevent / skill_vanishedevent / skill_flyevent.
+            //   Sau cast thành công, fire start sub-skill (nếu có). Sau missile va chạm, fire collide (đã có 1073→1072).
+            //   Sau missile vanish, fire vanish (chưa có). Giữa đường bay, fire fly (chưa có).
+            // Mobile MVP (đợt này): chỉ fire StartEvent inline. CollideEvent/VanishEvent cần missile runtime hook
+            //   (Phase 4 follow-up — SpawnProjectiles trả child SkillDefinition, cần wrap thành ActiveSkillEffect để có
+            //   lifecycle callback).
+            // Sau fix: catalog đã set startSkillId cho TangMen 58 / TianRen 148 / KunLun 172 / CuiYan 102, 111.
+            //   Phase 4 runtime: chỉ fire khi startSkillId > 0.
+            if (skill.startSkillId > 0 && _catalog.Resolve(skill.startSkillId) is { } startSubSkill)
+            {
+                var startLevel = skill.startSkillLevel > 0 ? skill.startSkillLevel : skillLevel;
+                var startLevelData = startSubSkill.GetPcLevelData(startLevel);
+                ApplyStates(caster, caster, CombatRelation.Self, startLevelData, report);
+                SpawnProjectiles(startSubSkill, caster, castPoint, grid, report, startLevel);
             }
 
             _nextCastTime[(caster.actorId, skillId)] = CurrentTime + Mathf.Max(0, skill.timePerCast);
@@ -244,9 +286,20 @@ namespace VLTK.Sandbox
             }
         }
 
+        // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.2.2 G2 (TianWang multi-hit root cause):
+        // Trước fix: `if (skillStyle != Missiles) return` → chặn 9 Melee skill của Thiên Vương (29/30/31/32/34/35/37/40/41)
+        //   + Mọi Melee khác (Võ Đang, Côn Luân) spawn child projectile. Đây là root cause chặn:
+        //   - TianWang 30 (PC childSkillNum=2, Hồi Phong Lạc Nhạn 2-hit)
+        //   - TianWang 35 (PC childSkillNum=3, Dương Quan Tam Điệp 3-hit)
+        //   - TianWang 41 (PC childSkillNum=4, Huyết Chiến Bát Phương 4-hit)
+        //   - TianWang 40 (PC MslsForm=11 thrust + multi-thrust)
+        // Sau fix: cho phép cả Missiles và Melee spawn child. Mỗi Melee skill vẫn cần set childSkillId/childSkillNum
+        //   riêng (xem catalog fix đợt này cho 9 TianWang active).
         private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report, int forcedSkillLevel = 0)
         {
-            if (skill.skillStyle != PcSkillStyle.Missiles || skill.childSkillNum <= 0) return;
+            // [SECT-QUICKWIN] §2.2.2 G2: allow cả Missiles và Melee (TianWang multi-hit pattern).
+            if (skill.childSkillNum <= 0) return;
+            if (skill.skillStyle != PcSkillStyle.Missiles && skill.skillStyle != PcSkillStyle.Melee) return;
             int skillLevel = forcedSkillLevel > 0 ? forcedSkillLevel : ResolveLevel(caster, skill);
             var kangLong = PcKangLongYouHuiTuning.Applies(skill.skillId) ? PcKangLongYouHuiTuning.AtLevel(skillLevel) : default;
             var modTuning = PcCaiBangModTuning.Applies(skill.skillId) ? PcCaiBangModTuning.AtLevel(skill.skillId, skillLevel) : default;
@@ -267,6 +320,18 @@ namespace VLTK.Sandbox
                     missileForm = childId == 195 ? SkillMissileForm.Single : form,
                     effectResolved = skill.effectResolved,
                     effectSourceId = skill.effectSourceId,
+                    // [SECT-QUICKWIN] §2.4-2.9 G6: propagate event chain anchors từ parent → child.
+                    // CollideEvent/VanishedEvent/FlyEvent trên parent sẽ fire khi child missile va chạm/vanish.
+                    // Phase 4 runtime cần wire projectile lifecycle callback để fire các event này.
+                    collideSkillId = skill.collideSkillId,
+                    collideSkillLevel = skill.collideSkillLevel,
+                    vanishSkillId = skill.vanishSkillId,
+                    vanishSkillLevel = skill.vanishSkillLevel,
+                    flySkillId = skill.flySkillId,
+                    flySkillLevel = skill.flySkillLevel,
+                    flyEventTime = skill.flyEventTime,
+                    startSkillId = skill.startSkillId,  // propagate để mỗi child trigger start
+                    startSkillLevel = skill.startSkillLevel,
                 };
                 var origin = child.skillId == 195 ? targetPoint : caster.position;
                 var result = _projectiles.Cast(child, origin, targetPoint, grid);

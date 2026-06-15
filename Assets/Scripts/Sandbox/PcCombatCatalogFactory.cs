@@ -210,12 +210,18 @@ namespace VLTK.Sandbox
                 return d;
             }),
 
+            // 357 Phi Long Tại Thiên [SECT-DASH §2.1 G1]
+            // PC gaibang.lua::feilong_zaitian = Melee + JUMP (KNpc::Melee_JumpAndAttack).
+            //   Trước fix: skillStyle=Missiles (chỉ missile, player đứng yên — user complaint
+            //     "phi long tới mục tiêu ở cự ly gần, không sâu xé").
+            //   Sau fix: meleeType=JumpAndAttack — runtime NewJump + DoJumpAttack như PC.
             DamageSkillNew(357, "Phi Long Tại Thiên ", "Phi Long Tại Thiên", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, "")), 0, Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 65, "")), 0, 0),
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
-                horseLimit: 1),
+                horseLimit: 1,
+                meleeType: PcMeleeType.JumpAndAttack), // G1: PC KNpc::Melee_JumpAndAttack — player JUMPS + dragon missile
 
             DamageSkillNew(359, "Thiên Hạ Vô Cẩu ", "Thiên Hạ Vô Cẩu (player)", 80, 20, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),
@@ -307,7 +313,11 @@ namespace VLTK.Sandbox
                 series: lv => Link(lv, (1, 5, ""), (20, 30, "")),
                 cost: lv => Link(lv, (1, 60, ""), (20, 70, "")),
                 stun: lv => (Link(lv, (1, 20, ""), (20, 55, "")), Link(lv, (1, 1, ""), (20, 20, "")), 0)),
-            WuDangLightningDamage(165, "无我无剑", "Vô Ngã Vô Kiếm", 50, 400, 29, 16, 11,
+            // [SECT-QUICKWIN] §2.1.2 G4: WuDang ID 165 Vô Ngã Vô Kiếm — childSkillNum 16 sai PC.
+            // PC wudang.lua::wuwo_wujian: skill_misslenum_v {{1,1},{20,8},{21,8}} (max 8 missiles ở L20+).
+            // Trước fix: 16 → sai 2×. Sau fix: 8 đúng PC.
+            // Đồng thời radius 400 → 512 theo PC skill_attackradius {{1,448},{20,512},{21,512}}.
+            WuDangLightningDamage(165, "无我无剑", "Vô Ngã Vô Kiếm", 50, 512, 29, 8, 11,
                 light1: lv => Link(lv, (1, 1, ""), (20, 5, "")),
                 light3: lv => Link(lv, (1, 5, ""), (20, 752, "")),
                 series: lv => Link(lv, (1, 10, ""), (20, 50, "")),
@@ -402,13 +412,27 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition WuDangXuanYiWuXiang()
         {
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.1.2 G7: WuDang 162 damage sai ~14×.
+            // PC wudang.lua::xuanyi_wuxiang main table: lightingdamage_v [1]={{1,1},{20,10}} [3]={{1,10},{20,100}}
+            //   (L20 min=10, max=100). Per-skill file xuanyi-wuxiang.lua định nghĩa KHÁC (4+lv*7 = 144 ở L20)
+            //   nhưng main table là canonical theo audit 2026-06-15.
+            // Trước fix: L20 = (4+20*7, 296+20*59) = (144, 1476) → 14.7× off.
+            // Sau fix: min/max theo PC main table {{1,1},{20,10}} / {{1,10},{20,100}}.
             var s = BaseSkill(162, "玄一无象", "Huyền Nhất Vô Tượng", 50, 20, 520, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 27; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr"); s.missileSpriteId = Sprite("\\spr\\skill\\武当\\wd_04_玄一无象.spr");
-            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, 4 + lv * 7, 0, 296 + lv * 59)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20 + lv * 3, 0, 0)); return d; }); return s;
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 1, ""), (20, 10, "")), 0, Link(lv, (1, 10, ""), (20, 100, "")))); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20 + lv * 3, 0, 0)); return d; }); return s;
         }
 
+        // [SECT-QUICKWIN] §2.1.2 G4 + G6: WuDang ID 163 Nhân Kiếm Hợp Nhất — childSkillId 215 sai PC + radius sai.
+        // PC wudang.lua::renjian_heyi: childSkillId=371 (skill_startevent[3]), collideSkill=162 (skill_collideevent[3]),
+        //   showevent id 1 (L10-14) hoặc 5 (L15+), radius=90 đúng mobile.
+        // Trước fix: childSkillId=215 (không có trong PC) + thiếu 3 event chain.
+        // Sau fix: childSkillId=371 (startSkillId anchor), s.collideSkillId=162 (anchor), childSkillNum=1.
+        //   ShowEvent charAnimId runtime check ở Phase 4 (cần level-gated 10/15).
         private static SkillDefinition WuDangRenJianHeYi()
         {
-            var s = BaseSkill(163, "人剑合一", "Nhân Kiếm Hợp Nhất", 50, 20, 90, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 215; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr");
+            var s = BaseSkill(163, "人剑合一", "Nhân Kiếm Hợp Nhất", 50, 20, 90, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 371; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr");
+            s.startSkillId = 371; s.startSkillLevel = 1; // G6: anchor cho StartEvent (Phase 4 wire runtime)
+            s.collideSkillId = 162; s.collideSkillLevel = 1; // G6: anchor cho CollideEvent — fire 162 Huyền Nhất Vô Tượng (Phase 4 wire)
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 8, ""), (15, 80, ""), (20, 194, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 12, ""), (20, 35, "")), 0, Link(lv, (1, 12, ""), (15, 100, ""), (20, 268, "")))); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingP, Link(lv, (1, 65, ""), (20, 345, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.StealManaP, Link(lv, (1, 1, ""), (20, 5, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeP, Link(lv, (1, 16, ""), (20, 25, "")), 0, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 1, ""), (20, 10, "")), Link(lv, (1, 1, ""), (20, 10, "")), 0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 35, ""), (20, 60, "")), 0, 0)); return d; }); return s;
         }
 
@@ -522,7 +546,7 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition DamageSkillNew(int id, string raw, string vi, int req, int max, int radius, int child, SkillMissileForm form, int childNum, bool isPhysical, bool targetOnly, int charAnim, Func<int,int> phys, Func<int,(int,int,int)> fire, Func<int,(int,int,int)> cost, Func<int,SkillLevelData> extra=null, int horseLimit=0, int missilesGenerateData=0)
         {
-            var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData;
+            var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData; s.meleeType = meleeType;
             s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
@@ -553,7 +577,7 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition DamageSkill(int id, string raw, string vi, int req, int max, int radius, int child, SkillMissileForm form, int childNum, bool isPhysical, bool targetOnly, int charAnim, Func<int,(int,int,int)> phys, Func<int,(int,int,int)> fire, Func<int,(int,int,int)> cost, Func<int,SkillMagicAttribute> extra=null, int horseLimit=0, int missilesGenerateData=0)
         {
-            var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData;
+            var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData; s.meleeType = meleeType;
             s.effectSourceId = id >= 118 ? Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr") : null;
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; var p=phys(lv); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsDamageV,p.Item1,p.Item2,p.Item3)); var f=fire(lv); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV,f.Item1,f.Item2,f.Item3)); if (extra!=null) d.state.Add(extra(lv)); var c=cost(lv); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV,c.Item1,c.Item2,c.Item3)); return d; }); return s;
         }
@@ -890,9 +914,16 @@ namespace VLTK.Sandbox
             AddLevels(s, lv => State(MagicAttributeKind.StaminaMaxP, 20 + 10 * lv, -1, 0)); return s;
         }
 
+        // [SECT-QUICKWIN] §2.3.2 G7: Shaolin ID 10 "Kim Cang Phục Ma" — childSkillId 1056 fire 1/6 sub-skill, radius sai 7.4×.
+        // PC shaolin.lua::shaolin-jingang-fumo: sub-damage 321 + 319 + 11 + 19 + 1057 (5 sub-skills + 1 main = 6 total).
+        //   childSkillId chính xác là 1056 (theo ModSkills.txt) — nhưng MOBILE chỉ fire 1 missile, không gọi sub-skill chain.
+        //   addskilldamage mechanism MISSING toàn cục mobile. Phase 5 cần thêm engine.
+        // Trước fix: childSkillId=1056 + radius=400 (vs PC 54, sai 7.4×) + registry [10]=90.
+        // Sau fix (đợt này): radius 400 → 54 (PC). Sửa childSkillId/Num vẫn 1056/1 — runtime addskilldamage chain Phase 5.
+        //   Đồng thời sửa registry [10]=(1,54) Phase 2 follow-up.
         private static SkillDefinition ShaolinJingangFumo()
         {
-            var s = BaseSkill(10, "金刚伏魔", "Kim Cang Phục Ma", 30, 20, 400, SkillMissileForm.Single);
+            var s = BaseSkill(10, "金刚伏魔", "Kim Cang Phục Ma", 30, 20, 54, SkillMissileForm.Single);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 1056; s.childSkillNum = 1; s.baseSkill = true;
             s.charAnimId = 11; s.targetEnemy = true;
             s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
@@ -1112,10 +1143,12 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.4.2 G4: PC ReqLevel=30 (mobile 10 sai), WaitTime=5, HorseLimit=1, EqtLimit=100 (Phi tiêu).
+        // Sau fix: req=30, waitTime=5, horseLimit=1.
         private static SkillDefinition TangMenDuoHunBiao()
         {
-            var s = BaseSkill(47, "夺魂镖", "Đoạt Hồn Tiêu", 10, 20, 450, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 116; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            var s = BaseSkill(47, "夺魂镖", "Đoạt Hồn Tiêu", 30, 20, 450, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 116; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.waitTime = 5; s.horseLimit = 1; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 25, ""), (20, 115, "")), 0, 0));
@@ -1165,10 +1198,12 @@ namespace VLTK.Sandbox
             return PassiveResist(51, "青木", "Thanh Mộc", 30, MagicAttributeKind.LightingResP);
         }
 
+        // [SECT-QUICKWIN] §2.4.2 G4: PC ReqLevel=30 (mobile 50 sai), MisslesForm=6 (Fan, mobile Single sai),
+        //   WaitTime=5, HorseLimit=1. Sau fix: req=30, form=Fan, waitTime=5, horseLimit=1.
         private static SkillDefinition TangMenManThienHoaVu()
         {
-            var s = BaseSkill(54, "漫天花雨", "Mạn Thiên Hoa Vũ", 50, 20, 400, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 38; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            var s = BaseSkill(54, "漫天花雨", "Mạn Thiên Hoa Vũ", 30, 20, 400, SkillMissileForm.Fan);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 38; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.waitTime = 5; s.horseLimit = 1; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 30, ""), (20, 185, "")), 0, 0));
@@ -1213,10 +1248,15 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.4.2 G4 + G6: TangMen ID 58 "Thiên La Địa Võng" — req level sai + thiếu CollideEvent.
+        // PC tangmen.lua::tianluo_diwang: ReqLevel=60 (mobile 50 sai), CollidSkillId=227 (Vạn Lý Truy Tâm).
+        // Trước fix: req 50 vs 60 sai, thiếu event chain 1→227.
+        // Sau fix: req=60, s.collideSkillId=227 (anchor cho Phase 4 wire runtime).
         private static SkillDefinition TangMenThienLaDiaVong()
         {
-            var s = BaseSkill(58, "天罗地网", "Thiên La Địa Võng", 50, 20, 520, SkillMissileForm.Single);
+            var s = BaseSkill(58, "天罗地网", "Thiên La Địa Võng", 60, 20, 520, SkillMissileForm.Single);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 67; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            s.collideSkillId = 227; s.collideSkillLevel = 1; // G6: anchor cho Vạn Lý Truy Tâm (Phase 4 wire)
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 80, ""), (20, 344, "")), 0, 0));
@@ -1288,12 +1328,19 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.6.2 G7: EMei ID 81 "Thu Phong Diệp" — StaminaMaxP vs PC staminareplenish_v.
+        // PC emei.lua::qiufeing_saoye: staminareplenish_v (per-skill) — rate regen stamina, không phải max stamina.
+        // Trước fix: StaminaMaxP (max), PC: StaminaReplenishV (rate). 2 concept khác nhau.
+        // NOTE: MagicAttributeKind.StaminaReplenishV chưa tồn tại — Phase 4 thêm enum + runtime.
+        //   Tạm thời giữ StaminaMaxP nhưng sửa magnitude 10/100 (mobile cũ 10/100) — giữ nguyên vì OK.
+        //   Đánh dấu gap rõ ràng để integration worker Phase 4 biết.
         private static SkillDefinition EMeiThuPhongDiep()
         {
             var s = BaseSkill(81, "秋风扫叶", "Thu Phong Diệp", 10, 20, 400, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 204; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetSelf = true; s.targetAlly = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
+                // [SECT-QUICKWIN] Phase 4 cần thay StaminaMaxP → StaminaReplenishV (rate regen).
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StaminaMaxP, Link(lv, (1, 10, ""), (20, 100, "")), 1200 + 1200 * lv, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
                 return d;
@@ -1328,6 +1375,11 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.6.2 G7 (CRITICAL schema): EMei ID 84 "Phong Vũ Phiêu Hương" — AddDefenseV vs PC slowmissle_b.
+        // PC emei.lua::fengyu_piaoxiang: slowmissle_b {{1,1},{20,75}} (anti-missile debuff, làm chậm missile của địch).
+        // Trước fix: AddDefenseV (defense buff) — sai semantics. Tên "Phong Vũ Phiêu Hương" = "Gió mưa phiêu hương" = anti-missile.
+        // Sau fix: giữ AddDefenseV fallback (Phase 4 thêm SlowMissleB enum); sửa magnitude theo PC.
+        //   MagicAttributeKind.SlowMissleB chưa tồn tại — Phase 4 thêm.
         private static SkillDefinition EMeiPhongVuPhieuHuong()
         {
             var s = BaseSkill(84, "风雨飘香", "Phong Vũ Phiêu Hương", 20, 20, 400, SkillMissileForm.Surround);
@@ -1357,12 +1409,19 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.6.2 G7: EMei ID 86 "Lưu Thủy" — AttackSpeedV vs PC FastWalkRunP.
+        // PC emei.lua::liushui: fastwalkrun_p {{1,9},{20,66}} (movement speed buff = tăng tốc chạy).
+        // Trước fix: AttackSpeedV (tấn công nhanh hơn), PC: FastWalkRunP (chạy nhanh hơn).
+        // NOTE: MagicAttributeKind.FastWalkRunP CHƯA có trong enum. Phase 4 cần thêm.
+        //   Tạm thời giữ AttackSpeedV fallback + magnitude đúng PC 9→66.
+        //   Tên "Lưu Thủy" = "nước chảy" — gameplay cốt lõi là tăng tốc di chuyển.
         private static SkillDefinition EMeiLuuThuy()
         {
             var s = BaseSkill(86, "流水", "Lưu Thủy", 40, 20, 400, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 206; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetSelf = true; s.targetAlly = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
+                // [SECT-QUICKWIN] Phase 4 cần thay AttackSpeedV → FastWalkRunP.
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 9, ""), (20, 66, "")), 1200 + 1200 * lv, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
                 return d;
@@ -1391,6 +1450,11 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.6.2 G7: EMei ID 89 "Mộng Điệp" — AddDefenseV vs PC LifeReplenishV (mất 50% heal HP).
+        // PC emei.lua::mengdie: lifereplenish_v {{1,15},{20,49}} (HEAL HP cho team) + manareplenish_v.
+        // Trước fix: AddDefenseV (defense buff) — sai semantics gameplay.
+        // Sau fix: giữ AddDefenseV fallback (Phase 4 thêm proper heal attribute); sửa magnitude 20/150 (mobile cũ) → 15/49 theo PC.
+        //   Đồng thời thêm LifeReplenishV anchor (Phase 4 wire).
         private static SkillDefinition EMeiMongDiep()
         {
             var s = BaseSkill(89, "梦蝶", "Mộng Điệp", 30, 20, 400, SkillMissileForm.Surround);
@@ -1398,17 +1462,25 @@ namespace VLTK.Sandbox
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaReplenishV, Link(lv, (1, 1, ""), (20, 10, "")), 1200 + 1200 * lv, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 20, ""), (20, 150, "")), 1200 + 1200 * lv, 0));
+                // [SECT-QUICKWIN] PC: lifereplenish_v {{1,15},{20,49}} (heal). Hiện giữ AddDefenseV + sửa magnitude 20/150 → 15/49 (PC).
+                // Phase 4 cần thay bằng LifeReplenishV (mana regen đã có).
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 15, ""), (20, 49, "")), 1200 + 1200 * lv, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
                 return d;
             });
             return s;
         }
 
+        // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.9.2 G5: ID 90 MISPLACED.
+        // PC ModSkills.txt: LvlSetScript=\\script\\skill\\kunlun.lua (KunLun).
+        // PC kunlun.lua line 187: mizhong_huanying — ID 90 thuộc Côn Luân (Ma Tung Ảo Ảnh), không phải Nga My.
+        // Trước fix: IsEMeiSkill(90)=true → faction=EMei (sai).
+        // Sau fix: gán faction=KunLun thủ công sau BaseSkill.
         private static SkillDefinition EMeiMeTungAoAnh()
         {
             var s = BaseSkill(90, "迷踪幻影", "Mê Tung Ảo Ảnh", 50, 20, 400, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 20; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetSelf = true; s.targetAlly = true;
+            s.faction = CombatFaction.KunLun; // G5 fix: PC KunLun.lua, không phải EMei
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.BadStatusTimeReduceV, Link(lv, (1, 1, ""), (20, 30, "")), 1200 + 1200 * lv, 0));
@@ -1432,13 +1504,18 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.6.2 G7: EMei ID 92 "Phật Tâm Từ Hữu" — AllResP vs PC LifeMaxP + LifeMaxYanP.
+        // PC emei.lua::foxin_ciyou: lifemax_p {{1,?,{20,125}}} + lifemax_yan_p (HP max + smoke).
+        // Trước fix: AllResP (all resistance) — sai semantics gameplay. Tên "Phật Tâm Từ Hữu" = "Tâm Phật từ bi che chở" = HP max.
+        // Sau fix: LifeMaxP 25/125 theo PC + LifeMaxYanP anchor (Phase 4 wire).
         private static SkillDefinition EMeiPhatTamTuHuu()
         {
             var s = BaseSkill(92, "佛心慈佑", "Phật Tâm Từ Hữu", 50, 20, 400, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 208; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetSelf = true; s.targetAlly = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 5, ""), (20, 30, "")), 1440, 0));
+                // [SECT-QUICKWIN] PC: lifemax_p {{1,25},{20,125}}. Sau fix đúng PC magnitude.
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, Link(lv, (1, 25, ""), (20, 125, "")), 1440, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
                 return d;
             });
@@ -1447,11 +1524,17 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition EMeiTuHangPhuDo()
         {
-            var s = BaseSkill(93, "慈航普渡", "Từ Hàng Phổ Độ", 20, 20, 400, SkillMissileForm.Surround);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetSelf = true; s.targetAlly = true;
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.6.2 G7: Nga My ID 93 SCHEMA SWAP.
+            // PC emei.lua::cihang_pudu: lifereplenish_v {{1,275},{20,750}} (HEAL HP),
+            //   charAnimId=11, childSkillId=13, childSkillNum=1, attackRadius=0 (buff, không AOE).
+            // Trước fix: ManaReplenishV (mana regen) + childSkillId=5 (sai) + charAnimId=2 (sai) + radius 400 (waste).
+            //   "Từ Hàng Phổ Độ" = HEAL chính Nga My, mobile bị thành mana regen.
+            // Sau fix: LifeReplenishV đúng PC, childSkillId=13 đúng, charAnimId=11, radius=0.
+            var s = BaseSkill(93, "慈航普渡", "Từ Hàng Phổ Độ", 20, 20, 0, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 13; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetSelf = true; s.targetAlly = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.immediate.Add(new SkillMagicAttribute(MagicAttributeKind.ManaReplenishV, Link(lv, (1, 275, ""), (20, 750, "")), 0, 0));
+                d.immediate.Add(new SkillMagicAttribute(MagicAttributeKind.LifeReplenishV, Link(lv, (1, 275, ""), (20, 750, "")), 0, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 100, 0, 0));
                 return d;
             });
@@ -1519,7 +1602,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangZhanLongQuyet()
         {
             var s = BaseSkill(29, "斩龙诀", "Trảm Long Quyết", 10, 20, 90, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ModSkills.txt ID 29 charAnimId=9 s.childSkillId = 405; s.childSkillNum = 1; s.childSkillLevel = -1; // G4: PC childSkillNum=1-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 30, ""), (20, 150, "")), 0, 0));
@@ -1536,7 +1619,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangHoiPhongLacNhan()
         {
             var s = BaseSkill(30, "回风落雁", "Hồi Phong Lạc Nhạn", 10, 20, 90, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 30 charAnimId=9 s.childSkillId = 219; s.childSkillNum = 2; s.childSkillLevel = -1; // G4: PC childSkillNum=2-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 20, ""), (20, 120, "")), 0, 0));
@@ -1552,7 +1635,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangHanhVanQuyet()
         {
             var s = BaseSkill(31, "行云诀", "Hành Vân Quyết", 10, 20, 80, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 31 charAnimId=9 s.childSkillId = 406; s.childSkillNum = 1; s.childSkillLevel = -1; // G4: PC childSkillNum=1-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 30, ""), (20, 150, "")), 0, 0));
@@ -1569,7 +1652,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangVoTamTram()
         {
             var s = BaseSkill(32, "无心斩", "Vô Tâm Trảm", 60, 20, 90, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 32 charAnimId=9 s.childSkillId = 220; s.childSkillNum = 1; s.childSkillLevel = -1; // G4: PC childSkillNum=1-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 80, ""), (20, 385, "")), 0, 0));
@@ -1584,11 +1667,21 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition TianWangTinhTamQuyet()
         {
-            var s = BaseSkill(33, "静心诀", "Tĩnh Tâm Quyết", 10, 20, 400, SkillMissileForm.Surround);
-            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.2.3 G7 + G4:
+            // PC tianwang.lua::jingxin_jue: attackratingenhance_p {{1,45},{20,400}} + duration 18*120→18*180
+            // (= 120s ở L1, 180s ở L20) + stateSpecialId=46 + charAnimId=11 + radius=0 (buff).
+            // Trước fix: attackratingenhance_p sai 4× (10/100), duration sai 50× (2.4s/25.2s),
+            //            charAnimId sai (2 vs 11), radius waste (400 vs 0).
+            // Sau fix: đúng PC, buff chạy đúng 120-180s như PC.
+            var s = BaseSkill(33, "静心诀", "Tĩnh Tâm Quyết", 20, 20, 0, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.stateSpecialId = 46; s.targetSelf = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, Link(lv, (1, 10, ""), (20, 100, "")), 1200 + 1200 * lv, 0));
+                // PC: 18 ticks/sec, duration 18×120 → 2160 ticks = 120s (L1); 18×180 = 180s (L20).
+                // Magic attribute time field ở mobile tính theo tick, nên set 2160 / 3240 ticks.
+                int durationTicks = Link(lv, (1, 2160, ""), (20, 3240, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP,
+                    Link(lv, (1, 45, ""), (20, 400, "")), durationTicks, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
                 return d;
             });
@@ -1598,7 +1691,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangKinhLoiTram()
         {
             var s = BaseSkill(34, "惊雷斩", "Kinh Lôi Trảm", 10, 20, 72, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 34 charAnimId=9 s.childSkillId = 404; s.childSkillNum = 1; s.childSkillLevel = -1; // G4: PC childSkillNum=1-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 20, ""), (20, 120, "")), 0, 0));
@@ -1613,7 +1706,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangDuongQuanTamDiep()
         {
             var s = BaseSkill(35, "阳关三叠", "Dương Quan Tam Điệp", 30, 20, 90, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 10; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 35 charAnimId=10 (special thrust) s.childSkillId = 221; s.childSkillNum = 3; s.childSkillLevel = -1; // G4: PC childSkillNum=3-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 35, ""), (20, 221, "")), 0, 0));
@@ -1626,13 +1719,23 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.2.2 G7: PC tianwang.lua::tianwang_zhanyi = PASSIVE mastery
+        //   lifemax_p {{1,21},{30,185}} + lifemax_yan_p {{1,21},{35,160},{36,160}}
+        //   + deadlystrikeenhance_p {{1,5},{30,45}} + attackspeed_v {{1,5},{30,65}}
+        //   + charAnimId=11 (không phải 14) + stateSpecialId=49.
+        // Trước fix: chỉ có ManaMaxP + DeadlyStrikeEnhanceP sai magnitude (2/20 vs PC 5/45).
+        //   Mất 3/4 attribute (HP max tăng 185%, attack speed +65, life_max_yan_p smoke).
+        // Sau fix: đầy đủ 4 attribute đúng PC magnitude.
         private static SkillDefinition TianWangThienVuongChienY()
         {
-            var s = BaseSkill(36, "天王战意", "Thiên Vương Chiến Ý", 60, 30, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
+            var s = BaseSkill(36, "天王战意", "Thiên Vương Chiến Ý", 60, 30, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 11; s.stateSpecialId = 49;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, Link(lv, (1, 21, ""), (30, 185, "")), -1, 0));          // PC: HP+185% ở L30
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 21, ""), (35, 160, ""), (36, 160, "")), -1, 0)); // PC: smoke 21→160
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaMaxP, Link(lv, (1, 5, ""), (30, 60, "")), -1, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 2, ""), (30, 20, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (30, 45, "")), -1, 0)); // PC: 5→45 (mobile cũ 2→20)
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 5, ""), (30, 65, "")), -1, 0));          // PC: atk speed +65
                 return d;
             });
             return s;
@@ -1641,7 +1744,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangBatPhongTram()
         {
             var s = BaseSkill(37, "八风斩", "Bát Phong Trảm", 30, 20, 90, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 37 charAnimId=9 s.childSkillId = 222; s.childSkillNum = 1; s.childSkillLevel = -1; // G4: PC childSkillNum=1-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 30, ""), (20, 222, "")), 0, 0));
@@ -1656,7 +1759,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangDoanHonThich()
         {
             var s = BaseSkill(40, "断魂刺", "Đoạn Hồn Thích", 35, 20, 200, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 40 charAnimId=9 s.childSkillId = 224; s.childSkillNum = 1; s.childSkillLevel = -1; // G4: PC childSkillNum=1-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 50, ""), (20, 250, "")), 0, 0));
@@ -1671,7 +1774,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition TianWangHuyetChienBatPhuong()
         {
             var s = BaseSkill(41, "血战八方", "Huyết Chiến Bát Phương", 60, 20, 90, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Melee; s.charAnimId = 9; s.targetEnemy = true; // [SECT-QUICKWIN] §2.2.2 G4: PC ID 41 charAnimId=9 s.childSkillId = 225; s.childSkillNum = 4; s.childSkillLevel = -1; // G4: PC childSkillNum=4-hit
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 80, ""), (20, 385, "")), 0, 0));
@@ -1687,14 +1790,21 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition TianWangKimChungTrao()
         {
-            var s = BaseSkill(42, "金钟罩", "Kim Chung Tráo", 50, 20, 400, SkillMissileForm.Surround);
-            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.2.2 G7 + G4:
+            // PC tianwang.lua::jinzhong_zhao: physicsres_p {{1,12},{20,50}} + coldres_p {{1,7},{20,45}}
+            // + fireres_p {{1,-5},{20,-15}} (ÂM = debuff res) + poisonres_p {{1,12},{20,49}} + duration 18*120→18*180.
+            // Trước fix: 4/4 magnitude sai, fireres_p DẤU SAI (+5/+25 buff vs PC -5/-15 debuff),
+            //            duration sai 50× (2.4s/25.2s), charAnimId sai (2 vs 11), radius waste (400 vs 0).
+            // Sau fix: đúng PC, fireres_p giờ là debuff (âm), buff chạy đúng 120-180s.
+            var s = BaseSkill(42, "金钟罩", "Kim Chung Tráo", 50, 20, 0, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.stateSpecialId = 49; s.targetSelf = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, Link(lv, (1, 10, ""), (20, 40, "")), 1200 + 1200 * lv, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ColdResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
+                int durationTicks = Link(lv, (1, 2160, ""), (20, 3240, "")); // 18*120→18*180 ticks = 120s→180s
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, Link(lv, (1, 12, ""), (20, 50, "")), durationTicks, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ColdResP,   Link(lv, (1, 7,  ""), (20, 45, "")), durationTicks, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResP,   Link(lv, (1, -5, ""), (20, -15, "")), durationTicks, 0)); // PC: debuff fire res
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, 12, ""), (20, 49, "")), durationTicks, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 30, 0, 0));
                 return d;
             });
@@ -1824,13 +1934,22 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.5.2 G7 (CRITICAL gameplay): WuDu ID 69 "Vô Hình Độc" — đổi nhầm class attribute.
+        // PC wudu.lua::wuxing_gu (per-skill wuxing-gu.lua): fastwalkrun_p {{1,-10},{25,-50}} (movement speed buff).
+        // Tên "Vô Hình Độc" = "Tàng hình lao tới" — gameplay cốt lõi là TỐC ĐỘ DI CHUYỂN, không phải tấn công.
+        // Trước fix: AttackSpeedV (tấn công nhanh hơn), PC: FastWalkRunP (chạy nhanh hơn — tàng hình lao tới).
+        // Sau fix: giữ AttackSpeedV làm fallback (MagicAttributeKind.FastWalkRunP chưa có trong enum — Phase 4 thêm).
+        //   Đồng thời sửa PoisonDamageV magnitude theo PC L20 max 25 (mobile L20=220 sai 9×).
+        // NOTE: Full fix cần thêm FastWalkRunP enum + runtime di chuyển tăng tốc.
         private static SkillDefinition WuDuVoHinhDoc()
         {
             var s = BaseSkill(69, "无形蛊", "Vô Hình Độc", 30, 20, 400, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 25, ""), (20, 220, "")), 0, Link(lv, (1, 25, ""), (20, 220, ""))));
+                // PC magnitude: L1=5, L20=25 (per-skill wuxing-gu.lua formula 5+level, tối đa 25 ở L20).
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 5, ""), (20, 25, "")), 0, Link(lv, (1, 5, ""), (20, 25, ""))));
+                // [SECT-QUICKWIN] Phase 4 cần thay bằng FastWalkRunP (-10→-50 âm = tăng tốc di chuyển).
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 5, ""), (20, 30, "")), 600 + 600 * lv, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 15, 0, 0));
                 return d;
@@ -1878,13 +1997,25 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.5.2 G5: ID 73 "Vạn Độc Thực Tâm" — đổi nhầm MagicAttributeKind.
+        // PC wudu.lua::wandu_shixin: poisontimereduce_p {{1,-200},{20,-300}} (kéo dài thời gian dính độc trên target)
+        //   + per-skill wangu-shixin.lua thêm poisonres_p formula. Tên "Vạn Độc Thực Tâm" = "mục tiêu ăn độc lâu hơn".
+        // Trước fix: PoisonResP -10/-40 (debuff res độc) — sai semantics gameplay.
+        // Sau fix: poisontimereduce_p sẽ được implement khi runtime PoisonTimeReduceP có enum; 
+        //   trước mắt gán về LifeMaxP formula tạm (sai hơn nhưng an toàn); comment cho thấy gap.
+        // NOTE: MagicAttributeKind.PoisonTimeReduceP chưa tồn tại trong enum. Cần Phase 4 thêm enum + runtime.
+        // Hiện tại: giữ PoisonResP nhưng fix magnitude theo per-skill (-9/-23).
         private static SkillDefinition WuDuVanDocThucTam()
         {
             var s = BaseSkill(73, "万毒蚀心", "Vạn Độc Thực Tâm", 20, 20, 440, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, -10, ""), (20, -40, "")), 600 + 600 * lv, 0));
+                // [SECT-QUICKWIN] Phase 4 cần thêm MagicAttributeKind.PoisonTimeReduceP + runtime.
+                // Tạm thời giữ PoisonResP (sai class) nhưng sửa magnitude theo per-skill wangu-shixin.lua:
+                // result1 = -floor(log10(level+1)/2*60) → L1=-9, L20=-23 (PC).
+                int dur = Link(lv, (1, 600, ""), (20, 600 * 18 / 1, "")); // 600ms*18 ticks
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonResP, Link(lv, (1, -9, ""), (20, -23, "")), dur, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
                 return d;
             });
@@ -1960,13 +2091,23 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.7.2 G7: CuiYan ID 97 "Thúy Yên Song Đao" (passive) — sai school effect.
+        // PC cuiyan.lua::cuiyan-shuangdao.lua: addcoldmagic_v (COLD magic damage), không phải physics damage.
+        // Trước fix: AddPhysicsDamageP + DeadlyStrikeEnhanceP (vật lý + crit) — sai school.
+        //   Thúy Yên là băng phái, đây là passive mastery "Song đao băng" = cold magic.
+        // Sau fix: dùng AddColdMagicV magnitude 13+7*lv (PC) thay cho AddPhysicsDamageP.
+        // NOTE: AddColdMagicV cần verify enum đã có (đã có AddColdDamageV). Phase 5 thêm nếu cần.
         private static SkillDefinition CuiYanPassiveShuangDao()
         {
             var s = BaseSkill(97, "翠烟双刀", "Thúy Yên Song Đao", 10, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 15, ""), (20, 215, "")), -1, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 6, ""), (20, 25, "Conic")), -1, 0));
+                // [SECT-QUICKWIN] PC per-skill cuiyan-shuangdao.lua::Getaddphysicsdamage_p trả về magic_v (cold).
+                // Hiện mobile dùng AddColdDamageV thay vì AddColdMagicV — Phase 4 thêm proper enum.
+                // Tạm thời dùng AddColdDamageV với magnitude 13+7*lv (L1=20, L20=153 theo PC).
+                int coldV = 13 + 7 * lv; // PC formula
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddColdDamageV, Link(lv, (1, coldV, ""), (20, coldV, "")), -1, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
                 return d;
             });
             return s;
@@ -1975,7 +2116,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition CuiYanPhongHoaTuyetNguyet()
         {
             var s = BaseSkill(99, "风花雪月", "Phong Hoa Tuyết Nguyệt", 10, 20, 360, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 70; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 6; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsDamageV, Link(lv, (1, 10, ""), (20, 120, "")), 0, 0));
@@ -1987,12 +2128,19 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.7.2 G7: CuiYan ID 100 "Hộ Thể Hàn Băng" — sai effect hoàn toàn.
+        // PC cuiyan.lua::huti_hanbing: meleedamagereturn_p {{1,5},{20,20}} + rangedamagereturn_p (damage return shield).
+        // Trước fix: ColdResP + AddDefenseV (cold res + def) — sai semantics gameplay. Thúy Yên trở thành tank thuần.
+        // Sau fix: giữ ColdResP fallback (Phase 4 thêm damage return attribute); sửa magnitude theo PC + charAnimId 2→11.
+        //   Tên "Hộ Thể Hàn Băng" = "Hộ thể bằng băng" = damage return shield PC.
         private static SkillDefinition CuiYanHoTheHanBang()
         {
-            var s = BaseSkill(100, "护体寒冰", "Hộ Thể Hàn Băng", 40, 20, 400, SkillMissileForm.Surround);
-            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            var s = BaseSkill(100, "护体寒冰", "Hộ Thể Hàn Băng", 40, 20, 0, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.targetSelf = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
+                // [SECT-QUICKWIN] PC damage return cần MeleeDamageReturnP + RangeDamageReturnP (chưa có enum).
+                //   Phase 4 cần thêm. Tạm giữ ColdResP fallback.
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ColdResP, Link(lv, (1, 10, ""), (20, 50, "")), 1200 + 1200 * lv, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 50, ""), (20, 450, "")), 1200 + 1200 * lv, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
@@ -2017,7 +2165,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition CuiYanPhongQuyenTanTuyet()
         {
             var s = BaseSkill(102, "风卷残雪", "Phong Quyển Tàn Tuyết", 10, 20, 360, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 71; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 7; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.startSkillId = 398; s.startSkillLevel = 1; // G6 anchor (Phase 4 wire)
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 30, ""), (20, 300, "")), 0, Link(lv, (1, 40, ""), (20, 400, ""))));
@@ -2042,10 +2190,14 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.7.2 G4: CuiYan ID 105 "Vũ Đả Lê Hoa" — childSkillId 72 vs PC 8, childSkillNum 1 vs PC 4, charAnimId 2 vs 11.
+        // PC cuiyan.lua::yuda_lihua: childSkillId=8, childSkillNum=4 (MẤT 4-HIT), charAnimId=11, MslsGenerate=3, MslsGenerateData=10.
+        // Trước fix: chỉ fire 1 missile, animation sai → mất cốt lõi "4-hit Vũ Đả Lê Hoa".
+        // Sau fix: childSkillId=8, childSkillNum=4, charAnimId=11.
         private static SkillDefinition CuiYanVuDaLeHoa()
         {
             var s = BaseSkill(105, "雨打梨花", "Vũ Đả Lê Hoa", 30, 20, 300, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 72; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 8; s.childSkillNum = 4; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 10, ""), (20, 100, "")), 0, 0));
@@ -2060,7 +2212,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition CuiYanMucDaLuuTinh()
         {
             var s = BaseSkill(108, "牧野流星", "Mục Dã Lưu Tinh", 60, 20, 420, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 73; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 9; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 50, ""), (20, 385, "")), 0, Link(lv, (1, 50, ""), (20, 385, ""))));
@@ -2071,12 +2223,19 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.7.2 G7: CuiYan ID 109 "Tuyết Ảnh" — sai effect hoàn toàn.
+        // PC cuiyan.lua::xueying: attackspeed_v + fastwalkrun_p (cast/atk/move speed buff = cảm giác "tuyết ảnh").
+        // Trước fix: AllResP + AddDefenseV (all res + def) — sai semantics. Mất cảm giác tốc độ.
+        // Sau fix: giữ AllResP fallback (Phase 4 thêm proper atk/move speed attribute); charAnimId 2→11.
+        //   Tên "Tuyết Ảnh" = "bóng tuyết" = atk/cast/move speed nhanh như bóng tuyết lướt.
         private static SkillDefinition CuiYanTuyetAnh()
         {
-            var s = BaseSkill(109, "雪影", "Tuyết Ảnh", 50, 20, 400, SkillMissileForm.Surround);
-            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 2; s.targetSelf = true;
+            var s = BaseSkill(109, "雪影", "Tuyết Ảnh", 50, 20, 0, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.targetSelf = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
+                // [SECT-QUICKWIN] PC: attackspeed_v + fastwalkrun_p (chưa có enum FastWalkRunP). Phase 4 cần thêm.
+                //   Tạm giữ AllResP fallback. Đánh dấu gap rõ ràng.
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 5, ""), (20, 25, "")), 1200 + 1200 * lv, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 50, ""), (20, 350, "")), 1200 + 1200 * lv, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 30, 0, 0));
@@ -2087,8 +2246,12 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition CuiYanBichHaiTrieuSinh()
         {
+            // [SECT-QUICKWIN] §2.7.2 G4 + G6: CuiYan ID 111 "Bích Hải Triều Sinh" — childSkillId 74 vs PC 10, charAnimId 2 vs 11, StartEvent 112.
+            // PC cuiyan.lua::bihai_chaosheng: childSkillId=10, charAnimId=11, StartEvent=1, StartSkill=112.
+            // Sau fix: childSkillId=10, charAnimId=11, s.startSkillId=112 (anchor cho Phase 4 wire 16-missile AOE).
             var s = BaseSkill(111, "碧海潮生", "Bích Hải Triều Sinh", 60, 20, 72, SkillMissileForm.Surround);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 74; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 10; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            s.startSkillId = 112; s.startSkillLevel = 1; // G6: anchor cho Bích Hải Triều Sinh b (16-missile AOE, Phase 4 wire)
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.ColdDamageV, Link(lv, (1, 40, ""), (20, 350, "")), 0, Link(lv, (1, 40, ""), (20, 350, ""))));
@@ -2102,7 +2265,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition CuiYanPhuVanTanTuyet()
         {
             var s = BaseSkill(113, "浮云散雪", "Phù Vân Tán Tuyết", 30, 20, 400, SkillMissileForm.Single);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 75; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 12; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 40, ""), (20, 200, "")), 0, 0));
@@ -2145,8 +2308,123 @@ namespace VLTK.Sandbox
             TianRenHuyenMinhHapTinh(),
             TianRenMaDiemThatSat(),
             TianRenThucCotHuyetNhan(),
-            TianRenThienMaGiaiThe()
+            TianRenThienMaGiaiThe(),
+            // [SECT-QUICKWIN] §2.8.2 G6: TianRen sub-skill MISSING trong mobile — thêm 6 entry.
+            // PC tianren.lua line 199-204 + per-skill sub-form: chain damage cốt lõi của Thiên Nhẫn.
+            // 361 Vân Long Kích — addskilldamage1 source cho 135/141/142 (chained damage L1-2)
+            // 362 Thiên Ngoại Lưu Tinh — addskilldamage1 cho 138/145, vanishSkill=363
+            // 363 Nghiệp Hỏa Phần Thành — fire spread AOE
+            // 364 Bi Tô Thanh Phong — state buff
+            // 1075 Giang Hải Não Lan — 150-tier, startSkill=1131
+            // 1076 Tật Hỏa Liệu Nguyên — 150-tier, fire storm
+            // Phase 4 runtime: chưa wire addskilldamage mechanism. Sub-skill được resolve khi chain fire.
+            TianRenSubVanLongKich(),
+            TianRenSubThienNgoaiLuuTinh(),
+            TianRenSubNghiepHoaPhanThanh(),
+            TianRenSubBiToThanhPhong(),
+            TianRenSubGiangHaiNaoLan(),
+            TianRenSubTatHoaLieuNguyen(),
         };
+
+        // [SECT-QUICKWIN] 6 TianRen sub-skill (PC tianren.lua + per-skill sub-form):
+        // Sub-skills được fire khi parent skill (135/138/141/142/145/148) cast ở level thấp.
+        // Mobile trước fix: MISSING trong catalog → addskilldamage chain dead.
+        // Sau fix: 6 entry BaseSkill với child missile ID theo PC ModSkills.txt:
+        //   361→169, 362→171, 363→170, 364→20, 1075→337, 1076→366.
+
+        private static SkillDefinition TianRenSubVanLongKich()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 361 Vân Long Kích — sub-skill cho 135/141/142 (chained damage L1-2).
+            // PC: child missile 169 (mv=1 homing, life=6, speed=32). isMelee=1 (melee-missile).
+            var s = BaseSkill(361, "云龙击", "Vân Long Kích", 60, 20, 60, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 169; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 10; s.targetEnemy = true;
+            s.horseLimit = 1;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 20, ""), (20, 200, "")), 0, Link(lv, (1, 30, ""), (20, 300, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubThienNgoaiLuuTinh()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 362 Thiên Ngoại Lưu Tinh — sub-skill cho 138/145, vanishSkill=363.
+            // PC: child missile 171 (mv=0 stationary, life=14). Event chain fire spread khi missile vanish.
+            var s = BaseSkill(362, "天外流星", "Thiên Ngoại Lưu Tinh", 80, 20, 420, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 171; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            s.vanishSkillId = 363; s.vanishSkillLevel = 1; // G6: anchor cho fire spread chain (Phase 4 wire runtime)
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 80, ""), (20, 320, "")), 0, Link(lv, (1, 100, ""), (20, 400, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubNghiepHoaPhanThanh()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 363 Nghiệp Hỏa Phần Thành — sub-skill cho 148 (fire spread AOE).
+            // PC: child missile 170 (mv=0 stationary, life=54, speed=2). AOE fire spread cuối game.
+            var s = BaseSkill(363, "业火焚城", "Nghiệp Hỏa Phần Thành", 80, 20, 570, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 170; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 100, ""), (20, 500, "")), 0, Link(lv, (1, 150, ""), (20, 700, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubBiToThanhPhong()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 364 Bi Tô Thanh Phong — state buff (referenced by chain).
+            // PC: child missile 20 (stateSpecialId=58). Hiện chưa rõ source dùng.
+            var s = BaseSkill(364, "碧水清风", "Bi Tô Thanh Phong", 60, 20, 0, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.stateSpecialId = 58; s.targetSelf = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 30, ""), (20, 200, "")), 1200 + 1200 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubGiangHaiNaoLan()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 1075 Giang Hải Não Lan — 150-tier sub-skill, startSkill=1131.
+            // PC: child missile 337 (mv=1 life=6 speed=36). 150-tier sub-form cuối game.
+            var s = BaseSkill(1075, "江海凝岚", "Giang Hải Não Lan", 150, 20, 60, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 337; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 10; s.targetEnemy = true;
+            s.horseLimit = 1;
+            s.startSkillId = 1131; s.startSkillLevel = 1; // G6: anchor cho start chain (Phase 4 wire)
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 50, ""), (20, 400, "")), 0, Link(lv, (1, 80, ""), (20, 600, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubTatHoaLieuNguyen()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 1076 Tật Hỏa Liệu Nguyên — 150-tier fire storm.
+            // PC: child missile 366 (mv=0 stationary, life=37). Fire storm AOE cuối game.
+            var s = BaseSkill(1076, "疾火燎原", "Tật Hỏa Liệu Nguyên", 150, 20, 570, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 366; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 150, ""), (20, 800, "")), 0, Link(lv, (1, 200, ""), (20, 1000, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
 
         private static SkillDefinition TianRenPassiveDaofa()
         {
@@ -2254,9 +2532,13 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.8.2 G4: TianRen ID 141 "Liệt Hỏa Tình Thiên" — radius sai 5× + MissilesForm sai.
+        // PC tianren.lua::liehuo_qingtian: skill_attackradius 72 (cast range, PC), MisslesForm=3 (Surround).
+        // Trước fix: radius 384 (overcast 5×), form Single (PC Surround 16 tia tỏa tròn).
+        // Sau fix: radius 72 + SkillMissileForm.Surround.
         private static SkillDefinition TianRenLietHoaTinhThien()
         {
-            var s = BaseSkill(141, "烈火情天", "Liệt Hỏa Tình Thiên", 30, 20, 384, SkillMissileForm.Single);
+            var s = BaseSkill(141, "烈火情天", "Liệt Hỏa Tình Thiên", 30, 20, 72, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 56; s.childSkillNum = 16; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
@@ -2352,10 +2634,16 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.8.2 G4 + G6: TianRen ID 148 "Ma Diệm Thất Sát" — radius sai lớn + thiếu StartEvent.
+        // PC tianren.lua::moyan_qisha: skill_attackradius {{1,448},{20,570},{21,570}}
+        //   startSkill=192 (Ngự Phong Thuật — fire wind visual trước khi bắn).
+        // Trước fix: radius 320 (sai 44% undercast), thiếu startSkill=192.
+        // Sau fix: radius 570 + s.startSkillId=192 (anchor cho Phase 4 wire runtime).
         private static SkillDefinition TianRenMaDiemThatSat()
         {
-            var s = BaseSkill(148, "魔炎七杀", "Ma Diệm Thất Sát", 60, 20, 320, SkillMissileForm.Single);
+            var s = BaseSkill(148, "魔炎七杀", "Ma Diệm Thất Sát", 60, 20, 570, SkillMissileForm.Single);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 58; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            s.startSkillId = 192; s.startSkillLevel = 1; // G6: anchor cho Ngự Phong Thuật (Phase 4 wire)
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 10, ""), (20, 50, "")), 0, 0));
@@ -2393,7 +2681,13 @@ namespace VLTK.Sandbox
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireEnhanceP, Link(lv, (1, 31, ""), (30, 100, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 26, ""), (30, 102, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, Link(lv, (1, 26, ""), (30, 81, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, Link(lv, (1, 21, ""), (30, 20, "")), Link(lv, (1, 18 * 45, ""), (30, 18 * 180, "")), 0));
+                // [SECT-QUICKWIN] §2.8.2 G7: TianRen ID 150 "Thiên Ma Giải Thể" (Tự Hủy Ma).
+                // PC tianren.lua tianmo_jieti: lifemax_p {{1,-11},{20,-30},{30,-40}}
+                //   (ÂM = tự giảm HP để tăng dmg — đây là điểm cốt lõi của "Giải Thể").
+                // Mobile dùng +21→+20 (DƯƠNG = buff HP) → sai gameplay hoàn toàn.
+                // Per-skill tianmo-jieti.lua::Getlifemax_p: result1 = -10-level, result2 = 600+level*200
+                //   → L1=-11, L20=-30, L30=-40. PC tianren.lua line 170 (commented) cũng confirm.
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, Link(lv, (1, -11, ""), (20, -30, ""), (30, -40, "")), Link(lv, (1, 18 * 45, ""), (30, 18 * 180, "")), 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 100, 0, 0));
                 return d;
             });
@@ -2486,10 +2780,15 @@ namespace VLTK.Sandbox
             return s;
         }
 
+        // [SECT-QUICKWIN] §2.9.2 G6 + G4: KunLun ID 172 "Thiên Tế Tấn Lôi" — radius sai + thiếu StartEvent.
+        // PC kunlun.lua::thien_te_tan_loi: StartEvent=1, StartSkill=399; attackRadius 384→448.
+        // Trước fix: radius 384 vs PC 448 (sai 14%), thiếu startSkill=399.
+        // Sau fix: radius 448 + s.startSkillId=399 (anchor cho Phase 4 wire).
         private static SkillDefinition KunLunThienTeTanLoi()
         {
-            var s = BaseSkill(172, "天际迅雷", "Thiên Tế Tấn Lôi", 30, 20, 384, SkillMissileForm.Single);
+            var s = BaseSkill(172, "天际迅雷", "Thiên Tế Tấn Lôi", 30, 20, 448, SkillMissileForm.Single);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 15; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            s.startSkillId = 399; s.startSkillLevel = 1; // G6: anchor cho event chain (Phase 4 wire)
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 25, ""), (20, 550, "")), 0, Link(lv, (1, 25, ""), (20, 550, ""))));

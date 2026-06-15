@@ -31,6 +31,22 @@ namespace VLTK.Model
         Summon = 4,
     }
 
+    /// <summary>
+    /// PC melee subtype (KNpc::CastMeleeSkill switch line 1834-1891).
+    /// Phân biệt các nhánh dash/jump/run trong melee skill. Mặc định = AttackWithBlur.
+    /// Áp dụng khi skillStyle=Melee; bỏ qua nếu Missiles.
+    /// </summary>
+    [Serializable]
+    public enum PcMeleeType
+    {
+        None = 0,              // Không melee (Missiles / Initiative / Passive)
+        AttackWithBlur = 1,    // PC: Melee_AttackWithBlur — instant swing, no jump (mặc định cho melee)
+        Jump = 2,              // PC: Melee_Jump — chỉ nhảy tới target
+        JumpAndAttack = 3,     // PC: Melee_JumpAndAttack — nhảy + chém cùng lúc (Phi Long 357, Kháng Long 128)
+        RunAndAttack = 4,      // PC: Melee_RunAndAttack — chạy tới + chém
+        ManyAttack = 5,        // PC: Melee_ManyAttack — nhiều hit không cần jump
+    }
+
     /// <summary>PC magic attribute names used by novice + Cái Bang scripts.</summary>
     [Serializable]
     public enum MagicAttributeKind
