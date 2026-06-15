@@ -194,6 +194,17 @@ namespace VLTK.UI
         private PartyMember _tradeTarget;
         private EconomyService _tradeEconomy;
         private const float RecorderFrameIntervalSeconds = 5f;
+
+        // PC scene-pos divisor (parity VLTK 1).
+        // Scene pos = floor(world / ScenePosCellSize) for both X and Y, with Y negated
+        // to match the PC top-down Y direction (PC binary format "%d / %d", positive Y
+        // for the southern half of the map). PC engine source of truth: KNpc.cpp Map2Mps
+        // (region+cells → mpsX/mpsY at 32 PC pixels per cell) and Lua scripts (NewWorld
+        // /nX/32, SetMissionV(floor(x/32)), thần hành phù /32, etc.). One PC cell = 32
+        // PC pixels. Unity world convention is 1:1 with PC pixel (per MapRenderer ground
+        // layer and CoordinateService cellSizePixels default), so the same 32-pixel cell
+        // size applies directly to the world→scene-pos conversion.
+        internal const int ScenePosCellSize = 32;
         private float _recFrameTimer;
         private int _recFrameCount;
         private string _recLastCapturePath;
@@ -1194,8 +1205,17 @@ namespace VLTK.UI
             return new Vector2(500f, 500f);
         }
 
+        // PC parity: format = "%d / %d" with spaces (PC binary %d / %d literal).
+        // Scene pos = floor(worldX / cellSize), floor(-worldY / cellSize). Y is negated
+        // because PC top-down screen Y is positive in the southern half; the mobile's
+        // Unity world Y is the negative of PC pixel Y (per MapRenderer ground layer).
+        // Cell size = 32 PC pixels per PC cell (KNpc.cpp Map2Mps / Lua NewWorld /nX/32).
         private static string FormatPcScenePos(Vector2 world)
-            => $"{Mathf.FloorToInt(world.x / 8f)}/{Mathf.FloorToInt(-world.y / 8f)}";
+        {
+            int x = Mathf.FloorToInt(world.x / ScenePosCellSize);
+            int y = Mathf.FloorToInt(-world.y / ScenePosCellSize);
+            return $"{x} / {y}";
+        }
 
         private static string ToVietnameseMapName(string raw)
         {
@@ -1262,7 +1282,7 @@ namespace VLTK.UI
             if (!TryParsePcScenePos(_mapPosInput.value, out var target))
             {
                 if (_mapPreviewCoords != null)
-                    _mapPreviewCoords.text = "Tọa độ không hợp lệ. Dùng dạng x/y.";
+                    _mapPreviewCoords.text = "Tọa độ không hợp lệ. Dùng dạng x / y (ví dụ: 1476 / 3274).";
                 OpenMapPreview();
                 return;
             }
@@ -1283,7 +1303,9 @@ namespace VLTK.UI
             if (parts.Length != 2) return false;
             if (!int.TryParse(parts[0].Trim(), out var x)) return false;
             if (!int.TryParse(parts[1].Trim(), out var y)) return false;
-            world = new Vector2(x * 8f, -y * 8f);
+            // PC parity: cell size = 32 PC pixels per PC cell. Parse must invert the
+            // FormatPcScenePos formula exactly: world = (x * cellSize, -y * cellSize).
+            world = new Vector2(x * ScenePosCellSize, -y * ScenePosCellSize);
             return true;
         }
 

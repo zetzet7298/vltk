@@ -248,22 +248,79 @@ namespace VLTK.Tests.PortFactorySmoke
         [Test]
         public void MinimapMapPosInput_ParsesPcCoordinateFormat()
         {
+            // PC parity: cell size = 32 PC pixels per PC cell (KNpc.cpp Map2Mps;
+            // Lua NewWorld /nX/32; thần hành phù /32; SetMissionV(floor(x/32))).
+            // Parse: world = (x * 32, -y * 32). Format (the inverse): scene pos
+            // = floor(worldX / 32), floor(-worldY / 32). See GameHudController.ScenePosCellSize.
+            const float CellSize = 32f;
             var method = typeof(GameHudController).GetMethod("TryParsePcScenePos", BindingFlags.Static | BindingFlags.NonPublic);
             Assert.NotNull(method, "PC [MapPosInput] parser must exist.");
 
             object[] args = { "210/203", Vector2.zero };
             bool ok = (bool)method.Invoke(null, args);
             Assert.IsTrue(ok);
-            Assert.AreEqual(new Vector2(1680f, -1624f), (Vector2)args[1]);
+            Assert.AreEqual(new Vector2(210f * CellSize, -203f * CellSize), (Vector2)args[1]);
 
             args = new object[] { "210,203", Vector2.zero };
             ok = (bool)method.Invoke(null, args);
             Assert.IsTrue(ok, "Mobile should accept comma as a touch-keyboard-friendly separator too.");
-            Assert.AreEqual(new Vector2(1680f, -1624f), (Vector2)args[1]);
+            Assert.AreEqual(new Vector2(210f * CellSize, -203f * CellSize), (Vector2)args[1]);
 
             args = new object[] { "bad", Vector2.zero };
             ok = (bool)method.Invoke(null, args);
             Assert.IsFalse(ok);
+        }
+
+        [Test]
+        public void MinimapScenePos_FormatPcParity()
+        {
+            // PC ground truth: format = "%d / %d" with spaces (PC binary %d / %d
+            // literal next to the ScenePos/MapPos UI element strings). The cell size
+            // is 32 PC pixels per PC cell. Display must match PC for the same world
+            // position (PC Y is top-down so we negate Unity world Y).
+            // Test vectors:
+            //   • (0, 0)            → "0 / 0"            (origin)
+            //   • (32, -64)         → "1 / 2"            (single cell east, 2 cells south)
+            //   • (47232, -104768)  → "1476 / 3274"      (Vượt ải Nhiếp Thí Trần
+            //                                              NewWorld(907, 1476, 3274);
+            //                                              PC pixel (1476*32, 3274*32))
+            //   • (-32, 0)          → "-1 / 0"           (west of origin, on the equator)
+            //   • (320, -480)       → "10 / 15"          (typical training area)
+            var fmt = typeof(GameHudController).GetMethod("FormatPcScenePos", BindingFlags.Static | BindingFlags.NonPublic);
+            Assert.NotNull(fmt, "PC [ScenePos] formatter must exist.");
+
+            AssertScenePos("0 / 0",          new Vector2(0f, 0f),           fmt);
+            AssertScenePos("1 / 2",          new Vector2(32f, -64f),        fmt);
+            AssertScenePos("1476 / 3274",    new Vector2(47232f, -104768f), fmt);
+            AssertScenePos("-1 / 0",         new Vector2(-32f, 0f),         fmt);
+            AssertScenePos("10 / 15",        new Vector2(320f, -480f),      fmt);
+        }
+
+        private static void AssertScenePos(string expected, Vector2 world, MethodInfo fmt)
+        {
+            string actual = (string)fmt.Invoke(null, new object[] { world });
+            Assert.AreEqual(expected, actual, $"FormatPcScenePos({world})");
+        }
+
+        [Test]
+        public void MinimapScenePos_RoundTrip_PreservesPcCoordinates()
+        {
+            // Round-trip: Format then Parse on the same value must yield a world position
+            // that displays the original PC scene pos again. Locks FormatPcScenePos and
+            // TryParsePcScenePos to a single shared cell size.
+            var fmt = typeof(GameHudController).GetMethod("FormatPcScenePos", BindingFlags.Static | BindingFlags.NonPublic);
+            var parse = typeof(GameHudController).GetMethod("TryParsePcScenePos", BindingFlags.Static | BindingFlags.NonPublic);
+
+            string[] cases = { "0 / 0", "1 / 2", "1476 / 3274", "-1 / 0", "10 / 15", "210 / 203" };
+            foreach (var expected in cases)
+            {
+                object[] args = { expected, Vector2.zero };
+                bool ok = (bool)parse.Invoke(null, args);
+                Assert.IsTrue(ok, $"parse({expected})");
+                var world = (Vector2)args[1];
+                string actual = (string)fmt.Invoke(null, new object[] { world });
+                Assert.AreEqual(expected, actual, $"round-trip {expected}");
+            }
         }
 
         [Test]
