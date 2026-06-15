@@ -2300,8 +2300,123 @@ namespace VLTK.Sandbox
             TianRenHuyenMinhHapTinh(),
             TianRenMaDiemThatSat(),
             TianRenThucCotHuyetNhan(),
-            TianRenThienMaGiaiThe()
+            TianRenThienMaGiaiThe(),
+            // [SECT-QUICKWIN] §2.8.2 G6: TianRen sub-skill MISSING trong mobile — thêm 6 entry.
+            // PC tianren.lua line 199-204 + per-skill sub-form: chain damage cốt lõi của Thiên Nhẫn.
+            // 361 Vân Long Kích — addskilldamage1 source cho 135/141/142 (chained damage L1-2)
+            // 362 Thiên Ngoại Lưu Tinh — addskilldamage1 cho 138/145, vanishSkill=363
+            // 363 Nghiệp Hỏa Phần Thành — fire spread AOE
+            // 364 Bi Tô Thanh Phong — state buff
+            // 1075 Giang Hải Não Lan — 150-tier, startSkill=1131
+            // 1076 Tật Hỏa Liệu Nguyên — 150-tier, fire storm
+            // Phase 4 runtime: chưa wire addskilldamage mechanism. Sub-skill được resolve khi chain fire.
+            TianRenSubVanLongKich(),
+            TianRenSubThienNgoaiLuuTinh(),
+            TianRenSubNghiepHoaPhanThanh(),
+            TianRenSubBiToThanhPhong(),
+            TianRenSubGiangHaiNaoLan(),
+            TianRenSubTatHoaLieuNguyen(),
         };
+
+        // [SECT-QUICKWIN] 6 TianRen sub-skill (PC tianren.lua + per-skill sub-form):
+        // Sub-skills được fire khi parent skill (135/138/141/142/145/148) cast ở level thấp.
+        // Mobile trước fix: MISSING trong catalog → addskilldamage chain dead.
+        // Sau fix: 6 entry BaseSkill với child missile ID theo PC ModSkills.txt:
+        //   361→169, 362→171, 363→170, 364→20, 1075→337, 1076→366.
+
+        private static SkillDefinition TianRenSubVanLongKich()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 361 Vân Long Kích — sub-skill cho 135/141/142 (chained damage L1-2).
+            // PC: child missile 169 (mv=1 homing, life=6, speed=32). isMelee=1 (melee-missile).
+            var s = BaseSkill(361, "云龙击", "Vân Long Kích", 60, 20, 60, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 169; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 10; s.targetEnemy = true;
+            s.horseLimit = 1;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 20, ""), (20, 200, "")), 0, Link(lv, (1, 30, ""), (20, 300, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubThienNgoaiLuuTinh()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 362 Thiên Ngoại Lưu Tinh — sub-skill cho 138/145, vanishSkill=363.
+            // PC: child missile 171 (mv=0 stationary, life=14). Event chain fire spread khi missile vanish.
+            var s = BaseSkill(362, "天外流星", "Thiên Ngoại Lưu Tinh", 80, 20, 420, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 171; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            s.vanishSkillId = 363; s.vanishSkillLevel = 1; // G6: anchor cho fire spread chain (Phase 4 wire runtime)
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 80, ""), (20, 320, "")), 0, Link(lv, (1, 100, ""), (20, 400, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubNghiepHoaPhanThanh()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 363 Nghiệp Hỏa Phần Thành — sub-skill cho 148 (fire spread AOE).
+            // PC: child missile 170 (mv=0 stationary, life=54, speed=2). AOE fire spread cuối game.
+            var s = BaseSkill(363, "业火焚城", "Nghiệp Hỏa Phần Thành", 80, 20, 570, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 170; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 100, ""), (20, 500, "")), 0, Link(lv, (1, 150, ""), (20, 700, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubBiToThanhPhong()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 364 Bi Tô Thanh Phong — state buff (referenced by chain).
+            // PC: child missile 20 (stateSpecialId=58). Hiện chưa rõ source dùng.
+            var s = BaseSkill(364, "碧水清风", "Bi Tô Thanh Phong", 60, 20, 0, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.stateSpecialId = 58; s.targetSelf = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 30, ""), (20, 200, "")), 1200 + 1200 * lv, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubGiangHaiNaoLan()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 1075 Giang Hải Não Lan — 150-tier sub-skill, startSkill=1131.
+            // PC: child missile 337 (mv=1 life=6 speed=36). 150-tier sub-form cuối game.
+            var s = BaseSkill(1075, "江海凝岚", "Giang Hải Não Lan", 150, 20, 60, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 337; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 10; s.targetEnemy = true;
+            s.horseLimit = 1;
+            s.startSkillId = 1131; s.startSkillLevel = 1; // G6: anchor cho start chain (Phase 4 wire)
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 50, ""), (20, 400, "")), 0, Link(lv, (1, 80, ""), (20, 600, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        private static SkillDefinition TianRenSubTatHoaLieuNguyen()
+        {
+            // [SECT-QUICKWIN] §2.8.2 G6: ID 1076 Tật Hỏa Liệu Nguyên — 150-tier fire storm.
+            // PC: child missile 366 (mv=0 stationary, life=37). Fire storm AOE cuối game.
+            var s = BaseSkill(1076, "疾火燎原", "Tật Hỏa Liệu Nguyên", 150, 20, 570, SkillMissileForm.Surround);
+            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 366; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 150, ""), (20, 800, "")), 0, Link(lv, (1, 200, ""), (20, 1000, ""))));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
+                return d;
+            });
+            return s;
+        }
 
         private static SkillDefinition TianRenPassiveDaofa()
         {
