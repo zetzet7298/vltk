@@ -75,6 +75,22 @@ namespace VLTK.Model
         public int maxShadowNum;         // MaxShadowNum — multi-shadow cho melee nhiều hit
         public bool dashVisualsEnabled;  // Cờ runtime: có show visual follow caster khi dash không
         public Vector2 dashOrigin;       // Lưu vị trí bắt đầu dash (set khi dash start)
+        // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.4.2 G6 + §2.8.2 G6: event chain anchors.
+        // PC tianren.lua/tangmen.lua/emei.lua khai báo:
+        //   skill_startevent[1] (1/0 → 1/1) trigger sub-skill khi cast start
+        //   skill_flyevent[1] trigger sub-skill giữa đường bay
+        //   skill_collideevent[1] trigger khi missile va chạm NPC
+        //   skill_vanishedevent[1] trigger khi missile biến mất (hết lifetime)
+        // Mobile runtime Phase 4 sẽ wire các field này. Hiện tại anchor cho catalog khớp PC.
+        public int collideSkillId;      // PC CollidSkillId (event chain khi missile va chạm)
+        public int collideSkillLevel;    // PC EventSkillLevel (level của sub-skill được fire, default 1)
+        public int vanishSkillId;        // PC VanishSkillId (event chain khi missile vanish)
+        public int vanishSkillLevel;     // PC VanishEvent level
+        public int flySkillId;           // PC FlySkillId (event chain giữa đường bay)
+        public int flySkillLevel;        // PC FlyEvent level
+        public int flyEventTime;         // PC FlyEventTime (tick khi fire mid-flight event)
+        public int startSkillId;         // PC StartSkillId (event chain khi cast start)
+        public int startSkillLevel;      // PC StartEvent level
         public string lvlSetScript;      // LvlSetScript (PC Lua tuning script path)
         public string levelUpScript;     // LevelUpScript (PC Lua upgrade script path)
 
