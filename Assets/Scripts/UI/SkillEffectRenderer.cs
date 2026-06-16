@@ -23,6 +23,8 @@ namespace VLTK.UI
         private readonly SkillEffectVisualService _service;
         private readonly Camera _camera;
         private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
+        // Per-key header center + per-frame offset (for PC body-aura frame-offset animation).
+        private readonly Dictionary<string, (int centerX, int centerY, Vector2[] frameOffsets)> _pcSpriteFrameData = new();
 
         /// <summary>World units per screen pixel for consistent effect sizing.</summary>
         public float WorldToScreenScale { get; set; } = 1f;
@@ -289,13 +291,13 @@ namespace VLTK.UI
         /// Render a looping body-aura SPR (e.g. Túy Điệp butterfly, PC StateSpecial 43).
         /// PC source: 状态与光效图形对照表 Status entry — PlayMode=Loop over sub-range
         /// (主角身后开始帧..结束帧), Type=Body. The sprite follows the live player position.
+        /// Each frame applies KSprite::DrawAlpha offset so golden dots fly/swirl around player.
         /// </summary>
         private void DrawPcAuraSprite(ActiveSkillEffect fx)
         {
             var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
             if (sprites == null || sprites.Length == 0)
             {
-                // Fallback: pulsing ring at caster
                 var sp = WorldToScreen(ResolveLiveCasterPos(fx));
                 DrawCircle(sp, 24f, fx.color, 2f);
                 return;
@@ -311,8 +313,28 @@ namespace VLTK.UI
             int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
             int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
 
+            // Apply PC KSprite::DrawAlpha per-frame offset (ppu=1 → world units directly).
+            Vector2 basePos = ResolveLiveCasterPos(fx);
+            Vector2 auraOffset = GetPcAuraFrameWorldOffset(fx, frameIndex, 1f);
             var sprite = sprites[frameIndex] ?? sprites[0];
-            if (sprite != null) DrawSpriteScreen(sprite, ResolveLiveCasterPos(fx));
+            if (sprite != null) DrawSpriteScreen(sprite, basePos + auraOffset);
+        }
+
+        private Vector2 GetPcAuraFrameWorldOffset(ActiveSkillEffect fx, int frameIndex, float scale)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || frameIndex < 0) return Vector2.zero;
+
+            string path = Path.Combine(Application.streamingAssetsPath, "Sprites", (fx.pcPreCastSpriteKey.EndsWith(".spr") ? fx.pcPreCastSpriteKey : fx.pcPreCastSpriteKey + ".spr"));
+            if (!System.IO.File.Exists(path)) return Vector2.zero;
+            var fileInfo = new System.IO.FileInfo(path);
+            string cacheKey = $"{fx.pcPreCastSpriteKey}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
+
+            if (!_pcSpriteFrameData.TryGetValue(cacheKey, out var data)) return Vector2.zero;
+            if (frameIndex >= data.frameOffsets.Length) return Vector2.zero;
+
+            Vector2 foff = data.frameOffsets[frameIndex];
+            return new Vector2((foff.x - data.centerX) * scale, (data.centerY - foff.y) * scale);
         }
 
         /// <summary>Live caster position so body-aura buffs follow the player.</summary>
@@ -413,6 +435,17 @@ namespace VLTK.UI
                     new Vector2(pivotX, pivotY), 1f);
                 sprites[i].name = $"PCSPR_{key}_{i}";
             }
+
+            // Cache frame offset data for PC body-aura animation.
+            int cx = decoded.header.centerX;
+            int cy = decoded.header.centerY;
+            var offsets = new Vector2[decoded.frames.Length];
+            for (int i = 0; i < decoded.frames.Length; i++)
+            {
+                var f = decoded.frames[i];
+                offsets[i] = new Vector2(f != null ? f.offsetX : 0, f != null ? f.offsetY : 0);
+            }
+            _pcSpriteFrameData[key] = (cx, cy, offsets);
 
             _pcSpriteCache[key] = sprites;
             return sprites;

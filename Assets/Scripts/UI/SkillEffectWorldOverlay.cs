@@ -41,6 +41,9 @@ namespace VLTK.UI
 
         private readonly Dictionary<ActiveSkillEffect, RuntimeEffectVisual> _visuals = new();
         private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
+        // Per-key header center + per-frame offset (for PC body-aura frame-offset animation).
+        // Key same as LoadPcSprites cacheKey.
+        private readonly Dictionary<string, (int centerX, int centerY, Vector2[] frameOffsets)> _pcSpriteFrameData = new();
         private Material _lineMaterial;
         
         private Sprite _dotSprite;
@@ -234,13 +237,14 @@ namespace VLTK.UI
                             Hide(v.preCastRing);
                             Vector2 auraPos = ResolveLiveCasterPos(fx);
                             v.pcPreCast.enabled = true;
-                            v.pcPreCast.transform.position = new Vector3(auraPos.x, auraPos.y, 0f);
-                            // Body SPRs (e.g. butterfly 45x51) render at native pixel size
-                            // (pixelsPerUnit=1). Scale up modestly so the buff is clearly visible
-                            // on the player body without dwarfing it. orthoSize-based.
                             float auraScale = Mathf.Max(1.5f, _scale * 0.006f);
                             v.pcPreCast.transform.localScale = new Vector3(auraScale, auraScale, 1f);
-                            v.pcPreCast.sprite = SelectPcAuraFrame(fx);
+                            // PC KSprite::DrawAlpha per-frame offset: (offsetX - centerX, centerY - offsetY).
+                            // At ppu=1, the offset is naturally in world units (no extra scale multiplication).
+                            int frameIdx = SelectPcAuraFrameIndex(fx);
+                            v.pcPreCast.sprite = SelectPcAuraFrame(fx, frameIdx);
+                            Vector2 offset = GetPcAuraFrameWorldOffset(fx, frameIdx, 1f);
+                            v.pcPreCast.transform.position = new Vector3(auraPos.x + offset.x, auraPos.y + offset.y, 0f);
                             Hide(v.impactRing);
                             Hide(v.trail);
                             SetMissileVisible(v, false);
@@ -463,8 +467,14 @@ namespace VLTK.UI
         /// </summary>
         private Sprite SelectPcAuraFrame(ActiveSkillEffect fx)
         {
+            int idx = SelectPcAuraFrameIndex(fx);
+            return SelectPcAuraFrame(fx, idx);
+        }
+
+        private int SelectPcAuraFrameIndex(ActiveSkillEffect fx)
+        {
             var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
-            if (sprites == null || sprites.Length == 0) return null;
+            if (sprites == null || sprites.Length == 0) return 0;
 
             int lo = Mathf.Clamp(fx.pcAuraFrameStart, 0, sprites.Length - 1);
             int hi = fx.pcAuraFrameEnd > fx.pcAuraFrameStart
@@ -474,8 +484,38 @@ namespace VLTK.UI
 
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
             int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
-            int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
+            return Mathf.Clamp(lo + local, 0, sprites.Length - 1);
+        }
+
+        private Sprite SelectPcAuraFrame(ActiveSkillEffect fx, int frameIndex)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || sprites.Length == 0) return null;
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcPreCastSpriteKey);
+        }
+
+        /// <summary>
+        /// Compute the world-space offset for a PC body-aura frame.
+        /// PC KSprite::DrawAlpha: (x - centerX + frame.OffsetX, y - centerY + frame.OffsetY).
+        /// Adapted for Unity Y+ up: offsetX = (frame.offsetX - centerX), offsetY = (centerY - frame.offsetY).
+        /// Scaled by auraScale (pixelsPerUnit=1 so 1 px = 1 unit * scale).
+        /// </summary>
+        private Vector2 GetPcAuraFrameWorldOffset(ActiveSkillEffect fx, int frameIndex, float scale)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || frameIndex < 0) return Vector2.zero;
+
+            string path = Path.Combine(Application.streamingAssetsPath, "Sprites", fx.pcPreCastSpriteKey.EndsWith(".spr") ? fx.pcPreCastSpriteKey : fx.pcPreCastSpriteKey + ".spr");
+            if (!System.IO.File.Exists(path)) return Vector2.zero;
+            var fileInfo = new System.IO.FileInfo(path);
+            string cacheKey = $"{fx.pcPreCastSpriteKey}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
+
+            if (!_pcSpriteFrameData.TryGetValue(cacheKey, out var data)) return Vector2.zero;
+            if (frameIndex >= data.frameOffsets.Length) return Vector2.zero;
+
+            Vector2 foff = data.frameOffsets[frameIndex];
+            // (offsetX - centerX, centerY - offsetY) scaled by aura scale
+            return new Vector2((foff.x - data.centerX) * scale, (data.centerY - foff.y) * scale);
         }
 
         /// <summary>
@@ -530,6 +570,16 @@ namespace VLTK.UI
                 sprites[i].name = $"PCSPR_{key}_{i}";
             }
 
+            // Cache frame offset data for PC body-aura animation.
+            int cx = decoded.header.centerX;
+            int cy = decoded.header.centerY;
+            var offsets = new Vector2[decoded.frames.Length];
+            for (int i = 0; i < decoded.frames.Length; i++)
+            {
+                var f = decoded.frames[i];
+                offsets[i] = new Vector2(f != null ? f.offsetX : 0, f != null ? f.offsetY : 0);
+            }
+            _pcSpriteFrameData[cacheKey] = (cx, cy, offsets);
             _pcSpriteCache[cacheKey] = sprites;
             return sprites;
         }
