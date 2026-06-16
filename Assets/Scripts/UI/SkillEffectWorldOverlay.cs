@@ -237,8 +237,9 @@ namespace VLTK.UI
                             Hide(v.preCastRing);
                             Vector2 auraPos = ResolveLiveCasterPos(fx);
                             v.pcPreCast.enabled = true;
-                            float auraScale = Mathf.Max(1.5f, _scale * 0.006f);
-                            v.pcPreCast.transform.localScale = new Vector3(auraScale, auraScale, 1f);
+                            // PC: KSprite::DrawAlpha draws SPR at native pixel size (ppu=1).
+                            // No extra scaling — the camera zoom + screen res handles visibility.
+                            v.pcPreCast.transform.localScale = Vector3.one;
                             // PC KSprite::DrawAlpha per-frame offset: (offsetX - centerX, centerY - offsetY).
                             // At ppu=1, the offset is naturally in world units (no extra scale multiplication).
                             int frameIdx = SelectPcAuraFrameIndex(fx);

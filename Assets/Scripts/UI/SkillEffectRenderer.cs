@@ -313,11 +313,9 @@ namespace VLTK.UI
             int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
             int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
 
-            // Match WorldOverlay scale: aura sprite is rendered at
-            // tex.width * auraScale world units in WorldOverlay.
-            // In IMGUI we compute the equivalent screen-pixel size.
-            float orthoH = _camera.orthographicSize * 2f;
-            float auraScale = Mathf.Max(1.5f, orthoH * 0.006f);
+            // PC: KSprite::DrawAlpha draws SPR at native pixel size (ppu=1).
+            // No extra scaling — camera zoom + screen res handle visibility.
+            float auraScale = 1f;
             Vector2 basePos = ResolveLiveCasterPos(fx);
             Vector2 auraOffset = GetPcAuraFrameWorldOffset(fx, frameIndex, 1f);
             var sprite = sprites[frameIndex] ?? sprites[0];
@@ -325,10 +323,9 @@ namespace VLTK.UI
         }
 
         /// <summary>
-        /// Draw the body-aura SPR at a screen size equivalent to WorldOverlay's
-        /// world-space size (tex.width * auraScale world units). This compensates
-        /// for IMGUI's native 1:1 pixel ratio that would otherwise render the
-        /// 43x57 sprite as a tiny speck on a phone screen.
+        /// Draw the body-aura SPR at native screen size matching PC.
+        /// tex.width * auraScale * worldToScreenScale screen pixels.
+        /// auraScale=1.0 means native size; camera zoom + screen res handle visibility.
         /// </summary>
         private void DrawAuraSpriteScaled(Sprite sprite, Vector2 worldPos, float auraScale)
         {
