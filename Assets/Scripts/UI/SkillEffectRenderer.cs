@@ -313,11 +313,45 @@ namespace VLTK.UI
             int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
             int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
 
-            // Apply PC KSprite::DrawAlpha per-frame offset (ppu=1 → world units directly).
+            // Match WorldOverlay scale: aura sprite is rendered at
+            // tex.width * auraScale world units in WorldOverlay.
+            // In IMGUI we compute the equivalent screen-pixel size.
+            float orthoH = _camera.orthographicSize * 2f;
+            float auraScale = Mathf.Max(1.5f, orthoH * 0.006f);
             Vector2 basePos = ResolveLiveCasterPos(fx);
             Vector2 auraOffset = GetPcAuraFrameWorldOffset(fx, frameIndex, 1f);
             var sprite = sprites[frameIndex] ?? sprites[0];
-            if (sprite != null) DrawSpriteScreen(sprite, basePos + auraOffset);
+            if (sprite != null) DrawAuraSpriteScaled(sprite, basePos + auraOffset, auraScale);
+        }
+
+        /// <summary>
+        /// Draw the body-aura SPR at a screen size equivalent to WorldOverlay's
+        /// world-space size (tex.width * auraScale world units). This compensates
+        /// for IMGUI's native 1:1 pixel ratio that would otherwise render the
+        /// 43x57 sprite as a tiny speck on a phone screen.
+        /// </summary>
+        private void DrawAuraSpriteScaled(Sprite sprite, Vector2 worldPos, float auraScale)
+        {
+            if (sprite == null) return;
+            var tex = sprite.texture;
+            if (tex == null) return;
+
+            var screenPos = WorldToScreen(worldPos);
+
+            // WorldOverlay equivalent world size: texSize * auraScale
+            // Screen size at this ortho: worldSize * (screenHeight / (orthoSize * 2))
+            float orthoH = _camera.orthographicSize * 2f;
+            float worldToScreenScale = Screen.height / orthoH;
+            float w = tex.width * auraScale * worldToScreenScale;
+            float h = tex.height * auraScale * worldToScreenScale;
+
+            // Center using PC pivot (same calculation as DrawSpriteScreen)
+            float px = sprite.pivot.x / Mathf.Max(1f, tex.width);
+            float py = sprite.pivot.y / Mathf.Max(1f, tex.height);
+            float drawX = screenPos.x - w * px;
+            float drawY = screenPos.y - h * (1f - py);
+
+            GUI.DrawTexture(new Rect(drawX, drawY, w, h), tex);
         }
 
         private Vector2 GetPcAuraFrameWorldOffset(ActiveSkillEffect fx, int frameIndex, float scale)
