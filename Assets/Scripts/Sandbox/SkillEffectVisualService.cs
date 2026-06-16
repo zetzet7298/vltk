@@ -718,7 +718,20 @@ namespace VLTK.Sandbox
                 // === PASSIVES (no cast visual) ===
                 case 115: // Cái Bang Bổng Pháp
                 case 116: // Cái Bang Chưởng Pháp
-                case 127: // Hoạt Bất Lưu Thủ
+                case 127: // Hoạt Bất Lưu Thủ (活不留手) — PC: self-buff, fastwalkrun_p (+9→66%), dur 120→180s
+                    // PC visual SPR: mag_tr_16_施魔法.spr (5 frames, body aura)
+                    // PC gaibang.lua: huabu_liushou block
+                    fx.preCastDuration = 0.4f;
+                    fx.pcPreCastSpriteKey = "3cae8f47";
+                    fx.pcPreCastTotalFrames = 5;
+                    fx.pcPreCastDirections = 1;
+                    fx.pcPreCastIntervalTicks = 4;
+                    fx.isAura = true;
+                    fx.auraDuration = 4f;
+                    fx.pcAuraFrameStart = 0;
+                    fx.pcAuraFrameEnd = 4;
+                    break;
+
                 // MOD passives
                 case 274: // Giương Long Chưởng (MOD passive combat mastery)
                 case 360: // Tiêu Dao Công (MOD passive combat mastery)
