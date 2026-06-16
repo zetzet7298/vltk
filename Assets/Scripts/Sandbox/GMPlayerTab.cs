@@ -181,10 +181,17 @@ namespace VLTK.Sandbox
                     var assignMethod = slotsType.GetMethod("AssignSkill");
                     if (assignMethod != null)
                     {
+                        // Force-clear all 4 slots trước khi gán default, để user thấy thay đổi
+                        // ngay cả khi deck đã có skills cũ. Không phụ thuộc IsDeckEmpty guard.
+                        for (int clearSlot = 0; clearSlot < 4; clearSlot++)
+                            assignMethod.Invoke(slotsObj, new object[] { clearSlot, 0 });
+
                         if (faction == CombatFaction.CaiBang)
                         {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 357 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 359 });
+                            assignMethod.Invoke(slotsObj, new object[] { 0, 359 });
+                            assignMethod.Invoke(slotsObj, new object[] { 1, 357 });
+                            assignMethod.Invoke(slotsObj, new object[] { 2, 130 });
+                            assignMethod.Invoke(slotsObj, new object[] { 3, 127 });
                         }
                         else if (faction == CombatFaction.WuDang)
                         {
