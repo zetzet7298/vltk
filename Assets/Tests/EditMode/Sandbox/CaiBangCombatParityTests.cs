@@ -106,8 +106,8 @@ namespace VLTK.Tests.Sandbox
             var cat = Catalog();
             Assert.AreEqual("AddPhysicsDamageP=150,-1,2", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
             Assert.AreEqual("DeadlyStrikeEnhanceP=25,-1,0", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.DeadlyStrikeEnhanceP).ToString());
-            Assert.AreEqual("AddPhysicsDamageP=275,-1,9", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
-            Assert.AreEqual("AddPhysicsDamageP=66,3240,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
+            Assert.AreEqual("AddFireDamageV=275,-1,9", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.AddFireDamageV).ToString());
+            Assert.AreEqual("FastWalkRunP=66,3240,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.FastWalkRunP).ToString());
             Assert.AreEqual("ColdResP=52,25200,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.ColdResP).ToString());
             // PC Lua 金乌映雪 returns Param2String(result,result,0) for skill_cost_v; preserve odd tuple.
             Assert.AreEqual("SkillCostV=20,20,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.SkillCostV).ToString());

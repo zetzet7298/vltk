@@ -82,7 +82,7 @@ namespace VLTK.UI
         }
 
         // Tái sử dụng danh sách skill từ PcSkillPanelService
-        public static readonly int[] PcCaiBangSkillOrder = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277 };
+        public static readonly int[] PcCaiBangSkillOrder = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274 };
         public static readonly int[] PcWuDangSkillOrder = { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166 };
         public static readonly int[] PcShaolinSkillOrder = { 3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 };
         public static readonly int[] PcTangMenSkillOrder = { 43, 45, 47, 48, 50, 51, 54, 55, 57, 58 };

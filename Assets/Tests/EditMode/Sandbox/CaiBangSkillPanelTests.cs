@@ -111,9 +111,9 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.CaiBang, snap.faction);
-            Assert.AreEqual(24, snap.rows.Count);
+            Assert.AreEqual(23, snap.rows.Count);
             Assert.AreEqual(115, snap.rows[0].skillId);
-            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 714, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
             Assert.AreEqual(30, PcSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 24-skill list.");
             Assert.AreEqual(50, snap.rows.Single(r => r.skillId == 128).requiredLevel, "PC Skills.txt ReqLevel for 亢龙有悔 is 50.");
             Assert.AreEqual(0, snap.rows[0].learnedLevel);
@@ -152,8 +152,8 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(hud.IsSkillPanelVisible);
                 Assert.AreEqual(30, hud.PcSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
                 Assert.IsNotNull(hud.CurrentSkillSnapshot);
-                Assert.AreEqual(24, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 24 Cái Bang fight skills.");
-                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
+                Assert.AreEqual(23, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 23 Cái Bang fight skills.");
+                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
                 Assert.That(hud.CurrentSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
                 Assert.AreEqual("200", summary.text);
                 // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
@@ -215,7 +215,7 @@ namespace VLTK.Tests.Sandbox
             Assert.That(source, Does.Contain("MOD source of truth (Server+Client-001 Việt hóa)"));
             Assert.That(source, Does.Contain("125 天下无狗 \\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));
             Assert.That(source, Does.Contain("\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));
-            int[] allSkillIds = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 1073, 1074 };
+            int[] allSkillIds = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 1073, 1074 };
             int missing = 0;
             foreach (var skillId in allSkillIds)
             {
@@ -231,7 +231,7 @@ namespace VLTK.Tests.Sandbox
         {
             var root = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
             var allSkillIds = new List<int>();
-            allSkillIds.AddRange(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 359, 360, 714, 1073, 1074 }); // Cái Bang
+            allSkillIds.AddRange(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 714, 1073, 1074 }); // Cái Bang
             allSkillIds.AddRange(new[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166 }); // Võ Đang
             allSkillIds.AddRange(new[] { 3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21 }); // Thiếu Lâm
             allSkillIds.AddRange(new[] { 43, 45, 47, 48, 50, 51, 54, 55, 57, 58 }); // Đường Môn
