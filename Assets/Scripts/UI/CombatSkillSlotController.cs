@@ -290,35 +290,21 @@ namespace VLTK.UI
             var prog = _progression ?? manager?.PlayerProgression;
             if (prog == null) return;
 
-            GetDefaultSkillsForFaction(prog.faction, out int defaultLeft, out int defaultRight);
-            if (defaultLeft > 0 && prog.knownSkills.Contains(defaultLeft)) deckASkillIds[0] = defaultLeft;
-            if (defaultRight > 0 && prog.knownSkills.Contains(defaultRight)) deckASkillIds[1] = defaultRight;
-
-            // CaiBang: 4 default skills — Thiên Hạ Vô Cẩu (359), Phi Long Tại Thiên (357),
-            // Túy Điệp Cuồng Vũ (130), Hoạt Bất Lưu Thủ (127)
-            if (prog.faction == CombatFaction.CaiBang)
-            {
-                if (prog.knownSkills.Contains(359)) deckASkillIds[0] = 359;
-                if (prog.knownSkills.Contains(357)) deckASkillIds[1] = 357;
-                if (prog.knownSkills.Contains(130)) deckASkillIds[2] = 130;
-                if (prog.knownSkills.Contains(127)) deckASkillIds[3] = 127;
-                leftSlotSkillId = deckASkillIds[0];
-                rightSlotSkillId = deckASkillIds[1];
-                return;
-            }
-
-            // Auto-fill remaining slots from faction skill order
+            // Auto-fill all empty slots from PC skill order (PcSkillPanelService).
+            // PC source: each faction has a canonical skill order in jx-source
+            // bin/client/script/skill/*.lua. We use the first 4 player-usable
+            // skills from that order (skip NPC variant + passives + unknown skills).
             var catalog = _catalog ?? manager?.CombatSkillCatalog;
             var order = PcSkillPanelService.GetPcSkillOrder(prog.faction);
             int slot = 0;
             foreach (var skillId in order)
             {
+                if (slot >= MobileSkillSlotCount) break;
                 if (skillId == PcSkillPanelService.NpcVariantSkillId) continue;
                 if (!prog.knownSkills.Contains(skillId) && prog.GetSkillLevel(skillId) <= 0) continue;
                 var skill = catalog?.Resolve(skillId);
                 if (skill != null && skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
-                while (slot < MobileSkillSlotCount && deckASkillIds[slot] > 0) slot++;
-                if (slot >= MobileSkillSlotCount) break;
+                if (deckASkillIds[slot] > 0) { slot++; continue; }
                 deckASkillIds[slot++] = skillId;
             }
 
@@ -326,23 +312,7 @@ namespace VLTK.UI
             rightSlotSkillId = deckASkillIds[1];
         }
 
-        private void GetDefaultSkillsForFaction(CombatFaction faction, out int leftSkill, out int rightSkill)
-        {
-            switch (faction)
-            {
-                case CombatFaction.CaiBang: leftSkill = 359; rightSkill = 357; break;
-                case CombatFaction.WuDang: leftSkill = 153; rightSkill = 155; break;
-                case CombatFaction.Shaolin: leftSkill = 10; rightSkill = 11; break;
-                case CombatFaction.TangMen: leftSkill = 47; rightSkill = 58; break;
-                case CombatFaction.EMei: leftSkill = 80; rightSkill = 91; break;
-                case CombatFaction.TianWang: leftSkill = 40; rightSkill = 41; break;
-                case CombatFaction.WuDu: leftSkill = 63; rightSkill = 65; break;
-                case CombatFaction.CuiYan: leftSkill = 99; rightSkill = 105; break;
-                case CombatFaction.TianRen: leftSkill = 142; rightSkill = 148; break;
-                case CombatFaction.KunLun: leftSkill = 172; rightSkill = 182; break;
-                default: leftSkill = 0; rightSkill = 0; break;
-            }
-        }
+        // (Removed GetDefaultSkillsForFaction hardcode - now uses PC source order via PcSkillPanelService)
 
         public int GetAssignedSkill(int slot, int deckIndex = -1)
         {

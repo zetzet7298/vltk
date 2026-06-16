@@ -60,9 +60,7 @@ namespace VLTK.UI
 
         private void DrawPreCast(ActiveSkillEffect fx)
         {
-            // PC body-aura buff (e.g. Túy Điệp StateSpecial 43 butterfly):
-            // render the SPR on the player body, following the live player position,
-            // looping the PC sub-range (pcAuraFrameStart..pcAuraFrameEnd).
+            // (Removed pcAuraFrameStart/End sub-range; loops full frame range)
             if (fx.isAura && fx.HasPcPreCastSprite)
             {
                 DrawPcAuraSprite(fx);
@@ -303,12 +301,10 @@ namespace VLTK.UI
                 return;
             }
 
-            int lo = Mathf.Clamp(fx.pcAuraFrameStart, 0, sprites.Length - 1);
-            int hi = fx.pcAuraFrameEnd > fx.pcAuraFrameStart
-                ? Mathf.Clamp(fx.pcAuraFrameEnd, 0, sprites.Length - 1)
-                : sprites.Length - 1;
+            // (pcAuraFrameStart/End removed: now loop full frame range like a default PC aura)
+            int lo = 0;
+            int hi = sprites.Length - 1;
             int span = Mathf.Max(1, hi - lo + 1);
-
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
             int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
             int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);

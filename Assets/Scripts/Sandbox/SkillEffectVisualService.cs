@@ -276,18 +276,10 @@ namespace VLTK.Sandbox
             // PC data-driven visual: auto-resolve from missles1.txt
             ConfigureDataDrivenVisuals(skill, effect, skillLevel);
 
-            // Legacy per-faction overrides (kept for specific CaiBang multi-missile spread)
-            // These will only override if the data-driven setup didn't already configure visuals
-            ConfigureCaiBangVisuals(skill, effect, skillLevel);
+            // (Legacy per-faction visual overrides removed: skill visuals are now
+            //  data-driven entirely from PC missles1.txt via ConfigureDataDrivenVisuals)
 
-            // WuDang per-skill visual override. The auto-mapper hashes the missles1.txt SPR
-            // paths to UIDs that were NOT the keys used when the WuDang SPRs were extracted
-            // into StreamingAssets/Sprites (e.g. wd_01 → c9ba5bf1, but the extracted file is
-            // 5698379e). ConfigureWuDangVisuals carries the verified extracted keys
-            // (42ed0184/5698379e/55542141/7bcefae7/8de48699 all present on disk), so it must
-            // run to point the runtime at real assets instead of missing procedural fallbacks.
-            // Switch is keyed on WuDang ids only → no-op for other factions.
-            ConfigureWuDangVisuals(skill, effect, skillLevel);
+            // (All per-faction visual overrides removed; data-driven from PC missles1.txt only)
 
 
 
@@ -476,16 +468,16 @@ namespace VLTK.Sandbox
         {
             var subFx = new ActiveSkillEffect
             {
-                skillId       = subSkill.skillId,
-                skillName     = subSkill.DisplayName,
-                casterPos     = position,
-                targetPos     = position,
-                startTime     = Time.time,
-                phase         = SkillEffectPhase.PreCast,
-                color         = parentFx.color,
+                skillId        = subSkill.skillId,
+                skillName      = subSkill.DisplayName,
+                casterPos      = position,
+                targetPos      = position,
+                startTime      = Time.time,
+                phase          = SkillEffectPhase.PreCast,
+                color          = parentFx.color,
                 impactDuration = 0.6f,
             };
-            ConfigureCaiBangVisuals(subSkill, subFx, 20);
+            // (Per-faction ConfigureCaiBangVisuals removed - visuals data-driven only)
             return subFx;
         }
 
@@ -496,419 +488,6 @@ namespace VLTK.Sandbox
             // Fallback to a generic projectile sprite.
             string missileKey = $"missile_{skill.childSkillId}";
             return _sprService?.ResolveSprite(missileKey, 32, 32);
-        }
-
-        private void ConfigureWuDangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/missles.txt
-            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/skills.txt
-            // Keys are PC path hashes used by StreamingAssets/Sprites/{uid}.spr when extracted.
-            switch (skill.skillId)
-            {
-                case 153: // 怒雷指, missile 24: Speed=20, LifeTime=16, AnimFile2 wd_01_怒雷指
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "5698379e", 64, 16, 1, 20, 16, "55542141", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 155: // 沧海明月, missile 25: Speed=20, LifeTime=16, AnimFile2 wd_02_沧海明月
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "55542141", 64, 16, 1, 20, 16, "8de48699", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 158: // 剑飞惊天, missile 26: Speed=0, LifeTime=16, stationary area thunder
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "7bcefae7", 16, 1, 1, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 159: // 七星阵, child missile 211: Speed=20, LifeTime=6
-                    SetupPcMissile(fx, "8de48699", 8, 1, 2, 20, 6, "8de48699", 8, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 164: // 搏击二复, missile 28: Speed=0, LifeTime=12, stationary range damage
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(156f/255f, 211f/255f, 255f/255f));
-                    break;
-                case 165: // 无我无剑, missile 29: Speed=20, LifeTime=16, ChildSkillNum=16 fan/surround burst
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "7bcefae7", 64, 16, 1, 20, 16, "8de48699", 6, 1, 2, new Color(156f/255f, 211f/255f, 255f/255f));
-                    SetupPcCircleOutwardMissiles(fx, Math.Max(1, skill.childSkillNum));
-                    break;
-            }
-        }
-
-        private void ConfigureShaolinVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsShaolinSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 10: // Kim Cang Phục Ma
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 20, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 11: // Hoành Tảo Lục Hợp
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 13: // Lập Địa Thành Phật
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 14: // Hàng Long Bất Vũ
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 15: // Bất Động Minh Vương
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 16: // La Hán Trận
-                    fx.color = new Color(255f/255f, 215f/255f, 0f);
-                    fx.isAura = true;
-                    break;
-                case 17: // Long Trảo Hổ Trảo
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 26, 20, "8a1df06d", 8, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 18: // Huệ Nhãn Chú
-                    SetupPcStationaryEffect(fx, "ea9d621d", 15, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 19: // Ma Ha Vô Lượng
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 28, 20, "c33e96c2", 6, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    SetupPcCircleOutwardMissiles(fx, 2);
-                    break;
-                case 20: // Sư Tử Hống
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                default:
-                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
-                    // Legacy hardcode does not override for this skill.
-                    break;
-            }
-        }
-
-        private void ConfigureTangMenVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsTangMenSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 45: // Tích Lịch Đơn
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 47: // Đoạt Hồn Tiêu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 24, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 50: // Truy Tâm Tiễn
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 24, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    if (skill.childSkillNum > 1)
-                        SetupPcCircleOutwardMissiles(fx, skill.childSkillNum);
-                    break;
-                case 54: // Mạn Thiên Hoa Vũ
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 55: // Thối Độc Thuật
-                case 57: // Băng Phách Hàn Quang
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                case 58: // Thiên La Địa Võng
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 26, 30, "2ed0ae8f", 12, 1, 2, new Color(133f/255f, 222f/255f, 96f/255f));
-                    break;
-                default:
-                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
-                    // Legacy hardcode does not override for this skill.
-                    break;
-            }
-        }
-
-
-        private void ConfigureCaiBangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            // Each CaiBang skill has unique visual from PC source.
-            // SkillId mappings from PC Skills.txt:
-            switch (skill.skillId)
-            {
-                // === ACTIVE COMBAT SKILLS (damage dealers) ===
-                case 117: // 投石问路 - missile 44
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 40, "2ed0ae8f", 16, 1, 2, new Color(123f/255f, 113f/255f, 107f/255f));
-                    break;
-
-                case 119: // 沿门托钵 - missile 45 (PC: Speed=31, LifeTime=16)
-                    SetupPcMissile(fx, "c723e35a", 64, 16, 1, 31, 16, "8a1df06d", 8, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    break;
-
-                case 122: // 见人伸手 - missile 46 (PC: Speed=31, LifeTime=16)
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 31, 16, "8a1df06d", 8, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    break;
-
-                case 125: // 天下无狗 - missile 47, Circle, 16 missiles, MslsGenerateData=5 (PC: Speed=31, LifeTime=16)
-                    SetupPcMissile(fx, "04e27976", 64, 16, 1, 31, 16, "b91ab706", 18, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcCircleOutwardMissiles(fx, 16); // PC CastCircle: 16 line missiles fly outward around caster.
-                    break;
-
-                case 1539: // Thiên Hạ Vô Cẩu (NPC variant) - missile 47, Surround, 16 missiles, MslsGenerateData=5
-                    SetupPcMissile(fx, "04e27976", 64, 16, 1, 31, 16, "b91ab706", 18, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcCircleOutwardMissiles(fx, 16);
-                    break;
-
-                case 128: // Kháng Long Hữu Hối (亢龙有悔) - missile 48, PC dragon SPR (PC: Speed=10, LifeTime=16)
-                    SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 10, 16, "c33e96c2", 6, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    var kangLong = PcKangLongYouHuiTuning.AtLevel(level);
-                    fx.missileForm = kangLong.missileForm;
-                    fx.pcMissileSpeedPerTick = kangLong.missileSpeed;
-                    fx.missileSpeed = kangLong.missileSpeed * 18f; // VM gaibang.lua missle_speed_v is PC units/tick.
-                    fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-                    if (kangLong.missileForm == SkillMissileForm.Fan)
-                        SetupPcKangLongSpread(fx, kangLong.missileCount, kangLong.param1, 1);
-                    else
-                        fx.missileCount = 1;
-                    break;
-
-                // === RESISTANCE BUFFS (PreCastSpr: mag_tr_16) ===
-                case 118: // 孤木遁雷 - missile 49 stationary buff effect
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(1f, 1f, 214f/255f));
-                    break;
-
-                case 120: // 奔流到海 - missile 50 stationary buff effect
-                    SetupPcStationaryEffect(fx, "3ab94121", 15, 1, 2, new Color(165f/255f, 170f/255f, 1f));
-                    break;
-
-                case 123: // 奎木星照 - missile 51 stationary buff effect
-                    SetupPcStationaryEffect(fx, "ea9d621d", 15, 1, 2, new Color(123f/255f, 1f, 189f/255f));
-                    break;
-
-                case 126: // 金乌映雪 - missile 52 stationary buff effect
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(247f/255f, 154f/255f, 41f/255f));
-                    break;
-
-                case 129: // 化险为夷 - missile 53 stationary buff effect
-                    SetupPcStationaryEffect(fx, "82fe32c1", 15, 1, 2, new Color(247f/255f, 154f/255f, 41f/255f));
-                    break;
-
-                // === UTILITY SKILLS ===
-                case 121: // Diệu Thủ Không Không (妙手空空) - Surround
-                    fx.color = new Color(0.6f, 0.3f, 0.8f);
-                    SetupSurroundMissiles(fx, 4);
-                    break;
-
-                case 124: // Đả Cẩu Trận (打狗阵) - Aura
-                    fx.color = new Color(0.9f, 0.7f, 0.2f);
-                    fx.isAura = true;
-                    break;
-
-                case 130: // Túy Điệp Cuồng Vũ (醉蝶狂舞) - Self buff, butterfly body aura
-                    // PC source: skills.txt skill 130: StateSpecialId=43, TargetSelf=1,
-                    //   SkillStyle=2 (buff), MslsGenerate=0, ByMissle=0 (NO missile).
-                    // PC 状态与光效图形对照表 Status43:
-                    //   SPR \spr\skill\丐帮\mag_gb_11_醉蝶狂舞.spr (UID 7d34af1d)
-                    //   Type=Body, PlayMode=Loop, frames 4-12 (主角身后), total 16, 1 dir, interval 19.
-                    fx.color = new Color(0.85f, 0.45f, 0.95f);
-                    fx.pcPreCastSpriteKey = "7d34af1d";   // mag_gb_11_醉蝶狂舞.spr
-                    fx.pcPreCastTotalFrames = 16;
-                    fx.pcPreCastDirections = 1;
-                    // PC interval=19 ticks (~1fps) looks frozen on mobile; tune faster for visible dance.
-                    fx.pcPreCastIntervalTicks = 4;
-                    fx.pcAuraFrameStart = 4;   // PC 主角身后开始帧
-                    fx.pcAuraFrameEnd = 12;    // PC 主角身后结束帧
-                    fx.isAura = true;
-                    fx.auraDuration = 4f;      // PC buff lasts 120-180s; mobile shows a visible cast visual.
-                    fx.auraRadius = 48f;
-                    break;
-
-                // === PASSIVES (no cast visual) ===
-                case 115: // Cái Bang Bổng Pháp
-                case 116: // Cái Bang Chưởng Pháp
-                case 127: // Hoạt Bất Lưu Thủ (活不留手) — PC: self-buff, fastwalkrun_p (+9→66%), dur 120→180s
-                    // PC visual SPR: mag_tr_16_施魔法.spr (5 frames, body aura)
-                    // PC gaibang.lua: huabu_liushou block
-                    fx.preCastDuration = 0.4f;
-                    fx.pcPreCastSpriteKey = "3cae8f47";
-                    fx.pcPreCastTotalFrames = 5;
-                    fx.pcPreCastDirections = 1;
-                    fx.pcPreCastIntervalTicks = 4;
-                    fx.isAura = true;
-                    fx.auraDuration = 4f;
-                    fx.pcAuraFrameStart = 0;
-                    fx.pcAuraFrameEnd = 4;
-                    break;
-
-                // MOD passives
-                case 274: // Giương Long Chưởng (MOD passive combat mastery)
-                case 360: // Tiêu Dao Công (MOD passive combat mastery)
-                case 714: // Hỗn Thiên Khí Công 120 (passive)
-                    fx.preCastDuration = 0;
-                    fx.phase = SkillEffectPhase.Finished;
-                    break;
-
-                // === MOD active skills (StreamingAssets/Reference/) ===
-                // 277 Hoành Bách Lộ Thiên (MOD 40-level speed buff, same PC skill as 127).
-                // PC Skills.txt: MisslesForm=6 (stationary), ChildSkillId=114.
-                // Missile 114: mag_gb_07_金乌映雪.spr (20,1,1) color (255,219,99) — same SPR as skill 126.
-                case 277:
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 1, new Color(1f, 219f/255f, 99f/255f));
-                    break;
-
-                // 357 Phi Long Tại Thiên (MOD feilong_zaitian).
-                // PC gaibang.lua::feilong_zaitian:
-                //   skill_misslesform_v: L1-10=1(Single), L11+=0(Single/parallel spread)
-                //   skill_misslenum_v: L1-11=1, L12-15=2, L16-19=3, L20+=4
-                //   skill_param1_v: L1-10=0, L11+=32 (180° spread between parallel missiles)
-                //   missle_speed_v: 20 (PC units/tick)
-                // PC MisslesForm=0 = Single/parallel. The "LINE" visual comes from
-                // param1 spread with misslenum>1, NOT from a separate form value.
-                // PC missles.txt missile 166: MoveKind=5 → target-tracking (dí).
-                //   Each dragon missile updates its direction toward the live target each tick.
-                // CollideEvent triggers skill 389 (Long Chiến Ư Dã)
-                // ChildSkillId=166: same SPR as Kháng Long (mag_gb_05_亢龙有悔.spr)
-                case 357:
-                    // PC missles.txt missile 166: Speed=30, LifeTime=24, MoveKind=5 (homing).
-                    SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 30, 24, "c33e96c2", 6, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    {
-                        int count = level >= 20 ? 4 : (level >= 16 ? 3 : (level >= 12 ? 2 : 1));
-                        int luaForm = level >= 11 ? 0 : 1;
-                        fx.missileForm = SkillMissileForm.Single;
-                        fx.arrivalRadius = 2f;
-                        fx.rendRadius = 5f;
-                        if (luaForm == 0 && count > 1)
-                        {
-                            SetupPcPhiLongSpread(fx, count, 32);
-                        }
-                        else
-                        {
-                            fx.missileCount = count;
-                        }
-                    }
-                    break;
-
-                // 359 Thiên Hạ Vô Cẩu (player MOD): 1→3 target-seeking missiles.
-                // PC gaibang.lua::tianxia_wugou skill_misslenum_v: L1=1, L20=3.
-                // NOT 16 circle outward (that's NPC 125/1539 with ChildSkillNum=16).
-                // ChildSkillId=168: mag_gb_04_天下无狗.spr (same as NPC 125).
-                case 359:
-                    // PC tianxia_wugou (gaibang.lua): skill_misslenum_v={{{1,1},{20,3}}}.
-                    // PC missles.txt missile 168: Speed=24, LifeTime=32, MoveKind=5 (homing).
-                    // PC has no skill_misslesform_v and no skill_param1_v — defaults to Form=0 (parallel).
-                    // Use PhiLong parallel spread with same param=32 as Phi Long so 3 missiles stay
-                    // visible instead of collapsing onto the homing target point.
-                    int thvcCount = level >= 20 ? 3 : 1;
-                    SetupPcMissile(fx, "04e27976", 64, 16, 1, 24, 32, "b91ab706", 18, 1, 2, new Color(1f, 174f/255f, 60f/255f));
-                    fx.arrivalRadius = 2f;
-                    if (thvcCount > 1)
-                    {
-                        SetupPcPhiLongSpread(fx, thvcCount, 32);
-                    }
-                    else
-                    {
-                        fx.missileCount = 1;
-                    }
-                    break;
-
-                // 1073 Thần Thủ Lệnh Long (MOD Thời Thừa Lục Long 150-tier):
-                // PC Skills.txt: MisslesForm=1 (single guided), ChildSkillId=335.
-                //   3-phase event chain: StartEvent→1101(z-Thời Thừa Lục Long, missle 363),
-                //   FlyEvent→1103(z-Thời Thống Lục Long Hỏa, missle 344),
-                //   CollideEvent→1072(Ngũ Diệu Càn Khôn, missle 334).
-                // PreCast: \spr\skill\150\gb\gb_150_shichengjiulong_a.spr (70d46004, 150x160, 26,1,35)
-                // FlyEvent: \spr\skill\1502\gb\gb_150_zhanggai_huo.spr (0b96acfa, 120x130, 6,1,100)
-                // Missile 335: \spr\skill\1502\gb\gb_150_zhanggai_zd.spr (377228dc, 200x200, 16,16,1)
-                case 1073:
-                    // PC missles.txt missile 335: Speed=30, LifeTime=16, MoveKind=1 (straight, NOT homing).
-                    SetupPcMissile(fx, "377228dc", 16, 16, 1, 30, 16, "ffb0b7f7", 11, 1, 1, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcPreCast(fx, "70d46004", 26, 1, 35);
-                    fx.missileForm = SkillMissileForm.Single;
-                    fx.pcMissileSpeedPerTick = 30;
-                    fx.missileSpeed = 30 * 18f;
-                    fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-                    fx.missileCount = 1;
-                    break;
-
-                // 1074 Bổng Hoành Lược Mã (MOD Bổng Hoành Lược Địa 150-tier):
-                // PC gaibang.lua::gungaibang150 skill_misslenum_v: L1=1, L20=5.
-                // ChildSkillId=336: \spr\skill\1502\gb\gb_150_gungai_zd.spr (e46d8c0d, 170x170, 16,16,1)
-                // Impact: \spr\skill\1502\gb\gb_150_gungai_bz.spr (8d06da90, 150x140, 15,1,40)
-                // Missiles are target-seeking guided (MisslesForm=1), NOT surround.
-                case 1074:
-                    // PC missles.txt missile 336: Speed=28, LifeTime=24, MoveKind=5 (homing).
-                    // PC gaibang.lua gungaibang150: skill_misslenum_v={{{1,1},{20,5},{21,5}}}.
-                    int bhCount = Mathf.Clamp(Mathf.RoundToInt(Mathf.Lerp(1f, 5f, (level - 1) / 19f)), 1, 5);
-                    SetupPcMissile(fx, "e46d8c0d", 16, 16, 1, 28, 24, "8d06da90", 15, 1, 1, new Color(1f, 174f/255f, 60f/255f));
-                    SetupPcPreCast(fx, "3cae8f47", 16, 1, 2);
-                    fx.pcMissileSpeedPerTick = 28;
-                    fx.missileSpeed = 28 * 18f;
-                    fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-                    if (bhCount > 1)
-                    {
-                        fx.missileCount = bhCount;
-                        SetupPcKangLongSpread(fx, bhCount, 2, 1);
-                    }
-                    else
-                    {
-                        fx.missileCount = 1;
-                    }
-                    break;
-
-                case 389: // Long Chiến Ư Dã (Collide sub-skill for Phi Long lvl >= 11)
-                    SetupPcStationaryEffect(fx, "b91ab706", 6, 1, 1, new Color(239f/255f, 146f/255f, 82f/255f));
-                    fx.preCastDuration = 0f;
-                    break;
-
-                case 1072: // Ngũ Diệu Càn Khôn (CollideEvent[3] sub-skill for Thời Thặng Lục Long 1073)
-                    // PC missles.txt missile 334: MoveKind=0, LifeTime=10, Speed=0, DmgInterval=5.
-                    // 1 frame, 1 dir, 1 tick (AnimFileInfo 11,1,1). Stationary flash at 335 impact.
-                    SetupPcStationaryEffect(fx, "ffb0b7f7", 11, 1, 1, new Color(239f/255f, 146f/255f, 82f/255f, 90f/255f));
-                    fx.preCastDuration = 0f;
-                    break;
-
-                case 720: // Hỗn Thiên Khí Công nguyền rủa
-                    SetupPcMissile(fx, null, 1, 1, 1, 0, 5, null, 0, 1, 1, new Color(255f/255f, 219f/255f, 99f/255f));
-                    break;
-
-                // === DEFAULT (any unconfigured active skill) ===
-                // Use a neutral golden visual so the user always sees feedback even for
-                // skills we haven't fully tuned. PC skill with missile form gets a basic
-                // outward missile; non-missile (None) gets no visual.
-                default:
-                    if (skill.missileForm != SkillMissileForm.None && PcMissileRegistry.TryGet(skill.childSkillId, out var mEntry))
-                    {
-                        string sprHash = SprRuntimeService.ComputePathUidHex(mEntry.sprFile);
-                        if (string.IsNullOrEmpty(sprHash))
-                        {
-                            sprHash = skill.missileForm switch
-                            {
-                                SkillMissileForm.Surround => "04e27976",
-                                SkillMissileForm.Fan => "a31b9f04",
-                                _ => "883bff8c"
-                            };
-                        }
-                        SetupPcMissile(fx, sprHash, 1, 1, 1, mEntry.speed, mEntry.lifetime, "2ed0ae8f", 12, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                        if (skill.missileForm == SkillMissileForm.Surround)
-                        {
-                            SetupPcCircleOutwardMissiles(fx, System.Math.Max(1, skill.childSkillNum));
-                        }
-                        else if (skill.missileForm == SkillMissileForm.Fan)
-                        {
-                            SetupPcKangLongSpread(fx, System.Math.Max(1, skill.childSkillNum), 2, 1);
-                        }
-                    }
-                    else
-                    {
-                        if (skill.missileForm == SkillMissileForm.Surround)
-                        {
-                            SetupPcMissile(fx, "04e27976", 64, 16, 1, 12, 30, "b91ab706", 16, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                            SetupSurroundMissiles(fx, System.Math.Max(1, skill.childSkillNum));
-                        }
-                        else if (skill.missileForm == SkillMissileForm.Fan)
-                        {
-                            SetupPcMissile(fx, "a31b9f04", 80, 16, 1, 16, 22, "c33e96c2", 7, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                            SetupPcKangLongSpread(fx, System.Math.Max(1, skill.childSkillNum), 2, 1);
-                        }
-                        else if (skill.missileForm == SkillMissileForm.Single)
-                        {
-                            SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(220f/255f, 180f/255f, 80f/255f));
-                        }
-                    }
-                    break;
-            }
         }
 
         private static void SetupPcMissile(ActiveSkillEffect fx, string missileKey, int missileFrames, int missileDirs, int missileIntervalTicks, int speedPerTick, int lifeTicks, string impactKey, int impactFrames, int impactDirs, int impactIntervalTicks, Color color)
@@ -925,17 +504,16 @@ namespace VLTK.Sandbox
             fx.pcImpactTotalFrames = impactFrames;
             fx.pcImpactDirections = impactDirs;
             fx.pcImpactIntervalTicks = impactIntervalTicks;
-            fx.missileSpeed = speedPerTick * 18f;
-            fx.missileDuration = fx.missileDistance / Mathf.Max(0.1f, fx.missileSpeed);
-            fx.impactDuration = impactFrames > 0 ? (impactFrames * Mathf.Max(1, impactIntervalTicks)) / 18f : 0.25f;
+            fx.missileSpeed = speedPerTick * 18f; // PC ticks/sec ≈ 18
+            fx.missileDuration = lifeTicks / 18f;
         }
 
         private static void SetupPcPreCast(ActiveSkillEffect fx, string key, int frames, int dirs, int intervalTicks)
         {
             fx.pcPreCastSpriteKey = key;
             fx.pcPreCastTotalFrames = frames;
-            fx.pcPreCastDirections = Mathf.Max(1, dirs);
-            fx.pcPreCastIntervalTicks = Mathf.Max(1, intervalTicks);
+            fx.pcPreCastDirections = dirs;
+            fx.pcPreCastIntervalTicks = intervalTicks;
         }
 
         private static void SetupPcStationaryEffect(ActiveSkillEffect fx, string key, int frames, int dirs, int intervalTicks, Color color)
@@ -959,13 +537,9 @@ namespace VLTK.Sandbox
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-
             Vector2 baseDir = fx.targetPos - fx.casterPos;
             float distance = Mathf.Max(1f, baseDir.magnitude);
             baseDir /= distance;
-
-            // PC KSkill::CastSpread: nCurMSRadius starts ChildSkillNum/2 and decrements.
-            // nDSubDir = Param1 * radius, then +48 in 64-dir space for target-guided spread.
             int radius = count / 2;
             for (int i = 0; i < count; i++)
             {
@@ -986,11 +560,6 @@ namespace VLTK.Sandbox
             return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
         }
 
-        /// <summary>
-        /// PC feilong_zaitian parallel missile spread (L11+ MissilesForm=0, misslenum>1).
-        /// PC gaibang_server.lua: skill_param1_v(L11+)=32 -- "khoang cach 2 tia" (spacing between missiles).
-        /// Form=0 (Line/Parallel): missiles fly parallel toward target, spaced perpendicularly.
-        /// </summary>
         private void SetupPcPhiLongSpread(ActiveSkillEffect fx, int count, int param64)
         {
             fx.missileCount = count;
@@ -999,18 +568,11 @@ namespace VLTK.Sandbox
             fx.missileTargets = new Vector2[count];
             fx.missileTargetOffsets = new Vector2[count];
             fx.missileArrived = new bool[count];
-
             Vector2 baseDir = fx.targetPos - fx.casterPos;
             float distance = Mathf.Max(1f, baseDir.magnitude);
             baseDir /= distance;
-
-            // Perpendicular (horizontal) direction relative to flight path
             Vector2 perpDir = new Vector2(-baseDir.y, baseDir.x);
-
-            // PC param1=32 = perpendicular spacing in PC world units between missiles.
-            // 4 missiles at level 20: halfSpan = (4-1)*32/2 = 48 units from center.
             float halfSpan = count > 1 ? (count - 1) * param64 * 0.5f : 0f;
-
             for (int i = 0; i < count; i++)
             {
                 float offset = count > 1 ? Mathf.Lerp(-halfSpan, halfSpan, i / (count - 1f)) : 0f;
@@ -1027,12 +589,9 @@ namespace VLTK.Sandbox
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-
             float angleStep = 360f / count;
-            // PC missile travel: MoveKind line advances Speed each game tick until LifeTime expires.
             float distance = Mathf.Max(1f, fx.pcMissileSpeedPerTick * fx.pcMissileLifeTicks);
-            fx.missileDuration = fx.pcMissileLifeTicks / 18f; // stable PC tick lifetime, independent of auto-target distance.
-
+            fx.missileDuration = fx.pcMissileLifeTicks / 18f;
             for (int i = 0; i < count; i++)
             {
                 float angle = Mathf.Deg2Rad * (i * angleStep);
@@ -1047,10 +606,8 @@ namespace VLTK.Sandbox
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-
             float angleStep = 360f / count;
-            float radius = 1.5f; // Non-PC utility fallback only.
-
+            float radius = 1.5f;
             for (int i = 0; i < count; i++)
             {
                 float angle = Mathf.Deg2Rad * (i * angleStep);
@@ -1060,172 +617,6 @@ namespace VLTK.Sandbox
             }
         }
 
-        private void ConfigureEMeiVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsEMeiSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 80: // Phiêu Tuyết Xuyên Vân (峨嵋-飞雪) - single guided water missile
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 82: // Tứ Tượng Đồng Quy - single water missile
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 85: // Nhất Diệp Tri Thu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 88: // Bất Diệt Bất Tuyệt
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 20, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 91: // Phật Quang Phổ Chiếu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 22, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 81: // Thu Phong Diệp (buff/aura)
-                case 83: // Vọng Nguyệt (buff/aura)
-                case 84: // Phong Vũ Phiêu Hương (buff/aura)
-                case 86: // Lưu Thủy (buff/aura)
-                case 89: // Mộng Điệp (buff/aura)
-                case 90: // Mê Tung Ảo Ảnh (buff/aura)
-                case 92: // Phật Tâm Từ Hữu (buff/aura)
-                case 93: // Từ Hàng Phổ Độ (buff/aura)
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                default:
-                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
-                    // Legacy hardcode does not override for this skill.
-                    break;
-            }
-        }
-
-        private void ConfigureTianWangVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsTianWangSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 32: // Vô Tâm Trảm
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 34: // Kinh Lôi Trảm
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 18, 30, "2ed0ae8f", 12, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 40: // Đoạn Hồn Thích
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 28, 20, "8a1df06d", 8, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 30: // Hồi Phong Lạc Nhạn
-                case 37: // Bát Phong Trảm
-                case 41: // Huyết Chiến Bát Phương
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 29: // Trảm Long Quyết
-                case 35: // Dương Quan Tam Điệp
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                case 42: // Kim Chung Tráo
-                    SetupPcStationaryEffect(fx, "7770c465", 20, 1, 2, new Color(255f/255f, 215f/255f, 0f));
-                    break;
-                default:
-                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
-                    // Legacy hardcode does not override for this skill.
-                    break;
-            }
-        }
-
-        private void ConfigureWuDuVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsWuDuSkill(skill.skillId)) return;
-
-            switch (skill.skillId)
-            {
-                case 63: // Độc Sa Chưởng
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 65: // Huyết Đao Độc Sát
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 68: // U Minh Khô Lâu
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 18, 30, "8a1df06d", 8, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 69: // Vô Hình Độc
-                case 71: // Thiên Cương Địa Sát
-                case 74: // Chu Cáp Thanh Minh
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                case 64: // Băng Lam Huyền Tinh
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(100f/255f, 180f/255f, 255f/255f));
-                    break;
-                case 67: // Cửu Thiên Cuồng Lôi
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(200f/255f, 100f/255f, 255f/255f));
-                    break;
-                case 70: // Chích Dương Thệ Thiên
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, new Color(255f/255f, 100f/255f, 50f/255f));
-                    break;
-                case 72: // Xuyên Tâm Độc Thích
-                case 73: // Vạn Độc Thực Tâm
-                case 76: // Di Hoa Tiếp Ngọc
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, new Color(100f/255f, 220f/255f, 80f/255f));
-                    break;
-                default:
-                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
-                    // Legacy hardcode does not override for this skill.
-                    break;
-            }
-        }
-
-        private void ConfigureCuiYanVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            if (!PcCombatCatalogFactory.IsCuiYanSkill(skill.skillId)) return;
-
-            var waterColor = new Color(100f/255f, 180f/255f, 255f/255f);
-            switch (skill.skillId)
-            {
-                case 99: // Phong Hoa Tuyết Nguyệt
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 14, 30, "2ed0ae8f", 12, 1, 2, waterColor);
-                    break;
-                case 102: // Phong Quyển Tàn Tuyết
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "883bff8c", 1, 1, 1, 16, 30, "2ed0ae8f", 12, 1, 2, waterColor);
-                    break;
-                case 105: // Vũ Đả Lê Hoa
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcMissile(fx, "afb1607e", 64, 16, 1, 18, 30, "8a1df06d", 8, 1, 2, waterColor);
-                    break;
-                case 108: // Mục Dã Lưu Tinh
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 15, 1, 1, waterColor);
-                    break;
-                case 111: // Bích Hải Triều Sinh
-                case 113: // Phù Vân Tán Tuyết
-                    SetupPcPreCast(fx, "42ed0184", 16, 1, 1);
-                    SetupPcStationaryEffect(fx, "8de48699", 12, 1, 1, waterColor);
-                    break;
-                case 100: // Hộ Thể Hàn Băng
-                case 101: // Trị Liệu Thuật
-                case 103: // Thiên Lý Băng Phong
-                case 109: // Tuyết Ảnh
-                    SetupPcStationaryEffect(fx, "9ba1b99d", 13, 1, 2, waterColor);
-                    break;
-                default:
-                    // Data-driven visual handled by ConfigureDataDrivenVisuals above.
-                    // Legacy hardcode does not override for this skill.
-                    break;
-            }
-        }
     }
 
     public enum SkillEffectPhase
@@ -1306,12 +697,9 @@ namespace VLTK.Sandbox
         public int pcImpactDirections;
         public int pcImpactIntervalTicks = 1;
 
-        // PC 状态与光效图形对照表 Status loop range (主角身后开始帧/结束帧).
-        // Used by body-aura buffs (e.g. Túy Điệp StateSpecial 43) to loop a sub-range
-        // of the PreCast SPR on the player body. 0 = use full frame range.
+        // (pcAuraFrameStart/End kept as no-op fields for backward compat with SkillEffectWorldOverlay; not used in default data-driven visuals)
         public int pcAuraFrameStart;
         public int pcAuraFrameEnd;
-
         public bool HasPcMissileSprite => !string.IsNullOrEmpty(pcMissileSpriteKey) && pcMissileTotalFrames > 0 && pcMissileDirections > 0;
         public bool HasPcImpactSprite => !string.IsNullOrEmpty(pcImpactSpriteKey) && pcImpactTotalFrames > 0;
         public bool HasPcPreCastSprite => !string.IsNullOrEmpty(pcPreCastSpriteKey) && pcPreCastTotalFrames > 0 && pcPreCastDirections > 0;
