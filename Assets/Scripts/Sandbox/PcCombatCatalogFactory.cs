@@ -241,14 +241,18 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1),
 
-            // 358 Kháng Long Hữu Hối (Cái Bang) — PC source: gaibang.lua unlocks 358 at level 20
-            //   [3]={{1,358},{20,358}} → player has skill 358 from level 20
-            // PC skills.txt row 358 is mapped to gaibang (collides with TianRen in shared file).
-            // 5-slot default deck requires 358 to be in catalog & knownSkills.
-            DamageSkillNew(358, "Kháng Long Hữu Hối ", "Kháng Long Hữu Hối (player)", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
-                phys: (lv) => 0,
-                fire: (lv) => (Link(lv, (1, 15, ""), (15, 400, ""), (20, 950, "")), 0, Link(lv, (1, 15, ""), (15, 400, ""), (20, 950, ""))),
-                cost: (lv) => (Link(lv, (1, 15, ""), (20, 80, "")), 0, 0),
+            // 358 Kháng Long Hữu Hối (Cái Bang) — PC source EVIDENCE:
+            //   skills.txt skill 358: ChildSkillId=167, CharAnimId=11, AttackRadius=570
+            //   gaibang.lua::kanglong-youhui (Tinh Kiem): physicsdamage_v, firedamage_v, misslesform_v=2
+            //     (level<11 straight line, level>=11 fan), misslenum_v up to 18
+            //   missles1.txt missile 167 (Long Chiến Ư Dã):
+            //     MoveKind=0 (stationary area effect), AnimFile=\spr\skill\gb\龙战于野.spr, 15 frames
+            //     Sound=\sound\skill\sound_k044.wav, IsRangeDmg=0, DmgRange=3, AutoExplode=1
+            //   PC gaibang.lua unlocks 358 at level 20: [3]={{1,358},{20,358}}
+            DamageSkillNew(358, "Kháng Long Hữu Hối ", "Kháng Long Hữu Hối (player)", 50, 20, 570, 167, SkillMissileForm.Fan, 1, false, false, 11,
+                phys: (lv) => Link(lv, (1, 20, ""), (20, 120, "")),
+                fire: (lv) => (Link(lv, (1, 130, ""), (20, 850, "")), 0, Link(lv, (1, 200, ""), (20, 1000, ""))),
+                cost: (lv) => (Link(lv, (1, 10, ""), (20, 30, "")), 0, 0),
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 25, ""), (20, 70, "")), -1, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
