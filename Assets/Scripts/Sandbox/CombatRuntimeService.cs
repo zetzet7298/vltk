@@ -108,6 +108,13 @@ namespace VLTK.Sandbox
             // PC: targetSelf overrides target to self
             // PC: targetOnly + param1 != -1 → reject (must have specific target)
             // PC: targetEnemy/Ally/Self checks via NPC_RELATION
+            if (skill.targetSelf && !skill.targetEnemy && !skill.targetAlly && !skill.targetOnly)
+            {
+                // Pure self-buff (TargetSelf=1, no other target flags).
+                // PC: KSkill forces target=caster regardless of current selection.
+                target = caster;
+                relation = CombatRelation.Self;
+            }
             if (skill.faction != CombatFaction.None && caster.faction != skill.faction) return Reject(report, CombatCastRejectReason.FactionMismatch, "CharClass faction mismatch");
             if (!ValidateTarget(skill, target, relation)) return Reject(report, CombatCastRejectReason.InvalidTarget, "KSkill::CanCastSkill: target relation rejected");
             // PC: IsPhysical + weaponSkill → must match current weapon skill id
