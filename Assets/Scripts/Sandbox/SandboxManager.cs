@@ -1375,6 +1375,11 @@ namespace VLTK.Sandbox
             }
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
+            // First-boot: default faction = Cái Bang (the PC sandbox convention).
+            // Without this the player joins with faction=None, knownSkills empty,
+            // and the skill panel shows 0 skills + slots are blank.
+            if (PlayerProgression.faction == CombatFaction.None)
+                PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, CombatFaction.CaiBang);
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
 
             // Gameplay Loop: wire all subsystems together
