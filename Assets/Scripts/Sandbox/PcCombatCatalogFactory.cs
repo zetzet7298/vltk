@@ -226,13 +226,15 @@ namespace VLTK.Sandbox
             //   => PHI LONG LÀ SKILL MISSILE (cast + projectile), KHÔNG CÓ DASH/LUNGE.
             // BUG TRƯỚC: commit e194a242a ép meleeType=JumpAndAttack do đọc sai gaibang.lua.
             //   → Fix: revert về missile thuần (PcMeleeType.None). Player đứng yên cast, missile bay tới target.
-            DamageSkillNew(357, "Phi Long Tại Thiên ", "Phi Long Tại Thiên", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
+            WithJxPreCast(DamageSkillNew(357, "Phi Long Tại Thiên ", "Phi Long Tại Thiên", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, "")), 0, Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 65, "")), 0, 0),
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1,
-                meleeType: PcMeleeType.None), // [SECT-ALL] PC source: IsMelee=0 → không melee, không dash
+                meleeType: PcMeleeType.None),
+                // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC vltksource_new mag_tr_16)
+                "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
 
             DamageSkillNew(359, "Thiên Hạ Vô Cẩu ", "Thiên Hạ Vô Cẩu (player)", 80, 20, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),
@@ -614,6 +616,9 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
+        /// <summary>Override PreCastSpr với path từ jx-source (khác vltksource_new).</summary>
+        private static SkillDefinition WithJxPreCast(SkillDefinition s, string jxPreCastSprPath)
+        { s.effectSourceId = Sprite(jxPreCastSprPath); return s; }
 
         private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form)
         {
