@@ -477,10 +477,8 @@ namespace VLTK.UI
             var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
             if (sprites == null || sprites.Length == 0) return 0;
 
-            int lo = Mathf.Clamp(fx.pcAuraFrameStart, 0, sprites.Length - 1);
-            int hi = fx.pcAuraFrameEnd > fx.pcAuraFrameStart
-                ? Mathf.Clamp(fx.pcAuraFrameEnd, 0, sprites.Length - 1)
-                : sprites.Length - 1;
+            int lo = 0;
+            int hi = sprites.Length - 1;
             int span = Mathf.Max(1, hi - lo + 1);
 
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));

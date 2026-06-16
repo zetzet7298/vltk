@@ -26,7 +26,7 @@ namespace VLTK.UI
         [SerializeField] private int[] deckASkillIds = new int[MobileSkillSlotCount];
         [SerializeField] private int[] deckBSkillIds = new int[MobileSkillSlotCount];
 
-        private const int MobileSkillSlotCount = 4;
+        private const int MobileSkillSlotCount = 5;
         private const long LongPressMs = 450;
         private const float SlotDragCancelThreshold = 45f;
         private const float PickerTapMoveThreshold = 12f;
@@ -282,6 +282,18 @@ namespace VLTK.UI
             }
         }
 
+        // PC source skill order per faction. PC gốc JX: 1 ô là skill tấn công cơ bản
+        // của phái, các ô còn lại là skill cao cấp / chiêu thức đặc trưng.
+        // MobileSkillSlotCount = 5 → set đủ 5 skill theo thứ tự PC.
+        // PC source: bin/client/script/skill/{gaibang,shaolin,...}.lua + skills.txt.
+        // Fallback: lấy 5 skill active đầu tiên từ PcSkillPanelService.GetPcSkillOrder(faction).
+        private static readonly System.Collections.Generic.Dictionary<CombatFaction, int[]> DefaultDeckByFaction =
+            new System.Collections.Generic.Dictionary<CombatFaction, int[]>
+            {
+                // Cái Bang (PC gaibang.lua): Phi Long → Thiên Hạ Vô Cẩu → Túy Điệp Cuồng Vũ → Kháng Long Hữu Hối → Hoạt Bất Lưu Thủ
+                { CombatFaction.CaiBang, new[] { 357, 359, 130, 358, 127 } },
+            };
+
         private void FillDefaultDeckIfEmpty()
         {
             if (!IsDeckEmpty(deckASkillIds)) return;
@@ -290,23 +302,32 @@ namespace VLTK.UI
             var prog = _progression ?? manager?.PlayerProgression;
             if (prog == null) return;
 
-            // Auto-fill all empty slots from PC skill order (PcSkillPanelService).
-            // PC source: each faction has a canonical skill order in jx-source
-            // bin/client/script/skill/*.lua. We use the first 4 player-usable
-            // skills from that order (skip NPC variant + passives + unknown skills).
-            var catalog = _catalog ?? manager?.CombatSkillCatalog;
-            var order = PcSkillPanelService.GetPcSkillOrder(prog.faction);
-            int slot = 0;
-            foreach (var skillId in order)
+            int[] defaults;
+            if (DefaultDeckByFaction.TryGetValue(prog.faction, out var perFaction))
             {
-                if (slot >= MobileSkillSlotCount) break;
-                if (skillId == PcSkillPanelService.NpcVariantSkillId) continue;
-                if (!prog.knownSkills.Contains(skillId) && prog.GetSkillLevel(skillId) <= 0) continue;
-                var skill = catalog?.Resolve(skillId);
-                if (skill != null && skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
-                if (deckASkillIds[slot] > 0) { slot++; continue; }
-                deckASkillIds[slot++] = skillId;
+                // Per-faction PC-source order (Cái Bang) — cố định 5 skill.
+                defaults = perFaction;
             }
+            else
+            {
+                // Fallback: lấy 5 skill active đầu tiên từ PC order (skip passives, NPC variant, unknown).
+                var catalog = _catalog ?? manager?.CombatSkillCatalog;
+                var order = PcSkillPanelService.GetPcSkillOrder(prog.faction);
+                var list = new System.Collections.Generic.List<int>();
+                foreach (var skillId in order)
+                {
+                    if (list.Count >= MobileSkillSlotCount) break;
+                    if (skillId == PcSkillPanelService.NpcVariantSkillId) continue;
+                    if (!prog.knownSkills.Contains(skillId) && prog.GetSkillLevel(skillId) <= 0) continue;
+                    var skill = catalog?.Resolve(skillId);
+                    if (skill != null && skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
+                    list.Add(skillId);
+                }
+                defaults = list.ToArray();
+            }
+
+            for (int i = 0; i < MobileSkillSlotCount && i < defaults.Length; i++)
+                deckASkillIds[i] = defaults[i];
 
             leftSlotSkillId = deckASkillIds[0];
             rightSlotSkillId = deckASkillIds[1];

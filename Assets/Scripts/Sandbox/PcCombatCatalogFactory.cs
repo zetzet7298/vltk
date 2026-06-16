@@ -157,7 +157,7 @@ namespace VLTK.Sandbox
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
                 int dur = 18 * Link(lv, (1, 120, ""), (20, 180, ""));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, pct, dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, pct, dur, 0));
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
                 return d;
@@ -179,7 +179,7 @@ namespace VLTK.Sandbox
                 var d = new SkillLevelData { level = lv };
                 int ret = Link(lv, (1, 4, ""), (20, 46, ""));
                 int def = Link(lv, (1, 48, ""), (20, 800, ""));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, ret, -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.MeleeDamageReturnP, ret, -1, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, def, -1, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
                 return d;
@@ -190,7 +190,9 @@ namespace VLTK.Sandbox
                 var d = new SkillLevelData{level=lv};
                 int dur = 18 * Link(lv, (1, 120, ""), (30, 180, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 1, ""), (30, 30, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 10, ""), (30, 175, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 21, ""), (35, 20, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (20, 30, "Conic")), dur, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 50, ""), (20, 100, "")), 0, 0));
                 return d;
@@ -207,7 +209,7 @@ namespace VLTK.Sandbox
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
                 int dur = 18 * Link(lv, (1, 120, ""), (20, 180, ""));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, pct, dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, pct, dur, 0));
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
                 return d;
@@ -238,6 +240,18 @@ namespace VLTK.Sandbox
                 cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1),
+
+            // 358 Kháng Long Hữu Hối (Cái Bang) — PC source: gaibang.lua unlocks 358 at level 20
+            //   [3]={{1,358},{20,358}} → player has skill 358 from level 20
+            // PC skills.txt row 358 is mapped to gaibang (collides with TianRen in shared file).
+            // 5-slot default deck requires 358 to be in catalog & knownSkills.
+            DamageSkillNew(358, "Kháng Long Hữu Hối ", "Kháng Long Hữu Hối (player)", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 15, ""), (15, 400, ""), (20, 950, "")), 0, Link(lv, (1, 15, ""), (15, 400, ""), (20, 950, ""))),
+                cost: (lv) => (Link(lv, (1, 15, ""), (20, 80, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 25, ""), (20, 70, "")), -1, 0),
+                horseLimit: 1,
+                meleeType: PcMeleeType.None),
 
             PassiveMasteryDao(360, "Tiêu Diêu Công ", "Tiêu Dao Công", 60,
                 attackSpeed: (lv) => Link(lv, (1, 6, ""), (20, 65, "")),
@@ -502,7 +516,7 @@ namespace VLTK.Sandbox
         private static SkillDefinition PassiveMastery(int id, string raw, string vi, int req, Func<int,int> addPhys, int elementParam, string icon, int charAnim = 14)
         {
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = charAnim; s.targetOnly = false; s.iconSourceId = Sprite(icon);
-            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addPhys(lv), -1, elementParam)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, 12+3*lv, -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, 5+lv, -1, 0)); return d; }); return s;
+            AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addPhys(lv), -1, elementParam)); return d; }); return s;
         }
 
         private static SkillDefinition PassiveMasteryWithDeadly(int id, string raw, string vi, int req, Func<int,int> addPhys, Func<int,int> deadly, int elementParam, string icon)
@@ -522,7 +536,7 @@ namespace VLTK.Sandbox
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addFire(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, addFire(lv), -1, elementParam));
                 return d;
             });
             return s;
@@ -533,9 +547,9 @@ namespace VLTK.Sandbox
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, addfire(lv), -1, elementParam));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, lifemax(lv), -1, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, manamax(lv), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, addfire(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, lifemax(lv), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaMaxP, manamax(lv), -1, 0));
                 return d;
             });
             return s;
@@ -546,8 +560,8 @@ namespace VLTK.Sandbox
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = charAnim; s.targetOnly = false; s.iconSourceId = Sprite(icon);
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingEnhanceP, attackSpeed(lv), -1, elementParam));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, castSpeed(lv), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, attackSpeed(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, castSpeed(lv), -1, 0));
                 return d;
             });
             return s;
@@ -623,7 +637,7 @@ namespace VLTK.Sandbox
         // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
         // the player skill panel filters it out via isNpcVariant.
-        public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1539 || id==389;
+        public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==358 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1539 || id==389;
         public static bool IsWuDangSkill(int id) => id >= WuDangMinSkillId && id <= WuDangMaxSkillId;
         public static bool IsShaolinSkill(int id) => id >= ShaolinMinSkillId && id <= ShaolinMaxSkillId && id != 5 && id != 7;
         public static bool IsTangMenSkill(int id) => id >= TangMenMinSkillId && id <= TangMenMaxSkillId && id != 53 && id != 44 && id != 46 && id != 49 && id != 52 && id != 56;
