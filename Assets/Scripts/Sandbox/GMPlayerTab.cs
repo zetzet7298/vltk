@@ -208,12 +208,20 @@ namespace VLTK.Sandbox
                 var hudObj = Object.FindAnyObjectByType(hudType);
                 if (hudObj != null)
                 {
-                    var isVisibleProp = hudType.GetProperty("IsSkillPanelVisible");
-                    bool isVisible = isVisibleProp != null && (bool)isVisibleProp.GetValue(hudObj, null);
-                    if (isVisible)
+                    // Luon auto-open skill panel sau khi switch phai (de user thay skill list moi ngay).
+                    // Neu panel dang visible, refresh; neu khong, open moi.
+                    var openMethod = hudType.GetMethod("OpenSkillPanel");
+                    if (openMethod != null)
                     {
-                        var openMethod = hudType.GetMethod("OpenSkillPanel");
-                        if (openMethod != null) openMethod.Invoke(hudObj, null);
+                        openMethod.Invoke(hudObj, null);
+                        UnityEngine.Debug.Log($"[GM] Auto-opened skill panel for faction {faction}");
+                    }
+                    var slotCtrlType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, Assembly-CSharp");
+                    if (slotCtrlType != null)
+                    {
+                        var refreshMethod = slotCtrlType.GetMethod("RefreshSlotVisuals");
+                        if (refreshMethod != null)
+                            refreshMethod.Invoke(UnityEngine.Object.FindAnyObjectByType(slotCtrlType), null);
                     }
                 }
             }
