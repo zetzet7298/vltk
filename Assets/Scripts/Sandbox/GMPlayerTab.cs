@@ -172,7 +172,7 @@ namespace VLTK.Sandbox
             }
 
             // Auto-assign default slots in CombatSkillSlotController
-            var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, Assembly-CSharp");
+            var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, VLTK.UI");
             if (slotsType != null)
             {
                 var slotsObj = Object.FindAnyObjectByType(slotsType);
@@ -202,7 +202,7 @@ namespace VLTK.Sandbox
             }
 
             // Refresh UI GameHudController
-            var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
+            var hudType = System.Type.GetType("VLTK.UI.GameHudController, VLTK.UI");
             if (hudType != null)
             {
                 var hudObj = Object.FindAnyObjectByType(hudType);
@@ -216,7 +216,7 @@ namespace VLTK.Sandbox
                         openMethod.Invoke(hudObj, null);
                         UnityEngine.Debug.Log($"[GM] Auto-opened skill panel for faction {faction}");
                     }
-                    var slotCtrlType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, Assembly-CSharp");
+                    var slotCtrlType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, VLTK.UI");
                     if (slotCtrlType != null)
                     {
                         var refreshMethod = slotCtrlType.GetMethod("RefreshSlotVisuals");
@@ -256,7 +256,7 @@ namespace VLTK.Sandbox
                 }
 
                 // Refresh visual slots
-                var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, Assembly-CSharp");
+                var slotsType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, VLTK.UI");
                 if (slotsType != null)
                 {
                     var slotsObj = Object.FindAnyObjectByType(slotsType);
@@ -276,7 +276,7 @@ namespace VLTK.Sandbox
                 }
 
                 // Refresh UI
-                var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
+                var hudType = System.Type.GetType("VLTK.UI.GameHudController, VLTK.UI");
                 if (hudType != null)
                 {
                     var hudObj = Object.FindAnyObjectByType(hudType);
