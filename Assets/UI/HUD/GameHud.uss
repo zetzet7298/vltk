@@ -1322,6 +1322,7 @@
 .hud-skill-slot-left  { right: 178px; bottom: 58px; }
 .hud-skill-slot-top   { right: 108px; bottom: 104px; }
 .hud-skill-slot-upper { right: 28px; bottom: 122px; }
+.hud-skill-slot-extra  { right: 168px; bottom: 150px; }
 
 #BottomPanel.hud-mobile-bottom .hud-skill-slot-icon {
     display: flex;
