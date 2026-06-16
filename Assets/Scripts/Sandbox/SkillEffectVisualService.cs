@@ -696,9 +696,23 @@ namespace VLTK.Sandbox
                     fx.isAura = true;
                     break;
 
-                case 130: // Túy Điệp Cuồng Vũ (醉蝶狂舞) - Self buff
-                    fx.color = new Color(0.8f, 0.4f, 0.9f);
+                case 130: // Túy Điệp Cuồng Vũ (醉蝶狂舞) - Self buff, butterfly body aura
+                    // PC source: skills.txt skill 130: StateSpecialId=43, TargetSelf=1,
+                    //   SkillStyle=2 (buff), MslsGenerate=0, ByMissle=0 (NO missile).
+                    // PC 状态与光效图形对照表 Status43:
+                    //   SPR \spr\skill\丐帮\mag_gb_11_醉蝶狂舞.spr (UID 7d34af1d)
+                    //   Type=Body, PlayMode=Loop, frames 4-12 (主角身后), total 16, 1 dir, interval 19.
+                    fx.color = new Color(0.85f, 0.45f, 0.95f);
+                    fx.pcPreCastSpriteKey = "7d34af1d";   // mag_gb_11_醉蝶狂舞.spr
+                    fx.pcPreCastTotalFrames = 16;
+                    fx.pcPreCastDirections = 1;
+                    // PC interval=19 ticks (~1fps) looks frozen on mobile; tune faster for visible dance.
+                    fx.pcPreCastIntervalTicks = 4;
+                    fx.pcAuraFrameStart = 4;   // PC 主角身后开始帧
+                    fx.pcAuraFrameEnd = 12;    // PC 主角身后结束帧
                     fx.isAura = true;
+                    fx.auraDuration = 4f;      // PC buff lasts 120-180s; mobile shows a visible cast visual.
+                    fx.auraRadius = 48f;
                     break;
 
                 // === PASSIVES (no cast visual) ===
@@ -1278,6 +1292,12 @@ namespace VLTK.Sandbox
         public int pcImpactTotalFrames;
         public int pcImpactDirections;
         public int pcImpactIntervalTicks = 1;
+
+        // PC 状态与光效图形对照表 Status loop range (主角身后开始帧/结束帧).
+        // Used by body-aura buffs (e.g. Túy Điệp StateSpecial 43) to loop a sub-range
+        // of the PreCast SPR on the player body. 0 = use full frame range.
+        public int pcAuraFrameStart;
+        public int pcAuraFrameEnd;
 
         public bool HasPcMissileSprite => !string.IsNullOrEmpty(pcMissileSpriteKey) && pcMissileTotalFrames > 0 && pcMissileDirections > 0;
         public bool HasPcImpactSprite => !string.IsNullOrEmpty(pcImpactSpriteKey) && pcImpactTotalFrames > 0;

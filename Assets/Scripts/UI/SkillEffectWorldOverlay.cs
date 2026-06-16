@@ -226,6 +226,28 @@ namespace VLTK.UI
                 {
                     if (fx.isAura)
                     {
+                        // PC body-aura buff (e.g. Túy Điệp StateSpecial 43 butterfly):
+                        // render the SPR on the player body, following the live player position,
+                        // looping the PC sub-range (pcAuraFrameStart..pcAuraFrameEnd).
+                        if (fx.HasPcPreCastSprite)
+                        {
+                            Hide(v.preCastRing);
+                            Vector2 auraPos = ResolveLiveCasterPos(fx);
+                            v.pcPreCast.enabled = true;
+                            v.pcPreCast.transform.position = new Vector3(auraPos.x, auraPos.y, 0f);
+                            // Body SPRs (e.g. butterfly 45x51) render at native pixel size
+                            // (pixelsPerUnit=1). Scale up modestly so the buff is clearly visible
+                            // on the player body without dwarfing it. orthoSize-based.
+                            float auraScale = Mathf.Max(1.5f, _scale * 0.006f);
+                            v.pcPreCast.transform.localScale = new Vector3(auraScale, auraScale, 1f);
+                            v.pcPreCast.sprite = SelectPcAuraFrame(fx);
+                            Hide(v.impactRing);
+                            Hide(v.trail);
+                            SetMissileVisible(v, false);
+                            SetImpactVisible(v, false);
+                            break;
+                        }
+
                         float dur = Mathf.Max(0.05f, fx.auraDuration);
                         float t = Mathf.Clamp01(fx.elapsed / dur);
                         float pulse = 0.5f + 0.5f * Mathf.Sin(fx.elapsed * fx.auraPulseRate * Mathf.PI * 2f);
@@ -431,6 +453,41 @@ namespace VLTK.UI
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
             int frameIndex = Mathf.Clamp(lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks), 0, sprites.Length - 1);
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcPreCastSpriteKey);
+        }
+
+        /// <summary>
+        /// Select a looping body-aura SPR frame for self-buff visuals (e.g. Túy Điệp butterfly).
+        /// PC source: 状态与光效图形对照表 Status entry — PlayMode=Loop over a sub-range
+        /// (主角身后开始帧..结束帧). When pcAuraFrameEnd&gt;pcAuraFrameStart, loop inside that
+        /// range; otherwise loop the full frame set.
+        /// </summary>
+        private Sprite SelectPcAuraFrame(ActiveSkillEffect fx)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || sprites.Length == 0) return null;
+
+            int lo = Mathf.Clamp(fx.pcAuraFrameStart, 0, sprites.Length - 1);
+            int hi = fx.pcAuraFrameEnd > fx.pcAuraFrameStart
+                ? Mathf.Clamp(fx.pcAuraFrameEnd, 0, sprites.Length - 1)
+                : sprites.Length - 1;
+            int span = Mathf.Max(1, hi - lo + 1);
+
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
+            int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
+            int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
+            return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcPreCastSpriteKey);
+        }
+
+        /// <summary>
+        /// Resolve the live caster position so body-aura buffs follow the player as it moves.
+        /// Falls back to the cast-time casterPos when the player is unavailable.
+        /// </summary>
+        private static Vector2 ResolveLiveCasterPos(ActiveSkillEffect fx)
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player != null)
+                return (Vector2)player.transform.position;
+            return fx.casterPos;
         }
 
         private Sprite[] LoadPcSprites(string key)

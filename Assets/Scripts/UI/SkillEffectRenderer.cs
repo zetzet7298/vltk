@@ -58,6 +58,15 @@ namespace VLTK.UI
 
         private void DrawPreCast(ActiveSkillEffect fx)
         {
+            // PC body-aura buff (e.g. Túy Điệp StateSpecial 43 butterfly):
+            // render the SPR on the player body, following the live player position,
+            // looping the PC sub-range (pcAuraFrameStart..pcAuraFrameEnd).
+            if (fx.isAura && fx.HasPcPreCastSprite)
+            {
+                DrawPcAuraSprite(fx);
+                return;
+            }
+
             // Draw a pulsing circle at caster position (PreCast effect)
             var screenPos = WorldToScreen(fx.casterPos);
             float t = fx.elapsed / Mathf.Max(0.01f, fx.preCastDuration);
@@ -274,6 +283,45 @@ namespace VLTK.UI
 
             var sprite = sprites[frameIndex] ?? sprites[0];
             if (sprite != null) DrawSpriteScreen(sprite, fx.targetPos);
+        }
+
+        /// <summary>
+        /// Render a looping body-aura SPR (e.g. Túy Điệp butterfly, PC StateSpecial 43).
+        /// PC source: 状态与光效图形对照表 Status entry — PlayMode=Loop over sub-range
+        /// (主角身后开始帧..结束帧), Type=Body. The sprite follows the live player position.
+        /// </summary>
+        private void DrawPcAuraSprite(ActiveSkillEffect fx)
+        {
+            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
+            if (sprites == null || sprites.Length == 0)
+            {
+                // Fallback: pulsing ring at caster
+                var sp = WorldToScreen(ResolveLiveCasterPos(fx));
+                DrawCircle(sp, 24f, fx.color, 2f);
+                return;
+            }
+
+            int lo = Mathf.Clamp(fx.pcAuraFrameStart, 0, sprites.Length - 1);
+            int hi = fx.pcAuraFrameEnd > fx.pcAuraFrameStart
+                ? Mathf.Clamp(fx.pcAuraFrameEnd, 0, sprites.Length - 1)
+                : sprites.Length - 1;
+            int span = Mathf.Max(1, hi - lo + 1);
+
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
+            int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
+            int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
+
+            var sprite = sprites[frameIndex] ?? sprites[0];
+            if (sprite != null) DrawSpriteScreen(sprite, ResolveLiveCasterPos(fx));
+        }
+
+        /// <summary>Live caster position so body-aura buffs follow the player.</summary>
+        private static Vector2 ResolveLiveCasterPos(ActiveSkillEffect fx)
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player != null)
+                return (Vector2)player.transform.position;
+            return fx.casterPos;
         }
 
         private Vector2 WorldToScreen(Vector2 worldPos)
