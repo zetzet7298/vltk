@@ -294,6 +294,20 @@ namespace VLTK.UI
             if (defaultLeft > 0 && prog.knownSkills.Contains(defaultLeft)) deckASkillIds[0] = defaultLeft;
             if (defaultRight > 0 && prog.knownSkills.Contains(defaultRight)) deckASkillIds[1] = defaultRight;
 
+            // CaiBang: 4 default skills — Thiên Hạ Vô Cẩu (359), Phi Long Tại Thiên (357),
+            // Túy Điệp Cuồng Vũ (130), Hoạt Bất Lưu Thủ (127)
+            if (prog.faction == CombatFaction.CaiBang)
+            {
+                if (prog.knownSkills.Contains(359)) deckASkillIds[0] = 359;
+                if (prog.knownSkills.Contains(357)) deckASkillIds[1] = 357;
+                if (prog.knownSkills.Contains(130)) deckASkillIds[2] = 130;
+                if (prog.knownSkills.Contains(127)) deckASkillIds[3] = 127;
+                leftSlotSkillId = deckASkillIds[0];
+                rightSlotSkillId = deckASkillIds[1];
+                return;
+            }
+
+            // Auto-fill remaining slots from faction skill order
             var catalog = _catalog ?? manager?.CombatSkillCatalog;
             var order = PcSkillPanelService.GetPcSkillOrder(prog.faction);
             int slot = 0;
@@ -303,7 +317,6 @@ namespace VLTK.UI
                 if (!prog.knownSkills.Contains(skillId) && prog.GetSkillLevel(skillId) <= 0) continue;
                 var skill = catalog?.Resolve(skillId);
                 if (skill != null && skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
-
                 while (slot < MobileSkillSlotCount && deckASkillIds[slot] > 0) slot++;
                 if (slot >= MobileSkillSlotCount) break;
                 deckASkillIds[slot++] = skillId;
@@ -317,7 +330,7 @@ namespace VLTK.UI
         {
             switch (faction)
             {
-                case CombatFaction.CaiBang: leftSkill = 357; rightSkill = 359; break;
+                case CombatFaction.CaiBang: leftSkill = 359; rightSkill = 357; break;
                 case CombatFaction.WuDang: leftSkill = 153; rightSkill = 155; break;
                 case CombatFaction.Shaolin: leftSkill = 10; rightSkill = 11; break;
                 case CombatFaction.TangMen: leftSkill = 47; rightSkill = 58; break;
@@ -339,6 +352,37 @@ namespace VLTK.UI
         }
 
         /// <summary>Assign a skill to a specific slot on the active deck.</summary>
+        /// <summary>
+        /// Reset cả 2 deck A/B về 0 cho tất cả 4 slot, sau đó gán default skills
+        /// cho deck A theo skillId array. Force _activeDeckIndex về 0 (deck A) để
+        /// user thấy thay đổi ngay lập tức. Đây là hard-reset, dùng khi switch phái.
+        /// </summary>
+        public void ResetDeckToDefaults(int[] defaultSkillIds, bool forceActiveDeckA = true)
+        {
+            EnsureDeckArrays();
+            // Force về deck A để user thấy đúng deck mà họ vừa gán
+            if (forceActiveDeckA) _activeDeckIndex = 0;
+            // Clear cả 2 deck hoàn toàn (zero out all slots)
+            for (int i = 0; i < MobileSkillSlotCount; i++)
+            {
+                deckASkillIds[i] = 0;
+                deckBSkillIds[i] = 0;
+            }
+            // Gán default skills cho deck A (đang active sau khi force)
+            if (defaultSkillIds != null)
+            {
+                int count = Mathf.Min(defaultSkillIds.Length, MobileSkillSlotCount);
+                for (int i = 0; i < count; i++)
+                {
+                    if (defaultSkillIds[i] > 0)
+                        deckASkillIds[i] = defaultSkillIds[i];
+                }
+            }
+            SyncLegacySlotFields();
+            RefreshSlotVisuals();
+            SubsystemLog.Info("Combat", $"ResetDeckToDefaults: forced deck A active, deckA=[{string.Join(",", deckASkillIds)}], deckB=[{string.Join(",", deckBSkillIds)}]");
+        }
+
         public void AssignSkill(int slot, int skillId)
         {
             EnsureDeckArrays();

@@ -178,65 +178,24 @@ namespace VLTK.Sandbox
                 var slotsObj = Object.FindAnyObjectByType(slotsType);
                 if (slotsObj != null)
                 {
-                    var assignMethod = slotsType.GetMethod("AssignSkill");
-                    if (assignMethod != null)
+                    var resetMethod = slotsType.GetMethod("ResetDeckToDefaults");
+                    if (resetMethod != null)
                     {
-                        // Force-clear all 4 slots trước khi gán default, để user thấy thay đổi
-                        // ngay cả khi deck đã có skills cũ. Không phụ thuộc IsDeckEmpty guard.
-                        for (int clearSlot = 0; clearSlot < 4; clearSlot++)
-                            assignMethod.Invoke(slotsObj, new object[] { clearSlot, 0 });
-
-                        if (faction == CombatFaction.CaiBang)
+                        // Hard-reset cả 2 deck A/B về 0, force deck A active, gán default
+                        int[] defaults = GetDefaultDeckForFaction(faction);
+                        resetMethod.Invoke(slotsObj, new object[] { defaults, true });
+                    }
+                    else
+                    {
+                        // Fallback nếu ResetDeckToDefaults chưa recompile: clear + assign per-slot
+                        var assignMethod = slotsType.GetMethod("AssignSkill");
+                        if (assignMethod != null)
                         {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 359 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 357 });
-                            assignMethod.Invoke(slotsObj, new object[] { 2, 130 });
-                            assignMethod.Invoke(slotsObj, new object[] { 3, 127 });
-                        }
-                        else if (faction == CombatFaction.WuDang)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 153 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 155 });
-                        }
-                        else if (faction == CombatFaction.Shaolin)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 10 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 11 });
-                        }
-                        else if (faction == CombatFaction.TangMen)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 47 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 58 });
-                        }
-                        else if (faction == CombatFaction.EMei)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 80 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 91 });
-                        }
-                        else if (faction == CombatFaction.TianWang)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 40 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 41 });
-                        }
-                        else if (faction == CombatFaction.WuDu)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 63 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 65 });
-                        }
-                        else if (faction == CombatFaction.CuiYan)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 99 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 105 });
-                        }
-                        else if (faction == CombatFaction.TianRen)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 142 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 148 });
-                        }
-                        else if (faction == CombatFaction.KunLun)
-                        {
-                            assignMethod.Invoke(slotsObj, new object[] { 0, 172 });
-                            assignMethod.Invoke(slotsObj, new object[] { 1, 182 });
+                            for (int clearSlot = 0; clearSlot < 4; clearSlot++)
+                                assignMethod.Invoke(slotsObj, new object[] { clearSlot, 0 });
+                            int[] defaultsFb = GetDefaultDeckForFaction(faction);
+                            for (int i = 0; i < defaultsFb.Length; i++)
+                                assignMethod.Invoke(slotsObj, new object[] { i, defaultsFb[i] });
                         }
                     }
                 }
@@ -326,6 +285,39 @@ namespace VLTK.Sandbox
                 }
 
                 SubsystemLog.Info("GM", "Đã nâng tối đa cấp độ và cấp kỹ năng võ công.");
+            }
+
+        }
+        /// <summary>
+        /// Tra ve mang 4 skill ID default cho moi mon phai (slot 0..3, 0 = empty slot).
+        /// Cai Bang co 4 default skills; cac phai khac fill 2 skills + de trong 2 slots.
+        /// </summary>
+        private static int[] GetDefaultDeckForFaction(CombatFaction faction)
+        {
+            switch (faction)
+            {
+                case CombatFaction.CaiBang:
+                    return new int[] { 359, 357, 130, 127 }; // Thiên Hạ Vô Cẩu, Phi Long Tại Thiên, Túy Điệp, Hoạt Bất Lưu Thủ
+                case CombatFaction.WuDang:
+                    return new int[] { 153, 155, 0, 0 };
+                case CombatFaction.Shaolin:
+                    return new int[] { 10, 11, 0, 0 };
+                case CombatFaction.TangMen:
+                    return new int[] { 47, 58, 0, 0 };
+                case CombatFaction.EMei:
+                    return new int[] { 80, 91, 0, 0 };
+                case CombatFaction.TianWang:
+                    return new int[] { 40, 41, 0, 0 };
+                case CombatFaction.WuDu:
+                    return new int[] { 63, 65, 0, 0 };
+                case CombatFaction.CuiYan:
+                    return new int[] { 99, 105, 0, 0 };
+                case CombatFaction.TianRen:
+                    return new int[] { 142, 148, 0, 0 };
+                case CombatFaction.KunLun:
+                    return new int[] { 172, 182, 0, 0 };
+                default:
+                    return new int[] { 0, 0, 0, 0 };
             }
         }
     }
