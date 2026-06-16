@@ -59,6 +59,17 @@ namespace VLTK.Sandbox
         public bool isRangeDmg;         // AOE damage
         public int dmgRange;            // AOE radius
 
+        // State aura visual (PC: 状态与光效图形对照表.txt → stateSpecialId → SPR + anim)
+        // Used by state self-buff skills (Túy Điệp Cuồng Vũ 130, Đả Cẩu Trận 277, etc.)
+        // 0 = no aura; loop SPR attached to body while state active.
+        public string stateAuraSprPath;     // e.g. \spr\skill\丐帮\mag_gb_11_醉蝶狂舞.spr
+        public int stateAuraTotalFrames;    // total animation frames (PC: 16 for Túy Điệp)
+        public int stateAuraIntervalTicks;  // animation speed (PC: 1 tick = 1 frame change)
+        public int stateAuraFrameStart;     // start frame (PC: 4 for Túy Điệp, 0 default)
+        public int stateAuraDirections;     // 1 (most state auras are direction-free)
+        public int stateAuraPos;            // 1=head(头顶) 2=feet(脚底) 3=body(身上)
+        public bool hasStateAura;
+
         /// <summary>Flight duration in seconds (at 18 ticks/sec).</summary>
         public float FlightDurationSeconds => missileLifetime > 0 ? missileLifetime / 18f : 1.5f;
 
@@ -75,8 +86,7 @@ namespace VLTK.Sandbox
         /// <summary>Has complete explosion SPR data?</summary>
         public bool HasExplodeVisual => !string.IsNullOrEmpty(explodeSprPath) && explodeFrames > 0;
 
-        /// <summary>Has any visual data (flight or explosion)?</summary>
-        public bool HasAnyVisual => HasFlightVisual || HasExplodeVisual || hasPreCast || isMelee;
+        public bool HasAnyVisual => HasFlightVisual || HasExplodeVisual || hasPreCast || isMelee || hasStateAura;
     }
 
     /// <summary>
@@ -185,7 +195,8 @@ namespace VLTK.Sandbox
             int missileId = skill.childSkillId;
             if (missileId <= 0)
             {
-                // Melee or instant skill — still may have PreCast visual
+                // No missile. State self-buff skill may still have a state aura SPR.
+                ApplyStateAura(skill, config);
                 return config;
             }
 
@@ -230,8 +241,25 @@ namespace VLTK.Sandbox
                 config.explodeDirections = explode.directions;
                 config.explodeIntervalTicks = explode.intervalTicks;
             }
-
             return config;
+        }
+
+        /// <summary>
+        /// Apply state aura SPR (PC 状态与光效图形对照表.txt) if skill has stateSpecialId > 0.
+        /// Used by Túy Điệp Cuồng Vũ (130), Đả Cẩu Trận (277), and other state self-buff skills.
+        /// </summary>
+        private void ApplyStateAura(SkillDefinition skill, PcSkillVisualConfig config)
+        {
+            if (skill.stateSpecialId <= 0) return;
+            var aura = GetStateAuraData(skill.stateSpecialId);
+            if (string.IsNullOrEmpty(aura.sprPath)) return;
+            config.stateAuraSprPath = aura.sprPath;
+            config.stateAuraTotalFrames = aura.totalFrames;
+            config.stateAuraIntervalTicks = aura.intervalTicks;
+            config.stateAuraFrameStart = aura.frameStart;
+            config.stateAuraDirections = aura.directions;
+            config.stateAuraPos = aura.position;
+            config.hasStateAura = true;
         }
 
         /// <summary>
@@ -253,7 +281,41 @@ public static string SprPathToKey(string pcPath)
         }
 
         /// <summary>
-        /// Default light color per faction (from PC data patterns).
+        /// State aura visual data from PC source: 状态与光效图形对照表.txt.
+        /// PC source: Utility/Run/Settings/状态与光效图形对照表.txt (Tinh Kiem mod 2023).
+        /// State ID 0 = no aura. Position: 1=头顶(head) 2=脚底(feet) 3=身上(body).
+        /// Anim: total frames, frame start (e.g. 4-12 for Túy Điệp 43), 1 direction, loop.
+        /// </summary>
+        public struct PcStateAuraData
+        {
+            public string sprPath;
+            public int totalFrames;
+            public int frameStart;
+            public int intervalTicks;
+            public int directions;
+            public int position;  // 1=head 2=feet 3=body
+        }
+
+        public static PcStateAuraData GetStateAuraData(int stateId)
+        {
+            // PC source 状态与光效图形对照表.txt (Tinh Kiem mod 2023)
+            // Format: stateId, sprPath, position, animType, frameStart, frameEnd, totalFrames, directions, anims, name
+            // Only state IDs that match PC VLTK skills in our catalog are listed.
+            switch (stateId)
+            {
+                case 43: return new PcStateAuraData
+                {
+                    // PC source: 状态43 = Túy Điệp Cuồng Vũ (skill 130 Cái Bang)
+                    //   SPR: \spr\skill\丐帮\mag_gb_11_醉蝶狂舞.spr, position 身上(body), loop
+                    //   Frames 4-12 of 16 total, 1 direction, 1 anim
+                    sprPath = "\\spr\\skill\\丐帮\\mag_gb_11_醉蝶狂舞.spr",
+                    totalFrames = 16, frameStart = 4, intervalTicks = 1, directions = 1, position = 3,
+                };
+                default: return new PcStateAuraData();
+            }
+        }
+
+        /// <summary>Default light color per faction (from PC data patterns).
         /// Each faction has a characteristic color for their skill effects.
         /// </summary>
         public static Color GetFactionDefaultColor(CombatFaction faction)
