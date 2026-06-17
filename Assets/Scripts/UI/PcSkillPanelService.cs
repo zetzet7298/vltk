@@ -81,7 +81,8 @@ namespace VLTK.UI
 
         public static readonly int[] PcEMeiSkillOrder =
         {
-            77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93
+            // PC EMei has 15 core skills (skill 90 reassigned to KunLun per PC emei.lua/kunlun.lua)
+            77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93
         };
 
         public static readonly int[] PcTianWangSkillOrder =
