@@ -8,7 +8,7 @@ namespace VLTK.Tests.Sandbox
     public class PcWeaponThiefSkillSourceTests
     {
         private const string PcUpdate27SkillDir =
-            "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings";
+            "/var/www/jx-source/pak_unpacked/update01/settings";
 
         private static string ClientWeaponSkillPath => Path.Combine(PcUpdate27SkillDir, "clientweaponskill.txt");
         private static string ThiefSkillPath => Path.Combine(PcUpdate27SkillDir, "thiefskill.txt");
@@ -17,7 +17,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ClientWeaponSkill_ParsesUpdate27SourceCountAndRepresentativeRows()
         {
-            Assert.IsTrue(ClientWeaponSkillPath.Contains("/00.src-tinh-kiem/"));
+            Assert.IsTrue(ClientWeaponSkillPath.Contains("/jx-source/"), "Path should be under jx-source canonical tree.");
             var rows = PcClientWeaponSkillParser.ParseFile(ClientWeaponSkillPath);
             var header = PcItemCommon.ReadServerLines(ClientWeaponSkillPath)[0].Split('\t');
 
@@ -53,7 +53,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ThiefSkill_ParsesUpdate27SourceCountAndRepresentativeRows()
         {
-            Assert.IsTrue(ThiefSkillPath.Contains("/00.src-tinh-kiem/"));
+            Assert.IsTrue(ThiefSkillPath.Contains("/jx-source/"), "Path should be under jx-source canonical tree.");
             var rows = PcThiefSkillParser.ParseFile(ThiefSkillPath);
             var header = PcItemCommon.ReadServerLines(ThiefSkillPath)[0].Split('\t');
 

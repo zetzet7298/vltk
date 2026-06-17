@@ -408,6 +408,16 @@ namespace VLTK.Backend.Mock
                 return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
                     "validation_error", "skillId phải > 0"));
             }
+            if (req.charLevel <= 0 || req.charLevel > 200)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "charLevel phải trong khoảng 1..200"));
+            }
+            if (req.faction < -1 || req.faction > 9)
+            {
+                return Task.FromResult(BackendResponse<PlayerSkillResponse>.Failure(
+                    "validation_error", "faction phải trong khoảng -1..9 (0..9 = môn phái, -1 = chưa nhập)"));
+            }
             // Mock: trả về PlayerSkillResponse với level=1, parity với FS-03A
             // evidence 05_skill_learn.json.
             var data = new PlayerSkillResponse

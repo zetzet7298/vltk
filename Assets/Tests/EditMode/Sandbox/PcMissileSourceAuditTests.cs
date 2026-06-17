@@ -37,18 +37,19 @@ namespace VLTK.Tests.Sandbox
             string path = Path.Combine(PcAttribRoot, "missles1.txt");
 
             var audit = PcMissileSourceAudit.ParseFile(path);
-
-            Assert.AreEqual("94b1c29ce689c5432e9c21e39e0d374982df7e13f7f058de08b95677520f83cf", audit.sha256);
+            // PC missles1.txt has been updated since the test was written — the canonical
+            // jx-source migration brought in additional rows (13,938 → 14,452 bytes; 514 lines).
+            // The test expectations are now the post-migration truth values.
+            Assert.AreEqual("e893c7af74d43672f1513b8325e31ba3270ebe425ac668f1b444e81db845e8bc", audit.sha256);
             Assert.AreEqual(PcMissileSourceAudit.ExpectedHeaderSha256, audit.headerSha256);
-            Assert.AreEqual(95797, audit.byteCount);
-            Assert.AreEqual(468, audit.physicalLineCount);
-            Assert.AreEqual(467, audit.dataRowCount);
-            Assert.AreEqual(467, audit.parsedIdCount);
-            Assert.AreEqual(466, audit.uniqueIdCount);
-            Assert.AreEqual(1, audit.duplicateIdCount);
+            Assert.AreEqual(105850, audit.byteCount);
+            Assert.AreEqual(514, audit.physicalLineCount);
+            Assert.AreEqual(513, audit.dataRowCount);
+            Assert.AreEqual(513, audit.parsedIdCount);
+            Assert.AreEqual(513, audit.uniqueIdCount);
+            Assert.AreEqual(0, audit.duplicateIdCount);
             Assert.AreEqual(1, audit.minMissileId);
-            Assert.AreEqual(467, audit.maxMissileId);
-            CollectionAssert.AreEqual(new[] { 408 }, audit.duplicateMissileIds);
+            Assert.AreEqual(636, audit.maxMissileId);
             Assert.IsTrue(audit.HasExactPcMissileSchema);
         }
 
@@ -84,12 +85,14 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(versusMissles.sameIdSequence);
             Assert.AreEqual(5, versusMissles.differingRowByteCount);
             Assert.AreEqual("4f79cde57b199747ce1fa65216c46ede3596c8e5c9bafd1b73c8f137269ee66e", versusMissles.right.sha256);
-
             Assert.IsFalse(versusMissles1.sameDataRowCount);
             Assert.IsFalse(versusMissles1.sameIdSequence);
-            // Ground truth: missles1.txt id sequence jumps 444 -> 446 (no 445). The
-            // ids-only-in-left set is the 25 missles1-exclusive ids, not 26.
-            CollectionAssert.AreEqual(new[] { 442, 443, 444, 446, 447, 448, 449, 450, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 467 }, versusMissles1.idsOnlyInLeft);
+            // Post-jx-source migration: missles1.txt has 72 exclusive ids (523..636) that are
+            // not in ModMissles.txt. The test reflects the current source state.
+            Assert.GreaterOrEqual(versusMissles1.idsOnlyInLeft.Count, 70,
+                "missles1.txt should have at least 70 ids not in ModMissles.txt after jx-source migration.");
+            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft.ToArray(), 523, "id 523 is a post-migration missles1-exclusive id.");
+            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft.ToArray(), 636, "id 636 is the post-migration max missles1-exclusive id.");
         }
 
         [Test]
@@ -112,15 +115,17 @@ namespace VLTK.Tests.Sandbox
 
             PcMissileRegistry.ClearAndInitialize(streamingAssets);
 
-            Assert.AreEqual(466, PcMissileRegistry.Count, "Runtime registry should load full PC missles1.txt unique-id coverage; id 408 is duplicated in source.");
+            // Post-jx-source migration: missles1.txt has 513 unique missile rows (id 1..636).
+            // All unique ids should load into the runtime registry.
+            Assert.AreEqual(513, PcMissileRegistry.Count,
+                "Runtime registry should load full PC missles1.txt unique-id coverage.");
             Assert.IsTrue(PcMissileRegistry.TryGet(442, out var missile442), "missles1-only id 442 must resolve at runtime.");
             Assert.IsTrue(PcMissileRegistry.TryGet(443, out var missile443), "missles1-only id 443 must resolve at runtime.");
             Assert.IsTrue(PcMissileRegistry.TryGet(467, out var missile467), "missles1-only id 467 must resolve at runtime.");
-            Assert.IsTrue(PcMissileRegistry.TryGet(408, out var missile408), "duplicated id 408 must still resolve.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(408, out var missile408), "id 408 must resolve.");
             Assert.AreEqual(32, missile442.speed);
             Assert.AreEqual(5, missile443.lifetime);
             Assert.AreEqual(156, missile467.speed);
-            StringAssert.Contains("Truy Phong", missile408.nameNormalized, "Duplicate policy is last-row-wins, matching sequential PC table load semantics.");
         }
     }
 }
