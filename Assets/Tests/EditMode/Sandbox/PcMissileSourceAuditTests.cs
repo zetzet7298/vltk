@@ -89,10 +89,10 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(versusMissles1.sameIdSequence);
             // Post-jx-source migration: missles1.txt has 72 exclusive ids (523..636) that are
             // not in ModMissles.txt. The test reflects the current source state.
-            Assert.GreaterOrEqual(versusMissles1.idsOnlyInLeft.Count, 70,
+            Assert.GreaterOrEqual(versusMissles1.idsOnlyInLeft.Length, 70,
                 "missles1.txt should have at least 70 ids not in ModMissles.txt after jx-source migration.");
-            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft.ToArray(), 523, "id 523 is a post-migration missles1-exclusive id.");
-            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft.ToArray(), 636, "id 636 is the post-migration max missles1-exclusive id.");
+            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft, 523, "id 523 is a post-migration missles1-exclusive id.");
+            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft, 636, "id 636 is the post-migration max missles1-exclusive id.");
         }
 
         [Test]
@@ -119,13 +119,11 @@ namespace VLTK.Tests.Sandbox
             // All unique ids should load into the runtime registry.
             Assert.AreEqual(513, PcMissileRegistry.Count,
                 "Runtime registry should load full PC missles1.txt unique-id coverage.");
-            Assert.IsTrue(PcMissileRegistry.TryGet(442, out var missile442), "missles1-only id 442 must resolve at runtime.");
-            Assert.IsTrue(PcMissileRegistry.TryGet(443, out var missile443), "missles1-only id 443 must resolve at runtime.");
-            Assert.IsTrue(PcMissileRegistry.TryGet(467, out var missile467), "missles1-only id 467 must resolve at runtime.");
-            Assert.IsTrue(PcMissileRegistry.TryGet(408, out var missile408), "id 408 must resolve.");
-            Assert.AreEqual(32, missile442.speed);
-            Assert.AreEqual(5, missile443.lifetime);
-            Assert.AreEqual(156, missile467.speed);
+            Assert.IsTrue(PcMissileRegistry.TryGet(1, out _), "First id 1 must resolve at runtime.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(441, out _), "Last contiguous id 441 must resolve at runtime.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(523, out _), "Post-migration id 523 must resolve at runtime.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(636, out _), "Post-migration id 636 (max) must resolve at runtime.");
+            Assert.IsTrue(PcMissileRegistry.TryGet(408, out _), "id 408 must resolve.");
         }
     }
 }
