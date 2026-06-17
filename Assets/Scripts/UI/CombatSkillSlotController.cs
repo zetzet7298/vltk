@@ -26,7 +26,7 @@ namespace VLTK.UI
         [SerializeField] private int[] deckASkillIds = new int[MobileSkillSlotCount];
         [SerializeField] private int[] deckBSkillIds = new int[MobileSkillSlotCount];
 
-        private const int MobileSkillSlotCount = 5;
+        public const int MobileSkillSlotCount = 5;
         private const long LongPressMs = 450;
         private const float SlotDragCancelThreshold = 45f;
         private const float PickerTapMoveThreshold = 12f;
