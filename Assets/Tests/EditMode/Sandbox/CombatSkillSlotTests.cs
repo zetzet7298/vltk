@@ -146,21 +146,16 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_SurroundSkill_SpawnsMultipleMissiles()
         {
-            var service = new SkillEffectVisualService(null);
-            // PC skill 125 (Thiên Hạ Vô Cẩu / Bổng Đả Ác Cẩu) — Cái Bang diamond/stick surround burst.
-            // Per PC catalog: childSkillNum=16 (16 missiles spread around caster).
-            var skill = new SkillDefinition
-            {
-                skillId = 125,
-                nameNormalized = "Thiên Hạ Vô Cẩu",
-                attackRadius = 400,
-                missileForm = SkillMissileForm.Surround,
-                childSkillNum = 16,
-            };
+            // PC skill 125 (Thiên Hạ Vô Cẩu) — Cái Bang surround burst with 16 missiles.
+            // Use the real catalog so the data-driven visual config resolves to the PC missile 47.
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var skill = catalog.Resolve(125);
+            Assert.IsNotNull(skill, "Skill 125 should be in PC catalog.");
 
+            var service = new SkillEffectVisualService(null, catalog);
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(50, 0), 1);
             Assert.IsNotNull(fx);
-            Assert.AreEqual(16, fx.missileCount);
+            Assert.AreEqual(16, fx.missileCount, "PC skill 125 (Thiên Hạ Vô Cẩu) spawns 16 surround missiles.");
             Assert.IsNotNull(fx.missilePositions);
             Assert.AreEqual(16, fx.missilePositions.Length);
         }
