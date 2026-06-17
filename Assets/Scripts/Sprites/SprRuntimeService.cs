@@ -20,6 +20,17 @@ namespace VLTK.Sprites
     /// </summary>
     public class SprRuntimeService
     {
+        static SprRuntimeService()
+        {
+            try
+            {
+                var pt = System.Type.GetType("System.Text.CodePagesEncodingProvider, System.Text.Encoding.CodePages");
+                var prov = pt?.GetProperty("Instance")?.GetValue(null, null) as System.Text.EncodingProvider;
+                if (prov != null) System.Text.Encoding.RegisterProvider(prov);
+            }
+            catch { }
+        }
+
         private readonly string _spritesRoot;
         private readonly Dictionary<string, Sprite> _cache = new();
         private readonly Dictionary<string, Texture2D> _texCache = new();

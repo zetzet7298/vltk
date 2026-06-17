@@ -148,12 +148,24 @@ namespace VLTK.Sandbox
         public bool TryGet(int missileId, out PcMissileFullVisual v)
             => _byId.TryGetValue(missileId, out v);
 
+        private static void RegisterCodePages()
+        {
+            try
+            {
+                var pt = System.Type.GetType("System.Text.CodePagesEncodingProvider, System.Text.Encoding.CodePages");
+                var prov = pt?.GetProperty("Instance")?.GetValue(null, null) as System.Text.EncodingProvider;
+                if (prov != null) System.Text.Encoding.RegisterProvider(prov);
+            }
+            catch { }
+        }
+
         /// <summary>
         /// Parse missles1.txt (57 columns) into full visual entries.
         /// Returns registry ready for lookup.
         /// </summary>
-public static PcMissileFullVisualRegistry ParseFromFile(string path)
+        public static PcMissileFullVisualRegistry ParseFromFile(string path)
         {
+            RegisterCodePages();
             var reg = new PcMissileFullVisualRegistry();
             if (string.IsNullOrEmpty(path) || !File.Exists(path)) return reg;
 

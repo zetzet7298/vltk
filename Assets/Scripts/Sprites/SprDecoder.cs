@@ -68,9 +68,7 @@ namespace VLTK.Sprites
                 using var ms = new MemoryStream(data);
                 using var br = new BinaryReader(ms);
 
-                // Parse header (36 bytes): sig(4) + 8 fields*2 + 6 reserved*2 = 4+16+12 = 32? actually 4 + 8*2 + 6*2 = 4+16+12 = 32.
-                // PC JX engine uses 36 bytes: sig(4) + 8 fields*2 (16) + 6 reserved*2 (12) + 4 trailing reserved = 36.
-                // Original code only read 32 bytes, leaving 4 bytes unconsumed and mis-aligning the palette read.
+                // Parse header (32 bytes)
                 var header = new SprHeader
                 {
                     signature = br.ReadUInt32(),
@@ -85,9 +83,7 @@ namespace VLTK.Sprites
                 };
                 for (int i = 0; i < 6; i++)
                     header.reserved[i] = br.ReadUInt16();
-                // PC JX engine header is 36 bytes total: 4 (sig) + 16 (8 fields) + 12 (6 reserved) + 4 trailing = 36.
-                // We read 32 bytes; consume the trailing 4 bytes before palette.
-                br.ReadUInt32();
+
                 if (!header.IsValid)
                 {
                     result.error = $"Invalid SPR signature: 0x{header.signature:X8}";
