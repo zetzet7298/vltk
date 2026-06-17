@@ -347,13 +347,39 @@ namespace VLTK.UI
             GUI.DrawTexture(new Rect(drawX, drawY, w, h), tex);
         }
 
+        private string ResolvePcSpritePath(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+
+            string spritesRoot = Path.Combine(Application.dataPath, "..", "SpritesRuntime");
+            string keyWithExt = key.EndsWith(".spr") ? key : key + ".spr";
+            string path = Path.Combine(spritesRoot, keyWithExt);
+            if (File.Exists(path)) return path;
+
+            string fileNameOnly = Path.GetFileName(keyWithExt.Replace('\\', '/'));
+            string fallbackPath = Path.Combine(spritesRoot, fileNameOnly);
+            if (File.Exists(fallbackPath)) return fallbackPath;
+
+            // Fallback to signed hash file on disk
+            string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
+            string hashPath = signedUid != null ? Path.Combine(spritesRoot, signedUid + ".spr") : null;
+            if (hashPath != null && File.Exists(hashPath)) return hashPath;
+
+            // Fallback to unsigned hash file on disk
+            string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
+            string unsignedHashPath = unsignedUid != null ? Path.Combine(spritesRoot, unsignedUid + ".spr") : null;
+            if (unsignedHashPath != null && File.Exists(unsignedHashPath)) return unsignedHashPath;
+
+            return null;
+        }
+
         private Vector2 GetPcAuraFrameWorldOffset(ActiveSkillEffect fx, int frameIndex, float scale)
         {
             var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
             if (sprites == null || frameIndex < 0) return Vector2.zero;
 
-            string path = Path.Combine(Application.streamingAssetsPath, "Sprites", (fx.pcPreCastSpriteKey.EndsWith(".spr") ? fx.pcPreCastSpriteKey : fx.pcPreCastSpriteKey + ".spr"));
-            if (!System.IO.File.Exists(path)) return Vector2.zero;
+            string path = ResolvePcSpritePath(fx.pcPreCastSpriteKey);
+            if (path == null) return Vector2.zero;
             var fileInfo = new System.IO.FileInfo(path);
             string cacheKey = $"{fx.pcPreCastSpriteKey}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
 
@@ -424,57 +450,27 @@ namespace VLTK.UI
         /// </summary>
         private Sprite[] LoadPcSprites(string key)
         {
-            // SPRs live in SpritesRuntime/ at project root (NOT StreamingAssets/Sprites/).
-            // Mirrors SkillEffectWorldOverlay.LoadPcSprites — 67K+ SPRs moved out of
-            // Assets/ to keep Unity import time bounded. Full backslash path keys (PC
-            // missile/effect SPR paths) fall back to filename-only resolution so Cái
-            // Bang skill effect SPRs resolve instead of returning procedural fallbacks.
-            string spritesRoot = Path.Combine(Application.dataPath, "..", "SpritesRuntime");
-            string keyWithExt = key.EndsWith(".spr") ? key : key + ".spr";
-            string path = Path.Combine(spritesRoot, keyWithExt);
-            if (!File.Exists(path))
+            if (string.IsNullOrEmpty(key)) return null;
+
+            string path = ResolvePcSpritePath(key);
+            if (path == null)
             {
-                string fileNameOnly = Path.GetFileName(keyWithExt.Replace('\\', '/'));
-                string fallbackPath = Path.Combine(spritesRoot, fileNameOnly);
-                if (File.Exists(fallbackPath))
-                {
-                    path = fallbackPath;
-                }
-                else
-                {
-                    // Fallback to signed hash file on disk
-                    string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
-                    string hashPath = signedUid != null ? Path.Combine(spritesRoot, signedUid + ".spr") : null;
-                    if (hashPath != null && File.Exists(hashPath))
-                    {
-                        path = hashPath;
-                    }
-                    else
-                    {
-                        // Fallback to unsigned hash file on disk
-                        string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
-                        string unsignedHashPath = unsignedUid != null ? Path.Combine(spritesRoot, unsignedUid + ".spr") : null;
-                        if (unsignedHashPath != null && File.Exists(unsignedHashPath))
-                        {
-                            path = unsignedHashPath;
-                        }
-                        else
-                        {
-                            SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (tried {spritesRoot}/{keyWithExt}, /{fileNameOnly}, signedHash={signedUid}, unsignedHash={unsignedUid})");
-                            _pcSpriteCache[key] = null;
-                            return null;
-                        }
-                    }
-                }
+                string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
+                string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
+                SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (signedHash={signedUid}, unsignedHash={unsignedUid})");
+                _pcSpriteCache[key] = null;
+                return null;
             }
 
-            if (_pcSpriteCache.TryGetValue(key, out var cached)) return cached;
+            var fileInfo = new FileInfo(path);
+            string cacheKey = $"{key}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
+            if (_pcSpriteCache.TryGetValue(cacheKey, out var cached)) return cached;
 
             var decoded = SprDecoder.Decode(File.ReadAllBytes(path));
             if (!decoded.success || decoded.frames == null || decoded.frames.Length == 0)
             {
                 SubsystemLog.Warn("Combat", $"PC skill SPR decode failed: {key} — {decoded.error}");
-                _pcSpriteCache[key] = null;
+                _pcSpriteCache[cacheKey] = null;
                 return null;
             }
 
@@ -505,9 +501,9 @@ namespace VLTK.UI
                 var f = decoded.frames[i];
                 offsets[i] = new Vector2(f != null ? f.offsetX : 0, f != null ? f.offsetY : 0);
             }
-            _pcSpriteFrameData[key] = (cx, cy, offsets);
+            _pcSpriteFrameData[cacheKey] = (cx, cy, offsets);
 
-            _pcSpriteCache[key] = sprites;
+            _pcSpriteCache[cacheKey] = sprites;
             return sprites;
         }
     }

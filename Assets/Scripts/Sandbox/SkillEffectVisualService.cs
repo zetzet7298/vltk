@@ -72,11 +72,11 @@ namespace VLTK.Sandbox
 
             // Cái Bang dragon SPRs (Tinh Kiem PAK variants) are very small relative
             // to the mobile viewport (PC tile scale ~32-64px, mobile chars ~128-256px).
-            // Scale 50x so the dragon body is unmistakably visible. Affects flight
+            // Scale 2.5x so the dragon body is unmistakably visible. Affects flight
             // missile + impact + precast SpriteRenderers.
             if (PcCaiBangLuaLevelService.Applies(skill.skillId))
             {
-                fx.pcSpriteRenderScale = 50f;
+                fx.pcSpriteRenderScale = 2.5f;
             }
 
             // PreCast visual

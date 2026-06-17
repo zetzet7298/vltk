@@ -499,16 +499,39 @@ namespace VLTK.UI
         /// Adapted for Unity Y+ up: offsetX = (frame.offsetX - centerX), offsetY = (centerY - frame.offsetY).
         /// Scaled by auraScale (pixelsPerUnit=1 so 1 px = 1 unit * scale).
         /// </summary>
+        private string ResolvePcSpritePath(string key)
+        {
+            if (string.IsNullOrEmpty(key)) return null;
+
+            string spritesRoot = Path.Combine(Application.dataPath, "..", "SpritesRuntime");
+            string keyWithExt = key.EndsWith(".spr") ? key : key + ".spr";
+            string path = Path.Combine(spritesRoot, keyWithExt);
+            if (File.Exists(path)) return path;
+
+            string fileNameOnly = Path.GetFileName(keyWithExt.Replace('\\', '/'));
+            string fallbackPath = Path.Combine(spritesRoot, fileNameOnly);
+            if (File.Exists(fallbackPath)) return fallbackPath;
+
+            // Fallback to signed hash file on disk
+            string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
+            string hashPath = signedUid != null ? Path.Combine(spritesRoot, signedUid + ".spr") : null;
+            if (hashPath != null && File.Exists(hashPath)) return hashPath;
+
+            // Fallback to unsigned hash file on disk
+            string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
+            string unsignedHashPath = unsignedUid != null ? Path.Combine(spritesRoot, unsignedUid + ".spr") : null;
+            if (unsignedHashPath != null && File.Exists(unsignedHashPath)) return unsignedHashPath;
+
+            return null;
+        }
+
         private Vector2 GetPcAuraFrameWorldOffset(ActiveSkillEffect fx, int frameIndex, float scale)
         {
             var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
             if (sprites == null || frameIndex < 0) return Vector2.zero;
 
-            // SPRs live in SpritesRuntime/ at project root (NOT StreamingAssets/Sprites/).
-            // See SprRuntimeService.DefaultSpritesRoot for the rationale.
-            string path = Path.Combine(Application.dataPath, "..", "SpritesRuntime",
-                fx.pcPreCastSpriteKey.EndsWith(".spr") ? fx.pcPreCastSpriteKey : fx.pcPreCastSpriteKey + ".spr");
-            if (!System.IO.File.Exists(path)) return Vector2.zero;
+            string path = ResolvePcSpritePath(fx.pcPreCastSpriteKey);
+            if (path == null) return Vector2.zero;
             var fileInfo = new System.IO.FileInfo(path);
             string cacheKey = $"{fx.pcPreCastSpriteKey}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
             if (!_pcSpriteFrameData.TryGetValue(cacheKey, out var data)) return Vector2.zero;
@@ -535,51 +558,14 @@ namespace VLTK.UI
         {
             if (string.IsNullOrEmpty(key)) return null;
 
-            // SPRs live in SpritesRuntime/ at project root (NOT StreamingAssets/Sprites/).
-            // See SprRuntimeService.DefaultSpritesRoot for the rationale — moving 67K+ SPRs
-            // out of Assets/ fixed a 1h+ Unity import hang.
-            string spritesRoot = Path.Combine(Application.dataPath, "..", "SpritesRuntime");
-            // PC missile/effect SPR paths are full backslash paths (e.g.
-            // \spr\skill\150\gb\gb_150_shichengjiulong_a.spr). SpritesRuntime stores them
-            // by filename-only (gb_150_shichengjiulong_a.spr). Try full-key first (for
-            // pre-sanitized keys), then fall back to filename-only so Cái Bang skill
-            // effect SPRs resolve instead of falling through to procedural _dotSprite.
-            string keyWithExt = key.EndsWith(".spr") ? key : key + ".spr";
-            string path = Path.Combine(spritesRoot, keyWithExt);
-            if (!File.Exists(path))
+            string path = ResolvePcSpritePath(key);
+            if (path == null)
             {
-                string fileNameOnly = Path.GetFileName(keyWithExt.Replace('\\', '/'));
-                string fallbackPath = Path.Combine(spritesRoot, fileNameOnly);
-                if (File.Exists(fallbackPath))
-                {
-                    path = fallbackPath;
-                }
-                else
-                {
-                    // Fallback to signed hash file on disk
-                    string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
-                    string hashPath = signedUid != null ? Path.Combine(spritesRoot, signedUid + ".spr") : null;
-                    if (hashPath != null && File.Exists(hashPath))
-                    {
-                        path = hashPath;
-                    }
-                    else
-                    {
-                        // Fallback to unsigned hash file on disk
-                        string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
-                        string unsignedHashPath = unsignedUid != null ? Path.Combine(spritesRoot, unsignedUid + ".spr") : null;
-                        if (unsignedHashPath != null && File.Exists(unsignedHashPath))
-                        {
-                            path = unsignedHashPath;
-                        }
-                        else
-                        {
-                            SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (tried {spritesRoot}/{keyWithExt}, /{fileNameOnly}, signedHash={signedUid}, unsignedHash={unsignedUid})");
-                            _pcSpriteCache[key] = null;
-                            return null;
-                        }
-                    }
-                }
+                string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
+                string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
+                SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (signedHash={signedUid}, unsignedHash={unsignedUid})");
+                _pcSpriteCache[key] = null;
+                return null;
             }
 
             var fileInfo = new FileInfo(path);
