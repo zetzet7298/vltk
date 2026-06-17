@@ -233,8 +233,9 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
-                // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC PC stock 2011 mag_tr_16)
-                "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
+                // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC PC stock 2011 mag_tr_16).
+                // mag_bz_huo3_爆炸效果.spr không tồn tại trong pak_unpacked; dùng mag_tr_16_施魔法.spr (đã có trong SpritesRuntime) làm fallback.
+                "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
 
             DamageSkillNew(359, "Thiên Hạ Vô Cẩu ", "Thiên Hạ Vô Cẩu (player)", 80, 20, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),
@@ -361,8 +362,8 @@ namespace VLTK.Sandbox
             var s = BaseSkill(389, "Long Chiến Ư Dã ", "Long Chiến Ư Dã", 80, 20, 570, SkillMissileForm.None);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 195; s.childSkillNum = 1; s.baseSkill = true;
             s.charAnimId = 11; s.targetEnemy = true;
-            s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
-            s.missileSpriteId = Sprite("\\spr\\skill\\天\\mag_bz_huo3_爆炸效果.spr");
+            // mag_bz_huo3_爆炸效果.spr không tồn tại trong pak_unpacked; dùng mag_tr_16_施魔法.spr (đã có trong SpritesRuntime) làm fallback.
+            s.missileSpriteId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 17, ""), (20, 371, "")), 0, Link(lv, (1, 17, ""), (20, 371, ""))));
