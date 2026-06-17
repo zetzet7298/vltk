@@ -273,7 +273,7 @@ namespace VLTK.UI
                         Hide(v.preCastRing);
                         v.pcPreCast.enabled = true;
                         v.pcPreCast.transform.position = new Vector3(fx.casterPos.x, fx.casterPos.y, 0f);
-                        v.pcPreCast.transform.localScale = Vector3.one;
+                        v.pcPreCast.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                         v.pcPreCast.sprite = SelectPcPreCastFrame(fx);
                     }
                     else if (fx.HasPcMissileSprite)
@@ -328,7 +328,7 @@ namespace VLTK.UI
                             // so the dragon SPR rotates as it curves toward a moving enemy.
                             renderer.sprite = SelectPcMissileFrame(fx, mp, liveTarget);
                             renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
-                            renderer.transform.localScale = Vector3.one; // SPR decoder already outputs PC-correct orientation.
+                            renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                             renderer.color = Color.white;
                             renderer.enabled = true;
                         }
@@ -359,7 +359,7 @@ namespace VLTK.UI
                         Hide(v.impactRing);
                         v.pcImpact.enabled = true;
                         v.pcImpact.transform.position = new Vector3(fx.targetPos.x, fx.targetPos.y, 0f);
-                        v.pcImpact.transform.localScale = Vector3.one;
+                        v.pcImpact.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                         v.pcImpact.sprite = SelectPcImpactFrame(fx);
                         break;
                     }
@@ -504,11 +504,13 @@ namespace VLTK.UI
             var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
             if (sprites == null || frameIndex < 0) return Vector2.zero;
 
-            string path = Path.Combine(Application.streamingAssetsPath, "Sprites", fx.pcPreCastSpriteKey.EndsWith(".spr") ? fx.pcPreCastSpriteKey : fx.pcPreCastSpriteKey + ".spr");
+            // SPRs live in SpritesRuntime/ at project root (NOT StreamingAssets/Sprites/).
+            // See SprRuntimeService.DefaultSpritesRoot for the rationale.
+            string path = Path.Combine(Application.dataPath, "..", "SpritesRuntime",
+                fx.pcPreCastSpriteKey.EndsWith(".spr") ? fx.pcPreCastSpriteKey : fx.pcPreCastSpriteKey + ".spr");
             if (!System.IO.File.Exists(path)) return Vector2.zero;
             var fileInfo = new System.IO.FileInfo(path);
             string cacheKey = $"{fx.pcPreCastSpriteKey}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
-
             if (!_pcSpriteFrameData.TryGetValue(cacheKey, out var data)) return Vector2.zero;
             if (frameIndex >= data.frameOffsets.Length) return Vector2.zero;
 
@@ -533,12 +535,31 @@ namespace VLTK.UI
         {
             if (string.IsNullOrEmpty(key)) return null;
 
-            string path = Path.Combine(Application.streamingAssetsPath, "Sprites", key.EndsWith(".spr") ? key : key + ".spr");
+            // SPRs live in SpritesRuntime/ at project root (NOT StreamingAssets/Sprites/).
+            // See SprRuntimeService.DefaultSpritesRoot for the rationale — moving 67K+ SPRs
+            // out of Assets/ fixed a 1h+ Unity import hang.
+            string spritesRoot = Path.Combine(Application.dataPath, "..", "SpritesRuntime");
+            // PC missile/effect SPR paths are full backslash paths (e.g.
+            // \spr\skill\150\gb\gb_150_shichengjiulong_a.spr). SpritesRuntime stores them
+            // by filename-only (gb_150_shichengjiulong_a.spr). Try full-key first (for
+            // pre-sanitized keys), then fall back to filename-only so Cái Bang skill
+            // effect SPRs resolve instead of falling through to procedural _dotSprite.
+            string keyWithExt = key.EndsWith(".spr") ? key : key + ".spr";
+            string path = Path.Combine(spritesRoot, keyWithExt);
             if (!File.Exists(path))
             {
-                SubsystemLog.Warn("Combat", $"PC skill SPR missing: {path}");
-                _pcSpriteCache[key] = null;
-                return null;
+                string fileNameOnly = Path.GetFileName(keyWithExt.Replace('\\', '/'));
+                string fallbackPath = Path.Combine(spritesRoot, fileNameOnly);
+                if (File.Exists(fallbackPath))
+                {
+                    path = fallbackPath;
+                }
+                else
+                {
+                    SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (tried {spritesRoot}/{keyWithExt} and /{fileNameOnly})");
+                    _pcSpriteCache[key] = null;
+                    return null;
+                }
             }
 
             var fileInfo = new FileInfo(path);

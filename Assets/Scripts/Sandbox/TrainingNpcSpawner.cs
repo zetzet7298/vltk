@@ -46,10 +46,11 @@ namespace VLTK.Sandbox
 
             Vector2 center = usePlayerPosition ? GetPlayerCenter() : new Vector2(centerX, centerY);
 
-            // Pentagon: 5 vertices, start from top (angle = 90°), evenly spaced 72° apart
-            // Order: Bao cát, Cọc gỗ, Mộc nhân, Cọc gỗ, Bao cát
-            int[] templateIds = { TEMPLATE_BAO_CAT, TEMPLATE_COC_GOC, TEMPLATE_MOC_NHAN, TEMPLATE_COC_GOC, TEMPLATE_BAO_CAT };
-            string[] vietnameseNames = { "Bao cát", "Cọc gỗ", "Mộc nhân", "Cọc gỗ", "Bao cát" };
+            // PC source (NpcS.txt): templates 413 (Cọc gỗ → enemy178), 414 (Mộc nhân → enemy179),
+            // 415 (Bao cát → enemy180). Each template's NpcResType drives the SPR path via
+            // MapEnemyDatabase.GetTemplate(...).spriteClipRef — no more hardcoded enemy170 fallback.
+            int[] templateIds = { TEMPLATE_BAO_CAT, TEMPLATE_BAO_CAT, TEMPLATE_COC_GOC, TEMPLATE_COC_GOC, TEMPLATE_MOC_NHAN };
+            string[] vietnameseNames = { "Bao cát", "Bao cát", "Cọc gỗ", "Cọc gỗ", "Mộc nhân" };
 
             for (int i = 0; i < 5; i++)
             {
@@ -117,10 +118,14 @@ namespace VLTK.Sandbox
             go.transform.SetParent(_npcRoot, false);
             go.transform.position = new Vector3(worldPos.x, worldPos.y, 0f);
 
-            string standPath = TrainingStandPath(templateId);
+            // PC source: each template's NpcResType (enemy178/179/180) drives the SPR path.
+            // Mirrors MapEnemySpawnRuntime.SpawnTrainerMarkers pattern (PcNpcVisual + spriteClipRef).
+            string clipRef = ResolveClipRef(templateId);
+            string standPath = $@"spr\npcres\enemy\{clipRef}\{clipRef}_st.spr";
             var visual = go.AddComponent<PcNpcVisual>();
             visual.Configure(standPath, standPath, new Vector2(160f, 192f));
             var sr = go.transform.Find("NpcSprite")?.GetComponent<SpriteRenderer>();
+
 
             // Nameplate with HP bar
             var plate = CreateNameplate(go.transform, vietnameseName, MAX_HP);
@@ -146,7 +151,7 @@ namespace VLTK.Sandbox
                 activeRadius = 0,
                 aiMode = 0,
                 aiParams = new int[0],
-                spriteClipRef = "",
+                spriteClipRef = clipRef,
                 spriteResolved = false,
             };
             var npcInstance = new NpcInstance
@@ -168,16 +173,21 @@ namespace VLTK.Sandbox
             ai.Initialize(npcInstance, plate);
         }
 
-        private static string TrainingStandPath(int templateId)
+        // Resolve the PC NpcResType (spriteClipRef) for a training template. Reads from
+        // MapEnemyDatabase (PC npcs.txt); falls back to the canonical Ba Lăng mapping
+        // (413→enemy178, 414→enemy179, 415→enemy180) if the catalog entry is missing.
+        private static string ResolveClipRef(int templateId)
         {
-            string resType = templateId switch
+            var srcTemplate = MapEnemyDatabase.GetTemplate(templateId);
+            if (!string.IsNullOrEmpty(srcTemplate?.spriteClipRef))
+                return srcTemplate.spriteClipRef;
+            return BaLangEnemyDatabase.VietnameseTrainerName(templateId, null) switch
             {
-                TEMPLATE_COC_GOC => "enemy178",
-                TEMPLATE_MOC_NHAN => "enemy179",
-                TEMPLATE_BAO_CAT => "enemy180",
-                _ => null
+                "Cọc gỗ" => "enemy178",
+                "Mộc nhân" => "enemy179",
+                "Bao cát" => "enemy180",
+                _ => "enemy178",
             };
-            return string.IsNullOrEmpty(resType) ? null : $@"spr\npcres\enemy\{resType}\{resType}_st.spr";
         }
 
         private static EnemyHealthBar CreateNameplate(Transform parent, string displayName, int maxLife)

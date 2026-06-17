@@ -640,9 +640,16 @@ namespace VLTK.Sandbox
                         EnsureObjectRuntime();
                         EnsureTrapRuntime();
                         PlacePlayerOnActiveMap();
-                        SpawnEnemiesForActiveMap();
-                        RenderObjectsForActiveMap();
-                        BuildTrapsForActiveMap();
+                        if (ActiveBootProfile != SandboxBootProfile.FastEditor)
+                        {
+                            SpawnEnemiesForActiveMap();
+                            RenderObjectsForActiveMap();
+                            BuildTrapsForActiveMap();
+                        }
+                        else
+                        {
+                            SubsystemLog.Info("SandboxBoot", "FastEditor: skipped enemy/object/trap spawn.");
+                        }
                         SpawnTrainingNpcs();
                         ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
@@ -1584,12 +1591,18 @@ namespace VLTK.Sandbox
             // Equip Cái Bang Bổng Pháp staff weapon on boot for testing.
             // PC: Cái Bang Bổng Pháp requires 长棍类 weapon to cast staff skills.
             // 长棍类1 → PcWeaponType.LongWeapon → MA_RW_010_* SPRs.
-            PlayerController.EquipWeapon(PcWeaponType.LongWeapon);
-
-            // Auto-equip horse from PlayerProgression. PC source: level 30+ unlocks horse
-            // (see horseres.txt). Sandbox defaults: level 200 = red horse (id=5).
-            int horseId = PlayerProgression?.horseId ?? 0;
-            if (horseId > 0) PlayerController.SetHorseId(horseId);
+            //
+            // FastEditor guard: skip weapon equip on FastEditor boot to avoid loading 8×N
+            // MA_RW_010 SPRs (which can hang Unity for 20+ minutes when the SPR decoder
+            // stalls on shadow/aux frames). Re-enable manually by un-ticking FastEditor.
+            if (ActiveBootProfile != SandboxBootProfile.FastEditor)
+            {
+                PlayerController.EquipWeapon(PcWeaponType.LongWeapon);
+            }
+            else
+            {
+                SubsystemLog.Info("SandboxBoot", "FastEditor: skipped player weapon equip (MA_RW_010_* SPRs).");
+            }
 
             PlayerVisual = PlayerController.visual as MalePlayerVisual;
             PlayerJoystick = EnsureMobileJoystick();

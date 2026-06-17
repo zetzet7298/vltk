@@ -49,7 +49,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(cat.Resolve(PcCombatCatalogFactory.CaiBangDogBeatingAuraChild));
             Assert.IsNotNull(cat.Resolve(714), "missing Hỗn Thiên Khí Công 120");
             Assert.IsNotNull(cat.Resolve(720), "missing Hỗn Thiên Khí Công Quyết Chí");
-            Assert.AreEqual(35, cat.Count, "33 PC + Novice skills + NguDieuCanKhon (1072) CollideEvent + Kháng Long (358)");
+            Assert.AreEqual(39, cat.Count, "33 PC + Novice skills + NguDieuCanKhon (1072) CollideEvent + Kháng Long (358) + 4 NPC variants (1101/1103/1161/1162)");
         }
 
         [Test]
@@ -189,38 +189,29 @@ namespace VLTK.Tests.Sandbox
         public void CaiBang_AttackRadius_ScalesPerLevelFromPcGaibangLua()
         {
             // PC gaibang.lua short-range skills (117, 119, 122): skill_attackradius={{{1,320},{20,384}}}.
-            // PC gaibang.lua long-range skills (125, 128, 357, 359, 1073, 1074): skill_attackradius={{{1,448},{20,512}}}.
-            // 117/119/122 use PcCaiBangSkillTuning; 128/357/359/1073/1074 use KangLong/ModTuning.
+            // PC gaibang.lua long-range skills (125, 128, 357, 359, 1073, 1074, 1539): skill_attackradius={{{1,448},{20,512}}}.
+            // [CaiBang-LuaPort 2026-06-17] PcCaiBangSkillTuning/PcCaiBangModTuning removed;
+            // PcCaiBangLuaLevelService reads radius straight từ gaibang.lua SKILLS dict.
+            // 128 keeps its dedicated PcKangLongYouHuiTuning (level-curve richer than SKILLS dict).
             int[] shortRange = { 117, 119, 122 };
-            int[] longRange  = { 125, 128, 357, 359, 1073, 1074, 1539 };
+            int[] longRange  = { 125, 357, 359, 1073, 1074, 1539 };
 
             foreach (int id in shortRange)
             {
-                Assert.AreEqual(320, PcCaiBangSkillTuning.AtLevel(id, 1).attackRadius, $"L1 radius for {id}");
-                Assert.AreEqual(384, PcCaiBangSkillTuning.AtLevel(id, 20).attackRadius, $"L20 radius for {id}");
-                int mid = PcCaiBangSkillTuning.AtLevel(id, 10).attackRadius;
+                Assert.AreEqual(320, PcCaiBangLuaLevelService.GetAttackRadius(id, 1), $"L1 radius for {id}");
+                Assert.AreEqual(384, PcCaiBangLuaLevelService.GetAttackRadius(id, 20), $"L20 radius for {id}");
+                int mid = PcCaiBangLuaLevelService.GetAttackRadius(id, 10);
                 Assert.GreaterOrEqual(mid, 320, $"L10 radius for {id} should be >= L1");
                 Assert.LessOrEqual(mid, 384, $"L10 radius for {id} should be <= L20");
             }
             foreach (int id in longRange)
             {
-                // 128 uses KangLong; 357/359/1073/1074 use ModTuning; 125/1539 use PcCaiBangSkillTuning.
-                if (id == 128)
-                {
-                    Assert.AreEqual(448, PcKangLongYouHuiTuning.AtLevel(1).attackRadius, "128 L1");
-                    Assert.AreEqual(512, PcKangLongYouHuiTuning.AtLevel(20).attackRadius, "128 L20");
-                }
-                else if (id == 357 || id == 359 || id == 1073 || id == 1074)
-                {
-                    Assert.AreEqual(448, PcCaiBangModTuning.AtLevel(id, 1).attackRadius, $"{id} L1");
-                    Assert.AreEqual(512, PcCaiBangModTuning.AtLevel(id, 20).attackRadius, $"{id} L20");
-                }
-                else
-                {
-                    Assert.AreEqual(448, PcCaiBangSkillTuning.AtLevel(id, 1).attackRadius, $"{id} L1");
-                    Assert.AreEqual(512, PcCaiBangSkillTuning.AtLevel(id, 20).attackRadius, $"{id} L20");
-                }
+                Assert.AreEqual(448, PcCaiBangLuaLevelService.GetAttackRadius(id, 1), $"{id} L1");
+                Assert.AreEqual(512, PcCaiBangLuaLevelService.GetAttackRadius(id, 20), $"{id} L20");
             }
+            // 128 still routed qua PcKangLongYouHuiTuning (448→512 curve).
+            Assert.AreEqual(448, PcKangLongYouHuiTuning.AtLevel(1).attackRadius, "128 L1");
+            Assert.AreEqual(512, PcKangLongYouHuiTuning.AtLevel(20).attackRadius, "128 L20");
         }
 
         [Test]
@@ -314,7 +305,9 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(300, 0));
             var fx = visual.PlaySkillCast(cat.Resolve(117), beggar.position, enemy.position, 20);
             Assert.IsNotNull(fx, "117 visual should be configured");
-            Assert.AreEqual(14, fx.pcMissileSpeedPerTick, "PC missile 44 Speed=14 ticks/sec");
+            // [CaiBang-LuaPort] Lua authoritative: yanmen_tuobo missle_speed_v L20=24 (mobile gaibang.lua).
+            // Engine missile 44 Speed=14 được override bởi Lua missle_speed_v.
+            Assert.AreEqual(24, fx.pcMissileSpeedPerTick, "PC Lua yanmen_tuobo missle_speed_v L20=24");
             Assert.AreEqual(40, fx.pcMissileLifeTicks, "PC missile 44 LifeTime=40");
         }
 
@@ -460,7 +453,9 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(400, 0));
             var fx = visual.PlaySkillCast(cat.Resolve(1539), beggar.position, enemy.position, 20);
             Assert.IsNotNull(fx);
-            Assert.AreEqual(31, fx.pcMissileSpeedPerTick, "PC missile 47 Speed=31");
+            // [CaiBang-LuaPort] Lua authoritative: bangda_egou missle_speed_v L20=32 (mobile gaibang.lua).
+            // Engine missile 47 Speed=31 được override bởi Lua missle_speed_v.
+            Assert.AreEqual(32, fx.pcMissileSpeedPerTick, "PC Lua bangda_egou missle_speed_v L20=32");
             Assert.AreEqual(16, fx.pcMissileLifeTicks, "PC missile 47 LifeTime=16");
         }
     }

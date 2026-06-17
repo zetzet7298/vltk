@@ -424,15 +424,28 @@ namespace VLTK.UI
         /// </summary>
         private Sprite[] LoadPcSprites(string key)
         {
-            if (string.IsNullOrEmpty(key)) return null;
-
-            string path = Path.Combine(Application.streamingAssetsPath, "Sprites",
-                key.EndsWith(".spr") ? key : key + ".spr");
+            // SPRs live in SpritesRuntime/ at project root (NOT StreamingAssets/Sprites/).
+            // Mirrors SkillEffectWorldOverlay.LoadPcSprites — 67K+ SPRs moved out of
+            // Assets/ to keep Unity import time bounded. Full backslash path keys (PC
+            // missile/effect SPR paths) fall back to filename-only resolution so Cái
+            // Bang skill effect SPRs resolve instead of returning procedural fallbacks.
+            string spritesRoot = Path.Combine(Application.dataPath, "..", "SpritesRuntime");
+            string keyWithExt = key.EndsWith(".spr") ? key : key + ".spr";
+            string path = Path.Combine(spritesRoot, keyWithExt);
             if (!File.Exists(path))
             {
-                SubsystemLog.Warn("Combat", $"PC skill SPR missing: {path}");
-                _pcSpriteCache[key] = null;
-                return null;
+                string fileNameOnly = Path.GetFileName(keyWithExt.Replace('\\', '/'));
+                string fallbackPath = Path.Combine(spritesRoot, fileNameOnly);
+                if (File.Exists(fallbackPath))
+                {
+                    path = fallbackPath;
+                }
+                else
+                {
+                    SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (tried {spritesRoot}/{keyWithExt} and /{fileNameOnly})");
+                    _pcSpriteCache[key] = null;
+                    return null;
+                }
             }
 
             if (_pcSpriteCache.TryGetValue(key, out var cached)) return cached;

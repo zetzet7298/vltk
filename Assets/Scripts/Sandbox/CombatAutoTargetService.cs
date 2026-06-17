@@ -30,8 +30,11 @@ namespace VLTK.Sandbox
             int attackRadius;
             if (PcKangLongYouHuiTuning.Applies(skill.skillId) && skillLevel > 0)
                 attackRadius = PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
-            else if (PcCaiBangSkillTuning.Applies(skill.skillId) && skillLevel > 0)
-                attackRadius = PcCaiBangSkillTuning.AtLevel(skill.skillId, skillLevel).attackRadius;
+            else if (PcCaiBangLuaLevelService.Applies(skill.skillId) && skillLevel > 0)
+            {
+                int luaRadius = PcCaiBangLuaLevelService.GetAttackRadius(skill.skillId, skillLevel);
+                attackRadius = luaRadius > 0 ? luaRadius : skill.attackRadius;
+            }
             else
                 attackRadius = skill.attackRadius;
             float maxRange = attackRadius * RangeWorldPerPcUnit;

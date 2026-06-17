@@ -322,12 +322,20 @@ namespace VLTK.Sandbox
             if (skill.skillStyle != PcSkillStyle.Missiles && skill.skillStyle != PcSkillStyle.Melee) return;
             int skillLevel = forcedSkillLevel > 0 ? forcedSkillLevel : ResolveLevel(caster, skill);
             var kangLong = PcKangLongYouHuiTuning.Applies(skill.skillId) ? PcKangLongYouHuiTuning.AtLevel(skillLevel) : default;
-            var modTuning = PcCaiBangModTuning.Applies(skill.skillId) ? PcCaiBangModTuning.AtLevel(skill.skillId, skillLevel) : default;
             bool useKangLong = PcKangLongYouHuiTuning.Applies(skill.skillId);
-            bool useMod = PcCaiBangModTuning.Applies(skill.skillId);
-            int count = useMod ? Mathf.Max(1, modTuning.missileCount) : (useKangLong ? Mathf.Max(1, kangLong.missileCount) : Mathf.Max(1, skill.childSkillNum));
-            SkillMissileForm form = useMod ? modTuning.missileForm : (useKangLong ? kangLong.missileForm : skill.missileForm);
-            int attackRadius = useMod ? modTuning.attackRadius : (useKangLong ? kangLong.attackRadius : skill.attackRadius);
+            // [CaiBang-LuaPort 2026-06-17] PcCaiBangModTuning (stale hardcoded tables) replaced
+            // by PcCaiBangLuaLevelService, which reads từ Assets/StreamingAssets/Reference/gaibang.lua
+            // SKILLS dict. 357/359/1073/1074 (MOD Vietnam Cái Bang) lấy count/form/radius từ đây.
+            bool useLua = PcCaiBangLuaLevelService.Applies(skill.skillId);
+            // Lua returns 0 khi skill không có skill_misslenum_v/attackradius/misslesform_v
+            // trong SKILLS dict → caller fall through về catalog values (skill.childSkillNum, v.v.).
+            int luaCountRaw = useLua ? PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, skillLevel) : 0;
+            int luaAttackRadiusRaw = useLua ? PcCaiBangLuaLevelService.GetAttackRadius(skill.skillId, skillLevel) : 0;
+            int luaFormInt = useLua ? PcCaiBangLuaLevelService.GetMissileForm(skill.skillId, skillLevel) : -1;
+            SkillMissileForm luaForm = luaFormInt <= 0 ? skill.missileForm : (luaFormInt == 2 ? SkillMissileForm.Fan : SkillMissileForm.Single);
+            int count = luaCountRaw > 0 ? luaCountRaw : (useKangLong ? Mathf.Max(1, kangLong.missileCount) : Mathf.Max(1, skill.childSkillNum));
+            SkillMissileForm form = luaFormInt > 0 ? luaForm : (useKangLong ? kangLong.missileForm : skill.missileForm);
+            int attackRadius = luaAttackRadiusRaw > 0 ? luaAttackRadiusRaw : (useKangLong ? kangLong.attackRadius : skill.attackRadius);
             report.childProjectileCount += count;
             for (int i = 0; i < count; i++)
             {

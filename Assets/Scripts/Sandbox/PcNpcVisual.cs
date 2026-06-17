@@ -155,7 +155,22 @@ namespace VLTK.Sandbox
             int dir = dirs > 1 ? Mathf.Clamp(direction, 0, dirs - 1) : 0;
             int frameInDir = moving ? Mathf.FloorToInt(time * frameRate) % clip.framesPerDirection : 0;
             int idx = Mathf.Clamp(dir * clip.framesPerDirection + frameInDir, 0, clip.sprites.Length - 1);
-            _renderer.sprite = clip.sprites[idx];
+            // PC SPR frames are often shadow/ambient tiles (very wide or very tall) — the actual
+            // character sprite lives in one direction and frame position. When the natural index
+            // hits a null or pathological frame, search nearby for a "real" sprite (50–512 px).
+            var sprite = clip.sprites[idx];
+            if (NeedsSpriteFallback(sprite))
+            {
+                int pick = FindBestSpriteInDirection(clip, dir);
+                if (pick < 0)
+                {
+                    if (_renderer != null) _renderer.sprite = null;
+                    return;
+                }
+                sprite = clip.sprites[pick];
+                idx = pick;
+            }
+            _renderer.sprite = sprite;
             _spriteRoot.localPosition = clip.offsets[idx];
             _renderer.sortingOrder = MapRenderer.PlayerSortingOrder - 10;
             ApplyShadowFrame(time);
@@ -182,8 +197,56 @@ namespace VLTK.Sandbox
             int frameInDir = moving ? Mathf.FloorToInt(time * frameRate) % clip.framesPerDirection : 0;
             int idx = Mathf.Clamp(dir * clip.framesPerDirection + frameInDir, 0, clip.sprites.Length - 1);
             _shadowRenderer.sprite = clip.sprites[idx];
-            _shadowRoot.localPosition = clip.offsets[idx];
+            _spriteRoot.localPosition = clip.offsets[idx];
             _shadowRenderer.sortingOrder = MapRenderer.PlayerSortingOrder - 20;
+        }
+
+        // Returns true if the natural frame at this index is unusable (null or a wide shadow tile
+        // instead of the actual character sprite). Width > 1024 or height > 1024 is treated as
+        // an ambient/shadow tile that we should NOT render directly — PC engine packs shadow
+        // tiles into the same SPR file as the character frames.
+        private static bool NeedsSpriteFallback(Sprite s)
+        {
+            if (s == null) return true;
+            if (s.rect.width > 1024f || s.rect.height > 1024f) return true;
+            if (s.rect.width < 16f || s.rect.height < 16f) return true;
+            return false;
+        }
+
+        // Scan every sprite in the given direction for the one closest to a real character
+        // sprite (smallest "reasonable" pixel area). Returns global sprite index, or -1.
+        // Scan every sprite in the given direction. Prefer the one that looks like a character
+        // body (16–512 px, aspect ratio close to 1:1 — shadows/aux tiles are very wide or very tall).
+        // Tiebreaker: smallest |offsetX| - so the character's design pivot wins over shadow
+        // tiles that share similar area.
+        private static int FindBestSpriteInDirection(ClipRuntime clip, int dir)
+        {
+            if (clip == null || clip.sprites == null || clip.framesPerDirection <= 0) return -1;
+            int dirs = Mathf.Max(1, clip.directionCount);
+            int dirBase = Mathf.Clamp(dir, 0, dirs - 1) * clip.framesPerDirection;
+            int bestIdx = -1;
+            float bestScore = float.MaxValue;
+            int end = Mathf.Min(clip.sprites.Length, dirBase + clip.framesPerDirection);
+            for (int i = dirBase; i < end; i++)
+            {
+                var s = clip.sprites[i];
+                if (s == null) continue;
+                int w = (int)s.rect.width;
+                int h = (int)s.rect.height;
+                if (w < 16 || h < 16 || w > 512 || h > 512) continue;
+                // Aspect ratio: 1.0 = perfect square. Score = |w/h - 1| + small bonus for being closer to design pivot.
+                float aspect = (float)w / (float)h;
+                float aspectScore = Mathf.Abs(aspect - 1f);
+                var off = clip.offsets[i];
+                float pivotScore = Mathf.Abs(off.x) * 0.001f;
+                float score = aspectScore + pivotScore;
+                if (score < bestScore)
+                {
+                    bestScore = score;
+                    bestIdx = i;
+                }
+            }
+            return bestIdx;
         }
 
         private void EnsureRenderer()
@@ -269,7 +332,11 @@ namespace VLTK.Sandbox
                 if (tex == null) continue;
                 tex.name = $"PcNpc_{Path.GetFileNameWithoutExtension(sourcePath)}_{i:000}";
                 clip.sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0f, 1f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
-                clip.offsets[i] = new Vector2((frame.offsetX - referencePixel.x) / pixelsPerUnit, (referencePixel.y - frame.offsetY) / pixelsPerUnit);
+                // PC frame offsets are stored in 1/64 PC-pixel units (engine tile grid).
+                // referencePixel is in raw PC pixels; normalize offsetY through the same divisor
+                // so the resulting world-space offset lands near the sprite's own foot
+                // regardless of how big frame.offsetY happens to be in PC internal coords.
+                clip.offsets[i] = new Vector2((frame.offsetX - referencePixel.x) / pixelsPerUnit, (referencePixel.y - frame.offsetY / 64f) / pixelsPerUnit);
             }
 
             ClipCache[key] = clip;

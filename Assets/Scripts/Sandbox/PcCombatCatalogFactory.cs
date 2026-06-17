@@ -302,6 +302,40 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
                 horseLimit: 1, missilesGenerateData: 5),
 
+            // 1101 Thừa Lục Long (multi-target) — PC reuse zhanggaibang150 table (Bước 6)
+            // PC skills.txt 1101: clone của 1073, ByMissle=1, ChildSkillId=335
+            DamageSkillNew(1101, "时乘六龙(多)", "Thừa Lục Long (đa mục tiêu)", 150, 20, 512, 335, SkillMissileForm.Fan, 3, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
+                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                horseLimit: 1),
+
+            // 1103 Thừa Lục Long (no script) — inert, no LvlSetScript; PC damage inline trong skills.txt
+            // PC skills.txt 1103: clone 1073, không có Lua, stats fixed
+            DamageSkillNew(1103, "时乘六龙(无脚本)", "Thừa Lục Long (không script)", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
+                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                horseLimit: 1),
+
+            // 1161 Thừa Lục Long (NPC) — PC reuse zhanggaibang150 table
+            DamageSkillNew(1161, "时乘六龙NPC", "Thừa Lục Long (NPC)", 1, 60, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
+                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                horseLimit: 1),
+
+            // 1162 Cửu Cái Bang 150 (NPC) — PC reuse gungaibang150 table
+            DamageSkillNew(1162, "滚丐帮150NPC", "Cửu Cái Bang 150 (NPC)", 1, 60, 512, 336, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => Link(lv, (1, 10, ""), (15, 80, ""), (20, 165, "")),
+                fire: (lv) => (Link(lv, (1, 60, ""), (15, 120, ""), (20, 230, "")), 0, Link(lv, (1, 60, ""), (15, 160, ""), (20, 345, ""))),
+                cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                horseLimit: 1),
+
             LongChienUYuyeSkill(),
             NguDieuCanKhonSkill(),
         };
@@ -648,7 +682,7 @@ namespace VLTK.Sandbox
         // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
         // the player skill panel filters it out via isNpcVariant.
-        public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==358 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1539 || id==389;
+        public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==358 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1101 || id==1103 || id==1161 || id==1162 || id==1539 || id==389;
         public static bool IsWuDangSkill(int id) => id >= WuDangMinSkillId && id <= WuDangMaxSkillId;
         public static bool IsShaolinSkill(int id) => id >= ShaolinMinSkillId && id <= ShaolinMaxSkillId && id != 5 && id != 7;
         public static bool IsTangMenSkill(int id) => id >= TangMenMinSkillId && id <= TangMenMaxSkillId && id != 53 && id != 44 && id != 46 && id != 49 && id != 52 && id != 56;

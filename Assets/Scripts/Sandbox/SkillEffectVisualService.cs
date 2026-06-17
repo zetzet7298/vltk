@@ -70,6 +70,15 @@ namespace VLTK.Sandbox
             fx.color = config.lightColor;
             fx.castSoundPath = config.castSoundPath;
 
+            // Cái Bang dragon SPRs (Tinh Kiem PAK variants) are very small relative
+            // to the mobile viewport (PC tile scale ~32-64px, mobile chars ~128-256px).
+            // Scale 50x so the dragon body is unmistakably visible. Affects flight
+            // missile + impact + precast SpriteRenderers.
+            if (PcCaiBangLuaLevelService.Applies(skill.skillId))
+            {
+                fx.pcSpriteRenderScale = 50f;
+            }
+
             // PreCast visual
             if (config.hasPreCast && !string.IsNullOrEmpty(config.preCastSprPath))
             {
@@ -115,9 +124,9 @@ namespace VLTK.Sandbox
                 // PC gaibang.lua overrides: missle_speed_v takes priority over engine missles.txt Speed.
                 // Source: jx-source bin/client/script/skill/gaibang.lua per-skill interpolation tables.
                 int missileSpeed = config.missileSpeed;
-                if (PcCaiBangSkillTuning.Applies(skill.skillId))
+                if (PcCaiBangLuaLevelService.Applies(skill.skillId))
                 {
-                    int luaSpeed = PcCaiBangSkillTuning.MissileSpeedAtLevel(skill.skillId, level);
+                    int luaSpeed = PcCaiBangLuaLevelService.GetMissileSpeed(skill.skillId, level);
                     if (luaSpeed > 0) missileSpeed = luaSpeed;
                 }
 
@@ -145,9 +154,11 @@ namespace VLTK.Sandbox
                 }
                 // PC gaibang.lua: Single-form skills with skill_misslenum_v > 1 use homing spread.
                 // E.g. Phi Long (357) L20=4, Thiên Hạ Vô Cẩu (359) L20=3, Càn Khôn (1074) L20=5.
-                else if (PcCaiBangSkillTuning.Applies(skill.skillId))
+                // [CaiBang-LuaPort 2026-06-17] PcCaiBangSkillTuning.MissileCountAtLevel replaced
+                // by Lua-driven GetMissileCount from gaibang.lua skill_misslenum_v table.
+                else if (PcCaiBangLuaLevelService.Applies(skill.skillId))
                 {
-                    int luaCount = PcCaiBangSkillTuning.MissileCountAtLevel(skill.skillId, level);
+                    int luaCount = PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, level);
                     if (luaCount > 1)
                         SetupPcPhiLongSpread(fx, luaCount, 8);
                 }
@@ -684,6 +695,12 @@ namespace VLTK.Sandbox
         public float arrivalRadius = 1f;
         public float rendRadius = 4f;
         public List<Vector2> rendPositions;
+        // Multiplier for PC missile/impact/precast SpriteRenderer.localScale.
+        // Default 1x (native pixel size). Cái Bang dragon skills (Phi Long 357,
+        // Khang Long 358, Thien Ha Vo Cau 359) override to 2.5x because their
+        // Tinh Kiem PAK SPRs are sized for tile-based PC clients and look
+        // tiny in the mobile viewport.
+        public float pcSpriteRenderScale = 1f;
 
         /// <summary>
         /// Optional live target position getter for homing missiles.

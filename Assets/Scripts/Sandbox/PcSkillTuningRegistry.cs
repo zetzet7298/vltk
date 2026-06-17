@@ -123,11 +123,11 @@ namespace VLTK.Sandbox
             int lv = Mathf.Max(1, level);
             var spec = new SkillTuningSpec();
 
-            // Cái Bang legacy path
-            if (factionId == CombatFactionExt.CaiBangId || PcCaiBangSkillTuning.Applies(skillId))
+            // [CaiBang-LuaPort 2026-06-17] PcCaiBangSkillTuning.AtLevel replaced by Lua service
+            // reading từ gaibang.lua. Cái Bang luôn applies nếu skillId trong SkillIdToName map.
+            if (factionId == CombatFactionExt.CaiBangId || PcCaiBangLuaLevelService.Applies(skillId))
             {
-                var cb = PcCaiBangSkillTuning.AtLevel(skillId, lv);
-                spec.attackRadius = cb.attackRadius;
+                spec.attackRadius = PcCaiBangLuaLevelService.GetAttackRadius(skillId, lv);
             }
 
             // Override từ registry nếu có
@@ -177,7 +177,7 @@ namespace VLTK.Sandbox
         /// <summary>Kiểm tra tuning data có tồn tại cho skill không.</summary>
         public static bool HasTuning(int skillId, int factionId)
         {
-            if (PcCaiBangSkillTuning.Applies(skillId)) return true;
+            if (PcCaiBangLuaLevelService.Applies(skillId)) return true;
             if (RadiusCurves.TryGetValue(factionId, out var fc) && fc.ContainsKey(skillId)) return true;
             foreach (var curveDict in RadiusCurves.Values)
                 if (curveDict.ContainsKey(skillId)) return true;

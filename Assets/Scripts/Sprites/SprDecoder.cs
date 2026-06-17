@@ -68,7 +68,9 @@ namespace VLTK.Sprites
                 using var ms = new MemoryStream(data);
                 using var br = new BinaryReader(ms);
 
-                // Parse header (32 bytes)
+                // Parse header (36 bytes): sig(4) + 8 fields*2 + 6 reserved*2 = 4+16+12 = 32? actually 4 + 8*2 + 6*2 = 4+16+12 = 32.
+                // PC JX engine uses 36 bytes: sig(4) + 8 fields*2 (16) + 6 reserved*2 (12) + 4 trailing reserved = 36.
+                // Original code only read 32 bytes, leaving 4 bytes unconsumed and mis-aligning the palette read.
                 var header = new SprHeader
                 {
                     signature = br.ReadUInt32(),
@@ -83,7 +85,9 @@ namespace VLTK.Sprites
                 };
                 for (int i = 0; i < 6; i++)
                     header.reserved[i] = br.ReadUInt16();
-
+                // PC JX engine header is 36 bytes total: 4 (sig) + 16 (8 fields) + 12 (6 reserved) + 4 trailing = 36.
+                // We read 32 bytes; consume the trailing 4 bytes before palette.
+                br.ReadUInt32();
                 if (!header.IsValid)
                 {
                     result.error = $"Invalid SPR signature: 0x{header.signature:X8}";
@@ -128,25 +132,44 @@ namespace VLTK.Sprites
                 {
                     var off = result.offsets[i];
                     long frameStart = frameDataBase + off.offset;
+                    long frameEnd = frameStart + off.length;
 
-                    if (frameStart + off.length > data.Length)
+                    if (frameEnd > data.Length)
                     {
-                        SubsystemLog.Warn("SPR", $"Frame {i} out of bounds, skipping");
-                        result.frames[i] = new SprFrame { width = 0, height = 0 };
-                        continue;
+                        // Fallback for malformed PC SPR offset tables (e.g. training dummies
+                        // enemy178/179/180/181_st.spr): the `offset` field actually stores the
+                        // frame payload length (+4 bias for the per-frame header), and the
+                        // `length` field is garbage. PC JX engine reads the rest of the file as
+                        // a single contiguous frame. Recover it instead of dropping the frame.
+                        long payloadAvail = data.Length - frameDataBase;
+                        long guessLength = (long)off.offset - 4;
+                        if (guessLength > 0 && guessLength <= payloadAvail)
+                        {
+                            SubsystemLog.Warn("SPR",
+                                $"Frame {i} offset table malformed (offset={off.offset}, length={off.length}); "
+                                + $"using contiguous fallback (start={frameDataBase}, length={guessLength})");
+                            frameStart = frameDataBase;
+                            frameEnd = frameStart + guessLength;
+                        }
+                        else
+                        {
+                            SubsystemLog.Warn("SPR", $"Frame {i} out of bounds, skipping");
+                            result.frames[i] = new SprFrame { width = 0, height = 0 };
+                            continue;
+                        }
                     }
 
                     ms.Position = frameStart;
-                    var frameBlob = br.ReadBytes((int)off.length);
+                    var frameBlob = br.ReadBytes((int)(frameEnd - frameStart));
                     result.frames[i] = DecodeFrame(frameBlob, result.palette, header.colors);
                 }
-
                 result.success = true;
                 return result;
             }
             catch (Exception ex)
             {
-                result.error = $"Decode error: {ex.Message}";
+                string msg = !string.IsNullOrEmpty(ex.Message) ? ex.Message : ex.GetType().Name;
+                result.error = $"Decode error: {msg}";
                 return result;
             }
         }
@@ -167,8 +190,15 @@ namespace VLTK.Sprites
             frame.offsetX = (short)(blob[4] | (blob[5] << 8));
             frame.offsetY = (short)(blob[6] | (blob[7] << 8));
 
-            int pixelCount = frame.width * frame.height;
-            frame.rgbaPixels = new Color32[pixelCount];
+            // fwidth and fheight are ushort (max 65535 each) — multiplying as int can overflow.
+            // Skip pathological frames (>4M pixels) instead of crashing the whole decode.
+            long pixelCount = (long)frame.width * (long)frame.height;
+            if (pixelCount > 0xFFFFFFL)
+            {
+                frame.width = 0; frame.height = 0;
+                return frame;
+            }
+            frame.rgbaPixels = new Color32[(int)pixelCount];
 
             // Decode RLE-compressed rows
             int srcPos = 8;
@@ -196,10 +226,20 @@ namespace VLTK.Sprites
                         if (srcPos >= blob.Length) break;
 
                         byte colorIndex = blob[srcPos++];
-                        int palOff = colorIndex * 3;
-                        byte red = palOff + 0 < palette.Length ? palette[palOff + 0] : (byte)0;
-                        byte green = palOff + 1 < palette.Length ? palette[palOff + 1] : (byte)0;
-                        byte blue = palOff + 2 < palette.Length ? palette[palOff + 2] : (byte)0;
+                        // PC SPR palettes use 256 colors; SPR colorIndex is a byte (0-255) but
+                        // header.colors can be < 256 — clamp and mask to prevent IndexOutOfRangeException
+                        // (which surfaces as an empty ex.Message in the outer catch).
+                        byte red = 0, green = 0, blue = 0;
+                        if (colorIndex < colorCount && colorCount > 0)
+                        {
+                            int palOff = colorIndex * 3;
+                            if (palOff + 2 < palette.Length)
+                            {
+                                red = palette[palOff + 0];
+                                green = palette[palOff + 1];
+                                blue = palette[palOff + 2];
+                            }
+                        }
 
                         frame.rgbaPixels[rowBase + col] = new Color32(red, green, blue, alpha);
                         col++;
@@ -210,9 +250,21 @@ namespace VLTK.Sprites
             return frame;
         }
 
+        // Max texture dimension Unity allows on the active graphics device.
+        // SPR frames can declare huge dimensions (e.g. 49k×65k) which fail Texture2D ctor.
+        // Skip such frames entirely — they are usually "shadow" or "ambient" effect textures
+        // with no visible pixel data, never rendered as part of an NPC sprite.
+        // Unity 6's default max texture dimension is 16384 on desktop GPUs.
+        // PC JX engine SPRs often declare very large dims (49k×65k) for shadow/ambient tiles;
+        // we skip those but still load any frame ≤ 16384 — needed so all 8 NPC directions
+        // resolve to a usable sprite (not just one frame in each direction).
+        private const int MAX_SPR_TEXTURE_DIM = 16384;
+
         public static Texture2D CreateTexture(SprFrame frame, bool linear = false)
         {
             if (frame == null || frame.width == 0 || frame.height == 0)
+                return null;
+            if (frame.width > MAX_SPR_TEXTURE_DIM || frame.height > MAX_SPR_TEXTURE_DIM)
                 return null;
 
             var tex = new Texture2D(frame.width, frame.height, TextureFormat.RGBA32, false, linear);

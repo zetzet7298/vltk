@@ -22,7 +22,7 @@
         "com.unity.nuget.newtonsoft-json": "3.0.2",
         "com.unity.test-framework": "1.1.31"
       },
-      "hash": "c0908b88d6ec2d7152df2a8fc9c1590270856390"
+      "hash": "dccecd689072dce4c319e15c812006005c68ad0b"
     },
     "com.unity.2d.common": {
       "version": "15.0.0",
