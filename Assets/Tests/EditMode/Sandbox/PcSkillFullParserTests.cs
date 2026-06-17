@@ -41,7 +41,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(80, byId[332].reqLevel);
             Assert.AreEqual(20, byId[332].maxLevel);
             Assert.AreEqual(@"\script\skill\emei.lua", byId[332].lvlSetScript);
-            Assert.AreEqual(@"\script\skill\lvlup_pudu_zhongsheng.lua", byId[332].levelUpScript);
+            Assert.AreEqual(@"\script\skill\phodo_chungsinh.lua", byId[332].levelUpScript);
             Assert.AreEqual(@"\script\skill\translife_4\lvlup_waigong.lua", byId[1123].levelUpScript);
         }
 

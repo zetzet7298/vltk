@@ -100,7 +100,6 @@ Assets/AssetBundles/
 # SPRs live OUTSIDE Assets/ to keep Unity import time bounded —
 # 67K+ binary SPRs in Assets/StreamingAssets/ hung Unity for 1+ hours.
 # Source: /var/www/jx-source/pak_unpacked/ → /var/www/vltk-mobile/SpritesRuntime/
-# ─────────────────────────────────────────────────
 SpritesRuntime/
 Assets/StreamingAssets/Generated/MapRegions/
 Assets/StreamingAssets/Generated/MapSprites/
@@ -109,7 +108,13 @@ Assets/StreamingAssets/Generated/NpcSprites/
 Assets/StreamingAssets/Generated/ObjectSprites/
 Assets/StreamingAssets/Generated.meta
 Assets/StreamingAssets/Generated/*.meta
-
+# Skill icon SPRs are intermediate (PNGs in UI/HUD/Art/PcSkillIcons are runtime art)
+Assets/StreamingAssets/Sprites/SkillIconsPc/*.spr
+Assets/StreamingAssets/Sprites/SkillIconsPc/*.spr.meta
+Assets/StreamingAssets/Sprites/SkillIconsPc.meta
+Assets/StreamingAssets/Sprites.meta
+!Assets/StreamingAssets/Sprites/SkillIconsPc/*.json
+!Assets/StreamingAssets/Sprites/SkillIconsPc/*.json.meta
 # ─────────────────────────────────────────────────
 # Converted/extracted game assets (intermediate output from vltktool)
 # ─────────────────────────────────────────────────

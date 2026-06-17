@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC settings/skills.txt full skill catalog parser
-// Source: server settings/skills.txt (GB2312, 1,216 rows, 113 tab-separated columns)
+// Source: server settings/skills.txt (GB2312, 1,555 rows, 114 tab-separated columns)
 // Purpose: expose the full PC skill catalog (id, name, faction, icon, cooldown,
 // damage, range, attribute flags) to mobile runtime for skill databases and
 // lookup. Reuses the same header layout as PcSkills.txt (the smaller curated
@@ -22,12 +22,12 @@ namespace VLTK.Sandbox
         public const int AttribCol = 3;
         public const int SkillStyleCol = 4;
         public const int IconCol = 5;
-        public const int IsAuraCol = 11;
-        public const int AttackRadiusCol = 14;
-        public const int ReqLevelCol = 52;
-        public const int MaxLevelCol = 53;
-        public const int LvlSetScriptCol = 70;
-        public const int LevelUpScriptCol = 111;
+        public const int IsAuraCol = 11;          // header: IsAura at col 11
+        public const int AttackRadiusCol = 14;   // header: AttackRadius at col 14
+        public const int ReqLevelCol = 53;       // header: ReqLevel at col 53
+        public const int MaxLevelCol = 54;       // header: MaxLevel at col 54
+        public const int LvlSetScriptCol = 71;   // header: LvlSetScript at col 71
+        public const int LevelUpScriptCol = 112; // header: LevelUpScript at col 112
 
         public static List<PcSkillEntry> ParseFile(string path)
         {
