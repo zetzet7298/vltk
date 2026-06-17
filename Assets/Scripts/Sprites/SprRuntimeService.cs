@@ -30,10 +30,30 @@ namespace VLTK.Sprites
         public int MissCount => _missCache.Count;
         public int DiagnosticCount => _diagnostics.Count;
 
+        /// <summary>
+        /// Default SPR search root. SPRs live outside Assets/ (in /SpritesRuntime)
+        /// to keep Unity's AssetDatabase import time bounded — 67K+ binary SPRs
+        /// make Unity hang for 1+ hours when staged in Assets/StreamingAssets/.
+        ///
+        /// Resolution:
+        ///   Editor: project root /SpritesRuntime
+        ///   Player: also project root /SpritesRuntime (same convention;
+        ///           if a build needs APK packaging, copy /SpritesRuntime
+        ///           into StreamingAssets before build)
+        /// </summary>
+        public const string DefaultSpritesRoot = "SpritesRuntime";
+
         public SprRuntimeService(string streamingAssetsRoot = null)
         {
-            _spritesRoot = streamingAssetsRoot
-                ?? Path.Combine(Application.streamingAssetsPath, "Sprites");
+            if (streamingAssetsRoot != null)
+            {
+                _spritesRoot = streamingAssetsRoot;
+                return;
+            }
+            // Application.dataPath = <project>/Assets
+            // project root = Application.dataPath/..
+            _spritesRoot = Path.GetFullPath(
+                Path.Combine(Application.dataPath, "..", DefaultSpritesRoot));
         }
 
         /// <summary>

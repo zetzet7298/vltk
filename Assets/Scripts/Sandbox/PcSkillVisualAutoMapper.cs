@@ -66,6 +66,7 @@ namespace VLTK.Sandbox
         public int stateAuraTotalFrames;    // total animation frames (PC: 16 for Túy Điệp)
         public int stateAuraIntervalTicks;  // animation speed (PC: 1 tick = 1 frame change)
         public int stateAuraFrameStart;     // start frame (PC: 4 for Túy Điệp, 0 default)
+        public int stateAuraFrameEnd;       // end frame (PC: 12 for Túy Điệp, 0 = play all)
         public int stateAuraDirections;     // 1 (most state auras are direction-free)
         public int stateAuraPos;            // 1=head(头顶) 2=feet(脚底) 3=body(身上)
         public bool hasStateAura;
@@ -254,9 +255,9 @@ namespace VLTK.Sandbox
             var aura = GetStateAuraData(skill.stateSpecialId);
             if (string.IsNullOrEmpty(aura.sprPath)) return;
             config.stateAuraSprPath = aura.sprPath;
-            config.stateAuraTotalFrames = aura.totalFrames;
             config.stateAuraIntervalTicks = aura.intervalTicks;
             config.stateAuraFrameStart = aura.frameStart;
+            config.stateAuraFrameEnd = aura.frameEnd;
             config.stateAuraDirections = aura.directions;
             config.stateAuraPos = aura.position;
             config.hasStateAura = true;
@@ -286,34 +287,100 @@ public static string SprPathToKey(string pcPath)
         /// State ID 0 = no aura. Position: 1=头顶(head) 2=脚底(feet) 3=身上(body).
         /// Anim: total frames, frame start (e.g. 4-12 for Túy Điệp 43), 1 direction, loop.
         /// </summary>
+        /// <summary>
+        /// State aura visual data from PC source: 状态与光效图形对照表.txt.
+        /// PC source: jx-source Utility/Run/Settings/状态与光效图形对照表.txt.
+        /// State ID 0 = no aura. Position: 1=头顶(head) 2=脚底(feet) 3=身上(body).
+        /// Columns: stateId, sprPath, position, playMode, frameStart, frameEnd,
+        /// totalFrames, directions, frameInterval, name.
+        /// </summary>
         public struct PcStateAuraData
         {
             public string sprPath;
             public int totalFrames;
             public int frameStart;
+            public int frameEnd;
             public int intervalTicks;
             public int directions;
             public int position;  // 1=head 2=feet 3=body
         }
 
-        public static PcStateAuraData GetStateAuraData(int stateId)
+        /// <summary>
+        /// Returns PC state aura visual config for a given state ID.
+        /// Source: jx-source 状态与光效图形对照表.txt — all 44 visual states (6-49).
+        /// States 1-5 are built-in (stun/poison/freeze/burn/confuse) with no SPR.
+        /// </summary>
+        public static PcStateAuraData GetStateAuraData(int stateId) => stateId switch
         {
-            // PC source 状态与光效图形对照表.txt (Tinh Kiem mod 2023)
-            // Format: stateId, sprPath, position, animType, frameStart, frameEnd, totalFrames, directions, anims, name
-            // Only state IDs that match PC VLTK skills in our catalog are listed.
-            switch (stateId)
-            {
-                case 43: return new PcStateAuraData
-                {
-                    // PC source: 状态43 = Túy Điệp Cuồng Vũ (skill 130 Cái Bang)
-                    //   SPR: \spr\skill\丐帮\mag_gb_11_醉蝶狂舞.spr, position 身上(body), loop
-                    //   Frames 4-12 of 16 total, 1 direction, 1 anim
-                    sprPath = "\\spr\\skill\\丐帮\\mag_gb_11_醉蝶狂舞.spr",
-                    totalFrames = 16, frameStart = 4, intervalTicks = 1, directions = 1, position = 3,
-                };
-                default: return new PcStateAuraData();
-            }
-        }
+            // ── WuDu (五毒教) states 6-12 ──
+            6  => Aura("\\spr\\skill\\五毒教\\wdu_06_无形蛊.spr",   pos:2, fs:0,  fe:0,  tf:30, dir:1, iv:1),
+            7  => Aura("\\spr\\skill\\五毒教\\wdu_07_毒盾.spr",     pos:3, fs:5,  fe:15, tf:20, dir:1, iv:1),
+            8  => Aura("\\spr\\skill\\五毒教\\wdu_08_冰蓝玄晶.spr", pos:1, fs:0,  fe:0,  tf:30, dir:1, iv:1),
+            9  => Aura("\\spr\\skill\\五毒教\\wdu_09_雷动九天.spr", pos:1, fs:0,  fe:0,  tf:30, dir:1, iv:1),
+            10 => Aura("\\spr\\skill\\五毒教\\wdu_10_赤焰蚀天.spr", pos:1, fs:0,  fe:0,  tf:30, dir:1, iv:1),
+            11 => Aura("\\spr\\skill\\五毒教\\wdu_11_万蛊蚀心.spr", pos:1, fs:0,  fe:0,  tf:30, dir:1, iv:1),
+            12 => Aura("\\spr\\skill\\五毒教\\wdu_12_移花接玉.spr", pos:1, fs:0,  fe:0,  tf:20, dir:1, iv:1),
+            // ── KunLun (昆仑) states 13-17 ──
+            13 => Aura("\\spr\\skill\\昆仑\\kl_06_大浪蚀空.spr",   pos:3, fs:5,  fe:15, tf:20, dir:1, iv:2),
+            14 => Aura("\\spr\\skill\\昆仑\\kl_07_引雷遁地.spr",   pos:3, fs:7,  fe:22, tf:30, dir:1, iv:2),
+            15 => Aura("\\spr\\skill\\昆仑\\kl_08_烈火红尘.spr",   pos:3, fs:7,  fe:22, tf:30, dir:1, iv:2),
+            16 => Aura("\\spr\\skill\\昆仑\\kl_09_木珠兵解.spr",   pos:3, fs:40, fe:40, tf:40, dir:1, iv:2),
+            17 => Aura("\\spr\\skill\\昆仑\\kl_10_滑不留手.spr",   pos:3, fs:4,  fe:12, tf:15, dir:1, iv:2),
+            // ── WuDang (武当) states 18-20 ──
+            18 => Aura("\\spr\\skill\\武当\\wd_08_人剑合一.spr",   pos:3, fs:7,  fe:22, tf:30, dir:1, iv:1),
+            19 => Aura("\\spr\\skill\\武当\\wd_06_坐忘无我.spr",   pos:1, fs:0,  fe:0,  tf:36, dir:1, iv:1),
+            20 => Aura("\\spr\\skill\\武当\\wd_07_七星阵.spr",     pos:2, fs:0,  fe:0,  tf:30, dir:1, iv:1),
+            // ── TianRen (天忍) states 21-30 ──
+            21 => Aura("\\spr\\skill\\天忍\\mag_tr_06_火盾.spr",       pos:3, fs:4,  fe:12, tf:15, dir:1, iv:1),
+            22 => Aura("\\spr\\skill\\天忍\\mag_tr_07_偷天换日.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            23 => Aura("\\spr\\skill\\天忍\\mag_tr_08_吸星大法.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            24 => Aura("\\spr\\skill\\天忍\\mag_tr_09_借力打力.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            25 => Aura("\\spr\\skill\\天忍\\mag_tr_10_蚀骨血仞.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            26 => Aura("\\spr\\skill\\天忍\\mag_tr_11_幻影飞狐.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            27 => Aura("\\spr\\skill\\天忍\\mag_tr_12_飞鸿无迹.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            28 => Aura("\\spr\\skill\\天忍\\mag_tr_13_厉魔夺魂.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            29 => Aura("\\spr\\skill\\天忍\\mag_tr_14_五行阵.spr",     pos:2, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            30 => Aura("\\spr\\skill\\天忍\\mag_tr_15_天魔解体.spr",   pos:1, fs:0,  fe:0,  tf:15, dir:1, iv:1),
+            // ── CuiYan (翠烟) states 31-34 ──
+            31 => Aura("\\spr\\skill\\翠烟\\mag_cy_06_雪盾.spr",   pos:3, fs:4,  fe:12, tf:16, dir:1, iv:2),
+            32 => Aura("\\spr\\skill\\翠烟\\mag_cy_07_冰盾.spr",   pos:3, fs:4,  fe:12, tf:16, dir:1, iv:2),
+            33 => Aura("\\spr\\skill\\翠烟\\mag_cy_09_雪影.spr",   pos:3, fs:16, fe:16, tf:16, dir:1, iv:2),
+            34 => Aura("\\spr\\skill\\翠烟\\mag_cy_12_摄心术.spr", pos:1, fs:0,  fe:0,  tf:18, dir:1, iv:4),
+            // ── TangMen (唐门) states 35-36 ──
+            35 => Aura("\\spr\\skill\\唐门\\tm_01_毒附加.spr", pos:1, fs:0, fe:0, tf:30, dir:1, iv:1),
+            36 => Aura("\\spr\\skill\\唐门\\tm_02_冰附加.spr", pos:1, fs:0, fe:0, tf:30, dir:1, iv:1),
+            // ── EMei (峨嵋) states 37-42 ──
+            37 => Aura("\\spr\\skill\\峨嵋\\mag_em_06_秋风叶.spr",       pos:2, fs:0, fe:0, tf:16, dir:1, iv:1),
+            38 => Aura("\\spr\\skill\\峨嵋\\mag_em_07_醉仙望月.spr",     pos:2, fs:0, fe:0, tf:16, dir:1, iv:1),
+            39 => Aura("\\spr\\skill\\峨嵋\\mag_em_08_流水.spr",         pos:2, fs:0, fe:0, tf:16, dir:1, iv:1),
+            40 => Aura("\\spr\\skill\\峨嵋\\mag_em_09_梦蝶.spr",         pos:2, fs:0, fe:0, tf:16, dir:1, iv:1),
+            41 => Aura("\\spr\\skill\\峨嵋\\mag_em_10_佛心慈佑.spr",     pos:2, fs:0, fe:0, tf:15, dir:1, iv:1),
+            42 => Aura("\\spr\\skill\\峨嵋\\mag_em_11_风雨飘香.spr",     pos:1, fs:0, fe:0, tf:4,  dir:1, iv:1),
+            // ── CaiBang (丐帮) states 43-44 ──
+            43 => Aura("\\spr\\skill\\丐帮\\mag_gb_11_醉蝶狂舞.spr", pos:3, fs:4, fe:12, tf:16, dir:1, iv:1),
+            44 => Aura("\\spr\\skill\\丐帮\\mag_gb_12_打狗阵.spr",   pos:2, fs:0, fe:0,  tf:8,  dir:1, iv:1),
+            // ── Shaolin (少林) state 45 ──
+            45 => Aura("\\spr\\skill\\少林\\sl_07_罗汉阵.spr", pos:2, fs:0, fe:0, tf:10, dir:1, iv:1),
+            // ── TianWang (天王) states 46-49 ──
+            46 => Aura("\\spr\\skill\\天王\\tw_01_火眼金睛.spr",   pos:1, fs:0,  fe:0,  tf:10, dir:1, iv:2),
+            47 => Aura("\\spr\\skill\\天王\\tw_02_天王战意.spr",   pos:3, fs:20, fe:20, tf:20, dir:1, iv:2),
+            48 => Aura("\\spr\\skill\\天王\\tw_03_沾衣十八跌.spr", pos:3, fs:20, fe:15, tf:20, dir:1, iv:2),
+            49 => Aura("\\spr\\skill\\天王\\tw_04_金钟罩.spr",     pos:3, fs:5,  fe:15, tf:20, dir:1, iv:1),
+            // States 1-5 are built-in (stun/poison/freeze/burn/confuse) with no SPR.
+            _ => default,
+        };
+
+        /// <summary>Compact constructor for PcStateAuraData.</summary>
+        private static PcStateAuraData Aura(string sprPath, int pos, int fs, int fe, int tf, int dir, int iv) => new()
+        {
+            sprPath = sprPath,
+            position = pos,
+            frameStart = fs,
+            frameEnd = fe,
+            totalFrames = tf,
+            directions = dir,
+            intervalTicks = iv,
+        };
 
         /// <summary>Default light color per faction (from PC data patterns).
         /// Each faction has a characteristic color for their skill effects.

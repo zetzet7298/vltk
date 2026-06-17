@@ -49,7 +49,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(cat.Resolve(PcCombatCatalogFactory.CaiBangDogBeatingAuraChild));
             Assert.IsNotNull(cat.Resolve(714), "missing Hỗn Thiên Khí Công 120");
             Assert.IsNotNull(cat.Resolve(720), "missing Hỗn Thiên Khí Công Quyết Chí");
-            Assert.AreEqual(34, cat.Count, "33 PC + Novice skills + NguDieuCanKhon (1072) CollideEvent sub-skill");
+            Assert.AreEqual(35, cat.Count, "33 PC + Novice skills + NguDieuCanKhon (1072) CollideEvent + Kháng Long (358)");
         }
 
         [Test]

@@ -106,12 +106,21 @@ namespace VLTK.Sandbox
                     ? PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath)
                     : null;
 
+                // PC gaibang.lua overrides: missle_speed_v takes priority over engine missles.txt Speed.
+                // Source: jx-source bin/client/script/skill/gaibang.lua per-skill interpolation tables.
+                int missileSpeed = config.missileSpeed;
+                if (PcCaiBangSkillTuning.Applies(skill.skillId))
+                {
+                    int luaSpeed = PcCaiBangSkillTuning.MissileSpeedAtLevel(skill.skillId, level);
+                    if (luaSpeed > 0) missileSpeed = luaSpeed;
+                }
+
                 SetupPcMissile(fx,
                     flightKey,
                     config.flightFrames,
                     System.Math.Max(1, config.flightDirections),
                     System.Math.Max(1, config.flightIntervalTicks),
-                    config.missileSpeed,
+                    missileSpeed,
                     config.missileLifetime,
                     explodeKey,
                     config.explodeFrames,
@@ -127,6 +136,14 @@ namespace VLTK.Sandbox
                         SetupSurroundMissiles(fx, count);
                     else
                         SetupPcCircleOutwardMissiles(fx, count);
+                }
+                // PC gaibang.lua: Single-form skills with skill_misslenum_v > 1 use homing spread.
+                // E.g. Phi Long (357) L20=4, Thiên Hạ Vô Cẩu (359) L20=3, Càn Khôn (1074) L20=5.
+                else if (PcCaiBangSkillTuning.Applies(skill.skillId))
+                {
+                    int luaCount = PcCaiBangSkillTuning.MissileCountAtLevel(skill.skillId, level);
+                    if (luaCount > 1)
+                        SetupPcPhiLongSpread(fx, luaCount, 8);
                 }
                 return;
             }

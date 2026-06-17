@@ -351,7 +351,8 @@ namespace VLTK.Sandbox
                 light3: lv => Link(lv, (1, 5, ""), (20, 752, "")),
                 series: lv => Link(lv, (1, 10, ""), (20, 50, "")),
                 cost: lv => Link(lv, (1, 70, ""), (20, 130, "")),
-                stun: lv => (Link(lv, (1, 5, ""), (20, 20, "")), Link(lv, (1, 1, ""), (20, 10, "")), 0)),
+                stun: lv => (Link(lv, (1, 5, ""), (20, 20, "")), Link(lv, (1, 1, ""), (20, 10, "")), 0),
+                form: SkillMissileForm.Fan),
             WuDangTaiJiShenGong(),
         };
 
@@ -415,9 +416,9 @@ namespace VLTK.Sandbox
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaShieldP, Link(lv, (1, -5, ""), (15, -15, ""), (20, -25, "")), -1, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 20, ""), (15, 250, ""), (20, 915, "")), -1, 0)); return d; }); return s;
         }
 
-        private static SkillDefinition WuDangLightningDamage(int id, string raw, string vi, int req, int radius, int child, int childNum, int charAnim, Func<int,int> light1, Func<int,int> light3, Func<int,int> series, Func<int,int> cost, Func<int,int> physics = null, Func<int,(int,int,int)> stun = null)
+        private static SkillDefinition WuDangLightningDamage(int id, string raw, string vi, int req, int radius, int child, int childNum, int charAnim, Func<int,int> light1, Func<int,int> light3, Func<int,int> series, Func<int,int> cost, Func<int,int> physics = null, Func<int,(int,int,int)> stun = null, SkillMissileForm form = SkillMissileForm.Single)
         {
-            var s = BaseSkill(id, raw, vi, req, 20, radius, SkillMissileForm.Single); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr"); s.missileSpriteId = Sprite(WuDangMissilePath(child));
+            var s = BaseSkill(id, raw, vi, req, 20, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr"); s.missileSpriteId = Sprite(WuDangMissilePath(child));
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; if (physics != null) d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, physics(lv), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, light1(lv), 0, light3(lv))); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, series(lv), 0, 0)); if (stun != null) { var st = stun(lv); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, st.Item1, st.Item2, st.Item3)); } d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost(lv), 0, 0)); return d; }); return s;
         }
 
@@ -459,7 +460,7 @@ namespace VLTK.Sandbox
         //   ShowEvent charAnimId runtime check ở Phase 4 (cần level-gated 10/15).
         private static SkillDefinition WuDangRenJianHeYi()
         {
-            var s = BaseSkill(163, "人剑合一", "Nhân Kiếm Hợp Nhất", 50, 20, 90, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 371; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr");
+            var s = BaseSkill(163, "人剑合一", "Nhân Kiếm Hợp Nhất", 50, 20, 90, SkillMissileForm.Surround); s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 215; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true; s.effectSourceId = Sprite("\\spr\\skill\\昆仑\\kl_16_魔法施放.spr");
             s.startSkillId = 371; s.startSkillLevel = 1; // G6: anchor cho StartEvent (Phase 4 wire runtime)
             s.collideSkillId = 162; s.collideSkillLevel = 1; // G6: anchor cho CollideEvent — fire 162 Huyền Nhất Vô Tượng (Phase 4 wire)
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, Link(lv, (1, 8, ""), (15, 80, ""), (20, 194, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.LightingDamageV, Link(lv, (1, 12, ""), (20, 35, "")), 0, Link(lv, (1, 12, ""), (15, 100, ""), (20, 268, "")))); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.AttackRatingP, Link(lv, (1, 65, ""), (20, 345, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.StealManaP, Link(lv, (1, 1, ""), (20, 5, "")), 0, 0)); d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeP, Link(lv, (1, 16, ""), (20, 25, "")), 0, 0)); d.state.Add(new SkillMagicAttribute(MagicAttributeKind.StunP, Link(lv, (1, 1, ""), (20, 10, "")), Link(lv, (1, 1, ""), (20, 10, "")), 0)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 35, ""), (20, 60, "")), 0, 0)); return d; }); return s;

@@ -111,9 +111,9 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.CaiBang, snap.faction);
-            Assert.AreEqual(23, snap.rows.Count);
+            Assert.AreEqual(24, snap.rows.Count);
             Assert.AreEqual(115, snap.rows[0].skillId);
-            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 714, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 358, 359, 360, 714, 1073, 1074 }, snap.rows.Select(r => r.skillId).ToArray());
             Assert.AreEqual(30, PcSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 24-skill list.");
             Assert.AreEqual(50, snap.rows.Single(r => r.skillId == 128).requiredLevel, "PC Skills.txt ReqLevel for 亢龙有悔 is 50.");
             Assert.AreEqual(0, snap.rows[0].learnedLevel);
@@ -152,8 +152,8 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(hud.IsSkillPanelVisible);
                 Assert.AreEqual(30, hud.PcSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
                 Assert.IsNotNull(hud.CurrentSkillSnapshot);
-                Assert.AreEqual(23, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 23 Cái Bang fight skills.");
-                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 714, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
+                Assert.AreEqual(24, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 24 Cái Bang fight skills.");
+                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 358, 359, 360, 714, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
                 Assert.That(hud.CurrentSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
                 Assert.AreEqual("200", summary.text);
                 // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.

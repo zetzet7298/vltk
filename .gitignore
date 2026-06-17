@@ -97,9 +97,11 @@ Assets/AssetBundles/
 # ─────────────────────────────────────────────────
 # PC game SPR assets (extracted from PAKs at build time)
 # jx-source is the SOLE source-of-truth; SPRs are not versioned.
+# SPRs live OUTSIDE Assets/ to keep Unity import time bounded —
+# 67K+ binary SPRs in Assets/StreamingAssets/ hung Unity for 1+ hours.
+# Source: /var/www/jx-source/pak_unpacked/ → /var/www/vltk-mobile/SpritesRuntime/
 # ─────────────────────────────────────────────────
-Assets/StreamingAssets/Sprites/*.spr
-Assets/StreamingAssets/Sprites/*.spr.meta
+SpritesRuntime/
 Assets/StreamingAssets/Generated/MapRegions/
 Assets/StreamingAssets/Generated/MapSprites/
 Assets/StreamingAssets/Generated/MapServerRegions/
