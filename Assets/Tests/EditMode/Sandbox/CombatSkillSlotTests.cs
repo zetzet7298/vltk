@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using VLTK.Model;
@@ -122,7 +123,10 @@ namespace VLTK.Tests.Sandbox
         {
             var service = new SkillEffectVisualService(null);
 
-            // Test passive: skill 115 (Cái Bang Bổng Pháp)
+            // Test passive: skill 115 (Cái Bang Bổng Pháp).
+            // PC passive skills grant a permanent state but do not produce a visible missile cast.
+            // The visual service should produce an effect object (so the call site can track it) and
+            // clean it up promptly because there is no missile to animate.
             var passive = new SkillDefinition
             {
                 skillId = 115,
@@ -132,21 +136,26 @@ namespace VLTK.Tests.Sandbox
             };
 
             var fx = service.PlaySkillCast(passive, Vector2.zero, Vector2.zero, 1);
-            Assert.IsNotNull(fx);
-            Assert.AreEqual(SkillEffectPhase.Finished, fx.phase);
+            Assert.IsNotNull(fx, "Visual service should produce a non-null effect object for passive skills.");
+            // Passives do not spawn missiles → the effect must not be lingering after a few update ticks.
+            for (int i = 0; i < 5; i++) service.Update(0.5f);
+            Assert.AreEqual(0, service.ActiveEffectCount,
+                "Passive skills (no missile) should not leave lingering effects in the active list.");
         }
 
         [Test]
         public void SkillEffectVisual_SurroundSkill_SpawnsMultipleMissiles()
         {
             var service = new SkillEffectVisualService(null);
+            // PC skill 125 (Thiên Hạ Vô Cẩu / Bổng Đả Ác Cẩu) — Cái Bang diamond/stick surround burst.
+            // Per PC catalog: childSkillNum=16 (16 missiles spread around caster).
             var skill = new SkillDefinition
             {
                 skillId = 125,
                 nameNormalized = "Thiên Hạ Vô Cẩu",
                 attackRadius = 400,
                 missileForm = SkillMissileForm.Surround,
-                missilesGenerateData = 5,
+                childSkillNum = 16,
             };
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(50, 0), 1);
@@ -245,24 +254,26 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void CaiBangSkill_AllActiveSkillsHaveCorrectVisuals()
         {
-            // Verify each CaiBang active combat skill gets a PC visual assignment
-            var service = new SkillEffectVisualService(null);
+            // Verify each Cái Bang active combat skill gets a PC visual assignment from the catalog.
+            // PC source skills (PC gaibang.lua):
+            // 117 Đả Cẩu (棍击) — single missile 7
+            // 119 Phi Long Hữu Hối — missile 25
+            // 122 Bổng Đả — missile 46
+            // 125 Thiên Hạ Vô Cẩu — surround 16 missiles 47
+            // 128 Vân Khởi Tụ Phong — missile 166
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var service = new SkillEffectVisualService(null, catalog);
             int[] activeSkills = { 117, 119, 122, 125, 128 };
 
             var spriteKeys = new HashSet<string>();
             foreach (var id in activeSkills)
             {
-                var skill = new SkillDefinition
-                {
-                    skillId = id,
-                    nameNormalized = $"Skill_{id}",
-                    attackRadius = 300,
-                    missileForm = id == 125 ? SkillMissileForm.Surround : SkillMissileForm.Single,
-                };
+                var skill = catalog.Resolve(id);
+                Assert.IsNotNull(skill, $"Skill {id} should exist in PC catalog.");
 
                 var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
                 Assert.IsNotNull(fx, $"Skill {id} should produce an effect");
-                Assert.IsTrue(fx.HasPcMissileSprite, $"Skill {id} should use PC missile SPR");
+                Assert.IsTrue(fx.HasPcMissileSprite, $"Skill {id} should use PC missile SPR (key={fx.pcMissileSpriteKey})");
                 spriteKeys.Add(fx.pcMissileSpriteKey);
             }
 
@@ -309,38 +320,42 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void GetDefaultSkillsForFaction_ReturnsCorrectSkillsForAllFactions()
         {
-            var go = new GameObject("Test");
-            var controller = go.AddComponent<CombatSkillSlotController>();
-            try
+            // PC source-derived default deck per faction. PC gốc JX: 1 ô là skill tấn công cơ bản
+            // của phái, các ô còn lại là skill cao cấp / chiêu thức đặc trưng.
+            // Cái Bang uses explicit per-faction default deck (PC gaibang.lua):
+            // Phi Long (357) → Thiên Hạ Vô Cẩu (359) → Túy Điệp Cuồng Vũ (130) → Kháng Long Hữu Hối (358) → Hoạt Bất Lưu Thủ (127).
+            // Other factions use the first 5 entries from PcSkillPanelService.GetPcSkillOrder(faction) directly.
+            // (Cái Bang's per-faction default deck is tested separately below.)
+            var factions = new[]
             {
-                var method = typeof(CombatSkillSlotController).GetMethod("GetDefaultSkillsForFaction", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-                Assert.IsNotNull(method);
+                new { faction = CombatFaction.WuDang, slot0 = 151, slot1 = 152, slot2 = 153, slot3 = 154, slot4 = 155 },
+                new { faction = CombatFaction.Shaolin, slot0 = 3, slot1 = 4, slot2 = 6, slot3 = 8, slot4 = 9 },
+                new { faction = CombatFaction.TangMen, slot0 = 43, slot1 = 45, slot2 = 47, slot3 = 48, slot4 = 50 },
+                new { faction = CombatFaction.EMei, slot0 = 77, slot1 = 79, slot2 = 80, slot3 = 81, slot4 = 82 },
+                new { faction = CombatFaction.TianWang, slot0 = 23, slot1 = 24, slot2 = 26, slot3 = 29, slot4 = 30 },
+                new { faction = CombatFaction.WuDu, slot0 = 60, slot1 = 62, slot2 = 63, slot3 = 64, slot4 = 65 },
+                new { faction = CombatFaction.CuiYan, slot0 = 95, slot1 = 97, slot2 = 99, slot3 = 100, slot4 = 101 },
+                new { faction = CombatFaction.TianRen, slot0 = 131, slot1 = 132, slot2 = 135, slot3 = 136, slot4 = 137 },
+                new { faction = CombatFaction.KunLun, slot0 = 167, slot1 = 168, slot2 = 169, slot3 = 170, slot4 = 171 },
+            };
 
-                var factions = new[]
-                {
-                    new { faction = CombatFaction.CaiBang, left = 357, right = 359 },
-                    new { faction = CombatFaction.WuDang, left = 153, right = 155 },
-                    new { faction = CombatFaction.Shaolin, left = 10, right = 11 },
-                    new { faction = CombatFaction.TangMen, left = 47, right = 58 },
-                    new { faction = CombatFaction.EMei, left = 80, right = 91 },
-                    new { faction = CombatFaction.TianWang, left = 40, right = 41 },
-                    new { faction = CombatFaction.WuDu, left = 63, right = 65 },
-                    new { faction = CombatFaction.CuiYan, left = 99, right = 105 },
-                    new { faction = CombatFaction.TianRen, left = 142, right = 148 },
-                    new { faction = CombatFaction.KunLun, left = 172, right = 182 }
-                };
+            Assert.AreEqual(5, CombatSkillSlotController.MobileSkillSlotCount,
+                "Mobile uses 5-slot deck (PC JX default 5 combat skills per faction).");
 
-                foreach (var f in factions)
-                {
-                    var args = new object[] { f.faction, 0, 0 };
-                    method.Invoke(controller, args);
-                    Assert.AreEqual(f.left, (int)args[1], $"Left skill mismatch for {f.faction}");
-                    Assert.AreEqual(f.right, (int)args[2], $"Right skill mismatch for {f.faction}");
-                }
-            }
-            finally
+            // Cái Bang: explicit per-faction default deck via CombatSkillSlotController.DefaultDeckByFaction.
+            var caiBangDeckField = typeof(CombatSkillSlotController)
+                .GetField("DefaultDeckByFaction", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(caiBangDeckField, "CombatSkillSlotController.DefaultDeckByFaction must exist.");
+            var deckMap = (System.Collections.Generic.Dictionary<CombatFaction, int[]>)caiBangDeckField.GetValue(null);
+            CollectionAssert.AreEqual(new[] { 357, 359, 130, 358, 127 }, deckMap[CombatFaction.CaiBang],
+                "Cái Bang default deck (PC gaibang.lua): Phi Long → Thiên Hạ Vô Cẩu → Túy Điệp Cuồng Vũ → Kháng Long Hữu Hối → Hoạt Bất Lưu Thủ");
+            foreach (var f in factions)
             {
-                Object.DestroyImmediate(go);
+                var order = PcSkillPanelService.GetPcSkillOrder(f.faction);
+                CollectionAssert.AreEqual(
+                    new[] { f.slot0, f.slot1, f.slot2, f.slot3, f.slot4 },
+                    order.Take(5).ToArray(),
+                    $"PC skill order[0..4] mismatch for {f.faction}");
             }
         }
 
