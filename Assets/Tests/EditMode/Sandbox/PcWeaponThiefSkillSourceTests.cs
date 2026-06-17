@@ -67,8 +67,8 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(1, stealMoney.maxLevel);
             Assert.AreEqual(100, stealMoney.timePerCast);
             Assert.AreEqual(50, stealMoney.cost);
-            // PC source has quotes around the targetMovieInfo value: "10,1,1"
-            Assert.AreEqual("\"10,1,1\"", stealMoney.targetMovieInfo);
+            // PC source dmjx03 has targetMovieInfo without surrounding quotes.
+            Assert.AreEqual("10,1,1", stealMoney.targetMovieInfo);
             Assert.IsTrue(stealMoney.movie.EndsWith("劫富济贫1.spr"));
             Assert.IsTrue(stealMoney.skillSound.EndsWith("劫富济贫.wav"));
 
