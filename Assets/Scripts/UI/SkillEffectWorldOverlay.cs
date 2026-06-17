@@ -556,9 +556,29 @@ namespace VLTK.UI
                 }
                 else
                 {
-                    SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (tried {spritesRoot}/{keyWithExt} and /{fileNameOnly})");
-                    _pcSpriteCache[key] = null;
-                    return null;
+                    // Fallback to signed hash file on disk
+                    string signedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: true);
+                    string hashPath = signedUid != null ? Path.Combine(spritesRoot, signedUid + ".spr") : null;
+                    if (hashPath != null && File.Exists(hashPath))
+                    {
+                        path = hashPath;
+                    }
+                    else
+                    {
+                        // Fallback to unsigned hash file on disk
+                        string unsignedUid = VLTK.Sprites.SprRuntimeService.ComputePathUidHex(key, signedBytes: false);
+                        string unsignedHashPath = unsignedUid != null ? Path.Combine(spritesRoot, unsignedUid + ".spr") : null;
+                        if (unsignedHashPath != null && File.Exists(unsignedHashPath))
+                        {
+                            path = unsignedHashPath;
+                        }
+                        else
+                        {
+                            SubsystemLog.Warn("Combat", $"PC skill SPR missing: {key} (tried {spritesRoot}/{keyWithExt}, /{fileNameOnly}, signedHash={signedUid}, unsignedHash={unsignedUid})");
+                            _pcSpriteCache[key] = null;
+                            return null;
+                        }
+                    }
                 }
             }
 
