@@ -13,9 +13,19 @@ namespace VLTK.Sandbox
         public const int SandboxDefaultSkillPanelLevel = 200;
         public const int SandboxDefaultSkillPanelPoints = 200;
         public const int SkillUpgradePointCost = 1;
-        // 1539 = Thiên Hạ Vô Cẩu NPC variant (ReqLevel 1, MaxLevel 60). MOD-only boss skill
-        // registered in the catalog for boss AI, but NOT shown in the player skill panel.
+        // 1539  = Thiên Hạ Vô Cẩu NPC variant (ReqLevel 1, MaxLevel 60). MOD-only boss skill.
+        // 1101/1103/1161/1162 = Thừa Lục Long / Cửu Cái Bang 150 NPC variants — registered
+        // in the catalog for boss/mob AI, but NOT shown in the player skill panel.
         public const int NpcVariantSkillId = 1539;
+        public static readonly System.Collections.Generic.HashSet<int> NpcVariantSkillIds = new()
+        {
+            1539,   // Thiên Hạ Vô Cẩu NPC
+            1101,   // Thừa Lục Long (đa mục tiêu) NPC
+            1103,   // Thừa Lục Long (không script) NPC
+            1161,   // Thừa Lục Long NPC
+            1162,   // Cửu Cái Bang 150 NPC
+        };
+        public static bool IsNpcVariant(int skillId) => NpcVariantSkillIds.Contains(skillId);
 
         public int level = 1;
         public int fightSkillPoints;
@@ -65,8 +75,8 @@ namespace VLTK.Sandbox
             {
                 if (skill.faction != targetFaction)
                     continue;
-                // Hide the NPC/boss variant (1539) from the player panel.
-                if (skill.skillId == NpcVariantSkillId)
+                // Hide NPC/boss variants from the player skill panel.
+                if (IsNpcVariant(skill.skillId))
                     continue;
 
                 knownSkills.Add(skill.skillId);
@@ -156,7 +166,7 @@ namespace VLTK.Sandbox
             foreach (var skill in catalog.All)
             {
                 if (skill.faction != CombatFaction.CaiBang && skill.faction != CombatFaction.WuDang && skill.faction != CombatFaction.Shaolin && skill.faction != CombatFaction.TangMen && skill.faction != CombatFaction.EMei && skill.faction != CombatFaction.TianWang && skill.faction != CombatFaction.WuDu && skill.faction != CombatFaction.CuiYan && skill.faction != CombatFaction.TianRen && skill.faction != CombatFaction.KunLun) continue;
-                if (skill.skillId == NpcVariantSkillId) continue;
+                if (IsNpcVariant(skill.skillId)) continue;
                 int maxLv = skill.maxLevel > 0 ? skill.maxLevel : 1;
                 knownSkills.Add(skill.skillId);
                 skillLevels[skill.skillId] = maxLv;

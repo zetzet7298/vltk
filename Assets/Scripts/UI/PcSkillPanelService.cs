@@ -57,8 +57,8 @@ namespace VLTK.UI
             115, 116, 117, 118, 119,
             120, 121, 122, 123, 124,
             125, 126, 127, 128, 129,
-            130, 274, 357, 358, 359,
-            360, 714, 1073, 1074,
+            130, 274, 277, 357, 358,
+            359, 360, 714, 720, 1073, 1074,
         };
 
         public static readonly int[] PcWuDangSkillOrder =
@@ -110,7 +110,9 @@ namespace VLTK.UI
             167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184
         };
 
-        public const int NpcVariantSkillId = 1539;
+        // NPC variant filter: delegate to PlayerProgressionState.IsNpcVariant (single source of truth).
+        public const int NpcVariantSkillId = 1539; // kept for external callers in CombatSkillSlotController
+        public static bool IsNpcVariant(int skillId) => PlayerProgressionState.IsNpcVariant(skillId);
 
         public static IReadOnlyList<int> GetPcSkillOrder(CombatFaction faction)
         {
@@ -156,7 +158,7 @@ namespace VLTK.UI
             {
                 foreach (var skillId in skillOrder)
                 {
-                    if (skillId == NpcVariantSkillId)
+                    if (IsNpcVariant(skillId))
                         continue;
                     var skill = catalog.Resolve(skillId);
                     if (skill == null)

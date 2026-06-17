@@ -112,7 +112,7 @@ namespace VLTK.Sandbox
             foreach (var skill in _catalog.All)
             {
                 // Lọc skill theo faction ngoại trừ boss skill
-                if ((int)skill.faction == factionId && skill.skillId != PlayerProgressionState.NpcVariantSkillId)
+                if ((int)skill.faction == factionId && !PlayerProgressionState.IsNpcVariant(skill.skillId))
                 {
                     _progression.knownSkills.Add(skill.skillId);
                     if (!_progression.skillLevels.ContainsKey(skill.skillId))

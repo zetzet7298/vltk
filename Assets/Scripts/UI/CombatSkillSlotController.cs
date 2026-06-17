@@ -290,8 +290,9 @@ namespace VLTK.UI
         private static readonly System.Collections.Generic.Dictionary<CombatFaction, int[]> DefaultDeckByFaction =
             new System.Collections.Generic.Dictionary<CombatFaction, int[]>
             {
-                // Cái Bang (PC gaibang.lua): Phi Long → Thiên Hạ Vô Cẩu → Túy Điệp Cuồng Vũ → Kháng Long Hữu Hối → Hoạt Bất Lưu Thủ
-                { CombatFaction.CaiBang, new[] { 357, 359, 130, 358, 127 } },
+                // Cái Bang (PC gaibang.lua): 5 skill cấp cao nhất vừa port —
+                // Phi Long Tại Thiên (357) → Thiên Hạ Vô Cẩu (359) → Thần Thủ Lệnh Long (1073) → Bổng Hoành Lược Mã (1074) → Kháng Long Hữu Hối (358)
+                { CombatFaction.CaiBang, new[] { 357, 359, 1073, 1074, 358 } },
             };
 
         private void FillDefaultDeckIfEmpty()
@@ -317,7 +318,7 @@ namespace VLTK.UI
                 foreach (var skillId in order)
                 {
                     if (list.Count >= MobileSkillSlotCount) break;
-                    if (skillId == PcSkillPanelService.NpcVariantSkillId) continue;
+                    if (PcSkillPanelService.IsNpcVariant(skillId)) continue;
                     if (!prog.knownSkills.Contains(skillId) && prog.GetSkillLevel(skillId) <= 0) continue;
                     var skill = catalog?.Resolve(skillId);
                     if (skill != null && skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
@@ -692,7 +693,7 @@ namespace VLTK.UI
 
             foreach (var skillId in factionSkillOrder)
             {
-                if (skillId == PcSkillPanelService.NpcVariantSkillId) continue;
+                if (PcSkillPanelService.IsNpcVariant(skillId)) continue;
                 var skill = catalog.Resolve(skillId);
                 if (skill == null) continue;
                 if (skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
