@@ -1381,6 +1381,8 @@ namespace VLTK.Sandbox
             if (PlayerProgression.faction == CombatFaction.None)
                 PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, CombatFaction.CaiBang);
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
+            // Wire skill cast sound → AudioService (PC missles.txt SoundPath)
+            SkillEffectVisual.OnCastSound = (pcPath) => AudioService?.PlaySkillCast(pcPath);
 
             // Gameplay Loop: wire all subsystems together
             GameplayLoop = new GameplayLoopService(CombatSkillCatalog);

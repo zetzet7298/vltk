@@ -19,6 +19,11 @@ namespace VLTK.Sandbox
         private readonly List<ActiveSkillEffect> _activeEffects = new();
         private readonly PcSkillVisualAutoMapper _autoMapper = new();
         private bool _autoMapperReady;
+        /// <summary>
+        /// Callback fired when a skill cast sound should be played.
+        /// Wired by SandboxManager → AudioService.PlaySkillCast.
+        /// </summary>
+        public Action<string> OnCastSound;
 
         public SkillEffectVisualService(SprRuntimeService sprService)
             : this(sprService, null) { }
@@ -63,6 +68,7 @@ namespace VLTK.Sandbox
 
             // Apply faction default color
             fx.color = config.lightColor;
+            fx.castSoundPath = config.castSoundPath;
 
             // PreCast visual
             if (config.hasPreCast && !string.IsNullOrEmpty(config.preCastSprPath))
@@ -292,6 +298,9 @@ namespace VLTK.Sandbox
             effect.currentMissilePos = casterPos;
             // PC data-driven visual: auto-resolve from missles1.txt
             ConfigureDataDrivenVisuals(skill, effect, skillLevel);
+            // Trigger cast sound (PC missles.txt SoundPath)
+            if (!string.IsNullOrEmpty(effect.castSoundPath))
+                OnCastSound?.Invoke(effect.castSoundPath);
 
             // (Legacy per-faction visual overrides removed: skill visuals are now
             //  data-driven entirely from PC missles1.txt via ConfigureDataDrivenVisuals)
@@ -721,5 +730,6 @@ namespace VLTK.Sandbox
         public bool HasPcImpactSprite => !string.IsNullOrEmpty(pcImpactSpriteKey) && pcImpactTotalFrames > 0;
         public bool HasPcPreCastSprite => !string.IsNullOrEmpty(pcPreCastSpriteKey) && pcPreCastTotalFrames > 0 && pcPreCastDirections > 0;
         public bool HasMissile => missileForm != SkillMissileForm.None && missileCount > 0;
+        public string castSoundPath;  // PC missles.txt SoundPath: \sound\skill\sound_k0XX.wav
     }
 }

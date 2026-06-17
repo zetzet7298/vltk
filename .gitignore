@@ -202,3 +202,11 @@ backend/
 # Static HTML Gallery
 # ─────────────────────────────────────────────────
 html/
+AudioRuntime/
+# ─────────────────────────────────────────────────
+# PC game audio assets (WAVs from PAKs)
+# jx-source is the SOLE source-of-truth; WAVs are not versioned.
+# Copied from /var/www/jx-source/pak_unpacked/sound/ to StreamingAssets/sound/
+# ─────────────────────────────────────────────────
+Assets/StreamingAssets/sound/
+Assets/StreamingAssets/sound.meta

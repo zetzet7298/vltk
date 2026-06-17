@@ -88,6 +88,7 @@ namespace VLTK.Sandbox
         public bool HasExplodeVisual => !string.IsNullOrEmpty(explodeSprPath) && explodeFrames > 0;
 
         public bool HasAnyVisual => HasFlightVisual || HasExplodeVisual || hasPreCast || isMelee || hasStateAura;
+        public string castSoundPath;       // PC Skills.txt ManCastSnd: \sound\skill\sound_k0XX.wav
     }
 
     /// <summary>
@@ -242,6 +243,11 @@ namespace VLTK.Sandbox
                 config.explodeDirections = explode.directions;
                 config.explodeIntervalTicks = explode.intervalTicks;
             }
+            // Cast/impact sound from missile anim slot (PC missles.txt SndFile1/SndFile2)
+            if (mv.PrimaryFlight != null && !string.IsNullOrEmpty(mv.PrimaryFlight.soundPath))
+                config.castSoundPath = mv.PrimaryFlight.soundPath;
+            else if (mv.PrimaryExplode != null && !string.IsNullOrEmpty(mv.PrimaryExplode.soundPath))
+                config.castSoundPath = mv.PrimaryExplode.soundPath;
             return config;
         }
 
