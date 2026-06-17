@@ -8,7 +8,7 @@ namespace VLTK.Editor.Porting
 {
     public class PcDialogSysIndexer
     {
-        private const string PcDialogSysPath = "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/dailogsys";
+        private const string PcDialogSysPath = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/dailogsys";
         private const string OutputPath = "Assets/StreamingAssets/Reference/PcDialogSys/DialogSysIndex.json";
 
         [MenuItem("Tools/Porting/Index PC DialogSys")]

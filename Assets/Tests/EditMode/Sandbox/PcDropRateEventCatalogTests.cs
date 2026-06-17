@@ -13,7 +13,7 @@ namespace VLTK.Tests.Sandbox
         {
             var catalog = PcDropRateEventSourceParser.BuildCatalog(EventDir);
 
-            Assert.AreEqual(17, catalog.FileCount, "PC source has exactly 17 settings/droprate/event INI files in vl_update_27.");
+            Assert.AreEqual(17, catalog.FileCount, "PC source has exactly 17 settings/droprate/event INI files in 00.src-tinh-kiem.");
             Assert.AreEqual(1152, catalog.DropRowCount, "Catalog should include one row per numeric [N] section.");
             Assert.AreEqual(3, catalog.DirectoryCount, "Root, jianxiashengri, and jxanniversary3 directories are expected.");
             Assert.AreEqual(70391L, catalog.TotalSizeBytes);

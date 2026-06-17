@@ -18,7 +18,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(File.Exists(IndexPath));
             var rows = PcDialogSysSourceIndexParser.ParseFile(IndexPath);
 
-            Assert.AreEqual(5, rows.Count, "PC script/dailogsys has exactly five Lua source files in vl_update_27/home_jxser.");
+            Assert.AreEqual(5, rows.Count, "PC script/dailogsys has exactly five Lua source files in 00.src-tinh-kiem/home_jxser.");
             Assert.AreEqual(5, rows.FindAll(r => r.extension == "lua").Count);
             Assert.AreEqual(30, Sum(rows, r => r.functionCount));
             Assert.AreEqual(27, Sum(rows, r => r.globalSymbolCount));

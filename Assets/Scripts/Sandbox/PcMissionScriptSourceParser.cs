@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC mission script source catalog parser.
-// Source of truth: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/missions
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions
 // The committed catalog records file inventory only: relative path, directory,
 // file kind, size, and SHA-256. It does not execute Lua or claim runtime parity.
 // -----------------------------------------------------------------------------

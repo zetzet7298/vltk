@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — ClearSkill mission lifecycle plan recorder.
-// PC source of truth: vl_update_27/server1/script/missions/clearskill/{mission,timer}.lua
+// PC source of truth: 00.src-tinh-kiem/server1/script/missions/clearskill/{mission,timer}.lua
 // Pure model-only adapter: records planned host calls; it does not execute Unity gameplay.
 // -----------------------------------------------------------------------------
 

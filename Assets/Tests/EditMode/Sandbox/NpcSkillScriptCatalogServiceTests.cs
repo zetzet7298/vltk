@@ -70,7 +70,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(fact.IsSpecialScriptPath);
             Assert.IsTrue(fact.IsBossSpecialScriptPath);
             Assert.IsFalse(fact.ExistsUnderPcServerRoot,
-                "vl_update_27 server script root does not contain the referenced boss_libaiskill.lua; do not substitute boss_specialskill.lua.");
+                "00.src-tinh-kiem server script root does not contain the referenced boss_libaiskill.lua; do not substitute boss_specialskill.lua.");
             Assert.IsTrue(service.MissingScripts.Any(m => m.ScriptPath == fact.ScriptPath));
         }
 

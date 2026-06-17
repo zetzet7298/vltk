@@ -6,7 +6,7 @@ namespace VLTK.Tests.Sandbox
 {
     public class PcMissileSourceAuditTests
     {
-        private const string PcServerSettings = "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/settings";
+        private const string PcServerSettings = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings";
         private static string RepoRoot => Directory.GetCurrentDirectory();
         private static string ReferenceRoot => Path.Combine(RepoRoot, "Assets/StreamingAssets/Reference");
         private static string PcAttribRoot => Path.Combine(ReferenceRoot, "PcAttrib");

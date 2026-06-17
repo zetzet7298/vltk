@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC NPC/Boss skill script availability index.
 // Data-only proof over NpcSkillCatalogService; never loads or executes Lua.
-// PC source root: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1
+// PC source root: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server
 // -----------------------------------------------------------------------------
 
 using System;
@@ -13,13 +13,13 @@ namespace VLTK.Sandbox
 {
     public sealed class NpcSkillScriptCatalogService
     {
-        public const string PcServerScriptRoot = "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1";
+        public const string PcServerScriptRoot = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server";
         public const string NoExecutionClaim = "Index only: checks referenced Lua file availability, does not execute scripts.";
 
 
         // Unity/Mono on Linux can enumerate legacy PC GBK filenames as replacement
         // chars and then fail File.Exists on the returned string. This set is a
-        // byte-path availability audit from vl_update_27, used only after live
+        // byte-path availability audit from 00.src-tinh-kiem, used only after live
         // direct/enumeration checks fail; it is still source indexing, not Lua execution.
         private static readonly HashSet<string> KnownAvailablePcGbEncodedPaths =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)

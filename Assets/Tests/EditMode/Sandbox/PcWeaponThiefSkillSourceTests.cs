@@ -8,7 +8,7 @@ namespace VLTK.Tests.Sandbox
     public class PcWeaponThiefSkillSourceTests
     {
         private const string PcUpdate27SkillDir =
-            "/var/www/vltksource_new/vl_update_27/Client 6.0/settings";
+            "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings";
 
         private static string ClientWeaponSkillPath => Path.Combine(PcUpdate27SkillDir, "clientweaponskill.txt");
         private static string ThiefSkillPath => Path.Combine(PcUpdate27SkillDir, "thiefskill.txt");
@@ -17,7 +17,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ClientWeaponSkill_ParsesUpdate27SourceCountAndRepresentativeRows()
         {
-            Assert.IsTrue(ClientWeaponSkillPath.Contains("/vl_update_27/"));
+            Assert.IsTrue(ClientWeaponSkillPath.Contains("/00.src-tinh-kiem/"));
             var rows = PcClientWeaponSkillParser.ParseFile(ClientWeaponSkillPath);
             var header = PcItemCommon.ReadServerLines(ClientWeaponSkillPath)[0].Split('\t');
 
@@ -53,7 +53,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ThiefSkill_ParsesUpdate27SourceCountAndRepresentativeRows()
         {
-            Assert.IsTrue(ThiefSkillPath.Contains("/vl_update_27/"));
+            Assert.IsTrue(ThiefSkillPath.Contains("/00.src-tinh-kiem/"));
             var rows = PcThiefSkillParser.ParseFile(ThiefSkillPath);
             var header = PcItemCommon.ReadServerLines(ThiefSkillPath)[0].Split('\t');
 

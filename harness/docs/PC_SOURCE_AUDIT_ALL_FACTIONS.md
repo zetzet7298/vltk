@@ -9,7 +9,7 @@ Audit Unity `PcCombatCatalogFactory` against PC stock 2011 source for all 10 mô
 
 ## PC Source Inventory
 
-Source: `/var/www/vltksource_new/vl_update_27/Client 6.0/script/skill2/`
+Source: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/`
 Encoding: GB2312 (decoded via `PcText.ReadLines` for proper Chinese names)
 
 | File | PC skills | Faction (VLTK) | Encoding |

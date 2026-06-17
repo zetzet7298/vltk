@@ -10,7 +10,7 @@ Usage:
 """
 import argparse, os, re, sys
 
-PC_ROOT = "/var/www/vltksource_new/vl_update_27"
+PC_ROOT = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem"
 VMDK = "/mnt/jxwin/SourceNew/swrod3"
 
 def first_existing(paths):

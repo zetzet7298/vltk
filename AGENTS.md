@@ -13,13 +13,13 @@ This project is now a **full-stack game port**, not only a Unity mobile client.
 | `/var/www/vltk-mobile` | Unity mobile client, assets, Harness, port-status authority. |
 | `/var/www/vltk-mobile/backend` | Python/FastAPI game server backend ported from the PC game server. |
 | `/var/www/vltktool` | Shared tooling for PAK/SPR/reference-resource lookup and repair. |
-| `/var/www/vltksource_new/vl_update_27` | PC source-of-truth for both client resources and server behavior. |
+| `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` | PC source-of-truth for both client resources and server behavior. |
 
 When a task touches gameplay behavior, data authority, persistence, economy, combat, missions, NPC AI, account/role/player state, skills, items, maps, events, guild/Tong, or realtime/network protocol, agents must consider **both sides**:
 
 1. Unity client implementation under `/var/www/vltk-mobile/Assets/...`.
 2. Backend game-server implementation under `/var/www/vltk-mobile/backend/app/...`.
-3. Original PC source/data/assets under `/var/www/vltksource_new/vl_update_27`.
+3. Original PC source/data/assets under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`.
 
 Do not assume the Unity client is the only place to fix a bug. If the missing logic belongs to the authoritative game server, port/fix it in `backend` and then wire the Unity client to consume it.
 
@@ -34,9 +34,9 @@ The backend is a separate game-server codebase inside this workspace:
 It is ported from the **PC VLTK game server** source under:
 
 ```text
-/var/www/vltksource_new/vl_update_27/Server 6.0
-/var/www/vltksource_new/vl_update_27/jx_linux_y
-/var/www/vltksource_new/vl_update_27/pak_unpacked
+/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server
+/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources
+/var/www/jx-source/pak_unpacked
 ```
 
 When working on backend files, always read and follow the nearest backend instructions first:
@@ -108,31 +108,42 @@ For routine table/Lua ports where source is readable, use the relevant JX/VLTK p
 Before any PC→Mobile/backend port/audit task, inspect the PC source under:
 
 ```text
-/var/www/vltksource_new
+/var/www/jx-source
 ```
 
 The PC source-of-truth is the combination of:
 
 ```text
-/var/www/vltksource_new/vl_update_27/Client 6.0
-/var/www/vltksource_new/vl_update_27/Server 6.0
-/var/www/vltksource_new/vl_update_27/pak_unpacked
-/var/www/vltksource_new/docs/port_docs
+/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client          # Client data, settings, scripts, PAKs
+/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server          # Server scripts (Lua)
+/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources # C++ engine source (640 files)
+/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings# Server-side settings (NpcS.txt, state mapping)
+/var/www/jx-source/pak_unpacked                                                     # Extracted PAK tree (222K files, 84K SPRs)
+/var/www/jx-source/docs/port_docs                                                   # Port documentation
 ```
+
+**NEVER use `/var/www/jx-source/` — it is DEPRECATED. All PC source is in jx-source.**
+
+Key data file locations:
+
+| File | Path | Rows |
+|---|---|---|
+| skills.txt | `bin/client/settings/Skills.txt` | 1,555 |
+| missles.txt (player missiles) | `pak_unpacked/slistcache/settings/missles.txt` | 513 (ID 1-636) |
+| Missles.txt (NPC missiles) | `bin/client/settings/Missles.txt` | 442 |
+| State mapping | `Utility/Run/Settings/状态与光效图形对照表.txt` | 199 |
+| NpcS.txt | `Utility/Run/Settings/NpcS.txt` | 456 |
+| Lua skill scripts | `bin/client/script/skill/` | 7,144 |
+| Lua server scripts | `bin/Server/` | 2,553 |
+| C++ engine | `SwordOnline/Sources/Core/Src/` | ~150 (.cpp+.h) |
 
 Canonical unpacked PAK tree:
 
 ```text
-/var/www/vltksource_new/vl_update_27/pak_unpacked
+/var/www/jx-source/pak_unpacked
 ```
 
-Manifest/audit:
-
-```text
-/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json
-```
-
-Current live manifest baseline must be read from `_unpack_summary.json` before use. Do **not** trust old baked counts. As last verified in the project notes, the repaired canonical tree had 46 PAKs, `total_exported=403560/403560`, `total_failed=0`; method `0x11000000` entries are raw SPR byte-copies, not undecoded failures.
+PAK extraction: 46 PAKs extracted, 222,127 files, 84,203 SPRs, 122,757 .dat (maps), 12 GB total.
 
 Rules:
 

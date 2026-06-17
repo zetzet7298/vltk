@@ -2,8 +2,8 @@
 
 ## Nguồn PC đã rà
 
-- `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudu.lua` (GB2312, 613 dòng, 25+ skills)
-- `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudu/*.lua` (26 file per-skill; 9 pinyin + 17 Chinese GBK)
+- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/wudu.lua` (GB2312, 613 dòng, 25+ skills)
+- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/wudu/*.lua` (26 file per-skill; 9 pinyin + 17 Chinese GBK)
 - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical TCVN3, ID 60-76 trừ 61, attackradius + isMelee + charAnimId)
 - `Assets/Scripts/Sandbox/PcCombatCatalogFactory.cs` line 1704-1932 (`CreateWuDuSkills` 16 skill)
 

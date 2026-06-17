@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — ClearSkill mission lifecycle PC facts.
-// PC source of truth: vl_update_27/server1/script/missions/clearskill/{head,mission,timer,camperman,playerdeath}.lua
+// PC source of truth: 00.src-tinh-kiem/server1/script/missions/clearskill/{head,mission,timer,camperman,playerdeath}.lua
 // This is a pure proof model only; executor/runtime integration is intentionally out of scope.
 // -----------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 # VLTK Mobile PC mission script source index
-# Source of truth: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/missions
+# Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/missions
 # Scope: file inventory only (relative path, directory, kind, size, sha256); no Lua runtime/execution semantics.
 # PathEncoding: UTF-8 catalog; non-ASCII PC filesystem byte names decoded with GB18030 when needed.
 # TotalFiles	985

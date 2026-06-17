@@ -2,7 +2,7 @@
 
 > **Nguồn PC**:
 > - `Assets/StreamingAssets/Reference/PcSkills.txt` (canonical, TCVN3, 8 active + 2 buff + 1 mastery + 1 resist + 1 passive = 10 skill ID 43-58)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/tangmen.lua` (GB18030, 749 dòng, 25 skills kể cả 80/150-tier)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/tangmen.lua` (GB18030, 749 dòng, 25 skills kể cả 80/150-tier)
 > - Per-skill files: `script/skill/tangmen/*.lua` (2 file pinyin) + `script/skill/tangmeng/*.lua` (19 file GB2312 bao gồm trùng lặp)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch (line 1834) — **không có** TangMen skill nào thuộc `Melee_Jump/JumpAndAttack/RunAndAttack` (tất cả `IsMelee=0`, thuần ranged). Do đó **G1 (dash) không áp dụng** cho Đường Môn.
 > - Tóm tắt: Đường Môn là môn phái **ranged ám khí / poison thuần**, 5 active attack (45/47/50/54/58) đều dùng `PcSkillStyle.Missiles` + `childSkillId/childSkillNum` cho sub-missile. Gap nặng nhất: **G4 (waitTime=5 bị bỏ ở 5/5 attack)** + **G4 (req level sai ID 47/54)** + **G4 (ID 54 missile form sai Single vs Fan)** + **G4 (ID 50 MslsGenData=4 bị bỏ)** + **G6 (ID 58 CollideEvent 1→227 thiếu)** + **G7 (radius flat curve sai PC, lighting res formula sai PC cho 51)**.

@@ -216,7 +216,7 @@ namespace VLTK.Sandbox
             }),
 
             // 357 Phi Long Tại Thiên [SECT-ALL fix 2026-06-15]
-            // PC source EVIDENCE (đọc từ vl_update_27/Client 6.0/settings/skills.txt + file/skill/gaibang.lua):
+            // PC source EVIDENCE (đọc từ 00.src-tinh-kiem/Client 6.0/settings/skills.txt + file/skill/gaibang.lua):
             //   skills.txt skill 357: IsMelee=0, ByMissle=1, MslsGenerate=5, ChildSkillId=166, CharAnimId=11
             //   gaibang.lua::feilong_zaitian:
             //     missle_speed_v={1,20→20,24}, skill_misslenum_v={1,1→20,4}, skill_attackradius={1,448→20,512}
@@ -233,7 +233,7 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
-                // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC vltksource_new mag_tr_16)
+                // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC PC stock 2011 mag_tr_16)
                 "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
 
             DamageSkillNew(359, "Thiên Hạ Vô Cẩu ", "Thiên Hạ Vô Cẩu (player)", 80, 20, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
@@ -308,7 +308,7 @@ namespace VLTK.Sandbox
 
         public static List<SkillDefinition> CreateWuDangSkills() => new()
         {
-            // Source: /var/www/vltksource_new/vl_update_27/Client 6.0/script/skill2/wudang.lua
+            // Source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/wudang.lua
             WuDangPassiveJianFa(),
             WuDangPassiveQuanFa(),
             WuDangYinYangQi(),
@@ -616,7 +616,7 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
-        /// <summary>Override PreCastSpr với path từ jx-source (khác vltksource_new).</summary>
+        /// <summary>Override PreCastSpr với path từ jx-source (khác PC stock 2011).</summary>
         private static SkillDefinition WithJxPreCast(SkillDefinition s, string jxPreCastSprPath)
         { s.effectSourceId = Sprite(jxPreCastSprPath); return s; }
 

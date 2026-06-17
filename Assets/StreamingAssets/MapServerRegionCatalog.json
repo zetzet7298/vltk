@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "generatedAtUtc": "2026-06-08T00:16:21Z",
-  "sourceRoot": "/var/www/vltksource_new/vl_update_27",
-  "sourcePakDir": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/pak",
+  "sourceRoot": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem",
+  "sourcePakDir": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak",
   "sourceGeometryCatalog": "/var/www/vltk-mobile/Assets/StreamingAssets/MapGeometryCatalog.json",
   "isPartialRun": false,
   "totalGeometries": 332,

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC skilltemplate.txt catalog service.
-// Source: vl_update_27 Server settings/skilltemplate.txt; 67 schema fields.
+// Source: 00.src-tinh-kiem Server settings/skilltemplate.txt; 67 schema fields.
 // -----------------------------------------------------------------------------
 
 using System.Collections.Generic;

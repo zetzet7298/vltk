@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC weather/music source index parser.
-// Source: vl_update_27 settings/weather and settings/music. Index only.
+// Source: 00.src-tinh-kiem settings/weather and settings/music. Index only.
 // -----------------------------------------------------------------------------
 
 using System;

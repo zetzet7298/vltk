@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — standalone CityWarJoinRouter runtime semantics model.
-// PC source: vl_update_27 Server 6.0/server/home_jxser/server1/script/missions/
+// PC source: 00.src-tinh-kiem Server 6.0/server/home_jxser/server1/script/missions/
 // citywar_city/zhongzhuan_map/trap.lua, citywar_city/head.lua,
 // citywar_city/camper.lua, citywar_global/head.lua.
 // -----------------------------------------------------------------------------

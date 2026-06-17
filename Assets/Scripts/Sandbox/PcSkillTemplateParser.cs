@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC settings/skilltemplate.txt schema parser.
-// Source: vl_update_27/Server 6.0/server/home_jxser/server1/settings/skilltemplate.txt
+// Source: 00.src-tinh-kiem/Server 6.0/server/home_jxser/server1/settings/skilltemplate.txt
 // This PC file is an INI-like skill table field template, not a 219-row data table.
 // -----------------------------------------------------------------------------
 

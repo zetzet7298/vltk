@@ -43,7 +43,7 @@ Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `j
 - Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
 - PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
 - For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
-- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/jx-source` at runtime.
 - Verify with real file existence/decode/render evidence before claiming parity or missing source.
 
 ### 1. Signed-byte path hash
@@ -193,7 +193,7 @@ Important behavior:
 
 ## Prerequisites
 
-Primary PC source: `/var/www/vltksource_new/vl_update_27/` (always available).
+Primary PC source: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` (always available).
 
 Optional: VMDK with original pak files. Check:
 
@@ -256,7 +256,7 @@ python3 scripts/jx_map_port.py \
   --map-name '特殊用地\任务用地\信使任务\风之骑' \
   --project-map-id 389 \
   --unity-root /var/www/vltk-mobile \
-  --data-dir '/var/www/vltksource_new/vl_update_27/Client 6.0/data' \
+  --data-dir '/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data' \
   --bounds 79 78 101 100
 
 # Mission maps with map-specific NPC/boss visuals: stage extra SPRs from NpcResType too.
@@ -373,16 +373,16 @@ coordinate bugs that normal map screenshots miss.
 
 PC references:
 
-- `/var/www/vltksource_new/vl_update_27/Utility/Run/Ui/ui3/小地图_小.ini`
+- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Ui/ui3/小地图_小.ini`
   - `[MiniMap] Left=670 Top=0 Width=130 Height=130`
   - `[MapRect] Left=1 Top=1 Width=128 Height=128`
   - `[SwitchBtn] Left=101 Top=115 Width=14 Height=14`
   - `[WorldMapBtn] Left=115 Top=115 Width=14 Height=14`
-- `/var/www/vltksource_new/vl_update_27/SwordOnline/Sources/S3Client/Ui/UiMiniMap.cpp`
+- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Ui/UiMiniMap.cpp`
   - left-click on minimap forwards to game space (`Wnd_TransmitInputToGameSpace`)
   - PC scene label uses `Set2IntText(nScenePos0 / 8, nScenePos1 / 8, '/')`
   - world map button switches to `MINIMAP_M_WORLD_MAP`
-- `/var/www/vltksource_new/vl_update_27/SwordOnline/Sources/S3Client/Ui/UiWorldMap.cpp`
+- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Ui/UiWorldMap.cpp`
   - PC world map closes on click/key; mobile keeps click-inside for move, click-outside for close.
 
 Unity implementation rules:

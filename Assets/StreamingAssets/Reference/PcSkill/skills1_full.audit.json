@@ -1,5 +1,5 @@
 {
-  "source": "/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/settings/skills1.txt",
+  "source": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt",
   "sha256": "9b8dc327e143f62328e01d8941ad411eca40c6d85c4ca60d486172739f9e6932",
   "byteCount": 778882,
   "lineCountIncludingTrailingBlank": 1714,

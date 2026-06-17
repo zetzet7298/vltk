@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — pure CityWar NPC transfer-route split proof.
-// PC source: vl_update_27 Server 6.0/server/home_jxser/server1/script/missions/
+// PC source: 00.src-tinh-kiem Server 6.0/server/home_jxser/server1/script/missions/
 // - citywar_global/infocenter.lua:209-247 (GoCityWarDefend/Attack -> 222/223)
 // - citywar_city/zhongzhuan_map/trap.lua:25-38 (222 -> camp 1, else camp 2)
 // - citywar_city/head.lua:71-72 (join map 221 camp spawns; handled by JoinRouter)

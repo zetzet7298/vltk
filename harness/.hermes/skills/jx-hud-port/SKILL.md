@@ -28,7 +28,7 @@ trust PC source + current Unity code + runtime probes, then update this skill.
 Match the PC client; do not redesign from memory. Source of truth, in order: (1) the actual
 pixels of `pc-evidence/pc_hud.png`, (2) INI coordinates extracted from the PAKs, (3) the real
 SPR art. The HUD is data-driven, but the old `Utility/Run/Ui/ui3/` layout this skill once
-assumed does NOT exist in `vltksource_new` — INI + SPR live in the canonical unpacked PAK tree
+assumed does NOT exist in jx-source (Tinh Kiem) — INI + SPR live in the canonical unpacked PAK tree
 (`pak_unpacked/.../Client 6.0/data/<pak>/`). Never trust a vision model over the raw pixels
 (see "Pixel-truth verification"), and verify every change against live Unity runtime
 hit-testing because this checklist can go stale.
@@ -40,14 +40,14 @@ Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `j
 - Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
 - PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
 - For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
-- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/jx-source` at runtime.
 - Verify with real file existence/decode/render evidence before claiming parity or missing source.
 
 PC HUD is **data-driven**, but the source layout the original version of this
-skill assumed (`Utility/Run/Ui/ui3/`) **does not exist** in `vltksource_new`. Do
+skill assumed (`Utility/Run/Ui/ui3/`) **does not exist** in jx-source (Tinh Kiem). Do
 not trust that path. Verified reality (this is the hard-won correction):
 
-- INI + SPR art live in the canonical unpacked PAK source tree first: `/var/www/vltksource_new/vl_update_27/pak_unpacked/vl_update_27/Client 6.0/data/<pak>/...`
+- INI + SPR art live in the canonical unpacked PAK source tree first: `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/<pak>/...`
   (notably `1024/` for 1024-res UI, `updatejx08/` for patched art, `800/` for 800-res).
 - Use `/var/www/vltktool/unpak_tool.py` only for exceptional repair/re-unpack cases; normal HUD porting should read the already-unpacked files.
 - Loose INI fragments exist under `Client 6.0/ui` and Lua under `Client 6.0/script/ui`,
@@ -110,7 +110,7 @@ settings in this project. Keep art in UI Toolkit; only use IMGUI/uGUI for text i
 ## PAK / SPR extraction workflow
 
 The art you need is usually already available in the canonical unpacked PAK tree. First read
-`/var/www/vltksource_new/vl_update_27/pak_unpacked/_SOURCE_OF_TRUTH.txt` and `/var/www/vltktool/README.md`. Do not write ad-hoc
+`/var/www/jx-source/pak_unpacked/_SOURCE_OF_TRUTH.txt` and `/var/www/vltktool/README.md`. Do not write ad-hoc
 SPR/PAK scanners unless the tool itself needs a surgical enhancement; broad scans can
 crash the machine and usually produce false confidence.
 
@@ -120,7 +120,7 @@ Pipeline:
    `\spr\UI3\主界面\背包按钮.spr`) and hash with `unpak_tool.file_id_from_bytes`. Scan
    each PAK's index for that uid. If the hash misses, use `resolve_uid.py` or a narrow
    `find_spr_by_image.py --pak <one pak>` query; never scan the whole source tree.
-2. **Prefer already-unpacked files** under `/var/www/vltksource_new/vl_update_27/pak_unpacked`; only decompress with `/var/www/vltktool/unpak_tool.py` if the canonical tree/manifest proves a repair case is needed.
+2. **Prefer already-unpacked files** under `/var/www/jx-source/pak_unpacked`; only decompress with `/var/www/vltktool/unpak_tool.py` if the canonical tree/manifest proves a repair case is needed.
 3. **Decode SPR frames to PNG.** Each SPR holds N frames; use
    `/var/www/vltktool/extract_item_spr.py` to write `*_frame_000.png` etc.
 4. **Copy the PNG into the Unity project** under `Assets/UI/HUD/Art/` (and the mirror

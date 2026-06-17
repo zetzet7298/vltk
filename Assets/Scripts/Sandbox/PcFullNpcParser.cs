@@ -342,7 +342,7 @@ namespace VLTK.Sandbox
         }
 
 
-        // PC server settings/npcs.txt in vl_update_27 is a mixed legacy file:
+        // PC server settings/npcs.txt in 00.src-tinh-kiem is a mixed legacy file:
         // tab/numeric columns are ASCII-compatible, most NPC names are TCVN3
         // Vietnamese bytes, and a small tail still uses GB2312 Chinese names.
         // Decode per name field instead of applying one whole-file codec.

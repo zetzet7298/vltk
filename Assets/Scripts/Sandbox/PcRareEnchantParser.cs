@@ -2,8 +2,8 @@
 // VLTK Mobile — PC rare.txt (Bảng cường hóa thuộc tính hiếm / weapon-enchant) parser
 //
 // PC source (verified 2026-06-12, GB2312, TAB-separated, 1 header + 480 rows):
-//   /var/www/vltksource_new/vl_update_27/Client 6.0/settings/rare.txt
-//   /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/itemexchange_setting/rare.txt
+//   /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/rare.txt
+//   /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/itemexchange_setting/rare.txt
 //   (both files are byte-identical)
 //
 // This is a RARE MAGIC-ATTRIBUTE ROLL TABLE used by the equipment enchant /

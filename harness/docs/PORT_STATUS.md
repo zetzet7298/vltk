@@ -1,8 +1,8 @@
 # PORT_STATUS.md — Evidence Audit PC → Mobile
 
 > **Audit date**: 2026-06-09; source-of-truth refresh: 2026-06-10
-> **PC source of truth**: loose source under `/var/www/vltksource_new/vl_update_27` **plus** canonical unpacked PAK tree `/var/www/vltksource_new/vl_update_27/pak_unpacked`
-> **Unpack manifest**: `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json` — read live, do not bake counts. Current manifest (re-verified 2026-06-12): `pak_count=46`, `total_entries=403560`, `total_exported=403560`, `total_failed=0`, `partial=0`, all 46 items `status=ok` (incl. `dmjx01.pak` 1621/1621). The earlier "401,281/401,640, 357 undecoded `0x11000000`" line was a pre-repair snapshot and is now stale: method `0x11000000` (352 entries) is raw-SPR stored-as-is (byte-copied, not undecoded), and the 5 `dmjx01` `0x10000000` fragment-table entries were repaired. Method distribution across all 46 paks: `0x20`=252000, `0x01`=149697, `0x00`=1506, `0x11`=352, `0x10`=5 (binary-verified vs engine.dll/represent3.dll 2026-06-12).
+> **PC source of truth**: loose source under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` **plus** canonical unpacked PAK tree `/var/www/jx-source/pak_unpacked`
+> **Unpack manifest**: `/var/www/jx-source/pak_unpacked/_unpack_summary.json` — read live, do not bake counts. Current manifest (re-verified 2026-06-12): `pak_count=46`, `total_entries=403560`, `total_exported=403560`, `total_failed=0`, `partial=0`, all 46 items `status=ok` (incl. `dmjx01.pak` 1621/1621). The earlier "401,281/401,640, 357 undecoded `0x11000000`" line was a pre-repair snapshot and is now stale: method `0x11000000` (352 entries) is raw-SPR stored-as-is (byte-copied, not undecoded), and the 5 `dmjx01` `0x10000000` fragment-table entries were repaired. Method distribution across all 46 paks: `0x20`=252000, `0x01`=149697, `0x00`=1506, `0x11`=352, `0x10`=5 (binary-verified vs engine.dll/represent3.dll 2026-06-12).
 > **Mobile repo**: `/var/www/vltk-mobile` (`dev` at `0480502` when audit started; source-truth alignment commits: `0638487`, `794f7ca`)
 > **Scope**: toàn bộ codebase/status, không chỉ map.
 > **Dirty excluded**: `Assets/Scripts/UI/CharacterPanelService.cs`, `Assets/Scripts/UI/GameHudController.cs`, `harness/item_spr_img/` là HUD/UI WIP của human/parallel work, không dùng làm proof.
@@ -18,7 +18,7 @@
 
 **Hard rule:** A parser/service/test skeleton is **not** completion. Mark `✅` only when the row states the exact verified scope, e.g. “data catalog loaded”, not “PC behavior complete”.
 
-**Kanban provenance warning:** board `vltk-port-wave1` is historical/pre-`pak_unpacked` migration. Its 30 audit outputs and blocked implementation tasks may be useful as hints, but they are not sufficient evidence after the 2026-06-10 source-of-truth refresh unless rechecked against `/var/www/vltksource_new/vl_update_27/pak_unpacked`. Board `vltk-port` is abandoned/corrupt. New work should use clean board `vltk-port-pakunpacked` and update this file only with fresh evidence.
+**Kanban provenance warning:** board `vltk-port-wave1` is historical/pre-`pak_unpacked` migration. Its 30 audit outputs and blocked implementation tasks may be useful as hints, but they are not sufficient evidence after the 2026-06-10 source-of-truth refresh unless rechecked against `/var/www/jx-source/pak_unpacked`. Board `vltk-port` is abandoned/corrupt. New work should use clean board `vltk-port-pakunpacked` and update this file only with fresh evidence.
 
 ## Audit evidence actually collected
 

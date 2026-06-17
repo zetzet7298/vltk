@@ -4,12 +4,12 @@
 > với PC, xác định gap và đề xuất thứ tự sửa. **CHƯA SỬA CODE.**
 >
 > **Nguồn tham chiếu**:
-> - PC: `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/gaibang.lua`
+> - PC: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/gaibang.lua`
 >   (đã giải mã TCVN3; các biến `gaibang_*`, `feilong_zaitian` v.v.)
 > - PC C++: `Assets/StreamingAssets/Reference/KNpc.cpp` (`DoSkill`, `DoOrdinSkill`,
 >   `CastMeleeSkill` switch với `Melee_Jump` / `Melee_JumpAndAttack` / `Melee_RunAndAttack`,
 >   `NewJump` với `m_JumpStep`, `DoJump`).
-> - PC docs: `/var/www/vltksource_new/docs/port_docs/03_skills.md` (25 file
+> - PC docs: `/var/www/jx-source/docs/port_docs/03_skills.md` (25 file
 >   `skill/gaibang/`).
 > - Mobile: `Assets/Scripts/Sandbox/PcCombatCatalogFactory.cs`,
 >   `Assets/Scripts/Sandbox/CombatRuntimeService.cs`,
@@ -265,14 +265,14 @@ private IEnumerator DashAndCast(CombatActorState caster, SkillDefinition skill,
 
 > Mỗi section bên dưới do 1 subagent gap-analysis sinh ra theo format giống Phần I (Cái Bang).
 > Mỗi subagent được giao scope 1 môn phái, đọc `PcCombatCatalogFactory.cs` cho mobile catalog
-> + `vl_update_27/Server 6.0/.../script/skill[N]/{faction}.lua` cho PC source.
+> + `00.src-tinh-kiem/Server 6.0/.../script/skill[N]/{faction}.lua` cho PC source.
 
 ---
 
 ## 2.1. Võ Đang (PC: 武当 WǔDāng, ID range 151-166)
 
-> **Nguồn PC**: `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudang.lua` (GB2312, đã `iconv -f gb2312` → UTF-8 tại `/tmp/wudang_utf8.lua`).
-> Per-skill files: `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudang/*.lua` (20 file TCVN3, 3 file pinyin `qixing-zhen.lua` / `sanhuan-taoyue.lua` / `xuanyi-wuxiang.lua`).
+> **Nguồn PC**: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudang.lua` (GB2312, đã `iconv -f gb2312` → UTF-8 tại `/tmp/wudang_utf8.lua`).
+> Per-skill files: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudang/*.lua` (20 file TCVN3, 3 file pinyin `qixing-zhen.lua` / `sanhuan-taoyue.lua` / `xuanyi-wuxiang.lua`).
 > C++: `KNpc.cpp::CastMeleeSkill` switch — **không có** Võ Đang skill nào thuộc nhánh `Melee_Jump/JumpAndAttack/RunAndAttack`. Toàn bộ Võ Đang skill là ranged magic (lighting damage) hoặc passive/buff. Do đó **G1 (dash) không áp dụng** cho Võ Đang.
 > Tóm tắt: Võ Đang là môn phái **không có dash** — gap nặng nhất là sai số liệu (G4, G7) + missing event chain (G6) + missing visual case (G7 visual coverage).
 
@@ -356,8 +356,8 @@ private IEnumerator DashAndCast(CombatActorState caster, SkillDefinition skill,
 > **Nguồn PC**:
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical, TCVN3, SkillId 23-42 trừ 25/27/28/38/39)
 > - `Assets/StreamingAssets/Reference/PcSkills.txt` (PC gốc, cùng schema)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/tianwang.lua` (GB18030, 763 dòng, 23 skills)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/tianwang/*.lua` (26 file per-skill, gồm 6 pinyin + 20 Chinese sub-form 150-tier)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/.../script/skill/tianwang.lua` (GB18030, 763 dòng, 23 skills)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/.../script/skill/tianwang/*.lua` (26 file per-skill, gồm 6 pinyin + 20 Chinese sub-form 150-tier)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch — không có Thiên Vương skill nào thuộc nhánh `Melee_Jump/JumpAndAttack/RunAndAttack` (IsMelee=1 nhưng không có MeleeType dash). Tất cả là **instant melee** (chém 1 nhát hoặc multi-hit liên tiếp qua childSkillNum).
 > - Tóm tắt: Thiên Vương là môn phái **melee cận chiến thuần**, đa số dùng `IsMelee=1` + `childSkillNum=1-4` (multi-hit pattern). **G1 (dash) KHÔNG áp dụng** — toàn bộ 9 skill active là instant melee, không phải dash. Gap nặng nhất: **G4 (childSkillNum/childSkillId bị mất hoàn toàn)** — mất cảm giác multi-hit "thương pháp 2 chiêu liên tiếp" / "đao pháp 3 chiêu liên tiếp".
 
@@ -464,8 +464,8 @@ private IEnumerator DashAndCast(CombatActorState caster, SkillDefinition skill,
 
 > **Nguồn PC**:
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical TCVN3, SkillId 77-94)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/emei.lua` (GB18030, 386 dòng, 18 skills + SkillExpFunc helper)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/emei/*.lua` (19 per-skill files, gồm 3 pinyin `fofa-wubian.lua` / `foguang-puzhao.lua` / `linji-zhuang.lua` + 16 GB2312 sub-form)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/.../script/skill/emei.lua` (GB18030, 386 dòng, 18 skills + SkillExpFunc helper)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/.../script/skill/emei/*.lua` (19 per-skill files, gồm 3 pinyin `fofa-wubian.lua` / `foguang-puzhao.lua` / `linji-zhuang.lua` + 16 GB2312 sub-form)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch (line 1829-1891) — **không có** Nga My skill nào thuộc nhánh `Melee_Jump/JumpAndAttack/RunAndAttack`. Toàn bộ 16 skill Nga My là `IsMelee=0` (ranged magic missile hoặc ranged surround state). `ChildSkillNum=1` cho mọi skill attack; `MslsGenerate=1` chỉ riêng 82.
 > - **Tóm tắt**: Nga My là môn phái **ranged thuần** (băng pháp + heal/buff quần), không có dash, không có melee, không có event chain trong range 77-94. Gap nặng nhất: **G7 (registry radius sai toàn bộ — 5/5 entries off)** + **G4 (ID 84 Phong Vũ Phiêu Hương thiếu childSkillId=210, 92 thiếu allres_p state matching)** + **missing skill 94** (Từ Hàng Phổ Độ 11 — heal sub-form passive).
 
@@ -625,8 +625,8 @@ Tất cả 6 active 150-tier đều có `skill_startevent` chain thật (khác v
 ## 2.5. Ngũ Độc (PC: WuDu, ID range 60-76)
 
 > **Nguồn PC**:
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudu.lua` (GB2312, 613 dòng, 25+ skills)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudu/*.lua` (26 file per-skill: 9 pinyin + 17 Chinese GBK)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudu.lua` (GB2312, 613 dòng, 25+ skills)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/wudu/*.lua` (26 file per-skill: 9 pinyin + 17 Chinese GBK)
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical TCVN3, ID 60-76 trừ 61)
 > - `Assets/Scripts/Sandbox/PcCombatCatalogFactory.cs` line 1704-1932 (`CreateWuDuSkills` 16 skill)
 >
@@ -758,7 +758,7 @@ Tất cả 6 active 150-tier đều có `skill_startevent` chain thật (khác v
 
 > **Nguồn PC**:
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` + `PcSkills.txt` (canonical, SkillId 3-21 loại 5/7)
-> - PC gốc: `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/shaolin.lua` (GB2312, 450 dòng, 11 skill chính + 9 sub-form 150-tier)
+> - PC gốc: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/shaolin.lua` (GB2312, 450 dòng, 11 skill chính + 9 sub-form 150-tier)
 > - PC cập nhật: `script/skill1/shaolin.lua` (TCVN3-pinyin, 450 dòng, dữ liệu mới với damage sub-skill cao hơn — "saolin mới")
 > - Per-skill cũ: `script/skill/shaolin/*.lua` (11 file pinyin TCVN3)
 > - Per-skill mới: `script/skill/saolin/*.lua` (19 file GB2312, không có `mohe-wuliang.lua` — skill 19)
@@ -867,7 +867,7 @@ Tất cả 6 active 150-tier đều có `skill_startevent` chain thật (khác v
 ## 2.7. Thúy Yên (PC: CuiYan 翠烟, ID range 95-114)
 
 > **Nguồn PC**:
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/cuiyan.lua` (GB18030, 23 skills incl. 150-tier + 120-tier)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/cuiyan.lua` (GB18030, 23 skills incl. 150-tier + 120-tier)
 > - Per-skill files: `cuiyan/{cuiyan-daofa,cuiyan-shuangdao,binggu-xuexin,bingxin-qianying,fengjuan-canxue,muye-liuxing,taxue-wuhen,xueying}.lua` (8 file, mỗi file override 1 attribute)
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical, TCVN3, SkillId 95-114, 19 skills — trừ 96/98 cùng pattern passive mastery)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch (line 1829-1891). **CuiYan 100% IsMelee=0** (xác nhận từ ModSkills.txt) → không thuộc nhánh Melee_Jump/JumpAndAttack/RunAndAttack. **G1 (dash) KHÔNG áp dụng** cho CuiYan.
@@ -1008,7 +1008,7 @@ Tất cả 6 active 150-tier đều có `skill_startevent` chain thật (khác v
 
 > **Nguồn PC**:
 > - `Assets/StreamingAssets/Reference/PcSkills.txt` (canonical, TCVN3, 8 active + 2 buff + 1 mastery + 1 resist + 1 passive = 10 skill ID 43-58)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/tangmen.lua` (GB18030, 749 dòng, 25 skills kể cả 80/150-tier)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/.../script/skill/tangmen.lua` (GB18030, 749 dòng, 25 skills kể cả 80/150-tier)
 > - Per-skill files: `script/skill/tangmen/*.lua` (2 file pinyin) + `script/skill/tangmeng/*.lua` (19 file GB2312 bao gồm trùng lặp)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch (line 1834) — **không có** TangMen skill nào thuộc `Melee_Jump/JumpAndAttack/RunAndAttack` (tất cả `IsMelee=0`, thuần ranged). Do đó **G1 (dash) không áp dụng** cho Đường Môn.
 > - Tóm tắt: Đường Môn là môn phái **ranged ám khí / poison thuần**, 5 active attack (45/47/50/54/58) đều dùng `PcSkillStyle.Missiles` + `childSkillId/childSkillNum` cho sub-missile. Gap nặng nhất: **G4 (waitTime=5 bị bỏ ở 5/5 attack)** + **G4 (req level sai ID 47/54)** + **G4 (ID 54 missile form sai Single vs Fan)** + **G4 (ID 50 MslsGenData=4 bị bỏ)** + **G6 (ID 58 CollideEvent 1→227 thiếu)** + **G7 (radius flat curve sai PC, lighting res formula sai PC cho 51)**.
@@ -1141,8 +1141,8 @@ Tất cả 6 active 150-tier đều có `skill_startevent` chain thật (khác v
 ## 2.8. Thiên Nhẫn (PC: TianRen 天忍, ID range 131-150 + 361-364 + 1075-1076)
 
 > **Nguồn PC**:
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/tianren.lua` (GBK, 247 dòng, 16 skill + 150-tier `zhanren150` có `randmove` + `missle_missrate` → dash-pattern)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/tianren/*.lua` (26 file per-skill; 6 pinyin ASCII: `limo-duohun`, `sanmei-zhenhuo`, `shigu-xueren`, `tianmo-jieti`, `wuxing-zhen`, `zhiyan`; 20 GBK TCVN3)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/.../script/skill/tianren.lua` (GBK, 247 dòng, 16 skill + 150-tier `zhanren150` có `randmove` + `missle_missrate` → dash-pattern)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/.../script/skill/tianren/*.lua` (26 file per-skill; 6 pinyin ASCII: `limo-duohun`, `sanmei-zhenhuo`, `shigu-xueren`, `tianmo-jieti`, `wuxing-zhen`, `zhiyan`; 20 GBK TCVN3)
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (TCVN3, canonical SkillId 131-150 + 361-364 + 1075-1076, full columns)
 > - `Assets/StreamingAssets/Reference/ModMissles.txt` (child missile 54-58, 69-71, 169-171, 226, 337, 363, 366, 192 — `mv=0` stationary fire, `mv=1` homing)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch (line 1829-1891) — **TianRen KHÔNG có** skill nào thuộc `Melee_Jump/JumpAndAttack/RunAndAttack` (PC `IsMelee=1` cho 139/142/147/361/1075 nhưng chỉ là melee-missile, không phải dash). Tuy nhiên `zhanren150` có `randmove` → missile có thể "lunge" (chưa thấy trong PC C++ reference, có thể nằm ngoài scope task).
@@ -1315,8 +1315,8 @@ Tất cả 6 active 150-tier đều có `skill_startevent` chain thật (khác v
 ## 2.9. Côn Luân (PC: KunLun 昆仑, ID range 167-184 + ID 90)
 
 > **Nguồn PC**:
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/kunlun.lua` (GB18030, 408 dòng, 23 skill — hàm `SKILLS{}` tên pinyin + 150-tier sub-form)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/kunlun/*.lua` (33 file per-skill: 14 pinyin + 19 Chinese GBK)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/kunlun.lua` (GB18030, 408 dòng, 23 skill — hàm `SKILLS{}` tên pinyin + 150-tier sub-form)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill/kunlun/*.lua` (33 file per-skill: 14 pinyin + 19 Chinese GBK)
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical TCVN3, ID 167-184 + ID 90)
 > - `Assets/Scripts/Sandbox/PcCombatCatalogFactory.cs` line 2403-2673 (`CreateKunLunSkills` 18 entry)
 > - `Assets/Scripts/Sandbox/PcSkillTuningRegistry.cs` line 108-114 (`KunLunId` radius curves — chỉ 4/18 entry)

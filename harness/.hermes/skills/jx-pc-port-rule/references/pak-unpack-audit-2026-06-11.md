@@ -8,7 +8,7 @@
 > the methodology and the format-gotcha history below. Do NOT cite the "dmjx01 partial /
 > segfault 1621" numbers as current.
 
-Use this when deciding whether to delete/rebuild `/var/www/vltksource_new/vl_update_27/pak_unpacked` or repair it incrementally.
+Use this when deciding whether to delete/rebuild `/var/www/jx-source/pak_unpacked` or repair it incrementally.
 
 ## Verdict
 
@@ -18,7 +18,7 @@ A full re-unpack run completed after `unpak_tool.py` learned to treat method `0x
 
 ## Observed full re-unpack output
 
-Command driver used `/tmp/full_reunpack_v3.py`, calling `/var/www/vltktool/unpak_tool.py -f -o /var/www/vltksource_new/vl_update_27/pak_unpacked` with scoped scan dirs from Client/Server settings and script folders.
+Command driver used `/tmp/full_reunpack_v3.py`, calling `/var/www/vltktool/unpak_tool.py -f -o /var/www/jx-source/pak_unpacked` with scoped scan dirs from Client/Server settings and script folders.
 
 Final log highlights:
 

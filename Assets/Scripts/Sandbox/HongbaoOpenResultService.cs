@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — pure PC Hồng Bao weighted-open model.
-// PC source of truth (vl_update_27 only):
+// PC source of truth (00.src-tinh-kiem only):
 // - Server 6.0/server/home_jxser/server1/script/item/shenmi_hongbao.lua
 // - Server 6.0/server/home_jxser/server1/script/class/kbonus.lua
 // - Server 6.0/server/home_jxser/server1/settings/item/hongbao.txt

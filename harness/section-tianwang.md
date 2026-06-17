@@ -2,7 +2,7 @@
 
 > **Nguồn PC verified**:
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical, TCVN3, SkillId 23-42 trừ 25/27/28/38/39)
-> - `/var/www/vltksource_new/vl_update_27/Server 6.0/.../script/skill/tianwang.lua` (GB18030, 763 dòng)
+> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/tianwang.lua` (GB18030, 763 dòng)
 > - `Assets/StreamingAssets/Reference/KNpc.cpp` (`CastMeleeSkill` switch line 1829-1891, `DoSkill`/`OnSkill` line 1937-1968, `NewJump` line 2883)
 > - `Assets/Scripts/Sandbox/PcCombatCatalogFactory.cs` (line 1461-1702 `CreateTianWangSkills`)
 > - `Assets/Scripts/Sandbox/PcSkillTuningRegistry.cs` (line 42-52 TianWangId radius curves)

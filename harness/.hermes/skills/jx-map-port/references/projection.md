@@ -6,7 +6,7 @@ can debug or port the renderer elsewhere.
 
 > Provenance: the formulas below were recovered from JX engine C++
 > (`KScenePlaceRegionC.{h,cpp}`, `Represent3/KRepresentShell3.cpp`). Those `.cpp` source
-> files are NOT in-scope under `/var/www/vltksource_new/vl_update_27` (only `represent3.dll`
+> files are NOT in-scope under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` (only `represent3.dll`
 > ships there) — but the key constant is now **binary-verified** against that DLL. The
 > Z-projection `screenY = sceneY/2 - (sceneZ*887)>>10` appears verbatim at
 > `represent3.dll:0x1000d08a` as `imul edi,edi,0x377` (887) followed by `sar edi,0xa` (>>10)

@@ -14,12 +14,12 @@ Usage:
 
 The map name is the MapList.ini value (region\\name, GBK). Grid bounds are read from the
 map's .wor (rect=minX,minY,maxX,maxY); pass --bounds to override or if the .wor is absent.
-The default data source is /var/www/vltksource_new/vl_update_27/Client 6.0/data, then the
+The default data source is /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data, then the
 mounted VMDK if the extracted source tree is unavailable.
 """
 import argparse, struct, ctypes, os, json, glob, shutil, sys
 
-DEFAULT_PC_ROOT = "/var/www/vltksource_new/vl_update_27"
+DEFAULT_PC_ROOT = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem"
 DEFAULT_VMDK_ROOT = "/mnt/jxwin/SourceNew/swrod3"
 
 # ---------------------------------------------------------------- UCL

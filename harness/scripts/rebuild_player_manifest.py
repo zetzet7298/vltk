@@ -17,8 +17,8 @@ MALE_MANIFEST = Path('/var/www/vltk-mobile/Assets/StreamingAssets/male_player_sp
 FEMALE_MANIFEST = Path('/var/www/vltk-mobile/Assets/StreamingAssets/female_player_sprites.json')
 
 # PC loose folder for man/woman
-PC_MAN_DIR = Path("/var/www/vltksource_new/vl_update_27/Client 6.0/spr/npcres/man")
-PC_WOMAN_DIR = Path("/var/www/vltksource_new/vl_update_27/Client 6.0/spr/npcres/woman")
+PC_MAN_DIR = Path("/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/spr/npcres/man")
+PC_WOMAN_DIR = Path("/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/spr/npcres/woman")
 
 # Actions we need for the game (idle, run, attack, mount)
 ACTIONS = ['ST01', 'ST02', 'ST04', 'ST05', 'ST06',

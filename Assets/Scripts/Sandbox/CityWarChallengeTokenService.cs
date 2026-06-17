@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — pure CityWar challenge-token turn-in model.
-// PC source of truth (vl_update_27 only):
+// PC source of truth (00.src-tinh-kiem only):
 // - server1/script/missions/citywar_global/infocenter.lua:25-29,271-350
 // - server1/script/missions/citywar_global/head.lua:24-26
 // -----------------------------------------------------------------------------

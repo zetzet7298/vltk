@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any
 
 UNITY_ROOT = Path('/var/www/vltk-mobile')
-PC_ROOT = Path('/var/www/vltksource_new/vl_update_27')
+PC_ROOT = Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem')
 JX_MAP_PORT = UNITY_ROOT / 'harness/.codex/skills/jx-map-port/scripts/jx_map_port.py'
 VLTK_DECODE = Path('/var/www/vltktool/decode_item_texts_vi.py')
 REGION_SCENE_WIDTH = 512

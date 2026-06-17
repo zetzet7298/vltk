@@ -28,7 +28,7 @@ Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `j
 - Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
 - PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
 - For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
-- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/jx-source` at runtime.
 - Verify with real file existence/decode/render evidence before claiming parity or missing source.
 
 Prefer PC data over guesses. Do not invent sprites or spawn positions if the PC source is available. If art/data is missing, skip or report that exact missing asset rather than showing placeholders as final output.
@@ -61,14 +61,14 @@ Use server region data, not client decoration data:
 
 If `Region_S` is not staged, search/extract from PC server map folder:
 
-- PC reference repo: `/var/www/vltksource_new/vl_update_27/bin/Server/maps/...`
+- PC reference repo: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/maps/...`
 - Ba Lăng example path decoded from GBK: `maps/两湖区/巴陵县/...`
 
 ### 2. Parse `Region_S.dat`
 
 PC format references:
 
-- `/var/www/vltksource_new/vl_update_27/SwordOnline/Sources/Core/Src/Scene/SceneDataDef.h`
+- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/Scene/SceneDataDef.h`
 - `KRegion::LoadServerNpc()` in `KRegion.cpp`
 - `KNpcSet::Add(int nSubWorld, void* pNpcInfo)` in `KNpcSet.cpp`
 
@@ -105,7 +105,7 @@ Important: `nPositionX/Y` are **MPS** coordinates. PC path: `KRegion::LoadServer
 
 Use `NpcS.txt` as authoritative for stats, AI, and visual resource:
 
-- `/var/www/vltksource_new/vl_update_27/bin/Server/Settings/NpcS.txt`
+- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Settings/NpcS.txt`
 - Has header row, so current Ba Lăng fix used `rowIndex = templateId + 1`.
 - Confirm by matching spawn `nameRaw` from `Region_S` against `NpcS.txt` row name.
 

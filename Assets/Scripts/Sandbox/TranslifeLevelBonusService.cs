@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — Chuyển Sinh translife.txt bonus lookup/diff service.
-// Source of truth: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/task/metempsychosis/translife.txt
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/task/metempsychosis/translife.txt
 // This service wraps the level-bonus table only; it is not the missing
 // translifeskill.txt skill-unlock/effect table.
 // -----------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 # Danh sách chức năng các nút trên HUD PC
 
-Tài liệu này tổng hợp chi tiết chức năng của từng nút bấm trên giao diện HUD của phiên bản PC gốc JX Online 1, được trích xuất trực tiếp từ các file cấu hình UI của PC bao gồm [dc11ac12.ini](file:///var/www/vltksource_new/vl_update_27/pak_unpacked/vl_update_27/Client%206.0/data/1024/unknown/dc11ac12.ini) và [0c164d5c.ini](file:///var/www/vltksource_new/vl_update_27/pak_unpacked/vl_update_27/Client%206.0/data/update01/unknown/0c164d5c.ini).
+Tài liệu này tổng hợp chi tiết chức năng của từng nút bấm trên giao diện HUD của phiên bản PC gốc JX Online 1, được trích xuất trực tiếp từ các file cấu hình UI của PC bao gồm [dc11ac12.ini](file:///var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client%206.0/data/1024/unknown/dc11ac12.ini) và [0c164d5c.ini](file:///var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client%206.0/data/update01/unknown/0c164d5c.ini).
 
 ---
 

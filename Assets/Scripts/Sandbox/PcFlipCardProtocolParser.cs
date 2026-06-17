@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC FlipCard protocol source catalog parser.
-// Source: vl_update_27/server1/script/flipcard/{flipcard_head,flipcard_c}.lua
+// Source: 00.src-tinh-kiem/server1/script/flipcard/{flipcard_head,flipcard_c}.lua
 // Catalog only: UI protocol constants/functions, not reward/runtime execution.
 // -----------------------------------------------------------------------------
 

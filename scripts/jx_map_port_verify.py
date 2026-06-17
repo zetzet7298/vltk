@@ -16,10 +16,10 @@ from pathlib import Path
 from typing import Any
 
 UNITY_ROOT = Path('/var/www/vltk-mobile')
-PC_ROOT = Path('/var/www/vltksource_new/vl_update_27')
+PC_ROOT = Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem')
 JX_MAP_PORT_REL = Path('harness/.codex/skills/jx-map-port/scripts/jx_map_port.py')
-SPR_LABEL_MAP = Path('/var/www/vltksource_new/vl_update_27/pak_unpacked/_labels.json')
-SPR_UNPACK_MANIFEST = Path('/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json')
+SPR_LABEL_MAP = Path('/var/www/jx-source/pak_unpacked/_labels.json')
+SPR_UNPACK_MANIFEST = Path('/var/www/jx-source/pak_unpacked/_unpack_summary.json')
 PROVENANCE_SAMPLE_LIMIT = 5
 EXPECTED_MAP_ALIASES = 1005
 EXPECTED_RUNTIME_MAPS = 1005

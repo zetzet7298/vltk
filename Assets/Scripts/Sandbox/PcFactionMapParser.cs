@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC Tong map catalog parser (legacy FactionMap service name)
-// Source of truth: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/tong/addtongnpc.lua
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/tong/addtongnpc.lua
 // Enter gate evidence: script/tong/tong_mix.lua ENTER_TONG_MAP_G requires level 10.
 // Imported file: StreamingAssets/Reference/PcTong/faction_map.txt
 // Rows are normalized from PC Lua tables only; no owner/capture semantics are

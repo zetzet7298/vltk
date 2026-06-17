@@ -18,7 +18,7 @@ the 2026-06-12 audit was prose/metadata contradicting the real repo.
    warns against reading the matrix as completion), but its baked counts and paths drift.
 2. PC Reference data: `Assets/StreamingAssets/Reference/**` (GBK/Chinese; many `*.txt` tables,
    some generated `*.json` catalogs).
-3. The unpack manifest `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json`
+3. The unpack manifest `/var/www/jx-source/pak_unpacked/_unpack_summary.json`
    — read live, never trust a baked count.
 4. Harness DB `harness/harness.db` via `scripts/bin/harness-cli` — a story-slice/test matrix,
    **NOT** a port-completion measure. It is gitignored; backlog/notes live locally.
@@ -74,7 +74,7 @@ Note: `fd` is blocked by .gitignore under StreamingAssets — use `rg --files --
 
 ### 5. pak/manifest counts are live, not baked
 ```bash
-python3 -c "import json;m=json.load(open('/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json'));print(m['pak_count'],m['total_entries'],m.get('total_exported'),m['total_failed'])"
+python3 -c "import json;m=json.load(open('/var/www/jx-source/pak_unpacked/_unpack_summary.json'));print(m['pak_count'],m['total_entries'],m.get('total_exported'),m['total_failed'])"
 ```
 Stale snapshots (e.g. "401,281/401,640, 357 undecoded 0x11000000") recur in docs. Live truth:
 46 paks, 403560/403560, 0 failed, 0 partial. `0x11000000` is raw-SPR byte-copy (stored, not

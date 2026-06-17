@@ -93,6 +93,13 @@ sysinfo.txt
 # ─────────────────────────────────────────────────
 Assets/StreamingAssets/aa/
 Assets/AssetBundles/
+
+# ─────────────────────────────────────────────────
+# PC game SPR assets (extracted from PAKs at build time)
+# jx-source is the SOLE source-of-truth; SPRs are not versioned.
+# ─────────────────────────────────────────────────
+Assets/StreamingAssets/Sprites/*.spr
+Assets/StreamingAssets/Sprites/*.spr.meta
 Assets/StreamingAssets/Generated/MapRegions/
 Assets/StreamingAssets/Generated/MapSprites/
 Assets/StreamingAssets/Generated/MapServerRegions/

@@ -103,7 +103,7 @@ Debug.Log($"Spawn position: {spawn}"); // Output: (6665.00, -3437.00)
 
 ## PC Source Reference
 Tọa độ này được derive từ PC JX Online source tại:
-- **PC Source**: `/var/www/vltksource_new/vl_update_27/`
+- **PC Source**: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`
 - **Training NPCs**: Template IDs 413, 414, 415 trong NpcS.txt
 - **Map**: Ba Lăng Huyện (Map 79)
 - **Region Data**: Region_S.dat có chứa spawn coordinates

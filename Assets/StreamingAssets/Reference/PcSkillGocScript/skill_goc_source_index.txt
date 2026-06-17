@@ -1,5 +1,5 @@
 # VLTK Mobile PC skill-goc source index. Catalog only; no Lua execution.
-# Source of truth: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill-goc
+# Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill-goc
 # Invalid PC filename bytes are escaped as backslash sequences for UTF-8 safety.
 SourceIndex	SourceRoot	RelativePath	Directory	FileName	Extension	IsLua	SizeBytes	Sha256
 1	Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill-goc	advancedskill.lua		advancedskill.lua	lua	1	11540	a3c44169af30fc99d59d8038d80d3e9f631af69c412b2f060be6e07f2c67884c

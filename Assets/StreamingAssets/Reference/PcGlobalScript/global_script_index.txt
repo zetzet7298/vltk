@@ -1,5 +1,5 @@
 # VLTK Mobile — PC script/global source index
-# Source of truth: /var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/script/global
+# Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/global
 # Directory rows preserve PC subdirectories; file rows preserve size/sha256. No Lua runtime semantics are claimed.
 SourceIndex	EntryKind	SourceRoot	RelativePath	Directory	FileName	Extension	IsLua	SizeBytes	Sha256
 1	directory	Server 6.0/server/home_jxser/server1/script/global	cn		cn		0	0	

@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC shop-related Lua source index parser.
-// Source of truth: /var/www/vltksource_new/vl_update_27 only:
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem only:
 //   */server1/script/shop, */server1/script/item/dynamic_shop, */server1/script/item/ib_shop
 // Imported file: StreamingAssets/Reference/PcShopScript/shop_script_index.txt
 // Data-only catalog: preserves PC Lua file path/size/SHA-256. No Lua execution,

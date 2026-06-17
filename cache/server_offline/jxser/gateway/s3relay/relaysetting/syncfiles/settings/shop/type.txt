@@ -1,0 +1,4 @@
+TypeName	SellID
+VËt PhÈm	184
+Thuèc	185
+Th¹ch	186

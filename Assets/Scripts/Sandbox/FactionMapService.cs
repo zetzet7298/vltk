@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — FactionMapService legacy facade for PC Tong map catalog
-// PC source: script/tong/addtongnpc.lua map arrays + tong_mix.lua enter gate under vl_update_27.
+// PC source: script/tong/addtongnpc.lua map arrays + tong_mix.lua enter gate under 00.src-tinh-kiem.
 // The service exposes imported rows only; Tong ownership/capture/runtime rules are
 // intentionally not inferred from this data.
 // -----------------------------------------------------------------------------

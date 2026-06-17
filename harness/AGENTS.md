@@ -63,15 +63,15 @@ Reference files gốc từ PC được lưu trong `Assets/StreamingAssets/Refere
 
 ### 🔴 BẮT BUỘC khi tìm UI / icon / img / SPR / PAK / tài nguyên game
 
-Khi cần tìm hoặc tra cứu bất kỳ **UI, icon, ảnh, SPR, PAK, hay tài nguyên game** nào trong nguồn PC (`/var/www/vltksource_new`):
+Khi cần tìm hoặc tra cứu bất kỳ **UI, icon, ảnh, SPR, PAK, hay tài nguyên game** nào trong nguồn PC (`/var/www/jx-source`):
 
 1. **PHẢI đọc trước** `/var/www/vltktool/README.md` — đặc biệt phần **Ma Trận Tra Cứu Nhanh Cho Agent** — để chọn đúng tool.
-2. **PHẢI đọc/cite cây canonical đã unpack trước**: `/var/www/vltksource_new/vl_update_27/pak_unpacked` (manifest `_unpack_summary.json`). Không unpack lại khi file đã có sẵn.
+2. **PHẢI đọc/cite cây canonical đã unpack trước**: `/var/www/jx-source/pak_unpacked` (manifest `_unpack_summary.json`). Không unpack lại khi file đã có sẵn.
 3. **PHẢI dùng tool có sẵn** trong `/var/www/vltktool/` khi cần tra cứu/preview/repair (vd `find_spr_by_image.py`, `resolve_uid.py`, `extract_item_spr.py`; `unpak_tool.py` chỉ cho repair/re-unpack đặc biệt).
 4. **KHÔNG được tự viết script riêng** để decode/scan SPR/PAK, hash uid, hay match ảnh. Tool đã chuẩn hoá, đã test, có guard chống crash.
 5. **KHÔNG quét toàn bộ source.** Dùng logic (đọc ini/lua trong source loose + pak_unpacked, suy ra feature) để **thu hẹp vùng** (1 PAK / 1 folder) trước, rồi mới trỏ tool vào — quét rộng sẽ crash máy.
 6. Nếu tool thiếu tính năng cần thiết → **bổ sung vào tool trong `/var/www/vltktool/`** (surgical edit + test), không tạo script rời.
-7. **Tra port docs trước khi quét tool** — `/var/www/vltksource_new/docs/port_docs/` là tài liệu đã audit (verified vs source):
+7. **Tra port docs trước khi quét tool** — `/var/www/jx-source/docs/port_docs/` là tài liệu đã audit (verified vs source):
    - `16_client_resources.md` — cây tài nguyên client (PAK, SPR, ui3, settings) + feature nằm ở PAK/folder nào → dùng để **thu hẹp vùng** (point 5).
    - `18_spr_asset_index.md` — SPR asset index/taxonomy. Cây canonical hiện có 75,928 SPR; label map/API có thể cần rebuild trên root mới trước khi dùng tên Việt/taxonomy tự động (`http://localhost:8081/`, chạy bằng `make dev` trong vltktool).
    - `19_pak_spr_taxonomy.md` — taxonomy PAK→SPR, cách map nhóm → folder gốc khi port.
@@ -193,8 +193,8 @@ Project-specific source-of-truth additions for this repo:
 
 - `docs/PORT_STATUS.md` is the port-status truth matrix. Read it before starting any PC→Mobile port task and update it after implementation.
 - Do not mark a `PORT_STATUS.md` row `✅` unless exact code/catalog/source evidence and tests/verifier prove the stated narrow scope. Use `🔄` for parser/service/data-only or partial runtime.
-- PC reference docs live at `/var/www/vltksource_new/docs/port_docs/`.
-- PC source-of-truth includes the canonical unpacked PAK tree `/var/www/vltksource_new/vl_update_27/pak_unpacked` with manifest `/var/www/vltksource_new/vl_update_27/pak_unpacked/_unpack_summary.json`. PAK contents are not image-only; they include SPR assets, Lua, TXT/INI config, map/runtime data, and other logic. Port/audit agents must inspect both loose PC source and this unpacked tree before declaring behavior/resource missing. Current audit: all 46 real source `.pak` files accounted for, 401,281/401,640 unique entries on disk (99.91%); known undecoded gap is 357 entries with unsupported compression method `0x11000000`. Use `/var/www/vltktool/unpak_tool.py` only for exceptional repair/re-unpack cases.
+- PC reference docs live at `/var/www/jx-source/docs/port_docs/`.
+- PC source-of-truth includes the canonical unpacked PAK tree `/var/www/jx-source/pak_unpacked` with manifest `/var/www/jx-source/pak_unpacked/_unpack_summary.json`. PAK contents are not image-only; they include SPR assets, Lua, TXT/INI config, map/runtime data, and other logic. Port/audit agents must inspect both loose PC source and this unpacked tree before declaring behavior/resource missing. Current audit: all 46 real source `.pak` files accounted for, 401,281/401,640 unique entries on disk (99.91%); known undecoded gap is 357 entries with unsupported compression method `0x11000000`. Use `/var/www/vltktool/unpak_tool.py` only for exceptional repair/re-unpack cases.
 - Harness durable DB is `/var/www/vltk-mobile/harness/harness.db`.
 - When working from `/var/www/vltk-mobile/harness`, run Harness commands in this directory. Do not create or use `/var/www/vltk-mobile/harness.db` at project root.
 - If running Harness from `/var/www/vltk-mobile`, set `HARNESS_DB=/var/www/vltk-mobile/harness/harness.db` first.

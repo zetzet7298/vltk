@@ -4,7 +4,7 @@
 
 **Mọi behavior implement PHẢI có PC source.** Không có source → TODO rõ ràng, KHÔNG đoán.
 
-PC source: `vl_update_27/Server 6.0/server/home_jxser_bachkim_6.0/server1/jx_linux_y`
+PC source: `00.src-tinh-kiem/Server 6.0/server/home_jxser_bachkim_6.0/server1/jx_linux_y`
 (ELF32 binary, có debug info, symbol KNpc::* đầy đủ).
 
 ---
@@ -84,7 +84,7 @@ Lerp smooth, không teleport. Đúng PC state machine semantic.
 ### ❌ Không implement (không có PC source)
 
 ❌ **Corpse sprite swap** — `CorpseIdx` + `m_CorpseSettingIdx` fields tồn tại trong binary NHƯNG
-SPR mapping data không có trong source tree (`vl_update_27/pak_unpacked/`).
+SPR mapping data không có trong source tree (`00.src-tinh-kiem/pak_unpacked/`).
 - **TODO(PC-runtime)**: cần client runtime video để verify corpse sprite nào được dùng cho mỗi NPC.
 - Hiện tại: body **vẫn hiển thị** sau khi chết (không hide, không swap sang corpse). Mày sẽ thấy NPC "đứng bất động" thay vì animation corpse.
 - **User-visible bug**: "heo trắng chết mà vẫn hiện diện" — chưa fix được vì cần PC source.

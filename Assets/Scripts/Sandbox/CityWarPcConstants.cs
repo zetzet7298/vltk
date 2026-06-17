@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — PC CityWar constants proven from vl_update_27 Lua sources.
+// VLTK Mobile — PC CityWar constants proven from 00.src-tinh-kiem Lua sources.
 // Sources:
 // - server1/script/missions/citywar_global/head.lua
 // - server1/script/missions/citywar_global/infocenter.lua

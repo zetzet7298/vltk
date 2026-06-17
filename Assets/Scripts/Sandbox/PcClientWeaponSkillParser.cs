@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC settings/clientweaponskill.txt focused parser.
-// Source: /var/www/vltksource_new/vl_update_27/Client 6.0/settings/clientweaponskill.txt
+// Source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/clientweaponskill.txt
 // Columns: Id  WeaponType  SkillId
 // -----------------------------------------------------------------------------
 
