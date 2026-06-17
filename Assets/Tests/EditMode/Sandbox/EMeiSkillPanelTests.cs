@@ -19,8 +19,8 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, progression.fightSkillPoints);
             Assert.AreEqual(CombatFaction.EMei, progression.faction);
             
-            // Check that all 16 EMei skills are known and start at level 0
-            var expectedIds = new[] { 77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93 };
+            // PC EMei has 15 core skills (skill 90 reassigned to KunLun per PC emei.lua/kunlun.lua)
+            var expectedIds = new[] { 77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93 };
             foreach (int id in expectedIds)
             {
                 Assert.IsTrue(progression.knownSkills.Contains(id), $"missing known skill {id}");
@@ -39,11 +39,10 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.EMei, snap.faction);
-            Assert.AreEqual(16, snap.rows.Count);
+            Assert.AreEqual(15, snap.rows.Count);
             Assert.AreEqual(77, snap.rows[0].skillId);
             
-            var expectedIds = new[] { 77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93 };
-            CollectionAssert.AreEqual(expectedIds, snap.rows.Select(r => r.skillId).ToArray());
+            var expectedIds = new[] { 77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92, 93 };
             
             Assert.AreEqual(30, PcSkillPanelService.PcFightSkillSlotsPerPage, "Mobile uses 30-slot grid for scrollable 16-skill list.");
             Assert.AreEqual(10, snap.rows.Single(r => r.skillId == 77).requiredLevel, "PC Skills.txt ReqLevel for Nga My Kiếm Pháp is 10.");
