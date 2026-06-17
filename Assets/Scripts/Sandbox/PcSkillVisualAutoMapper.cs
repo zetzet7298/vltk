@@ -101,6 +101,40 @@ namespace VLTK.Sandbox
 
         private PcMissileFullVisualRegistry _missileVisuals;
         private readonly Dictionary<int, PcSkillVisualConfig> _cache = new();
+        // PC missles.txt references some SPRs that don't exist in any PAK (older
+        // 2011 stock paths). Replace those with the actual Tinh Kiem / jx-source
+        // dragon / effect SPRs that ARE in SpritesRuntime. Key = original PC path
+        // from missles.txt, value = working PC path. Lookup is by full PC path
+        // (case-sensitive, exact match).
+        private static readonly Dictionary<string, string> MissilePathOverrides =
+            new(StringComparer.Ordinal)
+        {
+            // Phi Long Tại Thiên (skill 357) missile 166 — flight body.
+            // PC stock 2011 path: \spr\skill\丐帮\mag_gb_05_亢龙有悔.spr (NOT in any PAK).
+            // Tinh Kiem post-2018 PAK (updatejx08/09/spr/skill/150/gb/) has the
+            // 4-fire-dragon flight body visual.
+            { @"\spr\skill\丐帮\mag_gb_05_亢龙有悔.spr",
+              @"\spr\skill\150\gb\gb_150_shichengjiulong_a.spr" },
+            // Phi Long Tại Thiên (skill 357) missile 166 — explosion impact.
+            // PC stock 2011 path: \spr\skill\丐帮\mag_gb_bz5_爆炸效果.spr (NOT in any PAK).
+            // Tinh Kiem post-2018 PAK has the dragon's impact effect.
+            { @"\spr\skill\丐帮\mag_gb_bz5_爆炸效果.spr",
+              @"\spr\skill\1502\gb\gb_150_zhanggai_huo.spr" },
+            // Kháng Long Hữu Hối (skill 358) missile 167 — body wave.
+            // PC stock 2011 path: \spr\skill\gb\龙战于野.spr (NOT in any PAK).
+            // Tinh Kiem PAK has the dragon swarm body visual.
+            { @"\spr\skill\gb\龙战于野.spr",
+              @"\spr\skill\150\gb\gb_150_shishengliulong_d.spr" },
+            // Thiên Hạ Vô Cẩu (skill 359) missile 168 — body swarm.
+            // PC stock 2011 path: \spr\skill\丐帮\mag_gb_04_天下无狗.spr (NOT in any PAK).
+            // Tinh Kiem PAK has the dog-swarm body visual.
+            { @"\spr\skill\丐帮\mag_gb_04_天下无狗.spr",
+              @"\spr\skill\1502\gb\gb_150_gungai_bz.spr" },
+            // Thiên Hạ Vô Cẩu (skill 359) missile 168 — impact.
+            // PC stock 2011 path: \spr\skill\天忍\mag_bz_huo3_爆炸效果.spr (NOT in any PAK).
+            { @"\spr\skill\天忍\mag_bz_huo3_爆炸效果.spr",
+              @"\spr\skill\1502\gb\gb_150_zhanggai_zd.spr" },
+        };
         private bool _initialized;
         private int _skillsProcessed;
         private int _visualsFound;
@@ -218,17 +252,11 @@ namespace VLTK.Sandbox
             // Fill from full missile visual data
             config.missileSpeed = mv.speed;
             config.missileLifetime = mv.lifetime;
-            config.isStationary = mv.IsStationary;
-            config.isRangeDmg = mv.isRangeDmg != 0;
-            config.dmgRange = mv.dmgRange;
-            config.lightColor = mv.LightColor;
-            config.lightRadius = mv.lightRadius;
-
             // Flight SPR
             var flight = mv.PrimaryFlight;
             if (flight != null && flight.HasSpr)
             {
-                config.flightSprPath = flight.sprPath;
+                config.flightSprPath = ResolveMissileSprPath(flight.sprPath, missileId);
                 config.flightFrames = flight.totalFrames;
                 config.flightDirections = flight.directions;
                 config.flightIntervalTicks = flight.intervalTicks;
@@ -238,11 +266,16 @@ namespace VLTK.Sandbox
             var explode = mv.PrimaryExplode;
             if (explode != null && explode.HasSpr)
             {
-                config.explodeSprPath = explode.sprPath;
+                config.explodeSprPath = ResolveMissileSprPath(explode.sprPath, missileId);
                 config.explodeFrames = explode.totalFrames;
                 config.explodeDirections = explode.directions;
                 config.explodeIntervalTicks = explode.intervalTicks;
             }
+            config.isStationary = mv.IsStationary;
+            config.isRangeDmg = mv.isRangeDmg != 0;
+            config.dmgRange = mv.dmgRange;
+            config.lightColor = mv.LightColor;
+            config.lightRadius = mv.lightRadius;
             // Cast/impact sound from missile anim slot (PC missles.txt SndFile1/SndFile2)
             if (mv.PrimaryFlight != null && !string.IsNullOrEmpty(mv.PrimaryFlight.soundPath))
                 config.castSoundPath = mv.PrimaryFlight.soundPath;
@@ -407,6 +440,23 @@ public static string SprPathToKey(string pcPath)
                 CombatFaction.KunLun => new Color(0.8f, 0.6f, 1f),      // Purple
                 _ => new Color(0.8f, 0.8f, 0.8f),                        // Gray default
             };
+        }
+        /// <summary>
+        /// Apply per-missile path overrides from <see cref="MissilePathOverrides"/>.
+        /// PC missles.txt references some SPRs that don't exist in any PAK
+        /// (older 2011 stock paths). The override table replaces those with
+        /// the actual Tinh Kiem / jx-source PAK paths that DO exist.
+        /// </summary>
+        private static string ResolveMissileSprPath(string originalPath, int missileId)
+        {
+            if (string.IsNullOrEmpty(originalPath)) return originalPath;
+            if (MissilePathOverrides.TryGetValue(originalPath, out var replacement))
+            {
+                SubsystemLog.Info(LogTag,
+                    $"Missile {missileId}: remap '{originalPath}' → '{replacement}'");
+                return replacement;
+            }
+            return originalPath;
         }
 
         /// <summary>Clear cache for re-initialization.</summary>
