@@ -13,7 +13,7 @@ namespace VLTK.Sandbox
     public static class PcSkillSourceLinkParser
     {
         public const int SkillIdCol = 2;
-        public const int LvlSetScriptCol = 70;
+        public const int LvlSetScriptCol = 71; // header: LvlSetScript at col 71
 
         public static Dictionary<int, string> ParseSkillScripts(string skillsTxtPath)
         {
