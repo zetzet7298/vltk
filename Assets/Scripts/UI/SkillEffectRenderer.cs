@@ -474,10 +474,13 @@ namespace VLTK.UI
                 if (tex == null) continue;
                 tex.name = $"PCSPR_{key}_{i}";
                 // KSprite::DrawAlpha draws at (x - centerX + frame.OffsetX, y - centerY + frame.OffsetY).
-                float pivotX = decoded.header.width > 0
-                    ? decoded.header.centerX / (float)decoded.header.width : 0.5f;
-                float pivotY = decoded.header.height > 0
-                    ? 1f - decoded.header.centerY / (float)decoded.header.height : 0.5f;
+                // Preserve PC center as sprite pivot.
+                float pivotX = 0.5f;
+                float pivotY = 0.5f;
+                if (frame.width > 0)
+                    pivotX = (decoded.header.centerX - frame.offsetX) / (float)frame.width;
+                if (frame.height > 0)
+                    pivotY = (frame.height - (decoded.header.centerY - frame.offsetY)) / (float)frame.height;
                 sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height),
                     new Vector2(pivotX, pivotY), 1f);
                 sprites[i].name = $"PCSPR_{key}_{i}";
