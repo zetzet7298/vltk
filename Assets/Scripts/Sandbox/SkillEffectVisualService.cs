@@ -70,13 +70,15 @@ namespace VLTK.Sandbox
             fx.color = config.lightColor;
             fx.castSoundPath = config.castSoundPath;
 
-            // Cái Bang dragon SPRs (Tinh Kiem PAK variants) are very small relative
-            // to the mobile viewport (PC tile scale ~32-64px, mobile chars ~128-256px).
-            // Scale 2.5x so the dragon body is unmistakably visible. Affects flight
-            // missile + impact + precast SpriteRenderers.
+            // [CaiBang-PhiLongSpread 2026-06-18] Cái Bang dragon SPRs in PC Tinh Kiem PAK
+            // (mag_gb_05_亢龙有悔.spr, mag_gb_bz5_爆炸效果.spr) are 320x320 native sprites.
+            // At mobile orthoSize~300, 4 dragons at native scale would overflow screen,
+            // and at scale 2.5x they overlapped into one orange smear. Scale 0.5x gives
+            // each dragon ~160px body (≈1/4 screen height at default zoom) so all 4
+            // fit visually while staying readable.
             if (PcCaiBangLuaLevelService.Applies(skill.skillId))
             {
-                fx.pcSpriteRenderScale = 2.5f;
+                fx.pcSpriteRenderScale = 0.5f;
             }
 
             // PreCast visual
@@ -160,7 +162,11 @@ namespace VLTK.Sandbox
                 {
                     int luaCount = PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, level);
                     if (luaCount > 1)
-                        SetupPcPhiLongSpread(fx, luaCount, 8);
+                        // [CaiBang-PhiLongSpread 2026-06-18] PC sprite body = 320 PC pixel (native),
+                        // scaled 0.5x = 160 world-unit per dragon. param64=80 → offset ±120 world-unit
+                        // so 4 dragons spread visibly (positions roughly y = -120, -40, +40, +120)
+                        // while keeping the tight parallel formation PC players recognize.
+                        SetupPcPhiLongSpread(fx, luaCount, 80);
                 }
                 return;
             }
