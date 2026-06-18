@@ -290,9 +290,9 @@ namespace VLTK.UI
         private static readonly System.Collections.Generic.Dictionary<CombatFaction, int[]> DefaultDeckByFaction =
             new System.Collections.Generic.Dictionary<CombatFaction, int[]>
             {
-                // Cái Bang (PC gaibang.lua): 5 skill cấp cao nhất vừa port —
-                // Phi Long Tại Thiên (357) → Thiên Hạ Vô Cẩu (359) → Thần Thủ Lệnh Long (1073) → Bổng Hoành Lược Mã (1074) → Kháng Long Hữu Hối (358)
-                { CombatFaction.CaiBang, new[] { 357, 359, 1073, 1074, 358 } },
+                // Cái Bang (PC gaibang.lua): 5 skill Cái Bang mặc định —
+                // Phi Long Tại Thiên (357) → Kháng Long Hữu Hối (358) → Thần Thủ Lệnh Long (1073) → Túy Điệp Cuồng Vũ (130) → Hoạt Bất Lưu Thủ (127)
+                { CombatFaction.CaiBang, new[] { 357, 358, 1073, 130, 127 } },
             };
 
         private void FillDefaultDeckIfEmpty()
@@ -825,20 +825,51 @@ namespace VLTK.UI
             int skillLevel = manager.PlayerProgression?.skillLevels.TryGetValue(skillId, out var lv) == true ? lv : skill.maxLevel;
             var target = ResolveCombatTarget(casterPos, skill, enemies, skillLevel);
 
-            if (target != null)
+            if (target != null || (skill.targetSelf && !skill.targetEnemy))
             {
-                int facing = CombatAutoTargetService.ComputeFacing8Way(casterPos, target.position);
-                player.SetFacing(facing);
+                if (target != null)
+                {
+                    int facing = CombatAutoTargetService.ComputeFacing8Way(casterPos, target.position);
+                    player.SetFacing(facing);
+                }
 
                 var combatRuntime = manager.CombatRuntime;
                 if (combatRuntime != null)
                 {
                     var caster = CreateCombatActor(player, skill);
-                    var targetActor = CreateTargetActor(target);
-                    var report = combatRuntime.Cast(caster, targetActor, skillId, target.position, CombatRelation.Enemy);
+                    var targetActor = target != null ? CreateTargetActor(target) : null;
+                    var targetPos = target != null ? target.position : casterPos;
+                    var report = combatRuntime.Cast(caster, targetActor, skillId, targetPos, CombatRelation.Enemy);
 
                     if (report.success)
                     {
+                        var persistentPlayer = manager.GameplayLoop?.Player;
+                        if (persistentPlayer != null && persistentPlayer.combat != null)
+                        {
+                            persistentPlayer.combat.currentLife = caster.currentLife;
+                            persistentPlayer.combat.currentMana = caster.currentMana;
+                            persistentPlayer.combat.states.Clear();
+                            foreach (var kvp in caster.states)
+                            {
+                                persistentPlayer.combat.states[kvp.Key] = kvp.Value;
+                            }
+                        }
+
+                        if (target != null && targetActor != null)
+                        {
+                            var persistentTarget = manager.GameplayLoop?.GetActor(target.enemyId);
+                            if (persistentTarget != null && persistentTarget.combat != null)
+                            {
+                                persistentTarget.combat.currentLife = targetActor.currentLife;
+                                persistentTarget.combat.currentMana = targetActor.currentMana;
+                                persistentTarget.combat.states.Clear();
+                                foreach (var kvp in targetActor.states)
+                                {
+                                    persistentTarget.combat.states[kvp.Key] = kvp.Value;
+                                }
+                            }
+                        }
+
                         // [SECT-ALL] PC source-based dash (no teleport).
                         // PC source: KNpc::DoRunAttack (0x0809b9c0) close-range lunge, state 0x12.
                         //            KNpc::NewJump (0x08099fd0) long-range, TestMovePos + m_1834 distance.
@@ -853,16 +884,19 @@ namespace VLTK.UI
                             SubsystemLog.Warn("Combat", $"Cast {skill.DisplayName} (id={skillId}): dashDurationSeconds=0 — PC source does not provide duration, dash SKIPPED (TODO: PC runtime observation needed).");
 
                         var effectService = manager.SkillEffectVisual;
-                        BaLangEnemyAi liveTarget = target.enemyBehaviour;
+                        BaLangEnemyAi liveTarget = target != null ? target.enemyBehaviour : null;
                         System.Func<Vector2> currentTargetPos = liveTarget != null
                             ? (System.Func<Vector2>)(() => (Vector2)liveTarget.transform.position)
                             : null;
-                        var fx = effectService?.PlaySkillCast(skill, casterPos, target.position, report.skillLevel, currentTargetPos);
-                        if (target.enemyBehaviour != null)
+                        var fx = effectService?.PlaySkillCast(skill, casterPos, targetPos, report.skillLevel, currentTargetPos);
+                        if (target != null && target.enemyBehaviour != null && targetActor != null)
                             StartCoroutine(ApplyLiveEnemyHpAtImpact(target, targetActor.currentLife, skillId, report.skillLevel, report, fx));
 
-                        SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} [{ActiveDeckName()}-{slot + 1}] → {target.name} " +
-                                                     $"(dmg={report.damageResults.Count}, pendingHp={targetActor.currentLife}, range={target.distance:F0})");
+                        string targetName = target != null ? target.name : "Self";
+                        float targetDist = target != null ? target.distance : 0f;
+                        int targetHp = targetActor != null ? targetActor.currentLife : 0;
+                        SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} [{ActiveDeckName()}-{slot + 1}] → {targetName} " +
+                                                     $"(dmg={report.damageResults.Count}, pendingHp={targetHp}, range={targetDist:F0})");
                     }
                     else
                     {
@@ -1065,6 +1099,22 @@ namespace VLTK.UI
                 maxLife = 100,
             };
 
+            var persistentPlayer = manager?.GameplayLoop?.Player;
+            if (persistentPlayer != null && persistentPlayer.combat != null)
+            {
+                actor.currentLife = persistentPlayer.combat.currentLife;
+                actor.maxLife = persistentPlayer.combat.maxLife;
+                actor.currentMana = persistentPlayer.combat.currentMana;
+                actor.maxMana = persistentPlayer.combat.maxMana;
+                if (persistentPlayer.combat.states != null)
+                {
+                    foreach (var kvp in persistentPlayer.combat.states)
+                    {
+                        actor.states[kvp.Key] = new SkillMagicAttribute(kvp.Value.kind, kvp.Value.value1, kvp.Value.value2, kvp.Value.value3);
+                    }
+                }
+            }
+
             foreach (var id in progression.knownSkills)
                 actor.knownSkills.Add(id);
             foreach (var kv in progression.skillLevels)
@@ -1078,7 +1128,7 @@ namespace VLTK.UI
 
         private CombatActorState CreateTargetActor(CombatTargetInfo target)
         {
-            return new CombatActorState
+            var actor = new CombatActorState
             {
                 actorId = target.enemyId + 1000,
                 faction = CombatFaction.None,
@@ -1086,6 +1136,28 @@ namespace VLTK.UI
                 currentLife = target.currentLife,
                 maxLife = target.maxLife,
             };
+
+            var manager = SandboxManager.Instance;
+            if (manager != null && manager.GameplayLoop != null)
+            {
+                var persistentTarget = manager.GameplayLoop.GetActor(target.enemyId);
+                if (persistentTarget != null && persistentTarget.combat != null)
+                {
+                    actor.currentLife = persistentTarget.combat.currentLife;
+                    actor.maxLife = persistentTarget.combat.maxLife;
+                    actor.currentMana = persistentTarget.combat.currentMana;
+                    actor.maxMana = persistentTarget.combat.maxMana;
+                    if (persistentTarget.combat.states != null)
+                    {
+                        foreach (var kvp in persistentTarget.combat.states)
+                        {
+                            actor.states[kvp.Key] = new SkillMagicAttribute(kvp.Value.kind, kvp.Value.value1, kvp.Value.value2, kvp.Value.value3);
+                        }
+                    }
+                }
+            }
+
+            return actor;
         }
     }
 

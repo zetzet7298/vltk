@@ -154,7 +154,7 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsNotNull(hud.CurrentSkillSnapshot);
                 Assert.AreEqual(26, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 26 Cái Bang fight skills.");
                 CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 358, 359, 360, 714, 720, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
-                Assert.That(hud.CurrentSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
+                Assert.That(hud.CurrentSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Bổng Đả Ác Cẩu"));
                 Assert.AreEqual("200", summary.text);
                 // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
                 Assert.IsNotNull(typeof(MalePlayerVisual));
@@ -172,9 +172,9 @@ namespace VLTK.Tests.Sandbox
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
-            var snap = PcSkillPanelService.Build(catalog, progression, 125);
+            var snap = PcSkillPanelService.Build(catalog, progression, 359);
 
-            Assert.That(snap.selectedSkillId, Is.EqualTo(125));
+            Assert.That(snap.selectedSkillId, Is.EqualTo(359));
             Assert.That(snap.selectedRow.HasValue, Is.True);
             Assert.That(snap.selectedRow.Value.displayName, Does.Contain("Thiên Hạ"));
             Assert.That(snap.selectedRow.Value.summary, Does.Contain("Cấp hiện tại"));
@@ -192,11 +192,11 @@ namespace VLTK.Tests.Sandbox
 
             var snap = PcSkillPanelService.Build(catalog, progression);
             var dogAura = snap.rows.Single(r => r.skillId == 124);
-            var noDog = snap.rows.Single(r => r.skillId == 125);
+            var bongDa = snap.rows.Single(r => r.skillId == 125);
             var dragon = snap.rows.Single(r => r.skillId == 128);
 
             Assert.That(dogAura.displayName, Is.EqualTo("Đả Cẩu Trận"));
-            Assert.That(noDog.displayName, Is.EqualTo("Thiên Hạ Vô Cẩu"));
+            Assert.That(bongDa.displayName, Is.EqualTo("Bổng Đả Ác Cẩu"));
             Assert.That(dragon.displayName, Is.EqualTo("Kháng Long Hữu Hối"));
             Assert.That(catalog.Resolve(124).iconSourceId.sourcePath, Is.EqualTo("\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr"));
             Assert.That(catalog.Resolve(125).iconSourceId.sourcePath, Is.EqualTo("\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr"));

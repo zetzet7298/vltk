@@ -147,12 +147,7 @@ namespace VLTK.UI
                 Vector2 missilePos = fx.missilePositions != null && i < fx.missilePositions.Length
                     ? fx.missilePositions[i]
                     : fx.currentMissilePos;
-                // Homing (MoveKind=5): target tracks live target position; else cast-time targetPos
-                Vector2 target = fx.getCurrentTargetPos != null
-                    ? fx.getCurrentTargetPos()
-                    : (fx.missileTargets != null && i < fx.missileTargets.Length
-                        ? fx.missileTargets[i]
-                        : fx.targetPos);
+                Vector2 target = fx.ResolveMissileTarget(i);
 
                 var sprite = SelectPcMissileFrame(fx, sprites, missilePos, target);
                 if (sprite == null || sprite.texture == null) continue;

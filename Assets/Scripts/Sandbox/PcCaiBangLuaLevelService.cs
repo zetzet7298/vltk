@@ -46,13 +46,17 @@ namespace VLTK.Sandbox
             // Passive/buff (LvlData inline trong PC gaibang.lua, không có skill file riêng).
             [115] = "gaibang_bangfa",
             [116] = "gaibang_zhangfa",
+            [127] = "huabu_liushou",       // Hoạt Bất Lưu Thủ
+            [130] = "zuidie_kuangwu",      // Túy Điệp Cuồng Vũ
 
             // Active damage skills.
             [117] = "yanmen_tuobo",        // Đầu Thạch Vấn Lộ (PC 117 thuộc inline gaibang.lua; mobile dùng bảng của yanmen_tuobo vì LvlData reference 沿门托钵).
             [119] = "yanmen_tuobo",        // Duyên Môn Thoa Bát.
             [122] = "jianren_shenshou",    // Kiến Nhân Thân Thủ.
             [125] = "bangda_egou",         // Bổng Đả Ác Cẩu (PC map tới bangda_egou cùng dagou file).
+            [127] = "huabu_liushou",       // Hoạt Bất Lưu Thủ.
             [128] = "kanglong_youhui",     // Kháng Long Hữu Hối.
+            [130] = "zuidie_kuangwu",      // Túy Điệp Cuồng Vũ.
             [357] = "feilong_zaitian",     // Phi Long Tại Thiên.
             [358] = "kanglong_youhui",     // Kháng Long Hữu Hối (player variant, reuse kanglong_youhui table).
             [359] = "tianxia_wugou",       // Thiên Hạ Vô Cẩu.

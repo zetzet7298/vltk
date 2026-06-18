@@ -160,12 +160,18 @@ namespace VLTK.Sandbox
                 {
                     int luaCount = PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, level);
                     if (luaCount > 1)
-                        // [CaiBang-PhiLongSpread 2026-06-18] Scale 1.5x → body ~144 world-unit wide.
-                        // Spread 4 dragons: param64=120 → offset ±180 world-unit → dragons at
-                        // y=-180,-60,+60,+180 with 120-unit gaps between centers (≈one body width
-                        // of clear gap). Visible separation while keeping the parallel
-                        // "wall of dragons" formation PC players recognize.
-                        SetupPcPhiLongSpread(fx, luaCount, 120);
+                    {
+                        int missileForm = PcCaiBangLuaLevelService.GetMissileForm(skill.skillId, level);
+                        if (missileForm == 2)
+                        {
+                            int angleStep = PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, level, "skill_param1_v", 1);
+                            SetupPcKangLongSpread(fx, luaCount, angleStep, 0);
+                        }
+                        else
+                        {
+                            SetupPcPhiLongSpread(fx, luaCount, 120);
+                        }
+                    }
                 }
                 return;
             }
@@ -390,7 +396,7 @@ namespace VLTK.Sandbox
                             allArrived = true;
                             for (int mi = 0; mi < fx.missilePositions.Length; mi++)
                             {
-                                Vector2 targetPos = ResolveMissileTarget(fx, mi);
+                                Vector2 targetPos = fx.ResolveMissileTarget(mi);
                                 if (Vector2.Distance(fx.missilePositions[mi], targetPos) > fx.arrivalRadius)
                                     allArrived = false;
                             }
@@ -398,7 +404,7 @@ namespace VLTK.Sandbox
                         else
                         {
                             // Single missile: keep flying until it actually reaches the target.
-                            allArrived = Vector2.Distance(fx.currentMissilePos, ResolveMissileTarget(fx, -1)) <= fx.arrivalRadius;
+                            allArrived = Vector2.Distance(fx.currentMissilePos, fx.ResolveMissileTarget(-1)) <= fx.arrivalRadius;
                         }
 
                         bool timeout = (fx.elapsed - fx.phaseStart) >= fx.missileDuration * 1.5f;
@@ -411,7 +417,7 @@ namespace VLTK.Sandbox
                         for (int si = 0; si < (fx.missileArrived?.Length ?? 0); si++)
                         {
                             if (fx.missileArrived[si]) continue;
-                            Vector2 targetPos = ResolveMissileTarget(fx, si);
+                            Vector2 targetPos = fx.ResolveMissileTarget(si);
                             Vector2 mp = si < fx.missilePositions.Length ? fx.missilePositions[si] : fx.currentMissilePos;
                             if (Vector2.Distance(mp, targetPos) <= fx.rendRadius)
                             {
@@ -454,7 +460,7 @@ namespace VLTK.Sandbox
                 }
                 else
                 {
-                    fx.currentMissilePos = ResolveMissileTarget(fx, -1);
+                    fx.currentMissilePos = fx.ResolveMissileTarget(-1);
                 }
                 return;
             }
@@ -462,7 +468,7 @@ namespace VLTK.Sandbox
             for (int i = 0; i < fx.missilePositions.Length; i++)
             {
                 Vector2 pos = fx.missilePositions[i];
-                Vector2 target = ResolveMissileTarget(fx, i);
+                Vector2 target = fx.ResolveMissileTarget(i);
                 Vector2 dir = target - pos;
                 float dist = dir.magnitude;
 
@@ -478,22 +484,7 @@ namespace VLTK.Sandbox
             }
         }
 
-        private static Vector2 ResolveMissileTarget(ActiveSkillEffect fx, int index)
-        {
-            bool hasLiveTarget = fx.getCurrentTargetPos != null;
-            Vector2 target = hasLiveTarget ? fx.getCurrentTargetPos() : fx.targetPos;
 
-            if (index >= 0)
-            {
-                if (hasLiveTarget && fx.missileTargetOffsets != null && index < fx.missileTargetOffsets.Length)
-                    return target + fx.missileTargetOffsets[index];
-
-                if (!hasLiveTarget && fx.missileTargets != null && index < fx.missileTargets.Length)
-                    return fx.missileTargets[index];
-            }
-
-            return target;
-        }
 
         private void TriggerSauXe(ActiveSkillEffect fx, Vector2 position)
         {
@@ -513,6 +504,8 @@ namespace VLTK.Sandbox
             int subSkillId = parentFx.skillId switch
             {
                 1073 => 1072,
+                1101 => 1072,
+                1161 => 1072,
                 _    => 0,
             };
             if (subSkillId == 0) return;
@@ -771,5 +764,27 @@ namespace VLTK.Sandbox
         public bool HasPcPreCastSprite => !string.IsNullOrEmpty(pcPreCastSpriteKey) && pcPreCastTotalFrames > 0 && pcPreCastDirections > 0;
         public bool HasMissile => missileForm != SkillMissileForm.None && missileCount > 0;
         public string castSoundPath;  // PC missles.txt SoundPath: \sound\skill\sound_k0XX.wav
+
+        public static Vector2 ResolveMissileTarget(ActiveSkillEffect fx, int index)
+        {
+            return fx.ResolveMissileTarget(index);
+        }
+
+        public Vector2 ResolveMissileTarget(int index)
+        {
+            bool hasLiveTarget = getCurrentTargetPos != null;
+            Vector2 target = hasLiveTarget ? getCurrentTargetPos() : targetPos;
+
+            if (index >= 0)
+            {
+                if (hasLiveTarget && missileTargetOffsets != null && index < missileTargetOffsets.Length)
+                    return target + missileTargetOffsets[index];
+
+                if (!hasLiveTarget && missileTargets != null && index < missileTargets.Length)
+                    return missileTargets[index];
+            }
+
+            return target;
+        }
     }
 }

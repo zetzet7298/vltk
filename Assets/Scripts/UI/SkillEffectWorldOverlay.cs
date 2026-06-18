@@ -324,9 +324,8 @@ namespace VLTK.UI
                         {
                             var renderer = v.pcMissiles[i];
                             Vector2 mp = fx.missilePositions != null && i < fx.missilePositions.Length ? fx.missilePositions[i] : p;
-                            // Homing: face the live target from the missile's current position
-                            // so the dragon SPR rotates as it curves toward a moving enemy.
-                            renderer.sprite = SelectPcMissileFrame(fx, mp, liveTarget);
+                            Vector2 targetForMissile = fx.ResolveMissileTarget(i);
+                            renderer.sprite = SelectPcMissileFrame(fx, mp, targetForMissile);
                             renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
                             renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                             renderer.color = Color.white;

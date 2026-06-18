@@ -342,8 +342,8 @@ namespace VLTK.Tests.Sandbox
                 .GetField("DefaultDeckByFaction", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
             Assert.IsNotNull(caiBangDeckField, "CombatSkillSlotController.DefaultDeckByFaction must exist.");
             var deckMap = (System.Collections.Generic.Dictionary<CombatFaction, int[]>)caiBangDeckField.GetValue(null);
-            CollectionAssert.AreEqual(new[] { 357, 359, 1073, 1074, 358 }, deckMap[CombatFaction.CaiBang],
-                "Cái Bang default deck: Phi Long → Thiên Hạ Vô Cẩu → Thần Thủ Lệnh Long → Bổng Hoành Lược Mã → Kháng Long Hữu Hối");
+            CollectionAssert.AreEqual(new[] { 357, 358, 1073, 130, 127 }, deckMap[CombatFaction.CaiBang],
+                "Cái Bang default deck: Phi Long → Kháng Long → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ → Hoạt Bất Lưu Thủ");
             foreach (var f in factions)
             {
                 var order = PcSkillPanelService.GetPcSkillOrder(f.faction);

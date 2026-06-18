@@ -149,7 +149,7 @@ namespace VLTK.Sandbox
             PassiveMastery(124, "Đả Cẩu bổng", "Đả Cẩu Trận", 30, addPhys:(lv)=>Link(lv, (1, 10, ""), (20, 175, "")), elementParam:2, icon:"\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr", charAnim:11),
 
             // 125 Thiên Hạ Vô Cẩu: damage (bangda_egou) [PC radius L20=512]
-            DamageSkillNew(125, "Bổng Đả ác Cẩu", "Thiên Hạ Vô Cẩu", 50, 20, 512, 47, SkillMissileForm.Surround, 16, true, false, 11,
+            DamageSkillNew(125, "Bổng Đả ác Cẩu", "Bổng Đả Ác Cẩu", 50, 20, 512, 47, SkillMissileForm.Surround, 16, true, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
                 fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
                 cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
@@ -287,7 +287,7 @@ namespace VLTK.Sandbox
                 return d;
             }),
 
-            DamageSkillNew(1073, "Thời Thặng Lục Long", "Thần Thủ Lệnh Long", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
+            DamageSkillNew(1073, "Thời Thặng Lục Long", "Thời Thặng Lục Long", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
                 // PC gaibang.lua zhanggaibang150: skill_cost_v={{{1,12},{20,78},{23,98}}}
@@ -311,7 +311,7 @@ namespace VLTK.Sandbox
 
             // 1101 Thừa Lục Long (multi-target) — PC reuse zhanggaibang150 table (Bước 6)
             // PC skills.txt 1101: clone của 1073, ByMissle=1, ChildSkillId=335
-            DamageSkillNew(1101, "时乘六龙(多)", "Thừa Lục Long (đa mục tiêu)", 150, 20, 512, 335, SkillMissileForm.Fan, 3, false, false, 11,
+            DamageSkillNew(1101, "时乘六龙(多)", "Thừa Lục Long (đa mục tiêu)", 150, 20, 512, 363, SkillMissileForm.Fan, 3, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
                 cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
