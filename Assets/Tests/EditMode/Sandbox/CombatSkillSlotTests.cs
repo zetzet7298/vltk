@@ -466,5 +466,40 @@ namespace VLTK.Tests.Sandbox
                 Object.DestroyImmediate(go);
             }
         }
+
+        [Test]
+        public void CombatRuntime_PlayerActor_BypassesManaCostAndSucceeds()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var svc = new CombatRuntimeService(catalog);
+            
+            // Create a player actor with actorId = 1, currentMana = 10 (very low)
+            var player = new CombatActorState
+            {
+                actorId = 1, // Player Actor ID
+                faction = CombatFaction.CaiBang,
+                level = 60,
+                fightMode = true,
+                currentMana = 10,
+                position = Vector2.zero,
+                knownSkills = { 117 },
+                skillLevels = { [117] = 20 }
+            };
+            
+            var enemy = new CombatActorState
+            {
+                actorId = 2,
+                currentLife = 1000,
+                maxLife = 1000,
+                position = new Vector2(10, 0)
+            };
+            
+            var report = svc.Cast(player, enemy, 117, enemy.position, CombatRelation.Enemy);
+            
+            // The cast should succeed, and mana cost should be set to 0, and currentMana should remain 10
+            Assert.IsTrue(report.success, $"Cast failed: {report.reason} - {report.detail}");
+            Assert.AreEqual(0, report.manaCost);
+            Assert.AreEqual(10, player.currentMana);
+        }
     }
 }

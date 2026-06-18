@@ -196,7 +196,7 @@ namespace VLTK.Sandbox
             // maxMana lay tu PC formula (PcMaxManaFormula) de regen khong bi cap
             // nham qua maxLife va de cap level cao khong bi tran.
             _player.combat.maxMana = PcMaxManaFormula.Compute(level, 0, CombatFaction.CaiBang);
-            _player.combat.currentMana = 100;
+            _player.combat.currentMana = _player.combat.maxMana;
             _player.combat.position = pos;
 
             _actors[actorId] = _player;
@@ -347,8 +347,8 @@ namespace VLTK.Sandbox
             {
                 _manaRegenAccumulator -= 0.5f;
                 if (_player != null && !_player.isDead)
-                    // Mana regen cap dung maxMana (khong phai maxLife - copy-paste bug).
-                    _player.combat.currentMana = Mathf.Min(_player.combat.maxMana, _player.combat.currentMana + 1);
+                    // Sandbox mode: player mana is always full to support continuous visual/cast testing.
+                    _player.combat.currentMana = _player.combat.maxMana;
             }
 
             // Enemy AI: attack player if in range

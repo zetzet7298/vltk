@@ -174,6 +174,10 @@ namespace VLTK.Sandbox
             // PC: Cost(attrib_mana, GetSkillCost()) — checks & deducts mana
             var levelData = skill.GetPcLevelData(skillLevel);
             report.manaCost = GetCost(skill, levelData, caster);
+            if (caster.actorId == 1) // Player actor in sandbox
+            {
+                report.manaCost = 0;
+            }
             if (caster.currentMana < report.manaCost) return Reject(report, CombatCastRejectReason.InsufficientResource, "KNpc::Cost: insufficient mana");
 
             // PC: deduct mana (KNpc::Cost already checked above, now subtract)
