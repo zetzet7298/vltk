@@ -21,6 +21,7 @@ namespace VLTK.Tests.Sandbox
         private GameObject _female;
         private GameObject _horse;
         private string _tmpRoot;
+        private string _stagingRoot;
 
         [SetUp]
         public void SetUp()
@@ -28,9 +29,9 @@ namespace VLTK.Tests.Sandbox
             _male = new GameObject("MalePlayerTest");
             _female = new GameObject("FemalePlayerTest");
             _horse = new GameObject("HorseTest");
-            // Test environment: route the visuals to the real StreamingAssets/Sprites folder
-            // so they can find the staged HM01 + horse SPRs without copying test fixtures.
-            _tmpRoot = Path.Combine(Application.streamingAssetsPath, "Sprites");
+            _stagingRoot = MalePlayerSprStaging.StageForTests();
+            MalePlayerSprStaging.StageFemaleForTests(tempRoot: _stagingRoot);
+            _tmpRoot = _stagingRoot;
         }
 
         [TearDown]
@@ -39,6 +40,7 @@ namespace VLTK.Tests.Sandbox
             if (_male != null) Object.DestroyImmediate(_male);
             if (_female != null) Object.DestroyImmediate(_female);
             if (_horse != null) Object.DestroyImmediate(_horse);
+            MalePlayerSprStaging.CleanupTempDir(_stagingRoot);
         }
 
         // ----- Male mount catalog -----
@@ -125,6 +127,7 @@ namespace VLTK.Tests.Sandbox
         public void MaleVisual_Ride_LoadsMountedRiderParts()
         {
             var mv = _male.AddComponent<MalePlayerVisual>();
+            mv.spritesRootOverride = _tmpRoot;
             mv.SetMounted(true);
             // The visual auto-refreshes on SetMounted. After Awake, it already pulled parts.
             // Force a manual refresh to be deterministic.
@@ -140,6 +143,8 @@ namespace VLTK.Tests.Sandbox
         public void MaleVisual_MountCycle_TogglesPartsCleanly()
         {
             var mv = _male.AddComponent<MalePlayerVisual>();
+            mv.spritesRootOverride = _tmpRoot;
+            mv.RefreshActionParts(force: true);
             // Start unmounted
             mv.SetWeapon(PcWeaponType.EmptyHand);
             mv.SetAction(PlayerVisualAction.Idle);
@@ -164,6 +169,7 @@ namespace VLTK.Tests.Sandbox
         public void FemaleVisual_Ride_LoadsMountedRiderParts()
         {
             var fv = _female.AddComponent<FemalePlayerVisual>();
+            fv.spritesRootOverride = _tmpRoot;
             fv.SetMounted(true);
             fv.RefreshActionParts(force: true);
             Assert.IsTrue(fv.IsMounted);
@@ -175,6 +181,8 @@ namespace VLTK.Tests.Sandbox
         public void FemaleVisual_MountCycle_TogglesPartsCleanly()
         {
             var fv = _female.AddComponent<FemalePlayerVisual>();
+            fv.spritesRootOverride = _tmpRoot;
+            fv.RefreshActionParts(force: true);
             fv.SetWeapon(PcWeaponType.EmptyHand);
             fv.SetAction(PlayerVisualAction.Idle);
             int unmountedCount = fv.LoadedPartCount;
@@ -198,6 +206,7 @@ namespace VLTK.Tests.Sandbox
         public void HorseVisual_LoadsHorseBodySprite()
         {
             var hv = _horse.AddComponent<HorseVisual>();
+            hv.spritesRootOverride = _tmpRoot;
             hv.sourcePath = @"spr\item\equip\horse\horse001.spr";
             hv.LoadAndApply();
             Assert.IsTrue(hv.HasSprite, "HorseVisual should decode horse001.spr successfully.");
@@ -214,6 +223,7 @@ namespace VLTK.Tests.Sandbox
             try
             {
                 var hv = go.AddComponent<HorseVisual>();
+                hv.spritesRootOverride = _tmpRoot;
                 hv.horseId = 0; // disable horseId-driven resolution
                 hv.sourcePath = @"spr\item\equip\horse\horse999_notexist.spr";
                 hv.logMissing = false;
@@ -247,6 +257,7 @@ namespace VLTK.Tests.Sandbox
                 try
                 {
                     var hv = go.AddComponent<HorseVisual>();
+                    hv.spritesRootOverride = _tmpRoot;
                     hv.SetHorseId(id);
                     Assert.IsTrue(hv.HasSprite, $"horse id {id} should load a sprite.");
                     Assert.AreEqual(HorseVisual.SourcePathForHorseId(id), hv.sourcePath);
@@ -262,6 +273,7 @@ namespace VLTK.Tests.Sandbox
         public void HorseVisual_SetHorseId_ReDecodesOnChange()
         {
             var hv = _horse.AddComponent<HorseVisual>();
+            hv.spritesRootOverride = _tmpRoot;
             hv.SetHorseId(1);
             var firstSize = hv.SpriteSize;
             Assert.IsTrue(hv.HasSprite);

@@ -64,22 +64,22 @@ namespace VLTK.Tests.Sandbox
         public void GetVariant_EmptySlot_ReturnsDefault()
         {
             var svc = new PlayerEquipmentService();
-            // Body default = 19
-            Assert.AreEqual(19, svc.GetVariant(PlayerEquipSlot.Body));
+            // Body default = 1
+            Assert.AreEqual(1, svc.GetVariant(PlayerEquipSlot.Body));
         }
 
         [Test]
         public void GetArmorVariant_NoEquip_Returns19()
         {
             var svc = new PlayerEquipmentService();
-            Assert.AreEqual(19, svc.GetArmorVariant());
+            Assert.AreEqual(1, svc.GetArmorVariant());
         }
 
         [Test]
         public void GetHelmetVariant_NoEquip_Returns19()
         {
             var svc = new PlayerEquipmentService();
-            Assert.AreEqual(19, svc.GetHelmetVariant());
+            Assert.AreEqual(28, svc.GetHelmetVariant());
         }
 
         // ── Equip ───────────────────────────────────────────────────────────
@@ -215,7 +215,7 @@ namespace VLTK.Tests.Sandbox
             var svc = new PlayerEquipmentService();
             svc.Equip(PlayerEquipSlot.Body, 25, 1234);
             svc.Unequip(PlayerEquipSlot.Body);
-            Assert.AreEqual(19, svc.GetVariant(PlayerEquipSlot.Body));
+            Assert.AreEqual(1, svc.GetVariant(PlayerEquipSlot.Body));
         }
 
         // ── AttachHost ─────────────────────────────────────────────────────

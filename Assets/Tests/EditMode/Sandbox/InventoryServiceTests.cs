@@ -12,6 +12,20 @@ namespace VLTK.Tests.Sandbox
     /// </summary>
     public class InventoryServiceTests
     {
+        private string _stagingRoot;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _stagingRoot = MalePlayerSprStaging.StageForTests();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            MalePlayerSprStaging.CleanupTempDir(_stagingRoot);
+        }
+
         private ItemDefinition Item(int id, string name, int attr, int value, bool iconResolved = true)
         {
             var item = new ItemDefinition
@@ -199,6 +213,11 @@ namespace VLTK.Tests.Sandbox
                 var controller = go.AddComponent<SandboxPlayerController>();
                 controller.followCameraEnabled = false;
                 controller.allowKeyboardFallback = false;
+                if (controller.visual is MalePlayerVisual maleVisual)
+                {
+                    maleVisual.spritesRootOverride = _stagingRoot;
+                    maleVisual.RefreshActionParts(force: true);
+                }
                 svc.OnWeaponTypeChanged += controller.EquipWeapon;
 
                 svc.Equip(EquipSlot.Weapon, 1);

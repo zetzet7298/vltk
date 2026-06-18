@@ -250,10 +250,10 @@ namespace VLTK.Sprites
             int srcPos = startPos + 8;
             int totalPixels = frame.width * frame.height;
 
-            // Bottom-up row order (matching PC source payload ordering decoded to Unity bottom-up SetPixels32 format)
+            // Top-down row order (matching PC source payload ordering decoded to Unity bottom-up SetPixels32 format)
             for (int row = 0; row < frame.height; row++)
             {
-                int rowBase = row * frame.width;
+                int rowBase = (frame.height - 1 - row) * frame.width;
                 int col = 0;
 
                 while (col < frame.width && srcPos + 1 < blob.Length)
