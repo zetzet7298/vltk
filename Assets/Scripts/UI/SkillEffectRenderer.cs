@@ -292,18 +292,57 @@ namespace VLTK.UI
                 return;
             }
 
-            // (pcAuraFrameStart/End removed: now loop full frame range like a default PC aura)
-            int lo = 0;
-            int hi = sprites.Length - 1;
-            int span = Mathf.Max(1, hi - lo + 1);
+            int lo = fx.pcAuraFrameStart;
+            int hi = fx.pcAuraFrameEnd > 0 ? fx.pcAuraFrameEnd : sprites.Length - 1;
+            int interval = Mathf.Max(1, fx.pcPreCastIntervalTicks);
+
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt(fx.elapsed * 18f));
-            int local = (lifeTick / Mathf.Max(1, fx.pcPreCastIntervalTicks)) % span;
-            int frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
+            int entryTicks = lo * interval;
+            int frameIndex;
+
+            if (lifeTick < entryTicks)
+            {
+                int entryFrame = lifeTick / interval;
+                frameIndex = Mathf.Clamp(entryFrame, 0, sprites.Length - 1);
+            }
+            else
+            {
+                int loopSpan = Mathf.Max(1, hi - lo + 1);
+                int loopTick = lifeTick - entryTicks;
+                int local = (loopTick / interval) % loopSpan;
+                frameIndex = Mathf.Clamp(lo + local, 0, sprites.Length - 1);
+            }
 
             // PC: KSprite::DrawAlpha draws SPR at native pixel size (ppu=1).
             // No extra scaling — camera zoom + screen res handle visibility.
             float auraScale = 1f;
             Vector2 basePos = ResolveLiveCasterPos(fx);
+
+            float yOffset = 0f;
+            bool isMounted = false;
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player != null && player.visual != null)
+            {
+                isMounted = player.visual.IsMounted;
+            }
+
+            if (fx.stateAuraPos == 1) // Head
+            {
+                yOffset = 10f;
+                if (isMounted) yOffset += 38f;
+            }
+            else if (fx.stateAuraPos == 2) // Feet
+            {
+                yOffset = 0f;
+            }
+            else // Body (default)
+            {
+                yOffset = 0f;
+                if (isMounted) yOffset += 38f;
+            }
+
+            basePos.y += yOffset;
+
             Vector2 auraOffset = GetPcAuraFrameWorldOffset(fx, frameIndex, 1f);
             var sprite = sprites[frameIndex] ?? sprites[0];
             if (sprite != null) DrawAuraSpriteScaled(sprite, basePos + auraOffset, auraScale);
@@ -366,19 +405,9 @@ namespace VLTK.UI
 
         private Vector2 GetPcAuraFrameWorldOffset(ActiveSkillEffect fx, int frameIndex, float scale)
         {
-            var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
-            if (sprites == null || frameIndex < 0) return Vector2.zero;
-
-            string path = ResolvePcSpritePath(fx.pcPreCastSpriteKey);
-            if (path == null) return Vector2.zero;
-            var fileInfo = new System.IO.FileInfo(path);
-            string cacheKey = $"{fx.pcPreCastSpriteKey}|{fileInfo.Length}|{fileInfo.LastWriteTimeUtc.Ticks}";
-
-            if (!_pcSpriteFrameData.TryGetValue(cacheKey, out var data)) return Vector2.zero;
-            if (frameIndex >= data.frameOffsets.Length) return Vector2.zero;
-
-            Vector2 foff = data.frameOffsets[frameIndex];
-            return new Vector2((foff.x - data.centerX) * scale, (data.centerY - foff.y) * scale);
+            // Pivot on Sprite already handles the PC frame offsets correctly by aligning center and frames.
+            // Adding a manual offset shifts the sprite twice, causing misalignment. Return Vector2.zero.
+            return Vector2.zero;
         }
 
         /// <summary>Live caster position so body-aura buffs follow the player.</summary>

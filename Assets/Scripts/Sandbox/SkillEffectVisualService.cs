@@ -89,6 +89,7 @@ namespace VLTK.Sandbox
                 fx.pcPreCastIntervalTicks = config.stateAuraIntervalTicks > 0 ? config.stateAuraIntervalTicks : 1;
                 fx.pcAuraFrameStart = config.stateAuraFrameStart;
                 fx.pcAuraFrameEnd = config.stateAuraFrameEnd;
+                fx.stateAuraPos = config.stateAuraPos;
                 fx.auraDuration = float.MaxValue;
                 fx.preCastDuration = float.MaxValue;
 
@@ -871,6 +872,7 @@ namespace VLTK.Sandbox
         // (pcAuraFrameStart/End kept as no-op fields for backward compat with SkillEffectWorldOverlay; not used in default data-driven visuals)
         public int pcAuraFrameStart;
         public int pcAuraFrameEnd;
+        public int stateAuraPos;
         public bool HasPcMissileSprite => !string.IsNullOrEmpty(pcMissileSpriteKey) && pcMissileTotalFrames > 0 && pcMissileDirections > 0;
         public bool HasPcImpactSprite => !string.IsNullOrEmpty(pcImpactSpriteKey) && pcImpactTotalFrames > 0;
         public bool HasPcPreCastSprite => !string.IsNullOrEmpty(pcPreCastSpriteKey) && pcPreCastTotalFrames > 0 && pcPreCastDirections > 0;
