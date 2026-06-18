@@ -79,6 +79,26 @@ namespace VLTK.Sandbox
                 fx.pcSpriteRenderScale = 1.5f;
             }
 
+            // State aura self-buff visual (e.g. Túy Điệp butterfly, Hoạt Bất Lưu Thủ swirl)
+            if (config.hasStateAura)
+            {
+                fx.isAura = true;
+                fx.pcPreCastSpriteKey = PcSkillVisualAutoMapper.SprPathToKey(config.stateAuraSprPath);
+                fx.pcPreCastTotalFrames = config.stateAuraTotalFrames > 0 ? config.stateAuraTotalFrames : 16;
+                fx.pcPreCastDirections = config.stateAuraDirections > 0 ? config.stateAuraDirections : 1;
+                fx.pcPreCastIntervalTicks = config.stateAuraIntervalTicks > 0 ? config.stateAuraIntervalTicks : 1;
+                fx.pcAuraFrameStart = config.stateAuraFrameStart;
+                fx.pcAuraFrameEnd = config.stateAuraFrameEnd;
+                fx.auraDuration = float.MaxValue;
+                fx.preCastDuration = float.MaxValue;
+
+                if (_sprService != null && !string.IsNullOrEmpty(config.stateAuraSprPath))
+                {
+                    fx.preCastSprite = _sprService.ResolveSprite(config.stateAuraSprPath, 64, 64);
+                }
+                return;
+            }
+
             // PreCast visual
             if (config.hasPreCast && !string.IsNullOrEmpty(config.preCastSprPath))
             {
@@ -363,6 +383,18 @@ namespace VLTK.Sandbox
 
 
 
+
+            // If casting a permanent aura, remove any existing aura for the same skill first to avoid duplication
+            if (effect.isAura)
+            {
+                for (int i = _activeEffects.Count - 1; i >= 0; i--)
+                {
+                    if (_activeEffects[i].skillId == effect.skillId)
+                    {
+                        _activeEffects.RemoveAt(i);
+                    }
+                }
+            }
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;

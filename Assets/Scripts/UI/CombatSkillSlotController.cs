@@ -800,7 +800,7 @@ namespace VLTK.UI
 
             var enemies = CollectEnemies();
             int skillLevel = manager.PlayerProgression?.skillLevels.TryGetValue(skillId, out var lv) == true ? lv : skill.maxLevel;
-            var target = ResolveCombatTarget(casterPos, skill, enemies, skillLevel);
+            var target = skill.targetEnemy ? ResolveCombatTarget(casterPos, skill, enemies, skillLevel) : null;
 
             if (target != null || (skill.targetSelf && !skill.targetEnemy))
             {
@@ -816,7 +816,7 @@ namespace VLTK.UI
                     var caster = CreateCombatActor(player, skill);
                     var targetActor = target != null ? CreateTargetActor(target) : null;
                     var targetPos = target != null ? target.position : casterPos;
-                    var report = combatRuntime.Cast(caster, targetActor, skillId, targetPos, CombatRelation.Enemy);
+                    var report = combatRuntime.Cast(caster, targetActor, skillId, targetPos, target != null ? CombatRelation.Enemy : CombatRelation.Self);
 
                     if (report.success)
                     {

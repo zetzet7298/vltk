@@ -569,6 +569,9 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(report1.success);
             int lifeAfterCast1 = enemy.currentLife;
             
+            // Bypass cooldown
+            svc.AdvanceTime(100);
+            
             // Reset enemy HP
             enemy.currentLife = 1000;
             
@@ -582,6 +585,24 @@ namespace VLTK.Tests.Sandbox
             int damage1 = 1000 - lifeAfterCast1;
             int damage2 = 1000 - lifeAfterCast2;
             Assert.Less(damage2, damage1, $"Resisted damage ({damage2}) should be less than unresisted damage ({damage1})");
+        }
+
+        [Test]
+        public void VisualService_PlayStateAura_ConfiguresAuraPermanently()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(130); // Túy Điệp Cuồng Vũ
+            
+            Assert.IsNotNull(skill);
+            Assert.AreEqual(43, skill.stateSpecialId);
+            
+            var fx = service.PlaySkillCast(skill, Vector2.zero, Vector2.zero, 1);
+            Assert.IsNotNull(fx);
+            Assert.IsTrue(fx.isAura);
+            Assert.AreEqual(float.MaxValue, fx.auraDuration);
+            Assert.AreEqual(float.MaxValue, fx.preCastDuration);
+            Assert.AreEqual("\\spr\\skill\\丐帮\\mag_gb_11_醉蝶狂舞.spr", fx.pcPreCastSpriteKey);
         }
     }
 }

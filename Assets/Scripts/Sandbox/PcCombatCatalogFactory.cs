@@ -160,10 +160,10 @@ namespace VLTK.Sandbox
             ResistBuff(126, "Kim Ô ánh Tuyết", "Kim Ô Ánh Tuyết", 40, MagicAttributeKind.ColdResP, costBugReturnsResultTwice:true),
 
             // 127 Hoạt Bất Lưu Thủ: utility buff
-            UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, levelData:(lv)=>{
+            UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:17, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
-                int dur = 18 * Link(lv, (1, 120, ""), (20, 180, ""));
+                int dur = -1; // Permanent duration (N/A) in sandbox
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, pct, dur, 0));
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
@@ -195,7 +195,7 @@ namespace VLTK.Sandbox
             // 130 Túy Điệp Cuồng Vũ: buff (zuidie_kuangwu)
             UtilitySkill(130, "Túy Điệp Cuồng Vũ ", "Túy Điệp Cuồng Vũ", 60, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:43, levelData:(lv)=>{
                 var d = new SkillLevelData{level=lv};
-                int dur = 18 * Link(lv, (1, 120, ""), (30, 180, ""));
+                int dur = -1; // Permanent duration (N/A) in sandbox
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 1, ""), (30, 30, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 10, ""), (30, 175, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
@@ -215,7 +215,7 @@ namespace VLTK.Sandbox
             UtilitySkill(277, "Hoạt Bất Lưu Thủ ", "Hoành Bách Lộ Thiên", 40, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, stateSpecialId:3, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
-                int dur = 18 * Link(lv, (1, 120, ""), (20, 180, ""));
+                int dur = -1; // Permanent duration (N/A) in sandbox
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, pct, dur, 0));
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
