@@ -501,5 +501,87 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, report.manaCost);
             Assert.AreEqual(10, player.currentMana);
         }
+
+        [Test]
+        public void CombatRuntime_BuffStates_TickDownAndExpire()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var loop = new GameplayLoopService(catalog);
+            var player = loop.RegisterPlayer(1, "TestPlayer", 60, Vector2.zero);
+            
+            // Manually add a temporary state with duration of 180 ticks (10 seconds)
+            player.combat.states[MagicAttributeKind.FastWalkRunP] = new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, 66, 180, 0);
+            
+            // Manually add a permanent state with duration of -1 (should not expire)
+            player.combat.states[MagicAttributeKind.MeleeDamageReturnP] = new SkillMagicAttribute(MagicAttributeKind.MeleeDamageReturnP, 20, -1, 0);
+            
+            // Advance time by 5 seconds (90 ticks)
+            loop.Tick(5f);
+            
+            // FastWalkRunP should still be active, with duration reduced by 90
+            Assert.IsTrue(player.combat.states.ContainsKey(MagicAttributeKind.FastWalkRunP));
+            Assert.AreEqual(90, player.combat.states[MagicAttributeKind.FastWalkRunP].value2);
+            
+            // MeleeDamageReturnP should still be active, duration unchanged (-1)
+            Assert.IsTrue(player.combat.states.ContainsKey(MagicAttributeKind.MeleeDamageReturnP));
+            Assert.AreEqual(-1, player.combat.states[MagicAttributeKind.MeleeDamageReturnP].value2);
+            
+            // Advance time by another 6 seconds (108 ticks, total 198 ticks)
+            loop.Tick(6f);
+            
+            // FastWalkRunP should have expired and been removed
+            Assert.IsFalse(player.combat.states.ContainsKey(MagicAttributeKind.FastWalkRunP));
+            
+            // MeleeDamageReturnP should still remain
+            Assert.IsTrue(player.combat.states.ContainsKey(MagicAttributeKind.MeleeDamageReturnP));
+        }
+
+        [Test]
+        public void CombatRuntime_BuffStates_ApplyAddedDamageAndResistances()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var svc = new CombatRuntimeService(catalog);
+            
+            var player = new CombatActorState
+            {
+                actorId = 1,
+                faction = CombatFaction.CaiBang,
+                level = 60,
+                fightMode = true,
+                position = Vector2.zero,
+                knownSkills = { 117 },
+                skillLevels = { [117] = 20 }
+            };
+            
+            // Add a fire damage buff to the player
+            player.states[MagicAttributeKind.FireDamageV] = new SkillMagicAttribute(MagicAttributeKind.FireDamageV, 50, 180, 0);
+            
+            var enemy = new CombatActorState
+            {
+                actorId = 2,
+                currentLife = 1000,
+                maxLife = 1000,
+                position = new Vector2(10, 0)
+            };
+            
+            // Case 1: Enemy has no resistances
+            var report1 = svc.Cast(player, enemy, 117, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(report1.success);
+            int lifeAfterCast1 = enemy.currentLife;
+            
+            // Reset enemy HP
+            enemy.currentLife = 1000;
+            
+            // Case 2: Enemy has AllResP active
+            enemy.states[MagicAttributeKind.AllResP] = new SkillMagicAttribute(MagicAttributeKind.AllResP, 30, -1, 0); // 30% resist
+            var report2 = svc.Cast(player, enemy, 117, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(report2.success);
+            int lifeAfterCast2 = enemy.currentLife;
+            
+            // Target life after cast 2 should be higher because of the 30% resistance mitigation
+            int damage1 = 1000 - lifeAfterCast1;
+            int damage2 = 1000 - lifeAfterCast2;
+            Assert.Less(damage2, damage1, $"Resisted damage ({damage2}) should be less than unresisted damage ({damage1})");
+        }
     }
 }

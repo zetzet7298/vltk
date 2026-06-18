@@ -302,9 +302,80 @@ namespace VLTK.Sandbox
                 if (attr.kind != MagicAttributeKind.PhysicsDamageV && attr.kind != MagicAttributeKind.FireDamageV && attr.kind != MagicAttributeKind.PoisonDamageV)
                     continue;
                 var type = attr.kind == MagicAttributeKind.FireDamageV ? DamageType.Fire : attr.kind == MagicAttributeKind.PoisonDamageV ? DamageType.Poison : DamageType.Physics;
-                int min = attr.value1;
-                int max = attr.value3 != 0 ? attr.value3 : attr.value1;
-                var result = _damage.Compute(new AttackerStats { minDamage = min, maxDamage = max, type = type, isMelee = false }, new DefenderStats(), rolledOverride: min);
+                
+                int extraDamageMin = 0;
+                int extraDamageMax = 0;
+                
+                if (caster != null && caster.states != null)
+                {
+                    if (type == DamageType.Fire)
+                    {
+                        if (caster.states.TryGetValue(MagicAttributeKind.FireDamageV, out var fd))
+                        {
+                            extraDamageMin += fd.value1;
+                            extraDamageMax += fd.value3 != 0 ? fd.value3 : fd.value1;
+                        }
+                        if (caster.states.TryGetValue(MagicAttributeKind.AddFireDamageV, out var afd))
+                        {
+                            extraDamageMin += afd.value1;
+                            extraDamageMax += afd.value3 != 0 ? afd.value3 : afd.value1;
+                        }
+                    }
+                    else if (type == DamageType.Poison)
+                    {
+                        if (caster.states.TryGetValue(MagicAttributeKind.PoisonDamageV, out var pd))
+                        {
+                            extraDamageMin += pd.value1;
+                            extraDamageMax += pd.value3 != 0 ? pd.value3 : pd.value1;
+                        }
+                        if (caster.states.TryGetValue(MagicAttributeKind.AddPoisonDamageV, out var apd))
+                        {
+                            extraDamageMin += apd.value1;
+                            extraDamageMax += apd.value3 != 0 ? apd.value3 : apd.value1;
+                        }
+                    }
+                    else if (type == DamageType.Physics)
+                    {
+                        if (caster.states.TryGetValue(MagicAttributeKind.PhysicsDamageV, out var pd))
+                        {
+                            extraDamageMin += pd.value1;
+                            extraDamageMax += pd.value3 != 0 ? pd.value3 : pd.value1;
+                        }
+                    }
+                }
+
+                int targetResist = 0;
+                if (target != null && target.states != null)
+                {
+                    if (target.states.TryGetValue(MagicAttributeKind.AllResP, out var allRes))
+                    {
+                        targetResist += allRes.value1;
+                    }
+                    
+                    MagicAttributeKind specificKind = type switch
+                    {
+                        DamageType.Physics => MagicAttributeKind.PhysicsResP,
+                        DamageType.Fire => MagicAttributeKind.FireResP,
+                        DamageType.Poison => MagicAttributeKind.PoisonResP,
+                        DamageType.Cold => MagicAttributeKind.ColdResP,
+                        DamageType.Light => MagicAttributeKind.LightingResP,
+                        _ => MagicAttributeKind.AllResP
+                    };
+                    
+                    if (specificKind != MagicAttributeKind.AllResP && target.states.TryGetValue(specificKind, out var specRes))
+                    {
+                        targetResist += specRes.value1;
+                    }
+                }
+
+                int min = attr.value1 + extraDamageMin;
+                int max = (attr.value3 != 0 ? attr.value3 : attr.value1) + extraDamageMax;
+                
+                var result = _damage.Compute(
+                    new AttackerStats { minDamage = min, maxDamage = max, type = type, isMelee = false },
+                    new DefenderStats { resist = targetResist },
+                    rolledOverride: min
+                );
                 target.currentLife = Mathf.Max(0, target.currentLife - result.finalDamage);
                 report.damageResults.Add(result);
             }

@@ -343,6 +343,19 @@ namespace VLTK.Sandbox
             EnsureVisual();
             Mount.Tick(dt);
             float speed = Mount.IsMounted ? moveSpeed * mountedSpeedMultiplier : moveSpeed;
+
+            // Apply FastWalkRunP state buff/debuff speed multiplier from active player combat states
+            var manager = SandboxManager.Instance;
+            var playerActor = manager?.GameplayLoop?.Player;
+            if (playerActor != null && playerActor.combat != null && playerActor.combat.states != null)
+            {
+                if (playerActor.combat.states.TryGetValue(MagicAttributeKind.FastWalkRunP, out var attr))
+                {
+                    float walkRunMultiplier = 1f + (attr.value1 / 100f);
+                    speed *= Mathf.Max(0.1f, walkRunMultiplier);
+                }
+            }
+
             LastMoveDelta = input * (speed * dt);
             if (LastMoveDelta.sqrMagnitude > 0f)
             {

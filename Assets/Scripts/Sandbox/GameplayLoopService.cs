@@ -339,7 +339,40 @@ namespace VLTK.Sandbox
             _gameTime += deltaTime;
 
             // Combat tick (PC 18fps)
-            Combat.AdvanceTime(Mathf.FloorToInt(deltaTime * 18f));
+            int ticks = Mathf.FloorToInt(deltaTime * 18f);
+            Combat.AdvanceTime(ticks);
+
+            // Tick down active state/buff durations for all actors
+            if (ticks > 0)
+            {
+                foreach (var actor in _actors.Values)
+                {
+                    if (actor.combat != null && actor.combat.states != null)
+                    {
+                        List<MagicAttributeKind> expired = null;
+                        foreach (var kvp in actor.combat.states)
+                        {
+                            var attr = kvp.Value;
+                            if (attr.value2 > 0)
+                            {
+                                attr.value2 -= ticks;
+                                if (attr.value2 <= 0)
+                                {
+                                    expired ??= new List<MagicAttributeKind>();
+                                    expired.Add(kvp.Key);
+                                }
+                            }
+                        }
+                        if (expired != null)
+                        {
+                            foreach (var k in expired)
+                            {
+                                actor.combat.states.Remove(k);
+                            }
+                        }
+                    }
+                }
+            }
 
             // Mana regen (PC: 1 mana/tick)
             _manaRegenAccumulator += deltaTime;
