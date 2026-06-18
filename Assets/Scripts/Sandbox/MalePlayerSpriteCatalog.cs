@@ -85,7 +85,7 @@ namespace VLTK.Sandbox
         public const int ArmorVariant = 19;
         public const int MountArmorVariant = 050;  // MA_(BD/HD/HR/LH/RH)_050 — mounted rider outfit.
         public const int MountAltArmorVariant = 072; // alt mounted rider outfit.
-        public const int MountHorseVariant = 016;   // MA_(HH/HB/HT)_016 — horse body (front/mid/back).
+        public const int MountHorseVariant = 019;   // MA_(HH/HB/HT)_019 — horse body (front/mid/back).
         public const int MountAltHorseVariant = 018; // alt horse body.
         public const int ShadowVariant = 999;
         // PC 男主角马* tables: RideStand=RD01 (mounted idle), RideRun=HR01 (mounted gallop).

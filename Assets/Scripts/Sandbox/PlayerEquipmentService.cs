@@ -221,6 +221,8 @@ namespace VLTK.Sandbox
                         return 28;
                     case PlayerEquipSlot.Hair:
                         return 19;
+                    case PlayerEquipSlot.Mount:
+                        return 19;
                     default:
                         return 0;
                 }
@@ -233,6 +235,8 @@ namespace VLTK.Sandbox
                     case PlayerEquipSlot.Head:
                     case PlayerEquipSlot.Hair:
                         return 50;
+                    case PlayerEquipSlot.Mount:
+                        return 19;
                     default:
                         return 0;
                 }

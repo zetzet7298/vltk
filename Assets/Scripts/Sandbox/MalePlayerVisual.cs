@@ -46,7 +46,7 @@ namespace VLTK.Sandbox
         public int headVariant = 19;
         public int hairVariant = 19;
         public int weaponVariant = 0;
-        public int mountHorseVariant = 16;
+        public int mountHorseVariant = 19;
 
         private int _loadedArmorVariant = -1;
         private int _loadedHeadVariant = -1;

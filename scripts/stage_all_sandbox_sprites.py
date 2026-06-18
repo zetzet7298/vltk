@@ -73,12 +73,13 @@ def main():
                     
     # Horse parts
     for part in ['HH', 'HB', 'HT']:
-        for suffix in ['RD01', 'HR01']:
-            p = f"spr\\npcres\\man\\MA_{part}_016_{suffix}.spr"
-            if stage_path(p):
-                staged_count += 1
-            else:
-                missing_count += 1
+        for suffix in ['RD01', 'HR01', 'HW01']:
+            for var in [1, 4, 18, 19]:
+                p = f"spr\\npcres\\man\\MA_{part}_{var:03d}_{suffix}.spr"
+                if stage_path(p):
+                    staged_count += 1
+                else:
+                    missing_count += 1
                 
     # Extra horse items
     for horse in ['horse001.spr', 'horse005.spr']:
