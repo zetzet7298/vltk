@@ -309,7 +309,16 @@ namespace VLTK.Sandbox
             effect.currentMissilePos = casterPos;
             // PC data-driven visual: auto-resolve from missles1.txt
             ConfigureDataDrivenVisuals(skill, effect, skillLevel);
-            // Trigger cast sound (PC missles.txt SoundPath)
+            // [CaiBang-SoundParity 2026-06-18] PC KSkill::Cast fires the SKILL cast sound
+            // (skills.txt col 7 ManCastSnd / col 8 FMCastSnd) at the cast frame, BEFORE
+            // the missile spawns. This is distinct from the missile SPR soundPath
+            // (PC missles.txt SndFile1/SndFile2) which fires during projectile flight.
+            // Priority: skill.manCastSndPath > missile SPR soundPath. Before this fix,
+            // every Cái Bang skill cast was SILENT because PcConfigParser skipped cols 7/8
+            // and SkillEffectVisualService only read the missile sound.
+            if (string.IsNullOrEmpty(effect.castSoundPath) && !string.IsNullOrEmpty(skill.manCastSndPath))
+                effect.castSoundPath = skill.manCastSndPath;
+            // Trigger cast sound (PC skills.txt ManCastSnd, fallback to PC missles.txt SoundPath)
             if (!string.IsNullOrEmpty(effect.castSoundPath))
                 OnCastSound?.Invoke(effect.castSoundPath);
 

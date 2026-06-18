@@ -227,9 +227,26 @@ namespace VLTK.Core
                 ci++; // 3 Attrib (skip)
                 skill.skillStyle = (PcSkillStyle)IntCol(cols, ref ci);// 4
                 ci++; // 5 SkillIcon (skip, referenced as string)
-                ci++; // 6 PreCastSpr (skip)
-                ci++; // 7 ManCastSnd (skip)
-                ci++; // 8 FMCastSnd (skip)
+                // [CaiBang-SoundParity 2026-06-18] cols 6/7/8 used to be skipped,
+                // which silently dropped every PC skill cast sound (ManCastSnd/
+                // FMCastSnd) and skill-level PreCastSpr. PC source: skills.txt cols
+                // 6 PreCastSpr / 7 ManCastSnd / 8 FMCastSnd — consumed by KSkill::Cast
+                // to fire the cast-frame sound + body precast SPR before missile spawn.
+                string preCastSprPath = ColSafe(cols, ci);            // 6 PreCastSpr
+                ci++;
+                skill.manCastSndPath = ColSafe(cols, ci);             // 7 ManCastSnd
+                ci++;
+                skill.fmCastSndPath = ColSafe(cols, ci);              // 8 FMCastSnd
+                ci++;
+                if (!string.IsNullOrEmpty(preCastSprPath) && skill.effectSourceId == null)
+                {
+                    skill.effectSourceId = new SourceAssetId
+                    {
+                        sourcePath = preCastSprPath,
+                        resourceKind = ResourceKind.Sprite,
+                        uid = preCastSprPath.GetHashCode(),
+                    };
+                }
                 skill.stateSpecialId = IntCol(cols, ref ci);          // 9
                 ci++; // 10 StatePriority (skip)
                 skill.isAura = IntCol(cols, ref ci) != 0;            // 11

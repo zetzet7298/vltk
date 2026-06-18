@@ -91,7 +91,14 @@ namespace VLTK.Sandbox
             PoisonAttack(199, "吐口水", "Nhổ độc", 180, child:90),
         };
 
-        public static List<SkillDefinition> CreateCaiBangSkills() => new()
+        public static List<SkillDefinition> CreateCaiBangSkills()
+        {
+            var list = BuildCaiBangSkillsRaw();
+            ApplyCaiBangPcCastAudio(list);
+            return list;
+        }
+
+        private static List<SkillDefinition> BuildCaiBangSkillsRaw() => new()
         {
             // 115 Cái Bang Bổng Pháp: passive (gaibang_bangfa)
             PassiveMasteryWithDeadly(115, "Cái Bang Bổng pháp", "Cái Bang Bổng Pháp", 10,
@@ -339,6 +346,63 @@ namespace VLTK.Sandbox
             LongChienUYuyeSkill(),
             NguDieuCanKhonSkill(),
         };
+
+        // [CaiBang-SoundParity 2026-06-18] PC skills.txt cols 7/8 (ManCastSnd/FMCastSnd)
+        // per Cái Bang skill. Source of truth:
+        //   /var/www/vltk-mobile/Assets/StreamingAssets/Reference/PcSkill/skills.txt
+        // PC engine: KSkill::Cast fires m_szManCastSnd (or m_szFMCastSnd for female
+        // character) at the cast-frame of the CharAnimId action, BEFORE the missile
+        // spawns. Mobile wire: SkillEffectVisualService.PlaySkillCast prioritizes
+        // skill.manCastSndPath over the missile SPR soundPath.
+        // Empty = PC skill has no skill-level cast sound (passive/buff/stance skills).
+        private static readonly Dictionary<int, (string manCast, string fmCast, string preCastSpr)> CaiBangPcCastAudio = new()
+        {
+            // PC stock 115-130 (gaibang.lua). 117/119/122/125/128 have distinct cast sounds;
+            // 118/120/121/123/126/127/129/130 are buffs/utility with no PC cast sound.
+            [117] = ("\\sound\\skill\\sound_k001.wav", "\\sound\\skill\\sound_k006.wav", null),
+            [119] = ("\\sound\\skill\\sound_k002.wav", "\\sound\\skill\\sound_k007.wav", null),
+            [122] = ("\\sound\\skill\\sound_k003.wav", "\\sound\\skill\\sound_k008.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            [125] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            [128] = ("\\sound\\skill\\sound_k005.wav", "\\sound\\skill\\sound_k010.wav", "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
+            // MOD Vietnam Cái Bang additions (PC Tinh Kiem source).
+            [357] = ("\\sound\\skill\\sound_k005.wav", "\\sound\\skill\\sound_k010.wav", "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
+            [358] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            [359] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            // 389 Long Chiến Ư Dã — Phi Long collide-event sub-skill. PC plays sound_k004 on impact.
+            [389] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            // 150-tier Cái Bang (Thần Thủ Lệnh Long family) — PC gb_150 precast SPR.
+            [1073] = ("\\sound\\skill\\sound_k005.wav", "\\sound\\skill\\sound_k010.wav", "\\spr\\skill\\150\\gb\\gb_150_shichengjiulong_a.spr"),
+            [1074] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            [1101] = ("\\sound\\skill\\sound_k005.wav", "\\sound\\skill\\sound_k010.wav", "\\spr\\skill\\150\\gb\\gb_150_shichengjiulong_a.spr"),
+            [1161] = ("\\sound\\skill\\sound_k005.wav", "\\sound\\skill\\sound_k010.wav", "\\spr\\skill\\150\\gb\\gb_150_shichengjiulong_a.spr"),
+            [1162] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            [1539] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+        };
+
+        private static void ApplyCaiBangPcCastAudio(List<SkillDefinition> skills)
+        {
+            if (skills == null) return;
+            foreach (var s in skills)
+            {
+                if (s == null) continue;
+                if (!CaiBangPcCastAudio.TryGetValue(s.skillId, out var entry)) continue;
+                if (!string.IsNullOrEmpty(entry.manCast)) s.manCastSndPath = entry.manCast;
+                if (!string.IsNullOrEmpty(entry.fmCast))  s.fmCastSndPath  = entry.fmCast;
+                // preCastSpr: ALWAYS sync từ PC skills.txt col 6 khi entry có path.
+                // Lý do override-hard (không phải "chỉ khi null"): factory helpers
+                // DamageSkillNew/ResistBuff mặc định gán mag_tr_16_施魔法.spr cho mọi Cái Bang
+                // damage skill, nhưng PC source phân biệt rõ:
+                //   - 128 Kháng Long / 357 Phi Long: mag_bz_huo3_爆炸效果.spr (b91ab706)
+                //   - 1073/1101/1161 Thần Thủ Lệnh Long: gb_150_shichengjiulong_a.spr (70d46004)
+                //   - 122/125/358/359/1074/1539: mag_tr_16_施魔法.spr (3cae8f47)
+                // Tất cả các UID này đều staged trong SpritesRuntime (verified 2026-06-18).
+                // Pre-fix: 128/357/1073 render sai SPR (TianRen generic thay vì GB-specific).
+                if (!string.IsNullOrEmpty(entry.preCastSpr))
+                {
+                    s.effectSourceId = Sprite(entry.preCastSpr);
+                }
+            }
+        }
 
 
         public static List<SkillDefinition> CreateWuDangSkills() => new()

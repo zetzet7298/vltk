@@ -108,6 +108,14 @@ namespace VLTK.Model
         public SourceAssetId effectSourceId;     // m_szPreCastEffectFile
         public SourceAssetId missileSpriteId;    // missile/projectile sprite
 
+        // PC skills.txt cast audio (cols 7 + 8).
+        // Source: KSkill::Cast → KClient::PlaySkillSound(m_szManCastSnd | m_szFMCastSnd).
+        // Played at the cast-frame of the CharAnimId action, BEFORE the missile spawns.
+        // Mobile wire: SkillEffectVisualService.PlaySkillCast → AudioService.PlaySkillCast.
+        // Empty string = no skill-level cast sound (some passive/buff skills have none in PC).
+        public string manCastSndPath;            // m_szManCastSnd  (\sound\skill\sound_kXXX.wav)
+        public string fmCastSndPath;             // m_szFMCastSnd   (female variant; same wav family)
+
         public bool iconResolved;
         public bool effectResolved;
 
