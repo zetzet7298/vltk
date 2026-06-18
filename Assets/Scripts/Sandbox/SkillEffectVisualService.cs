@@ -313,10 +313,19 @@ namespace VLTK.Sandbox
             // (skills.txt col 7 ManCastSnd / col 8 FMCastSnd) at the cast frame, BEFORE
             // the missile spawns. This is distinct from the missile SPR soundPath
             // (PC missles.txt SndFile1/SndFile2) which fires during projectile flight.
-            // Priority: skill.manCastSndPath > missile SPR soundPath. Before this fix,
-            // every Cái Bang skill cast was SILENT because PcConfigParser skipped cols 7/8
-            // and SkillEffectVisualService only read the missile sound.
-            if (string.IsNullOrEmpty(effect.castSoundPath) && !string.IsNullOrEmpty(skill.manCastSndPath))
+            //
+            // Priority: SKILL cast sound > missile SPR sound. The skill cast sound is the
+            // iconic audible cue players identify with each Cái Bang skill
+            // (sound_k001 Yên Môn / sound_k005 Kháng Long / sound_k010 Phi Long / ...).
+            // The missile SPR sound (e.g.亢龙无悔.wav) is a secondary mid-flight cue and
+            // is currently dropped — TODO: split OnCastSound into separate cast-frame
+            // + flight-frame events so both can play at the right time.
+            //
+            // Pre-fix: ConfigureDataDrivenVisuals could overwrite effect.castSoundPath
+            // with the missile SPR sound, leaving the PC skill cast sound unused and
+            // every Cái Bang cast playing a generic missile whoosh instead of the
+            // iconic per-skill sound_k0XX.wav.
+            if (!string.IsNullOrEmpty(skill.manCastSndPath))
                 effect.castSoundPath = skill.manCastSndPath;
             // Trigger cast sound (PC skills.txt ManCastSnd, fallback to PC missles.txt SoundPath)
             if (!string.IsNullOrEmpty(effect.castSoundPath))

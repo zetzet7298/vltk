@@ -126,12 +126,15 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void PlaySkillCast_MissileSprSoundTakesPriorityOverSkillLevelSound()
+        public void PlaySkillCast_MissileSprSoundYieldsToSkillLevelCastSound()
         {
-            // PC: missile SPR sound (mid-flight) and skill cast sound (cast frame) are different
-            // events. When both exist, the missile SPR sound wins for the flight-phase audio cue
-            // because it is the more specific PC data point. Skill-level sound still applies for
-            // skills whose missile SPR has no soundPath.
+            // PC: KSkill::Cast fires the SKILL cast sound (skills.txt col 7) at the cast
+            // frame. The missile SPR sound (missles.txt SndFile1/2) fires mid-flight.
+            // Unity currently has a single cast-time hook, so the iconic skill cast sound
+            // (sound_k0XX.wav) must win over the missile SPR soundPath to match what the
+            // player hears at the cast moment in PC.
+            // Pre-fix: ConfigureDataDrivenVisuals overwrote effect.castSoundPath with the
+            // missile SPR sound, dropping the PC skill cast sound entirely.
             var skill = new SkillDefinition
             {
                 skillId = 999128,
@@ -142,17 +145,14 @@ namespace VLTK.Tests.Sandbox
                 childSkillId = 999,
                 childSkillNum = 1,
                 timePerCast = 2,
-                manCastSndPath = @"\sound\skill\sound_k001.wav",
+                manCastSndPath = @"\sound\skill\sound_k005.wav",
             };
 
-            // Build a minimal catalog with a stub child skill so ConfigureDataDrivenVisuals
-            // can resolve missile visual data. We only assert that the skill-level sound is
-            // NOT overwritten by a null missile sound (i.e. priority logic is sane).
             var svc = new SkillEffectVisualService(null, null);
             var fx = svc.PlaySkillCast(skill, Vector2.zero, new Vector2(50, 0), 1);
             Assert.IsNotNull(fx);
-            // No missile SPR data -> effect.castSoundPath must fall back to skill.manCastSndPath.
-            Assert.AreEqual(@"\sound\skill\sound_k001.wav", fx.castSoundPath);
+            Assert.AreEqual(@"\sound\skill\sound_k005.wav", fx.castSoundPath,
+                "skill.manCastSndPath (PC skills.txt col 7) must win over missile SPR soundPath");
         }
     }
 }
