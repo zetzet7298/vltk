@@ -169,7 +169,14 @@ namespace VLTK.Sandbox
                         }
                         else
                         {
-                            SetupPcPhiLongSpread(fx, luaCount, 120);
+                            // PC: skill_param1_v = per-step gap in subworld pixels.
+                            // Sprites render at PPU=1 (1 SPR-pixel = 1 world unit), so the
+                            // visual step in world-units equals the raw param value directly.
+                            // Default 32 (PC's standard 2-beam spacing for Phi Long).
+                            int rawParam = PcCaiBangLuaLevelService.GetSingleValue(
+                                skill.skillId, level, "skill_param1_v", 32);
+                            int stepWu = rawParam > 0 ? rawParam : 32;
+                            SetupPcPhiLongSpread(fx, luaCount, stepWu);
                         }
                     }
                 }
@@ -557,7 +564,11 @@ namespace VLTK.Sandbox
             fx.pcImpactTotalFrames = impactFrames;
             fx.pcImpactDirections = impactDirs;
             fx.pcImpactIntervalTicks = impactIntervalTicks;
-            fx.missileSpeed = speedPerTick * 18f; // PC ticks/sec ≈ 18
+            // PC KMissle: m_nXFactor is Q10 (≈±1024) direction cosine.
+            // nDOffsetX = m_nSpeed * m_nXFactor → actual pixel step per tick = m_nSpeed.
+            // All positions (casterPos/targetPos) are in raw PC pixel coords (PPU=1f),
+            // so speed in pixels/s = speedPerTick × 18fps — no PPU conversion needed.
+            fx.missileSpeed = speedPerTick * 18f; // PC pixels per second (world units = PC pixels at PPU=1f)
             fx.missileDuration = lifeTicks / 18f;
         }
 

@@ -92,15 +92,13 @@ namespace VLTK.UI
 
         private void DrawMissiles(ActiveSkillEffect fx)
         {
-            // PC source: render exact SPR frame for each missile.
-            // KMissleRes::Draw picks frame by direction + life-tick, alpha-blended at PC center.
+            // PC SPR missiles are rendered by SkillEffectWorldOverlay (SpriteRenderer, world-space).
+            // IMGUI overlay must NOT draw them — doing so causes a blurry double-image because
+            // WorldOverlay draws at PPU=1f world-scale while IMGUI draws at native pixel size.
             if (fx.HasPcMissileSprite)
-            {
-                DrawPcMissileSprite(fx);
                 return;
-            }
 
-            // Fallback: legacy circle/dot rendering (no SPR resolved)
+            // Fallback: legacy circle/dot rendering (no PC SPR configured or resolved)
             if (fx.missileCount <= 1)
             {
                 // Single missile: draw moving projectile
@@ -233,12 +231,10 @@ namespace VLTK.UI
 
         private void DrawImpact(ActiveSkillEffect fx)
         {
-            // PC source: KMissleRes::OnCollision draws explosion SPR frames.
+            // PC SPR impact sprites are rendered by SkillEffectWorldOverlay.
+            // Skip IMGUI path to avoid double-rendering ghost.
             if (fx.HasPcImpactSprite)
-            {
-                DrawPcImpactSprite(fx);
                 return;
-            }
 
             // Fallback: expanding burst circle (no SPR resolved)
             var screenPos = WorldToScreen(fx.targetPos);
