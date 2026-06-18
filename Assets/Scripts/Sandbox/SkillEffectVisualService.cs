@@ -71,14 +71,12 @@ namespace VLTK.Sandbox
             fx.castSoundPath = config.castSoundPath;
 
             // [CaiBang-PhiLongSpread 2026-06-18] Cái Bang dragon SPRs in PC Tinh Kiem PAK
-            // (mag_gb_05_亢龙有悔.spr, mag_gb_bz5_爆炸效果.spr) are 320x320 native sprites.
-            // At mobile orthoSize~300, 4 dragons at native scale would overflow screen,
-            // and at scale 2.5x they overlapped into one orange smear. Scale 0.5x gives
-            // each dragon ~160px body (≈1/4 screen height at default zoom) so all 4
-            // fit visually while staying readable.
+            // (mag_gb_05_亢龙有悔.spr, mag_gb_bz5_爆炸效果.spr) have native frames ~96x121 PC pixel.
+            // Scale 1.5x → ~144x180 world-unit body — clearly visible at default orthoSize
+            // without overflowing the 1067x600 mobile viewport.
             if (PcCaiBangLuaLevelService.Applies(skill.skillId))
             {
-                fx.pcSpriteRenderScale = 0.5f;
+                fx.pcSpriteRenderScale = 1.5f;
             }
 
             // PreCast visual
@@ -162,11 +160,12 @@ namespace VLTK.Sandbox
                 {
                     int luaCount = PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, level);
                     if (luaCount > 1)
-                        // [CaiBang-PhiLongSpread 2026-06-18] PC sprite body = 320 PC pixel (native),
-                        // scaled 0.5x = 160 world-unit per dragon. param64=80 → offset ±120 world-unit
-                        // so 4 dragons spread visibly (positions roughly y = -120, -40, +40, +120)
-                        // while keeping the tight parallel formation PC players recognize.
-                        SetupPcPhiLongSpread(fx, luaCount, 80);
+                        // [CaiBang-PhiLongSpread 2026-06-18] Scale 1.5x → body ~144 world-unit wide.
+                        // Spread 4 dragons: param64=120 → offset ±180 world-unit → dragons at
+                        // y=-180,-60,+60,+180 with 120-unit gaps between centers (≈one body width
+                        // of clear gap). Visible separation while keeping the parallel
+                        // "wall of dragons" formation PC players recognize.
+                        SetupPcPhiLongSpread(fx, luaCount, 120);
                 }
                 return;
             }
