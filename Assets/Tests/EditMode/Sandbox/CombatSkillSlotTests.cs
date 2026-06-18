@@ -466,22 +466,5 @@ namespace VLTK.Tests.Sandbox
                 Object.DestroyImmediate(go);
             }
         }
-
-        [Test]
-        public void TouchSlot_StopLongPressCoroutineOnRelease()
-        {
-            var go = new GameObject("TouchSlotTest");
-            var controller = go.AddComponent<CombatSkillSlotController>();
-            try
-            {
-                var longPressCoroutineField = typeof(CombatSkillSlotController)
-                    .GetField("_longPressCoroutine", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-                Assert.IsNotNull(longPressCoroutineField, "_longPressCoroutine field must exist.");
-            }
-            finally
-            {
-                Object.DestroyImmediate(go);
-            }
-        }
     }
 }

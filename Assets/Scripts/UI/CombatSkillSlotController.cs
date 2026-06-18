@@ -27,7 +27,6 @@ namespace VLTK.UI
         [SerializeField] private int[] deckBSkillIds = new int[MobileSkillSlotCount];
 
         public const int MobileSkillSlotCount = 5;
-        private const long LongPressMs = 450;
         private const float SlotDragCancelThreshold = 45f;
         private const float PickerTapMoveThreshold = 12f;
         private const int PrimaryAttackPseudoSlot = -2;
@@ -55,7 +54,6 @@ namespace VLTK.UI
         private int _pressedPointerId = -1;
         private Vector2 _startPointerPos;
         private bool _slotPointerDown;
-        private bool _longPressOpened;
         private bool _aimingDrag;
         private bool _initialized;
         private VisualElement _boundRoot;
@@ -64,7 +62,6 @@ namespace VLTK.UI
         private bool _pickerPointerDown;
         private SkillCatalog _catalog;
         private PlayerProgressionState _progression;
-        private Coroutine _longPressCoroutine;
 
         private int _lockedTargetId = -1;
         private string _lockedTargetName = string.Empty;
@@ -436,7 +433,6 @@ namespace VLTK.UI
             _pressedPointerId = pointerId;
             _startPointerPos = screenPos;
             _slotPointerDown = true;
-            _longPressOpened = false;
             _aimingDrag = false;
             HideCancelCastZone();
 
@@ -444,35 +440,11 @@ namespace VLTK.UI
                 _primaryAttackBtn?.CapturePointer(pointerId);
             else
                 _skillSlots[slot]?.CapturePointer(pointerId);
-
-            if (_longPressCoroutine != null)
-            {
-                StopCoroutine(_longPressCoroutine);
-            }
-            _longPressCoroutine = StartCoroutine(OpenPickerAfterLongPress(slot, pointerId));
-        }
-
-        private IEnumerator OpenPickerAfterLongPress(int slot, int pointerId)
-        {
-            SubsystemLog.Info("CombatTouch", $"OpenPickerAfterLongPress coroutine started for slot={slot}");
-            yield return new WaitForSeconds(LongPressMs / 1000f);
-            SubsystemLog.Info("CombatTouch", $"OpenPickerAfterLongPress timer expired: slot={slot}, _slotPointerDown={_slotPointerDown}, _aimingDrag={_aimingDrag}, _pressedSlot={_pressedSlot}, _pressedPointerId={_pressedPointerId}");
-            if (!_slotPointerDown || _aimingDrag || _pressedSlot != slot || _pressedPointerId != pointerId)
-            {
-                SubsystemLog.Info("CombatTouch", "OpenPickerAfterLongPress condition failed, yield break");
-                _longPressCoroutine = null;
-                yield break;
-            }
-            _longPressOpened = true;
-            ReleasePressedSlotCapture(pointerId);
-            SubsystemLog.Info("CombatTouch", $"OpenPickerAfterLongPress opening skill picker for slot={slot}");
-            OpenSkillPicker(slot == PrimaryAttackPseudoSlot ? 0 : slot);
-            _longPressCoroutine = null;
         }
 
         private void OnSlotMove(PointerMoveEvent evt)
         {
-            if (_slotPointerDown && !_longPressOpened && _pressedSlot != -1)
+            if (_slotPointerDown && _pressedSlot != -1)
             {
                 if (_pressedSlot == PrimaryAttackPseudoSlot)
                 {
@@ -495,17 +467,11 @@ namespace VLTK.UI
         private void OnSlotUp(PointerUpEvent evt)
         {
             int slot = _pressedSlot;
-            SubsystemLog.Info("CombatTouch", $"OnSlotUp: slot={slot}, pointerId={evt.pointerId}, _longPressOpened={_longPressOpened}, _aimingDrag={_aimingDrag}");
+            SubsystemLog.Info("CombatTouch", $"OnSlotUp: slot={slot}, pointerId={evt.pointerId}, _aimingDrag={_aimingDrag}");
             ReleasePressedSlotCapture(evt.pointerId);
             _slotPointerDown = false;
             _pressedSlot = -1;
             _pressedPointerId = -1;
-
-            if (_longPressCoroutine != null)
-            {
-                StopCoroutine(_longPressCoroutine);
-                _longPressCoroutine = null;
-            }
 
             if (_aimingDrag && slot != -1)
             {
@@ -522,7 +488,7 @@ namespace VLTK.UI
                     SubsystemLog.Info("Combat", $"Cancel aim deck {ActiveDeckName()} slot {(slot == PrimaryAttackPseudoSlot ? "Primary" : slot.ToString())}");
                 }
             }
-            else if (!_longPressOpened && slot != -1)
+            else if (slot != -1)
             {
                 if (slot == PrimaryAttackPseudoSlot)
                 {
@@ -536,7 +502,6 @@ namespace VLTK.UI
                 }
             }
 
-            _longPressOpened = false;
             _aimingDrag = false;
             HideCancelCastZone();
             evt.StopPropagation();
@@ -570,14 +535,8 @@ namespace VLTK.UI
             _slotPointerDown = false;
             _pressedSlot = -1;
             _pressedPointerId = -1;
-            _longPressOpened = false;
             _aimingDrag = false;
             HideCancelCastZone();
-            if (_longPressCoroutine != null)
-            {
-                StopCoroutine(_longPressCoroutine);
-                _longPressCoroutine = null;
-            }
         }
 
         private void ShowCancelCastZone()
