@@ -357,6 +357,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void CreateCombatActor_UsesPlayerFactionAndComputesCorrectMana()
         {
+            typeof(SandboxManager).GetProperty("Instance", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)?
+                .GetSetMethod(true)?.Invoke(null, new object[] { null });
+
             var go = new GameObject("Test");
             var controller = go.AddComponent<CombatSkillSlotController>();
             

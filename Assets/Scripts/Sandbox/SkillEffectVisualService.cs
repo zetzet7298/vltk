@@ -142,43 +142,49 @@ namespace VLTK.Sandbox
                     System.Math.Max(1, config.explodeDirections),
                     System.Math.Max(1, config.explodeIntervalTicks),
                     config.lightColor);
+                fx.pcMissileMoveKind = config.moveKind;
 
-                // Multi-missile spread for fan/surround forms
-                if (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround)
+
+                // PC gaibang.lua: Single-form or fan-spread skills with skill_misslenum_v > 1 use dynamic spread.
+                // E.g. Phi Long (357) L20=4, Kháng Long Hữu Hối (358) L20=15.
+                bool luaSpreadConfigured = false;
+                if (PcCaiBangLuaLevelService.Applies(skill.skillId))
+                {
+                    int luaCount = PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, level);
+                    if (luaCount > 0)
+                    {
+                        luaSpreadConfigured = true;
+                        if (luaCount > 1)
+                        {
+                            int missileForm = PcCaiBangLuaLevelService.GetMissileForm(skill.skillId, level);
+                            if (missileForm == 2)
+                            {
+                                int angleStep = PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, level, "skill_param1_v", 1);
+                                SetupPcKangLongSpread(fx, luaCount, angleStep, 0);
+                            }
+                            else
+                            {
+                                // PC: skill_param1_v = per-step gap in subworld pixels.
+                                // Sprites render at PPU=1 (1 SPR-pixel = 1 world unit), so the
+                                // visual step in world-units equals the raw param value directly.
+                                // Default 32 (PC's standard 2-beam spacing for Phi Long).
+                                int rawParam = PcCaiBangLuaLevelService.GetSingleValue(
+                                    skill.skillId, level, "skill_param1_v", 32);
+                                int stepWu = rawParam > 0 ? rawParam : 32;
+                                SetupPcPhiLongSpread(fx, luaCount, stepWu);
+                            }
+                        }
+                    }
+                }
+
+                // Multi-missile spread for other fan/surround forms
+                if (!luaSpreadConfigured && (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround))
                 {
                     int count = System.Math.Max(1, skill.childSkillNum);
                     if (skill.missileForm == SkillMissileForm.Surround)
                         SetupSurroundMissiles(fx, count);
                     else
                         SetupPcCircleOutwardMissiles(fx, count);
-                }
-                // PC gaibang.lua: Single-form skills with skill_misslenum_v > 1 use homing spread.
-                // E.g. Phi Long (357) L20=4, Thiên Hạ Vô Cẩu (359) L20=3, Càn Khôn (1074) L20=5.
-                // [CaiBang-LuaPort 2026-06-17] PcCaiBangSkillTuning.MissileCountAtLevel replaced
-                // by Lua-driven GetMissileCount from gaibang.lua skill_misslenum_v table.
-                else if (PcCaiBangLuaLevelService.Applies(skill.skillId))
-                {
-                    int luaCount = PcCaiBangLuaLevelService.GetMissileCount(skill.skillId, level);
-                    if (luaCount > 1)
-                    {
-                        int missileForm = PcCaiBangLuaLevelService.GetMissileForm(skill.skillId, level);
-                        if (missileForm == 2)
-                        {
-                            int angleStep = PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, level, "skill_param1_v", 1);
-                            SetupPcKangLongSpread(fx, luaCount, angleStep, 0);
-                        }
-                        else
-                        {
-                            // PC: skill_param1_v = per-step gap in subworld pixels.
-                            // Sprites render at PPU=1 (1 SPR-pixel = 1 world unit), so the
-                            // visual step in world-units equals the raw param value directly.
-                            // Default 32 (PC's standard 2-beam spacing for Phi Long).
-                            int rawParam = PcCaiBangLuaLevelService.GetSingleValue(
-                                skill.skillId, level, "skill_param1_v", 32);
-                            int stepWu = rawParam > 0 ? rawParam : 32;
-                            SetupPcPhiLongSpread(fx, luaCount, stepWu);
-                        }
-                    }
                 }
                 return;
             }
@@ -360,8 +366,20 @@ namespace VLTK.Sandbox
 
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
+
+            if (effect.missileCount > 0)
+            {
+                effect.missileExplodeStartTime = new float[effect.missileCount];
+                for (int midx = 0; midx < effect.missileCount; midx++)
+                    effect.missileExplodeStartTime[midx] = -1f;
+
+                if (effect.missileArrived == null)
+                    effect.missileArrived = new bool[effect.missileCount];
+            }
+
             return effect;
         }
+
 
         /// <summary>
         /// Update all active effects. Returns finished effects for cleanup.
@@ -403,14 +421,17 @@ namespace VLTK.Sandbox
                             allArrived = true;
                             for (int mi = 0; mi < fx.missilePositions.Length; mi++)
                             {
-                                Vector2 targetPos = fx.ResolveMissileTarget(mi);
-                                if (Vector2.Distance(fx.missilePositions[mi], targetPos) > fx.arrivalRadius)
+                                bool arrived = fx.missileArrived != null && mi < fx.missileArrived.Length && fx.missileArrived[mi];
+                                float explodeTime = arrived && fx.missileExplodeStartTime != null && mi < fx.missileExplodeStartTime.Length
+                                    ? fx.elapsed - fx.missileExplodeStartTime[mi]
+                                    : 0f;
+                                if (!arrived || explodeTime < fx.impactDuration)
                                     allArrived = false;
                             }
                         }
                         else
                         {
-                            // Single missile: keep flying until it actually reaches the target.
+                            // Single missile: keep flying until it reaches the target.
                             allArrived = Vector2.Distance(fx.currentMissilePos, fx.ResolveMissileTarget(-1)) <= fx.arrivalRadius;
                         }
 
@@ -425,15 +446,45 @@ namespace VLTK.Sandbox
                         {
                             if (fx.missileArrived[si]) continue;
                             Vector2 targetPos = fx.ResolveMissileTarget(si);
-                            Vector2 mp = si < fx.missilePositions.Length ? fx.missilePositions[si] : fx.currentMissilePos;
-                            if (Vector2.Distance(mp, targetPos) <= fx.rendRadius)
+                            Vector2 mp = (fx.missilePositions != null && si < fx.missilePositions.Length) ? fx.missilePositions[si] : fx.currentMissilePos;
+                            Vector2 origin = (fx.missileOrigins != null && si < fx.missileOrigins.Length) ? fx.missileOrigins[si] : fx.casterPos;
+
+
+                            bool isHomingMissile = fx.getCurrentTargetPos != null && fx.pcMissileMoveKind == 5;
+                            bool collided = false;
+                            if (!isHomingMissile)
+                            {
+                                // Non-homing: trigger collision when distance traveled is >= target dummy's distance
+                                float targetDist = Vector2.Distance(fx.targetPos, origin);
+                                float traveled = Vector2.Distance(mp, origin);
+                                if (traveled >= targetDist - fx.rendRadius)
+                                {
+                                    collided = true;
+                                }
+                            }
+                            else
+                            {
+                                // Homing: trigger collision when close to target
+                                if (Vector2.Distance(mp, targetPos) <= fx.rendRadius)
+                                {
+                                    collided = true;
+                                }
+                            }
+
+                            if (collided)
                             {
                                 fx.missileArrived[si] = true;
-                                TriggerSauXe(fx, mp);
-                                SpawnCollideSubEffect(fx, mp);
+                                if (fx.missileExplodeStartTime != null && si < fx.missileExplodeStartTime.Length)
+                                    fx.missileExplodeStartTime[si] = fx.elapsed;
+                                Vector2 collidePos = !isHomingMissile
+                                    ? origin + (targetPos - origin).normalized * Vector2.Distance(fx.targetPos, origin)
+                                    : mp;
+                                TriggerSauXe(fx, collidePos);
+                                SpawnCollideSubEffect(fx, collidePos);
                             }
                         }
                         break;
+
 
                     case SkillEffectPhase.Impact:
                         if (fx.elapsed - fx.phaseStart >= fx.impactDuration)
@@ -600,21 +651,30 @@ namespace VLTK.Sandbox
         {
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
+            fx.missileOrigins = new Vector2[count];
             fx.missileTargets = new Vector2[count];
+            fx.missileArrived = new bool[count];
             Vector2 baseDir = fx.targetPos - fx.casterPos;
-            float distance = Mathf.Max(1f, baseDir.magnitude);
-            baseDir /= distance;
-            int radius = count / 2;
+            float targetDist = Mathf.Max(1f, baseDir.magnitude);
+            baseDir /= targetDist;
+
+            // PC parity: non-homing missiles fly their full lifetime range (speed * duration)
+            float distance = fx.missileSpeed * fx.missileDuration;
+            if (distance < targetDist) distance = targetDist;
+
             for (int i = 0; i < count; i++)
             {
-                int dSubDir = angleStep64 * radius;
+                float offset = (count - 1) / 2f - i;
+                float dSubDir = angleStep64 * offset;
                 float angleDeg = dSubDir * 360f / 64f;
                 Vector2 dir = Rotate(baseDir, angleDeg);
-                fx.missilePositions[i] = fx.casterPos + dir * Mathf.Max(0f, firstStep);
+                Vector2 startPos = fx.casterPos + dir * Mathf.Max(0f, firstStep);
+                fx.missileOrigins[i] = startPos;
+                fx.missilePositions[i] = startPos;
                 fx.missileTargets[i] = fx.casterPos + dir * distance;
-                radius--;
             }
         }
+
 
         private static Vector2 Rotate(Vector2 v, float degrees)
         {
@@ -633,8 +693,13 @@ namespace VLTK.Sandbox
             fx.missileTargetOffsets = new Vector2[count];
             fx.missileArrived = new bool[count];
             Vector2 baseDir = fx.targetPos - fx.casterPos;
-            float distance = Mathf.Max(1f, baseDir.magnitude);
-            baseDir /= distance;
+            float targetDist = Mathf.Max(1f, baseDir.magnitude);
+            baseDir /= targetDist;
+
+            // PC parity: non-homing/fallback uses full range
+            float distance = fx.missileSpeed * fx.missileDuration;
+            if (distance < targetDist) distance = targetDist;
+
             Vector2 perpDir = new Vector2(-baseDir.y, baseDir.x);
             float halfSpan = count > 1 ? (count - 1) * param64 * 0.5f : 0f;
             for (int i = 0; i < count; i++)
@@ -719,7 +784,9 @@ namespace VLTK.Sandbox
         public Vector2[] missileTargets;
         public Vector2[] missileTargetOffsets;
         public bool[] missileArrived;
+        public float[] missileExplodeStartTime;
         public float arrivalRadius = 1f;
+
         public float rendRadius = 4f;
         public List<Vector2> rendPositions;
         // Multiplier for PC missile/impact/precast SpriteRenderer.localScale.
@@ -766,6 +833,8 @@ namespace VLTK.Sandbox
         public int pcImpactTotalFrames;
         public int pcImpactDirections;
         public int pcImpactIntervalTicks = 1;
+        public int pcMissileMoveKind = 1;
+
 
         // (pcAuraFrameStart/End kept as no-op fields for backward compat with SkillEffectWorldOverlay; not used in default data-driven visuals)
         public int pcAuraFrameStart;
@@ -783,19 +852,22 @@ namespace VLTK.Sandbox
 
         public Vector2 ResolveMissileTarget(int index)
         {
-            bool hasLiveTarget = getCurrentTargetPos != null;
-            Vector2 target = hasLiveTarget ? getCurrentTargetPos() : targetPos;
+            bool isHomingMissile = getCurrentTargetPos != null && pcMissileMoveKind == 5;
+            Vector2 target = isHomingMissile ? getCurrentTargetPos() : targetPos;
 
             if (index >= 0)
             {
-                if (hasLiveTarget && missileTargetOffsets != null && index < missileTargetOffsets.Length)
+                if (isHomingMissile && missileTargetOffsets != null && index < missileTargetOffsets.Length)
                     return target + missileTargetOffsets[index];
 
-                if (!hasLiveTarget && missileTargets != null && index < missileTargets.Length)
+                if (missileTargets != null && index < missileTargets.Length)
                     return missileTargets[index];
             }
 
             return target;
         }
+
     }
 }
+// recompile
+

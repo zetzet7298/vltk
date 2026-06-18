@@ -42,6 +42,8 @@ namespace VLTK.Sandbox
         public int missileSpeed;        // Speed in ticks
         public int missileLifetime;     // Lifetime in ticks
         public bool isStationary;       // MoveKind=0 (no flight, area effect)
+        public int moveKind = 1;
+
 
         // Impact/explosion visual
         public string explodeSprPath;   // Primary explosion SPR from missles1.txt
@@ -218,6 +220,8 @@ namespace VLTK.Sandbox
             // Fill from full missile visual data
             config.missileSpeed = mv.speed;
             config.missileLifetime = mv.lifetime;
+            config.moveKind = mv.moveKind;
+
             // Flight SPR
             var flight = mv.PrimaryFlight;
             if (flight != null && flight.HasSpr)

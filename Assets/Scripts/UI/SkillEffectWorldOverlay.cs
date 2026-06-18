@@ -319,19 +319,43 @@ namespace VLTK.UI
 
                     if (fx.HasPcMissileSprite && v.pcMissiles != null)
                     {
-                        Vector2 liveTarget = fx.getCurrentTargetPos != null ? fx.getCurrentTargetPos() : fx.targetPos;
                         for (int i = 0; i < v.pcMissiles.Count; i++)
                         {
                             var renderer = v.pcMissiles[i];
                             Vector2 mp = fx.missilePositions != null && i < fx.missilePositions.Length ? fx.missilePositions[i] : p;
-                            Vector2 targetForMissile = fx.ResolveMissileTarget(i);
-                            renderer.sprite = SelectPcMissileFrame(fx, mp, targetForMissile);
-                            renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
-                            renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
-                            renderer.color = Color.white;
-                            renderer.enabled = true;
+
+                            bool arrived = fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i];
+                            if (arrived)
+                            {
+                                float explodeTime = fx.missileExplodeStartTime != null && i < fx.missileExplodeStartTime.Length && fx.missileExplodeStartTime[i] >= 0f
+                                    ? fx.elapsed - fx.missileExplodeStartTime[i]
+                                    : 0f;
+
+                                if (explodeTime < fx.impactDuration && fx.HasPcImpactSprite)
+                                {
+                                    renderer.sprite = SelectPcImpactFrame(fx, explodeTime);
+                                    renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
+                                    renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
+                                    renderer.color = Color.white;
+                                    renderer.enabled = true;
+                                }
+                                else
+                                {
+                                    renderer.enabled = false;
+                                }
+                            }
+                            else
+                            {
+                                Vector2 targetForMissile = fx.ResolveMissileTarget(i);
+                                renderer.sprite = SelectPcMissileFrame(fx, mp, targetForMissile);
+                                renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
+                                renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
+                                renderer.color = Color.white;
+                                renderer.enabled = true;
+                            }
                         }
                     }
+
                     else
                     {
                         v.missileDot.transform.position = new Vector3(p.x, p.y, 0f);
@@ -441,14 +465,16 @@ namespace VLTK.UI
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcMissileSpriteKey);
         }
 
-        private Sprite SelectPcImpactFrame(ActiveSkillEffect fx)
+        private Sprite SelectPcImpactFrame(ActiveSkillEffect fx, float timeSinceImpact = -1f)
         {
             var sprites = LoadPcSprites(fx.pcImpactSpriteKey);
             if (sprites == null || sprites.Length == 0) return null;
-            int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
+            float time = timeSinceImpact >= 0f ? timeSinceImpact : (fx.elapsed - fx.phaseStart);
+            int lifeTick = Mathf.Max(0, Mathf.FloorToInt(time * 18f));
             int frameIndex = Mathf.Clamp(lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks), 0, sprites.Length - 1);
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcImpactSpriteKey);
         }
+
 
         private Sprite SelectPcPreCastFrame(ActiveSkillEffect fx)
         {
