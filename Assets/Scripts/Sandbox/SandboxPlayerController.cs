@@ -549,7 +549,7 @@ namespace VLTK.Sandbox
 
         private void OnMountChanged(MountChangeEvent evt)
         {
-            bool mounted = evt.newState == MountState.Mounted;
+            bool mounted = evt.newState == MountState.Mounted || evt.newState == MountState.Mounting;
             if (visual != null)
                 visual.SetMounted(mounted);
             // Horse body now renders as layered HH/HB/HT parts inside the player visual

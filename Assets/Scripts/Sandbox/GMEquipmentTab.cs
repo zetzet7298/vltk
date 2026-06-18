@@ -529,7 +529,7 @@ namespace VLTK.Sandbox
                 if (slot == EquipSlot.Mount)
                 {
                     var pc = mgr.PlayerController;
-                    if (pc != null && pc.visual is MalePlayerVisual mpv && !mpv.IsMounted)
+                    if (pc != null && pc.visual != null && !pc.visual.IsMounted)
                         pc.ToggleMount();
                 }
             }
@@ -550,7 +550,7 @@ namespace VLTK.Sandbox
 
             // Toggle mount OFF if currently mounted
             var pc = mgr.PlayerController;
-            if (pc != null && pc.visual is MalePlayerVisual mpv && mpv.IsMounted)
+            if (pc != null && pc.visual != null && pc.visual.IsMounted)
                 pc.ToggleMount();
 
             _statusText.text = "Đã xuống ngựa.";

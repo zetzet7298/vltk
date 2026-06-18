@@ -193,16 +193,51 @@ namespace VLTK.Sandbox
 
         // ── Defaults ───────────────────────────────────────────────────────
 
-        private static int DefaultVariant(PlayerEquipSlot slot) => slot switch
+        private int DefaultVariant(PlayerEquipSlot slot)
         {
-            PlayerEquipSlot.Body     => 19,   // Default armor variant (same as MalePlayerSpriteCatalog.ArmorVariant)
-            PlayerEquipSlot.Head     => 19,   // Default head variant
-            PlayerEquipSlot.Hair     => 19,   // Default hair variant
-            PlayerEquipSlot.Weapon   => 0,    // Empty hand
-            PlayerEquipSlot.Offhand  => 0,    // No offhand
-            PlayerEquipSlot.Mount    => 0,    // No mount
-            _ => 0,
-        };
+            if (!IsFemale)
+            {
+                switch (slot)
+                {
+                    case PlayerEquipSlot.Body:
+                        if (SandboxManager.Instance != null && SandboxManager.Instance.ItemDb != null)
+                        {
+                            var item = SandboxManager.Instance.ItemDb.Resolve(100061);
+                            if (item != null)
+                            {
+                                return PlayerAppearanceMapper.MapBody(false, item.resId);
+                            }
+                        }
+                        return 1;
+                    case PlayerEquipSlot.Head:
+                        if (SandboxManager.Instance != null && SandboxManager.Instance.ItemDb != null)
+                        {
+                            var item = SandboxManager.Instance.ItemDb.Resolve(200061);
+                            if (item != null)
+                            {
+                                return PlayerAppearanceMapper.MapHead(false, item.resId);
+                            }
+                        }
+                        return 28;
+                    case PlayerEquipSlot.Hair:
+                        return 19;
+                    default:
+                        return 0;
+                }
+            }
+            else
+            {
+                switch (slot)
+                {
+                    case PlayerEquipSlot.Body:
+                    case PlayerEquipSlot.Head:
+                    case PlayerEquipSlot.Hair:
+                        return 50;
+                    default:
+                        return 0;
+                }
+            }
+        }
 
         // ── PC Source Evidence ─────────────────────────────────────────────
 

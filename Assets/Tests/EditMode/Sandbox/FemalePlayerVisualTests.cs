@@ -22,6 +22,13 @@ namespace VLTK.Tests.Sandbox
     public class FemalePlayerVisualTests
     {
         private GameObject _go;
+        private string _stagingRoot;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _stagingRoot = MalePlayerSprStaging.StageFemaleForTests();
+        }
 
         [TearDown]
         public void TearDown()
@@ -29,6 +36,16 @@ namespace VLTK.Tests.Sandbox
             if (_go != null)
                 Object.DestroyImmediate(_go);
             _go = null;
+            MalePlayerSprStaging.CleanupTempDir(_stagingRoot);
+            _stagingRoot = null;
+        }
+
+        private FemalePlayerVisual CreateVisual(string name)
+        {
+            _go = new GameObject(name);
+            var visual = _go.AddComponent<FemalePlayerVisual>();
+            visual.spritesRootOverride = _stagingRoot;
+            return visual;
         }
 
         [Test]
@@ -126,8 +143,7 @@ namespace VLTK.Tests.Sandbox
         [TestCase(PlayerVisualAction.Attack)]
         public void Visual_LoadsEmptyHandParts_FromStagedSprFiles(PlayerVisualAction action)
         {
-            _go = new GameObject($"Female{action}Test");
-            var visual = _go.AddComponent<FemalePlayerVisual>();
+            var visual = CreateVisual($"Female{action}Test");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.EmptyHand);
             visual.SetAction(action);
@@ -144,8 +160,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_LoadsMoveParts_AndSwitchesDirection()
         {
-            _go = new GameObject("FemaleMoveTest");
-            var visual = _go.AddComponent<FemalePlayerVisual>();
+            var visual = CreateVisual("FemaleMoveTest");
             visual.playAutomatically = false;
             visual.SetMoveInput(Vector2.right);
 
@@ -161,8 +176,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_ZeroMoveInput_StaysIdle()
         {
-            _go = new GameObject("FemaleIdleTest");
-            var visual = _go.AddComponent<FemalePlayerVisual>();
+            var visual = CreateVisual("FemaleIdleTest");
             visual.playAutomatically = false;
             visual.SetMoveInput(Vector2.zero);
 
@@ -219,8 +233,7 @@ namespace VLTK.Tests.Sandbox
         [TestCase(PlayerVisualAction.Attack)]
         public void Visual_LoadsShortWeaponParts_FromStagedSprFiles(PlayerVisualAction action)
         {
-            _go = new GameObject($"FemaleShortWeapon{action}Test");
-            var visual = _go.AddComponent<FemalePlayerVisual>();
+            var visual = CreateVisual($"FemaleShortWeapon{action}Test");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.ShortWeapon);
             visual.SetAction(action);
@@ -236,8 +249,7 @@ namespace VLTK.Tests.Sandbox
         [TestCase(PlayerVisualAction.Attack)]
         public void Visual_LoadsLongWeaponParts_FromStagedSprFiles(PlayerVisualAction action)
         {
-            _go = new GameObject($"FemaleLongWeapon{action}Test");
-            var visual = _go.AddComponent<FemalePlayerVisual>();
+            var visual = CreateVisual($"FemaleLongWeapon{action}Test");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.LongWeapon);
             visual.SetAction(action);
@@ -253,8 +265,7 @@ namespace VLTK.Tests.Sandbox
         [TestCase(PlayerVisualAction.Attack)]
         public void Visual_LoadsDualWeaponParts_FromStagedSprFiles(PlayerVisualAction action)
         {
-            _go = new GameObject($"FemaleDualWeapon{action}Test");
-            var visual = _go.AddComponent<FemalePlayerVisual>();
+            var visual = CreateVisual($"FemaleDualWeapon{action}Test");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.DualWeapon);
             visual.SetAction(action);
@@ -267,8 +278,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Visual_WeaponSwitch_ReloadsAllParts()
         {
-            _go = new GameObject("FemaleWeaponSwitchTest");
-            var visual = _go.AddComponent<FemalePlayerVisual>();
+            var visual = CreateVisual("FemaleWeaponSwitchTest");
             visual.playAutomatically = false;
             visual.SetWeapon(PcWeaponType.EmptyHand);
             visual.SetAction(PlayerVisualAction.Idle);

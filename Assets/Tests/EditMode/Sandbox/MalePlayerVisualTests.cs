@@ -118,7 +118,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Catalog_RideMove_UsesHR01GallopForAllParts()
         {
-            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.RideMove, PcWeaponType.EmptyHand).ToList();
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.RideMove, PcWeaponType.EmptyHand, 50, 50, MalePlayerSpriteCatalog.EmptyWeaponVariant, 50).ToList();
             Assert.AreEqual(9, parts.Count);
             // Mounted move = RideRun = HR01 (gallop), 8-direction.
             Assert.IsTrue(parts.All(p => p.sourcePath.Contains("HR01")),

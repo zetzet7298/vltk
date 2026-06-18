@@ -132,6 +132,11 @@ namespace VLTK.Tests.Sandbox
             string env = Environment.GetEnvironmentVariable(DefaultSourceRootEnvVar);
             if (!string.IsNullOrEmpty(env))
                 return env;
+
+            string localRuntime = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "SpritesRuntime"));
+            if (Directory.Exists(localRuntime))
+                return localRuntime;
+
             return Path.Combine(Application.streamingAssetsPath, "Sprites");
         }
 
@@ -218,6 +223,58 @@ namespace VLTK.Tests.Sandbox
                 foreach (var spec in parts)
                     StageOne(sourceRoot, destRoot, spec.sourcePath, staged);
             }
+        }
+
+        /// <summary>
+        /// Stage every female player weapon/action combination into a fresh temp directory.
+        /// </summary>
+        public static string StageFemaleForTests(
+            string sourceRoot = null,
+            string tempRoot = null,
+            List<StagedFixture> staged = null)
+        {
+            string resolvedSource = ResolveSourceRoot(sourceRoot);
+            string dest = EnsureTempDir(tempRoot);
+
+            PcWeaponType[] weapons =
+            {
+                PcWeaponType.EmptyHand,
+                PcWeaponType.ShortWeapon,
+                PcWeaponType.LongWeapon,
+                PcWeaponType.DualWeapon,
+            };
+            PlayerVisualAction[] actions =
+            {
+                PlayerVisualAction.Idle,
+                PlayerVisualAction.Move,
+                PlayerVisualAction.Magic,
+                PlayerVisualAction.Attack,
+            };
+            foreach (var weapon in weapons)
+            {
+                foreach (var action in actions)
+                {
+                    var parts = FemalePlayerSpriteCatalog.BuildParts(action, weapon);
+                    foreach (var spec in parts)
+                        StageOne(resolvedSource, dest, spec.sourcePath, staged);
+                }
+            }
+
+            // Also stage mounted actions for female
+            string[] suffixes = { "RD01", "HR01" };
+            foreach (var suffix in suffixes)
+            {
+                var parts = FemalePlayerSpriteCatalog.BuildMountedParts(
+                    bodyVariant: 50,
+                    headVariant: 50,
+                    hairVariant: 50,
+                    horseVariant: 16,
+                    suffix: suffix);
+                foreach (var spec in parts)
+                    StageOne(resolvedSource, dest, spec.sourcePath, staged);
+            }
+
+            return dest;
         }
 
         /// <summary>

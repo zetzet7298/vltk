@@ -78,9 +78,9 @@ namespace VLTK.Sandbox
         public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon, int bodyVariant = ArmorVariant, int headVariant = ArmorVariant, int weaponVariant = EmptyWeaponVariant, int hairVariant = ArmorVariant, int horseVariant = MountHorseVariant)
         {
             if (action == PlayerVisualAction.Ride)
-                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MalePlayerSpriteCatalog.MountIdleSuffix);
+                return BuildMountedParts(50, 50, 50, horseVariant, MalePlayerSpriteCatalog.MountIdleSuffix);
             if (action == PlayerVisualAction.RideMove)
-                return BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, MalePlayerSpriteCatalog.MountMoveSuffix);
+                return BuildMountedParts(50, 50, 50, horseVariant, MalePlayerSpriteCatalog.MountMoveSuffix);
 
             int wIdx = (int)weapon;
             string suffix = ActionSuffix[wIdx, (int)action];

@@ -149,9 +149,9 @@ namespace VLTK.Sandbox
         {
             // Mounted actions use mount outfit (050/072) by default.
             // When caller passes the non-mounted default, auto-upgrade to MountArmorVariant.
-            int mountBody = (bodyVariant == ArmorVariant) ? MountArmorVariant : bodyVariant;
-            int mountHead = (headVariant == ArmorVariant) ? MountArmorVariant : headVariant;
-            int mountHair = (hairVariant == ArmorVariant) ? MountArmorVariant : hairVariant;
+            int mountBody = (bodyVariant == 19 || bodyVariant == 50 || bodyVariant == 72) ? bodyVariant : MountArmorVariant;
+            int mountHead = (headVariant == 19 || headVariant == 50 || headVariant == 72) ? headVariant : MountArmorVariant;
+            int mountHair = (hairVariant == 19 || hairVariant == 50 || hairVariant == 72) ? hairVariant : MountArmorVariant;
 
             if (action == PlayerVisualAction.Ride)
                 return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountIdleSuffix);

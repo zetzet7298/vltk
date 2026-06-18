@@ -101,7 +101,7 @@ namespace VLTK.Sandbox
         public const int GroundSortingOrder = -1000;  // terrain, always beneath objects
         public const int CoverSortingOrder = 0;       // flat ground decals (grass/road), Y-sorted
         public const int BuiltinSortingOrder = 1000;  // base for structures/trees (above cover)
-        public const int PlayerSortingOrder = 5000;   // actors above static map art
+        public const int PlayerSortingOrder = 32200;   // actors above static map art
 
         private static string ResolveRegionFolder(string regionFolder)
         {
