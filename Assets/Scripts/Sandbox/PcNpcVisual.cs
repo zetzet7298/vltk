@@ -336,7 +336,7 @@ namespace VLTK.Sandbox
                 // referencePixel is in raw PC pixels; normalize offsetY through the same divisor
                 // so the resulting world-space offset lands near the sprite's own foot
                 // regardless of how big frame.offsetY happens to be in PC internal coords.
-                clip.offsets[i] = new Vector2((frame.offsetX - referencePixel.x) / pixelsPerUnit, (referencePixel.y - frame.offsetY / 64f) / pixelsPerUnit);
+                clip.offsets[i] = new Vector2((frame.offsetX - referencePixel.x) / pixelsPerUnit, (referencePixel.y - frame.offsetY) / pixelsPerUnit);
             }
 
             ClipCache[key] = clip;

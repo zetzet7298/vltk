@@ -122,6 +122,39 @@ namespace VLTK.Sprites
                     };
                 }
 
+                // Check if this is a size table (per-frame compressed or raw SPR)
+                bool isSizeTable = false;
+                if (header.frames > 0)
+                {
+                    if (result.offsets[0].offset != 0)
+                    {
+                        isSizeTable = true;
+                    }
+                    else
+                    {
+                        for (int i = 1; i < header.frames; i++)
+                        {
+                            if (result.offsets[i].offset < result.offsets[i - 1].offset)
+                            {
+                                isSizeTable = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (isSizeTable)
+                {
+                    uint currentOffset = 0;
+                    for (int i = 0; i < header.frames; i++)
+                    {
+                        uint size = result.offsets[i].offset;
+                        result.offsets[i].offset = currentOffset;
+                        result.offsets[i].length = size;
+                        currentOffset += size;
+                    }
+                }
+
                 // Decode each frame
                 result.frames = new SprFrame[header.frames];
                 for (int i = 0; i < header.frames; i++)
@@ -177,14 +210,31 @@ namespace VLTK.Sprites
             if (blob == null || blob.Length < 8)
                 return frame;
 
-            frame.width = (ushort)(blob[0] | (blob[1] << 8));
-            frame.height = (ushort)(blob[2] | (blob[3] << 8));
+            int startPos = 0;
+            ushort w = (ushort)(blob[0] | (blob[1] << 8));
+            ushort h = (ushort)(blob[2] | (blob[3] << 8));
+
+            // Support 1-byte shift for per-frame raw/compressed SPRs
+            if ((w == 0 || w > 2048 || h == 0 || h > 2048) && blob.Length > 8)
+            {
+                ushort wShift = (ushort)(blob[1] | (blob[2] << 8));
+                ushort hShift = (ushort)(blob[3] | (blob[4] << 8));
+                if (wShift > 0 && wShift <= 2048 && hShift > 0 && hShift <= 2048)
+                {
+                    startPos = 1;
+                    w = wShift;
+                    h = hShift;
+                }
+            }
+
+            frame.width = w;
+            frame.height = h;
 
             if (frame.width == 0 || frame.height == 0)
                 return frame;
 
-            frame.offsetX = (short)(blob[4] | (blob[5] << 8));
-            frame.offsetY = (short)(blob[6] | (blob[7] << 8));
+            frame.offsetX = (short)(blob[startPos + 4] | (blob[startPos + 5] << 8));
+            frame.offsetY = (short)(blob[startPos + 6] | (blob[startPos + 7] << 8));
 
             // fwidth and fheight are ushort (max 65535 each) — multiplying as int can overflow.
             // Skip pathological frames (>4M pixels) instead of crashing the whole decode.
@@ -197,11 +247,11 @@ namespace VLTK.Sprites
             frame.rgbaPixels = new Color32[(int)pixelCount];
 
             // Decode RLE-compressed rows
-            int srcPos = 8;
+            int srcPos = startPos + 8;
             int totalPixels = frame.width * frame.height;
 
-            // Bottom-up row order (matching PC source)
-            for (int row = frame.height - 1; row >= 0; row--)
+            // Bottom-up row order (matching PC source payload ordering decoded to Unity bottom-up SetPixels32 format)
+            for (int row = 0; row < frame.height; row++)
             {
                 int rowBase = row * frame.width;
                 int col = 0;

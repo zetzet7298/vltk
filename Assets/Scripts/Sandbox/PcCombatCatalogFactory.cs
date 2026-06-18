@@ -252,7 +252,7 @@ namespace VLTK.Sandbox
             //     MoveKind=0 (stationary area effect), AnimFile=\spr\skill\gb\龙战于野.spr, 15 frames
             //     Sound=\sound\skill\sound_k044.wav, IsRangeDmg=0, DmgRange=3, AutoExplode=1
             //   PC gaibang.lua unlocks 358 at level 20: [3]={{1,358},{20,358}}
-            DamageSkillNew(358, "Kháng Long Hữu Hối ", "Kháng Long Hữu Hối (player)", 50, 20, 570, 167, SkillMissileForm.Fan, 1, false, false, 11,
+            DamageSkillNew(358, "Kháng Long Hữu Hối ", "Kháng Long Hữu Hối (player)", 50, 20, 570, 48, SkillMissileForm.Fan, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 20, ""), (20, 120, "")),
                 fire: (lv) => (Link(lv, (1, 130, ""), (20, 850, "")), 0, Link(lv, (1, 200, ""), (20, 1000, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 30, "")), 0, 0),

@@ -1,6 +1,6 @@
 # Agent Instructions
 
-## Research trước khi làm
+## Game hiện tại đang port từ game PC /var/www/jx-source vì thế nên trong quá trình port thì phải đọc hiểu code bên PC
 
 ## Tools RULES:
 
