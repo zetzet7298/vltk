@@ -64,6 +64,7 @@ namespace VLTK.UI
         private bool _pickerPointerDown;
         private SkillCatalog _catalog;
         private PlayerProgressionState _progression;
+        private Coroutine _longPressCoroutine;
 
         private int _lockedTargetId = -1;
         private string _lockedTargetName = string.Empty;
@@ -444,7 +445,11 @@ namespace VLTK.UI
             else
                 _skillSlots[slot]?.CapturePointer(pointerId);
 
-            StartCoroutine(OpenPickerAfterLongPress(slot, pointerId));
+            if (_longPressCoroutine != null)
+            {
+                StopCoroutine(_longPressCoroutine);
+            }
+            _longPressCoroutine = StartCoroutine(OpenPickerAfterLongPress(slot, pointerId));
         }
 
         private IEnumerator OpenPickerAfterLongPress(int slot, int pointerId)
@@ -455,12 +460,14 @@ namespace VLTK.UI
             if (!_slotPointerDown || _aimingDrag || _pressedSlot != slot || _pressedPointerId != pointerId)
             {
                 SubsystemLog.Info("CombatTouch", "OpenPickerAfterLongPress condition failed, yield break");
+                _longPressCoroutine = null;
                 yield break;
             }
             _longPressOpened = true;
             ReleasePressedSlotCapture(pointerId);
             SubsystemLog.Info("CombatTouch", $"OpenPickerAfterLongPress opening skill picker for slot={slot}");
             OpenSkillPicker(slot == PrimaryAttackPseudoSlot ? 0 : slot);
+            _longPressCoroutine = null;
         }
 
         private void OnSlotMove(PointerMoveEvent evt)
@@ -493,6 +500,12 @@ namespace VLTK.UI
             _slotPointerDown = false;
             _pressedSlot = -1;
             _pressedPointerId = -1;
+
+            if (_longPressCoroutine != null)
+            {
+                StopCoroutine(_longPressCoroutine);
+                _longPressCoroutine = null;
+            }
 
             if (_aimingDrag && slot != -1)
             {
@@ -560,6 +573,11 @@ namespace VLTK.UI
             _longPressOpened = false;
             _aimingDrag = false;
             HideCancelCastZone();
+            if (_longPressCoroutine != null)
+            {
+                StopCoroutine(_longPressCoroutine);
+                _longPressCoroutine = null;
+            }
         }
 
         private void ShowCancelCastZone()
