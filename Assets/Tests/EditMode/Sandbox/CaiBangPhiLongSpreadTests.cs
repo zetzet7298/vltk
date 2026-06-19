@@ -5,11 +5,13 @@ using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
-    // [CaiBang-PhiLongSpread 2026-06-19] Phase B.1: PC gaibang.lua::skill_param1_v drives Phi Long spread.
-    // PC source: gaibang.lua feilong_zaitian skill_misslenum_v L1=1, L11=1, L12=2, L15=2, L16=3, L20=4.
-    //   skill_param1_v L1=0, L11=0, L11=32, L20=32 — straight-line at low levels, spread 32 at L11+.
+    // [CaiBang-PhiLongSpread 2026-06-19] Phase B.1: PC gaibang.lua::feilong_zaitian drive Phi Long spread.
+    // PC source (mobile gaibang.lua): skill_misslenum_v L1=1, L11=1, L12=2, L15=2, L16=3, L20=4.
+    //   skill_misslesform_v L1=1, L11=1, L11=0, L20=0 — Single form throughout.
+    //   Mobile gaibang.lua does NOT have skill_param1_v for 357 (only for 128 kanglong_youhui).
+    //   Spread step derived from skill_misslenum_v count → SetupPcCircleOutwardMissiles fallback.
     // Trước fix: SetupPcPhiLongSpread luôn applied với stepWu=32 — sai straight-line L1-L10.
-    // Sau fix: rawParam == 0 → single straight missile, rawParam > 0 → spread.
+    // Sau fix: luaCount=1 → straight-line; luaCount>1 → spread via SetupPcCircleOutwardMissiles.
     public class CaiBangPhiLongSpreadTests
     {
         private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
@@ -28,35 +30,39 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void PhiLong_L12Plus_HasSpreadStep32()
+        public void PhiLong_L12_MissileCountFromLua()
         {
-            // L12+: skill_param1_v = 32 → spread with 32 world units per step.
-            // (Verified via runtime: PcCaiBangLuaLevelService.GetSingleValue(357, 12, "skill_param1_v", 1) == 32)
-            // L11 ambiguous (skill_param1_v has both (11,0) and (11,32) — PC Link returns first match = 0).
+            // L12+: skill_misslenum_v = 2 → spread (mobile gaibang.lua).
+            // Phi Long không có skill_param1_v trong mobile gaibang.lua — spread step được derive
+            // từ SetupPcCircleOutwardMissiles (per-missile angle step).
             if (!PcCaiBangLuaLevelService.Applies(357))
             {
                 Assert.Ignore("gaibang.lua not loaded — skipping Phi Long Lua parity check");
                 return;
             }
-            int paramL12 = PcCaiBangLuaLevelService.GetSingleValue(357, 12, "skill_param1_v", 1);
-            int paramL20 = PcCaiBangLuaLevelService.GetSingleValue(357, 20, "skill_param1_v", 1);
-            Assert.AreEqual(32, paramL12, "PC feilong_zaitian skill_param1_v L12=32");
-            Assert.AreEqual(32, paramL20, "PC feilong_zaitian skill_param1_v L20=32");
+            int countL11 = PcCaiBangLuaLevelService.GetMissileCount(357, 11);
+            int countL12 = PcCaiBangLuaLevelService.GetMissileCount(357, 12);
+            int countL20 = PcCaiBangLuaLevelService.GetMissileCount(357, 20);
+            Assert.AreEqual(1, countL11, "357 skill_misslenum_v L11=1");
+            Assert.AreEqual(2, countL12, "357 skill_misslenum_v L12=2 (multi-missile spread trigger)");
+            Assert.AreEqual(4, countL20, "357 skill_misslenum_v L20=4");
         }
 
         [Test]
-        public void PhiLong_LowLevel_StraightLine_ParamZero()
+        public void PhiLong_NoSkillParam1V_MobileLuaParity()
         {
-            // L1-L11: skill_param1_v = 0 → straight-line (no spread).
+            // Mobile gaibang.lua feilong_zaitian (357) KHÔNG có skill_param1_v (chỉ 128 kanglong_youhui mới có).
+            // Verify that GetSingleValue(357, lv, "skill_param1_v", 1) trả về 0 (no attribute) → rawParam=0
+            // → SetupPcPhiLongSpread sẽ dùng rawParam=0 path (straight-line / per-missile position).
             if (!PcCaiBangLuaLevelService.Applies(357))
             {
                 Assert.Ignore("gaibang.lua not loaded");
                 return;
             }
             int paramL1 = PcCaiBangLuaLevelService.GetSingleValue(357, 1, "skill_param1_v", 1);
-            int paramL11 = PcCaiBangLuaLevelService.GetSingleValue(357, 11, "skill_param1_v", 1);
-            Assert.AreEqual(0, paramL1, "PC feilong_zaitian skill_param1_v L1=0 (straight)");
-            Assert.AreEqual(0, paramL11, "PC feilong_zaitian skill_param1_v L11=0 (straight, ambiguous (11,0)/(11,32) pair)");
+            int paramL20 = PcCaiBangLuaLevelService.GetSingleValue(357, 20, "skill_param1_v", 1);
+            Assert.AreEqual(0, paramL1, "357 mobile Lua no skill_param1_v → 0");
+            Assert.AreEqual(0, paramL20, "357 mobile Lua no skill_param1_v → 0 (drives straight-line at runtime)");
         }
 
         [Test]
