@@ -124,8 +124,8 @@ namespace VLTK.Sandbox
             //   Font: NotoSans-Bold (sắc nét, đậm — fallback LegacyRuntime).
             //   Outline: 4 TextMesh shadow copy offset nhỏ.
             _color = isCrit ? new Color(1f, 0.85f, 0.10f, 1f) : new Color(1f, 0.24f, 0.10f, 1f);
-            int fontSize = isCrit ? 100 : 80;
-            float charSize = isCrit ? 0.6f : 0.5f;
+            int fontSize = isCrit ? 160 : 80;
+            float charSize = isCrit ? 1.0f : 0.5f;
 
             _text = gameObject.AddComponent<TextMesh>();
             _text.text = damage.ToString();

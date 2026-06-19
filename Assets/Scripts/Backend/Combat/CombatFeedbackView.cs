@@ -263,7 +263,7 @@ namespace VLTK.Backend.Combat
                 var tm = go.GetComponent<TextMesh>();
                 tm.text = label;
                 tm.color = color;
-                tm.fontSize = isCrit ? Mathf.RoundToInt(worldFontSize * 1.25f) : worldFontSize;
+                tm.fontSize = isCrit ? Mathf.RoundToInt(worldFontSize * 1.80f) : worldFontSize;
                 tm.anchor = TextAnchor.MiddleCenter;
                 tm.alignment = TextAlignment.Center;
                 tm.characterSize = worldCharacterSize;
@@ -299,7 +299,7 @@ namespace VLTK.Backend.Combat
         private void SpawnOutlineShadows(Transform parent, string label, float charSize, bool isCrit)
         {
             float offset = charSize * 0.12f;  // ~0.17 world unit, đủ rõ mà không che main text.
-            int baseFontSize = isCrit ? Mathf.RoundToInt(worldFontSize * 1.25f) : worldFontSize;
+            int baseFontSize = isCrit ? Mathf.RoundToInt(worldFontSize * 1.80f) : worldFontSize;
             int baseSorting = MapRendererSortingBelow(parent);
 
             for (int i = 0; i < 4; i++)
