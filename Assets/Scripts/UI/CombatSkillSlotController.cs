@@ -956,8 +956,12 @@ namespace VLTK.UI
         private static float PcCastAnimationDurationSeconds(SkillDefinition skill)
         {
             if (skill == null) return 0f;
-            if (skill.charAnimId == 14) return 0f; // cdo_none
-            return 20f / 18f; // PC default m_CastFrame=20 ticks, ~18 ticks/sec.
+            if (skill.charAnimId == 14) return 0f; // cdo_none stance/passive (no cast anim)
+            // PC parity [2026-06-19]: PC WaitTime (Skills.txt col 25) = ticks, 16 ticks/sec.
+            // Skill-specific WaitTime drives cast anim duration. Fallback 20f/16f if WaitTime=0
+            // (default m_CastFrame=20 ticks cho damage skills không khai báo WaitTime).
+            if (skill.waitTime > 0) return skill.waitTime / 16f;
+            return 20f / 16f;
         }
 
         private IEnumerator ApplyLiveEnemyHpAtImpact(CombatTargetInfo target, int hp, int skillId, int skillLevel, CombatCastReport report, ActiveSkillEffect fx)

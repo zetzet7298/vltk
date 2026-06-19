@@ -343,8 +343,11 @@ namespace VLTK.Sandbox
             };
 
             // Phase durations based on PC skill data
-            // PreCast: ensure visible (min 0.25s); PC timePerCast is in ticks (~55ms each)
-            effect.preCastDuration = Mathf.Max(0.25f, skill.timePerCast > 0 ? skill.timePerCast * 0.055f : 0.25f);
+            // PC parity [2026-06-19]: PreCast = PC WaitTime (Skills.txt col 25) / 16f seconds.
+            //   Trước fix: timePerCast * 0.055f (~PC ticks * 55ms — sai field).
+            //   PC WaitTime là cast anim duration; timePerCast là cooldown. Khác nhau.
+            //   Min 0.25s để giữ visual luôn thấy được trên mobile.
+            effect.preCastDuration = Mathf.Max(0.25f, skill.waitTime > 0 ? skill.waitTime / 16f : 0.25f);
             effect.missileSpeed = 324f; // PC missile 48: Speed=18 game units/tick × 18 ticks/sec
             effect.missileForm = skill.missileForm;
 

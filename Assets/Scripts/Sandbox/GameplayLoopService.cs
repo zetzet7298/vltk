@@ -58,6 +58,13 @@ namespace VLTK.Sandbox
         public int damage;
         public DamageType type;
         public int skillId;
+        // Vị trí world của target (để layer visual spawn số damage đỏ tại mục tiêu,
+        // giống PC client hiển thị số damage nổi lên đầu NPC khi bị hit).
+        public Vector2 targetPosition;
+        // True nếu chí mạng (PC bIsDS deadly strike) → highlight vàng.
+        public bool isCritical;
+        // True nếu đánh trượt (PC CheckHitTarget miss) → hiện chữ "Trượt".
+        public bool isMiss;
     }
 
     public struct GameplayDeathEvent
@@ -143,6 +150,9 @@ namespace VLTK.Sandbox
             int initialSilver = 1000)
         {
             Combat = new CombatRuntimeService(catalog);
+            // [CaiBang-DogArray 2026-06-19] PC 打狗阵 stance ally chain: cung cấp AllyFinder cho CombatRuntimeService
+            // để tìm allies trong radius. PC 打狗阵 AttackRadius=180 (PC subworld pixels ~ 1:1 world units).
+            Combat.AllyFinder = FindAlliesInRange;
             LevelService = new PlayerLevelService();
             DeathFlow = new DeathFlowService(LevelService);
             PkRules = new PkCombatService(playerFactionId, playerBangId);
@@ -232,6 +242,31 @@ namespace VLTK.Sandbox
             _enemies.RemoveAll(e => e.actorId == actorId);
         }
 
+        // [CaiBang-DogArray 2026-06-19] PC 打狗阵 stance ally chain.
+        // Trả về actors có cùng factionId (đồng đội/team) trong radius, ngoại trừ caster.
+        // Mobile MVP: chỉ có _player là đồng đội của player; party members chưa có nên trả empty.
+        // Khi party system thêm vào, filter này sẽ tự match party members cùng faction.
+        public System.Collections.Generic.IEnumerable<CombatActorState> FindAlliesInRange(Vector2 center, float radiusWu)
+        {
+            var result = new System.Collections.Generic.List<CombatActorState>();
+            int casterId = _player?.actorId ?? -1;
+            foreach (var actor in _actors.Values)
+            {
+                if (actor?.combat == null) continue;
+                if (actor.actorId == casterId) continue;
+                if (actor.combat.currentLife <= 0) continue;
+                // PC: ally cùng party hoặc cùng faction (non-hostile). MVP chỉ check faction match.
+                if (_player != null && actor.combat.faction != _player.combat.faction) continue;
+                float dx = actor.combat.position.x - center.x;
+                float dy = actor.combat.position.y - center.y;
+                if (dx * dx + dy * dy <= radiusWu * radiusWu)
+                {
+                    result.Add(actor.combat);
+                }
+            }
+            return result;
+        }
+
         // ── Core Gameplay Actions ──────────────────────────────────────────
 
         /// <summary>Player dùng skill tấn công target.</summary>
@@ -276,6 +311,9 @@ namespace VLTK.Sandbox
                 damage = damage,
                 type = DamageType.Physics,
                 skillId = 0,
+                targetPosition = _player.worldPos,
+                isCritical = false,
+                isMiss = false,
             });
 
             if (_player.combat.currentLife <= 0)
@@ -430,13 +468,25 @@ namespace VLTK.Sandbox
             foreach (var r in results)
                 totalDamage += r.finalDamage;
 
+            // [DMG-POPUP] Xác định crit/miss từ damage results (PC: bIsDS chí mạng / CheckHitTarget miss).
+            // PC source: KNpc.cpp:2867 CheckHitTarget → miss; bIsDS → deadly strike crit.
+            bool anyCrit = false;
+            bool anyMiss = true;
+            foreach (var r in results)
+            {
+                if (r.hit) anyMiss = false;
+                if (r.isCrit) anyCrit = true;
+            }
             OnDamage?.Invoke(new GameplayDamageEvent
             {
                 attackerId = attacker.actorId,
                 targetId = target.actorId,
                 damage = totalDamage,
-                type = DamageType.Physics,
+                type = results.Count > 0 ? results[0].type : DamageType.Physics,
                 skillId = skillId,
+                targetPosition = target.worldPos,
+                isCritical = anyCrit,
+                isMiss = totalDamage <= 0 || anyMiss,
             });
 
             // Check death

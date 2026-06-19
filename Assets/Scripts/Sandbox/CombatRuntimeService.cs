@@ -62,6 +62,11 @@ namespace VLTK.Sandbox
         public int CurrentTime { get; private set; }
         public float RangeWorldPerPcUnit { get; set; } = 1f;
 
+        // PC 打狗阵 stance ally chain: truyền callback từ GameplayLoopService để enumerate
+        // ally actors trong radius. Cho phép CombatRuntimeService không phụ thuộc GameplayLoopService.
+        // Delegate signature: nhận (center, radiusWu) → trả về IEnumerable<CombatActorState> trong range.
+        public System.Func<Vector2, float, System.Collections.Generic.IEnumerable<CombatActorState>> AllyFinder;
+
         public CombatRuntimeService(SkillCatalog catalog, ProjectileService projectiles = null, DamageFormulaService damage = null)
         {
             _catalog = catalog ?? throw new ArgumentNullException(nameof(catalog));
@@ -190,6 +195,16 @@ namespace VLTK.Sandbox
             ApplyDamage(caster, target, levelData, report);
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
+            // [CaiBang-DogArray 2026-06-19] PC 打狗阵 (124) stance: buff self + allies trong radius 180.
+            // PC 打狗阵.lua adddefense_v(level) = 30+10*level (đã apply cho caster qua ApplyStates ở trên).
+            // PC SkillStyle=2 (InitiativeNpcState), IsAura=1, TargetAlly=1, AttackRadius=180, WaitTime=0.
+            // Sau fix: tìm allies trong radius 180 qua AllyFinder callback → apply state 44 cho mỗi ally.
+            // Nếu AllyFinder null (test/standalone) → chỉ buff self, không crash.
+            if (skillId == 124 && skill.targetAlly && skill.stateSpecialId == 44 && skill.isAura)
+            {
+                PropagateAllyAura(caster, skill, levelData, report);
+            }
+
             // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.1 G2:
             // PC Phi Long 357 → Long Chiến Ư Dật 389 (sub-skill slash) fires
             // ở MỌI level khi missile collide (skill_collideevent[3]={{1,0},{10,0},{10,1},{20,1}}}).
@@ -219,6 +234,17 @@ namespace VLTK.Sandbox
                 ApplyStates(caster, caster, CombatRelation.Self, startLevelData, report);
                 SpawnProjectiles(startSubSkill, caster, castPoint, grid, report, startLevel);
             }
+
+            // [CaiBang-AddSkillDamage 2026-06-19] Port PC gaibang.lua::addskilldamageN chain.
+            // PC chain map (skillId → chain targetId, L20 chance %):
+            //   119 (yanmen_tuobo, Diên Môn Thác Bát) → 359 (Bổng Đả Ác Cẩu), 40%
+            //   122 (jianren_shenshou, Kiến Nhân Thần Thủ) → 357 (Phi Long), 50%
+            //   125 (tianxia_wugou, Thiên Hạ Vô Cẩu) → 1074 (Phi Long Tại Thiên tier 2), 25%
+            //   128 (kanglong_youhui, Kháng Long Hữu Hối) → 357 (Phi Long), 55%
+            // Trước fix: chain bị bỏ qua → user nói "skill gây damage thấp, thiếu xuyên thấu".
+            // Sau fix: roll random với chance L20 từ PcCaiBangLuaLevelService.GetSingleValue(slot[3]).
+            //   Nếu hit, apply damage + spawn missile của chain targetId.
+            TryFireAddSkillDamageChain(caster, target, skill, skillLevel, castPoint, grid, report);
 
             _nextCastTime[(caster.actorId, skillId)] = CurrentTime + Mathf.Max(0, skill.timePerCast);
             report.success = true;
@@ -573,6 +599,73 @@ namespace VLTK.Sandbox
                 }
                 if (result.projectile != null)
                     report.projectiles.Add(result.projectile);
+            }
+        }
+
+        // PC gaibang.lua::addskilldamageN chain. Sau khi parent skill cast thành công,
+        // roll random với chance L20 từ slot[3]. Nếu hit, fire chain targetId (apply damage + spawn missile).
+        // Chain map (skillId → chain targetId):
+        //   119 → 359 (yanmen_tuobo addskilldamage1, L20 chance=40%)
+        //   122 → 357 (jianren_shenshou addskilldamage1, L20 chance=50%)
+        //   125 → 1074 (tianxia_wugou addskilldamage1, L20 chance=25%)
+        //   128 → 357 (kanglong_youhui addskilldamage1, L20 chance=55%)
+        private void TryFireAddSkillDamageChain(CombatActorState caster, CombatActorState target, SkillDefinition parent, int parentLevel, Vector2 castPoint, ObstacleGrid grid, CombatCastReport report)
+        {
+            int chainId = parent.skillId switch
+            {
+                119 => 359,
+                122 => 357,
+                125 => 1074,
+                128 => 357,
+                _ => 0,
+            };
+            if (chainId <= 0) return;
+            var chainSkill = _catalog.Resolve(chainId);
+            if (chainSkill == null) return;
+            // PC source: lua point name (addskilldamage1) — slot[3] is the chance value (1..100 %).
+            string luaName = parent.skillId switch
+            {
+                119 => "yanmen_tuobo",
+                122 => "jianren_shenshou",
+                125 => "tianxia_wugou",
+                128 => "kanglong_youhui",
+                _ => null,
+            };
+            if (luaName == null) return;
+            int chancePct = PcCaiBangLuaLevelService.GetSingleValue(parent.skillId, parentLevel, "addskilldamage1", 3);
+            if (chancePct <= 0) return; // PC source returns 0 nếu không có chain
+            // PC semantic: roll random 1..100. Nếu roll <= chancePct → fire chain.
+            int roll = UnityEngine.Random.Range(1, 101);
+            if (roll > chancePct) return;
+            // Fire chain sub-skill (no ally chain here, đó là 打狗阵 riêng).
+            var chainLevel = Mathf.Clamp(parentLevel, 1, chainSkill.maxLevel > 0 ? chainSkill.maxLevel : parentLevel);
+            var chainLevelData = chainSkill.GetPcLevelData(chainLevel);
+            ApplyDamage(caster, target, chainLevelData, report);
+            SpawnProjectiles(chainSkill, caster, castPoint, grid, report, chainLevel);
+        }
+
+        // PC 打狗阵 (124) stance ally chain: tìm allies trong attackRadius=180, apply state 44 cho mỗi ally.
+        // PC 打狗阵.lua adddefense_v(level) = 30+10*level + 25 mana cost (đã apply cho caster qua ApplyStates trước).
+        // Dùng cùng levelData.state để allies nhận buff cùng magnitude với caster.
+        // Sau fix: 打狗阵 stance chain buff allies — đúng PC semantic.
+        private void PropagateAllyAura(CombatActorState caster, SkillDefinition skill, SkillLevelData data, CombatCastReport report)
+        {
+            if (data == null || AllyFinder == null) return;
+            Vector2 center = caster.position;
+            foreach (var ally in AllyFinder(center, skill.attackRadius))
+            {
+                if (ally == null || ally == caster || ally.currentLife <= 0) continue;
+                if (ally.states == null) continue;
+                foreach (var attr in data.state)
+                {
+                    ally.states[attr.kind] = attr;
+                    report.appliedState.Add(attr);
+                }
+                foreach (var attr in data.immediate)
+                {
+                    ally.states[attr.kind] = attr;
+                    report.appliedState.Add(attr);
+                }
             }
         }
 
