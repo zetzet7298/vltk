@@ -148,6 +148,9 @@
 
         <!-- ═══ PC-STYLE BOTTOM TOOLBAR MENU BUTTONS ═══ -->
         <!-- PC 工具控制条.ini: 11 buttons in a single 800x45 toolbar.
+             Rendered LAST in the GameHud tree so it draws ON TOP of BottomPanel
+             (bottom_bar_bg.png) and all other bottom elements. In UI Toolkit,
+             later siblings paint above earlier ones.
              5 round 30x30 action buttons on the LEFT (Run/Sit/Horse/Exchange/PK),
              6 menu 40x40 buttons on the RIGHT (Status/Items/Skills/Team/Faction/WorldSort).
              Left/Top positions match the PC INI 1:1. The toolbar overlays the

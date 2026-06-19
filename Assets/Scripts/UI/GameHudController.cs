@@ -401,6 +401,13 @@ namespace VLTK.UI
             _chatInputRow = root.Q("ChatInputRow");
             _chatChannelIdentityBtn = root.Q("ChatChannelIdentityBtn");
 
+            // PcMenuToolbar must render ON TOP of BottomPanel (bottom_bar_bg.png).
+            // In UI Toolkit, later siblings paint above earlier ones. BringToFront
+            // moves PcMenuToolbar to the end of the child list so it draws last.
+            var pcMenuToolbar = root.Q("PcMenuToolbar");
+            if (pcMenuToolbar != null)
+                pcMenuToolbar.BringToFront();
+
             // CHAT POSITION — hard-set center at bind time. Don't rely on
             // SizeRootToScreen for chat because that path may not run, or PC
             // safe-area padding (safeX) re-anchors it left. We want chat dead

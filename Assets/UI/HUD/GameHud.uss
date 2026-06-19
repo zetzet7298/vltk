@@ -2260,20 +2260,31 @@
     padding: 0px;
 }
 
-/* Round action buttons: 45x45 (1.5x of PC INI 30x30) — mobile thumb size */
+/* Round action buttons: 45x45 (1.5x of PC INI 30x30) — mobile thumb size.
+   Semi-opaque dark background so the transparent icon stands out against
+   the ornate bottom strip art. Matches the PC button look (dark circular
+   button face with icon on top). */
 .hud-pc-toolbar-round {
     width: 45px;
     height: 45px;
     position: absolute;
     top: 15px;
+    background-color: rgba(20, 20, 30, 0.85);
+    border-radius: 22px;
+    border-width: 2px;
+    border-color: rgba(100, 130, 100, 0.6);
 }
 
-/* Menu buttons: 60x60 (1.5x of PC INI 40x40) — mobile thumb size */
+/* Menu buttons: 60x60 (1.5x of PC INI 40x40) — mobile thumb size. */
 .hud-pc-toolbar-menu {
     width: 60px;
     height: 60px;
     position: absolute;
     top: 3px;
+    background-color: rgba(20, 20, 30, 0.85);
+    border-radius: 6px;
+    border-width: 2px;
+    border-color: rgba(100, 130, 100, 0.6);
 }
 
 /* PC INI Left × 1.5 for round actions (relative to .hud-pc-menu-toolbar) */
@@ -2298,14 +2309,14 @@
     top: 0px;
     width: 100%;
     height: 100%;
-    /* PC toolbar icons are 20x20 source PNGs stretched to fit the larger
-       mobile button slot. Use scale-and-crop with explicit 100% x 100% so
-       the icon fills the entire button instead of staying at native 20x20
-       in the corner (which makes icons invisible on a 45-60px button). */
+    /* Force the 20x20 PC art to STRETCH and fill the entire 45-60px button
+       slot. Without explicit background-size, Unity falls back to Contain
+       mode which renders the tiny 20x20 icon centered with ~25px of
+       transparent padding around it — invisible against the dark strip.
+       background-size overrides -unity-background-scale-mode in 2022+. */
     background-size: 100% 100%;
-    -unity-background-scale-mode: scale-to-fit;
-    background-position-x: 50%;
-    background-position-y: 50%;
+    background-position: center;
+    background-repeat: no-repeat;
     /* PC toolbar icons render at full opacity once LoadArt finishes.
        The base .hud-menu-btn-icon/.hud-btn-icon defaults to opacity:0
        (icons hidden until bridge signals loaded); previous BottomPanel
