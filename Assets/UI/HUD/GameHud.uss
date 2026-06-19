@@ -2225,21 +2225,23 @@
 }
 
 /* ═══ PC-STYLE BOTTOM TOOLBAR MENU ROW ═══ */
-/* PC 工具控制条.ini: 800x45 toolbar sitting on top of the PC bottom strip
-   (主界面新版.spr, 800x60) baked into bottom_bar_bg.png.
-   5 round 30x30 action buttons (Run/Sit/Horse/Exchange/PK) on the LEFT
-   at PC Left=9,40,75,110,145 Top=10, then a ~280px gap (PC chat input
-   lives here at Left=183,238,431,451) and 6 menu 40x40 buttons
-   (Status/Items/Skills/Team/Faction/WorldSort) on the RIGHT at PC
-   Left=474,514,555,594,635,713 Top=2.
-   Mobile offset: left=200 keeps the joystick lane on the left free
-   (PC native Left=0 would collide with the joystick at x<155). */
+/* PC 工具控制条.ini: 800x45 toolbar with 5 round action buttons on LEFT
+   (Run/Sit/Horse/Exchange/PK, 30x30, Left=9,40,75,110,145 Top=10) and
+   6 menu buttons on RIGHT (Status/Items/Skills/Team/Faction/WorldSort,
+   40x40, Left=474,514,555,594,635,713 Top=2). PC INI is designed for
+   800x600 PC resolution where 30x30 and 40x40 are touch-friendly.
+   Mobile (1280x720 HUD) needs them bigger and the icons are PC-native
+   20x20 SPRs so we 1.5x the whole toolbar for thumb-friendly hit boxes
+   without changing relative positions:
+     toolbar 1200x67, round 45x45 at Left=13.5/60/112.5/165/217.5 Top=15,
+     menu 60x60 at Left=711/771/832.5/891/952.5/1070 Top=3.
+   Positioned left=40 (centred in 1280 HUD) so the toolbar fits. */
 .hud-pc-menu-toolbar {
     position: absolute;
-    left: 200px;
-    bottom: 12px;
-    width: 800px;
-    height: 45px;
+    left: 40px;
+    bottom: 8px;
+    width: 1200px;
+    height: 67px;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
@@ -2258,36 +2260,36 @@
     padding: 0px;
 }
 
-/* Round action buttons: 30x30 (PC INI Width=Height=30) */
+/* Round action buttons: 45x45 (1.5x of PC INI 30x30) — mobile thumb size */
 .hud-pc-toolbar-round {
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     position: absolute;
-    top: 10px;
+    top: 15px;
 }
 
-/* Menu buttons: 40x40 (PC INI Width=Height=40) */
+/* Menu buttons: 60x60 (1.5x of PC INI 40x40) — mobile thumb size */
 .hud-pc-toolbar-menu {
-    width: 40px;
-    height: 40px;
+    width: 60px;
+    height: 60px;
     position: absolute;
-    top: 2px;
+    top: 3px;
 }
 
-/* PC INI Left positions for round actions (relative to .hud-pc-menu-toolbar) */
-#BtnRun      { left:   9px; }
-#BtnSit      { left:  40px; }
-#BtnHorse    { left:  75px; }
-#BtnExchange { left: 110px; }
-#BtnPK       { left: 145px; }
+/* PC INI Left × 1.5 for round actions (relative to .hud-pc-menu-toolbar) */
+#BtnRun      { left:  13.5px; }
+#BtnSit      { left:    60px; }
+#BtnHorse    { left: 112.5px; }
+#BtnExchange { left:   165px; }
+#BtnPK       { left: 217.5px; }
 
-/* PC INI Left positions for menu cluster (relative to .hud-pc-menu-toolbar) */
-#BtnStatus     { left: 474px; }
-#BtnItems      { left: 514px; }
-#BtnSkills     { left: 555px; }
-#BtnTeam       { left: 594px; }
-#BtnFaction    { left: 635px; }
-#BtnWorldSort  { left: 713px; }
+/* PC INI Left × 1.5 for menu cluster (relative to .hud-pc-menu-toolbar) */
+#BtnStatus     { left:   711px; }
+#BtnItems      { left:   771px; }
+#BtnSkills     { left: 832.5px; }
+#BtnTeam       { left:   891px; }
+#BtnFaction    { left: 952.5px; }
+#BtnWorldSort  { left:  1070px; }
 
 .hud-pc-toolbar-btn .hud-menu-btn-icon,
 .hud-pc-toolbar-btn .hud-btn-icon {
@@ -2296,7 +2298,14 @@
     top: 0px;
     width: 100%;
     height: 100%;
+    /* PC toolbar icons are 20x20 source PNGs stretched to fit the larger
+       mobile button slot. Use scale-and-crop with explicit 100% x 100% so
+       the icon fills the entire button instead of staying at native 20x20
+       in the corner (which makes icons invisible on a 45-60px button). */
+    background-size: 100% 100%;
     -unity-background-scale-mode: scale-to-fit;
+    background-position-x: 50%;
+    background-position-y: 50%;
     /* PC toolbar icons render at full opacity once LoadArt finishes.
        The base .hud-menu-btn-icon/.hud-btn-icon defaults to opacity:0
        (icons hidden until bridge signals loaded); previous BottomPanel
