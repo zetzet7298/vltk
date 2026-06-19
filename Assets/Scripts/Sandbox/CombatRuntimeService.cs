@@ -354,8 +354,8 @@ namespace VLTK.Sandbox
             // --- Hit/Miss check (PC ReceiveDamage:2855 CheckHitTarget) ---
             // Defender value: m_CurrentDefend. Target defend từ state (AddDefenseV) hoặc level-based.
             int targetDefend = 0;
-            if (target.states != null && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var def))
-                targetDefend = def.value1;
+            if (target.states != null && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var defendAttr))
+                targetDefend = defendAttr.value1;
             // PC: defend mặc định dựa trên level. Mvp: dùng targetDefend (hoặc default 0).
             if (targetDefend <= 0) targetDefend = target.level * 5; // level-based fallback
 
@@ -447,8 +447,8 @@ namespace VLTK.Sandbox
                     if (resKind != MagicAttributeKind.AllResP && target.states.TryGetValue(resKind, out var specRes))
                         targetResist += specRes.value1;
                     // Armor pool (PC m_*Armor.nValue[0]). Map AddDefenseV → physics armor alias.
-                    if (type == DamageType.Physics && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var def))
-                        targetArmor = def.value1;
+                    if (type == DamageType.Physics && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var armorDef))
+                        targetArmor = armorDef.value1;
                 }
 
                 // PC: KHÔNG pin rolledOverride → để DamageFormulaService random roll (KNpc.cpp:2466).

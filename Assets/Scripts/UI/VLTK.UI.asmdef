@@ -5,7 +5,8 @@
         "VLTK.Core",
         "VLTK.Model",
         "VLTK.Sandbox",
-        "VLTK.Sprites"
+        "VLTK.Sprites",
+        "VLTK.Backend"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
