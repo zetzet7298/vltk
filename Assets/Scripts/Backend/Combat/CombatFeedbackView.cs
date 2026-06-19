@@ -45,35 +45,38 @@ namespace VLTK.Backend.Combat
         [Min(8)]
         public int defaultFontSize = 24;
 
-        [Tooltip("Kích thước font world-space (TextMesh). Camera ortho 240 → ~64.")]
+        [Tooltip("Kích thước font world-space (TextMesh). PC JX dùng số to ~80 world unit.")]
         [Min(8)]
-        public int worldFontSize = 64;
+        public int worldFontSize = 80;
 
-        [Tooltip("Kích thước ký tự world-space (world unit). Càng lớn càng to.")]
+        [Tooltip("Kích thước ký tự world-space (world unit). PC JX ~1.4 world unit/digit.")]
         [Min(0.01f)]
-        public float worldCharacterSize = 16f;
+        public float worldCharacterSize = 1.4f;
 
-        [Tooltip("Thời gian sống của mỗi damage text (giây). Sau đó auto-Destroy.")]
+        [Tooltip("Thời gian sống của mỗi damage text (giây). PC JX ~0.9s.")]
         [Min(0.1f)]
-        public float textLifetimeSeconds = 1.0f;
+        public float textLifetimeSeconds = 0.9f;
 
         [Tooltip("Khoảng cách float-up (pixel trong UI space, hoặc world unit).")]
         public float floatDistance = 60f;
 
         [Tooltip("Tốc độ float-up world-space (world unit/giây).")]
-        public float worldFloatSpeed = 1.6f;
+        public float worldFloatSpeed = 1.8f;
 
         [Tooltip("Offset Y cho world-space spawn (tránh che player).")]
-        public float worldYOffset = 1.5f;
+        public float worldYOffset = 2.0f;
 
         [Tooltip("Random jitter X cho world-space spawn (tránh chồng số khi multi-hit).")]
-        public float worldJitterX = 0.6f;
+        public float worldJitterX = 0.8f;
 
-        [Tooltip("Màu cho mỗi loại feedback. Có thể override trong Inspector.")]
-        public Color normalColor = new Color(1f, 0.35f, 0.15f, 1f);   // cam-đỏ đậm (PC damage number)
-        public Color critColor = new Color(1f, 0.85f, 0.1f, 1f);      // vàng chí mạng
-        public Color missColor = new Color(0.85f, 0.85f, 0.85f, 1f);  // xám trượt
-        public Color healColor = new Color(0.3f, 1f, 0.4f, 1f);       // xanh hồi máu
+        [Tooltip("Màu cho mỗi loại feedback. PC JX damage red/yellow/gray convention.")]
+        // PC JX palette (observable gameplay convention):
+        //   Normal = đỏ cờ chói (#FF3D26-ish), Crit = vàng chói (#FFD900-ish),
+        //   Miss = xám trung tính, Heal = xanh lá tươi.
+        public Color normalColor = new Color(1f, 0.24f, 0.10f, 1f);   // đỏ damage (PC)
+        public Color critColor = new Color(1f, 0.85f, 0.10f, 1f);      // vàng chí mạng (PC)
+        public Color missColor = new Color(0.78f, 0.78f, 0.78f, 1f);  // xám trượt (PC)
+        public Color healColor = new Color(0.30f, 1f, 0.40f, 1f);      // xanh hồi máu (PC)
 
         // ----- Runtime state -----
 
@@ -128,12 +131,12 @@ namespace VLTK.Backend.Combat
 
                 if (f.WorldSpace)
                 {
-                    // Float-up + pop scale.
-                    float up = worldFloatSpeed * t;
-                    // Pop: 0→0.15 phồng lên (1.35x), 0.15→1 thu về 1.0x.
-                    float pop = t < 0.15f
-                        ? Mathf.Lerp(0.6f, 1.35f, t / 0.15f)
-                        : Mathf.Lerp(1.35f, 1.0f, (t - 0.15f) / 0.85f);
+                    // [DMG-100PC] Float-up + pop scale (PC JX damage number animation).
+                    // Pop: 0→0.10 phồng to 1.3x, 0.10→1.0 thu về 1.0x. PC JX pop rất nhanh.
+                    float pop = t < 0.10f
+                        ? Mathf.Lerp(0.4f, 1.30f, t / 0.10f)
+                        : Mathf.Lerp(1.30f, 1.0f, (t - 0.10f) / 0.90f);
+                    float up = worldFloatSpeed * t * (1f + t * 0.4f);  // ease-out-ish float up
                     f.Go.transform.position = f.StartPos + Vector3.up * up;
                     f.Go.transform.localScale = Vector3.one * pop;
 
@@ -143,6 +146,8 @@ namespace VLTK.Backend.Combat
                         c.a = alpha;
                         f.Mesh.color = c;
                     }
+                    // [DMG-OUTLINE] Alpha shadow outline cùng main text (children inherit scale/pos).
+                    ApplyShadowAlpha(f.Go.transform, alpha);
                 }
                 else
                 {
@@ -241,7 +246,15 @@ namespace VLTK.Backend.Combat
             }
             else
             {
-                // World-space mode: TextMesh TẠI vị trí target (PC damage popup).
+                // [DMG-100PC] World-space TextMesh TẠI vị trí target (PC damage popup).
+                // PC source: KNpc::DoHurt (KNpc.cpp:1427) trigger animation frames;
+                // damage number rendering là CLIENT-SIDE, tính từ HP delta giữa sync update.
+                // Client-side rendering code KHÔNG có trong source tree hiện có (chỉ server Core
+                // được ship). Visual dưới đây theo JX-PC observable convention:
+                //   - Bold font (NotoSans-Bold fallback LegacyRuntime)
+                //   - Black outline (4 shadow copy offset)
+                //   - Red cờ cho damage, vàng chói cho crit, xám cho miss
+                //   - Pop scale 0.4→1.3→1.0 + float-up + fade last 30%
                 go = new GameObject("DamageNumber", typeof(TextMesh), typeof(MeshRenderer));
                 go.transform.SetParent(transform, false);
                 // Jitter X nhẹ để multi-hit không chồng số.
@@ -254,17 +267,20 @@ namespace VLTK.Backend.Combat
                 tm.anchor = TextAnchor.MiddleCenter;
                 tm.alignment = TextAlignment.Center;
                 tm.characterSize = worldCharacterSize;
-                tm.fontStyle = isCrit ? FontStyle.BoldAndItalic : FontStyle.Bold;
-                // Đặt font + material chuẩn để TextMesh render được (Arial built-in).
-                var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+                tm.fontStyle = FontStyle.Bold;  // PC JX: bold only, no italic.
+                // Font: ưu tiên NotoSans-Bold (sắc nét, đậm — PC look) → fallback LegacyRuntime.
+                var font = LoadDamageFont();
                 if (font != null)
                 {
                     tm.font = font;
                     var mr = go.GetComponent<MeshRenderer>();
                     if (mr != null) mr.sharedMaterial = font.material;
                 }
+                // [DMG-OUTLINE] Black outline PC-style: 4 TextMesh shadow copy ở 4 hướng,
+                // offset nhỏ theo characterSize. Render TRƯỚC main text (sortingOrder thấp hơn).
+                SpawnOutlineShadows(go.transform, label, worldCharacterSize, isCrit);
                 // Scale nhỏ ban đầu → Update pop phồng lên (cảm giác "nhảy số").
-                go.transform.localScale = Vector3.one * 0.6f;
+                go.transform.localScale = Vector3.one * 0.4f;
                 _active.Add(new ActiveFeedback
                 {
                     Go = go,
@@ -275,6 +291,84 @@ namespace VLTK.Backend.Combat
                     Lifetime = textLifetimeSeconds,
                     WorldSpace = true,
                 });
+            }
+        }
+
+        // [DMG-OUTLINE] 4 TextMesh shadow copies làm outline đen cho damage number.
+        // PC JX damage number có viền đen rõ ràng quanh chữ số (visible readability cue).
+        private void SpawnOutlineShadows(Transform parent, string label, float charSize, bool isCrit)
+        {
+            float offset = charSize * 0.12f;  // ~0.17 world unit, đủ rõ mà không che main text.
+            int baseFontSize = isCrit ? Mathf.RoundToInt(worldFontSize * 1.25f) : worldFontSize;
+            int baseSorting = MapRendererSortingBelow(parent);
+
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 localOffset = i switch
+                {
+                    0 => new Vector3(-offset, 0f, 0f),   // left
+                    1 => new Vector3(offset, 0f, 0f),    // right
+                    2 => new Vector3(0f, offset, 0f),    // up
+                    _ => new Vector3(0f, -offset, 0f),   // down
+                };
+                var sh = new GameObject("DamageNumberShadow", typeof(TextMesh), typeof(MeshRenderer));
+                sh.transform.SetParent(parent, false);
+                sh.transform.localPosition = localOffset;
+                sh.transform.localRotation = Quaternion.identity;
+                sh.transform.localScale = Vector3.one;
+                var shtm = sh.GetComponent<TextMesh>();
+                shtm.text = label;
+                shtm.color = new Color(0f, 0f, 0f, 0.85f);  // black 85% alpha
+                shtm.fontSize = baseFontSize;
+                shtm.anchor = TextAnchor.MiddleCenter;
+                shtm.alignment = TextAlignment.Center;
+                shtm.characterSize = worldCharacterSize;
+                shtm.fontStyle = FontStyle.Bold;
+                var shFont = LoadDamageFont();
+                if (shFont != null)
+                {
+                    shtm.font = shFont;
+                    var shMr = sh.GetComponent<MeshRenderer>();
+                    if (shMr != null)
+                    {
+                        shMr.sharedMaterial = shFont.material;
+                        shMr.sortingOrder = baseSorting;  // behind main text
+                    }
+                }
+            }
+        }
+
+        private static Font _cachedDamageFont;
+        private static Font LoadDamageFont()
+        {
+            if (_cachedDamageFont != null) return _cachedDamageFont;
+            // PC JX look = bold + sharp. NotoSans-Bold có sẵn trong Assets/UI/Fonts.
+            // Fallback LegacyRuntime nếu Resources path khác.
+            _cachedDamageFont = Resources.Load<Font>("UI/Fonts/NotoSans-Bold");
+            if (_cachedDamageFont == null)
+                _cachedDamageFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            return _cachedDamageFont;
+        }
+
+        private static int MapRendererSortingBelow(Transform mainTransform)
+        {
+            // Lấy sortingOrder của main TextMesh renderer, trừ 1 để outline render behind.
+            var mr = mainTransform.GetComponent<MeshRenderer>();
+            return mr != null ? mr.sortingOrder - 1 : 0;
+        }
+
+        // [DMG-OUTLINE] Fade alpha cho tất cả shadow TextMesh con (outline) cùng main text.
+        private static void ApplyShadowAlpha(Transform parent, float alpha)
+        {
+            for (int i = 0; i < parent.childCount; i++)
+            {
+                var sh = parent.GetChild(i).GetComponent<TextMesh>();
+                if (sh != null)
+                {
+                    var c = sh.color;
+                    c.a = alpha * 0.85f;  // base alpha 0.85 trong SpawnOutlineShadows.
+                    sh.color = c;
+                }
             }
         }
 

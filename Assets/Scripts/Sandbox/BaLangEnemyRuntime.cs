@@ -119,9 +119,13 @@ namespace VLTK.Sandbox
         {
             Damage = damage;
             _startPosition = transform.position;
-            _color = isCrit ? new Color(1f, 0.85f, 0.1f, 1f) : new Color(1f, 0.08f, 0.02f, 1f);
-            int fontSize = isCrit ? 64 : 48;
-            float charSize = isCrit ? 0.5f : 0.42f;
+            // [DMG-100PC] PC JX damage number palette (observable):
+            //   Normal = đỏ cờ chói (1.0, 0.24, 0.10), Crit = vàng chói (1.0, 0.85, 0.10).
+            //   Font: NotoSans-Bold (sắc nét, đậm — fallback LegacyRuntime).
+            //   Outline: 4 TextMesh shadow copy offset nhỏ.
+            _color = isCrit ? new Color(1f, 0.85f, 0.10f, 1f) : new Color(1f, 0.24f, 0.10f, 1f);
+            int fontSize = isCrit ? 100 : 80;
+            float charSize = isCrit ? 0.6f : 0.5f;
 
             _text = gameObject.AddComponent<TextMesh>();
             _text.text = damage.ToString();
@@ -130,8 +134,9 @@ namespace VLTK.Sandbox
             _text.anchor = TextAnchor.MiddleCenter;
             _text.alignment = TextAlignment.Center;
             _text.color = _color;
+            _text.fontStyle = FontStyle.Bold;
 
-            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            var font = LoadDamageFont();
             if (font != null)
             {
                 _text.font = font;
@@ -142,6 +147,58 @@ namespace VLTK.Sandbox
             var mrComp = gameObject.GetComponent<MeshRenderer>();
             if (mrComp != null)
                 mrComp.sortingOrder = MapRenderer.PlayerSortingOrder + 3600;
+
+            // [DMG-OUTLINE] 4 shadow copies cho outline đen PC-style.
+            SpawnOutlineShadows(fontSize, charSize);
+        }
+
+        private void SpawnOutlineShadows(int fontSize, float charSize)
+        {
+            float offset = charSize * 0.12f;
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 localOffset = i switch
+                {
+                    0 => new Vector3(-offset, 0f, 0f),
+                    1 => new Vector3(offset, 0f, 0f),
+                    2 => new Vector3(0f, offset, 0f),
+                    _ => new Vector3(0f, -offset, 0f),
+                };
+                var sh = new GameObject("PcDamageNumberShadow", typeof(TextMesh), typeof(MeshRenderer));
+                sh.transform.SetParent(transform, false);
+                sh.transform.localPosition = localOffset;
+                sh.transform.localRotation = Quaternion.identity;
+                sh.transform.localScale = Vector3.one;
+                var shtm = sh.AddComponent<TextMesh>();
+                shtm.text = Damage.ToString();
+                shtm.color = new Color(0f, 0f, 0f, 0.85f);
+                shtm.fontSize = fontSize;
+                shtm.characterSize = charSize;
+                shtm.anchor = TextAnchor.MiddleCenter;
+                shtm.alignment = TextAlignment.Center;
+                shtm.fontStyle = FontStyle.Bold;
+                var font = LoadDamageFont();
+                if (font != null)
+                {
+                    shtm.font = font;
+                    var mr = sh.GetComponent<MeshRenderer>();
+                    if (mr != null)
+                    {
+                        mr.sharedMaterial = font.material;
+                        mr.sortingOrder = MapRenderer.PlayerSortingOrder + 3599;  // behind main
+                    }
+                }
+            }
+        }
+
+        private static Font _cachedDamageFont;
+        private static Font LoadDamageFont()
+        {
+            if (_cachedDamageFont != null) return _cachedDamageFont;
+            _cachedDamageFont = Resources.Load<Font>("UI/Fonts/NotoSans-Bold");
+            if (_cachedDamageFont == null)
+                _cachedDamageFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            return _cachedDamageFont;
         }
 
         private void Update()
@@ -153,13 +210,27 @@ namespace VLTK.Sandbox
         {
             _age += Mathf.Max(0f, deltaTime);
             float t = Mathf.Clamp01(_age / DefaultLifetimeSeconds);
-            transform.position = _startPosition + new Vector3(0f, 58f * t, 0f);
+            // [DMG-100PC] Float-up PC JX: 58 world unit/giây, ease-out (^1.3) → dốc lên nhanh đầu.
+            float up = 58f * t * (1f + t * 0.3f);
+            transform.position = _startPosition + new Vector3(0f, up, 0f);
 
+            float alpha = Mathf.Lerp(1f, 0f, Mathf.Clamp01((t - 0.35f) / 0.65f));
             if (_text != null)
             {
                 var c = _color;
-                c.a = Mathf.Lerp(1f, 0f, Mathf.Clamp01((t - 0.35f) / 0.65f));
+                c.a = alpha;
                 _text.color = c;
+            }
+            // [DMG-OUTLINE] Fade alpha outline cùng main text.
+            for (int i = 0; i < transform.childCount; i++)
+            {
+                var sh = transform.GetChild(i).GetComponent<TextMesh>();
+                if (sh != null)
+                {
+                    var c = sh.color;
+                    c.a = alpha * 0.85f;
+                    sh.color = c;
+                }
             }
 
             if (_age >= DefaultLifetimeSeconds)
