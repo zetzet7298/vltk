@@ -1195,13 +1195,16 @@
     right: 0px;
     bottom: 0px;
     width: 1280px;
-    height: 106px;
-    /* PC bottom toolbar strip (主界面新版.spr cropped) as ornate stone/metal background */
+    /* PC bottom toolbar strip (主界面新版.spr cropped) as ornate stone/metal background.
+       Source art is 800x60 px; on 1280x720 HUD reference at 1.5x screen scale that
+       becomes 90 px tall. Keep the panel tight to the PC strip so the strip
+       occupies ~12.5% of vertical space (was 220 px = 30% — way too tall for
+       mobile and wasted space below the stone strip). */
+    height: 90px;
     background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png');
-    -unity-background-scale-mode: stretch-to-fill;
+    -unity-background-scale-mode: scale-and-crop;
     -unity-background-image-tint-color: white;
     background-color: rgba(0,0,0,0);
-    height: 220px;
     border-width: 0px;
 }
 

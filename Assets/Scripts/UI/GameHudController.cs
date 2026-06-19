@@ -947,7 +947,11 @@ namespace VLTK.UI
                 _bottomPanel.style.left = safeX;
                 _bottomPanel.style.bottom = safeY;
                 _bottomPanel.style.width = referenceWidth;
-                _bottomPanel.style.height = 220f;
+                // PC bottom strip art (主界面新版.spr) is 800x60 — at the 1280x720
+                // HUD reference + 1.5x screen scale the strip is ~90 px tall.
+                // Sized to the strip art (no wasted empty space below) so it
+                // occupies ~12.5% of vertical HUD space on mobile.
+                _bottomPanel.style.height = 90f;
             }
             if (_chatPanel != null)
             {
