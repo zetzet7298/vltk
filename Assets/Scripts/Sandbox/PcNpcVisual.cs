@@ -324,36 +324,19 @@ namespace VLTK.Sandbox
                 offsets = new Vector2[total],
             };
 
-            bool shouldFlipY = !string.IsNullOrEmpty(sourcePath) && (
-                sourcePath.IndexOf("enemy178", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
-                sourcePath.IndexOf("enemy179", System.StringComparison.OrdinalIgnoreCase) >= 0 ||
-                sourcePath.IndexOf("enemy180", System.StringComparison.OrdinalIgnoreCase) >= 0
-            );
-
             for (int i = 0; i < total; i++)
             {
                 var frame = decoded.frames[i];
                 if (frame == null || frame.width == 0 || frame.height == 0) continue;
 
-                if (shouldFlipY && frame.rgbaPixels != null && frame.rgbaPixels.Length > 0)
-                {
-                    int w = frame.width;
-                    int h = frame.height;
-                    var flipped = new Color32[frame.rgbaPixels.Length];
-                    for (int r = 0; r < h; r++)
-                    {
-                        int srcRowBase = r * w;
-                        int dstRowBase = (h - 1 - r) * w;
-                        System.Array.Copy(frame.rgbaPixels, srcRowBase, flipped, dstRowBase, w);
-                    }
-                    frame.rgbaPixels = flipped;
-                }
-
                 var tex = SprDecoder.CreateTexture(frame);
                 if (tex == null) continue;
                 tex.name = $"PcNpc_{Path.GetFileNameWithoutExtension(sourcePath)}_{i:000}";
-                var pivot = shouldFlipY ? new Vector2(0f, 0f) : new Vector2(0f, 1f);
-                clip.sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), pivot, pixelsPerUnit, 0, SpriteMeshType.FullRect);
+                // [PcNpcVisual-TrainingNPC 2026-06-19] Removed buggy shouldFlipY for enemy178/179/180.
+                //   Trước fix: decoder đã đặt PC row 0 (top) ở Unity texture top (bottom-up storage),
+                //   rồi flip lại khiến PC row 0 xuống Unity bottom → training NPCs hiển thị UPSIDE DOWN.
+                //   Sau fix: dùng pivot (0,1) top-left chuẩn, không flip pixel — giống mọi NPC khác.
+                clip.sprites[i] = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0f, 1f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
                 // PC frame offsets are stored in 1/64 PC-pixel units (engine tile grid).
                 // referencePixel is in raw PC pixels; normalize offsetY through the same divisor
                 // so the resulting world-space offset lands near the sprite's own foot
