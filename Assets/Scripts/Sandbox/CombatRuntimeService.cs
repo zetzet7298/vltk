@@ -296,88 +296,214 @@ namespace VLTK.Sandbox
 
         private void ApplyDamage(CombatActorState caster, CombatActorState target, SkillLevelData data, CombatCastReport report)
         {
+            // [DMG-PORT-100] Port 100% từ PC KNpc::ReceiveDamage+CalcDamage.
+            // PC source: KNpc.cpp:2842-2941 (ReceiveDamage) + 2445-2732 (CalcDamage).
+            //
+            // PC ReceiveDamage extract 14 attribs theo thứ tự cố định:
+            // 1. AttackRatingP (AR) → hit/miss check
+            // 2. IgnoreDefenseP (IgnoreAR) → ignore defend chance
+            // 3. MagicDamage → unused (legacy)
+            // 4. SeriesDamageP → ngũ hành damage bonus
+            // 5. DeadlyStrikeP (DS%) → crit roll
+            // 6. (reserved FS% - chưa implement)
+            // 7. StealLifeP% → steal life percentage
+            // 8. StealManaP% → steal mana percentage
+            // 9. StealStaminaP% → steal stamina percentage
+            // 10-14. PhysicsDamageV, ColdDamageV, FireDamageV, LightDamageV, PoisonDamageV
+            //
+            // Mỗi damage type được tính độc lập qua DamageFormulaService.Compute.
             if (target == null || data == null) return;
+
+            // --- Pre-pass: extract combat meta from data.damage (PC ReceiveDamage:2849-2881) ---
+            int attackRating = 0;
+            int ignoreDefense = 0;
+            int deadlyStrikePercent = 0;
+            int stealLifePercent = 0;
+            int stealManaPercent = 0;
+            int stealStaminaPercent = 0;
+            int fiveElementsDamageP = 0;
+
             foreach (var attr in data.damage)
             {
-                if (attr.kind != MagicAttributeKind.PhysicsDamageV && attr.kind != MagicAttributeKind.FireDamageV && attr.kind != MagicAttributeKind.PoisonDamageV)
-                    continue;
-                var type = attr.kind == MagicAttributeKind.FireDamageV ? DamageType.Fire : attr.kind == MagicAttributeKind.PoisonDamageV ? DamageType.Poison : DamageType.Physics;
-                
-                int extraDamageMin = 0;
-                int extraDamageMax = 0;
-                
-                if (caster != null && caster.states != null)
+                switch (attr.kind)
                 {
-                    if (type == DamageType.Fire)
-                    {
-                        if (caster.states.TryGetValue(MagicAttributeKind.FireDamageV, out var fd))
-                        {
-                            extraDamageMin += fd.value1;
-                            extraDamageMax += fd.value3 != 0 ? fd.value3 : fd.value1;
-                        }
-                        if (caster.states.TryGetValue(MagicAttributeKind.AddFireDamageV, out var afd))
-                        {
-                            extraDamageMin += afd.value1;
-                            extraDamageMax += afd.value3 != 0 ? afd.value3 : afd.value1;
-                        }
-                    }
-                    else if (type == DamageType.Poison)
-                    {
-                        if (caster.states.TryGetValue(MagicAttributeKind.PoisonDamageV, out var pd))
-                        {
-                            extraDamageMin += pd.value1;
-                            extraDamageMax += pd.value3 != 0 ? pd.value3 : pd.value1;
-                        }
-                        if (caster.states.TryGetValue(MagicAttributeKind.AddPoisonDamageV, out var apd))
-                        {
-                            extraDamageMin += apd.value1;
-                            extraDamageMax += apd.value3 != 0 ? apd.value3 : apd.value1;
-                        }
-                    }
-                    else if (type == DamageType.Physics)
-                    {
-                        if (caster.states.TryGetValue(MagicAttributeKind.PhysicsDamageV, out var pd))
-                        {
-                            extraDamageMin += pd.value1;
-                            extraDamageMax += pd.value3 != 0 ? pd.value3 : pd.value1;
-                        }
-                    }
+                    case MagicAttributeKind.AttackRatingP:
+                        attackRating = attr.value1;
+                        break;
+                    case MagicAttributeKind.IgnoreDefenseP:
+                        ignoreDefense = attr.value1;
+                        break;
+                    case MagicAttributeKind.DeadlyStrikeP:
+                        deadlyStrikePercent = attr.value1;
+                        break;
+                    case MagicAttributeKind.StealLifeP:
+                        stealLifePercent = attr.value1;
+                        break;
+                    case MagicAttributeKind.StealManaP:
+                        stealManaPercent = attr.value1;
+                        break;
+                    case MagicAttributeKind.StealStaminaP:
+                        stealStaminaPercent = attr.value1;
+                        break;
+                    case MagicAttributeKind.SeriesDamageP:
+                        fiveElementsDamageP = attr.value1;
+                        break;
+                }
+            }
+
+            // --- Hit/Miss check (PC ReceiveDamage:2855 CheckHitTarget) ---
+            // Defender value: m_CurrentDefend. Target defend từ state (AddDefenseV) hoặc level-based.
+            int targetDefend = 0;
+            if (target.states != null && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var def))
+                targetDefend = def.value1;
+            // PC: defend mặc định dựa trên level. Mvp: dùng targetDefend (hoặc default 0).
+            if (targetDefend <= 0) targetDefend = target.level * 5; // level-based fallback
+
+            bool hit = _damage.CheckHitTarget(attackRating, targetDefend, ignoreDefense);
+            if (!hit)
+            {
+                // Miss: thêm result hit=false, KHÔNG tính damage.
+                report.damageResults.Add(new DamageResult { hit = false, type = DamageType.Physics });
+                return; // PC: return FALSE → damage pipeline stops
+            }
+
+            // --- Crit roll (PC ReceiveDamage:2867 g_RandPercent) ---
+            bool isDeadlyStrike = deadlyStrikePercent > 0 && _damage.RollPercent != null && _damage.RollPercent(deadlyStrikePercent);
+
+            // --- Loop 6 damage types (PC ReceiveDamage:2884-2940) ---
+            bool isMelee = report.skill != null && report.skill.meleeType != PcMeleeType.None;
+            Series skillSeries = report.skill != null && report.skill.series != Series.Nil
+                ? report.skill.series
+                : caster.faction.GetFactionSeries();
+
+            foreach (var attr in data.damage)
+            {
+                DamageType type;
+                // Map PC magic attribute → DamageType (PC KNpc.cpp:2500-2580 switch).
+                switch (attr.kind)
+                {
+                    case MagicAttributeKind.PhysicsDamageV:
+                        type = DamageType.Physics; break;
+                    case MagicAttributeKind.ColdDamageV:
+                        type = DamageType.Cold; break;
+                    case MagicAttributeKind.FireDamageV:
+                        type = DamageType.Fire; break;
+                    case MagicAttributeKind.LightingDamageV:
+                        type = DamageType.Light; break;
+                    case MagicAttributeKind.PoisonDamageV:
+                        type = DamageType.Poison; break;
+                    default:
+                        // Non-damage attr (enhance/AR/steal/...) — không phải hit component.
+                        continue;
                 }
 
+                // Extract min/max từ DamageV (value1 = min, value3 = max, hoặc value1 nếu value3=0)
+                int min = attr.value1;
+                int max = attr.value3 != 0 ? attr.value3 : attr.value1;
+                if (max < min) max = min;
+
+                // Add state buff damage (caster có thể cộng thêm damage từ buff)
+                int extraDamageMin = 0;
+                int extraDamageMax = 0;
+                if (caster != null && caster.states != null)
+                {
+                    // Base type buff (PC m_Current*Damage.nValue)
+                    AddStateDamage(caster.states, attr.kind, ref extraDamageMin, ref extraDamageMax);
+                    // Add-type buff (AddPhysicsDamageP, AddFireDamageV, ...)
+                    MagicAttributeKind addKind = type switch
+                    {
+                        DamageType.Physics => MagicAttributeKind.AddPhysicsDamageP,
+                        DamageType.Fire => MagicAttributeKind.AddFireDamageV,
+                        DamageType.Poison => MagicAttributeKind.AddPoisonDamageV,
+                        DamageType.Cold => MagicAttributeKind.AddColdDamageV,
+                        DamageType.Light => MagicAttributeKind.AddLightingDamageV,
+                        _ => (MagicAttributeKind)(-1),
+                    };
+                    if ((int)addKind >= 0)
+                        AddStateDamage(caster.states, addKind, ref extraDamageMin, ref extraDamageMax);
+                }
+
+                min += extraDamageMin;
+                max += extraDamageMax;
+                if (max < min) max = min;
+
+                // Extract defender resist + armor (PC m_Current*Resist + m_*Armor.nValue[0])
                 int targetResist = 0;
-                if (target != null && target.states != null)
+                int targetResistMax = 100;
+                int targetArmor = 0;
+                if (target.states != null)
                 {
                     if (target.states.TryGetValue(MagicAttributeKind.AllResP, out var allRes))
-                    {
                         targetResist += allRes.value1;
-                    }
-                    
-                    MagicAttributeKind specificKind = type switch
+                    MagicAttributeKind resKind = type switch
                     {
                         DamageType.Physics => MagicAttributeKind.PhysicsResP,
                         DamageType.Fire => MagicAttributeKind.FireResP,
                         DamageType.Poison => MagicAttributeKind.PoisonResP,
                         DamageType.Cold => MagicAttributeKind.ColdResP,
                         DamageType.Light => MagicAttributeKind.LightingResP,
-                        _ => MagicAttributeKind.AllResP
+                        _ => MagicAttributeKind.AllResP,
                     };
-                    
-                    if (specificKind != MagicAttributeKind.AllResP && target.states.TryGetValue(specificKind, out var specRes))
-                    {
+                    if (resKind != MagicAttributeKind.AllResP && target.states.TryGetValue(resKind, out var specRes))
                         targetResist += specRes.value1;
-                    }
+                    // Armor pool (PC m_*Armor.nValue[0]). Map AddDefenseV → physics armor alias.
+                    if (type == DamageType.Physics && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var def))
+                        targetArmor = def.value1;
                 }
 
-                int min = attr.value1 + extraDamageMin;
-                int max = (attr.value3 != 0 ? attr.value3 : attr.value1) + extraDamageMax;
-                
+                // PC: KHÔNG pin rolledOverride → để DamageFormulaService random roll (KNpc.cpp:2466).
                 var result = _damage.Compute(
-                    new AttackerStats { minDamage = min, maxDamage = max, type = type, isMelee = false },
-                    new DefenderStats { resist = targetResist },
-                    rolledOverride: min
-                );
+                    new AttackerStats
+                    {
+                        minDamage = min,
+                        maxDamage = max,
+                        type = type,
+                        isMelee = isMelee,
+                        series = skillSeries,
+                        fiveElementsDamageP = fiveElementsDamageP,
+                        fiveElementsEnhance = 0,
+                        // Crit visual: isDeadlyStrike → visual highlight (PC: crit KHÔNG nhân damage khi bReturn=FALSE)
+                        isDeadlyStrike = isDeadlyStrike,
+                        // Steal percentages (PC ReceiveDamage:2875-2881)
+                        stolenLifePercent = stealLifePercent,
+                        stolenManaPercent = stealManaPercent,
+                        stolenStaminaPercent = stealStaminaPercent,
+                    },
+                    new DefenderStats
+                    {
+                        resist = targetResist,
+                        resistMax = targetResistMax,
+                        armor = targetArmor,
+                        currentMana = target.currentMana,
+                        series = target.faction.GetFactionSeries(),
+                        fiveElementsResist = 0
+                    });
                 target.currentLife = Mathf.Max(0, target.currentLife - result.finalDamage);
+                // Reflect damage về caster (PC KNpc.cpp:2648-2679) — áp ngay lên caster HP.
+                if (isMelee && result.meleeReturnDamage > 0 && caster != null)
+                    caster.currentLife = Mathf.Max(0, caster.currentLife - result.meleeReturnDamage);
+                else if (!isMelee && result.rangeReturnDamage > 0 && caster != null)
+                    caster.currentLife = Mathf.Max(0, caster.currentLife - result.rangeReturnDamage);
+                // Steal life/mana (PC KNpc.cpp:2692-2700) — damage result đã tính stolenLife/StolenMana
+                // Cần apply lên caster.
+                if (caster != null && result.finalDamage > 0)
+                {
+                    if (result.stolenLife > 0)
+                        caster.currentLife = Mathf.Min(caster.maxLife, caster.currentLife + result.stolenLife);
+                    if (result.stolenMana > 0)
+                        caster.currentMana = Mathf.Min(caster.maxMana, caster.currentMana + result.stolenMana);
+                }
                 report.damageResults.Add(result);
+            }
+        }
+
+        // PC: cộng state buff vào min/max (PC KNpcAttribModify::Add*DamageV + EnhanceP).
+        private static void AddStateDamage(Dictionary<MagicAttributeKind, SkillMagicAttribute> states, MagicAttributeKind kind, ref int min, ref int max)
+        {
+            if (states != null && states.TryGetValue(kind, out var st))
+            {
+                min += st.value1;
+                max += st.value3 != 0 ? st.value3 : st.value1;
             }
         }
 

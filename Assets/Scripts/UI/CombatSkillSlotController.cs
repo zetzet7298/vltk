@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using VLTK.Backend.Combat;
 using VLTK.Core;
 using VLTK.Model;
 using VLTK.Sandbox;
@@ -974,6 +975,38 @@ namespace VLTK.UI
             if (target.enemyBehaviour != null)
             {
                 target.enemyBehaviour.SetLife(hp, showDamage: true);
+
+                // [DMG-POPUP] Publish CombatFeedbackEvent để spawn số damage ĐỎ tại mục tiêu.
+                // PC: số damage client-side render khi NPC bị hit (KNpc::DoHurt KNpc.cpp:1427).
+                // Unity: CombatFeedbackView subscribe CombatFeedbackBus.OnFeedback → spawn TextMesh tại evt.Position.
+                if (report.damageResults != null && report.damageResults.Count > 0)
+                {
+                    int totalDamage = 0;
+                    bool anyHit = false;
+                    bool anyCrit = false;
+                    foreach (var r in report.damageResults)
+                    {
+                        totalDamage += r.finalDamage;
+                        if (r.hit) anyHit = true;
+                        if (r.isCrit) anyCrit = true;
+                    }
+
+                    // Determine kind: Miss nếu tất cả miss, Crit nếu có crit, Normal thường
+                    CombatFeedbackKind kind = !anyHit ? CombatFeedbackKind.Miss
+                                           : anyCrit ? CombatFeedbackKind.Crit
+                                           : CombatFeedbackKind.Normal;
+
+                    // Position: vị trí world của target (để spawn số tại mục tiêu)
+                    Vector3 worldPos = target.enemyBehaviour.transform.position;
+                    // Offset Y lên chút để số nổi lên trên đầu NPC (PC damage number position)
+                    worldPos += Vector3.up * 2f;
+
+                    // Publish event — CombatFeedbackView/HitEffectSpawner sẽ nhận và spawn visual
+                    if (kind == CombatFeedbackKind.Miss)
+                        CombatFeedbackBus.Raise(new CombatFeedbackEvent(kind, 0, worldPos)); // Miss = 0 value
+                    else if (totalDamage > 0)
+                        CombatFeedbackBus.Raise(new CombatFeedbackEvent(kind, totalDamage, worldPos));
+                }
 
                 // Bridge damage into GameplayLoop so EXP/silver/respawn fire correctly.
                 // Mapping: GameplayActor.actorId = 10000 + BaLangNpcEntry.instanceId (enemyId).

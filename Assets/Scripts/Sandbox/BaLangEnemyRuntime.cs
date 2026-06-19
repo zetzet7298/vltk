@@ -24,16 +24,20 @@ namespace VLTK.Sandbox
         public string DisplayName { get; private set; }
         public bool HasThreeLayers => nameText != null && hpText != null && barBack != null && barFill != null;
 
+        private int previousLife;
+
         public void Initialize(string displayName, int maxLife)
         {
             DisplayName = string.IsNullOrWhiteSpace(displayName) ? "Vô hệ Kẻ địch" : displayName;
             MaxLife = Mathf.Max(1, maxLife);
-            SetLife(MaxLife);
+            SetLife(MaxLife, showDamage: false);
+            previousLife = MaxLife;
             if (nameText != null) nameText.text = DisplayName;
         }
 
-        public void SetLife(int currentLife)
+        public void SetLife(int currentLife, bool showDamage = false, bool isCrit = false)
         {
+            previousLife = CurrentLife;
             CurrentLife = Mathf.Clamp(currentLife, 0, Mathf.Max(1, MaxLife));
             if (hpText != null)
                 hpText.text = $"{CurrentLife}/{MaxLife}";
@@ -43,7 +47,18 @@ namespace VLTK.Sandbox
                 var s = barFill.transform.localScale;
                 barFill.transform.localScale = new Vector3(ratio, s.y, s.z);
             }
+            if (showDamage && CurrentLife < previousLife)
+            {
+                // Spawn damage number at target position with crit visual
+                var sr = GetComponentInChildren<SpriteRenderer>();
+                Vector3 spawnPos = sr != null && sr.sprite != null
+                    ? new Vector3(transform.position.x, sr.bounds.max.y + 10f, -12f)
+                    : transform.position + new Vector3(0f, 78f, -12f);
+                PcDamageNumber.Spawn(spawnPos, previousLife - CurrentLife, transform.parent, isCrit);
+            }
         }
+
+        public bool LastDamageWasCrit { get; private set; }
     }
 
     public sealed class EnemyNameplateAnchor : MonoBehaviour
@@ -86,7 +101,7 @@ namespace VLTK.Sandbox
         private Vector3 _startPosition;
         private float _age;
 
-        public static PcDamageNumber Spawn(Vector3 worldPosition, int damage, Transform parent)
+        public static PcDamageNumber Spawn(Vector3 worldPosition, int damage, Transform parent, bool isCrit = false)
         {
             if (damage <= 0) return null;
 
@@ -96,27 +111,37 @@ namespace VLTK.Sandbox
             go.transform.position = worldPosition;
 
             var popup = go.AddComponent<PcDamageNumber>();
-            popup.Initialize(damage);
+            popup.Initialize(damage, isCrit);
             return popup;
         }
 
-        private void Initialize(int damage)
+        private void Initialize(int damage, bool isCrit)
         {
             Damage = damage;
             _startPosition = transform.position;
-            _color = new Color(1f, 0.08f, 0.02f, 1f);
+            _color = isCrit ? new Color(1f, 0.85f, 0.1f, 1f) : new Color(1f, 0.08f, 0.02f, 1f);
+            int fontSize = isCrit ? 64 : 48;
+            float charSize = isCrit ? 0.5f : 0.42f;
 
             _text = gameObject.AddComponent<TextMesh>();
             _text.text = damage.ToString();
-            _text.fontSize = 48;
-            _text.characterSize = 0.42f;
+            _text.fontSize = fontSize;
+            _text.characterSize = charSize;
             _text.anchor = TextAnchor.MiddleCenter;
             _text.alignment = TextAlignment.Center;
             _text.color = _color;
 
-            var mr = gameObject.GetComponent<MeshRenderer>();
-            if (mr != null)
-                mr.sortingOrder = MapRenderer.PlayerSortingOrder + 3600;
+            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            if (font != null)
+            {
+                _text.font = font;
+                var mr = gameObject.GetComponent<MeshRenderer>();
+                if (mr != null) mr.sharedMaterial = font.material;
+            }
+
+            var mrComp = gameObject.GetComponent<MeshRenderer>();
+            if (mrComp != null)
+                mrComp.sortingOrder = MapRenderer.PlayerSortingOrder + 3600;
         }
 
         private void Update()
@@ -174,21 +199,24 @@ namespace VLTK.Sandbox
             CurrentLife = MaxLife;
             _phase = (npc?.instanceId ?? 1) * 0.73f;
             _nextThink = 0.1f + ((npc?.instanceId ?? 1) % 7) * 0.15f;
-            _healthBar?.SetLife(CurrentLife);
+            _healthBar?.SetLife(CurrentLife, showDamage: false, isCrit: false);
         }
 
         public void SetLife(int currentLife)
         {
-            SetLife(currentLife, false);
+            SetLife(currentLife, false, false);
         }
 
         public void SetLife(int currentLife, bool showDamage)
         {
+            SetLife(currentLife, showDamage, false);
+        }
+
+        public void SetLife(int currentLife, bool showDamage, bool isCrit)
+        {
             int previousLife = CurrentLife;
             CurrentLife = Mathf.Clamp(currentLife, 0, Mathf.Max(1, MaxLife));
-            _healthBar?.SetLife(CurrentLife);
-            if (showDamage && CurrentLife < previousLife)
-                PcDamageNumber.Spawn(DamagePopupPosition(), previousLife - CurrentLife, transform.parent);
+            _healthBar?.SetLife(CurrentLife, showDamage, isCrit);
 
             // [SECT-ALL] Death state machine (PC source: KNpc::DoDeath @ 0x0809def0).
             // PC behavior khi chết:
@@ -215,14 +243,6 @@ namespace VLTK.Sandbox
         // Public cho Combat layer / GameplayLoop đọc.
         private bool _isDead;
         public bool IsDead => _isDead;
-
-        private Vector3 DamagePopupPosition()
-        {
-            var sr = _visual != null ? _visual.GetComponentInChildren<SpriteRenderer>() : GetComponentInChildren<SpriteRenderer>();
-            if (sr != null && sr.sprite != null)
-                return new Vector3(transform.position.x, sr.bounds.max.y + 10f, -12f);
-            return transform.position + new Vector3(0f, 78f, -12f);
-        }
 
         private void Update()
         {

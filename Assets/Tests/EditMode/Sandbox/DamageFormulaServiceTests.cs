@@ -276,6 +276,69 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(50, rPvp.finalDamage, "PvP: PK rate halved.");
         }
 
+        // --- PC ReceiveDamage: hit/miss/crit/steal (NEW) ---
+
+        [Test]
+        public void CheckHitTarget_ZeroAttackRating_VsHighDefend_ReturnsFalse()
+        {
+            var svc = new DamageFormulaService();
+            // AR=0 vs defend=100 → always miss (PC: 0*100/(0+100)=0% hit chance → clamped min 5%)
+            Assert.IsFalse(svc.CheckHitTarget(0, 100, ignore: 0));
+        }
+
+        [Test]
+        public void CheckHitTarget_100AttackRating_VsZeroDefend_ReturnsTrue()
+        {
+            var svc = new DamageFormulaService();
+            // AR=100 vs defend=0 → 100*100/(100+0)=100% hit chance
+            Assert.IsTrue(svc.CheckHitTarget(100, 0, ignore: 0));
+        }
+
+        [Test]
+        public void CheckHitTarget_IgnoreDefenseOver100_AlwaysHits()
+        {
+            var svc = new DamageFormulaService();
+            // ignoreDefense >= 100 → always hit regardless of defend (PC: defend*(100-100)/100 = 0)
+            Assert.IsTrue(svc.CheckHitTarget(0, 999, ignore: 100));
+        }
+
+        [Test]
+        public void StealLifePercentage_RestoresAttackerLife()
+        {
+            var svc = new DamageFormulaService();
+            // Deal 100 damage, steal 10% → restore 10 life to attacker
+            var r = svc.Compute(
+                new AttackerStats { minDamage = 100, maxDamage = 100, stolenLifePercent = 10 },
+                new DefenderStats { currentMana = 0 },
+                rolledOverride: 100);
+            Assert.AreEqual(10, r.stolenLife);
+        }
+
+        [Test]
+        public void StealManaPercentage_RestoresAttackerMana()
+        {
+            var svc = new DamageFormulaService();
+            // Deal 100 damage, steal 15% → restore 15 mana to attacker
+            var r = svc.Compute(
+                new AttackerStats { minDamage = 100, maxDamage = 100, stolenManaPercent = 15 },
+                new DefenderStats { currentMana = 0 },
+                rolledOverride: 100);
+            Assert.AreEqual(15, r.stolenMana);
+        }
+
+        [Test]
+        public void MultipleDamageTypes_EachHasIndependentArmorPool()
+        {
+            var svc = new DamageFormulaService();
+            var def = new DefenderStats { physicsArmor = 50, fireArmor = 30, coldArmor = 70 };
+            // Deal 100 each type → physics=50, fire=70, cold=30 after armor
+            var rPhys = svc.Compute(new AttackerStats { minDamage = 100, maxDamage = 100, type = DamageType.Physics }, def, rolledOverride: 100);
+            var rFire = svc.Compute(new AttackerStats { minDamage = 100, maxDamage = 100, type = DamageType.Fire }, def, rolledOverride: 100);
+            var rCold = svc.Compute(new AttackerStats { minDamage = 100, maxDamage = 100, type = DamageType.Cold }, def, rolledOverride: 100);
+            Assert.AreEqual(50, rPhys.afterArmor);
+            Assert.AreEqual(70, rFire.afterArmor);
+            Assert.AreEqual(30, rCold.afterArmor);
+        }
 
         // --- AC#3: source evidence gap recorded before implementation ---
 
