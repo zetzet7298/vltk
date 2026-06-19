@@ -2225,17 +2225,23 @@
 }
 
 /* ═══ PC-STYLE BOTTOM TOOLBAR MENU ROW ═══ */
-/* Horizontal row of PC menu buttons along the bottom of the screen.
-   Sits on top of the bottom_bar_bg.png stone strip. Buttons are always
-   visible (no toggle/dock popup) matching PC 工具控制条.ini layout. */
+/* PC 工具控制条.ini: 800x45 toolbar sitting on top of the PC bottom strip
+   (主界面新版.spr, 800x60) baked into bottom_bar_bg.png.
+   5 round 30x30 action buttons (Run/Sit/Horse/Exchange/PK) on the LEFT
+   at PC Left=9,40,75,110,145 Top=10, then a ~280px gap (PC chat input
+   lives here at Left=183,238,431,451) and 6 menu 40x40 buttons
+   (Status/Items/Skills/Team/Faction/WorldSort) on the RIGHT at PC
+   Left=474,514,555,594,635,713 Top=2.
+   Mobile offset: left=200 keeps the joystick lane on the left free
+   (PC native Left=0 would collide with the joystick at x<155). */
 .hud-pc-menu-toolbar {
     position: absolute;
     left: 200px;
-    right: 18px;
     bottom: 12px;
-    height: 44px;
+    width: 800px;
+    height: 45px;
     flex-direction: row;
-    align-items: center;
+    align-items: flex-start;
     justify-content: flex-start;
     background-color: rgba(0,0,0,0);
     border-width: 0px;
@@ -2243,16 +2249,45 @@
 }
 
 .hud-pc-toolbar-btn {
-    width: 44px;
-    height: 44px;
-    margin-left: 2px;
-    margin-right: 2px;
     align-items: center;
     justify-content: center;
     background-color: rgba(0,0,0,0);
     border-width: 0px;
     border-radius: 0px;
+    margin: 0px;
+    padding: 0px;
 }
+
+/* Round action buttons: 30x30 (PC INI Width=Height=30) */
+.hud-pc-toolbar-round {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 10px;
+}
+
+/* Menu buttons: 40x40 (PC INI Width=Height=40) */
+.hud-pc-toolbar-menu {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 2px;
+}
+
+/* PC INI Left positions for round actions (relative to .hud-pc-menu-toolbar) */
+#BtnRun      { left:   9px; }
+#BtnSit      { left:  40px; }
+#BtnHorse    { left:  75px; }
+#BtnExchange { left: 110px; }
+#BtnPK       { left: 145px; }
+
+/* PC INI Left positions for menu cluster (relative to .hud-pc-menu-toolbar) */
+#BtnStatus     { left: 474px; }
+#BtnItems      { left: 514px; }
+#BtnSkills     { left: 555px; }
+#BtnTeam       { left: 594px; }
+#BtnFaction    { left: 635px; }
+#BtnWorldSort  { left: 713px; }
 
 .hud-pc-toolbar-btn .hud-menu-btn-icon,
 .hud-pc-toolbar-btn .hud-btn-icon {
@@ -2267,4 +2302,19 @@
        (icons hidden until bridge signals loaded); previous BottomPanel
        context overrode it to 1, but PcMenuToolbar is a sibling now. */
     opacity: 1;
+}
+
+/* Fallback label for buttons missing PC SPR art (e.g. WorldSort 排行).
+   Drawn on top of the icon slot so the user sees something instead of
+   an invisible button. Color matches PC HUD text on dark background. */
+.hud-pc-toolbar-fallback-label {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    -unity-text-align: middle-center;
+    color: rgb(255, 217, 78);
+    font-size: 11px;
+    -unity-font-style: bold;
 }

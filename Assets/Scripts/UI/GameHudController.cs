@@ -288,6 +288,10 @@ namespace VLTK.UI
             { "BtnSitQuick", "btn_sit" },
             { "BtnPKQuick", "btn_pk" },
             { "PrimaryAttackBtn", "btn_primary_attack" },
+            // PC 工具控制条.ini menu cluster (Left=474,514,555,594,635,713 Top=2)
+            // BtnRun / btn_run already mapped above (PC-accurate 20x20 stickman+circle,
+            // PC 跑步.spr missing from jx-source per rebuild_hud_icons.py convention).
+            { "BtnWorldSort", "btn_worldsort" }, // PC 排行 — no SPR available, label fallback
             { "IconBarArenaBtn", "icon_bar_arena" },
             { "IconBarActivityBtn", "icon_bar_activity" },
             { "IconBarTreasureBtn", "icon_bar_treasure" },

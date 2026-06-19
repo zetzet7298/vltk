@@ -147,23 +147,30 @@
         </ui:VisualElement>
 
         <!-- ═══ PC-STYLE BOTTOM TOOLBAR MENU BUTTONS ═══ -->
-        <!-- Replaces the old mobile tabbed dock. PC 工具控制条.ini layout: square 40x40 menu buttons
-             (Status/Items/Skills/Team/Faction/Friend/Options) in a horizontal row at the bottom.
-             Round action buttons (Run/Sit/Horse/Exchange/PK) live in the CombatActionCluster. -->
+        <!-- PC 工具控制条.ini: 11 buttons in a single 800x45 toolbar.
+             5 round 30x30 action buttons on the LEFT (Run/Sit/Horse/Exchange/PK),
+             6 menu 40x40 buttons on the RIGHT (Status/Items/Skills/Team/Faction/WorldSort).
+             Left/Top positions match the PC INI 1:1. The toolbar overlays the
+             PC bottom strip (主界面新版.spr, 800x60) baked into bottom_bar_bg.png.
+             CombatActionCluster stays hidden — Run/Sit/Horse/Exchange/PK live here. -->
         <ui:VisualElement name="PcMenuToolbar" class="hud-pc-menu-toolbar">
-            <ui:VisualElement name="BtnStatus" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnSkills" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnTask" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnTaskIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnItems" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnItemEx" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnTeam" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnFaction" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnFriend" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnFriendIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnChatRoom" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnTreasure" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnTreasureIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnExchange" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
-            <ui:VisualElement name="BtnOptions" class="hud-pc-toolbar-btn"><ui:VisualElement name="BtnOptionsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
-            <!-- Legacy hidden elements kept for C# binding compatibility (RegisterClick uses these names). -->
+            <!-- Round action cluster (left, 30x30). PC INI Left=9,40,75,110,145 Top=10 -->
+            <ui:VisualElement name="BtnRun"      class="hud-pc-toolbar-btn hud-pc-toolbar-round"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnSit"      class="hud-pc-toolbar-btn hud-pc-toolbar-round"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnHorse"    class="hud-pc-toolbar-btn hud-pc-toolbar-round"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnExchange" class="hud-pc-toolbar-btn hud-pc-toolbar-round"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnPK"       class="hud-pc-toolbar-btn hud-pc-toolbar-round"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            <!-- Menu cluster (right, 40x40). PC INI Left=474,514,555,594,635,713 Top=2 -->
+            <ui:VisualElement name="BtnStatus"    class="hud-pc-toolbar-btn hud-pc-toolbar-menu"><ui:VisualElement name="BtnStatusIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnItems"     class="hud-pc-toolbar-btn hud-pc-toolbar-menu"><ui:VisualElement name="BtnItemsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnSkills"    class="hud-pc-toolbar-btn hud-pc-toolbar-menu"><ui:VisualElement name="BtnSkillsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnTeam"      class="hud-pc-toolbar-btn hud-pc-toolbar-menu"><ui:VisualElement name="BtnTeamIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            <ui:VisualElement name="BtnFaction"   class="hud-pc-toolbar-btn hud-pc-toolbar-menu"><ui:VisualElement name="BtnFactionIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+            <!-- WorldSort (PC 排行) — no SPR art available (跑步.spr/排行.spr missing
+                 from jx-source/pak_unpacked), text label fallback. -->
+            <ui:VisualElement name="BtnWorldSort" class="hud-pc-toolbar-btn hud-pc-toolbar-menu"><ui:VisualElement name="BtnWorldSortIcon" class="hud-menu-btn-icon"/><ui:Label name="BtnWorldSortLabel" text="BXH" class="hud-pc-toolbar-fallback-label"/></ui:VisualElement>
+            <!-- Legacy hidden elements kept for C# binding compatibility (RegisterClick uses these names).
+                 Task/ItemEx/Friend/ChatRoom/Treasure/Options were Unity-only extras not in 工具控制条.ini. -->
             <ui:VisualElement name="UtilityToggleBtn" class="hidden" style="display: none;"/>
             <ui:VisualElement name="UtilitySwitchBtn" class="hidden" style="display: none;"/>
             <ui:VisualElement name="MobileUtilityDock" class="hidden" style="display: none;">
@@ -177,9 +184,12 @@
                 <ui:VisualElement name="UtilityTabSocial" class="hidden" style="display: none;"/>
                 <ui:VisualElement name="UtilityTabActivity" class="hidden" style="display: none;"/>
                 <ui:VisualElement name="UtilityTabSystem" class="hidden" style="display: none;"/>
-                <ui:VisualElement name="BtnSit" class="hidden" style="display: none;"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnHorse" class="hidden" style="display: none;"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnPK" class="hidden" style="display: none;"><ui:VisualElement name="BtnPKIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTask" class="hidden" style="display: none;"><ui:VisualElement name="BtnTaskIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnItemEx" class="hidden" style="display: none;"><ui:VisualElement name="BtnItemExIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnFriend" class="hidden" style="display: none;"><ui:VisualElement name="BtnFriendIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnChatRoom" class="hidden" style="display: none;"><ui:VisualElement name="BtnChatRoomIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnTreasure" class="hidden" style="display: none;"><ui:VisualElement name="BtnTreasureIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnOptions" class="hidden" style="display: none;"><ui:VisualElement name="BtnOptionsIcon" class="hud-menu-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnRec" class="hidden" style="display: none;"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
                 <ui:VisualElement name="IconBarArenaBtn" class="hidden" style="display: none;"><ui:VisualElement name="IconBarArenaBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
                 <ui:VisualElement name="IconBarActivityBtn" class="hidden" style="display: none;"><ui:VisualElement name="IconBarActivityBtnIcon" class="hud-pc-icon-bar-icon"/></ui:VisualElement>
