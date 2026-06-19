@@ -145,11 +145,22 @@ namespace VLTK.Sandbox
             // 123 Khuê Mộc Tinh Chiếu: buff
             ResistBuff(123, "Khuê Mộc Tinh Chiếu", "Khuê Mộc Tinh Chiếu", 30, MagicAttributeKind.PoisonResP),
 
-            // 124 Đả Cẩu Trận: passive
-            PassiveMastery(124, "Đả Cẩu bổng", "Đả Cẩu Trận", 30, addPhys:(lv)=>Link(lv, (1, 10, ""), (20, 175, "")), elementParam:2, icon:"\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr", charAnim:11),
+            // 124 Đả Cẩu Trận [PC source 2026-06-19 fix]: PC Skills.txt SkillStyle=2 (InitiativeNpcState),
+            //   stateSpecialId=44, CharAnimId=14, AttackRadius=180. Trước fix: PassiveMastery (PassivityNpcState) — sai.
+            //   PC 打狗阵.lua: adddefense_v(level) = 30 + 10*level (param1), 25 (param2), 0 (param3).
+            //   Sau fix: stance aura InitiativeNpcState, apply state 44 tự + chain buff ally (Phase E).
+            AuraSkillAllyBuff(124, "Đả Cẩu bổng", "Đả Cẩu Trận", 30, radius:180, stateId:44, child:209, levelData:(lv) => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, 30 + 10*lv, 25, 0));
+                return d;
+            }),
 
-            // 125 Thiên Hạ Vô Cẩu: damage (bangda_egou) [PC radius L20=512]
-            DamageSkillNew(125, "Bổng Đả ác Cẩu", "Bổng Đả Ác Cẩu", 50, 20, 512, 47, SkillMissileForm.Surround, 16, true, false, 11,
+            // 125 Thiên Hạ Vô Cẩu [PC source 2026-06-19 fix]: PC gaibang.lua::tianxia_wugou skill_misslenum_v L1=1, L20=3, L21=3
+            //   (NOT Skills.txt ChildSkillNum=8). PC MissilesForm=5 (Zone) — phân biệt với Surround form 3.
+            //   Trước fix: childNum hardcoded 16 (sai PC, sai L20), missileForm=Surround (form 3, sai PC form 5).
+            //   Runtime SkillEffectVisualService đọc skill_misslenum_v từ Lua, catalog metadata chỉ làm base/default.
+            //   Sau fix: childNum=3 (PC L20 max), missileForm=Zone (PC form 5).
+            DamageSkillNew(125, "Bổng Đả ác Cẩu", "Bổng Đả Ác Cẩu", 50, 20, 512, 47, SkillMissileForm.Zone, 3, true, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
                 fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
                 cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
@@ -159,7 +170,9 @@ namespace VLTK.Sandbox
             // 126 Kim Ô Ánh Tuyết: buff
             ResistBuff(126, "Kim Ô ánh Tuyết", "Kim Ô Ánh Tuyết", 40, MagicAttributeKind.ColdResP, costBugReturnsResultTwice:true),
 
-            // 127 Hoạt Bất Lưu Thủ: utility buff
+            // 127 Hoạt Bất Lưu Thủ [PC source 2026-06-19 fix]: PC Skills.txt SkillStyle=3 (PassivityNpcState),
+            //   LvlSetScript = 泥鳅功.lua (PC physicsres_p passive). Trước fix: PcSkillStyle.Missiles — sai PC semantics.
+            //   Sau fix: PassivityNpcState, charAnimId=14 (stance buff). Buff values giữ từ gaibang.lua::huabu_liushou (FastWalkRunP).
             UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:17, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
@@ -168,7 +181,7 @@ namespace VLTK.Sandbox
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
                 return d;
-            }, skillStyle: PcSkillStyle.Missiles),
+            }, skillStyle: PcSkillStyle.PassivityNpcState, maxLevel: 20),
 
             // 128 Kháng Long Hữu Hối: damage (kanglong_youhui)
             // [SECT-ALL fix 2026-06-15] PC source: skills.txt 128 IsMelee=0, ByMissle=0 → CAST skill, không melee.
@@ -302,7 +315,7 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
                 horseLimit: 1),
 
-            DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 512, 47, SkillMissileForm.Surround, 16, false, false, 11,
+            DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 512, 47, SkillMissileForm.Zone, 3, false, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
                 fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
                 cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
@@ -713,6 +726,16 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition AuraSkill(int id, string raw, string vi, int req, int radius, int stateId, int child, Func<int,SkillLevelData> levelData)
         { var s = BaseSkill(id, raw, vi, req, 20, radius, SkillMissileForm.None); s.skillStyle = PcSkillStyle.InitiativeNpcState; s.isAura = true; s.stateSpecialId = stateId; s.childSkillId = child; s.childSkillLevel = 1; s.childSkillNum = 1; s.targetSelf = true; s.charAnimId = 14; AddLevels(s, levelData); return s; }
+
+        // PC 打狗阵 (124): stance aura InitiativeNpcState, buff self + allies (PC 打狗阵.lua adddefense_v + 打狗阵子弹 missile 209→92 buff aura chain).
+        // Self buff only when no allies in radius. CharAnimId=14, waitTime=0 (immediate state apply).
+        private static SkillDefinition AuraSkillAllyBuff(int id, string raw, string vi, int req, int radius, int stateId, int child, Func<int,SkillLevelData> levelData)
+        {
+            var s = AuraSkill(id, raw, vi, req, radius, stateId, child, levelData);
+            s.targetAlly = true;
+            s.waitTime = 0;
+            return s;
+        }
 
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }

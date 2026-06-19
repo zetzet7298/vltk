@@ -18,6 +18,7 @@ namespace VLTK.Model
         Fan = 2,         // fan / multi-shot
         Surround = 3,    // surrounding burst
         Chain = 4,       // chained between targets
+        Zone = 5,        // PC SKILL_MF_Zone — missiles distribute in a fixed-radius area
     }
 
     [Serializable]
@@ -48,6 +49,7 @@ namespace VLTK.Model
         public int stateSpecialId;       // StateSpecialId
         public PcSkillStyle skillStyle;  // SkillStyle
         public CombatFaction faction;    // CharClass
+        public Series series;
         public SkillMissileForm missileForm; // m_eMisslesForm
 
         public int childSkillId;         // ChildSkillId

@@ -185,25 +185,38 @@ namespace VLTK.Sandbox
                             }
                             else
                             {
-                                // PC: skill_param1_v = per-step gap in subworld pixels.
+                                // PC gaibang.lua: skill_param1_v = per-step gap in subworld pixels.
+                                //   rawParam == 0 → straight-line (e.g. Phi Long 357 L1-L10 luaCount=1 + param=0,
+                                //   hoặc Kháng Long 128 L1-L10 luaCount=1 + param=0).
+                                //   rawParam > 0 → spread (Phi Long 357 L11+ dùng 32, Kháng Long 128 L11+ dùng 2).
                                 // Sprites render at PPU=1 (1 SPR-pixel = 1 world unit), so the
                                 // visual step in world-units equals the raw param value directly.
-                                // Default 32 (PC's standard 2-beam spacing for Phi Long).
                                 int rawParam = PcCaiBangLuaLevelService.GetSingleValue(
                                     skill.skillId, level, "skill_param1_v", 32);
-                                int stepWu = rawParam > 0 ? rawParam : 32;
-                                SetupPcPhiLongSpread(fx, luaCount, stepWu);
+                                if (rawParam == 0)
+                                {
+                                    // PC straight-line: single missile, no spread.
+                                    fx.missileCount = luaCount;
+                                    fx.missilePositions = null;
+                                }
+                                else
+                                {
+                                    int stepWu = rawParam > 0 ? rawParam : 32;
+                                    SetupPcPhiLongSpread(fx, luaCount, stepWu);
+                                }
                             }
                         }
                     }
                 }
 
                 // Multi-missile spread for other fan/surround forms
-                if (!luaSpreadConfigured && (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround))
+                if (!luaSpreadConfigured && (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround || skill.missileForm == SkillMissileForm.Zone))
                 {
                     int count = System.Math.Max(1, skill.childSkillNum);
                     if (skill.missileForm == SkillMissileForm.Surround)
                         SetupSurroundMissiles(fx, count);
+                    else if (skill.missileForm == SkillMissileForm.Zone)
+                        SetupPcZoneMissiles(fx, count, skill.attackRadius);
                     else
                         SetupPcCircleOutwardMissiles(fx, count);
                 }
@@ -776,6 +789,27 @@ namespace VLTK.Sandbox
                 var offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
                 fx.missilePositions[i] = fx.casterPos;
                 fx.missileTargets[i] = fx.casterPos + offset;
+            }
+        }
+
+        // PC SKILL_MF_Zone (form 5): missiles phân bố đều quanh caster tại góc cố định,
+        // bay trong bán kính attackRadius. Dùng cho Cái Bang skill 125 (天下无狗) + NPC variant 1539.
+        // PC gaibang.lua::tianxia_wugou: skill_misslenum_v L1=1, L20=3 (Unity base 3), attackradius L20=512.
+        private void SetupPcZoneMissiles(ActiveSkillEffect fx, int count, int radiusWu)
+        {
+            fx.missileCount = count;
+            fx.missilePositions = new Vector2[count];
+            fx.missileTargets = new Vector2[count];
+            fx.missileOrigins = new Vector2[count];
+            float angleStep = 360f / Mathf.Max(1, count);
+            float radius = Mathf.Max(1f, radiusWu);
+            for (int i = 0; i < count; i++)
+            {
+                float angle = Mathf.Deg2Rad * (i * angleStep);
+                var dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                fx.missilePositions[i] = fx.casterPos;
+                fx.missileOrigins[i] = fx.casterPos;
+                fx.missileTargets[i] = fx.casterPos + dir * radius;
             }
         }
 
