@@ -1196,13 +1196,12 @@
     bottom: 0px;
     width: 1280px;
     height: 106px;
-    /* REMOVED: pc_hud.png was causing yellow overlay. Buttons use individual SPR assets. */
-
+    /* PC bottom toolbar strip (主界面新版.spr cropped) as ornate stone/metal background */
+    background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png');
+    -unity-background-scale-mode: stretch-to-fill;
     -unity-background-image-tint-color: white;
-    /* This requires a proper cropped image, but using color as fallback for now */
-    background-color: #212121;
-    height: 220px;
     background-color: rgba(0,0,0,0);
+    height: 220px;
     border-width: 0px;
 }
 
@@ -1255,6 +1254,7 @@
     width: 318px;
     height: 210px;
     background-color: rgba(0,0,0,0);
+    display: none;
 }
 
 /* Primary attack button — PC art with subtle background, no heavy gold border.
@@ -2150,6 +2150,9 @@
 .hud-mobile-utility-dock {
     width: 244px;
     height: 170px;
+    background-image: url('project://database/Assets/UI/HUD/Art/utility_dock_bg.png');
+    -unity-background-scale-mode: stretch-to-fill;
+    -unity-background-image-tint-color: white;
     background-color: rgba(5,10,6,0.96);
     border-width: 2px;
     border-color: rgb(220,175,80);
@@ -2216,4 +2219,49 @@
 
 .hud-mobile-utility-btn-label {
     display: none;
+}
+
+/* ═══ PC-STYLE BOTTOM TOOLBAR MENU ROW ═══ */
+/* Horizontal row of PC menu buttons along the bottom of the screen.
+   Sits on top of the bottom_bar_bg.png stone strip. Buttons are always
+   visible (no toggle/dock popup) matching PC 工具控制条.ini layout. */
+.hud-pc-menu-toolbar {
+    position: absolute;
+    left: 200px;
+    right: 18px;
+    bottom: 12px;
+    height: 44px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    z-index: 100;
+}
+
+.hud-pc-toolbar-btn {
+    width: 44px;
+    height: 44px;
+    margin-left: 2px;
+    margin-right: 2px;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0);
+    border-width: 0px;
+    border-radius: 0px;
+}
+
+.hud-pc-toolbar-btn .hud-menu-btn-icon,
+.hud-pc-toolbar-btn .hud-btn-icon {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    -unity-background-scale-mode: scale-to-fit;
+    /* PC toolbar icons render at full opacity once LoadArt finishes.
+       The base .hud-menu-btn-icon/.hud-btn-icon defaults to opacity:0
+       (icons hidden until bridge signals loaded); previous BottomPanel
+       context overrode it to 1, but PcMenuToolbar is a sibling now. */
+    opacity: 1;
 }
