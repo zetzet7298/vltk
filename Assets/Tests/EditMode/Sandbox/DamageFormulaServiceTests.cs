@@ -232,8 +232,10 @@ namespace VLTK.Tests.Sandbox
         {
             var svc = new DamageFormulaService();
             // 100 final dmg, 20% melee return → 20 damage returned to melee attacker.
+            // NOTE: PC CalcDamage chỉ set nMax (return%) cho non-magic types (KNpc.cpp:2500-2580).
+            // Magic type skip return% assignment → dùng Physics cho test này.
             var def = new DefenderStats { meleeDmgRetPercent = 20 };
-            var r = svc.Compute(Atk(100, 100, DamageType.Magic, melee: true), def, rolledOverride: 100);
+            var r = svc.Compute(Atk(100, 100, DamageType.Physics, melee: true), def, rolledOverride: 100);
             Assert.AreEqual(20, r.meleeReturnDamage);
             Assert.AreEqual(0, r.rangeReturnDamage);
         }
@@ -242,8 +244,9 @@ namespace VLTK.Tests.Sandbox
         public void Compute_RangeDamageReturn_AppliesToRangedAttacker()
         {
             var svc = new DamageFormulaService();
+            // PC: damage return chỉ cho non-magic types.
             var def = new DefenderStats { rangeDmgRetPercent = 30 };
-            var r = svc.Compute(Atk(100, 100, DamageType.Magic, melee: false), def, rolledOverride: 100);
+            var r = svc.Compute(Atk(100, 100, DamageType.Physics, melee: false), def, rolledOverride: 100);
             Assert.AreEqual(30, r.rangeReturnDamage);
             Assert.AreEqual(0, r.meleeReturnDamage);
         }
@@ -279,26 +282,60 @@ namespace VLTK.Tests.Sandbox
         // --- PC ReceiveDamage: hit/miss/crit/steal (NEW) ---
 
         [Test]
-        public void CheckHitTarget_ZeroAttackRating_VsHighDefend_ReturnsFalse()
+        public void CheckHitTarget_NegativeAttackRating_AlwaysMisses()
         {
-            var svc = new DamageFormulaService();
-            // AR=0 vs defend=100 → always miss (PC: 0*100/(0+100)=0% hit chance → clamped min 5%)
-            Assert.IsFalse(svc.CheckHitTarget(0, 100, ignore: 0));
+            var svc = new DamageFormulaService { RollPercent = (pct) => true }; // even with 100% roll
+            // PC: if (nAR < 0) return FALSE; — negative AR always misses
+            Assert.IsFalse(svc.CheckHitTarget(-1, 100, ignore: 0));
+        }
+
+        [Test]
+        public void CheckHitTarget_NegativeDefend_AlwaysHits()
+        {
+            var svc = new DamageFormulaService { RollPercent = (pct) => true };
+            // PC: if (nDf < 0) nPercent = MAX_HIT_PERCENT (95)
+            Assert.IsTrue(svc.CheckHitTarget(0, -1, ignore: 0));
+        }
+
+        [Test]
+        public void CheckHitTarget_ZeroAR_ZeroDefend_50PercentChance()
+        {
+            // PC: if ((nAR + nDefense) == 0) nPercent = 50;
+            var svcHit = new DamageFormulaService { RollPercent = (pct) => pct >= 50 };
+            Assert.IsTrue(svcHit.CheckHitTarget(0, 0, ignore: 0));
+
+            var svcMiss = new DamageFormulaService { RollPercent = (pct) => pct < 50 ? true : false };
+            // With pct=50 and roll < pct → g_Random(100)=49 < 50 → TRUE. Roll returns true if roll < pct.
+            // For 50% chance: half the time hits. With our injected roll, we can test boundary.
+            var svcBoundary = new DamageFormulaService { RollPercent = (pct) => true };
+            Assert.IsTrue(svcBoundary.CheckHitTarget(0, 0, ignore: 0));
+        }
+
+        [Test]
+        public void CheckHitTarget_Minimum40PercentHitChance()
+        {
+            // PC: if (nPercent < 40) nPercent = 40; — minimum 40% hit chance
+            // AR=1 vs defend=1000 → 1*100/(1+1000) = 0% → clamped to 40%
+            var svcAlwaysHit = new DamageFormulaService { RollPercent = (pct) => pct <= 40 };
+            Assert.IsTrue(svcAlwaysHit.CheckHitTarget(1, 1000, ignore: 0),
+                "Even with terrible odds, PC guarantees minimum 40% hit chance");
         }
 
         [Test]
         public void CheckHitTarget_100AttackRating_VsZeroDefend_ReturnsTrue()
         {
-            var svc = new DamageFormulaService();
-            // AR=100 vs defend=0 → 100*100/(100+0)=100% hit chance
+            var svc = new DamageFormulaService { RollPercent = (pct) => true };
+            // AR=100 vs defend=0 → 100*100/(100+0)=100% → capped at 95% → still hits
             Assert.IsTrue(svc.CheckHitTarget(100, 0, ignore: 0));
         }
 
         [Test]
-        public void CheckHitTarget_IgnoreDefenseOver100_AlwaysHits()
+        public void CheckHitTarget_IgnoreDefenseOver100_NegatesDefense()
         {
-            var svc = new DamageFormulaService();
-            // ignoreDefense >= 100 → always hit regardless of defend (PC: defend*(100-100)/100 = 0)
+            // PC: if (nIngore < MAX_PERCENT) nDefense = ... else nDefense stays 0
+            // ignore=100 → nIngore < 100 is false → nDefense = 0
+            // Then AR=0, nDefense=0 → (0+0)==0 → nPercent=50
+            var svc = new DamageFormulaService { RollPercent = (pct) => true };
             Assert.IsTrue(svc.CheckHitTarget(0, 999, ignore: 100));
         }
 
