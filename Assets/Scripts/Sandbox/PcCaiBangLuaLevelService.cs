@@ -53,13 +53,13 @@ namespace VLTK.Sandbox
             [117] = "yanmen_tuobo",        // Đầu Thạch Vấn Lộ (PC 117 thuộc inline gaibang.lua; mobile dùng bảng của yanmen_tuobo vì LvlData reference 沿门托钵).
             [119] = "yanmen_tuobo",        // Duyên Môn Thoa Bát.
             [122] = "jianren_shenshou",    // Kiến Nhân Thân Thủ.
-            [125] = "bangda_egou",         // Bổng Đả Ác Cẩu (PC map tới bangda_egou cùng dagou file).
+            [125] = "tianxia_wugou",       // Thiên Hạ Vô Cẩu (PC Skills.txt 125 = 天下无狗; tianxia_wugou table addskilldamage1[3] L20=25).
             [127] = "huabu_liushou",       // Hoạt Bất Lưu Thủ.
             [128] = "kanglong_youhui",     // Kháng Long Hữu Hối.
             [130] = "zuidie_kuangwu",      // Túy Điệp Cuồng Vũ.
             [357] = "feilong_zaitian",     // Phi Long Tại Thiên.
             [358] = "kanglong_youhui",     // Kháng Long Hữu Hối (player variant, reuse kanglong_youhui table).
-            [359] = "tianxia_wugou",       // Thiên Hạ Vô Cẩu.
+            [359] = "tianxia_wugou",       // Thiên Hạ Vô Cẩu (MOD id, reuse 125 table).
             [1073] = "zhanggaibang150",    // Thời Thặng Lục Long.
             [1074] = "gungaibang150",      // Bổng Hoành Lược Mã.
             [1101] = "zhanggaibang150",    // Multi-target variant, reuse 1073 table.
@@ -472,6 +472,13 @@ namespace VLTK.Sandbox
             var slots = new List<List<LuaPoint>> { null, null, null };
             int pos = 0;
             int implicitSlot = 1;
+            // [CaiBang-LuaParser 2026-06-19] PC gaibang.lua table body formats:
+            //   Multi-slot (3 slots): `{{{1,10},{20,150}},{{1,-1},{2,-1}},{{1,2},{2,2}}}`
+            //     → 3 outer `{...}` entries, mỗi entry chứa 1+ (level,value) tuples cho 1 slot.
+            //   Single-slot (1 slot with N points): `{{1,0},{11,0},{11,32},{20,32}}`
+            //     → 1 outer `{...}` entry chứa N (level,value) tuples cho slot 1.
+            // Trước fix: parser treat mỗi `{level,value}` tuple như slot riêng → sai single-slot format.
+            //   Detect format bằng cách peek inner của `{...}` — nếu chứa inner `{` thì multi-point slot.
             while (pos < body.Length)
             {
                 SkipTrivia(body, ref pos);
@@ -505,16 +512,53 @@ namespace VLTK.Sandbox
                 int close = MatchClosingBrace(body, open);
                 if (close < 0) break;
                 string inner = body.Substring(open + 1, close - open - 1);
-                var points = ParsePointsList(inner);
-                if (points.Count > 0)
+                // Multi-point slot: inner chứa `{` (e.g. `"{1,0},{11,0},{11,32},{20,32}"` hoặc `"{1,10},{20,150}"`)
+                //   → parse tất cả tuples trong inner làm points của slot hiện tại.
+                // Single-point slot: inner chỉ là `level,value` (e.g. `"1,0"`) → 1 point.
+                bool isMultiPoint = ContainsTuple(inner);
+                if (isMultiPoint)
                 {
-                    while (slots.Count < slot) slots.Add(null);
-                    slots[slot - 1] = points;
+                    var points = ParsePointsList(inner);
+                    if (points.Count > 0)
+                    {
+                        while (slots.Count < slot) slots.Add(null);
+                        slots[slot - 1] = points;
+                    }
+                }
+                else
+                {
+                    var tup = ReadTuple(inner);
+                    if (tup.HasValue)
+                    {
+                        var points = new List<LuaPoint> { new LuaPoint(tup.Value.level, tup.Value.value, tup.Value.func) };
+                        while (slots.Count < slot) slots.Add(null);
+                        slots[slot - 1] = points;
+                    }
                 }
                 pos = close + 1;
                 if (slot == implicitSlot) implicitSlot++;
             }
             return slots;
+        }
+
+        /// <summary>
+        /// Detect nếu inner của `{...}` chứa inner `{...}` tuples (multi-point slot format).
+        ///   e.g. `"{1,0},{11,0},{11,32},{20,32}"` → true (multi-point).
+        ///   e.g. `"1,0"` → false (single point).
+        /// </summary>
+        private static bool ContainsTuple(string body)
+        {
+            int pos = 0;
+            while (pos < body.Length)
+            {
+                SkipTrivia(body, ref pos);
+                if (pos >= body.Length) return false;
+                if (body[pos] == '}') return false;
+                if (body[pos] == ',') { pos++; continue; }
+                if (body[pos] == '{') return true;
+                pos++;
+            }
+            return false;
         }
 
         /// <summary>

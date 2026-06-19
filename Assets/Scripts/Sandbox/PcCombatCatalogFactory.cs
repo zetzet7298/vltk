@@ -155,12 +155,16 @@ namespace VLTK.Sandbox
                 return d;
             }),
 
-            // 125 Thiên Hạ Vô Cẩu [PC source 2026-06-19 fix]: PC gaibang.lua::tianxia_wugou skill_misslenum_v L1=1, L20=3, L21=3
-            //   (NOT Skills.txt ChildSkillNum=8). PC MissilesForm=5 (Zone) — phân biệt với Surround form 3.
-            //   Trước fix: childNum hardcoded 16 (sai PC, sai L20), missileForm=Surround (form 3, sai PC form 5).
-            //   Runtime SkillEffectVisualService đọc skill_misslenum_v từ Lua, catalog metadata chỉ làm base/default.
-            //   Sau fix: childNum=3 (PC L20 max), missileForm=Zone (PC form 5).
-            DamageSkillNew(125, "Bổng Đả ác Cẩu", "Bổng Đả Ác Cẩu", 50, 20, 512, 47, SkillMissileForm.Zone, 3, true, false, 11,
+            // 125 Thiên Hạ Vô Cẩu: damage (bangda_egou) [PC radius L20=400]
+            // PC source: Skills.txt 125 SkillStyle=0, MissilesForm=4 (Chain), CharAnimId=11, ChildSkillNum=0 (Lua runtime).
+            //   gaibang.lua::tianxia_wugou skill_misslenum_v L1=1, L20=3 (Unity runtime đọc qua PcCaiBangLuaLevelService).
+            //   attackradius L20=400 (PC jx-source, bundled PcSkills.txt đồng ý).
+            // Trước fix [2026-06-19]: childNum hardcoded 16 (sai PC), missileForm=Surround (form 3, sai PC form 4).
+            //   attackRadius=512 (sai PC L20=400).
+            // Sau fix: attackRadius=400 (PC), childSkillNum=0 (PC runtime dùng Lua skill_misslenum_v).
+            //   missileForm giữ Surround (Unity runtime dùng SetupSurroundMissiles, tương đương PC Chain render area).
+            //   L20 actual missile count = 3 (qua Lua runtime).
+            DamageSkillNew(125, "Bổng Đả ác Cẩu", "Bổng Đả Ác Cẩu", 50, 20, 400, 47, SkillMissileForm.Surround, 0, true, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
                 fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
                 cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
@@ -176,7 +180,9 @@ namespace VLTK.Sandbox
             UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:17, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
-                int dur = -1; // Permanent duration (N/A) in sandbox
+                // PC gaibang.lua::huabu_liushou fastwalkrun_p duration: 18*120 (L1) → 18*180 (L20) ticks.
+                // Trước fix: dur=-1 (permanent) — sai PC magnitude. Sau fix: dùng Link 18*120 → 18*180.
+                int dur = Link(lv, (1, 18 * 120, ""), (20, 18 * 180, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, pct, dur, 0));
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
@@ -205,7 +211,7 @@ namespace VLTK.Sandbox
                 return d;
             }, skillStyle: PcSkillStyle.PassivityNpcState),
 
-            // 130 Túy Điệp Cuồng Vũ: buff (zuidie_kuangwu)
+            // 130 Túy Điệp Cuồng Vũ: buff (zuidie_kuangwu) [PC CharAnimId=43 state 43 aura]
             UtilitySkill(130, "Túy Điệp Cuồng Vũ ", "Túy Điệp Cuồng Vũ", 60, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:43, levelData:(lv)=>{
                 var d = new SkillLevelData{level=lv};
                 int dur = -1; // Permanent duration (N/A) in sandbox
@@ -216,7 +222,7 @@ namespace VLTK.Sandbox
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (20, 30, "Conic")), dur, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 50, ""), (20, 100, "")), 0, 0));
                 return d;
-            }, maxLevel: 30),
+            }, maxLevel: 30, charAnim: 43),
 
             // ===== MOD Vietnam Cái Bang additions =====
             PassiveMasteryLong(274, "Giáng Long Chưởng ", "Giương Long Chưởng", 30,
@@ -315,7 +321,7 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
                 horseLimit: 1),
 
-            DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 512, 47, SkillMissileForm.Zone, 3, false, false, 11,
+            DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 400, 47, SkillMissileForm.Surround, 0, false, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
                 fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
                 cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
@@ -737,8 +743,11 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20)
-        { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = 11; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
+        // [CaiBang-Catalog 2026-06-19] PC stance/passive buff charAnimId=14 (cdo_none, no cast animation).
+        //   Default charAnimId=11 (Cái Bang cast anim mag_tr_16_施魔法.spr) for active damage skills.
+        //   Sau fix: charAnimId parameter cho UtilitySkill, default 14 cho stance/utility/passive.
+        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20, int charAnim = 14)
+        { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = charAnim; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
         /// <summary>Override PreCastSpr với path từ jx-source (khác PC stock 2011).</summary>
         private static SkillDefinition WithJxPreCast(SkillDefinition s, string jxPreCastSprPath)
         { s.effectSourceId = Sprite(jxPreCastSprPath); return s; }

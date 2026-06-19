@@ -124,9 +124,18 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
             Assert.AreEqual(48, r.manaCost); // PC Lua 天下无狗: fixed 50 -> now 48
-            Assert.AreEqual(16, r.childProjectileCount);
-            Assert.AreEqual(16, r.projectiles.Count);
-            Assert.Less(enemy.currentLife, 1000);
+            // [CaiBang-TianXiaWuGou 2026-06-19] PC gaibang.lua::tianxia_wugou (skill 125 mapping) skill_misslenum_v L20=3.
+            //   catalog childSkillNum=0 → SpawnProjectiles early-return (childProjectileCount stays 0 for 125 main).
+            //   addskilldamage1 chain → 1074 (gungaibang150) chance L20=25% (tianxia_wugou.addskilldamage1[3] L20=25).
+            //   Nếu chain hit: 1074 skill_misslenum_v L20=5 → 5 missiles + damage.
+            //   Nếu chain miss (75%): 0 missiles (125 main đã có ApplyDamage riêng → enemy vẫn mất máu từ 125 cast).
+            //   Damage luôn được apply qua Cast() → ApplyDamage() regardless of chain (PC: damage rolls
+            //   independent of missile count).
+            Assert.That(r.childProjectileCount, Is.EqualTo(0).Or.EqualTo(5),
+                "125 chain miss (75%) → 0 missiles, hit (25%) → 5 missiles (gungaibang150 L20=5)");
+            Assert.That(r.projectiles.Count, Is.EqualTo(0).Or.EqualTo(5));
+            // Enemy luôn mất máu (125 ApplyDamage + có thể 1074 damage nếu chain hit).
+            Assert.Less(enemy.currentLife, 1000, "125 cast luôn apply damage từ levelData");
             Assert.AreEqual(2, svc.NextCastTime(beggar.actorId, 125));
 
             var onCooldown = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);

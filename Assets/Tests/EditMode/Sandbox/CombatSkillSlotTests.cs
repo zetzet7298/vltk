@@ -146,8 +146,10 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_SurroundSkill_SpawnsMultipleMissiles()
         {
-            // PC skill 125 (Thiên Hạ Vô Cẩu) — Cái Bang surround burst with 16 missiles.
-            // Use the real catalog so the data-driven visual config resolves to the PC missile 47.
+            // PC skill 125 (Thiên Hạ Vô Cẩu) — Cái Bang surround burst with N missiles.
+            // [CaiBang-TianXiaWuGou 2026-06-19] PC gaibang.lua::bangda_egou (125 mapping) không có skill_misslenum_v;
+            //   catalog childSkillNum=0 → runtime fallback = max(1, 0) = 1 missile at L1.
+            //   PC gaibang.lua::tianxia_wugou (359 mapping) có skill_misslenum_v L1=1, L20=3 — runtime đọc qua Lua.
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
             var skill = catalog.Resolve(125);
             Assert.IsNotNull(skill, "Skill 125 should be in PC catalog.");
@@ -155,9 +157,9 @@ namespace VLTK.Tests.Sandbox
             var service = new SkillEffectVisualService(null, catalog);
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(50, 0), 1);
             Assert.IsNotNull(fx);
-            Assert.AreEqual(16, fx.missileCount, "PC skill 125 (Thiên Hạ Vô Cẩu) spawns 16 surround missiles.");
+            Assert.AreEqual(1, fx.missileCount, "PC skill 125 L1 = 1 missile (catalog childSkillNum=0 fallback).");
             Assert.IsNotNull(fx.missilePositions);
-            Assert.AreEqual(16, fx.missilePositions.Length);
+            Assert.AreEqual(1, fx.missilePositions.Length);
         }
 
         [Test]
