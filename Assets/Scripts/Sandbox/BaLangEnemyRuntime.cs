@@ -44,8 +44,8 @@ namespace VLTK.Sandbox
             if (barFill != null)
             {
                 float ratio = MaxLife > 0 ? Mathf.Clamp01((float)CurrentLife / MaxLife) : 0f;
-                var s = barFill.transform.localScale;
-                barFill.transform.localScale = new Vector3(ratio, s.y, s.z);
+                Vector3 scale = barFill.transform.localScale;
+                barFill.transform.localScale = new Vector3(ratio, scale.y, scale.z);
             }
             if (showDamage && CurrentLife < previousLife)
             {
