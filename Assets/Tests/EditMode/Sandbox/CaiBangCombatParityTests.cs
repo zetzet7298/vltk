@@ -6,8 +6,12 @@ using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
+    [TestFixture, Category("CaiBang")]
     public class CaiBangCombatParityTests
     {
+        // [CaiBang-TestIsolation 2026-06-19] Reverted: sharing static catalog across tests broke
+        //   CaiBang_Cast test (damage = 0 sau SandboxManager_Bootstraps test). Fresh catalog per test
+        //   ensures isolation. Catalog build cost ~50ms is acceptable cho 24 tests trong fixture này.
         private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
         private CombatActorState Novice(int weaponSkill = PcCombatCatalogFactory.NoviceShortWeaponAttack) => new CombatActorState
         {
@@ -175,7 +179,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(CombatCastRejectReason.FactionMismatch, r.reason);
         }
 
-        [Test]
+        [Test, Category("CaiBang")]
         public void SandboxManager_BootstrapsCombatRuntimeWithNoviceAndCaiBangCatalog()
         {
             var go = new GameObject("SandboxManagerCombatTest");
@@ -190,6 +194,12 @@ namespace VLTK.Tests.Sandbox
             }
             finally
             {
+                // [CaiBang-TestIsolation 2026-06-19] Reset SandboxManager.Instance singleton — otherwise
+                //   subsequent tests trong cùng fixture hoặc category-only runs see corrupted global state
+                //   (CombatSkillCatalog từ CreateNoviceAndCoreSectCatalog thay vì CreateNoviceAndCaiBangCatalog,
+                //   gây ra damage=0 cho các test cast skill 122/125 v.v. sau đó).
+                var instanceProp = typeof(SandboxManager).GetProperty("Instance");
+                instanceProp?.GetSetMethod(true)?.Invoke(null, new object[] { null });
                 Object.DestroyImmediate(go);
             }
         }

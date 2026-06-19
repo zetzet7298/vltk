@@ -13,9 +13,11 @@ namespace VLTK.Tests.Sandbox
     // Trước fix: PcCastAnimationDurationSeconds trả 20f/18f ≈ 1.11s cứng.
     //   preCastDuration dùng timePerCast * 0.055f — sai field (timePerCast là cooldown, WaitTime mới là cast anim).
     // Sau fix: waitTime > 0 ? waitTime/16f : 20f/16f fallback.
+    [TestFixture, Category("CaiBang")]
     public class CaiBangWaitTimeTests
     {
-        private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+        private static readonly SkillCatalog _catalog = TestCatalogCache.NoviceAndCaiBang;
+        private SkillCatalog Catalog() => _catalog;
 
         // Reflection helper: invoke private static PcCastAnimationDurationSeconds trên CombatSkillSlotController.
         private static float InvokeCastDuration(SkillDefinition skill)

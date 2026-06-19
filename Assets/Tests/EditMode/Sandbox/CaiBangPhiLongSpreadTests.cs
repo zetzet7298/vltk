@@ -12,9 +12,11 @@ namespace VLTK.Tests.Sandbox
     //   Spread step derived from skill_misslenum_v count → SetupPcCircleOutwardMissiles fallback.
     // Trước fix: SetupPcPhiLongSpread luôn applied với stepWu=32 — sai straight-line L1-L10.
     // Sau fix: luaCount=1 → straight-line; luaCount>1 → spread via SetupPcCircleOutwardMissiles.
+    [TestFixture, Category("CaiBang")]
     public class CaiBangPhiLongSpreadTests
     {
-        private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+        private static readonly SkillCatalog _catalog = TestCatalogCache.NoviceAndCaiBang;
+        private SkillCatalog Catalog() => _catalog;
 
         [Test]
         public void PhiLong_L1_StraightLine_NoSpread()

@@ -11,9 +11,11 @@ namespace VLTK.Tests.Sandbox
     // PC stance aura: apply state 44 (AddDefenseV) cho caster + allies trong AttackRadius=180.
     // Trước fix: chỉ buff self, allies không nhận → sai PC semantic.
     // Sau fix: PropagateAllyAura iterate AllyFinder → apply state 44 cho mỗi ally trong radius.
+    [TestFixture, Category("CaiBang")]
     public class CaiBangDogArrayTests
     {
-        private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+        private static readonly SkillCatalog _catalog = TestCatalogCache.NoviceAndCaiBang;
+        private SkillCatalog Catalog() => _catalog;
 
         private CombatActorState Beggar(Vector2 pos, int level = 20) => new CombatActorState
         {

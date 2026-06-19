@@ -11,12 +11,13 @@ using VLTK.UI;
 
 namespace VLTK.Tests.Sandbox
 {
+    [TestFixture, Category("CaiBang")]
     public class CaiBangSkillPanelTests
     {
         [Test]
         public void GrantCaiBangSkillPanelProgression_SetsLevel200Points200AndKnownCaiBangSkillsAtZero()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
@@ -33,7 +34,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void ReopeningPanelProgression_DoesNotResetSpentSkillPointsOrLevels()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
             Assert.IsTrue(PcSkillPanelService.TryUpgrade(progression, catalog, 117));
@@ -46,7 +47,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void TryUpgradeCaiBangSkill_SpendsOnePointAndHonorsPcCaps()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
@@ -64,7 +65,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void LowPlayerLevelCannotUpgradePastReqLevelGate()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
             progression.level = 10;
@@ -78,7 +79,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void PcCombatCatalog_CaiBangRowsMatchAuthoritativePcSkillsTxt()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var pcRows = ReadPcCaiBangSkillRows();
 
             CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130 }, pcRows.Keys.ToArray());
@@ -110,7 +111,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillPanelSnapshot_ListsAllCaiBangSkillsInPcSlotOrder()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
@@ -175,7 +176,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void Build_WithSelectedSkill_ExposesPcLikeDetailAndToggleTarget()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 
@@ -193,7 +194,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void PcCaiBangSkillMapping_IsKeyedBySkillIdForSensitiveDogAndDragonSkills()
         {
-            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
             var progression = new PlayerProgressionState();
             progression.GrantCaiBangSkillPanelProgression(catalog);
 

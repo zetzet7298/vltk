@@ -14,7 +14,7 @@ using VLTK.Sprites;
 
 namespace VLTK.Tests.Sandbox
 {
-    [TestFixture]
+    [TestFixture, Category("Slow")]
     public class MountVisualTests
     {
         private GameObject _male;

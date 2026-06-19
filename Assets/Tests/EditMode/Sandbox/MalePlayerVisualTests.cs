@@ -20,6 +20,7 @@ namespace VLTK.Tests.Sandbox
     /// The catalog-level tests still rely on <see cref="MalePlayerSpriteCatalog"/>
     /// directly (no SPR bytes needed), so they pass without a visual.
     /// </summary>
+    [TestFixture, Category("Slow")]
     public class MalePlayerVisualTests
     {
         private GameObject _go;

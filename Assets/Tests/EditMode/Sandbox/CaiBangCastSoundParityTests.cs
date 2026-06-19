@@ -32,6 +32,7 @@ using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
+    [TestFixture, Category("CaiBang")]
     public class CaiBangCastSoundParityTests
     {
         // (skillId, expectedManCast, expectedFmCast, expectedPreCastSprUid). Source: PC skills.txt cols 7/8/6.

@@ -10,9 +10,11 @@ namespace VLTK.Tests.Sandbox
     // PC MissilesForm=5 (Zone) — missiles distribute in fixed-radius area.
     // Trước fix: Surround (form 3) + childNum=16 — sai PC.
     // Sau fix: Zone (form 5) + childNum=3 + SetupPcZoneMissiles(radius=512).
+    [TestFixture, Category("CaiBang")]
     public class CaiBangTianXiaWuGouTests
     {
-        private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+        private static readonly SkillCatalog _catalog = TestCatalogCache.NoviceAndCaiBang;
+        private SkillCatalog Catalog() => _catalog;
 
         [Test]
         public void TianxiaWugou_SurroundForm_RuntimeMissileCount3()

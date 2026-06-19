@@ -12,9 +12,11 @@ namespace VLTK.Tests.Sandbox
     //   122 (jianren_shenshou, Kiến Nhân Thần Thủ)    → 357 (Phi Long), 50%
     //   125 (tianxia_wugou, Thiên Hạ Vô Cẩu)         → 1074 (Phi Long Tại Thiên tier 2), 25%
     //   128 (kanglong_youhui, Kháng Long Hữu Hối)     → 357 (Phi Long), 55%
+    [TestFixture, Category("CaiBang")]
     public class CaiBangAddSkillDamageChainTests
     {
-        private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+        private static readonly SkillCatalog _catalog = TestCatalogCache.NoviceAndCaiBang;
+        private SkillCatalog Catalog() => _catalog;
 
         [Test]
         public void YanmenTuobo_L20Chance40_Target359()

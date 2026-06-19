@@ -15,9 +15,11 @@ namespace VLTK.Tests.Sandbox
     //   125 Thiên Hạ Vô Cẩu (tianxia_wugou)         → 0 Skill (damage, missile cast)
     //   127 Hoạt Bất Lưu Thủ (huabu_liushou)        → 3 PassivityNpcState
     //   128 Kháng Long Hữu Hối (kanglong_youhui)    → 0 Skill (damage, missile cast)
+    [TestFixture, Category("CaiBang")]
     public class CaiBangSkillStyleTests
     {
-        private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+        private static readonly SkillCatalog _catalog = TestCatalogCache.NoviceAndCaiBang;
+        private SkillCatalog Catalog() => _catalog;
 
         [Test]
         public void DamageSkills_UseMissiles_PcSkillStyle0()

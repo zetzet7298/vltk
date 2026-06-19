@@ -12,9 +12,11 @@ namespace VLTK.Tests.Sandbox
     //   118, 120, 121, 123, 126, 129  → 0 or default (buff utility, no cast anim)
     //   124, 127                      → 14 (stance/passive, cdo_none)
     //   130                           → 43 (Túy Điệp Cuồng Vũ — state 43 aura)
+    [TestFixture, Category("CaiBang")]
     public class CaiBangCatalogCharAnimTests
     {
-        private SkillCatalog Catalog() => PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+        private static readonly SkillCatalog _catalog = TestCatalogCache.NoviceAndCaiBang;
+        private SkillCatalog Catalog() => _catalog;
 
         [Test]
         public void DamageSkills_CharAnim11_PcAccurate()

@@ -17,6 +17,7 @@ using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
+    [TestFixture, Category("CaiBang")]
     public class CaiBangLuaLevelServiceTests
     {
         // Mobile Lua path (server-truth, identical content with client gaibang.lua).
