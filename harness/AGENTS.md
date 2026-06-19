@@ -14,6 +14,48 @@ Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng 
 | `srcwalk`                | Code navigation, tìm symbol/file/flow                       | Repo map, symbol search, callers/callees, deps. Ưu tiên hơn grep/read.        |
 | `unity-mcp-orchestrator` | Tạo/sửa GameObject, scene, script, test trong Unity Editor | Điều khiển Unity Editor qua MCP — CRUD scene, script, component, test.       |
 
+### 🔴 Bắt buộc — Test run rule (EditMode)
+
+**KHÔNG BAO GIỜ** chạy full EditMode suite (4049 tests, ~4 phút) trong dev loop.
+**LUÔN** filter theo category / namespace khi chạy test:
+
+```python
+# Mặc định khi dev 1 phái/skill cụ thể — chỉ chạy tests liên quan (~1-2s)
+unityMCP___run_tests(mode="EditMode", category_names=["<PháiTên>"])
+
+# Skip slow sprite tests khi không cần verify visual
+unityMCP___run_tests(mode="EditMode", category_names=["!Slow"])
+
+# Filter namespace khi không có category (regex groupNames)
+unityMCP___run_tests(mode="EditMode",
+    group_names=["^VLTK\\.Tests\\.Sandbox\\.PhaiTenTests\\."])
+```
+
+Full suite CHỈ chạy khi:
+- Trước khi `git push` (final gate).
+- Sau khi sửa code shared (`PcCombatCatalogFactory`, `CombatRuntimeService`, `SkillEffectVisualService`, asmdef).
+
+Khi tạo test file mới, PHẢI add `[TestFixture, Category("<PháiTên>")]` ở class-level
+(class-level áp dụng cho all methods trong class — verified qua NUnit docs).
+Nếu test chạm visual/sprite decode (chậm), add `[TestFixture, Category("Slow")]` để
+skip được khi cần.
+
+Categories hiện có (cập nhật 2026-06-19):
+- `CaiBang` — 12 fixtures, 82 tests (Phi Long, Bổng Đả, Kháng Long, Thiên Hạ Vô Cẩu, ...)
+- `Slow` — MountVisualTests, MalePlayerVisualTests (sprite decode chậm nhất)
+- Khi port phái mới (Thiếu Lâm, Võ Đang, ...) → add category riêng ngay từ đầu.
+
+Single test (debug nhanh):
+
+```python
+unityMCP___run_tests(mode="EditMode",
+    test_names=["VLTK.Tests.Sandbox.CaiBangCombatParityTests.CaiBang_122_FireDamageMaxesAtPc215_AtLevel20"])
+```
+
+Shared catalog cache: `TestCatalogCache.NoviceAndCaiBang` (avoid rebuild ~50ms/call).
+Tests KHÔNG mutate catalog mới dùng cache; tests mutate (vd. search-and-remove) phải
+gọi `PcCombatCatalogFactory.CreateXxxCatalog()` trực tiếp để lấy fresh copy.
+
 ### 🟡 Theo task — Port cụ thể
 
 | Skill                | Khi nào dùng                                                 | Tóm tắt                                                           |
