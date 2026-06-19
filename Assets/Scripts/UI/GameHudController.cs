@@ -551,6 +551,7 @@ namespace VLTK.UI
             RegisterClick(root, "BtnOptions", OnOptionsClick);
             RegisterClick(root, "BtnPK", OnPKClick);
             RegisterClick(root, "BtnExchange", OnExchangeClick);
+            RegisterClick(root, "BtnWorldSort", OnWorldSortClick);
             RegisterClick(root, "BtnRec", OnRecClick);
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
             RegisterClick(root, "IconBarArenaBtn", () => OnIconBarClick(0));
@@ -3364,6 +3365,22 @@ namespace VLTK.UI
                 }
                 SubsystemLog.Info("HUD", hide ? "Close Exchange" : "Open Exchange");
             }
+        }
+
+        /// <summary> PC 排名.ini: World ranking panel with category list + message detail. </summary>
+        private void OnWorldSortClick()
+        {
+            if (_pcToolPanel == null || _pcToolList == null)
+                return;
+            if (_pcToolTitle != null)
+                _pcToolTitle.text = "Bảng xếp hạng";
+            _pcToolList.Clear();
+            AddPcToolRow("PC 排名.ini — bảng xếp hạng thế giới");
+            AddPcToolRow("Danh mục: Cấp độ / Tiền bạc / Võ lực / Môn phái");
+            AddPcToolRow("(Chưa kết nối server — placeholder UI)");
+            _pcToolPanel.RemoveFromClassList("hidden");
+            _pcToolPanel.BringToFront();
+            SubsystemLog.Info("HUD", "Open WorldSort ranking panel");
         }
 
         private void OpenPcExchangePanel(string statusLine = null)
