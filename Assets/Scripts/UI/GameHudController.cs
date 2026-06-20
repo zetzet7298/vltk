@@ -791,6 +791,13 @@ namespace VLTK.UI
                 if (treasureBtn != null)
                     LoadIcon(treasureBtn, artPath, "btn_treasure");
 
+                // Direct-load fallback for chat buttons (bypass LoadIcon pipeline)
+                LoadChatIconDirectly(root, artPath, "ChatOptionsBtn", "btn_options");
+                LoadChatIconDirectly(root, artPath, "FaceBtn", "btn_chat_face");
+                LoadChatIconDirectly(root, artPath, "SendBtnIcon", "btn_chat_send");
+                LoadChatIconDirectly(root, artPath, "ChatFriendBtn", "btn_friend");
+                LoadChatIconDirectly(root, artPath, "ChatTreasureBtn", "btn_treasure");
+
                 LoadIcon(_mapPreviewPlayerDot, artPath, "minimap_dot");
 
                 var markerMap = root.Q("MinimapMarkerBtn");
@@ -862,6 +869,31 @@ namespace VLTK.UI
                 el.style.backgroundImage = new StyleBackground(tex);
                 UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
             });
+        }
+
+        /// <summary>Directly load a PNG from StreamingAssets and apply to element. Bypasses LoadIcon pipeline.</summary>
+        private static void LoadChatIconDirectly(VisualElement root, string artPath, string elementName, string iconName)
+        {
+            var el = root.Q(elementName);
+            if (el == null) return;
+            // Skip if already loaded via LoadIcon
+            if (el.style.backgroundImage.value.texture != null) return;
+            var pngPath = System.IO.Path.Combine(artPath, iconName + ".png");
+            if (!System.IO.File.Exists(pngPath)) return;
+            try
+            {
+                var data = System.IO.File.ReadAllBytes(pngPath);
+                var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+                if (tex.LoadImage(data))
+                {
+                    el.style.backgroundImage = new StyleBackground(tex);
+                    UnityEngine.Debug.Log($"[HUD] DirectLoad: {iconName} ({tex.width}x{tex.height}) -> {elementName}");
+                }
+            }
+            catch (System.Exception e)
+            {
+                UnityEngine.Debug.LogWarning($"[HUD] DirectLoad failed for {iconName}: {e.Message}");
+            }
         }
 
         /// <summary>Static version for use by CombatSkillSlotController.</summary>
