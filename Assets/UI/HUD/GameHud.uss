@@ -2258,53 +2258,56 @@
     padding: 0px;
 }
 
-/* Round action buttons: 48x48 (1.6x of PC INI 30x30).
-   No background or border — the 20x20 SPR icon contains its own
-   green circular frame in the pixel art. */
+/* Round action buttons: 40x40 — thumb-friendly mobile size matching PC
+   evidence scale (25px × 1.6 = 40px). No CSS bg/border — SPR art has
+   built-in green circular frame. */
 .hud-pc-toolbar-round {
-    width: 48px;
-    height: 48px;
+    width: 40px;
+    height: 40px;
     position: absolute;
-    top: 4px;
+    top: 8px;
     background-color: rgba(0,0,0,0);
     border-radius: 0px;
     border-width: 0px;
 }
 
-/* Menu buttons: 64x64 (1.6x of PC INI 40x40).
-   No background or border — the 20x20 SPR icon contains its own
-   thin square frame in the pixel art. */
+/* Menu buttons: 40x40 — same size as round for uniform appearance.
+   Matches PC evidence where all buttons are same ~25px size. */
 .hud-pc-toolbar-menu {
-    width: 64px;
-    height: 64px;
+    width: 40px;
+    height: 40px;
     position: absolute;
-    top: 3px;
+    top: 8px;
     background-color: rgba(0,0,0,0);
     border-radius: 0px;
     border-width: 0px;
 }
 
 /* PC evidence (pc-evidence/hud.png, 1071px wide) shows ALL buttons CENTERED
-   in a single cluster: square menu buttons LEFT, round action buttons RIGHT.
-   Scaled from 1071px to 1280px HUD (factor 1.195).
-   Square button centers in evidence: 439/464/489/514/539/564px
-   Round button centers in evidence: 602/627/652/677/702px
-   left = center * 1.195 - halfButtonWidth */
+   in a single compact cluster. In the PC image each button is ~25px wide
+   with ~27px step, spanning from x~326 to x~673 (total ~347px).
+   Scale from 1071px to 1280px HUD = factor 1.195.
+   Button width in evidence ~25px × 1.195 = ~30px per button.
+   Step ~27px × 1.195 = ~32px per step.
+   But we need thumb-friendly mobile sizes: 40px buttons with 44px step.
+   Cluster center = (326+673)/2 = 500px → scaled center = 597px in 1280 HUD.
+   Total cluster width = 11 buttons × 44px = 484px.
+   Start = 597 - 242 = 355px. */
 
-/* Square menu buttons (LEFT side of center cluster, 64px wide) */
-#BtnStatus     { left: 493px; }
-#BtnItems      { left: 522px; }
-#BtnSkills     { left: 552px; }
-#BtnTeam       { left: 582px; }
-#BtnFaction    { left: 612px; }
-#BtnWorldSort  { left: 642px; }
+/* Square menu buttons (40px, 44px step) */
+#BtnStatus     { left: 355px; }
+#BtnItems      { left: 399px; }
+#BtnSkills     { left: 443px; }
+#BtnTeam       { left: 487px; }
+#BtnFaction    { left: 531px; }
+#BtnWorldSort  { left: 575px; }
 
-/* Round action buttons (RIGHT side of center cluster, 48px wide) */
-#BtnRun      { left: 695px; }
-#BtnSit      { left: 725px; }
-#BtnHorse    { left: 755px; }
-#BtnExchange { left: 785px; }
-#BtnPK       { left: 815px; }
+/* Round action buttons (40px, 44px step, with gap after square group) */
+#BtnRun      { left: 640px; }
+#BtnSit      { left: 684px; }
+#BtnHorse    { left: 728px; }
+#BtnExchange { left: 772px; }
+#BtnPK       { left: 816px; }
 
 .hud-pc-toolbar-btn .hud-menu-btn-icon,
 .hud-pc-toolbar-btn .hud-btn-icon {
