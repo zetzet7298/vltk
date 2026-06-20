@@ -769,11 +769,28 @@ namespace VLTK.UI
                     LoadIcon(icon, artPath, kv.Value);
                 }
 
+                LoadIcon(_playerDot, artPath, "minimap_dot");
+
                 var sendIcon = root.Q("SendBtnIcon");
                 if (sendIcon != null)
                     LoadIcon(sendIcon, artPath, "btn_chat_send");
 
-                LoadIcon(_playerDot, artPath, "minimap_dot");
+                var optionsBtn = root.Q("ChatOptionsBtn");
+                if (optionsBtn != null)
+                    LoadIcon(optionsBtn, artPath, "btn_options");
+
+                var faceBtn = root.Q("FaceBtn");
+                if (faceBtn != null)
+                    LoadIcon(faceBtn, artPath, "btn_chat_face");
+
+                var friendBtn = root.Q("ChatFriendBtn");
+                if (friendBtn != null)
+                    LoadIcon(friendBtn, artPath, "btn_friend");
+
+                var treasureBtn = root.Q("ChatTreasureBtn");
+                if (treasureBtn != null)
+                    LoadIcon(treasureBtn, artPath, "btn_treasure");
+
                 LoadIcon(_mapPreviewPlayerDot, artPath, "minimap_dot");
 
                 var markerMap = root.Q("MinimapMarkerBtn");

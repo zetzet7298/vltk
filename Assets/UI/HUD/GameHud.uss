@@ -673,14 +673,13 @@
     width: 24px;
     height: 24px;
     margin-right: 4px;
-    background-color: transparent;
-    border-width: 0px;
+    background-color: rgba(25, 31, 11, 0.82);
+    border-width: 1px;
+    border-color: rgba(90, 115, 95, 0.45);
+    border-radius: 2px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png');
     -unity-background-scale-mode: scale-to-fit;
 }
-#ChatOptionsBtn {
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png') !important;
-}
-
 .hud-chat-input {
     flex-grow: 1;
     height: 28px;
@@ -708,15 +707,13 @@
     height: 30px;
     margin-left: 3px;
     margin-right: 3px;
-    background-color: transparent !important;
+    background-color: rgba(25, 31, 11, 0.82);
     -unity-background-scale-mode: scale-to-fit;
-    border-width: 0px !important;
-    border-color: transparent !important;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png');
+    border-width: 1px !important;
+    border-color: rgba(90, 115, 95, 0.45) !important;
     border-radius: 15px !important;
     overflow: hidden !important;
-}
-#FaceBtn {
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png') !important;
 }
 
 .hud-send-btn,
@@ -727,20 +724,18 @@
     margin-right: 3px;
     align-items: center;
     justify-content: center;
-    background-color: transparent !important;
-    border-width: 0px !important;
-    border-color: transparent !important;
-    border-radius: 15px !important;
+    background-color: rgba(25, 31, 11, 0.82) !important;
+    border-width: 1px !important;
+    border-color: rgba(90, 115, 95, 0.45) !important;
+    border-radius: 3px !important;
     overflow: hidden !important;
 }
 
 .hud-send-icon {
     width: 24px;
     height: 24px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_send.png');
     -unity-background-scale-mode: scale-to-fit;
-}
-#SendBtnIcon {
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_send.png') !important;
 }
 
 /* Chat friend button — PC chat bar, right of send button */
@@ -749,12 +744,12 @@
     height: 30px;
     margin-left: 3px;
     margin-right: 3px;
-    background-color: transparent;
-    border-width: 0px;
+    background-color: rgba(25, 31, 11, 0.82);
+    border-width: 1px;
+    border-color: rgba(90, 115, 95, 0.45);
+    border-radius: 3px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png');
     -unity-background-scale-mode: scale-to-fit;
-}
-#ChatFriendBtn {
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png') !important;
 }
 
 /* Chat treasure ("Bảo vật") button — PC chat bar, right of friend button */
@@ -762,12 +757,12 @@
     width: 30px;
     height: 30px;
     margin-right: 3px;
-    background-color: transparent;
-    border-width: 0px;
+    background-color: rgba(25, 31, 11, 0.82);
+    border-width: 1px;
+    border-color: rgba(90, 115, 95, 0.45);
+    border-radius: 3px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png');
     -unity-background-scale-mode: scale-to-fit;
-}
-#ChatTreasureBtn {
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png') !important;
 }
 
 
