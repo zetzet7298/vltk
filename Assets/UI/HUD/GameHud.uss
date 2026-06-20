@@ -660,7 +660,7 @@
     height: 24px;
     margin-left: 0px;
     margin-right: 4px;
-    background-color: rgba(25, 31, 11, 0.82) !important;
+    background-color: rgb(25, 31, 11) !important;
     border-width: 1px !important;
     border-color: rgba(90, 115, 95, 0.45) !important;
     border-radius: 2px;
@@ -673,7 +673,7 @@
     width: 24px;
     height: 24px;
     margin-right: 4px;
-    background-color: rgba(25, 31, 11, 0.82);
+    background-color: rgb(25, 31, 11);
     border-width: 1px;
     border-color: rgba(90, 115, 95, 0.45);
     border-radius: 2px;
@@ -692,7 +692,7 @@
 }
 
 .hud-chat-input .unity-text-field__input {
-    background-color: rgba(25, 31, 11, 0.82) !important;
+    background-color: rgb(25, 31, 11) !important;
     border-width: 1px !important;
     border-color: rgba(90, 115, 95, 0.45) !important;
     color: rgb(254, 255, 160) !important;
@@ -707,7 +707,7 @@
     height: 30px;
     margin-left: 3px;
     margin-right: 3px;
-    background-color: rgba(25, 31, 11, 0.82);
+    background-color: rgb(25, 31, 11);
     -unity-background-scale-mode: scale-to-fit;
     background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png');
     border-width: 1px !important;
@@ -724,7 +724,7 @@
     margin-right: 3px;
     align-items: center;
     justify-content: center;
-    background-color: rgba(25, 31, 11, 0.82) !important;
+    background-color: rgb(25, 31, 11) !important;
     border-width: 1px !important;
     border-color: rgba(90, 115, 95, 0.45) !important;
     border-radius: 3px !important;
@@ -744,7 +744,7 @@
     height: 30px;
     margin-left: 3px;
     margin-right: 3px;
-    background-color: rgba(25, 31, 11, 0.82);
+    background-color: rgb(25, 31, 11);
     border-width: 1px;
     border-color: rgba(90, 115, 95, 0.45);
     border-radius: 3px;
@@ -754,10 +754,10 @@
 
 /* Chat treasure ("Bảo vật") button — PC chat bar, right of friend button */
 .hud-chat-treasure-btn {
-    width: 30px;
+    width: 48px;
     height: 30px;
     margin-right: 3px;
-    background-color: rgba(25, 31, 11, 0.82);
+    background-color: rgb(25, 31, 11);
     border-width: 1px;
     border-color: rgba(90, 115, 95, 0.45);
     border-radius: 3px;
