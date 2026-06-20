@@ -130,16 +130,17 @@
                 <ui:VisualElement name="ChatSysDownBtn" class="hud-chat-rail-btn hud-chat-sys-down" style="display: none;"/>
                 <ui:VisualElement name="ChatSysOpenBtn" class="hud-chat-rail-btn hud-chat-sys-open" style="display: none;"/>
             </ui:VisualElement>
-        </ui:VisualElement>
-        <!-- Input row: channel icon | options btn | text field | face emoji btn | send btn | friend btn | treasure btn -->
-        <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
-            <ui:VisualElement name="ChatChannelIdentityBtn" class="hud-chat-channel-identity-btn"/>
-            <ui:VisualElement name="ChatOptionsBtn" class="hud-chat-options-btn"/>
-            <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
-            <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
-            <ui:VisualElement name="SendBtn" class="hud-send-btn"><ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/></ui:VisualElement>
-            <ui:VisualElement name="ChatFriendBtn" class="hud-chat-friend-btn"/>
-            <ui:VisualElement name="ChatTreasureBtn" class="hud-chat-treasure-btn"/>
+            <!-- Input row: channel icon | options btn | text field | face emoji btn | send btn | friend btn | treasure btn
+                 Must be INSIDE ChatBar so it's positioned relative to the chat panel bottom. -->
+            <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
+                <ui:VisualElement name="ChatChannelIdentityBtn" class="hud-chat-channel-identity-btn"/>
+                <ui:VisualElement name="ChatOptionsBtn" class="hud-chat-options-btn"/>
+                <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
+                <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
+                <ui:VisualElement name="SendBtn" class="hud-send-btn"><ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/></ui:VisualElement>
+                <ui:VisualElement name="ChatFriendBtn" class="hud-chat-friend-btn"/>
+                <ui:VisualElement name="ChatTreasureBtn" class="hud-chat-treasure-btn"/>
+            </ui:VisualElement>
         </ui:VisualElement>
 
         <!-- ═══ MOBILE COMBAT HUD — PC visual assets, mobile-first layout ═══ -->

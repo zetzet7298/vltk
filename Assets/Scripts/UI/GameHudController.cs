@@ -412,21 +412,24 @@ namespace VLTK.UI
             // CHAT POSITION — hard-set center at bind time. Don't rely on
             // SizeRootToScreen for chat because that path may not run, or PC
             // safe-area padding (safeX) re-anchors it left. We want chat dead
-            // center horizontally, anchored to bottom.
+            // center horizontally, anchored above the bottom PC menu toolbar.
             if (_chatPanel != null)
             {
                 _chatPanel.style.position = Position.Absolute;
                 _chatPanel.style.left = Length.Percent(50f);
                 _chatPanel.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
-                _chatPanel.style.bottom = 8f;
+                // Sit just above the PC menu toolbar (bottom 76px + height 56px = 132px)
+                _chatPanel.style.bottom = 132f;
             }
+            // ChatInputRow is now a child of ChatBar — let the parent flex layout
+            // position it at the bottom of the panel. Don't override its width/bottom.
             if (_chatInputRow != null)
             {
-                _chatInputRow.style.position = Position.Absolute;
-                _chatInputRow.style.left = Length.Percent(50f);
-                _chatInputRow.style.translate = new StyleTranslate(new Translate(Length.Percent(-50f), 0f));
-                _chatInputRow.style.bottom = 0f;
-                _chatInputRow.style.width = 410f;
+                _chatInputRow.style.position = Position.Relative;
+                _chatInputRow.style.left = StyleKeyword.Auto;
+                _chatInputRow.style.translate = StyleKeyword.None;
+                _chatInputRow.style.bottom = StyleKeyword.Auto;
+                _chatInputRow.style.width = StyleKeyword.Auto;
             }
             _hpFill = root.Q("HpBarFill");
             _mpFill = root.Q("MpBarFill");
@@ -1022,14 +1025,19 @@ namespace VLTK.UI
             if (_chatPanel != null)
             {
                 // Position already set at BindElements() — center horizontally,
-                // anchored to bottom of safe area. Safe-area padding (safeY) only.
-                _chatPanel.style.bottom = safeY + 8f;
+                // anchored above the PC menu toolbar (132px = toolbar bottom+height).
+                // Apply safeY so the chat input sits above any system bars.
+                _chatPanel.style.bottom = 132f + safeY;
             }
+            // ChatInputRow is a child of ChatBar — let flex layout position it
+            // at the bottom of the panel. Don't override position/width here.
             if (_chatInputRow != null)
             {
-                _chatInputRow.style.position = Position.Absolute;
-                _chatInputRow.style.bottom = safeY;
-                _chatInputRow.style.width = 410f;
+                _chatInputRow.style.position = Position.Relative;
+                _chatInputRow.style.left = StyleKeyword.Auto;
+                _chatInputRow.style.translate = StyleKeyword.None;
+                _chatInputRow.style.bottom = StyleKeyword.Auto;
+                _chatInputRow.style.width = StyleKeyword.Auto;
             }
             if (_minimapPanel != null)
             {

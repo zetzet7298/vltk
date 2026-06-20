@@ -388,17 +388,18 @@
     position: absolute;
     left: 50%;
     top: auto;
-    bottom: 8px;
+    /* bottom: toolbar(bottom 76px + height 56px) = 132px — chat input row sits just above toolbar */
+    bottom: 132px;
     translate: -50% 0;
-    /* total height = messages(123) + tabs(26) = 149 */
+    /* total height = input-row(32) + tabs(18) + messages(123) = 173 */
     width: 430px;
-    height: 141px;
+    height: 173px;
     flex-direction: column;
     justify-content: flex-end;
     z-index: 880;
     background-color: rgba(0,0,0,0);
     border-width: 0px;
-  }
+}
 
 .hud-chat-warning {
     height: 18px;
@@ -485,8 +486,8 @@
 .hud-chat-rail {
     position: absolute;
     left: 0px;
-    /* align bottom of rail with bottom of tabs (tabs(18) = 18) */
-    bottom: 18px;
+    /* align bottom of rail with bottom of tabs+input-row (tabs(18) + input-row(32) = 50) */
+    bottom: 50px;
     width: 18px;
     /* track height matches ChatMessages height (SizeBtn(14) + Track(95) + MoveBtn(14) = 123) */
     height: 123px;
@@ -620,7 +621,8 @@
 
 .hud-chat-panel.hud-chat-expanded {
     width: 540px;
-    height: 138px;
+    /* expanded: messages(155) + tabs(18) + input-row(32) = 205 */
+    height: 205px;
 }
 
 .hud-chat-panel.hud-chat-right {
