@@ -567,6 +567,9 @@ namespace VLTK.UI
             RegisterClick(root, "OpenChannelBtn", OnChatChannelToggleClick);
             RegisterClick(root, "ChatChannelIdentityBtn", OnChatChannelIdentityClick);
             RegisterClick(root, "SendBtn", OnSendChatClick);
+            RegisterClick(root, "ChatOptionsBtn", OnOptionsClick);
+            RegisterClick(root, "ChatFriendBtn", OnFriendClick);
+            RegisterClick(root, "ChatTreasureBtn", OnTreasureClick);
             RegisterClick(root, "ChatSizeBtn", OnChatSizeClick);
             RegisterClick(root, "ChatMoveBtn", OnChatMoveClick);
             RegisterClick(root, "ChatShadowBtn", OnChatShadowClick);

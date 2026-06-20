@@ -668,6 +668,19 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
+/* Chat options (gear/scroll) button — PC chat bar, left of text input */
+.hud-chat-options-btn {
+    width: 24px;
+    height: 24px;
+    margin-right: 4px;
+    background-color: transparent;
+    border-width: 0px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+#ChatOptionsBtn {
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png') !important;
+}
+
 .hud-chat-input {
     flex-grow: 1;
     height: 28px;
@@ -696,12 +709,14 @@
     margin-left: 3px;
     margin-right: 3px;
     background-color: transparent !important;
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png') !important;
     -unity-background-scale-mode: scale-to-fit;
     border-width: 0px !important;
     border-color: transparent !important;
     border-radius: 15px !important;
     overflow: hidden !important;
+}
+#FaceBtn {
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png') !important;
 }
 
 .hud-send-btn,
@@ -723,6 +738,36 @@
     width: 24px;
     height: 24px;
     -unity-background-scale-mode: scale-to-fit;
+}
+#SendBtnIcon {
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_send.png') !important;
+}
+
+/* Chat friend button — PC chat bar, right of send button */
+.hud-chat-friend-btn {
+    width: 30px;
+    height: 30px;
+    margin-left: 3px;
+    margin-right: 3px;
+    background-color: transparent;
+    border-width: 0px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+#ChatFriendBtn {
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png') !important;
+}
+
+/* Chat treasure ("Bảo vật") button — PC chat bar, right of friend button */
+.hud-chat-treasure-btn {
+    width: 30px;
+    height: 30px;
+    margin-right: 3px;
+    background-color: transparent;
+    border-width: 0px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+#ChatTreasureBtn {
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png') !important;
 }
 
 
