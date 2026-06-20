@@ -644,21 +644,179 @@
     overflow: hidden;
 }
 
-/* Chat input row — PC style. Lives as a sibling of ChatBar, sits just above the bottom menu toolbar. */
-.hud-chat-input-row {
+/* ═══ PC BOTTOM BAR — direct children of GameHud root, 1.5x scale ═══ */
+
+/* PC bottom bar elements — 1.5x scale from PC 600x480 to HUD 1280x720.
+   HUD root is 1280x720 (scaled 1.5x to 1920x1080 actual screen).
+   All positions are PC coords * 1.5. PC evidence y=453-475 (chat input) → 680-712.
+   PC evidence y=402-418 (chat tabs) → 603-627.
+   PC evidence y=440-475 (quick slots) → 660-712.
+   PC evidence y=428-475 (Bảo vật) → 642-712. */
+.hud-pc-quick-slot {
     position: absolute;
-    left: 50%;
-    /* bottom: input row sits directly above the PC menu toolbar (bottom 76px + height 56px = 132px) */
-    bottom: 132px;
-    translate: -50% 0;
-    width: 410px;
-    height: 32px;
+    width: 60px;
+    height: 50px;
+    bottom: 60px;
+    background-color: rgb(15, 15, 15);
+    border-width: 1px;
+    border-color: rgb(120, 120, 120);
+    border-radius: 2px;
+}
+.hud-pc-quick-slot:nth-child(1) { left: 12px; }
+.hud-pc-quick-slot:nth-child(2) { left: 78px; }
+.hud-pc-quick-slot:nth-child(3) { left: 144px; }
+
+/* PC chat messages — transparent overlay, PC y=418-435 → y=627-652 */
+.hud-pc-chat-messages-area {
+    position: absolute;
+    left: 8px;
+    bottom: 93px;
+    width: 412px;
+    height: 25px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0px;
+}
+
+/* PC chat tabs — PC y=402-418 → y=603-627 */
+.hud-pc-chat-tabs {
+    position: absolute;
+    left: 15px;
+    bottom: 117px;
+    width: 397px;
+    height: 24px;
     flex-direction: row;
     align-items: center;
     background-color: rgba(0, 0, 0, 0);
     border-width: 0px;
-    z-index: 882;
-    margin-left: 0px;
+}
+.hud-pc-chat-tab {
+    width: 52px;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+    margin-left: 6px;
+    margin-right: 6px;
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0px;
+}
+.hud-pc-chat-tab-label {
+    color: rgb(102, 204, 255);
+    font-size: 12px;
+    -unity-font-style: bold;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+/* PC chat input row elements — PC y=453-475 → y=680-712, screen 720 → bottom 8-40 */
+.hud-pc-chat-channel-identity-btn {
+    position: absolute;
+    left: 326px;
+    bottom: 14px;
+    width: 24px;
+    height: 24px;
+    background-color: rgb(35, 50, 70);
+    border-width: 1px;
+    border-color: rgba(140, 165, 145, 0.55);
+    border-radius: 2px;
+    background-image: url('project://database/Assets/UI/HUD/Art/聊天频道图示－附近频道.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+.hud-pc-chat-options-btn {
+    position: absolute;
+    left: 275px;
+    bottom: 16px;
+    width: 24px;
+    height: 24px;
+    background-color: rgb(35, 50, 70);
+    border-width: 1px;
+    border-color: rgba(140, 165, 145, 0.55);
+    border-radius: 2px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+.hud-pc-chat-input {
+    position: absolute;
+    left: 357px;
+    bottom: 18px;
+    width: 220px;
+    height: 22px;
+    color: rgb(254, 255, 160);
+    font-size: 12px;
+    background-color: rgb(212, 201, 178);
+    border-width: 1px;
+    border-color: rgb(120, 100, 70);
+    border-radius: 2px;
+}
+.hud-pc-chat-input .unity-text-field__input {
+    background-color: rgb(212, 201, 178) !important;
+    border-width: 0px !important;
+    color: rgb(40, 30, 15) !important;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.hud-pc-face-btn {
+    position: absolute;
+    left: 585px;
+    bottom: 16px;
+    width: 24px;
+    height: 24px;
+    background-color: rgb(220, 165, 50);
+    border-width: 1px;
+    border-color: rgb(80, 50, 20);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+.hud-pc-send-btn {
+    position: absolute;
+    left: 615px;
+    bottom: 16px;
+    width: 22px;
+    height: 24px;
+    background-color: rgb(35, 50, 70);
+    border-width: 1px;
+    border-color: rgba(140, 165, 145, 0.55);
+    border-radius: 2px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.hud-pc-send-icon {
+    width: 18px;
+    height: 18px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_send.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+.hud-pc-chat-friend-btn {
+    position: absolute;
+    left: 643px;
+    bottom: 16px;
+    width: 22px;
+    height: 24px;
+    background-color: rgb(35, 50, 70);
+    border-width: 1px;
+    border-color: rgba(140, 165, 145, 0.55);
+    border-radius: 2px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+.hud-pc-chat-treasure-btn {
+    position: absolute;
+    left: 735px;
+    bottom: 8px;
+    width: 60px;
+    height: 70px;
+    background-color: rgb(35, 50, 70);
+    border-width: 2px;
+    border-color: rgb(190, 165, 95);
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png');
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 
