@@ -94,7 +94,10 @@
         </ui:VisualElement>
 
         <!-- ═══ CHAT AREA — PC bottom-left ═══ -->
-        <ui:VisualElement name="ChatBar" class="hud-chat-panel">
+        <!-- Per user request 2026-06-20: chat messages + tabs panel is removed.
+             Chat input row now sits directly above the PC menu toolbar (see ChatInputRow).
+             ChatBar is kept in the UXML tree for C# binding compatibility but hidden. -->
+        <ui:VisualElement name="ChatBar" class="hud-chat-panel hidden" style="display: none;">
             <ui:Label name="ChatWarning" text="!! Hãy sử dụng hồi phục" class="hud-chat-warning hidden"/>
             <!-- PC 主界面玩家信息窗口.ini [OpenChannelBtn] at 110,430,60x60 has no concrete SPR file (Image is only a folder).
                  Keep it as an invisible PC-equivalent proxy so mobile gets the behavior without drawing the bad 7-o'clock wrapper. -->
@@ -130,17 +133,17 @@
                 <ui:VisualElement name="ChatSysDownBtn" class="hud-chat-rail-btn hud-chat-sys-down" style="display: none;"/>
                 <ui:VisualElement name="ChatSysOpenBtn" class="hud-chat-rail-btn hud-chat-sys-open" style="display: none;"/>
             </ui:VisualElement>
-            <!-- Input row: channel icon | options btn | text field | face emoji btn | send btn | friend btn | treasure btn
-                 Must be INSIDE ChatBar so it's positioned relative to the chat panel bottom. -->
-            <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
-                <ui:VisualElement name="ChatChannelIdentityBtn" class="hud-chat-channel-identity-btn"/>
-                <ui:VisualElement name="ChatOptionsBtn" class="hud-chat-options-btn"/>
-                <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
-                <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
-                <ui:VisualElement name="SendBtn" class="hud-send-btn"><ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/></ui:VisualElement>
-                <ui:VisualElement name="ChatFriendBtn" class="hud-chat-friend-btn"/>
-                <ui:VisualElement name="ChatTreasureBtn" class="hud-chat-treasure-btn"/>
-            </ui:VisualElement>
+        </ui:VisualElement>
+        <!-- PC: chat input row sits just above the bottom menu toolbar (not inside the chat panel).
+             Layout: channel icon | options btn | text field | face emoji btn | send btn | friend btn | treasure btn -->
+        <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
+            <ui:VisualElement name="ChatChannelIdentityBtn" class="hud-chat-channel-identity-btn"/>
+            <ui:VisualElement name="ChatOptionsBtn" class="hud-chat-options-btn"/>
+            <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
+            <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
+            <ui:VisualElement name="SendBtn" class="hud-send-btn"><ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/></ui:VisualElement>
+            <ui:VisualElement name="ChatFriendBtn" class="hud-chat-friend-btn"/>
+            <ui:VisualElement name="ChatTreasureBtn" class="hud-chat-treasure-btn"/>
         </ui:VisualElement>
 
         <!-- ═══ MOBILE COMBAT HUD — PC visual assets, mobile-first layout ═══ -->
