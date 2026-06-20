@@ -2228,20 +2228,18 @@
 /* PC 工具控制条.ini: 800x45 toolbar with 5 round action buttons on LEFT
    (Run/Sit/Horse/Exchange/PK, 30x30, Left=9,40,75,110,145 Top=10) and
    6 menu buttons on RIGHT (Status/Items/Skills/Team/Faction/WorldSort,
-   40x40, Left=474,514,555,594,635,713 Top=2). PC INI is designed for
-   800x600 PC resolution where 30x30 and 40x40 are touch-friendly.
-   Mobile (1280x720 HUD) needs them bigger and the icons are PC-native
-   20x20 SPRs so we 1.5x the whole toolbar for thumb-friendly hit boxes
-   without changing relative positions:
-     toolbar 1200x67, round 45x45 at Left=13.5/60/112.5/165/217.5 Top=15,
-     menu 60x60 at Left=711/771/832.5/891/952.5/1070 Top=3.
-   Positioned left=40 (centred in 1280 HUD) so the toolbar fits. */
+   40x40, Left=474,514,555,594,635,713 Top=2).
+   Mobile HUD is 1280x720 so scale = 1280/800 = 1.6x.
+   Icons are authentic PC SPRs (20x20 pixel art with built-in green
+   circular/square frames). No dark button background needed — the
+   SPR art itself contains the visual frame (green circle for round,
+   thin border for square). */
 .hud-pc-menu-toolbar {
     position: absolute;
-    left: 40px;
-    bottom: 8px;
-    width: 1200px;
-    height: 67px;
+    left: 0px;
+    bottom: 76px;
+    width: 1280px;
+    height: 56px;
     flex-direction: row;
     align-items: flex-start;
     justify-content: flex-start;
@@ -2260,47 +2258,46 @@
     padding: 0px;
 }
 
-/* Round action buttons: 45x45 (1.5x of PC INI 30x30) — mobile thumb size.
-   Semi-opaque dark background so the transparent icon stands out against
-   the ornate bottom strip art. Matches the PC button look (dark circular
-   button face with icon on top). */
+/* Round action buttons: 48x48 (1.6x of PC INI 30x30).
+   No background or border — the 20x20 SPR icon contains its own
+   green circular frame in the pixel art. */
 .hud-pc-toolbar-round {
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
     position: absolute;
-    top: 15px;
-    background-color: rgba(20, 20, 30, 0.85);
-    border-radius: 22px;
-    border-width: 2px;
-    border-color: rgba(100, 130, 100, 0.6);
+    top: 4px;
+    background-color: rgba(0,0,0,0);
+    border-radius: 0px;
+    border-width: 0px;
 }
 
-/* Menu buttons: 60x60 (1.5x of PC INI 40x40) — mobile thumb size. */
+/* Menu buttons: 64x64 (1.6x of PC INI 40x40).
+   No background or border — the 20x20 SPR icon contains its own
+   thin square frame in the pixel art. */
 .hud-pc-toolbar-menu {
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
     position: absolute;
     top: 3px;
-    background-color: rgba(20, 20, 30, 0.85);
-    border-radius: 6px;
-    border-width: 2px;
-    border-color: rgba(100, 130, 100, 0.6);
+    background-color: rgba(0,0,0,0);
+    border-radius: 0px;
+    border-width: 0px;
 }
 
-/* PC INI Left × 1.5 for round actions (relative to .hud-pc-menu-toolbar) */
-#BtnRun      { left:  13.5px; }
-#BtnSit      { left:    60px; }
-#BtnHorse    { left: 112.5px; }
-#BtnExchange { left:   165px; }
-#BtnPK       { left: 217.5px; }
+/* PC INI Left × 1.6 for round actions (relative to .hud-pc-menu-toolbar) */
+#BtnRun      { left:  14px; }
+#BtnSit      { left:  64px; }
+#BtnHorse    { left: 120px; }
+#BtnExchange { left: 176px; }
+#BtnPK       { left: 232px; }
 
-/* PC INI Left × 1.5 for menu cluster (relative to .hud-pc-menu-toolbar) */
-#BtnStatus     { left:   711px; }
-#BtnItems      { left:   771px; }
-#BtnSkills     { left: 832.5px; }
-#BtnTeam       { left:   891px; }
-#BtnFaction    { left: 952.5px; }
-#BtnWorldSort  { left:  1070px; }
+/* PC INI Left × 1.6 for menu cluster (relative to .hud-pc-menu-toolbar) */
+#BtnStatus     { left:  758px; }
+#BtnItems      { left:  822px; }
+#BtnSkills     { left:  888px; }
+#BtnTeam       { left:  950px; }
+#BtnFaction    { left: 1016px; }
+#BtnWorldSort  { left: 1141px; }
 
 .hud-pc-toolbar-btn .hud-menu-btn-icon,
 .hud-pc-toolbar-btn .hud-btn-icon {
