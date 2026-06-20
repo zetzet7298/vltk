@@ -235,7 +235,7 @@
                 <ui:VisualElement name="SkillSlot2" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-top"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="3" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot3" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-upper"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="4" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot4" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-extra"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="5" class="hud-skill-slot-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnRun" class="hud-combat-run-btn"><ui:VisualElement name="BtnRunIcon" class="hud-combat-run-icon"/></ui:VisualElement>
+                <ui:VisualElement name="BtnRunCombat" class="hud-combat-run-btn"><ui:VisualElement name="BtnRunCombatIcon" class="hud-combat-run-icon"/></ui:VisualElement>
                 <!-- Combat-critical quick actions (PK/farm): mount + sit arc beside skill slots for thumb reach. -->
                 <ui:VisualElement name="BtnMountQuick" class="hud-combat-quick-btn hud-combat-mount-btn"><ui:VisualElement name="BtnMountQuickIcon" class="hud-combat-quick-icon"/></ui:VisualElement>
                 <ui:VisualElement name="BtnSitQuick" class="hud-combat-quick-btn hud-combat-sit-btn"><ui:VisualElement name="BtnSitQuickIcon" class="hud-combat-quick-icon"/></ui:VisualElement>

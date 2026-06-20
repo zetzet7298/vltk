@@ -287,6 +287,7 @@ namespace VLTK.UI
             { "BtnMountQuick", "btn_horse" },
             { "BtnSitQuick", "btn_sit" },
             { "BtnPKQuick", "btn_pk" },
+            { "BtnRunCombat", "btn_run" },
             { "PrimaryAttackBtn", "btn_primary_attack" },
             // PC 工具控制条.ini menu cluster (Left=474,514,555,594,635,713 Top=2)
             // BtnRun / btn_run already mapped above (PC-accurate 20x20 stickman+circle,
@@ -528,6 +529,7 @@ namespace VLTK.UI
             RegisterClick(root, "BtnMountQuick", OnHorseClick);
             RegisterClick(root, "BtnSitQuick", OnSitClick);
             RegisterClick(root, "BtnPKQuick", OnPKClick);
+            RegisterClick(root, "BtnRunCombat", OnRunClick);
             RegisterClick(root, "PcShortcutToggleBtn", OnPcShortcutToggleClick);
             for (int i = 0; i < 9; i++)
             {
