@@ -2,62 +2,68 @@
     <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
 
-        <!-- ═══ TOP STATUS BAR — PC 800 顶部控制条.ini / uid 8da7027d ═══ -->
-        <!-- PC Main: Left=120, Top=0, Width=552, Height=17. Values are drawn by Vietnamese IMGUI overlay. -->
+        <!-- ═══ TOP STATUS BAR — PC 顶部控制条.ini, 1.6x scale (800→1280) ═══ -->
+        <!-- C# controller sets panel position/size at runtime (left=safeX, top=safeY, w=1280, h=40).
+             All children use INLINE styles because USS classes stopped applying in this scene. -->
         <ui:VisualElement name="TopBarPanel" class="hud-top-bar-panel">
-            <!-- PC 主界面玩家信息窗口.ini [DateTime]: network/smooth status text at top-left. -->
-            <ui:Label name="PcConnectionStatusText" text="Hoạt động tốt" class="hud-pc-connection-status"/>
-            <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
+            <ui:Label name="PcConnectionStatusText" text="Hoạt động tốt" style="position: absolute; left: 8px; top: 2px; width: 130px; height: 13px; color: rgb(60, 255, 160); font-size: 11px; -unity-text-align: middle-left; background-color: rgba(0, 0, 0, 0); border-width: 0px;"/>
 
-            <!-- Level number: PC Main.Left+35, Top=2, W=20, H=12 -->
-            <ui:Label name="LevelText" text="1" class="hud-level-label"/>
+            <!-- PC panel bg: 新血条面板.spr 552x17, scaled 1.6x = 883x27 -->
+            <ui:VisualElement name="PcBarPanelBg" style="position: absolute; left: 192px; top: 0px; width: 883px; height: 27px; background-image: url('project://database/Assets/UI/HUD/Art/top_status_strip.png'); -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); border-width: 0px;"/>
 
-            <!-- Stamina: PC Main.Left+58, Top=3, W=104, H=14 -->
-            <ui:VisualElement name="StaminaBarTrack" class="hud-bar-track hud-stamina-track">
-                <ui:VisualElement name="StaminaBarFill" class="hud-bar-fill"/>
+            <!-- Level: PC Left=155→248, Top=2→3 -->
+            <ui:Label name="LevelText" text="1" style="position: absolute; left: 248px; top: 3px; width: 32px; height: 19px; font-size: 14px; color: rgb(55, 231, 63); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;"/>
+
+            <!-- Stamina track: PC Left=178→285, Top=3→5, W=104→166, H=9→14 -->
+            <ui:VisualElement name="StaminaBarTrack" style="position: absolute; left: 285px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
+                <ui:VisualElement name="StaminaBarFill" style="width: 100%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_stamina_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
             </ui:VisualElement>
 
-            <!-- Life/HP: PC Main.Left+168, Top=3, W=104, H=14 -->
-            <ui:VisualElement name="HpBarTrack" class="hud-bar-track hud-hp-track">
-                <ui:VisualElement name="HpBarFill" class="hud-bar-fill"/>
+            <!-- HP track: PC Left=288→461 -->
+            <ui:VisualElement name="HpBarTrack" style="position: absolute; left: 461px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
+                <ui:VisualElement name="HpBarFill" style="width: 100%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_hp_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
             </ui:VisualElement>
 
-            <!-- Mana/MP: PC Main.Left+278, Top=3, W=104, H=14 -->
-            <ui:VisualElement name="MpBarTrack" class="hud-bar-track hud-mp-track">
-                <ui:VisualElement name="MpBarFill" class="hud-bar-fill"/>
+            <!-- MP track: PC Left=398→637 -->
+            <ui:VisualElement name="MpBarTrack" style="position: absolute; left: 637px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
+                <ui:VisualElement name="MpBarFill" style="width: 100%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_mp_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
             </ui:VisualElement>
 
-            <!-- Exp: PC Main.Left+388, Top=3, W=104, H=12 -->
-            <ui:VisualElement name="ExpBarTrack" class="hud-bar-track hud-exp-track">
-                <ui:VisualElement name="ExpBarFill" class="hud-bar-fill"/>
+            <!-- EXP track: PC Left=508→813 -->
+            <ui:VisualElement name="ExpBarTrack" style="position: absolute; left: 813px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
+                <ui:VisualElement name="ExpBarFill" style="width: 0%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
             </ui:VisualElement>
 
-            <!-- WorldSort number: PC Main.Left+522, Top=2, W=28, H=12 -->
-            <ui:Label name="RankText" text="Hạng ?" class="hud-rank-label"/>
+            <!-- Rank: PC Left=642→1027 -->
+            <ui:Label name="RankText" text="Hạng ?" style="position: absolute; left: 1027px; top: 3px; width: 45px; height: 19px; font-size: 12px; color: rgb(55, 231, 63); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;"/>
 
-            <!-- Hidden labels for data binding (IMGUI overlay draws the actual text) -->
-            <ui:Label name="HpText" text="100/100" class="hud-hidden-data"/>
-            <ui:Label name="MpText" text="50/50" class="hud-hidden-data"/>
-            <ui:Label name="StaminaText" text="100/100" class="hud-hidden-data"/>
-            <ui:Label name="ExpText" text="0%" class="hud-hidden-data"/>
+            <!-- Hidden data labels (IMGUI overlay draws the actual text) -->
+            <ui:Label name="HpText" text="100/100" style="display: none;"/>
+            <ui:Label name="MpText" text="50/50" style="display: none;"/>
+            <ui:Label name="StaminaText" text="100/100" style="display: none;"/>
+            <ui:Label name="ExpText" text="0%" style="display: none;"/>
         </ui:VisualElement>
 
-        <!-- ═══ MINIMAP — PC 小地图_小.ini ═══ -->
-        <ui:VisualElement name="MinimapPanel" class="hud-minimap-panel">
-            <ui:VisualElement name="MinimapFrame" class="hud-minimap-frame">
-                <ui:VisualElement name="MinimapContent" class="hud-minimap-content">
-                    <ui:VisualElement name="MiniMapTarget" class="hud-map-target-dot"/>
+        <!-- ═══ MINIMAP — PC 小地图_小.ini (MiniMap Left=670,Top=0,W=130,H=130), 1.6x scale (208x156) ═══ -->
+        <!-- MapRect: PC 1,1,128,128 → 1.6,1.2,204.8,153.6 (≈205x154)
+             SceneName/ScenePos: PC 0,1,112,14 / 2,15,112,14 (green)
+             SwitchBtn: PC 101,115,14,14 → 162,138,22,17
+             WorldMapBtn: PC 115,115,14,14 → 184,138,22,17 -->
+        <ui:VisualElement name="MinimapPanel" class="hud-minimap-panel" style="position: absolute; left: 1072px; top: 0px; width: 208px; height: 156px; align-items: center; background-color: rgba(0, 0, 0, 0);">
+            <ui:VisualElement name="MinimapFrame" style="width: 208px; height: 154px; border-width: 2px; border-color: rgb(60, 80, 60); background-color: rgba(2, 8, 4, 0.92); overflow: hidden;">
+                <ui:VisualElement name="MinimapContent" style="position: absolute; left: 2px; top: 1px; width: 205px; height: 154px; background-color: rgba(15, 25, 15, 0.90); background-image: url('project://database/Assets/UI/HUD/Textures/tex_minimap_bg.png'); -unity-background-scale-mode: stretch-to-fill;">
+                    <ui:VisualElement name="MiniMapTarget" style="position: absolute; left: -1000px; top: -1000px; width: 12px; height: 12px; border-radius: 6px; background-color: rgb(255, 230, 40); border-width: 0px;"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="PlayerDot" class="hud-player-dot"/>
+                <ui:VisualElement name="PlayerDot" style="position: absolute; left: 98px; top: 72px; width: 14px; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/minimap_dot.png'); -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
-            <ui:Label name="SceneName" text="" class="hud-scene-name"/>
-            <ui:Label name="ScenePos" text="" class="hud-scene-pos"/>
-            <ui:TextField name="MapPosInput" value="" class="hud-map-pos-input hidden"/>
-            <ui:VisualElement name="MinimapBtns" class="hud-minimap-btns">
-                <ui:VisualElement name="MinimapMarkerBtn" class="hud-minimap-btn"/>
-                <ui:VisualElement name="ToggleMapBtn" class="hud-minimap-btn"/>
-                <ui:VisualElement name="WorldMapBtn" class="hud-minimap-btn"/>
-                <ui:VisualElement name="CaveMapBtn" class="hud-minimap-btn"/>
+            <ui:Label name="SceneName" text="" style="width: 208px; height: 17px; font-size: 13px; color: rgb(0, 255, 0); -unity-text-align: middle-center; -unity-font-style: bold; margin-top: 1px;"/>
+            <ui:Label name="ScenePos" text="" style="width: 208px; height: 17px; font-size: 13px; color: rgb(0, 255, 0); -unity-text-align: middle-center;"/>
+            <ui:TextField name="MapPosInput" value="" style="display: none;"/>
+            <ui:VisualElement name="MinimapBtns" style="position: absolute; left: 162px; top: 136px; width: 44px; height: 18px; flex-direction: row; justify-content: flex-end;">
+                <ui:VisualElement name="MinimapMarkerBtn" style="width: 22px; height: 17px; margin-left: 0px; margin-right: 0px; background-color: rgba(0, 0, 0, 0); border-width: 0px; -unity-background-scale-mode: scale-to-fit;"/>
+                <ui:VisualElement name="ToggleMapBtn" style="width: 22px; height: 17px; margin-left: 0px; margin-right: 0px; background-color: rgba(0, 0, 0, 0); border-width: 0px; -unity-background-scale-mode: scale-to-fit;"/>
+                <ui:VisualElement name="WorldMapBtn" style="width: 22px; height: 17px; margin-left: 0px; margin-right: 0px; background-color: rgba(0, 0, 0, 0); border-width: 0px; -unity-background-scale-mode: scale-to-fit;"/>
+                <ui:VisualElement name="CaveMapBtn" style="width: 22px; height: 17px; margin-left: 0px; margin-right: 0px; background-color: rgba(0, 0, 0, 0); border-width: 0px; -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
         </ui:VisualElement>
 
@@ -139,13 +145,32 @@
              PC 600x480 evidence with 1.5x scale. All positions set inline (USS class
              rules aren't being applied in this scene; inline overrides take priority). -->
         <!-- Quick slots (PC left toolbar) y=440-475, x=5-150 in PC 600x480 -->
-        <ui:VisualElement name="PcQuickSlot1" style="position: absolute; left: 12px; bottom: 60px; width: 60px; height: 50px; background-color: rgb(15, 15, 15); border-width: 1px; border-color: rgb(120, 120, 120); border-radius: 2px;"/>
-        <ui:VisualElement name="PcQuickSlot2" style="position: absolute; left: 78px; bottom: 60px; width: 60px; height: 50px; background-color: rgb(15, 15, 15); border-width: 1px; border-color: rgb(120, 120, 120); border-radius: 2px;"/>
-        <ui:VisualElement name="PcQuickSlot3" style="position: absolute; left: 144px; bottom: 60px; width: 60px; height: 50px; background-color: rgb(15, 15, 15); border-width: 1px; border-color: rgb(120, 120, 120); border-radius: 2px;"/>
+        <!-- ═══ BOTTOM BAR BACKGROUND — must be FIRST in z-order so buttons paint on top ═══ -->
+        <ui:VisualElement name="PcBottomBarBg" style="position: absolute; left: 0px; bottom: 0px; width: 1280px; height: 90px; background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png'); -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); border-width: 0px;"/>
         <!-- PC chat messages — y=418-435 in PC -->
-        <ui:VisualElement name="PcChatMessagesArea" style="position: absolute; left: 8px; bottom: 93px; width: 412px; height: 25px; background-color: rgba(0, 0, 0, 0);"/>
+        <ui:VisualElement name="PcChatMessagesArea" style="position: absolute; left: 8px; bottom: 50px; width: 412px; height: 25px; background-color: rgba(0, 0, 0, 0);"/>
+        <!-- PC quick slots (玩家信息主界面.ini Item_0/1/2): W=30 H=30 at Left=235,270,304 Top=545.
+             1.6x/1.2x scale: x=376,432,486, bottom=30, w=48, h=36.
+             Top=545 in PC 600 = 55px above bottom → mobile 30px above bottom. -->
+        <ui:VisualElement name="PcQuickSlot1" style="position: absolute; left: 376px; bottom: 30px; width: 48px; height: 36px; background-color: rgba(20, 14, 8, 0.9); border-width: 2px; border-color: rgb(190, 165, 95); overflow: hidden; align-items: center; justify-content: center;">
+            <ui:Label text="1" style="width: 48px; height: 36px; color: rgb(180, 220, 255); font-size: 22px; -unity-font-style: bold; -unity-text-align: middle-center; background-color: rgba(0, 0, 0, 0);"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="PcQuickSlot2" style="position: absolute; left: 432px; bottom: 30px; width: 48px; height: 36px; background-color: rgba(20, 14, 8, 0.9); border-width: 2px; border-color: rgb(190, 165, 95); overflow: hidden; align-items: center; justify-content: center;">
+            <ui:Label text="2" style="width: 48px; height: 36px; color: rgb(180, 220, 255); font-size: 22px; -unity-font-style: bold; -unity-text-align: middle-center; background-color: rgba(0, 0, 0, 0);"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="PcQuickSlot3" style="position: absolute; left: 486px; bottom: 30px; width: 48px; height: 36px; background-color: rgba(20, 14, 8, 0.9); border-width: 2px; border-color: rgb(190, 165, 95); overflow: hidden; align-items: center; justify-content: center;">
+            <ui:Label text="3" style="width: 48px; height: 36px; color: rgb(180, 220, 255); font-size: 22px; -unity-font-style: bold; -unity-text-align: middle-center; background-color: rgba(0, 0, 0, 0);"/>
+        </ui:VisualElement>
+        <!-- PC ImediaLeftSkill/RightSkill (玩家信息主界面.ini): 36x36 at Left=369,404 Top=544.
+             1.6x/1.2x scale: x=590,646, bottom=24, w=58, h=43. -->
+        <ui:VisualElement name="PcLeftSkillBtn" style="position: absolute; left: 590px; bottom: 24px; width: 58px; height: 43px; background-color: rgba(20, 14, 8, 0.9); border-width: 2px; border-color: rgb(190, 165, 95); align-items: center; justify-content: center;">
+            <ui:Label text="Tả" style="position: absolute; left: 0px; top: 0px; width: 58px; height: 14px; color: rgb(255, 220, 100); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center; background-color: rgba(0, 0, 0, 0.7);"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="PcRightSkillBtn" style="position: absolute; left: 646px; bottom: 24px; width: 58px; height: 43px; background-color: rgba(20, 14, 8, 0.9); border-width: 2px; border-color: rgb(190, 165, 95); align-items: center; justify-content: center;">
+            <ui:Label text="Hữu" style="position: absolute; left: 0px; top: 0px; width: 58px; height: 14px; color: rgb(255, 220, 100); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center; background-color: rgba(0, 0, 0, 0.7);"/>
+        </ui:VisualElement>
         <!-- PC chat tabs (Tất cả / Mật / Môn phái / Bang hội / Phòng / Khác) — y=402-418 -->
-        <ui:VisualElement name="PcChatTabs" style="position: absolute; left: 15px; bottom: 117px; width: 397px; height: 24px; flex-direction: row; align-items: center; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="PcChatTabs" style="position: absolute; left: 15px; bottom: 80px; width: 397px; height: 24px; flex-direction: row; align-items: center; background-color: rgba(0, 0, 0, 0.5); border-radius: 3px; padding-left: 4px;">
             <ui:VisualElement name="ChatTabAll" class="active" style="width: 52px; height: 24px; align-items: center; justify-content: center; margin-left: 6px; margin-right: 6px; background-color: rgba(0, 0, 0, 0);"><ui:Label text="Tất cả" style="color: rgb(102, 204, 255); font-size: 12px; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0);"/></ui:VisualElement>
             <ui:VisualElement name="ChatTabPrivate" style="width: 52px; height: 24px; align-items: center; justify-content: center; margin-left: 6px; margin-right: 6px; background-color: rgba(0, 0, 0, 0);"><ui:Label text="Mật" style="color: rgb(102, 204, 255); font-size: 12px; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0);"/></ui:VisualElement>
             <ui:VisualElement name="ChatTabFaction" style="width: 52px; height: 24px; align-items: center; justify-content: center; margin-left: 6px; margin-right: 6px; background-color: rgba(0, 0, 0, 0);"><ui:Label text="Môn phái" style="color: rgb(102, 204, 255); font-size: 12px; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0);"/></ui:VisualElement>
@@ -153,15 +178,26 @@
             <ui:VisualElement name="ChatTabRoom" style="width: 52px; height: 24px; align-items: center; justify-content: center; margin-left: 6px; margin-right: 6px; background-color: rgba(0, 0, 0, 0);"><ui:Label text="Phòng" style="color: rgb(102, 204, 255); font-size: 12px; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0);"/></ui:VisualElement>
             <ui:VisualElement name="ChatTabOther" style="width: 52px; height: 24px; align-items: center; justify-content: center; margin-left: 6px; margin-right: 6px; background-color: rgba(0, 0, 0, 0);"><ui:Label text="Khác" style="color: rgb(102, 204, 255); font-size: 12px; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0);"/></ui:VisualElement>
         </ui:VisualElement>
-        <!-- Channel identity button — PC Left=217, Top=580 -->
-        <ui:VisualElement name="ChatChannelIdentityBtn" style="position: absolute; left: 326px; bottom: 14px; width: 24px; height: 24px; background-color: rgb(35, 50, 70); border-width: 1px; border-color: rgba(140, 165, 145, 0.55); border-radius: 2px; background-image: url('project://database/Assets/UI/HUD/Art/聊天频道图示－附近频道.png'); -unity-background-scale-mode: scale-to-fit;"/>
-        <ui:VisualElement name="ChatOptionsBtn" style="position: absolute; left: 275px; bottom: 16px; width: 24px; height: 24px; background-color: rgb(35, 50, 70); border-width: 1px; border-color: rgba(140, 165, 145, 0.55); border-radius: 2px; background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png'); -unity-background-scale-mode: scale-to-fit;"/>
-        <ui:TextField name="ChatInput" value="" style="position: absolute; left: 357px; bottom: 18px; width: 220px; height: 22px; color: rgb(40, 30, 15); font-size: 12px; background-color: rgb(212, 201, 178); border-width: 1px; border-color: rgb(120, 100, 70); border-radius: 2px;"/>
-        <ui:VisualElement name="FaceBtn" style="position: absolute; left: 585px; bottom: 16px; width: 24px; height: 24px; background-color: rgb(220, 165, 50); border-width: 1px; border-color: rgb(80, 50, 20); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png'); -unity-background-scale-mode: scale-to-fit;"/>
-        <ui:VisualElement name="SendBtn" style="position: absolute; left: 615px; bottom: 16px; width: 22px; height: 24px; background-color: rgb(35, 50, 70); border-width: 1px; border-color: rgba(140, 165, 145, 0.55); border-radius: 2px; align-items: center; justify-content: center; overflow: hidden;">
-            <ui:VisualElement name="SendBtnIcon" style="width: 18px; height: 18px; background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_send.png'); -unity-background-scale-mode: scale-to-fit;"/>
+        <!-- Channel identity button — PC ChannelBtn Left=217, Top=580, W=20, H=20
+             1.6x/1.2x: x=347, bottom=0, w=32, h=24 -->
+        <ui:VisualElement name="ChatChannelIdentityBtn" style="position: absolute; left: 347px; bottom: 0px; width: 32px; height: 24px; background-color: rgb(35, 50, 70); border-width: 1px; border-color: rgba(140, 165, 145, 0.55); border-radius: 2px; background-image: url('project://database/Assets/UI/HUD/Art/聊天频道图示－附近频道.png'); -unity-background-scale-mode: scale-to-fit;"/>
+        <!-- Options button — PC Options Left=183, Top=565, W=30, H=30
+             1.6x/1.2x: x=293, bottom=6, w=48, h=36 -->
+        <ui:VisualElement name="ChatOptionsBtn" style="position: absolute; left: 293px; bottom: 6px; width: 48px; height: 36px; background-color: rgb(35, 50, 70); border-width: 1px; border-color: rgba(140, 165, 145, 0.55); border-radius: 2px; background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png'); -unity-background-scale-mode: scale-to-fit;"/>
+        <!-- Chat input — PC InputEdit Left=238, Top=582, W=190, H=15
+             1.6x/1.2x: x=381, bottom=4, w=304, h=18 -->
+        <ui:TextField name="ChatInput" value="" style="position: absolute; left: 381px; bottom: 4px; width: 304px; height: 18px; color: rgb(40, 30, 15); font-size: 12px; background-color: rgb(212, 201, 178); border-width: 1px; border-color: rgb(120, 100, 70); border-radius: 2px;"/>
+        <!-- Face button — PC Face Left=431, Top=581, W=20, H=20
+             1.6x/1.2x: x=690, bottom=0, w=32, h=24 -->
+        <ui:VisualElement name="FaceBtn" style="position: absolute; left: 690px; bottom: 0px; width: 32px; height: 24px; background-color: rgb(220, 165, 50); border-width: 1px; border-color: rgb(80, 50, 20); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-left-radius: 12px; border-bottom-right-radius: 12px; background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_face.png'); -unity-background-scale-mode: scale-to-fit;"/>
+        <!-- Send button — PC SendBtn Left=451, Top=581, W=20, H=20
+             1.6x/1.2x: x=722, bottom=0, w=32, h=24 -->
+        <ui:VisualElement name="SendBtn" style="position: absolute; left: 722px; bottom: 0px; width: 32px; height: 24px; background-color: rgb(35, 50, 70); border-width: 1px; border-color: rgba(140, 165, 145, 0.55); border-radius: 2px; align-items: center; justify-content: center; overflow: hidden;">
+            <ui:VisualElement name="SendBtnIcon" style="width: 24px; height: 24px; background-image: url('project://database/Assets/UI/HUD/Art/btn_chat_send.png'); -unity-background-scale-mode: scale-to-fit;"/>
         </ui:VisualElement>
-        <ui:VisualElement name="ChatFriendBtn" style="position: absolute; left: 643px; bottom: 16px; width: 22px; height: 24px; background-color: rgb(35, 50, 70); border-width: 1px; border-color: rgba(140, 165, 145, 0.55); border-radius: 2px; background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png'); -unity-background-scale-mode: scale-to-fit;"/>
+        <!-- Friend button — PC Friend Left=675, Top=557, W=50, H=50
+             1.6x/1.2x: x=1080, bottom=0, w=80, h=60 -->
+        <ui:VisualElement name="ChatFriendBtn" style="position: absolute; left: 1080px; bottom: 0px; width: 80px; height: 60px; background-color: rgb(35, 50, 70); border-width: 2px; border-color: rgb(190, 165, 95); border-radius: 4px; background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png'); -unity-background-scale-mode: scale-to-fit;"/>
         <ui:VisualElement name="ChatTreasureBtn" style="position: absolute; left: 735px; bottom: 8px; width: 60px; height: 70px; background-color: rgb(35, 50, 70); border-width: 2px; border-color: rgb(190, 165, 95); border-top-left-radius: 30px; border-top-right-radius: 30px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png'); -unity-background-scale-mode: scale-to-fit;"/>
 
         <!-- ═══ MOBILE COMBAT HUD — PC visual assets, mobile-first layout ═══ -->
@@ -181,20 +217,21 @@
              Left/Top positions match the PC INI 1:1. The toolbar overlays the
              PC bottom strip (主界面新版.spr, 800x60) baked into bottom_bar_bg.png.
              CombatActionCluster stays hidden — Run/Sit/Horse/Exchange/PK live here. -->
-        <ui:VisualElement name="PcMenuToolbar" class="hud-pc-menu-toolbar" style="position: absolute; left: 0px; bottom: 76px; width: 1280px; height: 56px; flex-direction: row; align-items: flex-start; justify-content: flex-start;">
+        <ui:VisualElement name="PcMenuToolbar" class="hud-pc-menu-toolbar" style="position: absolute; left: 0px; bottom: 18px; width: 1280px; height: 56px; flex-direction: row; align-items: flex-start; justify-content: flex-start;">
             <!-- Round action cluster (left, 30x30). PC INI Left=9,40,75,110,145 Top=10. Scale 1.5x: 14,60,112,165,217 -->
-            <ui:VisualElement name="BtnRun"      style="position: absolute; left: 14px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden;"><ui:VisualElement name="BtnRunIcon" style="width: 36px; height: 36px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnSit"      style="position: absolute; left: 60px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden;"><ui:VisualElement name="BtnSitIcon" style="width: 36px; height: 36px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnHorse"    style="position: absolute; left: 112px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden;"><ui:VisualElement name="BtnHorseIcon" style="width: 36px; height: 36px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnExchange" style="position: absolute; left: 165px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden;"><ui:VisualElement name="BtnExchangeIcon" style="width: 36px; height: 36px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnPK"       style="position: absolute; left: 217px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnPKIcon" style="width: 36px; height: 36px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <!-- Menu cluster (right, 40x40). PC INI Left=474,514,555,594,635,713 Top=2. Scale 1.5x: 711,771,832,891,952,1069 -->
-            <ui:VisualElement name="BtnStatus"    style="position: absolute; left: 711px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnStatusIcon" style="width: 52px; height: 48px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnItems"     style="position: absolute; left: 771px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnItemsIcon" style="width: 52px; height: 48px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnSkills"    style="position: absolute; left: 832px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnSkillsIcon" style="width: 52px; height: 48px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnTeam"      style="position: absolute; left: 891px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnTeamIcon" style="width: 52px; height: 48px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnFaction"   style="position: absolute; left: 952px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnFactionIcon" style="width: 52px; height: 48px; position: absolute; left: 4px; top: 4px;"/></ui:VisualElement>
-            <ui:VisualElement name="BtnWorldSort" style="position: absolute; left: 1069px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnWorldSortIcon" style="width: 52px; height: 48px; position: absolute; left: 4px; top: 4px;"/><ui:Label name="BtnWorldSortLabel" text="BXH" style="position: absolute; left: 14px; top: 18px; color: rgb(255, 220, 100); font-size: 14px; -unity-font-style: bold;"/></ui:VisualElement>
+            <!-- Round action cluster (left, 30x30). PC INI Left=9,40,75,110,145 Top=10. Scale 1.6x: 14,64,120,176,232 -->
+            <ui:VisualElement name="BtnRun"      style="position: absolute; left: 14px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden; align-items: center; justify-content: center;"><ui:Label text="Chạy" style="color: rgb(255, 220, 100); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnSit"      style="position: absolute; left: 64px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden;"><ui:VisualElement name="BtnSitIcon" style="width: 32px; height: 32px; position: absolute; left: 6px; top: 6px; background-image: url('project://database/Assets/UI/HUD/Art/btn_sit.png'); -unity-background-scale-mode: scale-to-fit;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnHorse"    style="position: absolute; left: 120px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden;"><ui:VisualElement name="BtnHorseIcon" style="width: 32px; height: 32px; position: absolute; left: 6px; top: 6px; background-image: url('project://database/Assets/UI/HUD/Art/btn_horse.png'); -unity-background-scale-mode: scale-to-fit;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnExchange" style="position: absolute; left: 176px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden;"><ui:VisualElement name="BtnExchangeIcon" style="width: 32px; height: 32px; position: absolute; left: 6px; top: 6px; background-image: url('project://database/Assets/UI/HUD/Art/btn_exchange.png'); -unity-background-scale-mode: scale-to-fit;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnPK"       style="position: absolute; left: 232px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden;"><ui:VisualElement name="BtnPKIcon" style="width: 32px; height: 32px; position: absolute; left: 6px; top: 6px; background-image: url('project://database/Assets/UI/HUD/Art/btn_pk.png'); -unity-background-scale-mode: scale-to-fit;"/></ui:VisualElement>
+            <!-- Menu cluster (right, 40x40). PC INI Left=474,514,555,594,635,713 Top=2. Scale 1.6x: 758,822,888,950,1016,1141 -->
+            <ui:VisualElement name="BtnStatus"    style="position: absolute; left: 758px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden; align-items: center; justify-content: center;"><ui:VisualElement name="BtnStatusIcon" style="width: 36px; height: 36px; background-image: url('project://database/Assets/UI/HUD/Art/btn_status.png'); -unity-background-scale-mode: scale-to-fit;"/><ui:Label text="Nhân" style="position: absolute; left: 0px; bottom: 1px; width: 60px; height: 14px; color: rgb(255, 238, 174); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnItems"     style="position: absolute; left: 822px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden; align-items: center; justify-content: center;"><ui:VisualElement name="BtnItemsIcon" style="width: 36px; height: 36px; background-image: url('project://database/Assets/UI/HUD/Art/btn_items.png'); -unity-background-scale-mode: scale-to-fit;"/><ui:Label text="Túi" style="position: absolute; left: 0px; bottom: 1px; width: 60px; height: 14px; color: rgb(255, 238, 174); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnSkills"    style="position: absolute; left: 888px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden; align-items: center; justify-content: center;"><ui:VisualElement name="BtnSkillsIcon" style="width: 36px; height: 36px; background-image: url('project://database/Assets/UI/HUD/Art/btn_skills.png'); -unity-background-scale-mode: scale-to-fit;"/><ui:Label text="Võ" style="position: absolute; left: 0px; bottom: 1px; width: 60px; height: 14px; color: rgb(255, 238, 174); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnTeam"      style="position: absolute; left: 950px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden; align-items: center; justify-content: center;"><ui:VisualElement name="BtnTeamIcon" style="width: 36px; height: 36px; background-image: url('project://database/Assets/UI/HUD/Art/btn_team.png'); -unity-background-scale-mode: scale-to-fit;"/><ui:Label text="Đội" style="position: absolute; left: 0px; bottom: 1px; width: 60px; height: 14px; color: rgb(255, 238, 174); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnFaction"   style="position: absolute; left: 1016px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden; align-items: center; justify-content: center;"><ui:VisualElement name="BtnFactionIcon" style="width: 36px; height: 36px; background-image: url('project://database/Assets/UI/HUD/Art/btn_faction.png'); -unity-background-scale-mode: scale-to-fit;"/><ui:Label text="Bang" style="position: absolute; left: 0px; bottom: 1px; width: 60px; height: 14px; color: rgb(255, 238, 174); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
+            <ui:VisualElement name="BtnWorldSort" style="position: absolute; left: 1141px; top: 0px; width: 60px; height: 56px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-radius: 4px; overflow: hidden; align-items: center; justify-content: center;"><ui:Label text="BXH" style="color: rgb(255, 220, 100); font-size: 16px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
             <!-- Legacy hidden elements kept for C# binding compatibility (RegisterClick uses these names).
                  Task/ItemEx/Friend/ChatRoom/Treasure/Options were Unity-only extras not in 工具控制条.ini. -->
             <ui:VisualElement name="UtilityToggleBtn" class="hidden" style="display: none;"/>
@@ -250,8 +287,8 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom">
-            <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster">
+        <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom" style="position: absolute; left: 0px; right: 0px; bottom: 0px; width: 1280px; height: 90px; background-color: rgba(0, 0, 0, 0); border-width: 0px;">
+            <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster" style="display: none;">
                 <ui:VisualElement name="PrimaryAttackBtn" class="hud-primary-attack-btn"><ui:VisualElement name="PrimaryAttackBtnIcon" class="hud-primary-attack-icon"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot0" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-main"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot1" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-left"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="2" class="hud-skill-slot-label"/></ui:VisualElement>

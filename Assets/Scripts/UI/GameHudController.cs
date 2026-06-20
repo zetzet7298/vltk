@@ -1041,9 +1041,10 @@ namespace VLTK.UI
             }
             if (_minimapPanel != null)
             {
-                _minimapPanel.style.left = safeX + 1138f;
+                // PC 小地图_小.ini: MiniMap Left=670, Top=0, W=130, H=130 → 1.6x = 1072, 0, 208, 156
+                _minimapPanel.style.left = safeX + 1072f;
                 _minimapPanel.style.right = StyleKeyword.Auto;
-                _minimapPanel.style.top = safeY + 4f;
+                _minimapPanel.style.top = safeY + 0f;
             }
             if (_mapPreviewOverlay != null)
             {
