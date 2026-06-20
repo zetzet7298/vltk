@@ -2284,24 +2284,27 @@
     border-width: 0px;
 }
 
-/* PC INI Left × 1.6 for round actions (relative to .hud-pc-menu-toolbar).
-   Shifted +20px right from pure INI scale to avoid Run button being cut off
-   behind the quick-slot panel (1,2,3) on the far left. */
-#BtnRun      { left:  30px; }
-#BtnSit      { left:  80px; }
-#BtnHorse    { left: 136px; }
-#BtnExchange { left: 192px; }
-#BtnPK       { left: 248px; }
+/* PC evidence (pc-evidence/hud.png, 1071px wide) shows ALL buttons CENTERED
+   in a single cluster: square menu buttons LEFT, round action buttons RIGHT.
+   Scaled from 1071px to 1280px HUD (factor 1.195).
+   Square button centers in evidence: 439/464/489/514/539/564px
+   Round button centers in evidence: 602/627/652/677/702px
+   left = center * 1.195 - halfButtonWidth */
 
-/* PC INI Left × 1.6 for menu cluster (relative to .hud-pc-menu-toolbar).
-   Slightly compressed so all 6 buttons fit within 1280px without WorldSort
-   being cut off at the right edge. */
-#BtnStatus     { left:  700px; }
-#BtnItems      { left:  764px; }
-#BtnSkills     { left:  828px; }
-#BtnTeam       { left:  892px; }
-#BtnFaction    { left:  956px; }
-#BtnWorldSort  { left: 1080px; }
+/* Square menu buttons (LEFT side of center cluster, 64px wide) */
+#BtnStatus     { left: 493px; }
+#BtnItems      { left: 522px; }
+#BtnSkills     { left: 552px; }
+#BtnTeam       { left: 582px; }
+#BtnFaction    { left: 612px; }
+#BtnWorldSort  { left: 642px; }
+
+/* Round action buttons (RIGHT side of center cluster, 48px wide) */
+#BtnRun      { left: 695px; }
+#BtnSit      { left: 725px; }
+#BtnHorse    { left: 755px; }
+#BtnExchange { left: 785px; }
+#BtnPK       { left: 815px; }
 
 .hud-pc-toolbar-btn .hud-menu-btn-icon,
 .hud-pc-toolbar-btn .hud-btn-icon {
