@@ -49,7 +49,10 @@
              SceneName/ScenePos: PC 0,1,112,14 / 2,15,112,14 (green)
              SwitchBtn: PC 101,115,14,14 → 162,138,22,17
              WorldMapBtn: PC 115,115,14,14 → 184,138,22,17 -->
-        <ui:VisualElement name="MinimapPanel" class="hud-minimap-panel" style="position: absolute; left: 1072px; top: 0px; width: 208px; height: 156px; align-items: center; background-color: rgba(0, 0, 0, 0);">
+        <!-- ═══ TOP-RIGHT MINIMAP (PC top-right 256x128 scaled 1.5x → 208x156 @ left=1072px) ═══ -->
+        <!-- display: flex re-asserted 2026-06-22: USS class .hud-minimap-panel or runtime may
+             have flipped it to none; force visible so the player can re-open the map preview. -->
+        <ui:VisualElement name="MinimapPanel" class="hud-minimap-panel" style="position: absolute; left: 1072px; top: 0px; width: 208px; height: 156px; align-items: center; background-color: rgba(0, 0, 0, 0); display: flex;">
             <ui:VisualElement name="MinimapFrame" style="width: 208px; height: 154px; border-width: 2px; border-color: rgb(60, 80, 60); background-color: rgba(2, 8, 4, 0.92); overflow: hidden;">
                 <ui:VisualElement name="MinimapContent" style="position: absolute; left: 2px; top: 1px; width: 205px; height: 154px; background-color: rgba(15, 25, 15, 0.90); background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/MiniMap/balingxian.png'); -unity-background-scale-mode: stretch-to-fill;">
                     <ui:VisualElement name="MiniMapTarget" style="position: absolute; left: -1000px; top: -1000px; width: 12px; height: 12px; border-radius: 6px; background-color: rgb(255, 230, 40); border-width: 0px;"/>
@@ -146,7 +149,8 @@
              rules aren't being applied in this scene; inline overrides take priority). -->
         <!-- Quick slots (PC left toolbar) y=440-475, x=5-150 in PC 600x480 -->
         <!-- ═══ BOTTOM BAR BACKGROUND — must be FIRST in z-order so buttons paint on top ═══ -->
-        <ui:VisualElement name="PcBottomBarBg" style="position: absolute; left: 0px; bottom: 0px; width: 1280px; height: 90px; background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png'); -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); border-width: 0px;"/>
+        <!-- Hidden 2026-06-22: covers joystick (MobileJoystick) at bottom-left, blocking move input. -->
+        <ui:VisualElement name="PcBottomBarBg" style="position: absolute; left: 0px; bottom: 0px; width: 1280px; height: 90px; background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png'); -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); border-width: 0px; display: none;"/>
         <!-- PC chat messages — y=418-435 in PC -->
         <ui:VisualElement name="PcChatMessagesArea" style="position: absolute; left: 8px; bottom: 50px; width: 412px; height: 25px; background-color: rgba(0, 0, 0, 0);"/>
         <!-- PC quick slots (玩家信息主界面.ini Item_0/1/2): W=30 H=30 at Left=235,270,304 Top=545.
@@ -208,6 +212,12 @@
         </ui:VisualElement>
 
         <!-- ═══ PC-STYLE BOTTOM TOOLBAR MENU BUTTONS ═══ -->
+        <!-- Hidden 2026-06-22: BtnRun/Sit/Horse/Exchange/PK overlay joystick (MobileJoystick) at
+             bottom-left, blocking move input. Keep the legacy hidden child elements (UtilityToggleBtn,
+             MobileUtilityDock, PcShortcutDock) untouched — they carry C# binding names.
+             This outer wrapper is empty (the real PcMenuToolbar content is the inner tag below);
+             closing it here keeps the UXML balanced so UIDocument can clone the visual tree. -->
+        <ui:VisualElement name="PcMenuToolbar" class="hud-pc-menu-toolbar" style="position: absolute; left: 0px; bottom: 18px; width: 1280px; height: 56px; flex-direction: row; align-items: flex-start; justify-content: flex-start; display: none;"/>
         <!-- PC 工具控制条.ini: 11 buttons in a single 800x45 toolbar.
              Rendered LAST in the GameHud tree so it draws ON TOP of BottomPanel
              (bottom_bar_bg.png) and all other bottom elements. In UI Toolkit,
@@ -217,7 +227,7 @@
              Left/Top positions match the PC INI 1:1. The toolbar overlays the
              PC bottom strip (主界面新版.spr, 800x60) baked into bottom_bar_bg.png.
              CombatActionCluster stays hidden — Run/Sit/Horse/Exchange/PK live here. -->
-        <ui:VisualElement name="PcMenuToolbar" class="hud-pc-menu-toolbar" style="position: absolute; left: 0px; bottom: 18px; width: 1280px; height: 56px; flex-direction: row; align-items: flex-start; justify-content: flex-start;">
+        <ui:VisualElement name="PcMenuToolbar" class="hud-pc-menu-toolbar" style="position: absolute; left: 0px; bottom: 18px; width: 1280px; height: 56px; flex-direction: row; align-items: flex-start; justify-content: flex-start; display: none;">
             <!-- Round action cluster (left, 30x30). PC INI Left=9,40,75,110,145 Top=10. Scale 1.5x: 14,60,112,165,217 -->
             <!-- Round action cluster (left, 30x30). PC INI Left=9,40,75,110,145 Top=10. Scale 1.6x: 14,64,120,176,232 -->
             <ui:VisualElement name="BtnRun"      style="position: absolute; left: 14px; top: 4px; width: 44px; height: 44px; background-color: rgba(35, 50, 70, 0.5); border-width: 1px; border-color: rgba(140, 165, 145, 0.4); border-top-left-radius: 22px; border-top-right-radius: 22px; border-bottom-left-radius: 22px; border-bottom-right-radius: 22px; overflow: hidden; align-items: center; justify-content: center;"><ui:Label text="Chạy" style="color: rgb(255, 220, 100); font-size: 11px; -unity-font-style: bold; -unity-text-align: middle-center;"/></ui:VisualElement>
@@ -287,7 +297,7 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom" style="position: absolute; left: 0px; right: 0px; bottom: 0px; width: 1280px; height: 90px; background-color: rgba(0, 0, 0, 0); border-width: 0px;">
+        <ui:VisualElement name="BottomPanel" class="hud-mobile-bottom" style="position: absolute; left: 0px; right: 0px; bottom: 0px; width: 1280px; height: 90px; background-color: rgba(0, 0, 0, 0); border-width: 0px; display: none;">
             <ui:VisualElement name="CombatActionCluster" class="hud-combat-action-cluster" style="display: none;">
                 <ui:VisualElement name="PrimaryAttackBtn" class="hud-primary-attack-btn"><ui:VisualElement name="PrimaryAttackBtnIcon" class="hud-primary-attack-icon"/></ui:VisualElement>
                 <ui:VisualElement name="SkillSlot0" class="hud-skill-slot hud-mobile-skill-slot hud-skill-slot-main"><ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/><ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/></ui:VisualElement>

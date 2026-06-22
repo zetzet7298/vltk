@@ -314,6 +314,7 @@ namespace VLTK.UI
 
         private void Start()
         {
+            SubscribeToMapLoaded();
             BindElements();
             LoadArt();
             SizeRootToScreen();
@@ -354,8 +355,19 @@ namespace VLTK.UI
             ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(folderPath, screenshotName), 2);
         }
 
+        private void OnEnable()
+        {
+            SubscribeToMapLoaded();
+        }
+
+        private void OnDisable()
+        {
+            UnsubscribeFromMapLoaded();
+        }
+
         private void OnDestroy()
         {
+            UnsubscribeFromMapLoaded();
             if (_vltkunityBus != null)
             {
                 _vltkunityBus.OnScreenshotRequested -= HandleScreenshotRequested;
@@ -366,6 +378,42 @@ namespace VLTK.UI
             _vltkunityTopBar = null;
             _vltkunityMiniMap = null;
             _vltkunityBus = null;
+        }
+
+        private System.Action<int> _mapLoadedHandler;
+        private bool _mapLoadedSubscribed;
+
+        private void SubscribeToMapLoaded()
+        {
+            if (_mapLoadedSubscribed) return;
+            var mgr = SandboxManager.Instance;
+            if (mgr == null) return;
+            var mapMgr = mgr.MapManager;
+            if (mapMgr == null) return;
+
+            _mapLoadedHandler = _ => InvalidateMinimapCaches();
+            mapMgr.OnMapLoaded += _mapLoadedHandler;
+            _mapLoadedSubscribed = true;
+        }
+
+        private void UnsubscribeFromMapLoaded()
+        {
+            if (!_mapLoadedSubscribed) return;
+            _mapLoadedSubscribed = false;
+            var mgr = SandboxManager.Instance;
+            if (mgr == null) { _mapLoadedHandler = null; return; }
+            var mapMgr = mgr.MapManager;
+            if (_mapLoadedHandler != null && mapMgr != null)
+            {
+                mapMgr.OnMapLoaded -= _mapLoadedHandler;
+            }
+            _mapLoadedHandler = null;
+        }
+
+        private void InvalidateMinimapCaches()
+        {
+            _previewTextureMapId = -1;
+            _minimapTextureMapId = -1;
         }
 
         private void InitializeCombatSkillSlots()
@@ -389,6 +437,8 @@ namespace VLTK.UI
 
         private void Update()
         {
+            if (!_mapLoadedSubscribed)
+                SubscribeToMapLoaded();
             EnsureRuntimeReady();
             if (!_initialized) return;
             SizeRootToScreen();
@@ -1262,6 +1312,8 @@ namespace VLTK.UI
                 cam.nearClipPlane = 0.1f;
                 cam.farClipPlane = 5000f;
                 cam.cullingMask = ~0;
+                cam.transparencySortMode = TransparencySortMode.CustomAxis;
+                cam.transparencySortAxis = new Vector3(0f, 1f, 0f);
                 cam.targetTexture = rt;
                 cam.Render();
 
