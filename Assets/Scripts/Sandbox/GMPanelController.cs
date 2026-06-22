@@ -45,6 +45,8 @@ namespace VLTK.Sandbox
 
         private GameObject _equipmentPanel;
         private GameObject _joystickGo;
+        private UnityEngine.UIElements.UIDocument _cachedHudDoc;
+        private Behaviour _cachedHudOverlay;
 
         private void EnsureInitialized()
         {
@@ -208,29 +210,27 @@ namespace VLTK.Sandbox
                 }
 
                 // Hide UI Toolkit HUD to prevent blocking clicks on the left buttons (especially ChatInputRow/ChatBar)
-                var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
-                if (hudType != null)
+                if (_cachedHudDoc == null)
                 {
-                    var hud = UnityEngine.Object.FindAnyObjectByType(hudType) as MonoBehaviour;
-                    if (hud != null)
-                    {
-                        var uiDoc = hud.GetComponent<UnityEngine.UIElements.UIDocument>();
-                        if (uiDoc != null)
-                        {
-                            uiDoc.enabled = false;
-                        }
-                    }
+                    _cachedHudDoc = UnityEngine.Object.FindAnyObjectByType<UnityEngine.UIElements.UIDocument>();
+                }
+                if (_cachedHudDoc != null)
+                {
+                    _cachedHudDoc.enabled = false;
                 }
 
                 // Hide IMGUI HUD Overlay
-                var overlayType = System.Type.GetType("VLTK.UI.PcHudVietnameseTextOverlay, Assembly-CSharp");
-                if (overlayType != null)
+                if (_cachedHudOverlay == null)
                 {
-                    var overlay = UnityEngine.Object.FindAnyObjectByType(overlayType) as MonoBehaviour;
-                    if (overlay != null)
+                    var overlayType = System.Type.GetType("VLTK.UI.PcHudVietnameseTextOverlay, Assembly-CSharp");
+                    if (overlayType != null)
                     {
-                        overlay.enabled = false;
+                        _cachedHudOverlay = UnityEngine.Object.FindAnyObjectByType(overlayType) as Behaviour;
                     }
+                }
+                if (_cachedHudOverlay != null)
+                {
+                    _cachedHudOverlay.enabled = false;
                 }
 
                 // Hide Chat panel and button to prevent overlapping/blocking clicks
@@ -260,29 +260,27 @@ namespace VLTK.Sandbox
                 }
 
                 // Restore UI Toolkit HUD
-                var hudType = System.Type.GetType("VLTK.UI.GameHudController, Assembly-CSharp");
-                if (hudType != null)
+                if (_cachedHudDoc == null)
                 {
-                    var hud = UnityEngine.Object.FindAnyObjectByType(hudType) as MonoBehaviour;
-                    if (hud != null)
-                    {
-                        var uiDoc = hud.GetComponent<UnityEngine.UIElements.UIDocument>();
-                        if (uiDoc != null)
-                        {
-                            uiDoc.enabled = true;
-                        }
-                    }
+                    _cachedHudDoc = UnityEngine.Object.FindAnyObjectByType<UnityEngine.UIElements.UIDocument>();
+                }
+                if (_cachedHudDoc != null)
+                {
+                    _cachedHudDoc.enabled = true;
                 }
 
                 // Restore IMGUI HUD Overlay
-                var overlayType = System.Type.GetType("VLTK.UI.PcHudVietnameseTextOverlay, Assembly-CSharp");
-                if (overlayType != null)
+                if (_cachedHudOverlay == null)
                 {
-                    var overlay = UnityEngine.Object.FindAnyObjectByType(overlayType) as MonoBehaviour;
-                    if (overlay != null)
+                    var overlayType = System.Type.GetType("VLTK.UI.PcHudVietnameseTextOverlay, Assembly-CSharp");
+                    if (overlayType != null)
                     {
-                        overlay.enabled = true;
+                        _cachedHudOverlay = UnityEngine.Object.FindAnyObjectByType(overlayType) as Behaviour;
                     }
+                }
+                if (_cachedHudOverlay != null)
+                {
+                    _cachedHudOverlay.enabled = true;
                 }
 
                 // Restore Chat panel and button
