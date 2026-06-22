@@ -98,11 +98,24 @@ namespace VLTK.UI
     }
 
     /// <summary>
+    /// Phase 2 panels command contract for the six lightweight panels
+    /// (NpcDialog, Faction, Guild, Mail, Shop, Login).
+    /// </summary>
+    public interface IPanelsCommandBus
+    {
+        event Action<PanelType> OnPanelClosed;
+        event Action<PanelType, string> OnPanelActionSelected;
+
+        void PublishPanelClosed(PanelType panelType);
+        void PublishPanelActionSelected(PanelType panelType, string action);
+    }
+
+    /// <summary>
     /// Default in-process bus. The same instance is shared by adapters and the
     /// GameHudController; controllers wire subscriptions during OnEnable and
     /// unsubscribe during OnDisable so reloads do not leak handlers.
     /// </summary>
-    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus, ISkillCommandBus, IEquipmentCommandBus, IBagCommandBus
+    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus, ISkillCommandBus, IEquipmentCommandBus, IBagCommandBus, IPanelsCommandBus
     {
         public event Action OnProfileRequested;
         public event Action OnScreenshotRequested;
@@ -129,6 +142,9 @@ namespace VLTK.UI
         public event Action<int> OnItemSelected;
         public event Action OnBagCloseRequested;
 
+        public event Action<PanelType> OnPanelClosed;
+        public event Action<PanelType, string> OnPanelActionSelected;
+
         public void PublishProfileRequested() => OnProfileRequested?.Invoke();
         public void PublishScreenshotRequested() => OnScreenshotRequested?.Invoke();
         public void PublishMinimapMarkerRequested() => OnMinimapMarkerRequested?.Invoke();
@@ -154,6 +170,9 @@ namespace VLTK.UI
         public void PublishItemSelected(int slotIndex) => OnItemSelected?.Invoke(slotIndex);
         public void PublishBagCloseRequested() => OnBagCloseRequested?.Invoke();
 
+        public void PublishPanelClosed(PanelType panelType) => OnPanelClosed?.Invoke(panelType);
+        public void PublishPanelActionSelected(PanelType panelType, string action) => OnPanelActionSelected?.Invoke(panelType, action);
+
         public void ClearAllSubscribers()
         {
             OnProfileRequested = null;
@@ -176,6 +195,8 @@ namespace VLTK.UI
             OnBagTabChanged = null;
             OnItemSelected = null;
             OnBagCloseRequested = null;
+            OnPanelClosed = null;
+            OnPanelActionSelected = null;
         }
     }
 }
