@@ -84,11 +84,25 @@ namespace VLTK.UI
     }
 
     /// <summary>
+    /// Phase 2 bag/inventory panel command contract.
+    /// </summary>
+    public interface IBagCommandBus
+    {
+        event Action<int> OnBagTabChanged;
+        event Action<int> OnItemSelected;
+        event Action OnBagCloseRequested;
+
+        void PublishBagTabChanged(int tabIndex);
+        void PublishItemSelected(int slotIndex);
+        void PublishBagCloseRequested();
+    }
+
+    /// <summary>
     /// Default in-process bus. The same instance is shared by adapters and the
     /// GameHudController; controllers wire subscriptions during OnEnable and
     /// unsubscribe during OnDisable so reloads do not leak handlers.
     /// </summary>
-    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus, ISkillCommandBus, IEquipmentCommandBus
+    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus, ISkillCommandBus, IEquipmentCommandBus, IBagCommandBus
     {
         public event Action OnProfileRequested;
         public event Action OnScreenshotRequested;
@@ -111,6 +125,10 @@ namespace VLTK.UI
         public event Action<string> OnAttributeIncrementRequested;
         public event Action OnEquipmentCloseRequested;
 
+        public event Action<int> OnBagTabChanged;
+        public event Action<int> OnItemSelected;
+        public event Action OnBagCloseRequested;
+
         public void PublishProfileRequested() => OnProfileRequested?.Invoke();
         public void PublishScreenshotRequested() => OnScreenshotRequested?.Invoke();
         public void PublishMinimapMarkerRequested() => OnMinimapMarkerRequested?.Invoke();
@@ -132,6 +150,10 @@ namespace VLTK.UI
         public void PublishAttributeIncrementRequested(string attributeName) => OnAttributeIncrementRequested?.Invoke(attributeName);
         public void PublishEquipmentCloseRequested() => OnEquipmentCloseRequested?.Invoke();
 
+        public void PublishBagTabChanged(int tabIndex) => OnBagTabChanged?.Invoke(tabIndex);
+        public void PublishItemSelected(int slotIndex) => OnItemSelected?.Invoke(slotIndex);
+        public void PublishBagCloseRequested() => OnBagCloseRequested?.Invoke();
+
         public void ClearAllSubscribers()
         {
             OnProfileRequested = null;
@@ -151,6 +173,9 @@ namespace VLTK.UI
             OnEquipmentTabChanged = null;
             OnAttributeIncrementRequested = null;
             OnEquipmentCloseRequested = null;
+            OnBagTabChanged = null;
+            OnItemSelected = null;
+            OnBagCloseRequested = null;
         }
     }
 }
