@@ -51,7 +51,7 @@
              WorldMapBtn: PC 115,115,14,14 → 184,138,22,17 -->
         <ui:VisualElement name="MinimapPanel" class="hud-minimap-panel" style="position: absolute; left: 1072px; top: 0px; width: 208px; height: 156px; align-items: center; background-color: rgba(0, 0, 0, 0);">
             <ui:VisualElement name="MinimapFrame" style="width: 208px; height: 154px; border-width: 2px; border-color: rgb(60, 80, 60); background-color: rgba(2, 8, 4, 0.92); overflow: hidden;">
-                <ui:VisualElement name="MinimapContent" style="position: absolute; left: 2px; top: 1px; width: 205px; height: 154px; background-color: rgba(15, 25, 15, 0.90); background-image: url('project://database/Assets/UI/HUD/Textures/tex_minimap_bg.png'); -unity-background-scale-mode: stretch-to-fill;">
+                <ui:VisualElement name="MinimapContent" style="position: absolute; left: 2px; top: 1px; width: 205px; height: 154px; background-color: rgba(15, 25, 15, 0.90); background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/MiniMap/balingxian.png'); -unity-background-scale-mode: stretch-to-fill;">
                     <ui:VisualElement name="MiniMapTarget" style="position: absolute; left: -1000px; top: -1000px; width: 12px; height: 12px; border-radius: 6px; background-color: rgb(255, 230, 40); border-width: 0px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="PlayerDot" style="position: absolute; left: 98px; top: 72px; width: 14px; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/minimap_dot.png'); -unity-background-scale-mode: scale-to-fit;"/>

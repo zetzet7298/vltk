@@ -132,7 +132,7 @@
     width: 128px;
     height: 128px;
     background-color: rgba(15,25,15,0.90);
-    background-image: url('project://database/Assets/UI/HUD/Textures/tex_minimap_bg.png');
+    background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/MiniMap/balingxian.png');
     -unity-background-scale-mode: stretch-to-fill;
 }
 
@@ -313,7 +313,7 @@
     top: 0px;
     width: 500px;
     height: 500px;
-    background-image: url('project://database/Assets/UI/HUD/Textures/tex_minimap_bg.png');
+    background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/MiniMap/balingxian.png');
     -unity-background-scale-mode: stretch-to-fill;
 }
 

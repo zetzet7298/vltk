@@ -111,6 +111,11 @@ namespace VLTK.UI
         private bool _systemReminderVisible;
         private bool _minimapExpanded;
 
+        // Phase 1 vltkunity port — adapter fields
+        private HudCommandBus _vltkunityBus;
+        private TopBarVltkUnityAdapter _vltkunityTopBar;
+        private MiniMapVltkUnityAdapter _vltkunityMiniMap;
+
         // New HUD elements
         private VisualElement _buffPanel;
         private VisualElement _teamPreview;
@@ -313,6 +318,54 @@ namespace VLTK.UI
             LoadArt();
             SizeRootToScreen();
             InitializeCombatSkillSlots();
+            InitVltkUnityAdapters();
+        }
+
+        private void InitVltkUnityAdapters()
+        {
+            if (_bridge == null)
+                InitBridge();
+            if (_bridge == null)
+                return;
+
+            var doc = GetComponent<UIDocument>();
+            var root = doc?.rootVisualElement?.Q("GameHud");
+            if (root == null) return;
+
+            _vltkunityBus ??= new HudCommandBus();
+            _vltkunityTopBar ??= new TopBarVltkUnityAdapter(root, _bridge, _vltkunityBus);
+            _vltkunityTopBar.Bind();
+
+            _vltkunityMiniMap ??= new MiniMapVltkUnityAdapter(root, _bridge, _vltkunityBus);
+            _vltkunityMiniMap.Bind();
+
+            // Phase 1 only wires the screenshot intent (cheap, always available).
+            // Profile + minimap buttons stay wired in Phase 2+ once the matching
+            // panels exist in vltk-mobile.
+            _vltkunityBus.OnScreenshotRequested += HandleScreenshotRequested;
+        }
+
+        private void HandleScreenshotRequested()
+        {
+            string folderPath = "Assets/Screenshots/";
+            if (!System.IO.Directory.Exists(folderPath))
+                System.IO.Directory.CreateDirectory(folderPath);
+            var screenshotName = "Screenshot_" + System.DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(folderPath, screenshotName), 2);
+        }
+
+        private void OnDestroy()
+        {
+            if (_vltkunityBus != null)
+            {
+                _vltkunityBus.OnScreenshotRequested -= HandleScreenshotRequested;
+                _vltkunityBus.ClearAllSubscribers();
+            }
+            _vltkunityTopBar?.Dispose();
+            _vltkunityMiniMap?.Dispose();
+            _vltkunityTopBar = null;
+            _vltkunityMiniMap = null;
+            _vltkunityBus = null;
         }
 
         private void InitializeCombatSkillSlots()
@@ -1092,6 +1145,14 @@ namespace VLTK.UI
             EnsureMinimapTexture(snap);
             UpdateMinimapDots(snap);
             UpdateBuffs();
+
+            // Phase 1 vltkunity port — dispatch the snapshot through the bridge's
+            // SnapshotChanged event so the new TopBar/MiniMap adapters (which read
+            // the same IRuntimeStateProvider) stay in sync. The adapters duplicate
+            // a few of the bar writes above; that is acceptable for Phase 1 (same
+            // values reach the same VisualElements) and lets Phase 2 retire the
+            // legacy direct writes without breaking the new contract.
+            _bridge.RefreshAndPublish();
         }
 
 

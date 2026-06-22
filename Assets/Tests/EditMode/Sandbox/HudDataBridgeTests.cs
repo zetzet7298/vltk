@@ -23,6 +23,8 @@ namespace VLTK.Tests.Sandbox
             public int PlayerLevel { get; set; } = 12;
             public int PlayerCurrentLife { get; set; } = 80;
             public int PlayerMaxLife { get; set; } = 100;
+            public int PlayerCurrentMana { get; set; } = 50;
+            public long PlayerExp { get; set; } = 999;
         }
 
         // --- AC#1: snapshot from runtime systems ---

@@ -20,6 +20,8 @@ namespace VLTK.Sandbox
         int PlayerLevel { get; }
         int PlayerCurrentLife { get; }
         int PlayerMaxLife { get; }
+        int PlayerCurrentMana { get; }
+        long PlayerExp { get; }
     }
 
     /// <summary>Snapshot the HUD renders (M6.4 AC#1).</summary>
@@ -34,6 +36,10 @@ namespace VLTK.Sandbox
         public int currentLife;
         public int maxLife;
         public float lifeFraction;
+        public int currentMana;
+        public int maxMana;
+        public float manaFraction;
+        public long currentExp;
     }
 
     /// <summary>
@@ -51,6 +57,14 @@ namespace VLTK.Sandbox
         /// <summary>Whether this is a development build (drives GM availability).</summary>
         public bool IsDevelopmentBuild { get; set; }
 
+        /// <summary>
+        /// Raised when <see cref="BuildSnapshot"/> produces a snapshot that differs
+        /// from the previous one in any field the HUD cares about. vltkunity port
+        /// adapters subscribe here instead of polling inside Update(); controllers
+        /// should call <see cref="RefreshAndPublish"/> from their normal update tick.
+        /// </summary>
+        public event Action<HudSnapshot> SnapshotChanged;
+
         public HudDataBridge(IRuntimeStateProvider runtime, bool isDevelopmentBuild = false)
         {
             _runtime = runtime;
@@ -65,6 +79,8 @@ namespace VLTK.Sandbox
 
             int maxLife = Math.Max(1, _runtime.PlayerMaxLife);
             int curLife = Mathf.Clamp(_runtime.PlayerCurrentLife, 0, maxLife);
+            int maxMana = 100;
+            int curMana = Mathf.Clamp(_runtime.PlayerCurrentMana, 0, maxMana);
             return new HudSnapshot
             {
                 valid = true,
@@ -76,6 +92,10 @@ namespace VLTK.Sandbox
                 currentLife = curLife,
                 maxLife = maxLife,
                 lifeFraction = (float)curLife / maxLife,
+                currentMana = curMana,
+                maxMana = maxMana,
+                manaFraction = (float)curMana / maxMana,
+                currentExp = _runtime.PlayerExp,
             };
         }
 
@@ -101,6 +121,41 @@ namespace VLTK.Sandbox
             }
             action?.Invoke();
             return true;
+        }
+
+        private HudSnapshot _lastSnapshot;
+        private bool _hasLastSnapshot;
+
+        /// <summary>
+        /// Builds a fresh snapshot and raises <see cref="SnapshotChanged"/> when it
+        /// differs from the previous one. Controllers call this once per update tick
+        /// (typically inside their MonoBehaviour.Update). Returns true when the
+        /// snapshot changed and a notification was dispatched.
+        /// </summary>
+        public bool RefreshAndPublish()
+        {
+            var next = BuildSnapshot();
+            bool changed = !_hasLastSnapshot || !SnapshotsEqual(_lastSnapshot, next);
+            _lastSnapshot = next;
+            _hasLastSnapshot = true;
+            if (changed)
+                SnapshotChanged?.Invoke(next);
+            return changed;
+        }
+
+        private static bool SnapshotsEqual(HudSnapshot a, HudSnapshot b)
+        {
+            if (a.valid != b.valid) return false;
+            if (!a.valid) return true;
+            return a.mapId == b.mapId
+                && a.level == b.level
+                && a.currentLife == b.currentLife
+                && a.maxLife == b.maxLife
+                && a.currentMana == b.currentMana
+                && a.maxMana == b.maxMana
+                && a.currentExp == b.currentExp
+                && a.playerPosition == b.playerPosition
+                && a.mapName == b.mapName;
         }
     }
 }
