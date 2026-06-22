@@ -730,7 +730,7 @@
     border-width: 1px;
     border-color: rgba(140, 165, 145, 0.55);
     border-radius: 2px;
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png');
+    background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_setting.png');
     -unity-background-scale-mode: scale-to-fit;
 }
 .hud-pc-chat-input {
@@ -799,7 +799,7 @@
     border-width: 1px;
     border-color: rgba(140, 165, 145, 0.55);
     border-radius: 2px;
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png');
+    background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_partner.png');
     -unity-background-scale-mode: scale-to-fit;
 }
 .hud-pc-chat-treasure-btn {
@@ -842,7 +842,7 @@
     border-width: 1px;
     border-color: rgba(140, 165, 145, 0.55);
     border-radius: 4px;
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_options.png');
+    background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_setting.png');
     -unity-background-scale-mode: scale-to-fit;
 }
 .hud-chat-input {
@@ -919,7 +919,7 @@
     border-width: 1px;
     border-color: rgba(140, 165, 145, 0.55);
     border-radius: 4px;
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_friend.png');
+    background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_partner.png');
     -unity-background-scale-mode: scale-to-fit;
 }
 
@@ -2234,8 +2234,8 @@
 .hud-combat-sit-btn   { right: 260px; bottom: 108px; }
 .hud-combat-pk-btn    { right: 260px; bottom: 160px; }
 
-.hud-combat-mount-btn .hud-combat-quick-icon { background-image: url('project://database/Assets/UI/HUD/Art/btn_horse.png'); }
-.hud-combat-sit-btn .hud-combat-quick-icon   { background-image: url('project://database/Assets/UI/HUD/Art/btn_sit.png'); }
+.hud-combat-mount-btn .hud-combat-quick-icon { background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_ride_up.png'); }
+.hud-combat-sit-btn .hud-combat-quick-icon   { background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_sit.png'); }
 .hud-combat-pk-btn .hud-combat-quick-icon    { background-image: url('project://database/Assets/UI/HUD/Art/btn_pk.png'); }
 
 .hud-combat-quick-btn.active {
