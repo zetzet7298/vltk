@@ -34,11 +34,29 @@ namespace VLTK.UI
     }
 
     /// <summary>
+    /// Phase 2 chat command contract. The chat adapter publishes open/close/send
+    /// intents and category changes; the controller subscribes and routes them to
+    /// ChatService. Category IDs match vltkunity's PlayerChat enum order.
+    /// </summary>
+    public interface IChatCommandBus
+    {
+        event Action OnChatOpenRequested;
+        event Action OnChatCloseRequested;
+        event Action<string> OnChatSendRequested;
+        event Action<int> OnChatCategoryChanged;
+
+        void PublishChatOpenRequested();
+        void PublishChatCloseRequested();
+        void PublishChatSendRequested(string message);
+        void PublishChatCategoryChanged(int categoryId);
+    }
+
+    /// <summary>
     /// Default in-process bus. The same instance is shared by adapters and the
     /// GameHudController; controllers wire subscriptions during OnEnable and
     /// unsubscribe during OnDisable so reloads do not leak handlers.
     /// </summary>
-    public sealed class HudCommandBus : IHudCommandBus
+    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus
     {
         public event Action OnProfileRequested;
         public event Action OnScreenshotRequested;
@@ -47,12 +65,22 @@ namespace VLTK.UI
         public event Action OnWorldMapRequested;
         public event Action OnCaveMapRequested;
 
+        public event Action OnChatOpenRequested;
+        public event Action OnChatCloseRequested;
+        public event Action<string> OnChatSendRequested;
+        public event Action<int> OnChatCategoryChanged;
+
         public void PublishProfileRequested() => OnProfileRequested?.Invoke();
         public void PublishScreenshotRequested() => OnScreenshotRequested?.Invoke();
         public void PublishMinimapMarkerRequested() => OnMinimapMarkerRequested?.Invoke();
         public void PublishToggleMapSizeRequested() => OnToggleMapSizeRequested?.Invoke();
         public void PublishWorldMapRequested() => OnWorldMapRequested?.Invoke();
         public void PublishCaveMapRequested() => OnCaveMapRequested?.Invoke();
+
+        public void PublishChatOpenRequested() => OnChatOpenRequested?.Invoke();
+        public void PublishChatCloseRequested() => OnChatCloseRequested?.Invoke();
+        public void PublishChatSendRequested(string message) => OnChatSendRequested?.Invoke(message);
+        public void PublishChatCategoryChanged(int categoryId) => OnChatCategoryChanged?.Invoke(categoryId);
 
         public void ClearAllSubscribers()
         {
@@ -62,6 +90,10 @@ namespace VLTK.UI
             OnToggleMapSizeRequested = null;
             OnWorldMapRequested = null;
             OnCaveMapRequested = null;
+            OnChatOpenRequested = null;
+            OnChatCloseRequested = null;
+            OnChatSendRequested = null;
+            OnChatCategoryChanged = null;
         }
     }
 }
