@@ -124,15 +124,25 @@ namespace VLTK.Sandbox
 
         private void DestroyExistingChild(Transform cachedRoot, string childName)
         {
-            var root = cachedRoot != null ? cachedRoot : transform.Find(childName);
-            while (root != null)
+            if (cachedRoot != null)
             {
-                var go = root.gameObject;
-                if (Application.isPlaying)
-                    Destroy(go);
-                else
-                    DestroyImmediate(go);
-                root = transform.Find(childName);
+                var go = cachedRoot.gameObject;
+                if (go != null)
+                {
+                    if (Application.isPlaying) Destroy(go); else DestroyImmediate(go);
+                }
+            }
+            for (int i = transform.childCount - 1; i >= 0; i--)
+            {
+                var child = transform.GetChild(i);
+                if (child.name == childName)
+                {
+                    var go = child.gameObject;
+                    if (go != null)
+                    {
+                        if (Application.isPlaying) Destroy(go); else DestroyImmediate(go);
+                    }
+                }
             }
         }
 
