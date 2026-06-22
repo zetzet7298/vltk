@@ -69,11 +69,26 @@ namespace VLTK.UI
     }
 
     /// <summary>
+    /// Phase 2 equipment panel command contract. Equipment adapter publishes tab
+    /// changes, attribute increments, and close intents through this bus.
+    /// </summary>
+    public interface IEquipmentCommandBus
+    {
+        event Action<int> OnEquipmentTabChanged;
+        event Action<string> OnAttributeIncrementRequested;
+        event Action OnEquipmentCloseRequested;
+
+        void PublishEquipmentTabChanged(int tabIndex);
+        void PublishAttributeIncrementRequested(string attributeName);
+        void PublishEquipmentCloseRequested();
+    }
+
+    /// <summary>
     /// Default in-process bus. The same instance is shared by adapters and the
     /// GameHudController; controllers wire subscriptions during OnEnable and
     /// unsubscribe during OnDisable so reloads do not leak handlers.
     /// </summary>
-    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus, ISkillCommandBus
+    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus, ISkillCommandBus, IEquipmentCommandBus
     {
         public event Action OnProfileRequested;
         public event Action OnScreenshotRequested;
@@ -92,6 +107,10 @@ namespace VLTK.UI
         public event Action<int> OnSkillUpgradeRequested;
         public event Action OnSkillCloseRequested;
 
+        public event Action<int> OnEquipmentTabChanged;
+        public event Action<string> OnAttributeIncrementRequested;
+        public event Action OnEquipmentCloseRequested;
+
         public void PublishProfileRequested() => OnProfileRequested?.Invoke();
         public void PublishScreenshotRequested() => OnScreenshotRequested?.Invoke();
         public void PublishMinimapMarkerRequested() => OnMinimapMarkerRequested?.Invoke();
@@ -109,6 +128,10 @@ namespace VLTK.UI
         public void PublishSkillUpgradeRequested(int skillId) => OnSkillUpgradeRequested?.Invoke(skillId);
         public void PublishSkillCloseRequested() => OnSkillCloseRequested?.Invoke();
 
+        public void PublishEquipmentTabChanged(int tabIndex) => OnEquipmentTabChanged?.Invoke(tabIndex);
+        public void PublishAttributeIncrementRequested(string attributeName) => OnAttributeIncrementRequested?.Invoke(attributeName);
+        public void PublishEquipmentCloseRequested() => OnEquipmentCloseRequested?.Invoke();
+
         public void ClearAllSubscribers()
         {
             OnProfileRequested = null;
@@ -125,6 +148,9 @@ namespace VLTK.UI
             OnSkillSelected = null;
             OnSkillUpgradeRequested = null;
             OnSkillCloseRequested = null;
+            OnEquipmentTabChanged = null;
+            OnAttributeIncrementRequested = null;
+            OnEquipmentCloseRequested = null;
         }
     }
 }
