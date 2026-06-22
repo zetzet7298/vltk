@@ -52,11 +52,28 @@ namespace VLTK.UI
     }
 
     /// <summary>
+    /// Phase 2 skill panel command contract. Skill adapter publishes page switch,
+    /// skill selection, upgrade, and close intents through this bus.
+    /// </summary>
+    public interface ISkillCommandBus
+    {
+        event Action<int> OnSkillPageChanged;
+        event Action<int> OnSkillSelected;
+        event Action<int> OnSkillUpgradeRequested;
+        event Action OnSkillCloseRequested;
+
+        void PublishSkillPageChanged(int pageIndex);
+        void PublishSkillSelected(int skillId);
+        void PublishSkillUpgradeRequested(int skillId);
+        void PublishSkillCloseRequested();
+    }
+
+    /// <summary>
     /// Default in-process bus. The same instance is shared by adapters and the
     /// GameHudController; controllers wire subscriptions during OnEnable and
     /// unsubscribe during OnDisable so reloads do not leak handlers.
     /// </summary>
-    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus
+    public sealed class HudCommandBus : IHudCommandBus, IChatCommandBus, ISkillCommandBus
     {
         public event Action OnProfileRequested;
         public event Action OnScreenshotRequested;
@@ -70,6 +87,11 @@ namespace VLTK.UI
         public event Action<string> OnChatSendRequested;
         public event Action<int> OnChatCategoryChanged;
 
+        public event Action<int> OnSkillPageChanged;
+        public event Action<int> OnSkillSelected;
+        public event Action<int> OnSkillUpgradeRequested;
+        public event Action OnSkillCloseRequested;
+
         public void PublishProfileRequested() => OnProfileRequested?.Invoke();
         public void PublishScreenshotRequested() => OnScreenshotRequested?.Invoke();
         public void PublishMinimapMarkerRequested() => OnMinimapMarkerRequested?.Invoke();
@@ -81,6 +103,11 @@ namespace VLTK.UI
         public void PublishChatCloseRequested() => OnChatCloseRequested?.Invoke();
         public void PublishChatSendRequested(string message) => OnChatSendRequested?.Invoke(message);
         public void PublishChatCategoryChanged(int categoryId) => OnChatCategoryChanged?.Invoke(categoryId);
+
+        public void PublishSkillPageChanged(int pageIndex) => OnSkillPageChanged?.Invoke(pageIndex);
+        public void PublishSkillSelected(int skillId) => OnSkillSelected?.Invoke(skillId);
+        public void PublishSkillUpgradeRequested(int skillId) => OnSkillUpgradeRequested?.Invoke(skillId);
+        public void PublishSkillCloseRequested() => OnSkillCloseRequested?.Invoke();
 
         public void ClearAllSubscribers()
         {
@@ -94,6 +121,10 @@ namespace VLTK.UI
             OnChatCloseRequested = null;
             OnChatSendRequested = null;
             OnChatCategoryChanged = null;
+            OnSkillPageChanged = null;
+            OnSkillSelected = null;
+            OnSkillUpgradeRequested = null;
+            OnSkillCloseRequested = null;
         }
     }
 }
