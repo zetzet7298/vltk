@@ -75,6 +75,46 @@
              duplicate element names and preserve legacy binding compatibility. -->
         <ui:VisualElement name="PcIconBar" class="hud-pc-icon-bar" style="display: none;"/>
 
+        <!-- ═══ AVATAR — vltkunity Avatar.prefab (portrait + level badge), top-left corner ═══ -->
+        <ui:VisualElement name="AvatarFrame" style="position: absolute; left: 4px; top: 44px; width: 56px; height: 56px; border-radius: 28px; border-width: 2px; border-color: rgb(180, 140, 40); background-color: rgba(0, 0, 0, 0.55); overflow: hidden;">
+            <ui:VisualElement name="AvatarPortraitBg" style="position: absolute; left: 4px; top: 4px; width: 48px; height: 48px; border-radius: 24px; background-color: rgba(40, 30, 20, 0.9);"/>
+            <ui:VisualElement name="AvatarPortrait" style="position: absolute; left: 4px; top: 4px; width: 48px; height: 48px; -unity-background-scale-mode: scale-to-fit;"/>
+        </ui:VisualElement>
+        <ui:Label name="AvatarLevelText" text="1" style="position: absolute; left: 40px; top: 80px; width: 28px; height: 18px; font-size: 12px; color: rgb(255, 240, 120); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0.7); border-radius: 4px;"/>
+
+        <!-- ═══ MONEY — vltkunity Money.prefab (3 currency rows: Đồng/Vàng/Bạc + add btns), under avatar ═══ -->
+        <ui:VisualElement name="MoneyPanel" style="position: absolute; left: 4px; top: 106px; width: 150px; height: 84px; flex-direction: column; background-color: rgba(0, 0, 0, 0);">
+            <ui:VisualElement style="flex-direction: row; height: 28px; align-items: center;">
+                <ui:Label text="Đồng:" style="width: 40px; font-size: 11px; color: rgb(220, 200, 160); -unity-text-align: middle-left;"/>
+                <ui:Label name="MoneyCopperAmount" text="0" style="flex-grow: 1; font-size: 11px; color: rgb(255, 220, 160); -unity-text-align: middle-left;"/>
+                <ui:VisualElement name="MoneyCopperAddBtn" style="width: 18px; height: 18px; margin-right: 2px; background-color: rgba(0, 0, 0, 0.45); border-width: 1px; border-color: rgb(180, 140, 40); -unity-text-align: middle-center;">
+                    <ui:Label text="+" style="font-size: 13px; color: rgb(255, 240, 120); -unity-text-align: middle-center; left: 0; top: -1px;"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; height: 28px; align-items: center;">
+                <ui:Label text="Vàng:" style="width: 40px; font-size: 11px; color: rgb(220, 200, 160); -unity-text-align: middle-left;"/>
+                <ui:Label name="MoneyGoldAmount" text="0" style="flex-grow: 1; font-size: 11px; color: rgb(255, 215, 0); -unity-text-align: middle-left;"/>
+                <ui:VisualElement name="MoneyGoldAddBtn" style="width: 18px; height: 18px; margin-right: 2px; background-color: rgba(0, 0, 0, 0.45); border-width: 1px; border-color: rgb(180, 140, 40);">
+                    <ui:Label text="+" style="font-size: 13px; color: rgb(255, 240, 120); -unity-text-align: middle-center; left: 0; top: -1px;"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-direction: row; height: 28px; align-items: center;">
+                <ui:Label text="Bạc:" style="width: 40px; font-size: 11px; color: rgb(220, 200, 160); -unity-text-align: middle-left;"/>
+                <ui:Label name="MoneySilverAmount" text="0" style="flex-grow: 1; font-size: 11px; color: rgb(210, 210, 210); -unity-text-align: middle-left;"/>
+                <ui:VisualElement name="MoneySilverAddBtn" style="width: 18px; height: 18px; margin-right: 2px; background-color: rgba(0, 0, 0, 0.45); border-width: 1px; border-color: rgb(180, 140, 40);">
+                    <ui:Label text="+" style="font-size: 13px; color: rgb(255, 240, 120); -unity-text-align: middle-center; left: 0; top: -1px;"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <!-- ═══ DEVICE STATUS — vltkunity DeviceStatus.prefab (wifi/battery/time/RTT), bottom-right corner ═══ -->
+        <ui:VisualElement name="DeviceStatusPanel" style="position: absolute; left: 1076px; top: 692px; width: 200px; height: 24px; flex-direction: row; align-items: center; background-color: rgba(0, 0, 0, 0.55); border-width: 1px; border-color: rgba(80, 80, 80, 0.6);">
+            <ui:VisualElement name="DeviceWifi" style="width: 16px; height: 16px; margin-left: 6px; background-color: rgb(60, 255, 160); border-radius: 3px; flex-shrink: 0;"/>
+            <ui:VisualElement name="DeviceBattery" style="width: 24px; height: 14px; margin-left: 6px; background-color: rgb(60, 220, 90); border-width: 1px; border-color: rgb(40, 40, 40); flex-shrink: 0;"/>
+            <ui:Label name="DeviceTime" text="--:--:--" style="width: 80px; margin-left: 8px; font-size: 12px; color: rgb(230, 230, 230); -unity-text-align: middle-left; flex-shrink: 0;"/>
+            <ui:Label name="DeviceRtt" text="--ms" style="width: 50px; margin-left: 8px; font-size: 12px; color: rgb(200, 200, 200); -unity-text-align: middle-left; flex-shrink: 0;"/>
+        </ui:VisualElement>
+
         <!-- ═══ MAP PREVIEW (large, tap minimap to open) ═══ -->
         <ui:VisualElement name="MapPreviewOverlay" class="hud-map-preview-overlay hidden">
             <ui:VisualElement name="MapPreviewWindow" class="hud-map-preview-window">
