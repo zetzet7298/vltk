@@ -34,6 +34,11 @@ namespace VLTK.UI
         private Vector2 _lastPlayerPos;
         private bool _subscribed;
 
+        // Half the player-dot size, used to center the dot on the projected point
+        // (vltkunity centered via pivot; UI Toolkit absolute left/top is top-left).
+        private const float _dotHalfWidth = 0f;
+        private const float _dotHalfHeight = 0f;
+
         public int BindCount { get; private set; }
         public int PlayerDotUpdateCount { get; private set; }
         public int SceneTextUpdateCount { get; private set; }
@@ -145,7 +150,11 @@ namespace VLTK.UI
             _lastMapId = snapshot.mapId;
             if (_sceneName != null) _sceneName.text = snapshot.mapName ?? string.Empty;
             if (_scenePos != null)
-                _scenePos.text = $"{(int)snapshot.playerPosition.x}:{(int)snapshot.playerPosition.y}";
+            {
+                // M3 FIX: vltkunity MiniMap.cs uses "{top}:{left}" order (recon §1a).
+                // playerPosition.x ≈ left, playerPosition.y ≈ top.
+                _scenePos.text = $"{(int)snapshot.playerPosition.y}:{(int)snapshot.playerPosition.x}";
+            }
             SceneTextUpdateCount++;
         }
 
@@ -154,9 +163,21 @@ namespace VLTK.UI
             if (_playerDot == null) return;
             if (snapshot.playerPosition == _lastPlayerPos) return;
             _lastPlayerPos = snapshot.playerPosition;
-            _playerDot.style.left = snapshot.playerPosition.x;
-            _playerDot.style.top = snapshot.playerPosition.y;
-            LastDotPosition = snapshot.playerPosition;
+
+            // M1 FIX: port vltkunity MiniMap.cs projection formula (recon §1a):
+            //   xx = (left / 16f) + miniMapHandle.xRatio
+            //   yy = miniMapHandle.yRatio - (top / 16f)
+            // playerPosition.x ≈ left, playerPosition.y ≈ top.
+            // UI Toolkit origin is top-left (absolute left/top), so the projected
+            // (xx, yy) is used directly as the dot's left/top minus a half-dot
+            // centering offset (vltkunity centered the handle on its pivot).
+            float left = snapshot.playerPosition.x;
+            float top = snapshot.playerPosition.y;
+            float xx = (left / 16f) + snapshot.miniMapXRatio;
+            float yy = snapshot.miniMapYRatio - (top / 16f);
+            _playerDot.style.left = xx - _dotHalfWidth;
+            _playerDot.style.top = yy - _dotHalfHeight;
+            LastDotPosition = new Vector2(xx, yy);
             PlayerDotUpdateCount++;
         }
 

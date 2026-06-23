@@ -115,6 +115,11 @@ namespace VLTK.UI
         private HudCommandBus _vltkunityBus;
         private TopBarVltkUnityAdapter _vltkunityTopBar;
         private MiniMapVltkUnityAdapter _vltkunityMiniMap;
+        // S5 gap-fill adapters (recon §3–§6)
+        private MoneyVltkUnityAdapter _vltkunityMoney;
+        private AvatarVltkUnityAdapter _vltkunityAvatar;
+        private DeviceStatusVltkUnityAdapter _vltkunityDeviceStatus;
+        private float _deviceStatusAccumulator; // per-second tick (recon §5a)
 
         // New HUD elements
         private VisualElement _buffPanel;
@@ -340,6 +345,19 @@ namespace VLTK.UI
             _vltkunityMiniMap ??= new MiniMapVltkUnityAdapter(root, _bridge, _vltkunityBus);
             _vltkunityMiniMap.Bind();
 
+            // S5 gap-fill adapters (recon §3–§6). These lazily find their elements by
+            // name; if the UXML does not declare them yet the adapter no-ops safely
+            // (cached elements are null and Apply/SetAmounts guard against null).
+            _vltkunityMoney ??= new MoneyVltkUnityAdapter(root, _bridge, _vltkunityBus);
+            _vltkunityMoney.Bind();
+
+            _vltkunityAvatar ??= new AvatarVltkUnityAdapter(root, _bridge, _vltkunityBus);
+            _vltkunityAvatar.Bind();
+
+            _vltkunityDeviceStatus ??= new DeviceStatusVltkUnityAdapter(
+                root, _bridge, _vltkunityBus, new LiveDeviceStateProvider());
+            _vltkunityDeviceStatus.Bind();
+
             // Phase 1 only wires the screenshot intent (cheap, always available).
             // Profile + minimap buttons stay wired in Phase 2+ once the matching
             // panels exist in vltk-mobile.
@@ -375,8 +393,14 @@ namespace VLTK.UI
             }
             _vltkunityTopBar?.Dispose();
             _vltkunityMiniMap?.Dispose();
+            _vltkunityMoney?.Dispose();
+            _vltkunityAvatar?.Dispose();
+            _vltkunityDeviceStatus?.Dispose();
             _vltkunityTopBar = null;
             _vltkunityMiniMap = null;
+            _vltkunityMoney = null;
+            _vltkunityAvatar = null;
+            _vltkunityDeviceStatus = null;
             _vltkunityBus = null;
         }
 
@@ -444,6 +468,23 @@ namespace VLTK.UI
             SizeRootToScreen();
             UpdateBarsAndMinimap();
             UpdateRecorder(Time.deltaTime);
+            TickDeviceStatus(Time.deltaTime);
+        }
+
+        /// <summary>
+        /// Refresh device-status readouts once per second (NOT every frame — recon §5a
+        /// notes the vltkunity source stub is empty; the port implements the live
+        /// update at a sensible cadence).
+        /// </summary>
+        private void TickDeviceStatus(float deltaTime)
+        {
+            if (_vltkunityDeviceStatus == null) return;
+            _deviceStatusAccumulator += deltaTime;
+            if (_deviceStatusAccumulator >= 1f)
+            {
+                _deviceStatusAccumulator = 0f;
+                _vltkunityDeviceStatus.Tick();
+            }
         }
 
         private void EnsureRuntimeReady()

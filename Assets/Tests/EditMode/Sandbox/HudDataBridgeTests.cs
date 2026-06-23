@@ -10,6 +10,7 @@ namespace VLTK.Tests.Sandbox
     /// internals (AC#1), GM openable in dev builds (AC#2), and debug controls hidden
     /// in release builds (AC#3).
     /// </summary>
+    [TestFixture, Category("HUD")]
     public class HudDataBridgeTests
     {
         /// <summary>Fake runtime state provider (stands in for the live runtime systems).</summary>
@@ -24,7 +25,16 @@ namespace VLTK.Tests.Sandbox
             public int PlayerCurrentLife { get; set; } = 80;
             public int PlayerMaxLife { get; set; } = 100;
             public int PlayerCurrentMana { get; set; } = 50;
+            public int PlayerMaxMana { get; set; } = 100;
+            public int PlayerCurrentStamina { get; set; } = 60;
+            public int PlayerMaxStamina { get; set; } = 100;
             public long PlayerExp { get; set; } = 999;
+            public long PlayerMaxExp { get; set; } = 2000;
+            public float MiniMapXRatio { get; set; } = 0f;
+            public float MiniMapYRatio { get; set; } = 0f;
+            public int PlayerCopper { get; set; } = 100;
+            public int PlayerGold { get; set; } = 5;
+            public int PlayerSilver { get; set; } = 151160;
         }
 
         // --- AC#1: snapshot from runtime systems ---
@@ -114,6 +124,50 @@ namespace VLTK.Tests.Sandbox
             LogAssert.Expect(LogType.Warning, "[HUD] Debug action 'spawnNpc' blocked in release build");
             Assert.IsFalse(bridge.TryRunDebugAction("spawnNpc", () => ran = true));
             Assert.IsFalse(ran);
+        }
+
+        // --- S5 §1: widened contract (stamina, real maxMana, real maxExp) ---
+
+        [Test]
+        public void BuildSnapshot_PopulatesStaminaAndFraction()
+        {
+            var bridge = new HudDataBridge(new FakeRuntime());
+            var snap = bridge.BuildSnapshot();
+            Assert.AreEqual(60, snap.currentStamina);
+            Assert.AreEqual(100, snap.maxStamina);
+            Assert.AreEqual(0.6f, snap.staminaFraction, 0.001f);
+        }
+
+        [Test]
+        public void BuildSnapshot_PopulatesRealMaxMana_NotHardcoded100()
+        {
+            var rt = new FakeRuntime { PlayerCurrentMana = 150, PlayerMaxMana = 300 };
+            var bridge = new HudDataBridge(rt);
+            var snap = bridge.BuildSnapshot();
+            Assert.AreEqual(300, snap.maxMana); // not hardcoded 100
+            Assert.AreEqual(150, snap.currentMana);
+            Assert.AreEqual(0.5f, snap.manaFraction, 0.001f);
+        }
+
+        [Test]
+        public void BuildSnapshot_PopulatesRealMaxExpAndFraction()
+        {
+            var rt = new FakeRuntime { PlayerExp = 500, PlayerMaxExp = 1000 };
+            var bridge = new HudDataBridge(rt);
+            var snap = bridge.BuildSnapshot();
+            Assert.AreEqual(1000, snap.maxExp);
+            Assert.AreEqual(500, snap.currentExp);
+            Assert.AreEqual(0.5f, snap.expFraction, 0.001f);
+        }
+
+        [Test]
+        public void BuildSnapshot_GuardsStaminaMaxAgainstZero()
+        {
+            var rt = new FakeRuntime { PlayerCurrentStamina = 5, PlayerMaxStamina = 0 };
+            var bridge = new HudDataBridge(rt);
+            var snap = bridge.BuildSnapshot();
+            Assert.AreEqual(1, snap.maxStamina); // guarded to >= 1
+            Assert.AreEqual(0f, snap.staminaFraction, 0.001f);
         }
     }
 }

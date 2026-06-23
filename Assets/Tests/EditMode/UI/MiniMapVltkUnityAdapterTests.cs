@@ -77,7 +77,8 @@ namespace VLTK.Tests.UI
                 playerPosition = new Vector2(123, 456),
             });
             Assert.AreEqual(before + 1, _adapter.PlayerDotUpdateCount);
-            Assert.AreEqual(new Vector2(123, 456), _adapter.LastDotPosition);
+            // M1: projected (xx, yy) = (left/16 + xRatio, yRatio - top/16)
+            Assert.AreEqual(new Vector2(123f / 16f, -456f / 16f), _adapter.LastDotPosition);
         }
 
         [Test]
@@ -110,7 +111,8 @@ namespace VLTK.Tests.UI
                 playerPosition = new Vector2(100, 200),
             });
             Assert.AreEqual("Ba Ling", _sceneName.text);
-            Assert.AreEqual("100:200", _scenePos.text);
+            // M3: vltkunity order is "{top}:{left}" → playerPosition.y : playerPosition.x
+            Assert.AreEqual("200:100", _scenePos.text);
         }
 
         [Test]
@@ -166,6 +168,41 @@ namespace VLTK.Tests.UI
             Assert.AreEqual(before, _adapter.PlayerDotUpdateCount);
         }
 
+        // ── M1: position formula parity with vltkunity ─────────────────────
+
+        [Test]
+        public void Apply_PlayerDot_UsesProjectedFormula_WithRatios()
+        {
+            _adapter.Apply(new HudSnapshot
+            {
+                valid = true,
+                mapId = 1,
+                playerPosition = new Vector2(160, 320), // left=160, top=320
+                miniMapXRatio = 10f,
+                miniMapYRatio = 200f,
+            });
+
+            // xx = left/16 + xRatio = 10 + 10 = 20
+            // yy = yRatio - top/16 = 200 - 20 = 180
+            Assert.AreEqual(new Vector2(20f, 180f), _adapter.LastDotPosition);
+        }
+
+        [Test]
+        public void Apply_PlayerDot_DividesBy16fTileScale()
+        {
+            _adapter.Apply(new HudSnapshot
+            {
+                valid = true,
+                mapId = 1,
+                playerPosition = new Vector2(16, 16),
+                miniMapXRatio = 0f,
+                miniMapYRatio = 0f,
+            });
+
+            // xx = 16/16 = 1, yy = 0 - 16/16 = -1
+            Assert.AreEqual(new Vector2(1f, -1f), _adapter.LastDotPosition);
+        }
+
         private sealed class StaticRuntime : IRuntimeStateProvider
         {
             public bool HasActiveMap => true;
@@ -177,7 +214,16 @@ namespace VLTK.Tests.UI
             public int PlayerCurrentLife => 100;
             public int PlayerMaxLife => 100;
             public int PlayerCurrentMana => 100;
+            public int PlayerMaxMana => 100;
+            public int PlayerCurrentStamina => 100;
+            public int PlayerMaxStamina => 100;
             public long PlayerExp => 0;
+            public long PlayerMaxExp => 1000;
+            public float MiniMapXRatio => 0f;
+            public float MiniMapYRatio => 0f;
+            public int PlayerCopper => 0;
+            public int PlayerGold => 0;
+            public int PlayerSilver => 0;
         }
     }
 }

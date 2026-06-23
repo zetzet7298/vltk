@@ -21,7 +21,22 @@ namespace VLTK.Sandbox
         int PlayerCurrentLife { get; }
         int PlayerMaxLife { get; }
         int PlayerCurrentMana { get; }
+        int PlayerMaxMana { get; }       // vltkunity MaxInner (replaces hardcoded 100)
+        int PlayerCurrentStamina { get; } // vltkunity CurStamina
+        int PlayerMaxStamina { get; }     // vltkunity MaxStamina
         long PlayerExp { get; }
+        long PlayerMaxExp { get; }        // real EXP denominator (fixes ComputeExpFraction fudge)
+
+        // Minimap projection (recon §1a / M1). vltkunity miniMapHandle.xRatio/yRatio.
+        // Per-map offset used to project player world coords onto the minimap.
+        float MiniMapXRatio { get; }
+        float MiniMapYRatio { get; }
+
+        // Currency (recon §3). vltkunity Money.prefab has no source binding;
+        // these read from the runtime economy wallet. Vietnamese: Đồng/Vàng/Bạc.
+        int PlayerCopper { get; }   // tongqian
+        int PlayerGold { get; }     // jinbi
+        int PlayerSilver { get; }   // yinliang
     }
 
     /// <summary>Snapshot the HUD renders (M6.4 AC#1).</summary>
@@ -39,7 +54,19 @@ namespace VLTK.Sandbox
         public int currentMana;
         public int maxMana;
         public float manaFraction;
+        public int currentStamina;
+        public int maxStamina;
+        public float staminaFraction;
         public long currentExp;
+        public long maxExp;
+        public float expFraction;
+        // Minimap projection (recon §1a / M1).
+        public float miniMapXRatio;
+        public float miniMapYRatio;
+        // Currency (recon §3).
+        public int copper;
+        public int gold;
+        public int silver;
     }
 
     /// <summary>
@@ -79,8 +106,18 @@ namespace VLTK.Sandbox
 
             int maxLife = Math.Max(1, _runtime.PlayerMaxLife);
             int curLife = Mathf.Clamp(_runtime.PlayerCurrentLife, 0, maxLife);
-            int maxMana = 100;
+            int maxMana = Math.Max(1, _runtime.PlayerMaxMana);
             int curMana = Mathf.Clamp(_runtime.PlayerCurrentMana, 0, maxMana);
+            int maxStamina = Math.Max(1, _runtime.PlayerMaxStamina);
+            int curStamina = Mathf.Clamp(_runtime.PlayerCurrentStamina, 0, maxStamina);
+            // When the runtime max stamina is invalid (<=0), render an empty bar
+            // (0) rather than a full one — clamping current to the guarded max
+            // of 1 would otherwise yield a misleading 100% full bar (recon §2a).
+            float staminaFraction = _runtime.PlayerMaxStamina <= 0
+                ? 0f
+                : (float)curStamina / maxStamina;
+            long maxExp = Math.Max(1L, _runtime.PlayerMaxExp);
+            long curExp = Math.Min(Math.Max(0L, _runtime.PlayerExp), maxExp);
             return new HudSnapshot
             {
                 valid = true,
@@ -95,7 +132,17 @@ namespace VLTK.Sandbox
                 currentMana = curMana,
                 maxMana = maxMana,
                 manaFraction = (float)curMana / maxMana,
-                currentExp = _runtime.PlayerExp,
+                currentStamina = curStamina,
+                maxStamina = maxStamina,
+                staminaFraction = staminaFraction,
+                currentExp = curExp,
+                maxExp = maxExp,
+                expFraction = Mathf.Clamp01((float)curExp / maxExp),
+                miniMapXRatio = _runtime.MiniMapXRatio,
+                miniMapYRatio = _runtime.MiniMapYRatio,
+                copper = _runtime.PlayerCopper,
+                gold = _runtime.PlayerGold,
+                silver = _runtime.PlayerSilver,
             };
         }
 
@@ -153,9 +200,17 @@ namespace VLTK.Sandbox
                 && a.maxLife == b.maxLife
                 && a.currentMana == b.currentMana
                 && a.maxMana == b.maxMana
+                && a.currentStamina == b.currentStamina
+                && a.maxStamina == b.maxStamina
                 && a.currentExp == b.currentExp
+                && a.maxExp == b.maxExp
                 && a.playerPosition == b.playerPosition
-                && a.mapName == b.mapName;
+                && a.mapName == b.mapName
+                && a.miniMapXRatio == b.miniMapXRatio
+                && a.miniMapYRatio == b.miniMapYRatio
+                && a.copper == b.copper
+                && a.gold == b.gold
+                && a.silver == b.silver;
         }
     }
 }

@@ -25,12 +25,27 @@ namespace VLTK.UI
         event Action OnWorldMapRequested;
         event Action OnCaveMapRequested;
 
+        /// <summary>Currency recharge/shop intent (recon §3d, Y4).</summary>
+        event Action<CurrencyType> OnRechargeRequested;
+
         void PublishProfileRequested();
         void PublishScreenshotRequested();
         void PublishMinimapMarkerRequested();
         void PublishToggleMapSizeRequested();
         void PublishWorldMapRequested();
         void PublishCaveMapRequested();
+        void PublishRechargeRequested(CurrencyType type);
+    }
+
+    /// <summary>Currency kinds surfaced by the Money widget (recon §3b).</summary>
+    public enum CurrencyType
+    {
+        /// <summary>Đồng tiền (tongqian / copper).</summary>
+        Copper,
+        /// <summary>Vàng (jinbi / gold).</summary>
+        Gold,
+        /// <summary>Bạc (yinliang / silver).</summary>
+        Silver
     }
 
     /// <summary>
@@ -123,6 +138,7 @@ namespace VLTK.UI
         public event Action OnToggleMapSizeRequested;
         public event Action OnWorldMapRequested;
         public event Action OnCaveMapRequested;
+        public event Action<CurrencyType> OnRechargeRequested;
 
         public event Action OnChatOpenRequested;
         public event Action OnChatCloseRequested;
@@ -151,6 +167,7 @@ namespace VLTK.UI
         public void PublishToggleMapSizeRequested() => OnToggleMapSizeRequested?.Invoke();
         public void PublishWorldMapRequested() => OnWorldMapRequested?.Invoke();
         public void PublishCaveMapRequested() => OnCaveMapRequested?.Invoke();
+        public void PublishRechargeRequested(CurrencyType type) => OnRechargeRequested?.Invoke(type);
 
         public void PublishChatOpenRequested() => OnChatOpenRequested?.Invoke();
         public void PublishChatCloseRequested() => OnChatCloseRequested?.Invoke();
@@ -181,6 +198,7 @@ namespace VLTK.UI
             OnToggleMapSizeRequested = null;
             OnWorldMapRequested = null;
             OnCaveMapRequested = null;
+            OnRechargeRequested = null;
             OnChatOpenRequested = null;
             OnChatCloseRequested = null;
             OnChatSendRequested = null;

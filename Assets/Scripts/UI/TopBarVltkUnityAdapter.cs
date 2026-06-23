@@ -35,6 +35,11 @@ namespace VLTK.UI
         private Label _expText;
         private Label _rankText;
 
+        private HudProgressBar _hpBar;
+        private HudProgressBar _mpBar;
+        private HudProgressBar _staminaBar;
+        private HudProgressBar _expBar;
+
         private bool _subscribed;
 
         public int UpdateCount { get; private set; }
@@ -67,6 +72,12 @@ namespace VLTK.UI
             _staminaText = FindLabel("StaminaText");
             _expText = FindLabel("ExpText");
             _rankText = FindLabel("RankText");
+
+            // Wrap the cached fills/labels in HudProgressBar helpers (recon §6b, P1).
+            _hpBar = new HudProgressBar(_hpFill, _hpText);
+            _mpBar = new HudProgressBar(_mpFill, _mpText);
+            _staminaBar = new HudProgressBar(_staminaFill, _staminaText);
+            _expBar = new HudProgressBar(_expFill, _expText);
         }
 
         private VisualElement FindByName(string name)
@@ -109,31 +120,17 @@ namespace VLTK.UI
             UpdateCount++;
             if (!snapshot.valid) return;
 
-            SetBar(_hpFill, snapshot.lifeFraction);
-            SetBar(_mpFill, snapshot.manaFraction);
-            SetBar(_staminaFill, snapshot.lifeFraction);
-            SetBar(_expFill, ComputeExpFraction(snapshot));
+            // vltkunity TopBar.cs binds HP/MP/SP from CurLife/MaxLife, CurInner/MaxInner,
+            // CurStamina/MaxStamina (recon §2a). EXP is a mobile addition; use the
+            // bridge-computed expFraction (real maxExp denominator), not a fudge.
+            _hpBar.Set(snapshot.lifeFraction, snapshot.currentLife, snapshot.maxLife);
+            _mpBar.Set(snapshot.manaFraction, snapshot.currentMana, snapshot.maxMana);
+            // T1 FIX: stamina bar/text now bind to stamina (was lifeFraction).
+            _staminaBar.Set(snapshot.staminaFraction, snapshot.currentStamina, snapshot.maxStamina);
+            // T4 FIX: real expFraction from snapshot (was ComputeExpFraction fudge).
+            _expBar.Set(snapshot.expFraction, (int)snapshot.currentExp, (int)snapshot.maxExp);
 
             if (_levelText != null) _levelText.text = snapshot.level.ToString();
-            if (_hpText != null) _hpText.text = $"{snapshot.currentLife}/{snapshot.maxLife}";
-            if (_mpText != null) _mpText.text = $"{snapshot.currentMana}/{snapshot.maxMana}";
-            if (_staminaText != null) _staminaText.text = $"{snapshot.currentLife}/{snapshot.maxLife}";
-            if (_expText != null) _expText.text = snapshot.currentExp.ToString();
-        }
-
-        private static float ComputeExpFraction(HudSnapshot snapshot)
-        {
-            if (snapshot.level <= 0) return 0f;
-            long denominator = Math.Max(1L, snapshot.currentExp + 1L);
-            float raw = (float)snapshot.currentExp / denominator;
-            return Mathf.Clamp01(raw);
-        }
-
-        private static void SetBar(VisualElement fill, float fraction)
-        {
-            if (fill == null) return;
-            float pct = Mathf.Clamp01(fraction) * 100f;
-            fill.style.width = new Length(pct, LengthUnit.Percent);
         }
 
         public void RequestProfile()

@@ -160,6 +160,77 @@ namespace VLTK.Tests.UI
             Assert.AreEqual(before, _adapter.UpdateCount);
         }
 
+        // ── T1: stamina bar must bind stamina, NOT life ──────────────────────
+
+        [Test]
+        public void Apply_HalfStamina_BindsStaminaBarWidthTo50Percent()
+        {
+            _adapter.Apply(new HudSnapshot
+            {
+                valid = true,
+                currentLife = 100, maxLife = 100, lifeFraction = 1f,
+                currentMana = 100, maxMana = 100, manaFraction = 1f,
+                currentStamina = 50, maxStamina = 100, staminaFraction = 0.5f,
+                currentExp = 0, maxExp = 1000, expFraction = 0f,
+            });
+
+            Assert.AreEqual(new Length(50f, LengthUnit.Percent), _staminaFill.style.width.value);
+            Assert.AreEqual("50/100", _staminaText.text);
+        }
+
+        [Test]
+        public void Apply_StaminaText_ShowsCurrentSlashMaxStamina_NotLife()
+        {
+            _adapter.Apply(new HudSnapshot
+            {
+                valid = true,
+                currentLife = 80, maxLife = 100, lifeFraction = 0.8f,
+                currentMana = 100, maxMana = 100, manaFraction = 1f,
+                currentStamina = 30, maxStamina = 60, staminaFraction = 0.5f,
+                currentExp = 0, maxExp = 1000, expFraction = 0f,
+            });
+
+            // Must be stamina (30/60), NOT life (80/100).
+            Assert.AreEqual("30/60", _staminaText.text);
+            Assert.AreNotEqual(_hpText.text, _staminaText.text);
+        }
+
+        // ── T3: MP bar must use maxMana from snapshot, not hardcoded 100 ──────
+
+        [Test]
+        public void Apply_MpBar_UsesRealMaxManaFromSnapshot()
+        {
+            _adapter.Apply(new HudSnapshot
+            {
+                valid = true,
+                currentLife = 100, maxLife = 100, lifeFraction = 1f,
+                currentMana = 150, maxMana = 300, manaFraction = 0.5f,
+                currentStamina = 100, maxStamina = 100, staminaFraction = 1f,
+                currentExp = 0, maxExp = 1000, expFraction = 0f,
+            });
+
+            Assert.AreEqual(new Length(50f, LengthUnit.Percent), _mpFill.style.width.value);
+            Assert.AreEqual("150/300", _mpText.text);
+        }
+
+        // ── T4: EXP bar must use real expFraction, not the fudge ─────────────
+
+        [Test]
+        public void Apply_ExpBar_UsesRealExpFractionAndMaxExp()
+        {
+            _adapter.Apply(new HudSnapshot
+            {
+                valid = true,
+                currentLife = 100, maxLife = 100, lifeFraction = 1f,
+                currentMana = 100, maxMana = 100, manaFraction = 1f,
+                currentStamina = 100, maxStamina = 100, staminaFraction = 1f,
+                currentExp = 500, maxExp = 1000, expFraction = 0.5f,
+            });
+
+            Assert.AreEqual(new Length(50f, LengthUnit.Percent), _expFill.style.width.value);
+            Assert.AreEqual("500/1000", _expText.text);
+        }
+
         private sealed class FullLifeRuntime : IRuntimeStateProvider
         {
             public bool HasActiveMap => true;
@@ -171,7 +242,16 @@ namespace VLTK.Tests.UI
             public int PlayerCurrentLife => 100;
             public int PlayerMaxLife => 100;
             public int PlayerCurrentMana => 100;
+            public int PlayerMaxMana => 100;
+            public int PlayerCurrentStamina => 100;
+            public int PlayerMaxStamina => 100;
             public long PlayerExp => 0;
+            public long PlayerMaxExp => 1000;
+            public float MiniMapXRatio => 0f;
+            public float MiniMapYRatio => 0f;
+            public int PlayerCopper => 0;
+            public int PlayerGold => 0;
+            public int PlayerSilver => 0;
         }
     }
 }

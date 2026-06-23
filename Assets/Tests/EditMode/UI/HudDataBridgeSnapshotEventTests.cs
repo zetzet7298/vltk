@@ -22,7 +22,16 @@ namespace VLTK.Tests.UI
             public int PlayerCurrentLife { get; set; } = 100;
             public int PlayerMaxLife { get; set; } = 100;
             public int PlayerCurrentMana { get; set; } = 50;
+            public int PlayerMaxMana { get; set; } = 100;
+            public int PlayerCurrentStamina { get; set; } = 100;
+            public int PlayerMaxStamina { get; set; } = 100;
             public long PlayerExp { get; set; } = 1234;
+            public long PlayerMaxExp { get; set; } = 5000;
+            public float MiniMapXRatio { get; set; } = 0f;
+            public float MiniMapYRatio { get; set; } = 0f;
+            public int PlayerCopper { get; set; } = 0;
+            public int PlayerGold { get; set; } = 0;
+            public int PlayerSilver { get; set; } = 0;
         }
 
         [Test]
@@ -77,6 +86,24 @@ namespace VLTK.Tests.UI
             Assert.IsTrue(changed);
             Assert.AreEqual(1, hits);
             Assert.AreEqual(75, captured.currentLife);
+        }
+
+        [Test]
+        public void RefreshWithChangedStamina_RaisesEvent()
+        {
+            var runtime = new StubRuntime();
+            var bridge = new HudDataBridge(runtime, false);
+            bridge.RefreshAndPublish();
+            int hits = 0;
+            HudSnapshot captured = default;
+            bridge.SnapshotChanged += snap => { captured = snap; hits++; };
+
+            runtime.PlayerCurrentStamina = 40;
+            bool changed = bridge.RefreshAndPublish();
+
+            Assert.IsTrue(changed);
+            Assert.AreEqual(1, hits);
+            Assert.AreEqual(40, captured.currentStamina);
         }
 
         [Test]
