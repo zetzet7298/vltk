@@ -491,9 +491,44 @@ namespace VLTK.Sandbox
         public ForbitHeartService ForbitHeartService { get; private set; }
         public StringResourceCatalogService StringResourceCatalogService { get; private set; }
         private float _combatTickAccumulator;
-        // M1.2: Region catalog and report
-        public RegionCatalogFile RegionCatalog { get; private set; }
-        public RegionConversionReport RegionReport { get; private set; }
+        // M1.2: Region catalog and report — LAZY-LOADED on first access.
+        // RegionCatalog.json is a 12 MB catalog enumerating ALL ~64k PC region .dat
+        // files (metadata flags only: hasObstacle/hasNpc/…). It is NOT needed for
+        // normal gameplay — per-map geometry/enemy/obstacle data is loaded
+        // separately and on-demand by MapManager.LoadMap + MapRenderer.
+        // Parsing it synchronously at boot added a large main-thread stall for
+        // data that nothing reads at runtime, so it is now deferred. The first
+        // read of RegionCatalog triggers the load (and reuses the FastEditor
+        // static cache when applicable).
+        private RegionCatalogFile _regionCatalogLazy;
+        private bool _regionCatalogLoaded;
+        private RegionConversionReport _regionReportLazy;
+        public RegionCatalogFile RegionCatalog
+        {
+            get
+            {
+                if (!_regionCatalogLoaded)
+                {
+                    _regionCatalogLazy = LoadRegionCatalogForBoot();
+                    _regionReportLazy = _regionCatalogLazy != null
+                        ? RegionCatalogLoader.ToConversionReport(_regionCatalogLazy)
+                        : null;
+                    _regionCatalogLoaded = true;
+                    if (_regionCatalogLazy != null)
+                        SubsystemLog.Info("Sandbox", $"Regions (lazy): {_regionCatalogLazy.totalRegions} loaded");
+                }
+                return _regionCatalogLazy;
+            }
+        }
+        public RegionConversionReport RegionReport
+        {
+            get
+            {
+                // Trigger the lazy load (which also caches the report) and return it.
+                _ = RegionCatalog;
+                return _regionReportLazy;
+            }
+        }
 
         public event Action<SandboxBootReport> OnBootComplete;
 
@@ -604,15 +639,10 @@ namespace VLTK.Sandbox
                 MapManager = null;
             }
 
-            // M1.2: Load region catalog. SafeLoadOptionalCatalog returns null instead
-            // of throwing; we already handled that below in the original code path.
-            var regionCat = LoadRegionCatalogForBoot();
-            if (regionCat != null)
-            {
-                RegionCatalog = regionCat;
-                RegionReport = RegionCatalogLoader.ToConversionReport(regionCat);
-                SubsystemLog.Info("Sandbox", $"Regions: {regionCat.totalRegions} loaded");
-            }
+            // M1.2: Region catalog is now LAZY-LOADED via the RegionCatalog /
+            // RegionReport properties. It enumerates ALL ~64k PC region files but is
+            // not consumed by gameplay, so parsing the 12 MB JSON at boot was pure
+            // overhead. It loads on first access (if ever) instead of here.
 
             // Instantiate MapRenderer on the worldRoot
             if (worldRoot != null)
