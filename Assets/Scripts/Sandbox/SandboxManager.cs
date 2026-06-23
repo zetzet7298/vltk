@@ -181,6 +181,11 @@ namespace VLTK.Sandbox
         // Set during InitializeSubsystems when item/drop/skill loading should be
         // deferred; consumed/launched in Start().
         private bool _pendingItemDataLoad;
+        // True only while the boot default map is being loaded. After that it is
+        // reset so runtime map switches (GM panel / SwitchMap) always render the
+        // map visuals, regardless of the FastEditor skipVisuals flag (which is a
+        // boot-time optimization only).
+        private bool _initialBootMapLoad;
 
         [Tooltip("When useFastEditorBoot is on, also load optional service batches (skill CDB, item CDB extras, etc). " +
                  "Leave OFF for fastest boot.")]
@@ -681,7 +686,12 @@ namespace VLTK.Sandbox
                 MapManager.OnMapLoaded += (mapId) => {
                     if (MapManager.ActiveMap != null)
                     {
-                        bool skipVisuals = ActiveBootProfile == SandboxBootProfile.FastEditor && skipMapVisualsInFastEditorBoot;
+                        // skipMapVisualsInFastEditorBoot is a BOOT-time optimization
+                        // only — it must not suppress visuals when the player
+                        // deliberately switches maps at runtime.
+                        bool skipVisuals = _initialBootMapLoad
+                            && ActiveBootProfile == SandboxBootProfile.FastEditor
+                            && skipMapVisualsInFastEditorBoot;
                         if (!skipVisuals)
                             MapRenderer.LoadMapRegions(MapManager.ActiveMap);
                         else
@@ -696,15 +706,17 @@ namespace VLTK.Sandbox
                         EnsureObjectRuntime();
                         EnsureTrapRuntime();
                         PlacePlayerOnActiveMap();
-                        if (ActiveBootProfile != SandboxBootProfile.FastEditor)
+                        // Enemy/object/trap spawn is only skipped during the FastEditor
+                        // boot load. Runtime map switches always spawn content.
+                        if (_initialBootMapLoad && ActiveBootProfile == SandboxBootProfile.FastEditor)
+                        {
+                            SubsystemLog.Info("SandboxBoot", "FastEditor: skipped enemy/object/trap spawn.");
+                        }
+                        else
                         {
                             SpawnEnemiesForActiveMap();
                             RenderObjectsForActiveMap();
                             BuildTrapsForActiveMap();
-                        }
-                        else
-                        {
-                            SubsystemLog.Info("SandboxBoot", "FastEditor: skipped enemy/object/trap spawn.");
                         }
                         SpawnTrainingNpcs();
                         ConfigureCameraForMap();
@@ -827,8 +839,12 @@ namespace VLTK.Sandbox
                 catch (Exception e) { SubsystemLog.Warn("Sandbox", $"PlacePlayerAtDefaultSpawn failed: {e.Message}"); }
 
                 if (ShouldLoadDefaultMapOnBoot(ActiveBootProfile) && MapManager != null && MapManager.Catalog.ContainsKey(defaultMapId))
+                {
+                    _initialBootMapLoad = true;
                     try { TimedBootStep("MapManager.LoadMap", () => MapManager.LoadMap(defaultMapId)); }
                     catch (Exception e) { SubsystemLog.Warn("Sandbox", $"MapManager.LoadMap({defaultMapId}) failed: {e.Message}"); }
+                    _initialBootMapLoad = false;
+                }
             }
 
             bootWatch.Stop();
