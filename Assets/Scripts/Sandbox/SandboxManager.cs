@@ -39,6 +39,13 @@ namespace VLTK.Sandbox
 
         public SandboxBootProfile BootProfile { get; private set; } = SandboxBootProfile.Full;
         public long TotalMilliseconds { get; private set; }
+        /// <summary>
+        /// Number of timings recorded during the synchronous boot phase (before
+        /// Complete()). Timings beyond this index are deferred/async (e.g. item
+        /// table lazy-loaded after the map is shown) and are reported separately
+        /// so the synchronous-boot summary is not polluted.
+        /// </summary>
+        public int SynchronousTimingCount { get; private set; }
 
         public void Start(SandboxBootProfile bootProfile)
         {
@@ -46,6 +53,7 @@ namespace VLTK.Sandbox
             Entries.Clear();
             Timings.Clear();
             TotalMilliseconds = 0;
+            SynchronousTimingCount = 0;
         }
 
         public void Record(SubsystemKind kind, bool ok, string message)
@@ -61,6 +69,7 @@ namespace VLTK.Sandbox
         public void Complete(long totalMilliseconds)
         {
             TotalMilliseconds = totalMilliseconds;
+            SynchronousTimingCount = Timings.Count;
         }
     }
 
@@ -169,6 +178,10 @@ namespace VLTK.Sandbox
                  "Un-tick to boot in ~30s (Full profile, BLH terrain + 618 regions + 812 enemies render). " +
                  "Default in the scene is ON (fast); flip OFF in Inspector when you need to see the visual.")]
         public bool useFastEditorBoot = false;
+        // Set during InitializeSubsystems when item/drop/skill loading should be
+        // deferred; consumed/launched in Start().
+        private bool _pendingItemDataLoad;
+
         [Tooltip("When useFastEditorBoot is on, also load optional service batches (skill CDB, item CDB extras, etc). " +
                  "Leave OFF for fastest boot.")]
         public bool loadOptionalServicesInFastEditorBoot = false;
@@ -555,6 +568,19 @@ namespace VLTK.Sandbox
             }
         }
 
+        // Deferred item/drop/skill loading is launched here (not in Awake) so the
+        // synchronous boot — which only needs the single active map — finishes and
+        // renders the map first. Start() runs after Awake returns, so the heavy PC
+        // item table (~1.4s) is parsed afterwards instead of blocking boot.
+        private void Start()
+        {
+            if (_pendingItemDataLoad)
+            {
+                _pendingItemDataLoad = false;
+                StartCoroutine(LoadItemDataCoroutine());
+            }
+        }
+
         public void BootstrapCombatForTests(AssetRegistry registry = null)
         {
             if (Instance == null) 
@@ -697,36 +723,24 @@ namespace VLTK.Sandbox
                 // ── New Subsystems ──────────────────────────────────
                 try { QuestService = new QuestService(); }
                 catch (Exception e) { SubsystemLog.Warn("Sandbox", $"new QuestService failed: {e.Message}"); }
-                ItemContractImporter importer = null;
+                // Item/drop/skill loading is DEFERRED to Start() (LoadItemDataCoroutine),
+                // which runs AFTER Awake/InitializeSubsystems returns. Parsing the
+                // full PC item table (~28k items, ~1.4s) is not needed to show the
+                // single active map, so it is NOT part of the synchronous boot.
+                // ItemDb/LootService/InventoryService/ShopService stay null until the
+                // coroutine completes, then item-dependent UI panels/GM-login are
+                // (re)wired. FastEditor boot keeps the skip flag behaviour below.
                 bool skipItems = ActiveBootProfile == SandboxBootProfile.FastEditor && skipItemLoadingInFastEditorBoot;
-                if (!skipItems)
+                if (skipItems)
                 {
-                    // Load PC item data via batch loader (14 categories, ~10k+ items)
-                    // and script items from magicscript.txt (GM token 6/1/4890).
-                    try
-                    {
-                        var itemDir = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
-                        importer = LoadItemImporterForBoot(itemDir);
-                        ItemDb = new ItemDatabase(importer);
-                        LootService = new LootDropService(ItemDb);
-                        var dropRegistry = LoadDropRateRegistryForBoot(
-                            System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
-                        LootService.AttachRegistry(dropRegistry);
-                        PcSkillsFull = LoadPcSkillRegistryForBoot(
-                            System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
-                    }
-                    catch (Exception e)
-                    {
-                        SubsystemLog.Warn("Sandbox", $"Item/drop/skill loading failed: {e.Message}");
-                        importer = null;
-                        ItemDb = null;
-                        LootService = null;
-                        PcSkillsFull = null;
-                    }
+                    SubsystemLog.Info("SandboxBoot", "FastEditor: skipped item/drop/skill loading.");
                 }
                 else
                 {
-                    SubsystemLog.Info("SandboxBoot", "FastEditor: skipped item/drop/skill loading.");
+                    // Flag for Start() to launch LoadItemDataCoroutine (Awake must not
+                    // start it — StartCoroutine in Awake runs the first iteration inline
+                    // on some Unity versions, pulling item loading back into boot).
+                    _pendingItemDataLoad = true;
                 }
                 try { AudioService = new AudioService(); }
                 catch (Exception e) { SubsystemLog.Warn("Sandbox", $"new AudioService failed: {e.Message}"); }
@@ -752,35 +766,14 @@ namespace VLTK.Sandbox
                             QuestService?.UpdateKillObjective(e.victimTemplateId.Value);
                     };
 
-                // Initialize item inventory from the same PC item importer used by ItemDb.
+                // Equipment service is cheap and needed by the player visual layer,
+                // so it is created at boot. The inventory service (needs the deferred
+                // PC item importer) and the OnEquipChanged wiring are set up inside
+                // LoadItemDataCoroutine once items are available.
                 _equipmentService = new PlayerEquipmentService();
-                if (importer != null)
-                {
-                    _inventoryService = new InventoryService(importer, _equipmentService);
-                    _equipmentService.OnEquipChanged += (evt) => {
-                        if (PlayerController != null && PlayerController.visual != null)
-                        {
-                            PlayerController.visual.SetEquipVariant(evt.slot, evt.newVariant);
-                            if (evt.slot == PlayerEquipSlot.Weapon)
-                            {
-                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
-                                PlayerController.EquipWeapon(wType);
-                            }
-                        }
-                        if (FemalePlayerVisual != null)
-                        {
-                            FemalePlayerVisual.SetEquipVariant(evt.slot, evt.newVariant);
-                            if (evt.slot == PlayerEquipSlot.Weapon)
-                            {
-                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
-                                FemalePlayerVisual.SetWeapon(wType);
-                            }
-                        }
-                    };
-                }
                 GmAccessService = new GmAccessService();
-                if (_inventoryService != null)
-                    GmTestServerItemService = new GmTestServerItemService(this, _inventoryService, GmAccessService);
+                // GmTestServerItemService / EnsureGmLoginInGame need the inventory, so
+                // they are created in LoadItemDataCoroutine after items load.
 
                 // Initialize Chat system
                 ChatService = new ChatService();
@@ -789,8 +782,8 @@ namespace VLTK.Sandbox
                 // Initialize Party system
                 PartyService = new PartyService();
 
-                // Initialize Shop system
-                ShopService = new ShopService(ItemDb, initialSilver: 5000);
+                // Shop system needs ItemDb — created in LoadItemDataCoroutine after
+                // items load (kept null until then).
 
                 // ── PC-parity runtime services (meridian, partner, title, …) ────────
                 _serviceLoadStatuses.Clear();
@@ -812,7 +805,9 @@ namespace VLTK.Sandbox
                 {
                     InitializeFastBootFallbackServices();
                 }
-                GmTestServerItemService?.EnsureGmLoginInGame();
+                // GmTestServerItemService.EnsureGmLoginInGame() is invoked inside
+                // LoadItemDataCoroutine after items/inventory are ready (it grants
+                // GM login items, which need the item table).
 
                 // Wire combat events to chat log
                 if (GameplayLoop != null)
@@ -847,6 +842,126 @@ namespace VLTK.Sandbox
             // Wrapped to ensure subscribers cannot crash SandboxManager boot.
             try { OnBootComplete?.Invoke(BootReport); }
             catch (Exception e) { SubsystemLog.Warn("Sandbox", $"OnBootComplete subscriber threw: {e.Message}"); }
+        }
+
+        /// <summary>
+        /// Lazily loads the PC item table, drop rates, and skill registry AFTER the
+        /// synchronous boot + initial map load, then wires up the item-dependent
+        /// services (ItemDb/LootService/InventoryService/ShopService), item UI
+        /// panels (Inventory/Shop), and GM-login item grants. Yielding between
+        /// heavy steps keeps the main thread responsive while the map is already
+        /// visible.
+        /// </summary>
+        private System.Collections.IEnumerator LoadItemDataCoroutine()
+        {
+            // Yield first so nothing runs inline in Start(); the map is already
+            // rendered by the time the synchronous boot returned.
+            yield return null;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+            ItemContractImporter importer = null;
+            try
+            {
+                var itemDir = System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcItemFull");
+                importer = LoadItemImporterForBoot(itemDir);
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred item loading failed: {e.Message}");
+                yield break;
+            }
+            yield return null;
+
+            try
+            {
+                ItemDb = new ItemDatabase(importer);
+                LootService = new LootDropService(ItemDb);
+                var dropRegistry = LoadDropRateRegistryForBoot(
+                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcDropRate"));
+                LootService.AttachRegistry(dropRegistry);
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred ItemDb/Loot setup failed: {e.Message}");
+                ItemDb = null;
+                LootService = null;
+            }
+            yield return null;
+
+            try
+            {
+                PcSkillsFull = LoadPcSkillRegistryForBoot(
+                    System.IO.Path.Combine(Application.streamingAssetsPath, "Reference/PcSkill"));
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred PcSkillRegistry load failed: {e.Message}");
+                PcSkillsFull = null;
+            }
+            yield return null;
+
+            // Wire inventory + equipment events + shop, now that item data exists.
+            try
+            {
+                if (importer != null && _equipmentService != null)
+                {
+                    _inventoryService = new InventoryService(importer, _equipmentService);
+                    _equipmentService.OnEquipChanged += (evt) => {
+                        if (PlayerController != null && PlayerController.visual != null)
+                        {
+                            PlayerController.visual.SetEquipVariant(evt.slot, evt.newVariant);
+                            if (evt.slot == PlayerEquipSlot.Weapon)
+                            {
+                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
+                                PlayerController.EquipWeapon(wType);
+                            }
+                        }
+                        if (FemalePlayerVisual != null)
+                        {
+                            FemalePlayerVisual.SetEquipVariant(evt.slot, evt.newVariant);
+                            if (evt.slot == PlayerEquipSlot.Weapon)
+                            {
+                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
+                                FemalePlayerVisual.SetWeapon(wType);
+                            }
+                        }
+                    };
+                }
+                ShopService = new ShopService(ItemDb, initialSilver: 5000);
+                if (_inventoryService != null && GmAccessService != null)
+                    GmTestServerItemService = new GmTestServerItemService(this, _inventoryService, GmAccessService);
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred inventory/shop setup failed: {e.Message}");
+            }
+            yield return null;
+
+            // (Re)initialize item-dependent UI panels now that ItemDb/inventory exist.
+            // The panels were created (null-data) at boot; re-Initialize with real data.
+            try
+            {
+                if (InventoryPanel != null)
+                    InventoryPanel.Initialize(ItemDb, _inventoryService);
+                else
+                    EnsureMobileUiPanels(); // create them if boot skipped panel build
+                if (ShopPanel != null && ShopService != null)
+                    ShopPanel.Initialize(ShopService, _inventoryService, ItemDb);
+                else
+                    EnsureMobileUiPanels();
+            }
+            catch (Exception e)
+            {
+                SubsystemLog.Warn("Sandbox", $"Deferred item-panel rewire failed: {e.Message}");
+            }
+
+            // Grant GM login items now that inventory is ready.
+            try { GmTestServerItemService?.EnsureGmLoginInGame(); }
+            catch (Exception e) { SubsystemLog.Warn("Sandbox", $"Deferred EnsureGmLoginInGame failed: {e.Message}"); }
+
+            watch.Stop();
+            RecordBootTiming("ItemData.LazyLoad", watch.ElapsedMilliseconds);
+            SubsystemLog.Info("SandboxBoot", $"Item data lazy-loaded in {watch.ElapsedMilliseconds}ms " +
+                $"(ItemDb={(ItemDb != null ? "ok" : "null")}, inv={(_inventoryService != null ? "ok" : "null")}).");
         }
 
         private System.Collections.IEnumerator LoadOptionalServicesCoroutine()
@@ -1347,7 +1462,14 @@ namespace VLTK.Sandbox
             if (BootReport == null || BootReport.Timings.Count == 0)
                 return "(none)";
 
-            var timings = new List<(string stepName, long milliseconds)>(BootReport.Timings);
+            // Only consider timings recorded during the synchronous boot phase.
+            // Deferred/async steps (e.g. item table lazy-loaded after the map is
+            // shown) are recorded AFTER Complete() and reported separately so the
+            // synchronous-boot `slowest` breakdown is not polluted by them.
+            int syncCount = Math.Min(BootReport.SynchronousTimingCount, BootReport.Timings.Count);
+            var timings = new List<(string stepName, long milliseconds)>(syncCount);
+            for (int i = 0; i < syncCount; i++)
+                timings.Add(BootReport.Timings[i]);
             timings.Sort((a, b) => b.milliseconds.CompareTo(a.milliseconds));
             int count = Math.Min(Math.Max(0, maxSteps), timings.Count);
             var parts = new List<string>(count);
