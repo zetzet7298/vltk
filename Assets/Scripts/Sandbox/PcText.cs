@@ -14,7 +14,7 @@ namespace VLTK.Sandbox
 {
     internal static class PcText
     {
-        // Source: /var/www/vltktool/decode_item_texts_vi.py TCVN3_TABLE.
+        // Source: ~/Projects/vltktool/decode_item_texts_vi.py TCVN3_TABLE.
         // PC Vietnamese settings (npcs.txt, objdata.txt) are Western ANSI bytes
         // whose high chars are TCVN3 glyph codes, not Unicode Vietnamese.
         private static readonly int[] Tcvn3Table = new int[]

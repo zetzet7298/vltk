@@ -18,7 +18,7 @@ A full re-unpack run completed after `unpak_tool.py` learned to treat method `0x
 
 ## Observed full re-unpack output
 
-Command driver used `/tmp/full_reunpack_v3.py`, calling `/var/www/vltktool/unpak_tool.py -f -o /var/www/jx-source/pak_unpacked` with scoped scan dirs from Client/Server settings and script folders.
+Command driver used `/tmp/full_reunpack_v3.py`, calling `~/Projects/vltktool/unpak_tool.py -f -o /var/www/jx-source/pak_unpacked` with scoped scan dirs from Client/Server settings and script folders.
 
 Final log highlights:
 

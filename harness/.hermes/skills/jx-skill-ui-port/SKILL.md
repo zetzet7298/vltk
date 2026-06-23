@@ -77,7 +77,7 @@ Start here for current project:
   - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkills.cpp`
 - PC asset source:
   - Canonical unpacked PAK tree: `/var/www/jx-source/pak_unpacked` (skill SPR icons live under the SPR trees here; `\spr\Ui\技能图标\...` group). Manifest `_unpack_summary.json`.
-  - `/var/www/vltktool/` helpers for PAK/SPR lookup/extraction (read its README first; do not write ad-hoc scanners).
+  - `~/Projects/vltktool/` helpers for PAK/SPR lookup/extraction (read its README first; do not write ad-hoc scanners).
 
 Important PC asset caveat: Chinese PAK paths may require signed-byte hashing. Unsigned-byte lookup can fail even for correct paths.
 

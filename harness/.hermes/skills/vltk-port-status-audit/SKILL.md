@@ -89,7 +89,7 @@ proof behind these numbers see `jx-pc-port-rule/references/pak-format-internals.
   (define the symbol, run the real suite, replace no-op verify_command). The DB is gitignored, so
   the backlog is the durable in-DB record.
 - `harness.db` has no git identity by default in fresh sibling repos; `git config user.email/name`
-  locally before committing in repos like `/var/www/vltktool` if a commit fails with "Author identity unknown".
+  locally before committing in repos like `~/Projects/vltktool` if a commit fails with "Author identity unknown".
 - Don't mark a row `✅`/runtime until: define symbol set, real EditMode/PlayMode run via Unity Test
   Runner, artifact captured, and `verify_command` actually executes that suite.
 

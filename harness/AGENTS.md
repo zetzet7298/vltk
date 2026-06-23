@@ -1,8 +1,37 @@
+
 # Agent Instructions
+
+Add project-specific agent instructions here.
+
+<!-- HARNESS:BEGIN -->
+
+## Harness
+
+This repo uses Harness. Before work, read:
+
+- `README.md`
+- `docs/HARNESS.md`
+- `docs/FEATURE_INTAKE.md`
+- `docs/ARCHITECTURE.md`
+- `docs/CONTEXT_RULES.md`
+- `docs/TOOL_REGISTRY.md`
+- `scripts/bin/harness-cli query matrix` on macOS/Linux, or `.\scripts\bin\harness-cli.exe query matrix` on Windows
+
+Use the Rust Harness CLI at `scripts/bin/harness-cli` on macOS/Linux or
+`scripts/bin/harness-cli.exe` on Windows as the main operational tool. Before a
+step that could use an external tool, run `scripts/bin/harness-cli query tools --capability <name> --status present` to see what is equipped; an absent
+capability is a clean skip.
+
+<!-- HARNESS:END -->
+
 
 ## Game hiện tại đang port từ game PC /var/www/jx-source vì thế nên trong quá trình port thì phải đọc hiểu code bên PC
 
 Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng API/library lạ), **PHẢI dùng exa (`exa_web_search_exa`/`exa_web_fetch_exa`) và deepwiki (`mcp_deepwiki_deepwiki_fetch`) để research** cách làm chuẩn — không đoán, không vá mò. Research xong mới implement. Xong việc thì **commit all change + push**.
+
+---
+
+
 
 ## Skill Matrix
 
@@ -32,6 +61,7 @@ unityMCP___run_tests(mode="EditMode",
 ```
 
 Full suite CHỈ chạy khi:
+
 - Trước khi `git push` (final gate).
 - Sau khi sửa code shared (`PcCombatCatalogFactory`, `CombatRuntimeService`, `SkillEffectVisualService`, asmdef).
 
@@ -41,6 +71,7 @@ Nếu test chạm visual/sprite decode (chậm), add `[TestFixture, Category("Sl
 skip được khi cần.
 
 Categories hiện có (cập nhật 2026-06-19):
+
 - `CaiBang` — 12 fixtures, 82 tests (Phi Long, Bổng Đả, Kháng Long, Thiên Hạ Vô Cẩu, ...)
 - `Slow` — MountVisualTests, MalePlayerVisualTests (sprite decode chậm nhất)
 - Khi port phái mới (Thiếu Lâm, Võ Đang, ...) → add category riêng ngay từ đầu.
@@ -81,7 +112,7 @@ Reference files gốc từ PC được lưu trong `Assets/StreamingAssets/Refere
 
 ### Tool hỗ trợ
 
-- `/var/www/vltktool/` — Bộ công cụ Python: SPR decoder, PAK unpacker, item runtime, CMS web
+- `~/Projects/vltktool/` — Bộ công cụ Python: SPR decoder, PAK unpacker, item runtime, CMS web
 
 ## Test run commands (EditMode)
 
@@ -106,6 +137,7 @@ unityMCP___run_tests(mode="EditMode",
 ```
 
 Categories đã add (2026-06-19):
+
 - `CaiBang` — 12 fixtures, 82 tests (Phi Long, Bổng Đả, Kháng Long, Thiên Hạ Vô Cẩu, ...)
 - `Slow` — MountVisualTests, MalePlayerVisualTests (sprite decode chậm)
 

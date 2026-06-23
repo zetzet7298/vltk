@@ -154,7 +154,7 @@ load one, sanity-check these recurring hazards before relying on it:
    disk (`jxwin-kinnox/...`, `vhst/survivors/.../spr.pak`). `os.path.exists` before trusting;
    real PC source is always under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`.
 5. **Ad-hoc SPR/PAK scanners.** Per AGENTS rules, do not write your own SPR decoder or
-   `rglob('*.spr')` over the whole source — use `/var/www/vltktool/` tools and narrow the
+   `rglob('*.spr')` over the whole source — use `~/Projects/vltktool/` tools and narrow the
    region first. A skill's prose may say this correctly while its bundled script violates it.
 
 When you find one of these, patch the offending skill/script immediately rather than working

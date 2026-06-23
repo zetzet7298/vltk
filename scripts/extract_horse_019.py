@@ -6,11 +6,11 @@ import uuid
 from pathlib import Path
 
 # Add vltktool directory to path so we can import unpak_tool
-sys.path.insert(0, '/var/www/vltktool')
+sys.path.insert(0, '~/Projects/vltktool')
 try:
     import unpak_tool
 except ImportError:
-    print("Failed to import unpak_tool. Check path /var/www/vltktool")
+    print("Failed to import unpak_tool. Check path ~/Projects/vltktool")
     sys.exit(1)
 
 # Target horse variants

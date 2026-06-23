@@ -41,14 +41,14 @@
 ## 3. Các file thay đổi
 - `/var/www/vltk-mobile/html/generate_static_gallery.py` (Script Python sinh HTML)
 - `/var/www/vltk-mobile/html/index.html` (Được sinh tự động từ script)
-- `/var/www/vltktool/hanviet_dict.json` (Đã được tạo và cập nhật chữ `話` -> `thoại`)
+- `~/Projects/vltktool/hanviet_dict.json` (Đã được tạo và cập nhật chữ `話` -> `thoại`)
 
 ---
 
 ## 4. Kế hoạch triển khai chi tiết
 
 ### Bước 1: Khai báo các Hàm Hỗ trợ dịch thuật & ghép ảnh trong `generate_static_gallery.py`
-- Tải từ điển Hán Việt `/var/www/vltktool/hanviet_dict.json`.
+- Tải từ điển Hán Việt `~/Projects/vltktool/hanviet_dict.json`.
 - Thiết lập `word_map` cho các từ ghép thông dụng để dịch tự nhiên hơn.
 - Xây dựng hàm `translate_cjk_to_vietnamese(text)`.
 - Xây dựng hàm `extract_composite_character(body_logical_path, out_abs_path)`:

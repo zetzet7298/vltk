@@ -49,7 +49,7 @@ not trust that path. Verified reality (this is the hard-won correction):
 
 - INI + SPR art live in the canonical unpacked PAK source tree first: `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/<pak>/...`
   (notably `1024/` for 1024-res UI, `updatejx08/` for patched art, `800/` for 800-res).
-- Use `/var/www/vltktool/unpak_tool.py` only for exceptional repair/re-unpack cases; normal HUD porting should read the already-unpacked files.
+- Use `~/Projects/vltktool/unpak_tool.py` only for exceptional repair/re-unpack cases; normal HUD porting should read the already-unpacked files.
 - Loose INI fragments exist under `Client 6.0/ui` and Lua under `Client 6.0/script/ui`,
   but they are partial. The top-bar INI `顶部控制条.ini` is loose; the bottom-bar INIs
   are inside the PAKs.
@@ -110,7 +110,7 @@ settings in this project. Keep art in UI Toolkit; only use IMGUI/uGUI for text i
 ## PAK / SPR extraction workflow
 
 The art you need is usually already available in the canonical unpacked PAK tree. First read
-`/var/www/jx-source/pak_unpacked/_SOURCE_OF_TRUTH.txt` and `/var/www/vltktool/README.md`. Do not write ad-hoc
+`/var/www/jx-source/pak_unpacked/_SOURCE_OF_TRUTH.txt` and `~/Projects/vltktool/README.md`. Do not write ad-hoc
 SPR/PAK scanners unless the tool itself needs a surgical enhancement; broad scans can
 crash the machine and usually produce false confidence.
 
@@ -120,9 +120,9 @@ Pipeline:
    `\spr\UI3\主界面\背包按钮.spr`) and hash with `unpak_tool.file_id_from_bytes`. Scan
    each PAK's index for that uid. If the hash misses, use `resolve_uid.py` or a narrow
    `find_spr_by_image.py --pak <one pak>` query; never scan the whole source tree.
-2. **Prefer already-unpacked files** under `/var/www/jx-source/pak_unpacked`; only decompress with `/var/www/vltktool/unpak_tool.py` if the canonical tree/manifest proves a repair case is needed.
+2. **Prefer already-unpacked files** under `/var/www/jx-source/pak_unpacked`; only decompress with `~/Projects/vltktool/unpak_tool.py` if the canonical tree/manifest proves a repair case is needed.
 3. **Decode SPR frames to PNG.** Each SPR holds N frames; use
-   `/var/www/vltktool/extract_item_spr.py` to write `*_frame_000.png` etc.
+   `~/Projects/vltktool/extract_item_spr.py` to write `*_frame_000.png` etc.
 4. **Copy the PNG into the Unity project** under `Assets/UI/HUD/Art/` (and the mirror
    `Assets/StreamingAssets/UI/HUD/Art/` if the catalog reads from there).
 5. **Reimport as a Texture2D.** A bare `cp` does NOT register the asset — the USS

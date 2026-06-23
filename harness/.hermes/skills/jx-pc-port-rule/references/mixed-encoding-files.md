@@ -117,11 +117,11 @@ To separate actual Vietnamese (TCVN3) from untranslated Chinese that was garbled
   ```
 
 ### 2. Transliteration pipeline (Hán Việt Map + Custom Word Map)
-We maintain a canonical character mapping at `/var/www/vltktool/hanviet_dict.json` containing Hán Việt transliterations for all 1,000+ CJK characters found in JX1 settings. 
+We maintain a canonical character mapping at `~/Projects/vltktool/hanviet_dict.json` containing Hán Việt transliterations for all 1,000+ CJK characters found in JX1 settings. 
 
 The correct translation pipeline is:
 1. **Apply custom word-level mappings** first for gaming-specific terms (e.g. `金箱子` -> `Rương Vàng`, `事件总管` -> `Tổng Quản Sự Kiện`, `门派祈福香炉` -> `Lư Hương Cầu Phúc Môn Phái`).
-2. **Translate remaining CJK characters** character-by-character using `/var/www/vltktool/hanviet_dict.json`.
+2. **Translate remaining CJK characters** character-by-character using `~/Projects/vltktool/hanviet_dict.json`.
 3. **Normalize spacing and capitalization** so it formats as standard Vietnamese proper nouns.
 
 #### Python Implementation Example:
@@ -129,7 +129,7 @@ The correct translation pipeline is:
 import json
 import re
 
-with open("/var/www/vltktool/hanviet_dict.json", "r", encoding="utf-8") as f:
+with open("~/Projects/vltktool/hanviet_dict.json", "r", encoding="utf-8") as f:
     hanviet_dict = json.load(f)
 
 word_map = {

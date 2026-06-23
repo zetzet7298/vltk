@@ -63,7 +63,7 @@ in-scope tree (only `represent3.dll` ships), keep it as a marked provenance cave
 ### 5. Ad-hoc scanner / decoder check (AGENTS rule violation)
 Grep bundled scripts for `rglob('*.spr')`, `os.walk`, hand-rolled SPR header parsing. Per AGENTS
 rules: do NOT write your own SPR/PAK decoder and do NOT scan the whole source (can crash the box).
-The canonical decoder is `/var/www/vltktool/extract_item_spr.py` (top-down rows; `--legacy-flip`
+The canonical decoder is `~/Projects/vltktool/extract_item_spr.py` (top-down rows; `--legacy-flip`
 for legacy inverted output; `--file` for one SPR, `--frame N` for one frame). Replace ad-hoc
 scripts with a thin wrapper that requires an explicit `--file`/narrow `--src` and refuses a
 whole-root scan. Find a SPR's uid/path first via signed-byte hash + pak index, or vltktool

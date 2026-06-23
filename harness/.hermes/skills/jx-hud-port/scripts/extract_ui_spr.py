@@ -5,7 +5,7 @@ WHY THIS IS A WRAPPER, NOT A DECODER
 ------------------------------------
 Per AGENTS.md repo rules: do NOT write ad-hoc SPR/PAK decoders, and do NOT scan the whole
 source tree (broad `rglob('*.spr')` can crash the machine and produces false confidence).
-The canonical, tested decoder is `/var/www/vltktool/extract_item_spr.py` (top-down rows
+The canonical, tested decoder is `~/Projects/vltktool/extract_item_spr.py` (top-down rows
 matching the game; `--legacy-flip` for the old inverted output). This script just points it
 at the right input and enforces "narrow a region first".
 
@@ -36,7 +36,7 @@ import os
 import subprocess
 import sys
 
-VLTKTOOL = "/var/www/vltktool/extract_item_spr.py"
+VLTKTOOL = "~/Projects/vltktool/extract_item_spr.py"
 DEFAULT_OUT = "/var/www/vltk-mobile/Assets/UI/HUD/Art"
 PAK_UNPACKED = "/var/www/jx-source/pak_unpacked"
 

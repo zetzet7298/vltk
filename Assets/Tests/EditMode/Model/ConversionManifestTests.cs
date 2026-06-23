@@ -11,7 +11,7 @@ namespace VLTK.Tests.Model
             var manifest = new ConversionManifest
             {
                 manifestVersion = 1,
-                sourceRoot = "/var/www/vltktool/unpacked/maps_pak",
+                sourceRoot = "~/Projects/vltktool/unpacked/maps_pak",
                 conversionTimestamp = 1748000000L,
                 toolVersion = "parse_map_settings.py@git:abc123",
             };

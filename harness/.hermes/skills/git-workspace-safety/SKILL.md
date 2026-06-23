@@ -8,7 +8,7 @@ description: Safely commit/push in the VLTK multi-repo workspace where several g
 The `/var/www/vltk-mobile` tree is NOT a single repo. It contains/neighbours several independent
 git repos: `vltk-mobile` (Unity client, the outer repo), `backend/` (Python game server, its own
 `.git` + `.env`), `harness-be/` (a plain dir, already committed into the client), `harness/`, and
-`/var/www/vltktool`. AGENTS.md mandates "commit all change + push" after every task — so a blind
+`~/Projects/vltktool`. AGENTS.md mandates "commit all change + push" after every task — so a blind
 `git add -A` here is genuinely dangerous. Before any bulk commit, run the checks below.
 
 User's governing rule: **"tránh làm mất code"** — never take an action that could lose a repo's

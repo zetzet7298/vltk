@@ -52,7 +52,7 @@ Start here for current project:
   - `jxwin-kinnox/SourceNew/swrod3/SwordOnline/Sources/Core/Src/KSkills.cpp`
 - PC asset source:
   - `/var/www/vhst/survivors/external-data/vltklinux/data/spr.pak`
-  - `/var/www/vltktool/` helpers for PAK/SPR extraction.
+  - `~/Projects/vltktool/` helpers for PAK/SPR extraction.
 
 Important PC asset caveat: Chinese PAK paths may require signed-byte hashing. Unsigned-byte lookup can fail even for correct paths.
 

@@ -20,6 +20,50 @@ namespace VLTK.Model
         KunLun = 10,
     }
 
+    /// <summary>
+    /// PC ngũ hành (OBJ_ATTRIBYTE_TYPE in GameDataDef.h).
+    /// Numeric values mirror PC source so parity with KNpc.cpp/mobile combat pipeline is
+    /// traceable: Metal=0..Earth=4 are the 5 hành; Nil=5 = no series assigned;
+    /// Minus=6 forces damage to 1 (PC KNpc.cpp:2454 `if (m_Series == series_minus) nDamage = 1;`).
+    /// </summary>
+    [Serializable]
+    public enum Series
+    {
+        Metal = 0,   // PC: series_metal (Kim)
+        Wood = 1,    // PC: series_wood (Mộc)
+        Water = 2,   // PC: series_water (Thủy)
+        Fire = 3,    // PC: series_fire (Hỏa)
+        Earth = 4,   // PC: series_earth (Thổ)
+        Nil = 5,     // PC: series_nil — sentinel "no series"
+        Minus = 6,   // PC: series_minus — damage cap to 1
+    }
+
+    /// <summary>
+    /// Default ngũ hành cho mỗi môn phái (PC: per-character SetSeries via Lua, default
+    /// theo thiết kế gốc VLTK). Dùng khi skill không khai báo Series (Nil) thì combat
+    /// pipeline dùng hành mặc định của môn phái thay vì skip ApplyFiveElements.
+    /// </summary>
+    public static class CombatFactionSeriesExtensions
+    {
+        public static Series GetFactionSeries(this CombatFaction faction)
+        {
+            switch (faction)
+            {
+                case CombatFaction.Shaolin:   return Series.Metal;
+                case CombatFaction.TianWang:  return Series.Earth;
+                case CombatFaction.TangMen:   return Series.Water;
+                case CombatFaction.CaiBang:   return Series.Metal;
+                case CombatFaction.WuDu:      return Series.Fire;
+                case CombatFaction.TianRen:   return Series.Wood;
+                case CombatFaction.EMei:      return Series.Water;
+                case CombatFaction.CuiYan:    return Series.Wood;
+                case CombatFaction.WuDang:    return Series.Metal;
+                case CombatFaction.KunLun:    return Series.Metal;
+                default:                       return Series.Nil;
+            }
+        }
+    }
+
     /// <summary>PC skill style (SkillStyle column): missile/melee/initiative/passive/etc.</summary>
     [Serializable]
     public enum PcSkillStyle
