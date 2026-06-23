@@ -2,46 +2,61 @@
     <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
 
-        <!-- ═══ TOP STATUS BAR — PC 顶部控制条.ini, 1.6x scale (800→1280) ═══ -->
-        <!-- C# controller sets panel position/size at runtime (left=safeX, top=safeY, w=1280, h=40).
-             All children use INLINE styles because USS classes stopped applying in this scene. -->
-        <ui:VisualElement name="TopBarPanel" class="hud-top-bar-panel">
-            <ui:Label name="PcConnectionStatusText" text="Hoạt động tốt" style="position: absolute; left: 8px; top: 2px; width: 130px; height: 13px; color: rgb(60, 255, 160); font-size: 11px; -unity-text-align: middle-left; background-color: rgba(0, 0, 0, 0); border-width: 0px;"/>
-
-            <!-- PC panel bg: 新血条面板.spr 552x17, scaled 1.6x = 883x27 -->
-            <ui:VisualElement name="PcBarPanelBg" style="position: absolute; left: 192px; top: 0px; width: 883px; height: 27px; background-image: url('project://database/Assets/UI/HUD/Art/top_status_strip.png'); -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); border-width: 0px;"/>
-
-            <!-- Level: PC Left=155→248, Top=2→3 -->
-            <ui:Label name="LevelText" text="1" style="position: absolute; left: 248px; top: 3px; width: 32px; height: 19px; font-size: 14px; color: rgb(55, 231, 63); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;"/>
-
-            <!-- Stamina track: PC Left=178→285, Top=3→5, W=104→166, H=9→14 -->
-            <ui:VisualElement name="StaminaBarTrack" style="position: absolute; left: 285px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
-                <ui:VisualElement name="StaminaBarFill" style="width: 100%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_stamina_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
+        <!-- ═══ TOP STATUS BAR & AVATAR — vltkunity TopBar.prefab + Avatar.prefab (unified top-left) ═══ -->
+        <!-- TopBarPanel is placed at safeX/safeY, size 360x90.
+             Contains Avatar, Status Bars (HP/MP/SP/EXP) and Level Badge. -->
+        <ui:VisualElement name="TopBarPanel" class="hud-top-bar-panel" style="position: absolute; left: 10px; top: 10px; width: 360px; height: 90px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/top_bar.png'); -unity-background-scale-mode: stretch-to-fill; background-color: rgba(0, 0, 0, 0); border-width: 0px;">
+            <!-- Avatar block (btn_greencircular frame + welfare_bg + portrait) -->
+            <ui:VisualElement name="AvatarFrame" style="position: absolute; left: 8px; top: 8px; width: 62px; height: 62px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Bag/btn_greencircular.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px; background-color: rgba(0, 0, 0, 0);">
+                <ui:VisualElement name="AvatarPortraitBg" style="position: absolute; left: 5px; top: 5px; width: 52px; height: 52px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Bag/btn_welfare_bg.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;">
+                    <ui:VisualElement name="AvatarPortrait" style="position: absolute; left: 0px; top: 0px; width: 52px; height: 52px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Bag/008.png'); -unity-background-scale-mode: scale-to-fit; border-width: 0px;"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            <!-- Level badge (img_levelbg) aligned at bottom-right of Avatar frame -->
+            <ui:VisualElement name="AvatarLevelBg" style="position: absolute; left: 48px; top: 48px; width: 24px; height: 24px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/img_levelbg.png'); -unity-background-scale-mode: scale-to-fit;">
+                <ui:Label name="AvatarLevelText" text="1" style="width: 24px; height: 24px; font-size: 11px; color: rgb(246, 255, 105); -unity-text-align: middle-center; -unity-font-style: bold; margin: 0; padding: 0; background-color: rgba(0,0,0,0); border-width: 0px;"/>
             </ui:VisualElement>
 
-            <!-- HP track: PC Left=288→461 -->
-            <ui:VisualElement name="HpBarTrack" style="position: absolute; left: 461px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
-                <ui:VisualElement name="HpBarFill" style="width: 100%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_hp_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
+            <!-- Status Bars Panel (HP / MP / SP / EXP) -->
+            <ui:VisualElement name="StatusBarsContainer" style="position: absolute; left: 78px; top: 10px; width: 160px; height: 72px; flex-direction: column; justify-content: flex-start; background-color: rgba(0,0,0,0);">
+                <!-- HP Bar -->
+                <ui:VisualElement name="HpBarContainer" style="height: 14px; margin-bottom: 3px; justify-content: center; align-items: center; background-color: rgba(0,0,0,0);">
+                    <ui:VisualElement name="HpBarTrack" style="width: 160px; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progressbg.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;">
+                        <ui:VisualElement name="HpBarFill" style="width: 100%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progress_orange.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;"/>
+                    </ui:VisualElement>
+                    <ui:Label name="HpText" text="100/100" style="position: absolute; width: 160px; height: 14px; font-size: 10px; color: rgb(246, 255, 105); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0,0,0,0); border-width: 0px; margin: 0; padding: 0;"/>
+                </ui:VisualElement>
+
+                <!-- MP Bar -->
+                <ui:VisualElement name="MpBarContainer" style="height: 12px; margin-bottom: 3px; justify-content: center; align-items: center; background-color: rgba(0,0,0,0);">
+                    <ui:VisualElement name="MpBarTrack" style="width: 160px; height: 12px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progressbg.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;">
+                        <ui:VisualElement name="MpBarFill" style="width: 100%; height: 12px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progress_blue.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;"/>
+                    </ui:VisualElement>
+                    <ui:Label name="MpText" text="50/50" style="position: absolute; width: 160px; height: 12px; font-size: 9px; color: rgb(246, 255, 105); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0,0,0,0); border-width: 0px; margin: 0; padding: 0;"/>
+                </ui:VisualElement>
+
+                <!-- SP Bar (Stamina) -->
+                <ui:VisualElement name="StaminaBarContainer" style="height: 12px; margin-bottom: 3px; justify-content: center; align-items: center; background-color: rgba(0,0,0,0);">
+                    <ui:VisualElement name="StaminaBarTrack" style="width: 160px; height: 12px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progressbg.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;">
+                        <ui:VisualElement name="StaminaBarFill" style="width: 100%; height: 12px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progress_green.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;"/>
+                    </ui:VisualElement>
+                    <ui:Label name="StaminaText" text="100/100" style="position: absolute; width: 160px; height: 12px; font-size: 9px; color: rgb(246, 255, 105); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0,0,0,0); border-width: 0px; margin: 0; padding: 0;"/>
+                </ui:VisualElement>
+
+                <!-- EXP Bar (Mobile addition) -->
+                <ui:VisualElement name="ExpBarContainer" style="height: 4px; justify-content: center; align-items: center; background-color: rgba(0,0,0,0);">
+                    <ui:VisualElement name="ExpBarTrack" style="width: 160px; height: 4px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progressbg.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;">
+                        <ui:VisualElement name="ExpBarFill" style="width: 0%; height: 4px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Progress/img_carve_progress_green.png'); -unity-background-scale-mode: stretch-to-fill; border-width: 0px;"/>
+                    </ui:VisualElement>
+                    <ui:Label name="ExpText" text="0%" style="display: none;"/>
+                </ui:VisualElement>
             </ui:VisualElement>
 
-            <!-- MP track: PC Left=398→637 -->
-            <ui:VisualElement name="MpBarTrack" style="position: absolute; left: 637px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
-                <ui:VisualElement name="MpBarFill" style="width: 100%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_mp_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
-            </ui:VisualElement>
-
-            <!-- EXP track: PC Left=508→813 -->
-            <ui:VisualElement name="ExpBarTrack" style="position: absolute; left: 813px; top: 5px; width: 166px; height: 14px; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;">
-                <ui:VisualElement name="ExpBarFill" style="width: 0%; height: 14px; background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png'); -unity-background-scale-mode: stretch-to-fill;"/>
-            </ui:VisualElement>
-
-            <!-- Rank: PC Left=642→1027 -->
-            <ui:Label name="RankText" text="Hạng ?" style="position: absolute; left: 1027px; top: 3px; width: 45px; height: 19px; font-size: 12px; color: rgb(55, 231, 63); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0); border-width: 0px; overflow: hidden;"/>
-
-            <!-- Hidden data labels (IMGUI overlay draws the actual text) -->
-            <ui:Label name="HpText" text="100/100" style="display: none;"/>
-            <ui:Label name="MpText" text="50/50" style="display: none;"/>
-            <ui:Label name="StaminaText" text="100/100" style="display: none;"/>
-            <ui:Label name="ExpText" text="0%" style="display: none;"/>
+            <!-- Hidden/Compat elements -->
+            <ui:Label name="LevelText" text="1" style="display: none;"/>
+            <ui:Label name="RankText" text="Hạng ?" style="display: none;"/>
+            <ui:Label name="PcConnectionStatusText" text="Hoạt động tốt" style="display: none;"/>
         </ui:VisualElement>
 
         <!-- ═══ MINIMAP — PC 小地图_小.ini (MiniMap Left=670,Top=0,W=130,H=130), 1.6x scale (208x156) ═══ -->
@@ -76,43 +91,49 @@
         <ui:VisualElement name="PcIconBar" class="hud-pc-icon-bar" style="display: none;"/>
 
         <!-- ═══ AVATAR — vltkunity Avatar.prefab (portrait + level badge), top-left corner ═══ -->
-        <ui:VisualElement name="AvatarFrame" style="position: absolute; left: 4px; top: 44px; width: 56px; height: 56px; border-radius: 28px; border-width: 2px; border-color: rgb(180, 140, 40); background-color: rgba(0, 0, 0, 0.55); overflow: hidden;">
-            <ui:VisualElement name="AvatarPortraitBg" style="position: absolute; left: 4px; top: 4px; width: 48px; height: 48px; border-radius: 24px; background-color: rgba(40, 30, 20, 0.9);"/>
-            <ui:VisualElement name="AvatarPortrait" style="position: absolute; left: 4px; top: 4px; width: 48px; height: 48px; -unity-background-scale-mode: scale-to-fit;"/>
-        </ui:VisualElement>
-        <ui:Label name="AvatarLevelText" text="1" style="position: absolute; left: 40px; top: 80px; width: 28px; height: 18px; font-size: 12px; color: rgb(255, 240, 120); -unity-text-align: middle-center; -unity-font-style: bold; background-color: rgba(0, 0, 0, 0.7); border-radius: 4px;"/>
+        <!-- Merged into TopBarPanel hierarchy, kept here as hidden compatibility placeholders if needed by C# -->
+        <ui:VisualElement name="AvatarFrame" style="display: none;"/>
+        <ui:Label name="AvatarLevelText" text="1" style="display: none;"/>
 
-        <!-- ═══ MONEY — vltkunity Money.prefab (3 currency rows: Đồng/Vàng/Bạc + add btns), under avatar ═══ -->
-        <ui:VisualElement name="MoneyPanel" style="position: absolute; left: 4px; top: 106px; width: 150px; height: 84px; flex-direction: column; background-color: rgba(0, 0, 0, 0);">
-            <ui:VisualElement style="flex-direction: row; height: 28px; align-items: center;">
-                <ui:Label text="Đồng:" style="width: 40px; font-size: 11px; color: rgb(220, 200, 160); -unity-text-align: middle-left;"/>
-                <ui:Label name="MoneyCopperAmount" text="0" style="flex-grow: 1; font-size: 11px; color: rgb(255, 220, 160); -unity-text-align: middle-left;"/>
-                <ui:VisualElement name="MoneyCopperAddBtn" style="width: 18px; height: 18px; margin-right: 2px; background-color: rgba(0, 0, 0, 0.45); border-width: 1px; border-color: rgb(180, 140, 40); -unity-text-align: middle-center;">
-                    <ui:Label text="+" style="font-size: 13px; color: rgb(255, 240, 120); -unity-text-align: middle-center; left: 0; top: -1px;"/>
-                </ui:VisualElement>
+        <!-- ═══ MONEY — vltkunity Money.prefab (3 currency rows: Copper/Gold/Silver + add btns), under avatar ═══ -->
+        <ui:VisualElement name="MoneyPanel" style="position: absolute; left: 10px; top: 105px; width: 160px; height: 80px; flex-direction: column; background-color: rgba(0, 0, 0, 0);">
+            <!-- Copper (Đồng) Row -->
+            <ui:VisualElement style="flex-direction: row; height: 24px; align-items: center; margin-bottom: 3px; background-color: rgba(0,0,0,0);">
+                <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/money/tongqian.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 6px;"/>
+                <ui:Label name="MoneyCopperAmount" text="0" style="flex-grow: 1; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
+                <ui:VisualElement name="MoneyCopperAddBtn" style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_plus.png'); -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
-            <ui:VisualElement style="flex-direction: row; height: 28px; align-items: center;">
-                <ui:Label text="Vàng:" style="width: 40px; font-size: 11px; color: rgb(220, 200, 160); -unity-text-align: middle-left;"/>
-                <ui:Label name="MoneyGoldAmount" text="0" style="flex-grow: 1; font-size: 11px; color: rgb(255, 215, 0); -unity-text-align: middle-left;"/>
-                <ui:VisualElement name="MoneyGoldAddBtn" style="width: 18px; height: 18px; margin-right: 2px; background-color: rgba(0, 0, 0, 0.45); border-width: 1px; border-color: rgb(180, 140, 40);">
-                    <ui:Label text="+" style="font-size: 13px; color: rgb(255, 240, 120); -unity-text-align: middle-center; left: 0; top: -1px;"/>
-                </ui:VisualElement>
+            <!-- Gold (Vàng) Row -->
+            <ui:VisualElement style="flex-direction: row; height: 24px; align-items: center; margin-bottom: 3px; background-color: rgba(0,0,0,0);">
+                <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/money/jinbi.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 6px;"/>
+                <ui:Label name="MoneyGoldAmount" text="0" style="flex-grow: 1; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
+                <ui:VisualElement name="MoneyGoldAddBtn" style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_plus.png'); -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
-            <ui:VisualElement style="flex-direction: row; height: 28px; align-items: center;">
-                <ui:Label text="Bạc:" style="width: 40px; font-size: 11px; color: rgb(220, 200, 160); -unity-text-align: middle-left;"/>
-                <ui:Label name="MoneySilverAmount" text="0" style="flex-grow: 1; font-size: 11px; color: rgb(210, 210, 210); -unity-text-align: middle-left;"/>
-                <ui:VisualElement name="MoneySilverAddBtn" style="width: 18px; height: 18px; margin-right: 2px; background-color: rgba(0, 0, 0, 0.45); border-width: 1px; border-color: rgb(180, 140, 40);">
-                    <ui:Label text="+" style="font-size: 13px; color: rgb(255, 240, 120); -unity-text-align: middle-center; left: 0; top: -1px;"/>
-                </ui:VisualElement>
+            <!-- Silver (Bạc) Row -->
+            <ui:VisualElement style="flex-direction: row; height: 24px; align-items: center; background-color: rgba(0,0,0,0);">
+                <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/money/yinliang.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 6px;"/>
+                <ui:Label name="MoneySilverAmount" text="0" style="flex-grow: 1; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
+                <ui:VisualElement name="MoneySilverAddBtn" style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_plus.png'); -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
         </ui:VisualElement>
 
         <!-- ═══ DEVICE STATUS — vltkunity DeviceStatus.prefab (wifi/battery/time/RTT), bottom-right corner ═══ -->
-        <ui:VisualElement name="DeviceStatusPanel" style="position: absolute; left: 1076px; top: 692px; width: 200px; height: 24px; flex-direction: row; align-items: center; background-color: rgba(0, 0, 0, 0.55); border-width: 1px; border-color: rgba(80, 80, 80, 0.6);">
-            <ui:VisualElement name="DeviceWifi" style="width: 16px; height: 16px; margin-left: 6px; background-color: rgb(60, 255, 160); border-radius: 3px; flex-shrink: 0;"/>
-            <ui:VisualElement name="DeviceBattery" style="width: 24px; height: 14px; margin-left: 6px; background-color: rgb(60, 220, 90); border-width: 1px; border-color: rgb(40, 40, 40); flex-shrink: 0;"/>
-            <ui:Label name="DeviceTime" text="--:--:--" style="width: 80px; margin-left: 8px; font-size: 12px; color: rgb(230, 230, 230); -unity-text-align: middle-left; flex-shrink: 0;"/>
-            <ui:Label name="DeviceRtt" text="--ms" style="width: 50px; margin-left: 8px; font-size: 12px; color: rgb(200, 200, 200); -unity-text-align: middle-left; flex-shrink: 0;"/>
+        <!-- Uses inline styling to draw simulated wifi signal strength bars and battery shell for professional visuals. -->
+        <ui:VisualElement name="DeviceStatusPanel" style="position: absolute; left: 1060px; top: 686px; width: 210px; height: 28px; flex-direction: row; align-items: center; background-color: rgba(0, 0, 0, 0.45); border-width: 1px; border-color: rgba(100, 100, 100, 0.4); border-radius: 4px; padding: 2px;">
+            <!-- Wifi signal strength indicator bars -->
+            <ui:VisualElement name="DeviceWifi" style="flex-direction: row; align-items: flex-end; width: 18px; height: 14px; margin-left: 8px; background-color: rgba(0,0,0,0); margin-right: 4px;">
+                <ui:VisualElement style="width: 3px; height: 5px; background-color: rgb(0, 180, 0); margin-right: 2px;"/>
+                <ui:VisualElement style="width: 3px; height: 9px; background-color: rgb(0, 180, 0); margin-right: 2px;"/>
+                <ui:VisualElement style="width: 3px; height: 13px; background-color: rgb(0, 180, 0);"/>
+            </ui:VisualElement>
+            <!-- Battery level shell + fill -->
+            <ui:VisualElement name="DeviceBattery" style="flex-direction: row; align-items: center; width: 26px; height: 14px; border-width: 1px; border-color: rgb(180, 180, 180); border-radius: 2px; padding: 1px; margin-right: 8px; background-color: rgba(0,0,0,0);">
+                <ui:VisualElement style="flex-grow: 1; height: 10px; background-color: rgb(0, 180, 0); width: 80%;"/>
+                <ui:VisualElement style="width: 2px; height: 6px; background-color: rgb(180, 180, 180); position: absolute; right: -3px;"/>
+            </ui:VisualElement>
+            <!-- Time & Ping RTT display matching green theme -->
+            <ui:Label name="DeviceTime" text="00:00:00" style="width: 68px; font-size: 12px; color: rgb(0, 180, 0); -unity-text-align: middle-left; -unity-font-style: bold; margin: 0; padding: 0;"/>
+            <ui:Label name="DeviceRtt" text="0ms" style="width: 48px; font-size: 12px; color: rgb(0, 180, 0); -unity-text-align: middle-left; -unity-font-style: bold; margin: 0; padding: 0;"/>
         </ui:VisualElement>
 
         <!-- ═══ MAP PREVIEW (large, tap minimap to open) ═══ -->
