@@ -66,6 +66,17 @@ namespace VLTK.Sandbox
                 $"Spawned 5 training NPCs in pentagon at center={center}, radius={radius}");
         }
 
+        /// <summary>
+        /// Destroys all spawned training NPCs (the "TrainingNpcs" child). Used when
+        /// switching to a non-Ba-Lăng map so the training dummies do not leak into
+        /// other maps.
+        /// </summary>
+        public void Clear()
+        {
+            DestroyExistingChild(_npcRoot, "TrainingNpcs");
+            _npcRoot = null;
+        }
+
         public List<EnemyRuntimeInfo> GetActiveEnemies()
         {
             var result = new List<EnemyRuntimeInfo>();

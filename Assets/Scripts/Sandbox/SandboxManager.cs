@@ -718,7 +718,13 @@ namespace VLTK.Sandbox
                             RenderObjectsForActiveMap();
                             BuildTrapsForActiveMap();
                         }
-                        SpawnTrainingNpcs();
+                        // Training NPCs (5 bao cát/cọc gỗ/mộc nhân) are spawned for testing
+                        // only on Ba Lăng huyện (their home training ground) — and on
+                        // no-map fast boot (handled at the end of boot). Always clear any
+                        // leftover training NPCs first so they don't leak into other maps.
+                        TrainingSpawner?.Clear();
+                        if (mapId == BaLangHuyenMapId)
+                            SpawnTrainingNpcs();
                         ConfigureCameraForMap();
                         PlayerController?.SnapCamera();
                     }
@@ -844,6 +850,26 @@ namespace VLTK.Sandbox
                     try { TimedBootStep("MapManager.LoadMap", () => MapManager.LoadMap(defaultMapId)); }
                     catch (Exception e) { SubsystemLog.Warn("Sandbox", $"MapManager.LoadMap({defaultMapId}) failed: {e.Message}"); }
                     _initialBootMapLoad = false;
+                }
+
+                // Training NPCs spawn condition #1: no map loaded (fast boot no-map).
+                // (Condition #2 — map is Ba Lăng huyện — is handled in the OnMapLoaded
+                // handler above.) When no map is loaded OnMapLoaded never fires, so
+                // spawn the 5 training NPCs around the player now for testing.
+                if (MapManager != null && MapManager.ActiveMap == null)
+                {
+                    try
+                    {
+                        EnsureEnemyRuntime();
+                        if (TrainingSpawner != null)
+                        {
+                            TrainingSpawner.usePlayerPosition = true;
+                            SpawnTrainingNpcs();
+                            SubsystemLog.Info("SandboxBoot",
+                                "FastEditor no-map boot: spawned 5 training NPCs around player for testing.");
+                        }
+                    }
+                    catch (Exception e) { SubsystemLog.Warn("Sandbox", $"Boot training NPC spawn failed: {e.Message}"); }
                 }
             }
 
