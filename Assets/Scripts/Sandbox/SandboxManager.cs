@@ -769,250 +769,14 @@ namespace VLTK.Sandbox
 
                 if (ShouldLoadOptionalStreamingServices(ActiveBootProfile))
                 {
-                    MeridianService = MeridianService.LoadFromStreamingAssets();
-                    PartnerService = PartnerService.LoadFromStreamingAssets();
-                    PetSkillService = PetSkillService.LoadFromStreamingAssets();
-                    TitleService = TitleService.LoadFromStreamingAssets();
-                    LotteryService = LotteryService.LoadFromStreamingAssets();
-                    CompoundRecipeService = CompoundRecipeService.LoadFromStreamingAssets();
-                    QuestItemService = QuestItemService.LoadFromStreamingAssets();
-                    AdventureService = AdventureService.LoadFromStreamingAssets();
-                    GuildService = GuildService.LoadFromStreamingAssets();
-                    AttribConstService = AttribConstService.LoadFromStreamingAssets();
-                    MissleCatalogService = MissleCatalogService.LoadFromStreamingAssets();
-                    EventBonusService = EventBonusService.LoadFromStreamingAssets();
-                    CityWarService = CityWarService.LoadFromStreamingAssets();
-                    AuctionService = AuctionService.LoadFromStreamingAssets();
-                    GoodsCatalogService = GoodsCatalogService.LoadFromStreamingAssets();
-                    ShopConfigService = ShopConfigService.LoadFromStreamingAssets();
-
-                    // ── Batch 2: Battlefield, Instance, Special skills, NPC scripts, etc. ─
-                    BattlefieldService = LoadOptionalStreamingService(nameof(BattlefieldService), () => BattlefieldService.LoadFromStreamingAssets());
-                    InstanceMapService = LoadOptionalStreamingService(nameof(InstanceMapService), () => InstanceMapService.LoadFromStreamingAssets());
-                    HongbaoService = LoadOptionalStreamingService(nameof(HongbaoService), () => HongbaoService.LoadFromStreamingAssets());
-                    ItemExchangeService = LoadOptionalStreamingService(nameof(ItemExchangeService), () => ItemExchangeService.LoadFromStreamingAssets());
-                    SpecialSkillService = LoadOptionalStreamingService(nameof(SpecialSkillService), () => SpecialSkillService.LoadFromStreamingAssets());
-                    NpcSkillService = LoadOptionalStreamingService(nameof(NpcSkillService), () => NpcSkillService.LoadFromStreamingAssets());
-                    TranslifeSkillService = LoadOptionalStreamingService(nameof(TranslifeSkillService), () => TranslifeSkillService.LoadFromStreamingAssets());
-                    SkillTemplateService = LoadOptionalStreamingService(nameof(SkillTemplateService), () => SkillTemplateService.LoadFromStreamingAssets());
-                    NpcLevelScriptService = LoadOptionalStreamingService(nameof(NpcLevelScriptService), () => NpcLevelScriptService.LoadFromStreamingAssets());
-                    NpcDeathScriptService = LoadOptionalStreamingService(nameof(NpcDeathScriptService), () => NpcDeathScriptService.LoadFromStreamingAssets());
-                    DailyTaskService = LoadOptionalStreamingService(nameof(DailyTaskService), () => DailyTaskService.LoadFromStreamingAssets());
-                    BossMissionService = LoadOptionalStreamingService(nameof(BossMissionService), () => BossMissionService.LoadFromStreamingAssets());
-
-                    // ── Batch 3: Events, weather, music, tasks, arena, trip, bonus ───────
-                    ServerEventService = LoadOptionalStreamingService(nameof(ServerEventService), () => ServerEventService.LoadFromStreamingAssets());
-                    VngEventService = LoadOptionalStreamingService(nameof(VngEventService), () => VngEventService.LoadFromStreamingAssets());
-                    BattleScriptService = LoadOptionalStreamingService(nameof(BattleScriptService), () => BattleScriptService.LoadFromStreamingAssets());
-                    WeatherService = LoadOptionalStreamingService(nameof(WeatherService), () => WeatherService.LoadFromStreamingAssets());
-                    MusicService = LoadOptionalStreamingService(nameof(MusicService), () => MusicService.LoadFromStreamingAssets());
-                    GuildWorkshopService = LoadOptionalStreamingService(nameof(GuildWorkshopService), () => GuildWorkshopService.LoadFromStreamingAssets());
-                    HuoYueDuService = LoadOptionalStreamingService(nameof(HuoYueDuService), () => HuoYueDuService.LoadFromStreamingAssets());
-                    CityDefenceService = LoadOptionalStreamingService(nameof(CityDefenceService), () => CityDefenceService.LoadFromStreamingAssets());
-                    ActivityService = LoadOptionalStreamingService(nameof(ActivityService), () => ActivityService.LoadFromStreamingAssets());
-                    RandomTaskService = LoadOptionalStreamingService(nameof(RandomTaskService), () => RandomTaskService.LoadFromStreamingAssets());
-                    PartnerTaskService = LoadOptionalStreamingService(nameof(PartnerTaskService), () => PartnerTaskService.LoadFromStreamingAssets());
-                    MetempsychosisTaskService = LoadOptionalStreamingService(nameof(MetempsychosisTaskService), () => MetempsychosisTaskService.LoadFromStreamingAssets());
-                    ArenaService = LoadOptionalStreamingService(nameof(ArenaService), () => ArenaService.LoadFromStreamingAssets());
-                    TripService = LoadOptionalStreamingService(nameof(TripService), () => TripService.LoadFromStreamingAssets());
-                    BonusOnlineService = LoadOptionalStreamingService(nameof(BonusOnlineService), () => BonusOnlineService.LoadFromStreamingAssets());
-
-                    // ── Batch 4: Guild extras, honor, shitu, foundry, world rank, misc ──
-                    GuildRankService = LoadOptionalStreamingService(nameof(GuildRankService), () => GuildRankService.LoadFromStreamingAssets());
-                    GuildStuntService = LoadOptionalStreamingService(nameof(GuildStuntService), () => GuildStuntService.LoadFromStreamingAssets());
-                    GuildTaskService = LoadOptionalStreamingService(nameof(GuildTaskService), () => GuildTaskService.LoadFromStreamingAssets());
-                    HonorService = LoadOptionalStreamingService(nameof(HonorService), () => HonorService.LoadFromStreamingAssets());
-                    ShituService = LoadOptionalStreamingService(nameof(ShituService), () => ShituService.LoadFromStreamingAssets());
-                    FoundryService = LoadOptionalStreamingService(nameof(FoundryService), () => FoundryService.LoadFromStreamingAssets());
-                    WorldRankService = LoadOptionalStreamingService(nameof(WorldRankService), () => WorldRankService.LoadFromStreamingAssets());
-                    NewPlayerGuideService = LoadOptionalStreamingService(nameof(NewPlayerGuideService), () => NewPlayerGuideService.LoadFromStreamingAssets());
-                    ChangeFeatureService = LoadOptionalStreamingService(nameof(ChangeFeatureService), () => ChangeFeatureService.LoadFromStreamingAssets());
-                    StallService = LoadOptionalStreamingService(nameof(StallService), () => StallService.LoadFromStreamingAssets());
-                    FlipCardService = LoadOptionalStreamingService(nameof(FlipCardService), () => FlipCardService.LoadFromStreamingAssets());
-                    BaoRuongThanBiService = LoadOptionalStreamingService(nameof(BaoRuongThanBiService), () => BaoRuongThanBiService.LoadFromStreamingAssets());
-                    SeasonalEventService = LoadOptionalStreamingService(nameof(SeasonalEventService), () => SeasonalEventService.LoadFromStreamingAssets());
-                    CompensationService = LoadOptionalStreamingService(nameof(CompensationService), () => CompensationService.LoadFromStreamingAssets());
-
-                    // ── Batch 5: Final client systems (faction maps, awards, double exp, sim city, client skill scripts) ─
-                    FactionMapService = LoadOptionalStreamingService(nameof(FactionMapService), () => FactionMapService.LoadFromStreamingAssets());
-                    BattleAwardService = LoadOptionalStreamingService(nameof(BattleAwardService), () => BattleAwardService.LoadFromStreamingAssets());
-                    DoubleExpService = LoadOptionalStreamingService(nameof(DoubleExpService), () => DoubleExpService.LoadFromStreamingAssets());
-                    SimCityPluginService = LoadOptionalStreamingService(nameof(SimCityPluginService), () => SimCityPluginService.LoadFromStreamingAssets());
-                    ClientSkillScriptService = LoadOptionalStreamingService(nameof(ClientSkillScriptService), () => ClientSkillScriptService.LoadFromStreamingAssets());
-                    TongJinBattleService = LoadOptionalStreamingService(nameof(TongJinBattleService), () => TongJinBattleService.LoadFromStreamingAssets());
-                    BangChienService = LoadOptionalStreamingService(nameof(BangChienService), () => BangChienService.LoadFromStreamingAssets());
-                    BossHoangKimService = LoadOptionalStreamingService(nameof(BossHoangKimService), () => BossHoangKimService.LoadFromStreamingAssets());
-                    TaskFlagService = new TaskFlagService();
-                    // ── Batch 8: Save/Load + Mail + Mount + Ranking + Friend + Pet + Shop + Missile + HudArt + FactionRuntime + BattleScript + TaskFlagRegistry ───────────
-                    SaveSlotService = LoadOptionalStreamingService(nameof(SaveSlotService), () => SaveSlotService.LoadFromStreamingAssets());
-                    MailService = LoadOptionalStreamingService(nameof(MailService), () => MailService.LoadFromStreamingAssets());
-                    MountService = LoadOptionalStreamingService(nameof(MountService), () => MountService.LoadFromStreamingAssets());
-                    RankingService = LoadOptionalStreamingService(nameof(RankingService), () => RankingService.LoadFromStreamingAssets());
-                    FriendService = LoadOptionalStreamingService(nameof(FriendService), () => FriendService.LoadFromStreamingAssets());
-                    PetService = LoadOptionalStreamingService(nameof(PetService), () => PetService.LoadFromStreamingAssets());
-                    ShopConfigService = LoadOptionalStreamingService(nameof(ShopConfigService), () => ShopConfigService.LoadFromStreamingAssets());
-                    MissileEffectService = LoadOptionalStreamingService(nameof(MissileEffectService), () => MissileEffectService.LoadFromStreamingAssets());
-                    HudArtCatalogService = LoadOptionalStreamingService(nameof(HudArtCatalogService), () => HudArtCatalogService.LoadFromStreamingAssets());
-                    FactionMapRuntimeService = FactionMapRuntimeService != null ? FactionMapRuntimeService : new FactionMapRuntimeService(FactionMapService);
-                    BattleScriptRuntimeService = BattleScriptRuntimeService != null ? BattleScriptRuntimeService : new BattleScriptRuntimeService(BattleScriptService);
-                    TaskFlagRegistryService = LoadOptionalStreamingService(nameof(TaskFlagRegistryService), () => TaskFlagRegistryService.LoadFromStreamingAssets());
-                    // ── Batch 9: Map data + Skill data + World boss + Achievement + Mall + Fashion + Sign-in + Treasure + Encounter + Friend gift + Text + Animation ───────────
-                    MapListFullService = LoadOptionalStreamingService(nameof(MapListFullService), () => MapListFullService.LoadFromStreamingAssets());
-                    MapElementService = LoadOptionalStreamingService(nameof(MapElementService), () => MapElementService.LoadFromStreamingAssets());
-                    MapRespawnService = LoadOptionalStreamingService(nameof(MapRespawnService), () => MapRespawnService.LoadFromStreamingAssets());
-                    MapBlockService = LoadOptionalStreamingService(nameof(MapBlockService), () => MapBlockService.LoadFromStreamingAssets());
-                    MapNpcRespawnService = LoadOptionalStreamingService(nameof(MapNpcRespawnService), () => MapNpcRespawnService.LoadFromStreamingAssets());
-                    MapMusicService = LoadOptionalStreamingService(nameof(MapMusicService), () => MapMusicService.LoadFromStreamingAssets());
-                    SkillLevelDataService = LoadOptionalStreamingService(nameof(SkillLevelDataService), () => SkillLevelDataService.LoadFromStreamingAssets());
-                    SkillUpgradeService = LoadOptionalStreamingService(nameof(SkillUpgradeService), () => SkillUpgradeService.LoadFromStreamingAssets());
-                    SkillBookService = LoadOptionalStreamingService(nameof(SkillBookService), () => SkillBookService.LoadFromStreamingAssets());
-                    SkillComboService = LoadOptionalStreamingService(nameof(SkillComboService), () => SkillComboService.LoadFromStreamingAssets());
-                    SkillStateService = LoadOptionalStreamingService(nameof(SkillStateService), () => SkillStateService.LoadFromStreamingAssets());
-                    SkillMasteryService = LoadOptionalStreamingService(nameof(SkillMasteryService), () => SkillMasteryService.LoadFromStreamingAssets());
-                    WorldBossService = LoadOptionalStreamingService(nameof(WorldBossService), () => WorldBossService.LoadFromStreamingAssets());
-                    AchievementService = LoadOptionalStreamingService(nameof(AchievementService), () => AchievementService.LoadFromStreamingAssets());
-                    DailyRewardService = LoadOptionalStreamingService(nameof(DailyRewardService), () => DailyRewardService.LoadFromStreamingAssets());
-                    MallService = LoadOptionalStreamingService(nameof(MallService), () => MallService.LoadFromStreamingAssets());
-                    FashionService = LoadOptionalStreamingService(nameof(FashionService), () => FashionService.LoadFromStreamingAssets());
-                    SignInService = LoadOptionalStreamingService(nameof(SignInService), () => SignInService.LoadFromStreamingAssets());
-                    TreasureHuntService = LoadOptionalStreamingService(nameof(TreasureHuntService), () => TreasureHuntService.LoadFromStreamingAssets());
-                    EncounterService = LoadOptionalStreamingService(nameof(EncounterService), () => EncounterService.LoadFromStreamingAssets());
-                    FriendGiftService = LoadOptionalStreamingService(nameof(FriendGiftService), () => FriendGiftService.LoadFromStreamingAssets());
-                    TextResourceService = LoadOptionalStreamingService(nameof(TextResourceService), () => TextResourceService.LoadFromStreamingAssets());
-                    AnimationBankService = LoadOptionalStreamingService(nameof(AnimationBankService), () => AnimationBankService.LoadFromStreamingAssets());
-                    // ── Batch 10: Faction skill tree + bonus + relation + Guild scripts + Battle map config + reward config + honor + Sơ/Trung/Cao Jin ───────────
-                    FactionSkillTreeService = LoadOptionalStreamingService(nameof(FactionSkillTreeService), () => FactionSkillTreeService.LoadFromStreamingAssets());
-                    FactionBonusService = LoadOptionalStreamingService(nameof(FactionBonusService), () => FactionBonusService.LoadFromStreamingAssets());
-                    FactionRelationService = LoadOptionalStreamingService(nameof(FactionRelationService), () => FactionRelationService.LoadFromStreamingAssets());
-                    GuildScriptService = LoadOptionalStreamingService(nameof(GuildScriptService), () => GuildScriptService.LoadFromStreamingAssets());
-                    BattleMapConfigService = LoadOptionalStreamingService(nameof(BattleMapConfigService), () => BattleMapConfigService.LoadFromStreamingAssets());
-                    BattleRewardConfigService = LoadOptionalStreamingService(nameof(BattleRewardConfigService), () => BattleRewardConfigService.LoadFromStreamingAssets());
-                    BattleHonorService = LoadOptionalStreamingService(nameof(BattleHonorService), () => BattleHonorService.LoadFromStreamingAssets());
-                    SjBattleService = LoadOptionalStreamingService(nameof(SjBattleService), () => SjBattleService.LoadFromStreamingAssets());
-                    // ── Batch 11: Hoa Sơn + Sprite asset + Sound effect + Map connection + NPC shop item + Reputation + Title effect + VIP level ───────────
-                    HuaShanLuanJianService = LoadOptionalStreamingService(nameof(HuaShanLuanJianService), () => HuaShanLuanJianService.LoadFromStreamingAssets());
-                    SpriteAssetService = LoadOptionalStreamingService(nameof(SpriteAssetService), () => SpriteAssetService.LoadFromStreamingAssets());
-                    SoundEffectService = LoadOptionalStreamingService(nameof(SoundEffectService), () => SoundEffectService.LoadFromStreamingAssets());
-                    MapConnectionService = LoadOptionalStreamingService(nameof(MapConnectionService), () => MapConnectionService.LoadFromStreamingAssets());
-                    NpcShopItemService = LoadOptionalStreamingService(nameof(NpcShopItemService), () => NpcShopItemService.LoadFromStreamingAssets());
-                    ReputationService = LoadOptionalStreamingService(nameof(ReputationService), () => ReputationService.LoadFromStreamingAssets());
-                    TitleEffectService = LoadOptionalStreamingService(nameof(TitleEffectService), () => TitleEffectService.LoadFromStreamingAssets());
-                    VipLevelService = LoadOptionalStreamingService(nameof(VipLevelService), () => VipLevelService.LoadFromStreamingAssets());
-                    // ── Batch 12: Guild city war + Script registries (mission 985, skill 2,486, item 635, event 455, task 316, global 579, library 44) ───────────
-                    GuildCityWarService = new GuildCityWarService(CityWarService);
-                    GuildCityWarLogService = LoadOptionalStreamingService(nameof(GuildCityWarLogService), () => GuildCityWarLogService.LoadFromStreamingAssets());
-                    MissionScriptService = LoadOptionalStreamingService(nameof(MissionScriptService), () => MissionScriptService.LoadFromStreamingAssets());
-                    SkillScriptService = LoadOptionalStreamingService(nameof(SkillScriptService), () => SkillScriptService.LoadFromStreamingAssets());
-                    ItemScriptService = LoadOptionalStreamingService(nameof(ItemScriptService), () => ItemScriptService.LoadFromStreamingAssets());
-                    EventScriptService = LoadOptionalStreamingService(nameof(EventScriptService), () => EventScriptService.LoadFromStreamingAssets());
-                    TaskScriptService = LoadOptionalStreamingService(nameof(TaskScriptService), () => TaskScriptService.LoadFromStreamingAssets());
-                    GlobalScriptService = LoadOptionalStreamingService(nameof(GlobalScriptService), () => GlobalScriptService.LoadFromStreamingAssets());
-                    LibraryScriptService = LoadOptionalStreamingService(nameof(LibraryScriptService), () => LibraryScriptService.LoadFromStreamingAssets());
-                    // ── Batch 13: Area script registries (14.x GBK areas, faction quest, town, gbk trigger, tong battle) ───────────
-                    AreaScriptService = LoadOptionalStreamingService(nameof(AreaScriptService), () => AreaScriptService.LoadFromStreamingAssets());
-                    GbkMapScriptService = LoadOptionalStreamingService(nameof(GbkMapScriptService), () => GbkMapScriptService.LoadFromStreamingAssets());
-                    FactionQuestAreaService = LoadOptionalStreamingService(nameof(FactionQuestAreaService), () => FactionQuestAreaService.LoadFromStreamingAssets());
-                    TownScriptService = LoadOptionalStreamingService(nameof(TownScriptService), () => TownScriptService.LoadFromStreamingAssets());
-                    GbkTriggerService = LoadOptionalStreamingService(nameof(GbkTriggerService), () => GbkTriggerService.LoadFromStreamingAssets());
-                    TongBattleScriptService = LoadOptionalStreamingService(nameof(TongBattleScriptService), () => TongBattleScriptService.LoadFromStreamingAssets());
-
-                    // ── Batch 6: Client settings, items, maps (37 more services) ───────────
-                    PortraitService = LoadOptionalStreamingService(nameof(PortraitService), () => PortraitService.LoadFromStreamingAssets());
-                    SoundListService = LoadOptionalStreamingService(nameof(SoundListService), () => SoundListService.LoadFromStreamingAssets());
-                    KillerService = LoadOptionalStreamingService(nameof(KillerService), () => KillerService.LoadFromStreamingAssets());
-                    ItemDetailService = LoadOptionalStreamingService(nameof(ItemDetailService), () => ItemDetailService.LoadFromStreamingAssets());
-                    ItemTypeService = LoadOptionalStreamingService(nameof(ItemTypeService), () => ItemTypeService.LoadFromStreamingAssets());
-                    MapTrafficService = LoadOptionalStreamingService(nameof(MapTrafficService), () => MapTrafficService.LoadFromStreamingAssets());
-                    MapTypeService = LoadOptionalStreamingService(nameof(MapTypeService), () => MapTypeService.LoadFromStreamingAssets());
-                    AdjustColorService = LoadOptionalStreamingService(nameof(AdjustColorService), () => AdjustColorService.LoadFromStreamingAssets());
-                    ClientWeaponSkillService = LoadOptionalStreamingService(nameof(ClientWeaponSkillService), () => ClientWeaponSkillService.LoadFromStreamingAssets());
-                    GoldEquipService = LoadOptionalStreamingService(nameof(GoldEquipService), () => GoldEquipService.LoadFromStreamingAssets());
-                    PlatinaEquipService = LoadOptionalStreamingService(nameof(PlatinaEquipService), () => PlatinaEquipService.LoadFromStreamingAssets());
-                    HorseService = LoadOptionalStreamingService(nameof(HorseService), () => HorseService.LoadFromStreamingAssets());
-                    PotionService = LoadOptionalStreamingService(nameof(PotionService), () => PotionService.LoadFromStreamingAssets());
-                    MagicScriptService = LoadOptionalStreamingService(nameof(MagicScriptService), () => MagicScriptService.LoadFromStreamingAssets());
-                    MagicAttribService = LoadOptionalStreamingService(nameof(MagicAttribService), () => MagicAttribService.LoadFromStreamingAssets());
-                    ScrollService = LoadOptionalStreamingService(nameof(ScrollService), () => ScrollService.LoadFromStreamingAssets());
-                    CaveListFullService = LoadOptionalStreamingService(nameof(CaveListFullService), () => CaveListFullService.LoadFromStreamingAssets());
-                    GoldBossService = LoadOptionalStreamingService(nameof(GoldBossService), () => GoldBossService.LoadFromStreamingAssets());
-                    ChangeFeatureDataService = LoadOptionalStreamingService(nameof(ChangeFeatureDataService), () => ChangeFeatureDataService.LoadFromStreamingAssets());
-                    GlobalConfigService = LoadOptionalStreamingService(nameof(GlobalConfigService), () => GlobalConfigService.LoadFromStreamingAssets());
-                    NormalSpawnService = LoadOptionalStreamingService(nameof(NormalSpawnService), () => NormalSpawnService.LoadFromStreamingAssets());
-                    RareEnchantService = LoadOptionalStreamingService(nameof(RareEnchantService), () => RareEnchantService.LoadFromStreamingAssets());
-                    WharfService = LoadOptionalStreamingService(nameof(WharfService), () => WharfService.LoadFromStreamingAssets());
-                    WaypointService = LoadOptionalStreamingService(nameof(WaypointService), () => WaypointService.LoadFromStreamingAssets());
-                    AutoPathRouteService = LoadOptionalStreamingService(nameof(AutoPathRouteService), () => AutoPathRouteService.LoadFromStreamingAssets());
-                    RevivePosService = LoadOptionalStreamingService(nameof(RevivePosService), () => RevivePosService.LoadFromStreamingAssets());
-                    FactionConfigService = LoadOptionalStreamingService(nameof(FactionConfigService), () => FactionConfigService.LoadFromStreamingAssets());
-                    NpcResService = LoadOptionalStreamingService(nameof(NpcResService), () => NpcResService.LoadFromStreamingAssets());
-                    NpcSFullService = LoadOptionalStreamingService(nameof(NpcSFullService), () => NpcSFullService.LoadFromStreamingAssets());
-                    TongStuntService = LoadOptionalStreamingService(nameof(TongStuntService), () => TongStuntService.LoadFromStreamingAssets());
-                    TongSettingService = LoadOptionalStreamingService(nameof(TongSettingService), () => TongSettingService.LoadFromStreamingAssets());
-                    TongNpcPosService = LoadOptionalStreamingService(nameof(TongNpcPosService), () => TongNpcPosService.LoadFromStreamingAssets());
-                    MapListService = LoadOptionalStreamingService(nameof(MapListService), () => MapListService.LoadFromStreamingAssets());
-                    MapDescService = LoadOptionalStreamingService(nameof(MapDescService), () => MapDescService.LoadFromStreamingAssets());
-                    BossSpawnService = LoadOptionalStreamingService(nameof(BossSpawnService), () => BossSpawnService.LoadFromStreamingAssets());
-                    DropRateConfigService = LoadOptionalStreamingService(nameof(DropRateConfigService), () => DropRateConfigService.LoadFromStreamingAssets());
-                    // Batch 14: Station/Travel, Guild Workshop/Task, Mission Config
-                    StationService = LoadOptionalStreamingService(nameof(StationService), () => StationService.LoadFromStreamingAssets());
-                    StationPriceService = LoadOptionalStreamingService(nameof(StationPriceService), () => StationPriceService.LoadFromStreamingAssets());
-                    WaypointPriceService = LoadOptionalStreamingService(nameof(WaypointPriceService), () => WaypointPriceService.LoadFromStreamingAssets());
-                    GuildWorkshopLevelService = LoadOptionalStreamingService(nameof(GuildWorkshopLevelService), () => GuildWorkshopLevelService.LoadFromStreamingAssets());
-                    GuildTaskDefService = LoadOptionalStreamingService(nameof(GuildTaskDefService), () => GuildTaskDefService.LoadFromStreamingAssets());
-                    MissionArenaConfigService = LoadOptionalStreamingService(nameof(MissionArenaConfigService), () => MissionArenaConfigService.LoadFromStreamingAssets());
-                    MissionBattleConfigService = LoadOptionalStreamingService(nameof(MissionBattleConfigService), () => MissionBattleConfigService.LoadFromStreamingAssets());
-                    MissionMazeConfigService = LoadOptionalStreamingService(nameof(MissionMazeConfigService), () => MissionMazeConfigService.LoadFromStreamingAssets());
-                    MissionQianchongService = LoadOptionalStreamingService(nameof(MissionQianchongService), () => MissionQianchongService.LoadFromStreamingAssets());
-                    // Batch 14b: Task detail config services
-                    TaskDailyConfigService = LoadOptionalStreamingService(nameof(TaskDailyConfigService), () => TaskDailyConfigService.LoadFromStreamingAssets());
-                    TaskRandomConfigService = LoadOptionalStreamingService(nameof(TaskRandomConfigService), () => TaskRandomConfigService.LoadFromStreamingAssets());
-                    TaskLevelLinkService = LoadOptionalStreamingService(nameof(TaskLevelLinkService), () => TaskLevelLinkService.LoadFromStreamingAssets());
-                    TaskTalkConfigService = LoadOptionalStreamingService(nameof(TaskTalkConfigService), () => TaskTalkConfigService.LoadFromStreamingAssets());
-                    TaskEventService = LoadOptionalStreamingService(nameof(TaskEventService), () => TaskEventService.LoadFromStreamingAssets());
-                    // Batch 14c: Object/ItemValue/Music/Weather/Partner/NativePlace/Timer
-                    ObjDataService = LoadOptionalStreamingService(nameof(ObjDataService), () => ObjDataService.LoadFromStreamingAssets());
-                    ObjectSettingService = LoadOptionalStreamingService(nameof(ObjectSettingService), () => ObjectSettingService.LoadFromStreamingAssets());
-                    MusicConfigService = LoadOptionalStreamingService(nameof(MusicConfigService), () => MusicConfigService.LoadFromStreamingAssets());
-                    WeatherConfigService = LoadOptionalStreamingService(nameof(WeatherConfigService), () => WeatherConfigService.LoadFromStreamingAssets());
-                    ItemValueService = LoadOptionalStreamingService(nameof(ItemValueService), () => ItemValueService.LoadFromStreamingAssets());
-                    PartnerEventService = LoadOptionalStreamingService(nameof(PartnerEventService), () => PartnerEventService.LoadFromStreamingAssets());
-                    PartnerBagService = LoadOptionalStreamingService(nameof(PartnerBagService), () => PartnerBagService.LoadFromStreamingAssets());
-                    PartnerSettingService = LoadOptionalStreamingService(nameof(PartnerSettingService), () => PartnerSettingService.LoadFromStreamingAssets());
-                    NativePlaceService = LoadOptionalStreamingService(nameof(NativePlaceService), () => NativePlaceService.LoadFromStreamingAssets());
-                    TimerTaskService = LoadOptionalStreamingService(nameof(TimerTaskService), () => TimerTaskService.LoadFromStreamingAssets());
-                    // Batch 15: Item sub-types
-                    BrokenEquipService = LoadOptionalStreamingService(nameof(BrokenEquipService), () => BrokenEquipService.LoadFromStreamingAssets());
-                    FusionService = LoadOptionalStreamingService(nameof(FusionService), () => FusionService.LoadFromStreamingAssets());
-                    MantleService = LoadOptionalStreamingService(nameof(MantleService), () => MantleService.LoadFromStreamingAssets());
-                    MaskService = LoadOptionalStreamingService(nameof(MaskService), () => MaskService.LoadFromStreamingAssets());
-                    SignetService = LoadOptionalStreamingService(nameof(SignetService), () => SignetService.LoadFromStreamingAssets());
-                    ShipinService = LoadOptionalStreamingService(nameof(ShipinService), () => ShipinService.LoadFromStreamingAssets());
-                    SuiteActivateCountService = LoadOptionalStreamingService(nameof(SuiteActivateCountService), () => SuiteActivateCountService.LoadFromStreamingAssets());
-                    CompoundScriptService = LoadOptionalStreamingService(nameof(CompoundScriptService), () => CompoundScriptService.LoadFromStreamingAssets());
-                    // Batch 15b: Config services
-                    ForbitItemService = LoadOptionalStreamingService(nameof(ForbitItemService), () => ForbitItemService.LoadFromStreamingAssets());
-                    TaxRateService = LoadOptionalStreamingService(nameof(TaxRateService), () => TaxRateService.LoadFromStreamingAssets());
-                    ProgressConfigService = LoadOptionalStreamingService(nameof(ProgressConfigService), () => ProgressConfigService.LoadFromStreamingAssets());
-                    RankSettingService = LoadOptionalStreamingService(nameof(RankSettingService), () => RankSettingService.LoadFromStreamingAssets());
-                    FoundryResDemandService = LoadOptionalStreamingService(nameof(FoundryResDemandService), () => FoundryResDemandService.LoadFromStreamingAssets());
-                    PlatinaMagicRateService = LoadOptionalStreamingService(nameof(PlatinaMagicRateService), () => PlatinaMagicRateService.LoadFromStreamingAssets());
-                    RecoinService = LoadOptionalStreamingService(nameof(RecoinService), () => RecoinService.LoadFromStreamingAssets());
-                    CityHongbaoService = LoadOptionalStreamingService(nameof(CityHongbaoService), () => CityHongbaoService.LoadFromStreamingAssets());
-                    // Batch 16: Task tollgate/newtask
-                    TollgateKillerService = LoadOptionalStreamingService(nameof(TollgateKillerService), () => TollgateKillerService.LoadFromStreamingAssets());
-                    NewTaskBranchService = LoadOptionalStreamingService(nameof(NewTaskBranchService), () => NewTaskBranchService.LoadFromStreamingAssets());
-                    MainPassTaskService = LoadOptionalStreamingService(nameof(MainPassTaskService), () => MainPassTaskService.LoadFromStreamingAssets());
-                    // Batch 16b: Remaining config services
-                    AutoUpdateConfigService = LoadOptionalStreamingService(nameof(AutoUpdateConfigService), () => AutoUpdateConfigService.LoadFromStreamingAssets());
-                    TiredWarningService = LoadOptionalStreamingService(nameof(TiredWarningService), () => TiredWarningService.LoadFromStreamingAssets());
-                    PlayerLimitTimeService = LoadOptionalStreamingService(nameof(PlayerLimitTimeService), () => PlayerLimitTimeService.LoadFromStreamingAssets());
-                    PermitDialogNpcService = LoadOptionalStreamingService(nameof(PermitDialogNpcService), () => PermitDialogNpcService.LoadFromStreamingAssets());
-                    ProductConfigService = LoadOptionalStreamingService(nameof(ProductConfigService), () => ProductConfigService.LoadFromStreamingAssets());
-                    UtilitiesService = LoadOptionalStreamingService(nameof(UtilitiesService), () => UtilitiesService.LoadFromStreamingAssets());
-                    ForbitHeartService = LoadOptionalStreamingService(nameof(ForbitHeartService), () => ForbitHeartService.LoadFromStreamingAssets());
-                    StringResourceCatalogService = LoadOptionalStreamingService(nameof(StringResourceCatalogService), () => StringResourceCatalogService.LoadFromStreamingAssets());
-
-                    LogOptionalServiceSummary();
+                    if (Application.isPlaying)
+                    {
+                        StartCoroutine(LoadOptionalServicesCoroutine());
+                    }
+                    else
+                    {
+                        InitializeFastBootFallbackServices();
+                    }
                 }
                 else
                 {
@@ -1053,6 +817,314 @@ namespace VLTK.Sandbox
             // Wrapped to ensure subscribers cannot crash SandboxManager boot.
             try { OnBootComplete?.Invoke(BootReport); }
             catch (Exception e) { SubsystemLog.Warn("Sandbox", $"OnBootComplete subscriber threw: {e.Message}"); }
+        }
+
+        private System.Collections.IEnumerator LoadOptionalServicesCoroutine()
+        {
+            // Initial backup / fallback services setup to prevent NREs
+            TaskFlagService = new TaskFlagService();
+            if (FactionMapRuntimeService == null)
+                FactionMapRuntimeService = new FactionMapRuntimeService();
+            if (BattleScriptRuntimeService == null)
+                BattleScriptRuntimeService = new BattleScriptRuntimeService();
+
+            yield return null;
+
+            // Meridian, Partner, Title, PetSkill, Lottery, CompoundRecipe, QuestItem, Adventure, Guild, AttribConst, MissleCatalog, EventBonus, CityWar, Auction, GoodsCatalog, ShopConfig
+            MeridianService = MeridianService.LoadFromStreamingAssets();
+            yield return null;
+            PartnerService = PartnerService.LoadFromStreamingAssets();
+            yield return null;
+            PetSkillService = PetSkillService.LoadFromStreamingAssets();
+            yield return null;
+            TitleService = TitleService.LoadFromStreamingAssets();
+            yield return null;
+            LotteryService = LotteryService.LoadFromStreamingAssets();
+            yield return null;
+            CompoundRecipeService = CompoundRecipeService.LoadFromStreamingAssets();
+            yield return null;
+            QuestItemService = QuestItemService.LoadFromStreamingAssets();
+            yield return null;
+            AdventureService = AdventureService.LoadFromStreamingAssets();
+            yield return null;
+            GuildService = GuildService.LoadFromStreamingAssets();
+            yield return null;
+            AttribConstService = AttribConstService.LoadFromStreamingAssets();
+            yield return null;
+            MissleCatalogService = MissleCatalogService.LoadFromStreamingAssets();
+            yield return null;
+            EventBonusService = EventBonusService.LoadFromStreamingAssets();
+            yield return null;
+            CityWarService = CityWarService.LoadFromStreamingAssets();
+            yield return null;
+            AuctionService = AuctionService.LoadFromStreamingAssets();
+            yield return null;
+            GoodsCatalogService = GoodsCatalogService.LoadFromStreamingAssets();
+            yield return null;
+            ShopConfigService = ShopConfigService.LoadFromStreamingAssets();
+
+            yield return null;
+
+            // ── Batch 2: Battlefield, Instance, Special skills, NPC scripts, etc. ─
+            BattlefieldService = LoadOptionalStreamingService(nameof(BattlefieldService), () => BattlefieldService.LoadFromStreamingAssets());
+            InstanceMapService = LoadOptionalStreamingService(nameof(InstanceMapService), () => InstanceMapService.LoadFromStreamingAssets());
+            HongbaoService = LoadOptionalStreamingService(nameof(HongbaoService), () => HongbaoService.LoadFromStreamingAssets());
+            ItemExchangeService = LoadOptionalStreamingService(nameof(ItemExchangeService), () => ItemExchangeService.LoadFromStreamingAssets());
+            SpecialSkillService = LoadOptionalStreamingService(nameof(SpecialSkillService), () => SpecialSkillService.LoadFromStreamingAssets());
+            NpcSkillService = LoadOptionalStreamingService(nameof(NpcSkillService), () => NpcSkillService.LoadFromStreamingAssets());
+            TranslifeSkillService = LoadOptionalStreamingService(nameof(TranslifeSkillService), () => TranslifeSkillService.LoadFromStreamingAssets());
+            SkillTemplateService = LoadOptionalStreamingService(nameof(SkillTemplateService), () => SkillTemplateService.LoadFromStreamingAssets());
+            NpcLevelScriptService = LoadOptionalStreamingService(nameof(NpcLevelScriptService), () => NpcLevelScriptService.LoadFromStreamingAssets());
+            NpcDeathScriptService = LoadOptionalStreamingService(nameof(NpcDeathScriptService), () => NpcDeathScriptService.LoadFromStreamingAssets());
+            DailyTaskService = LoadOptionalStreamingService(nameof(DailyTaskService), () => DailyTaskService.LoadFromStreamingAssets());
+            BossMissionService = LoadOptionalStreamingService(nameof(BossMissionService), () => BossMissionService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            // ── Batch 3: Events, weather, music, tasks, arena, trip, bonus ───────
+            ServerEventService = LoadOptionalStreamingService(nameof(ServerEventService), () => ServerEventService.LoadFromStreamingAssets());
+            VngEventService = LoadOptionalStreamingService(nameof(VngEventService), () => VngEventService.LoadFromStreamingAssets());
+            BattleScriptService = LoadOptionalStreamingService(nameof(BattleScriptService), () => BattleScriptService.LoadFromStreamingAssets());
+            WeatherService = LoadOptionalStreamingService(nameof(WeatherService), () => WeatherService.LoadFromStreamingAssets());
+            MusicService = LoadOptionalStreamingService(nameof(MusicService), () => MusicService.LoadFromStreamingAssets());
+            GuildWorkshopService = LoadOptionalStreamingService(nameof(GuildWorkshopService), () => GuildWorkshopService.LoadFromStreamingAssets());
+            HuoYueDuService = LoadOptionalStreamingService(nameof(HuoYueDuService), () => HuoYueDuService.LoadFromStreamingAssets());
+            CityDefenceService = LoadOptionalStreamingService(nameof(CityDefenceService), () => CityDefenceService.LoadFromStreamingAssets());
+            ActivityService = LoadOptionalStreamingService(nameof(ActivityService), () => ActivityService.LoadFromStreamingAssets());
+            RandomTaskService = LoadOptionalStreamingService(nameof(RandomTaskService), () => RandomTaskService.LoadFromStreamingAssets());
+            PartnerTaskService = LoadOptionalStreamingService(nameof(PartnerTaskService), () => PartnerTaskService.LoadFromStreamingAssets());
+            MetempsychosisTaskService = LoadOptionalStreamingService(nameof(MetempsychosisTaskService), () => MetempsychosisTaskService.LoadFromStreamingAssets());
+            ArenaService = LoadOptionalStreamingService(nameof(ArenaService), () => ArenaService.LoadFromStreamingAssets());
+            TripService = LoadOptionalStreamingService(nameof(TripService), () => TripService.LoadFromStreamingAssets());
+            BonusOnlineService = LoadOptionalStreamingService(nameof(BonusOnlineService), () => BonusOnlineService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            // ── Batch 4: Guild extras, honor, shitu, foundry, world rank, misc ──
+            GuildRankService = LoadOptionalStreamingService(nameof(GuildRankService), () => GuildRankService.LoadFromStreamingAssets());
+            GuildStuntService = LoadOptionalStreamingService(nameof(GuildStuntService), () => GuildStuntService.LoadFromStreamingAssets());
+            GuildTaskService = LoadOptionalStreamingService(nameof(GuildTaskService), () => GuildTaskService.LoadFromStreamingAssets());
+            HonorService = LoadOptionalStreamingService(nameof(HonorService), () => HonorService.LoadFromStreamingAssets());
+            ShituService = LoadOptionalStreamingService(nameof(ShituService), () => ShituService.LoadFromStreamingAssets());
+            FoundryService = LoadOptionalStreamingService(nameof(FoundryService), () => FoundryService.LoadFromStreamingAssets());
+            WorldRankService = LoadOptionalStreamingService(nameof(WorldRankService), () => WorldRankService.LoadFromStreamingAssets());
+            NewPlayerGuideService = LoadOptionalStreamingService(nameof(NewPlayerGuideService), () => NewPlayerGuideService.LoadFromStreamingAssets());
+            ChangeFeatureService = LoadOptionalStreamingService(nameof(ChangeFeatureService), () => ChangeFeatureService.LoadFromStreamingAssets());
+            StallService = LoadOptionalStreamingService(nameof(StallService), () => StallService.LoadFromStreamingAssets());
+            FlipCardService = LoadOptionalStreamingService(nameof(FlipCardService), () => FlipCardService.LoadFromStreamingAssets());
+            BaoRuongThanBiService = LoadOptionalStreamingService(nameof(BaoRuongThanBiService), () => BaoRuongThanBiService.LoadFromStreamingAssets());
+            SeasonalEventService = LoadOptionalStreamingService(nameof(SeasonalEventService), () => SeasonalEventService.LoadFromStreamingAssets());
+            CompensationService = LoadOptionalStreamingService(nameof(CompensationService), () => CompensationService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            // ── Batch 5: Final client systems (faction maps, awards, double exp, sim city, client skill scripts) ─
+            FactionMapService = LoadOptionalStreamingService(nameof(FactionMapService), () => FactionMapService.LoadFromStreamingAssets());
+            BattleAwardService = LoadOptionalStreamingService(nameof(BattleAwardService), () => BattleAwardService.LoadFromStreamingAssets());
+            DoubleExpService = LoadOptionalStreamingService(nameof(DoubleExpService), () => DoubleExpService.LoadFromStreamingAssets());
+            SimCityPluginService = LoadOptionalStreamingService(nameof(SimCityPluginService), () => SimCityPluginService.LoadFromStreamingAssets());
+            ClientSkillScriptService = LoadOptionalStreamingService(nameof(ClientSkillScriptService), () => ClientSkillScriptService.LoadFromStreamingAssets());
+            TongJinBattleService = LoadOptionalStreamingService(nameof(TongJinBattleService), () => TongJinBattleService.LoadFromStreamingAssets());
+            BangChienService = LoadOptionalStreamingService(nameof(BangChienService), () => BangChienService.LoadFromStreamingAssets());
+            BossHoangKimService = LoadOptionalStreamingService(nameof(BossHoangKimService), () => BossHoangKimService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            SaveSlotService = LoadOptionalStreamingService(nameof(SaveSlotService), () => SaveSlotService.LoadFromStreamingAssets());
+            MailService = LoadOptionalStreamingService(nameof(MailService), () => MailService.LoadFromStreamingAssets());
+            MountService = LoadOptionalStreamingService(nameof(MountService), () => MountService.LoadFromStreamingAssets());
+            RankingService = LoadOptionalStreamingService(nameof(RankingService), () => RankingService.LoadFromStreamingAssets());
+            FriendService = LoadOptionalStreamingService(nameof(FriendService), () => FriendService.LoadFromStreamingAssets());
+            PetService = LoadOptionalStreamingService(nameof(PetService), () => PetService.LoadFromStreamingAssets());
+            ShopConfigService = LoadOptionalStreamingService(nameof(ShopConfigService), () => ShopConfigService.LoadFromStreamingAssets());
+            MissileEffectService = LoadOptionalStreamingService(nameof(MissileEffectService), () => MissileEffectService.LoadFromStreamingAssets());
+            HudArtCatalogService = LoadOptionalStreamingService(nameof(HudArtCatalogService), () => HudArtCatalogService.LoadFromStreamingAssets());
+            FactionMapRuntimeService = FactionMapRuntimeService != null ? FactionMapRuntimeService : new FactionMapRuntimeService(FactionMapService);
+            BattleScriptRuntimeService = BattleScriptRuntimeService != null ? BattleScriptRuntimeService : new BattleScriptRuntimeService(BattleScriptService);
+            TaskFlagRegistryService = LoadOptionalStreamingService(nameof(TaskFlagRegistryService), () => TaskFlagRegistryService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            MapListFullService = LoadOptionalStreamingService(nameof(MapListFullService), () => MapListFullService.LoadFromStreamingAssets());
+            MapElementService = LoadOptionalStreamingService(nameof(MapElementService), () => MapElementService.LoadFromStreamingAssets());
+            MapRespawnService = LoadOptionalStreamingService(nameof(MapRespawnService), () => MapRespawnService.LoadFromStreamingAssets());
+            MapBlockService = LoadOptionalStreamingService(nameof(MapBlockService), () => MapBlockService.LoadFromStreamingAssets());
+            MapNpcRespawnService = LoadOptionalStreamingService(nameof(MapNpcRespawnService), () => MapNpcRespawnService.LoadFromStreamingAssets());
+            MapMusicService = LoadOptionalStreamingService(nameof(MapMusicService), () => MapMusicService.LoadFromStreamingAssets());
+            SkillLevelDataService = LoadOptionalStreamingService(nameof(SkillLevelDataService), () => SkillLevelDataService.LoadFromStreamingAssets());
+            SkillUpgradeService = LoadOptionalStreamingService(nameof(SkillUpgradeService), () => SkillUpgradeService.LoadFromStreamingAssets());
+            SkillBookService = LoadOptionalStreamingService(nameof(SkillBookService), () => SkillBookService.LoadFromStreamingAssets());
+            SkillComboService = LoadOptionalStreamingService(nameof(SkillComboService), () => SkillComboService.LoadFromStreamingAssets());
+            SkillStateService = LoadOptionalStreamingService(nameof(SkillStateService), () => SkillStateService.LoadFromStreamingAssets());
+            SkillMasteryService = LoadOptionalStreamingService(nameof(SkillMasteryService), () => SkillMasteryService.LoadFromStreamingAssets());
+            WorldBossService = LoadOptionalStreamingService(nameof(WorldBossService), () => WorldBossService.LoadFromStreamingAssets());
+            AchievementService = LoadOptionalStreamingService(nameof(AchievementService), () => AchievementService.LoadFromStreamingAssets());
+            DailyRewardService = LoadOptionalStreamingService(nameof(DailyRewardService), () => DailyRewardService.LoadFromStreamingAssets());
+            MallService = LoadOptionalStreamingService(nameof(MallService), () => MallService.LoadFromStreamingAssets());
+            FashionService = LoadOptionalStreamingService(nameof(FashionService), () => FashionService.LoadFromStreamingAssets());
+            SignInService = LoadOptionalStreamingService(nameof(SignInService), () => SignInService.LoadFromStreamingAssets());
+            TreasureHuntService = LoadOptionalStreamingService(nameof(TreasureHuntService), () => TreasureHuntService.LoadFromStreamingAssets());
+            EncounterService = LoadOptionalStreamingService(nameof(EncounterService), () => EncounterService.LoadFromStreamingAssets());
+            FriendGiftService = LoadOptionalStreamingService(nameof(FriendGiftService), () => FriendGiftService.LoadFromStreamingAssets());
+            TextResourceService = LoadOptionalStreamingService(nameof(TextResourceService), () => TextResourceService.LoadFromStreamingAssets());
+            AnimationBankService = LoadOptionalStreamingService(nameof(AnimationBankService), () => AnimationBankService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            FactionSkillTreeService = LoadOptionalStreamingService(nameof(FactionSkillTreeService), () => FactionSkillTreeService.LoadFromStreamingAssets());
+            FactionBonusService = LoadOptionalStreamingService(nameof(FactionBonusService), () => FactionBonusService.LoadFromStreamingAssets());
+            FactionRelationService = LoadOptionalStreamingService(nameof(FactionRelationService), () => FactionRelationService.LoadFromStreamingAssets());
+            GuildScriptService = LoadOptionalStreamingService(nameof(GuildScriptService), () => GuildScriptService.LoadFromStreamingAssets());
+            BattleMapConfigService = LoadOptionalStreamingService(nameof(BattleMapConfigService), () => BattleMapConfigService.LoadFromStreamingAssets());
+            BattleRewardConfigService = LoadOptionalStreamingService(nameof(BattleRewardConfigService), () => BattleRewardConfigService.LoadFromStreamingAssets());
+            BattleHonorService = LoadOptionalStreamingService(nameof(BattleHonorService), () => BattleHonorService.LoadFromStreamingAssets());
+            SjBattleService = LoadOptionalStreamingService(nameof(SjBattleService), () => SjBattleService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            HuaShanLuanJianService = LoadOptionalStreamingService(nameof(HuaShanLuanJianService), () => HuaShanLuanJianService.LoadFromStreamingAssets());
+            SpriteAssetService = LoadOptionalStreamingService(nameof(SpriteAssetService), () => SpriteAssetService.LoadFromStreamingAssets());
+            SoundEffectService = LoadOptionalStreamingService(nameof(SoundEffectService), () => SoundEffectService.LoadFromStreamingAssets());
+            MapConnectionService = LoadOptionalStreamingService(nameof(MapConnectionService), () => MapConnectionService.LoadFromStreamingAssets());
+            NpcShopItemService = LoadOptionalStreamingService(nameof(NpcShopItemService), () => NpcShopItemService.LoadFromStreamingAssets());
+            ReputationService = LoadOptionalStreamingService(nameof(ReputationService), () => ReputationService.LoadFromStreamingAssets());
+            TitleEffectService = LoadOptionalStreamingService(nameof(TitleEffectService), () => TitleEffectService.LoadFromStreamingAssets());
+            VipLevelService = LoadOptionalStreamingService(nameof(VipLevelService), () => VipLevelService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            GuildCityWarService = new GuildCityWarService(CityWarService);
+            GuildCityWarLogService = LoadOptionalStreamingService(nameof(GuildCityWarLogService), () => GuildCityWarLogService.LoadFromStreamingAssets());
+            MissionScriptService = LoadOptionalStreamingService(nameof(MissionScriptService), () => MissionScriptService.LoadFromStreamingAssets());
+            SkillScriptService = LoadOptionalStreamingService(nameof(SkillScriptService), () => SkillScriptService.LoadFromStreamingAssets());
+            ItemScriptService = LoadOptionalStreamingService(nameof(ItemScriptService), () => ItemScriptService.LoadFromStreamingAssets());
+            EventScriptService = LoadOptionalStreamingService(nameof(EventScriptService), () => EventScriptService.LoadFromStreamingAssets());
+            TaskScriptService = LoadOptionalStreamingService(nameof(TaskScriptService), () => TaskScriptService.LoadFromStreamingAssets());
+            GlobalScriptService = LoadOptionalStreamingService(nameof(GlobalScriptService), () => GlobalScriptService.LoadFromStreamingAssets());
+            LibraryScriptService = LoadOptionalStreamingService(nameof(LibraryScriptService), () => LibraryScriptService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            AreaScriptService = LoadOptionalStreamingService(nameof(AreaScriptService), () => AreaScriptService.LoadFromStreamingAssets());
+            GbkMapScriptService = LoadOptionalStreamingService(nameof(GbkMapScriptService), () => GbkMapScriptService.LoadFromStreamingAssets());
+            FactionQuestAreaService = LoadOptionalStreamingService(nameof(FactionQuestAreaService), () => FactionQuestAreaService.LoadFromStreamingAssets());
+            TownScriptService = LoadOptionalStreamingService(nameof(TownScriptService), () => TownScriptService.LoadFromStreamingAssets());
+            GbkTriggerService = LoadOptionalStreamingService(nameof(GbkTriggerService), () => GbkTriggerService.LoadFromStreamingAssets());
+            TongBattleScriptService = LoadOptionalStreamingService(nameof(TongBattleScriptService), () => TongBattleScriptService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            PortraitService = LoadOptionalStreamingService(nameof(PortraitService), () => PortraitService.LoadFromStreamingAssets());
+            SoundListService = LoadOptionalStreamingService(nameof(SoundListService), () => SoundListService.LoadFromStreamingAssets());
+            KillerService = LoadOptionalStreamingService(nameof(KillerService), () => KillerService.LoadFromStreamingAssets());
+            ItemDetailService = LoadOptionalStreamingService(nameof(ItemDetailService), () => ItemDetailService.LoadFromStreamingAssets());
+            ItemTypeService = LoadOptionalStreamingService(nameof(ItemTypeService), () => ItemTypeService.LoadFromStreamingAssets());
+            MapTrafficService = LoadOptionalStreamingService(nameof(MapTrafficService), () => MapTrafficService.LoadFromStreamingAssets());
+            MapTypeService = LoadOptionalStreamingService(nameof(MapTypeService), () => MapTypeService.LoadFromStreamingAssets());
+            AdjustColorService = LoadOptionalStreamingService(nameof(AdjustColorService), () => AdjustColorService.LoadFromStreamingAssets());
+            ClientWeaponSkillService = LoadOptionalStreamingService(nameof(ClientWeaponSkillService), () => ClientWeaponSkillService.LoadFromStreamingAssets());
+            GoldEquipService = LoadOptionalStreamingService(nameof(GoldEquipService), () => GoldEquipService.LoadFromStreamingAssets());
+            PlatinaEquipService = LoadOptionalStreamingService(nameof(PlatinaEquipService), () => PlatinaEquipService.LoadFromStreamingAssets());
+            HorseService = LoadOptionalStreamingService(nameof(HorseService), () => HorseService.LoadFromStreamingAssets());
+            PotionService = LoadOptionalStreamingService(nameof(PotionService), () => PotionService.LoadFromStreamingAssets());
+            MagicScriptService = LoadOptionalStreamingService(nameof(MagicScriptService), () => MagicScriptService.LoadFromStreamingAssets());
+            MagicAttribService = LoadOptionalStreamingService(nameof(MagicAttribService), () => MagicAttribService.LoadFromStreamingAssets());
+            ScrollService = LoadOptionalStreamingService(nameof(ScrollService), () => ScrollService.LoadFromStreamingAssets());
+            CaveListFullService = LoadOptionalStreamingService(nameof(CaveListFullService), () => CaveListFullService.LoadFromStreamingAssets());
+            GoldBossService = LoadOptionalStreamingService(nameof(GoldBossService), () => GoldBossService.LoadFromStreamingAssets());
+            ChangeFeatureDataService = LoadOptionalStreamingService(nameof(ChangeFeatureDataService), () => ChangeFeatureDataService.LoadFromStreamingAssets());
+            GlobalConfigService = LoadOptionalStreamingService(nameof(GlobalConfigService), () => GlobalConfigService.LoadFromStreamingAssets());
+            NormalSpawnService = LoadOptionalStreamingService(nameof(NormalSpawnService), () => NormalSpawnService.LoadFromStreamingAssets());
+            RareEnchantService = LoadOptionalStreamingService(nameof(RareEnchantService), () => RareEnchantService.LoadFromStreamingAssets());
+            WharfService = LoadOptionalStreamingService(nameof(WharfService), () => WharfService.LoadFromStreamingAssets());
+            WaypointService = LoadOptionalStreamingService(nameof(WaypointService), () => WaypointService.LoadFromStreamingAssets());
+            AutoPathRouteService = LoadOptionalStreamingService(nameof(AutoPathRouteService), () => AutoPathRouteService.LoadFromStreamingAssets());
+            RevivePosService = LoadOptionalStreamingService(nameof(RevivePosService), () => RevivePosService.LoadFromStreamingAssets());
+            FactionConfigService = LoadOptionalStreamingService(nameof(FactionConfigService), () => FactionConfigService.LoadFromStreamingAssets());
+            NpcResService = LoadOptionalStreamingService(nameof(NpcResService), () => NpcResService.LoadFromStreamingAssets());
+            NpcSFullService = LoadOptionalStreamingService(nameof(NpcSFullService), () => NpcSFullService.LoadFromStreamingAssets());
+            TongStuntService = LoadOptionalStreamingService(nameof(TongStuntService), () => TongStuntService.LoadFromStreamingAssets());
+            TongSettingService = LoadOptionalStreamingService(nameof(TongSettingService), () => TongSettingService.LoadFromStreamingAssets());
+            TongNpcPosService = LoadOptionalStreamingService(nameof(TongNpcPosService), () => TongNpcPosService.LoadFromStreamingAssets());
+            MapListService = LoadOptionalStreamingService(nameof(MapListService), () => MapListService.LoadFromStreamingAssets());
+            MapDescService = LoadOptionalStreamingService(nameof(MapDescService), () => MapDescService.LoadFromStreamingAssets());
+            BossSpawnService = LoadOptionalStreamingService(nameof(BossSpawnService), () => BossSpawnService.LoadFromStreamingAssets());
+            DropRateConfigService = LoadOptionalStreamingService(nameof(DropRateConfigService), () => DropRateConfigService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            StationService = LoadOptionalStreamingService(nameof(StationService), () => StationService.LoadFromStreamingAssets());
+            StationPriceService = LoadOptionalStreamingService(nameof(StationPriceService), () => StationPriceService.LoadFromStreamingAssets());
+            WaypointPriceService = LoadOptionalStreamingService(nameof(WaypointPriceService), () => WaypointPriceService.LoadFromStreamingAssets());
+            GuildWorkshopLevelService = LoadOptionalStreamingService(nameof(GuildWorkshopLevelService), () => GuildWorkshopLevelService.LoadFromStreamingAssets());
+            GuildTaskDefService = LoadOptionalStreamingService(nameof(GuildTaskDefService), () => GuildTaskDefService.LoadFromStreamingAssets());
+            MissionArenaConfigService = LoadOptionalStreamingService(nameof(MissionArenaConfigService), () => MissionArenaConfigService.LoadFromStreamingAssets());
+            MissionBattleConfigService = LoadOptionalStreamingService(nameof(MissionBattleConfigService), () => MissionBattleConfigService.LoadFromStreamingAssets());
+            MissionMazeConfigService = LoadOptionalStreamingService(nameof(MissionMazeConfigService), () => MissionMazeConfigService.LoadFromStreamingAssets());
+            MissionQianchongService = LoadOptionalStreamingService(nameof(MissionQianchongService), () => MissionQianchongService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            TaskDailyConfigService = LoadOptionalStreamingService(nameof(TaskDailyConfigService), () => TaskDailyConfigService.LoadFromStreamingAssets());
+            TaskRandomConfigService = LoadOptionalStreamingService(nameof(TaskRandomConfigService), () => TaskRandomConfigService.LoadFromStreamingAssets());
+            TaskLevelLinkService = LoadOptionalStreamingService(nameof(TaskLevelLinkService), () => TaskLevelLinkService.LoadFromStreamingAssets());
+            TaskTalkConfigService = LoadOptionalStreamingService(nameof(TaskTalkConfigService), () => TaskTalkConfigService.LoadFromStreamingAssets());
+            TaskEventService = LoadOptionalStreamingService(nameof(TaskEventService), () => TaskEventService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            ObjDataService = LoadOptionalStreamingService(nameof(ObjDataService), () => ObjDataService.LoadFromStreamingAssets());
+            ObjectSettingService = LoadOptionalStreamingService(nameof(ObjectSettingService), () => ObjectSettingService.LoadFromStreamingAssets());
+            MusicConfigService = LoadOptionalStreamingService(nameof(MusicConfigService), () => MusicConfigService.LoadFromStreamingAssets());
+            WeatherConfigService = LoadOptionalStreamingService(nameof(WeatherConfigService), () => WeatherConfigService.LoadFromStreamingAssets());
+            ItemValueService = LoadOptionalStreamingService(nameof(ItemValueService), () => ItemValueService.LoadFromStreamingAssets());
+            PartnerEventService = LoadOptionalStreamingService(nameof(PartnerEventService), () => PartnerEventService.LoadFromStreamingAssets());
+            PartnerBagService = LoadOptionalStreamingService(nameof(PartnerBagService), () => PartnerBagService.LoadFromStreamingAssets());
+            PartnerSettingService = LoadOptionalStreamingService(nameof(PartnerSettingService), () => PartnerSettingService.LoadFromStreamingAssets());
+            NativePlaceService = LoadOptionalStreamingService(nameof(NativePlaceService), () => NativePlaceService.LoadFromStreamingAssets());
+            TimerTaskService = LoadOptionalStreamingService(nameof(TimerTaskService), () => TimerTaskService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            BrokenEquipService = LoadOptionalStreamingService(nameof(BrokenEquipService), () => BrokenEquipService.LoadFromStreamingAssets());
+            FusionService = LoadOptionalStreamingService(nameof(FusionService), () => FusionService.LoadFromStreamingAssets());
+            MantleService = LoadOptionalStreamingService(nameof(MantleService), () => MantleService.LoadFromStreamingAssets());
+            MaskService = LoadOptionalStreamingService(nameof(MaskService), () => MaskService.LoadFromStreamingAssets());
+            SignetService = LoadOptionalStreamingService(nameof(SignetService), () => SignetService.LoadFromStreamingAssets());
+            ShipinService = LoadOptionalStreamingService(nameof(ShipinService), () => ShipinService.LoadFromStreamingAssets());
+            SuiteActivateCountService = LoadOptionalStreamingService(nameof(SuiteActivateCountService), () => SuiteActivateCountService.LoadFromStreamingAssets());
+            CompoundScriptService = LoadOptionalStreamingService(nameof(CompoundScriptService), () => CompoundScriptService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            ForbitItemService = LoadOptionalStreamingService(nameof(ForbitItemService), () => ForbitItemService.LoadFromStreamingAssets());
+            TaxRateService = LoadOptionalStreamingService(nameof(TaxRateService), () => TaxRateService.LoadFromStreamingAssets());
+            ProgressConfigService = LoadOptionalStreamingService(nameof(ProgressConfigService), () => ProgressConfigService.LoadFromStreamingAssets());
+            RankSettingService = LoadOptionalStreamingService(nameof(RankSettingService), () => RankSettingService.LoadFromStreamingAssets());
+            FoundryResDemandService = LoadOptionalStreamingService(nameof(FoundryResDemandService), () => FoundryResDemandService.LoadFromStreamingAssets());
+            PlatinaMagicRateService = LoadOptionalStreamingService(nameof(PlatinaMagicRateService), () => PlatinaMagicRateService.LoadFromStreamingAssets());
+            RecoinService = LoadOptionalStreamingService(nameof(RecoinService), () => RecoinService.LoadFromStreamingAssets());
+            CityHongbaoService = LoadOptionalStreamingService(nameof(CityHongbaoService), () => CityHongbaoService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            TollgateKillerService = LoadOptionalStreamingService(nameof(TollgateKillerService), () => TollgateKillerService.LoadFromStreamingAssets());
+            NewTaskBranchService = LoadOptionalStreamingService(nameof(NewTaskBranchService), () => NewTaskBranchService.LoadFromStreamingAssets());
+            MainPassTaskService = LoadOptionalStreamingService(nameof(MainPassTaskService), () => MainPassTaskService.LoadFromStreamingAssets());
+
+            yield return null;
+
+            AutoUpdateConfigService = LoadOptionalStreamingService(nameof(AutoUpdateConfigService), () => AutoUpdateConfigService.LoadFromStreamingAssets());
+            TiredWarningService = LoadOptionalStreamingService(nameof(TiredWarningService), () => TiredWarningService.LoadFromStreamingAssets());
+            PlayerLimitTimeService = LoadOptionalStreamingService(nameof(PlayerLimitTimeService), () => PlayerLimitTimeService.LoadFromStreamingAssets());
+            PermitDialogNpcService = LoadOptionalStreamingService(nameof(PermitDialogNpcService), () => PermitDialogNpcService.LoadFromStreamingAssets());
+            ProductConfigService = LoadOptionalStreamingService(nameof(ProductConfigService), () => ProductConfigService.LoadFromStreamingAssets());
+            UtilitiesService = LoadOptionalStreamingService(nameof(UtilitiesService), () => UtilitiesService.LoadFromStreamingAssets());
+            ForbitHeartService = LoadOptionalStreamingService(nameof(ForbitHeartService), () => ForbitHeartService.LoadFromStreamingAssets());
+            StringResourceCatalogService = LoadOptionalStreamingService(nameof(StringResourceCatalogService), () => StringResourceCatalogService.LoadFromStreamingAssets());
+
+            LogOptionalServiceSummary();
+            GmTestServerItemService?.EnsureGmLoginInGame();
         }
 
 
@@ -1857,7 +1929,11 @@ namespace VLTK.Sandbox
             canvasGo.transform.SetParent(uiRoot, false);
             var canvas = canvasGo.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 100;
+            // Joystick phải nằm trên cùng: HUD UI Toolkit (PanelSettings sortingOrder=0),
+            // PanelCanvas (sortingOrder=200) và mọi PcBottomBarBg/CombatActionCluster đè vùng
+            // trái-dưới đều phải ở dưới joystick. 500 chừa headroom cho tooltip/dialogue popup
+            // tương lai (sortingOrder 600..700) mà vẫn không che joystick.
+            canvas.sortingOrder = 500;
             var scaler = canvasGo.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1280f, 720f);
