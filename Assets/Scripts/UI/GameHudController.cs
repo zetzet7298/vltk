@@ -121,6 +121,18 @@ namespace VLTK.UI
         private DeviceStatusVltkUnityAdapter _vltkunityDeviceStatus;
         private float _deviceStatusAccumulator; // per-second tick (recon §5a)
 
+        // S1-S4 and lightweight panels adapters
+        private ChatVltkUnityAdapter _vltkunityChat;
+        private EquipmentPanelVltkUnityAdapter _vltkunityEquipment;
+        private SkillPanelVltkUnityAdapter _vltkunitySkill;
+        private BagPanelVltkUnityAdapter _vltkunityBag;
+        private VltkPanelAdapter _vltkunityNpcDialog;
+        private VltkPanelAdapter _vltkunityFaction;
+        private VltkPanelAdapter _vltkunityGuild;
+        private VltkPanelAdapter _vltkunityMail;
+        private VltkPanelAdapter _vltkunityShop;
+        private VltkPanelAdapter _vltkunityLogin;
+
         // New HUD elements
         private VisualElement _buffPanel;
         private VisualElement _teamPreview;
@@ -358,10 +370,66 @@ namespace VLTK.UI
                 root, _bridge, _vltkunityBus, new LiveDeviceStateProvider());
             _vltkunityDeviceStatus.Bind();
 
+            // Initialize new adapters
+            var chatService = SandboxManager.Instance?.ChatService;
+            if (chatService != null)
+            {
+                _vltkunityChat ??= new ChatVltkUnityAdapter(root, chatService, _vltkunityBus);
+                _vltkunityChat.Bind();
+            }
+
+            _vltkunityEquipment ??= new EquipmentPanelVltkUnityAdapter(root, _vltkunityBus);
+            _vltkunityEquipment.Bind();
+
+            _vltkunitySkill ??= new SkillPanelVltkUnityAdapter(root, _vltkunityBus);
+            _vltkunitySkill.Bind();
+
+            _vltkunityBag ??= new BagPanelVltkUnityAdapter(root, _vltkunityBus);
+            _vltkunityBag.Bind();
+
+            _vltkunityNpcDialog ??= new VltkPanelAdapter(root, _vltkunityBus, PanelType.NpcDialog);
+            _vltkunityNpcDialog.Bind();
+
+            _vltkunityFaction ??= new VltkPanelAdapter(root, _vltkunityBus, PanelType.Faction);
+            _vltkunityFaction.Bind();
+
+            _vltkunityGuild ??= new VltkPanelAdapter(root, _vltkunityBus, PanelType.Guild);
+            _vltkunityGuild.Bind();
+
+            _vltkunityMail ??= new VltkPanelAdapter(root, _vltkunityBus, PanelType.Mail);
+            _vltkunityMail.Bind();
+
+            _vltkunityShop ??= new VltkPanelAdapter(root, _vltkunityBus, PanelType.Shop);
+            _vltkunityShop.Bind();
+
+            _vltkunityLogin ??= new VltkPanelAdapter(root, _vltkunityBus, PanelType.Login);
+            _vltkunityLogin.Bind();
+
             // Phase 1 only wires the screenshot intent (cheap, always available).
             // Profile + minimap buttons stay wired in Phase 2+ once the matching
             // panels exist in vltk-mobile.
             _vltkunityBus.OnScreenshotRequested += HandleScreenshotRequested;
+
+            // Wire command bus handlers for the new adapters
+            _vltkunityBus.OnBagCloseRequested += CloseVltkBagPanel;
+            _vltkunityBus.OnBagTabChanged += HandleBagTabChanged;
+            _vltkunityBus.OnItemSelected += HandleBagItemSelected;
+
+            _vltkunityBus.OnChatCloseRequested += CloseVltkChatPanel;
+            _vltkunityBus.OnChatSendRequested += HandleChatSendRequested;
+            _vltkunityBus.OnChatCategoryChanged += HandleChatCategoryChanged;
+
+            _vltkunityBus.OnSkillCloseRequested += CloseVltkSkillPanel;
+            _vltkunityBus.OnSkillUpgradeRequested += HandleSkillUpgradeRequested;
+            _vltkunityBus.OnSkillSelected += HandleSkillSelected;
+            _vltkunityBus.OnSkillPageChanged += HandleSkillPageChanged;
+
+            _vltkunityBus.OnEquipmentCloseRequested += CloseVltkEquipPanel;
+            _vltkunityBus.OnEquipmentTabChanged += HandleEquipmentTabChanged;
+            _vltkunityBus.OnAttributeIncrementRequested += HandleAttributeIncrementRequested;
+
+            _vltkunityBus.OnPanelClosed += CloseVltkLightweightPanel;
+            _vltkunityBus.OnPanelActionSelected += HandlePanelActionSelected;
         }
 
         private void HandleScreenshotRequested()
@@ -389,6 +457,21 @@ namespace VLTK.UI
             if (_vltkunityBus != null)
             {
                 _vltkunityBus.OnScreenshotRequested -= HandleScreenshotRequested;
+                _vltkunityBus.OnBagCloseRequested -= CloseVltkBagPanel;
+                _vltkunityBus.OnBagTabChanged -= HandleBagTabChanged;
+                _vltkunityBus.OnItemSelected -= HandleBagItemSelected;
+                _vltkunityBus.OnChatCloseRequested -= CloseVltkChatPanel;
+                _vltkunityBus.OnChatSendRequested -= HandleChatSendRequested;
+                _vltkunityBus.OnChatCategoryChanged -= HandleChatCategoryChanged;
+                _vltkunityBus.OnSkillCloseRequested -= CloseVltkSkillPanel;
+                _vltkunityBus.OnSkillUpgradeRequested -= HandleSkillUpgradeRequested;
+                _vltkunityBus.OnSkillSelected -= HandleSkillSelected;
+                _vltkunityBus.OnSkillPageChanged -= HandleSkillPageChanged;
+                _vltkunityBus.OnEquipmentCloseRequested -= CloseVltkEquipPanel;
+                _vltkunityBus.OnEquipmentTabChanged -= HandleEquipmentTabChanged;
+                _vltkunityBus.OnAttributeIncrementRequested -= HandleAttributeIncrementRequested;
+                _vltkunityBus.OnPanelClosed -= CloseVltkLightweightPanel;
+                _vltkunityBus.OnPanelActionSelected -= HandlePanelActionSelected;
                 _vltkunityBus.ClearAllSubscribers();
             }
             _vltkunityTopBar?.Dispose();
@@ -396,11 +479,32 @@ namespace VLTK.UI
             _vltkunityMoney?.Dispose();
             _vltkunityAvatar?.Dispose();
             _vltkunityDeviceStatus?.Dispose();
+            _vltkunityChat?.Dispose();
+            _vltkunityEquipment?.Dispose();
+            _vltkunitySkill?.Dispose();
+            _vltkunityBag?.Dispose();
+            _vltkunityNpcDialog?.Dispose();
+            _vltkunityFaction?.Dispose();
+            _vltkunityGuild?.Dispose();
+            _vltkunityMail?.Dispose();
+            _vltkunityShop?.Dispose();
+            _vltkunityLogin?.Dispose();
+
             _vltkunityTopBar = null;
             _vltkunityMiniMap = null;
             _vltkunityMoney = null;
             _vltkunityAvatar = null;
             _vltkunityDeviceStatus = null;
+            _vltkunityChat = null;
+            _vltkunityEquipment = null;
+            _vltkunitySkill = null;
+            _vltkunityBag = null;
+            _vltkunityNpcDialog = null;
+            _vltkunityFaction = null;
+            _vltkunityGuild = null;
+            _vltkunityMail = null;
+            _vltkunityShop = null;
+            _vltkunityLogin = null;
             _vltkunityBus = null;
         }
 
@@ -2473,8 +2577,8 @@ namespace VLTK.UI
 
         private void OnStatusClick()
         {
-            OpenPcCharacterPanel("Mở nhân vật / thuộc tính");
-            SubsystemLog.Info("HUD", "Open Character Status");
+            OpenVltkEquipPanel();
+            SubsystemLog.Info("HUD", "Open Character Status (Vltk parity)");
         }
 
         private void OpenPcCharacterPanel(string statusLine = null)
@@ -2571,7 +2675,7 @@ namespace VLTK.UI
             }
         }
 
-        private void OnItemsClick() => ToggleInventory();
+        private void OnItemsClick() => OpenVltkBagPanel();
 
         private void OnItemExClick()
         {
@@ -2586,7 +2690,7 @@ namespace VLTK.UI
             SubsystemLog.Info("HUD", "Open ItemEx / Bag panel");
         }
 
-        private void OnSkillsClick() => OpenSkillPanel();
+        private void OnSkillsClick() => OpenVltkSkillPanel();
 
         private void OnTaskClick()
         {
@@ -3237,11 +3341,8 @@ namespace VLTK.UI
 
         private void OnChatRoomClick()
         {
-            var chat = SandboxManager.Instance?.ChatService;
-            var snap = ChatRoomPanelService.BuildSnapshot(chat, 8);
-            OpenPcChatRoomPanel(snap);
-            _chatInput?.Focus();
-            SubsystemLog.Info("HUD", "Open ChatRoom panel");
+            OpenVltkChatPanel();
+            SubsystemLog.Info("HUD", "Open Chat panel (Vltk parity)");
         }
 
         private void OpenPcChatRoomPanel(ChatRoomPanelSnapshot snap)
@@ -4372,6 +4473,221 @@ namespace VLTK.UI
                 
                 _facePickerList.Add(cell);
             }
+        }
+
+        // ── Vltkunity Parity Adapters Wiring ──────────────────────────────────────────
+
+        private BagAdapterSnapshot MapToBagSnapshot(InventoryPanelSnapshot snap)
+        {
+            if (snap == null) return null;
+            var items = new List<BagItemRow>();
+            if (snap.rows != null)
+            {
+                foreach (var r in snap.rows)
+                {
+                    string rarity = r.itemQuality switch
+                    {
+                        1 => "Green",
+                        2 => "Blue",
+                        3 => "Purple",
+                        4 => "Gold",
+                        5 => "Orange",
+                        _ => "White"
+                    };
+                    items.Add(new BagItemRow(r.slotIdx, r.itemId, r.itemName, rarity, ""));
+                }
+            }
+            return new BagAdapterSnapshot
+            {
+                usedSlots = snap.usedSlots,
+                totalSlots = snap.totalSlots,
+                items = items
+            };
+        }
+
+        public void OpenVltkBagPanel()
+        {
+            var panel = _boundRoot?.Q("VltkBagPanel");
+            if (panel == null) return;
+            panel.RemoveFromClassList("hidden");
+            var manager = SandboxManager.Instance;
+            var inventory = manager != null ? manager.InventoryService : null;
+            int playerId = manager != null && manager.PlayerProgression != null ? 1 : 0;
+            var snap = InventoryPanelService.BuildGridSnapshot(inventory, playerId);
+            _vltkunityBag?.Apply(MapToBagSnapshot(snap));
+        }
+
+        public void CloseVltkBagPanel()
+        {
+            _boundRoot?.Q("VltkBagPanel")?.AddToClassList("hidden");
+        }
+
+        private void HandleBagTabChanged(int tabIndex)
+        {
+            SubsystemLog.Info("HUD", $"VltkBag Tab changed to: {tabIndex}");
+        }
+
+        private void HandleBagItemSelected(int slotIndex)
+        {
+            SubsystemLog.Info("HUD", $"VltkBag item selected at slot: {slotIndex}");
+        }
+
+        public void OpenVltkChatPanel()
+        {
+            _boundRoot?.Q("VltkChatPanel")?.RemoveFromClassList("hidden");
+        }
+
+        public void CloseVltkChatPanel()
+        {
+            _boundRoot?.Q("VltkChatPanel")?.AddToClassList("hidden");
+        }
+
+        private void HandleChatSendRequested(string message)
+        {
+            OnSendChatClick();
+        }
+
+        private void HandleChatCategoryChanged(int categoryId)
+        {
+            ChatChannel channel = categoryId switch
+            {
+                0 => ChatChannel.All,
+                1 => ChatChannel.Guild,
+                2 => ChatChannel.Room,
+                _ => ChatChannel.All
+            };
+            SelectChatChannel(channel);
+        }
+
+        public void OpenVltkSkillPanel()
+        {
+            var panel = _boundRoot?.Q("VltkSkillPanel");
+            if (panel == null) return;
+            panel.RemoveFromClassList("hidden");
+            var manager = SandboxManager.Instance;
+            var catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
+            var faction = progression.faction != CombatFaction.None ? progression.faction : CombatFaction.CaiBang;
+            if (manager != null)
+                progression = manager.PlayerProgression;
+            var snap = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
+            _vltkunitySkill?.Apply(snap);
+        }
+
+        public void CloseVltkSkillPanel()
+        {
+            _boundRoot?.Q("VltkSkillPanel")?.AddToClassList("hidden");
+        }
+
+        private void HandleSkillUpgradeRequested(int skillId)
+        {
+            var manager = SandboxManager.Instance;
+            var progression = manager != null ? manager.PlayerProgression : null;
+            var catalog = manager != null ? manager.CombatSkillCatalog : null;
+            if (progression != null && catalog != null)
+            {
+                bool upgraded = PcSkillPanelService.TryUpgrade(progression, catalog, skillId);
+                if (upgraded)
+                {
+                    var snap = PcSkillPanelService.BuildPage(catalog, progression, skillId, _skillPageIndex);
+                    _vltkunitySkill?.Apply(snap);
+                }
+            }
+        }
+
+        private void HandleSkillSelected(int skillId)
+        {
+            CurrentSelectedSkillId = skillId;
+        }
+
+        private void HandleSkillPageChanged(int pageIndex)
+        {
+            _skillPageIndex = pageIndex;
+        }
+
+        public void OpenVltkEquipPanel()
+        {
+            var panel = _boundRoot?.Q("VltkEquipPanel");
+            if (panel == null) return;
+            panel.RemoveFromClassList("hidden");
+            var manager = SandboxManager.Instance;
+            var snap = CharacterPanelService.BuildSnapshot(manager?.PlayerProgression, null, 1);
+            _vltkunityEquipment?.Apply(snap);
+        }
+
+        public void CloseVltkEquipPanel()
+        {
+            _boundRoot?.Q("VltkEquipPanel")?.AddToClassList("hidden");
+        }
+
+        private void HandleEquipmentTabChanged(int tabIndex)
+        {
+            SubsystemLog.Info("HUD", $"VltkEquip Tab changed to: {tabIndex}");
+        }
+
+        private void HandleAttributeIncrementRequested(string attributeName)
+        {
+            if (attributeName == "Strength") _characterStrength++;
+            else if (attributeName == "Vitality") _characterVitality++;
+            else if (attributeName == "Dexterity") _characterDexterity++;
+            else if (attributeName == "Energy") _characterEnergy++;
+            
+            var manager = SandboxManager.Instance;
+            var snap = CharacterPanelService.BuildSnapshot(manager?.PlayerProgression, null, 1);
+            _vltkunityEquipment?.Apply(snap);
+        }
+
+        public void OpenVltkLightweightPanel(PanelType type, string title, string content, IReadOnlyList<string> actions)
+        {
+            var prefix = type switch
+            {
+                PanelType.NpcDialog => "VltkNpc",
+                PanelType.Faction => "VltkFaction",
+                PanelType.Guild => "VltkGuild",
+                PanelType.Mail => "VltkMail",
+                PanelType.Shop => "VltkShop",
+                PanelType.Login => "VltkLogin",
+                _ => "VltkPanel",
+            };
+            var panel = _boundRoot?.Q(prefix + "Panel");
+            if (panel == null) return;
+            panel.RemoveFromClassList("hidden");
+            var adapter = type switch
+            {
+                PanelType.NpcDialog => _vltkunityNpcDialog,
+                PanelType.Faction => _vltkunityFaction,
+                PanelType.Guild => _vltkunityGuild,
+                PanelType.Mail => _vltkunityMail,
+                PanelType.Shop => _vltkunityShop,
+                PanelType.Login => _vltkunityLogin,
+                _ => null
+            };
+            if (adapter != null)
+            {
+                adapter.SetTitle(title);
+                adapter.SetContent(content);
+                adapter.SetActions(actions);
+            }
+        }
+
+        public void CloseVltkLightweightPanel(PanelType type)
+        {
+            var prefix = type switch
+            {
+                PanelType.NpcDialog => "VltkNpc",
+                PanelType.Faction => "VltkFaction",
+                PanelType.Guild => "VltkGuild",
+                PanelType.Mail => "VltkMail",
+                PanelType.Shop => "VltkShop",
+                PanelType.Login => "VltkLogin",
+                _ => "VltkPanel",
+            };
+            _boundRoot?.Q(prefix + "Panel")?.AddToClassList("hidden");
+        }
+
+        private void HandlePanelActionSelected(PanelType panelType, string action)
+        {
+            SubsystemLog.Info("HUD", $"Panel {panelType} action selected: {action}");
         }
     }
 }
