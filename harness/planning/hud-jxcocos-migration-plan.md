@@ -95,7 +95,7 @@
 | P2 | B: Buff icon row | active buff grid + countdown | existing-behavior | ✅ Done (JxBuffRowState/Adapter, 18 tests) |
 | P3 | C: Minimap | 128x128 + dots + coord + bigmap toggle | existing-behavior, cross-platform | ✅ Done (JxMinimapState/Adapter, 17 tests) |
 | P4 | D: Bottom bar | skill slots + immedicy box + joystick + attack btn | existing-behavior, public-contracts | D1 ✅ skill slots (19 tests); D2 ✅ immedicy box (15 tests); D3 ✅ joystick + attack button (63 tests; HudJxCocos 216/216) |
-| P5 | E0: 9 Menu toolbar | 9-button toolbar frame, panel toggle via command bus, selected highlight | existing-behavior | ✅ Done (JxToolbarConfig/State/Adapter, 9 tests) |
+| P5 | E0: 9 Menu toolbar | exact 9 CCMenuItemSprite config, normal/selected/disabled sprites, scale/position, callback policy | existing-behavior | ✅ Done + exact jx-cocos E0 state (JxToolbarConfig/State/Adapter + JxToolbarMenuState, HudJxCocos 255/255) |
 | P5 | E1: Role/equipment panel | 15 equip slots, slot layout, equip/unequip state | existing-behavior, public-contracts | ✅ E1 equipment state/layout (10 tests) |
 | P5 | E2: Inventory panel | inventory grid + tooltip, open/close, drag-drop | existing-behavior, public-contracts | ✅ E2a grid+item+swap (22) + adapter (12); ✅ E2b tooltip durability/action state (19) |
 | P5 | E3: Võ Công skill panel | 50 skill grid, selection tooltip/action model, main/extra assignment, add-point guard | existing-behavior, public-contracts | ✅ E3 state/action model (27 tests; HudJxCocos 243/243) |
