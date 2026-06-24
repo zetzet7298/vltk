@@ -92,7 +92,7 @@
 
 | Phase | Story | Scope | Risk flags | Status |
 | P1 | A: Top Status Bar | HP/MP/Stamina/EXP/Avatar/Level/Rank/Name, bind runtime, real sprites | existing-behavior, public-contracts | ✅ Done (JxTopStatusBarState/Adapter, 12 tests) |
-| P2 | B: Buff icon row | active buff grid + countdown | existing-behavior | next |
+| P2 | B: Buff icon row | active buff grid + countdown | existing-behavior | ✅ Done (JxBuffRowState/Adapter, 18 tests) |
 | P3 | C: Minimap | 128x128 + dots + coord + bigmap toggle | existing-behavior, cross-platform | ✅ Done (JxMinimapState/Adapter, 17 tests) |
 | P4 | D: Bottom bar | skill slots + immedicy box + joystick + attack btn | existing-behavior, public-contracts | todo |
 | P5 | E0: 9 Menu toolbar | 9-button toolbar frame, panel toggle via command bus, selected highlight | existing-behavior | ✅ Done (JxToolbarConfig/State/Adapter, 9 tests) |
