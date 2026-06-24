@@ -73,6 +73,17 @@
 - 128x128, nền RenderTexture, player dot trung tâm, NPC dot, nameplate.
 - Coord text (x:y PC), zoom buttons, toggle worldmap (KuiMaxMapVN overlay).
 - Click minimap → mở big map (KuiMaxMapVN) — KHÔNG phải click-to-move.
+- ✅ **State ported**: `Assets/Scripts/UI/JxCocos/JxMinimapState.cs`
+- ✅ **Adapter ported**: `Assets/Scripts/UI/JxCocos/JxMinimapAdapter.cs`
+- ✅ **WIRED into live scene** (2026-06-24): added `JxMinimapFrame` block to
+  `JxHud.uxml` (top-right, 128x128 viewport, player center, coord/mapname
+  labels, close button). Controller binds `JxMinimapAdapter` + `JxMinimapState`,
+  feeds player pos from `SandboxRuntimeState` + NPC POIs from
+  `SandboxManager.GameplayLoop.Enemies`. Added `JxHudCommandBus` (no-op
+  `IJxHudCommandBus` impl) so click→worldmap intent is wired.
+- ✅ **Verified in play mode** (vision): square dark minimap top-right with gold
+  border, yellow player dot at center, coord `0,0` below. (POI count 0 when no
+  map loaded — correct; NPC dots render once a map spawns enemies.)
 
 ### Slice D — Bottom bar: skill bar + immedicy item box + joystick
 - `KgameWorldVN.cpp` (7134 L): assembles mainskillmix.png (skill slots),

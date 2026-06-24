@@ -5,6 +5,8 @@
 // into the LIVE scene so they actually render. Slice A wires the top status
 // bar (JxTopStatusBarAdapter + JxTopStatusBarState), fed by the same
 // SandboxRuntimeState (IRuntimeStateProvider) the legacy HUD reads.
+// Slice C wires the minimap (JxMinimapAdapter + JxMinimapState): player dot at
+// center, coord/map-name labels, NPC POIs from the gameplay loop enemies.
 //
 // This controller is intentionally isolated: it owns its own UIDocument and
 // does not touch GameHudController, so the legacy HUD stays untouched while
@@ -29,6 +31,10 @@ namespace VLTK.UI.JxCocos
 
         private JxTopStatusBarState _topState;
         private JxTopStatusBarAdapter _topAdapter;
+
+        private JxMinimapState _minimapState;
+        private JxMinimapAdapter _minimapAdapter;
+        private IJxHudCommandBus _bus;
 
         private HudDataBridge _bridge;
         private IRuntimeStateProvider _provider;
@@ -60,6 +66,12 @@ namespace VLTK.UI.JxCocos
 
             FeedTopBar();
             _topAdapter.Render();
+
+            if (_minimapAdapter != null)
+            {
+                FeedMinimap();
+                _minimapAdapter.Render();
+            }
         }
 
         private void SizeRootToScreen()
@@ -139,6 +151,16 @@ namespace VLTK.UI.JxCocos
                 EnsureStyleSheetLoaded(_root);
                 EnsureFont(_root);
             }
+
+            // Slice C — minimap (128x128 top-right). Same font fix covers its labels.
+            if (_minimapAdapter == null)
+            {
+                _bus = new JxHudCommandBus();
+                _minimapState = new JxMinimapState { IsOpen = true };
+                _minimapAdapter = new JxMinimapAdapter(_root, _minimapState, _bus);
+                _minimapAdapter.Bind();
+                EnsureFont(_root);
+            }
         }
 
         private static UnityEngine.UIElements.StyleSheet _hudStyleSheet;
@@ -200,6 +222,36 @@ namespace VLTK.UI.JxCocos
             _topState.UpRoleInfo(0, 100, JxTopStatusBarState.Kind.Stamina);
             _topState.UpRoleInfo(0, 100, JxTopStatusBarState.Kind.Exp);
             _topState.UpRoleInfo(0, 0, JxTopStatusBarState.Kind.Level);
+        }
+
+        private void FeedMinimap()
+        {
+            if (_minimapState == null) return;
+
+            if (_provider != null)
+            {
+                _minimapState.MapName = _provider.ActiveMapName ?? string.Empty;
+                _minimapState.SetPlayerPos(_provider.PlayerWorldPosition.x, _provider.PlayerWorldPosition.y);
+            }
+
+            // NPC POIs from the gameplay loop enemy list (KuiMinMapVN DrawNode NPC
+            // dots). Each alive enemy -> a red NPC dot positioned relative to player.
+            _minimapState.ClearPois();
+            var loop = SandboxManager.Instance != null ? SandboxManager.Instance.GameplayLoop : null;
+            var enemies = loop?.Enemies;
+            if (enemies != null)
+            {
+                foreach (var enemy in enemies)
+                {
+                    if (enemy == null || enemy.isDead) continue;
+                    _minimapState.AddPoi(new JxMinimapPoi
+                    {
+                        WorldPos = enemy.worldPos,
+                        Kind = JxMinimapPoiKind.Npc,
+                        Name = enemy.nameVi,
+                    });
+                }
+            }
         }
     }
 }

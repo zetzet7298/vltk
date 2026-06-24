@@ -134,3 +134,33 @@
     -unity-font-style: bold;
     -unity-text-align: middle-center;
 }
+
+/* ── Minimap POI dots (Slice C) — color per kind, fixed size ── */
+.jx-mini-poi-player {
+    background-color: rgb(255, 235, 80);
+}
+
+.jx-mini-poi {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    margin-left: -3px;
+    margin-top: -3px;
+    border-radius: 3px;
+}
+
+.jx-mini-poi-npc {
+    background-color: rgb(226, 59, 59);
+}
+
+.jx-mini-poi-door {
+    background-color: rgb(120, 200, 255);
+}
+
+.jx-mini-poi-item {
+    background-color: rgb(226, 194, 59);
+}
+
+.jx-mini-poi-teammate {
+    background-color: rgb(120, 230, 140);
+}

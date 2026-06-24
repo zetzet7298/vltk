@@ -48,5 +48,22 @@
 
         </ui:VisualElement>
 
+        <!-- ═══ MINIMAP (Slice C) ═══ top-right, 128x128 viewport, player center -->
+        <ui:VisualElement name="JxMinimapFrame" style="position: absolute; right: 10px; top: 10px; width: 140px; flex-direction: column; align-items: flex-end;">
+            <ui:Label name="jx_minimap_mapname" text="Bản đồ" style="width: 128px; height: 18px; margin-bottom: 2px; font-size: 12px; color: rgb(255,224,150); -unity-font-style: bold; -unity-text-align: middle-right;" />
+            <ui:VisualElement style="position: relative; width: 128px; height: 128px; flex-direction: row;">
+                <!-- Viewport: the clickable minimap. position:relative so POIs/dots absolute inside. -->
+                <ui:VisualElement name="jx_minimap_viewport" style="position: relative; width: 128px; height: 128px; background-color: rgba(0,0,0,0.7); border-width: 2px; border-color: rgba(220,180,60,0.9); border-radius: 4px; overflow: hidden;">
+                    <!-- POI layer (NPC/door/item/teammate dots); rebuilt each render -->
+                    <ui:VisualElement name="jx_minimap_pois" style="position: absolute; left: 0; top: 0; width: 128px; height: 128px;" />
+                    <!-- Player dot at center -->
+                    <ui:VisualElement name="jx_minimap_player" class="jx-mini-poi-player" style="position: absolute; width: 8px; height: 8px; background-color: rgb(255,235,80); border-radius: 4px;" />
+                </ui:VisualElement>
+                <!-- Close button (top-right of viewport) -->
+                <ui:Button name="jx_minimap_close" text="×" style="position: absolute; left: 108px; top: -6px; width: 20px; height: 20px; font-size: 14px; padding: 0; margin: 0; color: rgb(255,255,255); background-color: rgba(180,40,40,0.9); border-radius: 3px;" />
+            </ui:VisualElement>
+            <ui:Label name="jx_minimap_coord" text="0,0" style="width: 128px; height: 16px; margin-top: 2px; font-size: 11px; color: rgba(200,200,210,0.95); -unity-text-align: middle-right;" />
+        </ui:VisualElement>
+
     </ui:VisualElement>
 </ui:UXML>
