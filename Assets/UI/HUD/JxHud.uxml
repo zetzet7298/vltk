@@ -1,0 +1,52 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <!-- JX HUD (jx-cocos port). All layout is inline (position:absolute + explicit
+         width/height) mirroring the project's GameHud.uxml pattern — no USS needed.
+         Element names use the jx_* contract (JxTopStatusBarAdapter.Names). -->
+    <ui:VisualElement name="JxHudRoot" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;">
+
+        <!-- ═══ TOP STATUS BAR (Slice A) ═══ -->
+        <!-- Panel: 380x140 to fit name + level/rank row + 4 bars (18px each). -->
+        <ui:VisualElement name="JxTopBar" style="position: absolute; left: 10px; top: 10px; width: 380px; height: 140px; background-color: rgba(8, 10, 16, 0.92); border-left-width: 3px; border-left-color: rgb(220, 180, 60); border-radius: 6px;">
+
+            <!-- Avatar (gender-driven background; controller toggles male/female classes) -->
+            <ui:VisualElement name="jx_avatar" class="jx-avatar jx-avatar-male" style="position: absolute; left: 8px; top: 8px; width: 74px; height: 74px; background-color: rgba(40, 90, 170, 1); border-width: 2px; border-color: rgba(255,255,255,0.85); border-radius: 4px;" />
+
+            <!-- Player name -->
+            <ui:Label name="jx_name_text" text="Đại Hiệp" style="position: absolute; left: 92px; top: 8px; width: 276px; height: 20px; font-size: 14px; color: rgb(255, 224, 150); -unity-font-style: bold; -unity-text-align: middle-left;" />
+
+            <!-- Level label -->
+            <ui:Label text="Cấp" style="position: absolute; left: 92px; top: 28px; width: 26px; height: 16px; font-size: 11px; color: rgba(200,200,210,0.95); -unity-text-align: middle-left;" />
+            <ui:Label name="jx_level_text" text="1" style="position: absolute; left: 116px; top: 28px; width: 50px; height: 16px; font-size: 15px; color: rgb(120,230,140); -unity-font-style: bold; -unity-text-align: middle-left;" />
+
+            <!-- Rank label -->
+            <ui:Label text="Danh vọng" style="position: absolute; left: 170px; top: 28px; width: 60px; height: 16px; font-size: 11px; color: rgba(200,200,210,0.95); -unity-text-align: middle-left;" />
+            <ui:Label name="jx_rank_text" text="0" style="position: absolute; left: 232px; top: 28px; width: 50px; height: 16px; font-size: 12px; color: rgb(120,200,255); -unity-font-style: bold; -unity-text-align: middle-left;" />
+
+            <!-- HP bar (track 92..372 = 280 wide, at top:48) -->
+            <ui:VisualElement style="position: absolute; left: 92px; top: 48px; width: 280px; height: 18px; background-color: rgba(0,0,0,0.85); border-radius: 3px; overflow: hidden;">
+                <ui:VisualElement name="jx_hp_fill" style="position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background-color: rgb(226, 59, 59);" />
+                <ui:Label name="jx_hp_text" text="0/0" style="position: absolute; left: 0; top: 0; width: 280px; height: 18px; font-size: 16px; color: rgb(255,255,0); -unity-text-align: middle-center; -unity-font-style: bold;" />
+            </ui:VisualElement>
+
+            <!-- Mana bar -->
+            <ui:VisualElement style="position: absolute; left: 92px; top: 70px; width: 280px; height: 18px; background-color: rgba(0,0,0,0.85); border-radius: 3px; overflow: hidden;">
+                <ui:VisualElement name="jx_mana_fill" style="position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background-color: rgb(59, 111, 226);" />
+                <ui:Label name="jx_mana_text" text="0/0" style="position: absolute; left: 0; top: 0; width: 280px; height: 18px; font-size: 16px; color: rgb(255,255,0); -unity-text-align: middle-center; -unity-font-style: bold;" />
+            </ui:VisualElement>
+
+            <!-- Stamina bar -->
+            <ui:VisualElement style="position: absolute; left: 92px; top: 92px; width: 280px; height: 18px; background-color: rgba(0,0,0,0.85); border-radius: 3px; overflow: hidden;">
+                <ui:VisualElement name="jx_stamina_fill" style="position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background-color: rgb(226, 194, 59);" />
+                <ui:Label name="jx_stamina_text" text="0/0" style="position: absolute; left: 0; top: 0; width: 280px; height: 18px; font-size: 16px; color: rgb(255,255,0); -unity-text-align: middle-center; -unity-font-style: bold;" />
+            </ui:VisualElement>
+
+            <!-- EXP bar -->
+            <ui:VisualElement style="position: absolute; left: 92px; top: 114px; width: 280px; height: 18px; background-color: rgba(0,0,0,0.85); border-radius: 3px; overflow: hidden;">
+                <ui:VisualElement name="jx_exp_fill" style="position: absolute; left: 0; top: 0; bottom: 0; width: 0%; background-color: rgb(59, 226, 122);" />
+                <ui:Label name="jx_exp_text" text="0%" style="position: absolute; left: 0; top: 0; width: 280px; height: 18px; font-size: 16px; color: rgb(255,255,0); -unity-text-align: middle-center; -unity-font-style: bold;" />
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

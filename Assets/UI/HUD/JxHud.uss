@@ -1,0 +1,136 @@
+/* VLTK Mobile — JX HUD (jx-cocos port) wiring styles.
+   Slice A: top status bar. Layout follows KuiTopControlVN intent
+   (rolestate.png 211x71 frame, avatar 70x70, 4 bars). Placeholder art
+   until real ui_vn SPR sprites are imported — kept visible so the wiring
+   can be verified in play mode. */
+
+.jx-hud-root {
+    flex-grow: 1;
+    flex-shrink: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    picking-mode: Ignore;
+}
+
+.jx-top-bar {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    flex-direction: row;
+    align-items: stretch;
+    padding: 6px;
+    width: 340px;
+    height: 108px;
+    background-color: rgba(10, 12, 18, 230);
+    border-left-width: 3px;
+    border-left-color: rgb(220, 180, 60);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 6px;
+}
+
+.jx-avatar {
+    width: 70px;
+    height: 70px;
+    margin-right: 8px;
+    background-color: rgba(60, 60, 70, 255);
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 200);
+    border-radius: 4px;
+    align-self: flex-start;
+}
+
+.jx-avatar-male {
+    background-color: rgba(40, 90, 170, 255);
+}
+
+.jx-avatar-female {
+    background-color: rgba(180, 60, 120, 255);
+}
+
+.jx-info-col {
+    flex-grow: 1;
+    flex-shrink: 1;
+    justify-content: space-between;
+}
+
+.jx-headline-row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.jx-headline {
+    color: rgb(255, 224, 150);
+    font-size: 14px;
+    -unity-font-style: bold;
+}
+
+.jx-level-row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.jx-caption {
+    color: rgba(200, 200, 210, 230);
+    font-size: 11px;
+}
+
+.jx-level-text {
+    color: rgb(120, 230, 140);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.jx-rank-text {
+    color: rgb(120, 200, 255);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.jx-bar-track {
+    height: 16px;
+    margin-top: 3px;
+    background-color: rgba(0, 0, 0, 200);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.jx-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0%;
+}
+
+.jx-fill-hp {
+    background-color: rgba(226, 59, 59, 255);
+}
+
+.jx-fill-mana {
+    background-color: rgba(59, 111, 226, 255);
+}
+
+.jx-fill-stamina {
+    background-color: rgba(226, 194, 59, 255);
+}
+
+.jx-fill-exp {
+    background-color: rgba(59, 226, 122, 255);
+}
+
+.jx-bar-label {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    color: rgb(255, 255, 255);
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}

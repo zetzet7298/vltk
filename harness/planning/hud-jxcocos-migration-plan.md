@@ -36,6 +36,19 @@
 ## Map element → source C++ → behavior
 
 ### Slice A — Top Status Bar (always visible) — `KuiTopControlVN.cpp` (509 L)
+- ✅ **State ported**: `Assets/Scripts/UI/JxCocos/JxTopStatusBarState.cs` (pure state, EditMode-tested)
+- ✅ **Adapter ported**: `Assets/Scripts/UI/JxCocos/JxTopStatusBarAdapter.cs` (UI Toolkit render)
+- ✅ **WIRED into live scene** (2026-06-24): `Assets/Scripts/UI/JxCocos/JxHudController.cs`
+  + `Assets/UI/HUD/JxHud.uxml` + `JxHud.uss`. GameObject `JxHud` (UIDocument, root
+  sibling of legacy `HUD`, sortingOrder=100) renders the jx-cocos top bar from
+  the same `SandboxRuntimeState` the legacy HUD read.
+- ✅ **Verified in play mode** (vision OCR): reads `Cấp 200`, red bar `4100/4100`,
+  blue `3700/3700`, yellow `100/100`, EXP `0%`. Legacy HUD disabled (removed
+  from render) per user request — only jx-cocos HUD renders now.
+- Key fixes during wiring: (1) panel container collapsed to height=0 under
+  ScaleWithScreenSize PanelSettings → fixed via `SizeRootToScreen` each frame;
+  (2) all labels rendered blank → fixed by attaching `GameHud.uss` + assigning
+  `HudDefaultFont` FontAsset (project's default runtime font is glyph-broken).
 - Layout: nền rolestate.png (211x71), avatar 70x70 (Nam/Nu theo gender), level
   label (BMFont số xanh, dưới avatar), rank label (số xanh).
 - 3 thanh fill (blood/mana/stamina) anchor (0,0), scaleX = cur/max (0..1).
