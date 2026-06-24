@@ -59,8 +59,8 @@
 
 ### Bước 2: Refactor phần parse `npcs.txt` (Dịch NPC/Boss/Quái)
 - Đọc song song 2 file:
-  - Client: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/npcs.txt`
-  - Gốc Trung Quốc: `/var/www/jx-source/pak_unpacked/dmjx06/settings/npcs.txt`
+  - Client: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/npcs.txt`
+  - Gốc Trung Quốc: `/var/www/vltksource_new/pak_unpacked/dmjx06/settings/npcs.txt`
 - Với mỗi dòng:
   - So sánh raw bytes: nếu trùng nhau -> Dịch tiếng Trung sang Hán Việt. Nếu khác nhau -> Giải mã TCVN3.
 

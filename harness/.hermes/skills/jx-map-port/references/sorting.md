@@ -8,7 +8,7 @@ port achieves equivalent results with three mechanisms working together.
 
 Source: `KIpoTree.cpp`, `KIpotBranch.cpp`, `KIpotLeaf.cpp` (recovered from the out-of-scope
 `jxwin-kinnox` engine tree — these `.cpp` files are NOT under
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`; the in-scope client ships only `represent3.dll`).
+`/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`; the in-scope client ships only `represent3.dll`).
 The behavior below is validated against the working Unity port, so trust it; to re-derive
 from binary, escalate to `reverse-engineering` against `represent3.dll`.
 

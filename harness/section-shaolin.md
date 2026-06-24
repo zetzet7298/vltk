@@ -2,7 +2,7 @@
 
 > Gap-analysis subagent output. Scope: **Thiếu Lâm** (ID 3-21, loại 5/7).
 > Nguồn: `Assets/Scripts/Sandbox/PcCombatCatalogFactory.cs::CreateShaolinSkills()` +
-> `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/shaolin.lua`
+> `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/shaolin.lua`
 > + `script/skill1/shaolin.lua` (saolin cập nhật, pinyin TCVN3) +
 > `script/skill/shaolin/*.lua` (11 per-skill pinyin) +
 > `script/skill/saolin/*.lua` (19 per-skill GB2312, không có `mohe-wuliang.lua`) +
@@ -29,10 +29,10 @@
 4. `Assets/Scripts/Sandbox/SkillEffectVisualService.cs` (line 887) — `SetupPcMissile` signature (`speedPerTick`, `lifeTicks` từ PC `missle_lifetime_v`)
 5. `Assets/StreamingAssets/Reference/KNpc.cpp` (line 1829-1891) — `CastMeleeSkill` switch (5 melee types, không có Shaolin)
 6. `Assets/Tests/EditMode/Sandbox/ShaolinSkillPanelTests.cs` — 17 skill test fixture
-7. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/shaolin.lua` — main PC gốc (GB2312, 450 dòng)
-8. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill1/shaolin.lua` — saolin cập nhật (TCVN3 pinyin comments)
-9. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/shaolin/*.lua` — 11 per-skill pinyin (TCVN3)
-10. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/saolin/*.lua` — 19 per-skill GB2312
+7. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/shaolin.lua` — main PC gốc (GB2312, 450 dòng)
+8. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill1/shaolin.lua` — saolin cập nhật (TCVN3 pinyin comments)
+9. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/shaolin/*.lua` — 11 per-skill pinyin (TCVN3)
+10. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/saolin/*.lua` — 19 per-skill GB2312
 
 ## Key code references
 

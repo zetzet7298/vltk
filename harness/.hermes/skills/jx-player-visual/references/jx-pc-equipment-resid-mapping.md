@@ -2,7 +2,7 @@
 
 **Provenance.** This table is the verified mapping used in the static HTML gallery
 (`/var/www/vltk-mobile/html/generate_static_gallery.py`). It was rebuilt by reading
-the canonical PC source on `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/`:
+the canonical PC source on `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/`:
 
 - `item/004/armor.txt` — `Particular` × `Level` × `ResID` × tên áo
 - `item/004/helm.txt`  — `Particular` × `Level` × `ResID` × tên mũ

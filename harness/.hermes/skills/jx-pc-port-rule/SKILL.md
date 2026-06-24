@@ -9,8 +9,8 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 
 ## Source Of Truth
 
-- The ONLY PC game source of truth is `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` (loose tree + canonical `pak_unpacked`). Never substitute another PC tree (e.g. `jxwin-kinnox`, `/var/www/vhst/survivors/...`, old VMDK mounts) for port decisions unless the user explicitly expands scope.
-- The authoritative count/status for `pak_unpacked` is the live manifest `/var/www/jx-source/pak_unpacked/_unpack_summary.json` — read it, do not trust extraction counts hardcoded in any SKILL/reference/AGENTS doc (they drift between re-unpack runs). As of the latest run: 46 paks, exported 403560/403560, failed 0, partial 0, `dmjx01.pak` ok 1621/1621.
+- The ONLY PC game source of truth is `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem` (loose tree + canonical `pak_unpacked`). Never substitute another PC tree (e.g. `jxwin-kinnox`, `/var/www/vhst/survivors/...`, old VMDK mounts) for port decisions unless the user explicitly expands scope.
+- The authoritative count/status for `pak_unpacked` is the live manifest `/var/www/vltksource_new/pak_unpacked/_unpack_summary.json` — read it, do not trust extraction counts hardcoded in any SKILL/reference/AGENTS doc (they drift between re-unpack runs). As of the latest run: 46 paks, exported 403560/403560, failed 0, partial 0, `dmjx01.pak` ok 1621/1621.
 - Unity code, generated assets, old extracted files, screenshots, and prior guesses are implementation clues only — never proof. Prove against PC source/data/asset.
 
 ## When to escalate to `reverse-engineering`
@@ -39,7 +39,7 @@ Do **not** escalate for routine data ports where the source table and assets alr
 
 Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, skill icon, missile/effect SPR):
 
-1. **Use canonical unpack first.** Search `/var/www/jx-source/pak_unpacked` and cite the real file/manifest. Do not re-unpack a full PAK unless repairing a proven gap.
+1. **Use canonical unpack first.** Search `/var/www/vltksource_new/pak_unpacked` and cite the real file/manifest. Do not re-unpack a full PAK unless repairing a proven gap.
 2. **`unknown/<uid>.spr` is valid PC source.** It means the PAK entry was extracted by UID but the human path was not resolved. Do not conclude “missing” just because a named path was not resolved.
 3. **Decode PC tables with the encoding required by the table.** Missile/skill/resource paths containing Chinese must be read as GB2312/GBK. A Vietnamese-friendly or UTF-8 fallback can mojibake paths such as `\\spr\\skill\\丐帮\\...`, producing wrong hashes and fake missing assets. **Beware mixed-encoding files** where some columns are TCVN3 (Việt-hoá names) and others are GBK (SPR paths) — see [`references/mixed-encoding-files.md`](references/mixed-encoding-files.md) for the raw-byte-per-column technique.
 4. **Use the PC signed-byte FileNameHash for PAK UID lookup.** Normalize slashes to `\`, encode path as GB2312/GBK, lowercase ASCII A-Z only, then treat bytes >=128 as signed (`b-256`) before the `0x8000000B / 0xFFFFFFEF / xor 0x12345678` hash. Evidence: `\spr\Ui\技能图标\icon_sk_ty_at.spr` hashes to `c4454165` (PC) while the old unsigned hash `bedc5b69` misses.
@@ -47,13 +47,13 @@ Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, s
 6. **If signed hash still misses, verify all likely PAK roots before declaring missing.** For combat effects, inspect `data/skills/unknown`; for HUD, inspect `data/1024`, `data/800`, `data/updatejx*`; for generic SPR, inspect `data/spr/unknown` plus loose `Client 6.0/spr`.
 7. **Never assign purpose to unidentified hash-only SPR by guess.** Use path evidence, table reference, binary/content match, or visual preview evidence.
 
-- Treat `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` as the only PC game source of truth.
+- Treat `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem` as the only PC game source of truth.
 - For **asset SPR** (sprite, effect, icon, NPC visual, HUD, item art), the authoritative index is:
-  - `/var/www/jx-source/docs/port_docs/18_spr_asset_index.md` (source of truth + tool tra cứu)
-  - `/var/www/jx-source/docs/port_docs/19_pak_spr_taxonomy.md` (phân loại pak/SPR chi tiết)
-  - Canonical unpack root: `/var/www/jx-source/pak_unpacked` (~75k `.spr` files from all source PAKs; for the exact live count read the manifest, do not trust a number baked here)
-  - Manifest: `/var/www/jx-source/pak_unpacked/_unpack_summary.json`
-  - Optional label map: `/var/www/jx-source/pak_unpacked/_labels.json` only if rebuilt for the canonical root; otherwise use the tree + vltktool API/rebuild index.
+  - `/var/www/vltksource_new/docs/port_docs/18_spr_asset_index.md` (source of truth + tool tra cứu)
+  - `/var/www/vltksource_new/docs/port_docs/19_pak_spr_taxonomy.md` (phân loại pak/SPR chi tiết)
+  - Canonical unpack root: `/var/www/vltksource_new/pak_unpacked` (~75k `.spr` files from all source PAKs; for the exact live count read the manifest, do not trust a number baked here)
+  - Manifest: `/var/www/vltksource_new/pak_unpacked/_unpack_summary.json`
+  - Optional label map: `/var/www/vltksource_new/pak_unpacked/_labels.json` only if rebuilt for the canonical root; otherwise use the tree + vltktool API/rebuild index.
   - Tra cứu tool/API: `http://localhost:8081/` (`/api/spr`, `/api/categories`)
 - Use the API/label map only if it has been rebuilt for the canonical root; otherwise inspect the canonical unpack tree and cite exact paths. Never guess sprite filenames.
 - **Trust protocol:** exact file paths in `pak_unpacked` + manifest evidence are primary. If a rebuilt label map exists, its `confidence`/`pak_origin` fields are secondary provenance; do not fabricate names or purposes for unresolved `unknown/<hash>.spr` entries.
@@ -73,7 +73,7 @@ Apply this before any asset/resource conclusion (map art, NPC/player SPR, HUD, s
 
 ## Required Workflow
 
-1. Locate the relevant file(s) under both loose PC source and `/var/www/jx-source/pak_unpacked` before editing Unity code.
+1. Locate the relevant file(s) under both loose PC source and `/var/www/vltksource_new/pak_unpacked` before editing Unity code.
    - For SPR assets: inspect the canonical unpacked tree first; query the SPR tool/API or rebuilt `_labels.json` (see 18_spr_asset_index.md) only as helper evidence — do not guess sprite filenames.
 2. Compare the PC source/data/asset against the current Unity implementation.
 3. Implement the Unity port using PC values and assets directly where possible.
@@ -152,7 +152,7 @@ load one, sanity-check these recurring hazards before relying on it:
    SKILL.md or reference is a snapshot, not truth. Re-read the manifest (see Source Of Truth).
 4. **Dead source paths.** Scripts/skills sometimes hardcode trees that no longer exist on
    disk (`jxwin-kinnox/...`, `vhst/survivors/.../spr.pak`). `os.path.exists` before trusting;
-   real PC source is always under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`.
+   real PC source is always under `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`.
 5. **Ad-hoc SPR/PAK scanners.** Per AGENTS rules, do not write your own SPR decoder or
    `rglob('*.spr')` over the whole source — use `~/Projects/vltktool/` tools and narrow the
    region first. A skill's prose may say this correctly while its bundled script violates it.
@@ -171,6 +171,6 @@ from porting a feature or auditing these skills.
 
 ## If Source Is Missing
 
-- Say exactly what was searched under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`.
+- Say exactly what was searched under `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`.
 - Do not silently substitute another PC source.
 - Make only clearly marked provisional changes if the user explicitly allows it.

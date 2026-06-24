@@ -2,7 +2,7 @@
 
 **Date**: 2026-06-16
 **Context**: Identified while auditing Cái Bang skills 127/130 against
-PC source at `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`
+PC source at `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/`
 
 ## What we have
 
@@ -202,5 +202,5 @@ If running the PC client is feasible:
 ## References
 
 - `docs/PC_SOURCE_AUDIT_CAIBANG_127_130.md` — current audit
-- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/jx_linux_y` — server binary
-- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua` — Cái Bang Lua formulas
+- `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/jx_linux_y` — server binary
+- `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua` — Cái Bang Lua formulas

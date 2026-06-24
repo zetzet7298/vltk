@@ -9,7 +9,7 @@ Audit Unity `PcCombatCatalogFactory` against PC stock 2011 source for all 10 mô
 
 ## PC Source Inventory
 
-Source: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/`
+Source: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/`
 Encoding: GB2312 (decoded via `PcText.ReadLines` for proper Chinese names)
 
 | File | PC skills | Faction (VLTK) | Encoding |
@@ -86,7 +86,7 @@ These are valid PC behavior: in PC source, these IDs are defined in `tianren.lua
 
 ## C++ Engine Source Backup (Tình Kiếm 2023 mod)
 
-For full PC engine behavior (not just data), use `/var/www/jx-source/`:
+For full PC engine behavior (not just data), use `/var/www/vltksource_new/`:
 - `SwordOnline/Sources/Core/Src/KSkills.cpp` (108KB) — main skill class
 - `SwordOnline/Sources/Core/Src/KSkillList.cpp` (25KB) — cast queue + GetDelayPerCast dispatch
 - `SwordOnline/Sources/Core/Src/KNpcAttribModify.cpp` (35KB) — cast speed, delay calc

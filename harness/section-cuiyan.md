@@ -1,7 +1,7 @@
 ## 2.7. Thúy Yên (PC: CuiYan 翠烟, ID range 95-114)
 
 > **Nguồn PC**:
-> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/cuiyan.lua` (GB18030, 23 skills incl. 150-tier + 120-tier)
+> - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/cuiyan.lua` (GB18030, 23 skills incl. 150-tier + 120-tier)
 > - Per-skill files: `cuiyan/{cuiyan-daofa,cuiyan-shuangdao,binggu-xuexin,bingxin-qianying,fengjuan-canxue,muye-liuxing,taxue-wuhen,xueying}.lua` (8 file, mỗi file override 1 attribute)
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (canonical, TCVN3, SkillId 95-114, 19 skills — trừ 96/98 cùng pattern passive mastery)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch (line 1829-1891). **CuiYan 100% IsMelee=0** (xác nhận từ ModSkills.txt) → không thuộc nhánh Melee_Jump/JumpAndAttack/RunAndAttack. **G1 (dash) KHÔNG áp dụng** cho CuiYan.

@@ -6,8 +6,8 @@ Use the audited PC source tree first. It already contains the client paks, setti
 scripts, and loose SPR fallback used during the map 389 / Vượt ải port:
 
 ```bash
-ls '/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/maps.pak'
-ls '/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini'
+ls '/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/maps.pak'
+ls '/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini'
 ```
 
 The bundled `scripts/jx_map_port.py` defaults to this tree. Only pass `--data-dir` when
@@ -36,13 +36,13 @@ sudo mount -o ro /dev/nbd0p1 /mnt/jxwin
 
 | What | Path |
 |---|---|
-| Client paks (primary) | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/*.pak` |
-| MapList.ini (primary) | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini` (GBK) |
-| Loose art fallback roots (primary) | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/{spr,settings,ui,...}` |
-| Server/client scripts (primary provenance) | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/{Client 6.0,Server 6.0}/.../script` |
+| Client paks (primary) | `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/*.pak` |
+| MapList.ini (primary) | `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini` (GBK) |
+| Loose art fallback roots (primary) | `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/{spr,settings,ui,...}` |
+| Server/client scripts (primary provenance) | `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/{Client 6.0,Server 6.0}/.../script` |
 | Client paks (optional VMDK) | `/mnt/jxwin/SourceNew/swrod3/bin/Client/data/*.pak` |
 | MapList.ini / `.wor` (optional VMDK) | `/mnt/jxwin/SourceNew/swrod3/Utility/Run/{Settings/MapList.ini,maps/...}` |
-| engine.dll (to re-derive hash if ever needed) | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/engine.dll` |
+| engine.dll (to re-derive hash if ever needed) | `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/engine.dll` |
 
 `Client 6.0/data` / `bin/Client/data` is the authoritative client pak set. Treat loose
 server map trees as provenance/bounds hints only; do not cross-match region payloads across

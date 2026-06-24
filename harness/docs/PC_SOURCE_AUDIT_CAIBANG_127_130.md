@@ -7,7 +7,7 @@
 ## Source Provenance
 
 All values traced to direct PC source files under
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`. No C++ source available in this
+`/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/`. No C++ source available in this
 distribution; only Lua scripts, settings, binary, and the canonical
 `pak_unpacked` SPR tree.
 

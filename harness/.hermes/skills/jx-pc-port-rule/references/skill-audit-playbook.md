@@ -46,7 +46,7 @@ Sweep ALL hash helpers, not just one (`resolve_*.py`, `data_controller_export_ed
 
 ### 3. Manifest read (counts drift)
 Never cite a baked "N/M, X failed" number. Read the live manifest:
-`/var/www/jx-source/pak_unpacked/_unpack_summary.json` →
+`/var/www/vltksource_new/pak_unpacked/_unpack_summary.json` →
 `total_exported`, `total_failed`, `partial`, and per-item `dmjx01.pak`. Cross-check `.spr` on
 disk if a count looks off. The 2026-06-11 23:25 run = 46 paks, 403560/403560, 0 failed, 0 partial,
 dmjx01 ok 1621/1621. AGENTS.md / older audit files / memory may lag this — manifest wins.
@@ -55,7 +55,7 @@ dmjx01 ok 1621/1621. AGENTS.md / older audit files / memory may lag this — man
 `os.path.exists` every hardcoded source path in scripts and SKILL.md. Known offenders that were
 dead: `/var/www/vltk-mobile/jxwin-kinnox/.../Utility/Run/spr/Ui3`,
 `/var/www/vhst/survivors/external-data/vltklinux/data/spr.pak`. Real PC source is always under
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`. If a path is dead, repoint to `pak_unpacked` / vltktool.
+`/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`. If a path is dead, repoint to `pak_unpacked` / vltktool.
 If a C++ provenance citation (e.g. `KRepresentShell3.cpp`, `KIpoTree.cpp`) isn't under the
 in-scope tree (only `represent3.dll` ships), keep it as a marked provenance caveat + point to
 `reverse-engineering` against the DLL — don't present it as greppable source.
@@ -73,12 +73,12 @@ resolvers (`resolve_uid.py`, `find_spr_by_image.py --pak <one pak>`).
 
 When prose says "reverse-engineered from engine.dll @0xRVA" or cites a magic constant, prove it
 against the binary instead of trusting the claim. The PC client DLLs are at
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/` (`engine.dll`, `represent3.dll` — PE i386,
+`/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/` (`engine.dll`, `represent3.dll` — PE i386,
 baddr `0x10000000`). `engine.dll` ships **full MSVC-mangled export symbols** (1362 exports), so
 RVAs are exact, not guesses. radare2 5.5.0 is available.
 
 ```bash
-cd "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client"
+cd "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client"
 rabin2 -I engine.dll                              # confirm PE i386, baddr 0x10000000, msvc
 rabin2 -E engine.dll | grep -iE "pak|codec|filename2id"   # locate symbols -> exact RVA
 r2 -2 -q -c "s 0x10025c60; af; pdf" engine.dll    # disassemble g_FileName2Id

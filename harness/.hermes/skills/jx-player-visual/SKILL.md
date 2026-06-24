@@ -40,7 +40,7 @@ Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `j
 - Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
 - PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
 - For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
-- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/jx-source` at runtime.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
 - Verify with real file existence/decode/render evidence before claiming parity or missing source.
 
 A JX character is NOT one sprite. It is a stack of independent part SPRs that share a
@@ -88,7 +88,7 @@ The male avatar is fully working. Read these before writing anything new:
 To add a NEW avatar (female, alt class) the cleanest path is to **generalize the male
 classes by gender/variant** rather than copy-paste. See `references/extending.md`.
 
-## Source data (PC client: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`)
+## Source data (PC client: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/`)
 
 Character definitions live in `SourceNew/swrod3/Utility/Run/Settings/NpcRes/` and art in
 `.../Run/spr/npcres/`. The master row table is `人物类型.txt` (tab-separated):
@@ -306,7 +306,7 @@ below) that catches people who hand-roll mappings. The cost of getting it wrong
 is a static gallery or in-game character whose visual is one variant off — and
 the user will spot it.
 
-Source of truth (canonical, on `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/`):
+Source of truth (canonical, on `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/`):
 
 - `item/004/armor.txt` — cols 0=name, 1=?, 2=?, 3=Particular, 5=ResID, 11=Level
 - `item/004/helm.txt`  — same shape

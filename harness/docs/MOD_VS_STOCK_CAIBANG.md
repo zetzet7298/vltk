@@ -1,7 +1,7 @@
 # MOD vs Stock: Cái Bang Skill Source Comparison
 
 **Date**: 2026-06-16
-**Source 1 (Stock)**: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` — PC original
+**Source 1 (Stock)**: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/` — PC original
 **Source 2 (MOD)**: Google Drive `1Click Mel 7 Jun 2026` — Hội Quán Võ Lâm Offline
 **Purpose**: Document which skill formulas in MOD differ from stock PC original
 
@@ -114,7 +114,7 @@ If a future decision is made to port MOD values instead, the changes needed are:
 
 ## File paths
 
-- Stock: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/gaibang.lua`
+- Stock: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/gaibang.lua`
 - MOD: `/var/www/vltk-mobile/cache/server_offline/jxser/server1/script/skill/gaibang.lua`
 - Google Drive source folder: `1x24JOS_RcK3bo1cfp5hqBHThybDCZuHu` (1Click Mel 7 Jun 2026)
 - MOD download URL: `https://drive.usercontent.google.com/download?id=1Utsd5fqpOdBbZzxhw60kfFSiEtFgfZMH&export=download&confirm=t`

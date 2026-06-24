@@ -25,7 +25,7 @@ capability is a clean skip.
 <!-- HARNESS:END -->
 
 
-## Game hiện tại đang port từ game PC /var/www/jx-source vì thế nên trong quá trình port thì phải đọc hiểu code bên PC
+## Game hiện tại đang port từ game PC /var/www/vltksource_new vì thế nên trong quá trình port thì phải đọc hiểu code bên PC
 
 Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng API/library lạ), **PHẢI dùng exa (`exa_web_search_exa`/`exa_web_fetch_exa`) và deepwiki (`mcp_deepwiki_deepwiki_fetch`) để research** cách làm chuẩn — không đoán, không vá mò. Research xong mới implement. Xong việc thì **commit all change + push**.
 

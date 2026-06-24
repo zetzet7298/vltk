@@ -7,7 +7,7 @@
 
 ## Critical finding: MOD adds visual state for Skill 127
 
-The PC stock `×´Ì¬Óë¹âÐ§Í¼ÐÎ¶ÔÕÕ±í.txt` (in `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/`)
+The PC stock `×´Ì¬Óë¹âÐ§Í¼ÐÎ¶ÔÕÕ±í.txt` (in `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/`)
 has NO status entry for skill 127 (Hoạt Bất Lưu Thủ). The skill is cast with
 brief PreCast animation only.
 
@@ -116,5 +116,5 @@ If a future decision is made to port MOD values:
 
 - MOD status mapping: `/var/www/vltk-mobile/cache/client_offline_extracted/×´Ì¬Óë¹âÐ§Í¼ÐÎ¶ÔÕÕ±í.txt`
 - MOD skill formulas: `/var/www/vltk-mobile/cache/client_offline_extracted/gaibang.lua`
-- Stock status mapping: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/×´Ì¬Óë¹âÐ§Í¼ÐÎ¶ÔÕÕ±í.txt`
-- Stock skill formulas: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua`
+- Stock status mapping: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/×´Ì¬Óë¹âÐ§Í¼ÐÎ¶ÔÕÕ±í.txt`
+- Stock skill formulas: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua`

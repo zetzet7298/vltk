@@ -31,7 +31,7 @@ Before concluding that any PC SPR/icon/effect/NPC/HUD asset is missing, apply `j
 - Read PC TXT/INI tables with the correct encoding. Paths with Chinese resource folders are usually GB2312/GBK; mojibake paths hash to fake UIDs.
 - PAK entries named `unknown/<uid>.spr` are valid extracted PC assets, not garbage.
 - For PAK lookup use PC signed-byte FileNameHash, not an unsigned-byte/private runtime hash.
-- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/jx-source` at runtime.
+- Copy exact PC assets into `Assets/StreamingAssets/...`; never load directly from `/var/www/vltksource_new` at runtime.
 - Verify with real file existence/decode/render evidence before claiming parity or missing source.
 
 - Do not invent skill list, order, Vietnamese names, icons, sprites, descriptions, upgrade gates, or UI layout.
@@ -61,22 +61,22 @@ Start here for current project:
   - `Assets/UI/HUD/Art/Generated/cai_bang_skill_*.png`
   - `Assets/UI/HUD/Art/技能*.png`
 - PC skill data:
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Settings/Skills.txt`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Settings/Skills.txt`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Script/skill/**`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Settings/Skills.txt`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Settings/Skills.txt`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Script/skill/**`
 - PC skill UI:
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Ui/Ui3/UiSkillsSheet.ini`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Ui/Ui3/UiSkillsFightSub.ini`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Ui/Ui3/UiSkillsLive.ini`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Ui/UiCase/UiSkills.cpp`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Ui/UiCase/UiSkillTree.cpp`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Ui/Ui3/UiSkillsSheet.ini`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Ui/Ui3/UiSkillsFightSub.ini`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Client/Ui/Ui3/UiSkillsLive.ini`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Ui/UiCase/UiSkills.cpp`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Ui/UiCase/UiSkillTree.cpp`
 - PC skill logic:
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/CoreShell.cpp`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkillList.cpp`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayer.cpp`
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkills.cpp`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/CoreShell.cpp`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkillList.cpp`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KPlayer.cpp`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/KSkills.cpp`
 - PC asset source:
-  - Canonical unpacked PAK tree: `/var/www/jx-source/pak_unpacked` (skill SPR icons live under the SPR trees here; `\spr\Ui\技能图标\...` group). Manifest `_unpack_summary.json`.
+  - Canonical unpacked PAK tree: `/var/www/vltksource_new/pak_unpacked` (skill SPR icons live under the SPR trees here; `\spr\Ui\技能图标\...` group). Manifest `_unpack_summary.json`.
   - `~/Projects/vltktool/` helpers for PAK/SPR lookup/extraction (read its README first; do not write ad-hoc scanners).
 
 Important PC asset caveat: Chinese PAK paths may require signed-byte hashing. Unsigned-byte lookup can fail even for correct paths.

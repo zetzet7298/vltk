@@ -1,7 +1,7 @@
 # JX1 PAK Format Internals
 
 Reverse-engineered from `engine.dll` (PE i386, MSVC 8, ImageBase `0x10000000`) in
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/engine.dll`.
+`/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/engine.dll`.
 
 ## Verified symbol RVAs (radare2 on the real engine.dll, 2026-06-12)
 

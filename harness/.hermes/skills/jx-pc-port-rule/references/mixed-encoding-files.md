@@ -2,7 +2,7 @@
 
 ## The problem
 
-Several PC data files under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` are **partially Việt-hoá**: some columns contain Vietnamese text (TCVN3-encoded) while others retain original Chinese (GBK-encoded). A single tab-separated row can mix both encodings.
+Several PC data files under `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem` are **partially Việt-hoá**: some columns contain Vietnamese text (TCVN3-encoded) while others retain original Chinese (GBK-encoded). A single tab-separated row can mix both encodings.
 
 **Known mixed-encoding files:**
 - `Client 6.0/settings/thiefskill.txt` — skill names are TCVN3 Vietnamese (e.g. "Kiếp Phá Thiên Tôn"), SPR/sound/icon paths are GBK Chinese (e.g. `劫富济贫1.spr`)

@@ -1,8 +1,8 @@
 ## 2.8. Thiên Nhẫn (PC: TianRen 天忍, ID range 131-150 + 361-364 + 1075-1076)
 
 > **Nguồn PC**:
-> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/tianren.lua` (GBK, 247 dòng, 16 skill + 150-tier `zhanren150` có `randmove` + `missle_missrate` → dash-pattern)
-> - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/tianren/*.lua` (26 file per-skill; 6 pinyin ASCII: `limo-duohun`, `sanmei-zhenhuo`, `shigu-xueren`, `tianmo-jieti`, `wuxing-zhen`, `zhiyan`; 20 GBK TCVN3)
+> - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/tianren.lua` (GBK, 247 dòng, 16 skill + 150-tier `zhanren150` có `randmove` + `missle_missrate` → dash-pattern)
+> - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/.../script/skill/tianren/*.lua` (26 file per-skill; 6 pinyin ASCII: `limo-duohun`, `sanmei-zhenhuo`, `shigu-xueren`, `tianmo-jieti`, `wuxing-zhen`, `zhiyan`; 20 GBK TCVN3)
 > - `Assets/StreamingAssets/Reference/ModSkills.txt` (TCVN3, canonical SkillId 131-150 + 361-364 + 1075-1076, full columns)
 > - `Assets/StreamingAssets/Reference/ModMissles.txt` (child missile 54-58, 69-71, 169-171, 226, 337, 363, 366, 192 — `mv=0` stationary fire, `mv=1` homing)
 > - C++: `KNpc.cpp::CastMeleeSkill` switch (line 1829-1891) — **TianRen KHÔNG có** skill nào thuộc `Melee_Jump/JumpAndAttack/RunAndAttack` (PC `IsMelee=1` cho 139/142/147/361/1075 nhưng chỉ là melee-missile, không phải dash). Tuy nhiên `zhanren150` có `randmove` → missile có thể "lunge" (chưa thấy trong PC C++ reference, có thể nằm ngoài scope task).

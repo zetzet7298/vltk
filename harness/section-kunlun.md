@@ -77,8 +77,8 @@
 - `Assets/Scripts/Sandbox/PcCombatCatalogFactory.cs:34-35,597,602` — `IsEMeiSkill` (line 597), `IsKunLunSkill` (line 602)
 - `Assets/Scripts/Sandbox/PcSkillTuningRegistry.cs:108-114` — KunLunId radius curves (only 4/18)
 - `Assets/Scripts/Sandbox/SkillEffectVisualService.cs:281,290,455-466,501,625,1036,1079` — no `ConfigureKunLunVisuals`
-- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/kunlun.lua` — PC main (GB18030)
-- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/kunlun/*.lua` — 33 per-skill files
+- `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/kunlun.lua` — PC main (GB18030)
+- `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/skill/kunlun/*.lua` — 33 per-skill files
 - `Assets/StreamingAssets/Reference/ModSkills.txt` — TCVN3 canonical PC data (SkillId 167-184, 90, 372, 373, 375, 376, 386, 387, 1080, 1081, 1108, 1109)
 - `Assets/StreamingAssets/Reference/KNpc.cpp:1829-1891` — `CastMeleeSkill` switch (KunLun KHÔNG có dash)
 

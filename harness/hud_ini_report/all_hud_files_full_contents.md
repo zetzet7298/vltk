@@ -1,13 +1,13 @@
 # VLTK PC HUD/UI INI/LUA layout/config files
 
 Search roots:
-- `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0`
-- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client`
+- `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0`
+- `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client`
 
 
 ---
 
-## 1. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/221307534.ini`
+## 1. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/221307534.ini`
 
 - size: 31 bytes
 - md5: `666f69f732b9ceb4e3cd5ed575b6d4c3`
@@ -26,7 +26,7 @@ InvisibleLogin=0
 
 ---
 
-## 2. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/2282215499.ini`
+## 2. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/2282215499.ini`
 
 - size: 31 bytes
 - md5: `666f69f732b9ceb4e3cd5ed575b6d4c3`
@@ -45,7 +45,7 @@ InvisibleLogin=0
 
 ---
 
-## 3. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/3448199312.ini`
+## 3. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/3448199312.ini`
 
 - size: 31 bytes
 - md5: `666f69f732b9ceb4e3cd5ed575b6d4c3`
@@ -64,7 +64,7 @@ InvisibleLogin=0
 
 ---
 
-## 4. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/381624740.ini`
+## 4. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/381624740.ini`
 
 - size: 31 bytes
 - md5: `666f69f732b9ceb4e3cd5ed575b6d4c3`
@@ -83,7 +83,7 @@ InvisibleLogin=0
 
 ---
 
-## 5. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/3892066717.ini`
+## 5. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/3892066717.ini`
 
 - size: 31 bytes
 - md5: `666f69f732b9ceb4e3cd5ed575b6d4c3`
@@ -102,7 +102,7 @@ InvisibleLogin=0
 
 ---
 
-## 6. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/3900424330.ini`
+## 6. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/3142745738/3900424330.ini`
 
 - size: 31 bytes
 - md5: `666f69f732b9ceb4e3cd5ed575b6d4c3`
@@ -121,7 +121,7 @@ InvisibleLogin=0
 
 ---
 
-## 7. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365l6cc31c76/uiconfig.ini`
+## 7. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365l6cc31c76/uiconfig.ini`
 
 - size: 46372 bytes
 - md5: `8e5d27f091158e06cd6c12e39fc3f086`
@@ -592,7 +592,7 @@ StallAdv=
 
 ---
 
-## 8. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365l769e9405/uiconfig.ini`
+## 8. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365l769e9405/uiconfig.ini`
 
 - size: 46323 bytes
 - md5: `49addc8f3e8eed1943cd6b9876166d2c`
@@ -1062,7 +1062,7 @@ StallAdv=
 
 ---
 
-## 9. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365la4611517b/uiconfig.ini`
+## 9. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365la4611517b/uiconfig.ini`
 
 - size: 46326 bytes
 - md5: `00c2f7edf05e1f09027b062858e7fa9c`
@@ -1532,7 +1532,7 @@ StallAdv=
 
 ---
 
-## 10. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365lf1801f99f/uiconfig.ini`
+## 10. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735a365lf1801f99f/uiconfig.ini`
 
 - size: 44628 bytes
 - md5: `91216f54ee6a6bf2a77f85ac9d5103c9`
@@ -1966,7 +1966,7 @@ StallAdv=
 
 ---
 
-## 11. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735d815l67709c50/uiconfig.ini`
+## 11. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735d815l67709c50/uiconfig.ini`
 
 - size: 46371 bytes
 - md5: `ac4c0b7eeccb2db65f6148901cb1554c`
@@ -2437,7 +2437,7 @@ StallAdv=
 
 ---
 
-## 12. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735d815l949edacc2/uiconfig.ini`
+## 12. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735d815l949edacc2/uiconfig.ini`
 
 - size: 44783 bytes
 - md5: `274b299d2c2ce6bed66e88500e75c345`
@@ -2875,7 +2875,7 @@ StallAdv=
 
 ---
 
-## 13. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735d815lb56d34097/uiconfig.ini`
+## 13. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/ea735d815lb56d34097/uiconfig.ini`
 
 - size: 46327 bytes
 - md5: `9ea3fac0069d3d29a4b2aa2a89797065`
@@ -3345,7 +3345,7 @@ StallAdv=
 
 ---
 
-## 14. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/uicommon.ini`
+## 14. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/UserData/uicommon.ini`
 
 - size: 845 bytes
 - md5: `46cc8d424e80321c34ca40d70c3d5882`
@@ -3390,7 +3390,7 @@ RecentAccount5=0000000000000000000000000000000000000000000000000000000000000000
 
 ---
 
-## 15. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/miniskill/ui.lua`
+## 15. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/miniskill/ui.lua`
 
 - size: 4433 bytes
 - md5: `cf6aa8e3e67d68bc21e1092ef8743a6d`
@@ -3518,7 +3518,7 @@ end
 
 ---
 
-## 16. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/ui/ranking.lua`
+## 16. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/ui/ranking.lua`
 
 - size: 295 bytes
 - md5: `231ab9b4a03a5e28c5c2c89e458fa7a5`
@@ -3544,7 +3544,7 @@ end
 
 ---
 
-## 17. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ChatPics.ini`
+## 17. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ChatPics.ini`
 
 - size: 664 bytes
 - md5: `c9bc3194b7dbabe8320ccecf7fe00200`
@@ -3686,7 +3686,7 @@ Path=\spr\Ui3\表情
 
 ---
 
-## 18. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/MiniSkill.ini`
+## 18. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/MiniSkill.ini`
 
 - size: 26966 bytes
 - md5: `5e41b90e43d34bcc440725d28e40a2a1`
@@ -4847,7 +4847,7 @@ Buff_187_Desc=Néi 30 phót, cïng ®ång ®éi t¨ng 20 ®iÓm May M¾n
 
 ---
 
-## 19. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/npcbobo.ini`
+## 19. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/npcbobo.ini`
 
 - size: 1472 bytes
 - md5: `f4dd98b159e771a87f571c992bf94d61`
@@ -4962,7 +4962,7 @@ Spr_10=\Spr\Ui3\FortuneRank\rank_10.spr
 
 ---
 
-## 20. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/setting.ini`
+## 20. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/setting.ini`
 
 - size: 2794 bytes
 - md5: `180585200d7e4d2fa72dcbc74750ed17`
@@ -5065,7 +5065,7 @@ SelfPlayerColor=0,255,0
 
 ---
 
-## 21. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ui3/TradeInfo.ini`
+## 21. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ui3/TradeInfo.ini`
 
 - size: 472 bytes
 - md5: `0806f864b8fd2312ef5ce35274a68e7a`
@@ -5121,7 +5121,7 @@ Guild_txt=    + Bang:
 
 ---
 
-## 22. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ui3/¶ÓÎéÒ»ÀÀÐÅÏ¢.ini`
+## 22. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ui3/¶ÓÎéÒ»ÀÀÐÅÏ¢.ini`
 
 - size: 1638 bytes
 - md5: `7af6f3d9b693dfcbdf54adf5811d232e`
@@ -5292,7 +5292,7 @@ Name13=\spr\ui4\主界面\组队预览\icon_zd_xy.spr
 
 ---
 
-## 23. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/±íÇé´óÈ«.ini`
+## 23. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/±íÇé´óÈ«.ini`
 
 - size: 9632 bytes
 - md5: `675957ba49e7db80d8761aa6d2ad45bc`
@@ -6379,7 +6379,7 @@ ForChat=0
 
 ---
 
-## 24. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/Ê÷ÐÍÅÅÃûÖ÷Ìâ.ini`
+## 24. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/Ê÷ÐÍÅÅÃûÖ÷Ìâ.ini`
 
 - size: 3160 bytes
 - md5: `846adde6155452829283eb6e9301812b`
@@ -6623,7 +6623,7 @@ Count=27
 
 ---
 
-## 25. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ÎåÐÐ.ini`
+## 25. `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/ui/ÎåÐÐ.ini`
 
 - size: 1124 bytes
 - md5: `d02f165db0a834fb730e765847431190`
@@ -6668,7 +6668,7 @@ SelSound_f=\sound\select\sound_tf.wav
 
 ---
 
-## 26. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1/unknown/9cd96589.ini`
+## 26. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1/unknown/9cd96589.ini`
 
 - size: 1884 bytes
 - md5: `356b405159bc7176470e04d1e6256fbe`
@@ -6907,7 +6907,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登陆界面_7_选择人物.spr
 
 ---
 
-## 27. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1/unknown/dc11ac12.ini`
+## 27. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1/unknown/dc11ac12.ini`
 
 - size: 2901 bytes
 - md5: `122a7d56580d302d231830ecfaa9c383`
@@ -7266,7 +7266,7 @@ ClassType=Player_Recorder
 
 ---
 
-## 28. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/07c790a7.ini`
+## 28. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/07c790a7.ini`
 
 - size: 2079 bytes
 - md5: `17b7f3db4d67fd2387d00fc42b802733`
@@ -7492,7 +7492,7 @@ WithoutName=Ch­a chän tªn nh©n vËt
 
 ---
 
-## 29. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/120ebf4e.ini`
+## 29. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/120ebf4e.ini`
 
 - size: 3158 bytes
 - md5: `371cad8c8b9081d8d04933382ad3959f`
@@ -7828,7 +7828,7 @@ Tip=HiÖu chØnh th«ng b¸o
 
 ---
 
-## 30. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/13925203.ini`
+## 30. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/13925203.ini`
 
 - size: 1198 bytes
 - md5: `3d34a025255d3cbc40fac10463e875e9`
@@ -7964,7 +7964,7 @@ Trans=0
 
 ---
 
-## 31. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/1a71ec0d.ini`
+## 31. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/1a71ec0d.ini`
 
 - size: 1812 bytes
 - md5: `0fdc9c36585f30b575c5357f88dd3671`
@@ -8174,7 +8174,7 @@ OverFrame=2
 
 ---
 
-## 32. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/2d1015aa.ini`
+## 32. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/2d1015aa.ini`
 
 - size: 1298 bytes
 - md5: `4e97fff98c1c413158d644f771b5465b`
@@ -8326,7 +8326,7 @@ Moveable=0
 
 ---
 
-## 33. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/3a99868c.ini`
+## 33. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/3a99868c.ini`
 
 - size: 11242 bytes
 - md5: `2ef06707c25cc255298aa87bd6b27af2`
@@ -9232,7 +9232,7 @@ Item_6=Thêi gian trªn m¹ng cuèi cïng
 
 ---
 
-## 34. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/3f81c8db.ini`
+## 34. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/3f81c8db.ini`
 
 - size: 1154 bytes
 - md5: `5856e7411a820487e00aa3197660cbb1`
@@ -9394,7 +9394,7 @@ FollowMove=0,1
 
 ---
 
-## 35. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/41acf824.ini`
+## 35. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/41acf824.ini`
 
 - size: 2280 bytes
 - md5: `1422a644fcdd122bbfa0d1eda0743815`
@@ -9641,7 +9641,7 @@ ChangeName=CÇn 100 v¹n l­îng
 
 ---
 
-## 36. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/4d6af437.ini`
+## 36. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/4d6af437.ini`
 
 - size: 26044 bytes
 - md5: `ec571f9f76ec47e597144f3504008f50`
@@ -10750,7 +10750,7 @@ Buff_172_Desc=T¨ng kh¶ n¨ng lµm cho¸ng
 
 ---
 
-## 37. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/51a4b625.ini`
+## 37. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/51a4b625.ini`
 
 - size: 3363 bytes
 - md5: `ef9aee7b732e9a7ca32fa2eb3fa4ef59`
@@ -11125,7 +11125,7 @@ Text=Ngµy thø b¶y trë lªn
 
 ---
 
-## 38. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/672b4132.ini`
+## 38. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/672b4132.ini`
 
 - size: 1761 bytes
 - md5: `84e8e6bd6f0a66bc26e8662a310fd13d`
@@ -11401,7 +11401,7 @@ Color=255,254,220
 
 ---
 
-## 39. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/6a5d8c4c.ini`
+## 39. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/6a5d8c4c.ini`
 
 - size: 1210 bytes
 - md5: `f5029dd49fc740b3f64059999642327c`
@@ -11575,7 +11575,7 @@ BGPlatinaColor=240,240,240
 
 ---
 
-## 40. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/6b197d1f.ini`
+## 40. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/6b197d1f.ini`
 
 - size: 1428 bytes
 - md5: `5aaca961df93561030d3a3c7db5919a5`
@@ -11762,7 +11762,7 @@ Image=\Spr\Ui3\帮助\复杂帮助2-关闭.spr
 
 ---
 
-## 41. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/71d51abe.ini`
+## 41. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/71d51abe.ini`
 
 - size: 26529 bytes
 - md5: `bddfefa1b088f7ecdd960e770be917e6`
@@ -12894,7 +12894,7 @@ Buff_174_Desc=Phôc håi sinh lùc cho b¶n th©n
 
 ---
 
-## 42. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/73fce6e7.ini`
+## 42. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/73fce6e7.ini`
 
 - size: 2130 bytes
 - md5: `13dd404a3290a11239997b491a5f2757`
@@ -13133,7 +13133,7 @@ HAlign=1
 
 ---
 
-## 43. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/7e20a7ac.ini`
+## 43. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/7e20a7ac.ini`
 
 - size: 10588 bytes
 - md5: `a18da68528427c4042af03a9961acfb3`
@@ -13819,7 +13819,7 @@ SendMsgNum=2
 
 ---
 
-## 44. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/87248bea.ini`
+## 44. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/87248bea.ini`
 
 - size: 1792 bytes
 - md5: `7088a8a72d25838cd3162096d2512c6d`
@@ -14049,7 +14049,7 @@ FollowSize=1,1
 
 ---
 
-## 45. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/8da7027d.ini`
+## 45. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/8da7027d.ini`
 
 - size: 2123 bytes
 - md5: `9913e569001d6f76da992338de5ccea2`
@@ -14368,7 +14368,7 @@ Color=55,231,63
 
 ---
 
-## 46. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/97a36ce4.ini`
+## 46. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/97a36ce4.ini`
 
 - size: 3153 bytes
 - md5: `fbdf7089aa4722fe50ea32b49d75cb6a`
@@ -14701,7 +14701,7 @@ Count=8
 
 ---
 
-## 47. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/9cd96589.ini`
+## 47. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/9cd96589.ini`
 
 - size: 1877 bytes
 - md5: `c4e24938acf733dc72eacd3c2a5f461f`
@@ -14940,7 +14940,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登陆界面_7_选择人物.spr
 
 ---
 
-## 48. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/a3969281.ini`
+## 48. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/a3969281.ini`
 
 - size: 1008 bytes
 - md5: `e789825d25137c63562a2082758291bb`
@@ -15101,7 +15101,7 @@ Trans=0
 
 ---
 
-## 49. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/a5e5430e.ini`
+## 49. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/a5e5430e.ini`
 
 - size: 2729 bytes
 - md5: `06b530740c7f547ee99bb7934aefb7c2`
@@ -15383,7 +15383,7 @@ SendHoldMsg=0
 
 ---
 
-## 50. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/b2772ecf.ini`
+## 50. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/b2772ecf.ini`
 
 - size: 800 bytes
 - md5: `9474b05f88a0b360cbaf2666594c5351`
@@ -15518,7 +15518,7 @@ Tip=hiÓn thÞ b¶n ®å thÕ giíi
 
 ---
 
-## 51. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/b49267df.ini`
+## 51. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/b49267df.ini`
 
 - size: 1125 bytes
 - md5: `7b0e9a153c8f104fe3a2053afa3636b0`
@@ -15674,7 +15674,7 @@ SelColor=255,252,178
 
 ---
 
-## 52. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/bf7b4312.ini`
+## 52. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/bf7b4312.ini`
 
 - size: 1668 bytes
 - md5: `a778286b249c6a24fa268314a1453df5`
@@ -15897,7 +15897,7 @@ Trans=0
 
 ---
 
-## 53. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/c8524a28.ini`
+## 53. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/c8524a28.ini`
 
 - size: 939 bytes
 - md5: `b2f9da897fb2298a95c53fb7957bcc33`
@@ -16013,7 +16013,7 @@ SelBgColor=140,121,99
 
 ---
 
-## 54. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/c9c8a750.ini`
+## 54. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/c9c8a750.ini`
 
 - size: 10588 bytes
 - md5: `13506f4d6a05b3a01c6ef7c4a5f00bb4`
@@ -16699,7 +16699,7 @@ SendMsgNum=2
 
 ---
 
-## 55. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/d4756f25.ini`
+## 55. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/d4756f25.ini`
 
 - size: 1242 bytes
 - md5: `e250cb1a537fd5948d60c109cca2bf84`
@@ -16872,7 +16872,7 @@ Image=\Spr\Ui3\好友qq\通用拖动条.spr
 
 ---
 
-## 56. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/dc11ac12.ini`
+## 56. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/dc11ac12.ini`
 
 - size: 2900 bytes
 - md5: `a812d01dfacaf179d5820e2cbf52d513`
@@ -17236,7 +17236,7 @@ ClassType=Player_Task
 
 ---
 
-## 57. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/e0e30c02.ini`
+## 57. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/e0e30c02.ini`
 
 - size: 2411 bytes
 - md5: `75a8b4035e44eb1c0f5419e28ac470e9`
@@ -17535,7 +17535,7 @@ Trans=0
 
 ---
 
-## 58. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/ec10b91e.ini`
+## 58. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/ec10b91e.ini`
 
 - size: 1660 bytes
 - md5: `f24f297464a85d83453d05ab5784ad60`
@@ -17749,7 +17749,7 @@ Tip=c¾m cê lªn
 
 ---
 
-## 59. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/f8bf2550.ini`
+## 59. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/1024/unknown/f8bf2550.ini`
 
 - size: 1904 bytes
 - md5: `4856c5af89617857516b51f552e03ebc`
@@ -17980,7 +17980,7 @@ SelBgColor=140,121,99
 
 ---
 
-## 60. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/0290f2e2.ini`
+## 60. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/0290f2e2.ini`
 
 - size: 446 bytes
 - md5: `dbf6e9d06464d654360c796c7ec504e8`
@@ -18082,7 +18082,7 @@ H=2
 
 ---
 
-## 61. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/07c790a7.ini`
+## 61. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/07c790a7.ini`
 
 - size: 2079 bytes
 - md5: `17b7f3db4d67fd2387d00fc42b802733`
@@ -18308,7 +18308,7 @@ WithoutName=Ch­a chän tªn nh©n vËt
 
 ---
 
-## 62. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/1a71ec0d.ini`
+## 62. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/1a71ec0d.ini`
 
 - size: 1812 bytes
 - md5: `b1dd46f79bddb82b1d6c1fde05ba58c4`
@@ -18518,7 +18518,7 @@ OverFrame=2
 
 ---
 
-## 63. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/1dc22adf.ini`
+## 63. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/1dc22adf.ini`
 
 - size: 1173 bytes
 - md5: `483aca8436c5e2711e8dd0e1e653a061`
@@ -18669,7 +18669,7 @@ Trans=0
 
 ---
 
-## 64. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/2d1015aa.ini`
+## 64. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/2d1015aa.ini`
 
 - size: 1298 bytes
 - md5: `4e97fff98c1c413158d644f771b5465b`
@@ -18821,7 +18821,7 @@ Moveable=0
 
 ---
 
-## 65. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/32970f60.ini`
+## 65. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/32970f60.ini`
 
 - size: 2322 bytes
 - md5: `7f032588166c9a85b78a8197b5f2c53a`
@@ -19082,7 +19082,7 @@ SelectBorderColor=255,0,0
 
 ---
 
-## 66. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/51a4b625.ini`
+## 66. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/51a4b625.ini`
 
 - size: 3363 bytes
 - md5: `ef9aee7b732e9a7ca32fa2eb3fa4ef59`
@@ -19457,7 +19457,7 @@ Text=Ngµy thø b¶y trë lªn
 
 ---
 
-## 67. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/6b197d1f.ini`
+## 67. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/6b197d1f.ini`
 
 - size: 1432 bytes
 - md5: `3a3f44064cf0a3f2c84e4b134bc250a7`
@@ -19646,7 +19646,7 @@ Image=\Spr\Ui3\帮助\复杂帮助2-关闭.spr
 
 ---
 
-## 68. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/71d51abe.ini`
+## 68. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/71d51abe.ini`
 
 - size: 23334 bytes
 - md5: `3088297babe1a264aa95d380f9030806`
@@ -20650,7 +20650,7 @@ Buff_154_Desc=Tû lÖ bá qua hãa gi¶i s¸t th­¬ng n©ng lªn
 
 ---
 
-## 69. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/7e20a7ac.ini`
+## 69. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/7e20a7ac.ini`
 
 - size: 10588 bytes
 - md5: `85dfb2679ee6a3fc475a3038f760162a`
@@ -21336,7 +21336,7 @@ SendMsgNum=2
 
 ---
 
-## 70. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/87248bea.ini`
+## 70. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/87248bea.ini`
 
 - size: 1792 bytes
 - md5: `959f8c4b85639bb47b3a210c13d33f2a`
@@ -21566,7 +21566,7 @@ FollowSize=1,1
 
 ---
 
-## 71. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/98523f6c.ini`
+## 71. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/98523f6c.ini`
 
 - size: 3063 bytes
 - md5: `ff2717e5fb28e7c6f4b1b35abb45fbef`
@@ -21884,7 +21884,7 @@ Label=Hñy theo dâi
 
 ---
 
-## 72. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/9cd96589.ini`
+## 72. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/9cd96589.ini`
 
 - size: 1884 bytes
 - md5: `356b405159bc7176470e04d1e6256fbe`
@@ -22123,7 +22123,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登陆界面_7_选择人物.spr
 
 ---
 
-## 73. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/a069d4c0.ini`
+## 73. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/a069d4c0.ini`
 
 - size: 4809 bytes
 - md5: `6376319669ed4d5cd9eecbe6e982a4af`
@@ -22669,7 +22669,7 @@ Height=24
 
 ---
 
-## 74. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/a3969281.ini`
+## 74. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/a3969281.ini`
 
 - size: 1008 bytes
 - md5: `2a8f9fa833320c851c03cb35c695f150`
@@ -22830,7 +22830,7 @@ Trans=0
 
 ---
 
-## 75. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/d4756f25.ini`
+## 75. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/d4756f25.ini`
 
 - size: 1258 bytes
 - md5: `bec9b8101c5c5a764dfb68d885ede4ee`
@@ -23004,7 +23004,7 @@ Image=\Spr\Ui3\好友qq\通用拖动条.spr
 
 ---
 
-## 76. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/dc11ac12.ini`
+## 76. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/dc11ac12.ini`
 
 - size: 2906 bytes
 - md5: `2c9c8a5c202969d4a7e2cf04135a06a7`
@@ -23369,7 +23369,7 @@ ClassType=Player_Task
 
 ---
 
-## 77. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/ebad2d8a.ini`
+## 77. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/ebad2d8a.ini`
 
 - size: 4091 bytes
 - md5: `7705d26a12ddddb9f510af29a1200508`
@@ -23813,7 +23813,7 @@ SelectBorderColor=255,0,0
 
 ---
 
-## 78. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/ec10b91e.ini`
+## 78. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/ec10b91e.ini`
 
 - size: 1660 bytes
 - md5: `a38fcbd8869750bc8a5bcab3c42807d0`
@@ -24027,7 +24027,7 @@ Tip=c¾m cê lªn
 
 ---
 
-## 79. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/f8bf2550.ini`
+## 79. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/_slistcache/unknown/f8bf2550.ini`
 
 - size: 1904 bytes
 - md5: `7c0cf65b16ce2be461f8c8ce5cde7cea`
@@ -24258,7 +24258,7 @@ SelBgColor=140,121,99
 
 ---
 
-## 80. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/07c790a7.ini`
+## 80. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/07c790a7.ini`
 
 - size: 2079 bytes
 - md5: `17b7f3db4d67fd2387d00fc42b802733`
@@ -24484,7 +24484,7 @@ WithoutName=Ch­a chän tªn nh©n vËt
 
 ---
 
-## 81. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/1a71ec0d.ini`
+## 81. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/1a71ec0d.ini`
 
 - size: 1812 bytes
 - md5: `b1dd46f79bddb82b1d6c1fde05ba58c4`
@@ -24694,7 +24694,7 @@ OverFrame=2
 
 ---
 
-## 82. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/2d1015aa.ini`
+## 82. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/2d1015aa.ini`
 
 - size: 1298 bytes
 - md5: `4e97fff98c1c413158d644f771b5465b`
@@ -24846,7 +24846,7 @@ Moveable=0
 
 ---
 
-## 83. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/51a4b625.ini`
+## 83. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/51a4b625.ini`
 
 - size: 3363 bytes
 - md5: `ef9aee7b732e9a7ca32fa2eb3fa4ef59`
@@ -25221,7 +25221,7 @@ Text=Ngµy thø b¶y trë lªn
 
 ---
 
-## 84. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/71d51abe.ini`
+## 84. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/71d51abe.ini`
 
 - size: 15053 bytes
 - md5: `8293c489f10a19f24b22821ff53380b8`
@@ -25929,7 +25929,7 @@ Buff_102_Desc=ChØ cã t¸c dông trong b¶n ®å Thiªn Ph­ S¬n, Bµn Long S�
 
 ---
 
-## 85. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/7e20a7ac.ini`
+## 85. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/7e20a7ac.ini`
 
 - size: 10588 bytes
 - md5: `11327d8f9593efc47a5b1c736e1e898b`
@@ -26615,7 +26615,7 @@ SendMsgNum=2
 
 ---
 
-## 86. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/87248bea.ini`
+## 86. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/87248bea.ini`
 
 - size: 1792 bytes
 - md5: `959f8c4b85639bb47b3a210c13d33f2a`
@@ -26845,7 +26845,7 @@ FollowSize=1,1
 
 ---
 
-## 87. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/a069d4c0.ini`
+## 87. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/a069d4c0.ini`
 
 - size: 4277 bytes
 - md5: `5da6eb33d6d2ad805ac570889c5a1128`
@@ -27325,7 +27325,7 @@ Height=24
 
 ---
 
-## 88. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/a3969281.ini`
+## 88. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/a3969281.ini`
 
 - size: 1008 bytes
 - md5: `2a8f9fa833320c851c03cb35c695f150`
@@ -27486,7 +27486,7 @@ Trans=0
 
 ---
 
-## 89. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/dc11ac12.ini`
+## 89. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/dc11ac12.ini`
 
 - size: 2906 bytes
 - md5: `2c9c8a5c202969d4a7e2cf04135a06a7`
@@ -27851,7 +27851,7 @@ ClassType=Player_Task
 
 ---
 
-## 90. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/ec10b91e.ini`
+## 90. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/ec10b91e.ini`
 
 - size: 1660 bytes
 - md5: `a38fcbd8869750bc8a5bcab3c42807d0`
@@ -28065,7 +28065,7 @@ Tip=c¾m cê lªn
 
 ---
 
-## 91. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/f8bf2550.ini`
+## 91. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/slistcache/unknown/f8bf2550.ini`
 
 - size: 1904 bytes
 - md5: `7c0cf65b16ce2be461f8c8ce5cde7cea`
@@ -28296,7 +28296,7 @@ SelBgColor=140,121,99
 
 ---
 
-## 92. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/06dfc306.ini`
+## 92. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/06dfc306.ini`
 
 - size: 1161 bytes
 - md5: `7532bbd875a6ac5bd4be10f272ee63b5`
@@ -28464,7 +28464,7 @@ Image=\Spr\Ui\道具栏\道具关闭按钮.spr
 
 ---
 
-## 93. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/07bf2a0a.ini`
+## 93. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/07bf2a0a.ini`
 
 - size: 1437 bytes
 - md5: `7ef6b29c5970211b0c7ce0e2b36750b5`
@@ -28675,7 +28675,7 @@ Tip=Mµu c©u héi tho¹i
 
 ---
 
-## 94. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/0c164d5c.ini`
+## 94. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/0c164d5c.ini`
 
 - size: 6486 bytes
 - md5: `474327c9abb7765e4bc016b3830b2bad`
@@ -29153,7 +29153,7 @@ SendMsgNum=2
 
 ---
 
-## 95. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/1194ceec.ini`
+## 95. `/var/www/vltksource_new/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/1194ceec.ini`
 
 - size: 566 bytes
 - md5: `65bba165c252801781ffe4da750d1658`
@@ -29239,7 +29239,8 @@ Over=2
 OverFrame=2
 Trans=0
 Image=\Spr\Ui\Ð¡µØÍ¼\Ð¡µØÍ¼Ð¡Ãæ°å¸Ä£­ËõÐ¡.spr
-Tip=Thu nhá(Tab)
+Tip=Thu nhá
+(Tab)
 
 ;»­µØÍ¼µÄ·¶Î§
 [MapRect]
@@ -29251,7 +29252,7 @@ Height=480
 
 
 ---
-
+/var/www/vltksource_new
 ## 96. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/149e1a43.ini`
 
 - size: 998 bytes
@@ -29393,7 +29394,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 97. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/180ab63d.ini`
 
 - size: 2643 bytes
@@ -29652,7 +29653,7 @@ PropText=<color=Earth>hÖ Thæ.Cã nam lÉn n÷.<enter>Gia nhËp Vâ §ang (chÝ
 
 
 ---
-
+/var/www/vltksource_new
 ## 98. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/182b1d9e.ini`
 
 - size: 939 bytes
@@ -29768,7 +29769,7 @@ SelBgColor=140,121,99
 
 
 ---
-
+/var/www/vltksource_new
 ## 99. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/23ae49ae.ini`
 
 - size: 520 bytes
@@ -29860,7 +29861,7 @@ Image=\Spr\Ui\组队\新建队伍取消按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 100. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/2d92d99f.ini`
 
 - size: 3427 bytes
@@ -30365,7 +30366,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮改.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 101. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/34d5a29e.ini`
 
 - size: 675 bytes
@@ -30473,7 +30474,7 @@ Image=\Spr\Ui\NPC对话条\NPC对话条拖动条.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 102. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/37f84077.ini`
 
 - size: 769 bytes
@@ -30583,7 +30584,7 @@ Image=
 
 
 ---
-
+/var/www/vltksource_new
 ## 103. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/3b13ed9c.ini`
 
 - size: 1551 bytes
@@ -30796,7 +30797,7 @@ Tip=Mµu c©u héi tho¹i
 
 
 ---
-
+/var/www/vltksource_new
 ## 104. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/3d29150d.ini`
 
 - size: 1111 bytes
@@ -30958,7 +30959,7 @@ Tip=c¾m cê lªn
 
 
 ---
-
+/var/www/vltksource_new
 ## 105. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/3f81c8db.ini`
 
 - size: 1154 bytes
@@ -31120,7 +31121,7 @@ FollowMove=0,1
 
 
 ---
-
+/var/www/vltksource_new
 ## 106. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/41acf824.ini`
 
 - size: 1736 bytes
@@ -31318,7 +31319,7 @@ FocusBKColorAlpha=120
 
 
 ---
-
+/var/www/vltksource_new
 ## 107. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/450e202a.ini`
 
 - size: 1189 bytes
@@ -31482,7 +31483,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 108. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/46d557e0.ini`
 
 - size: 3372 bytes
@@ -31980,7 +31981,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 109. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/51ab0502.ini`
 
 - size: 1736 bytes
@@ -32178,7 +32179,7 @@ FocusBKColorAlpha=120
 
 
 ---
-
+/var/www/vltksource_new
 ## 110. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/522ee7a1.ini`
 
 - size: 764 bytes
@@ -32299,7 +32300,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 111. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/54e371e3.ini`
 
 - size: 1350 bytes
@@ -32488,7 +32489,7 @@ Image=\spr\ui\道具栏\标准关闭按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 112. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/5a126490.ini`
 
 - size: 1770 bytes
@@ -32711,7 +32712,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登入-新建角色－土.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 113. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/605379ce.ini`
 
 - size: 1193 bytes
@@ -32893,7 +32894,7 @@ Tip=NhiÖm vô (F1. F12)
 
 
 ---
-
+/var/www/vltksource_new
 ## 114. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/672b4132.ini`
 
 - size: 1761 bytes
@@ -33169,7 +33170,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 115. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/690704b8.ini`
 
 - size: 1123 bytes
@@ -33353,7 +33354,7 @@ Image=\Spr\Ui\聊天条\聊天按钮条-地图按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 116. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/6a5d8c4c.ini`
 
 - size: 1152 bytes
@@ -33525,7 +33526,7 @@ BGPurpleBorder=100,80,123
 
 
 ---
-
+/var/www/vltksource_new
 ## 117. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/6aaad913.ini`
 
 - size: 1967 bytes
@@ -33739,7 +33740,7 @@ Color=255,0,0
 
 
 ---
-
+/var/www/vltksource_new
 ## 118. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/6b197d1f.ini`
 
 - size: 1428 bytes
@@ -33926,7 +33927,7 @@ Image=\Spr\Ui3\帮助\复杂帮助2-关闭.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 119. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/73fce6e7.ini`
 
 - size: 2106 bytes
@@ -34163,7 +34164,7 @@ HAlign=1
 
 
 ---
-
+/var/www/vltksource_new
 ## 120. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/78d6daaa.ini`
 
 - size: 2086 bytes
@@ -34432,7 +34433,7 @@ ClassType=Player_PK
 
 
 ---
-
+/var/www/vltksource_new
 ## 121. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/7e20a7ac.ini`
 
 - size: 10404 bytes
@@ -35111,7 +35112,7 @@ SendMsgNum=2
 
 
 ---
-
+/var/www/vltksource_new
 ## 122. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/82929b7b.ini`
 
 - size: 7968 bytes
@@ -35953,7 +35954,7 @@ Tip=Bang chñ ph¸t tiÒn cho mäi ng­êi
 
 
 ---
-
+/var/www/vltksource_new
 ## 123. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/87248bea.ini`
 
 - size: 1793 bytes
@@ -36183,7 +36184,7 @@ FollowSize=1,1
 
 
 ---
-
+/var/www/vltksource_new
 ## 124. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/8b1d89e1.ini`
 
 - size: 1761 bytes
@@ -36459,7 +36460,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 125. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/8da7027d.ini`
 
 - size: 2124 bytes
@@ -36778,7 +36779,7 @@ Color=55,231,63
 
 
 ---
-
+/var/www/vltksource_new
 ## 126. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/90be0674.ini`
 
 - size: 1668 bytes
@@ -37001,7 +37002,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 127. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/9199ae47.ini`
 
 - size: 847 bytes
@@ -37138,7 +37139,7 @@ Color=0,255,0
 
 
 ---
-
+/var/www/vltksource_new
 ## 128. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/94bd3752.ini`
 
 - size: 573 bytes
@@ -37238,7 +37239,7 @@ Height=128
 
 
 ---
-
+/var/www/vltksource_new
 ## 129. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/96212c4f.ini`
 
 - size: 2239 bytes
@@ -37475,7 +37476,7 @@ BorderColor=206,231,173
 
 
 ---
-
+/var/www/vltksource_new
 ## 130. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/97a36ce4.ini`
 
 - size: 3152 bytes
@@ -37808,7 +37809,7 @@ Count=8
 
 
 ---
-
+/var/www/vltksource_new
 ## 131. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/97e46b17.ini`
 
 - size: 3427 bytes
@@ -38313,7 +38314,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮改.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 132. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/9b390867.ini`
 
 - size: 3427 bytes
@@ -38818,7 +38819,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮改.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 133. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/9cd96589.ini`
 
 - size: 1884 bytes
@@ -39057,7 +39058,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登陆界面_7_选择人物.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 134. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/9f3fd876.ini`
 
 - size: 1761 bytes
@@ -39333,7 +39334,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 135. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/9f55c506.ini`
 
 - size: 1437 bytes
@@ -39544,7 +39545,7 @@ Tip=Mµu c©u héi tho¹i
 
 
 ---
-
+/var/www/vltksource_new
 ## 136. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/a3745fad.ini`
 
 - size: 1350 bytes
@@ -39733,7 +39734,7 @@ Image=\spr\ui\道具栏\标准关闭按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 137. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/a3969281.ini`
 
 - size: 1009 bytes
@@ -39894,7 +39895,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 138. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/a49cb906.ini`
 
 - size: 472 bytes
@@ -39971,7 +39972,7 @@ Tip=
 
 
 ---
-
+/var/www/vltksource_new
 ## 139. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/a5e5430e.ini`
 
 - size: 2367 bytes
@@ -40219,7 +40220,7 @@ SendHoldMsg=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 140. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/ae4582c6.ini`
 
 - size: 1005 bytes
@@ -40361,7 +40362,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 141. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/b09f2cf8.ini`
 
 - size: 1018 bytes
@@ -40521,7 +40522,7 @@ Image=
 
 
 ---
-
+/var/www/vltksource_new
 ## 142. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/b2772ecf.ini`
 
 - size: 801 bytes
@@ -40656,7 +40657,7 @@ Tip=hiÓn thÞ b¶n ®å thÕ giíi
 
 
 ---
-
+/var/www/vltksource_new
 ## 143. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/b49267df.ini`
 
 - size: 1067 bytes
@@ -40810,7 +40811,7 @@ SelColor=255,252,178
 
 
 ---
-
+/var/www/vltksource_new
 ## 144. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/b6005b73.ini`
 
 - size: 801 bytes
@@ -40945,7 +40946,7 @@ Tip=hiÓn thÞ b¶n ®å thÕ giíi
 
 
 ---
-
+/var/www/vltksource_new
 ## 145. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/b705e9d8.ini`
 
 - size: 1770 bytes
@@ -41168,7 +41169,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登入-新建角色－土.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 146. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/bcac5b6f.ini`
 
 - size: 1761 bytes
@@ -41444,7 +41445,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 147. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/bf7b4312.ini`
 
 - size: 1668 bytes
@@ -41667,7 +41668,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 148. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/c4ebbac2.ini`
 
 - size: 1154 bytes
@@ -41829,7 +41830,7 @@ FollowMove=0,1
 
 
 ---
-
+/var/www/vltksource_new
 ## 149. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/c8524a28.ini`
 
 - size: 939 bytes
@@ -41945,7 +41946,7 @@ SelBgColor=140,121,99
 
 
 ---
-
+/var/www/vltksource_new
 ## 150. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/c988819e.ini`
 
 - size: 578 bytes
@@ -42050,7 +42051,7 @@ UnitBorder=2
 
 
 ---
-
+/var/www/vltksource_new
 ## 151. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/cc460993.ini`
 
 - size: 7811 bytes
@@ -42869,7 +42870,7 @@ Tip=Thay ®æi danh hiÖu n÷ ®Ö tö
 
 
 ---
-
+/var/www/vltksource_new
 ## 152. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/cfb57016.ini`
 
 - size: 3152 bytes
@@ -43202,7 +43203,7 @@ Count=8
 
 
 ---
-
+/var/www/vltksource_new
 ## 153. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/d4756f25.ini`
 
 - size: 1242 bytes
@@ -43375,7 +43376,7 @@ Image=\Spr\Ui3\好友qq\通用拖动条.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 154. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/dc11ac12.ini`
 
 - size: 2501 bytes
@@ -43690,7 +43691,7 @@ ClassType=Player_Recorder
 
 
 ---
-
+/var/www/vltksource_new
 ## 155. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/dd144e58.ini`
 
 - size: 567 bytes
@@ -43789,7 +43790,7 @@ Height=480
 
 
 ---
-
+/var/www/vltksource_new
 ## 156. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/dddfbe81.ini`
 
 - size: 1437 bytes
@@ -44000,7 +44001,7 @@ Tip=Mµu c©u héi tho¹i
 
 
 ---
-
+/var/www/vltksource_new
 ## 157. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/dfecf22f.ini`
 
 - size: 2372 bytes
@@ -44248,7 +44249,7 @@ SendHoldMsg=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 158. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/e03da02a.ini`
 
 - size: 727 bytes
@@ -44376,7 +44377,7 @@ Color=255,255,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 159. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/e0e30c02.ini`
 
 - size: 2412 bytes
@@ -44675,7 +44676,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 160. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/e1adf7cc.ini`
 
 - size: 1122 bytes
@@ -44838,7 +44839,7 @@ Tip=c¾m cê lªn
 
 
 ---
-
+/var/www/vltksource_new
 ## 161. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/e7329097.ini`
 
 - size: 655 bytes
@@ -44946,7 +44947,7 @@ Image=\Spr\Ui\登入\拖动条.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 162. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/ec10b91e.ini`
 
 - size: 1634 bytes
@@ -45158,7 +45159,7 @@ Tip=c¾m cê lªn
 
 
 ---
-
+/var/www/vltksource_new
 ## 163. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/ece8de52.ini`
 
 - size: 472 bytes
@@ -45235,7 +45236,7 @@ Tip=
 
 
 ---
-
+/var/www/vltksource_new
 ## 164. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/f29b2e0f.ini`
 
 - size: 1189 bytes
@@ -45399,7 +45400,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 165. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/f7a2ac2f.ini`
 
 - size: 561 bytes
@@ -45503,7 +45504,7 @@ VUnits=10
 
 
 ---
-
+/var/www/vltksource_new
 ## 166. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/f8bf2550.ini`
 
 - size: 1879 bytes
@@ -45732,7 +45733,7 @@ SelBgColor=140,121,99
 
 
 ---
-
+/var/www/vltksource_new
 ## 167. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update01/unknown/ffb7d31b.ini`
 
 - size: 2124 bytes
@@ -46051,7 +46052,7 @@ Color=55,231,63
 
 
 ---
-
+/var/www/vltksource_new
 ## 168. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/06dfc306.ini`
 
 - size: 1161 bytes
@@ -46219,7 +46220,7 @@ Image=\Spr\Ui\道具栏\道具关闭按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 169. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/07bf2a0a.ini`
 
 - size: 1437 bytes
@@ -46430,7 +46431,7 @@ Tip=Mµu c©u héi tho¹i
 
 
 ---
-
+/var/www/vltksource_new
 ## 170. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/0c164d5c.ini`
 
 - size: 6486 bytes
@@ -46908,7 +46909,7 @@ SendMsgNum=2
 
 
 ---
-
+/var/www/vltksource_new
 ## 171. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/120ebf4e.ini`
 
 - size: 3158 bytes
@@ -47244,7 +47245,7 @@ Tip=HiÖu chØnh th«ng b¸o
 
 
 ---
-
+/var/www/vltksource_new
 ## 172. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/13925203.ini`
 
 - size: 1198 bytes
@@ -47380,7 +47381,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 173. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/149e1a43.ini`
 
 - size: 998 bytes
@@ -47522,7 +47523,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 174. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/180ab63d.ini`
 
 - size: 2643 bytes
@@ -47781,7 +47782,7 @@ PropText=<color=Earth>hÖ Thæ.Cã nam lÉn n÷.<enter>Gia nhËp Vâ §ang (chÝ
 
 
 ---
-
+/var/www/vltksource_new
 ## 175. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/182b1d9e.ini`
 
 - size: 939 bytes
@@ -47897,7 +47898,7 @@ SelBgColor=140,121,99
 
 
 ---
-
+/var/www/vltksource_new
 ## 176. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/23ae49ae.ini`
 
 - size: 520 bytes
@@ -47989,7 +47990,7 @@ Image=\Spr\Ui\组队\新建队伍取消按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 177. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/2d92d99f.ini`
 
 - size: 3427 bytes
@@ -48494,7 +48495,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮改.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 178. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/34d5a29e.ini`
 
 - size: 675 bytes
@@ -48602,7 +48603,7 @@ Image=\Spr\Ui\NPC对话条\NPC对话条拖动条.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 179. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/37f84077.ini`
 
 - size: 769 bytes
@@ -48712,7 +48713,7 @@ Image=
 
 
 ---
-
+/var/www/vltksource_new
 ## 180. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/3a99868c.ini`
 
 - size: 11242 bytes
@@ -49618,7 +49619,7 @@ Item_6=Thêi gian trªn m¹ng cuèi cïng
 
 
 ---
-
+/var/www/vltksource_new
 ## 181. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/3b13ed9c.ini`
 
 - size: 1551 bytes
@@ -49831,7 +49832,7 @@ Tip=Mµu c©u héi tho¹i
 
 
 ---
-
+/var/www/vltksource_new
 ## 182. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/3d29150d.ini`
 
 - size: 1111 bytes
@@ -49993,7 +49994,7 @@ Tip=c¾m cê lªn
 
 
 ---
-
+/var/www/vltksource_new
 ## 183. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/3f81c8db.ini`
 
 - size: 1154 bytes
@@ -50155,7 +50156,7 @@ FollowMove=0,1
 
 
 ---
-
+/var/www/vltksource_new
 ## 184. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/41acf824.ini`
 
 - size: 2280 bytes
@@ -50402,7 +50403,7 @@ ChangeName=CÇn 100 v¹n l­îng
 
 
 ---
-
+/var/www/vltksource_new
 ## 185. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/450e202a.ini`
 
 - size: 1189 bytes
@@ -50566,7 +50567,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 186. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/46d557e0.ini`
 
 - size: 3372 bytes
@@ -51064,7 +51065,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 187. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/51ab0502.ini`
 
 - size: 1736 bytes
@@ -51262,7 +51263,7 @@ FocusBKColorAlpha=120
 
 
 ---
-
+/var/www/vltksource_new
 ## 188. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/522ee7a1.ini`
 
 - size: 764 bytes
@@ -51383,7 +51384,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 189. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/5a126490.ini`
 
 - size: 1770 bytes
@@ -51606,7 +51607,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登入-新建角色－土.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 190. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/605379ce.ini`
 
 - size: 1193 bytes
@@ -51788,7 +51789,7 @@ Tip=NhiÖm vô (F1. F12)
 
 
 ---
-
+/var/www/vltksource_new
 ## 191. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/672b4132.ini`
 
 - size: 1761 bytes
@@ -52064,7 +52065,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 192. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/690704b8.ini`
 
 - size: 1123 bytes
@@ -52248,7 +52249,7 @@ Image=\Spr\Ui\聊天条\聊天按钮条-地图按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 193. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/6a5d8c4c.ini`
 
 - size: 1209 bytes
@@ -52422,7 +52423,7 @@ BGPlatinaColor=240,240,240
 
 
 ---
-
+/var/www/vltksource_new
 ## 194. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/6aaad913.ini`
 
 - size: 1967 bytes
@@ -52636,7 +52637,7 @@ Color=255,0,0
 
 
 ---
-
+/var/www/vltksource_new
 ## 195. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/6b197d1f.ini`
 
 - size: 1428 bytes
@@ -52823,7 +52824,7 @@ Image=\Spr\Ui3\帮助\复杂帮助2-关闭.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 196. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/73fce6e7.ini`
 
 - size: 2106 bytes
@@ -53060,7 +53061,7 @@ HAlign=1
 
 
 ---
-
+/var/www/vltksource_new
 ## 197. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/78d6daaa.ini`
 
 - size: 2086 bytes
@@ -53329,7 +53330,7 @@ ClassType=Player_PK
 
 
 ---
-
+/var/www/vltksource_new
 ## 198. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/7e20a7ac.ini`
 
 - size: 10586 bytes
@@ -54014,7 +54015,7 @@ SendMsgNum=2
 
 
 ---
-
+/var/www/vltksource_new
 ## 199. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/82929b7b.ini`
 
 - size: 7962 bytes
@@ -54856,7 +54857,7 @@ Tip=Bang chñ ph¸t tiÒn cho mäi ng­êi
 
 
 ---
-
+/var/www/vltksource_new
 ## 200. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/87248bea.ini`
 
 - size: 1792 bytes
@@ -55086,7 +55087,7 @@ FollowSize=1,1
 
 
 ---
-
+/var/www/vltksource_new
 ## 201. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/8b1d89e1.ini`
 
 - size: 1761 bytes
@@ -55362,7 +55363,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 202. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/8da7027d.ini`
 
 - size: 2124 bytes
@@ -55681,7 +55682,7 @@ Color=55,231,63
 
 
 ---
-
+/var/www/vltksource_new
 ## 203. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/90be0674.ini`
 
 - size: 1668 bytes
@@ -55904,7 +55905,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 204. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/94bd3752.ini`
 
 - size: 573 bytes
@@ -56004,7 +56005,7 @@ Height=128
 
 
 ---
-
+/var/www/vltksource_new
 ## 205. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/96212c4f.ini`
 
 - size: 2239 bytes
@@ -56241,7 +56242,7 @@ BorderColor=206,231,173
 
 
 ---
-
+/var/www/vltksource_new
 ## 206. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/97a36ce4.ini`
 
 - size: 3153 bytes
@@ -56574,7 +56575,7 @@ Count=8
 
 
 ---
-
+/var/www/vltksource_new
 ## 207. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/97e46b17.ini`
 
 - size: 3427 bytes
@@ -57079,7 +57080,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮改.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 208. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/9b390867.ini`
 
 - size: 3427 bytes
@@ -57584,7 +57585,7 @@ Image=\Spr\Ui\状态栏\状态加点按钮改.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 209. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/9cd96589.ini`
 
 - size: 1884 bytes
@@ -57823,7 +57824,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登陆界面_7_选择人物.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 210. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/9f3fd876.ini`
 
 - size: 1761 bytes
@@ -58099,7 +58100,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 211. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/9f55c506.ini`
 
 - size: 1437 bytes
@@ -58310,7 +58311,7 @@ Tip=Mµu c©u héi tho¹i
 
 
 ---
-
+/var/www/vltksource_new
 ## 212. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/a3745fad.ini`
 
 - size: 1350 bytes
@@ -58499,7 +58500,7 @@ Image=\spr\ui\道具栏\标准关闭按钮.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 213. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/a3969281.ini`
 
 - size: 1009 bytes
@@ -58660,7 +58661,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 214. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/a49cb906.ini`
 
 - size: 472 bytes
@@ -58737,7 +58738,7 @@ Tip=
 
 
 ---
-
+/var/www/vltksource_new
 ## 215. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/a5e5430e.ini`
 
 - size: 2729 bytes
@@ -59019,7 +59020,7 @@ SendHoldMsg=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 216. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/ae4582c6.ini`
 
 - size: 1005 bytes
@@ -59161,7 +59162,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 217. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/b09f2cf8.ini`
 
 - size: 1018 bytes
@@ -59321,7 +59322,7 @@ Image=
 
 
 ---
-
+/var/www/vltksource_new
 ## 218. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/b2772ecf.ini`
 
 - size: 801 bytes
@@ -59456,7 +59457,7 @@ Tip=hiÓn thÞ b¶n ®å thÕ giíi
 
 
 ---
-
+/var/www/vltksource_new
 ## 219. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/b49267df.ini`
 
 - size: 1124 bytes
@@ -59612,7 +59613,7 @@ SelColor=255,252,178
 
 
 ---
-
+/var/www/vltksource_new
 ## 220. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/b6005b73.ini`
 
 - size: 801 bytes
@@ -59747,7 +59748,7 @@ Tip=hiÓn thÞ b¶n ®å thÕ giíi
 
 
 ---
-
+/var/www/vltksource_new
 ## 221. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/b705e9d8.ini`
 
 - size: 1770 bytes
@@ -59970,7 +59971,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登入-新建角色－土.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 222. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/bcac5b6f.ini`
 
 - size: 1761 bytes
@@ -60246,7 +60247,7 @@ Color=255,254,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 223. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/bf7b4312.ini`
 
 - size: 1668 bytes
@@ -60469,7 +60470,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 224. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/c4ebbac2.ini`
 
 - size: 1154 bytes
@@ -60631,7 +60632,7 @@ FollowMove=0,1
 
 
 ---
-
+/var/www/vltksource_new
 ## 225. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/c8524a28.ini`
 
 - size: 939 bytes
@@ -60747,7 +60748,7 @@ SelBgColor=140,121,99
 
 
 ---
-
+/var/www/vltksource_new
 ## 226. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/c988819e.ini`
 
 - size: 578 bytes
@@ -60852,7 +60853,7 @@ UnitBorder=2
 
 
 ---
-
+/var/www/vltksource_new
 ## 227. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/cc460993.ini`
 
 - size: 7811 bytes
@@ -61671,7 +61672,7 @@ Tip=Thay ®æi danh hiÖu n÷ ®Ö tö
 
 
 ---
-
+/var/www/vltksource_new
 ## 228. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/cfb57016.ini`
 
 - size: 3152 bytes
@@ -62004,7 +62005,7 @@ Count=8
 
 
 ---
-
+/var/www/vltksource_new
 ## 229. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/d4756f25.ini`
 
 - size: 1242 bytes
@@ -62177,7 +62178,7 @@ Image=\Spr\Ui3\好友qq\通用拖动条.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 230. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/dc11ac12.ini`
 
 - size: 2726 bytes
@@ -62516,7 +62517,7 @@ ClassType=Player_Recorder
 
 
 ---
-
+/var/www/vltksource_new
 ## 231. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/dd144e58.ini`
 
 - size: 567 bytes
@@ -62615,7 +62616,7 @@ Height=480
 
 
 ---
-
+/var/www/vltksource_new
 ## 232. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/dddfbe81.ini`
 
 - size: 1437 bytes
@@ -62826,7 +62827,7 @@ Tip=Mµu c©u héi tho¹i
 
 
 ---
-
+/var/www/vltksource_new
 ## 233. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/dfecf22f.ini`
 
 - size: 2372 bytes
@@ -63074,7 +63075,7 @@ SendHoldMsg=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 234. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/e03da02a.ini`
 
 - size: 727 bytes
@@ -63202,7 +63203,7 @@ Color=255,255,220
 
 
 ---
-
+/var/www/vltksource_new
 ## 235. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/e0e30c02.ini`
 
 - size: 2411 bytes
@@ -63501,7 +63502,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 236. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/e1adf7cc.ini`
 
 - size: 1122 bytes
@@ -63664,7 +63665,7 @@ Tip=c¾m cê lªn
 
 
 ---
-
+/var/www/vltksource_new
 ## 237. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/e7329097.ini`
 
 - size: 655 bytes
@@ -63772,7 +63773,7 @@ Image=\Spr\Ui\登入\拖动条.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 238. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/ec10b91e.ini`
 
 - size: 1634 bytes
@@ -63984,7 +63985,7 @@ Tip=c¾m cê lªn
 
 
 ---
-
+/var/www/vltksource_new
 ## 239. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/ece8de52.ini`
 
 - size: 472 bytes
@@ -64061,7 +64062,7 @@ Tip=
 
 
 ---
-
+/var/www/vltksource_new
 ## 240. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/f29b2e0f.ini`
 
 - size: 1189 bytes
@@ -64225,7 +64226,7 @@ Trans=0
 
 
 ---
-
+/var/www/vltksource_new
 ## 241. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/f7a2ac2f.ini`
 
 - size: 561 bytes
@@ -64329,7 +64330,7 @@ VUnits=10
 
 
 ---
-
+/var/www/vltksource_new
 ## 242. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/f8bf2550.ini`
 
 - size: 1879 bytes
@@ -64558,7 +64559,7 @@ SelBgColor=140,121,99
 
 
 ---
-
+/var/www/vltksource_new
 ## 243. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/update03/unknown/ffb7d31b.ini`
 
 - size: 2124 bytes
@@ -64877,7 +64878,7 @@ Color=55,231,63
 
 
 ---
-
+/var/www/vltksource_new
 ## 244. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vltkdata/unknown/9cd96589.ini`
 
 - size: 1884 bytes
@@ -65116,7 +65117,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登陆界面_7_选择人物.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 245. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vltkdata/unknown/d897dcbf.ini`
 
 - size: 1884 bytes
@@ -65355,7 +65356,7 @@ Image=\Spr\Ui3\登入界面\新建角色按钮\登陆界面_7_选择人物.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 246. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vltkdata/unknown/dc11ac12.ini`
 
 - size: 2906 bytes
@@ -65720,7 +65721,7 @@ ClassType=Player_Task
 
 
 ---
-
+/var/www/vltksource_new
 ## 247. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vng00/unknown/1ceb6807.ini`
 
 - size: 3496 bytes
@@ -66248,7 +66249,7 @@ ReturnCode4=您需要重启windows来完成安装。
 
 
 ---
-
+/var/www/vltksource_new
 ## 248. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vng00/unknown/39a076c7.ini`
 
 - size: 3063 bytes
@@ -66483,7 +66484,7 @@ CheckOver=1
 
 
 ---
-
+/var/www/vltksource_new
 ## 249. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vng00/unknown/50d5cbc1.ini`
 
 - size: 3574 bytes
@@ -66627,7 +66628,7 @@ GoldColor=\spr\Ui4\µÀ¾ßÀ¸\»ÆÉ«¿ò.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 250. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vng00/unknown/5a596993.ini`
 
 - size: 1417 bytes
@@ -66806,7 +66807,7 @@ STR_KUNXIANGONG=$Khæn Tiªn Cung kh«ng thÓ sö dông chøc n¨ng tù t×m ®�
 
 
 ---
-
+/var/www/vltksource_new
 ## 251. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vng00/unknown/6fcaa162.ini`
 
 - size: 3598 bytes
@@ -66950,7 +66951,7 @@ GoldColor=\spr\Ui4\µÀ¾ßÀ¸\»ÆÉ«¿ò.spr
 
 
 ---
-
+/var/www/vltksource_new
 ## 252. `/var/www/jx-source/pak_unpacked/00.src-tinh-kiem/Client 6.0/data/vng00/unknown/ce57072b.ini`
 
 - size: 22826 bytes

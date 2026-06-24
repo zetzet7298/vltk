@@ -12,16 +12,16 @@ at the right input and enforces "narrow a region first".
 SOURCE OF TRUTH
 ---------------
 PC art lives in the canonical unpacked PAK tree:
-    /var/www/jx-source/pak_unpacked
+    /var/www/vltksource_new/pak_unpacked
 HUD/UI SPRs are under the `Client 6.0/data/<pak>/...` subtrees (notably `1024/`, `800/`,
 `updatejx08/`). The old `jxwin-kinnox/.../Utility/Run/spr/Ui3` path does NOT exist on disk.
 
 USAGE (you MUST pass an explicit --file or --src; this script refuses to scan everything)
     # one SPR -> PNG frames in Assets/UI/HUD/Art
-    python3 extract_ui_spr.py --file '/var/www/jx-source/pak_unpacked/.../jx1024.spr'
+    python3 extract_ui_spr.py --file '/var/www/vltksource_new/pak_unpacked/.../jx1024.spr'
 
     # a single narrow folder (e.g. one pak's UI subdir) -> PNGs
-    python3 extract_ui_spr.py --src '/var/www/jx-source/pak_unpacked/<pak>/<uidir>'
+    python3 extract_ui_spr.py --src '/var/www/vltksource_new/pak_unpacked/<pak>/<uidir>'
 
     # only one frame, or rollback to legacy bottom-up rows
     python3 extract_ui_spr.py --file <spr> --frame 0
@@ -38,7 +38,7 @@ import sys
 
 VLTKTOOL = "~/Projects/vltktool/extract_item_spr.py"
 DEFAULT_OUT = "/var/www/vltk-mobile/Assets/UI/HUD/Art"
-PAK_UNPACKED = "/var/www/jx-source/pak_unpacked"
+PAK_UNPACKED = "/var/www/vltksource_new/pak_unpacked"
 
 
 def main():
