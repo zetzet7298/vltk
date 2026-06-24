@@ -37,7 +37,7 @@ namespace VLTK.UI
         }
 
         public static string ResolvePngPath(string artRoot, string iconName)
-            => CombineStreamingPath(artRoot, iconName + ".png");
+            => CombineStreamingPath(artRoot, string.Concat(iconName, ".png"));
 
         public static string ResolveUserFacingPngPath(string artRoot, string iconName)
             => ResolvePngPath(artRoot, HudUserFacingArtCatalog.ResolveVietnameseArtName(iconName));
@@ -55,7 +55,7 @@ namespace VLTK.UI
                 return path;
 
             var fullPath = System.IO.Path.GetFullPath(path).Replace('\\', '/');
-            return "file://" + (fullPath.StartsWith("/", System.StringComparison.Ordinal) ? fullPath : "/" + fullPath);
+            return string.Concat("file://", fullPath.StartsWith("/", System.StringComparison.Ordinal) ? fullPath : string.Concat("/", fullPath));
         }
 
         private static string NormalizeRelativeFolder(string folder)
@@ -71,10 +71,10 @@ namespace VLTK.UI
                 return root;
 
             if (root.EndsWith("/", System.StringComparison.Ordinal) || root.EndsWith("\\", System.StringComparison.Ordinal))
-                return root + normalizedRelative;
+                return string.Concat(root, normalizedRelative);
 
             return RequiresUnityWebRequest(root)
-                ? root + "/" + normalizedRelative
+                ? string.Concat(root, "/", normalizedRelative)
                 : System.IO.Path.Combine(root, normalizedRelative);
         }
     }
@@ -135,6 +135,13 @@ namespace VLTK.UI
             { "BtnTeam", "btn_team" },
             { "BtnFaction", "btn_faction" },
             { "BtnPK", "btn_pk" },
+            { "BtnRec", "btn_rec" },
+            { "BtnChatRoom", "btn_chatroom" },
+            { "BtnItemEx", "btn_itemex" },
+            { "BtnQuest", "btn_treasure" },
+            { "BtnFriend", "btn_friend_over" },
+            { "BtnSystem", "系统－选项_01" },
+            { "BtnHelp", "系统－帮助_00" },
         };
 
         private void Awake()
@@ -148,6 +155,22 @@ namespace VLTK.UI
             LoadArt();
             SizeRootToScreen();
             InitializeCombatSkillSlots();
+            EnsurePcParityOverlayActive();
+        }
+
+        /// <summary>
+        /// The IMGUI <see cref="PcHudVietnameseTextOverlay"/> renders the level number, bar
+        /// values, rank, chat tabs and bottom-menu labels that match the PC client. The
+        /// UIToolkit bar labels are <c>display:none</c> by design (IMGUI draws them so they
+        /// sit above nameplates). Ensure the overlay is enabled so the HUD reflects the PC
+        /// runtime state; a scene may ship it disabled. <see cref="GMPanelController"/> only
+        /// temporarily hides it while a GM panel is open and restores it on close.
+        /// </summary>
+        private void EnsurePcParityOverlayActive()
+        {
+            var vnOverlay = GetComponent<PcHudVietnameseTextOverlay>();
+            if (vnOverlay != null && !vnOverlay.enabled)
+                vnOverlay.enabled = true;
         }
 
         private void InitializeCombatSkillSlots()
@@ -169,7 +192,7 @@ namespace VLTK.UI
                 gameObject.AddComponent<SkillEffectWorldOverlay>();
         }
 
-        private void Update()
+        private void Update ()
         {
             EnsureRuntimeReady();
             if (!_initialized) return;
@@ -195,6 +218,14 @@ namespace VLTK.UI
             var provider = runtimeStateProvider as IRuntimeStateProvider;
             if (provider == null && runtimeStateProvider != null)
                 provider = runtimeStateProvider.GetComponent<IRuntimeStateProvider>();
+
+            // Robustness: when the serialized reference is unset (e.g. a scene ships without
+            // it wired), fall back to the sibling runtime state — the HUD GameObject carries
+            // SandboxRuntimeState, which implements IRuntimeStateProvider — so the HUD always
+            // binds real player data (level/hp/mp/stamina/exp) when the runtime exists,
+            // matching the PC client instead of defaulting to placeholder values.
+            if (provider == null)
+                provider = GetComponent<IRuntimeStateProvider>();
 
             _bridge = new HudDataBridge(provider, Debug.isDebugBuild);
             _minimapService = new MinimapService(SandboxManager.Instance?.AssetRegistry);
@@ -396,7 +427,7 @@ namespace VLTK.UI
             var artPath = HudArtPathResolver.ResolveArtRoot(artFolder);
             if (HudArtPathResolver.CanCheckDirectory(artPath) && !System.IO.Directory.Exists(artPath))
             {
-                SubsystemLog.Warn("HUD", $"Art folder not found: {artPath}");
+                SubsystemLog.Warn("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Art folder not found: {0}", artPath));
                 return;
             }
 
@@ -414,7 +445,18 @@ namespace VLTK.UI
                 {
                     var btn = root.Q(kv.Key);
                     if (btn == null) continue;
-                    var icon = btn.Q(kv.Key + "Icon");
+                    var icon = btn.Q(string.Concat(kv.Key, "Icon"));
+                    if (icon == null) icon = btn.Q("Icon");
+                    if (icon == null)
+                    {
+                        var children = btn.Children();
+                        foreach (var child in children)
+                        {
+                            if (child is Label) continue;
+                            icon = child;
+                            break;
+                        }
+                    }
                     if (icon == null) continue;
                     LoadIcon(icon, artPath, kv.Value);
                 }
@@ -432,7 +474,19 @@ namespace VLTK.UI
 
                 var worldMap = root.Q("WorldMapBtn");
                 if (worldMap != null)
-                    LoadIcon(worldMap, artPath, "btn_worldmap");
+                    LoadIcon(worldMap, artPath, "btn_minimap_world_pc");
+
+                var caveMap = root.Q("CaveMapBtn");
+                if (caveMap != null)
+                    LoadIcon(caveMap, artPath, "btn_minimap_cave_pc");
+
+                var flagMap = root.Q("FlagMapBtn");
+                if (flagMap != null)
+                    LoadIcon(flagMap, artPath, "btn_minimap_local_pc");
+
+                var treasure = root.Q("BtnTreasure");
+                if (treasure != null)
+                    LoadIcon(treasure, artPath, "btn_treasure");
             }
         }
 
@@ -456,7 +510,7 @@ namespace VLTK.UI
         {
             if (el == null)
             {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadIcon: element for {name} is null");
+                UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: element for {0} is null", name));
                 return;
             }
 
@@ -466,7 +520,7 @@ namespace VLTK.UI
                 LoadTextureIntoElement(coroutineHost, png, name, tex =>
                 {
                     el.style.backgroundImage = new StyleBackground(tex);
-                    UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
+                    UnityEngine.Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: successfully loaded {0} ({1}x{2}) onto {3}", name, tex.width, tex.height, el.name));
                 });
                 return;
             }
@@ -474,7 +528,7 @@ namespace VLTK.UI
             LoadTextureIntoElement(null, png, name, tex =>
             {
                 el.style.backgroundImage = new StyleBackground(tex);
-                UnityEngine.Debug.Log($"[HUD] LoadIcon: successfully loaded {name} ({tex.width}x{tex.height}) onto {el.name}");
+                UnityEngine.Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: successfully loaded {0} ({1}x{2}) onto {3}", name, tex.width, tex.height, el.name));
             });
         }
 
@@ -508,7 +562,7 @@ namespace VLTK.UI
             {
                 if (coroutineHost == null)
                 {
-                    UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: {name} requires UnityWebRequest but no coroutine host was provided: {path}");
+                    UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadTexture: {0} requires UnityWebRequest but no coroutine host was provided: {1}", name, path));
                     return;
                 }
 
@@ -527,7 +581,7 @@ namespace VLTK.UI
             yield return request.SendWebRequest();
             if (request.result != UnityWebRequest.Result.Success)
             {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: failed to load {name} from {path}: {request.error}");
+                UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadTexture: failed to load {0} from {1}: {2}", name, path, request.error));
                 yield break;
             }
 
@@ -543,7 +597,7 @@ namespace VLTK.UI
         {
             if (!System.IO.File.Exists(path))
             {
-                UnityEngine.Debug.LogWarning($"[HUD] LoadTexture: file not found {path}");
+                UnityEngine.Debug.LogWarning(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadTexture: file not found {0}", path));
                 return null;
             }
 
@@ -796,7 +850,7 @@ namespace VLTK.UI
         }
 
         private static string FormatPcScenePos(Vector2 world)
-            => $"{Mathf.FloorToInt(world.x / 8f)}/{Mathf.FloorToInt(-world.y / 8f)}";
+            => string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/{1}", Mathf.FloorToInt(world.x / 8f), Mathf.FloorToInt(-world.y / 8f));
 
         private static string ToVietnameseMapName(string raw)
         {
@@ -826,11 +880,11 @@ namespace VLTK.UI
                 if (isExp)
                 {
                     float pct = max > 0 ? ((float)cur / max) * 100f : 0f;
-                    text.text = $"{Mathf.RoundToInt(pct)}%";
+                    text.text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}%", Mathf.RoundToInt(pct));
                 }
                 else
                 {
-                    text.text = $"{cur}/{max}";
+                    text.text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}/{1}", cur, max);
                 }
             }
         }
@@ -841,7 +895,7 @@ namespace VLTK.UI
             _mapPreviewOverlay.RemoveFromClassList("hidden");
             if (_mapPreviewCoords != null)
                 _mapPreviewCoords.text = _lastMoveTarget.HasValue
-                    ? $"Mục tiêu: {FormatPcScenePos(_lastMoveTarget.Value)}"
+                    ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "Mục tiêu: {0}", FormatPcScenePos(_lastMoveTarget.Value))
                     : "Chọn điểm đến";
         }
 
@@ -868,7 +922,7 @@ namespace VLTK.UI
             _lastMoveTarget = target;
 
             if (_mapPreviewCoords != null)
-                _mapPreviewCoords.text = $"Đến: {FormatPcScenePos(target)}";
+                _mapPreviewCoords.text = string.Format(System.Globalization.CultureInfo.InvariantCulture, "Đến: {0}", FormatPcScenePos(target));
             UpdateMinimapDots(snap);
             CloseMapPreview();
             evt.StopPropagation();
@@ -876,15 +930,15 @@ namespace VLTK.UI
 
         private void MovePlayerTo(Vector2 worldTarget)
         {
-            var player = SandboxManager.Instance != null ? SandboxManager.Instance.PlayerController : FindObjectOfType<SandboxPlayerController>();
+            var player = SandboxManager.Instance != null ? SandboxManager.Instance.PlayerController : Object.FindFirstObjectByType<SandboxPlayerController>();
             if (player == null)
             {
-                SubsystemLog.Warn("HUD", $"Map preview target {worldTarget} ignored: no player");
+                SubsystemLog.Warn("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Map preview target {0} ignored: no player", worldTarget));
                 return;
             }
 
             player.MoveTo(worldTarget);
-            SubsystemLog.Info("HUD", $"Map preview move target {worldTarget} ({FormatPcScenePos(worldTarget)})");
+            SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Map preview move target {0} ({1})", worldTarget, FormatPcScenePos(worldTarget)));
         }
 
         public bool IsSkillPanelVisible => _skillPanel != null && !_skillPanel.ClassListContains("hidden");
@@ -936,7 +990,7 @@ namespace VLTK.UI
             PopulateSkillPanel(snap);
             _skillPanel?.RemoveFromClassList("hidden");
             CloseMapPreview();
-            SubsystemLog.Info("HUD", $"Open {GetFactionNameVi(faction)} Skills page {_skillPageIndex + 1} (level={snap.playerLevel}, points={snap.skillPoints}, skills={snap.rows.Count})");
+            SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Open {0} Skills page {1} (level={2}, points={3}, skills={4})", GetFactionNameVi(faction), _skillPageIndex + 1, snap.playerLevel, snap.skillPoints, snap.rows.Count));
         }
 
         public int CurrentSkillPageIndex => _skillPageIndex;
@@ -962,7 +1016,7 @@ namespace VLTK.UI
             }
             CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
             PopulateSkillPanel(CurrentSkillSnapshot);
-            SubsystemLog.Info("HUD", $"Switch {GetFactionNameVi(faction)} Skills to page {_skillPageIndex + 1}");
+            SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Switch {0} Skills to page {1}", GetFactionNameVi(faction), _skillPageIndex + 1));
         }
 
         public void CloseSkillPanel()
@@ -997,7 +1051,7 @@ namespace VLTK.UI
                     var row = snap.rows[slotIndex];
                     if (row.canUpgrade)
                         item.AddToClassList("hud-cb-grid-cell-upgradable");
-                    LoadIcon(slot, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{row.skillId}");
+                    LoadIcon(slot, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), string.Format(System.Globalization.CultureInfo.InvariantCulture, "cai_bang_skill_{0}", row.skillId));
 
                     var levelText = row.learnedLevel > 0 ? row.learnedLevel.ToString() : string.Empty;
                     var level = new Label(levelText);
@@ -1041,7 +1095,9 @@ namespace VLTK.UI
             CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
             PopulateSkillPanel(CurrentSkillSnapshot);
             CombatFaction faction = progression.faction;
-            SubsystemLog.Info("HUD", CurrentSelectedSkillId != 0 ? $"Select {GetFactionNameVi(faction)} skill {skillId}" : $"Hide {GetFactionNameVi(faction)} skill detail {skillId}");
+            SubsystemLog.Info("HUD", CurrentSelectedSkillId != 0
+                ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "Select {0} skill {1}", GetFactionNameVi(faction), skillId)
+                : string.Format(System.Globalization.CultureInfo.InvariantCulture, "Hide {0} skill detail {1}", GetFactionNameVi(faction), skillId));
         }
 
         public bool TryUpgradeSelectedSkill()
@@ -1064,7 +1120,9 @@ namespace VLTK.UI
                 PopulateSkillPanel(CurrentSkillSnapshot);
             }
             CombatFaction faction = progression.faction;
-            SubsystemLog.Info("HUD", upgraded ? $"Upgrade {GetFactionNameVi(faction)} skill {skillId}" : $"Cannot upgrade {GetFactionNameVi(faction)} skill {skillId}");
+            SubsystemLog.Info("HUD", upgraded
+                ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "Upgrade {0} skill {1}", GetFactionNameVi(faction), skillId)
+                : string.Format(System.Globalization.CultureInfo.InvariantCulture, "Cannot upgrade {0} skill {1}", GetFactionNameVi(faction), skillId));
             return upgraded;
         }
 
@@ -1182,14 +1240,14 @@ namespace VLTK.UI
                 icon.AddToClassList("hud-buff-icon");
                 icon.AddToClassList(b.isDebuff ? "hud-buff-border-orange" : "hud-buff-border-green");
                 
-                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{b.skillId}");
+                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), string.Format(System.Globalization.CultureInfo.InvariantCulture, "cai_bang_skill_{0}", b.skillId));
                 cell.Add(icon);
                 
                 var timer = new Label(FormatTimer(b.durationRemaining));
                 timer.AddToClassList(b.isDebuff ? "hud-debuff-timer" : "hud-buff-timer");
                 cell.Add(timer);
                 
-                cell.tooltip = $"{b.nameVi}\nCòn lại: {FormatTimer(b.durationRemaining)}s";
+                cell.tooltip = string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}\nCòn lại: {1}s", b.nameVi, FormatTimer(b.durationRemaining));
                 
                 _buffPanel.Add(cell);
             }
@@ -1236,7 +1294,7 @@ namespace VLTK.UI
             {
                 int min = Mathf.FloorToInt(seconds / 60f);
                 int sec = Mathf.FloorToInt(seconds % 60f);
-                return $"{min}m{sec}s";
+                return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}m{1}s", min, sec);
             }
             return seconds.ToString("F1");
         }
@@ -1271,7 +1329,7 @@ namespace VLTK.UI
                 var fact = HudDataService.Instance.GetFaction(m.faction);
                 int placeholderSkillId = fact != null ? fact.placeholderSkillId : 124;
 
-                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), $"cai_bang_skill_{placeholderSkillId}");
+                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), string.Format(System.Globalization.CultureInfo.InvariantCulture, "cai_bang_skill_{0}", placeholderSkillId));
                 item.Add(icon);
                 
                 var info = new VisualElement();
@@ -1317,7 +1375,7 @@ namespace VLTK.UI
 
         private void SelectStallCurrency(string name)
         {
-            SubsystemLog.Info("Stall", $"Đã chọn tiền tệ thanh toán: {name}");
+            SubsystemLog.Info("Stall", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Đã chọn tiền tệ thanh toán: {0}", name));
             _stallCurrencySelector?.AddToClassList("hidden");
         }
 
@@ -1359,7 +1417,7 @@ namespace VLTK.UI
                 {
                     if (_chatInput != null)
                     {
-                        _chatInput.value += symbol;
+                        _chatInput.value = string.Concat(_chatInput.value, symbol);
                     }
                     CloseFacePicker();
                     evt.StopPropagation();

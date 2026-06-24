@@ -131,14 +131,15 @@
     width: 136px;
     height: 166px;
     align-items: center;
+    z-index: 20;
 }
 
 .hud-minimap-frame {
     width: 130px;
     height: 130px;
     border-width: 2px;
-    border-color: rgb(180,150,80);
-    border-radius: 2px;
+    border-color: rgb(58,138,92);
+    border-radius: 0px;
     background-color: rgba(5,10,5,0.92);
     overflow: hidden;
 }
@@ -187,16 +188,16 @@
 
 .hud-minimap-btns {
     position: absolute;
-    left: 80px;
+    left: 58px;
     top: 136px;
-    width: 50px;
-    height: 14px;
+    width: 72px;
+    height: 16px;
     flex-direction: row;
     justify-content: flex-end;
 }
 .hud-minimap-btn {
-    width: 14px;
-    height: 14px;
+    width: 16px;
+    height: 16px;
     margin-left: 1px;
     margin-right: 1px;
     -unity-background-scale-mode: scale-to-fit;
@@ -481,12 +482,15 @@
     height: 82px;
     flex-direction: row;
     align-items: flex-end;
+    background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png');
+    -unity-background-scale-mode: stretch-to-fill;
     background-color: rgba(0,0,0,0.78);
     border-top-width: 2px;
     border-top-color: rgb(35,115,95);
     padding-left: 0px;
     padding-right: 8px;
     padding-bottom: 6px;
+    overflow: visible;
 }
 
 .hud-left-tools {
@@ -494,7 +498,7 @@
     right: 8px;
     bottom: 84px;
     flex-direction: row;
-    width: 190px;
+    width: 322px;
     height: 48px;
     align-items: center;
     justify-content: flex-end;
@@ -533,22 +537,24 @@
 
 .hud-main-hotbar {
     flex-direction: row;
-    width: 540px;
+    width: 500px;
     height: 58px;
     align-items: center;
     margin-left: 0px;
-    background-color: transparent;
+    background-image: url('project://database/Assets/UI/HUD/Art/toolbar_bg.png');
+    -unity-background-scale-mode: stretch-to-fill;
     border-width: 0px;
 }
 
 .hud-hotbar-slot {
-    width: 58px;
-    height: 54px;
+    width: 51px;
+    height: 51px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+    -unity-background-scale-mode: stretch-to-fill;
     background-color: rgba(5,5,5,0.85);
-    border-width: 1px;
-    border-color: rgb(70,70,70);
-    margin-left: 2px;
-    margin-right: 2px;
+    border-width: 0px;
+    margin-left: 1px;
+    margin-right: 1px;
 }
 
 .hud-slot-number {
@@ -564,13 +570,15 @@
 
 .hud-skill-panel {
     flex-direction: row;
-    width: 120px;
-    height: 58px;
+    width: 128px;
+    height: 64px;
     align-items: center;
     justify-content: center;
-    margin-left: 8px;
-    background-color: transparent;
-    border-width: 0px;
+    margin-left: 6px;
+    background-image: url('project://database/Assets/UI/HUD/Art/toolbar_bg.png');
+    -unity-background-scale-mode: stretch-to-fill;
+    border-width: 1px;
+    border-color: rgb(92,92,78);
 }
 
 .hud-skill-slot {
@@ -584,15 +592,16 @@
 }
 
 .hud-skill-panel > .hud-skill-slot {
-    width: 56px;
-    height: 56px;
-    border-width: 1px;
-    border-color: rgb(100,100,100);
+    width: 52px;
+    height: 52px;
+    border-width: 0px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+    -unity-background-scale-mode: stretch-to-fill;
     background-color: rgba(5,5,5,0.85);
     border-radius: 0px;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .hud-skill-slot-icon {
@@ -717,7 +726,16 @@
 }
 
 .hud-skill-keys {
-    display: none;
+    position: absolute;
+    left: 18px;
+    bottom: -15px;
+    width: 92px;
+    height: 14px;
+    flex-direction: row;
+    justify-content: space-between;
+    color: rgb(235,230,190);
+    font-size: 11px;
+    -unity-font-style: bold;
 }
 
 .hud-right-menu {
@@ -726,13 +744,14 @@
     bottom: 0px;
     flex-direction: row;
     height: 48px;
+    width: 374px;
     align-items: center;
 }
 
 .hud-menu-btn {
-    width: 46px;
-    height: 46px;
-    margin-left: 4px;
+    width: 34px;
+    height: 34px;
+    margin-left: 2px;
     border-width: 0px;
     background-color: transparent;
     overflow: visible;
@@ -753,12 +772,13 @@
     position: absolute;
     right: 8px;
     bottom: 8px;
-    width: 72px;
-    height: 72px;
-    border-radius: 36px;
-    border-width: 3px;
-    border-color: rgb(230, 180, 50);
-    background-color: rgb(110, 20, 10);
+    width: 74px;
+    height: 61px;
+    border-radius: 0px;
+    border-width: 0px;
+    background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png');
+    -unity-background-scale-mode: stretch-to-fill;
+    background-color: transparent;
 }
 
 /* ──────────────────────────────────────────────────────────────────────────

@@ -157,45 +157,38 @@ namespace VLTK.UI
 
         // ── Live-data helpers (lấy từ HudDataBridge / SandboxManager) ──────────
 
-private string GetLevelText()
+        private string GetLevelText()
         {
-            var hud = FindObjectOfType<GameHudController>();
-            if (hud == null) return "1";
-            var label = hud.GetComponent<UIDocument>()
-                ?.rootVisualElement?.Q<Label>("LevelText");
-            return label?.text ?? "1";
+            return GetHudLabelText("LevelText", "1");
         }
 
         private string GetHpText()
         {
-            var hud = FindObjectOfType<GameHudController>();
-            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
-                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("HpText");
-            return label?.text ?? "100/100";
+            return GetHudLabelText("HpText", "100/100");
         }
 
         private string GetMpText()
         {
-            var hud = FindObjectOfType<GameHudController>();
-            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
-                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("MpText");
-            return label?.text ?? "50/50";
+            return GetHudLabelText("MpText", "50/50");
         }
 
         private string GetStaminaText()
         {
-            var hud = FindObjectOfType<GameHudController>();
-            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
-                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("StaminaText");
-            return label?.text ?? "100/100";
+            return GetHudLabelText("StaminaText", "100/100");
         }
 
         private string GetExpText()
         {
-            var hud = FindObjectOfType<GameHudController>();
-            var label = hud?.GetComponent<UnityEngine.UIElements.UIDocument>()
-                ?.rootVisualElement?.Q<UnityEngine.UIElements.Label>("ExpText");
-            return label?.text ?? "0%";
+            return GetHudLabelText("ExpText", "0%");
+        }
+
+        private static string GetHudLabelText(string labelName, string fallback)
+        {
+            var hud = FindAnyObjectByType<GameHudController>();
+            var label = hud != null
+                ? hud.GetComponent<UIDocument>()?.rootVisualElement?.Q<Label>(labelName)
+                : null;
+            return label != null ? label.text : fallback;
         }
 
         private string GetRankText()
@@ -245,7 +238,6 @@ private string GetLevelText()
             // Top PC bar captions+values — theo 顶部控制条.ini (Ui800)
             // PC Main.Left=218 → 1280-space: 218×1.6=348. Bar offsets scaled ×1.6.
             // Stamina=87→139, Life=182→291, Mana=277→443, Exp=372→595, Level=53→85, WorldSort=499→798
-            const float C = 0f;   // container offset is 0 because bars use absolute 1280-space coords
             const float BW = 166f; // bar width: PC 104 × 1.6
 
             // "+ Cấp X" — PC format, màu xanh lá
@@ -318,7 +310,7 @@ private string GetLevelText()
 
         private void DrawSkillPanelText()
         {
-            var hud = FindObjectOfType<GameHudController>();
+            var hud = FindAnyObjectByType<GameHudController>();
             if (hud == null || !hud.IsSkillPanelVisible)
                 return;
 
@@ -427,7 +419,7 @@ private string GetLevelText()
             Label(1140, 138, 80, 14, coord + "  Tìm", new GUIStyle(_minimap) { alignment = TextAnchor.MiddleLeft });
 
             // Large preview window coordinate readout, visible while preview is open.
-            var hud = FindObjectOfType<GameHudController>();
+            var hud = FindAnyObjectByType<GameHudController>();
             var doc = hud != null ? hud.GetComponent<UnityEngine.UIElements.UIDocument>() : null;
             var root = doc != null ? FindElement(doc.rootVisualElement, "GameHud") : null;
             var overlay = root != null ? FindElement(root, "MapPreviewOverlay") : null;
