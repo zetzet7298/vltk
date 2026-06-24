@@ -43,6 +43,11 @@ namespace VLTK.Sandbox
     public struct HudSnapshot
     {
         public bool valid;
+        // Whether the runtime currently has an active map. Player stats
+        // (level/hp/mp/stamina/exp) are always bound from the runtime per the
+        // PC client behaviour (HUD renders even off-map, e.g. login/sandbox);
+        // this flag only gates map/minimap-specific rendering.
+        public bool hasActiveMap;
         public int mapId;
         public string mapName;
         public MapDefinition activeMap;
@@ -98,10 +103,19 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>AC#1 — build the HUD snapshot from runtime systems only.</summary>
+        /// <remarks>
+        /// Mirrors the PC client: player stats (level/hp/mp/stamina/exp) are
+        /// bound from the runtime whenever a runtime provider exists, even when
+        /// no map is active (login/sandbox). Only map/minimap data is gated by
+        /// <see cref="HudSnapshot.hasActiveMap"/>. Previously the whole snapshot
+        /// was invalid off-map, which forced the HUD into hardcoded defaults.
+        /// </remarks>
         public HudSnapshot BuildSnapshot()
         {
-            if (_runtime == null || !_runtime.HasActiveMap)
+            if (_runtime == null)
                 return new HudSnapshot { valid = false };
+
+            bool hasMap = _runtime.HasActiveMap;
 
             int maxLife = Math.Max(1, _runtime.PlayerMaxLife);
             int curLife = Mathf.Clamp(_runtime.PlayerCurrentLife, 0, maxLife);
@@ -120,6 +134,7 @@ namespace VLTK.Sandbox
             return new HudSnapshot
             {
                 valid = true,
+                hasActiveMap = hasMap,
                 mapId = _runtime.ActiveMapId,
                 mapName = _runtime.ActiveMapName,
                 activeMap = _runtime.ActiveMapDefinition,
@@ -193,7 +208,8 @@ namespace VLTK.Sandbox
         {
             if (a.valid != b.valid) return false;
             if (!a.valid) return true;
-            return a.mapId == b.mapId
+            return a.hasActiveMap == b.hasActiveMap
+                && a.mapId == b.mapId
                 && a.level == b.level
                 && a.currentLife == b.currentLife
                 && a.maxLife == b.maxLife

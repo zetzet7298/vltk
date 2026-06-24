@@ -53,11 +53,22 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void BuildSnapshot_NoActiveMap_Invalid()
+        public void BuildSnapshot_NoActiveMap_StillValidAndBindsStats_PcParity()
         {
+            // PC parity: player stats (level/hp/mp/stamina/exp) are always bound
+            // from the runtime even when no map is active (login/sandbox). Only
+            // the hasActiveMap flag is cleared to gate minimap rendering. See
+            // HudDataBridge.BuildSnapshot for the rationale.
             var rt = new FakeRuntime { HasActiveMap = false };
             var bridge = new HudDataBridge(rt);
-            Assert.IsFalse(bridge.BuildSnapshot().valid);
+            var snap = bridge.BuildSnapshot();
+            Assert.IsTrue(snap.valid);
+            Assert.IsFalse(snap.hasActiveMap);
+            Assert.AreEqual(12, snap.level);
+            Assert.AreEqual(80, snap.currentLife);
+            Assert.AreEqual(50, snap.currentMana);
+            Assert.AreEqual(60, snap.currentStamina);
+            Assert.AreEqual(999, snap.currentExp);
         }
 
         [Test]

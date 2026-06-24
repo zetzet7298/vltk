@@ -558,15 +558,17 @@ namespace VLTK.UI
         {
             var doc = GetComponent<UIDocument>();
             if (doc == null) return;
-            var hud = doc.rootVisualElement.Q("GameHud");
+            var root = doc.rootVisualElement;
+            if (root == null) return;
+            var hud = root.Q("GameHud");
             if (hud == null) return;
             var panel = doc.panelSettings;
             float w = panel != null && panel.referenceResolution.x > 0 ? panel.referenceResolution.x : Screen.width;
             float h = panel != null && panel.referenceResolution.y > 0 ? panel.referenceResolution.y : Screen.height;
             hud.style.width = w;
             hud.style.height = h;
-            doc.rootVisualElement.style.width = w;
-            doc.rootVisualElement.style.height = h;
+            root.style.width = w;
+            root.style.height = h;
             if (_mapPreviewOverlay != null)
             {
                 _mapPreviewOverlay.style.width = w;
@@ -597,19 +599,29 @@ namespace VLTK.UI
                 return;
             }
 
+            // Player stats always bind from the runtime (PC parity): HUD renders
+            // level/hp/mp/stamina/exp even when no map is active.
             SetLevel(snap.level);
             SetBar(_hpFill, _hpText, snap.currentLife, snap.maxLife);
-            SetBar(_mpFill, _mpText, 50, 50);
-            SetBar(_staminaFill, _staminaText, 100, 100);
-            SetBar(_expFill, _expText, 0, 100, true);
+            SetBar(_mpFill, _mpText, snap.currentMana, snap.maxMana);
+            SetBar(_staminaFill, _staminaText, snap.currentStamina, snap.maxStamina);
+            SetBar(_expFill, _expText, (int)snap.currentExp, (int)snap.maxExp, true);
 
-            var viMapName = ToVietnameseMapName(snap.mapName);
-            if (_sceneName != null) _sceneName.text = viMapName;
-            if (_scenePos != null) _scenePos.text = FormatPcScenePos(snap.playerPosition);
-            if (_mapPreviewTitle != null) _mapPreviewTitle.text = viMapName;
+            if (snap.hasActiveMap)
+            {
+                var viMapName = ToVietnameseMapName(snap.mapName);
+                if (_sceneName != null) _sceneName.text = viMapName;
+                if (_scenePos != null) _scenePos.text = FormatPcScenePos(snap.playerPosition);
+                if (_mapPreviewTitle != null) _mapPreviewTitle.text = viMapName;
 
-            EnsureMinimapTexture(snap);
-            UpdateMinimapDots(snap);
+                EnsureMinimapTexture(snap);
+                UpdateMinimapDots(snap);
+            }
+            else
+            {
+                if (_sceneName != null) _sceneName.text = string.Empty;
+                if (_scenePos != null) _scenePos.text = string.Empty;
+            }
             UpdateBuffs();
         }
 
