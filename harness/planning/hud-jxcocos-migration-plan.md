@@ -96,7 +96,7 @@
 | P3 | C: Minimap | 128x128 + dots + coord + bigmap toggle | existing-behavior, cross-platform | ✅ Done (JxMinimapState/Adapter, 17 tests) |
 | P4 | D: Bottom bar | skill slots + immedicy box + joystick + attack btn | existing-behavior, public-contracts | D1 ✅ skill slots (19 tests); D2 ✅ immedicy box (15 tests); D3 joystick/attack todo |
 | P5 | E0: 9 Menu toolbar | 9-button toolbar frame, panel toggle via command bus, selected highlight | existing-behavior | ✅ Done (JxToolbarConfig/State/Adapter, 9 tests) |
-| P5b | E1-E3: Role/Item/Skill panels | character + inventory(+tooltip) + skill(+tooltip), open/close, drag-drop | existing-behavior, public-contracts | todo |
+| P5 | E2: Inventory panel | character + inventory grid + tooltip, open/close, drag-drop | existing-behavior, public-contracts | E2a ✅ grid+item+swap (JxInventoryState, 22 tests); E2b tooltip + adapter todo |
 | P6 | E4-E8: Task/Friend/Team/Guild/Shop | social + shop panels, open/close | existing-behavior | todo |
 | P7 | F: Chat panel | 5-tab chat + input + scroll | existing-behavior | todo |
 | P8 | Settings + misc popups | Settings (recon needed), give/trade | existing-behavior | todo |
