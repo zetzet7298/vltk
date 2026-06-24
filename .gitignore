@@ -183,7 +183,12 @@ vltkunity
 # ─────────────────────────────────────────────────
 .codex/
 .factory/
-.agents/
+!.agents/
+.agents/*
+!.agents/skills/
+.agents/skills/**/*-workspace/
+.agents/skills/**/__pycache__/
+harness/.agents/
 .understand-anything/
 .kiro/
 .pi/
