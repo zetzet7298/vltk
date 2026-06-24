@@ -1,5 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
-    <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
+    <!-- GameHud.uss is loaded at runtime by GameHudController.EnsureStyleSheetLoaded()
+         (from Resources/GameHud.uss). The <ui:Style> reference below resolves in
+         the UI Builder editor only and is intentionally absent here to avoid a
+         missing-asset warning when the stylesheet lives under Resources/. -->
     <ui:VisualElement name="GameHud" class="hud-root">
 
         <!-- ═══ TOP STATUS BAR & AVATAR — vltkunity TopBar.prefab + Avatar.prefab (unified top-left) ═══ -->
@@ -101,19 +104,19 @@
             <!-- Copper (Đồng) Row -->
             <ui:VisualElement style="flex-direction: row; height: 26px; align-items: center; margin-bottom: 4px; background-color: rgba(0, 0, 0, 0.65); border-radius: 4px; padding-left: 4px; padding-right: 4px;">
                 <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/money/tongqian.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 6px;"/>
-                <ui:Label name="MoneyCopperAmount" text="0" style="flex-grow: 1; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
+                <ui:Label name="MoneyCopperAmount" text="0" style="flex-grow: 1; height: 20px; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
                 <ui:VisualElement name="MoneyCopperAddBtn" style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_plus.png'); -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
             <!-- Gold (Vàng) Row -->
             <ui:VisualElement style="flex-direction: row; height: 26px; align-items: center; margin-bottom: 4px; background-color: rgba(0, 0, 0, 0.65); border-radius: 4px; padding-left: 4px; padding-right: 4px;">
                 <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/money/jinbi.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 6px;"/>
-                <ui:Label name="MoneyGoldAmount" text="0" style="flex-grow: 1; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
+                <ui:Label name="MoneyGoldAmount" text="0" style="flex-grow: 1; height: 20px; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
                 <ui:VisualElement name="MoneyGoldAddBtn" style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_plus.png'); -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
             <!-- Silver (Bạc) Row -->
             <ui:VisualElement style="flex-direction: row; height: 26px; align-items: center; background-color: rgba(0, 0, 0, 0.65); border-radius: 4px; padding-left: 4px; padding-right: 4px;">
                 <ui:VisualElement style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/money/yinliang.png'); -unity-background-scale-mode: scale-to-fit; margin-right: 6px;"/>
-                <ui:Label name="MoneySilverAmount" text="0" style="flex-grow: 1; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
+                <ui:Label name="MoneySilverAmount" text="0" style="flex-grow: 1; height: 20px; font-size: 13px; color: rgb(246, 255, 105); -unity-text-align: middle-left; -unity-font-style: bold; margin-right: 6px;"/>
                 <ui:VisualElement name="MoneySilverAddBtn" style="width: 20px; height: 20px; background-image: url('project://database/Assets/UI/HUD/Art/vltkunity/Buttons/btn_plus.png'); -unity-background-scale-mode: scale-to-fit;"/>
             </ui:VisualElement>
         </ui:VisualElement>

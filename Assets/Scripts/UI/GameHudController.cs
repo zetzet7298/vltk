@@ -430,6 +430,33 @@ namespace VLTK.UI
 
             _vltkunityBus.OnPanelClosed += CloseVltkLightweightPanel;
             _vltkunityBus.OnPanelActionSelected += HandlePanelActionSelected;
+
+            // Force-hide all vltkunity panels on init. The USS .hidden rule does
+            // not reliably apply at runtime (a later equal-specificity rule, plus
+            // the project:// stylesheet reference, can leave display at the Flex
+            // default), so we set inline display:none as the authoritative hidden
+            // state. Show/Close methods use the same inline-toggle approach.
+            HideAllPanels(root);
+        }
+
+
+        private static void HideAllPanels(VisualElement root)
+        {
+            if (root == null) return;
+            string[] names =
+            {
+                "VltkBagPanel", "VltkChatPanel", "VltkEquipPanel", "VltkSkillPanel",
+                "VltkNpcPanel", "VltkFactionPanel", "VltkGuildPanel", "VltkMailPanel",
+                "VltkShopPanel", "VltkLoginPanel",
+                "MapPreviewOverlay", "PcToolPanel", "TeamPreview", "FacePickerOverlay",
+                "StallCurrencySelector", "TradeInfoPanel", "InventoryWindow", 
+                "SkillPickerOverlay", "TargetLockMarker", "CaiBangSkillPanel",
+                "GmItemActionOverlay"
+            };
+            foreach (var n in names)
+            {
+                SetElementVisible(root.Q(n), false);
+            }
         }
 
         private void HandleScreenshotRequested()
@@ -626,6 +653,11 @@ namespace VLTK.UI
 
             _bridge = new HudDataBridge(provider, Debug.isDebugBuild);
             _minimapService = new MinimapService(SandboxManager.Instance?.AssetRegistry);
+        }
+
+        private static void SetElementVisible(VisualElement el, bool visible)
+        {
+            if (el != null) el.style.display = visible ? DisplayStyle.Flex : DisplayStyle.None;
         }
 
         private void BindElements()
@@ -910,7 +942,7 @@ namespace VLTK.UI
                         evt.StopPropagation();
                     }
                 });
-                _mapPosInput.RegisterCallback<FocusOutEvent>(_ => _mapPosInput.AddToClassList("hidden"));
+                _mapPosInput.RegisterCallback<FocusOutEvent>(_ => SetElementVisible(_mapPosInput, false));
             }
 
             RegisterClick(root, "CaiBangSkillPageOne", () => SetSkillPage(0));
@@ -963,6 +995,52 @@ namespace VLTK.UI
             _boundRoot = root;
             ApplyUtilityBarMode(_utilityBarMode);
             _initialized = true;
+            ApplyDefaultFont(root);
+            EnsureStyleSheetLoaded(root);
+        }
+
+        // The UXML <ui:Style src="..."> reference does not resolve at runtime in
+        // this project (project://database URIs fail outside the editor asset
+        // pipeline), so the entire GameHud.uss — including the .hidden rule — is
+        // silently skipped. We load the stylesheet explicitly and attach it to the
+        // root so USS rules (panel sizing, .hidden display:none, chrome styling)
+        // take effect in play mode.
+        private static StyleSheet _hudStyleSheet;
+        private static void EnsureStyleSheetLoaded(VisualElement root)
+        {
+            if (root == null) return;
+            if (_hudStyleSheet == null)
+                _hudStyleSheet = Resources.Load<StyleSheet>("GameHud");
+            if (_hudStyleSheet == null) return;
+            if (!root.styleSheets.Contains(_hudStyleSheet))
+                root.styleSheets.Add(_hudStyleSheet);
+        }
+
+        // UI Toolkit text renders blank when labels fall back to the project's
+        // default (runtime) font, which in this project resolves to a broken
+        // FontAsset with no source/glyphs. The HudDefaultFont asset (NotoSans,
+        // Dynamic atlas, ASCII pre-populated) is the authoritative UI font, so
+        // we assign it to every label at bind time. New dynamic labels created
+        // by adapters should call ApplyDefaultFont on their own subtree.
+        private static UnityEngine.TextCore.Text.FontAsset _uiFont;
+        private static void ApplyDefaultFont(VisualElement root)
+        {
+            if (root == null) return;
+            if (_uiFont == null)
+            {
+                _uiFont = Resources.Load<UnityEngine.TextCore.Text.FontAsset>("HudDefaultFont");
+            }
+            if (_uiFont == null) return;
+            var stack = new System.Collections.Generic.Stack<VisualElement>();
+            stack.Push(root);
+            while (stack.Count > 0)
+            {
+                var el = stack.Pop();
+                if (el is Label lbl)
+                    lbl.style.unityFontDefinition = new StyleFontDefinition(_uiFont);
+                int n = el.childCount;
+                for (int i = 0; i < n; i++) stack.Push(el[i]);
+            }
         }
 
         private void RegisterPreviewOpen(VisualElement root, string name)
@@ -1254,42 +1332,38 @@ namespace VLTK.UI
             doc.rootVisualElement.style.width = w;
             doc.rootVisualElement.style.height = h;
 
+            // vltkunity HUD parity: the S5 chrome widgets (TopBar, Bottom,
+            // Minimap, Skill) carry their own pixel-accurate inline layout in
+            // GameHud.uxml for the 1280x720 reference rectangle (matches the
+            // vltkunity 1920x1080 design at the same 16:9 ratio). The legacy
+            // PC sizing below overwrote width/height and crushed the inline
+            // avatar/bars/minimap art, so we only translate by the safe-area
+            // offset here and never touch width/height. The PanelSettings
+            // Shrink + the root volume sizing (w x h) handle letterboxing.
             if (_topBarPanel != null)
             {
-                _topBarPanel.style.left = safeX;
-                _topBarPanel.style.top = safeY;
-                _topBarPanel.style.width = referenceWidth;
-                _topBarPanel.style.height = 40f;
+                // Inline layout is left:10/top:10 — keep it, just add safe-area.
+                _topBarPanel.style.left = safeX + 10f;
+                _topBarPanel.style.top = safeY + 10f;
             }
             if (_bottomPanel != null)
             {
                 _bottomPanel.style.left = safeX;
                 _bottomPanel.style.bottom = safeY;
-                _bottomPanel.style.width = referenceWidth;
-                // PC bottom strip art (主界面新版.spr) is 800x60 — at the 1280x720
-                // HUD reference + 1.5x screen scale the strip is ~90 px tall.
-                // Sized to the strip art (no wasted empty space below) so it
-                // occupies ~12.5% of vertical HUD space on mobile.
-                _bottomPanel.style.height = 90f;
             }
             if (_chatPanel != null)
             {
-                // Position already set at BindElements() — center horizontally,
-                // anchored above the chat input row + PC menu toolbar.
-                // (input 32 + toolbar bottom 76 + toolbar height 56 = 164)
                 _chatPanel.style.bottom = 164f + safeY;
             }
             if (_chatInputRow != null)
             {
-                // ChatInputRow is a sibling of ChatBar, absolute-positioned just
-                // above the PC menu toolbar (bottom 76 + height 56 = 132).
                 _chatInputRow.style.position = Position.Absolute;
                 _chatInputRow.style.bottom = 132f + safeY;
                 _chatInputRow.style.width = 410f;
             }
             if (_minimapPanel != null)
             {
-                // PC 小地图_小.ini: MiniMap Left=670, Top=0, W=130, H=130 → 1.6x = 1072, 0, 208, 156
+                // vltkunity MiniMap inline: left:1072, top:0 (same as PC 1.6x).
                 _minimapPanel.style.left = safeX + 1072f;
                 _minimapPanel.style.right = StyleKeyword.Auto;
                 _minimapPanel.style.top = safeY + 0f;
@@ -1299,11 +1373,8 @@ namespace VLTK.UI
                 _mapPreviewOverlay.style.width = w;
                 _mapPreviewOverlay.style.height = h;
             }
-            if (_skillPanel != null)
-            {
-                _skillPanel.style.left = safeX + Mathf.Clamp(338f, 0f, Mathf.Max(0f, referenceWidth - 205f));
-                _skillPanel.style.top = safeY + Mathf.Clamp(110f, 0f, Mathf.Max(0f, referenceHeight - 376f));
-            }
+            // CaiBangSkillPanel is PC-era and kept hidden in favor of the
+            // vltkunity VltkSkillPanel; do not reposition it.
         }
 
         private void UpdateBarsAndMinimap()
@@ -1609,7 +1680,7 @@ namespace VLTK.UI
             }
 
             _mapPosInput.value = _scenePos != null ? _scenePos.text : string.Empty;
-            _mapPosInput.RemoveFromClassList("hidden");
+            SetElementVisible(_mapPosInput, true);
             _mapPosInput.Focus();
         }
 
@@ -1626,7 +1697,7 @@ namespace VLTK.UI
 
             MovePlayerTo(target);
             _lastMoveTarget = target;
-            _mapPosInput.AddToClassList("hidden");
+            SetElementVisible(_mapPosInput, false);
             if (_mapPreviewCoords != null)
                 _mapPreviewCoords.text = $"Đến: {FormatPcScenePos(target)}";
             OpenMapPreview();
@@ -1647,7 +1718,7 @@ namespace VLTK.UI
         private void OpenMapPreview()
         {
             if (_mapPreviewOverlay == null) return;
-            _mapPreviewOverlay.RemoveFromClassList("hidden");
+            SetElementVisible(_mapPreviewOverlay, true);
             if (_mapPreviewCoords != null)
                 _mapPreviewCoords.text = _lastMoveTarget.HasValue
                     ? $"Mục tiêu: {FormatPcScenePos(_lastMoveTarget.Value)}"
@@ -1657,7 +1728,7 @@ namespace VLTK.UI
         private void CloseMapPreview()
         {
             if (_mapPreviewOverlay == null) return;
-            _mapPreviewOverlay.AddToClassList("hidden");
+            SetElementVisible(_mapPreviewOverlay, false);
         }
 
         private void OnPreviewMapPointerDown(PointerDownEvent evt)
@@ -1743,7 +1814,7 @@ namespace VLTK.UI
             var snap = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
             CurrentSkillSnapshot = snap;
             PopulateSkillPanel(snap);
-            _skillPanel?.RemoveFromClassList("hidden");
+            SetElementVisible(_skillPanel, true);
             CloseMapPreview();
             SubsystemLog.Info("HUD", $"Open {GetFactionNameVi(faction)} Skills page {_skillPageIndex + 1} (level={snap.playerLevel}, points={snap.skillPoints}, skills={snap.rows.Count})");
         }
@@ -1776,7 +1847,7 @@ namespace VLTK.UI
 
         public void CloseSkillPanel()
         {
-            _skillPanel?.AddToClassList("hidden");
+            SetElementVisible(_skillPanel, false);
         }
 
         // ── Inventory window (Hành Trang) — PC 物品 / Open([[items]]) ──────────
@@ -1796,7 +1867,7 @@ namespace VLTK.UI
             int playerId = manager != null && manager.PlayerProgression != null ? 1 : 0;
             var snap = InventoryPanelService.BuildGridSnapshot(inventory, playerId);
             PopulateInventory(snap);
-            _invWindow?.RemoveFromClassList("hidden");
+            SetElementVisible(_invWindow, true);
             CloseSkillPanel();
             CloseMapPreview();
             SubsystemLog.Info("HUD", $"Open Inventory (slots={snap.totalSlots}, used={snap.usedSlots})");
@@ -1805,7 +1876,7 @@ namespace VLTK.UI
         public void CloseInventory()
         {
             CloseGmItemOverlay();
-            _invWindow?.AddToClassList("hidden");
+            SetElementVisible(_invWindow, false);
             SubsystemLog.Info("HUD", "Close Inventory");
         }
 
@@ -1929,7 +2000,7 @@ namespace VLTK.UI
             if (_gmItemOverlay != null && _gmItemOverlay.parent == parent) return;
 
             _gmItemOverlay = new VisualElement { name = "GmItemActionOverlay" };
-            _gmItemOverlay.AddToClassList("hidden");
+            SetElementVisible(_gmItemOverlay, false);
             _gmItemOverlay.style.position = Position.Absolute;
             _gmItemOverlay.style.left = 0; _gmItemOverlay.style.right = 0;
             _gmItemOverlay.style.top = 0; _gmItemOverlay.style.bottom = 0;
@@ -1970,14 +2041,14 @@ namespace VLTK.UI
 
         private void CloseGmItemOverlay()
         {
-            _gmItemOverlay?.AddToClassList("hidden");
+            SetElementVisible(_gmItemOverlay, false);
         }
 
         private void OpenInventoryItemDetail(InventoryPanelRow row)
         {
             EnsureGmItemOverlay();
             if (_gmItemOverlay == null) return;
-            _gmItemOverlay.RemoveFromClassList("hidden");
+            SetElementVisible(_gmItemOverlay, true);
             _gmItemOverlay.BringToFront();
             _gmItemTitle.text = row.itemName;
             _gmItemMessage.text = IsGmTestServerRow(row)
@@ -1994,7 +2065,7 @@ namespace VLTK.UI
             EnsureGmItemOverlay();
             if (_gmItemOverlay == null) return;
             var service = GetGmItemService();
-            _gmItemOverlay.RemoveFromClassList("hidden");
+            SetElementVisible(_gmItemOverlay, true);
             _gmItemOverlay.BringToFront();
             _gmItemTitle.text = "Lệnh bài GM Test Server";
             _gmItemMessage.text = service.CanUse
@@ -2043,7 +2114,7 @@ namespace VLTK.UI
         private void RenderGmConfirmation(GmItemMenuOption option, string message)
         {
             EnsureGmItemOverlay();
-            _gmItemOverlay?.RemoveFromClassList("hidden");
+            SetElementVisible(_gmItemOverlay, true);
             _gmItemTitle.text = option?.label ?? "Xác nhận";
             _gmItemMessage.text = message;
             _gmItemList.Clear();
@@ -2085,7 +2156,7 @@ namespace VLTK.UI
             EnsureGmItemOverlay();
             if (_gmItemOverlay == null) return;
             var service = GetGmItemService();
-            _gmItemOverlay.RemoveFromClassList("hidden");
+            SetElementVisible(_gmItemOverlay, true);
             _gmItemOverlay.BringToFront();
             _gmItemTitle.text = "Dịch chuyển bản đồ";
 
@@ -2616,7 +2687,7 @@ namespace VLTK.UI
                 AddPcToolActionRow($"PC {control.pcFile} [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcCharacterControlClick(section));
             }
 
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -2753,7 +2824,7 @@ namespace VLTK.UI
                 AddPcToolRow("Nhóm bằng hữu đang thu gọn.");
             }
 
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -2823,10 +2894,10 @@ namespace VLTK.UI
             {
                 bool hide = !_teamPreview.ClassListContains("hidden");
                 if (hide)
-                    _teamPreview.AddToClassList("hidden");
+                    SetElementVisible(_teamPreview, false);
                 else
                 {
-                    _teamPreview.RemoveFromClassList("hidden");
+                    SetElementVisible(_teamPreview, true);
                     PopulateTeamPreview();
                 }
                 SubsystemLog.Info("HUD", hide ? "Close Team" : "Open Team");
@@ -2854,7 +2925,7 @@ namespace VLTK.UI
                 AddPcToolActionRow($"PC [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcTeamControlClick(section));
             }
 
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -2925,7 +2996,7 @@ namespace VLTK.UI
                     OpenPcTeamPanel(_teamNearbyListClosed ? "PC [CloseTeam]: đã đóng danh sách lân cận." : "PC [CloseTeam]: đã mở danh sách lân cận.");
                     break;
                 case "Cancel":
-                    _teamPreview?.AddToClassList("hidden");
+                    SetElementVisible(_teamPreview, false);
                     ClosePcToolPanel();
                     break;
             }
@@ -2980,7 +3051,7 @@ namespace VLTK.UI
                 AddPcToolActionRow($"PC {control.pcFile} [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcGuildControlClick(section));
             }
 
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -3371,7 +3442,7 @@ namespace VLTK.UI
                     AddPcToolRow(row);
             }
 
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -3584,7 +3655,7 @@ namespace VLTK.UI
 
             if (_pcToolList.contentContainer.childCount == 0)
                 AddPcToolRow("Không có dữ liệu.");
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -3668,13 +3739,13 @@ namespace VLTK.UI
                     _tradeSession = null;
                     _tradeTarget = null;
                     _tradeEconomy = null;
-                    _tradeInfoPanel.AddToClassList("hidden");
+                    SetElementVisible(_tradeInfoPanel, false);
                     SetButtonActive("BtnExchange", false);
                     ClosePcToolPanel();
                 }
                 else
                 {
-                    _tradeInfoPanel.RemoveFromClassList("hidden");
+                    SetElementVisible(_tradeInfoPanel, true);
                     var manager = SandboxManager.Instance;
                     BeginExchangeSession(manager?.GameplayLoop?.Economy, manager?.PartyService?.Members);
                     PopulateTradeInfo();
@@ -3696,7 +3767,7 @@ namespace VLTK.UI
             AddPcToolRow("PC 排名.ini — bảng xếp hạng thế giới");
             AddPcToolRow("Danh mục: Cấp độ / Tiền bạc / Võ lực / Môn phái");
             AddPcToolRow("(Chưa kết nối server — placeholder UI)");
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
             SubsystemLog.Info("HUD", "Open WorldSort ranking panel");
         }
@@ -3719,7 +3790,7 @@ namespace VLTK.UI
                 AddPcToolActionRow($"PC [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcExchangeControlClick(section));
             }
 
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -3753,7 +3824,7 @@ namespace VLTK.UI
                     _tradeSession = null;
                     _tradeTarget = null;
                     _tradeEconomy = null;
-                    _tradeInfoPanel?.AddToClassList("hidden");
+                    SetElementVisible(_tradeInfoPanel, false);
                     SetButtonActive("BtnExchange", false);
                     ClosePcToolPanel();
                     break;
@@ -3932,7 +4003,7 @@ namespace VLTK.UI
                 AddPcToolActionRow($"PC {control.pcFile} [{control.pcSection}] {control.labelVi}: {control.actionVi}", () => OnPcTreasureMallControlClick(section));
             }
 
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -4051,7 +4122,7 @@ namespace VLTK.UI
 
         public void ClosePcToolPanel()
         {
-            _pcToolPanel?.AddToClassList("hidden");
+            SetElementVisible(_pcToolPanel, false);
         }
 
         private void OpenPcToolPanel(string title, IEnumerable<string> rows)
@@ -4070,7 +4141,7 @@ namespace VLTK.UI
             }
             if (_pcToolList.contentContainer.childCount == 0)
                 AddPcToolRow("Không có dữ liệu.");
-            _pcToolPanel.RemoveFromClassList("hidden");
+            SetElementVisible(_pcToolPanel, true);
             _pcToolPanel.BringToFront();
         }
 
@@ -4418,27 +4489,27 @@ namespace VLTK.UI
 
         private void CloseTradeInfo()
         {
-            _tradeInfoPanel?.AddToClassList("hidden");
+            SetElementVisible(_tradeInfoPanel, false);
         }
 
         private void SelectStallCurrency(string name)
         {
             SubsystemLog.Info("Stall", $"Đã chọn tiền tệ thanh toán: {name}");
-            _stallCurrencySelector?.AddToClassList("hidden");
+            SetElementVisible(_stallCurrencySelector, false);
         }
 
         private void OpenFacePicker()
         {
             if (_facePickerOverlay != null)
             {
-                _facePickerOverlay.RemoveFromClassList("hidden");
+                SetElementVisible(_facePickerOverlay, true);
                 PopulateFacePicker();
             }
         }
         
         private void CloseFacePicker()
         {
-            _facePickerOverlay?.AddToClassList("hidden");
+            SetElementVisible(_facePickerOverlay, false);
         }
 
         private void PopulateFacePicker()
@@ -4509,7 +4580,7 @@ namespace VLTK.UI
         {
             var panel = _boundRoot?.Q("VltkBagPanel");
             if (panel == null) return;
-            panel.RemoveFromClassList("hidden");
+            panel.style.display = DisplayStyle.Flex;
             var manager = SandboxManager.Instance;
             var inventory = manager != null ? manager.InventoryService : null;
             int playerId = manager != null && manager.PlayerProgression != null ? 1 : 0;
@@ -4519,7 +4590,7 @@ namespace VLTK.UI
 
         public void CloseVltkBagPanel()
         {
-            _boundRoot?.Q("VltkBagPanel")?.AddToClassList("hidden");
+            var p = _boundRoot?.Q("VltkBagPanel"); if (p != null) p.style.display = DisplayStyle.None;
         }
 
         private void HandleBagTabChanged(int tabIndex)
@@ -4534,12 +4605,12 @@ namespace VLTK.UI
 
         public void OpenVltkChatPanel()
         {
-            _boundRoot?.Q("VltkChatPanel")?.RemoveFromClassList("hidden");
+            var p = _boundRoot?.Q("VltkChatPanel"); if (p != null) p.style.display = DisplayStyle.Flex;
         }
 
         public void CloseVltkChatPanel()
         {
-            _boundRoot?.Q("VltkChatPanel")?.AddToClassList("hidden");
+            var p = _boundRoot?.Q("VltkChatPanel"); if (p != null) p.style.display = DisplayStyle.None;
         }
 
         private void HandleChatSendRequested(string message)
@@ -4563,7 +4634,7 @@ namespace VLTK.UI
         {
             var panel = _boundRoot?.Q("VltkSkillPanel");
             if (panel == null) return;
-            panel.RemoveFromClassList("hidden");
+            panel.style.display = DisplayStyle.Flex;
             var manager = SandboxManager.Instance;
             var catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
             var progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
@@ -4576,7 +4647,7 @@ namespace VLTK.UI
 
         public void CloseVltkSkillPanel()
         {
-            _boundRoot?.Q("VltkSkillPanel")?.AddToClassList("hidden");
+            var p = _boundRoot?.Q("VltkSkillPanel"); if (p != null) p.style.display = DisplayStyle.None;
         }
 
         private void HandleSkillUpgradeRequested(int skillId)
@@ -4609,7 +4680,7 @@ namespace VLTK.UI
         {
             var panel = _boundRoot?.Q("VltkEquipPanel");
             if (panel == null) return;
-            panel.RemoveFromClassList("hidden");
+            panel.style.display = DisplayStyle.Flex;
             var manager = SandboxManager.Instance;
             var snap = CharacterPanelService.BuildSnapshot(manager?.PlayerProgression, null, 1);
             _vltkunityEquipment?.Apply(snap);
@@ -4617,7 +4688,7 @@ namespace VLTK.UI
 
         public void CloseVltkEquipPanel()
         {
-            _boundRoot?.Q("VltkEquipPanel")?.AddToClassList("hidden");
+            var p = _boundRoot?.Q("VltkEquipPanel"); if (p != null) p.style.display = DisplayStyle.None;
         }
 
         private void HandleEquipmentTabChanged(int tabIndex)
@@ -4651,7 +4722,7 @@ namespace VLTK.UI
             };
             var panel = _boundRoot?.Q(prefix + "Panel");
             if (panel == null) return;
-            panel.RemoveFromClassList("hidden");
+            panel.style.display = DisplayStyle.Flex;
             var adapter = type switch
             {
                 PanelType.NpcDialog => _vltkunityNpcDialog,
@@ -4682,7 +4753,7 @@ namespace VLTK.UI
                 PanelType.Login => "VltkLogin",
                 _ => "VltkPanel",
             };
-            _boundRoot?.Q(prefix + "Panel")?.AddToClassList("hidden");
+            var pp = _boundRoot?.Q(prefix + "Panel"); if (pp != null) pp.style.display = DisplayStyle.None;
         }
 
         private void HandlePanelActionSelected(PanelType panelType, string action)

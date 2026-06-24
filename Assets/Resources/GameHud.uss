@@ -248,6 +248,13 @@
 
 .hidden { display: none; }
 
+/* vltkunity port panels — hidden state must beat any default/sibling rule.
+   Two-class specificity guarantees the display:none wins even when other
+   single-class or element rules would otherwise resolve to Flex. */
+.hud-vltk-panel.hidden { display: none; }
+.hud-mobile-bottom.hidden { display: none; }
+.hud-cb-skill-panel.hidden { display: none; }
+
 
 /* ═══ MAP PREVIEW ═══ */
 .hud-map-preview-overlay {
