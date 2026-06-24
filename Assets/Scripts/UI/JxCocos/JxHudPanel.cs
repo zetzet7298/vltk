@@ -26,6 +26,9 @@ namespace VLTK.UI.JxCocos
         Guild = 6,       // Bang Hội    -> KuiTongInfoVN
         Settings = 7,    // Cài Đặt     -> (options)
         Shop = 8,        // Kỳ Trân Các -> KuiShopVN
+
+        // Overlay (not a toolbar menu button): opened by clicking the minimap.
+        WorldMap = 100,  // KuiMaxMapVN overlay (big map)
     }
 
     /// <summary>Ancillary toolbar actions (not modal panels).</summary>
