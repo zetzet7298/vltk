@@ -21,19 +21,19 @@ namespace VLTK.Sandbox
         int PlayerCurrentLife { get; }
         int PlayerMaxLife { get; }
         int PlayerCurrentMana { get; }
-        int PlayerMaxMana { get; }       // vltkunity MaxInner (replaces hardcoded 100)
-        int PlayerCurrentStamina { get; } // vltkunity CurStamina
-        int PlayerMaxStamina { get; }     // vltkunity MaxStamina
+        int PlayerMaxMana { get; }       // runtime max mana (replaces hardcoded 100)
+        int PlayerCurrentStamina { get; } // runtime/current stamina
+        int PlayerMaxStamina { get; }     // runtime/max stamina
         long PlayerExp { get; }
         long PlayerMaxExp { get; }        // real EXP denominator (fixes ComputeExpFraction fudge)
 
-        // Minimap projection (recon §1a / M1). vltkunity miniMapHandle.xRatio/yRatio.
+        // Minimap projection (recon §1a / M1).
         // Per-map offset used to project player world coords onto the minimap.
         float MiniMapXRatio { get; }
         float MiniMapYRatio { get; }
 
-        // Currency (recon §3). vltkunity Money.prefab has no source binding;
-        // these read from the runtime economy wallet. Vietnamese: Đồng/Vàng/Bạc.
+        // Currency (recon §3). Read from the runtime economy wallet.
+        // Vietnamese: Đồng/Vàng/Bạc.
         int PlayerCopper { get; }   // tongqian
         int PlayerGold { get; }     // jinbi
         int PlayerSilver { get; }   // yinliang
@@ -86,8 +86,7 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Raised when <see cref="BuildSnapshot"/> produces a snapshot that differs
-        /// from the previous one in any field the HUD cares about. vltkunity port
-        /// adapters subscribe here instead of polling inside Update(); controllers
+        /// from the previous one in any field the HUD cares about. Controllers
         /// should call <see cref="RefreshAndPublish"/> from their normal update tick.
         /// </summary>
         public event Action<HudSnapshot> SnapshotChanged;

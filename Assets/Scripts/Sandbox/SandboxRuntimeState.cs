@@ -51,9 +51,9 @@ namespace VLTK.Sandbox
         public int PlayerMaxLife => Loop?.Player?.combat?.maxLife ?? 100;
         public int PlayerCurrentMana => Loop?.Player?.combat?.currentMana ?? 100;
         public int PlayerMaxMana => Loop?.Player?.combat?.maxMana ?? 100;
-        // vltkunity CurStamina/MaxStamina. CombatActorState does not yet track
-        // stamina; default to the MountService cap (100) so the stamina bar renders
-        // correctly until a stamina field is added to CombatActorState.
+        // CombatActorState does not yet track stamina; default to the MountService
+        // cap (100) so the stamina bar renders correctly until a stamina field is
+        // added to CombatActorState.
         public int PlayerCurrentStamina => MountService.MaxStamina;
         public int PlayerMaxStamina => MountService.MaxStamina;
         public long PlayerExp => Loop?.LevelService?.CurrentExp ?? 0;
@@ -69,7 +69,7 @@ namespace VLTK.Sandbox
         }
 
         // Minimap projection (recon §1a / M1). Defaults to 0 (no offset) until
-        // a runtime minimap handle supplies per-map xRatio/yRatio as in vltkunity.
+        // a runtime minimap handle supplies per-map xRatio/yRatio.
         public float MiniMapXRatio => 0f;
         public float MiniMapYRatio => 0f;
 
