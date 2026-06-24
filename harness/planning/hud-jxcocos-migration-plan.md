@@ -99,7 +99,8 @@
 | P5 | E1: Role/equipment panel | 15 equip slots, slot layout, equip/unequip state | existing-behavior, public-contracts | ✅ E1 equipment state/layout (10 tests) |
 | P5 | E2: Inventory panel | inventory grid + tooltip, open/close, drag-drop | existing-behavior, public-contracts | ✅ E2a grid+item+swap (22) + adapter (12); ✅ E2b tooltip durability/action state (19) |
 | P5 | E3: Võ Công skill panel | 50 skill grid, selection tooltip/action model, main/extra assignment, add-point guard | existing-behavior, public-contracts | ✅ E3 state/action model (27 tests; HudJxCocos 243/243) |
-| P6 | E4-E8: Task/Friend/Team/Guild/Shop | social + shop panels, open/close | existing-behavior | todo |
+| P6 | E4: Friend list panel | 3 relation groups (Friend/Enemy/Blacklist), dedup, online state, open/close | existing-behavior | ✅ E4 state (15 tests; HudJxCocos 270/270) |
+| P6 | E5-E8: Task/Team/Guild/Shop | social + shop panels, open/close | existing-behavior | todo |
 | P7 | F: Chat panel | 5-tab chat + input + scroll | existing-behavior | todo |
 | P8 | Settings + misc popups | Settings (recon needed), give/trade | existing-behavior | todo |
 
