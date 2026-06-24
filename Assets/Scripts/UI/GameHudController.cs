@@ -158,6 +158,30 @@ namespace VLTK.UI
             EnsurePcParityOverlayActive();
         }
 
+        private bool _joystickHidden;
+
+        /// <summary>
+        /// PC-parity HUD baseline: the uGUI virtual joystick (jade medallion bottom-left)
+        /// is a mobile-only control that is absent from the PC reference. The PC client
+        /// moves the character via click-to-move / minimap tap, which the mobile client
+        /// also supports. Hide the joystick GameObject so the on-screen HUD matches the
+        /// PC reference without disabling movement; the component/code is retained so a
+        /// future mobile-only mode can re-enable it. The joystick is spawned by
+        /// <see cref="SandboxManager"/> after the HUD starts, so this is polled each
+        /// frame until the joystick appears and is hidden once.
+        /// </summary>
+        private void HideMobileJoystick()
+        {
+            if (_joystickHidden)
+                return;
+            var joystick = Object.FindAnyObjectByType<MobileJoystick>();
+            if (joystick != null && joystick.gameObject.activeSelf)
+            {
+                joystick.gameObject.SetActive(false);
+                _joystickHidden = true;
+            }
+        }
+
         /// <summary>
         /// The IMGUI <see cref="PcHudVietnameseTextOverlay"/> renders the level number, bar
         /// values, rank, chat tabs and bottom-menu labels that match the PC client. The
@@ -198,6 +222,7 @@ namespace VLTK.UI
             if (!_initialized) return;
             SizeRootToScreen();
             UpdateBarsAndMinimap();
+            HideMobileJoystick();
         }
 
         private void EnsureRuntimeReady()

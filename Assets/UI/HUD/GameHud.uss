@@ -515,7 +515,9 @@
     overflow: hidden;
 }
 
+/* PC parity: round action buttons have no hotkey badge (mobile-only). */
 .hud-hotkey-number {
+    display: none;
     position: absolute;
     left: 0px;
     top: 0px;
@@ -757,7 +759,9 @@
     overflow: visible;
 }
 
+/* PC parity: bottom-right menu buttons are icon-only (no caption labels). */
 .hud-menu-label {
+    display: none;
     position: absolute;
     left: 0px;
     right: 0px;

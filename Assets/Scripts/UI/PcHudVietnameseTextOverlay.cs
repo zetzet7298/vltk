@@ -286,11 +286,8 @@ namespace VLTK.UI
 
             DrawMinimapCoordinates();
 
-            // Bottom menu labels - shifted left by 76px because right-menu was shifted to accommodate Treasure button.
-            string[] labels = { "Nhân", "Túi", "Võ", "Đội", "Bang", "PK" };
-            float startX = 899f;
-            for (int i = 0; i < labels.Length; i++)
-                Label(startX + i * 50f, 706, 46, 12, labels[i], _menu);
+            // PC parity: bottom-right menu buttons are icon-only (no caption labels).
+            // The UIToolkit labels are hidden via USS; do not redraw them here.
 
             // Bảo Vật button text
             var baovatStyle = new GUIStyle(GUI.skin.label)
