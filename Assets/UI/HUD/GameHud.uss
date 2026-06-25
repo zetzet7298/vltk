@@ -443,7 +443,7 @@
 .hud-chat-panel {
     position: absolute;
     left: 39px;
-    bottom: 126px;
+    bottom: 135px;
     width: 430px;
     height: 70px;
     flex-direction: column;
@@ -501,7 +501,7 @@
     left: 39px;
     right: 0px;
     bottom: 0px;
-    height: 122px;
+    height: 131px;
     flex-direction: row;
     align-items: flex-end;
     background-color: transparent;
@@ -512,14 +512,15 @@
     overflow: visible;
 }
 
-/* Frame overlay: 863x91 art scaled by height (122px -> ~1156px wide), bottom-left.
-   pickingMode ignore so taps fall through to buttons on top. */
+/* Frame overlay: 863x91 art scaled ×1.438 -> 1241x131 (fills the strip width exactly:
+   strip is left:39..right:0 = 1241px on the 1280x720 PanelSettings design space).
+   Natural aspect. pickingMode ignore so taps fall through to buttons on top. */
 .hud-bottom-frame {
     position: absolute;
     left: 0px;
     bottom: 0px;
-    width: 1156px;
-    height: 122px;
+    width: 1241px;
+    height: 131px;
     background-image: url('project://database/Assets/UI/HUD/Art/bottom_frame_pc.png');
     -unity-background-scale-mode: scale-to-fit;
     -unity-background-position: left bottom;
@@ -528,14 +529,13 @@
     background-color: transparent;
     picking-mode: Ignore;
 }
-/* Right cluster: PC toggle row (31px circular) above menu row (28px square).
-   Positioned over the frame's right-slot region (frame is ~1156px wide, left:0).
-   Menu row sits in the frame's slot wells; toggle row floats above (PC Top=675). */
+/* Right cluster: PC toggle row (circular) above menu row (square).
+   Positioned over the frame's right-slot region (slots x886-1251 at ×1.6 scale). */
 .hud-right-cluster {
     position: absolute;
-    left: 724px;
-    bottom: 14px;
-    width: 360px;
+    left: 792px;
+    bottom: 34px;
+    width: 330px;
     flex-direction: column;
     align-items: flex-end;
     justify-content: flex-end;
@@ -546,7 +546,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
 }
 
 .hud-menu-row {
@@ -557,10 +557,10 @@
 
 /* Toggle button (PC 31px circular SPR: Sit/Run/Horse/Trade/Camera/PK). */
 .hud-round-btn {
-    width: 46px;
-    height: 46px;
-    margin-left: 3px;
-    margin-right: 3px;
+    width: 36px;
+    height: 36px;
+    margin-left: 2px;
+    margin-right: 2px;
     border-width: 0px;
     border-radius: 0px;
     background-color: transparent;
@@ -579,10 +579,11 @@
 .hud-main-hotbar {
     flex-direction: row;
     flex-shrink: 0;
-    width: 504px;
-    height: 60px;
+    width: 442px;
+    height: 48px;
     align-items: center;
-    margin-left: 4px;
+    margin-left: 116px;
+    margin-bottom: 28px;
     background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
     border-width: 0px;
@@ -590,8 +591,8 @@
 }
 
 .hud-hotbar-slot {
-    width: 52px;
-    height: 52px;
+    width: 47px;
+    height: 47px;
     flex-shrink: 0;
     background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
@@ -615,11 +616,12 @@
 .hud-skill-panel {
     flex-direction: row;
     flex-shrink: 0;
-    width: 116px;
-    height: 64px;
+    width: 122px;
+    height: 60px;
     align-items: center;
     justify-content: center;
-    margin-left: 86px;
+    margin-left: 34px;
+    margin-bottom: 26px;
     background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
     border-width: 0px;
@@ -638,8 +640,8 @@
 }
 
 .hud-skill-panel > .hud-skill-slot {
-    width: 52px;
-    height: 52px;
+    width: 56px;
+    height: 56px;
     border-width: 0px;
     background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
@@ -787,8 +789,8 @@
 /* Menu button (PC 28px square SPR: CharF1/InvF2/ItemEx/SkillF3/QuestF4/TeamF6/FactionF7/ChatRoom).
    Icon drawn by child .hud-btn-icon; button itself is a transparent hit area. */
 .hud-menu-btn {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     margin-left: 2px;
     margin-right: 2px;
     border-width: 0px;
@@ -812,10 +814,10 @@
 
 .hud-baovat-btn {
     position: absolute;
-    left: 1086px;
-    bottom: 24px;
-    width: 78px;
-    height: 78px;
+    left: 1132px;
+    bottom: 16px;
+    width: 96px;
+    height: 96px;
     border-radius: 0px;
     border-width: 0px;
     background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png');
