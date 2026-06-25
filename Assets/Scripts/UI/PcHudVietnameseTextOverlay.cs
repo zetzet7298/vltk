@@ -193,36 +193,10 @@ namespace VLTK.UI
 
         private string GetRankText()
         {
-            var manager = SandboxManager.Instance;
-            var progression = manager != null ? manager.PlayerProgression : null;
-            if (progression != null)
-            {
-                int lvl = progression.level;
-                if (lvl >= 200)
-                {
-                    var r = HudDataService.Instance.GetRankingTitle(10287); // Thập đại cao thủ thế giới
-                    if (r != null) return r.name;
-                }
-                else if (lvl >= 100)
-                {
-                    int titleId = 10287;
-                    switch (progression.faction)
-                    {
-                        case CombatFaction.Shaolin: titleId = 10277; break;
-                        case CombatFaction.TianWang: titleId = 10278; break;
-                        case CombatFaction.TangMen: titleId = 10279; break;
-                        case CombatFaction.WuDu: titleId = 10280; break;
-                        case CombatFaction.EMei: titleId = 10281; break;
-                        case CombatFaction.CuiYan: titleId = 10282; break;
-                        case CombatFaction.CaiBang: titleId = 10283; break;
-                        case CombatFaction.TianRen: titleId = 10284; break;
-                        case CombatFaction.WuDang: titleId = 10285; break;
-                        case CombatFaction.KunLun: titleId = 10286; break;
-                    }
-                    var r = HudDataService.Instance.GetRankingTitle(titleId);
-                    if (r != null) return r.name;
-                }
-            }
+            // GAP DATA: PC Player_WorldSort = SỐ hạng thế giới (vd "9"). Mobile data model
+            // (PlayerProgression) chưa có field số hạng per-player — chỉ có title name.
+            // Theo jx-pc-port-rule không được bịa số → tạm hiện "?" cho đến khi port
+            // field worldRank từ PC (backlog #2).
             return "?";
         }
 
@@ -240,10 +214,10 @@ namespace VLTK.UI
             // Level=35→44, Stamina=58→72.5, Life=168→210, Mana=278→347.5, Exp=388→485, WorldSort=522→652.5
             const float BW = 130f; // bar width: PC 104 × 1.25
 
-            // "+ Cấp X" — PC format, màu xanh lá (Level.Left=35 → 44)
+            // Chỉ điền SỐ CẤP — panel Việt đã bake chữ "Cấp" (x=151..224) → số đặt sau x=228
             var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 11,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(150f + 44f, 8f, 80f, 13f, "+ Cấp " + GetLevelText(), lvlStyle);
+            Label(228f, 8f, 60f, 13f, GetLevelText(), lvlStyle);
 
             // Captions (row 0) - Bỏ theo PC HUD (PC không vẽ tên bar đè lên)
             // Label(150f + 72.5f, 0f, BW, 14f, "Thể lực",    _topCaption);
@@ -257,10 +231,10 @@ namespace VLTK.UI
             Label(150f + 347.5f, 17f, BW, 15f, GetMpText(),      _topValue);
             Label(150f + 485f, 17f, BW, 15f, GetExpText(),     _topValue);
 
-            // "Hạng N" — WorldSort (PC Player_WorldSort.Left=522 → 652.5), chữ xanh lá
+            // Chỉ điền GIÁ TRỊ HẠNG — panel Việt đã bake chữ "Hạng" (x=771..799) → giá trị sau x=803
             var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 10,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(150f + 652.5f, 8f, 80f, 13f, "Hạng " + GetRankText(), rankStyle);
+            Label(803f, 8f, 35f, 13f, GetRankText(), rankStyle);
 
             // Chat tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) giống PC
             var tabStyleNormal = new GUIStyle(_menu) {
