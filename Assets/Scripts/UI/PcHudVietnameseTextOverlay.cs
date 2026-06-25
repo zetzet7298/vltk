@@ -257,7 +257,7 @@ namespace VLTK.UI
             Label(tabX + 290f, 592f, 50f, 18f, "Khác", tabStyleYellow);
 
             // Chat/system hint, like Vietnamese PC client.
-            Label(39, 642, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
+            Label(39, 568, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
 
             DrawMinimapCoordinates();
 

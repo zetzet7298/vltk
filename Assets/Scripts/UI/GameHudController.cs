@@ -122,10 +122,14 @@ namespace VLTK.UI
         private Vector2 _lastMinimapCenter;
         private Vector2? _lastMoveTarget;
 
-        // Button name → SPR icon file mapping (matching PC 按钮条按钮/*.spr)
+        // Button name → SPR icon file mapping. Keys resolve to <key>.png in the HUD
+        // art folder. Each PNG is the decoded REAL PC SPR (主界面按钮, README §2):
+        //   toggles (31px): btn_sit/run/horse/exchange(交易)/rec(摄像机)/pk
+        //   menu (28px):    btn_status(人物F1)/items(背包F2)/itemex/skills(技能F3)/
+        //                   quest(任务F4)/team(队伍F6)/faction(帮会F7)/chatroom
         private static readonly Dictionary<string, string> ButtonIcons = new()
         {
-            { "BtnRun", "btn_run" },      // 跑步 (not extracted, use placeholder name)
+            { "BtnRun", "btn_run" },
             { "BtnSit", "btn_sit" },
             { "BtnHorse", "btn_horse" },
             { "BtnExchange", "btn_exchange" },
@@ -138,10 +142,7 @@ namespace VLTK.UI
             { "BtnRec", "btn_rec" },
             { "BtnChatRoom", "btn_chatroom" },
             { "BtnItemEx", "btn_itemex" },
-            { "BtnQuest", "btn_treasure" },
-            { "BtnFriend", "btn_friend_over" },
-            { "BtnSystem", "系统－选项_01" },
-            { "BtnHelp", "系统－帮助_00" },
+            { "BtnQuest", "btn_quest" },
         };
 
         private void Awake()

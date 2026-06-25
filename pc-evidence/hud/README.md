@@ -123,6 +123,36 @@ Bảng `新血条面板` là **một dải ngang** `552×17` (đặt tại `Left
 *   Tooltip (`Tip`) đã là tiếng Việt sẵn trong INI: `Sinh lực`, `Nội lực`, `Thể lực`, `kinh nghiệm`.
 *   **Thứ tự PC chuẩn (trái→phải)**: `Cấp → Thể lực → Sinh lực → Nội lực → Kinh nghiệm → Hạng`. Đây là mốc bắt buộc khi port topbar mobile.
 
+### 6.2. Toạ độ thật của Bottom Toolbar (verify từ `dc11ac12.ini` trong `pak_unpacked/1024`)
+
+Bottom bar là **một ảnh nền SPR duy nhất** `快捷栏(800).spr` (`800×90`, `Left=0,Top=400` trong khung 1024×768, 3 dòng bị comment trong `[Main]`). Các nút được phủ lên bằng toạ độ INI tuyệt đối. **Không có avatar/name ở đây** (chân dung nằm ở bảng F1 riêng).
+
+**Dòng toggle (hàng trên, 31×31 tròn — PC `Top=675`):**
+
+| Nút | ClassType | SPR fill | `Left` | `Top` | `W×H` | Chức năng |
+| :--- | :--- | :--- | ---: | ---: | :--- | :--- |
+| Đả tọa | `Player_Sit` | `打坐按钮.spr` (`82a5aa21`) | 656 | 675 | 31×31 | Ngồi thiền |
+| Chạy bộ | `Player_Run` | `跑步按钮.spr` (`41d364a1`) | 687 | 675 | 31×31 | Đi/chạy |
+| Cưỡi ngựa | `Player_Horse` | `骑马按钮.spr` (`fc8a4f16`) | 719 | 675 | 31×31 | Lên/xuống ngựa (M) |
+| Giao dịch | `Player_Exchange` | `交易按钮.spr` (`cc903517`) | 750 | 675 | 31×31 | Mở giao dịch |
+| Quay phim | `Player_Recorder` | `摄像机按钮.spr` (`9aca89f7`) | 783 | 675 | 31×31 | Quay phim |
+| PK | `Player_PK` | `PK按钮.spr` (`42e22aac`) | 815 | 675 | 31×31 | Chế độ PK |
+
+**Dòng menu (hàng dưới, 28×28 vuông — PC `Top=728`):**
+
+| Nút | ClassType | SPR fill | `Left` | `Top` | `W×H` | Chức năng |
+| :--- | :--- | :--- | ---: | ---: | :--- | :--- |
+| Nhân vật (F1) | `Player_Status` | `人物属性按钮_0.spr` (`cf92ecbe`) | 580 | 728 | 28×28 | Thuộc tính/trang bị |
+| Hành trang (F2) | `Player_Items` | `背包按钮.spr` (`175edefc`) | 611 | 728 | 28×28 | Hành lý |
+| Túi phụ | `Player_ItemEx` | `子母袋按钮.spr` (`c732baf9`) | 642 | 728 | 28×28 | Rương mở rộng |
+| Võ công (F3) | `Player_Skills` | `技能按钮.spr` (`2317ae46`) | 673 | 728 | 28×28 | Bảng chiêu thức |
+| Nhiệm vụ (F4) | `Player_Task` | `任务按钮.spr` (`a3717b5e`) | 704 | 728 | 28×28 | Theo dõi nhiệm vụ |
+| Tổ đội (F6) | `Player_Team` | `队伍按钮.spr` (`b3455277`) | 766 | 728 | 28×28 | Quản lý nhóm |
+| Bang hội (F7) | `Player_Faction` | `帮会按钮.spr` (`234770bb`) | 797 | 728 | 28×28 | Bang hội/môn phái |
+| Phòng chat | `Player_ChatRoom` | `聊天室按钮.spr` (`de6475b9`) | 828 | 728 | 28×28 | Danh sách phòng chat |
+
+> **Ghi chú port**: Trên mobile (16:9) các toggle (31px) + menu (28px) được gom thành **2 hàng** ở cụm phải (toggle trên, menu dưới). Hotkey 1–9 + skill T/P ở giữa/giữa-trái, Bảo Vật góc phải. SPR thật đã được decode (frame 0 = normal idle) bằng `extract_item_spr.py` và lưu tại `Assets/StreamingAssets/UI/HUD/Art/btn_*.png` + `Assets/UI/HUD/Art/PcButtons/`.
+
 ---
 
 ## 7. Cơ chế Cập nhật Dữ liệu & Đồ họa UI/UX (Data Update & Bar Scaling)

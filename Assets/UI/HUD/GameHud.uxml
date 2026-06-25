@@ -82,18 +82,10 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Bottom ornate action strip -->
+        <!-- Bottom toolbar (PC 快捷栏(800).spr layout): hotkey bar (L) + T/P skill (C) + toggle&menu cluster (R) + Bảo Vật.
+             PC INI dc11ac12.ini: toggle row (31px circular: Sit/Run/Horse/Trade/Camera/PK) above
+             menu row (28px square: CharF1/InvF2/ItemEx/SkillF3/QuestF4/TeamF6/FactionF7/ChatRoom). -->
         <ui:VisualElement name="BottomPanel" class="hud-bottom-strip">
-            <ui:VisualElement name="ToolbarLeft" class="hud-left-tools">
-                <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:Label text="1" class="hud-hotkey-number"/><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:Label text="2" class="hud-hotkey-number"/><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnHorse" class="hud-round-btn"><ui:Label text="3" class="hud-hotkey-number"/><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnExchange" class="hud-round-btn"><ui:Label text="4" class="hud-hotkey-number"/><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnRec" class="hud-round-btn"><ui:Label text="5" class="hud-hotkey-number"/><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnChatRoom" class="hud-round-btn"><ui:Label text="6" class="hud-hotkey-number"/><ui:VisualElement name="BtnChatRoomIcon" class="hud-btn-icon"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItemEx" class="hud-round-btn"><ui:Label text="7" class="hud-hotkey-number"/><ui:VisualElement name="BtnItemExIcon" class="hud-btn-icon"/></ui:VisualElement>
-            </ui:VisualElement>
-
             <ui:VisualElement name="HotbarCenter" class="hud-main-hotbar">
                 <ui:VisualElement name="ItemSlot0" class="hud-hotbar-slot"><ui:Label text="1" class="hud-slot-number"/></ui:VisualElement>
                 <ui:VisualElement name="ItemSlot1" class="hud-hotbar-slot"><ui:Label text="2" class="hud-slot-number"/></ui:VisualElement>
@@ -118,17 +110,27 @@
                 <ui:VisualElement class="hud-skill-keys"><ui:Label text="T"/><ui:Label text="P"/></ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:VisualElement name="ToolbarRight" class="hud-right-menu">
-                <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/><ui:Label text="Nhân" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/><ui:Label text="Túi" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSkills" class="hud-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-btn-icon"/><ui:Label text="Võ" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/><ui:Label text="Đội" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/><ui:Label text="Bang" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnPK" class="hud-menu-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/><ui:Label text="PK" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnQuest" class="hud-menu-btn"><ui:VisualElement name="BtnQuestIcon" class="hud-btn-icon"/><ui:Label text="Nhiệm" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnFriend" class="hud-menu-btn"><ui:VisualElement name="BtnFriendIcon" class="hud-btn-icon"/><ui:Label text="Bạn" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnSystem" class="hud-menu-btn"><ui:VisualElement name="BtnSystemIcon" class="hud-btn-icon"/><ui:Label text="Hệ" class="hud-menu-label"/></ui:VisualElement>
-                <ui:VisualElement name="BtnHelp" class="hud-menu-btn"><ui:VisualElement name="BtnHelpIcon" class="hud-btn-icon"/><ui:Label text="Giúp" class="hud-menu-label"/></ui:VisualElement>
+            <ui:VisualElement name="ToolbarRight" class="hud-right-cluster">
+                <!-- Toggle row: PC 跑步/打坐/骑马/交易/摄像机/PK (31px circular SPR) -->
+                <ui:VisualElement class="hud-toggle-row">
+                    <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnHorse" class="hud-round-btn"><ui:VisualElement name="BtnHorseIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnExchange" class="hud-round-btn"><ui:VisualElement name="BtnExchangeIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnRec" class="hud-round-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnPK" class="hud-round-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/></ui:VisualElement>
+                </ui:VisualElement>
+                <!-- Menu row: PC F1人物/F2背包/ItemEx/F3技能/F4任务/F6队伍/F7帮会/ChatRoom (28px square SPR) -->
+                <ui:VisualElement class="hud-menu-row">
+                    <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnItemEx" class="hud-menu-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnSkills" class="hud-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnQuest" class="hud-menu-btn"><ui:VisualElement name="BtnQuestIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnChatRoom" class="hud-menu-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-btn-icon"/></ui:VisualElement>
+                </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
         </ui:VisualElement>
