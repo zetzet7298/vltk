@@ -214,10 +214,11 @@ namespace VLTK.UI
             // Level=35→44, Stamina=58→72.5, Life=168→210, Mana=278→347.5, Exp=388→485, WorldSort=522→652.5
             const float BW = 130f; // bar width: PC 104 × 1.25
 
-            // Chỉ điền SỐ CẤP — panel Việt đã bake chữ "Cấp" (x=151..224) → số đặt sau x=228
-            var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 11,
+            // SỐ CẤP điền vào ô dark-green box bake sẵn trong panel (panel-space x=36..54
+            // → 1280-space x=195..217). PC Player_Level.Left=35→194 khớp box. KHÔNG đè stamina (x=223).
+            var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleCenter, fontSize = 10,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(228f, 8f, 60f, 13f, GetLevelText(), lvlStyle);
+            Label(195f, 4f, 24f, 13f, GetLevelText(), lvlStyle);
 
             // Captions (row 0) - Bỏ theo PC HUD (PC không vẽ tên bar đè lên)
             // Label(150f + 72.5f, 0f, BW, 14f, "Thể lực",    _topCaption);
@@ -231,10 +232,11 @@ namespace VLTK.UI
             Label(150f + 347.5f, 17f, BW, 15f, GetMpText(),      _topValue);
             Label(150f + 485f, 17f, BW, 15f, GetExpText(),     _topValue);
 
-            // Chỉ điền GIÁ TRỊ HẠNG — panel Việt đã bake chữ "Hạng" (x=771..799) → giá trị sau x=803
-            var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 10,
+            // GIÁ TRỊ HẠNG điền vào ô dark-green box bake sẵn (panel-space x=522..549
+            // → 1280-space x=802..836). PC Player_WorldSort.Left=522 khớp.
+            var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleCenter, fontSize = 10,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(803f, 8f, 35f, 13f, GetRankText(), rankStyle);
+            Label(802f, 4f, 35f, 13f, GetRankText(), rankStyle);
 
             // Chat tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) giống PC
             var tabStyleNormal = new GUIStyle(_menu) {
