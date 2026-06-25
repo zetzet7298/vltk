@@ -412,8 +412,10 @@ namespace VLTK.UI
             var mapName = ToVietnameseMapName(rawMapName);
 
             // PC small minimap shows scene name + coord on minimap frame matching PC layout.
-            Label(1140, 6, 120, 14, mapName, new GUIStyle(_minimap) { alignment = TextAnchor.UpperRight });
-            Label(1140, 138, 80, 14, coord + "  Tìm", new GUIStyle(_minimap) { alignment = TextAnchor.MiddleLeft });
+            // Positioned BELOW the minimap frame (top-right panel) so they do not overlap the
+            // top status bar's rank text (PC layout keeps map readout under the minimap).
+            Label(1138, 136, 132, 13, mapName, new GUIStyle(_minimap) { alignment = TextAnchor.UpperCenter });
+            Label(1138, 149, 132, 13, coord + "  Tìm", new GUIStyle(_minimap) { alignment = TextAnchor.UpperCenter });
 
             // Large preview window coordinate readout, visible while preview is open.
             var hud = FindAnyObjectByType<GameHudController>();
