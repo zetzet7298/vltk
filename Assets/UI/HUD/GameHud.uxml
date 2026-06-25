@@ -82,10 +82,13 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Bottom toolbar (PC 快捷栏(800).spr layout): hotkey bar (L) + T/P skill (C) + toggle&menu cluster (R) + Bảo Vật.
-             PC INI dc11ac12.ini: toggle row (31px circular: Sit/Run/Horse/Trade/Camera/PK) above
+        <!-- Bottom toolbar (PC 快捷栏.spr = hash ebb69f9b, recovered via jx-pc-resource-resolver).
+             The ornate filigree frame is a transparent overlay PNG (863x91, both end-caps +
+             center crown + scrollwork bands). Layered under the button containers. PC INI
+             dc11ac12.ini: toggle row (31px circular: Sit/Run/Horse/Trade/Camera/PK) above
              menu row (28px square: CharF1/InvF2/ItemEx/SkillF3/QuestF4/TeamF6/FactionF7/ChatRoom). -->
         <ui:VisualElement name="BottomPanel" class="hud-bottom-strip">
+            <ui:VisualElement name="BottomFrame" class="hud-bottom-frame"/>
             <ui:VisualElement name="HotbarCenter" class="hud-main-hotbar">
                 <ui:VisualElement name="ItemSlot0" class="hud-hotbar-slot"><ui:Label text="1" class="hud-slot-number"/></ui:VisualElement>
                 <ui:VisualElement name="ItemSlot1" class="hud-hotbar-slot"><ui:Label text="2" class="hud-slot-number"/></ui:VisualElement>

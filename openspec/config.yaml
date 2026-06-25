@@ -1,0 +1,15 @@
+# OpenSpec configuration for VLTK Mobile
+# Bootstrap config — created via inline init (async sdd-init runner crashed).
+project: vltk-mobile
+default_locale: vi        # Vietnamese-facing UI; artifacts authored in English
+spec_format: markdown
+folders:
+  - specs/        # stable, authoritative specs (proposals promoted here on archive)
+  - changes/      # in-flight SDD changes (proposal/spec/design/tasks/apply-progress/...)
+  - decisions/    # ADRs / durable design decisions
+
+# Runtime specifics for this project
+framework: 'Unity 6000.4 (C#), UI Toolkit (UXML/USS) + IMGUI overlays'
+test_command: 'Unity EditMode via MCP run_tests tool with category_names filter (NOT a CLI)'
+vcs: 'git, single dev branch dev, push origin/dev'
+commits: 'Conventional Commits: type(scope): subject'

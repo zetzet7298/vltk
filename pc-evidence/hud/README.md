@@ -153,6 +153,17 @@ Bottom bar là **một ảnh nền SPR duy nhất** `快捷栏(800).spr` (`800×
 
 > **Ghi chú port**: Trên mobile (16:9) các toggle (31px) + menu (28px) được gom thành **2 hàng** ở cụm phải (toggle trên, menu dưới). Hotkey 1–9 + skill T/P ở giữa/giữa-trái, Bảo Vật góc phải. SPR thật đã được decode (frame 0 = normal idle) bằng `extract_item_spr.py` và lưu tại `Assets/StreamingAssets/UI/HUD/Art/btn_*.png` + `Assets/UI/HUD/Art/PcButtons/`.
 
+### 6.3. SPR khung Toolbar (快捷栏.spr) — khôi phục bằng hash resolver
+
+Khung filigree (vòng tròn hai đầu + vương miện giữa + dải scrollwork) là **một SPR overlay trong suốt duy nhất**:
+
+| Tên gốc PC | Hash UID | Đường dẫn disk | Kích thước |
+| :--- | :--- | :--- | :--- |
+| `快捷栏.spr` | `ebb69f9b` | `vl_update_27/pak_unpacked/updatejx08/unknown/ebb69f9b.spr` | 965×768 overlay (toolbar ở đáy, ~y628-715) |
+
+*   **Cách khôi phục**: file INI `dc11ac12.ini` `[Main]` tham chiếu `快捷栏(800).spr` (bị comment). Dùng skill `jx-pc-resource-resolver`: normalize lowercase `\spr\ui3\主界面\快捷栏.spr` → encode GBK → JX Pack Hash UID algorithm → `ebb69f9b`. Decode bằng `extract_item_spr.py` → overlay 965×768 → crop vùng toolbar (content bbox) → `Assets/UI/HUD/Art/bottom_frame_pc.png` (863×91, aspect 9.48, 92% trong suốt). Vision confirm 10/10 sạch (cả hai end-cap + vương miện + dải scrollwork, không contamination).
+*   **Lưu ý**: bảng `_labels.json` (73270 entries) chỉ map SPR **item**, không có SPR UI `主界面` → phải dùng hash algorithm, không tra cứu tên trực tiếp được. Screenshot `bottom_bar.png` KHÔNG dùng được (bị contaminant: game-world bleed, tooltip "Bạn Hữu"/"Bảo Vật", buff icons).
+
 ---
 
 ## 7. Cơ chế Cập nhật Dữ liệu & Đồ họa UI/UX (Data Update & Bar Scaling)

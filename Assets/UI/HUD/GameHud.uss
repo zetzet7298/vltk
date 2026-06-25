@@ -443,7 +443,7 @@
 .hud-chat-panel {
     position: absolute;
     left: 39px;
-    bottom: 102px;
+    bottom: 126px;
     width: 430px;
     height: 70px;
     flex-direction: column;
@@ -492,40 +492,61 @@
     -unity-background-scale-mode: scale-to-fit;
 }
 
-/* BOTTOM TOOLBAR — PC 快捷栏(800).spr layout. Single clean flex row, no overlap:
-   [hotbar 1-9][skill T/P] ......... [toggle row / menu row][Bảo Vật]. */
+/* BOTTOM TOOLBAR — PC 快捷栏.spr (hash ebb69f9b, recovered via jx-pc-resource-resolver).
+   Strip is a transparent container; the real PC filigree frame lives in a child
+   .hud-bottom-frame layer (natural aspect 863x91 = 9.48:1), bottom-left anchored.
+   Button containers overlay the frame's slot wells. */
 .hud-bottom-strip {
     position: absolute;
     left: 39px;
     right: 0px;
     bottom: 0px;
-    height: 96px;
+    height: 122px;
     flex-direction: row;
-    align-items: center;
-    background-image: url('project://database/Assets/UI/HUD/Art/bottom_bar_bg.png');
-    -unity-background-scale-mode: stretch-to-fill;
-    background-color: rgba(0,0,0,0.82);
-    border-top-width: 2px;
-    border-top-color: rgb(35,115,95);
-    padding-left: 8px;
-    padding-right: 8px;
+    align-items: flex-end;
+    background-color: transparent;
+    border-top-width: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
     overflow: visible;
 }
 
-/* Right cluster: PC toggle row (31px circular) above menu row (28px square). */
+/* Frame overlay: 863x91 art scaled by height (122px -> ~1156px wide), bottom-left.
+   pickingMode ignore so taps fall through to buttons on top. */
+.hud-bottom-frame {
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    width: 1156px;
+    height: 122px;
+    background-image: url('project://database/Assets/UI/HUD/Art/bottom_frame_pc.png');
+    -unity-background-scale-mode: scale-to-fit;
+    -unity-background-position: left bottom;
+    -unity-background-position-x: 0px;
+    -unity-background-position-y: 0px;
+    background-color: transparent;
+    picking-mode: Ignore;
+}
+/* Right cluster: PC toggle row (31px circular) above menu row (28px square).
+   Positioned over the frame's right-slot region (frame is ~1156px wide, left:0).
+   Menu row sits in the frame's slot wells; toggle row floats above (PC Top=675). */
 .hud-right-cluster {
+    position: absolute;
+    left: 724px;
+    bottom: 14px;
+    width: 360px;
     flex-direction: column;
     align-items: flex-end;
-    margin-left: auto;
-    margin-right: 12px;
-    justify-content: center;
+    justify-content: flex-end;
+    padding-bottom: 0px;
 }
 
 .hud-toggle-row {
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
 .hud-menu-row {
@@ -561,19 +582,20 @@
     width: 504px;
     height: 60px;
     align-items: center;
-    margin-left: 0px;
-    background-image: url('project://database/Assets/UI/HUD/Art/toolbar_bg.png');
+    margin-left: 4px;
+    background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
     border-width: 0px;
+    background-color: transparent;
 }
 
 .hud-hotbar-slot {
     width: 52px;
     height: 52px;
     flex-shrink: 0;
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+    background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
-    background-color: rgba(5,5,5,0.85);
+    background-color: transparent;
     border-width: 0px;
     margin-left: 1px;
     margin-right: 1px;
@@ -593,23 +615,24 @@
 .hud-skill-panel {
     flex-direction: row;
     flex-shrink: 0;
-    width: 128px;
+    width: 116px;
     height: 64px;
     align-items: center;
     justify-content: center;
-    margin-left: 6px;
-    background-image: url('project://database/Assets/UI/HUD/Art/toolbar_bg.png');
+    margin-left: 86px;
+    background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
-    border-width: 1px;
-    border-color: rgb(92,92,78);
+    border-width: 0px;
+    border-color: transparent;
+    background-color: transparent;
 }
 
 .hud-skill-slot {
     width: 48px;
     height: 48px;
-    background-color: rgba(0,0,0,0.60);
-    border-width: 1px;
-    border-color: rgb(60,140,115);
+    background-color: transparent;
+    border-width: 0px;
+    border-color: transparent;
     margin-left: 2px;
     margin-right: 2px;
 }
@@ -618,9 +641,9 @@
     width: 52px;
     height: 52px;
     border-width: 0px;
-    background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+    background-image: none;
     -unity-background-scale-mode: stretch-to-fill;
-    background-color: rgba(5,5,5,0.85);
+    background-color: transparent;
     border-radius: 0px;
     justify-content: center;
     align-items: center;
@@ -789,14 +812,14 @@
 
 .hud-baovat-btn {
     position: absolute;
-    right: 8px;
-    bottom: 8px;
-    width: 74px;
-    height: 61px;
+    left: 1086px;
+    bottom: 24px;
+    width: 78px;
+    height: 78px;
     border-radius: 0px;
     border-width: 0px;
     background-image: url('project://database/Assets/UI/HUD/Art/btn_treasure.png');
-    -unity-background-scale-mode: stretch-to-fill;
+    -unity-background-scale-mode: scale-to-fit;
     background-color: transparent;
 }
 

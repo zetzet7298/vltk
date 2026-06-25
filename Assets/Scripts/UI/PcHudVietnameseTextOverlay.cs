@@ -249,30 +249,23 @@ namespace VLTK.UI
                 normal = { textColor = new Color(255/255f, 220/255f, 0f) }
             };
             float tabX = 39f;
-            Label(tabX, 592f, 50f, 18f, "Tất cả", tabStyleNormal);
-            Label(tabX + 60f, 592f, 40f, 18f, "Mật", tabStyleNormal);
-            Label(tabX + 105f, 592f, 50f, 18f, "Phòng", tabStyleNormal);
-            Label(tabX + 155f, 592f, 60f, 18f, "Bang hội", tabStyleNormal);
-            Label(tabX + 220f, 592f, 60f, 18f, "Môn phái", tabStyleNormal);
-            Label(tabX + 290f, 592f, 50f, 18f, "Khác", tabStyleYellow);
+            Label(tabX, 568f, 50f, 18f, "Tất cả", tabStyleNormal);
+            Label(tabX + 60f, 568f, 40f, 18f, "Mật", tabStyleNormal);
+            Label(tabX + 105f, 568f, 50f, 18f, "Phòng", tabStyleNormal);
+            Label(tabX + 155f, 568f, 60f, 18f, "Bang hội", tabStyleNormal);
+            Label(tabX + 220f, 568f, 60f, 18f, "Môn phái", tabStyleNormal);
+            Label(tabX + 290f, 568f, 50f, 18f, "Khác", tabStyleYellow);
 
             // Chat/system hint, like Vietnamese PC client.
-            Label(39, 568, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
+            Label(39, 544, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
 
             DrawMinimapCoordinates();
 
             // PC parity: bottom-right menu buttons are icon-only (no caption labels).
             // The UIToolkit labels are hidden via USS; do not redraw them here.
 
-            // Bảo Vật button text
-            var baovatStyle = new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 11,
-                fontStyle = FontStyle.Bold,
-                normal = { textColor = new Color(255/255f, 215/255f, 0f) }
-            };
-            Label(1200f, 640f, 72f, 72f, "Bảo\nVật", baovatStyle);
+            // Bảo Vật button: real SPR art (btn_treasure.png) now carries its own icon;
+            // the duplicate IMGUI caption overlapped the button. Removed for PC parity.
 
             DrawSkillPanelText();
 
