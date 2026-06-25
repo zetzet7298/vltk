@@ -4,8 +4,9 @@
         <!-- Full-width PC top frame art background (main_hud_bg scaled 1280px) -->
         <ui:VisualElement name="TopFrameBg" class="hud-top-frame-bg"/>
 
-        <!-- Top PC-style full status bar: PC 顶部控制条.ini layout -->
-        <!-- Stamina Left=87, Life Left=182, Mana Left=277, Exp Left=372, Level Left=53, WorldSort Left=499 -->
+        <!-- Top PC-style full status bar: ground-truth = ffb7d31b.ini / 8da7027d.ini (pak_unpacked/1024) -->
+        <!-- PC 1024-space, Main.Left=120; mobile design 1280-wide => scale 1280/1024 = 1.25 -->
+        <!-- Absolute left = (Main.Left + bar.Left) x 1.25: Level=194, Stamina=223, Life=360, Mana=498, Exp=635, WorldSort=803 -->
         <ui:VisualElement name="TopLeftPanel" class="hud-top-status">
             <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
             <ui:Label name="LevelText" text="1" class="hud-level-box"/>
@@ -13,6 +14,8 @@
             <ui:VisualElement name="HpBarTrack" class="hud-top-bar hud-hp-track"><ui:VisualElement name="HpBarFill" class="hud-top-fill"/></ui:VisualElement>
             <ui:VisualElement name="MpBarTrack" class="hud-top-bar hud-mp-track"><ui:VisualElement name="MpBarFill" class="hud-top-fill"/></ui:VisualElement>
             <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"/></ui:VisualElement>
+            <!-- WorldSort (Hạng thế giới): PC Player_WorldSort, chữ xanh 55,231,63, nằm sau EXP -->
+            <ui:Label name="WorldSortText" text="0" class="hud-worldsort-box"/>
             <ui:Label text="Cấp" class="hud-vn-top-caption hud-vn-level-caption"/>
             <ui:Label text="Thể lực" class="hud-vn-top-caption hud-vn-stamina-caption"/>
             <ui:Label text="Sinh lực" class="hud-vn-top-caption hud-vn-hp-caption"/>

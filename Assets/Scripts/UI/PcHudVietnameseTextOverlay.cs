@@ -235,32 +235,32 @@ namespace VLTK.UI
             int oldDepth = GUI.depth;
             GUI.depth = -10000;
 
-            // Top PC bar captions+values — theo 顶部控制条.ini (Ui800)
-            // PC Main.Left=218 → 1280-space: 218×1.6=348. Bar offsets scaled ×1.6.
-            // Stamina=87→139, Life=182→291, Mana=277→443, Exp=372→595, Level=53→85, WorldSort=499→798
-            const float BW = 166f; // bar width: PC 104 × 1.6
+            // Top PC bar captions+values — ground-truth = ffb7d31b.ini / 8da7027d.ini (pak_unpacked/1024)
+            // PC Main.Left=120 → 1280-space: 120×1.25=150. Bar offsets scaled ×1.25.
+            // Level=35→44, Stamina=58→72.5, Life=168→210, Mana=278→347.5, Exp=388→485, WorldSort=522→652.5
+            const float BW = 130f; // bar width: PC 104 × 1.25
 
-            // "+ Cấp X" — PC format, màu xanh lá
+            // "+ Cấp X" — PC format, màu xanh lá (Level.Left=35 → 44)
             var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 11,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(348f + 85f, 0f, 80f, 20f, "+ Cấp " + GetLevelText(), lvlStyle);
+            Label(150f + 44f, 8f, 80f, 13f, "+ Cấp " + GetLevelText(), lvlStyle);
 
             // Captions (row 0) - Bỏ theo PC HUD (PC không vẽ tên bar đè lên)
-            // Label(348f + 139f, 0f, BW, 14f, "Thể lực",    _topCaption);
-            // Label(348f + 291f, 0f, BW, 14f, "Sinh lực",   _topCaption);
-            // Label(348f + 443f, 0f, BW, 14f, "Nội lực",    _topCaption);
-            // Label(348f + 595f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
+            // Label(150f + 72.5f, 0f, BW, 14f, "Thể lực",    _topCaption);
+            // Label(150f + 210f, 0f, BW, 14f, "Sinh lực",   _topCaption);
+            // Label(150f + 347.5f, 0f, BW, 14f, "Nội lực",    _topCaption);
+            // Label(150f + 485f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
 
-            // Values (below bar tracks, top=19, Left shifted by 8px according to PC INI alignment)
-            Label(348f + 131f, 19f, BW, 15f, GetStaminaText(), _topValue);
-            Label(348f + 283f, 19f, BW, 15f, GetHpText(),      _topValue);
-            Label(348f + 435f, 19f, BW, 15f, GetMpText(),      _topValue);
-            Label(348f + 587f, 19f, BW, 15f, GetExpText(),     _topValue);
+            // Values (dưới thanh fill, căn giữa theo bar width) — thứ tự PC: Stamina→Sinh lực→Nội lực→Kinh nghiệm
+            Label(150f + 72.5f, 17f, BW, 15f, GetStaminaText(), _topValue);
+            Label(150f + 210f, 17f, BW, 15f, GetHpText(),      _topValue);
+            Label(150f + 347.5f, 17f, BW, 15f, GetMpText(),      _topValue);
+            Label(150f + 485f, 17f, BW, 15f, GetExpText(),     _topValue);
 
-            // "Hạng N" — WorldSort scaled
+            // "Hạng N" — WorldSort (PC Player_WorldSort.Left=522 → 652.5), chữ xanh lá
             var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleLeft, fontSize = 10,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(348f + 798f, 0f, 80f, 20f, "Hạng " + GetRankText(), rankStyle);
+            Label(150f + 652.5f, 8f, 80f, 13f, "Hạng " + GetRankText(), rankStyle);
 
             // Chat tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) giống PC
             var tabStyleNormal = new GUIStyle(_menu) {

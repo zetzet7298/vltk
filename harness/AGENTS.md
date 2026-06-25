@@ -1,37 +1,18 @@
-
 # Agent Instructions
 
-Add project-specific agent instructions here.
 
-<!-- HARNESS:BEGIN -->
+### So sánh Tỉ lệ màn hình & Quy đổi Giao diện (PC vs. Mobile)
 
-## Harness
-
-This repo uses Harness. Before work, read:
-
-- `README.md`
-- `docs/HARNESS.md`
-- `docs/FEATURE_INTAKE.md`
-- `docs/ARCHITECTURE.md`
-- `docs/CONTEXT_RULES.md`
-- `docs/TOOL_REGISTRY.md`
-- `scripts/bin/harness-cli query matrix` on macOS/Linux, or `.\scripts\bin\harness-cli.exe query matrix` on Windows
-
-Use the Rust Harness CLI at `scripts/bin/harness-cli` on macOS/Linux or
-`scripts/bin/harness-cli.exe` on Windows as the main operational tool. Before a
-step that could use an external tool, run `scripts/bin/harness-cli query tools --capability <name> --status present` to see what is equipped; an absent
-capability is a clean skip.
-
-<!-- HARNESS:END -->
-
-
-## Game hiện tại đang port từ game PC /var/www/vltksource_new vì thế nên trong quá trình port thì phải đọc hiểu code bên PC
+* **Màn hình PC gốc (`vltksource_new`)**: Tỉ lệ chuẩn **4:3**. Độ phân giải `800x600` hoặc `1024x768` (mặc định). Mọi tọa độ và layout trong file INI được định vị tuyệt đối theo khung 4:3 này.
+* **Màn hình Mobile (`vltk-mobile`)**: Tỉ lệ chuẩn màn hình rộng **16:9**, sử dụng độ phân giải thiết kế làm mốc là **`1920x1080`**.
+* **Công thức Quy đổi & Thiết kế**:
+  * **Scale Trục Ngang (X)**: $\approx 1920 / 1024 = 1.875$
+  * **Scale Trục Dọc (Y)**: $\approx 1080 / 768 = 1.406$
+  * **Nguyên tắc bố cục**: Không được nhân tỷ lệ thô trực tiếp cho ảnh (sẽ gây méo hình ảnh gốc). Hãy giữ nguyên tỉ lệ ảnh (Aspect Ratio), áp dụng neo góc màn hình (Anchor) theo cụm HUD (topbar neo Top-Center, minimap neo Top-Right, chat neo Bottom-Left, button bar neo Bottom-Center), và co giãn theo tỉ lệ màn hình thực tế của thiết bị. **Lưu ý**: `curSalx`/design-resolution từng được chép nhầm từ bản port C++ `jx-cocos` (không phải PC gốc) — đã gỡ bỏ; nguồn quy đổi duy nhất là `/var/www/vltksource_new` (file INI trong `pak_unpacked/1024` + `config.ini`).
 
 Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng API/library lạ), **PHẢI dùng exa (`exa_web_search_exa`/`exa_web_fetch_exa`) và deepwiki (`mcp_deepwiki_deepwiki_fetch`) để research** cách làm chuẩn — không đoán, không vá mò. Research xong mới implement. Xong việc thì **commit all change + push**.
 
 ---
-
-
 
 ## Skill Matrix
 
@@ -79,8 +60,15 @@ Categories hiện có (cập nhật 2026-06-19):
 Single test (debug nhanh):
 
 ```python
+# Mặc định khi dev 1 phái/skill cụ thể — chỉ chạy tests liên quan (~1-2s)
+unityMCP___run_tests(mode="EditMode", category_names=["<PháiTên>"])
+
+# Skip slow sprite tests khi không cần verify visual
+unityMCP___run_tests(mode="EditMode", category_names=["!Slow"])
+
+# Filter namespace khi không có category (regex groupNames)
 unityMCP___run_tests(mode="EditMode",
-    test_names=["VLTK.Tests.Sandbox.CaiBangCombatParityTests.CaiBang_122_FireDamageMaxesAtPc215_AtLevel20"])
+    group_names=["^VLTK\\.Tests\\.Sandbox\\.PhaiTenTests\\."])
 ```
 
 Shared catalog cache: `TestCatalogCache.NoviceAndCaiBang` (avoid rebuild ~50ms/call).
@@ -112,7 +100,7 @@ Reference files gốc từ PC được lưu trong `Assets/StreamingAssets/Refere
 
 ### Tool hỗ trợ
 
-- `~/Projects/vltktool/` — Bộ công cụ Python: SPR decoder, PAK unpacker, item runtime, CMS web
+- `~/Projects/vltktool/` — Bộ công cụ Python: SPR decoder, PAK unpacker, item runtime
 
 ## Test run commands (EditMode)
 
@@ -121,19 +109,15 @@ Full suite (4049 tests, ~4 phút) — chỉ dùng trước khi push/CI.
 Category filter (nhanh hơn ~140×, dùng khi dev):
 
 ```python
-# Cái Bang only — 82 tests, ~1.7 giây
-unityMCP___run_tests(mode="EditMode", category_names=["CaiBang"])
+# Mặc định khi dev 1 phái/skill cụ thể — chỉ chạy tests liên quan (~1-2s)
+unityMCP___run_tests(mode="EditMode", category_names=["<PháiTên>"])
 
-# Skip slow sprite tests
+# Skip slow sprite tests khi không cần verify visual
 unityMCP___run_tests(mode="EditMode", category_names=["!Slow"])
 
-# Filter theo namespace (regex groupNames)
+# Filter namespace khi không có category (regex groupNames)
 unityMCP___run_tests(mode="EditMode",
-    group_names=["^VLTK\\.Tests\\.Sandbox\\.CaiBangCombatParityTests\\."])
-
-# Single test
-unityMCP___run_tests(mode="EditMode",
-    test_names=["VLTK.Tests.Sandbox.CaiBangCombatParityTests.CaiBang_122_FireDamageMaxesAtPc215_AtLevel20"])
+    group_names=["^VLTK\\.Tests\\.Sandbox\\.PhaiTenTests\\."])
 ```
 
 Categories đã add (2026-06-19):
@@ -142,3 +126,24 @@ Categories đã add (2026-06-19):
 - `Slow` — MountVisualTests, MalePlayerVisualTests (sprite decode chậm)
 
 Shared catalog cache: `TestCatalogCache.NoviceAndCaiBang` (avoid rebuild ~50ms/call).
+
+<!-- HARNESS:BEGIN -->
+
+## Harness
+
+This repo uses Harness. Before work, read:
+
+- `README.md`
+- `docs/HARNESS.md`
+- `docs/FEATURE_INTAKE.md`
+- `docs/ARCHITECTURE.md`
+- `docs/CONTEXT_RULES.md`
+- `docs/TOOL_REGISTRY.md`
+- `scripts/bin/harness-cli query matrix` on macOS/Linux, or `.\scripts\bin\harness-cli.exe query matrix` on Windows
+
+Use the Rust Harness CLI at `scripts/bin/harness-cli` on macOS/Linux or
+`scripts/bin/harness-cli.exe` on Windows as the main operational tool. Before a
+step that could use an external tool, run `scripts/bin/harness-cli query tools --capability <name> --status present` to see what is equipped; an absent
+capability is a clean skip.
+
+<!-- HARNESS:END --

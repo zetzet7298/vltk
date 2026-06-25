@@ -6,7 +6,9 @@
     overflow: hidden;
 }
 
-/* TOP FRAME BG: dùng main_hud_bg.png cropped+scaled làm background frame PC ornate */
+/* TOP FRAME BG: BỎ — top_frame_bg.png là dải composite full-width 1280×88
+   (gỗ+hotkey+minimap) KHÔNG có trong PC gốc, gây tràn/tràn vỡ trên mobile.
+   PC thật chỉ có panel 新血条面板 552×17 (xem PcBarPanelBg dưới). */
 .hud-top-frame-bg {
     position: absolute;
     left: 0px;
@@ -15,6 +17,7 @@
     height: 88px;
     background-image: url('project://database/Assets/UI/HUD/Art/top_frame_bg.png');
     -unity-background-scale-mode: stretch-to-fill;
+    display: none;
 }
 
 /* TOP STATUS STRIP — full-width container, bars dùng absolute coords trong 1280-space */
@@ -27,22 +30,24 @@
     background-color: transparent;
 }
 
+/* PC 新血条面板 (bar_panel_bg.png = 552×17, đúng art PC gốc) — neo đúng vị trí PC:
+   Main.Left=120 ×1.25 = 150; Width=552 ×1.25 = 690; Height=17 ×1.25 ≈ 21 */
 .hud-pc-bar-panel-bg {
     position: absolute;
-    left: 0px;
+    left: 150px;
     top: 0px;
-    width: 883px; /* PC 552 ×1.6, scaled from bar art */
-    height: 27px; /* PC 17px × 1.6 */
+    width: 690px;
+    height: 21px;
     background-image: url('project://database/Assets/UI/HUD/Art/bar_panel_bg.png');
     -unity-background-scale-mode: stretch-to-fill;
-    display: none; /* top_frame_bg.png đã bao gồm bars art — ẩn cái này */
+    display: flex;
 }
 
 .hud-level-box {
     position: absolute;
-    left: 433px; /* PC Level.Left=53, container=348 → 348+85=433 absolute */
+    left: 194px; /* PC (Main.Left=120 + Level.Left=35)=155 × 1.25 = 194 */
     top: 8px;
-    width: 32px;
+    width: 25px; /* PC 20 × 1.25 */
     height: 14px;
     font-size: 11px;
     color: rgb(55,231,63);
@@ -51,23 +56,38 @@
     border-width: 0px;
 }
 
+/* WorldSort box (Hạng) — vẽ qua IMGUI overlay, ẩn element để tránh vẽ đè */
+.hud-worldsort-box {
+    position: absolute;
+    left: 803px; /* PC (120 + WorldSort.Left=522)=642 × 1.25 = 802.5 */
+    top: 8px;
+    width: 35px; /* PC 28 × 1.25 */
+    height: 14px;
+    font-size: 10px;
+    color: rgb(55,231,63);
+    -unity-text-align: middle-center;
+    background-color: transparent;
+    border-width: 0px;
+    display: none;
+}
+
 .hud-top-bar {
     position: absolute;
-    top: 3px; /* PC bars Top=2, scaled */
-    width: 166px; /* PC 104px × 1.6 */
-    height: 14px; /* PC 9px × 1.6 */
+    top: 3px; /* PC bars Top=3 */
+    width: 130px; /* PC 104px × 1.25 */
+    height: 14px;
     background-color: transparent;
     border-width: 0px;
     overflow: hidden;
 }
 
-/* Bars dùng absolute coords trong 1280-space:
-   Container (PC Main.Left=218): 218×1.6=348
-   Stamina: 348+87×1.6=487, Life:639, Mana:791, Exp:943 */
-.hud-stamina-track { left: 487px; }
-.hud-hp-track { left: 639px; }
-.hud-mp-track { left: 791px; }
-.hud-exp-track { left: 943px; }
+/* Bars absolute coords trong 1280-space (scale 1024→1280 = 1.25):
+   base = Main.Left=120 × 1.25 = 150; absolute = 150 + bar.Left×1.25.
+   Stamina=150+72.5=222.5, Life=150+210=360, Mana=150+347.5=497.5, Exp=150+485=635 */
+.hud-stamina-track { left: 223px; }
+.hud-hp-track { left: 360px; }
+.hud-mp-track { left: 498px; }
+.hud-exp-track { left: 635px; }
 
 .hud-top-fill {
     width: 100%;
@@ -97,12 +117,12 @@
     -unity-text-align: middle-center;
     -unity-font-style: bold;
 }
-/* Captions ẩn - IMGUI overlay sẽ vẽ. Positions absolute trong 1280-space. */
-.hud-vn-level-caption { left: 433px; width: 40px; display: none; } /* 348+85 */
-.hud-vn-stamina-caption { left: 487px; width: 166px; display: none; } /* 348+139 */
-.hud-vn-hp-caption { left: 639px; width: 166px; display: none; } /* 348+291 */
-.hud-vn-mp-caption { left: 791px; width: 166px; display: none; } /* 348+443 */
-.hud-vn-exp-caption { left: 943px; width: 166px; display: none; } /* 348+595 */
+/* Captions ẩn - IMGUI overlay sẽ vẽ. Positions absolute trong 1280-space (base 150). */
+.hud-vn-level-caption { left: 194px; width: 25px; display: none; }
+.hud-vn-stamina-caption { left: 223px; width: 130px; display: none; }
+.hud-vn-hp-caption { left: 360px; width: 130px; display: none; }
+.hud-vn-mp-caption { left: 498px; width: 130px; display: none; }
+.hud-vn-exp-caption { left: 635px; width: 130px; display: none; }
 
 
 .hud-top-small-text {
@@ -115,11 +135,11 @@
     -unity-text-align: middle-center;
     background-color: transparent;
 }
-/* Values dưới bar tracks — ẩn UIToolkit labels, IMGUI overlay sẽ vẽ. Absolute 1280-space. */
-.hud-stamina-text { left: 487px; display: none; }
-.hud-hp-text { left: 639px; display: none; }
-.hud-mp-text { left: 791px; display: none; }
-.hud-exp-text { left: 943px; display: none; }
+/* Values dưới bar tracks — ẩn UIToolkit labels, IMGUI overlay sẽ vẽ. Absolute 1280-space (base 150). */
+.hud-stamina-text { left: 223px; display: none; }
+.hud-hp-text { left: 360px; display: none; }
+.hud-mp-text { left: 498px; display: none; }
+.hud-exp-text { left: 635px; display: none; }
 
 
 
