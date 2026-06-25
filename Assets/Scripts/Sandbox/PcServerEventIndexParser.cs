@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC server event script index parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/event
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/event
 // Imported file: StreamingAssets/Reference/PcServerEvent/server_event_index.txt
 // This is a catalog of source files only. It does not execute or infer Lua event
 // semantics. The PC directory has 455 files total: 427 Lua scripts and 28 CVS

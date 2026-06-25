@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC VNG event source index parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/vng_event
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/vng_event
 // Imported file: StreamingAssets/Reference/PcVngEvent/vng_event_index.txt
 // Catalog only: records Lua source paths, sizes, and sha256 hashes. It never
 // executes Lua and does not infer event behavior.

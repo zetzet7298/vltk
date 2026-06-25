@@ -1,5 +1,5 @@
 # VLTK Mobile — PC Server script/lib source index (data-only; no Lua runtime claim)
-# Source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/lib
+# Source: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/lib
 # Counts: files=52 dirs=2 lua=52
 # Representative proof: droptemplet.lua, gb_taskfuncs.lua, awardtype/exp.lua, awardtype/item.lua
 RelativePath	Directory	FileName	FileKind	IsLua	SizeBytes	Sha256

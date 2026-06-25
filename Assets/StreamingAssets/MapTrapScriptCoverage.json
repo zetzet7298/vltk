@@ -8,7 +8,7 @@
   "sourceAliasTrapScriptIds": [
     "0xF51BA9A5"
   ],
-  "sourceScriptRoot": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script",
+  "sourceScriptRoot": "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script",
   "deterministicTrapActions": 804,
   "deterministicNewWorldActions": 532,
   "deterministicSetPosActions": 1,

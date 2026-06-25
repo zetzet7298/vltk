@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC global script source index parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/global
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/global
 // Imported file: StreamingAssets/Reference/PcGlobalScript/global_script_index.txt
 // Catalog only: paths, file sizes, SHA-256, and counts. No Lua runtime semantics.
 // -----------------------------------------------------------------------------

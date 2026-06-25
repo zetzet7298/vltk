@@ -9,7 +9,7 @@ namespace VLTK.Tests.Sandbox
     {
         private const int ExpectedPcReviveSections = 139;
         private const int ExpectedPcRevivePositions = 241;
-        private const string PcSourcePath = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/revivepos.ini";
+        private const string PcSourcePath = "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/revivepos.ini";
         private static string ReferencePath => Path.Combine(
             Directory.GetCurrentDirectory(),
             "Assets/StreamingAssets/Reference/PcMap/revivepos.ini");

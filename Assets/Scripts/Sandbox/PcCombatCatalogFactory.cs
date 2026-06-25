@@ -426,7 +426,7 @@ namespace VLTK.Sandbox
 
         public static List<SkillDefinition> CreateWuDangSkills() => new()
         {
-            // Source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/wudang.lua
+            // Source: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/wudang.lua
             WuDangPassiveJianFa(),
             WuDangPassiveQuanFa(),
             WuDangYinYangQi(),

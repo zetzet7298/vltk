@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC settings/horse.txt (Ngựa) parser
 // Source (verified GB2312, 46 tab-separated columns, 350 data rows):
-//   /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/server/
+//   /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/server/
 //     home_jxser_bachkim_6.0/server1/settings/item/004/horse.txt
 //
 // VERIFIED column layout (header read directly from PC source):

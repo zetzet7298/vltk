@@ -30,11 +30,11 @@
     background-color: transparent;
 }
 
-/* PC 新血条面板 (bar_panel_bg.png = 552×17, đúng art PC gốc) — neo đúng vị trí PC:
-   Main.Left=120 ×1.25 = 150; Width=552 ×1.25 = 690; Height=17 ×1.25 ≈ 21 */
+/* PC 新血条面板 (bar_panel_bg.png = 552×17, đúng art PC gốc). PC origin Main.Left×1.25=150.
+   MOBILE shift -112 (margin trái giảm 1/2 hai lần: 150→75→38). W=552×1.25=690; H=17×1.25≈21 */
 .hud-pc-bar-panel-bg {
     position: absolute;
-    left: 150px;
+    left: 38px;
     top: 0px;
     width: 690px;
     height: 21px;
@@ -45,7 +45,7 @@
 
 .hud-level-box {
     position: absolute;
-    left: 194px; /* PC (Main.Left=120 + Level.Left=35)=155 × 1.25 = 194 */
+    left: 82px; /* PC 194 - 112 mobile-shift (margin trái giảm 1/2 hai lần) */
     top: 8px;
     width: 25px; /* PC 20 × 1.25 */
     height: 14px;
@@ -59,7 +59,7 @@
 /* WorldSort box (Hạng) — vẽ qua IMGUI overlay, ẩn element để tránh vẽ đè */
 .hud-worldsort-box {
     position: absolute;
-    left: 803px; /* PC (120 + WorldSort.Left=522)=642 × 1.25 = 802.5 */
+    left: 691px; /* PC 803 - 112 mobile-shift (margin trái giảm 1/2 hai lần) */
     top: 8px;
     width: 35px; /* PC 28 × 1.25 */
     height: 14px;
@@ -81,13 +81,12 @@
     overflow: hidden;
 }
 
-/* Bars absolute coords trong 1280-space (scale 1024→1280 = 1.25):
-   base = Main.Left=120 × 1.25 = 150; absolute = 150 + bar.Left×1.25.
-   Stamina=150+72.5=222.5, Life=150+210=360, Mana=150+347.5=497.5, Exp=150+485=635 */
-.hud-stamina-track { left: 223px; }
-.hud-hp-track { left: 360px; }
-.hud-mp-track { left: 498px; }
-.hud-exp-track { left: 635px; }
+/* Bars absolute coords 1280-space. PC base=150; MOBILE shift -112 → base=38.
+   Stamina=111, HP=248, MP=386, EXP=523 (= PC value - 112). */
+.hud-stamina-track { left: 111px; }
+.hud-hp-track { left: 248px; }
+.hud-mp-track { left: 386px; }
+.hud-exp-track { left: 523px; }
 
 .hud-top-fill {
     width: 100%;
@@ -118,11 +117,11 @@
     -unity-font-style: bold;
 }
 /* Captions ẩn - IMGUI overlay sẽ vẽ. Positions absolute trong 1280-space (base 150). */
-.hud-vn-level-caption { left: 194px; width: 25px; display: none; }
-.hud-vn-stamina-caption { left: 223px; width: 130px; display: none; }
-.hud-vn-hp-caption { left: 360px; width: 130px; display: none; }
-.hud-vn-mp-caption { left: 498px; width: 130px; display: none; }
-.hud-vn-exp-caption { left: 635px; width: 130px; display: none; }
+.hud-vn-level-caption { left: 82px; width: 25px; display: none; }
+.hud-vn-stamina-caption { left: 111px; width: 130px; display: none; }
+.hud-vn-hp-caption { left: 248px; width: 130px; display: none; }
+.hud-vn-mp-caption { left: 386px; width: 130px; display: none; }
+.hud-vn-exp-caption { left: 523px; width: 130px; display: none; }
 
 
 .hud-top-small-text {
@@ -136,10 +135,10 @@
     background-color: transparent;
 }
 /* Values dưới bar tracks — ẩn UIToolkit labels, IMGUI overlay sẽ vẽ. Absolute 1280-space (base 150). */
-.hud-stamina-text { left: 223px; display: none; }
-.hud-hp-text { left: 360px; display: none; }
-.hud-mp-text { left: 498px; display: none; }
-.hud-exp-text { left: 635px; display: none; }
+.hud-stamina-text { left: 111px; display: none; }
+.hud-hp-text { left: 248px; display: none; }
+.hud-mp-text { left: 386px; display: none; }
+.hud-exp-text { left: 523px; display: none; }
 
 
 
@@ -443,7 +442,7 @@
 /* CHAT AREA */
 .hud-chat-panel {
     position: absolute;
-    left: 155px;
+    left: 39px;
     bottom: 78px;
     width: 430px;
     height: 70px;
@@ -496,7 +495,7 @@
 /* BOTTOM ORNATE STRIP */
 .hud-bottom-strip {
     position: absolute;
-    left: 155px;
+    left: 39px;
     right: 0px;
     bottom: 0px;
     height: 82px;
@@ -1035,7 +1034,7 @@
     border-color: rgb(80, 160, 120);
     border-radius: 8px;
     position: absolute;
-    left: 155px;
+    left: 39px;
     bottom: 150px;
 }
 

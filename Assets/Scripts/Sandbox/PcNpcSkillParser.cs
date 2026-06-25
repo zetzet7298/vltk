@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC skills1.txt NPC/Boss skill catalog parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt
 // The committed npcskills.txt preserves the PC skills1.txt header plus rows where
 // LvlSetScript starts with "\\script\\skill\\npc" or SkillName contains "boss".
 // PC source proves 158 rows (145 NPC-script rows + 13 boss-name-only rows), not 43.

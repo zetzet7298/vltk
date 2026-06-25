@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC chengshidahongbao.txt parser (hồng bao thành thị đại)
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/*/settings/item/chengshidahongbao.txt
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/*/settings/item/chengshidahongbao.txt
 // Cols: Name, Type, Genre, Detail, Particular, Serise, Level, Param1-6, Proba, Costly, Msg, Log
 // -----------------------------------------------------------------------------
 

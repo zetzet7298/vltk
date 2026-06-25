@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC thiefskill.txt focused parser/service data.
-// Source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/thiefskill.txt
+// Source: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/thiefskill.txt
 // Columns: SkillId SkillName ThiefStyle AttackRadius MaxLevel TimePerCast ...
 // -----------------------------------------------------------------------------
 

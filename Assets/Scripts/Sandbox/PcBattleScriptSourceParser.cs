@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC battle script source catalog parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/battles
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/battles
 // The committed catalog records file paths only: 183 files total, 182 active
 // .lua scripts plus one PC backup file (boss/mission.lua.bak). No Lua execution.
 // -----------------------------------------------------------------------------

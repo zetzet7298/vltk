@@ -54,8 +54,8 @@ print(f"Generated {len(path_meta)} target UIDs to find in JX PAKs.")
 
 # Find JX PAK files
 PAK_DIRS = [
-    Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Debug/data'),
-    Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data'),
+    Path('/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/S3Client/Debug/data'),
+    Path('/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data'),
 ]
 
 paks = []

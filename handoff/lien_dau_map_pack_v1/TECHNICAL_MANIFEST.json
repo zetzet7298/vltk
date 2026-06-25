@@ -3,7 +3,7 @@
   "package": "lien_dau_map_pack_v1",
   "createdAtUtc": "2026-06-11T11:45:56Z",
   "sourceUnityRoot": "/var/www/vltk-mobile",
-  "pcSourceRoot": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem",
+  "pcSourceRoot": "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem",
   "maps": [
     {
       "mapId": 396,

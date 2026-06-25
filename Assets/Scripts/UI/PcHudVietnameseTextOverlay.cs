@@ -210,33 +210,32 @@ namespace VLTK.UI
             GUI.depth = -10000;
 
             // Top PC bar captions+values — ground-truth = ffb7d31b.ini / 8da7027d.ini (pak_unpacked/1024)
-            // PC Main.Left=120 → 1280-space: 120×1.25=150. Bar offsets scaled ×1.25.
+            // PC Main.Left=120 → 1280-space base=150. MOBILE: HUD_LEFT=75 (margin trái giảm 1/2: 150→75).
             // Level=35→44, Stamina=58→72.5, Life=168→210, Mana=278→347.5, Exp=388→485, WorldSort=522→652.5
+            const float HUD_LEFT = 38f; // PC origin 150, mobile shift -112 (margin trái: 150→75→38)
             const float BW = 130f; // bar width: PC 104 × 1.25
 
-            // SỐ CẤP điền vào ô dark-green box bake sẵn trong panel (panel-space x=36..54
-            // → 1280-space x=195..217). PC Player_Level.Left=35→194 khớp box. KHÔNG đè stamina (x=223).
+            // SỐ CẤP điền vào ô dark-green box bake sẵn. PC 194 → mobile 119 (=HUD_LEFT+44).
             var lvlStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleCenter, fontSize = 10,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(195f, 4f, 24f, 13f, GetLevelText(), lvlStyle);
+            Label(HUD_LEFT + 44f, 4f, 24f, 13f, GetLevelText(), lvlStyle);
 
             // Captions (row 0) - Bỏ theo PC HUD (PC không vẽ tên bar đè lên)
-            // Label(150f + 72.5f, 0f, BW, 14f, "Thể lực",    _topCaption);
-            // Label(150f + 210f, 0f, BW, 14f, "Sinh lực",   _topCaption);
-            // Label(150f + 347.5f, 0f, BW, 14f, "Nội lực",    _topCaption);
-            // Label(150f + 485f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
+            // Label(HUD_LEFT + 72.5f, 0f, BW, 14f, "Thể lực",    _topCaption);
+            // Label(HUD_LEFT + 210f, 0f, BW, 14f, "Sinh lực",   _topCaption);
+            // Label(HUD_LEFT + 347.5f, 0f, BW, 14f, "Nội lực",    _topCaption);
+            // Label(HUD_LEFT + 485f, 0f, BW, 14f, "Kinh nghiệm",_topCaption);
 
             // Values (dưới thanh fill, căn giữa theo bar width) — thứ tự PC: Stamina→Sinh lực→Nội lực→Kinh nghiệm
-            Label(150f + 72.5f, 17f, BW, 15f, GetStaminaText(), _topValue);
-            Label(150f + 210f, 17f, BW, 15f, GetHpText(),      _topValue);
-            Label(150f + 347.5f, 17f, BW, 15f, GetMpText(),      _topValue);
-            Label(150f + 485f, 17f, BW, 15f, GetExpText(),     _topValue);
+            Label(HUD_LEFT + 72.5f, 17f, BW, 15f, GetStaminaText(), _topValue);
+            Label(HUD_LEFT + 210f, 17f, BW, 15f, GetHpText(),      _topValue);
+            Label(HUD_LEFT + 347.5f, 17f, BW, 15f, GetMpText(),      _topValue);
+            Label(HUD_LEFT + 485f, 17f, BW, 15f, GetExpText(),     _topValue);
 
-            // GIÁ TRỊ HẠNG điền vào ô dark-green box bake sẵn (panel-space x=522..549
-            // → 1280-space x=802..836). PC Player_WorldSort.Left=522 khớp.
+            // GIÁ TRỊ HẠNG điền vào ô dark-green box bake sẵn. PC 802 → mobile 727 (=HUD_LEFT+652.5).
             var rankStyle = new GUIStyle(_topValue) { alignment = TextAnchor.MiddleCenter, fontSize = 10,
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
-            Label(802f, 4f, 35f, 13f, GetRankText(), rankStyle);
+            Label(HUD_LEFT + 652.5f, 4f, 35f, 13f, GetRankText(), rankStyle);
 
             // Chat tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) giống PC
             var tabStyleNormal = new GUIStyle(_menu) {
@@ -249,7 +248,7 @@ namespace VLTK.UI
                 fontSize = 11,
                 normal = { textColor = new Color(255/255f, 220/255f, 0f) }
             };
-            float tabX = 155f;
+            float tabX = 39f;
             Label(tabX, 592f, 50f, 18f, "Tất cả", tabStyleNormal);
             Label(tabX + 60f, 592f, 40f, 18f, "Mật", tabStyleNormal);
             Label(tabX + 105f, 592f, 50f, 18f, "Phòng", tabStyleNormal);
@@ -258,7 +257,7 @@ namespace VLTK.UI
             Label(tabX + 290f, 592f, 50f, 18f, "Khác", tabStyleYellow);
 
             // Chat/system hint, like Vietnamese PC client.
-            Label(155, 642, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
+            Label(39, 642, 430, 20, "!! Hãy sử dụng hồi phục", _chatWarn);
 
             DrawMinimapCoordinates();
 

@@ -11,7 +11,7 @@ SPRITES_DIR = Path('/var/www/vltk-mobile/Assets/StreamingAssets/Sprites')
 SPRITES_DIR.mkdir(parents=True, exist_ok=True)
 
 SPRITES_RUNTIME_DIR = Path('/var/www/vltk-mobile/SpritesRuntime')
-PC_MAN_DIR = Path("/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/spr/npcres/man")
+PC_MAN_DIR = Path("/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/spr/npcres/man")
 
 # Actions & Suffixes
 ACTIONS = ['ST01', 'ST02', 'ST04', 'ST05', 'ST06',

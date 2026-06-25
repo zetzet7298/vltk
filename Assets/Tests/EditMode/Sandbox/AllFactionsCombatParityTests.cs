@@ -10,7 +10,7 @@ namespace VLTK.Tests.Sandbox
     /// Combat parity tests cho 10 môn phái: xác nhận ID, tên, faction, attack radius,
     /// child skill ID, magic attribute values khớp với PC source.
     ///
-    /// PC source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/*.lua
+    /// PC source: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/*.lua
     /// </summary>
     public class AllFactionsCombatParityTests
     {

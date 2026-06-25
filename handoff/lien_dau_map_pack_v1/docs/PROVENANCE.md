@@ -2,10 +2,10 @@
 
 ## PC source-of-truth
 
-- PC root: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`
-- Canonical unpack root: `/var/www/jx-source/pak_unpacked`
+- PC root: `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`
+- Canonical unpack root: `/var/www/vltksource_new/pak_unpacked`
 - PC maplist evidence:
-  - `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini`
+  - `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini`
   - map `396` => `特殊用地\武林大会专用\武林大会会场`
   - map `397` => `特殊用地\联赛比赛用地`
 

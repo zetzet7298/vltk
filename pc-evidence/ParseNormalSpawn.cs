@@ -10,7 +10,7 @@ namespace PcEvidence
     {
         public static void Main()
         {
-            string inputPath = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/normal.txt";
+            string inputPath = "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/normal.txt";
             // We use relative path assuming this is run from the Unity project root or similar.
             string outputDir = "Assets/StreamingAssets/Reference/PcNormalSpawn";
             Directory.CreateDirectory(outputDir);

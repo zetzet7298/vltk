@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC itemexchange_setting rolevalue.ini typed facts
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/itemexchange_setting/rolevalue.ini
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/itemexchange_setting/rolevalue.ini
 // Purpose: expose typed config values only; this does not execute item exchange.
 // -----------------------------------------------------------------------------
 

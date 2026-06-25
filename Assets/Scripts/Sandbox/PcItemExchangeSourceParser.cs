@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC itemexchange_setting source inventory parser (phase 1)
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/itemexchange_setting
+// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/itemexchange_setting
 // Purpose: expose file/header/row/key facts only. This does not execute exchange
 // runtime rules and intentionally does not read rolevalue_log runtime logs.
 // -----------------------------------------------------------------------------

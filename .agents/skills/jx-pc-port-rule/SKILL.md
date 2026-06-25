@@ -9,7 +9,7 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 
 ## Source Of Truth
 
-- Treat `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` as the only PC game source of truth.
+- Treat `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem` as the only PC game source of truth.
 - Do not read or trust other PC source trees for port decisions unless the user explicitly expands scope.
 - Unity code, generated assets, old extracted files, screenshots, and previous guesses are implementation clues only; they are not proof.
 - For every behavior, visual, coordinate, timing, skill formula, asset path, NPC/object definition, or UI layout, find the matching PC source/data/asset first.
@@ -24,7 +24,7 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 
 ## Required Workflow
 
-1. Locate the relevant file(s) under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` before editing Unity code.
+1. Locate the relevant file(s) under `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem` before editing Unity code.
 2. Compare the PC source/data/asset against the current Unity implementation.
 3. Implement the Unity port using PC values and assets directly where possible.
 4. Verify with Unity compile/tests or runtime checks appropriate to the task.
@@ -32,6 +32,6 @@ Use before starting any PC-to-Unity porting task in this repo. This is a short g
 
 ## If Source Is Missing
 
-- Say exactly what was searched under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`.
+- Say exactly what was searched under `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`.
 - Do not silently substitute another PC source.
 - Make only clearly marked provisional changes if the user explicitly allows it.
