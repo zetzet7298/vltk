@@ -13,6 +13,7 @@ using VLTK.UI;
 using VLTK.UI.Popup;
 using VLTK.UI.CharacterInfo;
 using VLTK.UI.Inventory;
+using VLTK.UI.Treasure;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -1240,7 +1241,21 @@ namespace VLTK.UI
             }
         }
 
-        private void OnTreasureClick() => SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+        private void OnTreasureClick()
+        {
+            var manager = PopupManager.Instance;
+            if (manager == null)
+            {
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
+            }
+
+            var sandbox = SandboxManager.Instance;
+            var mall = sandbox != null ? sandbox.MallService : null;
+            var treasureHunt = sandbox != null ? sandbox.TreasureHuntService : null;
+            manager.Show(new TreasureContent(mall, treasureHunt));
+            SubsystemLog.Info("HUD", "Open Kỳ Trân Các / Bảo Vật");
+        }
 
         // ── New HUD logic ──────────────────────────────────────────────────
 
