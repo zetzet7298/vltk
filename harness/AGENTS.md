@@ -1,6 +1,5 @@
 # Agent Instructions
 
-
 ### So sánh Tỉ lệ màn hình & Quy đổi Giao diện (PC vs. Mobile)
 
 * **Màn hình PC gốc (`vltksource_new`)**: Tỉ lệ chuẩn **4:3**. Độ phân giải `800x600` hoặc `1024x768` (mặc định). Mọi tọa độ và layout trong file INI được định vị tuyệt đối theo khung 4:3 này.
@@ -11,6 +10,14 @@
   * **Nguyên tắc bố cục**: Không được nhân tỷ lệ thô trực tiếp cho ảnh (sẽ gây méo hình ảnh gốc). Hãy giữ nguyên tỉ lệ ảnh (Aspect Ratio), áp dụng neo góc màn hình (Anchor) theo cụm HUD (topbar neo Top-Center, minimap neo Top-Right, chat neo Bottom-Left, button bar neo Bottom-Center), và co giãn theo tỉ lệ màn hình thực tế của thiết bị. **Lưu ý**: `curSalx`/design-resolution từng được chép nhầm từ bản port C++ `jx-cocos` (không phải PC gốc) — đã gỡ bỏ; nguồn quy đổi duy nhất là `/var/www/vltksource_new` (file INI trong `pak_unpacked/1024` + `config.ini`).
 
 Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng API/library lạ), **PHẢI dùng exa (`exa_web_search_exa`/`exa_web_fetch_exa`) và deepwiki (`mcp_deepwiki_deepwiki_fetch`) để research** cách làm chuẩn — không đoán, không vá mò. Research xong mới implement. Xong việc thì **commit all change + push**.
+
+### 🔴 Tìm SPR / PAK trong `vltksource_new` (PC) — dùng skill `jx-pc-resource-resolver`
+
+Khi cần lấy bất kỳ **sprite / pak / UI art** nào từ PC (`/var/www/vltksource_new`), **BẮT BUỘC** dùng skill `jx-pc-resource-resolver` (`harness/.pi/skills/jx-pc-resource-resolver/SKILL.md`) để:
+- Đọc file INI (mã hoá **GBK**, đường dẫn tiếng Trung vd `đườn dẫn đến SPR`) → tính **JX Pack Hash** → ra tên file hex thật (vd `đườn dẫn đến hash.spr`) trên `pak_unpacked/*/unknown/`.
+- **Chọn đúng bản TIẾNG VIỆT**, không nhầm bản tiếng Trung: VLTK PC có nhiều phiên bản SPR song song (CN + VI). Cross-check `name_vi` trong `pak_unpacked/_labels.json` + decode SPR (`~/Projects/vltktool`) để kiểm chứng chữ trên ảnh là tiếng Việt.
+
+⚠️ **Không bao giờ đoán mò tên file SPR** — phải tính hash. Sanity check: `đườn dẫn đến bút túi.spr` → `175edefc.spr`, `đườn dẫn đến thanh công cụ.spr` → `ebb69f9b.spr`.
 
 ---
 
@@ -23,6 +30,7 @@ Trước khi bắt tay làm bất cứ việc gì (fix bug, port feature, dùng 
 | `jx-pc-port-rule`        | **TRƯỚC MỌI PORT TASK** — không ngoại lệ        | Ép inspect PC source trước, port 100% từ PC. Không đoán, không tự chế. |
 | `srcwalk`                | Code navigation, tìm symbol/file/flow                       | Repo map, symbol search, callers/callees, deps. Ưu tiên hơn grep/read.        |
 | `unity-mcp-orchestrator` | Tạo/sửa GameObject, scene, script, test trong Unity Editor | Điều khiển Unity Editor qua MCP — CRUD scene, script, component, test.       |
+| `jx-pc-resource-resolver` | **MỌI lúc tìm SPR/PAK/UI trong `vltksource_new` (PC)** — không ngoại lệ | Hash CN (GBK) → tên file hex thật trên disk; chọn đúng bản **tiếng VIỆT**, không nhầm bản tiếng Trung. Cross-check `_labels.json` (`name_vi`) + decode SPR kiểm chứng. |
 
 ### 🔴 Bắt buộc — Test run rule (EditMode)
 
@@ -127,23 +135,5 @@ Categories đã add (2026-06-19):
 
 Shared catalog cache: `TestCatalogCache.NoviceAndCaiBang` (avoid rebuild ~50ms/call).
 
-<!-- HARNESS:BEGIN -->
-
-## Harness
-
-This repo uses Harness. Before work, read:
-
-- `README.md`
-- `docs/HARNESS.md`
-- `docs/FEATURE_INTAKE.md`
-- `docs/ARCHITECTURE.md`
-- `docs/CONTEXT_RULES.md`
-- `docs/TOOL_REGISTRY.md`
-- `scripts/bin/harness-cli query matrix` on macOS/Linux, or `.\scripts\bin\harness-cli.exe query matrix` on Windows
-
-Use the Rust Harness CLI at `scripts/bin/harness-cli` on macOS/Linux or
-`scripts/bin/harness-cli.exe` on Windows as the main operational tool. Before a
-step that could use an external tool, run `scripts/bin/harness-cli query tools --capability <name> --status present` to see what is equipped; an absent
-capability is a clean skip.
 
 <!-- HARNESS:END --
