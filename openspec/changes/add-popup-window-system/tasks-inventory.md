@@ -33,8 +33,8 @@
 
 ## Phase F — Commit + ship
 - [x] F1. Update `pc-evidence/hud/README.md` §inventory SPR provenance (engine-hardcoded note + scout-correction).
-- [ ] F2. Commit: `popup(SDD): Inventory window (6x10 grid, filter tabs, real data) wired to BtnItems`.
-- [ ] F3. Push origin/dev.
+- [x] F2. Commit: `popup(SDD): add inventory window for BtnItems` (`a669ad7ce`).
+- [x] F3. Push origin/dev (`dev == origin/dev`).
 
 ## Follow-up (NOT this change)
 - Item USE/EQUIP/DROP gameplay (tap-to-select → action menu).
