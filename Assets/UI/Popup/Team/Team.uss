@@ -1,0 +1,81 @@
+/* =============================================================================
+   VLTK Mobile — HUD-003 Team / Đội content (Team.uss)
+   Read-only slice based on PC 组队 window manifest (a05d7a2c.dat).
+   ========================================================================== */
+
+.team-body {
+    flex-grow: 1;
+    padding: 8px;
+}
+
+.team-panel {
+    margin-bottom: 8px;
+    padding: 7px;
+    background-color: rgba(18, 14, 10, 0.88);
+    border-width: 1px;
+    border-color: rgba(150, 112, 48, 0.55);
+}
+
+.team-section-title {
+    color: rgb(255, 230, 130);
+    font-size: 13px;
+    -unity-font-style: bold;
+    margin-bottom: 5px;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+.team-roster-scroll {
+    height: 200px;
+}
+
+.team-roster-list {
+    flex-direction: column;
+}
+
+.team-roster-row {
+    color: rgb(232, 220, 184);
+    font-size: 12px;
+    white-space: normal;
+    margin-bottom: 3px;
+}
+
+.team-control-scroll {
+    height: 180px;
+}
+
+.team-control-list {
+    flex-direction: column;
+}
+
+.team-control-row {
+    margin-bottom: 5px;
+    padding: 5px;
+    background-color: rgba(46, 34, 18, 0.78);
+    border-width: 1px;
+    border-color: rgba(130, 95, 42, 0.65);
+}
+
+.team-control-label {
+    color: rgb(255, 240, 165);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.team-control-action {
+    color: rgb(226, 218, 190);
+    font-size: 11px;
+    white-space: normal;
+}
+
+.team-control-source {
+    color: rgb(150, 195, 235);
+    font-size: 10px;
+}
+
+.team-footer {
+    color: rgb(190, 170, 125);
+    font-size: 11px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+}

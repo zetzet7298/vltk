@@ -4,6 +4,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VLTK.UI;
+using VLTK.UI.Popup;
 using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
@@ -15,7 +16,6 @@ namespace VLTK.Tests.Sandbox
         private GameHudController _hud;
         private VisualElement _root;
         private VisualElement _buffPanel;
-        private VisualElement _teamPreview;
         private VisualElement _tradeInfoPanel;
         private VisualElement _tradeInfoClose;
         private Label _tradePartnerName;
@@ -38,8 +38,6 @@ namespace VLTK.Tests.Sandbox
 
             _root = new VisualElement { name = "GameHud" };
             _buffPanel = new VisualElement { name = "BuffPanel" };
-            _teamPreview = new VisualElement { name = "TeamPreview" };
-            _teamPreview.AddToClassList("hidden");
 
             _tradeInfoPanel = new VisualElement { name = "TradeInfoPanel" };
             _tradeInfoPanel.AddToClassList("hidden");
@@ -71,7 +69,6 @@ namespace VLTK.Tests.Sandbox
             _faceBtn = new Button { name = "FaceBtn" };
 
             _root.Add(_buffPanel);
-            _root.Add(_teamPreview);
             _root.Add(_tradeInfoPanel);
             _root.Add(_stallCurrencySelector);
             _root.Add(_facePickerOverlay);
@@ -79,7 +76,6 @@ namespace VLTK.Tests.Sandbox
 
             // Set private fields via reflection
             SetPrivateField("_buffPanel", _buffPanel);
-            SetPrivateField("_teamPreview", _teamPreview);
             SetPrivateField("_tradeInfoPanel", _tradeInfoPanel);
             SetPrivateField("_tradeInfoClose", _tradeInfoClose);
             SetPrivateField("_tradePartnerName", _tradePartnerName);
@@ -119,20 +115,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void OnTeamClick_TogglesTeamPreviewAndPopulatesMembers()
+        public void OnTeamClick_WithoutPopupManager_DoesNotThrow()
         {
-            // Initially hidden
-            Assert.IsTrue(_teamPreview.ClassListContains("hidden"));
-            Assert.AreEqual(0, _teamPreview.childCount);
-
-            // Show
-            InvokePrivateMethod("OnTeamClick");
-            Assert.IsFalse(_teamPreview.ClassListContains("hidden"));
-            Assert.AreEqual(3, _teamPreview.childCount, "Should populate 3 team members");
-
-            // Hide again
-            InvokePrivateMethod("OnTeamClick");
-            Assert.IsTrue(_teamPreview.ClassListContains("hidden"));
+            // BtnTeam now opens the Team popup via PopupManager (see TeamContentTests).
+            // Without an initialised PopupManager the handler must degrade gracefully.
+            Assert.IsNull(PopupManager.Instance);
+            Assert.DoesNotThrow(() => InvokePrivateMethod("OnTeamClick"));
         }
 
         [Test]

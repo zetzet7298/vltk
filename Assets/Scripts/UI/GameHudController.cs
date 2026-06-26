@@ -14,6 +14,7 @@ using VLTK.UI.Popup;
 using VLTK.UI.CharacterInfo;
 using VLTK.UI.Inventory;
 using VLTK.UI.Treasure;
+using VLTK.UI.Team;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -104,7 +105,6 @@ namespace VLTK.UI
 
         // New HUD elements
         private VisualElement _buffPanel;
-        private VisualElement _teamPreview;
         private VisualElement _tradeInfoPanel, _tradeInfoClose;
         private Label _tradePartnerName, _tradePartnerLevel, _tradePartnerFaction, _tradePartnerGuild;
         private VisualElement _stallCurrencySelector;
@@ -319,7 +319,6 @@ namespace VLTK.UI
 
             // Bind new HUD panels
             _buffPanel = root.Q("BuffPanel");
-            _teamPreview = root.Q("TeamPreview");
 
             _tradeInfoPanel = root.Q("TradeInfoPanel");
             _tradeInfoClose = root.Q("TradeInfoClose");
@@ -1195,18 +1194,17 @@ namespace VLTK.UI
 
         private void OnTeamClick()
         {
-            if (_teamPreview != null)
+            var manager = PopupManager.Instance;
+            if (manager == null)
             {
-                bool hide = !_teamPreview.ClassListContains("hidden");
-                if (hide)
-                    _teamPreview.AddToClassList("hidden");
-                else
-                {
-                    _teamPreview.RemoveFromClassList("hidden");
-                    PopulateTeamPreview();
-                }
-                SubsystemLog.Info("HUD", hide ? "Close Team" : "Open Team");
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
             }
+
+            var sandbox = SandboxManager.Instance;
+            var party = sandbox != null ? sandbox.PartyService : null;
+            manager.Show(new TeamContent(party));
+            SubsystemLog.Info("HUD", "Open Tổ đội / Đội");
         }
 
         private void OnFactionClick()
@@ -1371,67 +1369,6 @@ namespace VLTK.UI
                 return string.Format(System.Globalization.CultureInfo.InvariantCulture, "{0}m{1}s", min, sec);
             }
             return seconds.ToString("F1");
-        }
-
-        private void PopulateTeamPreview()
-        {
-            if (_teamPreview == null) return;
-            _teamPreview.Clear();
-            
-            var members = new[]
-            {
-                new { name = "Đường Môn Đệ Tử", faction = "tm", hp = 80, maxHp = 100, mp = 40, maxMp = 50, isLeader = true },
-                new { name = "Nga Mi Đệ Tử", faction = "em", hp = 100, maxHp = 100, mp = 50, maxMp = 50, isLeader = false },
-                new { name = "Cái Bang Đệ Tử", faction = "gb", hp = 50, maxHp = 120, mp = 20, maxMp = 100, isLeader = false }
-            };
-            
-            foreach (var m in members)
-            {
-                var item = new VisualElement();
-                item.AddToClassList("hud-team-member");
-                
-                if (m.isLeader)
-                {
-                    var flag = new VisualElement();
-                    flag.AddToClassList("hud-team-leader-flag");
-                    item.Add(flag);
-                }
-                
-                var icon = new VisualElement();
-                icon.AddToClassList("hud-team-faction-icon");
-                
-                var fact = HudDataService.Instance.GetFaction(m.faction);
-                int placeholderSkillId = fact != null ? fact.placeholderSkillId : 124;
-
-                LoadIcon(icon, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), string.Format(System.Globalization.CultureInfo.InvariantCulture, "cai_bang_skill_{0}", placeholderSkillId));
-                item.Add(icon);
-                
-                var info = new VisualElement();
-                info.AddToClassList("hud-team-member-info");
-                
-                var nameLabel = new Label(m.name);
-                nameLabel.AddToClassList("hud-team-member-name");
-                info.Add(nameLabel);
-                
-                var hpTrack = new VisualElement();
-                hpTrack.AddToClassList("hud-team-bar-track");
-                var hpFill = new VisualElement();
-                hpFill.AddToClassList("hud-team-bar-fill-hp");
-                hpFill.style.width = Length.Percent(((float)m.hp / m.maxHp) * 100f);
-                hpTrack.Add(hpFill);
-                info.Add(hpTrack);
-                
-                var mpTrack = new VisualElement();
-                mpTrack.AddToClassList("hud-team-bar-track");
-                var mpFill = new VisualElement();
-                mpFill.AddToClassList("hud-team-bar-fill-mp");
-                mpFill.style.width = Length.Percent(((float)m.mp / m.maxMp) * 100f);
-                mpTrack.Add(mpFill);
-                info.Add(mpTrack);
-                
-                item.Add(info);
-                _teamPreview.Add(item);
-            }
         }
 
         private void PopulateTradeInfo()

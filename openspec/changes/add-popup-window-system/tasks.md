@@ -54,6 +54,7 @@
 ## Follow-up (NOT this change)
 - [x] Inventory window (`BtnItems`) reusing the base — completed in slice 2 (`a669ad7ce`, see `tasks-inventory.md`).
 - [x] Treasure window (`BtnTreasure`) — completed in slice 3 (see `tasks-treasure.md`).
+- [x] Team window (`BtnTeam`) — completed in slice 4 (see `tasks-team.md`).
 - [ ] Mask/Amulet/Charm/Trinket data binding.
 - [ ] Equip/unequip/socket gameplay (Khóa/Đính/Tháo real logic).
 - [ ] Migrate SkillPicker/Team/Faction onto PopupManager base.
