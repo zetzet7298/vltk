@@ -1108,3 +1108,17 @@
     -unity-text-align: middle-center;
 }
 
+
+/* =============================================================================
+   HUD-003 Popup overlay host (PopupManager mounts backdrop + window here).
+   Full-screen, on top of all HUD elements; transparent when empty.
+   ========================================================================== */
+.hud-popup-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);   /* backdrop drawn by PopupManager child */
+    picking-mode: Ignore;                  /* let taps pass through to game when empty */
+}

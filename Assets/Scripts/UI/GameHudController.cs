@@ -10,6 +10,7 @@ using UnityEngine.UIElements;
 using UnityEngine.Networking;
 using VLTK.Core;
 using VLTK.UI;
+using VLTK.UI.Popup;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -271,6 +272,14 @@ namespace VLTK.UI
             root.pickingMode = PickingMode.Ignore;
             foreach (var child in root.Children())
                 child.pickingMode = PickingMode.Ignore;
+
+            // HUD-003: bind the reusable popup host. The PopupOverlay element is
+            // the full-screen mount point; PopupManager adds backdrop + window there.
+            var popupHost = root.Q("PopupOverlay");
+            if (popupHost != null)
+            {
+                PopupManager.SetInstance(new PopupManager(popupHost));
+            }
 
             _hpFill = root.Q("HpBarFill");
             _mpFill = root.Q("MpBarFill");

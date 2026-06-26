@@ -1,0 +1,80 @@
+/* =============================================================================
+   VLTK Mobile — HUD-003 Popup Window shell (PopupWindow.uss)
+   Frame = 玲珑盒内框.spr (blank ornate border, decoded popup_frame_inner.png)
+   Close = 关闭_vn.spr ("Đóng" Vietnamese, 3 states).
+   Design space: 1280x720 (UI Toolkit PanelSettings).
+   ========================================================================== */
+
+/* Dim backdrop behind the active window. Full-screen, below the window. */
+.popup-backdrop {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.55);
+}
+
+/* The window shell, centered, on top of the backdrop. */
+.popup-window {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -unity-translate: -50% -50%;
+    width: 560px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* Ornate frame panel (玲珑盒内框 border). Fills the window. */
+.popup-chrome {
+    flex-grow: 1;
+    padding-top: 44px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+    background-image: url('project://database/Assets/UI/Popup/Art/popup_frame_inner.png');
+    -unity-background-scale-mode: scale-to-fill;
+}
+
+/* Title bar + close row, sitting on the top of the frame. */
+.popup-header {
+    position: absolute;
+    left: 50%;
+    top: 6px;
+    -unity-translate: -50% 0;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.popup-title {
+    -unity-font-style: bold;
+    color: rgb(220, 240, 255);
+    font-size: 16px;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    margin-right: 8px;
+}
+
+/* Close button: Vietnamese "Đóng" SPR (关闭_vn.spr). 3 states. */
+.popup-close {
+    width: 80px;
+    height: 22px;
+    border-width: 0;
+    padding: 0;
+    margin: 0;
+    color: rgba(0, 0, 0, 0);     /* text hidden; the SPR art carries "Đóng" */
+    background-image: url('project://database/Assets/UI/Popup/Art/btn_close_vn.png');
+    -unity-background-scale-mode: scale-to-fit;
+}
+.popup-close:hover {
+    background-image: url('project://database/Assets/UI/Popup/Art/btn_close_vn_h.png');
+}
+.popup-close:active {
+    background-image: url('project://database/Assets/UI/Popup/Art/btn_close_vn_p.png');
+}
+
+/* Content body slot (where IPopupContent mounts). */
+.popup-body {
+    flex-grow: 1;
+}
