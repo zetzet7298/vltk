@@ -30,6 +30,12 @@ namespace VLTK.UI.Popup
             _content = content ?? throw new ArgumentNullException(nameof(content));
             AddToClassList("popup-window");
 
+            // Robust modal geometry in the 1280×720 design space. USS percent/
+            // translate can resolve to NaN in some Editor playmode refresh paths,
+            // making the popup invisible. Content may provide a PC-like fixed hint.
+            style.position = Position.Absolute;
+            ApplyLayoutHint(content);
+
             var chrome = new VisualElement { name = "PopupChrome" };
             chrome.AddToClassList("popup-chrome");
 
@@ -55,6 +61,26 @@ namespace VLTK.UI.Popup
 
             // Let the content populate its body.
             content.Build(_body);
+        }
+
+        private void ApplyLayoutHint(IPopupContent content)
+        {
+            if (content is IPopupLayoutHint hint)
+            {
+                style.width = hint.Width;
+                style.height = hint.Height;
+                style.left = hint.Left;
+                style.top = hint.Top;
+                return;
+            }
+
+            // Default shell size preserves the slice-1 Character Info footprint.
+            const float width = 560f;
+            const float height = 520f;
+            style.width = width;
+            style.height = height;
+            style.left = (1280f - width) * 0.5f;
+            style.top = 70f;
         }
 
         /// <summary>Fire the close affordance (close button / Esc-equivalent).</summary>

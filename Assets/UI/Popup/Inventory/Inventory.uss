@@ -1,0 +1,144 @@
+/* =============================================================================
+   VLTK Mobile — HUD-003 Inventory content (Inventory.uss)
+   Reconstructed player inventory (PC engine-hardcoded): mobile-custom filter tabs,
+   6×10 PC [ItemBox] grid geometry, read-only bind.
+   ========================================================================== */
+
+.inv-body {
+    flex-grow: 1;
+    padding: 8px;
+}
+
+.inv-tab-bar {
+    flex-direction: row;
+    justify-content: space-around;
+    height: 34px;
+    margin-bottom: 8px;
+    padding: 2px;
+    flex-shrink: 0;
+}
+
+.inv-tab {
+    flex-grow: 1;
+    flex-shrink: 0;
+    height: 28px;
+    margin: 0 2px;
+    padding: 3px 4px;
+    min-height: 28px;
+    color: rgb(230, 245, 255);
+    background-color: rgba(36, 26, 16, 0.95);
+    border-width: 1px;
+    border-color: rgba(210, 165, 70, 0.8);
+    font-size: 13px;
+    align-items: center;
+    justify-content: center;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+.inv-tab.active {
+    color: rgb(255, 238, 145);
+    background-color: rgba(120, 80, 30, 0.9);
+    border-color: rgb(220, 180, 80);
+    -unity-font-style: bold;
+}
+.inv-tab-label {
+    flex-grow: 1;
+    color: rgb(230, 245, 255);
+    font-size: 12px;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+.inv-tab.active .inv-tab-label {
+    color: rgb(255, 238, 145);
+    -unity-font-style: bold;
+}
+
+.inv-grid-scroll {
+    height: 386px;
+    padding: 2px;
+    background-color: rgba(18, 14, 10, 0.88);
+    border-width: 1px;
+    border-color: rgba(150, 112, 48, 0.55);
+}
+
+.inv-grid-host,
+.inv-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: flex-start;
+    padding: 4px;
+}
+
+.inv-cell {
+    width: 50px;
+    height: 50px;
+    margin: 2px;
+    border-width: 2px;
+    border-color: rgba(118, 90, 42, 0.82);
+    background-color: rgba(22, 18, 13, 0.90);
+    align-items: center;
+    justify-content: center;
+}
+.inv-cell.filled {
+    border-color: rgb(215, 170, 75);
+    background-color: rgba(68, 49, 20, 0.72);
+}
+.inv-cell.empty {
+    border-color: rgba(88, 68, 38, 0.66);
+    background-color: rgba(13, 11, 9, 0.84);
+}
+
+.inv-cell-icon {
+    width: 42px;
+    height: 42px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.inv-cell-fallback {
+    color: rgb(235, 221, 180);
+    font-size: 10px;
+    white-space: normal;
+    -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+.inv-cell-count {
+    position: absolute;
+    right: 2px;
+    bottom: 1px;
+    padding: 0 3px;
+    min-width: 16px;
+    color: rgb(255, 245, 160);
+    background-color: rgba(0, 0, 0, 0.72);
+    border-radius: 5px;
+    font-size: 11px;
+    -unity-text-align: middle-center;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}
+
+.inv-footer {
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    height: 28px;
+    min-height: 28px;
+    flex-shrink: 0;
+    margin-top: 6px;
+    padding: 2px 8px;
+    border-top-width: 1px;
+    border-top-color: rgba(150, 115, 55, 0.55);
+}
+
+.inv-slot-count {
+    color: rgb(255, 230, 130);
+    font-size: 13px;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+}

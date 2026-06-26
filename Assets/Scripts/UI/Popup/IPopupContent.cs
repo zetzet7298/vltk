@@ -25,4 +25,13 @@ namespace VLTK.UI.Popup
         /// <summary>Release listeners/data refs on close.</summary>
         void OnClose();
     }
+
+    /// <summary>Optional fixed layout hint for content that needs PC-like sizing.</summary>
+    public interface IPopupLayoutHint
+    {
+        float Width { get; }
+        float Height { get; }
+        float Left { get; }
+        float Top { get; }
+    }
 }

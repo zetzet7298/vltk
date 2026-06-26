@@ -15,14 +15,17 @@
     background-color: rgba(0, 0, 0, 0.55);
 }
 
-/* The window shell, centered, on top of the backdrop. */
+/* The window shell, centered, on top of the backdrop.
+   Fixed size keeps content above the bottom hotbar and prevents the frame from
+   collapsing around scrollable bodies (inventory grid, character paperdoll). */
 .popup-window {
     position: absolute;
     left: 50%;
-    top: 50%;
+    top: 46%;
     -unity-translate: -50% -50%;
-    width: 560px;
-    -unity-background-scale-mode: scale-to-fit;
+    width: 430px;
+    height: 560px;
+    -unity-background-scale-mode: scale-to-fill;
 }
 
 /* Ornate frame panel (玲珑盒内框 border). Fills the window. */
@@ -32,6 +35,7 @@
     padding-left: 16px;
     padding-right: 16px;
     padding-bottom: 16px;
+    background-color: rgba(24, 20, 14, 0.94);
     background-image: url('project://database/Assets/UI/Popup/Art/popup_frame_inner.png');
     -unity-background-scale-mode: scale-to-fill;
 }
@@ -39,9 +43,10 @@
 /* Title bar + close row, sitting on the top of the frame. */
 .popup-header {
     position: absolute;
-    left: 50%;
+    left: 92px;
     top: 6px;
-    -unity-translate: -50% 0;
+    width: 246px;
+    height: 30px;
     flex-direction: row;
     align-items: center;
     justify-content: center;
@@ -49,17 +54,18 @@
 
 .popup-title {
     -unity-font-style: bold;
-    color: rgb(220, 240, 255);
+    color: rgb(235, 246, 255);
     font-size: 16px;
     -unity-text-outline-width: 1px;
     -unity-text-outline-color: rgb(0, 0, 0);
     margin-right: 8px;
+    -unity-text-align: middle-center;
 }
 
 /* Close button: Vietnamese "Đóng" SPR (关闭_vn.spr). 3 states. */
 .popup-close {
-    width: 80px;
-    height: 22px;
+    width: 96px;
+    height: 24px;
     border-width: 0;
     padding: 0;
     margin: 0;
@@ -77,4 +83,5 @@
 /* Content body slot (where IPopupContent mounts). */
 .popup-body {
     flex-grow: 1;
+    overflow: hidden;
 }

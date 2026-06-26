@@ -2,6 +2,7 @@
     <ui:Style src="project://database/Assets/UI/HUD/GameHud.uss" />
     <ui:Style src="project://database/Assets/UI/Popup/PopupWindow.uss" />
     <ui:Style src="project://database/Assets/UI/Popup/CharacterInfo/CharacterInfo.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/Inventory/Inventory.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
         <!-- Full-width PC top frame art background (main_hud_bg scaled 1280px) -->
         <ui:VisualElement name="TopFrameBg" class="hud-top-frame-bg"/>

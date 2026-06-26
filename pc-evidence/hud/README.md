@@ -54,6 +54,20 @@ Do hệ thống đóng gói PAK sử dụng mã băm (hash UID) một chiều ch
 
 ---
 
+## 3.5. Popup Hành Trang / Túi Đồ (Inventory Window)
+
+Kết luận sau khi resolver hash + vision MCP kiểm chứng (2026-06-26): **không tìm thấy SPR nền riêng cho cửa sổ Hành Trang player** trong PC unpacked; layout player bag nhiều khả năng được engine vẽ hardcoded. Các SPR gần giống nhưng **không được dùng làm nền Hành Trang**:
+
+| Đường dẫn thử | File SPR | Vision verdict |
+| :--- | :--- | :--- |
+| `\spr\ui3\道具\道具面板.spr` | `da1f1d62.spr` | Cửa hàng/rao bán (`Đồ vật`, `Lời rao`, `Định giá`, `Rao bán`, grid 8×10), không phải Hành Trang player |
+| `\Spr\UI3\状态与装备\角色信息底图_vn.spr` | `bc31847f.spr` | `Hướng dẫn hoạt động`, 4 tab, không phải character/inventory panel |
+| `\Spr\UI3\主界面\关闭_vn.spr` | `962ab518.spr` | Nút `Đóng` tiếng Việt — dùng lại cho popup shell |
+
+Geometry Hành Trang tái dựng theo `[ItemBox]` từ companion/stash INI (`94a9b42e.ini`, `b49267df.ini`): **6 cột × 10 hàng, cell 26×26, UnitBorder=2, box 170×280**. Mobile dùng shell chung `玲珑盒内框.spr` + grid động, không dùng SPR có chữ sai ngữ cảnh.
+
+---
+
 ## 4. Cửa sổ chat và Kênh Chat (Chat Window & Channels)
 *Nằm tại các thư mục giải nén: `update01/unknown/`, `dmjx01/unknown/` hoặc `update03/unknown/`*
 

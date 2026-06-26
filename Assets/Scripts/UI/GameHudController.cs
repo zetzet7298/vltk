@@ -12,6 +12,7 @@ using VLTK.Core;
 using VLTK.UI;
 using VLTK.UI.Popup;
 using VLTK.UI.CharacterInfo;
+using VLTK.UI.Inventory;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -1181,7 +1182,14 @@ namespace VLTK.UI
             manager.Show(new CharacterInfoContent(equipment, statsProvider: null));
             SubsystemLog.Info("HUD", "Open Character Status");
         }
-        private void OnItemsClick() => SubsystemLog.Info("HUD", "Open Inventory");
+        private void OnItemsClick()
+        {
+            var manager = PopupManager.Instance;
+            var sandbox = SandboxManager.Instance;
+            var inventory = sandbox != null ? sandbox.InventoryService : null;
+            manager.Show(new InventoryContent(inventory));
+            SubsystemLog.Info("HUD", "Open Inventory");
+        }
         private void OnSkillsClick() => OpenSkillPanel();
 
         private void OnTeamClick()
