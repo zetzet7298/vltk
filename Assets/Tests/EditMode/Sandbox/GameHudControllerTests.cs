@@ -124,17 +124,15 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void OnFactionClick_TogglesStallCurrencySelector()
+        public void OnFactionClick_WithoutPopupManager_DoesNotThrow()
         {
-            // Initially hidden
+            // BtnFaction now opens the Faction popup via PopupManager (see FactionContentTests).
+            // It must no longer toggle the StallCurrencySelector, and must degrade gracefully
+            // when PopupManager is not initialised.
+            Assert.IsNull(PopupManager.Instance);
             Assert.IsTrue(_stallCurrencySelector.ClassListContains("hidden"));
-
-            // Show
-            InvokePrivateMethod("OnFactionClick");
-            Assert.IsFalse(_stallCurrencySelector.ClassListContains("hidden"));
-
-            // Hide again
-            InvokePrivateMethod("OnFactionClick");
+            Assert.DoesNotThrow(() => InvokePrivateMethod("OnFactionClick"));
+            // Stall selector must remain untouched by the faction handler now.
             Assert.IsTrue(_stallCurrencySelector.ClassListContains("hidden"));
         }
 

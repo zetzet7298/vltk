@@ -5,6 +5,7 @@
     <ui:Style src="project://database/Assets/UI/Popup/Inventory/Inventory.uss" />
     <ui:Style src="project://database/Assets/UI/Popup/Treasure/Treasure.uss" />
     <ui:Style src="project://database/Assets/UI/Popup/Team/Team.uss" />
+    <ui:Style src="project://database/Assets/UI/Popup/Faction/Faction.uss" />
     <ui:VisualElement name="GameHud" class="hud-root">
         <!-- Full-width PC top frame art background (main_hud_bg scaled 1280px) -->
         <ui:VisualElement name="TopFrameBg" class="hud-top-frame-bg"/>

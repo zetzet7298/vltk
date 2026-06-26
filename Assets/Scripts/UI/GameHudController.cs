@@ -15,6 +15,7 @@ using VLTK.UI.CharacterInfo;
 using VLTK.UI.Inventory;
 using VLTK.UI.Treasure;
 using VLTK.UI.Team;
+using VLTK.UI.Faction;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -1209,16 +1210,25 @@ namespace VLTK.UI
 
         private void OnFactionClick()
         {
-            // Toggle StallCurrencySelector
-            if (_stallCurrencySelector != null)
+            var manager = PopupManager.Instance;
+            if (manager == null)
             {
-                bool hide = !_stallCurrencySelector.ClassListContains("hidden");
-                if (hide)
-                    _stallCurrencySelector.AddToClassList("hidden");
-                else
-                    _stallCurrencySelector.RemoveFromClassList("hidden");
-                SubsystemLog.Info("HUD", hide ? "Close Stall Currency" : "Open Stall Currency");
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
             }
+
+            var sandbox = SandboxManager.Instance;
+            var bonus = sandbox != null ? sandbox.FactionBonusService : null;
+            CombatFaction faction = sandbox != null && sandbox.PlayerProgression != null
+                ? sandbox.PlayerProgression.faction
+                : CombatFaction.None;
+            if (faction == CombatFaction.None)
+                faction = CombatFaction.CaiBang;
+            int level = sandbox != null && sandbox.PlayerProgression != null
+                ? sandbox.PlayerProgression.level
+                : 1;
+            manager.Show(new FactionContent(bonus, (int)faction, GetFactionNameVi(faction), level));
+            SubsystemLog.Info("HUD", "Open Bonus Môn Phái");
         }
 
         private void OnPKClick() => SubsystemLog.Info("HUD", "Toggle PK");
