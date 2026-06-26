@@ -26,4 +26,4 @@
 ## Follow-up (NOT this slice)
 - Real invite/kick/appoint/leave/dismiss gameplay wired to `PartyService` mutations.
 - Nearby-player list (PC `NearbyScroll`) population.
-- Remove orphaned `TeamPreview` UXML element + unused `.hud-team-*` USS classes (pure cleanup).
+- [x] Remove orphaned `TeamPreview` UXML element + unused `.hud-team-*` USS classes (pure cleanup) — done in slice 6 cleanup.

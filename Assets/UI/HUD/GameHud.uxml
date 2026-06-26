@@ -148,10 +148,6 @@
             <!-- Dynamically populated in C# -->
         </ui:VisualElement>
 
-        <!-- Team Preview: PC 队伍一览信息.ini -->
-        <ui:VisualElement name="TeamPreview" class="hud-team-preview hidden">
-            <!-- Dynamically populated in C# -->
-        </ui:VisualElement>
 
         <!-- Trade Info Panel: PC TradeInfo.ini -->
         <ui:VisualElement name="TradeInfoPanel" class="hud-trade-panel hidden">
