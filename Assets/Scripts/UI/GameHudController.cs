@@ -11,6 +11,7 @@ using UnityEngine.Networking;
 using VLTK.Core;
 using VLTK.UI;
 using VLTK.UI.Popup;
+using VLTK.UI.CharacterInfo;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -1164,7 +1165,22 @@ namespace VLTK.UI
         private void OnRunClick() => SubsystemLog.Info("HUD", "Toggle Run/Walk");
         private void OnSitClick() => SubsystemLog.Info("HUD", "Toggle Sit");
         private void OnHorseClick() => SubsystemLog.Info("HUD", "Toggle Horse");
-        private void OnStatusClick() => SubsystemLog.Info("HUD", "Open Character Status");
+        private void OnStatusClick()
+        {
+            // HUD-003: open Character Info via PopupManager. Equipment binds to the
+            // live PlayerEquipmentService; stats provider is null until the backend
+            // PlayerStateResponse is wired into the HUD (slice 1 shows '--' rows).
+            var manager = PopupManager.Instance;
+            if (manager == null)
+            {
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
+            }
+            var sandbox = SandboxManager.Instance;
+            var equipment = sandbox != null ? sandbox.EquipmentService : null;
+            manager.Show(new CharacterInfoContent(equipment, statsProvider: null));
+            SubsystemLog.Info("HUD", "Open Character Status");
+        }
         private void OnItemsClick() => SubsystemLog.Info("HUD", "Open Inventory");
         private void OnSkillsClick() => OpenSkillPanel();
 

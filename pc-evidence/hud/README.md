@@ -201,3 +201,21 @@ Khung filigree (vòng tròn hai đầu + vương miện giữa + dải scrollwor
     *   **Kênh Lân cận**: 2,000 ms (Chờ 2 giây)
     *   **Kênh Thành thị**: 20,000 ms (Chờ 20 giây)
     *   **Kênh Bang hội**: 10,000 ms (Chờ 10 giây)
+
+## Popup System (HUD-003) — SPR provenance
+
+Source: `openspec/changes/add-popup-window-system/`. All art resolved via
+`jx-pc-resource-resolver` (hash CN→VI), Vietnamese variants only.
+
+| Asset | PC path (GBK hash) | Hex file | VI check |
+| --- | --- | --- | --- |
+| Close button "Đóng" (3 states) | `界面/关闭_vn.spr` | `962ab518.spr` | ✓ decoded — text reads "Đóng" |
+| Window inner frame | `界面/玲珑盒内框.spr` | `a210b99e.spr` | ✓ decoded — blank ornate border 476×449 |
+
+**Note:** PC character-status window SPR does NOT exist on disk
+(`人物状态栏`/`角色面板` hashes not found → engine-hardcoded). Layout reconstructed
+from `pc-evidence/hud/popup/khi_nhan_nut_thong_tin_nhan_vat_tab_hanh_trang.png`,
+reusing 玲珑盒 border + VI close button.
+
+Decode tool: `~/Projects/vltktool/extract_item_spr.py` (`parse_frames` +
+`decode_frame_rgba`). Decoded frames in `Assets/UI/Popup/Art/`.

@@ -65,6 +65,15 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
+        /// True khi slot không ở default variant (đã được trang bị). Read-only bind.
+        /// HUD-003 Character Info paperdoll dùng để phân biệt ô đã/trống.
+        /// </summary>
+        public bool IsEquipped(PlayerEquipSlot slot)
+        {
+            return GetVariant(slot) != DefaultVariant(slot);
+        }
+
+        /// <summary>
         /// Trang bị một item vào slot. Triggers visual refresh.
         /// Source: PC equipment → SPR path mapping từ NpcRes tables.
         /// </summary>
