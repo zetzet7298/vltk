@@ -1,13 +1,14 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — HUD-003 Character Info paperdoll
 // Equipment slot layout per reference (khi_nhan_nut_thong_tin_nhan_vat_tab_hanh_trang.png).
-// Real data: Weapon/Body/Head/Mount (PlayerEquipmentService.IsEquipped).
-// Mapping framework: Ring/Necklace/Belt/Boots (EquipmentSlotMappingService VI names).
-// Display-only (reference-matched, empty): Mask/Amulet/Charm/Trinket.
+// Real data: visual Weapon/Body/Head/Mount (PlayerEquipmentService.IsEquipped)
+// + gameplay-equipped state for all canonical EquipSlot slots (InventoryService.Equipped).
+// PC semantics: pendant = Hộ Thân Phù (pendant.txt D9), necklace = Liên (amulet.txt D4).
 // ADR-4. Body built in C# (testable, no UXML coupling).
 // -----------------------------------------------------------------------------
 using System.Collections.Generic;
 using UnityEngine.UIElements;
+using VLTK.Model;
 using VLTK.Sandbox;
 
 namespace VLTK.UI.CharacterInfo
@@ -19,47 +20,57 @@ namespace VLTK.UI.CharacterInfo
     {
         public readonly string key;
         public readonly string labelVi;
-        public readonly PlayerEquipSlot? equipmentSlot;   // null = display/framework only
+        public readonly EquipSlot? gameplaySlot;          // null = no gameplay item binding
+        public readonly PlayerEquipSlot? equipmentSlot;   // null = no visual SPR-layer binding
 
-        public PaperdollSlot(string key, string labelVi, PlayerEquipSlot? equipmentSlot = null)
+        public PaperdollSlot(
+            string key,
+            string labelVi,
+            EquipSlot? gameplaySlot = null,
+            PlayerEquipSlot? equipmentSlot = null)
         {
             this.key = key;
             this.labelVi = labelVi;
+            this.gameplaySlot = gameplaySlot;
             this.equipmentSlot = equipmentSlot;
         }
     }
 
     /// <summary>
-    /// Builds the equipment paperdoll grid and binds the 4 real equipment slots.
+    /// Builds the equipment paperdoll grid and binds visual + gameplay equipment slots.
     /// </summary>
     public static class CharacterInfoPaperdoll
     {
         /// <summary>
-        /// Slot layout matching the reference (~12 visible slots). Order = visual
-        /// grid order (top-to-bottom, left-to-right as laid out by USS flex-wrap).
+        /// Slot layout matching the reference plus PC-parity second ring (13 visible slots).
+        /// Order = visual grid order (top-to-bottom, left-to-right as laid out by USS flex-wrap).
         /// </summary>
         public static readonly IReadOnlyList<PaperdollSlot> Slots = new[]
         {
-            new PaperdollSlot("helmet",   "Mũ",        PlayerEquipSlot.Head),
-            new PaperdollSlot("mask",     "Mặt Nạ"),                       // display-only
-            new PaperdollSlot("amulet",   "Hộ Thân Phù"),                  // display-only
-            new PaperdollSlot("weapon",   "Vũ Khí",    PlayerEquipSlot.Weapon),
-            new PaperdollSlot("armor",    "Giáp",      PlayerEquipSlot.Body),
-            new PaperdollSlot("belt",     "Đai Lưng"),                     // framework (mapping-known)
-            new PaperdollSlot("ring",     "Nhẫn"),                         // framework
-            new PaperdollSlot("necklace", "Liên"),                         // framework
-            new PaperdollSlot("boots",    "Giày"),                         // framework
-            new PaperdollSlot("mount",    "Ngựa",      PlayerEquipSlot.Mount),
-            new PaperdollSlot("charm",    "Ngọc Bội"),                      // display-only
-            new PaperdollSlot("trinket",  "Bội Kiện"),                      // display-only
+            new PaperdollSlot("helmet",   "Mũ",          EquipSlot.Helmet,   PlayerEquipSlot.Head),
+            new PaperdollSlot("mask",     "Mặt Nạ",      EquipSlot.Mask),
+            new PaperdollSlot("pendant",  "Hộ Thân Phù", EquipSlot.Pendant),
+            new PaperdollSlot("weapon",   "Vũ Khí",      EquipSlot.Weapon,   PlayerEquipSlot.Weapon),
+            new PaperdollSlot("armor",    "Giáp",        EquipSlot.Armor,    PlayerEquipSlot.Body),
+            new PaperdollSlot("belt",     "Đai Lưng",    EquipSlot.Belt),
+            new PaperdollSlot("ring",     "Nhẫn",        EquipSlot.Ring),
+            new PaperdollSlot("ring2",    "Nhẫn",        EquipSlot.Ring2),
+            new PaperdollSlot("necklace", "Liên",        EquipSlot.Necklace),
+            new PaperdollSlot("boots",    "Giày",        EquipSlot.Boots),
+            new PaperdollSlot("mount",    "Ngựa",        EquipSlot.Mount,    PlayerEquipSlot.Mount),
+            new PaperdollSlot("trinket",  "Bội Kiện",    EquipSlot.Trinket),
+            new PaperdollSlot("trinket2", "Ngọc Bội",    EquipSlot.Trinket2),
         };
 
         /// <summary>
         /// Build the paperdoll into <paramref name="container"/>. Each slot becomes a
-        /// child named <c>Slot_&lt;key&gt;</c> carrying the VI label and an
-        /// <c>equipped</c> class when its real equipment slot is non-default.
+        /// child named <c>Slot_&lt;key&gt;</c> carrying the VI label. Visual binding is checked
+        /// first (regression guard), then gameplay equipped-state binding.
         /// </summary>
-        public static void Build(VisualElement container, PlayerEquipmentService equipment)
+        public static void Build(
+            VisualElement container,
+            PlayerEquipmentService equipment,
+            IReadOnlyDictionary<EquipSlot, ItemDefinition> equippedItems = null)
         {
             container.Clear();
             container.AddToClassList("char-paperdoll");
@@ -73,21 +84,30 @@ namespace VLTK.UI.CharacterInfo
                 label.AddToClassList("char-paperdoll-slot-label");
                 cell.Add(label);
 
-                // Real equipment binding: mark equipped slots.
-                if (slot.equipmentSlot.HasValue && equipment != null)
+                bool hasVisualBinding = slot.equipmentSlot.HasValue;
+                bool hasGameplayBinding = slot.gameplaySlot.HasValue;
+                bool visualEquipped = hasVisualBinding
+                    && equipment != null
+                    && equipment.IsEquipped(slot.equipmentSlot.Value);
+                bool gameplayEquipped = hasGameplayBinding
+                    && equippedItems != null
+                    && equippedItems.ContainsKey(slot.gameplaySlot.Value);
+
+                if (visualEquipped)
                 {
-                    if (equipment.IsEquipped(slot.equipmentSlot.Value))
-                    {
-                        cell.AddToClassList("equipped");
-                    }
-                    else
-                    {
-                        cell.AddToClassList("empty");
-                    }
+                    cell.AddToClassList("equipped");
+                }
+                else if (gameplayEquipped)
+                {
+                    cell.AddToClassList("equipped");
+                }
+                else if (hasVisualBinding || hasGameplayBinding)
+                {
+                    cell.AddToClassList("empty");
                 }
                 else
                 {
-                    cell.AddToClassList("framework");   // mapping-known or display-only
+                    cell.AddToClassList("framework");
                 }
 
                 container.Add(cell);

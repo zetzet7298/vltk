@@ -70,10 +70,10 @@ Run gate: `run_tests(mode="EditMode", category_names=["Equipment"])` in dev loop
   `ApplyCategoryIds` pendant fallback `7 → 9` (`equip_pendant`). Update stale header comment
   from `pendant.txt=7(after fix)` to `pendant.txt=9`, and the inline comment from "Ngọc bội"
   to "Hộ Thân Phù — equip_pendant (D9)". T10 → green.
-- [ ] **T12 (REFACTOR)** — Review PR-1 code for dead code / consistency; ensure
+- [x] **T12 (REFACTOR)** — Review PR-1 code for dead code / consistency; ensure
   `DetailTypeToCategory` and `ItemTypeToCategory` doc-comments note the two distinct axes
   (ItemType 1–12 vs EQUIPDETAILTYPE 0–16). Run `category_names=["Equipment"]` → all green.
-- [ ] **T13 (GATE — pre-push only)** — Run full EditMode suite (pendant fix touches shared
+- [x] **T13 (GATE — pre-push only)** — Run full EditMode suite (pendant fix touches shared
   loader). Record result; only pre-existing baseline failures allowed, 0 new failures in
   equipment/inventory paths.
 
@@ -86,45 +86,45 @@ revert restores prior behavior.
 
 Run gate: `run_tests(mode="EditMode", category_names=["Equipment"])`, then full suite pre-push.
 
-- [ ] **T14 (RED)** — In `Assets/Tests/EditMode/UI/CharacterInfoContentTests.cs`, add failing
+- [x] **T14 (RED)** — In `Assets/Tests/EditMode/UI/CharacterInfoContentTests.cs`, add failing
   tests: `Paperdoll_TwoRings_BothPresent` (asserts both `Slot_ring` and `Slot_ring2` exist)
   and `Paperdoll_GameplaySlot_Equipped_ShowsEquippedClass` (inject `InventoryService` with a
   mask equipped, build paperdoll, assert mask cell has `equipped` class). Confirm RED.
-- [ ] **T15 (GREEN)** — In `Assets/Scripts/UI/CharacterInfo/CharacterInfoPaperdoll.cs`: extend
+- [x] **T15 (GREEN)** — In `Assets/Scripts/UI/CharacterInfo/CharacterInfoPaperdoll.cs`: extend
   `PaperdollSlot` struct with `readonly EquipSlot? gameplaySlot` (alongside existing
   `PlayerEquipSlot? equipmentSlot`). Add new slot `ring2` ("Nhẫn", gameplaySlot=Ring2); set
   `gameplaySlot` on mask=Mask, pendant=Pendant, belt=Belt, necklace=Necklace, boots=Boots,
   ring=Ring, trinket=Trinket slots per design slot matrix. T14 → green.
-- [ ] **T16 (RED)** — Add failing test asserting `Slot_amulet` and `Slot_charm` no longer
+- [x] **T16 (RED)** — Add failing test asserting `Slot_amulet` and `Slot_charm` no longer
   exist, and `Slot_pendant` + `Slot_trinket2` exist (rename per DQ-5). Confirm RED (old keys
   still present).
-- [ ] **T17 (GREEN)** — In `CharacterInfoPaperdoll.Slots[]`: rename key `amulet`→`pendant`
+- [x] **T17 (GREEN)** — In `CharacterInfoPaperdoll.Slots[]`: rename key `amulet`→`pendant`
   (label "Hộ Thân Phù", gameplaySlot=Pendant), rename `charm`→`trinket2` (label "Ngọc Bội",
   gameplaySlot=Trinket2). Keep other keys. T16 → green. Final 13 slots.
-- [ ] **T18 (RED)** — Add failing test `Paperdoll_GameplaySlot_EquippedViaDict` asserting a
+- [x] **T18 (RED)** — Add failing test `Paperdoll_GameplaySlot_EquippedViaDict` asserting a
   gameplay slot shows `equipped` only when the supplied equipped-dict contains its
   `EquipSlot` key, else `empty`; null dict → `empty` (never throws). Confirm RED (Build takes
   no dict).
-- [ ] **T19 (GREEN)** — In `CharacterInfoPaperdoll.Build(...)`: add optional
+- [x] **T19 (GREEN)** — In `CharacterInfoPaperdoll.Build(...)`: add optional
   `IReadOnlyDictionary<EquipSlot, ItemDefinition> equippedItems = null`. Binding logic:
   (1) `equipmentSlot` set AND `equipment.IsEquipped` → `equipped` (visual, checked FIRST);
   (2) else `gameplaySlot` set AND `equippedItems?.ContainsKey` → `equipped`;
   (3) else if `equipmentSlot` OR `gameplaySlot` set → `empty`;
   (4) else `framework`. Null-dict safe. T18 → green.
-- [ ] **T20 (GREEN)** — In `Assets/Scripts/UI/CharacterInfo/CharacterInfoContent.cs`: add
+- [x] **T20 (GREEN)** — In `Assets/Scripts/UI/CharacterInfo/CharacterInfoContent.cs`: add
   optional `InventoryService inventory` (or snapshot provider) to constructor;
   `BuildEquipmentTab()`/`OnShow()` pass `inventory?.Equipped` as 3rd `Build()` arg. Null-safe
   (GM sandbox without inventory → gameplay slots show `empty`, visual slots still work).
-- [ ] **T21 (MIGRATE)** — Update `CharacterInfoContentTests.cs`:
+- [x] **T21 (MIGRATE)** — Update `CharacterInfoContentTests.cs`:
   `Paperdoll_HasReferenceSlotCount` queries `Slot_amulet`→`Slot_pendant`,
   `Slot_charm`→`Slot_trinket2`, add `Slot_ring2`;
   `Paperdoll_BindsRealEquipmentSlots_EquippedVsEmpty` ring assertion `framework`→`empty`
   (ring now has gameplaySlot=Ring) plus positive `empty` checks for pendant/trinket/mask.
   Run category green.
-- [ ] **T22 (REGRESSION)** — Run `run_tests(mode="EditMode", category_names=["Equipment"])`.
+- [x] **T22 (REGRESSION)** — Run `run_tests(mode="EditMode", category_names=["Equipment"])`.
   Verify non-accessory visual slots (helmet/weapon/armor/mount) still show `equipped` when
   `PlayerEquipmentService` reports equipped (regression guard per spec).
-- [ ] **T23 (GATE — pre-push)** — Run full EditMode suite. Record baseline; 0 new failures.
+- [x] **T23 (GATE — pre-push)** — Run full EditMode suite. Record baseline; 0 new failures.
 
 PR-2 done: paperdoll binds all 13 slots to real equipped state; slot identifiers follow PC
 semantics; 2 rings; safe revert restores 12-slot framework paperdoll.
@@ -133,11 +133,11 @@ semantics; 2 rings; safe revert restores 12-slot framework paperdoll.
 
 ## Rollout & Follow-up
 
-- [ ] **T24** — Update task checkboxes as apply progresses; note known limitation in change
+- [x] **T24** — Update task checkboxes as apply progresses; note known limitation in change
   docs: `PcMaskParser`/`PcShipinParser` do not exist yet → mask/trinket slots render `empty`
   until a follow-up parser change (pendant/amulet/ring parsers DO exist → those bind real
   items).
-- [ ] **T25** — Verify `framework` USS class is harmless now that all 13 slots have at least a
+- [x] **T25** — Verify `framework` USS class is harmless now that all 13 slots have at least a
   gameplay binding (no CSS depends on it for specific slots).
 
 ### Follow-up (out of scope — separate changes)

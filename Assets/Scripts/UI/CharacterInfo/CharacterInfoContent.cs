@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — HUD-003 Character Info window content (IPopupContent)
 // 3 tabs: Thuộc tính (stats) / Trang bị (paperdoll, default) / Đánh giá (placeholder).
-// Binds: PlayerEquipmentService (paperdoll) + PlayerStateResponse (stats).
+// Binds: PlayerEquipmentService + InventoryService equipped items (paperdoll) + PlayerStateResponse (stats).
 // Action buttons Khóa/Đính/Tháo non-destructive (log only) — ADR-6.
 // REQ-4..9. Body built in C# for EditMode testability.
 // -----------------------------------------------------------------------------
@@ -35,6 +35,7 @@ namespace VLTK.UI.CharacterInfo
 
         private readonly PlayerEquipmentService _equipment;
         private readonly Func<PlayerStateResponse> _statsProvider;
+        private readonly InventoryService _inventory;
 
         // Tab + body refs (assigned in Build).
         private VisualElement _tabTrangBi, _tabThuocTinh, _tabDanhGia;
@@ -60,10 +61,14 @@ namespace VLTK.UI.CharacterInfo
             new StatRow("repute",     "Danh Vọng",  s => s.repute),
         };
 
-        public CharacterInfoContent(PlayerEquipmentService equipment, Func<PlayerStateResponse> statsProvider)
+        public CharacterInfoContent(
+            PlayerEquipmentService equipment,
+            Func<PlayerStateResponse> statsProvider,
+            InventoryService inventory = null)
         {
             _equipment = equipment;
             _statsProvider = statsProvider;
+            _inventory = inventory;
         }
 
         public void Build(VisualElement body)
@@ -107,9 +112,9 @@ namespace VLTK.UI.CharacterInfo
 
         public void OnShow()
         {
-            // Refresh paperdoll (real equipment state).
+            // Refresh paperdoll (visual + gameplay equipped state).
             if (_paperdoll != null)
-                CharacterInfoPaperdoll.Build(_paperdoll, _equipment);
+                CharacterInfoPaperdoll.Build(_paperdoll, _equipment, _inventory?.Equipped);
 
             // Refresh stats.
             RefreshStats();
@@ -136,7 +141,7 @@ namespace VLTK.UI.CharacterInfo
             _paperdoll = new VisualElement { name = "Paperdoll" };
             _paperdoll.AddToClassList("char-paperdoll-wrap");
             tab.Add(_paperdoll);
-            CharacterInfoPaperdoll.Build(_paperdoll, _equipment);
+            CharacterInfoPaperdoll.Build(_paperdoll, _equipment, _inventory?.Equipped);
             return tab;
         }
 

@@ -991,7 +991,8 @@ namespace VLTK.UI
             }
             var sandbox = SandboxManager.Instance;
             var equipment = sandbox != null ? sandbox.EquipmentService : null;
-            manager.Show(new CharacterInfoContent(equipment, statsProvider: null));
+            var inventory = sandbox != null ? sandbox.InventoryService : null;
+            manager.Show(new CharacterInfoContent(equipment, statsProvider: null, inventory: inventory));
             SubsystemLog.Info("HUD", "Open Character Status");
         }
         private void OnItemsClick()

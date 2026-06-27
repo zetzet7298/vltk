@@ -3,10 +3,12 @@
 // Spec REQ-5 (paperdoll bind), REQ-6 (stats bind), REQ-7 (Đánh giá placeholder),
 // REQ-4 (tabs), REQ-9 (action buttons), REQ-10 (EditMode coverage).
 // -----------------------------------------------------------------------------
+using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine.UIElements;
 using VLTK.Backend.Dto;
+using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.UI.CharacterInfo;
 using VLTK.UI.Popup;
@@ -16,6 +18,16 @@ namespace VLTK.Tests.UI
     [TestFixture, Category("Popup")]
     public class CharacterInfoContentTests
     {
+        private static ItemDefinition TestItem(int id, string name = "Test Item")
+            => new ItemDefinition { itemId = id, nameNormalized = name };
+
+        private static InventoryService InventoryWith(params ItemDefinition[] items)
+        {
+            var importer = new ItemContractImporter();
+            importer.Import(new ItemContractBundle { items = new List<ItemDefinition>(items) });
+            return new InventoryService(importer);
+        }
+
         [Test]
         public void TitleVi_IsVietnamese()
         {
@@ -55,48 +67,110 @@ namespace VLTK.Tests.UI
             Assert.AreEqual(DisplayStyle.None, body.Q("TabBody_trangbi").style.display.value);
         }
 
-        [Test]
+        [Test, Category("Equipment")]
         public void Paperdoll_BindsRealEquipmentSlots_EquippedVsEmpty()
         {
             var equipment = new PlayerEquipmentService();
-            // Equip weapon (variant != default → equipped)
+            // Equip visual slots (variant != default → equipped). Visual path must remain first.
+            equipment.Equip(PlayerEquipSlot.Head, variant: 2, itemId: 100010);
             equipment.Equip(PlayerEquipSlot.Weapon, variant: 5, itemId: 100001);
+            equipment.Equip(PlayerEquipSlot.Body, variant: 3, itemId: 100062);
+            equipment.Equip(PlayerEquipSlot.Mount, variant: 16, itemId: 100200);
 
             var content = new CharacterInfoContent(equipment, () => null);
             var body = new VisualElement();
             content.Build(body);
             content.OnShow();   // re-read equipment
 
-            var weaponCell = body.Q("Slot_weapon");
-            Assert.IsNotNull(weaponCell, "weapon paperdoll slot");
-            Assert.IsTrue(weaponCell.ClassListContains("equipped"), "weapon should be marked equipped");
+            Assert.IsTrue(body.Q("Slot_helmet").ClassListContains("equipped"), "helmet visual slot should remain equipped");
+            Assert.IsTrue(body.Q("Slot_weapon").ClassListContains("equipped"), "weapon visual slot should remain equipped");
+            Assert.IsTrue(body.Q("Slot_armor").ClassListContains("equipped"), "armor visual slot should remain equipped");
+            Assert.IsTrue(body.Q("Slot_mount").ClassListContains("equipped"), "mount visual slot should remain equipped");
 
-            var helmetCell = body.Q("Slot_helmet");
-            Assert.IsNotNull(helmetCell);
-            Assert.IsTrue(helmetCell.ClassListContains("empty"), "unequipped helmet should be empty");
-
-            // Framework slots (Ring/Necklace/Belt/Boots) carry 'framework' class.
-            var ringCell = body.Q("Slot_ring");
-            Assert.IsNotNull(ringCell);
-            Assert.IsTrue(ringCell.ClassListContains("framework"), "ring is framework slot");
+            // Gameplay-bound slots without equipped items are now empty, not framework.
+            Assert.IsTrue(body.Q("Slot_ring").ClassListContains("empty"), "ring is bound gameplay slot and should be empty when unequipped");
+            Assert.IsTrue(body.Q("Slot_pendant").ClassListContains("empty"), "pendant should be empty when unequipped");
+            Assert.IsTrue(body.Q("Slot_trinket").ClassListContains("empty"), "trinket should be empty when unequipped");
+            Assert.IsTrue(body.Q("Slot_mask").ClassListContains("empty"), "mask should be empty when unequipped");
         }
 
-        [Test]
+        [Test, Category("Equipment")]
         public void Paperdoll_HasReferenceSlotCount()
         {
             var content = new CharacterInfoContent(null, () => null);
             var body = new VisualElement();
             content.Build(body);
 
-            // Reference shows ~12 slots; all defined slots present.
+            // Final PR-2 paperdoll has 13 slots (12 original + ring2); all defined slots present.
+            Assert.AreEqual(13, CharacterInfoPaperdoll.Slots.Count);
             Assert.IsNotNull(body.Q("Slot_weapon"));
             Assert.IsNotNull(body.Q("Slot_armor"));
             Assert.IsNotNull(body.Q("Slot_helmet"));
             Assert.IsNotNull(body.Q("Slot_mount"));
             Assert.IsNotNull(body.Q("Slot_mask"));
-            Assert.IsNotNull(body.Q("Slot_amulet"));
-            Assert.IsNotNull(body.Q("Slot_charm"));
+            Assert.IsNotNull(body.Q("Slot_pendant"));
+            Assert.IsNotNull(body.Q("Slot_trinket2"));
             Assert.IsNotNull(body.Q("Slot_trinket"));
+            Assert.IsNotNull(body.Q("Slot_ring2"));
+        }
+
+        [Test, Category("Equipment")]
+        public void Paperdoll_TwoRings_BothPresent()
+        {
+            var content = new CharacterInfoContent(null, () => null);
+            var body = new VisualElement();
+            content.Build(body);
+
+            Assert.IsNotNull(body.Q("Slot_ring"), "primary ring slot");
+            Assert.IsNotNull(body.Q("Slot_ring2"), "PC-parity second ring slot");
+        }
+
+        [Test, Category("Equipment")]
+        public void Paperdoll_SlotIdentifiers_FollowPcSemantics()
+        {
+            var content = new CharacterInfoContent(null, () => null);
+            var body = new VisualElement();
+            content.Build(body);
+
+            Assert.IsNull(body.Q("Slot_amulet"), "old sachet key must be renamed to pendant");
+            Assert.IsNull(body.Q("Slot_charm"), "old charm key must be renamed to trinket2");
+            Assert.IsNotNull(body.Q("Slot_pendant"), "pendant/sachet key");
+            Assert.IsNotNull(body.Q("Slot_trinket2"), "second ornament key");
+        }
+
+        [Test, Category("Equipment")]
+        public void Paperdoll_GameplaySlot_Equipped_ShowsEquippedClass()
+        {
+            var mask = TestItem(900001, "Mặt Nạ Test");
+            var inventory = InventoryWith(mask);
+            inventory.Equip(EquipSlot.Mask, mask.itemId);
+
+            var content = new CharacterInfoContent(null, () => null, inventory);
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
+
+            var maskCell = body.Q("Slot_mask");
+            Assert.IsNotNull(maskCell);
+            Assert.IsTrue(maskCell.ClassListContains("equipped"), "mask equipped in InventoryService should render equipped");
+        }
+
+        [Test, Category("Equipment")]
+        public void Paperdoll_GameplaySlot_EquippedViaDict()
+        {
+            var container = new VisualElement();
+            var item = TestItem(900002, "Mặt Nạ Dict");
+            var equipped = new Dictionary<EquipSlot, ItemDefinition>
+            {
+                { EquipSlot.Mask, item }
+            };
+
+            CharacterInfoPaperdoll.Build(container, equipment: null, equippedItems: equipped);
+            Assert.IsTrue(container.Q("Slot_mask").ClassListContains("equipped"));
+            Assert.IsTrue(container.Q("Slot_pendant").ClassListContains("empty"));
+
+            Assert.DoesNotThrow(() => CharacterInfoPaperdoll.Build(container, equipment: null, equippedItems: null));
+            Assert.IsTrue(container.Q("Slot_mask").ClassListContains("empty"), "null dict should be safe empty state");
         }
 
         [Test]
