@@ -58,4 +58,4 @@
 - [x] Faction window (`BtnFaction`) — completed in slice 5 (see `tasks-faction.md`); also fixes the wrong wiring (was opening StallCurrencySelector).
 - [ ] Mask/Amulet/Charm/Trinket data binding.
 - [ ] Equip/unequip/socket gameplay (Khóa/Đính/Tháo real logic).
-- [ ] Migrate SkillPicker/Team/Faction onto PopupManager base.
+- [x] Migrate Skill onto PopupManager base — completed via SDD change `migrate-skill-panel-popup` (PR-1 ef4d556bf + PR-2 fe5a77cd7). BtnSkills now opens `SkillContent` (30-cell grid + selection + live upgrade); inline GameHudController skill panel, IMGUI overlay, and CaiBangSkillPanel UXML/USS fully removed. With Team (slice 4) + Faction (slice 5) also done, ALL toolbar feature buttons now use PopupManager.
