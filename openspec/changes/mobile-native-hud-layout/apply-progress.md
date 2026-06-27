@@ -242,3 +242,24 @@
 - S1 ✅ DONE + verified (commit `9cdc76675`)
 - S2 ✅ code done; S2.6/S2.7 pending parent verification
 - S3 ⏳ pending (quick slots + menu relocation)
+
+## S2 Runtime Verification (parent session, Unity MCP) ✅
+
+- **Recompile**: clean. Editor `ready_for_tools: true`.
+- **HUD EditMode tests**: `13/13 passed`, 0 regression (0.6s).
+- **Play mode + vision screenshot** (`Assets/Screenshots/mobile-hud-s2-combat.png`):
+  - **Combat cluster**: 6 slots confirmed — 1 larger main (center-right) + 5 sub in fan arc
+    (2 upper + 3 lower). PC-art skill-slot frames, all showing skill icons (butterfly/flame/
+    scroll/fist/etc). ✅
+  - **Action buttons**: 3 round buttons below cluster — run (walking figure), horse (horse
+    head), sit (meditation pose). Icons clear. ✅
+  - **Positioning**: bottom-right, within right-thumb reach; NO overlap (slots, joystick,
+    chat all distinct). ✅ fan px tuning acceptable, no adjustment needed.
+  - **Consistency**: joystick bottom-left intact, top bar + minimap intact, bottom-center
+    clear. ✅
+- **Verdict**: S2 PASS (vision rated Excellent/Complete). No rework needed.
+
+## Slice status
+- S1 ✅ DONE + verified (`9cdc76675`)
+- S2 ✅ DONE + verified (`d23593071`) — fan layout accepted as-is, no px retune needed
+- S3 ⏳ pending (quick slots + 8 menu relocation + buff)
