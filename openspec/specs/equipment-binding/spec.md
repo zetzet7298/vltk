@@ -119,7 +119,73 @@ the existing collision where pendant items were classified into the helm slot.
 > Implementation note (scout-verified): `PcItemBatchLoader.ApplyCategoryIds` currently has
 > `"pendant" => 7` with a stale comment claiming the fix was applied. This touches shared
 > loader code → the full EditMode suite is a required push gate.
-
+    
+### Requirement: PC Mask Item Parser
+    
+The runtime item database MUST parse PC `mask.txt` rows into `ItemDefinition` objects using
+the established 46-column PC equipment item format. Parsed mask items MUST keep PC identity
+columns (`ItemGenre`, `DetailType`, `ParticularType`) so DetailType 11 remains classifiable
+as Mask and `ParticularType=0` remains a valid PC key.
+    
+#### Scenario: Mask parser reads item identity and detail type
+    
+- GIVEN a valid PC mask row with `ItemGenre=0`, `DetailType=11`, and `ParticularType=0`
+- WHEN the mask parser parses the row
+- THEN the resulting item keeps `itemGenre=0`, `detailType=11`, and `particularType=0`
+- AND the item has non-empty raw/normalized Vietnamese name fields
+- AND icon source id is derived from the PC SPR path column
+    
+### Requirement: PC Shipin Item Parser
+    
+The runtime item database MUST parse PC `shipin.txt` rows into `ItemDefinition` objects using
+the established 46-column PC equipment item format. Parsed shipin/trinket items MUST keep PC
+identity columns (`ItemGenre`, `DetailType`, `ParticularType`) so DetailType 14 remains
+classifiable as Trinket/ornament.
+    
+#### Scenario: Shipin parser reads item identity and detail type
+    
+- GIVEN a valid PC shipin row with `ItemGenre=0`, `DetailType=14`, and `ParticularType=0`
+- WHEN the shipin parser parses the row
+- THEN the resulting item keeps `itemGenre=0` and `detailType=14`
+- AND it has non-empty raw/normalized Vietnamese name fields
+- AND icon source id is derived from the PC SPR path column
+    
+### Requirement: Batch Loader Includes Mask and Shipin
+    
+`PcItemBatchLoader.LoadAll` MUST include `mask` and `shipin` in the per-file load result and
+imported item bundle so the canonical Mask and Trinket slots have runtime item definitions
+available from PC source data.
+    
+#### Scenario: Reference batch loads sixteen item files
+    
+- GIVEN the reference PC item sample directory
+- WHEN `PcItemBatchLoader.LoadAll` is called
+- THEN `perFileCounts` contains 16 keys including `mask` and `shipin`
+- AND both new keys have at least five parsed rows
+    
+### Requirement: Mask ParticularType Zero Is Preserved
+    
+`PcItemBatchLoader.ApplyCategoryIds` MUST NOT rewrite `particularType=0` for mask rows
+because PC `mask.txt` uses zero as a valid unique particular type.
+    
+#### Scenario: Mask row zero remains zero
+    
+- GIVEN a mask item with `detailType=11` and `particularType=0`
+- WHEN category IDs are applied for stem `mask`
+- THEN the item keeps `particularType=0`
+    
+### Requirement: Shipin Rows Remain Importable Despite Repeated Zero
+    
+`PcItemBatchLoader.ApplyCategoryIds` MUST keep the existing zero-to-row-index fallback for
+shipin rows because sample PC `shipin.txt` rows repeat `ParticularType=0` and importer tuple
+keys must remain unique.
+    
+#### Scenario: Shipin zero receives row index fallback
+    
+- GIVEN two shipin items with `detailType=14` and `particularType=0`
+- WHEN category IDs are applied for stem `shipin`
+- THEN their resulting `particularType` values differ and can be imported without tuple collision
+    
 ### Requirement: InventoryService Equipped-Item Lookup by Slot
 
 `InventoryService` MUST expose the currently equipped `ItemDefinition` per canonical

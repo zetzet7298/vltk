@@ -1,14 +1,14 @@
 # Sync Report — add-pc-mask-and-shipin-parsers
 
-## Status: SYNCED (no canonical edits required)
+## Status: SYNCED
 
 ## Executive Summary
 
-Canonical spec reconciliation for `add-pc-mask-and-shipin-parsers` found that the canonical domain spec already contains all requirements introduced by this change. The change deltas are reflected in:
+Canonical spec reconciliation for `add-pc-mask-and-shipin-parsers` merged the change's new requirements into the canonical domain spec:
 
 `openspec/specs/equipment-binding/spec.md`
 
-The canonical spec already includes (matching this change's spec.md):
+The canonical spec now includes (matching this change's spec.md):
 
 - Requirement: PC Mask Item Parser
 - Requirement: PC Shipin Item Parser
@@ -17,15 +17,14 @@ The canonical spec already includes (matching this change's spec.md):
 - Requirement: Shipin Rows Remain Importable Despite Repeated Zero
 - Requirement: Test Categorization and Run Discipline (Equipment category)
 
-These were written into the canonical domain spec during the `bind-accessory-equipment-slots` sync, so the implementation follow-up in `add-pc-mask-and-shipin-parsers` fulfills requirements that were already canonical. No canonical spec edits were needed for sync.
+These requirements were added to the canonical `equipment-binding` spec as part of this sync step.
 
 ## Files Changed This Step
 
+- `openspec/specs/equipment-binding/spec.md` (merged new mask/shipin/parser requirements)
 - `openspec/changes/add-pc-mask-and-shipin-parsers/sync-report.md` (this report)
 
-No edits to:
-- `openspec/specs/equipment-binding/spec.md` (already in sync)
-- implementation code
+No edits to implementation code.
 
 ## Delta-to-Canonical Evidence
 
@@ -49,4 +48,4 @@ archive — the change is verified and synced; archive can move it under `opensp
 
 ## Risks
 
-- Canonical spec was authored with forward-looking parser requirements before the parser implementation existed. This sync confirms the implementation satisfies those pre-stated requirements; archive should record that ordering.
+- Canonical spec wording mirrors the change-level spec wording (Vietnamese names from PC source). If PC labels change later, both files should be updated together.
