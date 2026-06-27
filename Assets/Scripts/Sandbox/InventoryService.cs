@@ -15,6 +15,13 @@ namespace VLTK.Sandbox
         Necklace = 4,
         Ring = 5,
         Mount = 6,   // Thú cưỡi — resId = horse SPR variant from horseres.txt
+        // PR-1 bind-accessory-equipment-slots — append-only (values 7–12)
+        Ring2 = 7,    // Nhẫn 2 (PC itempart_ring2)
+        Mask = 8,     // Mặt Nạ (PC mask.txt, equip_mask D11)
+        Pendant = 9,  // Hộ Thân Phù (PC pendant.txt, equip_pendant D9)
+        Belt = 10,    // Đai Lưng (PC belt.txt, equip_belt D6)
+        Trinket = 11, // Bội Kiện (PC shipin.txt, equip_shipin D14)
+        Trinket2 = 12,// Ngọc Bội — second ornament (PC shipin.txt, equip_shipin D14)
     }
 
     /// <summary>A stack of an item held in the test inventory.</summary>
@@ -51,6 +58,17 @@ namespace VLTK.Sandbox
 
         public IReadOnlyList<InventoryEntry> Inventory => _inventory;
         public IReadOnlyDictionary<EquipSlot, ItemDefinition> Equipped => _equipped;
+
+        /// <summary>
+        /// PR-1 — read the equipped item for a canonical slot. Returns null if the
+        /// slot is empty. Safe empty state: never throws.
+        /// </summary>
+        public ItemDefinition GetEquipped(EquipSlot slot)
+            => _equipped.TryGetValue(slot, out var item) ? item : null;
+
+        /// <summary>PR-1 — check whether a canonical slot has an equipped item.</summary>
+        public bool IsSlotEquipped(EquipSlot slot)
+            => _equipped.ContainsKey(slot);
 
         public ItemDefinition ResolvePcItem(int itemGenre, int detailType, int particularType)
             => _db?.ResolvePcItem(itemGenre, detailType, particularType);

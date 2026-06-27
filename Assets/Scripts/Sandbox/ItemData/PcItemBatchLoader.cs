@@ -118,7 +118,7 @@ namespace VLTK.Sandbox.ItemData
             }
         }
 
-        private static void ApplyCategoryIds(List<ItemDefinition> items, int categoryId, string stem)
+        internal static void ApplyCategoryIds(List<ItemDefinition> items, int categoryId, string stem)
         {
             if (items == null) return;
             for (int i = 0; i < items.Count; i++)
@@ -133,7 +133,7 @@ namespace VLTK.Sandbox.ItemData
                 // itemGenre/detailType: parsers now read from cols 1/2/3 (verified from PC source).
                 // Only apply fallback for stems that don't have a full header (goldequip/platinaequip handled separately).
                 // PC source verified detailType per file:
-                //   helm.txt=7, armor.txt=2, ring.txt=3, pendant.txt=7(after fix), cuff.txt=8, belt.txt=6,
+                //   helm.txt=7, armor.txt=2, ring.txt=3, pendant.txt=9, cuff.txt=8, belt.txt=6,
                 //   boot.txt=5, amulet.txt=4, meleeweapon.txt=0, rangeweapon.txt=1, horse.txt=10
                 if (it.itemGenre == 0 && it.detailType == 0 && stem != "goldequip" && stem != "platinaequip")
                 {
@@ -143,7 +143,7 @@ namespace VLTK.Sandbox.ItemData
                         "helm"        => 7,
                         "armor"       => 2,
                         "ring"        => 3,
-                        "pendant"     => 7,  // Ngọc bội
+                        "pendant"     => 9,  // Hộ Thân Phù — equip_pendant (D9)
                         "cuff"        => 8,  // Tay (Bracers)
                         "belt"        => 6,  // Đai lưng
                         "boot"        => 5,  // Giày
