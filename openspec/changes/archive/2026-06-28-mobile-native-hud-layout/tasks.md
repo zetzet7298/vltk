@@ -69,5 +69,5 @@
 
 - [x] V1 Full HUD EditMode category green; top bar/minimap/popups regression-free.
 - [x] V2 Confirm zero fabricated assets introduced (asset-list audit vs proposal inventory).
-- [ ] V3 write `verify-report.md`; then sync into canonical `hud` domain (extend, or new
+- [x] V3 write `verify-report.md`; then sync into canonical `hud` domain (extend, or new
       `mobile-hud-layout` domain) → `sync-report.md`; then archive.
