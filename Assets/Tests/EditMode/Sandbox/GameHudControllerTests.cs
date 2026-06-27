@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UIElements;
 using VLTK.UI;
 using VLTK.UI.Popup;
@@ -228,19 +229,134 @@ namespace VLTK.Tests.Sandbox
             Assert.AreNotEqual(legacyDataPath, HudArtPathResolver.ResolveArtRoot("UI/HUD/Art"));
         }
 
-        [Test]
-        public void HudArtPathResolver_PreservesStreamingAssetsRootForMobileArchivePaths()
-        {
-            const string androidStreamingRoot = "jar:file:///data/app/vltk/base.apk!/assets";
+            [Test]
+            public void HudArtPathResolver_PreservesStreamingAssetsRootForMobileArchivePaths()
+            {
+                const string androidStreamingRoot = "jar:file:///data/app/vltk/base.apk!/assets";
 
-            var artRoot = HudArtPathResolver.ResolveUnderStreamingAssets(androidStreamingRoot, "/UI/HUD/Art/");
-            var generatedRoot = HudArtPathResolver.ResolveUnderStreamingAssets(androidStreamingRoot, "UI/HUD/Art/Generated");
+                var artRoot = HudArtPathResolver.ResolveUnderStreamingAssets(androidStreamingRoot, "/UI/HUD/Art/");
+                var generatedRoot = HudArtPathResolver.ResolveUnderStreamingAssets(androidStreamingRoot, "UI/HUD/Art/Generated");
 
-            Assert.AreEqual("jar:file:///data/app/vltk/base.apk!/assets/UI/HUD/Art", artRoot);
-            Assert.AreEqual("jar:file:///data/app/vltk/base.apk!/assets/UI/HUD/Art/Generated", generatedRoot);
-            Assert.IsTrue(HudArtPathResolver.RequiresUnityWebRequest(generatedRoot));
-            Assert.IsFalse(HudArtPathResolver.CanCheckDirectory(generatedRoot));
+                Assert.AreEqual("jar:file:///data/app/vltk/base.apk!/assets/UI/HUD/Art", artRoot);
+                Assert.AreEqual("jar:file:///data/app/vltk/base.apk!/assets/UI/HUD/Art/Generated", generatedRoot);
+                Assert.IsTrue(HudArtPathResolver.RequiresUnityWebRequest(generatedRoot));
+                Assert.IsFalse(HudArtPathResolver.CanCheckDirectory(generatedRoot));
+            }
+
+            // ===== S2 (HUD-004): mobile-native combat cluster tests =====
+            // These verify the UXML structure of the CombatCluster: exactly 6 slots
+            // (1 main + 5 sub) and 3 action buttons, all with correct element names
+            // so CombatSkillSlotController + GameHudController.LoadArt bind to them.
+            // Test-run status: PENDING parent Unity MCP verification (worker has no Unity MCP).
+
+            /// <summary>
+            /// Loads the GameHud UXML tree from disk and returns the root VisualElement.
+            /// This mirrors how UIDocument visualTreeAsset would populate the hierarchy.
+            /// </summary>
+            private static VisualElement LoadHudVisualTree()
+            {
+                var treeAsset = UnityEditor.AssetDatabase.LoadAssetAtPath<UnityEngine.UIElements.VisualTreeAsset>(
+                    "Assets/UI/HUD/GameHud.uxml");
+                Assert.IsNotNull(treeAsset, "GameHud.uxml not found or failed to load");
+                return treeAsset.CloneTree();
+            }
+
+            [Test]
+            public void S2_CombatCluster_HasExactlySixSlots_OneMainFiveSub()
+            {
+                var root = LoadHudVisualTree();
+                var cluster = root.Q("CombatCluster");
+                Assert.IsNotNull(cluster, "CombatCluster element missing from GameHud.uxml");
+
+                // 1 main slot (PrimaryAttackBtn)
+                var mainSlot = cluster.Q("PrimaryAttackBtn");
+                Assert.IsNotNull(mainSlot, "PrimaryAttackBtn (main combat slot) missing from CombatCluster");
+                Assert.IsTrue(mainSlot.ClassListContains("hud-combat-main-slot"),
+                    "Main slot must have hud-combat-main-slot class");
+
+                // 5 sub slots (SkillSlot0-4) — names match CombatSkillSlotController binding
+                for (int i = 0; i < 5; i++)
+                {
+                    var slot = cluster.Q($"SkillSlot{i}");
+                    Assert.IsNotNull(slot, $"SkillSlot{i} missing from CombatCluster");
+                    Assert.IsTrue(slot.ClassListContains("hud-combat-sub-slot"),
+                        $"SkillSlot{i} must have hud-combat-sub-slot class");
+                }
+            }
+
+            [Test]
+            public void S2_CombatCluster_HasThreeActionButtons_RunHorseSit()
+            {
+                var root = LoadHudVisualTree();
+                var cluster = root.Q("CombatCluster");
+                Assert.IsNotNull(cluster, "CombatCluster element missing from GameHud.uxml");
+
+                foreach (var name in new[] { "ActionBtnRun", "ActionBtnHorse", "ActionBtnSit" })
+                {
+                    var btn = cluster.Q(name);
+                    Assert.IsNotNull(btn, $"{name} missing from CombatCluster");
+                    Assert.IsTrue(btn.ClassListContains("hud-action-btn"),
+                        $"{name} must have hud-action-btn class");
+                    // Each action button must have an icon child for LoadArt to wire
+                    var icon = btn.Q(name + "Icon");
+                    Assert.IsNotNull(icon, $"{name}Icon child missing from {name}");
+                }
+            }
+
+            [Test]
+            public void S2_CombatSlots_HaveSlotIconChildren_ForControllerBinding()
+            {
+                var root = LoadHudVisualTree();
+                var cluster = root.Q("CombatCluster");
+                Assert.IsNotNull(cluster, "CombatCluster element missing from GameHud.uxml");
+
+                // CombatSkillSlotController queries slot.Q("SlotIcon") for icon resolution.
+                // All 5 sub slots + main must have a SlotIcon child.
+                var mainIcon = cluster.Q("PrimaryAttackBtn")?.Q("SlotIcon");
+                Assert.IsNotNull(mainIcon, "PrimaryAttackBtn must have SlotIcon child");
+
+                for (int i = 0; i < 5; i++)
+                {
+                    var icon = cluster.Q($"SkillSlot{i}")?.Q("SlotIcon");
+                    Assert.IsNotNull(icon, $"SkillSlot{i} must have SlotIcon child");
+                }
+            }
+
+            [Test]
+            public void S2_CombatCluster_BottomCenterLaneIsClear()
+            {
+                // The bottom-center lane is reserved for the future chat canvas.
+                // No combat slots, quick slots, action buttons, or menu buttons should be
+                // placed in the bottom-center area (they are all in CombatCluster bottom-RIGHT).
+                var root = LoadHudVisualTree();
+                var cluster = root.Q("CombatCluster");
+                Assert.IsNotNull(cluster, "CombatCluster element missing");
+
+                // CombatCluster must be anchored right (not center) — verify it has the
+                // hud-combat-cluster class which uses right:Npx positioning in USS.
+                Assert.IsTrue(cluster.ClassListContains("hud-combat-cluster"),
+                    "CombatCluster must have hud-combat-cluster class (anchored bottom-right)");
+            }
+
+            [Test]
+            public void S2_TopBarAndMinimap_RegressionGuard_Untouched()
+            {
+                var root = LoadHudVisualTree();
+
+                // Top status bar elements must still be present
+                Assert.IsNotNull(root.Q("TopLeftPanel"), "TopLeftPanel must remain (regression)");
+                Assert.IsNotNull(root.Q("HpBarFill"), "HP bar must remain (regression)");
+                Assert.IsNotNull(root.Q("MpBarFill"), "MP bar must remain (regression)");
+                Assert.IsNotNull(root.Q("ExpBarFill"), "EXP bar must remain (regression)");
+                Assert.IsNotNull(root.Q("StaminaBarFill"), "Stamina bar must remain (regression)");
+
+                // Minimap elements must still be present
+                Assert.IsNotNull(root.Q("MinimapPanel"), "MinimapPanel must remain (regression)");
+                Assert.IsNotNull(root.Q("PlayerDot"), "PlayerDot must remain (regression)");
+
+                // Popup overlay must still be present
+                Assert.IsNotNull(root.Q("PopupOverlay"), "PopupOverlay must remain (regression)");
+            }
+
         }
-
-    }
 }

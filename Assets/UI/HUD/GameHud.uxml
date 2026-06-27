@@ -95,11 +95,62 @@
              ChatBar is the only bottom-center content. Do NOT place combat slots,
              quick slots, action buttons, or menu buttons here. -->
 
-        <!-- S2 target: right-thumb combat cluster (1 main + 5 sub assignable slots).
-             Empty shell for S1; populated in S2. Anchored bottom-right. -->
-        <ui:VisualElement name="CombatCluster" class="hud-combat-cluster">
-            <!-- S2 populates: main slot + 5 sub slots + run/horse/sit action buttons -->
-        </ui:VisualElement>
+            <!-- S2 (HUD-004): right-thumb combat cluster — 1 main + 5 sub assignable slots
+                 + run/horse/sit action buttons. Anchored bottom-right. Fan layout per
+                 design.md: 2 sub slots upper arc, main slot center, 3 sub slots lower arc,
+                 action buttons below. Slot element NAMES (SkillSlot0-4, PrimaryAttackBtn)
+                 match what CombatSkillSlotController.BindElements() queries so the existing
+                 controller binds/casts automatically — no new gameplay wiring needed.
+                 PC sprite frames: btn_skill_empty_pc.png (42×42 PC SPR, scale-to-fit).
+                 Skill icons: Generated/cai_bang_skill_*.png (resolved by controller). -->
+            <ui:VisualElement name="CombatCluster" class="hud-combat-cluster">
+                <!-- Upper arc: 2 sub slots (above-right of main) -->
+                <ui:VisualElement name="SkillSlot4" class="hud-combat-sub-slot hud-combat-pos-sub5">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="5" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SkillSlot3" class="hud-combat-sub-slot hud-combat-pos-sub4">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="4" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+
+                <!-- Main slot (player-chosen priority, visually larger for thumb rest).
+                     Name PrimaryAttackBtn matches CombatSkillSlotController's primary attack
+                     pseudo-slot binding. Frame: btn_skill_empty_pc.png. -->
+                <ui:VisualElement name="PrimaryAttackBtn" class="hud-combat-main-slot">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon hud-combat-main-icon"/>
+                    <ui:Label name="SlotLabel" text="Tấn công" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+
+                <!-- Lower arc: 3 sub slots (below main) -->
+                <ui:VisualElement name="SkillSlot0" class="hud-combat-sub-slot hud-combat-pos-sub1">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="1" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SkillSlot1" class="hud-combat-sub-slot hud-combat-pos-sub2">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="2" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SkillSlot2" class="hud-combat-sub-slot hud-combat-pos-sub3">
+                    <ui:VisualElement name="SlotIcon" class="hud-skill-slot-icon"/>
+                    <ui:Label name="SlotLabel" text="3" class="hud-skill-slot-label"/>
+                </ui:VisualElement>
+
+                <!-- Action buttons (right-thumb reach): run / horse / sit.
+                     Fresh names (ActionBtnRun etc.) to avoid collision with parked
+                     BtnRun/BtnSit/BtnHorse in PendingRelocation. Icons loaded via
+                     ButtonIcons dict + LoadArt(). RegisterClick wires to existing
+                     OnRunClick/OnSitClick/OnHorseClick (no-op log stubs, no new gameplay). -->
+                <ui:VisualElement name="ActionBtnRun" class="hud-action-btn hud-combat-pos-run">
+                    <ui:VisualElement name="ActionBtnRunIcon" class="hud-btn-icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ActionBtnHorse" class="hud-action-btn hud-combat-pos-horse">
+                    <ui:VisualElement name="ActionBtnHorseIcon" class="hud-btn-icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ActionBtnSit" class="hud-action-btn hud-combat-pos-sit">
+                    <ui:VisualElement name="ActionBtnSitIcon" class="hud-btn-icon"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
 
         <!-- S3 target: usable-item quick slots (3) ascending the right side toward
              the minimap (Ngũ Hoa Ngọc Lộ etc). Empty shell for S1; populated in S3. -->

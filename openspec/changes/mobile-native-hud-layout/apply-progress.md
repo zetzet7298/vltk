@@ -115,3 +115,130 @@
 - S1 ✅ DONE + verified (commit `9cdc76675`)
 - S2 ⏳ pending (combat cluster 1+5 + action buttons)
 - S3 ⏳ pending (quick slots + menu relocation)
+
+## Slice S2 — Combat cluster (1 main + 5 sub) + action buttons
+
+### S2.1 — Populate CombatCluster with 6 slots ✅ (code done)
+- Populated the empty `CombatCluster` shell with exactly 6 slots:
+  - **1 main slot** (`PrimaryAttackBtn`, class `hud-combat-main-slot`, 96×96): the player's
+    chosen priority slot. Name `PrimaryAttackBtn` matches `CombatSkillSlotController`'s primary
+    attack pseudo-slot binding — the controller binds/casts automatically, no new gameplay wiring.
+  - **5 sub slots** (`SkillSlot0`–`SkillSlot4`, class `hud-combat-sub-slot`, 64×64): assignable
+    skill slots. Names `SkillSlot0–4` match `CombatSkillSlotController.BindElements()` primary
+    query (`root.Q($"SkillSlot{i}")`), which takes precedence over the parked `LeftSkillSlot`/
+    `RightSkillSlot` fallback. The controller populates these with the faction default deck
+    (CaiBang: 357/358/1073/130/127) via `FillDefaultDeckIfEmpty()` + `RefreshSlotVisuals()`.
+- Each slot has a `SlotIcon` child (for icon resolution) and `SlotLabel` child (slot number/name).
+- Fan arrangement: 2 sub slots upper arc (`hud-combat-pos-sub4`/`sub5`), main center, 3 sub slots
+  lower arc (`hud-combat-pos-sub1`/`sub2`/`sub3`).
+- File: `Assets/UI/HUD/GameHud.uxml`
+
+### S2.2 — Wire slot frames to btn_skill_empty_pc.png ✅ (code done)
+- `.hud-combat-main-slot` and `.hud-combat-sub-slot` USS classes wire
+  `background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png')` with
+  `-unity-background-scale-mode: scale-to-fit`. PC SPR (42×42) upscales cleanly as pixel art.
+- No `background-image: none` remains on combat slot frames.
+- File: `Assets/UI/HUD/GameHud.uss`
+
+### S2.3 — Per-slot icon child resolving to cai_bang_skill_*.png ✅ (code done)
+- Each slot's `SlotIcon` child is reused by `CombatSkillSlotController.RefreshSlotVisuals()`,
+  which calls `GameHudController.LoadIconStatic(this, icon, artPath, $"cai_bang_skill_{skillId}")`
+  to resolve the icon from `Generated/cai_bang_skill_*.png`. Empty slots show `.empty` PC styling.
+- Main slot (`PrimaryAttackBtn`) icon loaded manually in `GameHudController.LoadArt()` as a sample
+  placeholder (`cai_bang_skill_357`) until full assignment gameplay is wired (follow-up change).
+- Files: `Assets/UI/HUD/GameHud.uxml` (SlotIcon children), `Assets/Scripts/UI/GameHudController.cs`
+
+### S2.4 — Action buttons (run/horse/sit) with PC icons ✅ (code done)
+- 3 action buttons added to `CombatCluster`: `ActionBtnRun`, `ActionBtnHorse`, `ActionBtnSit`
+  (class `hud-action-btn`, 48×48, absolute positioned below the lower arc).
+- Fresh names avoid collision with parked `BtnRun`/`BtnSit`/`BtnHorse` in `PendingRelocation`.
+- Each has an `{Name}Icon` child for `LoadArt()` icon wiring via `ButtonIcons` dict:
+  `{ "ActionBtnRun", "btn_run" }`, `{ "ActionBtnSit", "btn_sit" }`, `{ "ActionBtnHorse", "btn_horse" }`.
+- Icons reuse PC toggle-row sprites (31px SPRs, root-level `Art/btn_run.png` etc.).
+- File: `Assets/UI/HUD/GameHud.uxml` + `Assets/Scripts/UI/GameHudController.cs`
+
+### S2.5 — C# binding for combat slots + action buttons ✅ (code done)
+- Action button click handlers wired via `RegisterClick(root, "ActionBtnRun", OnRunClick)` etc.,
+  reusing existing no-op log stubs (`OnRunClick`/`OnSitClick`/`OnHorseClick`). No new gameplay.
+- Combat slots bind automatically via `CombatSkillSlotController` (queries by name). No manual
+  slot binding needed in `GameHudController`.
+- `ButtonIcons` dict extended with 3 action-button entries so `LoadArt()` wires their icons.
+- File: `Assets/Scripts/UI/GameHudController.cs`
+
+### S2.6 — Fan px tuning ⚠️ PENDING (needs parent vision screenshot)
+- Chosen default positions (absolute within 340×340 container, main center at 170,138):
+  - Main (96×96): left=122, top=90
+  - sub1: left=14, top=196 (lower-left)
+  - sub2: left=138, top=212 (lower-center)
+  - sub3: left=262, top=196 (lower-right)
+  - sub4: left=40, top=10 (upper-left)
+  - sub5: left=236, top=10 (upper-right)
+  - run: left=80, top=280
+  - horse: left=146, top=280
+  - sit: left=212, top=280
+- **PARENT MUST**: enter play mode, screenshot, verify slots sit in the 27–41mm comfort arc and
+  don't overlap. Adjust `hud-combat-pos-*` USS values if needed.
+
+### S2.7 — EditMode tests ⚠️ PENDING (needs parent Unity MCP run)
+- 5 test methods added to `GameHudControllerTests.cs`:
+  1. `S2_CombatCluster_HasExactlySixSlots_OneMainFiveSub`
+  2. `S2_CombatCluster_HasThreeActionButtons_RunHorseSit`
+  3. `S2_CombatSlots_HaveSlotIconChildren_ForControllerBinding`
+  4. `S2_CombatCluster_BottomCenterLaneIsClear`
+  5. `S2_TopBarAndMinimap_RegressionGuard_Untouched`
+- Tests load the actual `GameHud.uxml` via `UnityEditor.AssetDatabase.LoadAssetAtPath` and assert
+  the element structure.
+- **PARENT MUST**: run `unityMCP___run_tests(mode="EditMode", category_names=["HUD"])` and verify
+  all new + existing tests pass (no regression).
+
+### S2.8 — Commit + push ✅
+
+## Structural Verification (performed without Unity MCP)
+
+| Check | Method | Result |
+|---|---|---|
+| UXML valid XML | ElementTree parse | VALID ✅ |
+| CombatCluster has 6 slots (1 main + 5 sub) | XML name lookup | PrimaryAttackBtn + SkillSlot0-4 FOUND ✅ |
+| CombatCluster has 3 action buttons | XML name lookup | ActionBtnRun/Horse/Sit FOUND ✅ |
+| All slots have SlotIcon children | XML subtree scan | 6× SlotIcon FOUND ✅ |
+| All action buttons have Icon children | XML subtree scan | ActionBtnRunIcon/HorseIcon/SitIcon FOUND ✅ |
+| C# braces balanced | raw char count | 194 = 194 ✅ |
+| C# test braces balanced | raw char count | 54 = 54 ✅ |
+| PendingRelocation untouched | XML name lookup | all 18 parked names still present ✅ |
+| Top bar unchanged | XML name lookup | TopLeftPanel/HpBarFill/etc. intact ✅ |
+| Minimap unchanged | XML name lookup | MinimapPanel/PlayerDot intact ✅ |
+| Popups unchanged | XML name lookup | PopupOverlay intact ✅ |
+| Slot frames wire PC sprite | USS grep | btn_skill_empty_pc.png in .hud-combat-main-slot + .hud-combat-sub-slot ✅ |
+
+## Files Changed (S2)
+
+| File | Change |
+|---|---|
+| `Assets/UI/HUD/GameHud.uxml` | Populated CombatCluster: 6 slots (PrimaryAttackBtn + SkillSlot0-4) + 3 action buttons (ActionBtnRun/Horse/Sit) |
+| `Assets/UI/HUD/GameHud.uss` | Updated .hud-combat-cluster (340×340); added .hud-combat-main-slot, .hud-combat-sub-slot, .hud-action-btn, fan position classes; wired btn_skill_empty_pc.png frames |
+| `Assets/Scripts/UI/GameHudController.cs` | Added ActionBtnRun/Sit/Horse to ButtonIcons; added RegisterClick calls; added PrimaryAttackBtn sample icon load |
+| `Assets/Tests/EditMode/Sandbox/GameHudControllerTests.cs` | Added 5 S2 test methods + LoadHudVisualTree helper |
+| `openspec/changes/mobile-native-hud-layout/tasks.md` | Ticked S2.1-S2.5, S2.8 |
+
+## Deviations
+
+- S2.3: The main slot (`PrimaryAttackBtn`) icon is loaded as a sample placeholder
+  (`cai_bang_skill_357`) in `GameHudController.LoadArt()`, not via the controller's deck system.
+  This is because `CombatSkillSlotController` treats `PrimaryAttackBtn` as a fixed primary-attack
+  pseudo-slot (`PrimaryAttackPseudoSlot = -2`), not a deck-managed assignable slot. Making the main
+  slot fully assignable would require controller behavior changes (gameplay scope creep). The visual
+  layout requirement (1 main + 5 sub, all with PC sprite frames + icons) is satisfied.
+- S2.4: No `_over` hover variants wired for action buttons — `btn_run_over` does not exist in the
+  art folder (only `btn_horse_over` and `btn_sit_over`). Normal icons wired only; hover states can
+  be added in a polish pass if the art is extracted.
+
+## Remaining (S3 + parent verification)
+
+- **S3**: populate QuickSlots (3) + relocate 8 menu buttons + buff + Bảo Vật into TopGapCluster.
+- **S2.6**: parent vision screenshot to fine-tune fan px.
+- **S2.7**: parent Unity MCP test run.
+
+## Slice status
+- S1 ✅ DONE + verified (commit `9cdc76675`)
+- S2 ✅ code done; S2.6/S2.7 pending parent verification
+- S3 ⏳ pending (quick slots + menu relocation)

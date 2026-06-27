@@ -135,6 +135,12 @@ namespace VLTK.UI
             { "BtnRun", "btn_run" },
             { "BtnSit", "btn_sit" },
             { "BtnHorse", "btn_horse" },
+            // S2 (HUD-004): mobile combat cluster action buttons (fresh names to avoid
+            // collision with parked BtnRun/BtnSit/BtnHorse in PendingRelocation).
+            // Icons reuse the same PC SPRs (btn_run/btn_sit/btn_horse, 31px toggle-row art).
+            { "ActionBtnRun", "btn_run" },
+            { "ActionBtnSit", "btn_sit" },
+            { "ActionBtnHorse", "btn_horse" },
             { "BtnExchange", "btn_exchange" },
             { "BtnStatus", "btn_status" },
             { "BtnItems", "btn_items" },
@@ -313,6 +319,12 @@ namespace VLTK.UI
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
+            // S2 (HUD-004): wire the mobile combat cluster action buttons (visible
+            // versions of run/horse/sit). Reuse existing no-op log handlers — no new
+            // gameplay. The parked BtnRun/BtnSit/BtnHorse stay wired but are display:none.
+            RegisterClick(root, "ActionBtnRun", OnRunClick);
+            RegisterClick(root, "ActionBtnSit", OnSitClick);
+            RegisterClick(root, "ActionBtnHorse", OnHorseClick);
             RegisterClick(root, "BtnStatus", OnStatusClick);
             RegisterClick(root, "BtnItems", OnItemsClick);
             RegisterClick(root, "BtnSkills", OnSkillsClick);
@@ -490,6 +502,18 @@ namespace VLTK.UI
                 var treasure = root.Q("BtnTreasure");
                 if (treasure != null)
                     LoadIcon(treasure, artPath, "btn_treasure");
+
+                // S2 (HUD-004): load a sample CaiBang skill icon for the main combat slot
+                // (PrimaryAttackBtn SlotIcon) so it's visible at runtime. The 5 sub slots
+                // are populated by CombatSkillSlotController.RefreshSlotVisuals() with the
+                // faction default deck. The main slot icon is a sample placeholder until
+                // full assignment gameplay is wired (follow-up change).
+                var primaryIcon = root.Q("PrimaryAttackBtn")?.Q("SlotIcon");
+                if (primaryIcon != null)
+                {
+                    var generatedArtPath = HudArtPathResolver.ResolveGeneratedArtRoot(artFolder);
+                    LoadIcon(primaryIcon, generatedArtPath, "cai_bang_skill_357");
+                }
             }
         }
 

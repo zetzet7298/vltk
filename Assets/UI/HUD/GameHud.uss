@@ -420,16 +420,82 @@
     }
 
     /* CombatCluster: right-thumb combat zone (1 main + 5 sub assignable slots
-       + run/horse/sit action buttons). Anchored bottom-right. Empty in S1. */
+       + run/horse/sit action buttons). Anchored bottom-right.
+       S2 (HUD-004): populated with PC sprite frames (btn_skill_empty_pc.png).
+       Fan layout: main slot center, 2 sub upper arc, 3 sub lower arc, actions below.
+       Design space 1280×720; fan radius ~110px (27-41mm comfort arc at ~5.5").
+       NOTE: exact px need parent vision screenshot to fine-tune (S2.6). */
     .hud-combat-cluster {
         position: absolute;
-        right: 24px;
-        bottom: 24px;
-        width: 320px;
-        height: 280px;
+        right: 16px;
+        bottom: 16px;
+        width: 340px;
+        height: 340px;
         background-color: transparent;
         picking-mode: Ignore;
         overflow: visible;
+    }
+
+    /* Main combat slot (player-chosen priority, visually larger for thumb rest).
+       Frame: btn_skill_empty_pc.png (PC 42×42 SPR, scale-to-fit, upscaled 2.3× —
+       pixel art upscales cleanly). Centered in the cluster's upper-middle area. */
+    .hud-combat-main-slot {
+        position: absolute;
+        left: 122px;
+        top: 90px;
+        width: 96px;
+        height: 96px;
+        border-width: 0px;
+        border-radius: 6px;
+        background-color: rgba(20,40,30,0.35);
+        background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+        -unity-background-scale-mode: scale-to-fit;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Sub combat slot (64×64). Frame: btn_skill_empty_pc.png (PC SPR, scale-to-fit). */
+    .hud-combat-sub-slot {
+        position: absolute;
+        width: 64px;
+        height: 64px;
+        border-width: 0px;
+        border-radius: 4px;
+        background-color: rgba(20,40,30,0.3);
+        background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
+        -unity-background-scale-mode: scale-to-fit;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Fan positions (absolute within 340×340 container). Main center = (170, 138).
+       Sub slots at radius ~110px from main center. Action buttons in a row below.
+       Lower arc: sub1(left) sub2(center) sub3(right). Upper arc: sub4(left) sub5(right). */
+    .hud-combat-pos-sub1 { left: 14px;  top: 196px; }   /* lower-left arc  */
+    .hud-combat-pos-sub2 { left: 138px; top: 212px; }   /* lower-center arc */
+    .hud-combat-pos-sub3 { left: 262px; top: 196px; }   /* lower-right arc */
+    .hud-combat-pos-sub4 { left: 40px;  top: 10px;  }   /* upper-left arc   */
+    .hud-combat-pos-sub5 { left: 236px; top: 10px;  }   /* upper-right arc  */
+
+    /* Action buttons (48×48) in a row below the lower arc. Transparent hit area;
+       icon drawn by child .hud-btn-icon. Icons: PcButtons/btn_run/horse/sit (PC 31px). */
+    .hud-action-btn {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        border-width: 0px;
+        border-radius: 4px;
+        background-color: rgba(20,40,30,0.3);
+        overflow: hidden;
+    }
+    .hud-combat-pos-run   { left: 80px;  top: 280px; }
+    .hud-combat-pos-horse { left: 146px; top: 280px; }
+    .hud-combat-pos-sit   { left: 212px; top: 280px; }
+
+    /* Main slot icon (larger than sub slot icons). */
+    .hud-combat-main-icon {
+        width: 72px !important;
+        height: 72px !important;
     }
 
     /* QuickSlots: usable-item quick slots (3) ascending the right side toward

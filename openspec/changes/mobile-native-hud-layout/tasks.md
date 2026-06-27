@@ -27,23 +27,23 @@
 - [x] S1.9 Commit + push S1.
 
 ## Slice S2 — Combat cluster (1 main + 5 sub) + action buttons
-
-- [ ] S2.1 Populate `CombatCluster` with 6 slots: 1 `hud-combat-main-slot` (`96×96`) + 5
+    
+- [x] S2.1 Populate `CombatCluster` with 6 slots: 1 `hud-combat-main-slot` (`96×96`) + 5
       `hud-combat-sub-slot` (`64×64`) arranged in the right-thumb fan (3 lower arc + 2 upper arc).
-- [ ] S2.2 Wire slot frames to `btn_skill_empty_pc.png` (scale-to-fit) — replace
+- [x] S2.2 Wire slot frames to `btn_skill_empty_pc.png` (scale-to-fit) — replace
       `background-image: none`.
-- [ ] S2.3 Add per-slot icon child resolving to `Generated/cai_bang_skill_*.png` (assignment
+- [x] S2.3 Add per-slot icon child resolving to `Generated/cai_bang_skill_*.png` (assignment
       state: skill id per slot; empty state shows PC empty styling).
-- [ ] S2.4 Add action buttons `hud-action-btn` (`48×48`) beside the cluster: run / horse / sit,
+- [x] S2.4 Add action buttons `hud-action-btn` (`48×48`) beside the cluster: run / horse / sit,
       icons `PcButtons/btn_run.png`, `btn_horse.png`, `btn_sit.png` (+ `_over` hover states).
-- [ ] S2.5 C#: bind the 6 combat slots (assignment state + icon resolution + activation handler)
+- [x] S2.5 C#: bind the 6 combat slots (assignment state + icon resolution + activation handler)
       and the 3 action buttons (toggle handlers, reuse existing sit/run/mount logic or no-op/log
       stub matching Khóa/Đính/Tháo convention).
 - [ ] S2.6 Tune fan px (radius ~110–130) with a vision screenshot until slots sit in the 27–41 mm
-      comfort arc and don't overlap.
+      comfort arc and don't overlap. **PENDING — requires parent vision check**.
 - [ ] S2.7 EditMode tests: exactly 6 combat slots (1 main + 5 sub); 3 action buttons present +
-      icon-art-wired (not `none`); slots assignable.
-- [ ] S2.8 Commit + push S2.
+      icon-art-wired (not `none`); slots assignable. **PENDING — requires parent Unity MCP run**.
+- [x] S2.8 Commit + push S2.
 
 ## Slice S3 — Quick slots (3) + menu relocation + icon wiring
 
