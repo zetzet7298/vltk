@@ -152,6 +152,7 @@ namespace VLTK.UI
             { "BtnChatRoom", "btn_chatroom" },
             { "BtnItemEx", "btn_itemex" },
             { "BtnQuest", "btn_quest" },
+            { "BtnTreasure", "btn_treasure" },
         };
 
         private void Awake()
@@ -333,6 +334,14 @@ namespace VLTK.UI
             RegisterClick(root, "BtnPK", OnPKClick);
             RegisterClick(root, "BtnExchange", OnExchangeClick);
             RegisterClick(root, "BtnTreasure", OnTreasureClick);
+            // S3 (HUD-004): relocated top-gap buttons and usable-item quick slots.
+            // ItemEx / Quest / ChatRoom remain safe no-op logs until their feature popups land.
+            RegisterClick(root, "BtnItemEx", OnItemExClick);
+            RegisterClick(root, "BtnQuest", OnQuestClick);
+            RegisterClick(root, "BtnChatRoom", OnChatRoomClick);
+            RegisterClick(root, "QuickSlot1", () => OnQuickSlotClick(1));
+            RegisterClick(root, "QuickSlot2", () => OnQuickSlotClick(2));
+            RegisterClick(root, "QuickSlot3", () => OnQuickSlotClick(3));
 
             if (_faceBtn != null)
             {
@@ -984,6 +993,10 @@ namespace VLTK.UI
         private void OnRunClick() => SubsystemLog.Info("HUD", "Toggle Run/Walk");
         private void OnSitClick() => SubsystemLog.Info("HUD", "Toggle Sit");
         private void OnHorseClick() => SubsystemLog.Info("HUD", "Toggle Horse");
+        private void OnItemExClick() => SubsystemLog.Info("HUD", "Open ItemEx (pending popup)");
+        private void OnQuestClick() => SubsystemLog.Info("HUD", "Open Quest (pending popup)");
+        private void OnChatRoomClick() => SubsystemLog.Info("HUD", "Open ChatRoom (pending popup)");
+        private void OnQuickSlotClick(int slotIndex) => SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Quick slot {0}: consume intent (backend effect pending)", slotIndex));
         private void OnStatusClick()
         {
             // HUD-003: open Character Info via PopupManager. Equipment binds to the

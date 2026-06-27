@@ -503,7 +503,7 @@
     .hud-quick-slots {
         position: absolute;
         right: 28px;
-        bottom: 320px;
+        bottom: 390px;
         width: 70px;
         height: 200px;
         flex-direction: column-reverse;
@@ -517,15 +517,89 @@
        Empty in S1. */
     .hud-top-gap-cluster {
         position: absolute;
-        left: 620px;
-        top: 8px;
-        width: 380px;
-        height: 60px;
-        flex-direction: column;
-        background-color: transparent;
-        picking-mode: Ignore;
-        overflow: visible;
-    }
+            left: 620px;
+            top: 8px;
+            width: 380px;
+            height: 120px;
+            flex-direction: column;
+            background-color: transparent;
+            picking-mode: Ignore;
+            overflow: visible;
+        }
+
+        /* S3 (HUD-004): compact horizontal row of PC menu buttons + BtnTreasure in the
+           minimap<->topbar gap. Each button = transparent hit area; icon drawn by child. */
+        .hud-top-gap-menu-row {
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            background-color: transparent;
+        }
+
+        /* Menu button relocated from PC bottom strip to the top gap (S3). 36×36 hit area
+           with invisible padding to exceed the visual icon (≥44pt tap target, ADR-5).
+           Icon loaded by LoadArt via ButtonIcons dict (root-level PC sprites). */
+        .hud-top-gap-menu-btn {
+            width: 36px;
+            height: 36px;
+            margin-left: 2px;
+            margin-right: 2px;
+            border-width: 0px;
+            border-radius: 0px;
+            background-color: transparent;
+            overflow: hidden;
+        }
+
+        /* S3 (HUD-004): usable-item quick slot frame. Reuses PC numbered-well sprites
+           (btn_quick_item_1/2/3_pc.png — 快捷栏 slot-well family, 36×36 RGBA). Each
+           numbered sprite baked-in at PC extraction; no fabrication. */
+        .hud-quick-slot {
+            width: 56px;
+            height: 56px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+            -unity-background-scale-mode: scale-to-fit;
+            background-color: transparent;
+            border-width: 0px;
+            border-radius: 0px;
+            overflow: hidden;
+        }
+
+        .hud-quick-slot-1 {
+            background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_1_pc.png');
+        }
+        .hud-quick-slot-2 {
+            background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_2_pc.png');
+        }
+        .hud-quick-slot-3 {
+            background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_3_pc.png');
+        }
+
+        /* Quick-slot item icon child (centered, shown when an item is assigned).
+           Empty state shows PC empty styling (semi-transparent dark). */
+        .hud-quick-slot-icon {
+            position: absolute;
+            left: 8px;
+            top: 8px;
+            width: 40px;
+            height: 40px;
+            background-size: contain;
+            -unity-background-scale-mode: scale-to-fit;
+        }
+        .hud-quick-slot-icon.empty {
+            background-color: rgba(40,80,60,0.3);
+        }
+
+        /* BuffPanel inside TopGapCluster: flow as a row below the menu buttons instead
+           of using absolute positioning (its old top-level class used absolute). */
+        .hud-top-gap-cluster > .hud-buff-panel {
+            position: relative;
+            left: 0;
+            top: 0;
+            width: auto;
+            margin-top: 4px;
+        }
 
     /* Right cluster: PC toggle row (circular) above menu row (square).
    Positioned over the frame's right-slot region (slots x886-1251 at ×1.6 scale). */

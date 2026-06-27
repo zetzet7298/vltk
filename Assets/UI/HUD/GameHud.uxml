@@ -154,15 +154,47 @@
 
         <!-- S3 target: usable-item quick slots (3) ascending the right side toward
              the minimap (Ngũ Hoa Ngọc Lộ etc). Empty shell for S1; populated in S3. -->
-        <ui:VisualElement name="QuickSlots" class="hud-quick-slots">
-            <!-- S3 populates: qs1/qs2/qs3 with PC numbered-well chrome -->
-        </ui:VisualElement>
+            <!-- S3 (HUD-004): 3 usable-item quick slots ascending the right side (qs1
+                 lowest → qs3 highest via column-reverse). Frame chrome = PC numbered-well
+                 sprites btn_quick_item_1/2/3_pc.png (快捷栏 slot-well family, 36×36 RGBA).
+                 Each slot assignable to a consumable (e.g. Ngũ Hoa Ngọc Lộ). Activation =
+                 consume intent (no-op log; backend effect is a follow-up gameplay change). -->
+            <ui:VisualElement name="QuickSlots" class="hud-quick-slots">
+                <ui:VisualElement name="QuickSlot1" class="hud-quick-slot hud-quick-slot-1">
+                    <ui:VisualElement name="QuickSlot1Icon" class="hud-quick-slot-icon empty"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="QuickSlot2" class="hud-quick-slot hud-quick-slot-2">
+                    <ui:VisualElement name="QuickSlot2Icon" class="hud-quick-slot-icon empty"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="QuickSlot3" class="hud-quick-slot hud-quick-slot-3">
+                    <ui:VisualElement name="QuickSlot3Icon" class="hud-quick-slot-icon empty"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
 
         <!-- S3 target: relocated overflow PC UI (8 menu buttons + buff + Bảo Vật)
              into the minimap↔topbar gap. Empty shell for S1; populated in S3. -->
-        <ui:VisualElement name="TopGapCluster" class="hud-top-gap-cluster">
-            <!-- S3 populates: BtnStatus…BtnChatRoom + BtnTreasure + BuffPanel -->
-        </ui:VisualElement>
+            <!-- S3 (HUD-004): relocated overflow PC UI — 8 menu buttons (PC F-key icons)
+                 + BtnTreasure (Bảo Vật) as a compact horizontal row in the minimap↔topbar gap.
+                 BuffPanel renders below when buffs exist. Click handlers unchanged
+                 (RegisterClick names preserved so popups still fire via PopupManager). -->
+            <ui:VisualElement name="TopGapCluster" class="hud-top-gap-cluster">
+                <ui:VisualElement name="TopGapMenuRow" class="hud-top-gap-menu-row">
+                    <ui:VisualElement name="BtnStatus" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnItems" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnItemEx" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnSkills" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnQuest" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnQuestIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnTeam" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnFaction" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnChatRoom" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-btn-icon"/></ui:VisualElement>
+                    <ui:VisualElement name="BtnTreasure" class="hud-top-gap-menu-btn"><ui:VisualElement name="BtnTreasureIcon" class="hud-btn-icon"/></ui:VisualElement>
+                </ui:VisualElement>
+                <!-- Buff / Debuff panel: PC MiniSkill.ini / SkillState.ini. Hidden baseline;
+                     runtime re-enables when buffs exist. Relocated from old top-level position. -->
+                <ui:VisualElement name="BuffPanel" class="hud-buff-panel hidden">
+                    <!-- Dynamically populated in C# -->
+                </ui:VisualElement>
+            </ui:VisualElement>
 
         <!-- PendingRelocation: parked PC 快捷栏 replica elements (display:none).
              Names preserved so root.Q("BtnRun"), RegisterClick, and LoadArt icon
@@ -201,24 +233,13 @@
                     <ui:VisualElement name="BtnRec" class="hud-round-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
                     <ui:VisualElement name="BtnPK" class="hud-round-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/></ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement class="hud-menu-row">
-                    <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/></ui:VisualElement>
-                    <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/></ui:VisualElement>
-                    <ui:VisualElement name="BtnItemEx" class="hud-menu-btn"><ui:VisualElement name="BtnItemExIcon" class="hud-btn-icon"/></ui:VisualElement>
-                    <ui:VisualElement name="BtnSkills" class="hud-menu-btn"><ui:VisualElement name="BtnSkillsIcon" class="hud-btn-icon"/></ui:VisualElement>
-                    <ui:VisualElement name="BtnQuest" class="hud-menu-btn"><ui:VisualElement name="BtnQuestIcon" class="hud-btn-icon"/></ui:VisualElement>
-                    <ui:VisualElement name="BtnTeam" class="hud-menu-btn"><ui:VisualElement name="BtnTeamIcon" class="hud-btn-icon"/></ui:VisualElement>
-                    <ui:VisualElement name="BtnFaction" class="hud-menu-btn"><ui:VisualElement name="BtnFactionIcon" class="hud-btn-icon"/></ui:VisualElement>
-                    <ui:VisualElement name="BtnChatRoom" class="hud-menu-btn"><ui:VisualElement name="BtnChatRoomIcon" class="hud-btn-icon"/></ui:VisualElement>
-                </ui:VisualElement>
+                <!-- S3 (HUD-004): 8 menu buttons (BtnStatus…BtnChatRoom) + BtnTreasure
+                     relocated to TopGapCluster above. Only the toggle-row (Sit/Run/Horse/
+                     Exchange/Rec/PK) remains parked here for the S2 ActionBtn* to reuse. -->
             </ui:VisualElement>
-            <ui:VisualElement name="BtnTreasure" class="hud-baovat-btn"/>
+            <!-- BuffPanel moved into TopGapCluster above by S3 (HUD-004). The C# code
+                 resolves it via root.Q("BuffPanel") which searches the whole tree. -->
         </ui:VisualElement>
-        <!-- Buff / Debuff panel: PC MiniSkill.ini / SkillState.ini. Hidden in PC-parity HUD baseline; runtime can re-enable when buffs exist. -->
-        <ui:VisualElement name="BuffPanel" class="hud-buff-panel hidden">
-            <!-- Dynamically populated in C# -->
-        </ui:VisualElement>
-
 
         <!-- Trade Info Panel: PC TradeInfo.ini -->
         <ui:VisualElement name="TradeInfoPanel" class="hud-trade-panel hidden">

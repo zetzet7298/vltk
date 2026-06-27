@@ -263,3 +263,51 @@
 - S1 ✅ DONE + verified (`9cdc76675`)
 - S2 ✅ DONE + verified (`d23593071`) — fan layout accepted as-is, no px retune needed
 - S3 ⏳ pending (quick slots + 8 menu relocation + buff)
+
+## Slice S3 — Quick slots + menu relocation + icon wiring ✅
+
+### S3.1 — Quick-slot chrome ✅
+- Used existing PC extracted quick-item slot chrome: `btn_quick_item_1_pc.png`,
+  `btn_quick_item_2_pc.png`, `btn_quick_item_3_pc.png`.
+- These files already existed under `Assets/UI/HUD/Art/` and are PC `快捷栏` slot-well family
+  sprites; no fabricated art introduced.
+- Avoided unsafe Unity USS `nth-child` selectors by adding explicit per-slot classes
+  `hud-quick-slot-1/2/3`.
+
+### S3.2 — QuickSlots populated ✅
+- Added `QuickSlot1`, `QuickSlot2`, `QuickSlot3` (56×56) to the existing `QuickSlots` shell.
+- Each has a centered icon child (`QuickSlotXIcon`) with empty styling.
+
+### S3.3 — Quick slot binding ✅
+- Bound `QuickSlot1..3` in `GameHudController.RegisterClick`.
+- Activation logs consume intent only (`OnQuickSlotClick`) — backend effect intentionally deferred.
+
+### S3.4–S3.7 — TopGapCluster menu relocation + icon wiring ✅
+- Relocated `BtnStatus`, `BtnItems`, `BtnItemEx`, `BtnSkills`, `BtnQuest`, `BtnTeam`,
+  `BtnFaction`, `BtnChatRoom`, and `BtnTreasure` into `TopGapCluster` / `TopGapMenuRow`.
+- `BuffPanel` moved into `TopGapCluster` below the row.
+- Added `BtnTreasure` to `ButtonIcons`; existing root-level PC menu sprites load for the other
+  menu buttons. Added safe no-op log handlers for `BtnItemEx`, `BtnQuest`, `BtnChatRoom` so
+  relocated buttons do not throw before their feature popups land.
+
+### S3.8 — EditMode tests ✅
+- Added `MobileHudLayoutTests` (`[Category("HUD")]`) asserting S3 structure:
+  quick slots present, top-gap menu buttons present, no `BottomPanel`, quick slot PC chrome wired,
+  no unsafe `nth-child`, quick-slot/controller binding present.
+- Parent Unity MCP test run: **HUD 16/16 passed**, 0 failures.
+
+### S3.9 — Vision screenshot ✅
+- Initial screenshot `mobile-hud-s3-complete.png` found a real issue: QuickSlot1 overlapped the
+  top-right combat sub-slot.
+- Fixed by moving `.hud-quick-slots` upward (`bottom: 320px` → `390px`).
+- Final screenshot `Assets/Screenshots/mobile-hud-s3-complete-fixed.png` vision result: **PASS**.
+  Quick slots stack cleanly between minimap and combat cluster; no overlap; top-gap row clear;
+  joystick, combat cluster, action buttons, top bar, minimap, and bottom-center chat lane all OK.
+
+## Slice status
+- S1 ✅ DONE + verified (`9cdc76675`)
+- S2 ✅ DONE + verified (`d23593071`)
+- S3 ✅ DONE + verified (this slice)
+
+## Next
+All apply slices complete. Proceed to verify → sync → archive.
