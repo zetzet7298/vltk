@@ -94,3 +94,24 @@
 - **S3**: populate QuickSlots (3) + relocate 8 menu buttons + buff + Bảo Vật into TopGapCluster + icon wiring.
 - **S1.7/S1.8**: Unity runtime verification (screenshot + EditMode tests) — must be run by a
   Unity-MCP-enabled session before marking S1 fully verified.
+
+## S1 Runtime Verification (parent session, Unity MCP) ✅
+
+- **Recompile**: clean (no CS errors). Editor `ready_for_tools: true`.
+- **HUD EditMode tests**: `13/13 passed`, 0 failures, 0 regression (0.6s). Category `HUD`.
+- **Play mode + vision screenshot** (`Assets/Screenshots/mobile-hud-s1-overlay.png`):
+  - **Joystick**: PRESENT bottom-left (jade medallion, gold border). ✅ force-hide removed.
+  - **Bottom-center**: CLEAR — PC `快捷栏` replica toolbar fully removed; only game world
+    visible. Chat-lane reserved. ✅
+  - **Top bar**: PRESENT & intact — Level `Cấp 200`, HP/MP/Stamina/EXP bars + Vietnamese
+    captions. ✅ unchanged.
+  - **Minimap**: PRESENT & intact top-right — frame, player dot, coords, map buttons. ✅
+    unchanged.
+  - **Combat/quick slots**: not yet present (correct — S2/S3 work).
+- **Verdict**: S1 PASS. Clean mobile canvas: joystick bottom-left, empty bottom-center, top bar
+  + minimap intact. Ready for S2.
+
+## Slice status
+- S1 ✅ DONE + verified (commit `9cdc76675`)
+- S2 ⏳ pending (combat cluster 1+5 + action buttons)
+- S3 ⏳ pending (quick slots + menu relocation)
