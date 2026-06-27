@@ -208,5 +208,66 @@ namespace VLTK.Tests.Sandbox
             var category = EquipmentSlotMappingService.DetailTypeToCategory(items[0].detailType);
             Assert.AreEqual(PcItemCategory.Pendant, category);
         }
+
+        // ── add-pc-mask-and-shipin-parsers: parser + particularType guards ──
+
+        [Test]
+        public void PcMaskItemParser_ParseRow_ReadsDetailTypeAndPreservesZeroParticularType()
+        {
+            var cols = new string[PcMaskItemParser.MinColumns];
+            cols[0] = "Mặt nạ thử";
+            cols[1] = "0";
+            cols[2] = "11";
+            cols[3] = "0";
+            cols[4] = @"\spr\item\equip\mask\yrmj_01.spr";
+            var item = PcMaskItemParser.ParseRow(cols, 1);
+            Assert.IsNotNull(item);
+            Assert.AreEqual(0, item.itemGenre);
+            Assert.AreEqual(11, item.detailType);
+            Assert.AreEqual(0, item.particularType);
+            Assert.IsNotNull(item.iconSourceId);
+        }
+
+        [Test]
+        public void PcShipinItemParser_ParseRow_ReadsTrinketDetailType()
+        {
+            var cols = new string[PcShipinItemParser.MinColumns];
+            cols[0] = "Trang sức thử";
+            cols[1] = "0";
+            cols[2] = "14";
+            cols[3] = "0";
+            cols[4] = @"\spr\mel\trangsuctanthu.spr";
+            var item = PcShipinItemParser.ParseRow(cols, 1);
+            Assert.IsNotNull(item);
+            Assert.AreEqual(0, item.itemGenre);
+            Assert.AreEqual(14, item.detailType);
+            Assert.AreEqual(PcItemCategory.Trinket, EquipmentSlotMappingService.DetailTypeToCategory(item.detailType));
+            Assert.IsNotNull(item.iconSourceId);
+        }
+
+        [Test]
+        public void PcItemBatchLoader_MaskParticularTypeZero_IsPreserved()
+        {
+            var items = new List<ItemDefinition>
+            {
+                new ItemDefinition { itemGenre = 0, detailType = 11, particularType = 0 }
+            };
+            PcItemBatchLoader.ApplyCategoryIds(items, 1500000, "mask");
+            Assert.AreEqual(0, items[0].particularType,
+                "mask.txt uses ParticularType=0 as a valid PC key and must not be row-indexed");
+        }
+
+        [Test]
+        public void PcItemBatchLoader_ShipinParticularTypeZero_FallsBackToUniqueRows()
+        {
+            var items = new List<ItemDefinition>
+            {
+                new ItemDefinition { itemGenre = 0, detailType = 14, particularType = 0 },
+                new ItemDefinition { itemGenre = 0, detailType = 14, particularType = 0 },
+            };
+            PcItemBatchLoader.ApplyCategoryIds(items, 1600000, "shipin");
+            Assert.AreEqual(1, items[0].particularType);
+            Assert.AreEqual(2, items[1].particularType);
+        }
     }
 }

@@ -4,6 +4,7 @@ using VLTK.Sandbox.ItemData;
 
 namespace VLTK.Tests.Sandbox.ItemData
 {
+    [TestFixture, Category("Equipment")]
     public class PcItemBatchLoaderTests
     {
         private static string ItemDir => Path.Combine(
@@ -11,16 +12,16 @@ namespace VLTK.Tests.Sandbox.ItemData
             "Assets/StreamingAssets/Reference/PcItem");
 
         [Test]
-        public void LoadAll_ReadsAllFourteenPcItemFiles()
+        public void LoadAll_ReadsAllSixteenPcItemFiles()
         {
             var batch = PcItemBatchLoader.LoadAll(ItemDir);
             Assert.IsNotNull(batch);
-            Assert.AreEqual(14, batch.perFileCounts.Count, "batch should have 14 per-file entries");
+            Assert.AreEqual(16, batch.perFileCounts.Count, "batch should have 16 per-file entries");
             foreach (var key in new[]
             {
                 "armor", "helm", "boot", "cuff", "belt", "ring",
                 "amulet", "pendant", "meleeweapon", "rangeweapon",
-                "horse", "potion", "goldequip", "platinaequip"
+                "horse", "potion", "goldequip", "platinaequip", "mask", "shipin"
             })
             {
                 Assert.IsTrue(batch.perFileCounts.ContainsKey(key), $"Missing per-file key: {key}");
@@ -70,6 +71,14 @@ namespace VLTK.Tests.Sandbox.ItemData
         {
             var importer = PcItemBatchLoader.ImportInto(ItemDir, new VLTK.Sandbox.ItemContractImporter());
             Assert.GreaterOrEqual(importer.Count, 5000);
+        }
+
+        [Test]
+        public void ImportInto_IncludesMaskAndShipinItems()
+        {
+            var importer = PcItemBatchLoader.ImportInto(ItemDir, new VLTK.Sandbox.ItemContractImporter());
+            Assert.IsNotNull(importer.ResolvePcItem(0, 11, 0), "mask DetailType 11 / ParticularType 0 should import");
+            Assert.IsNotNull(importer.ResolvePcItem(0, 14, 1), "shipin repeated zero should be row-indexed to ParticularType 1");
         }
     }
 }
