@@ -24,6 +24,11 @@ namespace VLTK.UI.Popup
         /// <summary>True while a window is open.</summary>
         public bool IsOpen => _current != null;
 
+        /// <summary>The content of the currently focused window, or null when none is open.
+        /// Enables callers (e.g. GM debug tooling that cannot reference this assembly directly)
+        /// to detect which popup is showing without reaching into the window internals.</summary>
+        public IPopupContent CurrentContent => _current?.Content;
+
         /// <summary>
         /// Convenience instance set by <see cref="GameHudController"/>. Null until the
         /// HUD initialises it. Tests construct a <see cref="PopupManager"/> directly

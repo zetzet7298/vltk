@@ -182,13 +182,14 @@ namespace VLTK.Sandbox
                 var hudObj = Object.FindAnyObjectByType(hudType);
                 if (hudObj != null)
                 {
-                    // Luon auto-open skill panel sau khi switch phai (de user thay skill list moi ngay).
-                    // Neu panel dang visible, refresh; neu khong, open moi.
-                    var openMethod = hudType.GetMethod("OpenSkillPanel");
+                    // Luon auto-open skill popup sau khi switch phai (de user thay skill list moi ngay).
+                    // BtnSkills now opens SkillContent via PopupManager.OnSkillsClick; the inline
+                    // OpenSkillPanel/IsSkillPanelVisible HUD surface was retired in migrate-skill-panel-popup.
+                    var openMethod = hudType.GetMethod("OnSkillsClick", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
                     if (openMethod != null)
                     {
                         openMethod.Invoke(hudObj, null);
-                        UnityEngine.Debug.Log($"[GM] Auto-opened skill panel for faction {faction}");
+                        UnityEngine.Debug.Log($"[GM] Auto-opened skill popup for faction {faction}");
                     }
                     var slotCtrlType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, VLTK.UI");
                     if (slotCtrlType != null)
@@ -256,11 +257,19 @@ namespace VLTK.Sandbox
                     var hudObj = Object.FindAnyObjectByType(hudType);
                     if (hudObj != null)
                     {
-                        var isVisibleProp = hudType.GetProperty("IsSkillPanelVisible");
-                        bool isVisible = isVisibleProp != null && (bool)isVisibleProp.GetValue(hudObj, null);
-                        if (isVisible)
+                        // Refresh the skill popup if it is currently open. BtnSkills now opens a
+                        // SkillContent popup via PopupManager (the inline IsSkillPanelVisible/
+                        // OpenSkillPanel HUD surface was retired in migrate-skill-panel-popup).
+                        // Reflect over PopupManager to detect a currently-open SkillContent.
+                        var pmType = System.Type.GetType("VLTK.UI.Popup.PopupManager, VLTK.UI");
+                        var pmInstanceProp = pmType?.GetProperty("Instance");
+                        object pmInstance = pmInstanceProp?.GetValue(null, null);
+                        var currentContentProp = pmType?.GetProperty("CurrentContent");
+                        object currentContent = pmInstance != null ? currentContentProp?.GetValue(pmInstance, null) : null;
+                        bool isSkillPopupOpen = currentContent != null && currentContent.GetType().Name == "SkillContent";
+                        if (isSkillPopupOpen)
                         {
-                            var openMethod = hudType.GetMethod("OpenSkillPanel");
+                            var openMethod = hudType.GetMethod("OnSkillsClick", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
                             if (openMethod != null) openMethod.Invoke(hudObj, null);
                         }
                     }

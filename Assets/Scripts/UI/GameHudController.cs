@@ -16,6 +16,7 @@ using VLTK.UI.Inventory;
 using VLTK.UI.Treasure;
 using VLTK.UI.Team;
 using VLTK.UI.Faction;
+using VLTK.UI.Skill;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.Sprites;
@@ -98,10 +99,8 @@ namespace VLTK.UI
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
-        private VisualElement _skillPanel, _skillClose, _skillPageOne, _skillPageTwo;
-        private ScrollView _skillList;
         private Label _hpText, _mpText, _staminaText, _expText;
-        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords, _skillSummary;
+        private Label _levelText, _sceneName, _scenePos, _mapPreviewTitle, _mapPreviewCoords;
         private TextField _chatInput;
 
         // New HUD elements
@@ -123,7 +122,6 @@ namespace VLTK.UI
         private Texture2D _previewTexture;
         private int _minimapTextureMapId = -1;
         private int _previewTextureMapId = -1;
-        private int _skillPageIndex;
         private Vector2 _lastMinimapCenter;
         private Vector2? _lastMoveTarget;
 
@@ -311,13 +309,6 @@ namespace VLTK.UI
             _mapPreviewTitle = root.Q<Label>("MapPreviewTitle");
             _mapPreviewCoords = root.Q<Label>("MapPreviewCoords");
 
-            _skillPanel = root.Q("CaiBangSkillPanel");
-            _skillClose = root.Q("CaiBangSkillClose");
-            _skillList = root.Q<ScrollView>("CaiBangSkillList");
-            _skillPageOne = root.Q("CaiBangSkillPageOne");
-            _skillPageTwo = root.Q("CaiBangSkillPageTwo");
-            _skillSummary = root.Q<Label>("CaiBangSkillSummary");
-
             // Bind new HUD panels
             _buffPanel = root.Q("BuffPanel");
 
@@ -402,14 +393,6 @@ namespace VLTK.UI
             RegisterPreviewOpen(root, "ToggleMapBtn");
             RegisterPreviewOpen(root, "WorldMapBtn");
             RegisterClick(root, "MapPreviewClose", CloseMapPreview);
-            RegisterClick(root, "CaiBangSkillClose", CloseSkillPanel);
-            RegisterClick(root, "CaiBangSkillPageOne", () => SetSkillPage(0));
-            RegisterClick(root, "CaiBangSkillPageTwo", () => SetSkillPage(1));
-
-            if (_skillPanel != null)
-                _skillPanel.pickingMode = PickingMode.Position;
-            if (_skillList != null)
-                _skillList.pickingMode = PickingMode.Position;
 
             if (_mapPreviewOverlay != null)
             {
@@ -665,11 +648,6 @@ namespace VLTK.UI
             {
                 _mapPreviewOverlay.style.width = w;
                 _mapPreviewOverlay.style.height = h;
-            }
-            if (_skillPanel != null)
-            {
-                _skillPanel.style.left = Mathf.Clamp(338f, 0f, Mathf.Max(0f, w - 205f));
-                _skillPanel.style.top = Mathf.Clamp(110f, 0f, Mathf.Max(0f, h - 376f));
             }
         }
 
@@ -979,14 +957,6 @@ namespace VLTK.UI
             SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Map preview move target {0} ({1})", worldTarget, FormatPcScenePos(worldTarget)));
         }
 
-        public bool IsSkillPanelVisible => _skillPanel != null && !_skillPanel.ClassListContains("hidden");
-
-        public int PcSkillPanelRowCount => _skillList?.childCount ?? 0;
-
-        public PcSkillPanelSnapshot CurrentSkillSnapshot { get; private set; }
-
-        public int CurrentSelectedSkillId { get; private set; }
-
         private string GetFactionNameVi(CombatFaction faction)
         {
             return faction switch
@@ -1003,165 +973,6 @@ namespace VLTK.UI
                 CombatFaction.KunLun => "Côn Lôn",
                 _ => "Vô Phái"
             };
-        }
-
-        public void OpenSkillPanel()
-        {
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null
-                ? manager.CombatSkillCatalog
-                : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
-            CombatFaction faction = progression.faction != CombatFaction.None ? progression.faction : CombatFaction.CaiBang;
-            if (manager != null)
-            {
-                manager.GrantFactionSkillPanelProgression(faction);
-                progression = manager.PlayerProgression;
-            }
-            else
-            {
-                progression.GrantFactionSkillPanelProgression(catalog, faction);
-            }
-
-            var snap = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-            CurrentSkillSnapshot = snap;
-            PopulateSkillPanel(snap);
-            _skillPanel?.RemoveFromClassList("hidden");
-            CloseMapPreview();
-            SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Open {0} Skills page {1} (level={2}, points={3}, skills={4})", GetFactionNameVi(faction), _skillPageIndex + 1, snap.playerLevel, snap.skillPoints, snap.rows.Count));
-        }
-
-        public int CurrentSkillPageIndex => _skillPageIndex;
-
-        public void SetSkillPage(int pageIndex)
-        {
-            pageIndex = Mathf.Clamp(pageIndex, 0, PcSkillPanelService.PcFightSkillPageCount - 1);
-            if (_skillPageIndex == pageIndex && CurrentSkillSnapshot != null)
-                return;
-            _skillPageIndex = pageIndex;
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : new PlayerProgressionState();
-            CombatFaction faction = progression.faction != CombatFaction.None ? progression.faction : CombatFaction.CaiBang;
-            if (manager != null)
-            {
-                manager.GrantFactionSkillPanelProgression(faction);
-                progression = manager.PlayerProgression;
-            }
-            else
-            {
-                progression.GrantFactionSkillPanelProgression(catalog, faction);
-            }
-            CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-            PopulateSkillPanel(CurrentSkillSnapshot);
-            SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Switch {0} Skills to page {1}", GetFactionNameVi(faction), _skillPageIndex + 1));
-        }
-
-        public void CloseSkillPanel()
-        {
-            _skillPanel?.AddToClassList("hidden");
-        }
-
-        private void PopulateSkillPanel(PcSkillPanelSnapshot snap)
-        {
-            if (_skillSummary != null)
-                _skillSummary.text = snap.skillPoints.ToString();
-            if (_skillList == null)
-                return;
-            _skillList.Clear();
-            _skillPageOne?.EnableInClassList("hud-cb-page-tab-active", _skillPageIndex == 0);
-            _skillPageTwo?.EnableInClassList("hud-cb-page-tab-active", _skillPageIndex == 1);
-            _skillList.contentContainer.style.flexDirection = FlexDirection.Row;
-            _skillList.contentContainer.style.flexWrap = Wrap.Wrap;
-            _skillList.contentContainer.style.alignContent = Align.FlexStart;
-            for (int slotIndex = 0; slotIndex < PcSkillPanelService.PcFightSkillSlotsPerPage; slotIndex++)
-            {
-                var item = new VisualElement();
-                item.AddToClassList("hud-cb-grid-cell");
-                item.pickingMode = PickingMode.Position;
-
-                var slot = new VisualElement();
-                slot.AddToClassList("hud-cb-grid-slot");
-                item.Add(slot);
-
-                if (slotIndex < snap.rows.Count)
-                {
-                    var row = snap.rows[slotIndex];
-                    if (row.canUpgrade)
-                        item.AddToClassList("hud-cb-grid-cell-upgradable");
-                    LoadIcon(slot, HudArtPathResolver.ResolveGeneratedArtRoot(artFolder), string.Format(System.Globalization.CultureInfo.InvariantCulture, "cai_bang_skill_{0}", row.skillId));
-
-                    var levelText = row.learnedLevel > 0 ? row.learnedLevel.ToString() : string.Empty;
-                    var level = new Label(levelText);
-                    level.AddToClassList("hud-cb-grid-level");
-                    item.Add(level);
-
-                    var add = new VisualElement();
-                    add.AddToClassList("hud-cb-add-point");
-                    item.Add(add);
-
-                    var name = new Label(row.displayName);
-                    name.AddToClassList("hud-cb-grid-name");
-                    item.Add(name);
-
-                    int skillId = row.skillId;
-                    item.RegisterCallback<PointerDownEvent>(evt =>
-                    {
-                        SelectSkill(skillId);
-                        evt.StopPropagation();
-                    });
-                }
-                else
-                {
-                    item.AddToClassList("hud-cb-grid-cell-empty");
-                    slot.AddToClassList("hud-cb-grid-slot-empty");
-                }
-
-                _skillList.Add(item);
-            }
-        }
-
-        public void SelectSkill(int skillId)
-        {
-            CurrentSelectedSkillId = CurrentSelectedSkillId == skillId ? 0 : skillId;
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : null;
-            if (progression == null)
-                return;
-
-            CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-            PopulateSkillPanel(CurrentSkillSnapshot);
-            CombatFaction faction = progression.faction;
-            SubsystemLog.Info("HUD", CurrentSelectedSkillId != 0
-                ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "Select {0} skill {1}", GetFactionNameVi(faction), skillId)
-                : string.Format(System.Globalization.CultureInfo.InvariantCulture, "Hide {0} skill detail {1}", GetFactionNameVi(faction), skillId));
-        }
-
-        public bool TryUpgradeSelectedSkill()
-        {
-            return CurrentSelectedSkillId != 0 && TryUpgradeSkill(CurrentSelectedSkillId);
-        }
-
-        public bool TryUpgradeSkill(int skillId)
-        {
-            var manager = SandboxManager.Instance;
-            SkillCatalog catalog = manager != null ? manager.CombatSkillCatalog : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
-            PlayerProgressionState progression = manager != null ? manager.PlayerProgression : null;
-            if (progression == null)
-                return false;
-
-            bool upgraded = PcSkillPanelService.TryUpgrade(progression, catalog, skillId);
-            if (upgraded)
-            {
-                CurrentSkillSnapshot = PcSkillPanelService.BuildPage(catalog, progression, CurrentSelectedSkillId, _skillPageIndex);
-                PopulateSkillPanel(CurrentSkillSnapshot);
-            }
-            CombatFaction faction = progression.faction;
-            SubsystemLog.Info("HUD", upgraded
-                ? string.Format(System.Globalization.CultureInfo.InvariantCulture, "Upgrade {0} skill {1}", GetFactionNameVi(faction), skillId)
-                : string.Format(System.Globalization.CultureInfo.InvariantCulture, "Cannot upgrade {0} skill {1}", GetFactionNameVi(faction), skillId));
-            return upgraded;
         }
 
         private void OnRunClick() => SubsystemLog.Info("HUD", "Toggle Run/Walk");
@@ -1191,7 +1002,43 @@ namespace VLTK.UI
             manager.Show(new InventoryContent(inventory));
             SubsystemLog.Info("HUD", "Open Inventory");
         }
-        private void OnSkillsClick() => OpenSkillPanel();
+        private void OnSkillsClick()
+        {
+            // HUD-003: open the Skill popup via PopupManager (mirrors OnFactionClick /
+            // OnStatusClick). SkillContent owns the 30-cell grid, skill-point summary,
+            // tap-to-select detail, and "+" upgrade that spends a live fight-skill point.
+            var manager = PopupManager.Instance;
+            if (manager == null)
+            {
+                SubsystemLog.Info("HUD", "PopupManager not initialised");
+                return;
+            }
+
+            var sandbox = SandboxManager.Instance;
+            SkillCatalog catalog = sandbox != null
+                ? sandbox.CombatSkillCatalog
+                : PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            // LIVE progression ref (gameplay-critical, reviewer hand-off): SkillContent.OnShow
+            // runs the grant callback BEFORE BuildPage/Refresh. At runtime the callback is
+            // SandboxManager.GrantFactionSkillPanelProgression, which mutates
+            // manager.PlayerProgression IN PLACE (verified in SandboxManager.cs:
+            //   PlayerProgression ??= new PlayerProgressionState();
+            //   PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, targetFaction);
+            // ), i.e. the SAME instance this 'progression' ref points to. So the popup body reads
+            // the granted fight-skill points without a post-grant re-fetch (the prior inline
+            // OpenSkillPanel re-fetched manager.PlayerProgression defensively; the in-place
+            // mutation makes that unnecessary — same live ref). When the sandbox is null
+            // (EditMode), grantProgression is null and SkillContent.OnShow falls back to
+            // progression.GrantFactionSkillPanelProgression(catalog, faction), still on this ref.
+            PlayerProgressionState progression = sandbox != null ? sandbox.PlayerProgression : new PlayerProgressionState();
+            CombatFaction faction = progression != null && progression.faction != CombatFaction.None
+                ? progression.faction
+                : CombatFaction.CaiBang;
+            manager.Show(new SkillContent(catalog, progression, faction, GetFactionNameVi(faction), artFolder,
+                grantProgression: sandbox != null ? sandbox.GrantFactionSkillPanelProgression : null));
+            SubsystemLog.Info("HUD", "Open Kỹ năng võ công");
+            CloseMapPreview();
+        }
 
         private void OnTeamClick()
         {

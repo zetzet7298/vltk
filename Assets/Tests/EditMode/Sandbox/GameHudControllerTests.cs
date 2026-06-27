@@ -137,6 +137,16 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void OnSkillsClick_WithoutPopupManager_DoesNotThrow()
+        {
+            // BtnSkills now opens the Skill popup via PopupManager (see SkillContentTests).
+            // It must degrade gracefully when PopupManager is not initialised and must no longer
+            // toggle any inline skill panel (the inline CaiBangSkillPanel is retired).
+            Assert.IsNull(PopupManager.Instance);
+            Assert.DoesNotThrow(() => InvokePrivateMethod("OnSkillsClick"));
+        }
+
+        [Test]
         public void OnExchangeClick_TogglesTradeInfoPanelAndPopulatesPartnerInfo()
         {
             // Initially hidden

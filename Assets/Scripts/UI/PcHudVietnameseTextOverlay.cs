@@ -21,21 +21,11 @@ namespace VLTK.UI
         private GUIStyle _menu;
         private GUIStyle _minimap;
         private GUIStyle _preview;
-        private GUIStyle _skillName;
-        private GUIStyle _skillLevel;
-        private GUIStyle _skillHint;
-        private Texture2D _skillPanelTexture;
-        private Texture2D _skillPanelTargetTexture;
-        private Texture2D _addPointTexture;
-        private readonly System.Collections.Generic.Dictionary<int, Texture2D> _caiBangIconTextures = new();
 
         private void EnsureStyles()
         {
-            if (_topCaption != null && _topValue != null && _chatWarn != null && _menu != null && _minimap != null && _preview != null && _skillName != null && _skillLevel != null && _skillHint != null)
-            {
-                EnsureSkillTextures();
+            if (_topCaption != null && _topValue != null && _chatWarn != null && _menu != null && _minimap != null && _preview != null)
                 return;
-            }
 
             _topCaption = new GUIStyle(GUI.skin.label)
             {
@@ -79,28 +69,6 @@ namespace VLTK.UI
                 fontStyle = FontStyle.Bold,
                 normal = { textColor = new Color(1f, 0.96f, 0.30f, 1f) }
             };
-            _skillName = new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.MiddleLeft,
-                fontSize = 12,
-                fontStyle = FontStyle.Bold,
-                normal = { textColor = new Color(1f, 0.96f, 0.66f, 1f) }
-            };
-            _skillLevel = new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontSize = 12,
-                fontStyle = FontStyle.Bold,
-                normal = { textColor = new Color(0.82f, 1f, 0.58f, 1f) }
-            };
-            _skillHint = new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.UpperLeft,
-                fontSize = 10,
-                wordWrap = true,
-                normal = { textColor = new Color(0.88f, 0.88f, 0.78f, 1f) }
-            };
-
             // Domain reload off can leave nested GUIStyleState references null after script reload.
             _topCaption.normal.textColor = new Color(0.92f, 0.92f, 0.82f, 1f);
             _topValue.normal.textColor = Color.white;
@@ -110,39 +78,6 @@ namespace VLTK.UI
             _menu.normal.textColor = new Color(0.88f, 0.92f, 0.82f, 1f);
             _minimap.normal.textColor = new Color(0f, 1f, 0f, 1f);
             _preview.normal.textColor = new Color(1f, 0.96f, 0.30f, 1f);
-            _skillName.normal.textColor = new Color(1f, 0.96f, 0.66f, 1f);
-            _skillLevel.normal.textColor = new Color(0.82f, 1f, 0.58f, 1f);
-            _skillHint.normal.textColor = new Color(0.88f, 0.88f, 0.78f, 1f);
-            _skillHint.wordWrap = true;
-            EnsureSkillTextures();
-        }
-
-        private void EnsureSkillTextures()
-        {
-            var artRoot = HudArtPathResolver.ResolveArtRoot("UI/HUD/Art");
-            if (_skillPanelTexture == null)
-                _skillPanelTexture = LoadTexture(HudArtPathResolver.ResolveUserFacingPngPath(artRoot, "技能"));
-            if (_skillPanelTargetTexture == null)
-                _skillPanelTargetTexture = LoadTexture(HudArtPathResolver.ResolveUserFacingPngPath(artRoot, "技能－战斗分页"));
-            if (_addPointTexture == null)
-                _addPointTexture = LoadTexture(HudArtPathResolver.ResolvePngPath(artRoot, "状态加点按钮改_01"));
-            var caiBangIconIds = new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130,
-                                        274, 277, 357, 359, 360, 714, 1073, 1074,
-                                        151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166,
-                                        3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-                                        43, 45, 47, 48, 50, 51, 54, 55, 57, 58,
-                                         77, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93,
-                                         23, 24, 26, 29, 30, 31, 32, 33, 34, 35, 36, 37, 40, 41, 42,
-                                         60, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76,
-                                         95, 97, 99, 100, 101, 102, 103, 105, 108, 109, 111, 113, 114,
-                                         131, 132, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150,
-                                         167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184 };
-            foreach (var skillId in caiBangIconIds)
-            {
-                if (_caiBangIconTextures.ContainsKey(skillId) && _caiBangIconTextures[skillId] != null)
-                    continue;
-                _caiBangIconTextures[skillId] = LoadTexture(HudArtPathResolver.ResolvePngPath(HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art"), $"cai_bang_skill_{skillId}"));
-            }
         }
 
         private static Texture2D LoadTexture(string path)
@@ -267,100 +202,11 @@ namespace VLTK.UI
             // Bảo Vật button: real SPR art (btn_treasure.png) now carries its own icon;
             // the duplicate IMGUI caption overlapped the button. Removed for PC parity.
 
-            DrawSkillPanelText();
+            // Skill panel visuals are now owned by the SkillContent popup body (HUD-003);
+            // the IMGUI DrawSkillPanelText overlay has been retired.
 
             GUI.depth = oldDepth;
             GUI.matrix = Matrix4x4.identity;
-        }
-
-        private void DrawSkillPanelText()
-        {
-            var hud = FindAnyObjectByType<GameHudController>();
-            if (hud == null || !hud.IsSkillPanelVisible)
-                return;
-
-            var snap = hud.CurrentSkillSnapshot;
-            int points = snap != null ? snap.skillPoints : 200;
-            Rect panel = new Rect(338, 110, 205, 376);
-            if (_skillPanelTexture != null)
-                GUI.DrawTexture(panel, _skillPanelTexture, ScaleMode.StretchToFill, true);
-            if (_skillPanelTargetTexture != null)
-                GUI.DrawTexture(new Rect(345, 167, 191, 278), _skillPanelTargetTexture, ScaleMode.StretchToFill, true);
-            var titleStyle = new GUIStyle(_skillLevel) { fontSize = 13, alignment = TextAnchor.MiddleCenter };
-            Label(376, 116, 110, 18, "Kỹ năng võ công", titleStyle);
-            var pageOneRect = new Rect(345, 422, 67, 22);
-            var pageStyle = new GUIStyle(_skillLevel) { fontSize = 9, alignment = TextAnchor.MiddleCenter };
-            Label(345, 422, 67, 22, $"Tất cả ({snap?.rows?.Count ?? 0} skill)", pageStyle);
-            if (snap?.rows == null)
-                return;
-
-            const float startX = 345f;
-            const float startY = 171f;
-            const float cellW = 39f;
-            const float cellH = 51f;
-            const int columns = 5;
-            for (int i = 0; i < snap.rows.Count; i++)
-            {
-                var row = snap.rows[i];
-                int col = i % columns;
-                int line = i / columns;
-                float x = startX + col * cellW;
-                float y = startY + line * cellH;
-                var oldGuiColor = GUI.color;
-                GUI.color = new Color(0.02f, 0.035f, 0.03f, 1f);
-                GUI.DrawTexture(new Rect(x, y, 36, 50), Texture2D.whiteTexture);
-                GUI.color = oldGuiColor;
-                _caiBangIconTextures.TryGetValue(row.skillId, out var icon);
-                if (icon != null)
-                    GUI.DrawTexture(new Rect(x, y, 36, 36), icon, ScaleMode.StretchToFill, true);
-                if (snap.selectedSkillId == row.skillId)
-                    GUI.Box(new Rect(x - 1, y - 1, 38, 38), GUIContent.none);
-                if (_addPointTexture != null && row.canUpgrade)
-                {
-                    var addRect = new Rect(x + 22, y + 35, 14, 14);
-                    GUI.DrawTexture(addRect, _addPointTexture, ScaleMode.StretchToFill, true);
-                    if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && addRect.Contains(Event.current.mousePosition))
-                    {
-                        hud.TryUpgradeSkill(row.skillId);
-                        Event.current.Use();
-                    }
-                }
-                if (row.learnedLevel > 0)
-                    Label(x, y + 36f, 22, 14, row.learnedLevel.ToString(), _skillLevel);
-            }
-
-            if (snap.selectedRow.HasValue)
-            {
-                var row = snap.selectedRow.Value;
-                var detail = $"{row.displayName}\nCấp {row.learnedLevel}/{row.maxLevel} · cần cấp {row.requiredLevel}\n{row.summary}";
-                if (!string.IsNullOrEmpty(row.nextLevelSummary))
-                    detail += $"\n\nCấp sau\n{row.nextLevelSummary}";
-                detail += $"\n\n{row.upgradeStatus}";
-                var detailRect = new Rect(panel.xMax + 6, panel.y + 58, 220, 220);
-                DrawPcTooltip(detailRect, detail);
-            }
-        }
-
-
-        private static void DrawPcTooltip(Rect rect, string text)
-        {
-            var oldColor = GUI.color;
-            GUI.color = new Color(0.02f, 0.02f, 0.02f, 0.92f);
-            GUI.DrawTexture(rect, Texture2D.whiteTexture);
-            GUI.color = new Color(0.75f, 0.60f, 0.32f, 1f);
-            GUI.DrawTexture(new Rect(rect.x, rect.y, rect.width, 1), Texture2D.whiteTexture);
-            GUI.DrawTexture(new Rect(rect.x, rect.yMax - 1, rect.width, 1), Texture2D.whiteTexture);
-            GUI.DrawTexture(new Rect(rect.x, rect.y, 1, rect.height), Texture2D.whiteTexture);
-            GUI.DrawTexture(new Rect(rect.xMax - 1, rect.y, 1, rect.height), Texture2D.whiteTexture);
-            GUI.color = oldColor;
-            var style = new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.UpperLeft,
-                fontSize = 10,
-                wordWrap = true,
-                normal = { textColor = new Color(0.92f, 0.88f, 0.70f, 1f) }
-            };
-            GUI.Label(new Rect(rect.x + 8, rect.y + 8, rect.width - 16, rect.height - 16), text ?? string.Empty, style);
         }
 
         private void DrawMinimapCoordinates()

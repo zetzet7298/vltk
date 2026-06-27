@@ -197,7 +197,7 @@ PR-2 is branched off the updated `main` and merged second.
 
 ## Phase 2.1 — Rewire `BtnSkills` + de-inline `GameHudController`
 
-- [ ] **T27 — Rewire `OnSkillsClick()` in `Assets/Scripts/UI/GameHudController.cs`** to the
+- [x] **T27 — Rewire `OnSkillsClick()` in `Assets/Scripts/UI/GameHudController.cs`** to the
   sibling one-line shape (mirror `OnFactionClick`/`OnStatusClick`, design §3.2): null-guard
   `PopupManager.Instance` (log + return); resolve `catalog`/`progression`/`faction`/`factionNameVi`/`artFolder`
   from `SandboxManager` with the same fallbacks (`PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog()`,
@@ -205,48 +205,48 @@ PR-2 is branched off the updated `main` and merged second.
   `grantProgression: sandbox != null ? sandbox.GrantFactionSkillPanelProgression : null`; then
   `manager.Show(new SkillContent(...))`; `CloseMapPreview();`. Replace the existing
   `OnSkillsClick() => OpenSkillPanel();` body.
-- [ ] **T28 — Remove the inline skill fields** from `GameHudController`: `_skillPanel`,
+- [x] **T28 — Remove the inline skill fields** from `GameHudController`: `_skillPanel`,
   `_skillClose`, `_skillPageOne`, `_skillPageTwo`, `_skillList` (ScrollView), `_skillSummary`
   (Label), and `_skillPageIndex` (int).
-- [ ] **T29 — Remove the inline skill methods**: `OpenSkillPanel`, `SetSkillPage`,
+- [x] **T29 — Remove the inline skill methods**: `OpenSkillPanel`, `SetSkillPage`,
   `CloseSkillPanel`, `SelectSkill`, `TryUpgradeSelectedSkill`, `TryUpgradeSkill`,
   `PopulateSkillPanel`.
-- [ ] **T30 — Remove the inline-only public surface**: `IsSkillPanelVisible`,
+- [x] **T30 — Remove the inline-only public surface**: `IsSkillPanelVisible`,
   `PcSkillPanelRowCount`, `CurrentSkillSnapshot`, `CurrentSelectedSkillId`,
   `CurrentSkillPageIndex`.
-- [ ] **T31 — Remove the `BindElements()` skill queries**: `_skillPanel = root.Q("CaiBangSkillPanel")`,
+- [x] **T31 — Remove the `BindElements()` skill queries**: `_skillPanel = root.Q("CaiBangSkillPanel")`,
   `_skillClose = root.Q("CaiBangSkillClose")`, `_skillList = root.Q<ScrollView>("CaiBangSkillList")`,
   `_skillPageOne = root.Q("CaiBangSkillPageOne")`, `_skillPageTwo = root.Q("CaiBangSkillPageTwo")`,
   `_skillSummary = root.Q<Label>("CaiBangSkillSummary")`, and the `RegisterClick` lines for
   `CaiBangSkillClose`/`CaiBangSkillPageOne`/`CaiBangSkillPageTwo`, plus the `_skillPanel`/`_skillList`
   `pickingMode = Position` assignments.
-- [ ] **T32 — Remove the `SizeRootToScreen` skill-panel clamp**: delete the
+- [x] **T32 — Remove the `SizeRootToScreen` skill-panel clamp**: delete the
   `if (_skillPanel != null) { style.left = Clamp(338f,...); style.top = Clamp(110f,...); }` block
   (the `IPopupLayoutHint` now owns positioning).
-- [ ] **T33 — Keep `GetFactionNameVi(CombatFaction)`** (still used by `OnSkillsClick` and log
+- [x] **T33 — Keep `GetFactionNameVi(CombatFaction)`** (still used by `OnSkillsClick` and log
   context; reused, do not remove).
 
 ## Phase 2.2 — Retire the IMGUI skill-panel render
 
-- [ ] **T34 — Remove `DrawSkillPanelText()` from `Assets/Scripts/UI/PcHudVietnameseTextOverlay.cs`**
+- [x] **T34 — Remove `DrawSkillPanelText()` from `Assets/Scripts/UI/PcHudVietnameseTextOverlay.cs`**
   and its call site in `OnGUI()` (the `DrawSkillPanelText();` line).
-- [ ] **T35 — Remove the skill-only IMGUI assets/styles from the overlay**: fields
+- [x] **T35 — Remove the skill-only IMGUI assets/styles from the overlay**: fields
   `_skillName`/`_skillLevel`/`_skillHint` (GUIStyle), `_skillPanelTexture`/`_skillPanelTargetTexture`/
   `_addPointTexture` (Texture2D), the `_caiBangIconTextures` cache; the `EnsureSkillTextures()`
   method and its call in `EnsureStyles()`; and the `DrawPcTooltip` helper IF it is now unused
   (verify no other caller — keep it if shared). The `SkillContent` popup body is the single
   source of truth for skill visuals.
-- [ ] **T36 — Compile-gate the overlay**: confirm no remaining reference to
+- [x] **T36 — Compile-gate the overlay**: confirm no remaining reference to
   `IsSkillPanelVisible` / `CurrentSkillSnapshot` / `TryUpgradeSkill` / `DrawSkillPanelText` /
   `_skill*` / `_caiBangIconTextures` (a stray reference fails to compile).
 
 ## Phase 2.3 — Remove obsolete UXML/USS
 
-- [ ] **T37 — Remove the `CaiBangSkillPanel` block from `Assets/UI/HUD/GameHud.uxml`**: the
+- [x] **T37 — Remove the `CaiBangSkillPanel` block from `Assets/UI/HUD/GameHud.uxml`**: the
   whole comment + container and its 6 named elements (`CaiBangSkillPanel`, `CaiBangSkillClose`,
   `CaiBangSkillSummary`, `CaiBangSkillList`, `CaiBangSkillPageOne`, `CaiBangSkillPageTwo`).
   Keep the PR-1 `<ui:Style Skill.uss>` link.
-- [ ] **T38 — Remove all `.hud-cb-*` classes from `Assets/UI/HUD/GameHud.uss`** (the
+- [x] **T38 — Remove all `.hud-cb-*` classes from `Assets/UI/HUD/GameHud.uss`** (the
   `/* CÁI BANG SKILL PANEL */` section): `.hud-cb-skill-panel .hud-cb-header .hud-cb-title
   .hud-cb-close .hud-cb-close-text .hud-cb-summary .hud-cb-list .hud-cb-grid-cell
   .hud-cb-grid-cell-upgradable .hud-cb-grid-cell-empty .hud-cb-grid-slot .hud-cb-grid-slot-empty
@@ -256,7 +256,7 @@ PR-2 is branched off the updated `main` and merged second.
 
 ## Phase 2.4 — Migrate tests
 
-- [ ] **T39 — Retarget `CaiBangSkillPanelTests::HudButtonSkills_OpensCaiBangPanelWithoutTouchingPlayerVisual`**
+- [x] **T39 — Retarget `CaiBangSkillPanelTests::HudButtonSkills_OpensCaiBangPanelWithoutTouchingPlayerVisual`**
   in `Assets/Tests/EditMode/Sandbox/CaiBangSkillPanelTests.cs`: stop using reflection on removed
   fields / `hud.OpenSkillPanel()`. Construct `new SkillContent(TestCatalogCache.NoviceAndCaiBang,
   progression, CombatFaction.CaiBang, "Cái Bang", artFolder, grantProgression: null)`, `Build(body)`,
@@ -264,7 +264,7 @@ PR-2 is branched off the updated `main` and merged second.
   (first `115`), skill `125` name `"Bổng Đả Ác Cẩu"`, summary `"200"`. Preserve the
   MalePlayerVisual/MalePlayerSpriteCatalog "does not touch player visual" invariant. Every other
   test in the file stays unchanged (data-service level).
-- [ ] **T40 — Add `OnSkillsClick_WithoutPopupManager_DoesNotThrow` to
+- [x] **T40 — Add `OnSkillsClick_WithoutPopupManager_DoesNotThrow` to
   `Assets/Tests/EditMode/Sandbox/GameHudControllerTests.cs`** (additive, mirrors
   `OnTeamClick_WithoutPopupManager_DoesNotThrow` / `OnFactionClick_WithoutPopupManager_DoesNotThrow`):
   assert `PopupManager.Instance` is null, invoke `OnSkillsClick`, assert no throw and no inline
@@ -272,24 +272,24 @@ PR-2 is branched off the updated `main` and merged second.
 
 ## Phase 2.5 — PR-2 verification
 
-- [ ] **T41 — Run `run_tests mode=EditMode category_names=["Skill"]`** → `SkillContentTests` +
+- [x] **T41 — Run `run_tests mode=EditMode category_names=["Skill"]`** → `SkillContentTests` +
   the retargeted `HudButtonSkills_*` green.
-- [ ] **T42 — Run `run_tests mode=EditMode category_names=["Popup","CaiBang"]`** → sibling
+- [x] **T42 — Run `run_tests mode=EditMode category_names=["Popup","CaiBang"]`** → sibling
   popups + Cái Bang data-service/PC-parity tests green.
-- [ ] **T43 — Run `run_tests mode=EditMode category_names=["!Slow"]`** (HUD + broad). Only
+- [x] **T43 — Run `run_tests mode=EditMode category_names=["!Slow"]`** (HUD + broad). Only
   pre-existing failures allowed: `Backend` / `BaLang` / `Mount` / `PcWeaponThief` /
   `InventoryService`. No NEW failures, no fixture NRE from removed skill fields.
-- [ ] **T44 — Pre-push full suite gate: `run_tests mode=EditMode`** (no filter). Same
+- [x] **T44 — Pre-push full suite gate: `run_tests mode=EditMode`** (no filter). Same
   allowed-pre-existing-failures rule. This is the final gate before push (project test-run rule).
-- [ ] **T45 — Visual parity check (manual, no automated baseline):** open the skill popup in
+- [x] **T45 — Visual parity check (manual, no automated baseline):** open the skill popup in
   Play mode and screenshot before/after for the Cái Bang grid — reused art + ported geometry, 30
   cells, 26 populated, summary `200`. Confirm the 205×376 window sits in the prior 338,110 region.
-- [ ] **T46 — Open PR-2.** Confirm diff = rewired `OnSkillsClick` (~+15), removed HUD fields/
+- [x] **T46 — Open PR-2.** Confirm diff = rewired `OnSkillsClick` (~+15), removed HUD fields/
   methods/props/clamp/wiring, removed `DrawSkillPanelText` + skill IMGUI assets, removed UXML
   block + `.hud-cb-*` USS, retargeted one test, +1 no-throw test. Reverting PR-2 alone restores
   the exact prior inline behavior.
 
-**PR-2 unchecked task count: 20** (T27–T46).
+**PR-2 task count: 20 — COMPLETE (T27–T46 done; see apply-progress.md).**
 
 ---
 

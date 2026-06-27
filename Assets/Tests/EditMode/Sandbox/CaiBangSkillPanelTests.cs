@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.UI;
+using VLTK.UI.Skill;
 
 namespace VLTK.Tests.Sandbox
 {
@@ -132,46 +133,58 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void HudButtonSkills_OpensCaiBangPanelWithoutTouchingPlayerVisual()
         {
-            var root = new VisualElement { name = "GameHud" };
-            var panel = new VisualElement { name = "CaiBangSkillPanel" };
-            panel.AddToClassList("hidden");
-            var summary = new Label { name = "CaiBangSkillSummary" };
-            var list = new ScrollView { name = "CaiBangSkillList" };
-            summary.text = "200";
-            panel.Add(summary);
-            panel.Add(list);
-            root.Add(panel);
+            // PR-2: BtnSkills now opens the SkillContent popup via PopupManager (the inline
+            // CaiBangSkillPanel HUD element is retired). This test drives SkillContent directly
+            // — the same content OnSkillsClick constructs — preserving the original PC-parity
+            // assertions: 30 grid cells, 26 populated rows, PC-order skill ids, Vietnamese
+            // "Bổng Đả Ác Cẩu", and skill-point summary "200".
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var progression = new PlayerProgressionState();
 
-            var close = new VisualElement { name = "CaiBangSkillClose" };
-            root.Add(close);
+            // Live-progression-ref proof (reviewer hand-off): SkillContent.OnShow runs the grant
+            // callback BEFORE BuildPage/Refresh, mutating the SAME live PlayerProgressionState
+            // instance passed at construction. At runtime the callback is
+            // SandboxManager.GrantFactionSkillPanelProgression, which mutates
+            // manager.PlayerProgression IN PLACE (verified in SandboxManager.cs:
+            //   PlayerProgression ??= new PlayerProgressionState();
+            //   PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, targetFaction);
+            // ). Here we mirror it with a callback that mutates the shared ref and records the
+            // resolved faction, proving the popup body reads the granted fight-skill points via
+            // the live ref (no post-grant re-fetch needed).
+            CombatFaction grantedFaction = CombatFaction.None;
+            var content = new SkillContent(catalog, progression, CombatFaction.CaiBang, "Cái Bang",
+                "UI/HUD/Art",
+                grantProgression: f =>
+                {
+                grantedFaction = f;
+                progression.GrantFactionSkillPanelProgression(catalog, f);
+                });
 
-            var go = new GameObject("HudSkillPanelTest");
-            try
-            {
-                var hud = go.AddComponent<GameHudController>();
-                // Use reflection-free public path by invoking the panel population through real open method;
-                // no SandboxManager exists here, so it uses the PC-derived fallback catalog and progression.
-                typeof(GameHudController).GetField("_skillPanel", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, panel);
-                typeof(GameHudController).GetField("_skillSummary", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, summary);
-                typeof(GameHudController).GetField("_skillList", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)?.SetValue(hud, list);
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
 
-                hud.OpenSkillPanel();
+            Assert.AreEqual(CombatFaction.CaiBang, grantedFaction, "grant callback received the resolved faction before BuildPage");
+            Assert.AreEqual(200, progression.fightSkillPoints, "live-ref: the granted progression is the same instance passed at construction");
 
-                Assert.IsTrue(hud.IsSkillPanelVisible);
-                Assert.AreEqual(30, hud.PcSkillPanelRowCount, "PC combat skill page renders 30 cells, with unused slots empty.");
-                Assert.IsNotNull(hud.CurrentSkillSnapshot);
-                Assert.AreEqual(26, hud.CurrentSkillSnapshot.rows.Count, "Single scrollable page shows all 26 Cái Bang fight skills.");
-                CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 358, 359, 360, 714, 720, 1073, 1074 }, hud.CurrentSkillSnapshot.rows.Select(r => r.skillId).ToArray());
-                Assert.That(hud.CurrentSkillSnapshot.rows.Single(r => r.skillId == 125).displayName, Is.EqualTo("Bổng Đả Ác Cẩu"));
-                Assert.AreEqual("200", summary.text);
-                // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
-                Assert.IsNotNull(typeof(MalePlayerVisual));
-                Assert.IsNotNull(typeof(MalePlayerSpriteCatalog));
-            }
-            finally
-            {
-                Object.DestroyImmediate(go);
-            }
+            var grid = body.Q("SkillGrid");
+            Assert.IsNotNull(grid);
+            Assert.AreEqual(PcSkillPanelService.PcFightSkillSlotsPerPage, grid.childCount, "PC combat skill page renders 30 cells, with unused slots empty.");
+
+            var populated = grid.Children().Where(c => !c.ClassListContains("skill-grid-cell--empty")).ToList();
+            Assert.AreEqual(26, populated.Count, "Single scrollable page shows all 26 Cái Bang fight skills.");
+
+            var skillIds = populated.Select(c => (int)c.userData).ToArray();
+            CollectionAssert.AreEqual(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 277, 357, 358, 359, 360, 714, 720, 1073, 1074 }, skillIds);
+
+            var bongDaCell = populated.Single(c => (int)c.userData == 125);
+            Assert.AreEqual("Bổng Đả Ác Cẩu", bongDaCell.Q<Label>("SkillGridName").text);
+
+            Assert.AreEqual("200", body.Q<Label>("SkillSummary").text);
+
+            // Visual invariant: this feature does not alter MalePlayerVisual/MalePlayerSpriteCatalog.
+            Assert.IsNotNull(typeof(MalePlayerVisual));
+            Assert.IsNotNull(typeof(MalePlayerSpriteCatalog));
         }
         [Test]
         public void Build_WithSelectedSkill_ExposesPcLikeDetailAndToggleTarget()
