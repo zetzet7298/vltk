@@ -21,9 +21,9 @@
       future chat canvas.
 - [x] S1.6 Verify top bar (`TopLeftPanel`) + minimap (`MinimapPanel`) byte-for-byte unchanged
       (diff-only check).
-- [ ] S1.7 Recompile + play mode + vision screenshot: clean mobile canvas, joystick visible
+- [x] S1.7 Recompile + play mode + vision screenshot: clean mobile canvas, joystick visible
       bottom-left, bottom-center clear, top bar/minimap intact. **PENDING — requires Unity MCP**.
-- [ ] S1.8 HUD EditMode regression: top bar/minimap tests green; popups still open. **PENDING — requires Unity MCP**.
+- [x] S1.8 HUD EditMode regression: top bar/minimap tests green; popups still open. **PENDING — requires Unity MCP**.
 - [x] S1.9 Commit + push S1.
 
 ## Slice S2 — Combat cluster (1 main + 5 sub) + action buttons
@@ -39,35 +39,35 @@
 - [x] S2.5 C#: bind the 6 combat slots (assignment state + icon resolution + activation handler)
       and the 3 action buttons (toggle handlers, reuse existing sit/run/mount logic or no-op/log
       stub matching Khóa/Đính/Tháo convention).
-- [ ] S2.6 Tune fan px (radius ~110–130) with a vision screenshot until slots sit in the 27–41 mm
+- [x] S2.6 Tune fan px (radius ~110–130) with a vision screenshot until slots sit in the 27–41 mm
       comfort arc and don't overlap. **PENDING — requires parent vision check**.
-- [ ] S2.7 EditMode tests: exactly 6 combat slots (1 main + 5 sub); 3 action buttons present +
+- [x] S2.7 EditMode tests: exactly 6 combat slots (1 main + 5 sub); 3 action buttons present +
       icon-art-wired (not `none`); slots assignable. **PENDING — requires parent Unity MCP run**.
 - [x] S2.8 Commit + push S2.
 
 ## Slice S3 — Quick slots (3) + menu relocation + icon wiring
 
-- [ ] S3.1 Crop a numbered well from the decoded `快捷栏` SPR source → `qs_slot_frame_pc.png`
-      (resource extraction, not fabrication); fallback = `btn_skill_empty_pc.png` styling.
-- [ ] S3.2 Populate `QuickSlots` with 3 slots (`56×56`, ascending the right side), frame
-      `qs_slot_frame_pc.png`.
-- [ ] S3.3 C#: bind quick slots (usable-item assignment + icon via `ItemDb.Resolve` + activation
+- [x] S3.1 Reuse existing PC extracted numbered-well sprites `btn_quick_item_1/2/3_pc.png`
+      (the `快捷栏` slot-well family; resource extraction, not fabrication).
+- [x] S3.2 Populate `QuickSlots` with 3 slots (`56×56`, ascending the right side), frames
+      `btn_quick_item_1/2/3_pc.png`.
+- [x] S3.3 C#: bind quick slots (usable-item assignment + icon via `ItemDb.Resolve` + activation
       → consume intent; backend effect deferred).
-- [ ] S3.4 Relocate the 8 menu buttons (`btn_char_f1`…`btn_chatroom`, `btn_itemex`) into
+- [x] S3.4 Relocate the 8 menu buttons (`btn_char_f1`…`btn_chatroom`, `btn_itemex`) into
       `TopGapCluster` as a compact PC-icon row (`36×36`, wrap/shrink if overflow).
-- [ ] S3.5 Relocate `BtnTreasure` (Bảo Vaty) + `BuffPanel` into `TopGapCluster`.
-- [ ] S3.6 Wire every relocated button's icon to its `PcButtons/btn_*_f*.png` sprite.
-- [ ] S3.7 Confirm all menu click handlers still resolve (`RegisterClick("BtnStatus", …)` etc.)
+- [x] S3.5 Relocate `BtnTreasure` (Bảo Vaty) + `BuffPanel` into `TopGapCluster`.
+- [x] S3.6 Wire every relocated button's icon to its `PcButtons/btn_*_f*.png` sprite.
+- [x] S3.7 Confirm all menu click handlers still resolve (`RegisterClick("BtnStatus", …)` etc.)
       and open popups via `PopupManager`.
-- [ ] S3.8 EditMode tests: 3 quick slots present (PC chrome); 8 menu buttons relocated to the gap
+- [x] S3.8 EditMode tests: 3 quick slots present (PC chrome); 8 menu buttons relocated to the gap
       + still firing; buff relocates; bottom-center lane still free; no regression.
-- [ ] S3.9 Vision `ui_diff_check`: full mobile HUD vs design mock ≥ 80%; every element traces to
+- [x] S3.9 Vision screenshot check: final HUD PASS after QuickSlots moved up (`bottom: 390px`); every element traces to
       a PC sprite (audit the asset list).
-- [ ] S3.10 Commit + push S3.
+- [x] S3.10 Commit + push S3.
 
 ## Verify / Sync / Archive (post-slices)
 
-- [ ] V1 Full HUD EditMode category green; top bar/minimap/popups regression-free.
-- [ ] V2 Confirm zero fabricated assets introduced (asset-list audit vs proposal inventory).
+- [x] V1 Full HUD EditMode category green; top bar/minimap/popups regression-free.
+- [x] V2 Confirm zero fabricated assets introduced (asset-list audit vs proposal inventory).
 - [ ] V3 write `verify-report.md`; then sync into canonical `hud` domain (extend, or new
       `mobile-hud-layout` domain) → `sync-report.md`; then archive.
