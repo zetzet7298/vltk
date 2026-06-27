@@ -1,81 +1,152 @@
 # HUD Specification
 
-> Domain: **hud** (canonical spec, established by change `add-bottom-bar-pc-frame` / HUD-002).
-> Source of truth: PC `\spr\UI3\主界面\快捷栏(800).spr` (hash `ebb69f9b`) recovered via
-> `jx-pc-resource-resolver`, decoded to `bottom_frame_pc.png` (863×91, aspect 9.48, 92%
-> transparent overlay). PC INI `dc11ac12.ini` bottom-bar coordinates. `default_locale: vi`.
+> Domain: **hud**.
+> Current baseline established by `mobile-native-hud-layout` / HUD-004.
+> Historical note: HUD-002 (`add-bottom-bar-pc-frame`) recovered the real PC `快捷栏.spr`
+> (hash `ebb69f9b`) and used it as a full bottom-strip frame. HUD-004 supersedes that desktop
+> toolbar ARRANGEMENT for mobile play: the PC art identity is preserved, but the full bottom
+> strip is no longer the canonical runtime layout. `default_locale: vi`.
 
 ## Purpose
 
-Establish the bottom HUD bar as a PC-parity ornate filigree frame with functional button
-containers overlaid on top, so the mobile bottom strip visually matches the PC antique-silver
-toolbar housing while preserving all button click wiring.
+The runtime HUD is a **mobile-native arrangement using PC sprites 1:1**. Movement belongs to the
+bottom-left joystick; combat and high-frequency actions belong to the bottom-right thumb zone;
+quick usable-item slots climb the right side; overflow PC menu buttons and buffs live in the
+minimap↔topbar gap; bottom-center is reserved for the future chat canvas. The top status bar and
+minimap remain PC-parity and unchanged.
+
+Hard invariant: **no fabricated art**. Every visible HUD control introduced by the mobile layout
+MUST use an existing ported PC sprite or a direct crop/extraction from a genuine decoded PC SPR.
 
 ## Requirements
 
-### Requirement: Ornate Filigree Frame Visible
+### Requirement: Top bar and minimap unchanged
 
-The `.hud-bottom-strip` MUST display the PC ornate antique-silver filigree housing (left
-low-profile band, raised center crown over T/P slots, right double-banded menu, circular right
-end-cap for Bảo Vật), sourced from the recovered PC SPR `快捷栏.spr`.
+The top status bar (Level/Stamina/HP/MP/EXP/WorldSort + Vietnamese captions) and the minimap
+(frame, content, player dot, scene name/position, 4 map buttons) SHALL remain unchanged from the
+PC-parity baseline.
 
-#### Scenario: Frame renders
+#### Scenario: Top bar and minimap render intact
 
 - GIVEN the Sandbox scene is playing
 - WHEN the HUD loads
-- THEN the bottom strip shows the ornate filigree frame (crown + end-cap + bands)
-- AND no flat dark-green rectangle remains as the primary frame
+- THEN the top status bar appears with Level, HP, MP, Stamina, EXP, WorldSort, and Vietnamese captions
+- AND the minimap appears at top-right with its frame, dots, coordinates, and map buttons
 
-### Requirement: Aspect Ratio Preserved
+### Requirement: Mobile joystick enabled bottom-left
 
-Frame art MUST preserve its original aspect ratio. The 4:3-origin frame MUST NOT be
-raw-stretched across the 16:9 mobile strip. The implementation MUST use anchor-based layout +
-`scale-to-fit` (or 9-slice) so scrollwork stays crisp; the strip may extend with a matching
-dark fill on the far side if narrower than the art.
+The `MobileJoystick` SHALL be visible and active in mobile play, anchored bottom-left and layered
+above the UIToolkit HUD. The HUD SHALL NOT force-hide it for PC-parity screenshots.
 
-#### Scenario: No distortion
+#### Scenario: Joystick controls movement
 
-- GIVEN the mobile strip is 16:9 and the frame art is 4:3-origin
-- WHEN the frame is laid out
-- THEN the art preserves aspect ratio with no horizontal stretch distortion
+- GIVEN the Sandbox scene is playing
+- WHEN the player drags the bottom-left joystick
+- THEN the joystick emits movement through `TouchInputService`
+- AND no HUD element covers the joystick input area
 
-### Requirement: Buttons Functional and On Top
+### Requirement: Combat cluster 1+5 in the right-thumb zone
 
-All existing button click wiring (`GameHudController.RegisterClick`) MUST keep working. The
-frame background layer MUST use `pickingMode: Ignore`; buttons MUST stay at z-top above the
-frame so input is not swallowed.
+The HUD SHALL provide exactly 6 assignable combat slots anchored bottom-right: 1 larger player
+priority slot and 5 sub slots arranged in a right-thumb fan. All 6 slots SHALL be assignable to
+skills or Khinh Công/light-conduct actions. Slot frames SHALL use ported PC skill-slot art.
 
-#### Scenario: Buttons clickable over frame
+#### Scenario: Combat cluster shape
 
-- GIVEN the filigree frame is rendered
-- WHEN the user taps BtnStatus / BtnItems / BtnSkills / etc.
-- THEN the corresponding click handler fires (no frame layer swallows the input)
+- GIVEN the HUD loads
+- THEN the combat cluster contains exactly one larger main slot and five sub slots
+- AND the cluster sits bottom-right without overlapping joystick, chat, quick slots, top bar, or minimap
 
-### Requirement: PC-Proportional Positioning
+### Requirement: Right-hand action buttons
 
-Hotkey slots 1–9, T/P skill slots, toggle row (6), menu row (8), and Bảo Vát MUST be
-positioned to match PC coordinates from `dc11ac12.ini`, scaled to the mobile design
-resolution, anchor-based (not raw multiplied).
+Walk/run, mount/dismount, and meditate/sit buttons SHALL sit beside the combat cluster in
+right-thumb reach. They SHALL use existing PC sprites (`btn_run`, `btn_horse`, `btn_sit`) and
+SHALL be distinct from the 6 combat slots.
 
-#### Scenario: Hotkeys not overlapping
+#### Scenario: Action buttons use PC icons
 
-- GIVEN 9 hotkey slots
-- THEN they render as a clean spread row (no stacking)
+- GIVEN the right-thumb combat region renders
+- THEN run, horse, and sit buttons are present and show their PC icons
 
-### Requirement: No Regressions
+### Requirement: Three usable-item quick slots on the right side
 
-- The chat panel, tabs, and red-warning MUST sit cleanly above the strip (no overlap).
-- Hotkey slots MUST NOT overlap each other.
-- The HUD EditMode test category MUST stay green.
+The HUD SHALL provide exactly 3 usable-item quick slots on the right side between the combat
+cluster and minimap. They SHALL use PC `快捷栏` numbered-well chrome (`btn_quick_item_1/2/3_pc`
+or equivalent genuine PC extraction) and SHALL be assignable to usable consumables such as
+Ngũ Hoa Ngọc Lộ. Backend consume effects are outside this HUD layout requirement; activation may
+log a consume intent until gameplay logic lands.
 
-#### Scenario: Chat not overlapping strip
+#### Scenario: Quick slots do not overlap combat or minimap
 
-- GIVEN the strip is now taller (frame art ~120px-equivalent)
-- THEN the chat panel + red warning sit above the strip top edge
+- GIVEN the HUD loads
+- THEN 3 quick slots are stacked on the right side between the minimap and combat cluster
+- AND they do not overlap the combat cluster or minimap
 
-## Follow-up (tracked separately, not part of this domain spec's baseline)
+### Requirement: Overflow PC menu buttons in the minimap↔topbar gap
 
-- Fine pixel-align each button to its frame slot well.
-- Lock circular toggle button aspect ratio to 1:1.
-- Decide whether to keep PC-art `左/右` labels in the crown or overlay `T/P`.
-- Reconcile mobile chat panel style with PC chat input bar.
+The PC menu buttons (`BtnStatus`, `BtnItems`, `BtnItemEx`, `BtnSkills`, `BtnQuest`, `BtnTeam`,
+`BtnFaction`, `BtnChatRoom`) and `BtnTreasure` SHALL live in the gap between the top status bar
+and minimap as compact PC-icon buttons. The buff/debuff panel SHALL also render in this top-gap
+region when buffs exist.
+
+#### Scenario: Relocated menu buttons remain functional
+
+- GIVEN the top-gap menu row is visible
+- WHEN a relocated menu button is tapped
+- THEN its existing handler runs (opening its popup when implemented, or safe no-op/log when deferred)
+- AND no button overlaps the top status bar or minimap
+
+### Requirement: Bottom-center reserved for chat
+
+The bottom-center lane SHALL remain clear of combat slots, quick slots, action buttons, menu
+buttons, and the old PC `快捷栏` full strip. It is reserved for the future mobile chat canvas.
+
+#### Scenario: No PC bottom strip
+
+- GIVEN the HUD loads
+- THEN the old full-width `快捷栏` bottom toolbar is absent
+- AND bottom-center remains clear except for current/future chat content
+
+### Requirement: Sprite-reuse invariant
+
+Every introduced or repositioned visible HUD element SHALL use existing ported PC art:
+combat frames (`btn_skill_empty_pc` / PC skill-slot frames), action/menu PC buttons, generated
+skill icons, and quick-slot PC numbered wells. The change SHALL NOT introduce fabricated art.
+
+#### Scenario: Asset audit passes
+
+- GIVEN the HUD asset list
+- WHEN visible control art is inspected
+- THEN each element traces to an existing ported PC sprite or a genuine PC crop/extraction
+
+### Requirement: Anchor-based layout
+
+HUD clusters SHALL use anchor-based layout for 16:9 mobile screens: joystick bottom-left,
+combat cluster bottom-right, quick slots right side, menu/buffs top-gap. Sprites SHALL preserve
+aspect ratio and SHALL NOT be raw-stretched.
+
+#### Scenario: 16:9 layout has no overlap
+
+- GIVEN the HUD renders at the 1280×720 design resolution
+- THEN the joystick, combat cluster, quick slots, top-gap menu, top bar, minimap, and chat lane
+  occupy their own regions without overlap
+
+### Requirement: HUD regression tests stay green
+
+The HUD EditMode category SHALL cover the mobile layout structure and remain green: joystick
+visibility contract, combat cluster, quick slots, top-gap menu, top bar/minimap regression, and
+bottom-center chat lane reservation.
+
+#### Scenario: HUD tests pass
+
+- GIVEN the HUD EditMode tests
+- WHEN category `HUD` runs
+- THEN all HUD tests pass with zero failures
+
+## Legacy / Follow-up
+
+- HUD-002 PC `快捷栏` full bottom-frame layout is archived as a historical PC-parity baseline and
+  is no longer the canonical runtime mobile arrangement.
+- Future chat canvas implementation owns the reserved bottom-center lane.
+- Real combat tap→fire refinements and consumable backend effects remain gameplay follow-ups.
+- Further PC menu popups (Quest/ChatRoom/ItemEx) may replace current safe no-op/log handlers.
