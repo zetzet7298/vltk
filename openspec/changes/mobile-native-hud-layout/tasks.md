@@ -6,25 +6,25 @@
 
 ## Slice S1 — Foundation + chat lane (joystick on, bottom strip stripped, lanes reserved)
 
-- [ ] S1.1 Remove `HideMobileJoystick()` force-hide + its polling frame in `GameHudController.cs`;
+- [x] S1.1 Remove `HideMobileJoystick()` force-hide + its polling frame in `GameHudController.cs`;
       confirm joystick stays active in play mode (bottom-left, above UIToolkit HUD).
-- [ ] S1.2 Strip the PC `快捷栏` replica bottom-center strip from `GameHud.uxml` (the 9 numbered
+- [x] S1.2 Strip the PC `快捷栏` replica bottom-center strip from `GameHud.uxml` (the 9 numbered
       hotbar + T/P + toggle row + menu row + Bảo Vật markup) — move Bảo Vaty/menu/toggle elements
       to S2/S3 shells or temporarily park them; do NOT delete click-wiring names yet.
-- [ ] S1.3 Add empty anchored cluster shells in `GameHud.uxml`:
+- [x] S1.3 Add empty anchored cluster shells in `GameHud.uxml`:
       `CombatCluster` (bottom-right), `QuickSlots` (right side), `TopGapCluster` (top gap), each
       `picking-mode: Ignore` passthrough container.
-- [ ] S1.4 Add USS anchor classes: `.hud-combat-cluster`, `.hud-quick-slots`,
+- [x] S1.4 Add USS anchor classes: `.hud-combat-cluster`, `.hud-quick-slots`,
       `.hud-top-gap-cluster` (absolute, anchored to regions; no raw pixel-multiply).
-- [ ] S1.5 Reserve the bottom-center lane: confirm `ChatBar` is the only bottom-center content;
+- [x] S1.5 Reserve the bottom-center lane: confirm `ChatBar` is the only bottom-center content;
       no control element placed there. Add a code comment marking the lane reserved for the
       future chat canvas.
-- [ ] S1.6 Verify top bar (`TopLeftPanel`) + minimap (`MinimapPanel`) byte-for-byte unchanged
+- [x] S1.6 Verify top bar (`TopLeftPanel`) + minimap (`MinimapPanel`) byte-for-byte unchanged
       (diff-only check).
 - [ ] S1.7 Recompile + play mode + vision screenshot: clean mobile canvas, joystick visible
-      bottom-left, bottom-center clear, top bar/minimap intact.
-- [ ] S1.8 HUD EditMode regression: top bar/minimap tests green; popups still open.
-- [ ] S1.9 Commit + push S1.
+      bottom-left, bottom-center clear, top bar/minimap intact. **PENDING — requires Unity MCP**.
+- [ ] S1.8 HUD EditMode regression: top bar/minimap tests green; popups still open. **PENDING — requires Unity MCP**.
+- [x] S1.9 Commit + push S1.
 
 ## Slice S2 — Combat cluster (1 main + 5 sub) + action buttons
 

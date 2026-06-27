@@ -162,29 +162,11 @@ namespace VLTK.UI
             EnsurePcParityOverlayActive();
         }
 
-        private bool _joystickHidden;
-
-        /// <summary>
-        /// PC-parity HUD baseline: the uGUI virtual joystick (jade medallion bottom-left)
-        /// is a mobile-only control that is absent from the PC reference. The PC client
-        /// moves the character via click-to-move / minimap tap, which the mobile client
-        /// also supports. Hide the joystick GameObject so the on-screen HUD matches the
-        /// PC reference without disabling movement; the component/code is retained so a
-        /// future mobile-only mode can re-enable it. The joystick is spawned by
-        /// <see cref="SandboxManager"/> after the HUD starts, so this is polled each
-        /// frame until the joystick appears and is hidden once.
-        /// </summary>
-        private void HideMobileJoystick()
-        {
-            if (_joystickHidden)
-                return;
-            var joystick = Object.FindAnyObjectByType<MobileJoystick>();
-            if (joystick != null && joystick.gameObject.activeSelf)
-            {
-                joystick.gameObject.SetActive(false);
-                _joystickHidden = true;
-            }
-        }
+        // S1 (HUD-004): the uGUI virtual joystick (MobileJoystick, jade medallion
+        // bottom-left, spawned by SandboxManager at sortingOrder 500) is now kept VISIBLE
+        // and ACTIVE for mobile play. The previous force-hide (HideMobileJoystick) matched
+        // a PC-parity baseline that is no longer the target — the HUD is mobile-native now.
+        // The joystick stays above the UIToolkit HUD so it never gets covered.
 
         /// <summary>
         /// The IMGUI <see cref="PcHudVietnameseTextOverlay"/> renders the level number, bar
@@ -226,7 +208,7 @@ namespace VLTK.UI
             if (!_initialized) return;
             SizeRootToScreen();
             UpdateBarsAndMinimap();
-            HideMobileJoystick();
+            // S1 (HUD-004): joystick force-hide removed — stays active for mobile play.
         }
 
         private void EnsureRuntimeReady()

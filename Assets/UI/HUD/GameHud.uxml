@@ -80,13 +80,43 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Bottom toolbar (PC 快捷栏.spr = hash ebb69f9b, recovered via jx-pc-resource-resolver).
-             The ornate filigree frame is a transparent overlay PNG (863x91, both end-caps +
-             center crown + scrollwork bands). Layered under the button containers. PC INI
-             dc11ac12.ini: toggle row (31px circular: Sit/Run/Horse/Trade/Camera/PK) above
-             menu row (28px square: CharF1/InvF2/ItemEx/SkillF3/QuestF4/TeamF6/FactionF7/ChatRoom). -->
-        <ui:VisualElement name="BottomPanel" class="hud-bottom-strip">
-            <ui:VisualElement name="BottomFrame" class="hud-bottom-frame"/>
+        <!-- ===================================================================
+             HUD-004 (mobile-native-hud-layout) — Slice S1: mobile-native layout
+             The PC 快捷栏 replica bottom-center strip has been REMOVED from the
+             center lane. Bottom-center is now RESERVED for the future mobile chat
+             canvas. The former strip elements (9 hotbar slots, T/P skill slots,
+             toggle row, menu row, BtnTreasure) are parked in PendingRelocation
+             (display:none) so their click-wiring + icon names still resolve via
+             root.Q(...) until S2 (combat cluster) and S3 (menu relocation) repopulate
+             them into the new anchored clusters below.
+             =================================================================== -->
+
+        <!-- BOTTOM-CENTER LANE: RESERVED for the future mobile chat canvas.
+             ChatBar is the only bottom-center content. Do NOT place combat slots,
+             quick slots, action buttons, or menu buttons here. -->
+
+        <!-- S2 target: right-thumb combat cluster (1 main + 5 sub assignable slots).
+             Empty shell for S1; populated in S2. Anchored bottom-right. -->
+        <ui:VisualElement name="CombatCluster" class="hud-combat-cluster">
+            <!-- S2 populates: main slot + 5 sub slots + run/horse/sit action buttons -->
+        </ui:VisualElement>
+
+        <!-- S3 target: usable-item quick slots (3) ascending the right side toward
+             the minimap (Ngũ Hoa Ngọc Lộ etc). Empty shell for S1; populated in S3. -->
+        <ui:VisualElement name="QuickSlots" class="hud-quick-slots">
+            <!-- S3 populates: qs1/qs2/qs3 with PC numbered-well chrome -->
+        </ui:VisualElement>
+
+        <!-- S3 target: relocated overflow PC UI (8 menu buttons + buff + Bảo Vật)
+             into the minimap↔topbar gap. Empty shell for S1; populated in S3. -->
+        <ui:VisualElement name="TopGapCluster" class="hud-top-gap-cluster">
+            <!-- S3 populates: BtnStatus…BtnChatRoom + BtnTreasure + BuffPanel -->
+        </ui:VisualElement>
+
+        <!-- PendingRelocation: parked PC 快捷栏 replica elements (display:none).
+             Names preserved so root.Q("BtnRun"), RegisterClick, and LoadArt icon
+             wiring still resolve. S2/S3 move these out into the clusters above. -->
+        <ui:VisualElement name="PendingRelocation" class="hud-pending-relocation">
             <ui:VisualElement name="HotbarCenter" class="hud-main-hotbar">
                 <ui:VisualElement name="ItemSlot0" class="hud-hotbar-slot"><ui:Label text="1" class="hud-slot-number"/></ui:VisualElement>
                 <ui:VisualElement name="ItemSlot1" class="hud-hotbar-slot"><ui:Label text="2" class="hud-slot-number"/></ui:VisualElement>
@@ -112,7 +142,6 @@
             </ui:VisualElement>
 
             <ui:VisualElement name="ToolbarRight" class="hud-right-cluster">
-                <!-- Toggle row: PC 跑步/打坐/骑马/交易/摄像机/PK (31px circular SPR) -->
                 <ui:VisualElement class="hud-toggle-row">
                     <ui:VisualElement name="BtnSit" class="hud-round-btn"><ui:VisualElement name="BtnSitIcon" class="hud-btn-icon"/></ui:VisualElement>
                     <ui:VisualElement name="BtnRun" class="hud-round-btn"><ui:VisualElement name="BtnRunIcon" class="hud-btn-icon"/></ui:VisualElement>
@@ -121,7 +150,6 @@
                     <ui:VisualElement name="BtnRec" class="hud-round-btn"><ui:VisualElement name="BtnRecIcon" class="hud-btn-icon"/></ui:VisualElement>
                     <ui:VisualElement name="BtnPK" class="hud-round-btn"><ui:VisualElement name="BtnPKIcon" class="hud-btn-icon"/></ui:VisualElement>
                 </ui:VisualElement>
-                <!-- Menu row: PC F1人物/F2背包/ItemEx/F3技能/F4任务/F6队伍/F7帮会/ChatRoom (28px square SPR) -->
                 <ui:VisualElement class="hud-menu-row">
                     <ui:VisualElement name="BtnStatus" class="hud-menu-btn"><ui:VisualElement name="BtnStatusIcon" class="hud-btn-icon"/></ui:VisualElement>
                     <ui:VisualElement name="BtnItems" class="hud-menu-btn"><ui:VisualElement name="BtnItemsIcon" class="hud-btn-icon"/></ui:VisualElement>

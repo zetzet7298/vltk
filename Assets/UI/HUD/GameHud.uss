@@ -396,8 +396,72 @@
     -unity-background-position-y: 0px;
     background-color: transparent;
     picking-mode: Ignore;
-}
-/* Right cluster: PC toggle row (circular) above menu row (square).
+    }
+
+    /* ===================================================================
+       HUD-004 (mobile-native-hud-layout) — Slice S1 anchor shells.
+       Anchor-based, region-anchored containers. NO raw pixel-multiply of art
+       (per project 4:3->16:9 rule). These are empty passthrough containers;
+       picking-mode Ignore so touches fall through. S2/S3 populate them.
+       Design space: 1280x720 (16:9).
+       =================================================================== */
+
+    /* PendingRelocation: hidden parking for the stripped PC 快捷栏 replica elements.
+       display:none so they are invisible but root.Q(name) still resolves them
+       for click-wiring + icon loading until S2/S3 repopulate. */
+    .hud-pending-relocation {
+        position: absolute;
+        display: none;
+        left: 0px;
+        top: 0px;
+        width: 0px;
+        height: 0px;
+        overflow: hidden;
+    }
+
+    /* CombatCluster: right-thumb combat zone (1 main + 5 sub assignable slots
+       + run/horse/sit action buttons). Anchored bottom-right. Empty in S1. */
+    .hud-combat-cluster {
+        position: absolute;
+        right: 24px;
+        bottom: 24px;
+        width: 320px;
+        height: 280px;
+        background-color: transparent;
+        picking-mode: Ignore;
+        overflow: visible;
+    }
+
+    /* QuickSlots: usable-item quick slots (3) ascending the right side toward
+       the minimap. Anchored right side, above the combat cluster. Empty in S1. */
+    .hud-quick-slots {
+        position: absolute;
+        right: 28px;
+        bottom: 320px;
+        width: 70px;
+        height: 200px;
+        flex-direction: column-reverse;
+        background-color: transparent;
+        picking-mode: Ignore;
+        overflow: visible;
+    }
+
+    /* TopGapCluster: relocated overflow PC UI (8 menu buttons + buff + Bảo Vật)
+       into the minimap<->topbar gap. Anchored top, between status bar and minimap.
+       Empty in S1. */
+    .hud-top-gap-cluster {
+        position: absolute;
+        left: 620px;
+        top: 8px;
+        width: 380px;
+        height: 60px;
+        flex-direction: column;
+        background-color: transparent;
+        picking-mode: Ignore;
+        overflow: visible;
+    }
+
+    /* Right cluster: PC toggle row (circular) above menu row (square).
    Positioned over the frame's right-slot region (slots x886-1251 at ×1.6 scale). */
 .hud-right-cluster {
     position: absolute;
