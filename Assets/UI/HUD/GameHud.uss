@@ -497,12 +497,6 @@
     .hud-combat-pos-horse { left: 178px; top: 300px; }
     .hud-combat-pos-sit   { left: 236px; top: 300px; }
 
-    /* Main slot icon (larger than sub slot icons). */
-    .hud-combat-main-icon {
-        width: 72px !important;
-        height: 72px !important;
-    }
-
     /* QuickSlots: usable-item quick slots (3) ascending the right side toward
        the minimap. Anchored right side, above the combat cluster. Empty in S1. */
     .hud-quick-slots {
@@ -732,9 +726,17 @@
 }
 
 .hud-skill-slot-icon {
-    width: 44px;
-    height: 44px;
+    width: 52px;
+    height: 52px;
     background-size: contain;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+/* Main combat icon override must come AFTER the shared .hud-skill-slot-icon rule;
+   otherwise the shared rule can make the 96×96 primary slot reuse sub-slot sizing. */
+.hud-combat-main-icon {
+    width: 88px;
+    height: 88px;
 }
 
 .hud-skill-slot-icon.empty {
