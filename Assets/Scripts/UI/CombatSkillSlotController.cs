@@ -899,7 +899,18 @@ namespace VLTK.UI
                         // [SECT-ALL] TODO(PC-runtime): dashDurationSeconds là 0 cho tất cả skill hiện tại
                         //   (PC source chỉ set state + distance, duration thuộc client engine animation).
                         //   Khi duration > 0 → dash mượt. Khi duration <= 0 → skip dash (no source → no fake).
-                        if (skill.dashDurationSeconds > 0f)
+                        //
+                        // [SECT-ALL] PC 轻功 (Khinh Công / JumpFly, skill 210): a self-cast leap skill.
+                        //   Instead of the no-op dash, leap forward (KNpc::NewJump) while playing the
+                        //   Jump (JP01) animation. Distance/duration are PC client-engine values not in
+                        //   the server source; use faithful observed defaults (documented in BeginLeap).
+                        if (skill.isLeapSkill)
+                        {
+                            const float KhinhCongLeapDistance = 240f;  // PC NewJump observed leap range (~3-4 tiles).
+                            const float KhinhCongLeapDuration = 0.45f; // PC jump animation cycle.
+                            player.BeginLeap(player.GetLeapTarget(KhinhCongLeapDistance), KhinhCongLeapDuration);
+                        }
+                        else if (skill.dashDurationSeconds > 0f)
                             player.BeginDash(caster.position, skill.dashDurationSeconds);
                         else
                             SubsystemLog.Warn("Combat", $"Cast {skill.DisplayName} (id={skillId}): dashDurationSeconds=0 — PC source does not provide duration, dash SKIPPED (TODO: PC runtime observation needed).");

@@ -17,6 +17,9 @@ namespace VLTK.Sandbox
         Attack,     // AT04/AT05 (melee attack)
         Ride,       // RD01 (mounted IDLE: RideStand — full 8-dir layered horse+rider)
         RideMove,   // HR01 (mounted MOVE: RideRun gallop — full 8-dir layered horse+rider)
+        Walk,       // WK01/WK04 (PC 走路 — walk mode, slower than run; 男主角躯体.txt)
+        Sit,        // ZZ01 (PC 打坐 — meditate / cross-legged sit; one suffix for all weapons)
+        Jump,       // JP01 (PC 跳跃 — Khinh Công leap; one suffix for all weapons)
     }
 
     /// <summary>
@@ -119,6 +122,18 @@ namespace VLTK.Sandbox
             DualWeaponVariant,   // DualWeapon (双剑类1 = LW/RW_013)
         };
 
+        // PC 男主角躯体.txt walk column (走路): WK01=FreeWalk/NormalWalk, WK02=MeleeW, WK03=RangeW, WK04=DoubleW.
+        private static readonly string[] WalkSuffix = new string[4]
+        {
+            "WK01", // EmptyHand
+            "WK02", // ShortWeapon
+            "WK03", // LongWeapon
+            "WK04", // DualWeapon
+        };
+        // PC 打坐 (SitDown) and 跳跃 (JumpFly) columns: ONE shared suffix for every weapon type.
+        public const string SitSuffix = "ZZ01";
+        public const string JumpSuffix = "JP01";
+
         /// <summary>
         /// Resolve the PC SPR variant index for a given weapon equip category.
         /// Used by MalePlayerVisual.SetWeapon to keep weaponVariant in sync.
@@ -164,7 +179,16 @@ namespace VLTK.Sandbox
                 : weaponVariant;
 
             int wIdx = (int)weapon;
-            string suffix = ActionSuffix[wIdx, (int)action];
+            // Walk/Sit/Jump resolve to dedicated PC suffixes (男主角躯体.txt):
+            //   Walk (走路) -> WK01..WK04 per weapon; Sit (打坐) -> ZZ01; Jump (跳跃) -> JP01.
+            // Sit/Jump share ONE suffix across all weapon categories per PC source.
+            string suffix = action switch
+            {
+                PlayerVisualAction.Walk => WalkSuffix[wIdx],
+                PlayerVisualAction.Sit  => SitSuffix,
+                PlayerVisualAction.Jump => JumpSuffix,
+                _ => ActionSuffix[wIdx, (int)action],
+            };
             string rightWeaponSuffix = (weapon == PcWeaponType.ShortWeapon && action == PlayerVisualAction.Magic)
                 ? "MG03" // PC 男主角右手武器.txt: MeleeWMagic uses MA_RW_001_MG03.spr.
                 : suffix;

@@ -92,8 +92,9 @@ namespace VLTK.Sandbox
             PoisonAttack(199, "吐口水", "Nhổ độc", 180, child:90),
             // PC universal special skill: Skills.txt id=210 Khinh công / 轻功,
             // icon \spr\Ui\技能图标\轻功.spr (hash bf787a8a), script \script\skill\special\轻功.lua.
+            // isLeapSkill: PC 轻功 = JumpFly — the cast pipeline triggers BeginLeap (JP01 + forward dash).
             UtilitySkill(UniversalLightnessSkill, "轻功", "Khinh công", 1, 400, SkillMissileForm.None,
-                targetEnemy:false, targetSelf:true, charAnim:13,
+                targetEnemy:false, targetSelf:true, charAnim:13, isLeapSkill:true,
                 levelData:(lv)=>SkillOnly(MagicAttributeKind.SkillCostV, 50, 0, 0)),
         };
 
@@ -752,8 +753,8 @@ namespace VLTK.Sandbox
         // [CaiBang-Catalog 2026-06-19] PC stance/passive buff charAnimId=14 (cdo_none, no cast animation).
         //   Default charAnimId=11 (Cái Bang cast anim mag_tr_16_施魔法.spr) for active damage skills.
         //   Sau fix: charAnimId parameter cho UtilitySkill, default 14 cho stance/utility/passive.
-        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20, int charAnim = 14)
-        { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = charAnim; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
+        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20, int charAnim = 14, bool isLeapSkill = false)
+        { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = charAnim; s.isLeapSkill = isLeapSkill; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
         /// <summary>Override PreCastSpr với path từ jx-source (khác PC stock 2011).</summary>
         private static SkillDefinition WithJxPreCast(SkillDefinition s, string jxPreCastSprPath)
         { s.effectSourceId = Sprite(jxPreCastSprPath); return s; }

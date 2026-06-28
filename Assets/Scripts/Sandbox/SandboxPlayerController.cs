@@ -324,6 +324,48 @@ namespace VLTK.Sandbox
             dashDuration = 0f;
         }
 
+        // PC 8-way direction → unit vector. Mirrors PcDirection8Way but kept gender-agnostic
+        // (works for both Male/Female visuals since `direction` is a shared 0..7 index).
+        // PC convention: 0=S, 1=SW, 2=W, 3=NW, 4=N, 5=NE, 6=E, 7=SE.
+        private static readonly Vector2[] Facing8Way =
+        {
+            new Vector2(0, -1), new Vector2(-1, -1), new Vector2(-1, 0), new Vector2(-1, 1),
+            new Vector2(0, 1),  new Vector2(1, 1),    new Vector2(1, 0),  new Vector2(1, -1),
+        };
+
+        /// <summary>
+        /// PC 轻功 (Khinh Công / JumpFly, skill 210): world position reached by leaping
+        /// <paramref name="distance"/> units in the current facing direction, clamped to map bounds.
+        /// </summary>
+        public Vector2 GetLeapTarget(float distance)
+        {
+            Vector2 dir = (visual != null && visual.direction >= 0 && visual.direction < Facing8Way.Length)
+                ? Facing8Way[visual.direction]
+                : Vector2.down;
+            Vector2 target = (Vector2)transform.position + dir.normalized * Mathf.Max(0f, distance);
+            if (clampToMapBounds)
+                target = new Vector2(
+                    Mathf.Clamp(target.x, mapBoundsMin.x, mapBoundsMax.x),
+                    Mathf.Clamp(target.y, mapBoundsMin.y, mapBoundsMax.y));
+            return target;
+        }
+
+        /// <summary>
+        /// PC 轻功 leap: dash from the current position toward <paramref name="worldTarget"/> while
+        /// playing the Jump (JP01) animation. PC source: KNpc::NewJump (TestMovePos + m_1834 distance).
+        /// The exact leap distance/duration is owned by the PC client engine animation and is not in
+        /// the server source, so the caller passes a faithful observed value.
+        /// </summary>
+        public void BeginLeap(Vector2 worldTarget, float duration)
+        {
+            EnsureVisual();
+            _forcedVisualAction = PlayerVisualAction.Jump;
+            _forcedVisualUntil = Time.time + Mathf.Max(0.05f, duration);
+            if (visual != null)
+                visual.SetAction(PlayerVisualAction.Jump);
+            BeginDash(worldTarget, duration);
+        }
+
         public void ResetMovementState()
         {
             MoveInput = Vector2.zero;
@@ -430,6 +472,9 @@ namespace VLTK.Sandbox
             EnsureVisual();
             if (visual != null)
             {
+                // Drive PC walk/run + 打坐 (meditate) modes into the visual every frame.
+                visual.walkMode = !IsRunning;
+                visual.isMeditating = IsMeditating;
                 if (_forcedVisualAction.HasValue && Time.time < _forcedVisualUntil)
                 {
                     visual.SetAction(_forcedVisualAction.Value);

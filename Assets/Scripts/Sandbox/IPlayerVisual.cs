@@ -17,6 +17,10 @@ namespace VLTK.Sandbox
         PlayerVisualAction currentAction { get; set; }
         PcWeaponType currentWeapon { get; set; }
         bool isMounted { get; set; }
+        // PC walk/run mode toggle: when true and moving, the visual plays Walk (WK01) instead of Move/Run (RN01).
+        bool walkMode { get; set; }
+        // PC 打坐 (meditate): when true, the visual is forced to the Sit (ZZ01) action and ignores move input.
+        bool isMeditating { get; set; }
         int direction { get; set; }
         bool playAutomatically { get; set; }
 

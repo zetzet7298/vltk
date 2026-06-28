@@ -86,6 +86,10 @@ namespace VLTK.Model
         //   - > 0: dash mượt theo PC state machine
         //   - <= 0: skip dash (PC source không provide duration → không implement)
         public float dashDurationSeconds; // 0 = no dash (PC source doesn't provide duration)
+        // [SECT-ALL] PC 轻功 (Khinh Công / JumpFly, skill 210): a self-cast movement skill that
+        // leaps the caster forward (PC KNpc::NewJump). Flagged so the cast pipeline triggers
+        // SandboxPlayerController.BeginLeap (Jump JP01 animation + forward dash) instead of a no-op.
+        public bool isLeapSkill;
         // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.4.2 G6 + §2.8.2 G6: event chain anchors.
         // PC tianren.lua/tangmen.lua/emei.lua khai báo:
         //   skill_startevent[1] (1/0 → 1/1) trigger sub-skill khi cast start

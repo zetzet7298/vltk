@@ -23,6 +23,8 @@ namespace VLTK.Sandbox
     {
         [Header("Playback")]
         public PlayerVisualAction currentAction { get; set; } = PlayerVisualAction.Idle;
+        public bool walkMode { get; set; }   // PC walk mode (WK01) vs run (RN01).
+        public bool isMeditating { get; set; } // PC 打坐 (ZZ01) forces Sit and blocks move-driven action changes.
         public PcWeaponType currentWeapon { get; set; } = PcWeaponType.EmptyHand;
         public bool isMounted { get; set; }
         public int direction { get; set; }
@@ -139,11 +141,18 @@ namespace VLTK.Sandbox
         public void SetMoveInput(Vector2 input)
         {
             LastMoveInput = Vector2.ClampMagnitude(input, 1f);
+            // PC 打坐: meditation locks the visual to Sit (ZZ01) regardless of input.
+            if (isMeditating)
+            {
+                SetAction(PlayerVisualAction.Sit);
+                return;
+            }
             int nextDirection = MalePlayerSpriteCatalog.DirectionFromMove(LastMoveInput);
             if (nextDirection >= 0)
             {
+                // PC 走路/跑步: walk mode plays Walk (WK01), otherwise run (RN01 Move).
+                SetAction(walkMode ? PlayerVisualAction.Walk : PlayerVisualAction.Move);
                 direction = nextDirection;
-                SetAction(PlayerVisualAction.Move);
             }
             else
             {
@@ -153,10 +162,13 @@ namespace VLTK.Sandbox
 
         public void SetAction(PlayerVisualAction action)
         {
+            // PC 打坐 (meditate) is sticky: once meditating, force Sit (ZZ01) until meditation ends.
+            if (isMeditating)
+                action = PlayerVisualAction.Sit;
             // When mounted, map on-foot action to its mounted equivalent:
             // Move -> RideMove (HR01 gallop), everything else -> Ride (RD01 idle).
             if (isMounted)
-                action = (action == PlayerVisualAction.Move) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
+                action = (action == PlayerVisualAction.Move || action == PlayerVisualAction.Walk) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
 
@@ -320,10 +332,12 @@ namespace VLTK.Sandbox
             float rate = currentAction switch
             {
                 PlayerVisualAction.Move => moveFrameRate,
+                PlayerVisualAction.Walk => moveFrameRate, // PC 走路 uses the same cadence family as run.
                 PlayerVisualAction.RideMove => moveFrameRate,
                 PlayerVisualAction.Magic => magicFrameRate,
                 PlayerVisualAction.Attack => attackFrameRate,
-                _ => idleFrameRate,
+                PlayerVisualAction.Jump => magicFrameRate, // PC 跳跃 leap — single burst cycle.
+                _ => idleFrameRate, // Idle, Sit (打坐), Ride use idle cadence.
             };
             int baseOrder = PlayerBaseSortingOrder();
 
@@ -333,8 +347,21 @@ namespace VLTK.Sandbox
                 if (clip == null || clip.framesPerDirection <= 0 || clip.sprites == null || clip.sprites.Length == 0)
                     continue;
 
-                int frameInDirection = Mathf.FloorToInt(time * rate) % clip.framesPerDirection;
-                if (frameInDirection < 0) frameInDirection += clip.framesPerDirection;
+                // PC 打坐 (Sit): the meditation cycle is a one-shot sit-down that HOLDS on the final
+                // seated frame once the character is on the ground — it does not loop back to standing.
+                // PC 跳跃 (Jump): the leap is a single forward burst; hold the last frame until the dash ends.
+                int frameInDirection;
+                if ((currentAction == PlayerVisualAction.Sit || currentAction == PlayerVisualAction.Jump) && clip.framesPerDirection > 0)
+                {
+                    int lastFrame = clip.framesPerDirection - 1;
+                    int computed = Mathf.FloorToInt(time * rate);
+                    frameInDirection = (computed < lastFrame) ? computed : lastFrame;
+                }
+                else
+                {
+                    frameInDirection = Mathf.FloorToInt(time * rate) % clip.framesPerDirection;
+                    if (frameInDirection < 0) frameInDirection += clip.framesPerDirection;
+                }
                 CurrentFrameInDirection = frameInDirection;
 
                 int dir = clip.directionCount > 1 ? direction % clip.directionCount : 0;

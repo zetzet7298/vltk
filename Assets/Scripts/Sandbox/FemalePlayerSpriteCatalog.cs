@@ -58,6 +58,14 @@ namespace VLTK.Sandbox
             002,                 // DualWeapon
         };
 
+        // PC 女主角躯体.txt walk column (走路): WK01..WK04 per weapon; Sit (打坐)=ZZ01; Jump (跳跃)=JP01.
+        // NOTE: female body SPRs at variant 019 are not present in the unpacked PAK set, so
+        // Walk/Sit/Jump may not render for female until those assets are imported. Code stays
+        // correct and mirrors the male catalog; the visual falls back gracefully on missing SPR.
+        private static readonly string[] WalkSuffix = new string[4] { "WK01", "WK02", "WK03", "WK04" };
+        public const string SitSuffix = "ZZ01";
+        public const string JumpSuffix = "JP01";
+
         // PC draw-order table for female: 女主角贴图顺序表.txt
         // Dir1..Dir8 identical to male per PC source. Reuse works as-is.
         private static readonly int[][] DrawOrderByDirection =
@@ -83,7 +91,13 @@ namespace VLTK.Sandbox
                 return BuildMountedParts(50, 50, 50, horseVariant, MalePlayerSpriteCatalog.MountMoveSuffix);
 
             int wIdx = (int)weapon;
-            string suffix = ActionSuffix[wIdx, (int)action];
+            string suffix = action switch
+            {
+                PlayerVisualAction.Walk => WalkSuffix[wIdx],
+                PlayerVisualAction.Sit  => SitSuffix,
+                PlayerVisualAction.Jump => JumpSuffix,
+                _ => ActionSuffix[wIdx, (int)action],
+            };
             int lwVariant = (weapon == PcWeaponType.DualWeapon) ? weaponVariant : EmptyWeaponVariant;
 
             // Female has no separate weapon SPRs — LW/RW are not required.

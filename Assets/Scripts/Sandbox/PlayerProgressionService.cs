@@ -83,6 +83,16 @@ namespace VLTK.Sandbox
                 if (!skillLevels.ContainsKey(skill.skillId))
                     skillLevels[skill.skillId] = 0;
             }
+
+            // PC universal action skill: Khinh Công (轻功, id=210) is not tied to a faction,
+            // but it is a player action button/slot and must be known for KSkillList::FindSame.
+            var lightness = catalog.Resolve(PcCombatCatalogFactory.UniversalLightnessSkill);
+            if (lightness != null && !IsNpcVariant(lightness.skillId))
+            {
+                knownSkills.Add(lightness.skillId);
+                if (!skillLevels.ContainsKey(lightness.skillId) || skillLevels[lightness.skillId] <= 0)
+                    skillLevels[lightness.skillId] = 1;
+            }
         }
 
         /// <summary>
@@ -165,7 +175,9 @@ namespace VLTK.Sandbox
             fightSkillPoints = baseline.points;
             foreach (var skill in catalog.All)
             {
-                if (skill.faction != CombatFaction.CaiBang && skill.faction != CombatFaction.WuDang && skill.faction != CombatFaction.Shaolin && skill.faction != CombatFaction.TangMen && skill.faction != CombatFaction.EMei && skill.faction != CombatFaction.TianWang && skill.faction != CombatFaction.WuDu && skill.faction != CombatFaction.CuiYan && skill.faction != CombatFaction.TianRen && skill.faction != CombatFaction.KunLun) continue;
+                bool factionSkill = skill.faction == CombatFaction.CaiBang || skill.faction == CombatFaction.WuDang || skill.faction == CombatFaction.Shaolin || skill.faction == CombatFaction.TangMen || skill.faction == CombatFaction.EMei || skill.faction == CombatFaction.TianWang || skill.faction == CombatFaction.WuDu || skill.faction == CombatFaction.CuiYan || skill.faction == CombatFaction.TianRen || skill.faction == CombatFaction.KunLun;
+                bool universalPcActionSkill = skill.skillId == PcCombatCatalogFactory.UniversalLightnessSkill || skill.isLeapSkill;
+                if (!factionSkill && !universalPcActionSkill) continue;
                 if (IsNpcVariant(skill.skillId)) continue;
                 int maxLv = skill.maxLevel > 0 ? skill.maxLevel : 1;
                 knownSkills.Add(skill.skillId);
