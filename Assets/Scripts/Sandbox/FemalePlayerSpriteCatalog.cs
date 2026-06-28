@@ -87,6 +87,8 @@ namespace VLTK.Sandbox
         {
             if (action == PlayerVisualAction.Ride)
                 return BuildMountedParts(50, 50, 50, horseVariant, MalePlayerSpriteCatalog.MountIdleSuffix);
+            if (action == PlayerVisualAction.RideWalk)
+                return BuildMountedParts(50, 50, 50, horseVariant, MalePlayerSpriteCatalog.MountWalkSuffix);
             if (action == PlayerVisualAction.RideMove)
                 return BuildMountedParts(50, 50, 50, horseVariant, MalePlayerSpriteCatalog.MountMoveSuffix);
 

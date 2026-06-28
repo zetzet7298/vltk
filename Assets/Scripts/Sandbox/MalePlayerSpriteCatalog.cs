@@ -16,7 +16,8 @@ namespace VLTK.Sandbox
         Magic,      // MG01/MG04 (magic cast)
         Attack,     // AT04/AT05 (melee attack)
         Ride,       // RD01 (mounted IDLE: RideStand — full 8-dir layered horse+rider)
-        RideMove,   // HR01 (mounted MOVE: RideRun gallop — full 8-dir layered horse+rider)
+        RideWalk,   // HW01 (mounted WALK: RideWalk — full 8-dir layered horse+rider)
+        RideMove,   // HR01 (mounted RUN: RideRun gallop — full 8-dir layered horse+rider)
         Walk,       // WK01/WK04 (PC 走路 — walk mode, slower than run; 男主角躯体.txt)
         Sit,        // ZZ01 (PC 打坐 — meditate / cross-legged sit; one suffix for all weapons)
         Jump,       // JP01 (PC 跳跃 — Khinh Công leap; one suffix for all weapons)
@@ -91,8 +92,10 @@ namespace VLTK.Sandbox
         public const int MountHorseVariant = 019;   // MA_(HH/HB/HT)_019 — horse body (front/mid/back).
         public const int MountAltHorseVariant = 018; // alt horse body.
         public const int ShadowVariant = 999;
-        // PC 男主角马* tables: RideStand=RD01 (mounted idle), RideRun=HR01 (mounted gallop).
+        // PC mount tables (pak_unpacked/_slistcache/unknown/d14d05cc.dat):
+        // RideStand=RD01, RideWalk=HW01, RideRun=HR01.
         public const string MountIdleSuffix = "RD01";
+        public const string MountWalkSuffix = "HW01";
         public const string MountMoveSuffix = "HR01";
         public const int EmptyWeaponVariant = 0;
         public const int ShortWeaponVariant = 001; // 单手剑1 from 男主角右手武器.txt
@@ -170,6 +173,8 @@ namespace VLTK.Sandbox
 
             if (action == PlayerVisualAction.Ride)
                 return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountIdleSuffix);
+            if (action == PlayerVisualAction.RideWalk)
+                return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountWalkSuffix);
             if (action == PlayerVisualAction.RideMove)
                 return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountMoveSuffix);
 

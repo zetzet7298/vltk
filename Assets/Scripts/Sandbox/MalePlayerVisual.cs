@@ -166,10 +166,12 @@ namespace VLTK.Sandbox
             // PC 打坐 (meditate) is sticky: once meditating, force Sit (ZZ01) until meditation ends.
             if (isMeditating)
                 action = PlayerVisualAction.Sit;
-            // When mounted, map on-foot action to its mounted equivalent:
-            // Move -> RideMove (HR01 gallop), everything else -> Ride (RD01 idle).
+            // When mounted, map on-foot actions to PC mounted equivalents:
+            // Walk -> RideWalk (HW01), Move -> RideMove (HR01), idle -> Ride (RD01).
             if (isMounted)
-                action = (action == PlayerVisualAction.Move || action == PlayerVisualAction.Walk) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
+                action = action == PlayerVisualAction.Walk ? PlayerVisualAction.RideWalk
+                    : action == PlayerVisualAction.Move ? PlayerVisualAction.RideMove
+                    : PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
 
@@ -190,7 +192,9 @@ namespace VLTK.Sandbox
             isMounted = mounted;
             _loadedAction = (PlayerVisualAction)(-1);
             if (isMounted)
-                currentAction = (LastMoveInput.sqrMagnitude > 0.0001f) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
+                currentAction = (LastMoveInput.sqrMagnitude > 0.0001f)
+                    ? (walkMode ? PlayerVisualAction.RideWalk : PlayerVisualAction.RideMove)
+                    : PlayerVisualAction.Ride;
             else
                 currentAction = Vector2.zero == LastMoveInput ? PlayerVisualAction.Idle : PlayerVisualAction.Move;
             _time = 0f;
@@ -334,9 +338,8 @@ namespace VLTK.Sandbox
             {
                 PlayerVisualAction.Move => moveFrameRate,
                 PlayerVisualAction.Walk => moveFrameRate * 0.55f, // PC walk mode: slower cadence than run.
-                // Mounted walk/run shares PC HR01 mounted-move art, but walk mode must slow
-                // playback so riding does not look like gallop/run while IsRunning=false.
-                PlayerVisualAction.RideMove => walkMode ? moveFrameRate * 0.55f : moveFrameRate,
+                PlayerVisualAction.RideWalk => moveFrameRate * 0.55f,
+                PlayerVisualAction.RideMove => moveFrameRate,
                 PlayerVisualAction.Magic => magicFrameRate,
                 PlayerVisualAction.Attack => attackFrameRate,
                 PlayerVisualAction.Jump => magicFrameRate, // PC 跳跃 leap — single burst cycle.

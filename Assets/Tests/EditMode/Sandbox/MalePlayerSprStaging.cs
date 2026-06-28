@@ -208,10 +208,10 @@ namespace VLTK.Tests.Sandbox
 
         private static void StageMountedFixtures(string sourceRoot, string destRoot, List<StagedFixture> staged)
         {
-            // Mounted idle (RD01) and gallop (HR01) share the same BuildMountedParts
-            // helper but the catalog selects the suffix at the call site. Stage
-            // both, with the mount outfit 050 rider and horse 016 body.
-            string[] suffixes = { "RD01", "HR01" };
+            // Mounted idle (RD01), walk (HW01), and run/gallop (HR01) share
+            // the same BuildMountedParts helper but the catalog selects the suffix
+            // at the call site. Stage all with mount outfit 050 rider and horse 016 body.
+            string[] suffixes = { "RD01", "HW01", "HR01" };
             foreach (var suffix in suffixes)
             {
                 var parts = MalePlayerSpriteCatalog.BuildMountedParts(
@@ -260,8 +260,8 @@ namespace VLTK.Tests.Sandbox
                 }
             }
 
-            // Also stage mounted actions for female
-            string[] suffixes = { "RD01", "HR01" };
+            // Also stage mounted actions for female.
+            string[] suffixes = { "RD01", "HW01", "HR01" };
             foreach (var suffix in suffixes)
             {
                 var parts = FemalePlayerSpriteCatalog.BuildMountedParts(

@@ -117,9 +117,22 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void Catalog_RideWalk_UsesHW01WalkForAllParts()
+        {
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.RideWalk, PcWeaponType.EmptyHand, 50, 50, MalePlayerSpriteCatalog.EmptyWeaponVariant, 50, 16).ToList();
+            Assert.AreEqual(9, parts.Count);
+            // PC mount table: RideWalk = HW01.
+            Assert.IsTrue(parts.All(p => p.sourcePath.Contains("HW01")),
+                "Mounted walk should use HW01 (RideWalk) SPRs for all parts, not HR01 gallop art.");
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseFront && p.sourcePath.Contains("HH_016")));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Body && p.sourcePath.Contains("BD_050")));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shadow && p.sourcePath.Contains("YY_999")));
+        }
+
+        [Test]
         public void Catalog_RideMove_UsesHR01GallopForAllParts()
         {
-            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.RideMove, PcWeaponType.EmptyHand, 50, 50, MalePlayerSpriteCatalog.EmptyWeaponVariant, 50).ToList();
+            var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.RideMove, PcWeaponType.EmptyHand, 50, 50, MalePlayerSpriteCatalog.EmptyWeaponVariant, 50, 16).ToList();
             Assert.AreEqual(9, parts.Count);
             // Mounted move = RideRun = HR01 (gallop), 8-direction.
             Assert.IsTrue(parts.All(p => p.sourcePath.Contains("HR01")),
@@ -130,19 +143,22 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void Visual_MountedWalkMode_SlowsRideMoveCadence()
+        public void Visual_MountedWalkMode_UsesRideWalkAction()
         {
-            var visual = CreateVisual("MaleMountedWalkCadenceTest");
-            visual.currentAction = PlayerVisualAction.RideMove;
-            visual.moveFrameRate = 12f;
-
+            var visual = CreateVisual("MaleMountedWalkActionTest");
+            visual.SetMounted(true);
             visual.walkMode = true;
-            Assert.AreEqual(6.6f, visual.CurrentPlaybackRate, 0.001f,
-                "Mounted walk should slow HR01 cadence so it does not look like mounted run/gallop.");
+            visual.SetMoveInput(Vector2.right);
+
+            Assert.AreEqual(PlayerVisualAction.RideWalk, visual.currentAction,
+                "Mounted walk should switch to PC RideWalk/HW01 art instead of reusing HR01 gallop art.");
+            Assert.AreEqual(6.6f, visual.CurrentPlaybackRate, 0.001f);
 
             visual.walkMode = false;
-            Assert.AreEqual(12f, visual.CurrentPlaybackRate, 0.001f,
-                "Mounted run should keep the normal HR01 gallop cadence.");
+            visual.SetMoveInput(Vector2.right);
+            Assert.AreEqual(PlayerVisualAction.RideMove, visual.currentAction,
+                "Mounted run should switch back to PC RideRun/HR01 gallop art.");
+            Assert.AreEqual(12f, visual.CurrentPlaybackRate, 0.001f);
         }
 
         [Test]

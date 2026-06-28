@@ -158,7 +158,9 @@ namespace VLTK.Sandbox
             if (isMeditating)
                 action = PlayerVisualAction.Sit;
             if (isMounted)
-                action = (action == PlayerVisualAction.Move || action == PlayerVisualAction.Walk) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
+                action = action == PlayerVisualAction.Walk ? PlayerVisualAction.RideWalk
+                    : action == PlayerVisualAction.Move ? PlayerVisualAction.RideMove
+                    : PlayerVisualAction.Ride;
             if (currentAction == action && _loadedAction == action && _loadedWeapon == currentWeapon)
                 return;
             currentAction = action;
@@ -174,7 +176,9 @@ namespace VLTK.Sandbox
             _loadedAction = (PlayerVisualAction)(-1);
             if (isMounted)
             {
-                currentAction = (LastMoveInput.sqrMagnitude > 0.0001f) ? PlayerVisualAction.RideMove : PlayerVisualAction.Ride;
+                currentAction = (LastMoveInput.sqrMagnitude > 0.0001f)
+                    ? (walkMode ? PlayerVisualAction.RideWalk : PlayerVisualAction.RideMove)
+                    : PlayerVisualAction.Ride;
             }
             else
             {
@@ -311,7 +315,8 @@ namespace VLTK.Sandbox
             {
                 PlayerVisualAction.Move => moveFrameRate,
                 PlayerVisualAction.Walk => moveFrameRate * 0.55f, // PC walk mode: slower cadence than run.
-                PlayerVisualAction.RideMove => walkMode ? moveFrameRate * 0.55f : moveFrameRate,
+                PlayerVisualAction.RideWalk => moveFrameRate * 0.55f,
+                PlayerVisualAction.RideMove => moveFrameRate,
                 PlayerVisualAction.Magic => magicFrameRate,
                 PlayerVisualAction.Attack => attackFrameRate,
                 PlayerVisualAction.Jump => magicFrameRate, // PC 跳跃 leap burst cycle.
