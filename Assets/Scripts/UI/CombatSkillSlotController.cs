@@ -132,6 +132,7 @@ namespace VLTK.UI
             EnsureDeckArrays();
             ImportLegacySlotsIfNeeded();
             FillDefaultDeckIfEmpty();
+            MigrateCaiBangDeckToKhinhCongDefaultIfNeeded();
 
             if (doc == null || doc.rootVisualElement == null) return;
             if (root == null) return;
@@ -286,12 +287,16 @@ namespace VLTK.UI
         // MobileSkillSlotCount = 5 → set đủ 5 skill theo thứ tự PC.
         // PC source: bin/client/script/skill/{gaibang,shaolin,...}.lua + skills.txt.
         // Fallback: lấy 5 skill active đầu tiên từ PcSkillPanelService.GetPcSkillOrder(faction).
+        private static readonly int[] LegacyCaiBangDefaultDeck = { 357, 358, 1073, 130, 127 };
+
         private static readonly System.Collections.Generic.Dictionary<CombatFaction, int[]> DefaultDeckByFaction =
             new System.Collections.Generic.Dictionary<CombatFaction, int[]>
             {
-                // Cái Bang (PC gaibang.lua): 5 skill Cái Bang mặc định —
-                // Phi Long Tại Thiên (357) → Kháng Long Hữu Hối (358) → Thần Thủ Lệnh Long (1073) → Túy Điệp Cuồng Vũ (130) → Hoạt Bất Lưu Thủ (127)
-                { CombatFaction.CaiBang, new[] { 357, 358, 1073, 130, 127 } },
+                // Cái Bang + universal PC Khinh Công (210): user-requested swap places
+                // the previous sub-slot-1 skill into the formerly empty left-arc slot, then
+                // assigns Khinh Công to sub-slot 1. PC Khinh Công source: Skills.txt id=210,
+                // icon \spr\Ui\技能图标\轻功.spr (hash bf787a8a), script \script\skill\special\轻功.lua.
+                { CombatFaction.CaiBang, new[] { 210, 357, 358, 1073, 130 } },
             };
 
         private void FillDefaultDeckIfEmpty()
@@ -331,6 +336,44 @@ namespace VLTK.UI
 
             leftSlotSkillId = deckASkillIds[0];
             rightSlotSkillId = deckASkillIds[1];
+        }
+
+        private void MigrateCaiBangDeckToKhinhCongDefaultIfNeeded()
+        {
+            var manager = SandboxManager.Instance;
+            var prog = _progression ?? manager?.PlayerProgression;
+            if (prog == null || prog.faction != CombatFaction.CaiBang) return;
+            if (ContainsSkill(deckASkillIds, PcCombatCatalogFactory.UniversalLightnessSkill)) return;
+            if (!ContainsEmptySlot(deckASkillIds) && !MatchesDeck(deckASkillIds, LegacyCaiBangDefaultDeck)) return;
+            if (!DefaultDeckByFaction.TryGetValue(CombatFaction.CaiBang, out var defaults)) return;
+
+            for (int i = 0; i < MobileSkillSlotCount; i++)
+                deckASkillIds[i] = i < defaults.Length ? defaults[i] : 0;
+            SyncLegacySlotFields();
+        }
+
+        private static bool ContainsSkill(int[] deck, int skillId)
+        {
+            if (deck == null) return false;
+            for (int i = 0; i < deck.Length; i++)
+                if (deck[i] == skillId) return true;
+            return false;
+        }
+
+        private static bool ContainsEmptySlot(int[] deck)
+        {
+            if (deck == null) return true;
+            for (int i = 0; i < deck.Length; i++)
+                if (deck[i] <= 0) return true;
+            return false;
+        }
+
+        private static bool MatchesDeck(int[] deck, int[] expected)
+        {
+            if (deck == null || expected == null || deck.Length != expected.Length) return false;
+            for (int i = 0; i < expected.Length; i++)
+                if (deck[i] != expected[i]) return false;
+            return true;
         }
 
         // (Removed GetDefaultSkillsForFaction hardcode - now uses PC source order via PcSkillPanelService)

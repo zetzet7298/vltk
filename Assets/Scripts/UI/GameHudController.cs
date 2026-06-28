@@ -320,9 +320,9 @@ namespace VLTK.UI
             RegisterClick(root, "BtnRun", OnRunClick);
             RegisterClick(root, "BtnSit", OnSitClick);
             RegisterClick(root, "BtnHorse", OnHorseClick);
-            // S2 (HUD-004): wire the mobile combat cluster action buttons (visible
-            // versions of run/horse/sit). Reuse existing no-op log handlers — no new
-            // gameplay. The parked BtnRun/BtnSit/BtnHorse stay wired but are display:none.
+            // SDD port-lightness-and-action-buttons: mobile combat action buttons now
+            // bridge to SandboxPlayerController movement/mount/meditation runtime state.
+            // The parked BtnRun/BtnSit/BtnHorse stay wired but are display:none.
             RegisterClick(root, "ActionBtnRun", OnRunClick);
             RegisterClick(root, "ActionBtnSit", OnSitClick);
             RegisterClick(root, "ActionBtnHorse", OnHorseClick);
@@ -990,9 +990,38 @@ namespace VLTK.UI
             };
         }
 
-        private void OnRunClick() => SubsystemLog.Info("HUD", "Toggle Run/Walk");
-        private void OnSitClick() => SubsystemLog.Info("HUD", "Toggle Sit");
-        private void OnHorseClick() => SubsystemLog.Info("HUD", "Toggle Horse");
+        private void OnRunClick()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player == null)
+            {
+                SubsystemLog.Warn("HUD", "Toggle Run/Walk ignored: player controller not ready");
+                return;
+            }
+            player.ToggleWalkRun();
+        }
+
+        private void OnSitClick()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player == null)
+            {
+                SubsystemLog.Warn("HUD", "Toggle Sit ignored: player controller not ready");
+                return;
+            }
+            player.ToggleMeditation();
+        }
+
+        private void OnHorseClick()
+        {
+            var player = SandboxManager.Instance?.PlayerController;
+            if (player == null)
+            {
+                SubsystemLog.Warn("HUD", "Toggle Horse ignored: player controller not ready");
+                return;
+            }
+            player.ToggleMount();
+        }
         private void OnItemExClick() => SubsystemLog.Info("HUD", "Open ItemEx (pending popup)");
         private void OnQuestClick() => SubsystemLog.Info("HUD", "Open Quest (pending popup)");
         private void OnChatRoomClick() => SubsystemLog.Info("HUD", "Open ChatRoom (pending popup)");

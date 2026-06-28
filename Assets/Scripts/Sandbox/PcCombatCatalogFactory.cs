@@ -17,6 +17,7 @@ namespace VLTK.Sandbox
         public const int NoviceRangedAttack = 2;
         public const int NoviceThrowStone = 196;
         public const int NovicePoisonAttack = 199;
+        public const int UniversalLightnessSkill = 210;
         public const int CaiBangMinSkillId = 115;
         public const int CaiBangMaxSkillId = 130;
         // MOD Vietnam adds 7 extra Cái Bang player skills beyond the original 115-130 PC range. Skill 1539 is
@@ -89,6 +90,11 @@ namespace VLTK.Sandbox
             PhysicalAttack(53, "短兵物理攻击", "Tấn công cận chiến", 75, child:63),
             PhysicalAttack(196, "扔石头", "Ném đá", 180, child:87, charAnim:11, timePerCast:2, isMelee:false),
             PoisonAttack(199, "吐口水", "Nhổ độc", 180, child:90),
+            // PC universal special skill: Skills.txt id=210 Khinh công / 轻功,
+            // icon \spr\Ui\技能图标\轻功.spr (hash bf787a8a), script \script\skill\special\轻功.lua.
+            UtilitySkill(UniversalLightnessSkill, "轻功", "Khinh công", 1, 400, SkillMissileForm.None,
+                targetEnemy:false, targetSelf:true, charAnim:13,
+                levelData:(lv)=>SkillOnly(MagicAttributeKind.SkillCostV, 50, 0, 0)),
         };
 
         public static List<SkillDefinition> CreateCaiBangSkills()
@@ -793,6 +799,7 @@ namespace VLTK.Sandbox
             1 => "\\spr\\Ui\\技能图标\\icon_sk_ty_ap.spr",
             2 => "\\spr\\Ui\\技能图标\\icon_sk_ty_at.spr",
             53 => "\\spr\\Ui\\技能图标\\icon_sk_ty_as.spr",
+            210 => "\\spr\\Ui\\技能图标\\轻功.spr",
             115 => "\\spr\\Ui\\技能图标\\icon_sk_gb_gf.spr",
             116 => "\\spr\\Ui\\技能图标\\icon_sk_gb_aq.spr",
             117 or 196 or 197 or 198 or 199 or 200 or 201 => "\\spr\\Ui\\技能图标\\icon_sk_gb_01.spr",
@@ -806,7 +813,7 @@ namespace VLTK.Sandbox
             125 or 359 or 1539 => "\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr", // 359/1539 share the same path family (天下无狗) but use distinct extracted UIDs; see PC_SOURCE.txt.
             126 or 274 => "\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr", // 274 Giương Long Chưởng shares the GB_32 icon visually.
             127 or 277 => "\\spr\\Ui\\技能图标\\icon_sk_gb_33.spr", // 277 Hoành Bách Lộ Thiên shares the GB_33 icon visually.
-            128 or 357 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 357 Phi Long Tại Thiên: same Long-family icon, real icon not in any PAK.
+            128 or 357 or 358 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 357 Phi Long / 358 Kháng Long (MOD variant): same Long-family icon, real icons not in any PAK.
             129 => "\\spr\\Ui\\技能图标\\icon_sk_gb_42.spr",
             130 or 360 => "\\spr\\Ui\\技能图标\\icon_sk_gb_43.spr", // 360 Tiêu Dao Công: alias to Túy Điệp Cuồng Vũ; real icon not in any PAK.
             151 => "\\spr\\Ui\\技能图标\\icon_sk_wd_jf.spr",

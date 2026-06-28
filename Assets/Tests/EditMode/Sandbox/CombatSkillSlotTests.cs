@@ -346,8 +346,10 @@ namespace VLTK.Tests.Sandbox
                 .GetField("DefaultDeckByFaction", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
             Assert.IsNotNull(caiBangDeckField, "CombatSkillSlotController.DefaultDeckByFaction must exist.");
             var deckMap = (System.Collections.Generic.Dictionary<CombatFaction, int[]>)caiBangDeckField.GetValue(null);
-            CollectionAssert.AreEqual(new[] { 357, 358, 1073, 130, 127 }, deckMap[CombatFaction.CaiBang],
-                "Cái Bang default deck: Phi Long → Kháng Long → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ → Hoạt Bất Lưu Thủ");
+            CollectionAssert.AreEqual(new[] { 210, 357, 358, 1073, 130 }, deckMap[CombatFaction.CaiBang],
+                "Cái Bang default deck after HUD action SDD: Khinh công → Phi Long → Kháng Long → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ");
+            Assert.AreEqual(1, deckMap[CombatFaction.CaiBang].Count(id => id == PcCombatCatalogFactory.UniversalLightnessSkill),
+                "Khinh công must appear exactly once in the right-thumb default deck.");
             foreach (var f in factions)
             {
                 var order = PcSkillPanelService.GetPcSkillOrder(f.faction);
@@ -356,6 +358,20 @@ namespace VLTK.Tests.Sandbox
                     order.Take(5).ToArray(),
                     $"PC skill order[0..4] mismatch for {f.faction}");
             }
+        }
+
+        [Test]
+        public void Catalog_ResolvesPcKhinhCongSpecialSkill()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var skill = catalog.Resolve(PcCombatCatalogFactory.UniversalLightnessSkill);
+
+            Assert.IsNotNull(skill, "SkillId=210 Khinh công must be registered from PC Skills.txt evidence.");
+            Assert.AreEqual("Khinh công", skill.DisplayName);
+            Assert.AreEqual(CombatFaction.None, skill.faction, "Khinh công is a universal PC special skill, not a Cái Bang-only skill.");
+            Assert.AreEqual("\\spr\\Ui\\技能图标\\轻功.spr", skill.iconSourceId.sourcePath);
+            Assert.AreEqual(400, skill.attackRadius);
+            Assert.AreEqual(PcSkillStyle.InitiativeNpcState, skill.skillStyle);
         }
 
         [Test]

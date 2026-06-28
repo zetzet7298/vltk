@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using VLTK.Core;
 using VLTK.Model;
 
 namespace VLTK.Sandbox
@@ -20,6 +21,8 @@ namespace VLTK.Sandbox
     {
         [Header("Movement")]
         public float moveSpeed = 360f; // 200% tốc độ hiện tại (180f) theo yêu cầu test map rộng
+        [Tooltip("Walk multiplier relative to the normal run speed. PC walk/run is a movement mode toggle; exact PC value can be refined when source is recovered.")]
+        public float walkSpeedMultiplier = 0.55f;
         public bool allowKeyboardFallback = true;
 
         [Header("Player Gender")]
@@ -57,6 +60,8 @@ namespace VLTK.Sandbox
         public Vector2 LastMoveDelta { get; private set; }
         public Vector2 MoveTarget { get; private set; }
         public bool HasMoveTarget { get; private set; }
+        public bool IsRunning { get; private set; } = true;
+        public bool IsMeditating { get; private set; }
         public float targetArriveDistance = 8f;
 
         // [SECT-ALL] Dash state machine cho melee skill THẬT SỰ (Cái Bang Bổng Pháp, etc.).
@@ -152,7 +157,7 @@ namespace VLTK.Sandbox
             if (allowKeyboardFallback)
             {
                 var keyboard = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-                if (keyboard.sqrMagnitude > 0.0001f)
+                if (keyboard.sqrMagnitude > 0.0001f && !IsMeditating)
                     MoveInput = Vector2.ClampMagnitude(keyboard, 1f);
             }
 
@@ -175,6 +180,13 @@ namespace VLTK.Sandbox
 
         public void SetMoveInput(Vector2 input)
         {
+            if (IsMeditating)
+            {
+                MoveInput = Vector2.zero;
+                HasMoveTarget = false;
+                return;
+            }
+
             MoveInput = Vector2.ClampMagnitude(input, 1f);
             if (MoveInput.sqrMagnitude > 0.0001f)
                 HasMoveTarget = false;
@@ -182,6 +194,13 @@ namespace VLTK.Sandbox
 
         public void MoveTo(Vector2 worldTarget)
         {
+            if (IsMeditating)
+            {
+                MoveInput = Vector2.zero;
+                HasMoveTarget = false;
+                return;
+            }
+
             MoveTarget = ClampToActiveMapBounds(worldTarget);
             HasMoveTarget = true;
         }
@@ -212,6 +231,31 @@ namespace VLTK.Sandbox
         public void ClearMoveTarget()
         {
             HasMoveTarget = false;
+        }
+
+        public void ToggleWalkRun()
+        {
+            IsRunning = !IsRunning;
+            SubsystemLog.Info("HUD", IsRunning ? "Chạy" : "Đi bộ");
+        }
+
+        public void ToggleMeditation()
+        {
+            if (!IsMeditating && Mount.IsMounted)
+            {
+                SubsystemLog.Info("HUD", "Không thể ngồi thiền khi đang cưỡi ngựa");
+                return;
+            }
+
+            IsMeditating = !IsMeditating;
+            if (IsMeditating)
+            {
+                MoveInput = Vector2.zero;
+                HasMoveTarget = false;
+                LastMoveDelta = Vector2.zero;
+            }
+
+            SubsystemLog.Info("HUD", IsMeditating ? "Bắt đầu ngồi thiền" : "Dừng ngồi thiền");
         }
 
         /// <summary>Set 8-way facing direction (0-7) for combat targeting.</summary>
@@ -338,11 +382,20 @@ namespace VLTK.Sandbox
                 }
             }
 
+            if (IsMeditating)
+            {
+                input = Vector2.zero;
+                HasMoveTarget = false;
+                MoveInput = Vector2.zero;
+            }
+
             LastMoveDelta = Vector2.zero;
 
             EnsureVisual();
             Mount.Tick(dt);
-            float speed = Mount.IsMounted ? moveSpeed * mountedSpeedMultiplier : moveSpeed;
+            float speed = moveSpeed * (IsRunning ? 1f : Mathf.Clamp(walkSpeedMultiplier, 0.05f, 1f));
+            if (Mount.IsMounted)
+                speed *= mountedSpeedMultiplier;
 
             // Apply FastWalkRunP state buff/debuff speed multiplier from active player combat states
             var manager = SandboxManager.Instance;
@@ -578,6 +631,9 @@ namespace VLTK.Sandbox
         /// </summary>
         public void ToggleMount()
         {
+            if (IsMeditating)
+                ToggleMeditation();
+
             if (Mount.IsMounted)
                 Mount.Dismount();
             else if (defaultHorseId > 0)

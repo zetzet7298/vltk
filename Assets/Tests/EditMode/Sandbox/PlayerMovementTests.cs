@@ -203,6 +203,77 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void SandboxController_WalkRunToggle_ChangesMovementDistance()
+        {
+            var go = new GameObject("player-controller-walk-run-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.startMounted = false;
+                controller.moveSpeed = 100f;
+                controller.mountedSpeedMultiplier = 1f;
+                controller.walkSpeedMultiplier = 0.5f;
+
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                var runX = go.transform.position.x;
+
+                go.transform.position = Vector3.zero;
+                controller.ToggleWalkRun();
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                var walkX = go.transform.position.x;
+
+                Assert.IsFalse(controller.IsRunning);
+                Assert.AreEqual(100f, runX, 0.001f);
+                Assert.AreEqual(50f, walkX, 0.001f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void SandboxController_Meditation_CancelsAndBlocksMovementUntilToggledOff()
+        {
+            var go = new GameObject("player-controller-meditation-test");
+            try
+            {
+                var controller = go.AddComponent<SandboxPlayerController>();
+                controller.allowKeyboardFallback = false;
+                controller.followCameraEnabled = false;
+                controller.clampToMapBounds = false;
+                controller.startMounted = false;
+                controller.moveSpeed = 100f;
+                controller.mountedSpeedMultiplier = 1f;
+
+                controller.MoveTo(new Vector2(100f, 0f));
+                Assert.IsTrue(controller.HasMoveTarget);
+
+                controller.ToggleMeditation();
+                Assert.IsTrue(controller.IsMeditating);
+                Assert.IsFalse(controller.HasMoveTarget);
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                Assert.AreEqual(Vector3.zero, go.transform.position);
+
+                controller.ToggleMeditation();
+                Assert.IsFalse(controller.IsMeditating);
+                controller.SetMoveInput(Vector2.right);
+                controller.SimulateMove(1f);
+                Assert.AreEqual(100f, go.transform.position.x, 0.001f);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
         public void SandboxController_OutOfBoundsTarget_ArrivesAtClampedMap907Edge()
         {
             var go = new GameObject("player-controller-edge-arrival-test");
