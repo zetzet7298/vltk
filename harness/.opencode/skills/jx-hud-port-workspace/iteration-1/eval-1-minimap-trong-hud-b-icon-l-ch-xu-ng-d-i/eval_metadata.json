@@ -1,6 +1,0 @@
-{
-  "eval_id": 1,
-  "eval_name": "minimap-trong-hud-b-icon-l-ch-xu-ng-d-i",
-  "prompt": "Minimap trong HUD bị icon lệch xuống dưới khung, với nhóm nút dưới đè joystick. Fix để giống PC và joystick vẫn kéo được.",
-  "assertions": []
-}
