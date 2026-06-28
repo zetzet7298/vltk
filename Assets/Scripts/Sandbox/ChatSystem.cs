@@ -308,8 +308,8 @@ namespace VLTK.Sandbox
             _panelRoot.transform.SetParent(transform, false);
 
             var mainRt = _panelRoot.AddComponent<RectTransform>();
-            mainRt.anchorMin = new Vector2(0f, 0.05f);
-            mainRt.anchorMax = new Vector2(0.45f, 0.40f);
+            mainRt.anchorMin = new Vector2(0.27f, 0.05f);
+            mainRt.anchorMax = new Vector2(0.73f, 0.40f);
             mainRt.offsetMin = new Vector2(8f, 8f);
             mainRt.offsetMax = new Vector2(-8f, -8f);
 

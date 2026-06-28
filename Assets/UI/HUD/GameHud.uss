@@ -310,8 +310,8 @@
 /* CHAT AREA */
 .hud-chat-panel {
     position: absolute;
-    left: 39px;
-    bottom: 135px;
+    left: 425px;
+    bottom: 24px;
     width: 430px;
     height: 70px;
     flex-direction: column;
@@ -429,8 +429,8 @@
         position: absolute;
         right: 16px;
         bottom: 16px;
-        width: 340px;
-        height: 340px;
+        width: 320px;
+        height: 360px;
         background-color: transparent;
         picking-mode: Ignore;
         overflow: visible;
@@ -441,8 +441,8 @@
        pixel art upscales cleanly). Centered in the cluster's upper-middle area. */
     .hud-combat-main-slot {
         position: absolute;
-        left: 122px;
-        top: 90px;
+        left: 147px;
+        top: 117px;
         width: 96px;
         height: 96px;
         border-width: 0px;
@@ -471,11 +471,16 @@
     /* Fan positions (absolute within 340×340 container). Main center = (170, 138).
        Sub slots at radius ~110px from main center. Action buttons in a row below.
        Lower arc: sub1(left) sub2(center) sub3(right). Upper arc: sub4(left) sub5(right). */
-    .hud-combat-pos-sub1 { left: 14px;  top: 196px; }   /* lower-left arc  */
-    .hud-combat-pos-sub2 { left: 138px; top: 212px; }   /* lower-center arc */
-    .hud-combat-pos-sub3 { left: 262px; top: 196px; }   /* lower-right arc */
-    .hud-combat-pos-sub4 { left: 40px;  top: 10px;  }   /* upper-left arc   */
-    .hud-combat-pos-sub5 { left: 236px; top: 10px;  }   /* upper-right arc  */
+    /* Circular fan (~120px radius) around main center (195,165). The 5 sub slots
+       sweep from lower-left (225°) up to upper-right (45°) — the natural right-thumb
+       arc. No slot sits directly below main (action buttons go there). Radius 120 keeps
+       adjacent slots ~21px apart so the ornate PC skill-slot frames (btn_skill_empty_pc)
+       do NOT visually overlap, while the innermost slot (sub2, 180°) stays reachable. */
+    .hud-combat-pos-sub1 { left: 78px;  top: 218px; }   /* lower-left arc (225°) */
+    .hud-combat-pos-sub2 { left: 43px;  top: 133px; }   /* left arc (180°, innermost) */
+    .hud-combat-pos-sub3 { left: 78px;  top: 48px;  }   /* upper-left arc (135°) */
+    .hud-combat-pos-sub4 { left: 163px; top: 13px;  }   /* upper arc (90°) */
+    .hud-combat-pos-sub5 { left: 248px; top: 48px;  }   /* upper-right arc (45°) */
 
     /* Action buttons (48×48) in a row below the lower arc. Transparent hit area;
        icon drawn by child .hud-btn-icon. Icons: PcButtons/btn_run/horse/sit (PC 31px). */
@@ -488,9 +493,9 @@
         background-color: rgba(20,40,30,0.3);
         overflow: hidden;
     }
-    .hud-combat-pos-run   { left: 80px;  top: 280px; }
-    .hud-combat-pos-horse { left: 146px; top: 280px; }
-    .hud-combat-pos-sit   { left: 212px; top: 280px; }
+    .hud-combat-pos-run   { left: 120px; top: 300px; }
+    .hud-combat-pos-horse { left: 178px; top: 300px; }
+    .hud-combat-pos-sit   { left: 236px; top: 300px; }
 
     /* Main slot icon (larger than sub slot icons). */
     .hud-combat-main-icon {
@@ -503,10 +508,10 @@
     .hud-quick-slots {
         position: absolute;
         right: 28px;
-        bottom: 390px;
-        width: 70px;
-        height: 200px;
-        flex-direction: column-reverse;
+        bottom: 410px;
+        width: 200px;
+        height: 64px;
+        flex-direction: row;
         background-color: transparent;
         picking-mode: Ignore;
         overflow: visible;
@@ -517,23 +522,25 @@
        Empty in S1. */
     .hud-top-gap-cluster {
         position: absolute;
-            left: 620px;
-            top: 8px;
-            width: 380px;
-            height: 120px;
-            flex-direction: column;
-            background-color: transparent;
-            picking-mode: Ignore;
-            overflow: visible;
-        }
+        left: 690px;
+        top: 16px;
+        width: 470px;
+        height: 50px;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        picking-mode: Ignore;
+        overflow: visible;
+    }
 
         /* S3 (HUD-004): compact horizontal row of PC menu buttons + BtnTreasure in the
            minimap<->topbar gap. Each button = transparent hit area; icon drawn by child. */
         .hud-top-gap-menu-row {
             flex-direction: row;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             background-color: transparent;
         }
 
@@ -555,10 +562,10 @@
            (btn_quick_item_1/2/3_pc.png — 快捷栏 slot-well family, 36×36 RGBA). Each
            numbered sprite baked-in at PC extraction; no fabrication. */
         .hud-quick-slot {
-            width: 56px;
-            height: 56px;
-            margin-top: 4px;
-            margin-bottom: 4px;
+            width: 60px;
+            height: 60px;
+            margin-left: 2px;
+            margin-right: 2px;
             -unity-background-scale-mode: scale-to-fit;
             background-color: transparent;
             border-width: 0px;
