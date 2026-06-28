@@ -814,7 +814,8 @@ namespace VLTK.Sandbox
             125 or 359 or 1539 => "\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr", // 359/1539 share the same path family (天下无狗) but use distinct extracted UIDs; see PC_SOURCE.txt.
             126 or 274 => "\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr", // 274 Giương Long Chưởng shares the GB_32 icon visually.
             127 or 277 => "\\spr\\Ui\\技能图标\\icon_sk_gb_33.spr", // 277 Hoành Bách Lộ Thiên shares the GB_33 icon visually.
-            128 or 357 or 358 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 357 Phi Long / 358 Kháng Long (MOD variant): same Long-family icon, real icons not in any PAK.
+            128 or 358 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 128 KLHH stock + 358 KLHH player variant share the kanglong_youhui icon.
+            357 or 389 => "\\spr\\Ui\\skill\\龙战在野.spr", // 357 PLTT + 389 Long Chiến Ư Dã share 龙战在野 (PC source verified: skills.txt).
             129 => "\\spr\\Ui\\技能图标\\icon_sk_gb_42.spr",
             130 or 360 => "\\spr\\Ui\\技能图标\\icon_sk_gb_43.spr", // 360 Tiêu Dao Công: alias to Túy Điệp Cuồng Vũ; real icon not in any PAK.
             151 => "\\spr\\Ui\\技能图标\\icon_sk_wd_jf.spr",
