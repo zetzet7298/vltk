@@ -130,6 +130,22 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void Visual_MountedWalkMode_SlowsRideMoveCadence()
+        {
+            var visual = CreateVisual("MaleMountedWalkCadenceTest");
+            visual.currentAction = PlayerVisualAction.RideMove;
+            visual.moveFrameRate = 12f;
+
+            visual.walkMode = true;
+            Assert.AreEqual(6.6f, visual.CurrentPlaybackRate, 0.001f,
+                "Mounted walk should slow HR01 cadence so it does not look like mounted run/gallop.");
+
+            visual.walkMode = false;
+            Assert.AreEqual(12f, visual.CurrentPlaybackRate, 0.001f,
+                "Mounted run should keep the normal HR01 gallop cadence.");
+        }
+
+        [Test]
         public void ResolveAction_CharAnimId11_ReturnsMagic()
         {
             Assert.AreEqual(PlayerVisualAction.Magic,

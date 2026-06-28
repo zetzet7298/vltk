@@ -66,6 +66,7 @@ namespace VLTK.Sandbox
 
         public int LoadedPartCount { get; private set; }
         public int CurrentFrameInDirection { get; private set; }
+        public float CurrentPlaybackRate => ResolvePlaybackRate(currentAction);
         public bool HasAllRequiredParts { get; private set; }
         public int MissingRequiredPartCount => LastMissingRequiredParts.Count;
         public IReadOnlyList<string> LastMissingRequiredParts => _lastMissingRequiredParts;
@@ -304,17 +305,23 @@ namespace VLTK.Sandbox
             return runtime;
         }
 
-        private void ApplyFrame(float time)
+        private float ResolvePlaybackRate(PlayerVisualAction action)
         {
-            float rate = currentAction switch
+            return action switch
             {
                 PlayerVisualAction.Move => moveFrameRate,
-                PlayerVisualAction.Walk => moveFrameRate, // PC 走路 same cadence family as run.
+                PlayerVisualAction.Walk => moveFrameRate * 0.55f, // PC walk mode: slower cadence than run.
+                PlayerVisualAction.RideMove => walkMode ? moveFrameRate * 0.55f : moveFrameRate,
                 PlayerVisualAction.Magic => magicFrameRate,
                 PlayerVisualAction.Attack => attackFrameRate,
                 PlayerVisualAction.Jump => magicFrameRate, // PC 跳跃 leap burst cycle.
                 _ => idleFrameRate, // Idle, Sit (打坐), Ride use idle cadence.
             };
+        }
+
+        private void ApplyFrame(float time)
+        {
+            float rate = ResolvePlaybackRate(currentAction);
             int baseOrder = MapRenderer.PlayerSortingOrder;
 
             foreach (var runtime in _parts.Values)
