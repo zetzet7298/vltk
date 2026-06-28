@@ -227,7 +227,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void IconPngs_AreExactPcSkillSpriteExportsDocumented()
         {
-            var root = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
+            // Icons are staged at runtime from StreamingAssets (HudArtPathResolver_UsesStreamingAssetsRootInEditor);
+            // the legacy Assets/UI copy was removed in favour of a single canonical source.
+            var root = System.IO.Path.Combine(Application.streamingAssetsPath, "UI/HUD/Art/Generated");
             var source = System.IO.File.ReadAllText(System.IO.Path.Combine(root, "PC_SOURCE.txt"));
 
             Assert.That(source, Does.Contain("signed-byte FileNameHash"));
@@ -250,7 +252,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void AllTenFactionsIconPngs_ArePresentAndNonEmpty()
         {
-            var root = System.IO.Path.Combine(Application.dataPath, "UI/HUD/Art/Generated");
+            var root = System.IO.Path.Combine(Application.streamingAssetsPath, "UI/HUD/Art/Generated");
             var allSkillIds = new List<int>();
             allSkillIds.AddRange(new[] { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 274, 357, 359, 360, 714, 1073, 1074 }); // Cái Bang
             allSkillIds.AddRange(new[] { 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166 }); // Võ Đang

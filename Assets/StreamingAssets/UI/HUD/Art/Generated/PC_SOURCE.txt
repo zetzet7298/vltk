@@ -1,3 +1,26 @@
+================================================================================
+REGENERATION (2026-06-28) — canonical source
+================================================================================
+Every cai_bang_skill_{skillId}.png in this folder was regenerated straight from
+the canonical Vietnamese PC client /var/www/vltksource_new/vl_update_27/pak_unpacked
+(vl_update_27), using the verified skill_icon_pc_manifest.json skillId->uid map
+(SprRuntimeService signed-byte JX Pack hash; identical to the
+jx-pc-resource-resolver skill algorithm).
+
+- 951 skill icons, 301 unique SPR UIDs; all UIDs resolve to a real SPR in
+  pak_unpacked (0 missing) and are byte-identical across pak dirs (0 CN/VI drift).
+- Generator: ~/Projects/vltktool/regenerate_skill_icons_pc.py (decodes SPR frame 0
+  in-process via extract_item_spr.parse_frames/decode_frame_rgba).
+- SUPersedes the previous batch which used non-canonical MOD PAKs
+  (/tmp/server_client_001, /var/www/vhst/.../vltklinux) and aliased missing icons
+  to placeholders. Notably 357 Phi Long Tại Thiên (uid d97b70ca) and
+  360 Tiêu Dao Công (uid dff8108a) now have their own real icons instead of the
+  old aliases to 128/130. The legacy alias notes for 357/358/360 below are kept
+  only as historical context and NO LONGER reflect the staged art.
+- The duplicate Assets/UI/HUD/Art/Generated copy was removed; StreamingAssets is
+  now the single source of truth (HudArtPathResolver_UsesStreamingAssetsRootInEditor).
+================================================================================
+
 Cái Bang skill icons in this folder are decoded from exact JXWin PC SPR paths in Skills.txt.
 
 PC source of truth (PC gốc JX1) — archived in StreamingAssets/Reference/:
