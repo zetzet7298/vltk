@@ -160,13 +160,16 @@
                  Each slot assignable to a consumable (e.g. Ngũ Hoa Ngọc Lộ). Activation =
                  consume intent (no-op log; backend effect is a follow-up gameplay change). -->
             <ui:VisualElement name="QuickSlots" class="hud-quick-slots">
-                <ui:VisualElement name="QuickSlot1" class="hud-quick-slot hud-quick-slot-1">
+                <ui:VisualElement name="QuickSlot1" class="hud-quick-slot">
+                    <ui:VisualElement class="hud-quick-slot-badge hud-quick-slot-1"/>
                     <ui:VisualElement name="QuickSlot1Icon" class="hud-quick-slot-icon empty"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="QuickSlot2" class="hud-quick-slot hud-quick-slot-2">
+                <ui:VisualElement name="QuickSlot2" class="hud-quick-slot">
+                    <ui:VisualElement class="hud-quick-slot-badge hud-quick-slot-2"/>
                     <ui:VisualElement name="QuickSlot2Icon" class="hud-quick-slot-icon empty"/>
                 </ui:VisualElement>
-                <ui:VisualElement name="QuickSlot3" class="hud-quick-slot hud-quick-slot-3">
+                <ui:VisualElement name="QuickSlot3" class="hud-quick-slot">
+                    <ui:VisualElement class="hud-quick-slot-badge hud-quick-slot-3"/>
                     <ui:VisualElement name="QuickSlot3Icon" class="hud-quick-slot-icon empty"/>
                 </ui:VisualElement>
             </ui:VisualElement>

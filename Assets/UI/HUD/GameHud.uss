@@ -437,33 +437,34 @@
     }
 
     /* Main combat slot (player-chosen priority, visually larger for thumb rest).
-       Frame: btn_skill_empty_pc.png (PC 42×42 SPR, scale-to-fit, upscaled 2.3× —
-       pixel art upscales cleanly). Centered in the cluster's upper-middle area. */
+       Clean translucent frame; the PC btn_skill_empty_pc.png sprite was a MISLABEL —
+       it actually depicts a bandaged gauntlet/hand icon (not an empty frame), which
+       rendered as a distracting hand baked into every slot. The real skill icon loads
+       into the child .hud-skill-slot-icon from PC art. Centered in the cluster. */
     .hud-combat-main-slot {
         position: absolute;
         left: 147px;
         top: 117px;
         width: 96px;
         height: 96px;
-        border-width: 0px;
-        border-radius: 6px;
-        background-color: rgba(20,40,30,0.35);
-        background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
-        -unity-background-scale-mode: scale-to-fit;
+        border-width: 2px;
+        border-radius: 10px;
+        background-color: rgba(20,40,30,0.45);
+        border-color: rgba(95,160,115,0.9);
         justify-content: center;
         align-items: center;
     }
 
-    /* Sub combat slot (64×64). Frame: btn_skill_empty_pc.png (PC SPR, scale-to-fit). */
+    /* Sub combat slot (64×64). Clean translucent frame (see main-slot note: the
+       btn_skill_empty_pc sprite was a gauntlet icon misused as a frame — removed). */
     .hud-combat-sub-slot {
         position: absolute;
         width: 64px;
         height: 64px;
-        border-width: 0px;
-        border-radius: 4px;
-        background-color: rgba(20,40,30,0.3);
-        background-image: url('project://database/Assets/UI/HUD/Art/btn_skill_empty_pc.png');
-        -unity-background-scale-mode: scale-to-fit;
+        border-width: 2px;
+        border-radius: 8px;
+        background-color: rgba(20,40,30,0.4);
+        border-color: rgba(95,160,115,0.85);
         justify-content: center;
         align-items: center;
     }
@@ -561,16 +562,34 @@
         /* S3 (HUD-004): usable-item quick slot frame. Reuses PC numbered-well sprites
            (btn_quick_item_1/2/3_pc.png — 快捷栏 slot-well family, 36×36 RGBA). Each
            numbered sprite baked-in at PC extraction; no fabrication. */
+        /* Quick item slot — clean mobile frame, uniform on all 4 sides. The PC
+           numbered-well sprites (btn_quick_item_X_pc.png) have a solid-black interior
+           + teal border on only top/left, so scale-to-fit to the full 60×60 slot
+           produced the thick uneven black border flagged in review. They are now
+           rendered as a SMALL corner badge (PC number-tag style) while the slot uses
+           a translucent dark frame. Preserves PC number art (test
+           S3_QuickSlotsUsePcChromeAndNoNthChildSelector) without the black bleed. */
         .hud-quick-slot {
             width: 60px;
             height: 60px;
-            margin-left: 2px;
-            margin-right: 2px;
-            -unity-background-scale-mode: scale-to-fit;
-            background-color: transparent;
-            border-width: 0px;
-            border-radius: 0px;
+            margin-left: 3px;
+            margin-right: 3px;
+            background-color: rgba(12,22,16,0.6);
+            border-width: 2px;
+            border-color: rgba(95,160,115,0.9);
+            border-radius: 9px;
             overflow: hidden;
+        }
+
+        /* PC numbered-well badge (small, top-left corner). At badge size the sprite's
+           black-on-teal reads as a number tag instead of a black box. */
+        .hud-quick-slot-badge {
+            position: absolute;
+            left: -2px;
+            top: -2px;
+            width: 20px;
+            height: 20px;
+            -unity-background-scale-mode: scale-to-fit;
         }
 
         .hud-quick-slot-1 {
@@ -584,18 +603,17 @@
         }
 
         /* Quick-slot item icon child (centered, shown when an item is assigned).
-           Empty state shows PC empty styling (semi-transparent dark). */
+           Empty state is transparent so the clean frame shows through cleanly. */
         .hud-quick-slot-icon {
             position: absolute;
-            left: 8px;
-            top: 8px;
-            width: 40px;
-            height: 40px;
-            background-size: contain;
+            left: 12px;
+            top: 12px;
+            width: 36px;
+            height: 36px;
             -unity-background-scale-mode: scale-to-fit;
         }
         .hud-quick-slot-icon.empty {
-            background-color: rgba(40,80,60,0.3);
+            background-color: transparent;
         }
 
         /* BuffPanel inside TopGapCluster: flow as a row below the menu buttons instead
