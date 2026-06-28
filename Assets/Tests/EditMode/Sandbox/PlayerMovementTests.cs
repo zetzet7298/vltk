@@ -296,14 +296,14 @@ namespace VLTK.Tests.Sandbox
 
                 controller.SetMoveInput(Vector2.right);
                 controller.SimulateMove(1f);
-                Assert.AreEqual(100f, go.transform.position.x, 0.001f); // 100 * mounted 2 * walk 0.5
+                Assert.AreEqual(50f, go.transform.position.x, 0.001f); // mounted walk selects horse walk pace: 100 * walk 0.5
 
                 go.transform.position = Vector3.zero;
                 controller.ToggleWalkRun(); // mounted run
                 controller.SetMoveInput(Vector2.right);
                 controller.SimulateMove(1f);
                 Assert.IsTrue(controller.IsRunning);
-                Assert.AreEqual(200f, go.transform.position.x, 0.001f); // 100 * mounted 2
+                Assert.AreEqual(200f, go.transform.position.x, 0.001f); // mounted run: 100 * mounted run 2
             }
             finally
             {

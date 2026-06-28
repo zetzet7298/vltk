@@ -455,9 +455,19 @@ namespace VLTK.Sandbox
 
             EnsureVisual();
             Mount.Tick(dt);
-            float speed = moveSpeed * (IsRunning ? 1f : Mathf.Clamp(walkSpeedMultiplier, 0.05f, 1f));
+            float walkMultiplier = Mathf.Clamp(walkSpeedMultiplier, 0.05f, 1f);
+            float speed = moveSpeed;
             if (Mount.IsMounted)
-                speed *= mountedSpeedMultiplier;
+            {
+                // PC walk/run is an action mode. Mounted walk must select the horse's
+                // walk pace, not apply the walk factor after the horse run multiplier;
+                // otherwise walking on a horse still moves about as fast as on-foot run.
+                speed *= IsRunning ? mountedSpeedMultiplier : walkMultiplier;
+            }
+            else
+            {
+                speed *= IsRunning ? 1f : walkMultiplier;
+            }
 
             // Apply FastWalkRunP state buff/debuff speed multiplier from active player combat states
             var manager = SandboxManager.Instance;
