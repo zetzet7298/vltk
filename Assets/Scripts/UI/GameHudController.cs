@@ -113,6 +113,17 @@ namespace VLTK.UI
         private ScrollView _facePickerList;
         private Button _faceBtn;
 
+        // Action toggle buttons (run/sit/horse): swap icon between off/on PC SPR frames.
+        // PC source: dc11ac12.ini (工具控制条.ini) defines these as CheckBox=1 toggles:
+        //   [Run]   Up=0 Down=1 -> off=btn_run(f0),   on=btn_run_on(f1, walk active)
+        //   [Sit]   Up=0 Down=1 -> off=btn_sit(f0),   on=btn_sit_on(f1, meditating)
+        //   [Horse] Up=1 Down=0 -> off=btn_horse(f1, on foot), on=btn_horse_on(f0, mounted)
+        // Both clusters (parked BtnXxx + mobile ActionBtnXxx) stay in sync.
+        private VisualElement _btnRunIcon, _btnSitIcon, _btnHorseIcon;
+        private VisualElement _actionBtnRunIcon, _actionBtnSitIcon, _actionBtnHorseIcon;
+        private bool _runToggleOn, _sitToggleOn, _horseToggleOn;
+        private bool _actionTogglesBound;
+
 
         private HudDataBridge _bridge;
         private MinimapService _minimapService;
@@ -215,7 +226,63 @@ namespace VLTK.UI
             if (!_initialized) return;
             SizeRootToScreen();
             UpdateBarsAndMinimap();
+            RefreshActionToggles();
             // S1 (HUD-004): joystick force-hide removed — stays active for mobile play.
+        }
+
+        /// <summary>
+        /// Swaps run/sit/horse button icons between their PC off/on SPR frames based on the
+        /// live player state (walk mode, meditation, mount). PC source: dc11ac12.ini marks
+        /// these buttons CheckBox=1 with explicit Up/Down frame indices (see field notes).
+        /// Only reloads the texture when the toggle state actually changes.
+        /// </summary>
+        private void RefreshActionToggles()
+        {
+            var player = SandboxManager.Instance != null ? SandboxManager.Instance.PlayerController : null;
+            if (player == null) return;
+
+            // walk active == not running; sit active == meditating; horse active == mounted.
+            bool runOn = !player.IsRunning;
+            bool sitOn = player.IsMeditating;
+            bool horseOn = player.Mount != null && player.Mount.IsMounted;
+
+            if (runOn != _runToggleOn)
+            {
+                _runToggleOn = runOn;
+                SetActionToggleIcon(_btnRunIcon, "btn_run", runOn);
+                SetActionToggleIcon(_actionBtnRunIcon, "btn_run", runOn);
+            }
+            if (sitOn != _sitToggleOn)
+            {
+                _sitToggleOn = sitOn;
+                SetActionToggleIcon(_btnSitIcon, "btn_sit", sitOn);
+                SetActionToggleIcon(_actionBtnSitIcon, "btn_sit", sitOn);
+            }
+            if (horseOn != _horseToggleOn)
+            {
+                _horseToggleOn = horseOn;
+                SetActionToggleIcon(_btnHorseIcon, "btn_horse", horseOn);
+                SetActionToggleIcon(_actionBtnHorseIcon, "btn_horse", horseOn);
+            }
+        }
+
+        private void SetActionToggleIcon(VisualElement icon, string baseName, bool on)
+        {
+            if (icon == null) return;
+            var name = on ? string.Concat(baseName, "_on") : baseName;
+            LoadIcon(icon, HudArtPathResolver.ResolveArtRoot(artFolder), name);
+        }
+
+        private void CacheActionToggleIcons(VisualElement root)
+        {
+            if (root == null || _actionTogglesBound) return;
+            _btnRunIcon = root.Q("BtnRunIcon");
+            _btnSitIcon = root.Q("BtnSitIcon");
+            _btnHorseIcon = root.Q("BtnHorseIcon");
+            _actionBtnRunIcon = root.Q("ActionBtnRunIcon");
+            _actionBtnSitIcon = root.Q("ActionBtnSitIcon");
+            _actionBtnHorseIcon = root.Q("ActionBtnHorseIcon");
+            _actionTogglesBound = true;
         }
 
         private void EnsureRuntimeReady()
@@ -485,6 +552,8 @@ namespace VLTK.UI
                     LoadIcon(icon, artPath, kv.Value);
                 }
 
+                CacheActionToggleIcons(root);
+
                 var sendIcon = root.Q("SendBtnIcon");
                 if (sendIcon != null)
                     LoadIcon(sendIcon, artPath, "btn_chat_send");
@@ -512,11 +581,10 @@ namespace VLTK.UI
                 if (treasure != null)
                     LoadIcon(treasure, artPath, "btn_treasure");
 
-                // S2 (HUD-004): load a sample CaiBang skill icon for the main combat slot
-                // (PrimaryAttackBtn SlotIcon) so it's visible at runtime. The 5 sub slots
-                // are populated by CombatSkillSlotController.RefreshSlotVisuals() with the
-                // faction default deck. The main slot icon is a sample placeholder until
-                // full assignment gameplay is wired (follow-up change).
+                // Main combat slot (PrimaryAttackBtn SlotIcon): shows Phi Long Tại Thiên (357),
+                // which is slot 0 of the Cái Bang default deck and what TriggerPrimaryAttack casts via
+                // ResolvePrimaryAttackSlot(). Keep this icon in sync with DefaultDeckByFaction slot 0
+                // if the primary attack skill ever changes.
                 var primaryIcon = root.Q("PrimaryAttackBtn")?.Q("SlotIcon");
                 if (primaryIcon != null)
                 {

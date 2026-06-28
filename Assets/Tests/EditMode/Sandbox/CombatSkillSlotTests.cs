@@ -346,8 +346,8 @@ namespace VLTK.Tests.Sandbox
                 .GetField("DefaultDeckByFaction", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
             Assert.IsNotNull(caiBangDeckField, "CombatSkillSlotController.DefaultDeckByFaction must exist.");
             var deckMap = (System.Collections.Generic.Dictionary<CombatFaction, int[]>)caiBangDeckField.GetValue(null);
-            CollectionAssert.AreEqual(new[] { 210, 357, 358, 1073, 130 }, deckMap[CombatFaction.CaiBang],
-                "Cái Bang default deck after HUD action SDD: Khinh công → Phi Long → Kháng Long → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ");
+            CollectionAssert.AreEqual(new[] { 357, 210, 358, 1073, 130 }, deckMap[CombatFaction.CaiBang],
+                "Cái Bang default deck: Phi Long (357, main/primary attack slot 0) → Khinh công → Kháng Long → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ");
             Assert.AreEqual(1, deckMap[CombatFaction.CaiBang].Count(id => id == PcCombatCatalogFactory.UniversalLightnessSkill),
                 "Khinh công must appear exactly once in the right-thumb default deck.");
             foreach (var f in factions)

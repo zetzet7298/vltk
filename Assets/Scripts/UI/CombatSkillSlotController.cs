@@ -132,7 +132,7 @@ namespace VLTK.UI
             EnsureDeckArrays();
             ImportLegacySlotsIfNeeded();
             FillDefaultDeckIfEmpty();
-            MigrateCaiBangDeckToKhinhCongDefaultIfNeeded();
+            MigrateCaiBangDeckToDefaultIfNeeded();
 
             if (doc == null || doc.rootVisualElement == null) return;
             if (root == null) return;
@@ -287,16 +287,19 @@ namespace VLTK.UI
         // MobileSkillSlotCount = 5 → set đủ 5 skill theo thứ tự PC.
         // PC source: bin/client/script/skill/{gaibang,shaolin,...}.lua + skills.txt.
         // Fallback: lấy 5 skill active đầu tiên từ PcSkillPanelService.GetPcSkillOrder(faction).
-        private static readonly int[] LegacyCaiBangDefaultDeck = { 357, 358, 1073, 130, 127 };
+        // Legacy Cái Bang deck shape BEFORE the main-slot=Phi Long fix (Khinh Công sat at slot 0).
+        // Used by MigrateCaiBangDeckToDefaultIfNeeded to reorder old saves to the current default.
+        private static readonly int[] LegacyCaiBangDefaultDeck = { 210, 357, 358, 1073, 130 };
 
         private static readonly System.Collections.Generic.Dictionary<CombatFaction, int[]> DefaultDeckByFaction =
             new System.Collections.Generic.Dictionary<CombatFaction, int[]>
             {
-                // Cái Bang + universal PC Khinh Công (210): user-requested swap places
-                // the previous sub-slot-1 skill into the formerly empty left-arc slot, then
-                // assigns Khinh Công to sub-slot 1. PC Khinh Công source: Skills.txt id=210,
+                // Cái Bang default deck (PC-correct order): slot 0 is the faction basic attack =
+                // Phi Long Tại Thiên (357), which the main PrimaryAttackBtn resolves to and casts
+                // (ResolvePrimaryAttackSlot -> slot 0). Universal PC Khinh Công (210) stays at slot 1
+                // (most reachable utility). Khinh Công source: Skills.txt id=210,
                 // icon \spr\Ui\技能图标\轻功.spr (hash bf787a8a), script \script\skill\special\轻功.lua.
-                { CombatFaction.CaiBang, new[] { 210, 357, 358, 1073, 130 } },
+                { CombatFaction.CaiBang, new[] { 357, 210, 358, 1073, 130 } },
             };
 
         private void FillDefaultDeckIfEmpty()
@@ -338,26 +341,21 @@ namespace VLTK.UI
             rightSlotSkillId = deckASkillIds[1];
         }
 
-        private void MigrateCaiBangDeckToKhinhCongDefaultIfNeeded()
+        // Normalize a Cái Bang deck to the current DefaultDeckByFaction order. Reorders legacy
+        // shapes (e.g. the old Khinh-Công-at-slot-0 deck) and fills empty slots, but never clobbers
+        // a user-customized deck. Ensures slot 0 = Phi Long (357) = main primary attack.
+        private void MigrateCaiBangDeckToDefaultIfNeeded()
         {
             var manager = SandboxManager.Instance;
             var prog = _progression ?? manager?.PlayerProgression;
             if (prog == null || prog.faction != CombatFaction.CaiBang) return;
-            if (ContainsSkill(deckASkillIds, PcCombatCatalogFactory.UniversalLightnessSkill)) return;
-            if (!ContainsEmptySlot(deckASkillIds) && !MatchesDeck(deckASkillIds, LegacyCaiBangDefaultDeck)) return;
             if (!DefaultDeckByFaction.TryGetValue(CombatFaction.CaiBang, out var defaults)) return;
+            if (MatchesDeck(deckASkillIds, defaults)) return; // already the current default
+            if (!ContainsEmptySlot(deckASkillIds) && !MatchesDeck(deckASkillIds, LegacyCaiBangDefaultDeck)) return;
 
             for (int i = 0; i < MobileSkillSlotCount; i++)
                 deckASkillIds[i] = i < defaults.Length ? defaults[i] : 0;
             SyncLegacySlotFields();
-        }
-
-        private static bool ContainsSkill(int[] deck, int skillId)
-        {
-            if (deck == null) return false;
-            for (int i = 0; i < deck.Length; i++)
-                if (deck[i] == skillId) return true;
-            return false;
         }
 
         private static bool ContainsEmptySlot(int[] deck)
