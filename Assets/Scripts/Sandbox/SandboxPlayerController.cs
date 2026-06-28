@@ -157,8 +157,8 @@ namespace VLTK.Sandbox
             if (allowKeyboardFallback)
             {
                 var keyboard = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
-                if (keyboard.sqrMagnitude > 0.0001f && !IsMeditating)
-                    MoveInput = Vector2.ClampMagnitude(keyboard, 1f);
+                if (keyboard.sqrMagnitude > 0.0001f)
+                    SetMoveInput(keyboard);
             }
 
             SimulateMove(Time.deltaTime);
@@ -180,14 +180,11 @@ namespace VLTK.Sandbox
 
         public void SetMoveInput(Vector2 input)
         {
-            if (IsMeditating)
-            {
-                MoveInput = Vector2.zero;
-                HasMoveTarget = false;
-                return;
-            }
+            Vector2 clamped = Vector2.ClampMagnitude(input, 1f);
+            if (IsMeditating && clamped.sqrMagnitude > 0.0001f)
+                StopMeditation("Dừng ngồi thiền để di chuyển");
 
-            MoveInput = Vector2.ClampMagnitude(input, 1f);
+            MoveInput = IsMeditating ? Vector2.zero : clamped;
             if (MoveInput.sqrMagnitude > 0.0001f)
                 HasMoveTarget = false;
         }
@@ -195,11 +192,7 @@ namespace VLTK.Sandbox
         public void MoveTo(Vector2 worldTarget)
         {
             if (IsMeditating)
-            {
-                MoveInput = Vector2.zero;
-                HasMoveTarget = false;
-                return;
-            }
+                StopMeditation("Dừng ngồi thiền để di chuyển");
 
             MoveTarget = ClampToActiveMapBounds(worldTarget);
             HasMoveTarget = true;
@@ -247,15 +240,26 @@ namespace VLTK.Sandbox
                 return;
             }
 
-            IsMeditating = !IsMeditating;
             if (IsMeditating)
             {
-                MoveInput = Vector2.zero;
-                HasMoveTarget = false;
-                LastMoveDelta = Vector2.zero;
+                StopMeditation("Dừng ngồi thiền");
+                return;
             }
 
-            SubsystemLog.Info("HUD", IsMeditating ? "Bắt đầu ngồi thiền" : "Dừng ngồi thiền");
+            IsMeditating = true;
+            MoveInput = Vector2.zero;
+            HasMoveTarget = false;
+            LastMoveDelta = Vector2.zero;
+            SubsystemLog.Info("HUD", "Bắt đầu ngồi thiền");
+        }
+
+        private void StopMeditation(string reason)
+        {
+            if (!IsMeditating)
+                return;
+            IsMeditating = false;
+            LastMoveDelta = Vector2.zero;
+            SubsystemLog.Info("HUD", reason);
         }
 
         /// <summary>Set 8-way facing direction (0-7) for combat targeting.</summary>
@@ -339,9 +343,17 @@ namespace VLTK.Sandbox
         /// </summary>
         public Vector2 GetLeapTarget(float distance)
         {
-            Vector2 dir = (visual != null && visual.direction >= 0 && visual.direction < Facing8Way.Length)
-                ? Facing8Way[visual.direction]
-                : Vector2.down;
+            // PC KNpc::NewJump jumps toward the current command/direction. On mobile, prefer the
+            // live joystick/click-to-move direction so Khinh Công can be fired while already moving.
+            Vector2 dir = Vector2.zero;
+            if (MoveInput.sqrMagnitude > 0.0001f)
+                dir = MoveInput;
+            else if (HasMoveTarget)
+                dir = MoveTarget - (Vector2)transform.position;
+            else if (visual != null && visual.direction >= 0 && visual.direction < Facing8Way.Length)
+                dir = Facing8Way[visual.direction];
+            else
+                dir = Vector2.down;
             Vector2 target = (Vector2)transform.position + dir.normalized * Mathf.Max(0f, distance);
             if (clampToMapBounds)
                 target = new Vector2(
@@ -358,12 +370,20 @@ namespace VLTK.Sandbox
         /// </summary>
         public void BeginLeap(Vector2 worldTarget, float duration)
         {
+            // Khinh Công may be pressed while moving. Dash owns position during the leap, but keep
+            // the current movement intent so holding joystick continues movement after landing.
+            Vector2 preservedInput = MoveInput;
+            Vector2 preservedTarget = MoveTarget;
+            bool preservedHasTarget = HasMoveTarget;
             EnsureVisual();
             _forcedVisualAction = PlayerVisualAction.Jump;
             _forcedVisualUntil = Time.time + Mathf.Max(0.05f, duration);
             if (visual != null)
                 visual.SetAction(PlayerVisualAction.Jump);
             BeginDash(worldTarget, duration);
+            MoveInput = preservedInput;
+            MoveTarget = preservedTarget;
+            HasMoveTarget = preservedHasTarget;
         }
 
         public void ResetMovementState()
@@ -677,8 +697,10 @@ namespace VLTK.Sandbox
         public void ToggleMount()
         {
             if (IsMeditating)
-                ToggleMeditation();
+                StopMeditation("Dừng ngồi thiền");
 
+            // Preserve IsRunning across mount/dismount: PC walk/run is an action-toggle state,
+            // and mounted movement also respects walk vs run speed.
             if (Mount.IsMounted)
                 Mount.Dismount();
             else if (defaultHorseId > 0)
