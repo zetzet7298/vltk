@@ -59,6 +59,60 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void MobileSkillTapTarget_ApproachesNearestEnemy_WhenOutsideCastRange()
+        {
+            var service = new CombatAutoTargetService();
+            var skill = new SkillDefinition
+            {
+                skillId = 117,
+                attackRadius = 100,
+                targetEnemy = true,
+                missileForm = SkillMissileForm.Single,
+            };
+
+            var enemies = new List<EnemyRuntimeInfo>
+            {
+                new() { enemyId = 1, position = new Vector2(250, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Xa hơn" },
+                new() { enemyId = 2, position = new Vector2(180, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Gần nhất" },
+            };
+
+            var plan = service.ResolveSkillTapTarget(Vector2.zero, skill, enemies);
+
+            Assert.IsTrue(plan.hasTarget);
+            Assert.IsTrue(plan.shouldApproach, "Mobile tap should move toward the nearest valid enemy instead of doing a no-target forward cast.");
+            Assert.IsFalse(plan.canCastNow);
+            Assert.AreEqual(2, plan.target.enemyId);
+            Assert.AreEqual(88f, plan.approachPosition.x, 0.1f, "Approach point should stop inside attack range with safety padding.");
+            Assert.AreEqual(0f, plan.approachPosition.y, 0.1f);
+        }
+
+        [Test]
+        public void MobileSkillTapTarget_CastsImmediately_WhenNearestEnemyInRange()
+        {
+            var service = new CombatAutoTargetService();
+            var skill = new SkillDefinition
+            {
+                skillId = 117,
+                attackRadius = 100,
+                targetEnemy = true,
+                missileForm = SkillMissileForm.Single,
+            };
+
+            var enemies = new List<EnemyRuntimeInfo>
+            {
+                new() { enemyId = 1, position = new Vector2(80, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Trong tầm" },
+                new() { enemyId = 2, position = new Vector2(180, 0), alive = true, currentLife = 50, maxLife = 50, displayName = "Ngoài tầm" },
+            };
+
+            var plan = service.ResolveSkillTapTarget(Vector2.zero, skill, enemies);
+
+            Assert.IsTrue(plan.hasTarget);
+            Assert.IsTrue(plan.canCastNow);
+            Assert.IsFalse(plan.shouldApproach);
+            Assert.AreEqual(1, plan.target.enemyId);
+        }
+
+        [Test]
         public void AutoTarget_SkipsDeadEnemies()
         {
             var service = new CombatAutoTargetService();
@@ -321,8 +375,8 @@ namespace VLTK.Tests.Sandbox
         {
             // PC source-derived default deck per faction. PC gốc JX: 1 ô là skill tấn công cơ bản
             // của phái, các ô còn lại là skill cao cấp / chiêu thức đặc trưng.
-            // Cái Bang uses explicit per-faction default deck (PC gaibang.lua):
-            // Phi Long (357) → Thiên Hạ Vô Cẩu (359) → Túy Điệp Cuồng Vũ (130) → Kháng Long Hữu Hối (358) → Hoạt Bất Lưu Thủ (127).
+            // Cái Bang uses explicit per-faction default deck (PC gaibang.lua + newest skills.txt rows):
+            // Phi Long (357) → Khinh công (210) → Tiềm Long Tại Uyên (358) → Thần Thủ Lệnh Long (1073) → Túy Điệp Cuồng Vũ (130).
             // Other factions use the first 5 entries from PcSkillPanelService.GetPcSkillOrder(faction) directly.
             // (Cái Bang's per-faction default deck is tested separately below.)
             var factions = new[]
@@ -347,7 +401,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(caiBangDeckField, "CombatSkillSlotController.DefaultDeckByFaction must exist.");
             var deckMap = (System.Collections.Generic.Dictionary<CombatFaction, int[]>)caiBangDeckField.GetValue(null);
             CollectionAssert.AreEqual(new[] { 357, 210, 358, 1073, 130 }, deckMap[CombatFaction.CaiBang],
-                "Cái Bang default deck: Phi Long (357, main/primary attack slot 0) → Khinh công → Kháng Long → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ");
+                "Cái Bang default deck: Phi Long (357, main/primary attack slot 0) → Khinh công → Tiềm Long Tại Uyên → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ");
             Assert.AreEqual(1, deckMap[CombatFaction.CaiBang].Count(id => id == PcCombatCatalogFactory.UniversalLightnessSkill),
                 "Khinh công must appear exactly once in the right-thumb default deck.");
             foreach (var f in factions)
@@ -560,7 +614,8 @@ namespace VLTK.Tests.Sandbox
         public void CombatRuntime_BuffStates_ApplyAddedDamageAndResistances()
         {
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
-            var svc = new CombatRuntimeService(catalog);
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(catalog, damage: deterministicDamage);
             
             var player = new CombatActorState
             {

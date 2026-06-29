@@ -838,14 +838,27 @@ namespace VLTK.UI
             if (player == null) return;
 
             Vector2 casterPos = player.transform.position;
-            player.PlayPcSkillAction(skill.charAnimId, PcCastAnimationDurationSeconds(skill));
 
             var enemies = CollectEnemies();
             int skillLevel = manager.PlayerProgression?.skillLevels.TryGetValue(skillId, out var lv) == true ? lv : skill.maxLevel;
-            var target = skill.targetEnemy ? ResolveCombatTarget(casterPos, skill, enemies, skillLevel) : null;
+            var plan = skill.targetEnemy ? ResolveMobileSkillTapPlan(casterPos, skill, enemies, skillLevel) : MobileSkillTapTargetPlan.NoTarget();
+            var target = plan.canCastNow ? plan.target : null;
+
+            if (plan.shouldApproach && plan.target != null)
+            {
+                int facing = CombatAutoTargetService.ComputeFacing8Way(casterPos, plan.target.position);
+                player.SetFacing(facing);
+                player.MoveTo(plan.approachPosition);
+                LockTarget(plan.target.enemyId, plan.target.name);
+                SubsystemLog.Info("Combat", $"Move into range for {skill.DisplayName} → {plan.target.name} " +
+                                             $"(distance={plan.target.distance:F0}, range={plan.maxRange:F0})");
+                return;
+            }
 
             if (target != null || (skill.targetSelf && !skill.targetEnemy))
             {
+                player.PlayPcSkillAction(skill.charAnimId, PcCastAnimationDurationSeconds(skill));
+
                 if (target != null)
                 {
                     int facing = CombatAutoTargetService.ComputeFacing8Way(casterPos, target.position);
@@ -936,6 +949,7 @@ namespace VLTK.UI
             }
             else
             {
+                player.PlayPcSkillAction(skill.charAnimId, PcCastAnimationDurationSeconds(skill));
                 var effectService = manager.SkillEffectVisual;
                 // No target: shoot forward in player's facing direction (PC: KNpc fires toward facing dir)
                 int facing = player.visual != null ? player.visual.GetCurrentDirection() : 0;
@@ -947,20 +961,36 @@ namespace VLTK.UI
             }
         }
 
-        private CombatTargetInfo ResolveCombatTarget(
+        private MobileSkillTapTargetPlan ResolveMobileSkillTapPlan(
             Vector2 casterPos,
             SkillDefinition skill,
             IReadOnlyList<EnemyRuntimeInfo> enemies,
             int skillLevel)
         {
             var locked = FindLockedTarget(casterPos, skill, enemies, skillLevel);
-            if (locked != null) return locked;
+            if (locked != null)
+                return MobileSkillTapTargetPlan.Cast(locked, ResolveWorldRange(skill, skillLevel));
 
             var targetService = new CombatAutoTargetService();
-            var nearest = targetService.FindNearestEnemy(casterPos, skill, enemies, skillLevel);
-            if (nearest != null)
-                LockTarget(nearest.enemyId, nearest.name);
-            return nearest;
+            var plan = targetService.ResolveSkillTapTarget(casterPos, skill, enemies, skillLevel);
+            if (plan.hasTarget && plan.target != null)
+                LockTarget(plan.target.enemyId, plan.target.name);
+            return plan;
+        }
+
+        private static float ResolveWorldRange(SkillDefinition skill, int skillLevel)
+        {
+            int attackRadius;
+            if (PcKangLongYouHuiTuning.Applies(skill.skillId) && skillLevel > 0)
+                attackRadius = PcKangLongYouHuiTuning.AtLevel(skillLevel).attackRadius;
+            else if (PcCaiBangLuaLevelService.Applies(skill.skillId) && skillLevel > 0)
+            {
+                int luaRadius = PcCaiBangLuaLevelService.GetAttackRadius(skill.skillId, skillLevel);
+                attackRadius = luaRadius > 0 ? luaRadius : skill.attackRadius;
+            }
+            else
+                attackRadius = skill.attackRadius;
+            return attackRadius > 0 ? attackRadius : 500f;
         }
 
         private CombatTargetInfo FindLockedTarget(
