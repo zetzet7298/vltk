@@ -114,13 +114,15 @@ namespace VLTK.UI
         private ScrollView _facePickerList;
         private Button _faceBtn;
 
-        // Action toggle buttons (run/sit/horse): swap icon between off/on PC SPR frames.
+        // Action toggle buttons (run/sit/horse): swap icon between off/on PC SPR frames
+        // and add a light mobile ring around the active right-thumb buttons.
         // PC source: dc11ac12.ini (工具控制条.ini) defines these as CheckBox=1 toggles:
         //   [Run]   Up=0 Down=1 -> off=btn_run(f0),   on=btn_run_on(f1, walk active)
         //   [Sit]   Up=0 Down=1 -> off=btn_sit(f0),   on=btn_sit_on(f1, meditating)
         //   [Horse] Up=1 Down=0 -> off=btn_horse(f1, on foot), on=btn_horse_on(f0, mounted)
         // Both clusters (parked BtnXxx + mobile ActionBtnXxx) stay in sync.
         private VisualElement _btnRunIcon, _btnSitIcon, _btnHorseIcon;
+        private VisualElement _actionBtnRun, _actionBtnSit, _actionBtnHorse;
         private VisualElement _actionBtnRunIcon, _actionBtnSitIcon, _actionBtnHorseIcon;
         private bool _runToggleOn, _sitToggleOn, _horseToggleOn;
         private bool _actionTogglesBound;
@@ -283,6 +285,13 @@ namespace VLTK.UI
                 SetActionToggleIcon(_btnHorseIcon, "btn_horse", horseOn);
                 SetActionToggleIcon(_actionBtnHorseIcon, "btn_horse", horseOn);
             }
+
+            // Rings are cheap class toggles, so refresh them every frame to avoid stale
+            // active visuals after UI reloads or late binding. Texture reloads above stay
+            // state-change-only to avoid per-frame IO/coroutine churn.
+            SetActionToggleRing(_actionBtnRun, runOn);
+            SetActionToggleRing(_actionBtnSit, sitOn);
+            SetActionToggleRing(_actionBtnHorse, horseOn);
         }
 
         private void SetActionToggleIcon(VisualElement icon, string baseName, bool on)
@@ -292,12 +301,20 @@ namespace VLTK.UI
             LoadIcon(icon, HudArtPathResolver.ResolveArtRoot(artFolder), name);
         }
 
+        private static void SetActionToggleRing(VisualElement button, bool on)
+        {
+            button?.EnableInClassList("toggle-on", on);
+        }
+
         private void CacheActionToggleIcons(VisualElement root)
         {
             if (root == null || _actionTogglesBound) return;
             _btnRunIcon = root.Q("BtnRunIcon");
             _btnSitIcon = root.Q("BtnSitIcon");
             _btnHorseIcon = root.Q("BtnHorseIcon");
+            _actionBtnRun = root.Q("ActionBtnRun");
+            _actionBtnSit = root.Q("ActionBtnSit");
+            _actionBtnHorse = root.Q("ActionBtnHorse");
             _actionBtnRunIcon = root.Q("ActionBtnRunIcon");
             _actionBtnSitIcon = root.Q("ActionBtnSitIcon");
             _actionBtnHorseIcon = root.Q("ActionBtnHorseIcon");

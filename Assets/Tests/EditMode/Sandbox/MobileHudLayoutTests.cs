@@ -56,5 +56,23 @@ namespace VLTK.Tests.Sandbox
             Assert.That(controller, Does.Contain("OnQuickSlotClick"));
             Assert.That(controller, Does.Contain("{ \"BtnTreasure\", \"btn_treasure\" }"));
         }
+
+        [Test]
+        public void S3_ActionTogglesHaveActiveRings()
+        {
+            var uxml = File.ReadAllText(AssetPath("UI/HUD/GameHud.uxml"));
+            var uss = File.ReadAllText(AssetPath("UI/HUD/GameHud.uss"));
+            var controller = File.ReadAllText(AssetPath("Scripts/UI/GameHudController.cs"));
+
+            foreach (var ringName in new[] { "ActionBtnRunRing", "ActionBtnHorseRing", "ActionBtnSitRing" })
+                Assert.That(uxml, Does.Contain($"name=\"{ringName}\""), $"Missing active-state ring {ringName}");
+
+            Assert.That(uss, Does.Contain(".hud-action-toggle-ring"));
+            Assert.That(uss, Does.Contain(".hud-action-btn.toggle-on > .hud-action-toggle-ring"));
+            Assert.That(controller, Does.Contain("EnableInClassList(\"toggle-on\""));
+            Assert.That(controller, Does.Contain("SetActionToggleRing(_actionBtnRun, runOn)"));
+            Assert.That(controller, Does.Contain("SetActionToggleRing(_actionBtnSit, sitOn)"));
+            Assert.That(controller, Does.Contain("SetActionToggleRing(_actionBtnHorse, horseOn)"));
+        }
     }
 }

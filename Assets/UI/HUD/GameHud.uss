@@ -657,7 +657,28 @@
         border-width: 0px;
         border-radius: 4px;
         background-color: rgba(20,40,30,0.3);
-        overflow: hidden;
+        overflow: visible;
+    }
+
+    .hud-action-toggle-ring {
+        position: absolute;
+        left: -3px;
+        top: -3px;
+        width: 54px;
+        height: 54px;
+        border-width: 0px;
+        border-radius: 27px;
+        border-color: transparent;
+        background-color: transparent;
+        display: none;
+        picking-mode: Ignore;
+    }
+
+    .hud-action-btn.toggle-on > .hud-action-toggle-ring {
+        display: flex;
+        border-width: 2px;
+        border-color: rgba(255, 239, 150, 0.92);
+        background-color: rgba(255, 224, 96, 0.10);
     }
     .hud-combat-pos-run   { left: 120px; top: 300px; }
     .hud-combat-pos-horse { left: 178px; top: 300px; }

@@ -184,12 +184,15 @@
                      OnRunClick/OnSitClick/OnHorseClick (no-op log stubs, no new gameplay). -->
                 <ui:VisualElement name="ActionBtnRun" class="hud-action-btn hud-combat-pos-run">
                     <ui:VisualElement name="ActionBtnRunIcon" class="hud-btn-icon"/>
+                    <ui:VisualElement name="ActionBtnRunRing" class="hud-action-toggle-ring"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="ActionBtnHorse" class="hud-action-btn hud-combat-pos-horse">
                     <ui:VisualElement name="ActionBtnHorseIcon" class="hud-btn-icon"/>
+                    <ui:VisualElement name="ActionBtnHorseRing" class="hud-action-toggle-ring"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="ActionBtnSit" class="hud-action-btn hud-combat-pos-sit">
                     <ui:VisualElement name="ActionBtnSitIcon" class="hud-btn-icon"/>
+                    <ui:VisualElement name="ActionBtnSitRing" class="hud-action-toggle-ring"/>
                 </ui:VisualElement>
             </ui:VisualElement>
 
