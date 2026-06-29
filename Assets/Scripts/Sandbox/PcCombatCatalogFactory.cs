@@ -221,11 +221,11 @@ namespace VLTK.Sandbox
             // 130 Túy Điệp Cuồng Vũ: buff (zuidie_kuangwu) [PC CharAnimId=43 state 43 aura]
             UtilitySkill(130, "Túy Điệp Cuồng Vũ ", "Túy Điệp Cuồng Vũ", 60, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:43, levelData:(lv)=>{
                 var d = new SkillLevelData{level=lv};
-                int dur = -1; // Permanent duration (N/A) in sandbox
+                int dur = Link(lv, (1, 18 * 120, ""), (30, 18 * 180, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 1, ""), (30, 30, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 10, ""), (30, 175, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 21, ""), (35, 20, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 21, ""), (35, 20, "")), -1, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (20, 30, "Conic")), dur, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 50, ""), (20, 100, "")), 0, 0));
                 return d;

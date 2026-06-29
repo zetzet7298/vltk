@@ -24,15 +24,15 @@
 - [x] Run filtered CaiBang tests.
 
 ## Phase 3 - Buff Skills and State Runtime
-- [ ] RED: Add tests for `Hoạt Bất Lưu Thủ` (`127`) mapping to `huabu_liushou` and applying `fastwalkrun_p` at current level.
-- [ ] RED: Add tests for `Túy Điệp Cuồng Vũ` (`130`) mapping to `zuidie_kuangwu` and exposing resistance/fire/deadly/life/cost values.
-- [ ] RED: Add runtime test proving buff states expire after their PC duration.
-- [ ] GREEN: Add/verify missing skill id mappings in `PcCaiBangLuaLevelService`.
-- [ ] GREEN: Add typed Lua accessors for speed/resistance/fire/deadly/life/cost/duration values.
-- [ ] GREEN: Apply PC-derived buff states in `CombatRuntimeService`.
-- [ ] GREEN: Integrate active movement speed state into `SandboxPlayerController` or the authoritative movement path.
-- [ ] GREEN: Add state ticking/expiration, using `BuffStateService` if compatible or a minimal runtime tick if safer.
-- [ ] Run filtered CaiBang tests and relevant movement/runtime tests.
+- [x] RED: Add tests for `Hoạt Bất Lưu Thủ` (`127`) mapping to `huabu_liushou` and applying `fastwalkrun_p` at current level.
+- [x] RED: Add tests for `Túy Điệp Cuồng Vũ` (`130`) mapping to `zuidie_kuangwu` and exposing resistance/fire/deadly/life/cost values.
+- [x] RED: Add runtime test proving buff states expire after their PC duration.
+- [x] GREEN: Add/verify missing skill id mappings in `PcCaiBangLuaLevelService`.
+- [x] GREEN: Add typed Lua accessors for speed/resistance/fire/deadly/life/cost/duration values.
+- [x] GREEN: Apply PC-derived buff states in `CombatRuntimeService`.
+- [x] GREEN: Integrate active movement speed state into `SandboxPlayerController` or the authoritative movement path.
+- [x] GREEN: Add state ticking/expiration, using `BuffStateService` if compatible or a minimal runtime tick if safer.
+- [x] Run filtered CaiBang tests and relevant movement/runtime tests.
 
 ## Phase 4 - Active Damage and Defender State
 - [ ] RED: Add CaiBang damage test proving defender resistance states affect incoming Cai Bang skill damage.

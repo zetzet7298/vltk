@@ -15,6 +15,13 @@ Planning/evidence phase started. No implementation changes have been applied und
   - Resolved missile 48 resources in `evidence/khang-long-resource-evidence.md`; it shares dragon/impact SPRs with Phi Long but uses `MoveKind=1` non-homing.
   - Added `CaiBang_128_KhangLongUsesFanSpreadFromLuaMissileForm` verifying 15 fan targets, upward/downward lanes, center lane, and no Phi Long homing offsets.
   - Verified filtered CaiBang tests green: Unity EditMode job `46ef0c54113f4537895d1dd8a44cefb2`, 83 total / 83 passed / 0 failed / 0 skipped.
+- Completed Phase 3 buff runtime evidence/test slice:
+  - Verified Hoạt Bất Lưu Thủ `127` PC L20 `FastWalkRunP=66`, duration `3240`, cost `50`.
+  - Verified Túy Điệp Cuồng Vũ `130` PC active buff durations at L20 (`2867` ticks for allres/fire/deadly states; `LifeMaxYanP=-1` sentinel), and cost `100`.
+  - Fixed `PcCombatCatalogFactory` so `130` no longer uses permanent `-1` duration for all active buff states; only `LifeMaxYanP` keeps PC `-1` sentinel.
+  - Added runtime cast tests for 127 and 130 buff application.
+  - Verified filtered CaiBang tests green: Unity EditMode job `42335754025b435c9f17d4ed3578cc2c`, 85 total / 85 passed / 0 failed / 0 skipped.
+  - Verified focused buff expiration runtime test green: Unity EditMode job `f0ce62a7e9744188af5f752b0ed158c7`, 1 total / 1 passed.
 - Created SDD artifacts:
   - `proposal.md`
   - `spec.md`
@@ -50,10 +57,10 @@ Some older `.agents` handoff recommendations are already implemented in the curr
 Therefore, the next apply step should not blindly re-implement those old fixes. It should verify them against PC evidence and focus on remaining gaps.
 
 ## Next Recommended Apply Slice
-Phase 3:
-- Move to buff/runtime slices for `Hoạt Bất Lưu Thủ` and `Túy Điệp Cuồng Vũ`.
-- Verify movement speed consumes `FastWalkRunP` and buff states expire.
+Phase 4:
+- Move to active damage/defender state and remaining skill audit slices.
 - Continue PC evidence/resource resolution for Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
+- Add visual/state-icon smoke for 127/130 after core runtime parity.
 
 ## Blockers / Cautions
 - Async scout subagents failed/staled in this session, so parent-created SDD artifacts are the authoritative planning state for now.

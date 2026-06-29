@@ -170,6 +170,45 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_127_HoatBatLuuThu_AppliesPcFastWalkRunDuration()
+        {
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(127);
+            beggar.skillLevels[127] = 20;
+
+            var r = svc.Cast(beggar, beggar, 127, beggar.position, CombatRelation.Self);
+
+            Assert.IsTrue(r.success, r.detail);
+            Assert.AreEqual(50, r.manaCost, "PC huabu_liushou L20 skill_cost_v=50");
+            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.FastWalkRunP, out var speed));
+            Assert.AreEqual(66, speed.value1, "PC huabu_liushou L20 fastwalkrun_p=66");
+            Assert.AreEqual(3240, speed.value2, "PC huabu_liushou L20 duration=18*180 ticks");
+        }
+
+        [Test]
+        public void CaiBang_130_TuyDiepCuongVu_AppliesPcBuffDurations()
+        {
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(130);
+            beggar.skillLevels[130] = 20;
+
+            var r = svc.Cast(beggar, beggar, 130, beggar.position, CombatRelation.Self);
+
+            Assert.IsTrue(r.success, r.detail);
+            Assert.AreEqual(100, r.manaCost, "PC zuidie_kuangwu L20 skill_cost_v=100");
+            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AllResP, out var allRes));
+            Assert.AreEqual(20, allRes.value1, "PC zuidie_kuangwu L20 allres_p interpolates to 20");
+            Assert.AreEqual(2867, allRes.value2, "PC zuidie_kuangwu L20 duration interpolates between 18*120 at L1 and 18*180 at L30");
+            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AddFireDamageV, out var addFire));
+            Assert.AreEqual(144, addFire.value1, "PC zuidie_kuangwu L20 addfiremagic_v floors to 144");
+            Assert.AreEqual(2867, addFire.value2);
+            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.LifeMaxYanP, out var lifeMaxYan));
+            Assert.AreEqual(-1, lifeMaxYan.value2, "PC lifemax_yan_p duration remains permanent/sentinel -1");
+        }
+
+        [Test]
         public void NonCaiBang_CannotCastCaiBangSkill()
         {
             var svc = new CombatRuntimeService(Catalog());
