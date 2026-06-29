@@ -12,7 +12,7 @@ namespace VLTK.Tests.Sandbox
     //   119 Diên Môn Thác Bát (yanmen_tuobo)        → 0 Skill (damage, missile cast)
     //   122 Kiến Nhân Thần Thủ (jianren_shenshou)   → 0 Skill (damage, missile cast)
     //   124 Đả Cẩu Trận (dagou_zhen)               → 2 InitiativeNpcState (stance aura)
-    //   125 Thiên Hạ Vô Cẩu (tianxia_wugou)         → 0 Skill (damage, missile cast)
+    //   125 Bổng Đả Ác Cẩu (bangda_egou)           → 0 Skill (damage, missile cast)
     //   127 Hoạt Bất Lưu Thủ (huabu_liushou)        → 3 PassivityNpcState
     //   128 Kháng Long Hữu Hối (kanglong_youhui)    → 0 Skill (damage, missile cast)
     [TestFixture, Category("CaiBang")]
@@ -76,15 +76,15 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void TianxiaWugou_NpcVariant1539_SameShapeAsPlayer125()
+        public void TianxiaWugou_NpcVariant1539_SameShapeAsPlayer359()
         {
-            // PC 1539 (NPC variant) shares skill form với 125 nhưng req level 1, max level 60.
+            // PC 1539 (NPC variant) shares Thiên Hạ Vô Cẩu form with player skill 359.
             var cat = Catalog();
-            var p = cat.Resolve(125);
+            var p = cat.Resolve(359);
             var n = cat.Resolve(1539);
             Assert.IsNotNull(n, "skill 1539 missing");
-            Assert.AreEqual(p.missileForm, n.missileForm, "1539 missileForm = 125 missileForm (Surround)");
-            Assert.AreEqual(0, n.childSkillNum, "1539 childSkillNum = 0 (PC runtime uses Lua skill_misslenum_v)");
+            Assert.AreEqual(p.missileForm, n.missileForm, "1539 missileForm = 359 missileForm (Single + Lua count)");
+            Assert.AreEqual(p.childSkillId, n.childSkillId, "1539 child missile = 359 child missile 168");
         }
     }
 }

@@ -5,11 +5,9 @@ using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
-    // [CaiBang-TianXiaWuGou 2026-06-19] Phase A.3 + B.2: PC zone form for skill 125 + 1539.
+    // [CaiBang-TianXiaWuGou 2026-06-29] Newest PC version priority:
+    //   skill 125 is Bổng Đả Ác Cẩu (`bangda_egou`), while 359/1539 are Thiên Hạ Vô Cẩu (`tianxia_wugou`).
     // PC gaibang.lua::tianxia_wugou skill_misslenum_v L1=1, L20=3.
-    // PC MissilesForm=5 (Zone) — missiles distribute in fixed-radius area.
-    // Trước fix: Surround (form 3) + childNum=16 — sai PC.
-    // Sau fix: Zone (form 5) + childNum=3 + SetupPcZoneMissiles(radius=512).
     [TestFixture, Category("CaiBang")]
     public class CaiBangTianXiaWuGouTests
     {
@@ -17,44 +15,32 @@ namespace VLTK.Tests.Sandbox
         private SkillCatalog Catalog() => _catalog;
 
         [Test]
-        public void TianxiaWugou_SurroundForm_RuntimeMissileCount3()
-        {
-            // PC source (jx-source) Skills.txt 125 MissilesForm=4 (Chain). Unity runtime renders as Surround form
-            // (visual semantic: missiles fan out around caster). PC gaibang.lua::tianxia_wugou skill_misslenum_v
-            // L1=1, L20=3 — runtime đọc qua PcCaiBangLuaLevelService, catalog childSkillNum=0 (Lua override).
-            // Trước fix [2026-06-19]: Surround + childSkillNum=16 + attackRadius=512 — sai PC.
-            // Sau fix: Surround + childSkillNum=0 (Lua runtime) + attackRadius=400 (PC L20).
-            var cat = Catalog();
-            var s = cat.Resolve(125);
-            Assert.IsNotNull(s);
-            Assert.AreEqual(SkillMissileForm.Surround, s.missileForm, "125 PC MissilesForm=4 (Chain, rendered as Surround)");
-            Assert.AreEqual(0, s.childSkillNum, "125 PC ChildSkillNum=0 (Lua runtime override)");
-            Assert.AreEqual(400, s.attackRadius, "125 PC AttackRadius L20=400");
-        }
-
-        [Test]
-        public void TianxiaWugou_NpcVariant1539_SameShape()
+        public void TianxiaWugou_PlayerAndNpcVariantsUsePcHomingShape()
         {
             var cat = Catalog();
-            var p = cat.Resolve(125);
-            var n = cat.Resolve(1539);
-            Assert.IsNotNull(n, "skill 1539 missing");
-            Assert.AreEqual(p.missileForm, n.missileForm, "1539 missileForm = 125 missileForm");
-            Assert.AreEqual(p.attackRadius, n.attackRadius, "1539 attackRadius = 125 attackRadius");
-            Assert.AreEqual(0, n.childSkillNum, "1539 PC ChildSkillNum=0 (Lua runtime)");
+            var player = cat.Resolve(359);
+            var npc = cat.Resolve(1539);
+            Assert.IsNotNull(player, "skill 359 missing");
+            Assert.IsNotNull(npc, "skill 1539 missing");
+            Assert.AreEqual(SkillMissileForm.Single, player.missileForm, "359 PC MissilesForm=0 (Single, Lua count overrides to 3)");
+            Assert.AreEqual(player.missileForm, npc.missileForm, "1539 missileForm = 359 missileForm");
+            Assert.AreEqual(168, player.childSkillId, "359 PC child missile = 168");
+            Assert.AreEqual(168, npc.childSkillId, "1539 PC child missile = 168");
+            Assert.AreEqual(512, player.attackRadius, "359 PC Lua L20 AttackRadius=512");
+            Assert.AreEqual(player.attackRadius, npc.attackRadius, "1539 attackRadius = 359 attackRadius");
         }
 
         [Test]
         public void TianxiaWugou_L20MissileCount_FromLua()
         {
             // PC gaibang.lua tianxia_wugou skill_misslenum_v L20=3 (verified).
-            if (!PcCaiBangLuaLevelService.Applies(125))
+            if (!PcCaiBangLuaLevelService.Applies(359))
             {
                 Assert.Ignore("gaibang.lua not loaded");
                 return;
             }
-            int count = PcCaiBangLuaLevelService.GetMissileCount(125, 20);
-            Assert.AreEqual(3, count, "125 tianxia_wugou skill_misslenum_v L20=3");
+            int count = PcCaiBangLuaLevelService.GetMissileCount(359, 20);
+            Assert.AreEqual(3, count, "359 tianxia_wugou skill_misslenum_v L20=3");
         }
 
         [Test]

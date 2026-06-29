@@ -53,7 +53,7 @@ namespace VLTK.Sandbox
             [117] = "yanmen_tuobo",        // Đầu Thạch Vấn Lộ (PC 117 thuộc inline gaibang.lua; mobile dùng bảng của yanmen_tuobo vì LvlData reference 沿门托钵).
             [119] = "yanmen_tuobo",        // Duyên Môn Thoa Bát.
             [122] = "jianren_shenshou",    // Kiến Nhân Thân Thủ.
-            [125] = "tianxia_wugou",       // Thiên Hạ Vô Cẩu (PC Skills.txt 125 = 天下无狗; tianxia_wugou table addskilldamage1[3] L20=25).
+            [125] = "bangda_egou",         // Bổng Đả Ác Cẩu (newest PC Skills.txt row 125; chains to 359 + 1074).
             [127] = "huabu_liushou",       // Hoạt Bất Lưu Thủ.
             [128] = "kanglong_youhui",     // Kháng Long Hữu Hối.
             [130] = "zuidie_kuangwu",      // Túy Điệp Cuồng Vũ.
@@ -66,7 +66,7 @@ namespace VLTK.Sandbox
             [1103] = "zhanggaibang150",    // No-script variant, dùng cùng bảng 1073.
             [1161] = "zhanggaibang150",    // NPC variant.
             [1162] = "gungaibang150",      // NPC variant.
-            [1539] = "bangda_egou",        // Thiên Hạ Vô Cẩu NPC.
+            [1539] = "tianxia_wugou",      // Thiên Hạ Vô Cẩu NPC/player-table variant.
 
             // NPC/MOD reuse.
             [209] = "dagou_zhen",          // Bang Đả Cẩu (NPC variant của 124).

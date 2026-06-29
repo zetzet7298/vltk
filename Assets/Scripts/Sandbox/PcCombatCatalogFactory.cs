@@ -328,12 +328,12 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
                 horseLimit: 1),
 
-            DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 400, 47, SkillMissileForm.Surround, 0, false, false, 11,
-                phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
-                fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
-                cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
-                horseLimit: 1, missilesGenerateData: 5),
+            DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),
+                fire: (lv) => (Link(lv, (1, 70, ""), (15, 150, ""), (20, 285, "")), 0, Link(lv, (1, 70, ""), (15, 200, ""), (20, 432, ""))),
+                cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
+                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
+                horseLimit: 0),
 
             // 1101 Thừa Lục Long (multi-target) — PC reuse zhanggaibang150 table (Bước 6)
             // PC skills.txt 1101: clone của 1073, ByMissle=1, ChildSkillId=335

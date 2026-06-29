@@ -235,15 +235,11 @@ namespace VLTK.Sandbox
                 SpawnProjectiles(startSubSkill, caster, castPoint, grid, report, startLevel);
             }
 
-            // [CaiBang-AddSkillDamage 2026-06-19] Port PC gaibang.lua::addskilldamageN chain.
-            // PC chain map (skillId → chain targetId, L20 chance %):
-            //   119 (yanmen_tuobo, Diên Môn Thác Bát) → 359 (Bổng Đả Ác Cẩu), 40%
-            //   122 (jianren_shenshou, Kiến Nhân Thần Thủ) → 357 (Phi Long), 50%
-            //   125 (tianxia_wugou, Thiên Hạ Vô Cẩu) → 1074 (Phi Long Tại Thiên tier 2), 25%
-            //   128 (kanglong_youhui, Kháng Long Hữu Hối) → 357 (Phi Long), 55%
-            // Trước fix: chain bị bỏ qua → user nói "skill gây damage thấp, thiếu xuyên thấu".
-            // Sau fix: roll random với chance L20 từ PcCaiBangLuaLevelService.GetSingleValue(slot[3]).
-            //   Nếu hit, apply damage + spawn missile của chain targetId.
+            // [CaiBang-AddSkillDamage 2026-06-19/29] Port PC gaibang.lua::addskilldamageN chains.
+            // PC newest-version rule: skill 125 is Bổng Đả Ác Cẩu (`bangda_egou`), not Thiên Hạ.
+            // Chain map examples at L20:
+            //   119 → 359 chance 40%; 122 → 357 chance 50%; 125 → 359 chance 60% AND 1074 chance 50%;
+            //   128 → 357 chance 55%; 359 → 1074 chance 25%.
             TryFireAddSkillDamageChain(caster, target, skill, skillLevel, castPoint, grid, report);
 
             _nextCastTime[(caster.actorId, skillId)] = CurrentTime + Mathf.Max(0, skill.timePerCast);
@@ -604,40 +600,37 @@ namespace VLTK.Sandbox
 
         // PC gaibang.lua::addskilldamageN chain. Sau khi parent skill cast thành công,
         // roll random với chance L20 từ slot[3]. Nếu hit, fire chain targetId (apply damage + spawn missile).
-        // Chain map (skillId → chain targetId):
-        //   119 → 359 (yanmen_tuobo addskilldamage1, L20 chance=40%)
-        //   122 → 357 (jianren_shenshou addskilldamage1, L20 chance=50%)
-        //   125 → 1074 (tianxia_wugou addskilldamage1, L20 chance=25%)
-        //   128 → 357 (kanglong_youhui addskilldamage1, L20 chance=55%)
         private void TryFireAddSkillDamageChain(CombatActorState caster, CombatActorState target, SkillDefinition parent, int parentLevel, Vector2 castPoint, ObstacleGrid grid, CombatCastReport report)
         {
-            int chainId = parent.skillId switch
+            switch (parent.skillId)
             {
-                119 => 359,
-                122 => 357,
-                125 => 1074,
-                128 => 357,
-                _ => 0,
-            };
-            if (chainId <= 0) return;
+                case 119:
+                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 359, "addskilldamage1");
+                    break;
+                case 122:
+                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 357, "addskilldamage1");
+                    break;
+                case 125:
+                    // Newest PC row 125 = bangda_egou: addskilldamage1 -> 359, addskilldamage2 -> 1074.
+                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 359, "addskilldamage1");
+                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 1074, "addskilldamage2");
+                    break;
+                case 128:
+                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 357, "addskilldamage1");
+                    break;
+                case 359:
+                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 1074, "addskilldamage1");
+                    break;
+            }
+        }
+
+        private void TryFireAddSkillDamageChainSlot(CombatActorState caster, CombatActorState target, int parentSkillId, int parentLevel, Vector2 castPoint, ObstacleGrid grid, CombatCastReport report, int chainId, string attribName)
+        {
             var chainSkill = _catalog.Resolve(chainId);
             if (chainSkill == null) return;
-            // PC source: lua point name (addskilldamage1) — slot[3] is the chance value (1..100 %).
-            string luaName = parent.skillId switch
-            {
-                119 => "yanmen_tuobo",
-                122 => "jianren_shenshou",
-                125 => "tianxia_wugou",
-                128 => "kanglong_youhui",
-                _ => null,
-            };
-            if (luaName == null) return;
-            int chancePct = PcCaiBangLuaLevelService.GetSingleValue(parent.skillId, parentLevel, "addskilldamage1", 3);
+            int chancePct = PcCaiBangLuaLevelService.GetSingleValue(parentSkillId, parentLevel, attribName, 3);
             if (chancePct <= 0) return; // PC source returns 0 nếu không có chain
-            // PC semantic: roll random 1..100. Nếu roll <= chancePct → fire chain.
-            int roll = UnityEngine.Random.Range(1, 101);
-            if (roll > chancePct) return;
-            // Fire chain sub-skill (no ally chain here, đó là 打狗阵 riêng).
+            if (!_damage.RollPercent(chancePct)) return;
             var chainLevel = Mathf.Clamp(parentLevel, 1, chainSkill.maxLevel > 0 ? chainSkill.maxLevel : parentLevel);
             var chainLevelData = chainSkill.GetPcLevelData(chainLevel);
             ApplyDamage(caster, target, chainLevelData, report);

@@ -7,11 +7,12 @@ using VLTK.Sandbox;
 namespace VLTK.Tests.Sandbox
 {
     // [CaiBang-AddSkillDamage 2026-06-19] Phase D: PC gaibang.lua::addskilldamageN chain.
-    // Chain map (skillId → chain targetId, L20 chance %):
-    //   119 (yanmen_tuobo, Diên Môn Thác Bát)         → 359 (Bổng Đả Ác Cẩu), 40%
-    //   122 (jianren_shenshou, Kiến Nhân Thần Thủ)    → 357 (Phi Long), 50%
-    //   125 (tianxia_wugou, Thiên Hạ Vô Cẩu)         → 1074 (Phi Long Tại Thiên tier 2), 25%
-    //   128 (kanglong_youhui, Kháng Long Hữu Hối)     → 357 (Phi Long), 55%
+    // Chain map (skillId → chain targetId, L20 chance %) from newest PC source:
+    //   119 (yanmen_tuobo, Diên Môn Thác Bát)         → 359, 40%
+    //   122 (jianren_shenshou, Kiến Nhân Thần Thủ)    → 357, 50%
+    //   125 (bangda_egou, Bổng Đả Ác Cẩu)             → 359, 60% AND 1074, 50%
+    //   128 (kanglong_youhui, Kháng Long Hữu Hối)     → 357, 55%
+    //   359 (tianxia_wugou, Thiên Hạ Vô Cẩu)          → 1074, 25%
     [TestFixture, Category("CaiBang")]
     public class CaiBangAddSkillDamageChainTests
     {
@@ -43,14 +44,28 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void TianxiaWugou_L20Chance25_Target1074()
+        public void BangDaEgou_L20Chances60And50_Target359And1074()
         {
             if (!PcCaiBangLuaLevelService.Applies(125))
             {
                 Assert.Ignore("gaibang.lua not loaded");
                 return;
             }
-            int chance = PcCaiBangLuaLevelService.GetSingleValue(125, 20, "addskilldamage1", 3);
+            int chance1 = PcCaiBangLuaLevelService.GetSingleValue(125, 20, "addskilldamage1", 3);
+            int chance2 = PcCaiBangLuaLevelService.GetSingleValue(125, 20, "addskilldamage2", 3);
+            Assert.AreEqual(60, chance1, "PC newest bangda_egou addskilldamage1[3] L20=60 → target 359");
+            Assert.AreEqual(50, chance2, "PC newest bangda_egou addskilldamage2[3] L20=50 → target 1074");
+        }
+
+        [Test]
+        public void TianxiaWugou_L20Chance25_Target1074()
+        {
+            if (!PcCaiBangLuaLevelService.Applies(359))
+            {
+                Assert.Ignore("gaibang.lua not loaded");
+                return;
+            }
+            int chance = PcCaiBangLuaLevelService.GetSingleValue(359, 20, "addskilldamage1", 3);
             Assert.AreEqual(25, chance, "PC tianxia_wugou addskilldamage1[3] L20=25");
         }
 

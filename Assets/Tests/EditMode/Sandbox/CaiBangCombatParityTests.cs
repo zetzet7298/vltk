@@ -128,18 +128,14 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(300, 0));
             var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
-            Assert.AreEqual(48, r.manaCost); // PC Lua 天下无狗: fixed 50 -> now 48
-            // [CaiBang-TianXiaWuGou 2026-06-19] PC gaibang.lua::tianxia_wugou (skill 125 mapping) skill_misslenum_v L20=3.
-            //   catalog childSkillNum=0 → SpawnProjectiles early-return (childProjectileCount stays 0 for 125 main).
-            //   addskilldamage1 chain → 1074 (gungaibang150) chance L20=25% (tianxia_wugou.addskilldamage1[3] L20=25).
-            //   Nếu chain hit: 1074 skill_misslenum_v L20=5 → 5 missiles + damage.
-            //   Nếu chain miss (75%): 0 missiles (125 main đã có ApplyDamage riêng → enemy vẫn mất máu từ 125 cast).
-            //   Damage luôn được apply qua Cast() → ApplyDamage() regardless of chain (PC: damage rolls
-            //   independent of missile count).
-            Assert.That(r.childProjectileCount, Is.EqualTo(0).Or.EqualTo(5),
-                "125 chain miss (75%) → 0 missiles, hit (25%) → 5 missiles (gungaibang150 L20=5)");
-            Assert.That(r.projectiles.Count, Is.EqualTo(0).Or.EqualTo(5));
-            // Enemy luôn mất máu (125 ApplyDamage + có thể 1074 damage nếu chain hit).
+            Assert.AreEqual(48, r.manaCost); // PC bangda_egou L20 skill_cost_v=48.
+            // [CaiBang-VersionPriority 2026-06-29] Newest PC row 125 = Bổng Đả Ác Cẩu (`bangda_egou`),
+            // not Thiên Hạ. Deterministic RollPercent=true fires both PC chains:
+            //   addskilldamage1 → 359 (`tianxia_wugou`) L20 count=3, chance=60%
+            //   addskilldamage2 → 1074 (`gungaibang150`) L20 count=5, chance=50%
+            Assert.AreEqual(8, r.childProjectileCount, "125 deterministic chain hit should spawn 3 + 5 missiles from newest PC bangda_egou chains");
+            Assert.AreEqual(8, r.projectiles.Count);
+            // Enemy luôn mất máu (125 ApplyDamage + 359/1074 chain damage when deterministic chain hits).
             Assert.Less(enemy.currentLife, 1000, "125 cast luôn apply damage từ levelData");
             Assert.AreEqual(2, svc.NextCastTime(beggar.actorId, 125));
 
@@ -530,9 +526,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang_1539_VisualServiceUsesPcMissile47Speed()
+        public void CaiBang_1539_VisualServiceUsesPcMissile168HomingSpeed()
         {
-            // PC PcMissles.txt missile 47 (Bổng Đả ác Cẩu): Speed=31, LifeTime=16.
+            // Newest PC row 1539 is Thiên Hạ Vô Cẩu NPC variant: child missile 168, Lua `tianxia_wugou`.
             var cat = Catalog();
             var visual = new SkillEffectVisualService(null, cat);
             var beggar = Beggar();
@@ -541,10 +537,9 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(400, 0));
             var fx = visual.PlaySkillCast(cat.Resolve(1539), beggar.position, enemy.position, 20);
             Assert.IsNotNull(fx);
-            // [CaiBang-LuaPort] Lua authoritative: bangda_egou missle_speed_v L20=32 (mobile gaibang.lua).
-            // Engine missile 47 Speed=31 được override bởi Lua missle_speed_v.
-            Assert.AreEqual(32, fx.pcMissileSpeedPerTick, "PC Lua bangda_egou missle_speed_v L20=32");
-            Assert.AreEqual(16, fx.pcMissileLifeTicks, "PC missile 47 LifeTime=16");
+            Assert.AreEqual(24, fx.pcMissileSpeedPerTick, "PC Lua tianxia_wugou missle_speed_v L20=24");
+            Assert.AreEqual(32, fx.pcMissileLifeTicks, "PC missile 168 LifeTime=32");
+            Assert.AreEqual(3, fx.missileCount, "L20 1539 spawns 3 homing missiles like 359");
         }
     }
 }

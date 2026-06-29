@@ -58,9 +58,18 @@ Therefore, the next apply step should not blindly re-implement those old fixes. 
 
 ## Next Recommended Apply Slice
 Phase 4:
-- Move to active damage/defender state and remaining skill audit slices.
-- Continue PC evidence/resource resolution for Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
-- Add visual/state-icon smoke for 127/130 after core runtime parity.
+- Started active damage/chain version-priority slice:
+  - Recorded user rule: when PC has multiple versions, newest/update override PC source wins (`evidence/version-priority.md`).
+  - Compared mobile reference, `_slistcache`, `vltkdata`, Client 6.0, and Server skill-goc `gaibang.lua`; checked 125/359/1073/1074 active-chain attributes agree across these sources.
+  - Corrected Lua mapping from stale `125 -> tianxia_wugou` to newest PC `125 -> bangda_egou`; `359/1539 -> tianxia_wugou`.
+  - Updated 1539 catalog shape to match newest PC Thiên Hạ variant: child missile 168, single/homing form with Lua count override.
+  - Updated `CombatRuntimeService` to support multiple `addskilldamageN` chain slots per parent and to use deterministic injected `DamageFormulaService.RollPercent` for chain tests.
+  - Updated/add tests so 125 now verifies both PC chains (`359` chance 60 and `1074` chance 50) and deterministic cast expects 8 chain projectiles (`359` L20 count 3 + `1074` L20 count 5).
+  - Verified filtered CaiBang tests green: Unity EditMode job `605e92791d464058a663cb3ec33faf17`, 85 total / 85 passed / 0 failed / 0 skipped.
+- Next Phase 4 work:
+  - Add CaiBang damage test proving defender resistance states affect incoming Cai Bang skill damage.
+  - Continue PC evidence/resource resolution for Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
+  - Add visual/state-icon smoke for 127/130 after core runtime parity.
 
 ## Blockers / Cautions
 - Async scout subagents failed/staled in this session, so parent-created SDD artifacts are the authoritative planning state for now.

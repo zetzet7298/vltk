@@ -35,6 +35,10 @@
 - [x] Run filtered CaiBang tests and relevant movement/runtime tests.
 
 ## Phase 4 - Active Damage and Defender State
+- [x] Apply newest-PC version priority for 125/359/1539 Lua mapping (`125 -> bangda_egou`, `359/1539 -> tianxia_wugou`).
+- [x] RED/GREEN: Update addskilldamage chain tests so 125 verifies both PC chains (`359` 60% and `1074` 50%) and 359 verifies `1074` 25%.
+- [x] GREEN: Update `CombatRuntimeService` to support multiple `addskilldamageN` chain slots per parent skill and use injectable deterministic `RollPercent`.
+- [x] Run filtered CaiBang tests after chain mapping update.
 - [ ] RED: Add CaiBang damage test proving defender resistance states affect incoming Cai Bang skill damage.
 - [ ] RED: Add tests for at least one staff/dog-array skill and one dragon skill using PC-derived damage/range/missile data.
 - [ ] GREEN: Populate `DefenderStats` from active defender states in `CombatRuntimeService.ApplyDamage`.
