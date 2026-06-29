@@ -122,8 +122,7 @@ namespace VLTK.Sandbox
             DamageSkillNew(117, "Đầu Thạch Vấn Lộ ", "Ném Đá Hỏi Đường", 10, 20, 384, 44, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 55, "")),
                 fire: (lv) => (Link(lv, (1, 10, ""), (20, 100, "")), 0, Link(lv, (1, 10, ""), (20, 150, ""))),
-                cost: (lv) => (10, 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 1, ""), (20, 10, "")), -1, 0)),
+                cost: (lv) => (10, 0, 0)),
 
             // 118 Cô Mộc Độn Lôi: buff
             ResistBuff(118, "Cô Mộc Độn Lôi ", "Cô Mộc Độn Lôi", 10, MagicAttributeKind.LightingResP),
@@ -132,8 +131,7 @@ namespace VLTK.Sandbox
             DamageSkillNew(119, "Diên Môn Thác Bát", "Duyên Môn Thác Bát", 10, 20, 384, 45, SkillMissileForm.Single, 1, true, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 55, "")),
                 fire: (lv) => (Link(lv, (1, 10, ""), (20, 100, "")), 0, Link(lv, (1, 10, ""), (20, 150, ""))),
-                cost: (lv) => (10, 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 1, ""), (20, 10, "")), -1, 0)),
+                cost: (lv) => (10, 0, 0)),
 
             // 120 Bôn Lưu Đáo Hải: buff
             ResistBuff(120, "Bôn Lưu Đáo Hải", "Bôn Lưu Đáo Hải", 20, MagicAttributeKind.FireResP),
@@ -146,7 +144,6 @@ namespace VLTK.Sandbox
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 15, ""), (20, 75, "")), 0, Link(lv, (1, 15, ""), (20, 215, ""))),
                 cost: (lv) => (25, 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 1, ""), (20, 10, "")), -1, 0),
                 horseLimit: 1),
 
             // 123 Khuê Mộc Tinh Chiếu: buff
@@ -173,7 +170,6 @@ namespace VLTK.Sandbox
                 phys: (lv) => Link(lv, (1, 10, ""), (20, 179, "")),
                 fire: (lv) => (Link(lv, (1, 70, ""), (20, 360, "")), 0, Link(lv, (1, 70, ""), (20, 420, ""))),
                 cost: (lv) => (Link(lv, (1, 28, ""), (20, 48, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
                 horseLimit: 1, missilesGenerateData: 5),
 
             // 126 Kim Ô Ánh Tuyết: buff
@@ -201,7 +197,6 @@ namespace VLTK.Sandbox
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (20, 536, "")), 0, Link(lv, (1, 10, ""), (20, 536, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 50, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 10, ""), (20, 50, "")), -1, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None), // [SECT-ALL] PC IsMelee=0 → không melee, không dash
 
@@ -261,7 +256,6 @@ namespace VLTK.Sandbox
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, "")), 0, Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 65, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
                 // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC PC stock 2011 mag_tr_16).
@@ -272,7 +266,6 @@ namespace VLTK.Sandbox
                 phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),
                 fire: (lv) => (Link(lv, (1, 70, ""), (15, 150, ""), (20, 285, "")), 0, Link(lv, (1, 70, ""), (15, 200, ""), (20, 432, ""))),
                 cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1),
 
             // 358 Tiềm Long Tại Uyên — newest PC version priority:
@@ -312,14 +305,12 @@ namespace VLTK.Sandbox
                 fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
                 // PC gaibang.lua zhanggaibang150: skill_cost_v={{{1,12},{20,78},{23,98}}}
                 cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
                 horseLimit: 1),
 
             DamageSkillNew(1074, "Bổng Huýnh Lược Địa", "Bổng Hoành Lược Mã", 150, 20, 512, 336, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (15, 80, ""), (20, 165, "")),
                 fire: (lv) => (Link(lv, (1, 60, ""), (15, 120, ""), (20, 230, "")), 0, Link(lv, (1, 60, ""), (15, 160, ""), (20, 345, ""))),
                 cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
                 horseLimit: 1),
 
             DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 512, 168, SkillMissileForm.Single, 1, false, false, 11,

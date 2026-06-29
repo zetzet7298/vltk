@@ -120,6 +120,25 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_PlayerSkills_HaveNoFabricatedConfuseP()
+        {
+            // PC truth (verified 2026-06-29): gaibang.lua has NO confuse/混乱/迷惑 keyword at all,
+            // and missles.txt has no state-apply column. Therefore NO Cai Bang player skill applies
+            // a Confuse state at cast time. Previous catalog entries adding ConfuseP were fabricated.
+            // PC source: /var/www/vltksource_new/vl_update_27/Client 6.0/script/skill/gaibang.lua
+            //           + pak_unpacked/slistcache/unknown/08bcd3fc.dat (missles, no state cols).
+            var cat = Catalog();
+            int[] ids = { 117, 119, 122, 125, 128, 357, 359, 1073, 1074 };
+            foreach (var id in ids)
+            {
+                var d = cat.Resolve(id).GetPcLevelData(20);
+                Assert.IsNotNull(d, $"skill {id} missing from catalog");
+                Assert.IsFalse(d.state.Any(a => a.kind == MagicAttributeKind.ConfuseP),
+                    $"skill {id} must have NO ConfuseP state (PC gaibang.lua has no confuse)");
+            }
+        }
+
+        [Test]
         public void CaiBang_Cast_AppliesCostCooldownProjectileCountDamageAndHorseRestriction()
         {
             var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
@@ -482,7 +501,11 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(11, skill.charAnimId, "PC skills.txt row 359 CharAnimId=11");
             Assert.AreEqual("PhysicsEnhanceP=206,0,0", data.First(MagicAttributeKind.PhysicsEnhanceP).ToString());
             Assert.AreEqual("FireDamageV=285,0,432", data.First(MagicAttributeKind.FireDamageV).ToString());
-            Assert.AreEqual("ConfuseP=60,-1,0", data.First(MagicAttributeKind.ConfuseP).ToString());
+            // PC truth [2026-06-29]: gaibang.lua::tianxia_wugou has NO confuse state; the prior
+            //   "ConfuseP=60,-1,0" assertion encoded a FABRICATED catalog entry (PC gaibang.lua
+            //   has zero confuse/混乱/迷惑 keyword). Assert absence instead.
+            Assert.IsFalse(data.state.Any(a => a.kind == MagicAttributeKind.ConfuseP),
+                "PC gaibang.lua::tianxia_wugou applies no Confuse state at cast");
             Assert.AreEqual(512, PcCaiBangLuaLevelService.GetAttackRadius(359, 20), "Lua L20 range overrides row radius for runtime cast");
             Assert.AreEqual(3, PcCaiBangLuaLevelService.GetMissileCount(359, 20), "Lua L20 missile count overrides row ChildSkillNum");
 
