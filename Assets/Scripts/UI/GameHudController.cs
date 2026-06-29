@@ -177,6 +177,7 @@ namespace VLTK.UI
             LoadArt();
             SizeRootToScreen();
             InitializeCombatSkillSlots();
+            InitializeHudChatBar();
             EnsurePcParityOverlayActive();
         }
 
@@ -194,8 +195,25 @@ namespace VLTK.UI
         /// runtime state; a scene may ship it disabled. <see cref="GMPanelController"/> only
         /// temporarily hides it while a GM panel is open and restores it on close.
         /// </summary>
-        private void EnsurePcParityOverlayActive()
-        {
+            /// <summary>
+            /// Initializes the PC-parity chat bar controller (HudChatBarController) which
+            /// binds the ChatBar UI Toolkit element tree to ChatService. Called after combat
+            /// slots are wired so the chat bar can query the same root visual element.
+            /// SDD: port-pc-chat-bar-parity, PR 2 (design §5.1).
+            /// </summary>
+            private void InitializeHudChatBar()
+            {
+                var chatBar = GetComponent<HudChatBarController>();
+                if (chatBar == null)
+                    chatBar = gameObject.AddComponent<HudChatBarController>();
+
+                var doc = GetComponent<UIDocument>();
+                var root = doc != null ? doc.rootVisualElement.Q("GameHud") : null;
+                chatBar.Initialize(root, artFolder);
+            }
+
+            private void EnsurePcParityOverlayActive()
+            {
             var vnOverlay = GetComponent<PcHudVietnameseTextOverlay>();
             if (vnOverlay != null && !vnOverlay.enabled)
                 vnOverlay.enabled = true;

@@ -2,6 +2,7 @@ using System.IO;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
+using VLTK.Sandbox;  // ChatService, ChatChannel for T2.1 channel color tests
 
 namespace VLTK.Tests.Sandbox
 {
@@ -160,6 +161,36 @@ namespace VLTK.Tests.Sandbox
             }
         }
     }
+}
+
+/// <summary>
+/// T2.1 (port-pc-chat-bar-parity) — regression guard: verifies ChatService channel
+/// colors match the PC TextColor values from uiconfig.ini / 7e20a7ac.ini before the
+/// HudChatBarController renders them. These colors are PC-authentic (data layer) and
+/// must not drift.
+/// </summary>
+[TestFixture, Category("Chat")]
+public class ChatChannelColorFidelityTests
+{
+private static void AssertColorApprox(string label, Color actual, float r, float g, float b, float tol = 0.02f)
+{
+Assert.AreEqual(r, actual.r, tol, $"{label} R mismatch: expected ~{r}, got {actual.r}");
+Assert.AreEqual(g, actual.g, tol, $"{label} G mismatch: expected ~{g}, got {actual.g}");
+Assert.AreEqual(b, actual.b, tol, $"{label} B mismatch: expected ~{b}, got {actual.b}");
+}
+
+[Test]
+public void ChannelColors_MatchPC_TextColorValues()
+{
+// PC CH_SYSTEM TextColor = 255,0,0 (red)
+AssertColorApprox("System", ChatService.ChannelColor(ChatChannel.System), 1f, 0f, 0f);
+// PC CH_TEAM TextColor = 64,190,255 (blue)
+AssertColorApprox("Team", ChatService.ChannelColor(ChatChannel.Team), 0.251f, 0.745f, 1f);
+// PC CH_WORLD TextColor = 146,255,143 (green)
+AssertColorApprox("World", ChatService.ChannelColor(ChatChannel.World), 0.573f, 1f, 0.561f);
+// PC CH_TONG TextColor = 255,244,0 (yellow)
+AssertColorApprox("Guild", ChatService.ChannelColor(ChatChannel.Guild), 1f, 0.957f, 0f);
+}
 }
 
 /// <summary>

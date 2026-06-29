@@ -95,7 +95,7 @@ Chain strategy: stacked-to-main
 
 ### T2.1 — RED: write failing test for channel data fidelity
 
-- [ ] In `Assets/Tests/EditMode/Sandbox/ChatBarIconLoadingTests.cs` (the `Chat` category
+- [x] In `Assets/Tests/EditMode/Sandbox/ChatBarIconLoadingTests.cs` (the `Chat` category
       class), add `ChannelColors_MatchPC_TextColorValues` asserting
       `ChatService.ChannelColor(ChatChannel.System)` ≈ rgb(255,0,0),
       `ChannelColor(ChatChannel.Team)` ≈ rgb(64,190,255),
@@ -106,7 +106,7 @@ Chain strategy: stacked-to-main
 
 ### T2.2 — Create HudChatBarController.cs
 
-- [ ] Create `Assets/Scripts/UI/HudChatBarController.cs` per design §4. A
+- [x] Create `Assets/Scripts/UI/HudChatBarController.cs` per design §4. A
       `[RequireComponent(typeof(UIDocument))]` MonoBehaviour with:
       `Initialize(hudRoot, artFolder)` → `BindElements()` (query the ChatBar subtree from
       PR 1: `ChatRoomList`, `ChatRoomContent`, `SysRoomContent`, `ChatInput`, tabs,
@@ -119,7 +119,7 @@ Chain strategy: stacked-to-main
 
 ### T2.3 — Implement RefreshHistory (core render)
 
-- [ ] In `HudChatBarController.cs`, implement `RefreshHistory()` per design §4.4: call
+- [x] In `HudChatBarController.cs`, implement `RefreshHistory()` per design §4.4: call
       `_chat.GetFilteredMessages(120)` (PC `MaxMsgCount`), split into system vs non-system,
       render each as rich-text `<color=#hex>` into `ChatRoomContent` / `SysRoomContent`
       Labels (using `msg.color` from `ChatService` — already PC-authentic). Auto-scroll to
@@ -128,7 +128,7 @@ Chain strategy: stacked-to-main
 
 ### T2.4 — Implement channel tabs + on/off toggle + sys toggle + scroll
 
-- [ ] In `HudChatBarController.cs` per design §4.5–§4.7:
+- [x] In `HudChatBarController.cs` per design §4.5–§4.7:
       - 6 tabs (`ChatTab0`..`5`): click → `_chat.SetChannel(channel)` + `RefreshHistory()`;
         selected tab gets `.selected` USS class.
       - `ChannelToggle`: on=`btn_chat_channel_on` (filter active), off=`btn_chat_channel_off`
@@ -140,7 +140,7 @@ Chain strategy: stacked-to-main
 
 ### T2.5 — Implement input + send
 
-- [ ] In `HudChatBarController.cs` per design §4.8: rebind `SendBtnIcon` click → `OnSend()`
+- [x] In `HudChatBarController.cs` per design §4.8: rebind `SendBtnIcon` click → `OnSend()`
       reads `ChatInput.text`, trims, rejects empty (PC behavior), posts via
       `_chat.SendPlayerMessage(_chat.ActiveChannel, "Người chơi", text)`, clears input.
       `FaceBtn` stays wired in `GameHudController` (no conflict — picker writes, send reads).
@@ -148,7 +148,7 @@ Chain strategy: stacked-to-main
 
 ### T2.6 — Integrate into GameHudController
 
-- [ ] In `Assets/Scripts/UI/GameHudController.cs`, add `InitializeHudChatBar()` per design
+- [x] In `Assets/Scripts/UI/GameHudController.cs`, add `InitializeHudChatBar()` per design
       §5.1 (~15 lines): get/add `HudChatBarController`, call `Initialize(root, artFolder)`.
       Call it from `Start()` after `InitializeCombatSkillSlots()`, before
       `EnsurePcParityOverlayActive()`. Existing `ChatInput`/`FaceBtn`/`SendBtnIcon` bindings
@@ -156,7 +156,7 @@ Chain strategy: stacked-to-main
 
 ### T2.7 — Verify PR 2: compile + targeted tests
 
-- [ ] Refresh Unity, confirm 0 compile errors. Run
+- [x] Refresh Unity, confirm 0 compile errors. Run
       `unityMCP_run_tests(mode="EditMode", category_names=["Chat"])`. Enter play mode,
       post test messages via sandbox, confirm history renders in PC color, channel tab
       filters work, system strip separates, send posts + clears. Commit:

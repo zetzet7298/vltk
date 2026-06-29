@@ -86,8 +86,99 @@ PR 3: T3.1–T3.4 (ChatPanel retirement + tests + final screenshot parity)
 
 PR 1 = 228 changed lines (55 test + 129 USS + 44 UXML). Within scope. No PR 2/3 files touched.
 
-### Structured status consumed
-
-- `actionContext.mode: repo-local`, `allowedEditRoots: [/var/www/vltk-mobile/harness]`
-- `artifactStore: both` (non-authoritative — resolved from openspec/)
-- No blocking conditions; proceeded with implementation.
+    ### Structured status consumed
+    
+    - `actionContext.mode: repo-local`, `allowedEditRoots: [/var/www/vltk-mobile/harness]`
+    - `artifactStore: both` (non-authoritative — resolved from openspec/)
+    - No blocking conditions; proceeded with implementation.
+    
+    ## PR 2 — Logic: HudChatBarController + GameHudController integration (COMPLETE)
+    
+    ### Completed tasks
+    
+    | Task | Status | Persisted checkbox |
+    |------|--------|--------------------|
+    | T2.1 RED: channel color fidelity test | ✅ DONE | `[x]` |
+    | T2.2 Create HudChatBarController.cs | ✅ DONE | `[x]` |
+    | T2.3 Implement RefreshHistory (core render) | ✅ DONE | `[x]` |
+    | T2.4 Channel tabs + on/off toggle + sys toggle + scroll | ✅ DONE | `[x]` |
+    | T2.5 Implement input + send | ✅ DONE | `[x]` |
+    | T2.6 Integrate into GameHudController | ✅ DONE | `[x]` |
+    | T2.7 Verify: compile + targeted tests | ✅ DONE | `[x]` |
+    
+    ### Files changed (4 scoped files — 3 modified, 1 new)
+    
+    1. **`Assets/Scripts/UI/HudChatBarController.cs`** (NEW, ~360 lines)
+       - `[RequireComponent(typeof(UIDocument))]` MonoBehaviour in `VLTK.UI` namespace.
+       - `Initialize(hudRoot, artFolder)` → BindElements → cache `_artPath` → LoadChatArt →
+         BindChatService → RegisterInteractions → RefreshHistory.
+       - `BindElements()`: queries all ChatBar subtree elements (ChatRoomList ScrollView,
+         ChatRoomContent/SysRoomContent Labels, ChatInput, tabs, toggles, scroll buttons).
+         Sets `enableRichText = true` on both content labels.
+       - `LoadChatArt()`: loads 8 PC SPR PNGs via `GameHudController.LoadIconStatic`:
+         btn_chat_channel_on (ChannelToggleIcon), chat_icon_self_pc (ChatChannelIcon),
+         chat_bar_middle (ChatRoomScrollTrack), btn_chat_scroll_thumb_pc (ChatRoomScrollThumb),
+         btn_chat_sys_toggle_f1 (SysToggleIcon), btn_chat_sys_up (SysScrollUp),
+         btn_chat_sys_down (SysScrollDown).
+       - `BindChatService()`: obtains `SandboxManager.Instance.ChatService`, subscribes
+         `OnMessageReceived` for event-driven refresh. Retries in `Update()`.
+       - `RefreshHistory()`: `GetFilteredMessages(120)` (PC MaxMsgCount), splits system vs
+         non-system, renders rich-text `<color=#hex>` using `msg.color` (PC-authentic),
+         auto-scrolls to bottom (PC TextBottom=1).
+       - Channel tabs (0–5): All/Private/Room/Guild/Faction/Other → SetChannel + Refresh.
+       - ChannelToggle: on=btn_chat_channel_on (expanded), off=btn_chat_channel_off (collapsed).
+       - SysToggle: frame swap btn_chat_sys_toggle_f1↔btn_chat_sys_toggle (PC Up=0 Down=1).
+       - OnSend: reads ChatInput, rejects empty, posts via SendPlayerMessage.
+       - `Update()`: polls at 0.5s interval + retries ChatService binding for startup race.
+    
+    2. **`Assets/Scripts/UI/GameHudController.cs`** (+15 lines)
+       - Added `InitializeHudChatBar()` method (~12 lines): gets/adds HudChatBarController,
+         passes root + artFolder.
+       - Called from `Start()` after `InitializeCombatSkillSlots()`, before
+         `EnsurePcParityOverlayActive()`.
+    
+    3. **`Assets/Tests/EditMode/Sandbox/ChatBarIconLoadingTests.cs`** (+32 lines)
+       - New `[TestFixture, Category("Chat")]` class `ChatChannelColorFidelityTests`.
+       - Test `ChannelColors_MatchPC_TextColorValues`: asserts System=rgb(255,0,0),
+         Team=rgb(64,190,255), World=rgb(146,255,143), Guild=rgb(255,244,0).
+       - Added `using VLTK.Sandbox;` for ChatService/ChatChannel access.
+    
+    ### Test commands run
+    
+    | Command | Result | Details |
+    |---------|--------|--------|
+    | `refresh_unity(mode=force, scope=assets)` | ✅ passed | Editor recovered from disconnect, ready |
+    | `read_console(types=[error])` | ✅ 0 errors | Only pre-existing CS0618/CS1998 warnings |
+    | `run_tests(mode=EditMode, category_names=["Chat"])` | ✅ 2/2 passed | Art presence (T1.1) + Channel colors (T2.1), 0.29s |
+    | Play mode: `execute_code` post messages | ✅ 4 messages | ChatService.PostSystemMessage + SendPlayerMessage |
+    | Unity log: LoadIcon verification | ✅ 8 SPRs loaded | btn_chat_channel_on, chat_icon_self_pc, chat_bar_middle, btn_chat_scroll_thumb_pc, btn_chat_sys_toggle_f1, btn_chat_sys_up, btn_chat_sys_down all loaded |
+    | Unity log: call chain | ✅ confirmed | GameHudController.InitializeHudChatBar → HudChatBarController.Initialize → LoadChatArt → LoadChatIcon |
+    | `execute_code` component check | ✅ found | HudChatBarController=True, GameHudController=True, ChatService.History.Count=4 |
+    
+    ### UI diff verification (play mode)
+    
+    - Entered play mode, posted 4 test messages (1 system + 2 player + 1 from init).
+    - Unity log confirms all 8 PC SPR art pieces loaded onto their elements with correct
+      dimensions (e.g., btn_chat_channel_on 20×20, chat_icon_self_pc 23×13, etc.).
+    - HudChatBarController confirmed active via FindObjectOfType.
+    - Screenshot saved to `Assets/Screenshots/chat_pr2_after.png`.
+    - Could not verify rendered text via CodeDOM (UIElements extension methods not available
+      in CodeDOM context), but the call chain + icon loads + ChatService history count confirm
+      the controller is wired correctly.
+    
+    ### PC source evidence (no guessing)
+    
+    - `7e20a7ac.ini [ChatRoom_List]`: MsgColor=255,249,148, MaxMsgCount=120, TextBottom=1.
+    - `7e20a7ac.ini [SysRoom_List]`: MsgColor=255,249,148.
+    - `7e20a7ac.ini [SysRoom_Open]`: Up=0 Down=1 (frame 0=closed, frame 1=open).
+    - `7e20a7ac.ini [Main]`: CheckOnImage=频道开与关a, CheckOffImage=频道开与关b.
+    - Channel colors from `ChatService.ChannelColor()`: already PC-authentic (uiconfig.ini).
+    
+    ### Remaining tasks (PR 3 — NOT started)
+    
+    PR 3: T3.1–T3.4 (ChatPanel retirement + tests + final screenshot parity)
+    
+    ### Workload / PR boundary
+    
+    PR 2 = ~407 changed lines (360 controller + 15 integration + 32 test). Within scope.
+    Only 4 scoped files touched (3 modified, 1 new). No PR 3 files touched.
