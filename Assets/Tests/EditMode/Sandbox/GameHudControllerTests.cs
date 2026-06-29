@@ -345,10 +345,14 @@ namespace VLTK.Tests.Sandbox
 
                 // Top status bar elements must still be present
                 Assert.IsNotNull(root.Q("TopLeftPanel"), "TopLeftPanel must remain (regression)");
-                Assert.IsNotNull(root.Q("HpBarFill"), "HP bar must remain (regression)");
-                Assert.IsNotNull(root.Q("MpBarFill"), "MP bar must remain (regression)");
-                Assert.IsNotNull(root.Q("ExpBarFill"), "EXP bar must remain (regression)");
-                Assert.IsNotNull(root.Q("StaminaBarFill"), "Stamina bar must remain (regression)");
+                Assert.IsNotNull(root.Q("HpBarFill"), "HP bar clip must remain (regression)");
+                Assert.IsNotNull(root.Q("MpBarFill"), "MP bar clip must remain (regression)");
+                Assert.IsNotNull(root.Q("ExpBarFill"), "EXP bar clip must remain (regression)");
+                Assert.IsNotNull(root.Q("StaminaBarFill"), "Stamina bar clip must remain (regression)");
+                Assert.IsNotNull(root.Q("HpBarFillImage"), "HP bar fixed image must remain for PC left-to-right clipping");
+                Assert.IsNotNull(root.Q("MpBarFillImage"), "MP bar fixed image must remain for PC left-to-right clipping");
+                Assert.IsNotNull(root.Q("ExpBarFillImage"), "EXP bar fixed image must remain for PC left-to-right clipping");
+                Assert.IsNotNull(root.Q("StaminaBarFillImage"), "Stamina bar fixed image must remain for PC left-to-right clipping");
 
                 // Minimap elements must still be present
                 Assert.IsNotNull(root.Q("MinimapPanel"), "MinimapPanel must remain (regression)");

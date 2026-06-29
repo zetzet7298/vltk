@@ -96,6 +96,7 @@ namespace VLTK.UI
         public string artFolder = "UI/HUD/Art";
 
         private VisualElement _hpFill, _mpFill, _staminaFill, _expFill;
+        private VisualElement _hpFillImage, _mpFillImage, _staminaFillImage, _expFillImage;
         private VisualElement _minimapContent, _previewContent;
         private VisualElement _playerDot, _mapPreviewOverlay, _mapPreviewFrame, _mapPreviewPlayerDot;
         private VisualElement _miniMapTarget, _mapPreviewTarget;
@@ -361,6 +362,10 @@ namespace VLTK.UI
             _mpFill = root.Q("MpBarFill");
             _staminaFill = root.Q("StaminaBarFill");
             _expFill = root.Q("ExpBarFill");
+            _hpFillImage = root.Q("HpBarFillImage");
+            _mpFillImage = root.Q("MpBarFillImage");
+            _staminaFillImage = root.Q("StaminaBarFillImage");
+            _expFillImage = root.Q("ExpBarFillImage");
 
             _hpText = root.Q<Label>("HpText");
             _mpText = root.Q<Label>("MpText");
@@ -540,10 +545,10 @@ namespace VLTK.UI
                 return;
             }
 
-            LoadBarArt(_hpFill, artPath, "bar_hp_fill");
-            LoadBarArt(_mpFill, artPath, "bar_mp_fill");
-            LoadBarArt(_staminaFill, artPath, "bar_stamina_fill");
-            LoadBarArt(_expFill, artPath, "bar_exp_fill");
+            LoadBarArt(_hpFillImage, artPath, "bar_hp_fill");
+            LoadBarArt(_mpFillImage, artPath, "bar_mp_fill");
+            LoadBarArt(_staminaFillImage, artPath, "bar_stamina_fill");
+            LoadBarArt(_expFillImage, artPath, "bar_exp_fill");
             LoadPanelArt(artPath);
 
             var doc = GetComponent<UIDocument>();
@@ -623,7 +628,7 @@ namespace VLTK.UI
             LoadTextureIntoElement(this, png, name, tex =>
             {
                 fill.style.backgroundImage = new StyleBackground(tex);
-                fill.style.backgroundSize = new BackgroundSize(104, 9);
+                fill.style.backgroundSize = new BackgroundSize(130, 14);
             });
         }
 

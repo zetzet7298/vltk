@@ -17,10 +17,10 @@
         <ui:VisualElement name="TopLeftPanel" class="hud-top-status">
             <ui:VisualElement name="PcBarPanelBg" class="hud-pc-bar-panel-bg"/>
             <ui:Label name="LevelText" text="1" class="hud-level-box"/>
-            <ui:VisualElement name="StaminaBarTrack" class="hud-top-bar hud-stamina-track"><ui:VisualElement name="StaminaBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="HpBarTrack" class="hud-top-bar hud-hp-track"><ui:VisualElement name="HpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="MpBarTrack" class="hud-top-bar hud-mp-track"><ui:VisualElement name="MpBarFill" class="hud-top-fill"/></ui:VisualElement>
-            <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"/></ui:VisualElement>
+            <ui:VisualElement name="StaminaBarTrack" class="hud-top-bar hud-stamina-track"><ui:VisualElement name="StaminaBarFill" class="hud-top-fill"><ui:VisualElement name="StaminaBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
+            <ui:VisualElement name="HpBarTrack" class="hud-top-bar hud-hp-track"><ui:VisualElement name="HpBarFill" class="hud-top-fill"><ui:VisualElement name="HpBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
+            <ui:VisualElement name="MpBarTrack" class="hud-top-bar hud-mp-track"><ui:VisualElement name="MpBarFill" class="hud-top-fill"><ui:VisualElement name="MpBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
+            <ui:VisualElement name="ExpBarTrack" class="hud-top-bar hud-exp-track"><ui:VisualElement name="ExpBarFill" class="hud-top-fill"><ui:VisualElement name="ExpBarFillImage" class="hud-top-fill-image"/></ui:VisualElement></ui:VisualElement>
             <!-- WorldSort (Hạng thế giới): PC Player_WorldSort, chữ xanh 55,231,63, nằm sau EXP -->
             <ui:Label name="WorldSortText" text="0" class="hud-worldsort-box"/>
             <ui:Label text="Cấp" class="hud-vn-top-caption hud-vn-level-caption"/>

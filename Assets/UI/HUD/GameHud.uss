@@ -89,21 +89,31 @@
 .hud-exp-track { left: 523px; }
 
 .hud-top-fill {
+    position: relative;
     width: 100%;
     height: 14px; /* PC 9px ×1.6 */
+    overflow: hidden; /* PC parity: clip fixed fill image left→right; do not scale texture width */
+}
+
+.hud-top-fill-image {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 130px;
+    height: 14px;
     -unity-background-scale-mode: stretch-to-fill;
 }
 
-.hud-exp-track .hud-top-fill {
+.hud-exp-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_exp_fill.png');
 }
-.hud-hp-track .hud-top-fill {
+.hud-hp-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_hp_fill.png');
 }
-.hud-mp-track .hud-top-fill {
+.hud-mp-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_mp_fill.png');
 }
-.hud-stamina-track .hud-top-fill {
+.hud-stamina-track .hud-top-fill-image {
     background-image: url('project://database/Assets/UI/HUD/Art/bar_stamina_fill.png');
 }
 
