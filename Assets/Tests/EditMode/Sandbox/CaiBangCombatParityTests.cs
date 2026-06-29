@@ -53,7 +53,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsNotNull(cat.Resolve(PcCombatCatalogFactory.CaiBangDogBeatingAuraChild));
             Assert.IsNotNull(cat.Resolve(714), "missing Hỗn Thiên Khí Công 120");
             Assert.IsNotNull(cat.Resolve(720), "missing Hỗn Thiên Khí Công Quyết Chí");
-            Assert.AreEqual(39, cat.Count, "33 PC + Novice skills + NguDieuCanKhon (1072) CollideEvent + Kháng Long (358) + 4 NPC variants (1101/1103/1161/1162)");
+            Assert.AreEqual(40, cat.Count, "Cai Bang catalog includes novice/universal skills, stock 115-130 skills, MOD/player extensions, Phi Long collide child 389, NguDieuCanKhon 1072, and NPC variants (1101/1103/1161/1162/1539)");
         }
 
         [Test]
@@ -122,7 +122,8 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void CaiBang_Cast_AppliesCostCooldownProjectileCountDamageAndHorseRestriction()
         {
-            var svc = new CombatRuntimeService(Catalog());
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(Catalog(), damage: deterministicDamage);
             var beggar = Beggar();
             var enemy = Enemy(new Vector2(300, 0));
             var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
@@ -336,7 +337,9 @@ namespace VLTK.Tests.Sandbox
             // PC gaibang.lua::jianren_shenshou (122) firedamage_v[3]={{1,15},{20,215}}.
             // rolledBase is the damage value before defender mitigation (armor/resist).
             // The actual roll is 1..215; sum across multiple damageResults stays in that range.
-            var svc = new CombatRuntimeService(Catalog());
+            // Force hit chance in this damage-value test; CheckHitTarget itself is covered separately.
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(Catalog(), damage: deterministicDamage);
             var beggar = Beggar();
             beggar.knownSkills.Add(122);
             beggar.skillLevels[122] = 20;
