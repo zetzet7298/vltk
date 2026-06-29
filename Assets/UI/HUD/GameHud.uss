@@ -678,7 +678,7 @@
         display: flex;
         border-width: 2px;
         border-color: rgba(255, 239, 150, 0.92);
-        background-color: rgba(255, 224, 96, 0.10);
+        background-color: transparent;
     }
     .hud-combat-pos-run   { left: 120px; top: 300px; }
     .hud-combat-pos-horse { left: 178px; top: 300px; }
