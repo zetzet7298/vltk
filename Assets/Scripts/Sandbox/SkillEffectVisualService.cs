@@ -185,25 +185,14 @@ namespace VLTK.Sandbox
                             }
                             else
                             {
-                                // PC gaibang.lua: skill_param1_v = per-step gap in subworld pixels.
-                                //   rawParam == 0 → straight-line (e.g. Phi Long 357 L1-L10 luaCount=1 + param=0,
-                                //   hoặc Kháng Long 128 L1-L10 luaCount=1 + param=0).
-                                //   rawParam > 0 → spread (Phi Long 357 L11+ dùng 32, Kháng Long 128 L11+ dùng 2).
-                                // Sprites render at PPU=1 (1 SPR-pixel = 1 world unit), so the
-                                // visual step in world-units equals the raw param value directly.
+                                // PC gaibang.lua: Phi Long 357 has no skill_param1_v, but PC skills.txt
+                                // Param1=32 and missile 166 MoveKind=5. Therefore luaCount>1 still needs
+                                // parallel lane offsets for the level-20 four homing dragons. Only a single
+                                // missile remains straight-line/no-spread.
                                 int rawParam = PcCaiBangLuaLevelService.GetSingleValue(
                                     skill.skillId, level, "skill_param1_v", 32);
-                                if (rawParam == 0)
-                                {
-                                    // PC straight-line: single missile, no spread.
-                                    fx.missileCount = luaCount;
-                                    fx.missilePositions = null;
-                                }
-                                else
-                                {
-                                    int stepWu = rawParam > 0 ? rawParam : 32;
-                                    SetupPcPhiLongSpread(fx, luaCount, stepWu);
-                                }
+                                int stepWu = rawParam > 0 ? rawParam : 32;
+                                SetupPcPhiLongSpread(fx, luaCount, stepWu);
                             }
                         }
                     }

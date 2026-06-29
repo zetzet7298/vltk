@@ -433,15 +433,10 @@ namespace VLTK.Tests.Sandbox
 
             Assert.IsNotNull(fx);
             Assert.AreEqual(4, fx.missileCount, "Phi Long level 20 should spawn 4 parallel homing missiles");
-            // [CaiBang-PhiLongSpread 2026-06-19] Mobile gaibang.lua::feilong_zaitian KHÔNG có skill_param1_v
-            //   (chỉ PC source mới có L11=0, L11=32, L20=32). rawParam=0 → straight-line, missileTargetOffsets
-            //   không được set. Test chỉ meaningful khi mobile file có skill_param1_v — bỏ qua cho mobile.
-            //   Spread vẫn đúng cho 4-missile parallel khi SetupPcPhiLongSpread được apply (PC source).
-            if (fx.missileTargetOffsets == null)
-            {
-                Assert.Ignore("Mobile gaibang.lua::feilong_zaitian lacks skill_param1_v → rawParam=0 → straight-line (no spread offsets). PC source full spread verified in PcCaiBangLuaLevelServiceTests.");
-                return;
-            }
+            // PC evidence: skill 357 row has Param1=32 and child missile 166 has MoveKind=5.
+            // gaibang.lua supplies the level-20 count (4), while Param1 supplies the parallel lane gap.
+            Assert.IsNotNull(fx.missileTargetOffsets, "Phi Long L20 must configure per-dragon homing lane offsets even though gaibang.lua has no skill_param1_v");
+            Assert.AreEqual(4, fx.missileTargetOffsets.Length);
 
             fx.phase = SkillEffectPhase.Missile;
             fx.phaseStart = fx.elapsed;

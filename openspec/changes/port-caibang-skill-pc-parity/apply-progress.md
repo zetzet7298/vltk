@@ -4,6 +4,12 @@
 Planning/evidence phase started. No implementation changes have been applied under this SDD change yet.
 
 ## Completed
+- Completed Phase 1C Phi Long homing lane slice:
+  - Verified canonical PC `gaibang.lua` in mobile reference, PC Client, PC Server, and unpacked PAK all has `feilong_zaitian` with `skill_misslesform_v L20=0` and `skill_misslenum_v L20=4`, but no `skill_param1_v`.
+  - Used PC `skills.txt` row 357 `Param1=32` and missile 166 `MoveKind=5` as the source for parallel lane gap + homing behavior.
+  - Updated `SkillEffectVisualService` so `luaCount>1` always configures `SetupPcPhiLongSpread` with fallback step `32` when Lua has no `skill_param1_v`.
+  - Re-enabled/strengthened `CaiBang_357_HomingSpreadKeepsPerMissileOffsetsForLiveTarget`; it now asserts four lane offsets and live-target homing without `Assert.Ignore`.
+  - Verified filtered CaiBang tests green: Unity EditMode job `b0ed18f3971f40cd865aaa62f9f7475e`, 82 total / 82 passed / 0 failed / 0 skipped.
 - Created SDD artifacts:
   - `proposal.md`
   - `spec.md`
@@ -39,10 +45,10 @@ Some older `.agents` handoff recommendations are already implemented in the curr
 Therefore, the next apply step should not blindly re-implement those old fixes. It should verify them against PC evidence and focus on remaining gaps.
 
 ## Next Recommended Apply Slice
-Phase 1C:
-- Revisit the currently ignored `CaiBang_357_HomingSpreadKeepsPerMissileOffsetsForLiveTarget` test: it is ignored because current mobile `gaibang.lua::feilong_zaitian` lacks `skill_param1_v`. Determine from canonical PC client/server/pak source whether mobile reference is stale or whether Phi Long should use a different PC data path for level-20 four-dragon homing lanes.
-- Add/strengthen tests proving `Phi Long Tại Thiên` level 20 uses four homing dragons against a moving target using live-target resolution.
-- Run a visual smoke with PC SPRs for `a31b9f04.spr`/`c33e96c2.spr` once the runtime test gap is resolved.
+Phase 2:
+- Move to Kháng Long Hữu Hối spread parity and buff/runtime slices.
+- Add/verify tests for `skill_misslesform_v == 2` fan spread using `skill_param1_v`.
+- Continue PC evidence/resource resolution for Kháng Long, Túy Điệp, Hoạt Bất Lưu Thủ, Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
 
 ## Blockers / Cautions
 - Async scout subagents failed/staled in this session, so parent-created SDD artifacts are the authoritative planning state for now.

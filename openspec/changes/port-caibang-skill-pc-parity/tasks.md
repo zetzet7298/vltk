@@ -8,13 +8,13 @@
 - [ ] Record resource paths and hashed filenames for initial Phi Long assets using `jx-pc-resource-resolver`.
 
 ## Phase 1 - Phi Long Tại Thiên Homing First Slice
-- [ ] RED: Add/extend CaiBang EditMode test asserting `Phi Long Tại Thiên` level 20 resolves exactly 4 missiles/dragons from PC data.
-- [ ] RED: Add/extend CaiBang EditMode test simulating target movement after cast and asserting missile target resolution follows the live target, not only cast-time position.
-- [ ] RED: Add/extend visual/math test asserting each of the 4 dragons keeps lane-specific offsets and does not resolve all heads to one center target.
-- [ ] GREEN: Expose/use an index-specific missile target resolver on `ActiveSkillEffect` or equivalent runtime model.
-- [ ] GREEN: Update `SkillEffectVisualService` homing update so `Phi Long Tại Thiên` uses `liveTarget + laneOffset` for each dragon.
-- [ ] GREEN: Update `SkillEffectRenderer` and `SkillEffectWorldOverlay` to orient/select frames with each missile's resolved target.
-- [ ] Run filtered tests: `unityMCP_run_tests(mode="EditMode", category_names=["CaiBang"])`.
+- [x] RED: Add/extend CaiBang EditMode test asserting `Phi Long Tại Thiên` level 20 resolves exactly 4 missiles/dragons from PC data.
+- [x] RED: Add/extend CaiBang EditMode test simulating target movement after cast and asserting missile target resolution follows the live target, not only cast-time position.
+- [x] RED: Add/extend visual/math test asserting each of the 4 dragons keeps lane-specific offsets and does not resolve all heads to one center target.
+- [x] GREEN: Expose/use an index-specific missile target resolver on `ActiveSkillEffect` or equivalent runtime model.
+- [x] GREEN: Update `SkillEffectVisualService` homing update so `Phi Long Tại Thiên` uses `liveTarget + laneOffset` for each dragon.
+- [x] GREEN: Update `SkillEffectRenderer` and `SkillEffectWorldOverlay` to orient/select frames with each missile's resolved target.
+- [x] Run filtered tests: `unityMCP_run_tests(mode="EditMode", category_names=["CaiBang"])`.
 
 ## Phase 2 - Kháng Long Hữu Hối Spread
 - [ ] RED: Add/extend CaiBang test proving `skill_misslesform_v == 2` selects fan/radial spread for Kháng Long, not Phi Long parallel lanes.

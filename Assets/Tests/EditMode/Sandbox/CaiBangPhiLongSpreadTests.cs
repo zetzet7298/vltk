@@ -8,10 +8,9 @@ namespace VLTK.Tests.Sandbox
     // [CaiBang-PhiLongSpread 2026-06-19] Phase B.1: PC gaibang.lua::feilong_zaitian drive Phi Long spread.
     // PC source (mobile gaibang.lua): skill_misslenum_v L1=1, L11=1, L12=2, L15=2, L16=3, L20=4.
     //   skill_misslesform_v L1=1, L11=1, L11=0, L20=0 — Single form throughout.
-    //   Mobile gaibang.lua does NOT have skill_param1_v for 357 (only for 128 kanglong_youhui).
-    //   Spread step derived from skill_misslenum_v count → SetupPcCircleOutwardMissiles fallback.
-    // Trước fix: SetupPcPhiLongSpread luôn applied với stepWu=32 — sai straight-line L1-L10.
-    // Sau fix: luaCount=1 → straight-line; luaCount>1 → spread via SetupPcCircleOutwardMissiles.
+    //   Mobile/PC gaibang.lua does NOT have skill_param1_v for 357 (only for 128 kanglong_youhui).
+    //   PC skills.txt 357 Param1=32 supplies the lane gap; missile 166 MoveKind=5 supplies homing.
+    // Sau fix: luaCount=1 → straight line; luaCount>1 → parallel homing lanes via SetupPcPhiLongSpread.
     [TestFixture, Category("CaiBang")]
     public class CaiBangPhiLongSpreadTests
     {
@@ -53,9 +52,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void PhiLong_NoSkillParam1V_MobileLuaParity()
         {
-            // Mobile gaibang.lua feilong_zaitian (357) KHÔNG có skill_param1_v (chỉ 128 kanglong_youhui mới có).
-            // Verify that GetSingleValue(357, lv, "skill_param1_v", 1) trả về 0 (no attribute) → rawParam=0
-            // → SetupPcPhiLongSpread sẽ dùng rawParam=0 path (straight-line / per-missile position).
+            // Mobile/PC gaibang.lua feilong_zaitian (357) KHÔNG có skill_param1_v (chỉ 128 kanglong_youhui mới có).
+            // Verify that GetSingleValue(357, lv, "skill_param1_v", 1) trả về 0 (no attribute).
+            // Runtime must therefore use PC skills.txt Param1=32 fallback for luaCount>1 parallel lanes.
             if (!PcCaiBangLuaLevelService.Applies(357))
             {
                 Assert.Ignore("gaibang.lua not loaded");
