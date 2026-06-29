@@ -70,10 +70,51 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-        <!-- Chat message area + input -->
+        <!-- PC chat bar (聊天条) — rebuilt per port-pc-chat-bar-parity design §2.
+             PC source: 7e20a7ac.ini. Layout top→bottom (column-reverse = bottom first):
+             ChannelSelector → ChatRoomArea (history) → SysRoomArea → ChatInputRow.
+             Frame SPRs (top/bottom/middle) + toggle/scroll icons load at runtime via C#.
+             Element names ChatInput/FaceBtn/SendBtnIcon preserved for GameHudController. -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
-            <ui:Label text="!! Hãy sử dụng hồi phục" class="hud-chat-warning"/>
-            <ui:VisualElement class="hud-chat-input-row">
+            <!-- Channel selector row: on/off toggle + 6 PC tabs + identity icon
+                 PC: [ChannelBtn] + [Main] CheckOnImage/CheckOffImage + ChatTabNum=6 -->
+            <ui:VisualElement name="ChannelSelector" class="hud-chat-channel-row">
+                <ui:VisualElement name="ChannelToggle" class="hud-chat-channel-toggle">
+                    <ui:VisualElement name="ChannelToggleIcon" class="hud-chat-toggle-icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ChatTab0" class="hud-chat-tab"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab1" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab2" class="hud-chat-tab"><ui:Label text="Phòng" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab3" class="hud-chat-tab"><ui:Label text="Bang hội" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab4" class="hud-chat-tab"><ui:Label text="Môn phái" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab5" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatChannelIcon" class="hud-chat-channel-identity"/>
+            </ui:VisualElement>
+
+            <!-- ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148)
+                 + scroll track (PC [ChatRoom_Scroll] 聊天条中部改) + thumb (通用拖动条) -->
+            <ui:VisualElement name="ChatRoomArea" class="hud-chat-room-area">
+                <ui:ScrollView name="ChatRoomList" class="hud-chat-room-list">
+                    <ui:Label name="ChatRoomContent" class="hud-chat-room-content" text=""/>
+                </ui:ScrollView>
+                <ui:VisualElement name="ChatRoomScrollTrack" class="hud-chat-scroll-track">
+                    <ui:VisualElement name="ChatRoomScrollThumb" class="hud-chat-scroll-thumb"/>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <!-- SysRoom: system/combat message strip (PC [SysRoom_List] 235×42)
+                 collapsible via toggle (PC [SysRoom_Open] 提示信息窗－开关) -->
+            <ui:VisualElement name="SysRoomArea" class="hud-chat-sys-area">
+                <ui:VisualElement name="SysToggle" class="hud-chat-sys-toggle">
+                    <ui:VisualElement name="SysToggleIcon" class="hud-chat-toggle-icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="SysScrollUp" class="hud-chat-sys-btn"/>
+                <ui:VisualElement name="SysScrollDown" class="hud-chat-sys-btn"/>
+                <ui:Label name="SysRoomContent" class="hud-chat-sys-content" text=""/>
+            </ui:VisualElement>
+
+            <!-- Input row (existing elements preserved: ChatInput/FaceBtn/SendBtnIcon) -->
+            <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
                 <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
                 <ui:Button name="FaceBtn" text="😊" class="hud-face-btn"/>
                 <ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/>

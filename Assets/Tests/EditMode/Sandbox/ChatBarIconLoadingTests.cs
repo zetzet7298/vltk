@@ -161,3 +161,58 @@ namespace VLTK.Tests.Sandbox
         }
     }
 }
+
+/// <summary>
+/// T1.1 (port-pc-chat-bar-parity) — guard test: verifies all 15 new PC chat-bar
+/// SPR PNGs exist in BOTH art roots (editor + StreamingAssets). Runtime loads via
+/// StreamingAssets; staging only the editor copy is a silent load failure.
+/// Art is pre-staged from decoded PC SPRs (hash-resolved from 7e20a7ac.ini paths).
+/// </summary>
+[TestFixture, Category("Chat")]
+public class HudChatBarArtTests
+{
+    // The 15 PC chat-bar art pieces decoded from vltksource_new SPRs.
+    private static readonly string[] NewChatBarPngs =
+    {
+        "chat_bar_top",              // 8fa68495 聊天条顶部改
+        "chat_bar_bottom",           // bdf9af98 聊天条底部改
+        "chat_bar_middle",           // 3483ec02 聊天条中部改
+        "btn_chat_shadow",           // bcca4952 聊天条阴影按钮
+        "btn_chat_channel_on",       // 3b255f40 频道开与关a
+        "btn_chat_channel_off",      // 34fc44d5 频道开与关b
+        "btn_chat_sys_toggle",       // 7c6eaab0 提示信息窗－开关
+        "btn_chat_sys_up",           // b3e52a98 提示信息窗－上
+        "btn_chat_sys_down",         // af1cbe4c 提示信息窗－下
+        "btn_chat_scroll_thumb_pc",  // 23fe2a10 通用拖动条
+        "chat_icon_self_pc",         // 50304af7 聊天频道图示－自己说
+        "chat_icon_friend_pc",       // 2c66b90e 聊天频道图示－好友频道
+        "chat_icon_stranger_pc",     // 69fbc7e6 聊天频道图示－密人频道
+        "btn_chat_channel_friend",   // 7addeacc 主界面按钮-好友频道选择
+        "btn_chat_channel_stranger", // 3be3a09f 主界面按钮-密人频道选择
+    };
+
+    [Test]
+    public void NewChatBarPngs_ExistInBothArtRoots()
+    {
+        // Application.dataPath = <project>/Assets in EditMode.
+        var editorArtDir = Path.Combine(Application.dataPath, "UI", "HUD", "Art");
+        var streamingArtDir = Path.Combine(Application.dataPath, "StreamingAssets", "UI", "HUD", "Art");
+
+        Assert.IsTrue(Directory.Exists(editorArtDir),
+            $"Editor art dir missing: {editorArtDir}");
+        Assert.IsTrue(Directory.Exists(streamingArtDir),
+            $"StreamingAssets art dir missing: {streamingArtDir}");
+
+        foreach (var name in NewChatBarPngs)
+        {
+            var editorPath = Path.Combine(editorArtDir, name + ".png");
+            var streamingPath = Path.Combine(streamingArtDir, name + ".png");
+
+            Assert.IsTrue(File.Exists(editorPath),
+                $"Editor art missing: {name}.png at {editorPath}");
+            Assert.IsTrue(File.Exists(streamingPath),
+                $"StreamingAssets art missing: {name}.png at {streamingPath} " +
+                "(runtime load will silently fail — stage to BOTH roots)");
+        }
+    }
+}
