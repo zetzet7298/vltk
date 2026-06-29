@@ -316,7 +316,7 @@
         left: 465px;          /* mobile: centered bottom / 6 o'clock anchor at 1280 design width */
         bottom: 16px;
         width: 350px;        /* PC [ChatRoom_List].Width=280 scaled 1024→1280 */
-        height: 185px;        /* mobile-safe stack: chat scroll/list directly above input; tabs overlay room top */
+        height: 55px;         /* mobile compact: tabs/scroll directly above input, no tall empty room */
         flex-direction: column;
         overflow: visible;
         background-color: transparent;
@@ -400,11 +400,11 @@
 
     /* ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148) */
     .hud-chat-room-area {
-        height: 160px;
+        height: 30px;
         flex-shrink: 0;
         flex-direction: row;
         align-items: stretch;
-        background-color: rgba(0,0,0,0.08);  /* PC ShadowBtn-style subtle readability shadow */
+        background-color: transparent;  /* mobile: no empty chat-room block between tabs and input */
     }
     .hud-chat-room-list {
         flex-grow: 1;
@@ -419,7 +419,7 @@
         white-space: normal;
         flex-grow: 1;
         flex-shrink: 0;
-        min-height: 114px;
+        min-height: 26px;
         -unity-text-align: lower-left;
         padding: 2px 4px;
     }
@@ -428,7 +428,7 @@
         left: 0px;
         top: 0px;
         width: 15px;
-        height: 160px;
+        height: 30px;
         flex-shrink: 0;
         margin-left: 0px;
         margin-top: 0px;       /* mobile: no gap between tab row and vertical scroll */
