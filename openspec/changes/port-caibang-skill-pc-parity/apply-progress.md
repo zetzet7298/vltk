@@ -104,3 +104,42 @@ Phase 4:
 - Async scout subagents failed/staled in this session, so parent-created SDD artifacts are the authoritative planning state for now.
 - Do not run full EditMode suite in the dev loop.
 - Use fresh-context review before committing implementation changes.
+
+## Phase 5 — Visual/SFX resources + addskilldamage engine correction (2026-06-29)
+- Read PC `docs/porting_guide.md` and loaded `jx-pc-resource-resolver`.
+- Confirmed all core Cai Bang visual/SFX resources are already physically bound in the mobile
+  runtime roots (no re-import needed); runtime signed-GB2312 hash reproduces the recorded UIDs:
+  - dragon `a31b9f04`, impact `c33e96c2`, pre-cast `b91ab706`, Túy Điệp aura `7d34af1d`,
+    Đả Cẩu Trận aura `202667bb`, Kháng Long icon `98055770`, Phi Long icon `d97b70ca` — all in `SpritesRuntime/`.
+  - cast SFX `sound_k005/k010/k037.wav` present in `StreamingAssets/sound/skill` + `AudioRuntime/Skill`.
+- Added evidence:
+  - `evidence/phi-long-video-evidence.md` — quantitative analysis of user-supplied
+    `pc-evidence/skills/phi_long_tai_thien.mp4` (warm orange hue ~34°, homing left→right convergence).
+  - `evidence/caibang-visual-sfx-resource-evidence.md` — UID + presence table for all resources.
+  - `evidence/addskilldamage-engine-semantics-evidence.md` — DECISIVE PC engine evidence.
+- Added `Assets/Tests/EditMode/Sandbox/CaiBangVisualResourceParityTests.cs` (6 tests: state-aura
+  metadata, signed-hash parity, SpritesRuntime existence, SFX existence, [Slow] decode-to-frames).
+- ENGINE CORRECTION — `addskilldamage` is NOT a missile-spawning proc:
+  - PC `KSkillList::GetAddSkillDamage` (KSkillList.cpp:895) + `KNpc::AppendSkillEffect`
+    (KNpc.cpp:3017/3045/3119, MAX_PERCENT=100) prove it is a PASSIVE flat %-damage amplifier on
+    the cast skill, summed from LEARNED skills whose addskilldamage targets it. No RNG, no spawn.
+  - Replaced `CombatRuntimeService.TryFireAddSkillDamageChain/Slot` (rolled chance + spawned
+    sub-skill missiles + applied separate damage) with `ComputeAddSkillDamagePercent` + an
+    `addSkillDamagePercent` arg on `ApplyDamage` that scales the cast skill's own damage components.
+  - Added `CombatCastReport.addSkillDamagePercent`.
+  - Updated tests: `CaiBang_359` now passes (3 own missiles, was wrongly expecting 8 chain);
+    `CaiBang_Cast_...125` asserts 0 sub-skill missiles + addP 0; added
+    `CaiBang_AddSkillDamage_IsPassiveDamageAmp_NotChainSpawn` (cast 359 with 119+125 learned → +100%)
+    and `CaiBang_AddSkillDamage_ZeroWhenGrantSkillNotLearned`.
+  - Updated `CaiBangAddSkillDamageChainTests` header to passive-amp semantics (percent values unchanged).
+- Verified filtered CaiBang tests green: Unity EditMode job `1e9843e321fc4a50b384f0d7c32ae268`,
+  93 total / 93 passed / 0 failed / 0 skipped.
+- Cross-faction smoke (WuDang/Shaolin/TangMen/EMei groups): 16 ran, 15 passed; the 1 failure
+  `WuDangCombatCatalogTests.WuDangVisualService_UsesPcMissileSpeedLifeAndSpriteKeys` is a
+  PRE-EXISTING SPR-key expectation mismatch (expects hash `3dfcabc2`, gets raw path) unrelated to
+  this change (no SprPathToKey/WuDang code touched).
+
+## Not committed yet
+Holding commit for user review: this reverses the Phase 4 addskilldamage "chain spawn" model
+(casting Bổng Đả Ác Cẩu 125 no longer launches extra 359/1074 dragons; instead 125 passively
+buffs 359/1074 damage when those are cast), which is a visible gameplay/visual change.

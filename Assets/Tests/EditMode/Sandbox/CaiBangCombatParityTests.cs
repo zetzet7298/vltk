@@ -129,14 +129,15 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
             Assert.AreEqual(48, r.manaCost); // PC bangda_egou L20 skill_cost_v=48.
-            // [CaiBang-VersionPriority 2026-06-29] Newest PC row 125 = Bổng Đả Ác Cẩu (`bangda_egou`),
-            // not Thiên Hạ. Deterministic RollPercent=true fires both PC chains:
-            //   addskilldamage1 → 359 (`tianxia_wugou`) L20 count=3, chance=60%
-            //   addskilldamage2 → 1074 (`gungaibang150`) L20 count=5, chance=50%
-            Assert.AreEqual(8, r.childProjectileCount, "125 deterministic chain hit should spawn 3 + 5 missiles from newest PC bangda_egou chains");
-            Assert.AreEqual(8, r.projectiles.Count);
-            // Enemy luôn mất máu (125 ApplyDamage + 359/1074 chain damage when deterministic chain hits).
-            Assert.Less(enemy.currentLife, 1000, "125 cast luôn apply damage từ levelData");
+            // [CaiBang-AddSkillDamage 2026-06-29] PC engine (KSkillList::GetAddSkillDamage) treats
+            // addskilldamage as a PASSIVE flat %-damage bonus, NOT a proc that casts the sub-skill.
+            // 125's addskilldamage entries passively buff 359/1074 WHEN THOSE skills are cast; casting
+            // 125 itself spawns only its OWN projectiles (Surround form, childSkillId=0 → none) and
+            // receives no self-bonus because nothing in the known set targets 125.
+            Assert.AreEqual(0, r.addSkillDamagePercent, "no learned skill grants addskilldamage to 125");
+            Assert.AreEqual(0, r.childProjectileCount, "125 must NOT spawn 359/1074 sub-skill missiles");
+            Assert.IsFalse(r.projectiles.Any(p => p.skillId == 168), "casting 125 must not spawn 359/1074 chain dragons (missile 168)");
+            Assert.Less(enemy.currentLife, 1000, "125 cast applies its own levelData damage");
             Assert.AreEqual(2, svc.NextCastTime(beggar.actorId, 125));
 
             var onCooldown = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
@@ -492,6 +493,56 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(3, report.projectiles.Count);
             Assert.That(report.projectiles.All(p => p.skillId == 168), Is.True, "All runtime children should use PC missile 168");
             Assert.Less(enemy.currentLife, 1000, "Deterministic hit should apply PC-derived damage before projectile visuals resolve");
+        }
+
+        [Test]
+        public void CaiBang_AddSkillDamage_IsPassiveDamageAmp_NotChainSpawn()
+        {
+            // PC KSkillList::GetAddSkillDamage(nSkillID) + KNpc::AppendSkillEffect: addskilldamage is a
+            // passive flat %-damage amplifier on the CAST skill, summed from LEARNED skills whose
+            // addskilldamage entries target it. No proc chance, no sub-skill missiles.
+            // Beggar() has learned 119 (addskilldamage1 → 359, +40% L20) and 125 (addskilldamage1 →
+            // 359, +60% L20). Casting 359 must therefore get +100% and spawn only its own 3 missiles.
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(Catalog(), damage: deterministicDamage);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(359);
+            beggar.skillLevels[359] = 20;
+            var enemy = Enemy(new Vector2(300, 0));
+
+            var r = svc.Cast(beggar, enemy, 359, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+            Assert.AreEqual(100, r.addSkillDamagePercent,
+                "addskilldamage sums learned grants targeting 359: 119(+40) + 125(+60) = 100");
+            Assert.AreEqual(3, r.childProjectileCount, "359 still spawns only its own 3 missiles");
+            Assert.AreEqual(3, r.projectiles.Count);
+            Assert.That(r.projectiles.All(p => p.skillId == 168), Is.True,
+                "no chain sub-skill missiles — only 359's own PC missile 168");
+        }
+
+        [Test]
+        public void CaiBang_AddSkillDamage_ZeroWhenGrantSkillNotLearned()
+        {
+            // Same cast, but caster has NOT learned any skill that grants addskilldamage to 359.
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(Catalog(), damage: deterministicDamage);
+            var caster = new CombatActorState
+            {
+                actorId = 3,
+                faction = CombatFaction.CaiBang,
+                level = 60,
+                currentLife = 1000,
+                currentMana = 500,
+                position = Vector2.zero,
+                knownSkills = { 359 },
+                skillLevels = { [359] = 20 },
+            };
+            var enemy = Enemy(new Vector2(300, 0));
+
+            var r = svc.Cast(caster, enemy, 359, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+            Assert.AreEqual(0, r.addSkillDamagePercent, "no learned grant skill targets 359 → no bonus");
+            Assert.AreEqual(3, r.projectiles.Count);
         }
 
         [Test]

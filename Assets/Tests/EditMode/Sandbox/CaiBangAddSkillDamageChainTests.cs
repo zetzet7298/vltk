@@ -6,13 +6,17 @@ using VLTK.Sandbox;
 
 namespace VLTK.Tests.Sandbox
 {
-    // [CaiBang-AddSkillDamage 2026-06-19] Phase D: PC gaibang.lua::addskilldamageN chain.
-    // Chain map (skillId → chain targetId, L20 chance %) from newest PC source:
-    //   119 (yanmen_tuobo, Diên Môn Thác Bát)         → 359, 40%
-    //   122 (jianren_shenshou, Kiến Nhân Thần Thủ)    → 357, 50%
-    //   125 (bangda_egou, Bổng Đả Ác Cẩu)             → 359, 60% AND 1074, 50%
-    //   128 (kanglong_youhui, Kháng Long Hữu Hối)     → 357, 55%
-    //   359 (tianxia_wugou, Thiên Hạ Vô Cẩu)          → 1074, 25%
+    // [CaiBang-AddSkillDamage 2026-06-29] PC gaibang.lua::addskilldamageN.
+    // ENGINE TRUTH (KSkillList::GetAddSkillDamage + KNpc::AppendSkillEffect, MAX_PERCENT=100):
+    //   addskilldamage is a PASSIVE flat %-damage amplifier, NOT a proc that casts a sub-skill.
+    //   Learning skill G adds G.addskilldamageN[3]% to the damage of the skill G.addskilldamageN[1]
+    //   points at, WHEN that target skill is cast. No RNG, no extra missiles/visual.
+    // These tests assert the PC percent VALUES per skill/slot (slot[3] = the damage % bonus):
+    //   119 (yanmen_tuobo)      → 359, +40%
+    //   122 (jianren_shenshou)  → 357, +50%
+    //   125 (bangda_egou)       → 359, +60% AND 1074, +50%
+    //   128 (kanglong_youhui)   → 357, +55%
+    //   359 (tianxia_wugou)     → 1074, +25%
     [TestFixture, Category("CaiBang")]
     public class CaiBangAddSkillDamageChainTests
     {

@@ -47,16 +47,16 @@
 - [x] Run filtered CaiBang tests plus focused shared combat tests.
 
 ## Phase 5 - Visual/SFX Resources
-- [ ] Resolve Phi Long missile SPR(s), impact SPR(s), icon, cast/precast, and SFX paths from PC config with hash evidence.
-- [ ] Resolve Kháng Long and core buff/support visual resources with hash evidence.
-- [ ] Import or bind resolved resources into mobile asset paths with deterministic metadata.
-- [ ] RED/GREEN visual tests where practical: sprite existence, frame count/direction metadata, non-null SFX path, and resource reference wiring.
+- [x] Resolve Phi Long missile SPR(s), impact SPR(s), icon, cast/precast, and SFX paths from PC config with hash evidence.
+- [x] Resolve Kháng Long and core buff/support visual resources with hash evidence.
+- [x] Import or bind resolved resources into mobile asset paths with deterministic metadata.
+- [x] RED/GREEN visual tests where practical: sprite existence, frame count/direction metadata, non-null SFX path, and resource reference wiring.
 - [ ] Manual/Unity visual smoke: Phi Long level 20 moving-target homing, Kháng Long fan spread, Hoạt/Túy buff aura/status visuals.
 
 ## Phase 6 - Review and Final Gates
-- [ ] Run `unityMCP_run_tests(mode="EditMode", category_names=["CaiBang"])`.
-- [ ] If shared combat services changed, run focused shared combat/catalog tests.
-- [ ] Run `lens_diagnostics(mode="all")` or equivalent diagnostics for edited files.
+- [x] Run `unityMCP_run_tests(mode="EditMode", category_names=["CaiBang"])`.
+- [x] If shared combat services changed, run focused shared combat/catalog tests.
+- [x] Run `lens_diagnostics(mode="all")` or equivalent diagnostics for edited files.
 - [ ] Run a fresh-context reviewer before commit/push because this is multi-file combat work.
 - [ ] Commit in small conventional commits by slice.
 - [ ] Push only after final gate passes.

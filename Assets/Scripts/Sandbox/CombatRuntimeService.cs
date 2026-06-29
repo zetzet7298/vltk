@@ -42,6 +42,8 @@ namespace VLTK.Sandbox
         public int totalFrames;
         public int manaCost;
         public int childProjectileCount;
+        // PC addskilldamage flat %-damage bonus applied to this cast (KSkillList::GetAddSkillDamage).
+        public int addSkillDamagePercent;
         public List<ProjectileInstance> projectiles = new();
         public List<SkillMagicAttribute> appliedState = new();
         public List<DamageResult> damageResults = new();
@@ -192,7 +194,12 @@ namespace VLTK.Sandbox
 
             ApplyActionState(caster, skill, report);
             ApplyStates(caster, target, relation, levelData, report);
-            ApplyDamage(caster, target, levelData, report);
+            // PC KNpc::AppendSkillEffect: addskilldamage is a passive flat %-damage amplifier
+            // applied to THIS cast skill's own damage, summed from learned skills whose
+            // addskilldamage entries target this skill. No proc chance, no sub-skill spawn.
+            int addSkillDamageP = ComputeAddSkillDamagePercent(caster, skill.skillId);
+            report.addSkillDamagePercent = addSkillDamageP;
+            ApplyDamage(caster, target, levelData, report, addSkillDamageP);
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
             // [CaiBang-VersionPriority 2026-06-29] Newest PC skill 124 is passive dagou_zhen
@@ -232,12 +239,12 @@ namespace VLTK.Sandbox
                 SpawnProjectiles(startSubSkill, caster, castPoint, grid, report, startLevel);
             }
 
-            // [CaiBang-AddSkillDamage 2026-06-19/29] Port PC gaibang.lua::addskilldamageN chains.
-            // PC newest-version rule: skill 125 is Bổng Đả Ác Cẩu (`bangda_egou`), not Thiên Hạ.
-            // Chain map examples at L20:
-            //   119 → 359 chance 40%; 122 → 357 chance 50%; 125 → 359 chance 60% AND 1074 chance 50%;
-            //   128 → 357 chance 55%; 359 → 1074 chance 25%.
-            TryFireAddSkillDamageChain(caster, target, skill, skillLevel, castPoint, grid, report);
+            // [CaiBang-AddSkillDamage 2026-06-29] PC gaibang.lua::addskilldamageN is NOT a
+            // proc that casts/spawns the listed sub-skill. PC engine KSkillList::GetAddSkillDamage
+            // (KSkillList.cpp:895) + KNpc::AppendSkillEffect (KNpc.cpp:3017/3045/3119) treat it as a
+            // passive flat %-damage bonus: learning skill G adds G's addskilldamageN[3]% to the
+            // damage of the skill G's addskilldamageN[1] points at, WHEN that target skill is cast.
+            // It is applied above via ComputeAddSkillDamagePercent → ApplyDamage. No missiles, no RNG.
 
             _nextCastTime[(caster.actorId, skillId)] = CurrentTime + Mathf.Max(0, skill.timePerCast);
             report.success = true;
@@ -313,7 +320,7 @@ namespace VLTK.Sandbox
             }
         }
 
-        private void ApplyDamage(CombatActorState caster, CombatActorState target, SkillLevelData data, CombatCastReport report)
+        private void ApplyDamage(CombatActorState caster, CombatActorState target, SkillLevelData data, CombatCastReport report, int addSkillDamagePercent = 0)
         {
             // [DMG-PORT-100] Port 100% từ PC KNpc::ReceiveDamage+CalcDamage.
             // PC source: KNpc.cpp:2842-2941 (ReceiveDamage) + 2445-2732 (CalcDamage).
@@ -420,6 +427,15 @@ namespace VLTK.Sandbox
                 int min = attr.value1;
                 int max = attr.value3 != 0 ? attr.value3 : attr.value1;
                 if (max < min) max = min;
+
+                // PC KNpc::AppendSkillEffect: addskilldamage + skill enhance scale the skill's OWN
+                // damage component: nValue + nValue * nAddDamageP / MAX_PERCENT (MAX_PERCENT=100).
+                // Applied to the skill's base value before external state buffs are added.
+                if (addSkillDamagePercent != 0)
+                {
+                    min = min * (DamageFormulaService.MaxPercent + addSkillDamagePercent) / DamageFormulaService.MaxPercent;
+                    max = max * (DamageFormulaService.MaxPercent + addSkillDamagePercent) / DamageFormulaService.MaxPercent;
+                }
 
                 // Add state buff damage (caster có thể cộng thêm damage từ buff)
                 int extraDamageMin = 0;
@@ -595,43 +611,41 @@ namespace VLTK.Sandbox
             }
         }
 
-        // PC gaibang.lua::addskilldamageN chain. Sau khi parent skill cast thành công,
-        // roll random với chance L20 từ slot[3]. Nếu hit, fire chain targetId (apply damage + spawn missile).
-        private void TryFireAddSkillDamageChain(CombatActorState caster, CombatActorState target, SkillDefinition parent, int parentLevel, Vector2 castPoint, ObstacleGrid grid, CombatCastReport report)
+        // PC KSkillList::GetAddSkillDamage(nSkillID) (KSkillList.cpp:895): scan ALL learned skills;
+        // for each learned skill G whose addskilldamageN[1] target == the skill being cast, add
+        // G's addskilldamageN[3] percent. No proc chance, no sub-skill cast. The result is a flat
+        // %-damage amplifier on the cast skill's own damage (KNpc::AppendSkillEffect, MAX_PERCENT=100).
+        // Slot[1] of an addskilldamage table holds the target skillId; slot[3] holds the percent.
+        private static readonly (int grantSkillId, string[] slots)[] AddSkillDamageGrants =
         {
-            switch (parent.skillId)
-            {
-                case 119:
-                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 359, "addskilldamage1");
-                    break;
-                case 122:
-                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 357, "addskilldamage1");
-                    break;
-                case 125:
-                    // Newest PC row 125 = bangda_egou: addskilldamage1 -> 359, addskilldamage2 -> 1074.
-                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 359, "addskilldamage1");
-                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 1074, "addskilldamage2");
-                    break;
-                case 128:
-                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 357, "addskilldamage1");
-                    break;
-                case 359:
-                    TryFireAddSkillDamageChainSlot(caster, target, parent.skillId, parentLevel, castPoint, grid, report, 1074, "addskilldamage1");
-                    break;
-            }
-        }
+            (119, new[] { "addskilldamage1" }),                         // yanmen_tuobo  → 359 (+40% L20)
+            (122, new[] { "addskilldamage1" }),                         // jianren_shenshou → 357 (+50% L20)
+            (125, new[] { "addskilldamage1", "addskilldamage2" }),      // bangda_egou → 359 (+60%) & 1074 (+50%)
+            (128, new[] { "addskilldamage1" }),                         // kanglong_youhui → 357 (+55% L20)
+            (359, new[] { "addskilldamage1" }),                         // tianxia_wugou → 1074 (+25% L20)
+        };
 
-        private void TryFireAddSkillDamageChainSlot(CombatActorState caster, CombatActorState target, int parentSkillId, int parentLevel, Vector2 castPoint, ObstacleGrid grid, CombatCastReport report, int chainId, string attribName)
+        /// <summary>
+        /// Sum of PC addskilldamage percents granted to <paramref name="castSkillId"/> by the
+        /// caster's learned skills. Mirrors PC KSkillList::GetAddSkillDamage (no RNG, no sub-skill spawn).
+        /// </summary>
+        private int ComputeAddSkillDamagePercent(CombatActorState caster, int castSkillId)
         {
-            var chainSkill = _catalog.Resolve(chainId);
-            if (chainSkill == null) return;
-            int chancePct = PcCaiBangLuaLevelService.GetSingleValue(parentSkillId, parentLevel, attribName, 3);
-            if (chancePct <= 0) return; // PC source returns 0 nếu không có chain
-            if (!_damage.RollPercent(chancePct)) return;
-            var chainLevel = Mathf.Clamp(parentLevel, 1, chainSkill.maxLevel > 0 ? chainSkill.maxLevel : parentLevel);
-            var chainLevelData = chainSkill.GetPcLevelData(chainLevel);
-            ApplyDamage(caster, target, chainLevelData, report);
-            SpawnProjectiles(chainSkill, caster, castPoint, grid, report, chainLevel);
+            if (caster?.knownSkills == null || castSkillId <= 0) return 0;
+            int addP = 0;
+            foreach (var (grantId, slots) in AddSkillDamageGrants)
+            {
+                if (!caster.knownSkills.Contains(grantId)) continue;
+                int grantLevel = caster.skillLevels != null && caster.skillLevels.TryGetValue(grantId, out var lv) ? lv : 0;
+                if (grantLevel <= 0) continue;
+                foreach (var slot in slots)
+                {
+                    int target = PcCaiBangLuaLevelService.GetSingleValue(grantId, grantLevel, slot, 1);
+                    if (target != castSkillId) continue;
+                    addP += PcCaiBangLuaLevelService.GetSingleValue(grantId, grantLevel, slot, 3);
+                }
+            }
+            return addP;
         }
 
         // PC 打狗阵 (124) stance ally chain: tìm allies trong attackRadius=180, apply state 44 cho mỗi ally.
