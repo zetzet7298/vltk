@@ -94,12 +94,12 @@
             <!-- ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148)
                  PC scroll strip is LEFT of the chat list: [ChatRoom_Scroll].Left=-15, [ChatRoom].Left=15. -->
             <ui:VisualElement name="ChatRoomArea" class="hud-chat-room-area">
-                <ui:VisualElement name="ChatRoomScrollTrack" class="hud-chat-scroll-track">
-                    <ui:VisualElement name="ChatRoomScrollThumb" class="hud-chat-scroll-thumb"/>
-                </ui:VisualElement>
                 <ui:ScrollView name="ChatRoomList" class="hud-chat-room-list">
                     <ui:Label name="ChatRoomContent" class="hud-chat-room-content" text=""/>
                 </ui:ScrollView>
+                <ui:VisualElement name="ChatRoomScrollTrack" class="hud-chat-scroll-track">
+                    <ui:VisualElement name="ChatRoomScrollThumb" class="hud-chat-scroll-thumb"/>
+                </ui:VisualElement>
             </ui:VisualElement>
 
             <!-- SysRoom: system/combat message strip (PC [SysRoom_List] 235×42).

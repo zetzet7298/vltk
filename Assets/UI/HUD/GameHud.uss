@@ -316,7 +316,7 @@
         left: 465px;          /* mobile: centered bottom / 6 o'clock anchor at 1280 design width */
         bottom: 16px;
         width: 350px;        /* PC [ChatRoom_List].Width=280 scaled 1024→1280 */
-        height: 197px;        /* mobile-safe stack: tabs above history + sys + input */
+        height: 185px;        /* mobile-safe stack: chat scroll/list directly above input; tabs overlay room top */
         flex-direction: column;
         overflow: visible;
         background-color: transparent;
@@ -356,13 +356,15 @@
 
     /* Channel selector row: PC [ChannelBtn] + 6 tabs (ChatTabNum=6) */
     .hud-chat-channel-row {
+        position: absolute;
+        left: 0px;
+        top: 0px;
         flex-direction: row;
         align-items: center;
         height: 12px;
-        flex-shrink: 0;
-        padding-left: 15px;   /* PC ChatRoom.Left */
-        width: 570px;         /* mobile-safe tabs are above, not over input controls */
-        margin-bottom: 2px;
+        padding-left: 28px;   /* mobile: keep first tab text clear of the left scroll strip */
+        width: 570px;         /* mobile-safe tabs overlay the room top, not the input controls */
+        margin-bottom: 0px;
     }
     .hud-chat-channel-toggle {
         display: none;        /* PC evidence shows the channel identity icon, not the size-up text button */
@@ -398,7 +400,7 @@
 
     /* ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148) */
     .hud-chat-room-area {
-        height: 118px;
+        height: 160px;
         flex-shrink: 0;
         flex-direction: row;
         align-items: stretch;
@@ -407,7 +409,7 @@
     .hud-chat-room-list {
         flex-grow: 1;
         overflow: hidden;
-        margin-left: 0px;
+        margin-left: 15px;     /* reserve the overlaid left scroll strip */
         background-color: transparent;
     }
     .hud-chat-room-content {
@@ -422,11 +424,15 @@
         padding: 2px 4px;
     }
     .hud-chat-scroll-track {
+        position: absolute;
+        left: 0px;
+        top: 0px;
         width: 15px;
+        height: 160px;
         flex-shrink: 0;
         margin-left: 0px;
-        margin-top: 15px;      /* PC [ChatRoom_Scroll].Top */
-        margin-bottom: 30px;
+        margin-top: 0px;       /* mobile: no gap between tab row and vertical scroll */
+        margin-bottom: 0px;
         -unity-background-scale-mode: scale-to-fill;
     }
     .hud-chat-scroll-thumb {
@@ -437,12 +443,9 @@
 
     /* SysRoom: system/combat strip (PC [SysRoom_List] 235×42, collapsible) */
     .hud-chat-sys-area {
-        height: 42px;
+        display: none;        /* mobile omits PC SysRoom controls/blank strip; chat scroll sits directly above input */
+        height: 0px;
         flex-shrink: 0;
-        flex-direction: row;
-        align-items: flex-start;
-        padding-left: 15px;
-        background-color: rgba(0,0,0,0.14);
     }
     .hud-chat-sys-toggle {
         width: 19px;

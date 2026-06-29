@@ -185,8 +185,8 @@ namespace VLTK.UI
                 fontSize = 11,
                 normal = { textColor = new Color(230/255f, 220/255f, 53/255f) }
             };
-            float tabX = 480f;
-            float tabY = 505f;
+            float tabX = 493f;
+            float tabY = 519f;
             Label(tabX,        tabY, 50f, 18f, "Tất cả", tabStyleYellow);
             Label(tabX + 58f,  tabY, 40f, 18f, "Mật", tabStyleNormal);
             Label(tabX + 104f, tabY, 50f, 18f, "Phòng", tabStyleNormal);
