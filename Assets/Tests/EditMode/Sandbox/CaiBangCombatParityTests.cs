@@ -375,6 +375,26 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_128_KhangLongUsesFanSpreadFromLuaMissileForm()
+        {
+            // PC evidence: skills.txt 128 MisslesForm=2, missile 48 MoveKind=1.
+            // gaibang.lua::kanglong_youhui L20 skill_misslenum_v=15 and skill_param1_v=2.
+            var cat = Catalog();
+            var visual = new SkillEffectVisualService(null, cat);
+            var fx = visual.PlaySkillCast(cat.Resolve(128), Vector2.zero, new Vector2(400, 0), 20);
+
+            Assert.IsNotNull(fx);
+            Assert.AreEqual(15, fx.missileCount, "Kháng Long L20 uses gaibang.lua skill_misslenum_v=15");
+            Assert.AreEqual(1, fx.pcMissileMoveKind, "Kháng Long missile 48 is non-homing MoveKind=1");
+            Assert.IsNull(fx.missileTargetOffsets, "Kháng Long fan spread must not use Phi Long parallel homing lane offsets");
+            Assert.IsNotNull(fx.missileTargets);
+            Assert.AreEqual(15, fx.missileTargets.Length);
+            Assert.That(fx.missileTargets.Any(p => p.y > 1f), Is.True, "fan spread should include upward lanes");
+            Assert.That(fx.missileTargets.Any(p => p.y < -1f), Is.True, "fan spread should include downward lanes");
+            Assert.AreEqual(0f, fx.missileTargets[7].y, 0.001f, "center lane should remain aimed at the target center");
+        }
+
+        [Test]
         public void CaiBang_359_VisualServiceUsesPcMissile168HomingSpeed()
         {
             // PC PcMissles.txt missile 168 (Thiên Hạ Vô Cẩu): Speed=24, LifeTime=32, MoveKind=5.

@@ -17,11 +17,11 @@
 - [x] Run filtered tests: `unityMCP_run_tests(mode="EditMode", category_names=["CaiBang"])`.
 
 ## Phase 2 - Kháng Long Hữu Hối Spread
-- [ ] RED: Add/extend CaiBang test proving `skill_misslesform_v == 2` selects fan/radial spread for Kháng Long, not Phi Long parallel lanes.
-- [ ] RED: Add test proving `skill_param1_v` is used as the fan angle step.
-- [ ] GREEN: Ensure `PcCaiBangLuaLevelService.GetMissileForm` and parameter accessors return PC values for current level.
-- [ ] GREEN: Route Cai Bang multi-missile setup to `SetupPcKangLongSpread` when missile form is fan/radial.
-- [ ] Run filtered CaiBang tests.
+- [x] RED: Add/extend CaiBang test proving `skill_misslesform_v == 2` selects fan/radial spread for Kháng Long, not Phi Long parallel lanes.
+- [x] RED: Add test proving `skill_param1_v` is used as the fan angle step.
+- [x] GREEN: Ensure `PcCaiBangLuaLevelService.GetMissileForm` and parameter accessors return PC values for current level.
+- [x] GREEN: Route Cai Bang multi-missile setup to `SetupPcKangLongSpread` when missile form is fan/radial.
+- [x] Run filtered CaiBang tests.
 
 ## Phase 3 - Buff Skills and State Runtime
 - [ ] RED: Add tests for `Hoạt Bất Lưu Thủ` (`127`) mapping to `huabu_liushou` and applying `fastwalkrun_p` at current level.

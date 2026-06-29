@@ -10,6 +10,11 @@ Planning/evidence phase started. No implementation changes have been applied und
   - Updated `SkillEffectVisualService` so `luaCount>1` always configures `SetupPcPhiLongSpread` with fallback step `32` when Lua has no `skill_param1_v`.
   - Re-enabled/strengthened `CaiBang_357_HomingSpreadKeepsPerMissileOffsetsForLiveTarget`; it now asserts four lane offsets and live-target homing without `Assert.Ignore`.
   - Verified filtered CaiBang tests green: Unity EditMode job `b0ed18f3971f40cd865aaa62f9f7475e`, 82 total / 82 passed / 0 failed / 0 skipped.
+- Completed Phase 2 Kháng Long spread evidence/test slice:
+  - Resolved PC row 128: `MisslesForm=2`, child missile `48`, row `Param1=3`, Lua L20 `skill_misslenum_v=15`, `skill_param1_v=2`.
+  - Resolved missile 48 resources in `evidence/khang-long-resource-evidence.md`; it shares dragon/impact SPRs with Phi Long but uses `MoveKind=1` non-homing.
+  - Added `CaiBang_128_KhangLongUsesFanSpreadFromLuaMissileForm` verifying 15 fan targets, upward/downward lanes, center lane, and no Phi Long homing offsets.
+  - Verified filtered CaiBang tests green: Unity EditMode job `46ef0c54113f4537895d1dd8a44cefb2`, 83 total / 83 passed / 0 failed / 0 skipped.
 - Created SDD artifacts:
   - `proposal.md`
   - `spec.md`
@@ -45,10 +50,10 @@ Some older `.agents` handoff recommendations are already implemented in the curr
 Therefore, the next apply step should not blindly re-implement those old fixes. It should verify them against PC evidence and focus on remaining gaps.
 
 ## Next Recommended Apply Slice
-Phase 2:
-- Move to Kháng Long Hữu Hối spread parity and buff/runtime slices.
-- Add/verify tests for `skill_misslesform_v == 2` fan spread using `skill_param1_v`.
-- Continue PC evidence/resource resolution for Kháng Long, Túy Điệp, Hoạt Bất Lưu Thủ, Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
+Phase 3:
+- Move to buff/runtime slices for `Hoạt Bất Lưu Thủ` and `Túy Điệp Cuồng Vũ`.
+- Verify movement speed consumes `FastWalkRunP` and buff states expire.
+- Continue PC evidence/resource resolution for Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
 
 ## Blockers / Cautions
 - Async scout subagents failed/staled in this session, so parent-created SDD artifacts are the authoritative planning state for now.
