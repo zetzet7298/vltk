@@ -9,6 +9,7 @@
 // SDD: port-pc-chat-bar-parity, PR 2 (design §4).
 // -----------------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -61,6 +62,39 @@ namespace VLTK.UI
 
         // PC MaxMsgCount=120 (7e20a7ac.ini [ChatRoom_List])
         private const int MaxDisplayMessages = 120;
+
+        /// <summary>
+        /// Testable PC chat-tab mapping from 7e20a7ac.ini [ChatTab] ChatTabNum=6.
+        /// </summary>
+        public static ChatChannel GetChannelForTabIndex(int index)
+        {
+            if (index < 0 || index >= TabChannels.Length)
+                throw new System.ArgumentOutOfRangeException(nameof(index), index, "Chat tab index must be 0..5.");
+            return TabChannels[index];
+        }
+
+        /// <summary>
+        /// Splits a filtered ChatService history into the PC ChatRoom_List (non-system) and
+        /// SysRoom_List (system/combat) streams. Kept pure for regression tests.
+        /// </summary>
+        public static void SplitMessages(
+            IEnumerable<ChatMessage> messages,
+            out List<ChatMessage> chatMessages,
+            out List<ChatMessage> systemMessages)
+        {
+            chatMessages = new List<ChatMessage>();
+            systemMessages = new List<ChatMessage>();
+
+            if (messages == null) return;
+
+            foreach (var msg in messages)
+            {
+                if (msg.channel == ChatChannel.System)
+                    systemMessages.Add(msg);
+                else
+                    chatMessages.Add(msg);
+            }
+        }
 
         /// <summary>
         /// Called from GameHudController.Start() after combat slots are initialized.
@@ -309,22 +343,30 @@ namespace VLTK.UI
             if (_chat == null) return;
 
             var messages = _chat.GetFilteredMessages(MaxDisplayMessages);
+            SplitMessages(messages, out var chatMessages, out var systemMessages);
 
             // Split: PC separates system messages into SysRoom_List
             var chatMsgs = new StringBuilder();
             var sysMsgs = new StringBuilder();
 
-            foreach (var msg in messages)
+            foreach (var msg in chatMessages)
             {
                 string hex = ColorUtility.ToHtmlStringRGBA(msg.color);
                 string line = string.IsNullOrEmpty(msg.senderName)
                     ? $"<color=#{hex}>{msg.text}</color>"
                     : $"<color=#{hex}>{msg.senderName}: {msg.text}</color>";
 
-                if (msg.channel == ChatChannel.System)
-                    sysMsgs.AppendLine(line);
-                else
-                    chatMsgs.AppendLine(line);
+                chatMsgs.AppendLine(line);
+            }
+
+            foreach (var msg in systemMessages)
+            {
+                string hex = ColorUtility.ToHtmlStringRGBA(msg.color);
+                string line = string.IsNullOrEmpty(msg.senderName)
+                    ? $"<color=#{hex}>{msg.text}</color>"
+                    : $"<color=#{hex}>{msg.senderName}: {msg.text}</color>";
+
+                sysMsgs.AppendLine(line);
             }
 
             if (_historyContent != null)

@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
 using VLTK.Sandbox;  // ChatService, ChatChannel for T2.1 channel color tests
+using VLTK.UI;
 
 namespace VLTK.Tests.Sandbox
 {
@@ -245,5 +246,83 @@ public class HudChatBarArtTests
                 $"StreamingAssets art missing: {name}.png at {streamingPath} " +
                 "(runtime load will silently fail — stage to BOTH roots)");
         }
+    }
+
+    [Test]
+    public void NewChatBarPngs_DecodeToNonZeroOpaquePixels()
+    {
+        var streamingArtDir = Path.Combine(Application.dataPath, "StreamingAssets", "UI", "HUD", "Art");
+
+        foreach (var name in NewChatBarPngs)
+        {
+            var path = Path.Combine(streamingArtDir, name + ".png");
+            Assert.IsTrue(File.Exists(path), $"StreamingAssets art missing: {name}.png at {path}");
+
+            var tex = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            Assert.IsTrue(tex.LoadImage(File.ReadAllBytes(path)), $"LoadImage failed for {name}.png");
+
+            var opaque = 0;
+            foreach (var pixel in tex.GetPixels32())
+            {
+                if (pixel.a > 0)
+                    opaque++;
+            }
+
+            Assert.Greater(opaque, 0, $"{name}.png decoded but has zero opaque pixels");
+            Object.DestroyImmediate(tex);
+        }
+    }
+}
+
+/// <summary>
+/// T3.3 (port-pc-chat-bar-parity) — locks the six PC chat tab mappings from
+/// 7e20a7ac.ini [ChatTab] to the channels consumed by HudChatBarController.
+/// </summary>
+[TestFixture, Category("Chat")]
+public class HudChatBarTabMappingTests
+{
+    [Test]
+    public void SixTabs_MapToExpectedChatChannels()
+    {
+        var expected = new[]
+        {
+            ChatChannel.All,
+            ChatChannel.Private,
+            ChatChannel.Room,
+            ChatChannel.Guild,
+            ChatChannel.Faction,
+            ChatChannel.Other,
+        };
+
+        for (var i = 0; i < expected.Length; i++)
+            Assert.AreEqual(expected[i], HudChatBarController.GetChannelForTabIndex(i), $"ChatTab{i} mapping drifted");
+    }
+}
+
+/// <summary>
+/// T3.1 (port-pc-chat-bar-parity) — verifies PC ChatRoom_List vs SysRoom_List split.
+/// </summary>
+[TestFixture, Category("Chat")]
+public class HudChatBarMessageSplitTests
+{
+    [Test]
+    public void MessageSplit_SeparatesSystemFromPlayer()
+    {
+        var chat = new ChatService();
+        chat.PostSystemMessage("sys");
+        chat.SendPlayerMessage(ChatChannel.World, "Người chơi", "hello");
+
+        HudChatBarController.SplitMessages(
+            chat.GetFilteredMessages(120),
+            out var playerMessages,
+            out var systemMessages);
+
+        Assert.AreEqual(1, systemMessages.Count, "System messages should render in SysRoomContent only");
+        Assert.AreEqual(ChatChannel.System, systemMessages[0].channel);
+        StringAssert.Contains("sys", systemMessages[0].text);
+
+        Assert.AreEqual(1, playerMessages.Count, "Player messages should render in ChatRoomContent only");
+        Assert.AreEqual(ChatChannel.World, playerMessages[0].channel);
+        StringAssert.Contains("hello", playerMessages[0].text);
     }
 }

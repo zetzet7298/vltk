@@ -2333,7 +2333,10 @@ namespace VLTK.Sandbox
                 MapSelectPanel.Initialize(MapManager, SwitchMap);
             }
 
-            // Chat Panel
+#if VLTK_LEGACY_CHAT_PANEL
+            // Chat Panel — RETIRED by port-pc-chat-bar-parity.
+            // The HUD chat bar (HudChatBarController) is now the single PC-parity chat surface.
+            // Re-enable this define to restore the legacy uGUI ChatPanel for debugging.
             if (ChatPanel == null && ChatService != null)
             {
                 var cpGo = new GameObject("ChatPanel");
@@ -2341,6 +2344,7 @@ namespace VLTK.Sandbox
                 ChatPanel = cpGo.AddComponent<ChatPanel>();
                 ChatPanel.Initialize(ChatService);
             }
+#endif
 
             // Party Panel
             if (PartyPanel == null && PartyService != null)
@@ -2476,10 +2480,12 @@ namespace VLTK.Sandbox
                 new Vector2(-32f, 460f), new Color(0.4f, 0.1f, 0.6f, 0.85f),
                 () => MapSelectPanel?.Toggle());
 
-            // Chat toggle button
+#if VLTK_LEGACY_CHAT_PANEL
+            // Chat toggle button — legacy uGUI ChatPanel only; HUD ChatBar is always visible.
             EnsurePanelButton(canvasTransform, "ChatBtn", "Chat",
                 new Vector2(-32f, 380f), new Color(0.2f, 0.4f, 0.3f, 0.85f),
                 () => ChatPanel?.Toggle());
+#endif
 
             // Party button
             EnsurePanelButton(canvasTransform, "PartyBtn", "Đội",

@@ -170,7 +170,7 @@ Chain strategy: stacked-to-main
 
 ### T3.1 — RED: write failing test for message split
 
-- [ ] In the `Chat` category test class, add `MessageSplit_SeparatesSystemFromPlayer`:
+- [x] In the `Chat` category test class, add `MessageSplit_SeparatesSystemFromPlayer`:
       create a `ChatService`, `PostSystemMessage("sys")` + `SendPlayerMessage(...)`, then
       assert the split logic (system messages vs player messages are separable by
       `msg.channel == ChatChannel.System`). This may need a small static helper in
@@ -179,7 +179,7 @@ Chain strategy: stacked-to-main
 
 ### T3.2 — Gate ChatPanel + ChatBtn instantiation behind compile flag
 
-- [ ] In `Assets/Scripts/Sandbox/SandboxManager.cs`, wrap the `ChatPanel` creation block
+- [x] In `Assets/Scripts/Sandbox/SandboxManager.cs`, wrap the `ChatPanel` creation block
       (~line 2337) and the `ChatBtn` sidebar button (~line 2482) in
       `#if VLTK_LEGACY_CHAT_PANEL ... #endif` per design §6. Add deprecation comment.
       The `ChatPanel` property stays (nullable, null at runtime). The `ChatPanel` class in
@@ -188,7 +188,7 @@ Chain strategy: stacked-to-main
 
 ### T3.3 — Add remaining Chat tests + finalize category
 
-- [ ] In `Assets/Tests/EditMode/Sandbox/ChatBarIconLoadingTests.cs`, complete the `Chat`
+- [x] In `Assets/Tests/EditMode/Sandbox/ChatBarIconLoadingTests.cs`, complete the `Chat`
       category class from design §9.1: (1) new art decodes to non-zero opaque pixels,
       (2) channel colors match PC (T2.1), (3) 6 tabs map to expected `ChatChannel` enum,
       (4) message split (T3.1), (5) art present in both roots (T1.1). All use
@@ -196,7 +196,7 @@ Chain strategy: stacked-to-main
 
 ### T3.4 — Verify PR 3: full category + play-mode screenshot parity
 
-- [ ] Run `unityMCP_run_tests(mode="EditMode", category_names=["Chat"])` — all pass.
+- [x] Run `unityMCP_run_tests(mode="EditMode", category_names=["Chat"])` — all pass.
       Enter play mode, capture Game View screenshot, compare against
       `/var/www/vltk-mobile/pc-evidence/hud/chat.png` — confirm: history region (yellow PC
       text), system strip, channel selector, scroll controls, input row all match PC.

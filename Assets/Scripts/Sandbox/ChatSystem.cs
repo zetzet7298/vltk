@@ -210,6 +210,9 @@ namespace VLTK.Sandbox
         }
     }
 
+    // DEPRECATED by port-pc-chat-bar-parity: legacy uGUI chat panel retained only for
+    // optional debugging behind VLTK_LEGACY_CHAT_PANEL. The UI Toolkit HUD ChatBar is the
+    // single user-facing PC-parity chat surface.
     /// <summary>
     /// Chat UI panel — rendered at bottom of screen.
     /// Shows message history, channel tabs, and input field.

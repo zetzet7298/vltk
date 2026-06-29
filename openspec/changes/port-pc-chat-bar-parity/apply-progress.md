@@ -182,3 +182,89 @@ PR 1 = 228 changed lines (55 test + 129 USS + 44 UXML). Within scope. No PR 2/3 
     
     PR 2 = ~407 changed lines (360 controller + 15 integration + 32 test). Within scope.
     Only 4 scoped files touched (3 modified, 1 new). No PR 3 files touched.
+
+## PR 3 — ChatPanel retirement + full test suite (COMPLETE)
+
+### Completed tasks
+
+| Task | Status | Persisted checkbox |
+|------|--------|--------------------|
+| T3.1 RED: message split test | ✅ DONE | `[x]` |
+| T3.2 Gate legacy ChatPanel + ChatBtn | ✅ DONE | `[x]` |
+| T3.3 Complete Chat category tests | ✅ DONE | `[x]` |
+| T3.4 Verify: Chat category + play-mode single surface | ✅ DONE | `[x]` |
+
+### Files changed (PR 3 scoped only)
+
+1. **`Assets/Scripts/UI/HudChatBarController.cs`**
+   - Added pure static helper `GetChannelForTabIndex(int)` for the six PC `[ChatTab]` mappings.
+   - Added pure static helper `SplitMessages(IEnumerable<ChatMessage>, out chatMessages, out systemMessages)`.
+   - `RefreshHistory()` now uses `SplitMessages()` before rendering ChatRoom vs SysRoom buffers.
+
+2. **`Assets/Tests/EditMode/Sandbox/ChatBarIconLoadingTests.cs`**
+   - Extended `HudChatBarArtTests` with `NewChatBarPngs_DecodeToNonZeroOpaquePixels`.
+   - Added `HudChatBarTabMappingTests.SixTabs_MapToExpectedChatChannels`.
+   - Added `HudChatBarMessageSplitTests.MessageSplit_SeparatesSystemFromPlayer`.
+   - Existing PR1/PR2 tests kept: art present in both roots + channel color fidelity.
+
+3. **`Assets/Scripts/Sandbox/SandboxManager.cs`**
+   - Wrapped legacy uGUI `ChatPanel` instantiation in `#if VLTK_LEGACY_CHAT_PANEL`.
+   - Wrapped legacy sidebar `ChatBtn` creation in `#if VLTK_LEGACY_CHAT_PANEL`.
+   - `ChatPanel` property remains unchanged and nullable.
+
+4. **`Assets/Scripts/Sandbox/ChatSystem.cs`**
+   - Added deprecation comment above `ChatPanel` class; no code deletion.
+
+5. **`openspec/changes/port-pc-chat-bar-parity/tasks.md`**
+   - Marked T3.1–T3.4 checkboxes `[x]`.
+
+### Test commands run
+
+| Command | Result | Details |
+|---------|--------|---------|
+| `git diff --check` | ✅ passed | No whitespace errors |
+| `unityMCP/read_console(action=clear)` via MCP HTTP | ✅ passed | Console cleared before test run |
+| `unityMCP_run_tests(mode="EditMode", category_names=["Chat"], include_failed_tests=true)` via MCP HTTP | ✅ passed | Job `4d6131e3ea234599a10452b370ecc991`: 5/5 passed, 0 failed, 0 skipped, 0.110s |
+| `unityMCP_manage_editor(action=play)` via MCP HTTP | ✅ passed | Entered play mode |
+| `unityMCP_execute_code` single-surface probe | ✅ passed | `ChatPanelComponents=0; ChatPanelGameObject=null; HudChatBarController=True; ChatBarElement=True; ChatBarDisplay=Flex; ChatBarLeft=160` |
+| `unityMCP_manage_camera(action=screenshot, camera=null)` via MCP HTTP | ✅ passed | Captured `Assets/Screenshots/chat_pr3_single_surface.png`; file removed afterward to keep scoped diff clean |
+| `unityMCP_manage_editor(action=stop)` via MCP HTTP | ✅ passed | Exited play mode |
+
+### Runtime verification evidence
+
+- Legacy uGUI chat surface is not instantiated with default defines:
+  - `ChatPanelComponents=0`
+  - `ChatPanelGameObject=null`
+- HUD PC-parity chat surface remains active:
+  - `HudChatBarController=True`
+  - `ChatBarElement=True`
+  - `ChatBarDisplay=Flex`
+  - `ChatBarLeft=160` (keeps joystick lane x<155 clear per HUD skill)
+- Screenshot was captured through ScreenCapture/game_view path (`camera=null`) so overlay UI is included. The screenshot artifact was intentionally removed after verification to avoid widening the PR3 diff.
+
+### PC source evidence (no guessing)
+
+- `7e20a7ac.ini [ChatTab]`: ChatTabNum=6 → mapped to All, Private, Room, Guild, Faction, Other.
+- `7e20a7ac.ini [ChatRoom_List]`: non-system history list, MaxMsgCount=120, MsgColor=255,249,148.
+- `7e20a7ac.ini [SysRoom_List]`: system/combat strip, MsgColor=255,249,148.
+- `7e20a7ac.ini [Main]`: single chat-bar surface mandate implemented by retiring duplicate uGUI panel instantiation.
+
+### Deviations from design
+
+- None in code behavior.
+- Tooling note: the child session did not have direct `unityMCP_*` developer tools exposed, but the live `mcp-for-unity` HTTP server was available on port 8080. Used the same MCP tools via JSON-RPC HTTP (`run_tests`, `manage_editor`, `execute_code`, `manage_camera`). A direct Unity batchmode attempt was blocked because the project was already open in the live Unity Editor; no editor processes were killed.
+
+### Remaining tasks
+
+None. All PR 1, PR 2, and PR 3 tasks are checked `[x]` in `tasks.md`.
+
+### Workload / PR boundary
+
+PR 3 only. No commit/stage performed per parent instruction. Scoped changed files only: HudChatBarController.cs helper, SandboxManager.cs gate, ChatSystem.cs comment, ChatBarIconLoadingTests.cs tests, OpenSpec tasks/apply-progress.
+
+### Structured status consumed
+
+- Parent status: artifactStore `both`, non-authoritative native status (`nextRecommended: resolve-via-engram`); readiness resolved from OpenSpec files and Engram attempts.
+- actionContext: repo-local, workspace `/var/www/vltk-mobile/harness`; target project root `/var/www/vltk-mobile` from explicit user task. Edits stayed under project root and the requested scoped files.
+- Review workload gate: tasks forecast required chained PRs / high risk; parent explicitly assigned PR 3 only in an auto-chain flow, so proceeded with this slice.
+- Strict TDD: not active in `openspec/config.yaml` (no strict TDD declaration).
