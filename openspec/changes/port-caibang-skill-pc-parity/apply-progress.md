@@ -66,8 +66,13 @@ Phase 4:
   - Updated `CombatRuntimeService` to support multiple `addskilldamageN` chain slots per parent and to use deterministic injected `DamageFormulaService.RollPercent` for chain tests.
   - Updated/add tests so 125 now verifies both PC chains (`359` chance 60 and `1074` chance 50) and deterministic cast expects 8 chain projectiles (`359` L20 count 3 + `1074` L20 count 5).
   - Verified filtered CaiBang tests green: Unity EditMode job `605e92791d464058a663cb3ec33faf17`, 85 total / 85 passed / 0 failed / 0 skipped.
+- Continued defender-state damage slice:
+  - Added PC evidence from `Assets/StreamingAssets/Reference/KNpc.cpp::CalcDamage`: defender current resist is read by damage type and applied via `nDamage -= nDamage * nRes / MAX_PERCENT`.
+  - Added `evidence/defender-state-damage-evidence.md`.
+  - Added `CaiBang_117_DefenderAllResStateReducesIncomingDamage`, proving active defender `AllResP` reduces incoming Cai Bang damage through `CombatRuntimeService.ApplyDamage` -> `DefenderStats`.
+  - Verified filtered CaiBang tests green: Unity EditMode job `e961aace5c714d9aa8606aaf2a18c494`, 86 total / 86 passed / 0 failed / 0 skipped.
 - Next Phase 4 work:
-  - Add CaiBang damage test proving defender resistance states affect incoming Cai Bang skill damage.
+  - Add remaining staff/dog-array and dragon tests using PC-derived damage/range/missile data.
   - Continue PC evidence/resource resolution for Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
   - Add visual/state-icon smoke for 127/130 after core runtime parity.
 

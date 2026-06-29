@@ -391,6 +391,37 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_117_DefenderAllResStateReducesIncomingDamage()
+        {
+            // PC KNpc.cpp::CalcDamage reads m_CurrentXxxResist from the defender, then applies:
+            //   nDamage -= nDamage * nRes / MAX_PERCENT.
+            // Runtime parity: CombatRuntimeService must convert active defender states into DefenderStats.
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(Catalog(), damage: deterministicDamage);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(117);
+            beggar.skillLevels[117] = 20;
+
+            UnityEngine.Random.InitState(20260629);
+            var noResEnemy = Enemy(new Vector2(200, 0));
+            var noRes = svc.Cast(beggar, noResEnemy, 117, noResEnemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(noRes.success, noRes.detail);
+            int noResDamage = noRes.damageResults.Sum(d => d.finalDamage);
+
+            svc.AdvanceTime(2);
+            UnityEngine.Random.InitState(20260629);
+            var resistedEnemy = Enemy(new Vector2(200, 0));
+            resistedEnemy.states[MagicAttributeKind.AllResP] = new SkillMagicAttribute(MagicAttributeKind.AllResP, 50, -1, 0);
+            var resisted = svc.Cast(beggar, resistedEnemy, 117, resistedEnemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(resisted.success, resisted.detail);
+            int resistedDamage = resisted.damageResults.Sum(d => d.finalDamage);
+
+            Assert.That(noResDamage, Is.GreaterThan(0), "baseline damage should hit with deterministic RollPercent=true");
+            Assert.That(resistedDamage, Is.LessThan(noResDamage),
+                "defender AllResP state must reduce incoming Cai Bang damage via PC CalcDamage resist path");
+        }
+
+        [Test]
         public void CaiBang_128_VisualServiceUsesGaibangLuaMissileSpeed()
         {
             // PC gaibang.lua::kanglong_youhui (128) missle_speed_v={{1,28},{20,32}}.
