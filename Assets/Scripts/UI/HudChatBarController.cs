@@ -45,7 +45,7 @@ namespace VLTK.UI
         private string _artPath;                // cached art root for toggle icon swaps
         private bool _channelFilterOn = true;   // PC CheckOnImage default (filter active)
         private bool _sysExpanded = true;        // PC SysRoom_Open Down=1 (open by default)
-        private int _activeTabIndex = -1;        // PC default starts at CH_SYSTEM/"Nhắc nhở"; no tab selected until user chooses one
+        private int _activeTabIndex = 0;         // PC evidence highlights "Tất cả" while default send label remains "Nhắc nhở"
         private float _refreshInterval = 0.5f;   // poll ChatService for startup-race robustness
         private float _lastRefresh;
 
@@ -147,8 +147,8 @@ namespace VLTK.UI
             // Channel toggle: CheckOnImage default (filter active)
             LoadChatIcon(_channelToggleIcon, _artPath, "btn_chat_channel_on");
 
-            // Channel identity icon: self (聊天频道图示－自己说)
-            LoadChatIcon(_chatChannelIcon, _artPath, "chat_icon_self_pc");
+            // Input-left social/channel button visible in PC evidence.
+            LoadChatIcon(_chatChannelIcon, _artPath, "btn_friend");
 
             // Scroll track background (聊天条中部改) + thumb (通用拖动条)
             LoadChatIcon(_chatBar.Q("ChatRoomScrollTrack"), _artPath, "chat_bar_middle");
@@ -282,10 +282,17 @@ namespace VLTK.UI
             for (int i = 0; i < _tabs.Length; i++)
             {
                 if (_tabs[i] == null) continue;
+                var label = _tabs[i].Q<Label>();
                 if (i == _activeTabIndex)
+                {
                     _tabs[i].AddToClassList("selected");
+                    if (label != null) label.style.color = new Color(230f / 255f, 220f / 255f, 53f / 255f);
+                }
                 else
+                {
                     _tabs[i].RemoveFromClassList("selected");
+                    if (label != null) label.style.color = new Color(50f / 255f, 220f / 255f, 173f / 255f);
+                }
             }
         }
 

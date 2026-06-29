@@ -22,7 +22,7 @@ namespace VLTK.Tests.Sandbox
         private static readonly (string iconName, string element, int expectedW, int expectedH)[] Icons =
         {
             ("btn_options",     "ChatOptionsBtn",  20, 20),
-            ("btn_chat_face",   "FaceBtn",         25, 25),
+            ("btn_chat_face",   "FaceBtn",         20, 20),
             ("btn_chat_send",   "SendBtnIcon",     20, 20),
             ("btn_friend",      "ChatFriendBtn",   20, 20),
             ("btn_treasure",    "ChatTreasureBtn", 74, 61),
@@ -100,7 +100,7 @@ namespace VLTK.Tests.Sandbox
             var expectedOpaque = new (string name, int minOpaque, int maxOpaque)[]
             {
                 ("btn_options",     200, 280),
-                ("btn_chat_face",   150, 250),
+                ("btn_chat_face",   280, 340),
                 ("btn_chat_send",   200, 280),
                 ("btn_friend",      220, 300),
                 ("btn_treasure",   3000, 4000),

@@ -172,24 +172,27 @@ namespace VLTK.UI
                 fontStyle = FontStyle.Bold, normal = { textColor = new Color(55/255f, 231/255f, 63/255f) } };
             Label(HUD_LEFT + 652.5f, 4f, 35f, 13f, GetRankText(), rankStyle);
 
-            // Chat tabs (Tất cả, Mật, Phòng, Bang hội, Môn phái, Khác) giống PC
+            // Chat tabs: draw in IMGUI because this project's UI Toolkit text is unreliable
+            // in Game View captures. Coordinates are tied to the PC-parity ChatBar bottom-left
+            // layout (GameHud.uss .hud-chat-panel left=145, ChannelSelector padding-left=15).
             var tabStyleNormal = new GUIStyle(_menu) {
                 alignment = TextAnchor.MiddleLeft,
                 fontSize = 11,
-                normal = { textColor = new Color(0f, 210/255f, 255/255f) }
+                normal = { textColor = new Color(50/255f, 220/255f, 173/255f) }
             };
             var tabStyleYellow = new GUIStyle(_menu) {
                 alignment = TextAnchor.MiddleLeft,
                 fontSize = 11,
-                normal = { textColor = new Color(255/255f, 220/255f, 0f) }
+                normal = { textColor = new Color(230/255f, 220/255f, 53/255f) }
             };
-            float tabX = 470f;
-            Label(tabX, 568f, 50f, 18f, "Tất cả", tabStyleNormal);
-            Label(tabX + 60f, 568f, 40f, 18f, "Mật", tabStyleNormal);
-            Label(tabX + 105f, 568f, 50f, 18f, "Phòng", tabStyleNormal);
-            Label(tabX + 155f, 568f, 60f, 18f, "Bang hội", tabStyleNormal);
-            Label(tabX + 220f, 568f, 60f, 18f, "Môn phái", tabStyleNormal);
-            Label(tabX + 290f, 568f, 50f, 18f, "Khác", tabStyleYellow);
+            float tabX = 160f;
+            float tabY = 675f;
+            Label(tabX,        tabY, 50f, 18f, "Tất cả", tabStyleYellow);
+            Label(tabX + 58f,  tabY, 40f, 18f, "Mật", tabStyleNormal);
+            Label(tabX + 104f, tabY, 50f, 18f, "Phòng", tabStyleNormal);
+            Label(tabX + 154f, tabY, 62f, 18f, "Bang hội", tabStyleNormal);
+            Label(tabX + 220f, tabY, 70f, 18f, "Môn phái", tabStyleNormal);
+            Label(tabX + 295f, tabY, 50f, 18f, "Khác", tabStyleNormal);
 
             // Chat/system hint moved to the bottom-center UIToolkit chat panel
             // (hud-chat-warning) to consolidate the chat canvas. The duplicate IMGUI

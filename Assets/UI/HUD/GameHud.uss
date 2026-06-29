@@ -313,19 +313,20 @@
        Frame SPR art loads at runtime via C# LoadIconStatic, not USS background-image. */
     .hud-chat-panel {
         position: absolute;
-        left: 160px;          /* clear of bottom-left joystick (x >= 155 per jx-hud-port) */
+        left: 145px;          /* aligns PC chat strip with left control bar; still near joystick lane edge */
         bottom: 16px;
-        width: 640px;
-        min-height: 60px;     /* collapsed: input only */
-        flex-direction: column-reverse;  /* input bottom, history top */
+        width: 350px;        /* PC [ChatRoom_List].Width=280 scaled 1024→1280 */
+        height: 183px;        /* compact PC stack: history + sys + tabs + input with minimal gaps */
+        flex-direction: column;
         overflow: visible;
-        picking-mode: Ignore;  /* root passthrough; PR 2 controller re-enables Position on children */
+        background-color: transparent;
+        picking-mode: Ignore;  /* root passthrough; controller re-enables Position on children */
     }
 
     .hud-chat-frame-top {
         position: absolute;
         left: 0px;
-        top: 0px;
+        top: 104px;
         width: 15px;
         height: 17px;
         -unity-background-scale-mode: scale-to-fit;
@@ -333,7 +334,7 @@
     .hud-chat-frame-bottom {
         position: absolute;
         left: 0px;
-        bottom: 0px;
+        top: 0px;
         width: 15px;
         height: 16px;
         -unity-background-scale-mode: scale-to-fit;
@@ -341,7 +342,7 @@
     .hud-chat-shadow-toggle {
         position: absolute;
         left: 0px;
-        top: 111px;
+        top: 96px;
         width: 15px;
         height: 17px;
         -unity-background-scale-mode: scale-to-fit;
@@ -357,14 +358,13 @@
     .hud-chat-channel-row {
         flex-direction: row;
         align-items: center;
-        height: 22px;
+        height: 12px;
         flex-shrink: 0;
+        padding-left: 15px;   /* PC ChatRoom.Left */
+        width: 570px;         /* PC tabs extend across the chat lane */
     }
     .hud-chat-channel-toggle {
-        width: 20px;
-        height: 20px;
-        flex-shrink: 0;
-        margin-right: 4px;
+        display: none;        /* PC evidence shows the channel identity icon, not the size-up text button */
     }
     .hud-chat-toggle-icon {
         width: 100%;
@@ -372,41 +372,42 @@
         -unity-background-scale-mode: scale-to-fit;
     }
     .hud-chat-tab {
-        flex-grow: 1;
-        min-width: 50px;
-        height: 22px;
+        width: 86px;          /* PC TabButtons XOffset=50 scaled, compact like reference */
+        height: 12px;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-        border-bottom-width: 2px;
-        border-bottom-color: rgba(255,255,255,0);
     }
-    .hud-chat-tab.selected {
-        border-bottom-color: rgb(255,249,148);  /* PC MsgColor highlight */
+    .hud-chat-tab.selected .hud-chat-tab-label {
+        color: rgb(230,220,53);  /* PC SpecialColor */
     }
     .hud-chat-tab-label {
-        font-size: 11px;
-        color: rgb(220,220,220);  /* PC NameTextColor=220,220,220 */
+        font-size: 12px;       /* PC [TabButton] Font=12 */
+        color: rgb(50,220,173);  /* PC TabButton Color */
         -unity-text-align: middle-center;
     }
     .hud-chat-channel-identity {
-        width: 16px;
-        height: 16px;
+        width: 23px;
+        height: 20px;
         flex-shrink: 0;
-        margin-left: 4px;
+        margin-left: 2px;
+        margin-right: 2px;
         -unity-background-scale-mode: scale-to-fit;
     }
 
     /* ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148) */
     .hud-chat-room-area {
-        flex-grow: 1;
-        min-height: 100px;
+        height: 118px;
+        flex-shrink: 0;
         flex-direction: row;
         align-items: stretch;
+        background-color: rgba(0,0,0,0.08);  /* PC ShadowBtn-style subtle readability shadow */
     }
     .hud-chat-room-list {
         flex-grow: 1;
         overflow: hidden;
+        margin-left: 0px;
+        background-color: transparent;
     }
     .hud-chat-room-content {
         font-size: 12px;
@@ -415,14 +416,16 @@
         white-space: normal;
         flex-grow: 1;
         flex-shrink: 0;
-        min-height: 96px;
+        min-height: 114px;
         -unity-text-align: lower-left;
         padding: 2px 4px;
     }
     .hud-chat-scroll-track {
         width: 15px;
         flex-shrink: 0;
-        margin-left: 2px;
+        margin-left: 0px;
+        margin-top: 15px;      /* PC [ChatRoom_Scroll].Top */
+        margin-bottom: 30px;
         -unity-background-scale-mode: scale-to-fill;
     }
     .hud-chat-scroll-thumb {
@@ -436,7 +439,8 @@
         height: 42px;
         flex-shrink: 0;
         flex-direction: row;
-        align-items: center;
+        align-items: flex-start;
+        background-color: rgba(0,0,0,0.14);
     }
     .hud-chat-sys-toggle {
         width: 19px;
@@ -465,16 +469,17 @@
     .hud-chat-input-row {
         flex-direction: row;
         align-items: center;
-        width: 640px;
-        height: 28px;
+        width: 350px;
+        height: 25px;
         flex-shrink: 0;
-        background-color: rgba(5,10,8,0.85);
+        background-color: rgba(5,10,8,0.72);
         border-width: 1px;
         border-color: rgb(70,70,70);
     }
 
 .hud-chat-send-name {
-    width: 58px;
+    display: none; /* PC evidence keeps default send name as state, not prominent text in input row */
+    width: 0px;
     height: 24px;
     flex-shrink: 0;
     color: rgb(255,249,148);  /* PC DefaultChannelSendNameVi = Nhắc nhở */
@@ -492,15 +497,16 @@
 }
 
 .hud-face-btn {
-    width: 30px;
-    height: 26px;
+    width: 20px;
+    height: 20px;
     background-color: transparent;
     border-width: 0px;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .hud-send-icon {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     margin-right: 3px;
     -unity-background-scale-mode: scale-to-fit;
 }

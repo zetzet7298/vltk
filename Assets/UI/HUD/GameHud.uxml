@@ -81,30 +81,15 @@
             <ui:VisualElement name="ChatBarBottomFrame" class="hud-chat-frame-bottom"/>
             <ui:VisualElement name="ShadowToggle" class="hud-chat-shadow-toggle"/>
 
-            <!-- Channel selector row: on/off toggle + 6 PC tabs + identity icon
-                 PC: [ChannelBtn] + [Main] CheckOnImage/CheckOffImage + ChatTabNum=6 -->
-            <ui:VisualElement name="ChannelSelector" class="hud-chat-channel-row">
-                <ui:VisualElement name="ChannelToggle" class="hud-chat-channel-toggle">
-                    <ui:VisualElement name="ChannelToggleIcon" class="hud-chat-toggle-icon"/>
-                </ui:VisualElement>
-                <ui:VisualElement name="ChatTab0" class="hud-chat-tab"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab1" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab2" class="hud-chat-tab"><ui:Label text="Phòng" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab3" class="hud-chat-tab"><ui:Label text="Bang hội" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab4" class="hud-chat-tab"><ui:Label text="Môn phái" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab5" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatChannelIcon" class="hud-chat-channel-identity"/>
-            </ui:VisualElement>
-
             <!-- ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148)
-                 + scroll track (PC [ChatRoom_Scroll] 聊天条中部改) + thumb (通用拖动条) -->
+                 PC scroll strip is LEFT of the chat list: [ChatRoom_Scroll].Left=-15, [ChatRoom].Left=15. -->
             <ui:VisualElement name="ChatRoomArea" class="hud-chat-room-area">
-                <ui:ScrollView name="ChatRoomList" class="hud-chat-room-list">
-                    <ui:Label name="ChatRoomContent" class="hud-chat-room-content" text=""/>
-                </ui:ScrollView>
                 <ui:VisualElement name="ChatRoomScrollTrack" class="hud-chat-scroll-track">
                     <ui:VisualElement name="ChatRoomScrollThumb" class="hud-chat-scroll-thumb"/>
                 </ui:VisualElement>
+                <ui:ScrollView name="ChatRoomList" class="hud-chat-room-list">
+                    <ui:Label name="ChatRoomContent" class="hud-chat-room-content" text=""/>
+                </ui:ScrollView>
             </ui:VisualElement>
 
             <!-- SysRoom: system/combat message strip (PC [SysRoom_List] 235×42)
@@ -118,11 +103,25 @@
                 <ui:Label name="SysRoomContent" class="hud-chat-sys-content" text=""/>
             </ui:VisualElement>
 
+            <!-- Channel tabs: PC [TabButtons] StartY=140, immediately above input row. -->
+            <ui:VisualElement name="ChannelSelector" class="hud-chat-channel-row">
+                <ui:VisualElement name="ChatTab0" class="hud-chat-tab selected"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab1" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab2" class="hud-chat-tab"><ui:Label text="Phòng" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab3" class="hud-chat-tab"><ui:Label text="Bang hội" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab4" class="hud-chat-tab"><ui:Label text="Môn phái" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab5" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
+            </ui:VisualElement>
+
             <!-- Input row (existing elements preserved: ChatInput/FaceBtn/SendBtnIcon) -->
             <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
+                <ui:VisualElement name="ChannelToggle" class="hud-chat-channel-toggle">
+                    <ui:VisualElement name="ChannelToggleIcon" class="hud-chat-toggle-icon"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="ChatChannelIcon" class="hud-chat-channel-identity"/>
                 <ui:Label name="ChatSendName" text="Nhắc nhở" class="hud-chat-send-name"/>
                 <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
-                <ui:Button name="FaceBtn" text="😊" class="hud-face-btn"/>
+                <ui:Button name="FaceBtn" text="" class="hud-face-btn"/>
                 <ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/>
             </ui:VisualElement>
         </ui:VisualElement>

@@ -572,6 +572,10 @@ namespace VLTK.UI
 
                 CacheActionToggleIcons(root);
 
+                var faceBtn = root.Q("FaceBtn");
+                if (faceBtn != null)
+                    LoadIcon(faceBtn, artPath, "btn_chat_face");
+
                 var sendIcon = root.Q("SendBtnIcon");
                 if (sendIcon != null)
                     LoadIcon(sendIcon, artPath, "btn_chat_send");
