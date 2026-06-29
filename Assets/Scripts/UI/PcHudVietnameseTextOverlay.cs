@@ -174,7 +174,7 @@ namespace VLTK.UI
 
             // Chat tabs: draw in IMGUI because this project's UI Toolkit text is unreliable
             // in Game View captures. Coordinates are tied to the PC-parity ChatBar bottom-left
-            // layout (GameHud.uss .hud-chat-panel left=145, ChannelSelector padding-left=15).
+            // layout (GameHud.uss .hud-chat-panel left=465, ChannelSelector padding-left=15).
             var tabStyleNormal = new GUIStyle(_menu) {
                 alignment = TextAnchor.MiddleLeft,
                 fontSize = 11,
@@ -185,8 +185,8 @@ namespace VLTK.UI
                 fontSize = 11,
                 normal = { textColor = new Color(230/255f, 220/255f, 53/255f) }
             };
-            float tabX = 160f;
-            float tabY = 675f;
+            float tabX = 480f;
+            float tabY = 505f;
             Label(tabX,        tabY, 50f, 18f, "Tất cả", tabStyleYellow);
             Label(tabX + 58f,  tabY, 40f, 18f, "Mật", tabStyleNormal);
             Label(tabX + 104f, tabY, 50f, 18f, "Phòng", tabStyleNormal);

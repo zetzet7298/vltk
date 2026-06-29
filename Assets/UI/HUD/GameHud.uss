@@ -313,10 +313,10 @@
        Frame SPR art loads at runtime via C# LoadIconStatic, not USS background-image. */
     .hud-chat-panel {
         position: absolute;
-        left: 145px;          /* aligns PC chat strip with left control bar; still near joystick lane edge */
+        left: 465px;          /* mobile: centered bottom / 6 o'clock anchor at 1280 design width */
         bottom: 16px;
         width: 350px;        /* PC [ChatRoom_List].Width=280 scaled 1024→1280 */
-        height: 183px;        /* compact PC stack: history + sys + tabs + input with minimal gaps */
+        height: 197px;        /* mobile-safe stack: tabs above history + sys + input */
         flex-direction: column;
         overflow: visible;
         background-color: transparent;
@@ -361,7 +361,8 @@
         height: 12px;
         flex-shrink: 0;
         padding-left: 15px;   /* PC ChatRoom.Left */
-        width: 570px;         /* PC tabs extend across the chat lane */
+        width: 570px;         /* mobile-safe tabs are above, not over input controls */
+        margin-bottom: 2px;
     }
     .hud-chat-channel-toggle {
         display: none;        /* PC evidence shows the channel identity icon, not the size-up text button */
@@ -440,6 +441,7 @@
         flex-shrink: 0;
         flex-direction: row;
         align-items: flex-start;
+        padding-left: 15px;
         background-color: rgba(0,0,0,0.14);
     }
     .hud-chat-sys-toggle {

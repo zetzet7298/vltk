@@ -81,6 +81,16 @@
             <ui:VisualElement name="ChatBarBottomFrame" class="hud-chat-frame-bottom"/>
             <ui:VisualElement name="ShadowToggle" class="hud-chat-shadow-toggle"/>
 
+            <!-- Channel tabs: mobile-safe position above the chat frame to avoid input/button mis-taps. -->
+            <ui:VisualElement name="ChannelSelector" class="hud-chat-channel-row">
+                <ui:VisualElement name="ChatTab0" class="hud-chat-tab selected"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab1" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab2" class="hud-chat-tab"><ui:Label text="Phòng" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab3" class="hud-chat-tab"><ui:Label text="Bang hội" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab4" class="hud-chat-tab"><ui:Label text="Môn phái" class="hud-chat-tab-label"/></ui:VisualElement>
+                <ui:VisualElement name="ChatTab5" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
+            </ui:VisualElement>
+
             <!-- ChatRoom: message history (PC [ChatRoom_List] 280×140, MsgColor=255,249,148)
                  PC scroll strip is LEFT of the chat list: [ChatRoom_Scroll].Left=-15, [ChatRoom].Left=15. -->
             <ui:VisualElement name="ChatRoomArea" class="hud-chat-room-area">
@@ -92,25 +102,10 @@
                 </ui:ScrollView>
             </ui:VisualElement>
 
-            <!-- SysRoom: system/combat message strip (PC [SysRoom_List] 235×42)
-                 collapsible via toggle (PC [SysRoom_Open] 提示信息窗－开关) -->
+            <!-- SysRoom: system/combat message strip (PC [SysRoom_List] 235×42).
+                 Mobile omits the PC sys toggle/up/down controls; they occupy an unused touch zone. -->
             <ui:VisualElement name="SysRoomArea" class="hud-chat-sys-area">
-                <ui:VisualElement name="SysToggle" class="hud-chat-sys-toggle">
-                    <ui:VisualElement name="SysToggleIcon" class="hud-chat-toggle-icon"/>
-                </ui:VisualElement>
-                <ui:VisualElement name="SysScrollUp" class="hud-chat-sys-btn"/>
-                <ui:VisualElement name="SysScrollDown" class="hud-chat-sys-btn"/>
                 <ui:Label name="SysRoomContent" class="hud-chat-sys-content" text=""/>
-            </ui:VisualElement>
-
-            <!-- Channel tabs: PC [TabButtons] StartY=140, immediately above input row. -->
-            <ui:VisualElement name="ChannelSelector" class="hud-chat-channel-row">
-                <ui:VisualElement name="ChatTab0" class="hud-chat-tab selected"><ui:Label text="Tất cả" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab1" class="hud-chat-tab"><ui:Label text="Mật" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab2" class="hud-chat-tab"><ui:Label text="Phòng" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab3" class="hud-chat-tab"><ui:Label text="Bang hội" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab4" class="hud-chat-tab"><ui:Label text="Môn phái" class="hud-chat-tab-label"/></ui:VisualElement>
-                <ui:VisualElement name="ChatTab5" class="hud-chat-tab"><ui:Label text="Khác" class="hud-chat-tab-label"/></ui:VisualElement>
             </ui:VisualElement>
 
             <!-- Input row (existing elements preserved: ChatInput/FaceBtn/SendBtnIcon) -->
