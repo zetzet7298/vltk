@@ -152,17 +152,15 @@ namespace VLTK.Sandbox
             // 123 Khuê Mộc Tinh Chiếu: buff
             ResistBuff(123, "Khuê Mộc Tinh Chiếu", "Khuê Mộc Tinh Chiếu", 30, MagicAttributeKind.PoisonResP),
 
-            // 124 Đả Cẩu Trận [PC source 2026-06-19 fix]: PC Skills.txt SkillStyle=2 (InitiativeNpcState),
-            //   stateSpecialId=44, CharAnimId=14, AttackRadius=180. Trước fix: PassiveMastery (PassivityNpcState) — sai.
-            //   PC 打狗阵.lua: adddefense_v(level) = 30 + 10*level (param1), 25 (param2), 0 (param3).
-            //   Sau fix: stance aura InitiativeNpcState, apply state 44 tự + chain buff ally (Phase E).
-            AuraSkillAllyBuff(124, "Đả Cẩu bổng", "Đả Cẩu Trận", 30, radius:180, stateId:44, child:209, levelData:(lv) => {
-                var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, 30 + 10*lv, 25, 0));
-                return d;
-            }),
+            // 124 Đả Cẩu Bổng Pháp / Đả Cẩu Trận passive (dagou_zhen).
+            // [CaiBang-VersionPriority 2026-06-29] Newest PC Client/Server skills.txt agree:
+            //   SkillStyle=3, AttackRadius=0, StateSpecialId=0, ChildSkillId=0, CharAnimId=11.
+            //   gaibang.lua::dagou_zhen addphysicsdamage_p L20=175, duration=-1, param3=2.
+            PassiveMastery(124, "Đả Cẩu bổng", "Đả Cẩu Bổng Pháp", 30,
+                addPhys: (lv) => Link(lv, (1, 10, ""), (20, 175, "")),
+                elementParam: 2, icon: "\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr", charAnim: 11),
 
-            // 125 Thiên Hạ Vô Cẩu: damage (bangda_egou) [PC radius L20=400]
+            // 125 Bổng Đả Ác Cẩu: damage (bangda_egou) [PC radius L20=512]
             // PC source: Skills.txt 125 SkillStyle=0, MissilesForm=4 (Chain), CharAnimId=11, ChildSkillNum=0 (Lua runtime).
             //   gaibang.lua::tianxia_wugou skill_misslenum_v L1=1, L20=3 (Unity runtime đọc qua PcCaiBangLuaLevelService).
             //   attackradius L20=400 (PC jx-source, bundled PcSkills.txt đồng ý).
@@ -277,19 +275,15 @@ namespace VLTK.Sandbox
                 extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 20, ""), (20, 60, "")), -1, 0),
                 horseLimit: 1),
 
-            // 358 Kháng Long Hữu Hối (Cái Bang) — PC source EVIDENCE:
-            //   skills.txt skill 358: ChildSkillId=167, CharAnimId=11, AttackRadius=570
-            //   gaibang.lua::kanglong-youhui (Tinh Kiem): physicsdamage_v, firedamage_v, misslesform_v=2
-            //     (level<11 straight line, level>=11 fan), misslenum_v up to 18
-            //   missles1.txt missile 167 (Long Chiến Ư Dã):
-            //     MoveKind=0 (stationary area effect), AnimFile=\spr\skill\gb\龙战于野.spr, 15 frames
-            //     Sound=\sound\skill\sound_k044.wav, IsRangeDmg=0, DmgRange=3, AutoExplode=1
-            //   PC gaibang.lua unlocks 358 at level 20: [3]={{1,358},{20,358}}
-            DamageSkillNew(358, "Kháng Long Hữu Hối ", "Kháng Long Hữu Hối (player)", 50, 20, 570, 48, SkillMissileForm.Fan, 1, false, false, 11,
-                phys: (lv) => Link(lv, (1, 20, ""), (20, 120, "")),
-                fire: (lv) => (Link(lv, (1, 130, ""), (20, 850, "")), 0, Link(lv, (1, 200, ""), (20, 1000, ""))),
-                cost: (lv) => (Link(lv, (1, 10, ""), (20, 30, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 25, ""), (20, 70, "")), -1, 0),
+            // 358 Tiềm Long Tại Uyên — newest PC version priority:
+            //   skills.txt row 358: ChildSkillId=167, MisslesForm=7, AttackRadius=570, ReqLevel=50, CharAnimId=11.
+            //   LvlData points at qianlong_zaiyuan, but newest gaibang.lua comments that table out in all checked sources;
+            //   therefore only row/default missile data is authoritative until a newer active table is found.
+            //   missles.txt missile 167: MoveKind=0, Speed=0, LifeTime=15, AnimFile2=\spr\skill\gb\龙战于野.spr.
+            DamageSkillNew(358, "Tiềm Long Tại Uyên", "Tiềm Long Tại Uyên", 50, 20, 570, 167, SkillMissileForm.Stationary, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (0, 0, 0),
+                cost: (lv) => (0, 0, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
 
@@ -523,7 +517,7 @@ namespace VLTK.Sandbox
         {
             var s = BaseSkill(209, "打狗阵子弹", "Đả Cẩu Trận Tử Đạn", 50, 20, 180, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 92; s.childSkillNum = 1; s.baseSkill = true; s.byMissile = true;
-            s.targetAlly = true; s.targetSelf = true; s.stateSpecialId = 44; s.charAnimId = 14;
+            s.targetAlly = true; s.targetSelf = true; s.stateSpecialId = 44; s.charAnimId = 11; s.waitTime = 0;
             AddLevels(s, lv => Immediate(MagicAttributeKind.AddDefenseV, 30 + 10 * lv, 25, 0));
             return s;
         }
@@ -782,7 +776,7 @@ namespace VLTK.Sandbox
             };
         }
 
-        // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
+        // Cái Bang skill set: PC gốc 115-130 + MOD 274, 277, 357, 358, 359, 360, 714, 720, 1073, 1074, 1539 (NPC variant).
         // 1539 is an NPC/boss version of Thiên Hạ Vô Cẩu and stays in the catalog for boss AI;
         // the player skill panel filters it out via isNpcVariant.
         public static bool IsCaiBangSkill(int id) => id==209 || (id>=115 && id<=130) || id==274 || id==277 || id==357 || id==358 || id==359 || id==360 || id==714 || id==720 || id==1073 || id==1074 || id==1101 || id==1103 || id==1161 || id==1162 || id==1539 || id==389;
@@ -814,8 +808,8 @@ namespace VLTK.Sandbox
             125 or 359 or 1539 => "\\spr\\Ui\\技能图标\\icon_sk_gb_31.spr", // 359/1539 share the same path family (天下无狗) but use distinct extracted UIDs; see PC_SOURCE.txt.
             126 or 274 => "\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr", // 274 Giương Long Chưởng shares the GB_32 icon visually.
             127 or 277 => "\\spr\\Ui\\技能图标\\icon_sk_gb_33.spr", // 277 Hoành Bách Lộ Thiên shares the GB_33 icon visually.
-            128 or 358 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 128 KLHH stock + 358 KLHH player variant share the kanglong_youhui icon.
-            357 or 389 => "\\spr\\Ui\\skill\\龙战在野.spr", // 357 PLTT + 389 Long Chiến Ư Dã share 龙战在野 (PC source verified: skills.txt).
+            128 => "\\spr\\Ui\\技能图标\\icon_sk_gb_41.spr", // 128 Kháng Long stock icon.
+            357 or 358 or 389 => "\\spr\\Ui\\skill\\龙战在野.spr", // 357 PLTT, 358 Tiềm Long, and 389 Long Chiến share 龙战在野 (PC source verified: skills.txt).
             129 => "\\spr\\Ui\\技能图标\\icon_sk_gb_42.spr",
             130 or 360 => "\\spr\\Ui\\技能图标\\icon_sk_gb_43.spr", // 360 Tiêu Dao Công: alias to Túy Điệp Cuồng Vũ; real icon not in any PAK.
             151 => "\\spr\\Ui\\技能图标\\icon_sk_wd_jf.spr",

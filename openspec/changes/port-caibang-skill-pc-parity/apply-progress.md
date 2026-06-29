@@ -71,10 +71,34 @@ Phase 4:
   - Added `evidence/defender-state-damage-evidence.md`.
   - Added `CaiBang_117_DefenderAllResStateReducesIncomingDamage`, proving active defender `AllResP` reduces incoming Cai Bang damage through `CombatRuntimeService.ApplyDamage` -> `DefenderStats`.
   - Verified filtered CaiBang tests green: Unity EditMode job `e961aace5c714d9aa8606aaf2a18c494`, 86 total / 86 passed / 0 failed / 0 skipped.
+- Continued staff/dog-array version-priority slice:
+  - Compared newest PC `skills.txt` row 124 across Client 6.0 and Server 6.0 variants. All agree `124` is `SkillStyle=3`, `AttackRadius=0`, `StateSpecialId=0`, `ChildSkillId=0`, `CharAnimId=11`.
+  - Compared row 209 and confirmed it is the actual state projectile/aura row (`StateSpecialId=44`, `AttackRadius=180`, `TargetAlly=1`, `TargetSelf=1`, `ChildSkillId=92`).
+  - Added `evidence/dagou-zhen-version-priority-evidence.md`.
+  - Updated `PcCombatCatalogFactory` so `124` is passive `dagou_zhen` with PC Lua `AddPhysicsDamageP` L1=10 / L20=175 / duration=-1 / param3=2.
+  - Rewrote `CaiBangDogArrayTests` and updated related skill-style/char-anim/panel/wait-time tests to remove stale `124` aura assumptions.
+  - Verified focused updated tests green: Unity EditMode job `266cf06167c74324b4fa0e4e2b4b3380`, 16 total / 16 passed / 0 failed / 0 skipped.
+  - Verified filtered CaiBang tests green after first pass: Unity EditMode job `a4eff245f6bb42b4ba6d0a17aa8a4162`, 86 total / 86 passed / 0 failed / 0 skipped.
+- Continued dragon active-skill parity slice:
+  - Added `CaiBang_359_TianxiaUsesPcDerivedDamageRangeAndMissileData` for Thiên Hạ Vô Cẩu.
+  - Test locks newest PC `skills.txt` row 359 + `gaibang.lua::tianxia_wugou` evidence: child missile `168`, `WaitTime=5`, `CharAnimId=11`, L20 radius `512`, missile count `3`, cost `50`, `PhysicsEnhanceP=206`, `FireDamageV=285,0,432`, and `ConfuseP=60,-1,0`.
+  - Test verifies runtime cast uses Lua-derived range/projectile count and spawns 3 child projectiles with skill id `168` while deterministic damage hits.
+  - Verified filtered CaiBang tests green: Unity EditMode job `3e0333e30783495198988834fc4300fe`, 84 total / 84 passed / 0 failed / 0 skipped.
+- Completed remaining Phase 4 active-data audit/fix slice:
+  - Searched required PC source-of-truth path `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`; it is absent in this environment, so used already-established SDD fallback evidence from `/var/www/vltksource_new/vl_update_27/Client 6.0`, Server 6.0, `pak_unpacked`, and mobile Reference files.
+  - Found stale mobile override for skill `358`: mobile treated it as Kháng Long/player `kanglong_youhui`, but newest PC `skills.txt` rows identify `358` as `Tiềm Long Tại Uyên` / `qianlong_zaiyuan`, `ChildSkillId=167`, `MisslesForm=7`, `AttackRadius=570`, `WaitTime=5`, `CharAnimId=11`.
+  - Confirmed checked `gaibang.lua` sources keep `qianlong_zaiyuan` commented out; therefore row/default missile data wins and 358 must not borrow Kháng Long (128) Lua damage/count/form data.
+  - Added `SkillMissileForm.Stationary = 7`, mapped `358 -> qianlong_zaiyuan`, updated 358 catalog to PC row/default data, and removed stale KLHH icon/comment overrides.
+  - Added `CaiBang_358_TiemLongUsesNewestPcRowDefaultsWhenLuaTableIsCommented` to lock this behavior.
+  - Verified filtered CaiBang tests green: Unity EditMode job `74b3bd3ad9a84714bdd7336599935665`, 84 total / 84 passed / 0 failed / 0 skipped.
+  - Verified focused shared/mobile skill-slot tests green: Unity EditMode job `8f81799327b942568b21c2715a4d75c8`, 27 total / 27 passed / 0 failed / 0 skipped.
+  - Fresh review timed out but surfaced one valid blocker: PC row `209` has `CharAnimId=11`, `WaitTime=0` while mobile still had `charAnimId=14`.
+  - Fixed `CaiBangDogBeatingAuraChildSkill` and `CaiBangDogArrayTests` so row `209` now uses PC `CharAnimId=11` and `WaitTime=0`.
+  - Re-verified filtered CaiBang tests green: Unity EditMode job `b5e917add01c4b41bccede6ce28fe9a9`, 84 total / 84 passed / 0 failed / 0 skipped.
+  - Re-verified focused shared/mobile skill-slot tests green: Unity EditMode job `57e871b11e8c465880ca2ef6bd483f67`, 27 total / 27 passed / 0 failed / 0 skipped.
 - Next Phase 4 work:
-  - Add remaining staff/dog-array and dragon tests using PC-derived damage/range/missile data.
-  - Continue PC evidence/resource resolution for Đả Cẩu Trận, Thiên Hạ Vô Cẩu, and 150-skill variants.
-  - Add visual/state-icon smoke for 127/130 after core runtime parity.
+  - Phase 4 implementation tasks are complete; run final fresh-context review before commit/push if continuing to git operations.
+  - Add visual/state-icon smoke for 127/130 after core runtime parity (Phase 5).
 
 ## Blockers / Cautions
 - Async scout subagents failed/staled in this session, so parent-created SDD artifacts are the authoritative planning state for now.

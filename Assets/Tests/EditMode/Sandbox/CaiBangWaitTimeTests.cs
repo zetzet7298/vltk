@@ -74,12 +74,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void DogArray_WaitTimeZero_ImmediateStateApply()
+        public void DogArray_124_PassiveWaitTimeZero()
         {
-            // PC 打狗阵 stance: WaitTime=0 → state apply ngay lập tức.
+            // PC newest 124 passive row: WaitTime=0/default and no cast-time gate.
             var cat = Catalog();
             var s = cat.Resolve(124);
-            Assert.AreEqual(0, s.waitTime, "124 PC WaitTime=0");
+            Assert.AreEqual(0, s.waitTime, "124 newest PC WaitTime=0");
         }
     }
 }

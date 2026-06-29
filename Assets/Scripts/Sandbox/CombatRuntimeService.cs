@@ -195,12 +195,9 @@ namespace VLTK.Sandbox
             ApplyDamage(caster, target, levelData, report);
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
-            // [CaiBang-DogArray 2026-06-19] PC 打狗阵 (124) stance: buff self + allies trong radius 180.
-            // PC 打狗阵.lua adddefense_v(level) = 30+10*level (đã apply cho caster qua ApplyStates ở trên).
-            // PC SkillStyle=2 (InitiativeNpcState), IsAura=1, TargetAlly=1, AttackRadius=180, WaitTime=0.
-            // Sau fix: tìm allies trong radius 180 qua AllyFinder callback → apply state 44 cho mỗi ally.
-            // Nếu AllyFinder null (test/standalone) → chỉ buff self, không crash.
-            if (skillId == 124 && skill.targetAlly && skill.stateSpecialId == 44 && skill.isAura)
+            // [CaiBang-VersionPriority 2026-06-29] Newest PC skill 124 is passive dagou_zhen
+            // (SkillStyle=3, no aura propagation). Keep ally aura propagation only for actual aura skills.
+            if (skill.isAura && skill.targetAlly && skill.stateSpecialId != 0)
             {
                 PropagateAllyAura(caster, skill, levelData, report);
             }

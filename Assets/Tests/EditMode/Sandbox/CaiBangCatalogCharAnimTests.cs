@@ -10,7 +10,8 @@ namespace VLTK.Tests.Sandbox
     //   115, 116 (mastery passive)    → 0 (default, no cast anim)
     //   117, 119, 122, 125, 128       → 11 (Cái Bang cast anim, mag_tr_16_施魔法.spr)
     //   118, 120, 121, 123, 126, 129  → 0 or default (buff utility, no cast anim)
-    //   124, 127                      → 14 (stance/passive, cdo_none)
+    //   124                           → 11 (newest PC passive dagou_zhen row)
+    //   127                           → 14 (passive cdo_none)
     //   130                           → 43 (Túy Điệp Cuồng Vũ — state 43 aura)
     [TestFixture, Category("CaiBang")]
     public class CaiBangCatalogCharAnimTests
@@ -34,17 +35,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void StanceAndPassiveSkills_CharAnim14_PcAccurate()
+        public void PassiveUtilitySkills_CharAnimMatchesNewestPc()
         {
-            // PC: 121 (utility), 124 (stance), 127 (passive) CharAnimId=14 (cdo_none).
             var cat = Catalog();
-            int[] ids = { 121, 124, 127 };
-            foreach (int id in ids)
-            {
-                var s = cat.Resolve(id);
-                Assert.IsNotNull(s, $"skill {id} missing");
-                Assert.AreEqual(14, s.charAnimId, $"skill {id} PC CharAnimId=14 (cdo_none)");
-            }
+            Assert.AreEqual(14, cat.Resolve(121).charAnimId, "121 PC CharAnimId=14 (utility)");
+            Assert.AreEqual(11, cat.Resolve(124).charAnimId, "124 newest PC CharAnimId=11 (dagou_zhen passive row)");
+            Assert.AreEqual(14, cat.Resolve(127).charAnimId, "127 PC CharAnimId=14 (cdo_none)");
         }
 
         [Test]
@@ -68,7 +64,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(11, byId[119].charAnimId, "119 sect charAnim=11");
             Assert.AreEqual(11, byId[122].charAnimId, "122 sect charAnim=11");
             Assert.AreEqual(14, byId[121].charAnimId, "121 sect charAnim=14");
-            Assert.AreEqual(14, byId[124].charAnimId, "124 sect charAnim=14");
+            Assert.AreEqual(11, byId[124].charAnimId, "124 sect charAnim=11");
             Assert.AreEqual(14, byId[127].charAnimId, "127 sect charAnim=14");
             Assert.AreEqual(11, byId[125].charAnimId, "125 sect charAnim=11");
             Assert.AreEqual(11, byId[128].charAnimId, "128 sect charAnim=11");

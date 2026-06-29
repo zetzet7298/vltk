@@ -167,7 +167,7 @@ namespace VLTK.Sandbox
 
 
                 // PC gaibang.lua: Single-form or fan-spread skills with skill_misslenum_v > 1 use dynamic spread.
-                // E.g. Phi Long (357) L20=4, Kháng Long Hữu Hối (358) L20=15.
+                // E.g. Phi Long (357) L20=4, Kháng Long Hữu Hối stock (128) L20=15.
                 bool luaSpreadConfigured = false;
                 if (PcCaiBangLuaLevelService.Applies(skill.skillId))
                 {

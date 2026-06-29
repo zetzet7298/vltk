@@ -461,6 +461,40 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_359_TianxiaUsesPcDerivedDamageRangeAndMissileData()
+        {
+            // Newest PC Thiên Hạ Vô Cẩu data comes from skills.txt row 359 plus gaibang.lua::tianxia_wugou:
+            //   row: ChildSkillId=168, WaitTime=5, CharAnimId=11;
+            //   Lua L20: attackradius=512, skill_misslenum_v=3, skill_cost_v=50,
+            //            physics=206, fire min/max=285/432, confuse=60.
+            var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(Catalog(), damage: deterministicDamage);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(359);
+            beggar.skillLevels[359] = 20;
+            var enemy = Enemy(new Vector2(500, 0));
+
+            var skill = Catalog().Resolve(359);
+            var data = skill.GetPcLevelData(20);
+            Assert.AreEqual(168, skill.childSkillId, "PC skills.txt row 359 ChildSkillId=168");
+            Assert.AreEqual(5, skill.waitTime, "PC skills.txt row 359 WaitTime=5");
+            Assert.AreEqual(11, skill.charAnimId, "PC skills.txt row 359 CharAnimId=11");
+            Assert.AreEqual("PhysicsEnhanceP=206,0,0", data.First(MagicAttributeKind.PhysicsEnhanceP).ToString());
+            Assert.AreEqual("FireDamageV=285,0,432", data.First(MagicAttributeKind.FireDamageV).ToString());
+            Assert.AreEqual("ConfuseP=60,-1,0", data.First(MagicAttributeKind.ConfuseP).ToString());
+            Assert.AreEqual(512, PcCaiBangLuaLevelService.GetAttackRadius(359, 20), "Lua L20 range overrides row radius for runtime cast");
+            Assert.AreEqual(3, PcCaiBangLuaLevelService.GetMissileCount(359, 20), "Lua L20 missile count overrides row ChildSkillNum");
+
+            var report = svc.Cast(beggar, enemy, 359, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(report.success, report.detail);
+            Assert.AreEqual(50, report.manaCost, "PC Lua tianxia_wugou L20 skill_cost_v=50");
+            Assert.AreEqual(3, report.childProjectileCount, "Runtime should spawn Lua-derived 3 homing child missiles at L20");
+            Assert.AreEqual(3, report.projectiles.Count);
+            Assert.That(report.projectiles.All(p => p.skillId == 168), Is.True, "All runtime children should use PC missile 168");
+            Assert.Less(enemy.currentLife, 1000, "Deterministic hit should apply PC-derived damage before projectile visuals resolve");
+        }
+
+        [Test]
         public void CaiBang_359_VisualServiceUsesPcMissile168HomingSpeed()
         {
             // PC PcMissles.txt missile 168 (Thiên Hạ Vô Cẩu): Speed=24, LifeTime=32, MoveKind=5.
@@ -535,6 +569,28 @@ namespace VLTK.Tests.Sandbox
                 Assert.AreEqual(originalY[i], fx.missilePositions[i].y, 0.001f, $"Missile {i} should chase live target plus its own offset, not collapse into center target");
                 Assert.Greater(fx.missilePositions[i].x, 0f, $"Missile {i} should advance toward the live target");
             }
+        }
+
+        [Test]
+        public void CaiBang_358_TiemLongUsesNewestPcRowDefaultsWhenLuaTableIsCommented()
+        {
+            // Newest checked PC sources keep gaibang.lua::qianlong_zaiyuan commented out.
+            // So row 358 must not borrow Kháng Long (128) Lua data; it uses skills.txt row defaults + missile 167.
+            var cat = Catalog();
+            var skill = cat.Resolve(358);
+            var data = skill.GetPcLevelData(20);
+
+            Assert.AreEqual("Tiềm Long Tại Uyên", skill.DisplayName);
+            Assert.AreEqual(167, skill.childSkillId, "PC skills.txt row 358 ChildSkillId=167");
+            Assert.AreEqual(SkillMissileForm.Stationary, skill.missileForm, "PC skills.txt row 358 MisslesForm=7");
+            Assert.AreEqual(570, skill.attackRadius, "PC skills.txt row 358 AttackRadius=570");
+            Assert.AreEqual(5, skill.waitTime, "PC skills.txt row 358 WaitTime=5");
+            Assert.AreEqual(11, skill.charAnimId, "PC skills.txt row 358 CharAnimId=11");
+            Assert.AreEqual(0, PcCaiBangLuaLevelService.GetSingleValue(358, 20, "firedamage_v", 1), "qianlong_zaiyuan table is commented out; no Lua firedamage should be parsed");
+            Assert.AreEqual(0, PcCaiBangLuaLevelService.GetSingleValue(358, 20, "seriesdamage_p", 1), "qianlong_zaiyuan table is commented out; no Lua series damage should be parsed");
+            Assert.AreEqual("PhysicsEnhanceP=0,0,0", data.First(MagicAttributeKind.PhysicsEnhanceP).ToString());
+            Assert.AreEqual("FireDamageV=0,0,0", data.First(MagicAttributeKind.FireDamageV).ToString());
+            Assert.AreEqual("SkillCostV=0,0,0", data.First(MagicAttributeKind.SkillCostV).ToString());
         }
 
         [Test]

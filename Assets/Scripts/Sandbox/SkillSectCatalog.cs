@@ -199,7 +199,7 @@ namespace VLTK.Sandbox
                 S(121, "Diệu Thủ Không Không",   "Diệu Thủ Không Không",   SkillTier.Utility, 20, 20, charAnim: 14),
                 S(122, "Kiến Nhân Thần Thủ",     "Kiến Nhân Thần Thủ",     SkillTier.Active,  10, 20, charAnim: 11),
                 S(123, "Khuê Mộc Tinh Chiếu",    "Khuê Mộc Tinh Chiếu",    SkillTier.Buff,    30, 20),
-                S(124, "Đả Cẩu Trận",            "Đả Cẩu Trận",            SkillTier.Active,  30, 20, charAnim: 14),
+                S(124, "Đả Cẩu bổng",            "Đả Cẩu Bổng Pháp",       SkillTier.Passive, 30, 20, charAnim: 11),
                 S(125, "Thiên Hạ Vô Cẩu",        "Bổng Đả Ác Cẩu",        SkillTier.Active,  50, 20, charAnim: 11),
                 S(126, "Kim Ô Ánh Tuyết",        "Kim Ô ánh Tuyết",        SkillTier.Buff,    40, 20),
                 S(127, "Hoạt Bất Lưu Thủ",       "Hoạt Bất Lưu Thủ",       SkillTier.Passive, 10, 20, charAnim: 14),

@@ -48,10 +48,10 @@ namespace VLTK.UI
         public const int PcFightSkillSlotsPerPage = 30;
         public const int PcFightSkillPageCount = 1;
 
-        // PC source: bin/client/script/skill/gaibang.lua
-        // 115-116 passive mastery, 117-130 active combat skills, 274/357/358/359/360 high-tier
-        // 358 (Kháng Long Hữu Hối) exists in PC gaibang.lua but commented out in client script;
-        // included here so 5-slot default deck can pick it.
+        // PC source: bin/client/script/skill/gaibang.lua + newest checked skills.txt rows.
+        // 115-116 passive mastery, 117-130 active combat skills, 274/357/358/359/360 high-tier.
+        // 358 is Tiềm Long Tại Uyên in newest PC rows; its qianlong_zaiyuan Lua table is commented out,
+        // so catalog uses row/default missile data instead of borrowing Kháng Long (128) tuning.
         public static readonly int[] PcCaiBangSkillOrder =
         {
             115, 116, 117, 118, 119,

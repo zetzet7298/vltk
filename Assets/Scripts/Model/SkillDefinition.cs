@@ -19,6 +19,7 @@ namespace VLTK.Model
         Surround = 3,    // surrounding burst
         Chain = 4,       // chained between targets
         Zone = 5,        // PC SKILL_MF_Zone — missiles distribute in a fixed-radius area
+        Stationary = 7,  // PC form 7 — stationary/area child missile such as Cái Bang 358
     }
 
     [Serializable]

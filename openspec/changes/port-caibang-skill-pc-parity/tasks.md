@@ -40,10 +40,11 @@
 - [x] GREEN: Update `CombatRuntimeService` to support multiple `addskilldamageN` chain slots per parent skill and use injectable deterministic `RollPercent`.
 - [x] Run filtered CaiBang tests after chain mapping update.
 - [x] RED/GREEN: Add CaiBang damage test proving defender resistance states affect incoming Cai Bang skill damage.
-- [ ] RED: Add tests for at least one staff/dog-array skill and one dragon skill using PC-derived damage/range/missile data.
+- [x] RED/GREEN: Add tests for staff/dog-array version-priority slice: newest PC `124` is passive `dagou_zhen`, while `209` is the state projectile.
+- [x] RED: Add tests for one dragon skill using PC-derived damage/range/missile data.
 - [x] GREEN: Verify/populate `DefenderStats` from active defender states in `CombatRuntimeService.ApplyDamage`.
-- [ ] GREEN: Ensure Cai Bang active skills use PC-derived level data instead of empty/default approximations.
-- [ ] Run filtered CaiBang tests plus focused shared combat tests.
+- [x] GREEN: Ensure Cai Bang active skills use PC-derived level data instead of empty/default approximations.
+- [x] Run filtered CaiBang tests plus focused shared combat tests.
 
 ## Phase 5 - Visual/SFX Resources
 - [ ] Resolve Phi Long missile SPR(s), impact SPR(s), icon, cast/precast, and SFX paths from PC config with hash evidence.

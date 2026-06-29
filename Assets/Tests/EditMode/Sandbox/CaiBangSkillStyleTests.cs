@@ -11,7 +11,7 @@ namespace VLTK.Tests.Sandbox
     //   117 Đầu Thạch Vấn Lộ (toushi_wenlu)         → 0 Skill (damage, missile cast)
     //   119 Diên Môn Thác Bát (yanmen_tuobo)        → 0 Skill (damage, missile cast)
     //   122 Kiến Nhân Thần Thủ (jianren_shenshou)   → 0 Skill (damage, missile cast)
-    //   124 Đả Cẩu Trận (dagou_zhen)               → 2 InitiativeNpcState (stance aura)
+    //   124 Đả Cẩu Bổng Pháp (dagou_zhen)         → 3 PassivityNpcState (newest PC passive)
     //   125 Bổng Đả Ác Cẩu (bangda_egou)           → 0 Skill (damage, missile cast)
     //   127 Hoạt Bất Lưu Thủ (huabu_liushou)        → 3 PassivityNpcState
     //   128 Kháng Long Hữu Hối (kanglong_youhui)    → 0 Skill (damage, missile cast)
@@ -37,19 +37,19 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void DogArray_StanceIsAura_TargetAllyTrue_WaitTimeZero()
+        public void DogArray_124_IsNewestPcPassive_NotAura()
         {
             var cat = Catalog();
             var s = cat.Resolve(124);
             Assert.IsNotNull(s, "skill 124 missing");
-            Assert.AreEqual(PcSkillStyle.InitiativeNpcState, s.skillStyle, "124 PC SkillStyle=2");
-            Assert.IsTrue(s.isAura, "124 PC IsAura=1");
-            Assert.IsTrue(s.targetAlly, "124 PC TargetAlly=1");
-            Assert.IsTrue(s.targetSelf, "124 PC TargetSelf=1");
-            Assert.AreEqual(0, s.waitTime, "124 PC WaitTime=0 (immediate state apply)");
-            Assert.AreEqual(44, s.stateSpecialId, "124 PC StateSpecialId=44");
-            Assert.AreEqual(180, s.attackRadius, "124 PC AttackRadius=180");
-            Assert.AreEqual(209, s.childSkillId, "124 PC ChildSkillId=209 (打狗阵子弹)");
+            Assert.AreEqual(PcSkillStyle.PassivityNpcState, s.skillStyle, "124 newest PC SkillStyle=3");
+            Assert.IsFalse(s.isAura, "124 newest PC IsAura=0");
+            Assert.IsFalse(s.targetAlly, "124 newest PC TargetAlly=0");
+            Assert.IsFalse(s.targetSelf, "124 newest PC TargetSelf=0");
+            Assert.AreEqual(0, s.waitTime, "124 newest PC WaitTime=0/default");
+            Assert.AreEqual(0, s.stateSpecialId, "124 newest PC StateSpecialId=0");
+            Assert.AreEqual(0, s.attackRadius, "124 newest PC AttackRadius=0");
+            Assert.AreEqual(0, s.childSkillId, "124 newest PC ChildSkillId=0");
         }
 
         [Test]
@@ -63,16 +63,17 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void DogArray_Level20_DefenseBuffAtPcMagnitude()
+        public void DogArray_124_Level20_AddPhysicsDamageAtPcMagnitude()
         {
-            // PC 打狗阵.lua::Getadddefense_v(level): result = 30+10*level → L20 = 230.
+            // PC gaibang.lua::dagou_zhen addphysicsdamage_p L20 = 175, duration=-1, param3=2.
             var cat = Catalog();
             var s = cat.Resolve(124);
             var levelData = s.GetPcLevelData(20);
-            var attr = levelData.state.FirstOrDefault(a => a.kind == MagicAttributeKind.AddDefenseV);
-            Assert.IsNotNull(attr, "L20 state has AddDefenseV");
-            Assert.AreEqual(230, attr.value1, "PC adddefense_v L20 = 30+10*20 = 230");
-            Assert.AreEqual(25, attr.value2, "PC param2=25 (mana cost baked into state)");
+            var attr = levelData.state.FirstOrDefault(a => a.kind == MagicAttributeKind.AddPhysicsDamageP);
+            Assert.IsNotNull(attr, "L20 state has AddPhysicsDamageP");
+            Assert.AreEqual(175, attr.value1, "PC addphysicsdamage_p L20 = 175");
+            Assert.AreEqual(-1, attr.value2, "PC duration sentinel = -1");
+            Assert.AreEqual(2, attr.value3, "PC param3=2");
         }
 
         [Test]
