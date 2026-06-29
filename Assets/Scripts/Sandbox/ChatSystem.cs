@@ -46,7 +46,8 @@ namespace VLTK.Sandbox
     {
         private readonly List<ChatMessage> _history = new();
         private readonly int _maxHistory = 200;
-        private ChatChannel _activeChannel = ChatChannel.All;
+        // PC default channel: CH_SYSTEM (default send label "Nhắc nhở" in ChatRoomPanelService).
+        private ChatChannel _activeChannel = ChatChannel.System;
         private IChatServiceHost _host;
 
         public event Action<ChatMessage> OnMessageReceived;

@@ -76,6 +76,11 @@
              Frame SPRs (top/bottom/middle) + toggle/scroll icons load at runtime via C#.
              Element names ChatInput/FaceBtn/SendBtnIcon preserved for GameHudController. -->
         <ui:VisualElement name="ChatBar" class="hud-chat-panel">
+            <!-- PC frame/shadow pieces: [MoveImg]/[SizeBtn]/[ShadowBtn]. Runtime-loaded from real SPR. -->
+            <ui:VisualElement name="ChatBarTopFrame" class="hud-chat-frame-top"/>
+            <ui:VisualElement name="ChatBarBottomFrame" class="hud-chat-frame-bottom"/>
+            <ui:VisualElement name="ShadowToggle" class="hud-chat-shadow-toggle"/>
+
             <!-- Channel selector row: on/off toggle + 6 PC tabs + identity icon
                  PC: [ChannelBtn] + [Main] CheckOnImage/CheckOffImage + ChatTabNum=6 -->
             <ui:VisualElement name="ChannelSelector" class="hud-chat-channel-row">
@@ -115,6 +120,7 @@
 
             <!-- Input row (existing elements preserved: ChatInput/FaceBtn/SendBtnIcon) -->
             <ui:VisualElement name="ChatInputRow" class="hud-chat-input-row">
+                <ui:Label name="ChatSendName" text="Nhắc nhở" class="hud-chat-send-name"/>
                 <ui:TextField name="ChatInput" value="" class="hud-chat-input"/>
                 <ui:Button name="FaceBtn" text="😊" class="hud-face-btn"/>
                 <ui:VisualElement name="SendBtnIcon" class="hud-send-icon"/>

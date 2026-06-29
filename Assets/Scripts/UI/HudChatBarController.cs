@@ -45,7 +45,7 @@ namespace VLTK.UI
         private string _artPath;                // cached art root for toggle icon swaps
         private bool _channelFilterOn = true;   // PC CheckOnImage default (filter active)
         private bool _sysExpanded = true;        // PC SysRoom_Open Down=1 (open by default)
-        private int _activeTabIndex = 0;         // ChatTab0 = All
+        private int _activeTabIndex = -1;        // PC default starts at CH_SYSTEM/"Nhắc nhở"; no tab selected until user chooses one
         private float _refreshInterval = 0.5f;   // poll ChatService for startup-race robustness
         private float _lastRefresh;
 
@@ -131,14 +131,19 @@ namespace VLTK.UI
             for (int i = 0; i < 6; i++)
                 _tabs[i] = _chatBar.Q("ChatTab" + i);
 
-            // Enable rich text for both content labels (UI Toolkit requires explicit opt-in).
+            // History uses per-channel rich text; SysRoom uses the PC strip MsgColor uniformly.
             if (_historyContent != null) _historyContent.enableRichText = true;
-            if (_sysContent != null) _sysContent.enableRichText = true;
+            if (_sysContent != null) _sysContent.enableRichText = false;
         }
 
         /// <summary>Load PC SPR art onto toggle/icon elements (design §7 art map).</summary>
         private void LoadChatArt()
         {
+            // PC frame/shadow pieces from [MoveImg]/[SizeBtn]/[ShadowBtn]
+            LoadChatIcon(_chatBar.Q("ChatBarTopFrame"), _artPath, "chat_bar_top");
+            LoadChatIcon(_chatBar.Q("ChatBarBottomFrame"), _artPath, "chat_bar_bottom");
+            LoadChatIcon(_chatBar.Q("ShadowToggle"), _artPath, "btn_chat_shadow");
+
             // Channel toggle: CheckOnImage default (filter active)
             LoadChatIcon(_channelToggleIcon, _artPath, "btn_chat_channel_on");
 
@@ -172,7 +177,12 @@ namespace VLTK.UI
             var sandbox = SandboxManager.Instance;
             _chat = sandbox != null ? sandbox.ChatService : null;
             if (_chat != null)
+            {
                 _chat.OnMessageReceived += OnChatMessage;
+                // PC default: CH_SYSTEM + send label "Nhắc nhở" (ChatRoomPanelService defaults).
+                if (_chat.ActiveChannel != ChatChannel.System)
+                    _chat.SetChannel(ChatChannel.System);
+            }
         }
 
         private void OnChatMessage(ChatMessage msg)
@@ -361,10 +371,11 @@ namespace VLTK.UI
 
             foreach (var msg in systemMessages)
             {
-                string hex = ColorUtility.ToHtmlStringRGBA(msg.color);
+                // PC SysRoom_List uses its own MsgColor=255,249,148; do not let
+                // per-message ChatService colors override the system strip.
                 string line = string.IsNullOrEmpty(msg.senderName)
-                    ? $"<color=#{hex}>{msg.text}</color>"
-                    : $"<color=#{hex}>{msg.senderName}: {msg.text}</color>";
+                    ? msg.text
+                    : $"{msg.senderName}: {msg.text}";
 
                 sysMsgs.AppendLine(line);
             }

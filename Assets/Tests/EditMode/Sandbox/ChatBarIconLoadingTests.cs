@@ -308,12 +308,14 @@ public class HudChatBarMessageSplitTests
     [Test]
     public void MessageSplit_SeparatesSystemFromPlayer()
     {
-        var chat = new ChatService();
-        chat.PostSystemMessage("sys");
-        chat.SendPlayerMessage(ChatChannel.World, "Người chơi", "hello");
+        var messages = new System.Collections.Generic.List<ChatMessage>
+        {
+            new ChatMessage { channel = ChatChannel.System, text = "sys" },
+            new ChatMessage { channel = ChatChannel.World, senderName = "Người chơi", text = "hello" },
+        };
 
         HudChatBarController.SplitMessages(
-            chat.GetFilteredMessages(120),
+            messages,
             out var playerMessages,
             out var systemMessages);
 

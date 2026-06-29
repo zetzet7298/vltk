@@ -268,3 +268,24 @@ PR 3 only. No commit/stage performed per parent instruction. Scoped changed file
 - actionContext: repo-local, workspace `/var/www/vltk-mobile/harness`; target project root `/var/www/vltk-mobile` from explicit user task. Edits stayed under project root and the requested scoped files.
 - Review workload gate: tasks forecast required chained PRs / high risk; parent explicitly assigned PR 3 only in an auto-chain flow, so proceeded with this slice.
 - Strict TDD: not active in `openspec/config.yaml` (no strict TDD declaration).
+
+## Verify-blocker fix (post sdd-verify)
+
+Addressed the fresh `sdd-verify` critical blockers:
+
+- Added visible/runtime-loaded PC frame/shadow elements to `GameHud.uxml` and `HudChatBarController.LoadChatArt()`:
+  - `ChatBarTopFrame` → `chat_bar_top`
+  - `ChatBarBottomFrame` → `chat_bar_bottom`
+  - `ShadowToggle` → `btn_chat_shadow`
+- Added visible PC default send label `ChatSendName` = `Nhắc nhở` in the input row.
+- Changed `ChatService` default active channel from `All` to `System` to match PC `CH_SYSTEM` default.
+- Changed SysRoom rendering to use the PC strip `MsgColor=255,249,148` uniformly (no per-message rich-text override for system/combat strip).
+- Fixed impacted `ChatServiceHostServiceTests` expectations for the new PC default channel.
+
+Verification after fix:
+- `unityMCP_run_tests(mode="EditMode", category_names=["Chat"])`: 5/5 passed (job `768f76a8e49043159fd3b5a160987747`).
+- `unityMCP_run_tests(mode="EditMode", group_names=["^VLTK\\.Tests\\.Sandbox\\.ChatServiceHostServiceTests\\."])`: 14/14 passed (job `2e307da9fa82452993e82560fece16e3`).
+- Runtime load logs confirmed newly required art loaded:
+  - `chat_bar_top` → `ChatBarTopFrame`
+  - `chat_bar_bottom` → `ChatBarBottomFrame`
+  - `btn_chat_shadow` → `ShadowToggle`

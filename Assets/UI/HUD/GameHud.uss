@@ -322,6 +322,31 @@
         picking-mode: Ignore;  /* root passthrough; PR 2 controller re-enables Position on children */
     }
 
+    .hud-chat-frame-top {
+        position: absolute;
+        left: 0px;
+        top: 0px;
+        width: 15px;
+        height: 17px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
+    .hud-chat-frame-bottom {
+        position: absolute;
+        left: 0px;
+        bottom: 0px;
+        width: 15px;
+        height: 16px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
+    .hud-chat-shadow-toggle {
+        position: absolute;
+        left: 0px;
+        top: 111px;
+        width: 15px;
+        height: 17px;
+        -unity-background-scale-mode: scale-to-fit;
+    }
+
     /* Collapsed: channel toggle off → hide history + system, show input only */
     .hud-chat-panel.collapsed .hud-chat-room-area,
     .hud-chat-panel.collapsed .hud-chat-sys-area {
@@ -447,6 +472,15 @@
         border-width: 1px;
         border-color: rgb(70,70,70);
     }
+
+.hud-chat-send-name {
+    width: 58px;
+    height: 24px;
+    flex-shrink: 0;
+    color: rgb(255,249,148);  /* PC DefaultChannelSendNameVi = Nhắc nhở */
+    font-size: 11px;
+    -unity-text-align: middle-center;
+}
 
 .hud-chat-input {
     flex-grow: 1;

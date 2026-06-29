@@ -125,7 +125,8 @@ namespace VLTK.Tests.Sandbox
         {
             var svc = new ChatService();
             Assert.AreEqual(0, svc.History.Count);
-            Assert.AreEqual(ChatChannel.All, svc.ActiveChannel);
+            // PC default channel is CH_SYSTEM (default send label "Nhắc nhở").
+            Assert.AreEqual(ChatChannel.System, svc.ActiveChannel);
         }
 
         [Test]
@@ -238,6 +239,7 @@ namespace VLTK.Tests.Sandbox
         {
             var host = new FakeHost();
             var svc = new ChatService(host);
+            svc.SetChannel(ChatChannel.All);
             svc.SendPlayerMessage(ChatChannel.World, "Alice", "msg1");
             svc.PostSystemMessage("system1");
             var list = svc.GetFilteredMessages(50);
