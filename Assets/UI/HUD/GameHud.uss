@@ -690,11 +690,11 @@
         position: absolute;
         right: 28px;
         bottom: 410px;
-        width: 136px;
+        width: 146px;
         height: 55px;
         flex-direction: row;
         background-color: transparent;
-        background-image: url('project://database/Assets/UI/HUD/Art/quick_slots_1_2_3_pc.png');
+        background-image: url('project://database/Assets/UI/HUD/Art/quick_slots_1_2_3_mobile_gap_pc.png');
         -unity-background-scale-mode: stretch-to-fill;
         picking-mode: Ignore;
         overflow: visible;
@@ -741,14 +741,14 @@
             overflow: hidden;
         }
 
-        /* S3 (HUD-004): usable-item quick slots. The PC evidence is one contiguous
-           1/2/3 chrome strip, so the children are transparent click/icon regions;
-           the frame, black wells, dividers, and digits live on .hud-quick-slots. */
+        /* S3 (HUD-004): usable-item quick slots. PC chrome is split from the
+           evidence strip with a short mobile gap, so users do not tap adjacent
+           slots by mistake. Children are transparent click/icon regions. */
         .hud-quick-slot {
             width: 45px;
             height: 55px;
             margin-left: 0px;
-            margin-right: 0px;
+            margin-right: 5px;
             background-color: transparent;
             border-width: 0px;
             border-radius: 0px;
@@ -763,6 +763,10 @@
 
         .hud-quick-slot-2 {
             width: 46px;
+        }
+
+        .hud-quick-slot-3 {
+            margin-right: 0px;
         }
 
         /* Quick-slot item icon child (centered, shown when an item is assigned).

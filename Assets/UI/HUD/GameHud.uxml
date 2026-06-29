@@ -198,8 +198,8 @@
 
         <!-- S3 target: usable-item quick slots (3) between minimap and combat buttons. -->
             <!-- S3 (HUD-004): 3 usable-item quick slots restored from the PC HUD.
-                 Frame chrome = one contiguous PC 1/2/3 strip matching pc-evidence/hud/1_2_3.png;
-                 child slots are transparent click/icon overlays so internal dividers do not double-border.
+                 Frame chrome = PC 1/2/3 evidence split with short mobile gaps for safer taps;
+                 child slots are transparent click/icon overlays so the PC chrome stays visible.
                  Each slot assignable to a consumable (e.g. Ngũ Hoa Ngọc Lộ). Activation =
                  consume intent (no-op log; backend effect is a follow-up gameplay change). -->
             <ui:VisualElement name="QuickSlots" class="hud-quick-slots">

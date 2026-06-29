@@ -38,10 +38,11 @@ namespace VLTK.Tests.Sandbox
         {
             var uss = File.ReadAllText(AssetPath("UI/HUD/GameHud.uss"));
 
-            Assert.That(uss, Does.Contain("quick_slots_1_2_3_pc.png"));
-            Assert.That(uss, Does.Contain("width: 136px;"));
+            Assert.That(uss, Does.Contain("quick_slots_1_2_3_mobile_gap_pc.png"));
+            Assert.That(uss, Does.Contain("width: 146px;"));
             Assert.That(uss, Does.Contain("height: 55px;"));
             Assert.That(uss, Does.Contain("margin-left: 0px;"));
+            Assert.That(uss, Does.Contain("margin-right: 5px;"));
             Assert.That(uss, Does.Contain("background-image: none;"));
             Assert.That(uss, Does.Not.Contain("nth-child"), "Unity USS support for nth-child is unsafe here; use explicit classes");
         }
