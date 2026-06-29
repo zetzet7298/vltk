@@ -690,10 +690,12 @@
         position: absolute;
         right: 28px;
         bottom: 410px;
-        width: 200px;
-        height: 64px;
+        width: 136px;
+        height: 55px;
         flex-direction: row;
         background-color: transparent;
+        background-image: url('project://database/Assets/UI/HUD/Art/quick_slots_1_2_3_pc.png');
+        -unity-background-scale-mode: stretch-to-fill;
         picking-mode: Ignore;
         overflow: visible;
     }
@@ -739,44 +741,43 @@
             overflow: hidden;
         }
 
-        /* S3 (HUD-004): usable-item quick slot frame. Reuses PC numbered-well sprites
-           (btn_quick_item_1/2/3_pc.png — 快捷栏 slot-well family, 36×36 RGBA). Each
-           numbered sprite baked-in at PC extraction; no fabrication. */
+        /* S3 (HUD-004): usable-item quick slots. The PC evidence is one contiguous
+           1/2/3 chrome strip, so the children are transparent click/icon regions;
+           the frame, black wells, dividers, and digits live on .hud-quick-slots. */
         .hud-quick-slot {
-            width: 60px;
-            height: 60px;
-            margin-left: 2px;
-            margin-right: 2px;
-            -unity-background-scale-mode: scale-to-fit;
+            width: 45px;
+            height: 55px;
+            margin-left: 0px;
+            margin-right: 0px;
             background-color: transparent;
             border-width: 0px;
             border-radius: 0px;
             overflow: hidden;
         }
 
-        .hud-quick-slot-1 {
-            background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_1_pc.png');
-        }
-        .hud-quick-slot-2 {
-            background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_2_pc.png');
-        }
+        .hud-quick-slot-1,
+        .hud-quick-slot-2,
         .hud-quick-slot-3 {
-            background-image: url('project://database/Assets/UI/HUD/Art/btn_quick_item_3_pc.png');
+            background-image: none;
+        }
+
+        .hud-quick-slot-2 {
+            width: 46px;
         }
 
         /* Quick-slot item icon child (centered, shown when an item is assigned).
-           Empty state shows PC empty styling (semi-transparent dark). */
+           Empty state must remain transparent so the PC 1/2/3 chrome stays visible. */
         .hud-quick-slot-icon {
             position: absolute;
             left: 8px;
-            top: 8px;
-            width: 40px;
-            height: 40px;
+            top: 12px;
+            width: 29px;
+            height: 29px;
             background-size: contain;
             -unity-background-scale-mode: scale-to-fit;
         }
         .hud-quick-slot-icon.empty {
-            background-color: rgba(40,80,60,0.3);
+            background-color: transparent;
         }
 
         /* BuffPanel inside TopGapCluster: flow as a row below the menu buttons instead
