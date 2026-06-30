@@ -200,6 +200,12 @@ namespace VLTK.Sandbox
             int addSkillDamageP = ComputeAddSkillDamagePercent(caster, skill.skillId);
             report.addSkillDamagePercent = addSkillDamageP;
             ApplyDamage(caster, target, levelData, report, addSkillDamageP);
+            // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua::gaibang120 (skill 714): passive
+            // 'autoattackskill' — when bearer (target) is HIT, roll proc% → cast 720 on attacker.
+            // PC source: jx-cocos server KNpcAttribModify::autoskill (stores m_AutoAttackSkill) +
+            // KNpc::AutoDoSkill (casts 720 + SetNextCastTime(714, +nDelay=12s)). Proc fires once per
+            // damaging hit on the bearer, after damage is applied.
+            ProcessAutoAttackProcs(caster, target, report);
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
             // [CaiBang-VersionPriority 2026-06-29] Newest PC skill 124 is passive dagou_zhen
@@ -530,6 +536,41 @@ namespace VLTK.Sandbox
                 }
                 report.damageResults.Add(result);
             }
+        }
+
+        // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua::gaibang120 (skill 714) 'autoattackskill'
+        // passive proc config: when bearer is hit, roll proc% → cast targetSkill on attacker + cooldown.
+        // autoattackskill[0]=720*256+N → targetSkill=720. [2]=12*18*256+N → cooldownTicks=216 (12s), proc%=N.
+        // proc% interpolation matches gaibang.lua autoattackskill[3]: {1,1},{15,5},{20,6}.
+        private const int AutoAttackSkillBearerId = 714;
+        private const int AutoAttackTargetSkillId = 720;
+        private const int AutoAttackCooldownTicks = 12 * 18; // PC 216 ticks (12s @ 18fps)
+        private static int AutoAttackProcPercent(int level) => Mathf.RoundToInt(Mathf.Lerp(1f, 6f, Mathf.InverseLerp(1f, 20f, level)));
+
+        private void ProcessAutoAttackProcs(CombatActorState attacker, CombatActorState bearer, CombatCastReport report)
+        {
+            // PC: proc fires only when the bearer actually took a damaging hit.
+            if (bearer == null || attacker == null) return;
+            if (report.damageResults == null || report.damageResults.Count == 0) return;
+            bool tookHit = false;
+            foreach (var dr in report.damageResults)
+            {
+                if (dr.hit && dr.finalDamage > 0) { tookHit = true; break; }
+            }
+            if (!tookHit) return;
+            // Bearer must have learned the passive 714.
+            if (!bearer.skillLevels.TryGetValue(AutoAttackSkillBearerId, out int lvl) || lvl <= 0) return;
+            // PC: 12s cooldown on the passive itself (KNpc::AutoDoSkill SetNextCastTime(714, +nDelay)).
+            if (_nextCastTime.TryGetValue((bearer.actorId, AutoAttackSkillBearerId), out int next) && CurrentTime < next)
+                return;
+            int procPct = AutoAttackProcPercent(lvl);
+            if (_damage.RollPercent != null && !_damage.RollPercent(procPct)) return;
+            // PC: cast skill 720 on the attacker — apply its debuff states to attacker.
+            if (_catalog.Resolve(AutoAttackTargetSkillId) is { } debuff && debuff.GetPcLevelData(lvl) is { } debuffData)
+            {
+                ApplyStates(bearer, attacker, CombatRelation.Enemy, debuffData, report);
+            }
+            _nextCastTime[(bearer.actorId, AutoAttackSkillBearerId)] = CurrentTime + AutoAttackCooldownTicks;
         }
 
         // PC: cộng state buff vào min/max (PC KNpcAttribModify::Add*DamageV + EnhanceP).

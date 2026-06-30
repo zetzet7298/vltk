@@ -271,6 +271,44 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_714_PassiveAutoAttack_ProcsSkill720OnBearerHit()
+        {
+            // PC slistcache + gaibang.lua::gaibang120 (verified 2026-06-30):
+            //   714 Hỗn Thiên Khí Công = PASSIVE (Style=3). When learned, attaches 'autoattackskill'
+            //   magic attrib. When bearer is HIT, roll proc% → cast skill 720 (Quyết Chú debuff)
+            //   on attacker + 12s CD. autoattackskill[3]=12*18*256+N → /256=216 ticks CD, %256=proc%.
+            //   jx-cocos server: KNpcAttribModify::autoskill stores m_AutoAttackSkill; KNpc::AutoDoSkill
+            //   casts 720 + SetNextCastTime(714, +nDelay).
+            // Mobile cũ SAI: UtilitySkill active + fabricated AddPhysicsDamageP.
+            var dmg = new DamageFormulaService { RollPercent = (pct) => true }; // force proc + crit
+            var svc = new CombatRuntimeService(Catalog(), damage: dmg);
+            var beggar = Beggar();
+            beggar.knownSkills.Add(714);
+            beggar.skillLevels[714] = 20;
+            beggar.currentLife = 1000;
+            var enemy = Enemy(new Vector2(2, 0)); // attacker (becomes target of proc'd 720)
+            enemy.knownSkills.Add(117); // enemy needs a damaging CaiBang skill to cast on beggar
+            enemy.skillLevels[117] = 20;
+            enemy.faction = CombatFaction.CaiBang;
+            enemy.currentMana = 500;
+
+            // enemy casts 117 on beggar → beggar is hit → beggar's 714 procs → 720 debuff on enemy.
+            var r = svc.Cast(enemy, beggar, 117, beggar.position, CombatRelation.Enemy);
+
+            Assert.IsTrue(r.success, r.detail);
+            // PC: 714 is passive (Style=3), NOT active UtilitySkill.
+            Assert.AreEqual(PcSkillStyle.PassivityNpcState, Catalog().Resolve(714).skillStyle,
+                "PC slistcache 714 SkillStyle=3 (passive)");
+            // PC: 714 has NO fabricated AddPhysicsDamageP; proc casts 720 on attacker instead.
+            Assert.IsFalse(beggar.states.ContainsKey(MagicAttributeKind.AddPhysicsDamageP),
+                "PC 714 has no AddPhysicsDamageP (was fabricated in mobile)");
+            // PC: proc fired → 720 debuff applied to attacker (enemy).
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResP, out var pres),
+                "720 debuff proc'd on attacker via 714 on-hit");
+            Assert.AreEqual(-10, pres.value1, "PC 720 L20 physicsres_p=-10 (proc'd from 714)");
+        }
+
+        [Test]
         public void NonCaiBang_CannotCastCaiBangSkill()
         {
             var svc = new CombatRuntimeService(Catalog());

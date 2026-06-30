@@ -290,12 +290,14 @@ namespace VLTK.Sandbox
                 castSpeed: (lv) => Link(lv, (1, 6, ""), (20, 65, "")),
                 elementParam: 2, icon: "\\spr\\Ui\\skill\\逍遥功.spr", charAnim:11),
 
-            UtilitySkill(714, "Hỗn Thiên Khí Công", "Hỗn Thiên Khí Công", 120, 180, SkillMissileForm.None, targetEnemy:false, targetSelf:true, levelData:(lv)=>{
-                var d = new SkillLevelData { level = lv };
-                int pct = Link(lv, (1, 1, ""), (20, 6, ""));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, pct, 0, 0));
-                return d;
-            }),
+            // 714 Hỗn Thiên Khí Công [PC slistcache + gaibang.lua::gaibang120 2026-06-30, RESOLVED]:
+            //   PC row: SkillStyle=3 (PASSIVE), no active cast. gaibang120 table defines 'autoattackskill':
+            //     [0]=720*256+N (target skill 720 + level), [2]=12*18*256+N (/256=216 ticks=12s CD, %256=proc%).
+            //   jx-cocos server KNpcAttribModify::autoskill stores m_AutoAttackSkill; KNpc::AutoDoSkill
+            //   (on bearer HIT) rolls proc → casts 720 on attacker + SetNextCastTime(714, +12s).
+            //   Trước fix SAI: UtilitySkill active + fabricated AddPhysicsDamageP 1-6% (PC has none).
+            //   Sau fix: PassivityNpcState, no active state. On-hit proc handled in CombatRuntimeService.
+            PassiveAutoAttackSkill(714, "Hỗn Thiên Khí Công", "Hỗn Thiên Khí Công", 120),
 
             // 720 Hỗn Thiên Khí Công_Quyết Chú [PC slistcache + gaibang.lua::gaibang120zuzhou 2026-06-30]:
             //   PC row: MisslesForm=6 (Stance), ChildSkillId=275, StateSpecialId=120, TargetEnemy=1.
@@ -682,6 +684,18 @@ namespace VLTK.Sandbox
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaMaxP, manamax(lv), -1, 0));
                 return d;
             });
+            return s;
+        }
+
+        // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua::gaibang120 (skill 714): passive SkillStyle=3
+        // with 'autoattackskill' proc — when bearer is HIT, roll proc% → cast 720 on attacker + 12s CD.
+        // No active cast, no state attribs (the proc is handled in CombatRuntimeService, keyed by skillId).
+        // autoattackskill[3]=12*18*256+N → /256=216 ticks (12s) CD, %256=proc% (1→6 by level).
+        private static SkillDefinition PassiveAutoAttackSkill(int id, string raw, string vi, int req)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None);
+            s.skillStyle = PcSkillStyle.PassivityNpcState; // PC slistcache SkillStyle=3
+            s.charAnimId = 0;                              // PC slistcache CharAnimId=0
             return s;
         }
 
