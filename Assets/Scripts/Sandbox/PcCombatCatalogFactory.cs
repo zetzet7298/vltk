@@ -269,11 +269,15 @@ namespace VLTK.Sandbox
                 cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
                 horseLimit: 1),
 
-            // 358 Tiềm Long Tại Uyên — newest PC version priority:
-            //   skills.txt row 358: ChildSkillId=167, MisslesForm=7, AttackRadius=570, ReqLevel=50, CharAnimId=11.
-            //   LvlData points at qianlong_zaiyuan, but newest gaibang.lua comments that table out in all checked sources;
-            //   therefore only row/default missile data is authoritative until a newer active table is found.
-            //   missles.txt missile 167: MoveKind=0, Speed=0, LifeTime=15, AnimFile2=\spr\skill\gb\龙战于野.spr.
+            // 358 Tiềm Long Tại Uyên — PC PARITY VERIFIED 2026-06-30 (0 damage is CORRECT, matches PC):
+            //   slistcache ec1243ff.dat row 358: LvlData1-20 ALL = "qianlong_zaiyuan" (only source).
+            //   gaibang.lua::qianlong_zaiyuan table is COMMENTED OUT in every source (Client/Server/skill2/slistcache).
+            //   C++ KSkills.cpp:2276 calls lua GetSkillLevelData("firedamage_v","qianlong_zaiyuan",level).
+            //   gaibang.lua:534 nil-guard: if(SKILLS[data]==nil) then return "" → returns empty string.
+            //   C++ KSkills.cpp:2302 ParseString2MagicAttrib(level,"firedamage_v","") → parses 0 attribs.
+            //   missile 167: MoveKind=0 (Stationary), Speed=0 → ground zone, no impact damage.
+            //   => PC skill 358 does 0 damage (inert). Mobile 0-damage below is FAITHFUL to PC, NOT a bug.
+            //   (Audit baocao once claimed "PC does real damage" — disproven by C++/lua evidence above.)
             DamageSkillNew(358, "Tiềm Long Tại Uyên", "Tiềm Long Tại Uyên", 50, 20, 570, 167, SkillMissileForm.Stationary, 1, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (0, 0, 0),
