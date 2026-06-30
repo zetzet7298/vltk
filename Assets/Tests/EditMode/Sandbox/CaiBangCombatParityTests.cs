@@ -309,6 +309,49 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_357_CollideEvent_NoFireBelowLevel10_PcL10Gate()
+        {
+            // PC gaibang.lua::feilong_zaitian skill_collideevent:
+            //   [1]={{1,0},{10,0},{10,1},{20,1}}  ← gate flag: 0 for L1-9, 1 for L10+
+            //   [3]={{1,389},{20,389}}            ← sub-skill id
+            // => 389 (Long Chiến Ư Dã) fires on missile collide ONLY at L10+.
+            // Trước fix (SECT-QUICKWIN): fired 389 at all levels — sai PC. Sau fix: honor L10 gate.
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(357);
+            beggar.skillLevels[357] = 5; // below L10 gate
+            var enemy = Enemy(new Vector2(200, 0));
+
+            var r = svc.Cast(beggar, enemy, 357, enemy.position, CombatRelation.Enemy);
+
+            Assert.IsTrue(r.success, r.detail);
+            // PC: below L10, collide sub-skill 389 does NOT fire — only 357's own damage applies.
+            Assert.AreEqual(1, r.damageResults.Count, "L5 < L10 gate → 389 must NOT fire (only 357 damage)");
+            Assert.IsFalse(r.projectiles.Any(p => p.skillId == 195),
+                "L5 < L10 gate → no stationary child 195 (389 did not fire)");
+        }
+
+        [Test]
+        public void CaiBang_1073_CollideEvent_Fires1072_OnMissileImpact()
+        {
+            // PC gaibang.lua::zhanggaibang150 (1073) skill_collideevent:
+            //   [1]={{1,0},{10,0},{10,1},{20,1}}  [3]={{1,1072},{20,1072}}
+            // => 1073 missile collide fires skill 1072 (Ngũ Diệu Càn Khôn) at L10+.
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(1073);
+            beggar.skillLevels[1073] = 20;
+            var enemy = Enemy(new Vector2(200, 0));
+
+            var r = svc.Cast(beggar, enemy, 1073, enemy.position, CombatRelation.Enemy);
+
+            Assert.IsTrue(r.success, r.detail);
+            // PC: 1073 has collideSkillId wired to 1072.
+            var s1073 = Catalog().Resolve(1073);
+            Assert.AreEqual(1072, s1073.collideSkillId, "PC 1073 skill_collideevent[3]=1072");
+        }
+
+        [Test]
         public void NonCaiBang_CannotCastCaiBangSkill()
         {
             var svc = new CombatRuntimeService(Catalog());

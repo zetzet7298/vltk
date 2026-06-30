@@ -215,17 +215,19 @@ namespace VLTK.Sandbox
                 PropagateAllyAura(caster, skill, levelData, report);
             }
 
-            // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.1 G2:
-            // PC Phi Long 357 → Long Chiến Ư Dật 389 (sub-skill slash) fires
-            // ở MỌI level khi missile collide (skill_collideevent[3]={{1,0},{10,0},{10,1},{20,1}}}).
-            // Trước fix: chỉ fire khi L>=11 — mất slash ở L1-10 → user nói
-            // "phi long tới mục tiêu ở cự ly gần, không sâu xé".
-            // Sau fix: fire mọi level — sâu xé luôn damage + projectile.
-            if (skillId == 357 && _catalog.Resolve(389) is { } subSkill)
+            // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua skill_collideevent — general missile-collide
+            // sub-skill firing (replaces SECT-QUICKWIN inline 357→389 hack). PC lua semantics:
+            //   skill_collideevent = { [1]={{1,0},{10,0},{10,1},{20,1}}, [3]={subSkillId} }
+            // [1] is the gate flag: 0 for L1-9, 1 for L10+ → sub-skill fires only at L10+.
+            // Sandbox instant-sim: missile 'collide' resolves immediately after SpawnProjectiles,
+            // so the sub-skill fires in the same Cast call (parity outcome preserved).
+            // 357→389, 1073→1072 wired in catalog via WithCollideEvent.
+            if (skill.collideSkillId > 0 && skillLevel >= 10 && _catalog.Resolve(skill.collideSkillId) is { } collideSub)
             {
-                var subLevelData = subSkill.GetPcLevelData(skillLevel);
-                ApplyDamage(caster, target, subLevelData, report);
-                SpawnProjectiles(subSkill, caster, castPoint, grid, report);
+                int collideLvl = skill.collideSkillLevel > 0 ? skill.collideSkillLevel : skillLevel;
+                var collideLevelData = collideSub.GetPcLevelData(collideLvl);
+                ApplyDamage(caster, target, collideLevelData, report);
+                SpawnProjectiles(collideSub, caster, castPoint, grid, report, collideLvl);
             }
 
             // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.4-2.9 G6: event chain generalizer.

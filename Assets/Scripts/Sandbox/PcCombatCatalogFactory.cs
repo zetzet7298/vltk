@@ -253,12 +253,13 @@ namespace VLTK.Sandbox
             //   => PHI LONG LÀ SKILL MISSILE (cast + projectile), KHÔNG CÓ DASH/LUNGE.
             // BUG TRƯỚC: commit e194a242a ép meleeType=JumpAndAttack do đọc sai gaibang.lua.
             //   → Fix: revert về missile thuần (PcMeleeType.None). Player đứng yên cast, missile bay tới target.
-            WithJxPreCast(DamageSkillNew(357, "Phi Long Tại Thiên ", "Phi Long Tại Thiên", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
+            WithJxPreCast(WithCollideEvent(DamageSkillNew(357, "Phi Long Tại Thiên ", "Phi Long Tại Thiên", 80, 20, 512, 166, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, "")), 0, Link(lv, (1, 10, ""), (15, 300, ""), (20, 750, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 65, "")), 0, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
+                collideSkillId: 389),  // PC gaibang.lua::feilong_zaitian skill_collideevent[3]=389 (L10+ gate)
                 // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC PC stock 2011 mag_tr_16).
                 // mag_bz_huo3_爆炸效果.spr không tồn tại trong pak_unpacked; dùng mag_tr_16_施魔法.spr (đã có trong SpritesRuntime) làm fallback.
                 "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
@@ -315,12 +316,13 @@ namespace VLTK.Sandbox
                 return d;
             }),
 
-            DamageSkillNew(1073, "Thời Thặng Lục Long", "Thời Thặng Lục Long", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
+            WithCollideEvent(DamageSkillNew(1073, "Thời Thặng Lục Long", "Thời Thặng Lục Long", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
                 // PC gaibang.lua zhanggaibang150: skill_cost_v={{{1,12},{20,78},{23,98}}}
                 cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
                 horseLimit: 1),
+                collideSkillId: 1072),  // PC gaibang.lua::zhanggaibang150 skill_collideevent[3]=1072 (L10+ gate)
 
             DamageSkillNew(1074, "Bổng Huýnh Lược Địa", "Bổng Hoành Lược Mã", 150, 20, 512, 336, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 10, ""), (15, 80, ""), (20, 165, "")),
@@ -770,6 +772,12 @@ namespace VLTK.Sandbox
         /// <summary>Override PreCastSpr với path từ jx-source (khác PC stock 2011).</summary>
         private static SkillDefinition WithJxPreCast(SkillDefinition s, string jxPreCastSprPath)
         { s.effectSourceId = Sprite(jxPreCastSprPath); return s; }
+
+        // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua skill_collideevent[3]=subSkillId:
+        // wires the missile-collide sub-skill anchor onto the parent skill (357→389, 1073→1072).
+        // Runtime fires it at missile impact, honoring PC lua [1] L10+ gate.
+        private static SkillDefinition WithCollideEvent(SkillDefinition s, int collideSkillId, int collideSkillLevel = 1)
+        { s.collideSkillId = collideSkillId; s.collideSkillLevel = collideSkillLevel; return s; }
 
         private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form)
         {
