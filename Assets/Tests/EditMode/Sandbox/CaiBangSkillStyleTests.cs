@@ -53,12 +53,14 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void HuocBatLuuThu_PassiveState_PcSkillStyle3()
+        public void HuocBatLuuThu_ActiveCastStyle_PcSkillStyle0()
         {
+            // PC slistcache ec1243ff.dat skill 127 (authoritative, verified 2026-06-30):
+            //   SkillStyle=0 (active cast self-buff), NOT passive. Old test claimed Style=3 — was wrong.
             var cat = Catalog();
             var s = cat.Resolve(127);
             Assert.IsNotNull(s, "skill 127 missing");
-            Assert.AreEqual(PcSkillStyle.PassivityNpcState, s.skillStyle, "127 PC SkillStyle=3 (PassivityNpcState)");
+            Assert.AreEqual(PcSkillStyle.InitiativeNpcState, s.skillStyle, "127 PC SkillStyle=0 (active cast buff)");
             Assert.AreEqual(17, s.stateSpecialId, "127 PC StateSpecialId=17");
         }
 

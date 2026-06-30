@@ -40,7 +40,7 @@ namespace VLTK.Tests.Sandbox
             var cat = Catalog();
             Assert.AreEqual(14, cat.Resolve(121).charAnimId, "121 PC CharAnimId=14 (utility)");
             Assert.AreEqual(11, cat.Resolve(124).charAnimId, "124 newest PC CharAnimId=11 (dagou_zhen passive row)");
-            Assert.AreEqual(14, cat.Resolve(127).charAnimId, "127 PC CharAnimId=14 (cdo_none)");
+            Assert.AreEqual(11, cat.Resolve(127).charAnimId, "127 PC CharAnimId=11 (slistcache authoritative; old test wrongly claimed 14)");
         }
 
         [Test]

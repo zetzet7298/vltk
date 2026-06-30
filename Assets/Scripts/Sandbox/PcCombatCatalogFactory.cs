@@ -175,20 +175,21 @@ namespace VLTK.Sandbox
             // 126 Kim Ô Ánh Tuyết: buff
             ResistBuff(126, "Kim Ô ánh Tuyết", "Kim Ô Ánh Tuyết", 40, MagicAttributeKind.ColdResP, costBugReturnsResultTwice:true),
 
-            // 127 Hoạt Bất Lưu Thủ [PC source 2026-06-19 fix]: PC Skills.txt SkillStyle=3 (PassivityNpcState),
-            //   LvlSetScript = 泥鳅功.lua (PC physicsres_p passive). Trước fix: PcSkillStyle.Missiles — sai PC semantics.
-            //   Sau fix: PassivityNpcState, charAnimId=14 (stance buff). Buff values giữ từ gaibang.lua::huabu_liushou (FastWalkRunP).
-            UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:17, levelData:(lv)=>{
+            // 127 Hoạt Bất Lưu Thủ [PC slistcache ec1243ff.dat 2026-06-30, authoritative]:
+            //   SkillStyle=0 (active cast self-buff), MisslesForm=6 (Stance/Self), CharAnimId=11, TargetSelf=1.
+            //   LvlSetScript=gaibang.lua::huabu_liushou: fastwalkrun_p 9→66 (speed%), dur 18*120→18*180 ticks, cost 24→50.
+            //   Trước fix (sai): comment mobile ghi Style=3/anim=14 (đọc sai PC) → bị đóng cứng thành passive always-on.
+            //   Sau fix: InitiativeNpcState (active cast buff), charAnim=11, form=Stance → khớp PC slistcache.
+            UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.Stance, targetEnemy:false, targetSelf:true, stateSpecialId:17, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
                 // PC gaibang.lua::huabu_liushou fastwalkrun_p duration: 18*120 (L1) → 18*180 (L20) ticks.
-                // Trước fix: dur=-1 (permanent) — sai PC magnitude. Sau fix: dùng Link 18*120 → 18*180.
                 int dur = Link(lv, (1, 18 * 120, ""), (20, 18 * 180, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, pct, dur, 0));
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
                 return d;
-            }, skillStyle: PcSkillStyle.PassivityNpcState, maxLevel: 20),
+            }, skillStyle: PcSkillStyle.InitiativeNpcState, maxLevel: 20, charAnim: 11),
 
             // 128 Kháng Long Hữu Hối: damage (kanglong_youhui)
             // [SECT-ALL fix 2026-06-15] PC source: skills.txt 128 IsMelee=0, ByMissle=0 → CAST skill, không melee.
@@ -292,11 +293,19 @@ namespace VLTK.Sandbox
                 return d;
             }),
 
-            UtilitySkill(720, "Hỗn Thiên Khí Công_Quyết Chú", "Hỗn Thiên Khí Công Quyết Chí", 120, 440, SkillMissileForm.Surround, targetEnemy:true, targetSelf:false, levelData:(lv)=>{
+            // 720 Hỗn Thiên Khí Công_Quyết Chú [PC slistcache + gaibang.lua::gaibang120zuzhou 2026-06-30]:
+            //   PC row: MisslesForm=6 (Stance), ChildSkillId=275, StateSpecialId=120, TargetEnemy=1.
+            //   gaibang120zuzhou defines 5 debuff attrs (L20): physicsres_p=-10, fireres_p=-15,
+            //   physicsresmax_p=-4, fireresmax_p=-6, rangedamagereturn_p=-30; duration=9*18=162 ticks.
+            //   Trước fix: mobile chỉ apply 2 (physicsres/fireres) + sai form=Surround → thiếu 3 debuff + sai parity.
+            UtilitySkill(720, "Hỗn Thiên Khí Công_Quyết Chú", "Hỗn Thiên Khí Công Quyết Chí", 120, 440, SkillMissileForm.Stance, targetEnemy:true, targetSelf:false, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int dur = 18 * Link(lv, (1, 3, ""), (20, 9, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, Link(lv, (1, -2, ""), (20, -10, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResP, Link(lv, (1, -3, ""), (20, -15, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResMaxP, Link(lv, (1, -1, ""), (15, -1, ""), (20, -4, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResMaxP, Link(lv, (1, -1, ""), (15, -2, ""), (20, -6, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, Link(lv, (1, -4, ""), (15, -25, ""), (20, -30, "")), dur, 0));
                 return d;
             }),
 

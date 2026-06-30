@@ -225,6 +225,52 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_127_MatchesPcSlistcacheRow_HoatBatLuuThu()
+        {
+            // PC slistcache ec1243ff.dat skill 127 (authoritative, overrides stale comments):
+            //   SkillStyle=0 (active cast buff), MisslesForm=6 (Stance/Self), CharAnimId=11, TargetSelf=1.
+            // Mobile comment cũ nói Style=3/anim=14 là ĐỌC SAI → fix về PC truth.
+            var s = Catalog().Resolve(127);
+            Assert.IsNotNull(s, "127 must be in catalog");
+            Assert.AreEqual(PcSkillStyle.InitiativeNpcState, s.skillStyle,
+                "PC slistcache 127 SkillStyle=0 → active cast buff, NOT passive always-on");
+            Assert.AreEqual(11, s.charAnimId, "PC slistcache 127 CharAnimId=11");
+            Assert.AreEqual(SkillMissileForm.Stance, s.missileForm, "PC slistcache 127 MisslesForm=6 (Stance)");
+            Assert.IsTrue(s.targetSelf, "PC slistcache 127 TargetSelf=1");
+        }
+
+        [Test]
+        public void CaiBang_720_QuyetChu_AppliesAllPcFiveDebuffAttrs()
+        {
+            // PC gaibang.lua::gaibang120zuzhou (skill 720) defines 5 debuff attrs at L20:
+            //   physicsres_p=-10, fireres_p=-15, physicsresmax_p=-4, fireresmax_p=-6,
+            //   rangedamagereturn_p=-30; duration=9*18=162 ticks.
+            // Mobile cũ chỉ apply 2 (physicsres/fireres) → thiếu 3 debuff.
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(720);
+            beggar.skillLevels[720] = 20;
+            var enemy = Enemy(new Vector2(2, 0));
+
+            var r = svc.Cast(beggar, enemy, 720, enemy.position, CombatRelation.Enemy);
+
+            Assert.IsTrue(r.success, r.detail);
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResP, out var pres), "PC physicsres_p");
+            Assert.AreEqual(-10, pres.value1, "PC L20 physicsres_p=-10");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.FireResP, out var fres), "PC fireres_p");
+            Assert.AreEqual(-15, fres.value1, "PC L20 fireres_p=-15");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResMaxP, out var pmax), "PC physicsresmax_p (missing in mobile)");
+            Assert.AreEqual(-4, pmax.value1, "PC L20 physicsresmax_p=-4");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.FireResMaxP, out var fmax), "PC fireresmax_p (missing in mobile)");
+            Assert.AreEqual(-6, fmax.value1, "PC L20 fireresmax_p=-6");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.RangeDamageReturnP, out var rret), "PC rangedamagereturn_p (missing in mobile)");
+            Assert.AreEqual(-30, rret.value1, "PC L20 rangedamagereturn_p=-30");
+            Assert.AreEqual(162, pres.value2, "PC L20 duration=9*18=162 ticks");
+            // PC slistcache 720: MisslesForm=6 (Stance), not mobile Surround.
+            Assert.AreEqual(SkillMissileForm.Stance, Catalog().Resolve(720).missileForm, "PC 720 MisslesForm=6");
+        }
+
+        [Test]
         public void NonCaiBang_CannotCastCaiBangSkill()
         {
             var svc = new CombatRuntimeService(Catalog());

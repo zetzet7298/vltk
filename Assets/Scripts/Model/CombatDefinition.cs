@@ -140,6 +140,10 @@ namespace VLTK.Model
         LifeMaxYanP, // [SECT-QUICKWIN] Gap baocao-all-sect-skills.md: Yan (smoke) variant for life max buff (TianRen 36, 150, 1075, 1076)
         FireEnhanceP,
         FastWalkRunP,
+        // [CaiBang-PC-Parity 2026-06-30] PC gaibang120zuzhou debuff attrs (skill 720):
+        // physicsresmax_p / fireresmax_p reduce the MAX resistance cap, distinct from *_res_p percent.
+        PhysicsResMaxP,
+        FireResMaxP,
     }
 
     [Serializable]
