@@ -929,10 +929,37 @@ namespace VLTK.UI
                         var effectService = manager.SkillEffectVisual;
                         BaLangEnemyAi liveTarget = target != null ? target.enemyBehaviour : null;
                         System.Func<Vector2> currentTargetPos = liveTarget != null
-                            ? (System.Func<Vector2>)(() => (Vector2)liveTarget.transform.position)
+                            ? (System.Func<Vector2>)(() => liveTarget != null
+                                ? (Vector2)liveTarget.transform.position
+                                : targetPos)
                             : null;
-                        var fx = effectService?.PlaySkillCast(skill, casterPos, targetPos, report.skillLevel, currentTargetPos);
-                        if (target != null && target.enemyBehaviour != null && targetActor != null)
+                        var phiLongMissiles = skillId == 357 && report.projectiles != null
+                            ? report.projectiles.FindAll(projectile => projectile.skillId == 166)
+                            : null;
+                        System.Action<ActiveSkillEffect, int, Vector2> onPhiLongMissileCollided = null;
+                        if (phiLongMissiles != null && phiLongMissiles.Count > 0)
+                        {
+                            onPhiLongMissileCollided = (_, missileIndex, collisionPoint) =>
+                            {
+                                if (missileIndex < 0 || missileIndex >= phiLongMissiles.Count || targetActor == null)
+                                    return;
+
+                                int damageCountBefore = report.damageResults?.Count ?? 0;
+                                int projectileCountBefore = report.projectiles?.Count ?? 0;
+                                int targetLifeBefore = targetActor.currentLife;
+                                if (!combatRuntime.TryResolvePhiLongCollision(
+                                        caster, targetActor, report, phiLongMissiles[missileIndex], collisionPoint))
+                                    return;
+
+                                ApplyPhiLongCollisionResult(
+                                    manager, effectService, catalog, target, targetActor, report, collisionPoint,
+                                    damageCountBefore, projectileCountBefore, targetLifeBefore);
+                            };
+                        }
+
+                        var fx = effectService?.PlaySkillCast(
+                            skill, casterPos, targetPos, report.skillLevel, currentTargetPos, onPhiLongMissileCollided);
+                        if (skillId != 357 && target != null && target.enemyBehaviour != null && targetActor != null)
                             StartCoroutine(ApplyLiveEnemyHpAtImpact(target, targetActor.currentLife, skillId, report.skillLevel, report, fx));
 
                         string targetName = target != null ? target.name : "Self";
@@ -1046,6 +1073,87 @@ namespace VLTK.UI
             return 20f / 16f;
         }
 
+        private static void ApplyPhiLongCollisionResult(
+            SandboxManager manager,
+            SkillEffectVisualService effectService,
+            SkillCatalog catalog,
+            CombatTargetInfo target,
+            CombatActorState targetActor,
+            CombatCastReport report,
+            Vector2 collisionPoint,
+            int damageCountBefore,
+            int projectileCountBefore,
+            int targetLifeBefore)
+        {
+            if (targetActor == null || report == null)
+                return;
+
+            if (target != null)
+                target.currentLife = targetActor.currentLife;
+            var liveTarget = target?.enemyBehaviour;
+            if (liveTarget != null)
+            {
+                liveTarget.SetLife(targetActor.currentLife, showDamage: true);
+                EmitPhiLongCollisionFeedback(liveTarget, report.damageResults, damageCountBefore);
+            }
+
+            int visualDamage = Mathf.Max(0, targetLifeBefore - targetActor.currentLife);
+            var gameplayLoop = manager?.GameplayLoop;
+            var glEnemy = target != null ? gameplayLoop?.GetActor(10000 + target.enemyId) : null;
+            if (visualDamage > 0 && glEnemy?.combat != null && !glEnemy.isDead)
+            {
+                int glDamage = targetActor.maxLife > 0
+                    ? Mathf.RoundToInt((float)visualDamage / targetActor.maxLife * glEnemy.combat.maxLife)
+                    : visualDamage;
+                glEnemy.combat.currentLife = Mathf.Max(0, glEnemy.combat.currentLife - glDamage);
+                if (glEnemy.combat.currentLife <= 0)
+                    gameplayLoop.ProcessActorDeathPublic(glEnemy, gameplayLoop.Player);
+            }
+
+            if (report.projectiles == null)
+                return;
+
+            for (int i = projectileCountBefore; i < report.projectiles.Count; i++)
+            {
+                if (report.projectiles[i].skillId != 195)
+                    continue;
+
+                var collideVisual = catalog?.Resolve(389);
+                if (collideVisual != null)
+                    effectService?.PlaySkillCast(collideVisual, collisionPoint, collisionPoint, report.skillLevel);
+                break;
+            }
+        }
+
+        private static void EmitPhiLongCollisionFeedback(
+            BaLangEnemyAi liveTarget,
+            List<DamageResult> damageResults,
+            int damageCountBefore)
+        {
+            if (liveTarget == null || damageResults == null || damageCountBefore < 0 || damageCountBefore >= damageResults.Count)
+                return;
+
+            int totalDamage = 0;
+            bool anyHit = false;
+            bool anyCrit = false;
+            for (int i = damageCountBefore; i < damageResults.Count; i++)
+            {
+                var result = damageResults[i];
+                totalDamage += result.finalDamage;
+                anyHit |= result.hit;
+                anyCrit |= result.isCrit;
+            }
+
+            CombatFeedbackKind kind = !anyHit ? CombatFeedbackKind.Miss
+                                   : anyCrit ? CombatFeedbackKind.Crit
+                                   : CombatFeedbackKind.Normal;
+            Vector3 worldPos = liveTarget.transform.position + Vector3.up * 2f;
+            if (kind == CombatFeedbackKind.Miss)
+                CombatFeedbackBus.Raise(new CombatFeedbackEvent(kind, 0, worldPos));
+            else if (totalDamage > 0)
+                CombatFeedbackBus.Raise(new CombatFeedbackEvent(kind, totalDamage, worldPos));
+        }
+
         private IEnumerator ApplyLiveEnemyHpAtImpact(CombatTargetInfo target, int hp, int skillId, int skillLevel, CombatCastReport report, ActiveSkillEffect fx)
         {
             if (target?.enemyBehaviour == null) yield break;
@@ -1113,31 +1221,6 @@ namespace VLTK.UI
                     }
                 }
 
-                if (skillId == 357 && skillLevel >= 11)
-                {
-                    var manager = SandboxManager.Instance;
-                    if (manager != null)
-                    {
-                        var subSkill = manager.CombatSkillCatalog?.Resolve(389);
-                        if (subSkill != null)
-                            manager.SkillEffectVisual?.PlaySkillCast(subSkill, target.position, target.position, skillLevel);
-                    }
-
-                    if (report.damageResults.Count > 1)
-                    {
-                        int aoeDamage = report.damageResults[1].finalDamage;
-                        var allEnemies = CollectEnemies();
-                        foreach (var enemy in allEnemies)
-                        {
-                            if (enemy.enemyBehaviour != null && enemy.enemyBehaviour != target.enemyBehaviour && enemy.alive)
-                            {
-                                float dist = Vector2.Distance(target.position, enemy.position);
-                                if (dist <= 3.0f)
-                                    enemy.enemyBehaviour.SetLife(Mathf.Max(0, enemy.currentLife - aoeDamage), showDamage: true);
-                            }
-                        }
-                    }
-                }
             }
         }
 

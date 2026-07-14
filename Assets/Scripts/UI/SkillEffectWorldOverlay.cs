@@ -329,7 +329,7 @@ namespace VLTK.UI
                     SetImpactVisible(v, false);
 
                     Vector2 p = fx.currentMissilePos;
-                    if (fx.missilePositions != null && fx.missilePositions.Length > 0)
+                    if (fx.HasPcImpactSprite && fx.missilePositions != null && fx.missilePositions.Length > 0)
                         p = fx.missilePositions[0];
                     if (p.sqrMagnitude < 0.01f)
                         p = fx.casterPos;
@@ -400,6 +400,15 @@ namespace VLTK.UI
                     SetPreCastVisible(v, false);
                     Hide(v.trail);
                     SetMissileVisible(v, false);
+
+                    // Multi-missile effects already rendered every individual impact
+                    // during Missile. Do not add an aggregate target explosion.
+                    if (fx.HasPcImpactSprite && fx.missilePositions != null && fx.missilePositions.Length > 0)
+                    {
+                        Hide(v.impactRing);
+                        SetImpactVisible(v, false);
+                        break;
+                    }
 
                     if (fx.HasPcImpactSprite)
                     {

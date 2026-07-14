@@ -259,10 +259,10 @@ namespace VLTK.Sandbox
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 65, "")), 0, 0),
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
-                collideSkillId: 389),  // PC gaibang.lua::feilong_zaitian skill_collideevent[3]=389 (L10+ gate)
-                // jx-source Tinh Kiem: PreCastSpr = mag_bz_huo3 (KHÁC PC stock 2011 mag_tr_16).
-                // mag_bz_huo3_爆炸效果.spr không tồn tại trong pak_unpacked; dùng mag_tr_16_施魔法.spr (đã có trong SpritesRuntime) làm fallback.
-                "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+                collideSkillId: 389,
+                collideSkillLevel: 0), // PC skill_eventskilllevel follows Phi Long's current level.
+                // Tinh Kiem PreCastSpr: mag_bz_huo3_爆炸效果.spr (b91ab706).
+                "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
 
             DamageSkillNew(359, "Thiên Hạ Vô Cẩu ", "Thiên Hạ Vô Cẩu (player)", 80, 20, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => Link(lv, (1, 12, ""), (15, 100, ""), (20, 206, "")),

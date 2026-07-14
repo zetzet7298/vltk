@@ -90,7 +90,9 @@ namespace VLTK.Sandbox
         public bool HasExplodeVisual => !string.IsNullOrEmpty(explodeSprPath) && explodeFrames > 0;
 
         public bool HasAnyVisual => HasFlightVisual || HasExplodeVisual || hasPreCast || isMelee || hasStateAura;
-        public string castSoundPath;       // PC Skills.txt ManCastSnd: \sound\skill\sound_k0XX.wav
+        // PC Missles.txt status slots: SndFile2=MS_DoFly, SndFile4=MS_DoCollision.
+        public string flightSoundPath;
+        public string impactSoundPath;
     }
 
     /// <summary>
@@ -232,8 +234,8 @@ namespace VLTK.Sandbox
                 config.flightIntervalTicks = flight.intervalTicks;
             }
 
-            // Explosion SPR
-            var explode = mv.PrimaryExplode;
+            // Collision SPR (PC eMissleStatus::MS_DoCollision = AnimFile4).
+            var explode = mv.PrimaryCollision;
             if (explode != null && explode.HasSpr)
             {
                 config.explodeSprPath = ResolveMissileSprPath(explode.sprPath, missileId);
@@ -246,11 +248,12 @@ namespace VLTK.Sandbox
             config.dmgRange = mv.dmgRange;
             config.lightColor = mv.LightColor;
             config.lightRadius = mv.lightRadius;
-            // Cast/impact sound from missile anim slot (PC missles.txt SndFile1/SndFile2)
+            // PC KMissle plays SndFile2 for each MS_DoFly instance and SndFile4
+            // when that individual missile creates its collision effect.
             if (mv.PrimaryFlight != null && !string.IsNullOrEmpty(mv.PrimaryFlight.soundPath))
-                config.castSoundPath = mv.PrimaryFlight.soundPath;
-            else if (mv.PrimaryExplode != null && !string.IsNullOrEmpty(mv.PrimaryExplode.soundPath))
-                config.castSoundPath = mv.PrimaryExplode.soundPath;
+                config.flightSoundPath = mv.PrimaryFlight.soundPath;
+            if (mv.PrimaryCollision != null && !string.IsNullOrEmpty(mv.PrimaryCollision.soundPath))
+                config.impactSoundPath = mv.PrimaryCollision.soundPath;
             return config;
         }
 

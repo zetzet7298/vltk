@@ -45,6 +45,8 @@ namespace VLTK.Sandbox
         // PC addskilldamage flat %-damage bonus applied to this cast (KSkillList::GetAddSkillDamage).
         public int addSkillDamagePercent;
         public List<ProjectileInstance> projectiles = new();
+        // Missile collision events are idempotent per projectile within this cast.
+        public HashSet<int> resolvedCollisionProjectileIds = new();
         public List<SkillMagicAttribute> appliedState = new();
         public List<DamageResult> damageResults = new();
         public string detail;
@@ -82,6 +84,51 @@ namespace VLTK.Sandbox
         public CombatCastReport Cast(CombatActorState caster, CombatActorState target, int skillId, Vector2 targetPoint, CombatRelation relation, ObstacleGrid grid = null)
         {
             return CastInternal(caster, target, skillId, targetPoint, relation, grid, bypassKnownSkillGate: false, forcedSkillLevel: 0);
+        }
+
+        /// <summary>
+        /// Resolves one PC Phi Long Tại Thiên (357) missile-166 collision.
+        /// The parent cast has already passed its cast gates; this event deliberately does not
+        /// reapply known-skill, mana, or cooldown gates to child skill 389.
+        /// </summary>
+        public bool TryResolvePhiLongCollision(
+            CombatActorState caster,
+            CombatActorState target,
+            CombatCastReport parentCast,
+            ProjectileInstance missile,
+            Vector2 collisionPoint,
+            ObstacleGrid grid = null)
+        {
+            if (caster == null || target == null || parentCast?.skill?.skillId != 357 ||
+                missile == null || missile.skillId != 166 || !parentCast.projectiles.Contains(missile))
+                return false;
+            if (!parentCast.resolvedCollisionProjectileIds.Add(missile.instanceId))
+                return false;
+
+            ApplyDamage(caster, target, parentCast.levelData, parentCast, parentCast.addSkillDamagePercent);
+            ProcessAutoAttackProcs(caster, target, parentCast);
+
+            // PC gaibang.lua::feilong_zaitian skill_collideevent enables 389 only at L10+.
+            if (parentCast.skillLevel >= 10 && _catalog.Resolve(389) is { } collideSub)
+            {
+                int collideLevel = parentCast.skill.collideSkillLevel > 0
+                    ? parentCast.skill.collideSkillLevel
+                    : parentCast.skillLevel;
+                var parentSkill = parentCast.skill;
+                try
+                {
+                    // ApplyDamage reads report.skill for the child skill's element/series metadata.
+                    parentCast.skill = collideSub;
+                    ApplyDamage(caster, target, collideSub.GetPcLevelData(collideLevel), parentCast);
+                    SpawnProjectiles(collideSub, caster, collisionPoint, grid, parentCast, collideLevel);
+                }
+                finally
+                {
+                    parentCast.skill = parentSkill;
+                }
+            }
+
+            return true;
         }
 
         public CombatCastReport CastNpcPlan(CombatActorState caster, CombatActorState target, NpcBossSkillCastPlan plan, Vector2 targetPoint, CombatRelation relation, ObstacleGrid grid = null)
@@ -199,13 +246,18 @@ namespace VLTK.Sandbox
             // addskilldamage entries target this skill. No proc chance, no sub-skill spawn.
             int addSkillDamageP = ComputeAddSkillDamagePercent(caster, skill.skillId);
             report.addSkillDamagePercent = addSkillDamageP;
-            ApplyDamage(caster, target, levelData, report, addSkillDamageP);
-            // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua::gaibang120 (skill 714): passive
-            // 'autoattackskill' — when bearer (target) is HIT, roll proc% → cast 720 on attacker.
-            // PC source: jx-cocos server KNpcAttribModify::autoskill (stores m_AutoAttackSkill) +
-            // KNpc::AutoDoSkill (casts 720 + SetNextCastTime(714, +nDelay=12s)). Proc fires once per
-            // damaging hit on the bearer, after damage is applied.
-            ProcessAutoAttackProcs(caster, target, report);
+            // Phi Long Tại Thiên uses homing missile 166: its parent damage resolves at collision,
+            // not when KNpc starts the cast.
+            if (skill.skillId != 357)
+            {
+                ApplyDamage(caster, target, levelData, report, addSkillDamageP);
+                // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua::gaibang120 (skill 714): passive
+                // 'autoattackskill' — when bearer (target) is HIT, roll proc% → cast 720 on attacker.
+                // PC source: jx-cocos server KNpcAttribModify::autoskill (stores m_AutoAttackSkill) +
+                // KNpc::AutoDoSkill (casts 720 + SetNextCastTime(714, +nDelay=12s)). Proc fires once per
+                // damaging hit on the bearer, after damage is applied.
+                ProcessAutoAttackProcs(caster, target, report);
+            }
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
 
             // [CaiBang-VersionPriority 2026-06-29] Newest PC skill 124 is passive dagou_zhen
@@ -216,13 +268,13 @@ namespace VLTK.Sandbox
             }
 
             // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua skill_collideevent — general missile-collide
-            // sub-skill firing (replaces SECT-QUICKWIN inline 357→389 hack). PC lua semantics:
+            // sub-skill firing. PC lua semantics:
             //   skill_collideevent = { [1]={{1,0},{10,0},{10,1},{20,1}}, [3]={subSkillId} }
             // [1] is the gate flag: 0 for L1-9, 1 for L10+ → sub-skill fires only at L10+.
-            // Sandbox instant-sim: missile 'collide' resolves immediately after SpawnProjectiles,
-            // so the sub-skill fires in the same Cast call (parity outcome preserved).
-            // 357→389, 1073→1072 wired in catalog via WithCollideEvent.
-            if (skill.collideSkillId > 0 && skillLevel >= 10 && _catalog.Resolve(skill.collideSkillId) is { } collideSub)
+            // Phi Long Tại Thiên (357) must wait for each homing missile 166 to collide before
+            // firing 389; its visual collision lifecycle owns that follow-up.
+            if (skill.collideSkillId > 0 && skill.collideSkillId != 389 && skillLevel >= 10 &&
+                _catalog.Resolve(skill.collideSkillId) is { } collideSub)
             {
                 int collideLvl = skill.collideSkillLevel > 0 ? skill.collideSkillLevel : skillLevel;
                 var collideLevelData = collideSub.GetPcLevelData(collideLvl);

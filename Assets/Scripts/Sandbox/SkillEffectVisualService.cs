@@ -20,10 +20,16 @@ namespace VLTK.Sandbox
         private readonly PcSkillVisualAutoMapper _autoMapper = new();
         private bool _autoMapperReady;
         /// <summary>
-        /// Callback fired when a skill cast sound should be played.
+        /// Callback fired when a PC skill sound should be played.
         /// Wired by SandboxManager → AudioService.PlaySkillCast.
         /// </summary>
         public Action<string> OnCastSound;
+
+        /// <summary>
+        /// Fired once for every missile that collides. Consumers can apply the
+        /// corresponding PC collide event without waiting for the aggregate phase.
+        /// </summary>
+        public Action<ActiveSkillEffect, int, Vector2> OnMissileCollided;
 
         public SkillEffectVisualService(SprRuntimeService sprService)
             : this(sprService, null) { }
@@ -68,7 +74,8 @@ namespace VLTK.Sandbox
 
             // Apply faction default color
             fx.color = config.lightColor;
-            fx.castSoundPath = config.castSoundPath;
+            fx.flightSoundPath = config.flightSoundPath;
+            fx.impactSoundPath = config.impactSoundPath;
 
             // [CaiBang-PhiLongSpread 2026-06-18] Cái Bang dragon SPRs in PC Tinh Kiem PAK
             // (mag_gb_05_亢龙有悔.spr, mag_gb_bz5_爆炸效果.spr) have native frames ~96x121 PC pixel.
@@ -304,7 +311,7 @@ namespace VLTK.Sandbox
             Vector2 targetPos,
             int skillLevel)
         {
-            return PlaySkillCast(skill, casterPos, targetPos, skillLevel, null);
+            return PlaySkillCast(skill, casterPos, targetPos, skillLevel, null, null);
         }
 
         /// <summary>
@@ -317,7 +324,8 @@ namespace VLTK.Sandbox
             Vector2 casterPos,
             Vector2 targetPos,
             int skillLevel,
-            Func<Vector2> getCurrentTargetPos)
+            Func<Vector2> getCurrentTargetPos,
+            Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null)
         {
             if (skill == null) return null;
 
@@ -330,6 +338,7 @@ namespace VLTK.Sandbox
                 startTime = Time.time,
                 phase = SkillEffectPhase.PreCast,
             };
+            effect.onMissileCollided = onMissileCollided;
 
             // Phase durations based on PC skill data
             // PC parity [2026-06-19]: PreCast = PC WaitTime (Skills.txt col 25) / 16f seconds.
@@ -361,23 +370,14 @@ namespace VLTK.Sandbox
             ConfigureDataDrivenVisuals(skill, effect, skillLevel);
             // [CaiBang-SoundParity 2026-06-18] PC KSkill::Cast fires the SKILL cast sound
             // (skills.txt col 7 ManCastSnd / col 8 FMCastSnd) at the cast frame, BEFORE
-            // the missile spawns. This is distinct from the missile SPR soundPath
-            // (PC missles.txt SndFile1/SndFile2) which fires during projectile flight.
+            // the missile spawns. This is distinct from the missile status sounds
+            // (PC missles.txt SndFile2/SndFile4) fired during flight/collision.
             //
-            // Priority: SKILL cast sound > missile SPR sound. The skill cast sound is the
-            // iconic audible cue players identify with each Cái Bang skill
-            // (sound_k001 Yên Môn / sound_k005 Kháng Long / sound_k010 Phi Long / ...).
-            // The missile SPR sound (e.g.亢龙无悔.wav) is a secondary mid-flight cue and
-            // is currently dropped — TODO: split OnCastSound into separate cast-frame
-            // + flight-frame events so both can play at the right time.
-            //
-            // Pre-fix: ConfigureDataDrivenVisuals could overwrite effect.castSoundPath
-            // with the missile SPR sound, leaving the PC skill cast sound unused and
-            // every Cái Bang cast playing a generic missile whoosh instead of the
-            // iconic per-skill sound_k0XX.wav.
+            // PC skill cast sound fires at the cast frame. Missile status sounds
+            // are dispatched later at their own flight/collision phases.
             if (!string.IsNullOrEmpty(skill.manCastSndPath))
                 effect.castSoundPath = skill.manCastSndPath;
-            // Trigger cast sound (PC skills.txt ManCastSnd, fallback to PC missles.txt SoundPath)
+            // Trigger the PC Skills.txt ManCastSnd only at the cast frame.
             if (!string.IsNullOrEmpty(effect.castSoundPath))
                 OnCastSound?.Invoke(effect.castSoundPath);
 
@@ -447,6 +447,14 @@ namespace VLTK.Sandbox
                         {
                             fx.phase = fx.HasMissile ? SkillEffectPhase.Missile : SkillEffectPhase.Impact;
                             fx.phaseStart = fx.elapsed;
+                            if (fx.phase == SkillEffectPhase.Missile && !string.IsNullOrEmpty(fx.flightSoundPath))
+                            {
+                                // PC KMissle::Activate calls PlaySound(MS_DoFly) for every
+                                // spawned missile instance, not once for the aggregate cast.
+                                int missileInstances = Mathf.Max(1, fx.missileCount);
+                                for (int mi = 0; mi < missileInstances; mi++)
+                                    OnCastSound?.Invoke(fx.flightSoundPath);
+                            }
                         }
                         break;
 
@@ -518,6 +526,10 @@ namespace VLTK.Sandbox
                                     ? origin + (targetPos - origin).normalized * Vector2.Distance(fx.targetPos, origin)
                                     : mp;
                                 TriggerSauXe(fx, collidePos);
+                                fx.onMissileCollided?.Invoke(fx, si, collidePos);
+                                OnMissileCollided?.Invoke(fx, si, collidePos);
+                                if (!string.IsNullOrEmpty(fx.impactSoundPath))
+                                    OnCastSound?.Invoke(fx.impactSoundPath);
                                 SpawnCollideSubEffect(fx, collidePos);
                             }
                         }
@@ -653,6 +665,9 @@ namespace VLTK.Sandbox
             fx.pcImpactTotalFrames = impactFrames;
             fx.pcImpactDirections = impactDirs;
             fx.pcImpactIntervalTicks = impactIntervalTicks;
+            fx.impactDuration = impactFrames > 0
+                ? (impactFrames * Mathf.Max(1, impactIntervalTicks)) / 18f
+                : fx.impactDuration;
             // PC KMissle: m_nXFactor is Q10 (≈±1024) direction cosine.
             // nDOffsetX = m_nSpeed * m_nXFactor → actual pixel step per tick = m_nSpeed.
             // All positions (casterPos/targetPos) are in raw PC pixel coords (PPU=1f),
@@ -903,7 +918,10 @@ namespace VLTK.Sandbox
         public bool HasPcImpactSprite => !string.IsNullOrEmpty(pcImpactSpriteKey) && pcImpactTotalFrames > 0;
         public bool HasPcPreCastSprite => !string.IsNullOrEmpty(pcPreCastSpriteKey) && pcPreCastTotalFrames > 0 && pcPreCastDirections > 0;
         public bool HasMissile => missileForm != SkillMissileForm.None && missileCount > 0;
-        public string castSoundPath;  // PC missles.txt SoundPath: \sound\skill\sound_k0XX.wav
+        public string castSoundPath;  // PC skills.txt ManCastSnd/FMCastSnd.
+        public string flightSoundPath; // PC SndFile2/MS_DoFly, played per missile instance.
+        public string impactSoundPath; // PC SndFile4/MS_DoCollision, played per collision.
+        public Action<ActiveSkillEffect, int, Vector2> onMissileCollided;
 
         public static Vector2 ResolveMissileTarget(ActiveSkillEffect fx, int index)
         {
@@ -930,4 +948,3 @@ namespace VLTK.Sandbox
     }
 }
 // recompile
-

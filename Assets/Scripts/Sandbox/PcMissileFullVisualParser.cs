@@ -2,7 +2,7 @@
 // VLTK Mobile — PC missles1.txt full visual parser (57 columns)
 // Source: Assets/StreamingAssets/Reference/PcAttrib/missles1.txt
 // Purpose: Parse ALL visual data from PC missile definitions including:
-//   AnimFile1-4 (flight SPR paths), AnimFileB1-4 (explosion SPR paths),
+//   AnimFile1-4 (wait/fly/vanish/collision), AnimFileB1-4 (alternate status set),
 //   AnimFileInfo1-4 (frames,directions,interval), light color, speed, lifetime.
 // This replaces the hardcoded per-skill visual switch-cases with data-driven lookups.
 // PC source: KMissle struct in KSkill.h / KSkill.cpp
@@ -58,9 +58,11 @@ namespace VLTK.Sandbox
         public int canColFriend;
         public int autoExplode;
 
-        // Visual: Flight animation SPR files + info
-        public MissileAnimSlot[] flightAnims = new MissileAnimSlot[4];  // AnimFile1-4
-        public MissileAnimSlot[] explodeAnims = new MissileAnimSlot[4]; // AnimFileB1-4
+        // PC eMissleStatus order: wait, fly, vanish, collision.
+        // Keep the legacy field names for compatibility, but the arrays represent
+        // primary AnimFile1-4 and alternate AnimFileB1-4 status sets respectively.
+        public MissileAnimSlot[] flightAnims = new MissileAnimSlot[4];
+        public MissileAnimSlot[] explodeAnims = new MissileAnimSlot[4];
 
         // Light
         public int redLum;
@@ -68,17 +70,20 @@ namespace VLTK.Sandbox
         public int blueLum;
         public int lightRadius;
 
-        /// <summary>Get primary flight SPR path (first non-empty AnimFile).</summary>
-        public string PrimaryFlightSpr => FirstNonEmpty(flightAnims);
+        /// <summary>Get the MS_DoFly (AnimFile2) SPR path.</summary>
+        public string PrimaryFlightSpr => PrimaryFlight?.sprPath;
 
-        /// <summary>Get primary explosion SPR path (first non-empty AnimFileB).</summary>
-        public string PrimaryExplodeSpr => FirstNonEmpty(explodeAnims);
+        /// <summary>Get the MS_DoCollision (AnimFile4) SPR path.</summary>
+        public string PrimaryExplodeSpr => PrimaryCollision?.sprPath;
 
-        /// <summary>Get primary flight anim info.</summary>
-        public MissileAnimSlot PrimaryFlight => FirstSlot(flightAnims);
+        /// <summary>Get the MS_DoFly (AnimFile2/SndFile2) status slot.</summary>
+        public MissileAnimSlot PrimaryFlight => StatusSlot(1);
 
-        /// <summary>Get primary explosion anim info.</summary>
-        public MissileAnimSlot PrimaryExplode => FirstSlot(explodeAnims);
+        /// <summary>Get the MS_DoCollision (AnimFile4/SndFile4) status slot.</summary>
+        public MissileAnimSlot PrimaryCollision => StatusSlot(3);
+
+        /// <summary>Legacy alias for the collision visual used as the impact burst.</summary>
+        public MissileAnimSlot PrimaryExplode => PrimaryCollision;
 
         /// <summary>Is this a stationary/area effect (MoveKind=0)?</summary>
         public bool IsStationary => moveKind == 0;
@@ -89,20 +94,27 @@ namespace VLTK.Sandbox
             Mathf.Clamp01(greenLum / 255f),
             Mathf.Clamp01(blueLum / 255f));
 
-        private static string FirstNonEmpty(MissileAnimSlot[] slots)
+        private MissileAnimSlot StatusSlot(int statusIndex)
         {
-            if (slots == null) return null;
-            foreach (var s in slots)
-                if (s != null && !string.IsNullOrEmpty(s.sprPath)) return s.sprPath;
-            return null;
+            var primary = SlotAt(flightAnims, statusIndex);
+            if (HasStatusData(primary))
+                return primary;
+
+            var alternate = SlotAt(explodeAnims, statusIndex);
+            return HasStatusData(alternate) ? alternate : null;
         }
 
-        private static MissileAnimSlot FirstSlot(MissileAnimSlot[] slots)
+        private static MissileAnimSlot SlotAt(MissileAnimSlot[] slots, int index)
         {
-            if (slots == null) return null;
-            foreach (var s in slots)
-                if (s != null && !string.IsNullOrEmpty(s.sprPath)) return s;
-            return null;
+            return slots != null && index >= 0 && index < slots.Length ? slots[index] : null;
+        }
+
+        private static bool HasStatusData(MissileAnimSlot slot)
+        {
+            return slot != null &&
+                   (!string.IsNullOrEmpty(slot.sprPath) ||
+                    !string.IsNullOrEmpty(slot.soundPath) ||
+                    slot.totalFrames > 0);
         }
     }
 
@@ -237,14 +249,14 @@ namespace VLTK.Sandbox
                     lightRadius = IntVal(c, col, "LightRadius"),
                 };
 
-                // Parse flight animation slots (AnimFile1-4, AnimFileInfo1-4, SndFile1-4)
+                // PC eMissleStatus maps AnimFile1-4 to wait/fly/vanish/collision.
                 for (int i = 1; i <= 4; i++)
                 {
                     entry.flightAnims[i - 1] = ParseAnimSlot(c, col,
                         $"AnimFile{i}", $"AnimFileInfo{i}", $"SndFile{i}");
                 }
 
-                // Parse explosion animation slots (AnimFileB1-4, AnimFileInfoB1-4, SndFileB1-4)
+                // B1-4 are an alternate status set selected by MultiShow, not explosion-only slots.
                 for (int i = 1; i <= 4; i++)
                 {
                     entry.explodeAnims[i - 1] = ParseAnimSlot(c, col,

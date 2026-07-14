@@ -325,10 +325,16 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 357, enemy.position, CombatRelation.Enemy);
 
             Assert.IsTrue(r.success, r.detail);
-            // PC: below L10, collide sub-skill 389 does NOT fire — only 357's own damage applies.
-            Assert.AreEqual(1, r.damageResults.Count, "L5 < L10 gate → 389 must NOT fire (only 357 damage)");
+            Assert.AreEqual(0, r.damageResults.Count, "Missile 166 damage must wait for collision");
+            var missile = r.projectiles.Single(p => p.skillId == 166);
+            Assert.IsTrue(svc.TryResolvePhiLongCollision(beggar, enemy, r, missile, enemy.position));
+            // PC: below L10, collide sub-skill 389 does NOT fire — only 357's missile damage applies.
+            Assert.AreEqual(1, r.damageResults.Count, "L5 < L10 gate → 389 must NOT fire");
             Assert.IsFalse(r.projectiles.Any(p => p.skillId == 195),
                 "L5 < L10 gate → no stationary child 195 (389 did not fire)");
+            Assert.IsFalse(svc.TryResolvePhiLongCollision(beggar, enemy, r, missile, enemy.position),
+                "Each missile collision must resolve exactly once");
+            Assert.AreEqual(1, r.damageResults.Count, "Duplicate collision must not apply damage again");
         }
 
         [Test]
@@ -470,9 +476,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang_PhiLongAtLevel11_TriggersLongChienUYuye()
+        public void CaiBang_PhiLongAtLevel11_WaitsForMissileCollisionBeforeLongChienUYuye()
         {
-            var svc = new CombatRuntimeService(Catalog());
+            // PC gaibang.lua::feilong_zaitian enables skill_collideevent 389 at L10+, but
+            // missile 166 must collide before the child skill fires. Cast itself only emits 166.
+            var damage = new DamageFormulaService { RollPercent = _ => true };
+            var svc = new CombatRuntimeService(Catalog(), damage: damage);
             var beggar = Beggar();
             beggar.knownSkills.Add(357);
             beggar.skillLevels[357] = 11;
@@ -481,14 +490,24 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 357, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
             
-            Assert.AreEqual(2, r.damageResults.Count, "Should apply damage twice (both 357 and 389)");
-            Assert.AreEqual(2, r.projectiles.Count, "Should spawn 2 projectiles (1 main missile + 1 stationary child)");
-            
-            var stationaryProj = r.projectiles.FirstOrDefault(p => p.skillId == 195);
-            Assert.IsNotNull(stationaryProj, "Should spawn stationary projectile ID 195");
-            Assert.AreEqual(0f, stationaryProj.speed, "Stationary projectile speed should be 0");
-            Assert.AreEqual(15f / 18f, stationaryProj.duration, "Stationary projectile duration should be 15 ticks");
-            Assert.AreEqual(enemy.position, stationaryProj.position, "Stationary projectile should start at target position");
+            Assert.AreEqual(0, r.damageResults.Count, "No Phi Long damage applies before missile 166 collides");
+            Assert.AreEqual(1, r.projectiles.Count, "Cast should spawn only Phi Long's missile 166");
+            Assert.IsFalse(r.projectiles.Any(p => p.skillId == 195),
+                "389's stationary child 195 must wait for the collision lifecycle");
+
+            var missile = r.projectiles.Single(p => p.skillId == 166);
+            Assert.IsTrue(svc.TryResolvePhiLongCollision(beggar, enemy, r, missile, enemy.position));
+            Assert.AreEqual(2, r.damageResults.Count,
+                "Collision applies 357 missile damage then its L10+ child 389 damage");
+            var childFire = Catalog().Resolve(389).GetPcLevelData(11).damage
+                .Single(attr => attr.kind == MagicAttributeKind.FireDamageV);
+            Assert.AreEqual(childFire.value1, r.damageResults[1].rolledBase,
+                "PC skill_eventskilllevel passes Phi Long L11 to collide child 389");
+            Assert.AreEqual(2, r.projectiles.Count, "Collision spawns 389's stationary child missile 195");
+            Assert.IsTrue(r.projectiles.Any(p => p.skillId == 195),
+                "389 is executed without requiring it in the caster's known-skill list");
+            Assert.IsFalse(svc.TryResolvePhiLongCollision(beggar, enemy, r, missile, enemy.position),
+                "The same missile must not fire 389 twice");
         }
 
         // === Phase 2 + 3 — Comprehensive PC parity tests for damage, radius, cost, count ===

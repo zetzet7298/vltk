@@ -97,7 +97,7 @@ namespace VLTK.Tests.Sandbox
             // PC skills.txt cols 7/8 ManCast/FMCast for 128/357 + missile 166 flight SFX.
             string streaming = Path.Combine(Directory.GetCurrentDirectory(), "Assets", "StreamingAssets", "sound", "skill");
             string runtime = Path.Combine(Directory.GetCurrentDirectory(), "AudioRuntime", "Skill");
-            foreach (var clip in new[] { "sound_k005.wav", "sound_k010.wav", "sound_k037.wav" })
+            foreach (var clip in new[] { "sound_k005.wav", "sound_k010.wav", "亢龙无悔.wav", "sound_k037.wav" })
             {
                 bool inStreaming = File.Exists(Path.Combine(streaming, clip));
                 bool inRuntime = File.Exists(Path.Combine(runtime, clip));
