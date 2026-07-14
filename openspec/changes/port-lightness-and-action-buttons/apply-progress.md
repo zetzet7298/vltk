@@ -47,7 +47,7 @@
 
 ## Follow-up runtime fix: true PC Walk/Sit/Jump actions
 
-After runtime QA, mount/dismount worked but Khinh Công, walk/run, and meditate were still visually no-op or functionally gated. Additional PC-source research found the missing player action suffixes in `vltksource_new` `Client 6.0/settings/npcres/男主角未骑马关联表.txt` and `男主角躯体.txt`:
+After runtime QA, mount/dismount worked but Khinh Công, walk/run, and meditate were still visually no-op or functionally gated. Additional PC-source research found the missing player action suffixes in `jx-source` `Client 6.0/settings/npcres/男主角未骑马关联表.txt` and `男主角躯体.txt`:
 
 - `Walk` / `走路` → `WK01..WK04` per weapon type.
 - `SitDown` / `打坐` → `ZZ01` shared suffix.

@@ -71,7 +71,7 @@
 
 ### PC source evidence (no guessing)
 
-- Layout INI: `vltksource_new/.../1024/unknown/7e20a7ac.ini` (聊天条)
+- Layout INI: `jx-source/.../1024/unknown/7e20a7ac.ini` (聊天条)
 - Sections mapped: `[ChatRoom_List]` (280×140, MsgColor=255,249,148, MaxMsgCount=120),
   `[SysRoom_List]` (235×42), `[ChannelBtn]`+`[Main]` CheckOnImage/CheckOffImage,
   `[ChatRoom_Scroll]`, `[SysRoom_Open]`, `[SysRoom_Up]`, `[SysRoom_Down]`

@@ -1,13 +1,13 @@
 # 🎮 Tài Liệu Port HUD — Võ Lâm Truyền Kỳ PC → Mobile
 
-> **Mục tiêu**: Tái tạo 100% HUD game PC tại `/var/www/vltksource_new` sang phiên bản mobile tại `/var/www/vltk-mobile`, giữ nguyên layout, Việt hoá, và logic hiển thị.
+> **Mục tiêu**: Tái tạo 100% HUD game PC tại `/var/www/jx-source` sang phiên bản mobile tại `/var/www/vltk-mobile`, giữ nguyên layout, Việt hoá, và logic hiển thị.
 
 ---
 
 ## 📁 Cấu Trúc File HUD PC (Nguồn)
 
 ```
-vl_update_27/Client 6.0/
+jx-source/pak_unpacked/ (unpacked from update01/update03/etc.)
 ├── ui/                         # UI config root (runtime)
 │   ├── setting.ini             # Cài đặt chung, Map colors, shortcut sets
 │   ├── MiniSkill.ini           # Buff/Debuff panel (204 buffs đã Việt hoá)
@@ -638,17 +638,17 @@ Width=170, Height=50 per member
 
 | File | Path |
 |---|---|
-| Top Status Bar | [顶部控制条.ini](file:///var/www/vltksource_new/vl_update_27/Client%206.0/Ui800/顶部控制条.ini) |
-| Icon Bar | [icon_bar.ini](file:///var/www/vltksource_new/vl_update_27/Client%206.0/Ui800/Ui3/icon_bar.ini) |
-| Skill State (Buff) | [SkillState.ini](file:///var/www/vltksource_new/vl_update_27/Client%206.0/Ui800/Ui3/SkillState.ini) |
-| MiniSkill Buff | [MiniSkill.ini](file:///var/www/vltksource_new/vl_update_27/Client%206.0/ui/MiniSkill.ini) |
-| Setting | [setting.ini](file:///var/www/vltksource_new/vl_update_27/Client%206.0/ui/setting.ini) |
-| Team Preview | [队伍一览信息.ini (ui)](file:///var/www/vltksource_new/vl_update_27/Client%206.0/ui/ui3/) |
-| Trade Info | [TradeInfo.ini](file:///var/www/vltksource_new/vl_update_27/Client%206.0/ui/ui3/TradeInfo.ini) |
-| Buff Icon Script | [miniskill/ui.lua](file:///var/www/vltksource_new/vl_update_27/Client%206.0/script/miniskill/ui.lua) |
-| Ranking Script | [ui/ranking.lua](file:///var/www/vltksource_new/vl_update_27/Client%206.0/script/ui/ranking.lua) |
+| Top Status Bar | 顶部控制条.ini |
+| Icon Bar | icon_bar.ini |
+| Skill State (Buff) | SkillState.ini |
+| MiniSkill Buff | MiniSkill.ini |
+| Setting | setting.ini |
+| Team Preview | 队伍一览信息.ini (ui) |
+| Trade Info | TradeInfo.ini |
+| Buff Icon Script | miniskill/ui.lua |
+| Ranking Script | ui/ranking.lua |
 
 ---
 
-*Generated từ deep scan knowledge graph + file analysis — `/var/www/vltksource_new`*  
+*Generated từ deep scan knowledge graph + file analysis — `/var/www/jx-source`*  
 *Target project: `/var/www/vltk-mobile`*

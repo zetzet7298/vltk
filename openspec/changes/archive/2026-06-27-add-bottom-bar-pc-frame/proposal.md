@@ -49,7 +49,7 @@ no raw aspect-ratio distortion per README §5).
 
 ## Evidence / Source
 
-- **PC INI**: `vl_update_27/pak_unpacked/1024/unknown/dc11ac12.ini` — `[Main]` references
+- **PC INI**: `pak_unpacked/1024/unknown/dc11ac12.ini` — `[Main]` references
   `快捷栏(800).spr` (`800×90`, `Left=0,Top=400` in 1024×768). Button coords documented in
   README §6.2.
 - **PC reference screenshot**: `pc-evidence/hud/bottom_bar.png` (933×120).

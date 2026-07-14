@@ -7,8 +7,8 @@ namespace VLTK.Tests.Sandbox
 {
     // Fix #14 (2026-06-12): PC rare.txt is a RARE MAGIC-ATTRIBUTE / WEAPON-ENCHANT
     // ROLL TABLE, not an NPC spawn table. Verified against PC source:
-    //   /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/rare.txt
-    //   /var/www/vltksource_new/.../itemexchange_setting/rare.txt   (byte-identical)
+    //   /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/rare.txt
+    //   /var/www/jx-source/.../itemexchange_setting/rare.txt   (byte-identical)
     // Real header (29 cols): NAME, MAGIC_ID, MAG_P1_MIN, MAG_P1_MAX, SWORD, BLADE,
     // WAND, SPEAR, HAMMER, DUALBLADES, DARTS, KNIFE, CROSSBOW, ARMOR, RING,
     // NECKLACE, AMULET, BOOT, BELT, HELM, CUFF, SACHET, PENDANT, METAL, WOOD,

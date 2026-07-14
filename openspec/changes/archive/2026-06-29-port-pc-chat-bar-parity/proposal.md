@@ -17,7 +17,7 @@ The mobile HUD currently only renders a minimal input row (`GameHud.uxml` `ChatB
 not the HUD's chat bar and does not use PC SPR art.
 
 Goal: bring the HUD chat bar to PC parity — full message history, system strip,
-channel selector, and PC SPR frame pieces — sourced 100% from `vltksource_new`.
+channel selector, and PC SPR frame pieces — sourced 100% from `jx-source`.
 
 ## What Changes
 
@@ -42,7 +42,7 @@ channel selector, and PC SPR frame pieces — sourced 100% from `vltksource_new`
 
 ## PC Source (evidence)
 
-- Layout INI: `vltksource_new/vl_update_27/pak_unpacked/1024/unknown/7e20a7ac.ini`
+- Layout INI: `jx-source/pak_unpacked/1024/unknown/7e20a7ac.ini`
   (聊天条 chat bar) — sections `[Main] [SysRoom] [SizeBtn] [MoveImg] [ShadowBtn]
   [ChannelBtn] [ChatRoom] [ChatRoom_List] [ChatRoom_Scroll] [ChatRoom_Scroll_Btn]
   [SplitBtn] [MSNRoom] [SysRoom_Open] [SysRoom_List] [SysRoom_Up] [SysRoom_Down]`.

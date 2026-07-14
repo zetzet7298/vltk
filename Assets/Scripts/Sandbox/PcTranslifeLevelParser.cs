@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC settings/task/metempsychosis/translife.txt level table parser
-// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/task/metempsychosis/translife.txt
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/task/metempsychosis/translife.txt
 // Schema: LEVEL + 7 repeating groups of MAGICPOINT/PROP/RESIST/SKILLLIMIT.
 // This is the Chuyển Sinh level bonus table (levels 160..200), not translifeskill.txt.
 // -----------------------------------------------------------------------------

@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - **Cai Bang combat parity**: added PC-sourced tuning for MOD/Cai Bang skills,
   including level-scaled formulas, missile counts, costs, damage, and 150-tier
-  skill visuals sourced from `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem`.
+  skill visuals sourced from `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`.
 - PC SPR playback for 150-tier Cai Bang pre-cast visuals, including
   `Thần Thủ Lệnh Long` and `Bổng Hoành Lược Mã` source-backed SPR assets.
 - `jx-pc-port-rule` skill and `/port` command so PC-to-Unity porting tasks load

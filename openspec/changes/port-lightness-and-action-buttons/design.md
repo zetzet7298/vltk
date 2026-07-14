@@ -3,11 +3,11 @@
 ## Evidence and constraints
 
 - User-facing behavior must be Vietnamese, but code/artifact identifiers remain English unless extending existing Vietnamese labels.
-- PC source rule was applied. The configured source path `/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem` is absent in this environment, so this change uses the available PC-derived reference and unpacked client evidence:
+- PC source rule was applied. The configured source path `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` is absent in this environment, so this change uses the available PC-derived reference and unpacked client evidence:
   - `Assets/StreamingAssets/Reference/PcSkills.txt`: row `Khinh công`, `SkillId=210`.
   - Canonical PC icon path: `\spr\Ui\技能图标\轻功.spr`.
   - JX Pack hash: `bf787a8a`.
-  - Resolved SPR: `/var/www/vltksource_new/vl_update_27/pak_unpacked/update01/unknown/bf787a8a.spr` and `/var/www/vltksource_new/vl_update_27/pak_unpacked/spr/unknown/bf787a8a.spr`.
+  - Resolved SPR: `/var/www/jx-source/pak_unpacked/update01/unknown/bf787a8a.spr` and `/var/www/jx-source/pak_unpacked/spr/unknown/bf787a8a.spr`.
   - Script path evidence: `\script\skill\special\轻功.lua`.
 - Existing HUD structure:
   - `Assets/UI/HUD/GameHud.uxml`: `SkillSlot0..4`, `PrimaryAttackBtn`, `ActionBtnRun`, `ActionBtnHorse`, `ActionBtnSit`.

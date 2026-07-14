@@ -125,7 +125,7 @@ namespace VLTK.Tests.Sandbox
             // PC truth (verified 2026-06-29): gaibang.lua has NO confuse/混乱/迷惑 keyword at all,
             // and missles.txt has no state-apply column. Therefore NO Cai Bang player skill applies
             // a Confuse state at cast time. Previous catalog entries adding ConfuseP were fabricated.
-            // PC source: /var/www/vltksource_new/vl_update_27/Client 6.0/script/skill/gaibang.lua
+            // PC source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua
             //           + pak_unpacked/slistcache/unknown/08bcd3fc.dat (missles, no state cols).
             var cat = Catalog();
             int[] ids = { 117, 119, 122, 125, 128, 357, 359, 1073, 1074 };

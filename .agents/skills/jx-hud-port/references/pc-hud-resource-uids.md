@@ -1,7 +1,7 @@
 # PC HUD Resource UIDs (Hash → Vietnamese name)
 
 Lookup catalog for JX PC HUD sprites. Files live under
-`/var/www/vltksource_new/vl_update_27/pak_unpacked/<pak>/unknown/<hash>.spr`
+`/var/www/jx-source/pak_unpacked/<pak>/unknown/<hash>.spr`
 because the unpacker lacks the full path dictionary. Resolve Chinese/GBK INI
 paths to these hashes with the `jx-pc-resource-resolver` skill; do not guess.
 

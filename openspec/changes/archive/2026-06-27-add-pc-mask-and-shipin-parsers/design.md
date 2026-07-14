@@ -69,7 +69,7 @@ Add fast sample files under `Assets/StreamingAssets/Reference/PcItem/`:
 - `mask_sample.txt`
 - `shipin_sample.txt`
 
-Use header + first 5 PC rows from `/var/www/vltksource_new/vl_update_27/Server 6.0/server/home_jxser/server1/settings/item/004/`.
+Use header + first 5 PC rows from `/var/www/jx-source/Server 6.0/server/home_jxser/server1/settings/item/004/`.
 
 ## Tests
 

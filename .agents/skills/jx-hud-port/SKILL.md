@@ -23,9 +23,9 @@ geometry, NPC spawn, or player-sprite layering (other skills own those).
 
 1. **PC is the source of truth.** Read the matching PC INI (GBK-decoded) and the
    referenced SPR before editing Unity. Canonical unpacked tree:
-   `/var/www/vltksource_new/vl_update_27/pak_unpacked/<pak>/unknown/<hash>.{ini,spr}`.
+   `/var/www/jx-source/pak_unpacked/<pak>/unknown/<hash>.{ini,spr}`.
 2. **No phantom paths.** `jxwin-kinnox/SourceNew/swrod3/...`, `UiShell.cpp`,
-   `WndButton.cpp`, `WndImagePart.cpp` do **not** exist in `vltksource_new`. Do not
+   `WndButton.cpp`, `WndImagePart.cpp` do **not** exist in `jx-source`. Do not
    cite them. Resolve SPR names → hashes via the `jx-pc-resource-resolver` skill.
 3. **Decode with the right tool, no blanket flipping.** Use
    `~/Projects/vltktool/extract_item_spr.py` (default top-down = correct game

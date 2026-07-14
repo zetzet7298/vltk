@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — full PC Server settings/skills1.txt source-audit parser.
-// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt
 // This is a catalog/audit surface only; it does not claim runtime skill behavior.
 // -----------------------------------------------------------------------------
 

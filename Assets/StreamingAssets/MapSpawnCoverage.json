@@ -3,15 +3,15 @@
   "generatedAtUtc": "2026-06-08T00:16:21Z",
   "phase": "phase2_server_region_s_spawns",
   "scope": "server Region_S binary extraction only; final NPC visuals/combat/object/trap wiring excluded",
-  "sourceRoot": "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem",
-  "sourcePakDir": "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak",
+  "sourceRoot": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem",
+  "sourcePakDir": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak",
   "sourcePackages": [
-    "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/maps.pak",
-    "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/yanwuchang.mps",
-    "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/qianchonglou.mps",
-    "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/jingjichang.mps",
-    "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/update_map.pak",
-    "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/update3.pak"
+    "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/maps.pak",
+    "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/yanwuchang.mps",
+    "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/qianchonglou.mps",
+    "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/jingjichang.mps",
+    "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/update_map.pak",
+    "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/pak/update3.pak"
   ],
   "sourceGeometryCatalog": "/var/www/vltk-mobile/Assets/StreamingAssets/MapGeometryCatalog.json",
   "isPartialRun": false,

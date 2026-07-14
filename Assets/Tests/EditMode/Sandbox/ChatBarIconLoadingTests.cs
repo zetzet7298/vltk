@@ -203,7 +203,7 @@ AssertColorApprox("Guild", ChatService.ChannelColor(ChatChannel.Guild), 1f, 0.95
 [TestFixture, Category("Chat")]
 public class HudChatBarArtTests
 {
-    // The 15 PC chat-bar art pieces decoded from vltksource_new SPRs.
+    // The 15 PC chat-bar art pieces decoded from jx-source SPRs.
     private static readonly string[] NewChatBarPngs =
     {
         "chat_bar_top",              // 8fa68495 聊天条顶部改

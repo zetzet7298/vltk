@@ -55,13 +55,13 @@ Computed with the JX Pack Hash UID algorithm over normalized raw path bytes.
 
 | Resource | Hash | Found |
 | --- | ---: | --- |
-| SkillIcon | `98055770.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/update01/unknown/98055770.spr`, `/var/www/vltksource_new/vl_update_27/pak_unpacked/spr/unknown/98055770.spr` |
-| PreCastSpr | `b91ab706.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/skills/unknown/b91ab706.spr` |
+| SkillIcon | `98055770.spr` | `/var/www/jx-source/pak_unpacked/update01/unknown/98055770.spr`, `/var/www/jx-source/pak_unpacked/spr/unknown/98055770.spr` |
+| PreCastSpr | `b91ab706.spr` | `/var/www/jx-source/pak_unpacked/skills/unknown/b91ab706.spr` |
 | ManCastSnd | `805e4929.wav` | hash computed; quick bounded lookup did not find file |
 | FMCastSnd | `a9f82272.wav` | hash computed; quick bounded lookup did not find file |
-| Missile AnimFile2 dragon | `a31b9f04.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/skills/unknown/a31b9f04.spr` |
-| Missile SndFile2 | `3b6bb009.wav` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/sound/unknown/3b6bb009.wav` |
-| Missile AnimFile4 impact | `c33e96c2.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/skills/unknown/c33e96c2.spr` |
+| Missile AnimFile2 dragon | `a31b9f04.spr` | `/var/www/jx-source/pak_unpacked/skills/unknown/a31b9f04.spr` |
+| Missile SndFile2 | `3b6bb009.wav` | `/var/www/jx-source/pak_unpacked/sound/unknown/3b6bb009.wav` |
+| Missile AnimFile4 impact | `c33e96c2.spr` | `/var/www/jx-source/pak_unpacked/skills/unknown/c33e96c2.spr` |
 | Missile SndFile4 | `ff4dadbd.wav` | hash computed; quick bounded lookup did not find file |
 
 ## Behavior implication

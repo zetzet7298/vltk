@@ -25,8 +25,8 @@ Computed with the JX Pack Hash UID algorithm over normalized raw resource path b
 
 | Resource | Hash | Found |
 | --- | ---: | --- |
-| SkillIcon `\spr\Ui\skill\ÁúƠ½ÔÚ̉°.spr` | `d97b70ca.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/update01/unknown/d97b70ca.spr`, `/var/www/vltksource_new/vl_update_27/pak_unpacked/spr/unknown/d97b70ca.spr` |
-| PreCastSpr `\spr\skill\̀́È̀\mag_bz_huo3_±¬Ơ¨Đ§¹û.spr` | `b91ab706.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/skills/unknown/b91ab706.spr` |
+| SkillIcon `\spr\Ui\skill\ÁúƠ½ÔÚ̉°.spr` | `d97b70ca.spr` | `/var/www/jx-source/pak_unpacked/update01/unknown/d97b70ca.spr`, `/var/www/jx-source/pak_unpacked/spr/unknown/d97b70ca.spr` |
+| PreCastSpr `\spr\skill\̀́È̀\mag_bz_huo3_±¬Ơ¨Đ§¹û.spr` | `b91ab706.spr` | `/var/www/jx-source/pak_unpacked/skills/unknown/b91ab706.spr` |
 | ManCastSnd `\sound\skill\sound_k005.wav` | `805e4929.wav` | hash computed; existence not found in quick bounded lookup |
 | FMCastSnd `\sound\skill\sound_k010.wav` | `a9f82272.wav` | hash computed; existence not found in quick bounded lookup |
 
@@ -53,9 +53,9 @@ Source: `Assets/StreamingAssets/Reference/PcAttrib/missles.txt` decoded with CP1
 
 | Resource | Hash | Found |
 | --- | ---: | --- |
-| AnimFile2 dragon `\spr\skill\Ø¤°ï\mag_gb_05_¿ºÁúÓĐ»Ú.spr` | `a31b9f04.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/skills/unknown/a31b9f04.spr` |
-| SndFile2 `\sound\skill\¿ºÁúÎ̃»Ú.wav` | `3b6bb009.wav` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/sound/unknown/3b6bb009.wav` |
-| AnimFile4 impact `\spr\skill\Ø¤°ï\mag_gb_bz5_±¬Ơ¨Đ§¹û.spr` | `c33e96c2.spr` | `/var/www/vltksource_new/vl_update_27/pak_unpacked/skills/unknown/c33e96c2.spr` |
+| AnimFile2 dragon `\spr\skill\Ø¤°ï\mag_gb_05_¿ºÁúÓĐ»Ú.spr` | `a31b9f04.spr` | `/var/www/jx-source/pak_unpacked/skills/unknown/a31b9f04.spr` |
+| SndFile2 `\sound\skill\¿ºÁúÎ̃»Ú.wav` | `3b6bb009.wav` | `/var/www/jx-source/pak_unpacked/sound/unknown/3b6bb009.wav` |
+| AnimFile4 impact `\spr\skill\Ø¤°ï\mag_gb_bz5_±¬Ơ¨Đ§¹û.spr` | `c33e96c2.spr` | `/var/www/jx-source/pak_unpacked/skills/unknown/c33e96c2.spr` |
 | SndFile4 `\sound\skill\sound_k037.wav` | `ff4dadbd.wav` | hash computed; existence not found in quick bounded lookup |
 
 ## Behavior implication

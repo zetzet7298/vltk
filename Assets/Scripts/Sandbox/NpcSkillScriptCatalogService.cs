@@ -1,7 +1,7 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC NPC/Boss skill script availability index.
 // Data-only proof over NpcSkillCatalogService; never loads or executes Lua.
-// PC source root: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server
+// PC source root: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server
 // -----------------------------------------------------------------------------
 
 using System;
@@ -13,7 +13,7 @@ namespace VLTK.Sandbox
 {
     public sealed class NpcSkillScriptCatalogService
     {
-        public const string PcServerScriptRoot = "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server";
+        public const string PcServerScriptRoot = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server";
         public const string NoExecutionClaim = "Index only: checks referenced Lua file availability, does not execute scripts.";
 
 

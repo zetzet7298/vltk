@@ -13,7 +13,7 @@
   "sources": [
     {
       "label": "pc-server-settings/missles.txt",
-      "path": "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/missles.txt",
+      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/missles.txt",
       "bytes": 89787,
       "sha256": "6c5e1720905278e09e7dc7fc8786b6062b07edf2f9ffd2113aec86a5566d7b4a",
       "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
@@ -32,7 +32,7 @@
     },
     {
       "label": "pc-server-settings/missles1.txt",
-      "path": "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/missles1.txt",
+      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/missles1.txt",
       "bytes": 95797,
       "sha256": "94b1c29ce689c5432e9c21e39e0d374982df7e13f7f058de08b95677520f83cf",
       "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",

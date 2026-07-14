@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — focused PC skill source/script link parser.
-// Source: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/skills.txt
+// Source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/skills.txt
 // Purpose: prove SkillId -> LvlSetScript links without widening PcSkillFullParser.
 // -----------------------------------------------------------------------------
 

@@ -2,7 +2,7 @@ import os
 import json
 import re
 
-base_dir = '/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem'
+base_dir = '/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem'
 
 pattern = re.compile(r'(tongwar|bangchien|factionwar)', re.IGNORECASE)
 

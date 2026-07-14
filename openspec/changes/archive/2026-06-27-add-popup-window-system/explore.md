@@ -2,7 +2,7 @@
 
 > Compiled by parent from scout handoff + PC SPR resolution. Authoritative input for proposal/spec/design.
 
-## PC Architecture (vltksource_new — NO C++ source, data + INI + SPR only)
+## PC Architecture (jx-source — NO C++ source, data + INI + SPR only)
 
 JX1/VLTK PC windows are **INI-driven + engine-assembled**:
 - Each window = a GBK-encoded `.ini` with `[Main]` (background `Image=` SPR, Left/Top/Width/Height) + child sections (buttons, slots, lists, text). The engine reads the INI and composes the window by positioning each child over the background.

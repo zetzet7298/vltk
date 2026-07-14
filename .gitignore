@@ -99,7 +99,7 @@ Assets/AssetBundles/
 # jx-source is the SOLE source-of-truth; SPRs are not versioned.
 # SPRs live OUTSIDE Assets/ to keep Unity import time bounded —
 # 67K+ binary SPRs in Assets/StreamingAssets/ hung Unity for 1+ hours.
-# Source: /var/www/vltksource_new/pak_unpacked/ → /var/www/vltk-mobile/SpritesRuntime/
+# Source: /var/www/jx-source/pak_unpacked/ → /var/www/vltk-mobile/SpritesRuntime/
 SpritesRuntime/
 Assets/StreamingAssets/Generated/MapRegions/
 Assets/StreamingAssets/Generated/MapSprites/
@@ -216,7 +216,7 @@ AudioRuntime/
 # ─────────────────────────────────────────────────
 # PC game audio assets (WAVs from PAKs)
 # jx-source is the SOLE source-of-truth; WAVs are not versioned.
-# Copied from /var/www/vltksource_new/pak_unpacked/sound/ to StreamingAssets/sound/
+# Copied from /var/www/jx-source/pak_unpacked/sound/ to StreamingAssets/sound/
 # ─────────────────────────────────────────────────
 Assets/StreamingAssets/sound/
 Assets/StreamingAssets/sound.meta

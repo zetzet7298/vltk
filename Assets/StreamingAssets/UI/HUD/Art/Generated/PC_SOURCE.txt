@@ -2,8 +2,8 @@
 REGENERATION (2026-06-28) — canonical source
 ================================================================================
 Every cai_bang_skill_{skillId}.png in this folder was regenerated straight from
-the canonical Vietnamese PC client /var/www/vltksource_new/vl_update_27/pak_unpacked
-(vl_update_27), using the verified skill_icon_pc_manifest.json skillId->uid map
+the canonical Vietnamese PC client /var/www/jx-source/pak_unpacked
+(jx-source), using the verified skill_icon_pc_manifest.json skillId->uid map
 (SprRuntimeService signed-byte JX Pack hash; identical to the
 jx-pc-resource-resolver skill algorithm).
 
@@ -103,8 +103,8 @@ The mobile client treats MOD as the source of truth for these 8 new IDs but uses
 Universal special skill:
 210 Khinh công / 轻功 \spr\Ui\技能图标\轻功.spr UID 0xbf787a8a PAK update01.pak size 30x30
     Resolved via JX Pack hash (GBK/signed-byte path) to:
-    /var/www/vltksource_new/vl_update_27/pak_unpacked/update01/unknown/bf787a8a.spr
-    /var/www/vltksource_new/vl_update_27/pak_unpacked/spr/unknown/bf787a8a.spr
+    /var/www/jx-source/pak_unpacked/update01/unknown/bf787a8a.spr
+    /var/www/jx-source/pak_unpacked/spr/unknown/bf787a8a.spr
     Script evidence: \script\skill\special\轻功.lua
     Extracted frame 0 to cai_bang_skill_210.png for compatibility with the existing HUD icon loader naming pattern.
 

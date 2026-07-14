@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC Server script/lib source index parser.
-// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/lib
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/lib
 // Data-only index of PC Lua library file paths, sizes, and SHA-256 hashes. No Lua runtime claim.
 // -----------------------------------------------------------------------------
 

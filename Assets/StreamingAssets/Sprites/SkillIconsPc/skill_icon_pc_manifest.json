@@ -7016,5 +7016,5 @@
       "found": true
     }
   ],
-  "refresh_note": "Refreshed against canonical /var/www/vltksource_new/vl_update_27/pak_unpacked after PAK RE fixes (signed-byte hash, raw 0x11000000, dmjx01 fragments)."
+  "refresh_note": "Refreshed against canonical /var/www/jx-source/pak_unpacked after PAK RE fixes (signed-byte hash, raw 0x11000000, dmjx01 fragments)."
 }

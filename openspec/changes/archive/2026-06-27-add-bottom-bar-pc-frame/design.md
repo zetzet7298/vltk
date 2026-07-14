@@ -13,7 +13,7 @@ that image was contaminated (game-world bleed, T/P text, portrait, tooltips "B�
 references `\spr\UI3\主界面\快捷栏(800).spr` (commented). Applying the JX Pack Hash UID
 algorithm (GBK-encode normalized lowercase path → hash) to the base name `快捷栏.spr`
 yielded hash `ebb69f9b`, located at:
-`vl_update_27/pak_unpacked/updatejx08/unknown/ebb69f9b.spr`.
+`pak_unpacked/updatejx08/unknown/ebb69f9b.spr`.
 
 **Verification:** Decoded via `extract_item_spr.py` → 965×768 single-frame overlay. Content
 bbox = toolbar at bottom (~y628-715 of 716-tall content canvas). Cropped to the toolbar

@@ -8,7 +8,7 @@ namespace VLTK.Tests.Sandbox
     public class PcWeaponThiefSkillSourceTests
     {
         private const string PcUpdate27SkillDir =
-            "/var/www/vltksource_new/pak_unpacked/dmjx03/settings";
+            "/var/www/jx-source/pak_unpacked/dmjx03/settings";
 
         private static string ClientWeaponSkillPath => Path.Combine(PcUpdate27SkillDir, "clientweaponskill.txt");
         private static string ThiefSkillPath => Path.Combine(PcUpdate27SkillDir, "thiefskill.txt");

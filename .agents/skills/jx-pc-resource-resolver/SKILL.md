@@ -4,15 +4,15 @@ description: >-
   Resolve, lookup, and translate JX Online 1 / Võ Lâm Truyền Kỳ PC resource paths
   (such as SPR, INI, WAV, TXT, LUA) into their decrypted Vietnamese/Chinese meanings,
   and map them to their actual hashed filenames (Pack Hash UIDs) in the unpacked
-  vltksource_new client directory. Use this skill whenever the user asks to look up,
+  jx-source client directory. Use this skill whenever the user asks to look up,
   locate, port, or analyze a feature, skill, map, enemy, item, or asset from JX PC to Mobile,
   or needs to find a specific `.spr` file, client layout, sound, or script within
-  `/var/www/vltksource_new/`.
+  `/var/www/jx-source/`.
 ---
 
 # JX PC Resource Resolver Skill
 
-Use this skill to systematically find and translate Chinese/GBK resource paths from the PC client source/configs to their raw, hashed file names on disk under the unpacked `/var/www/vltksource_new/vl_update_27/pak_unpacked/` directories.
+Use this skill to systematically find and translate Chinese/GBK resource paths from the PC client source/configs to their raw, hashed file names on disk under the unpacked `/var/www/jx-source/pak_unpacked/` directories.
 
 ---
 
@@ -98,13 +98,13 @@ print(f'latin1: {file_id(path.encode(\"latin1\")):08x}')
 "
 ```
 
-### Step C: Search in `vltksource_new`
+### Step C: Search in `jx-source`
 Search for the generated 8-digit hex filename under:
-`/var/www/vltksource_new/vl_update_27/pak_unpacked/`
+`/var/www/jx-source/pak_unpacked/`
 
 For example:
 ```bash
-find /var/www/vltksource_new/vl_update_27/pak_unpacked/ -name "973816f3.spr"
+find /var/www/jx-source/pak_unpacked/ -name "973816f3.spr"
 ```
 
 ---

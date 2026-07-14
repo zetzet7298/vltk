@@ -9,7 +9,7 @@ namespace VLTK.Tests.Sandbox
     {
         private const int ExpectedPcWharfRows = 11;
         private const int ExpectedPcWharfSectSlots = 16;
-        private const string PcSourcePath = "/var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/wharf.txt";
+        private const string PcSourcePath = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/wharf.txt";
         private static string ReferencePath => Path.Combine(
             Directory.GetCurrentDirectory(),
             "Assets/StreamingAssets/Reference/PcMap/wharf.txt");

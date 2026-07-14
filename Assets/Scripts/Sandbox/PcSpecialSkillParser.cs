@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC skills1.txt special-skill script catalog parser.
-// Source of truth: /var/www/vltksource_new/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt
+// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/skills1.txt
 // The committed specialskills.txt preserves the PC skills1.txt header plus rows where
 // LvlSetScript starts with "\\script\\skill\\special". PC source proves 576 rows,
 // not an old standalone 58-row specialskills.txt table.
