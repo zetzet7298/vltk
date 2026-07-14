@@ -145,9 +145,9 @@ namespace VLTK.UI
                 Vector2 missilePos = fx.missilePositions != null && i < fx.missilePositions.Length
                     ? fx.missilePositions[i]
                     : fx.currentMissilePos;
-                Vector2 target = fx.ResolveMissileTarget(i);
+                Vector2 direction = fx.ResolveMissileDirection(i);
 
-                var sprite = SelectPcMissileFrame(fx, sprites, missilePos, target);
+                var sprite = SelectPcMissileFrame(fx, sprites, missilePos, missilePos + direction);
                 if (sprite == null || sprite.texture == null) continue;
 
                 DrawSpriteScreen(sprite, missilePos);

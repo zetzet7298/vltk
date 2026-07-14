@@ -764,7 +764,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang_357_HomingSpreadKeepsPerMissileOffsetsForLiveTarget()
+        public void CaiBang_357_WallFormationUsesPcOriginsAndOneLiveTarget()
         {
             var cat = Catalog();
             var visual = new SkillEffectVisualService(null, cat);
@@ -772,22 +772,14 @@ namespace VLTK.Tests.Sandbox
             var fx = visual.PlaySkillCast(cat.Resolve(357), Vector2.zero, new Vector2(100, 0), 20, () => liveTarget);
 
             Assert.IsNotNull(fx);
-            Assert.AreEqual(4, fx.missileCount, "Phi Long level 20 should spawn 4 parallel homing missiles");
-            // PC evidence: skill 357 row has Param1=32 and child missile 166 has MoveKind=5.
-            // gaibang.lua supplies the level-20 count (4), while Param1 supplies the parallel lane gap.
-            Assert.IsNotNull(fx.missileTargetOffsets, "Phi Long L20 must configure per-dragon homing lane offsets even though gaibang.lua has no skill_param1_v");
-            Assert.AreEqual(4, fx.missileTargetOffsets.Length);
-
-            fx.phase = SkillEffectPhase.Missile;
-            fx.phaseStart = fx.elapsed;
-            var originalY = fx.missilePositions.Select(p => p.y).ToArray();
-
-            visual.Update(0.01f);
-
+            Assert.AreEqual(4, fx.missileCount, "Phi Long level 20 should spawn four PC wall-form missiles.");
+            float[] expectedOffsets = { -64f, -32f, 0f, 32f };
             for (int i = 0; i < fx.missilePositions.Length; i++)
             {
-                Assert.AreEqual(originalY[i], fx.missilePositions[i].y, 0.001f, $"Missile {i} should chase live target plus its own offset, not collapse into center target");
-                Assert.Greater(fx.missilePositions[i].x, 0f, $"Missile {i} should advance toward the live target");
+                Assert.AreEqual(expectedOffsets[i], fx.missileOrigins[i].y, 0.001f,
+                    "KSkill::CastWall uses -Param1*count/2, then increments by Param1.");
+                Assert.AreEqual(liveTarget, fx.ResolveMissileTarget(i),
+                    "KMissle MoveKind=5 stores the same followed NPC on every dragon.");
             }
         }
 

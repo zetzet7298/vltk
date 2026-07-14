@@ -164,12 +164,12 @@ namespace VLTK.Sandbox
                     2 => new Vector3(0f, offset, 0f),
                     _ => new Vector3(0f, -offset, 0f),
                 };
-                var sh = new GameObject("PcDamageNumberShadow", typeof(TextMesh), typeof(MeshRenderer));
+                var sh = new GameObject("PcDamageNumberShadow", typeof(TextMesh));
                 sh.transform.SetParent(transform, false);
                 sh.transform.localPosition = localOffset;
                 sh.transform.localRotation = Quaternion.identity;
                 sh.transform.localScale = Vector3.one;
-                var shtm = sh.AddComponent<TextMesh>();
+                var shtm = sh.GetComponent<TextMesh>();
                 shtm.text = Damage.ToString();
                 shtm.color = new Color(0f, 0f, 0f, 0.85f);
                 shtm.fontSize = fontSize;

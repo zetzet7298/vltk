@@ -45,19 +45,70 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void PhiLong_L20_UsesPcHomingLanesAndRecordsOneImpactPerDragon()
+        public void PhiLong_L20_UsesPcWallOriginsAndOneLiveHomingTarget()
         {
             var visual = new SkillEffectVisualService(null, Catalog());
-            var fx = visual.PlaySkillCast(Catalog().Resolve(357), Vector2.zero, new Vector2(400f, 0f), 20,
-                () => new Vector2(400f, 0f));
+            var liveTarget = new Vector2(400f, 0f);
+            var fx = visual.PlaySkillCast(Catalog().Resolve(357), Vector2.zero, liveTarget, 20,
+                () => liveTarget);
 
             Assert.AreEqual(4, fx.missileCount, "PC Lua L20 missile count is four.");
             Assert.AreEqual(5, fx.pcMissileMoveKind, "PC missile 166 MoveKind=5 is target-tracking.");
             Assert.AreEqual(24, fx.pcMissileSpeedPerTick,
                 "PC gaibang.lua L20 missle_speed_v=24 overrides missile 166's raw Speed=30.");
             Assert.AreEqual(24, fx.pcMissileLifeTicks, "PC missile 166 LifeTime=24.");
-            Assert.AreEqual(32f, Vector2.Distance(fx.missileTargetOffsets[0], fx.missileTargetOffsets[1]), 0.001f,
-                "PC skills.txt Param1=32 is the spacing between adjacent homing lanes.");
+            float[] expectedOffsets = { -64f, -32f, 0f, 32f };
+            for (int i = 0; i < fx.missileCount; i++)
+            {
+                Assert.AreEqual(0f, fx.missileOrigins[i].x, 0.001f);
+                Assert.AreEqual(expectedOffsets[i], fx.missileOrigins[i].y, 0.001f,
+                    $"PC CastWall origin {i} must use -Param1*count/2 + Param1*i.");
+                Assert.AreEqual(liveTarget, fx.ResolveMissileTarget(i),
+                    "All four follow missiles must chase the same NPC center, not four offset targets.");
+                Assert.Greater(Vector2.Dot(Vector2.right, fx.ResolveMissileDirection(i)), 0.999f,
+                    "Param2 != 0 makes all four missiles initially face the cast target.");
+            }
+        }
+
+        [Test]
+        public void PhiLong_L20_RetargetsOnNinthPcTickAndThenConverges()
+        {
+            var visual = new SkillEffectVisualService(null, Catalog());
+            var liveTarget = new Vector2(400f, 0f);
+            var fx = visual.PlaySkillCast(Catalog().Resolve(357), Vector2.zero, liveTarget, 20,
+                () => liveTarget);
+
+            visual.Update(fx.preCastDuration);
+            liveTarget = new Vector2(0f, 400f);
+            for (int tick = 0; tick < 8; tick++)
+                visual.Update(1f / 18f);
+
+            float spreadBeforeRetarget = fx.missilePositions[3].y - fx.missilePositions[0].y;
+            for (int i = 0; i < fx.missileCount; i++)
+            {
+                Assert.Greater(Vector2.Dot(Vector2.right, fx.ResolveMissileDirection(i)), 0.999f,
+                    $"Missile {i} must preserve its initial direction for PC ticks 1-8.");
+            }
+
+            visual.Update(1f / 18f);
+
+            float spreadAfterRetarget = fx.missilePositions[3].y - fx.missilePositions[0].y;
+            for (int i = 0; i < fx.missileCount; i++)
+            {
+                Vector2 direction = fx.ResolveMissileDirection(i);
+                Assert.Less(direction.x, 0f, $"Missile {i} must turn west toward the moved target on tick 9.");
+                Assert.Greater(direction.y, 0f, $"Missile {i} must turn north toward the moved target on tick 9.");
+            }
+            Assert.Less(spreadAfterRetarget, spreadBeforeRetarget,
+                "Once all four missiles retarget the same center, their wall formation must converge.");
+        }
+
+        [Test]
+        public void PhiLong_L20_RecordsOneImpactPerDragonAndStopsArrivedMissiles()
+        {
+            var visual = new SkillEffectVisualService(null, Catalog());
+            var fx = visual.PlaySkillCast(Catalog().Resolve(357), Vector2.zero, new Vector2(400f, 0f), 20,
+                () => new Vector2(400f, 0f));
 
             // First update completes precast; the second advances all four dragons to collision.
             visual.Update(fx.preCastDuration);
@@ -67,6 +118,12 @@ namespace VLTK.Tests.Sandbox
                 "Every missile 166 collision must independently produce Phi Long's impact/collide event.");
             Assert.That(fx.missileExplodeStartTime, Has.All.GreaterThanOrEqualTo(0f),
                 "Each individual impact must retain its own explosion start time.");
+
+            var collidedPositions = (Vector2[])fx.missilePositions.Clone();
+            visual.Update(0.25f);
+            for (int i = 0; i < fx.missileCount; i++)
+                Assert.AreEqual(collidedPositions[i], fx.missilePositions[i],
+                    $"Missile {i} must stop moving as soon as its collision event fires.");
         }
 
         [Test]
@@ -74,14 +131,33 @@ namespace VLTK.Tests.Sandbox
         {
             var visual = new SkillEffectVisualService(null, Catalog());
             var collisionIndexes = new System.Collections.Generic.List<int>();
-            var fx = visual.PlaySkillCast(Catalog().Resolve(357), Vector2.zero, new Vector2(400f, 0f), 20,
-                () => new Vector2(400f, 0f),
-                (_, missileIndex, _) => collisionIndexes.Add(missileIndex));
+            var popupRoot = new GameObject("phi-long-damage-popups");
+            try
+            {
+                var fx = visual.PlaySkillCast(Catalog().Resolve(357), Vector2.zero, new Vector2(400f, 0f), 20,
+                    () => new Vector2(400f, 0f),
+                    (_, missileIndex, position) =>
+                    {
+                        collisionIndexes.Add(missileIndex);
+                        PcDamageNumber.Spawn(position, 100 + missileIndex, popupRoot.transform);
+                    });
 
-            visual.Update(fx.preCastDuration);
-            visual.Update(1f);
+                visual.Update(fx.preCastDuration);
+                visual.Update(1f);
 
-            CollectionAssert.AreEqual(new[] { 0, 1, 2, 3 }, collisionIndexes);
+                CollectionAssert.AreEqual(new[] { 0, 1, 2, 3 }, collisionIndexes);
+                var popups = popupRoot.GetComponentsInChildren<PcDamageNumber>(true);
+                Assert.AreEqual(4, popups.Length, "All four collision callbacks must finish without a damage-popup exception.");
+                foreach (var popup in popups)
+                {
+                    Assert.AreEqual(5, popup.GetComponentsInChildren<TextMesh>(true).Length,
+                        "Each damage popup requires one main TextMesh and four outline shadows.");
+                }
+            }
+            finally
+            {
+                Object.DestroyImmediate(popupRoot);
+            }
         }
 
         [Test]

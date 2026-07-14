@@ -370,8 +370,8 @@ namespace VLTK.UI
                             }
                             else
                             {
-                                Vector2 targetForMissile = fx.ResolveMissileTarget(i);
-                                renderer.sprite = SelectPcMissileFrame(fx, mp, targetForMissile);
+                                Vector2 direction = fx.ResolveMissileDirection(i);
+                                renderer.sprite = SelectPcMissileFrame(fx, mp, mp + direction);
                                 renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
                                 renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                                 renderer.color = Color.white;
@@ -488,8 +488,8 @@ namespace VLTK.UI
 
             // PC KMissleRes::Draw(MS_DoFly):
             // nImageDir = rounded nDir from 64-dir space into nSprDir; nFramePerDir = totalFrames / nSprDir;
-            // For homing missiles (MoveKind=5 in missles.txt), the dir must update each tick
-            // to face the current target — dragon SPR rotates as it chases a moving enemy.
+            // Homing direction comes from the last simulated PC tick. Do not point the
+            // renderer at the live target before KMissle's 9-tick retarget cadence fires.
             int dir = ComputePc16Dir(fromPos, targetPos);
             int framePerDir = Mathf.Max(1, fx.pcMissileTotalFrames / Mathf.Max(1, fx.pcMissileDirections));
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));

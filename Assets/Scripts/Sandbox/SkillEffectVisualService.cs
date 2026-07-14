@@ -14,6 +14,10 @@ namespace VLTK.Sandbox
     /// </summary>
     public class SkillEffectVisualService
     {
+        private const float PcMissileTickSeconds = 1f / 18f;
+        private const int PcFollowRetargetCounterMax = 8;
+        private const int MaxPcMissileTicksPerUpdate = 512;
+
         private readonly SprRuntimeService _sprService;
         private readonly SkillCatalog _catalog;
         private readonly List<ActiveSkillEffect> _activeEffects = new();
@@ -459,7 +463,9 @@ namespace VLTK.Sandbox
                         break;
 
                     case SkillEffectPhase.Missile:
-                        UpdateMultiMissile(fx, dt);
+                        bool collisionCheckedPerTick = UpdateMultiMissile(fx, dt);
+                        if (!collisionCheckedPerTick)
+                            ResolveMissileCollisions(fx);
 
                         bool allArrived;
                         if (fx.missilePositions != null && fx.missilePositions.Length > 0)
@@ -487,52 +493,6 @@ namespace VLTK.Sandbox
                             fx.phase = SkillEffectPhase.Impact;
                             fx.phaseStart = fx.elapsed;
                         }
-
-                        for (int si = 0; si < (fx.missileArrived?.Length ?? 0); si++)
-                        {
-                            if (fx.missileArrived[si]) continue;
-                            Vector2 targetPos = fx.ResolveMissileTarget(si);
-                            Vector2 mp = (fx.missilePositions != null && si < fx.missilePositions.Length) ? fx.missilePositions[si] : fx.currentMissilePos;
-                            Vector2 origin = (fx.missileOrigins != null && si < fx.missileOrigins.Length) ? fx.missileOrigins[si] : fx.casterPos;
-
-
-                            bool isHomingMissile = fx.getCurrentTargetPos != null && fx.pcMissileMoveKind == 5;
-                            bool collided = false;
-                            if (!isHomingMissile)
-                            {
-                                // Non-homing: trigger collision when distance traveled is >= target dummy's distance
-                                float targetDist = Vector2.Distance(fx.targetPos, origin);
-                                float traveled = Vector2.Distance(mp, origin);
-                                if (traveled >= targetDist - fx.rendRadius)
-                                {
-                                    collided = true;
-                                }
-                            }
-                            else
-                            {
-                                // Homing: trigger collision when close to target
-                                if (Vector2.Distance(mp, targetPos) <= fx.rendRadius)
-                                {
-                                    collided = true;
-                                }
-                            }
-
-                            if (collided)
-                            {
-                                fx.missileArrived[si] = true;
-                                if (fx.missileExplodeStartTime != null && si < fx.missileExplodeStartTime.Length)
-                                    fx.missileExplodeStartTime[si] = fx.elapsed;
-                                Vector2 collidePos = !isHomingMissile
-                                    ? origin + (targetPos - origin).normalized * Vector2.Distance(fx.targetPos, origin)
-                                    : mp;
-                                TriggerSauXe(fx, collidePos);
-                                fx.onMissileCollided?.Invoke(fx, si, collidePos);
-                                OnMissileCollided?.Invoke(fx, si, collidePos);
-                                if (!string.IsNullOrEmpty(fx.impactSoundPath))
-                                    OnCastSound?.Invoke(fx.impactSoundPath);
-                                SpawnCollideSubEffect(fx, collidePos);
-                            }
-                        }
                         break;
 
 
@@ -553,7 +513,7 @@ namespace VLTK.Sandbox
 
         public List<ActiveSkillEffect> GetActiveEffects() => new(_activeEffects);
 
-        private void UpdateMultiMissile(ActiveSkillEffect fx, float dt)
+        private bool UpdateMultiMissile(ActiveSkillEffect fx, float dt)
         {
             if (fx.missilePositions == null)
             {
@@ -570,11 +530,32 @@ namespace VLTK.Sandbox
                 {
                     fx.currentMissilePos = fx.ResolveMissileTarget(-1);
                 }
-                return;
+                return false;
+            }
+
+            if (UsesPcFollowTickSimulation(fx))
+            {
+                fx.missileTickAccumulator += Mathf.Max(0f, dt);
+                int simulatedTicks = 0;
+                while (fx.missileTickAccumulator + 0.000001f >= PcMissileTickSeconds &&
+                       simulatedTicks < MaxPcMissileTicksPerUpdate)
+                {
+                    fx.missileTickAccumulator -= PcMissileTickSeconds;
+                    if (fx.missileTickAccumulator < 0f)
+                        fx.missileTickAccumulator = 0f;
+
+                    AdvancePcFollowMissilesOneTick(fx);
+                    ResolveMissileCollisions(fx);
+                    simulatedTicks++;
+                }
+                return true;
             }
 
             for (int i = 0; i < fx.missilePositions.Length; i++)
             {
+                if (fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i])
+                    continue;
+
                 Vector2 pos = fx.missilePositions[i];
                 Vector2 target = fx.ResolveMissileTarget(i);
                 Vector2 dir = target - pos;
@@ -589,6 +570,115 @@ namespace VLTK.Sandbox
                     float step = fx.missileSpeed * dt;
                     fx.missilePositions[i] = step >= dist ? target : pos + (dir / dist) * step;
                 }
+            }
+            return false;
+        }
+
+        private static bool UsesPcFollowTickSimulation(ActiveSkillEffect fx)
+        {
+            int count = fx.missilePositions?.Length ?? 0;
+            return fx.pcMissileMoveKind == 5 &&
+                   count > 0 &&
+                   fx.missileDirections != null &&
+                   fx.missileDirections.Length == count &&
+                   fx.missileFollowTickCounters != null &&
+                   fx.missileFollowTickCounters.Length == count;
+        }
+
+        private static void AdvancePcFollowMissilesOneTick(ActiveSkillEffect fx)
+        {
+            float step = fx.pcMissileSpeedPerTick > 0
+                ? fx.pcMissileSpeedPerTick
+                : fx.missileSpeed * PcMissileTickSeconds;
+
+            for (int i = 0; i < fx.missilePositions.Length; i++)
+            {
+                if (fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i])
+                    continue;
+
+                Vector2 pos = fx.missilePositions[i];
+                if (fx.getCurrentTargetPos != null)
+                {
+                    // PC KMissle.cpp: if (m_nTempParam1++ >= 8), retarget before moving tick 9.
+                    if (fx.missileFollowTickCounters[i] >= PcFollowRetargetCounterMax)
+                    {
+                        Vector2 toTarget = fx.ResolveMissileTarget(i) - pos;
+                        if (toTarget.sqrMagnitude > 0.000001f)
+                            fx.missileDirections[i] = toTarget.normalized;
+                        fx.missileFollowTickCounters[i] = 0;
+                    }
+                    else
+                    {
+                        fx.missileFollowTickCounters[i]++;
+                    }
+                }
+
+                Vector2 direction = fx.missileDirections[i];
+                if (direction.sqrMagnitude <= 0.000001f)
+                    continue;
+                direction.Normalize();
+                fx.missileDirections[i] = direction;
+
+                Vector2 next = pos + direction * step;
+                Vector2 target = fx.ResolveMissileTarget(i);
+                if (PassesWithinRadius(pos, next, target, fx.rendRadius))
+                    next = target;
+                fx.missilePositions[i] = next;
+            }
+        }
+
+        private static bool PassesWithinRadius(Vector2 from, Vector2 to, Vector2 point, float radius)
+        {
+            Vector2 segment = to - from;
+            float segmentLengthSq = segment.sqrMagnitude;
+            if (segmentLengthSq <= 0.000001f)
+                return Vector2.Distance(from, point) <= radius;
+
+            float t = Mathf.Clamp01(Vector2.Dot(point - from, segment) / segmentLengthSq);
+            Vector2 closest = from + segment * t;
+            return (closest - point).sqrMagnitude <= radius * radius;
+        }
+
+        private void ResolveMissileCollisions(ActiveSkillEffect fx)
+        {
+            for (int si = 0; si < (fx.missileArrived?.Length ?? 0); si++)
+            {
+                if (fx.missileArrived[si]) continue;
+                Vector2 targetPos = fx.ResolveMissileTarget(si);
+                Vector2 mp = fx.missilePositions != null && si < fx.missilePositions.Length
+                    ? fx.missilePositions[si]
+                    : fx.currentMissilePos;
+                Vector2 origin = fx.missileOrigins != null && si < fx.missileOrigins.Length
+                    ? fx.missileOrigins[si]
+                    : fx.casterPos;
+
+                bool isHomingMissile = fx.getCurrentTargetPos != null && fx.pcMissileMoveKind == 5;
+                bool collided;
+                if (!isHomingMissile)
+                {
+                    float targetDist = Vector2.Distance(fx.targetPos, origin);
+                    float traveled = Vector2.Distance(mp, origin);
+                    collided = traveled >= targetDist - fx.rendRadius;
+                }
+                else
+                {
+                    collided = Vector2.Distance(mp, targetPos) <= fx.rendRadius;
+                }
+
+                if (!collided) continue;
+
+                fx.missileArrived[si] = true;
+                if (fx.missileExplodeStartTime != null && si < fx.missileExplodeStartTime.Length)
+                    fx.missileExplodeStartTime[si] = fx.elapsed;
+                Vector2 collidePos = !isHomingMissile
+                    ? origin + (targetPos - origin).normalized * Vector2.Distance(fx.targetPos, origin)
+                    : mp;
+                TriggerSauXe(fx, collidePos);
+                fx.onMissileCollided?.Invoke(fx, si, collidePos);
+                OnMissileCollided?.Invoke(fx, si, collidePos);
+                if (!string.IsNullOrEmpty(fx.impactSoundPath))
+                    OnCastSound?.Invoke(fx.impactSoundPath);
+                SpawnCollideSubEffect(fx, collidePos);
             }
         }
 
@@ -737,13 +827,14 @@ namespace VLTK.Sandbox
             return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
         }
 
-        private void SetupPcPhiLongSpread(ActiveSkillEffect fx, int count, int param64)
+        private void SetupPcPhiLongSpread(ActiveSkillEffect fx, int count, int spacing)
         {
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
             fx.missileOrigins = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-            fx.missileTargetOffsets = new Vector2[count];
+            fx.missileDirections = new Vector2[count];
+            fx.missileFollowTickCounters = new int[count];
             fx.missileArrived = new bool[count];
             Vector2 baseDir = fx.targetPos - fx.casterPos;
             float targetDist = Mathf.Max(1f, baseDir.magnitude);
@@ -754,15 +845,16 @@ namespace VLTK.Sandbox
             if (distance < targetDist) distance = targetDist;
 
             Vector2 perpDir = new Vector2(-baseDir.y, baseDir.x);
-            float halfSpan = count > 1 ? (count - 1) * param64 * 0.5f : 0f;
+            // PC KSkill::CastWall starts at -Param1 * count / 2, then adds Param1.
+            float currentOffset = -spacing * count / 2f;
             for (int i = 0; i < count; i++)
             {
-                float offset = count > 1 ? Mathf.Lerp(-halfSpan, halfSpan, i / (count - 1f)) : 0f;
-                Vector2 perp = perpDir * offset;
+                Vector2 perp = perpDir * currentOffset;
                 fx.missileOrigins[i] = fx.casterPos + perp;
                 fx.missilePositions[i] = fx.casterPos + perp;
-                fx.missileTargetOffsets[i] = perp;
                 fx.missileTargets[i] = fx.casterPos + baseDir * distance + perp;
+                fx.missileDirections[i] = baseDir;
+                currentOffset += spacing;
             }
         }
 
@@ -857,6 +949,9 @@ namespace VLTK.Sandbox
         public Vector2[] missileOrigins;
         public Vector2[] missileTargets;
         public Vector2[] missileTargetOffsets;
+        public Vector2[] missileDirections;
+        public int[] missileFollowTickCounters;
+        public float missileTickAccumulator;
         public bool[] missileArrived;
         public float[] missileExplodeStartTime;
         public float arrivalRadius = 1f;
@@ -935,14 +1030,28 @@ namespace VLTK.Sandbox
 
             if (index >= 0)
             {
-                if (isHomingMissile && missileTargetOffsets != null && index < missileTargetOffsets.Length)
-                    return target + missileTargetOffsets[index];
-
                 if (missileTargets != null && index < missileTargets.Length)
-                    return missileTargets[index];
+                    return isHomingMissile ? target : missileTargets[index];
             }
 
             return target;
+        }
+
+        public Vector2 ResolveMissileDirection(int index)
+        {
+            if (index >= 0 &&
+                missileDirections != null &&
+                index < missileDirections.Length &&
+                missileDirections[index].sqrMagnitude > 0.000001f)
+            {
+                return missileDirections[index].normalized;
+            }
+
+            Vector2 from = index >= 0 && missilePositions != null && index < missilePositions.Length
+                ? missilePositions[index]
+                : currentMissilePos;
+            Vector2 direction = ResolveMissileTarget(index) - from;
+            return direction.sqrMagnitude > 0.000001f ? direction.normalized : Vector2.zero;
         }
 
     }
