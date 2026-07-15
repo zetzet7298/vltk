@@ -1,0 +1,20 @@
+﻿<Solution>
+  <Project Path="Unity.Localization.csproj" />
+  <Project Path="VLTK.Sandbox.csproj" />
+  <Project Path="Unity.Localization.Editor.csproj" />
+  <Project Path="VLTK.Backend.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="VLTK.Tests.EditMode.csproj" />
+  <Project Path="VLTK.UI.csproj" />
+  <Project Path="Unity.ResourceManager.csproj" />
+  <Project Path="Unity.InternalAPIEngineBridge.013.csproj" />
+  <Project Path="VLTK.Core.csproj" />
+  <Project Path="Unity.Localization.DocCodeSamples.csproj" />
+  <Project Path="PortFactorySmoke.csproj" />
+  <Project Path="VLTK.Sprites.csproj" />
+  <Project Path="Unity.InternalAPIEditorBridge.013.csproj" />
+  <Project Path="VLTK.Resources.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="VLTK.Model.csproj" />
+  <Project Path="VLTK.Tests.PlayMode.csproj" />
+</Solution>

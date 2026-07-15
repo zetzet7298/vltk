@@ -200,7 +200,7 @@ def run():
 
     # Step 4: Execute C# verify_player.cs code
     print("\n--- Reading verify_player.cs ---")
-    with open("/var/www/vltk-mobile/bak/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
+    with open("/var/www/vltk-mobile/harness/.agents/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
         code_content = f.read()
 
     print("\n--- Executing verify_player.cs for MalePlayer ---")

@@ -20,7 +20,7 @@ async def main():
     time.sleep(10)
     
     # Read verify_player.cs content
-    with open("/var/www/vltk-mobile/bak/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
+    with open("/var/www/vltk-mobile/harness/.agents/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
         code_content = f.read()
         
     print("Executing verify_player.cs in Play Mode...")

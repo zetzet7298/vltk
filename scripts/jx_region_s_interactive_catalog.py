@@ -24,7 +24,7 @@ from typing import Any
 
 UNITY_ROOT = Path('/var/www/vltk-mobile')
 PC_ROOT = Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem')
-JX_MAP_PORT = UNITY_ROOT / 'harness/.codex/skills/jx-map-port/scripts/jx_map_port.py'
+JX_MAP_PORT = UNITY_ROOT / 'harness/.agents/skills/jx-map-port/scripts/jx_map_port.py'
 VLTK_DECODE = Path('~/Projects/vltktool/decode_item_texts_vi.py')
 REGION_FILE_RE = re.compile(r'^(\d+)_(\d+)_Region_S\.dat$', re.IGNORECASE)
 KILLBOSSMATCH_MAP_IDS = set(range(907, 917))

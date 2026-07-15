@@ -179,16 +179,18 @@ vltkunity
 # scripts/                  → Harness & tool scripts
 
 # ─────────────────────────────────────────────────
-# Agent tooling skill dirs (not VLTK project source)
+# Agent tooling skill dirs
 # ─────────────────────────────────────────────────
 .codex/
 .factory/
 !.agents/
 .agents/*
-!.agents/skills/
-.agents/skills/**/*-workspace/
-.agents/skills/**/__pycache__/
-harness/.agents/
+.opencode/skills/
+!harness/.agents/
+harness/.agents/*
+!harness/.agents/skills/
+harness/.agents/skills/**/*-workspace/
+harness/.agents/skills/**/__pycache__/
 .understand-anything/
 .kiro/
 .pi/

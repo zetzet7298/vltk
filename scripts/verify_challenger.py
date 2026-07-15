@@ -85,7 +85,7 @@ async def main():
         
         # 4. Read verify_player.cs script content
         print("Reading verify_player.cs C# script...")
-        with open("/var/www/vltk-mobile/bak/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
+        with open("/var/www/vltk-mobile/harness/.agents/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
             code_content = f.read()
             
         # 5. Execute C# code for MalePlayer

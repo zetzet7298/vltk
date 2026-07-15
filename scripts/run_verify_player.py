@@ -12,7 +12,7 @@ async def main():
             print("Session initialized successfully!")
             
             # Read script content
-            with open("/var/www/vltk-mobile/bak/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
+            with open("/var/www/vltk-mobile/harness/.agents/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
                 code_content = f.read()
             
             # We want to execute this code.

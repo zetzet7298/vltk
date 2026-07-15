@@ -28,7 +28,7 @@ async def main():
         
         # 3. Read verify_player.cs script content
         print("Reading verify_player.cs C# script...")
-        with open("/var/www/vltk-mobile/bak/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
+        with open("/var/www/vltk-mobile/harness/.agents/skills/jx-player-visual/scripts/verify_player.cs", "r") as f:
             code_content = f.read()
             
         # 4. Execute C# code
