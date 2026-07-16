@@ -92,6 +92,12 @@ namespace VLTK.UI
 
         private void DrawMissiles(ActiveSkillEffect fx)
         {
+            // [DEBUG 2026-07-16] KangLong visual: log render entry.
+            if (fx.skillId == 128)
+                SubsystemLog.Info("SkillFx", $"[KangLongDraw] skill={fx.skillId} missileCount={fx.missileCount} positionsLen={fx.missilePositions?.Length ?? -1} " +
+                    $"originsLen={fx.missileOrigins?.Length ?? -1} targetsLen={fx.missileTargets?.Length ?? -1} " +
+                    $"pos0={(fx.missilePositions != null && fx.missilePositions.Length > 0 ? fx.missilePositions[0].ToString() : "<none>")} " +
+                    $"posLast={(fx.missilePositions != null && fx.missilePositions.Length > 1 ? fx.missilePositions[fx.missilePositions.Length - 1].ToString() : "<none>")}");
             // PC SPR missiles are rendered by SkillEffectWorldOverlay (SpriteRenderer, world-space).
             // IMGUI overlay must NOT draw them — doing so causes a blurry double-image because
             // WorldOverlay draws at PPU=1f world-scale while IMGUI draws at native pixel size.

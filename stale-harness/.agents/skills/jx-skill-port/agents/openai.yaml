@@ -1,0 +1,4 @@
+interface:
+  display_name: "JX Skill Port"
+  short_description: "Port võ công JX PC sang Unity theo parity ledger"
+  default_prompt: "Dùng $jx-skill-port để port hoặc sửa một võ công JX PC sang Unity Mobile, chứng minh đủ source trước khi code và để tôi human verify phần visual cuối."

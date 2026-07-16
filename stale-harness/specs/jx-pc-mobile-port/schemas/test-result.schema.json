@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://contracts.vltk.example/spec/test-result.schema.json",
+  "title": "Kết quả kiểm thử có bằng chứng",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["test_id", "status", "revision", "executed_at", "result_path", "sha256", "reviewer", "golden_ids"],
+  "properties": {
+    "test_id": {"type": "string", "pattern": "^TEST-[A-Z0-9-]+$"},
+    "status": {"enum": ["PASS", "FAIL"]},
+    "revision": {"type": "string", "minLength": 7, "maxLength": 128},
+    "executed_at": {"type": "string", "format": "date-time"},
+    "result_path": {"type": "string", "minLength": 1, "pattern": "^(?!/)(?!.*\\.\\.).+$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reviewer": {"type": "string", "minLength": 1},
+    "golden_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^GOLD-[A-Z0-9-]+$"}
+    }
+  }
+}

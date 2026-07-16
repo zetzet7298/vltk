@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using VLTK.Core;
 using VLTK.Model;
 using VLTK.Sprites;
 
@@ -332,6 +333,11 @@ namespace VLTK.Sandbox
             Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null)
         {
             if (skill == null) return null;
+
+            // [DEBUG 2026-07-16] KangLong visual: entry log.
+            if (skill.skillId == 128)
+                SubsystemLog.Info("SkillFx", $"[KangLongEntry] PlaySkillCast skill=128 level={skillLevel} caster={casterPos} target={targetPos} " +
+                    $"effectKey={skill.effectSourceId?.ToKey() ?? "<null>"} form={skill.missileForm} childNum={skill.childSkillNum} appliesLua={PcCaiBangLuaLevelService.Applies(128)}");
 
             var effect = new ActiveSkillEffect
             {
@@ -804,6 +810,11 @@ namespace VLTK.Sandbox
             // PC parity: non-homing missiles fly their full lifetime range (speed * duration)
             float distance = fx.missileSpeed * fx.missileDuration;
             if (distance < targetDist) distance = targetDist;
+
+            // [DEBUG 2026-07-16] KangLong visual: chỉ render 1 quả cầu thay vì 15. Log setup.
+            SubsystemLog.Info("SkillFx", $"[KangLongSetup] skill={fx.skillId} count={count} angleStep64={angleStep64} firstStep={firstStep} " +
+                $"speed={fx.missileSpeed} duration={fx.missileDuration} pcSpeedPerTick={fx.pcMissileSpeedPerTick} pcLifeTicks={fx.pcMissileLifeTicks} " +
+                $"targetDist={targetDist} distance={distance} caster={fx.casterPos} target={fx.targetPos}");
 
             for (int i = 0; i < count; i++)
             {

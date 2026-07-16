@@ -1,0 +1,15 @@
+schema_version: 1
+designs:
+  - {id: DOM-ACS, path: domains/account-character-session.md, owner: identity-character}
+  - {id: DOM-WMM, path: domains/world-map-movement.md, owner: world}
+  - {id: DOM-CBT, path: domains/combat-targeting.md, owner: combat}
+  - {id: DOM-SKL, path: domains/skills.md, owner: skills}
+  - {id: DOM-PRG, path: domains/progression.md, owner: progression}
+  - {id: DOM-IIEL, path: domains/items-inventory-equipment-loot.md, owner: item-economy}
+  - {id: DOM-NQ, path: domains/npc-quest.md, owner: npc-quest}
+  - {id: DOM-AUTO, path: domains/autopath-autocombat.md, owner: automation}
+  - {id: DOM-MP, path: domains/mount-pet.md, owner: companion}
+  - {id: DOM-STGPE, path: domains/social-trade-guild-pvp-endgame.md, owner: social-endgame}
+  - {id: DOM-UI, path: domains/ui-hud-panels/README.md, owner: unity-ui}
+  - {id: DOM-CONTENT, path: domains/content-assets-avatar-audio/README.md, owner: content}
+  - {id: DOM-SERVER, path: domains/server-runtime/README.md, owner: backend-data}

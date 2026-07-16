@@ -1,0 +1,80 @@
+{
+  "schema_id": "urn:vltk-mobile:spec:training-npcs-p0-fixture:v1",
+  "fixture_id": "FIXTURE-CBT-TRAINING-001",
+  "schema_version": 1,
+  "language": "vi-VN",
+  "purpose": "Khóa chính xác baseline mobile hiện hữu của 5 NPC huấn luyện cho Combat Parity Lab; không phải golden chứng minh parity PC.",
+  "lifecycle": "DISCOVERED",
+  "verification": "UNVERIFIED_RUNTIME",
+  "authority_limit": "Các giá trị lấy từ source Unity hiện tại chỉ là fixture DevHarness. Trường BLOCKED không được tự điền hoặc dùng làm oracle production.",
+  "sources": [
+    {
+      "path": "Assets/Scripts/Sandbox/TrainingNpcSpawner.cs",
+      "sha256": "defad24d7fd6042e8a2887fa1a5401128c9b35df66f820e9fbef197707e52ad5",
+      "line_ranges": ["15-18", "23-36", "47-66", "140-215"],
+      "claim": "số lượng, thứ tự, template, tên Việt, vị trí, instance ID, HP, level, AI tĩnh và SPR fallback"
+    },
+    {
+      "path": "Assets/Scripts/Sandbox/SandboxManager.cs",
+      "sha256": "984f0e853db852a4a4434640a2b86347036bc3136446fe515bf641220670d0bc",
+      "line_ranges": ["134-134", "721-727", "855-869", "1839-1843"],
+      "claim": "map Ba Lăng 53, điều kiện spawn trên map hoặc fast boot không map"
+    }
+  ],
+  "spawn_policy": {
+    "production_enabled": false,
+    "devharness_only": true,
+    "fixture_mode": "MAP_53_FIXED_CENTER",
+    "canonical_map_id": 53,
+    "requires_use_player_position": false,
+    "clear_on_other_map": true,
+    "fixed_center": {"x": 53246.0, "y": -52041.0},
+    "radius_world_units": 300.0,
+    "angle_formula_degrees": "90 + index * 72",
+    "position_formula": "center + radius * (cos(angle), sin(angle))",
+    "position_tolerance_world_units": 0.01,
+    "observed_fast_boot_variant": {
+      "included_in_fixture": false,
+      "map_id": null,
+      "use_player_position": true,
+      "note": "SandboxManager no-map fast boot đổi center sang vị trí player; không dùng variant này cho deterministic parity case."
+    }
+  },
+  "shared_state": {
+    "spawn_life": 999999,
+    "max_life": 999999,
+    "level": 1,
+    "kind": 0,
+    "series": 0,
+    "walk_speed": 0,
+    "run_speed": 0,
+    "vision_radius": 0,
+    "active_radius": 0,
+    "ai_mode": 0,
+    "ai_params": [],
+    "alive_on_spawn": true,
+    "movement": "STATIC"
+  },
+  "resistance_profile": {
+    "status": "BLOCKED",
+    "physical": null,
+    "cold": null,
+    "fire": null,
+    "lightning": null,
+    "poison": null,
+    "state_resistances": null,
+    "blocker": "TrainingNpcSpawner không gán resistance; cần PC runtime golden và source authority đã reconcile trước khi khóa oracle."
+  },
+  "npcs": [
+    {"index": 0, "instance_id": 1000, "template_id": 415, "name_vi": "Bao cát", "angle_degrees": 90.0, "position": {"x": 53246.0, "y": -51741.0}, "sprite_clip_ref_fallback": "enemy180", "stand_spr": "spr\\npcres\\enemy\\enemy180\\enemy180_st.spr"},
+    {"index": 1, "instance_id": 1001, "template_id": 415, "name_vi": "Bao cát", "angle_degrees": 162.0, "position": {"x": 52960.6834, "y": -51948.2949}, "sprite_clip_ref_fallback": "enemy180", "stand_spr": "spr\\npcres\\enemy\\enemy180\\enemy180_st.spr"},
+    {"index": 2, "instance_id": 1002, "template_id": 413, "name_vi": "Cọc gỗ", "angle_degrees": 234.0, "position": {"x": 53069.6645, "y": -52283.7051}, "sprite_clip_ref_fallback": "enemy178", "stand_spr": "spr\\npcres\\enemy\\enemy178\\enemy178_st.spr"},
+    {"index": 3, "instance_id": 1003, "template_id": 413, "name_vi": "Cọc gỗ", "angle_degrees": 306.0, "position": {"x": 53422.3355, "y": -52283.7051}, "sprite_clip_ref_fallback": "enemy178", "stand_spr": "spr\\npcres\\enemy\\enemy178\\enemy178_st.spr"},
+    {"index": 4, "instance_id": 1004, "template_id": 414, "name_vi": "Mộc nhân", "angle_degrees": 378.0, "position": {"x": 53531.3166, "y": -51948.2949}, "sprite_clip_ref_fallback": "enemy179", "stand_spr": "spr\\npcres\\enemy\\enemy179\\enemy179_st.spr"}
+  ],
+  "required_capture": {
+    "status": "BLOCKED",
+    "fields": ["resistance_profile", "hitbox", "collision_radius", "faction_relation", "damage_rounding_oracle", "state_proc_oracle", "death_and_reset_policy", "canonical_pc_visual_frames"],
+    "exit_evidence": "PC runtime capture đã hash + reviewer Gameplay/QA Parity sign-off"
+  }
+}

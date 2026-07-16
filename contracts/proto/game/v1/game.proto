@@ -1,0 +1,190 @@
+syntax = "proto3";
+
+package game.v1;
+
+option go_package = "vltk.dev/server-runtime/gen/game/v1;gamev1";
+
+// WebSocket carries exactly one length-delimited ClientEnvelope or
+// ServerEnvelope per binary message. Compression is disabled until negotiated.
+message ClientEnvelope {
+  string request_id = 1;
+  uint64 session_epoch = 2;
+  uint64 client_seq = 3;
+  uint64 ack_server_seq = 4;
+  oneof payload {
+    ClientHello hello = 10;
+    InputBatch input_batch = 11;
+    ResyncRequest resync = 12;
+    ClientPing ping = 13;
+  }
+}
+
+message ServerEnvelope {
+  string request_id = 1;
+  uint64 session_epoch = 2;
+  uint64 server_seq = 3;
+  uint64 last_processed_client_seq = 4;
+  uint64 server_tick = 5;
+  oneof payload {
+    ServerHello hello = 10;
+    WorldSnapshot snapshot = 11;
+    CommandResult command_result = 12;
+    Error error = 13;
+    ServerPong pong = 14;
+    ShutdownNotice shutdown = 15;
+  }
+}
+
+message ClientHello {
+  string protocol = 1; // Must be "game.v1".
+  string ticket = 2; // Single-use, bound to realm/character/release.
+  string client_version = 3;
+  string content_release_id = 4;
+  uint64 resume_session_epoch = 5;
+  uint64 last_applied_server_seq = 6;
+  uint64 last_applied_server_tick = 7;
+}
+
+message ServerHello {
+  string protocol = 1;
+  string realm_id = 2;
+  string character_id = 3;
+  string content_release_id = 4;
+  uint32 tick_rate_hz = 5; // Exactly 18 for game.v1.
+  uint64 initial_tick = 6;
+  uint64 session_epoch = 7;
+  uint32 max_input_batch = 8;
+  uint32 max_frame_bytes = 9;
+  bool resumed = 10;
+}
+
+message InputBatch {
+  // Inputs are sorted by input_seq, cover at most 6 future ticks and contain
+  // no duplicate durable command_id. Server clamps/rejects invalid target_tick.
+  repeated PlayerInput inputs = 1;
+}
+
+message PlayerInput {
+  uint64 input_seq = 1;
+  uint64 target_tick = 2;
+  string command_id = 3; // UUID required for durable side effects.
+  oneof command {
+    MoveInput move = 10;
+    CastSkillInput cast_skill = 11;
+    UseItemInput use_item = 12;
+    InteractInput interact = 13;
+  }
+}
+
+message MoveInput {
+  sint32 axis_x_milli = 1; // [-1000, 1000]
+  sint32 axis_y_milli = 2; // [-1000, 1000]
+  uint32 facing_millirad = 3;
+  bool stop = 4;
+}
+
+message CastSkillInput {
+  uint32 skill_id = 1;
+  string target_entity_id = 2;
+  sint32 target_x = 3;
+  sint32 target_y = 4;
+}
+
+message UseItemInput {
+  string inventory_item_id = 1;
+  uint32 quantity = 2;
+  string target_entity_id = 3;
+}
+
+message InteractInput {
+  string entity_id = 1;
+  uint32 action_id = 2;
+}
+
+message ResyncRequest {
+  enum Reason {
+    REASON_UNSPECIFIED = 0;
+    BASELINE_MISSING = 1;
+    CHECKSUM_MISMATCH = 2;
+    SEQUENCE_GAP = 3;
+  }
+  Reason reason = 1;
+  uint64 last_good_tick = 2;
+}
+
+message WorldSnapshot {
+  uint64 baseline_tick = 1; // 0 means full snapshot.
+  bool full = 2;
+  repeated EntityState upserts = 3;
+  repeated string removed_entity_ids = 4;
+  PlayerResources resources = 5;
+  fixed64 state_checksum = 6;
+}
+
+message EntityState {
+  string entity_id = 1;
+  EntityKind kind = 2;
+  uint32 template_id = 3;
+  uint32 map_id = 4;
+  sint32 x = 5;
+  sint32 y = 6;
+  uint32 facing_millirad = 7;
+  sint64 hp = 8;
+  sint64 max_hp = 9;
+  uint32 state_flags = 10;
+  uint64 version = 11;
+}
+
+enum EntityKind {
+  ENTITY_KIND_UNSPECIFIED = 0;
+  ENTITY_KIND_CHARACTER = 1;
+  ENTITY_KIND_NPC = 2;
+  ENTITY_KIND_ITEM_DROP = 3;
+  ENTITY_KIND_OBJECT = 4;
+}
+
+message PlayerResources {
+  sint64 hp = 1;
+  sint64 mana = 2;
+  sint64 stamina = 3;
+  sint64 experience = 4;
+  uint64 version = 5;
+}
+
+message CommandResult {
+  string command_id = 1;
+  uint64 input_seq = 2;
+  bool accepted = 3;
+  string code = 4;
+  string detail = 5;
+  repeated EconomyDelta economy = 6;
+}
+
+message EconomyDelta {
+  string currency = 1;
+  sint64 delta = 2;
+  sint64 balance = 3;
+  string transaction_id = 4;
+}
+
+message Error {
+  string code = 1;
+  string detail = 2;
+  bool retryable = 3;
+  string command_id = 4;
+  uint32 retry_after_ms = 5;
+}
+
+message ClientPing {
+  uint64 client_time_ms = 1; // Diagnostic only, never simulation authority.
+}
+
+message ServerPong {
+  uint64 client_time_ms = 1;
+  uint64 server_time_ms = 2;
+}
+
+message ShutdownNotice {
+  uint32 retry_after_seconds = 1;
+  string reason = 2;
+}

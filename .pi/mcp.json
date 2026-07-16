@@ -35,7 +35,7 @@
       "args": [
         "blender-mcp"
       ],
-      "directTools": true
+      "directTools": false
     }
   }
 }

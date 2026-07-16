@@ -1,0 +1,318 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+$id: https://vltk-mobile.local/schemas/records.schema.yaml
+title: Stable registry record VLTK PC-mobile
+description: Schema nghiêm ngặt cho 14 loại stable ID; áp dụng lên từng record sau khi tách khỏi ledger chứa nó.
+oneOf:
+  - $ref: '#/$defs/objective'
+  - $ref: '#/$defs/functional_requirement'
+  - $ref: '#/$defs/nonfunctional_requirement'
+  - $ref: '#/$defs/adr'
+  - $ref: '#/$defs/risk'
+  - $ref: '#/$defs/test'
+  - $ref: '#/$defs/migration'
+  - $ref: '#/$defs/debt'
+  - $ref: '#/$defs/claim'
+  - $ref: '#/$defs/evidence'
+  - $ref: '#/$defs/contradiction'
+  - $ref: '#/$defs/gap'
+  - $ref: '#/$defs/golden'
+  - $ref: '#/$defs/parity'
+unevaluatedProperties: false
+
+$defs:
+  nonempty_string:
+    type: string
+    minLength: 1
+  phase:
+    enum: [P0, P1, P2, P3, P4, P0-P3, P0-P4, P1-P2, P1-P4, ALL]
+  lifecycle:
+    enum: [DISCOVERED, SOURCE_PROVEN, SPECIFIED, READY, IMPLEMENTING, FUNCTIONAL, VERIFYING, PARITY_DONE, BLOCKED, DEFERRED, OUT_OF_SCOPE, SUPERSEDED]
+  verification:
+    enum: [UNVERIFIED, AUTOMATED_VERIFIED, RUNTIME_VERIFIED, HUMAN_ACCEPTED, STALE, BLOCKED]
+  evidence_refs:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      $ref: '#/$defs/nonempty_string'
+  common:
+    type: object
+    required: [id, dri, reviewer, phase, status, acceptance_evidence]
+    properties:
+      id:
+        type: string
+      dri:
+        $ref: '#/$defs/nonempty_string'
+      reviewer:
+        $ref: '#/$defs/nonempty_string'
+      phase:
+        $ref: '#/$defs/phase'
+      status:
+        $ref: '#/$defs/nonempty_string'
+      acceptance_evidence:
+        $ref: '#/$defs/evidence_refs'
+
+  objective:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [title, owner]
+        properties:
+          id: {type: string, pattern: '^OBJ-[A-Z0-9-]+$'}
+          title: {$ref: '#/$defs/nonempty_string'}
+          owner: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [DRAFT, ACTIVE, READY, BLOCKED, DEFERRED, COMPLETED, SUPERSEDED]}
+
+  requirement_base:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [title, owner, objective, lifecycle, verification, tests]
+        properties:
+          title: {$ref: '#/$defs/nonempty_string'}
+          owner: {$ref: '#/$defs/nonempty_string'}
+          objective: {type: string, pattern: '^OBJ-[A-Z0-9-]+$'}
+          lifecycle: {$ref: '#/$defs/lifecycle'}
+          verification: {$ref: '#/$defs/verification'}
+          tests:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, pattern: '^TEST-[A-Z0-9-]+$'}
+          status: {$ref: '#/$defs/lifecycle'}
+
+  functional_requirement:
+    allOf:
+      - $ref: '#/$defs/requirement_base'
+      - type: object
+        properties:
+          id: {type: string, pattern: '^FR-[A-Z0-9-]+$'}
+
+  nonfunctional_requirement:
+    allOf:
+      - $ref: '#/$defs/requirement_base'
+      - type: object
+        properties:
+          id: {type: string, pattern: '^NFR-[A-Z0-9-]+$'}
+
+  adr:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [path]
+        properties:
+          id: {type: string, pattern: '^ADR-[0-9]{4}$'}
+          path: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [DRAFT, ACCEPTED, SUPERSEDED, DEFERRED]}
+
+  risk:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [severity, owner, summary]
+        properties:
+          id: {type: string, pattern: '^RISK-[0-9]{3}$'}
+          severity: {enum: [low, medium, high, critical]}
+          owner: {$ref: '#/$defs/nonempty_string'}
+          summary: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [OPEN, ACTIVE, BLOCKED, RESOLVED, DEFERRED]}
+
+  test:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [layer, gate, title]
+        properties:
+          id: {type: string, pattern: '^TEST-[A-Z0-9-]+$'}
+          layer: {$ref: '#/$defs/nonempty_string'}
+          gate: {type: string, pattern: '^G[0-6]$'}
+          title: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [NOT_RUN, PASS, FAIL, BLOCKED, DEFERRED]}
+
+  migration:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [title, rollback]
+        properties:
+          id: {type: string, pattern: '^MIG-[0-9]{3}$'}
+          title: {$ref: '#/$defs/nonempty_string'}
+          rollback: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [PLANNED, READY, IMPLEMENTING, COMPLETED, BLOCKED, DEFERRED, SUPERSEDED]}
+
+  debt:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [domain, summary]
+        properties:
+          id: {type: string, pattern: '^DEBT-[0-9]{3}$'}
+          domain: {$ref: '#/$defs/nonempty_string'}
+          summary: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [OPEN, ACTIVE, BLOCKED, RETIRED, DEFERRED, RESOLVED]}
+
+  claim:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [statement, evidence, confidence]
+        properties:
+          id: {type: string, pattern: '^CLAIM-[0-9]{4}$'}
+          statement: {$ref: '#/$defs/nonempty_string'}
+          evidence:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, pattern: '^EVID-[0-9]{4}$'}
+          confidence: {enum: [low, medium, high]}
+          status: {enum: [DISCOVERED, SOURCE_PROVEN, STALE, BLOCKED, SUPERSEDED]}
+
+  evidence:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [kind, path, lines, claim_limit, sha256, revision, captured_at, fresh_until]
+        properties:
+          id: {type: string, pattern: '^EVID-[0-9]{4}$'}
+          kind: {enum: [source, audit, document, runtime, user_decision]}
+          path: {type: string, pattern: '^/'}
+          lines:
+            oneOf:
+              - {type: integer, minimum: 1}
+              - {$ref: '#/$defs/nonempty_string'}
+          claim_limit: {$ref: '#/$defs/nonempty_string'}
+          sha256: {type: string, pattern: '^[a-f0-9]{64}$'}
+          revision: {$ref: '#/$defs/nonempty_string'}
+          captured_at: {type: string, format: date-time}
+          fresh_until: {type: string, format: date-time}
+          status: {enum: [DISCOVERED, SOURCE_PROVEN, STALE, BLOCKED, SUPERSEDED]}
+
+  contradiction:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [subject, claim_a, claim_b, claim_refs, evidence_refs, priority, resolution, open]
+        properties:
+          id: {type: string, pattern: '^CON-[0-9]{4}$'}
+          subject: {$ref: '#/$defs/nonempty_string'}
+          claim_a: {$ref: '#/$defs/nonempty_string'}
+          claim_b: {$ref: '#/$defs/nonempty_string'}
+          claim_refs:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, pattern: '^CLAIM-[0-9]{4}$'}
+          evidence_refs:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, pattern: '^EVID-[0-9]{4}$'}
+          priority: {enum: [P0, P1, P2, P3, P4]}
+          resolution: {$ref: '#/$defs/nonempty_string'}
+          open: {type: boolean}
+          blocker: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [OPEN, OPEN_BLOCKER, RESOLVED, SUPERSEDED]}
+        allOf:
+          - if:
+              properties: {status: {enum: [OPEN, OPEN_BLOCKER]}}
+              required: [status]
+            then:
+              required: [blocker]
+              properties: {open: {const: true}}
+          - if:
+              properties: {status: {const: RESOLVED}}
+              required: [status]
+            then:
+              properties: {open: {const: false}}
+
+  gap:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [domain, priority, summary]
+        properties:
+          id: {type: string, pattern: '^GAP-[0-9]{3}$'}
+          domain: {$ref: '#/$defs/nonempty_string'}
+          priority: {enum: [P0, P1, P2, P3, P4]}
+          summary: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [OPEN, ACTIVE, READY, BLOCKED, RESOLVED, DEFERRED]}
+
+  golden_artifact:
+    type: object
+    properties:
+      object_key: {$ref: '#/$defs/nonempty_string'}
+      sha256: {type: string, pattern: '^[a-f0-9]{64}$'}
+      size_bytes: {type: integer, minimum: 1}
+      captured_at: {type: string, format: date-time}
+      source_revision: {$ref: '#/$defs/nonempty_string'}
+      tool_revision: {$ref: '#/$defs/nonempty_string'}
+      content_type: {$ref: '#/$defs/nonempty_string'}
+    additionalProperties: false
+
+  golden:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [subject, required_for, artifact]
+        properties:
+          id: {type: string, pattern: '^GOLD-[0-9]{4}$'}
+          subject: {$ref: '#/$defs/nonempty_string'}
+          required_for:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, pattern: '^PAR-[0-9]{4}$'}
+          artifact: {$ref: '#/$defs/golden_artifact'}
+          blocker: {$ref: '#/$defs/nonempty_string'}
+          status: {enum: [BLOCKED, REQUIRED, READY, APPROVED, COMPLETED]}
+        allOf:
+          - if:
+              properties: {status: {enum: [READY, APPROVED, COMPLETED]}}
+              required: [status]
+            then:
+              properties:
+                artifact:
+                  required: [object_key, sha256, size_bytes, captured_at, source_revision, tool_revision, content_type]
+            else:
+              required: [blocker]
+
+  parity:
+    allOf:
+      - $ref: '#/$defs/common'
+      - type: object
+        required: [subject, lifecycle, verification]
+        properties:
+          id: {type: string, pattern: '^PAR-[0-9]{4}$'}
+          subject: {$ref: '#/$defs/nonempty_string'}
+          lifecycle: {$ref: '#/$defs/lifecycle'}
+          verification: {$ref: '#/$defs/verification'}
+          status: {$ref: '#/$defs/lifecycle'}
+          tests:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, pattern: '^TEST-[A-Z0-9-]+$'}
+          golden_ids:
+            type: array
+            minItems: 1
+            uniqueItems: true
+            items: {type: string, pattern: '^GOLD-[0-9]{4}$'}
+          reviewer_signoff:
+            type: object
+            additionalProperties: false
+            required: [reviewer, signed_at, revision, evidence_path, sha256]
+            properties:
+              reviewer: {$ref: '#/$defs/nonempty_string'}
+              signed_at: {type: string, format: date-time}
+              revision: {$ref: '#/$defs/nonempty_string'}
+              evidence_path: {type: string, minLength: 1}
+              sha256: {type: string, pattern: '^[a-f0-9]{64}$'}
+        allOf:
+          - if:
+              properties: {lifecycle: {const: PARITY_DONE}}
+              required: [lifecycle]
+            then:
+              required: [tests, golden_ids, reviewer_signoff]
+              properties:
+                status: {const: PARITY_DONE}
+                verification: {enum: [RUNTIME_VERIFIED, HUMAN_ACCEPTED]}

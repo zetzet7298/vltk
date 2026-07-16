@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:vltk-mobile:spec:skill-parity-p0-case:v1",
+  "title": "Schema case parity kỹ năng P0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["case_id", "catalog_ref", "group", "skill_level", "variant", "fixture_ref", "source_refs", "dimensions", "oracle", "lifecycle", "blocked_fields"],
+  "properties": {
+    "case_id": {"type": "string", "pattern": "^CASE-SKL-[A-Z0-9-]+$"},
+    "catalog_ref": {"type": "string", "pattern": "^SKILL-[0-9]+$"},
+    "group": {"enum": ["shared", "novice", "shaolin", "tianwang", "tangmen", "wudu", "emei", "cuiyan", "gaibang", "tianren", "wudang", "kunlun"]},
+      "skill_level": {"type": "integer", "minimum": 1},
+      "variant": {"type": "string", "minLength": 1},
+    "fixture_ref": {"const": "FIXTURE-CBT-TRAINING-001"},
+    "source_refs": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "dimensions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cast_kind", "target_mode", "target_relation", "range", "cost", "cooldown", "formula", "rounding", "rng", "proc_order", "missile", "states", "stacking", "death_interaction"],
+      "properties": {
+        "cast_kind": {"$ref": "#/$defs/evidenced"},
+        "target_mode": {"$ref": "#/$defs/evidenced"},
+        "target_relation": {"$ref": "#/$defs/evidenced"},
+        "range": {"$ref": "#/$defs/evidenced"},
+        "cost": {"$ref": "#/$defs/evidenced"},
+        "cooldown": {"$ref": "#/$defs/evidenced"},
+        "formula": {"$ref": "#/$defs/evidenced"},
+        "rounding": {"$ref": "#/$defs/evidenced"},
+        "rng": {"$ref": "#/$defs/evidenced"},
+        "proc_order": {"$ref": "#/$defs/evidenced"},
+        "missile": {"$ref": "#/$defs/evidenced"},
+        "states": {"$ref": "#/$defs/evidenced"},
+        "stacking": {"$ref": "#/$defs/evidenced"},
+        "death_interaction": {"$ref": "#/$defs/evidenced"}
+      }
+    },
+    "oracle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["logic_event_stream", "damage_state_snapshot", "visual_frame_sequence", "audio_sequence", "deterministic_replay"],
+      "properties": {
+        "logic_event_stream": {"$ref": "#/$defs/evidenced"},
+        "damage_state_snapshot": {"$ref": "#/$defs/evidenced"},
+        "visual_frame_sequence": {"$ref": "#/$defs/evidenced"},
+        "audio_sequence": {"$ref": "#/$defs/evidenced"},
+        "deterministic_replay": {"$ref": "#/$defs/evidenced"}
+      }
+    },
+    "lifecycle": {"enum": ["DISCOVERED", "SPECIFIED", "FUNCTIONAL", "PARITY_DONE", "BLOCKED"]},
+    "blocked_fields": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+  },
+  "$defs": {
+    "evidenced": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "value", "evidence_refs", "blocker"],
+      "properties": {
+        "status": {"enum": ["BLOCKED", "NOT_APPLICABLE", "SPECIFIED", "VERIFIED", "PARITY_DONE"]},
+        "value": {},
+        "evidence_refs": {"type": "array", "items": {"type": "string"}},
+        "blocker": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "BLOCKED"}}}, "then": {"properties": {"blocker": {"type": "string", "minLength": 1}}}}
+      ]
+    }
+  }
+}

@@ -1,0 +1,370 @@
+openapi: 3.1.0
+info:
+  title: VLTK DevHarness REST API
+  version: 1.0.0
+  description: Normative REST contract for authentication, bootstrap and character lifecycle.
+  license:
+    name: Proprietary
+    identifier: LicenseRef-Proprietary
+servers:
+  - url: https://api.example.invalid/v1
+security:
+  - bearerAuth: []
+paths:
+  /auth/login:
+    post:
+      summary: Authenticate an account in a realm
+      operationId: login
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authenticated; refresh token is rotated on every refresh.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenPair'
+        '401':
+          $ref: '#/components/responses/Problem'
+        '403':
+          $ref: '#/components/responses/Problem'
+        '422':
+          $ref: '#/components/responses/Problem'
+        '429':
+          $ref: '#/components/responses/Problem'
+  /auth/refresh:
+    post:
+      summary: Rotate a refresh token
+      operationId: refresh
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [refreshToken]
+              properties:
+                refreshToken: {type: string, minLength: 32, maxLength: 4096}
+      responses:
+        '200':
+          description: Rotated token pair.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/TokenPair'}
+        '401': {$ref: '#/components/responses/Problem'}
+        '429': {$ref: '#/components/responses/Problem'}
+  /auth/logout:
+    post:
+      summary: Revoke the current authentication session
+      operationId: logout
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '204': {description: Current session revoked; replay is also successful.}
+        '401': {$ref: '#/components/responses/Problem'}
+  /bootstrap:
+    get:
+      summary: Bootstrap realm, content and WSS admission data
+      operationId: bootstrap
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - name: realmId
+          in: query
+          required: true
+          schema: {$ref: '#/components/schemas/Uuid'}
+        - name: clientVersion
+          in: query
+          required: true
+          schema: {type: string, pattern: '^\d+\.\d+\.\d+([+-][0-9A-Za-z.-]+)?$'}
+      responses:
+        '200':
+          description: Immutable bootstrap data and a single-use WSS ticket valid at most 60 seconds.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/BootstrapResponse'}
+        '403': {$ref: '#/components/responses/Problem'}
+        '426': {$ref: '#/components/responses/Problem'}
+        '503': {$ref: '#/components/responses/Problem'}
+  /characters:
+    get:
+      summary: List characters owned by the authenticated account
+      operationId: listCharacters
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/RealmId'
+      responses:
+        '200':
+          description: Active characters owned by the authenticated account in the realm.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [characters]
+                properties:
+                  characters:
+                    type: array
+                    maxItems: 32
+                    items: {$ref: '#/components/schemas/CharacterSummary'}
+        '403': {$ref: '#/components/responses/Problem'}
+    post:
+      summary: Create a character aggregate
+      operationId: createCharacter
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/RealmId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/CreateCharacterRequest'}
+      responses:
+        '201':
+          description: Character created atomically with stats, wallet and initial checkpoint.
+          headers:
+            Location: {schema: {type: string}}
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CharacterDetail'}
+        '409': {$ref: '#/components/responses/Problem'}
+        '422': {$ref: '#/components/responses/Problem'}
+  /characters/{characterId}:
+    get:
+      summary: Get durable character state
+      operationId: getCharacter
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/RealmId'
+        - $ref: '#/components/parameters/CharacterId'
+      responses:
+        '200':
+          description: Character state visible outside realtime session.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/CharacterDetail'}
+        '404': {$ref: '#/components/responses/Problem'}
+    delete:
+      summary: Soft-delete a character
+      operationId: deleteCharacter
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/RealmId'
+        - $ref: '#/components/parameters/CharacterId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - name: If-Match
+          in: header
+          required: true
+          schema: {type: string, pattern: '^"[0-9]+"$'}
+      responses:
+        '202': {description: Soft-delete scheduled; name remains reserved during retention.}
+        '404': {$ref: '#/components/responses/Problem'}
+        '409': {$ref: '#/components/responses/Problem'}
+  /characters/{characterId}/select:
+    post:
+      summary: Select a character and obtain a WSS ticket
+      operationId: selectCharacter
+      parameters:
+        - $ref: '#/components/parameters/RequestId'
+        - $ref: '#/components/parameters/RealmId'
+        - $ref: '#/components/parameters/CharacterId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [contentReleaseId]
+              properties:
+                contentReleaseId: {$ref: '#/components/schemas/Uuid'}
+      responses:
+        '200':
+          description: Single-use WSS ticket bound to account, realm, character and release.
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/GameAdmission'}
+        '409': {$ref: '#/components/responses/Problem'}
+        '503': {$ref: '#/components/responses/Problem'}
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    RequestId:
+      name: X-Request-ID
+      in: header
+      required: false
+      schema: {$ref: '#/components/schemas/Uuid'}
+    RealmId:
+      name: X-Realm-ID
+      in: header
+      required: true
+      schema: {$ref: '#/components/schemas/Uuid'}
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: {type: string, minLength: 16, maxLength: 128, pattern: '^[!-~]+$'}
+    CharacterId:
+      name: characterId
+      in: path
+      required: true
+      schema: {$ref: '#/components/schemas/Uuid'}
+  responses:
+    Problem:
+      description: Error response; stable behavior is identified by `code`, not `detail`.
+      content:
+        application/problem+json:
+          schema: {$ref: '#/components/schemas/Problem'}
+  schemas:
+    Uuid:
+      type: string
+      format: uuid
+      pattern: '^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      required: [realmId, accountName, password]
+      properties:
+        realmId: {$ref: '#/components/schemas/Uuid'}
+        accountName: {type: string, minLength: 1, maxLength: 32}
+        password: {type: string, minLength: 8, maxLength: 256, writeOnly: true}
+        otp: {type: string, minLength: 6, maxLength: 12, writeOnly: true}
+        deviceId: {type: string, minLength: 1, maxLength: 128}
+    TokenPair:
+      type: object
+      additionalProperties: false
+      required: [accessToken, accessExpiresAt, refreshToken, refreshExpiresAt, accountId, realmId]
+      properties:
+        accessToken: {type: string, writeOnly: true}
+        accessExpiresAt: {type: string, format: date-time}
+        refreshToken: {type: string, writeOnly: true}
+        refreshExpiresAt: {type: string, format: date-time}
+        accountId: {$ref: '#/components/schemas/Uuid'}
+        realmId: {$ref: '#/components/schemas/Uuid'}
+    BootstrapResponse:
+      type: object
+      additionalProperties: false
+      required: [realm, content, protocols, minClientVersion, recommendedClientVersion, wss]
+      properties:
+        realm:
+          type: object
+          required: [id, code, name, status]
+          properties:
+            id: {$ref: '#/components/schemas/Uuid'}
+            code: {type: string}
+            name: {type: string}
+            status: {type: string, enum: [open, maintenance, closed]}
+        content:
+          type: object
+          required: [releaseId, manifestUrl, manifestSha256]
+          properties:
+            releaseId: {$ref: '#/components/schemas/Uuid'}
+            manifestUrl: {type: string, format: uri}
+            manifestSha256: {type: string, pattern: '^[0-9a-f]{64}$'}
+        protocols:
+          type: array
+          items: {type: string, enum: [game.v1]}
+        minClientVersion: {type: string}
+        recommendedClientVersion: {type: string}
+        wss: {$ref: '#/components/schemas/GameAdmission'}
+    GameAdmission:
+      type: object
+      additionalProperties: false
+      required: [url, subprotocol, ticket, expiresAt, tickRateHz]
+      properties:
+        url: {type: string, format: uri, pattern: '^wss://'}
+        subprotocol: {type: string, const: game.v1}
+        ticket: {type: string, minLength: 32, writeOnly: true}
+        expiresAt: {type: string, format: date-time}
+        tickRateHz: {type: integer, const: 18}
+    CreateCharacterRequest:
+      type: object
+      additionalProperties: false
+      required: [name, faction, series]
+      properties:
+        name: {type: string, minLength: 2, maxLength: 24}
+        faction: {type: integer, minimum: -1, maximum: 9}
+        series: {type: integer, minimum: 0, maximum: 4}
+        appearance:
+          type: object
+          additionalProperties: {type: integer}
+          maxProperties: 16
+    CharacterSummary:
+      type: object
+      additionalProperties: false
+      required: [id, name, faction, level, mapId, version]
+      properties:
+        id: {$ref: '#/components/schemas/Uuid'}
+        legacyRoleId: {type: integer, format: int64, minimum: 1}
+        name: {type: string}
+        faction: {type: integer}
+        level: {type: integer, minimum: 1, maximum: 200}
+        mapId: {type: integer, minimum: 0}
+        version: {type: integer, format: int64, minimum: 1}
+    CharacterDetail:
+      allOf:
+        - $ref: '#/components/schemas/CharacterSummary'
+        - type: object
+          required: [stats, position]
+          properties:
+            stats:
+              type: object
+              additionalProperties: false
+              required: [experience, transLife, freePoint, magicPoint, strength, dexterity, vitality, spirit, repute]
+              properties:
+                experience: {type: integer, format: int64, minimum: 0}
+                transLife: {type: integer, minimum: 0}
+                freePoint: {type: integer, minimum: 0}
+                magicPoint: {type: integer, minimum: 0}
+                strength: {type: integer, minimum: 0}
+                dexterity: {type: integer, minimum: 0}
+                vitality: {type: integer, minimum: 0}
+                spirit: {type: integer, minimum: 0}
+                repute: {type: integer, format: int64, minimum: 0}
+            position:
+              type: object
+              required: [mapId, x, y]
+              properties:
+                mapId: {type: integer, minimum: 0}
+                x: {type: integer}
+                y: {type: integer}
+    Problem:
+      type: object
+      additionalProperties: true
+      required: [type, title, status, code, requestId, retryable]
+      properties:
+        type: {type: string, format: uri}
+        title: {type: string}
+        status: {type: integer, minimum: 400, maximum: 599}
+        code: {type: string, pattern: '^[A-Z][A-Z0-9_]+$'}
+        detail: {type: string}
+        instance: {type: string}
+        requestId: {$ref: '#/components/schemas/Uuid'}
+        traceId: {type: string}
+        retryable: {type: boolean}
+        violations:
+          type: array
+          items:
+            type: object
+            required: [field, rule, message]
+            properties:
+              field: {type: string}
+              rule: {type: string}
+              message: {type: string}

@@ -1,0 +1,50 @@
+schema_version: 1
+adrs:
+- id: ADR-0001
+  dri: architecture
+  reviewer: qa-parity-review
+  phase: ALL
+  status: ACCEPTED
+  acceptance_evidence:
+  - governance/adrs/ADR-0001-source-authority.md
+  path: governance/adrs/ADR-0001-source-authority.md
+- id: ADR-0002
+  dri: architecture
+  reviewer: qa-parity-review
+  phase: P1-P4
+  status: ACCEPTED
+  acceptance_evidence:
+  - governance/adrs/ADR-0002-go-modular-monolith.md
+  path: governance/adrs/ADR-0002-go-modular-monolith.md
+- id: ADR-0003
+  dri: architecture
+  reviewer: qa-parity-review
+  phase: ALL
+  status: ACCEPTED
+  acceptance_evidence:
+  - governance/adrs/ADR-0003-content-compiler.md
+  path: governance/adrs/ADR-0003-content-compiler.md
+- id: ADR-0004
+  dri: architecture
+  reviewer: qa-parity-review
+  phase: P0-P4
+  status: ACCEPTED
+  acceptance_evidence:
+  - governance/adrs/ADR-0004-mobile-ux.md
+  path: governance/adrs/ADR-0004-mobile-ux.md
+- id: ADR-0005
+  dri: architecture
+  reviewer: qa-parity-review
+  phase: ALL
+  status: ACCEPTED
+  acceptance_evidence:
+  - governance/adrs/ADR-0005-parity-gates.md
+  path: governance/adrs/ADR-0005-parity-gates.md
+- id: ADR-0006
+  dri: architecture
+  reviewer: qa-parity-review
+  phase: P1-P4
+  status: ACCEPTED
+  acceptance_evidence:
+  - governance/adrs/ADR-0006-postgresql-durability.md
+  path: governance/adrs/ADR-0006-postgresql-durability.md
