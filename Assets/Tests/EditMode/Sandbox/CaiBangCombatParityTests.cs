@@ -111,7 +111,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual("AddPhysicsDamageP=150,-1,2", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
             Assert.AreEqual("DeadlyStrikeEnhanceP=25,-1,0", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.DeadlyStrikeEnhanceP).ToString());
             Assert.AreEqual("AddFireDamageV=275,-1,9", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.AddFireDamageV).ToString());
-            Assert.AreEqual("FastWalkRunP=66,3240,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.FastWalkRunP).ToString());
+            Assert.AreEqual("FastWalkRunP=33,3240,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.FastWalkRunP).ToString());
             Assert.AreEqual("ColdResP=52,25200,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.ColdResP).ToString());
             // PC Lua 金乌映雪 returns Param2String(result,result,0) for skill_cost_v; preserve odd tuple.
             Assert.AreEqual("SkillCostV=20,20,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.SkillCostV).ToString());
@@ -198,7 +198,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(r.success, r.detail);
             Assert.AreEqual(50, r.manaCost, "PC huabu_liushou L20 skill_cost_v=50");
             Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.FastWalkRunP, out var speed));
-            Assert.AreEqual(66, speed.value1, "PC huabu_liushou L20 fastwalkrun_p=66");
+            Assert.AreEqual(33, speed.value1, "PC slistcache huabu_liushou L20 fastwalkrun_p=33 (giảm hiệu quả gia tốc)");
             Assert.AreEqual(3240, speed.value2, "PC huabu_liushou L20 duration=18*180 ticks");
         }
 
@@ -214,14 +214,16 @@ namespace VLTK.Tests.Sandbox
 
             Assert.IsTrue(r.success, r.detail);
             Assert.AreEqual(100, r.manaCost, "PC zuidie_kuangwu L20 skill_cost_v=100");
-            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AllResP, out var allRes));
-            Assert.AreEqual(20, allRes.value1, "PC zuidie_kuangwu L20 allres_p interpolates to 20");
+            // [CaiBang-slistcache 2026-07-15] slistcache đổi allres_p→allres_yan_p (1→15 L30): L20≈10.
+            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AllResYanP, out var allRes),
+                "PC slistcache zuidie allres_yan_p");
+            Assert.AreEqual(10, allRes.value1, "PC slistcache zuidie_kuangwu L20 allres_yan_p floors to 10");
             Assert.AreEqual(2867, allRes.value2, "PC zuidie_kuangwu L20 duration interpolates between 18*120 at L1 and 18*180 at L30");
             Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AddFireDamageV, out var addFire));
             Assert.AreEqual(144, addFire.value1, "PC zuidie_kuangwu L20 addfiremagic_v floors to 144");
             Assert.AreEqual(2867, addFire.value2);
             Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.LifeMaxYanP, out var lifeMaxYan));
-            Assert.AreEqual(-1, lifeMaxYan.value2, "PC lifemax_yan_p duration remains permanent/sentinel -1");
+            Assert.AreEqual(2867, lifeMaxYan.value2, "PC slistcache lifemax_yan_p duration finite (18*120→18*180), không còn sentinel -1");
         }
 
         [Test]
@@ -255,15 +257,15 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 720, enemy.position, CombatRelation.Enemy);
 
             Assert.IsTrue(r.success, r.detail);
-            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResP, out var pres), "PC physicsres_p");
-            Assert.AreEqual(-10, pres.value1, "PC L20 physicsres_p=-10");
-            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.FireResP, out var fres), "PC fireres_p");
-            Assert.AreEqual(-15, fres.value1, "PC L20 fireres_p=-15");
-            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResMaxP, out var pmax), "PC physicsresmax_p (missing in mobile)");
-            Assert.AreEqual(-4, pmax.value1, "PC L20 physicsresmax_p=-4");
-            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.FireResMaxP, out var fmax), "PC fireresmax_p (missing in mobile)");
-            Assert.AreEqual(-6, fmax.value1, "PC L20 fireresmax_p=-6");
-            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.RangeDamageReturnP, out var rret), "PC rangedamagereturn_p (missing in mobile)");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResYanP, out var pres), "PC slistcache physicsres_yan_p");
+            Assert.AreEqual(-17, pres.value1, "PC slistcache L20 physicsres_yan_p floor(-16.04)=-17");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.FireResYanP, out var fres), "PC slistcache fireres_yan_p");
+            Assert.AreEqual(-17, fres.value1, "PC slistcache L20 fireres_yan_p floor(-16.04)=-17");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResMaxP, out var pmax), "PC physicsresmax_p");
+            Assert.AreEqual(-10, pmax.value1, "PC slistcache L20 physicsresmax_p=-10");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.FireResMaxP, out var fmax), "PC fireresmax_p");
+            Assert.AreEqual(-15, fmax.value1, "PC slistcache L20 fireresmax_p=-15");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.RangeDamageReturnP, out var rret), "PC rangedamagereturn_p");
             Assert.AreEqual(-30, rret.value1, "PC L20 rangedamagereturn_p=-30");
             Assert.AreEqual(162, pres.value2, "PC L20 duration=9*18=162 ticks");
             // PC slistcache 720: MisslesForm=6 (Stance), not mobile Surround.
@@ -303,9 +305,9 @@ namespace VLTK.Tests.Sandbox
             Assert.IsFalse(beggar.states.ContainsKey(MagicAttributeKind.AddPhysicsDamageP),
                 "PC 714 has no AddPhysicsDamageP (was fabricated in mobile)");
             // PC: proc fired → 720 debuff applied to attacker (enemy).
-            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResP, out var pres),
-                "720 debuff proc'd on attacker via 714 on-hit");
-            Assert.AreEqual(-10, pres.value1, "PC 720 L20 physicsres_p=-10 (proc'd from 714)");
+            Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResYanP, out var pres),
+                "720 debuff proc'd on attacker via 714 on-hit (slistcache physicsres_yan_p)");
+            Assert.AreEqual(-17, pres.value1, "PC slistcache 720 L20 physicsres_yan_p floor=-17 (proc'd from 714)");
         }
 
         [Test]

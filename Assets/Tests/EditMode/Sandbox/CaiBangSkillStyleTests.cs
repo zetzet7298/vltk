@@ -67,15 +67,18 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void DogArray_124_Level20_AddPhysicsDamageAtPcMagnitude()
         {
-            // PC gaibang.lua::dagou_zhen addphysicsdamage_p L20 = 175, duration=-1, param3=2.
+            // [CaiBang-slistcache 2026-07-15] PC slistcache dagou_zhen addphysicsdamage_p L20 = 348, duration=-1, param3=2.
             var cat = Catalog();
             var s = cat.Resolve(124);
             var levelData = s.GetPcLevelData(20);
             var attr = levelData.state.FirstOrDefault(a => a.kind == MagicAttributeKind.AddPhysicsDamageP);
             Assert.IsNotNull(attr, "L20 state has AddPhysicsDamageP");
-            Assert.AreEqual(175, attr.value1, "PC addphysicsdamage_p L20 = 175");
+            Assert.AreEqual(348, attr.value1, "PC slistcache addphysicsdamage_p L20 = 348");
             Assert.AreEqual(-1, attr.value2, "PC duration sentinel = -1");
             Assert.AreEqual(2, attr.value3, "PC param3=2");
+            // slistcache NEW: lifemax_yan_p 1→50 (L50).
+            var life = levelData.state.FirstOrDefault(a => a.kind == MagicAttributeKind.LifeMaxYanP);
+            Assert.IsNotNull(life, "slistcache dagou_zhen lifemax_yan_p");
         }
 
         [Test]

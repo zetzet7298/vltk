@@ -144,6 +144,22 @@ namespace VLTK.Model
         // physicsresmax_p / fireresmax_p reduce the MAX resistance cap, distinct from *_res_p percent.
         PhysicsResMaxP,
         FireResMaxP,
+        // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua new attribute kinds (KMagicDesc.cpp).
+        // Yang (阳) resistance variants — separate PC state slot, same damage-reduction math as base res.
+        PhysicsResYanP,
+        FireResYanP,
+        AllResYanP,
+        // returnres_p: tăng kháng phản đòn (KMagicDesc.cpp:186).
+        ReturnResP,
+        // anti_do_hurt_p: giảm % sát thương chịu (KMagicDesc.cpp:223).
+        AntiDoHurtP,
+        // fatallystrike_p: tỷ lệ chí mạng chí mạng (KMagicDesc.cpp:72).
+        FatallyStrikeP,
+        // me2metaldamage_p / metal2medamage_p: hệ Kim vào ra (KMagicDesc.cpp:249/253).
+        Me2MetalDamageP,
+        Metal2MeDamageP,
+        // anti_block_rate: tỷ lệ chống đỡ (KMagicDesc.cpp:270).
+        AntiBlockRate,
     }
 
     [Serializable]

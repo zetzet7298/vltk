@@ -578,6 +578,16 @@ namespace VLTK.Core
                 "lifemax_p" or "lifemax_yan_p" => MagicAttributeKind.LifeMaxP,
                 "fireenhance_p" => MagicAttributeKind.FireEnhanceP,
                 "fastwalkrun_p" => MagicAttributeKind.FastWalkRunP,
+                // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua new attribute kinds.
+                "physicsres_yan_p" => MagicAttributeKind.PhysicsResYanP,
+                "fireres_yan_p" => MagicAttributeKind.FireResYanP,
+                "allres_yan_p" => MagicAttributeKind.AllResYanP,
+                "returnres_p" => MagicAttributeKind.ReturnResP,
+                "anti_do_hurt_p" => MagicAttributeKind.AntiDoHurtP,
+                "fatallystrike_p" => MagicAttributeKind.FatallyStrikeP,
+                "me2metaldamage_p" => MagicAttributeKind.Me2MetalDamageP,
+                "metal2medamage_p" => MagicAttributeKind.Metal2MeDamageP,
+                "anti_block_rate" => MagicAttributeKind.AntiBlockRate,
                 _ => (MagicAttributeKind?)null,
             };
 

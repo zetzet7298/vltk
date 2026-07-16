@@ -541,6 +541,18 @@ namespace VLTK.Sandbox
                     };
                     if (resKind != MagicAttributeKind.AllResP && target.states.TryGetValue(resKind, out var specRes))
                         targetResist += specRes.value1;
+                    // [CaiBang-slistcache 2026-07-15] PC yang (阳) resistance variants stack cùng base res
+                    // (KMagicDesc.cpp:241/230/231). gaibang120zuzhou slistcache dùng physicsres_yan_p/fireres_yan_p.
+                    if (target.states.TryGetValue(MagicAttributeKind.AllResYanP, out var allResYan))
+                        targetResist += allResYan.value1;
+                    MagicAttributeKind resYanKind = type switch
+                    {
+                        DamageType.Physics => MagicAttributeKind.PhysicsResYanP,
+                        DamageType.Fire => MagicAttributeKind.FireResYanP,
+                        _ => MagicAttributeKind.AllResYanP,
+                    };
+                    if (resYanKind != MagicAttributeKind.AllResYanP && target.states.TryGetValue(resYanKind, out var specResYan))
+                        targetResist += specResYan.value1;
                     // Armor pool (PC m_*Armor.nValue[0]). Map AddDefenseV → physics armor alias.
                     if (type == DamageType.Physics && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var armorDef))
                         targetArmor = armorDef.value1;
@@ -592,14 +604,14 @@ namespace VLTK.Sandbox
             }
         }
 
-        // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua::gaibang120 (skill 714) 'autoattackskill'
+        // [CaiBang-slistcache 2026-07-15] PC gaibang.lua::gaibang120 (skill 714) 'autoattackskill'
         // passive proc config: when bearer is hit, roll proc% → cast targetSkill on attacker + cooldown.
         // autoattackskill[0]=720*256+N → targetSkill=720. [2]=12*18*256+N → cooldownTicks=216 (12s), proc%=N.
-        // proc% interpolation matches gaibang.lua autoattackskill[3]: {1,1},{15,5},{20,6}.
+        // slistcache autoattackskill[3]: {1,1},{20,10},{21,10} (mobile cũ {1,1},{15,5},{20,6}).
         private const int AutoAttackSkillBearerId = 714;
         private const int AutoAttackTargetSkillId = 720;
         private const int AutoAttackCooldownTicks = 12 * 18; // PC 216 ticks (12s @ 18fps)
-        private static int AutoAttackProcPercent(int level) => Mathf.RoundToInt(Mathf.Lerp(1f, 6f, Mathf.InverseLerp(1f, 20f, level)));
+        private static int AutoAttackProcPercent(int level) => Mathf.RoundToInt(Mathf.Lerp(1f, 10f, Mathf.InverseLerp(1f, 20f, level)));
 
         private void ProcessAutoAttackProcs(CombatActorState attacker, CombatActorState bearer, CombatCastReport report)
         {

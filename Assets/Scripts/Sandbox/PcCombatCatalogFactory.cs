@@ -149,13 +149,12 @@ namespace VLTK.Sandbox
             // 123 Khuê Mộc Tinh Chiếu: buff
             ResistBuff(123, "Khuê Mộc Tinh Chiếu", "Khuê Mộc Tinh Chiếu", 30, MagicAttributeKind.PoisonResP),
 
-            // 124 Đả Cẩu Bổng Pháp / Đả Cẩu Trận passive (dagou_zhen).
-            // [CaiBang-VersionPriority 2026-06-29] Newest PC Client/Server skills.txt agree:
+            // 124 Đả Cẩu Bổng Pháp / Đả Cẩu Trận passive (dagou_zhen) [PC slistcache 2026-07-15].
+            // [CaiBang-VersionPriority] Newest PC Client/Server/slistcache skills.txt agree:
             //   SkillStyle=3, AttackRadius=0, StateSpecialId=0, ChildSkillId=0, CharAnimId=11.
-            //   gaibang.lua::dagou_zhen addphysicsdamage_p L20=175, duration=-1, param3=2.
-            PassiveMastery(124, "Đả Cẩu bổng", "Đả Cẩu Bổng Pháp", 30,
-                addPhys: (lv) => Link(lv, (1, 10, ""), (20, 175, "")),
-                elementParam: 2, icon: "\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr", charAnim: 11),
+            //   slistcache gaibang.lua::dagou_zhen: addphysicsdamage_p 53→348 (L20), +L21=369;
+            //   lifemax_yan_p 1→50 (L50) [NEW slistcache].
+            DogArrayPassive(124, "Đả Cẩu bổng", "Đả Cẩu Bổng Pháp", 30, "\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr"),
 
             // 125 Bổng Đả Ác Cẩu: damage (bangda_egou) [PC radius L20=512]
             // PC source: Skills.txt 125 SkillStyle=0, MissilesForm=4 (Chain), CharAnimId=11, ChildSkillNum=0 (Lua runtime).
@@ -182,8 +181,9 @@ namespace VLTK.Sandbox
             //   Sau fix: InitiativeNpcState (active cast buff), charAnim=11, form=Stance → khớp PC slistcache.
             UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.Stance, targetEnemy:false, targetSelf:true, stateSpecialId:17, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
-                int pct = Link(lv, (1, 9, ""), (20, 66, ""));
-                // PC gaibang.lua::huabu_liushou fastwalkrun_p duration: 18*120 (L1) → 18*180 (L20) ticks.
+                // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua::huabu_liushou:
+                //   fastwalkrun_p 5→33 (giảm hiệu quả gia tốc, comment PC "降低加速跑速效果").
+                int pct = Link(lv, (1, 5, ""), (20, 33, ""));
                 int dur = Link(lv, (1, 18 * 120, ""), (20, 18 * 180, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, pct, dur, 0));
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
@@ -202,25 +202,37 @@ namespace VLTK.Sandbox
                 meleeType: PcMeleeType.None), // [SECT-ALL] PC IsMelee=0 → không melee, không dash
 
             // 129 Hóa Hiểm Vi Di: buff
+            // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua::huaxian_weiyi:
+            //   meleedamagereturn_p 1→55 (L30), adddefense_v 48→800, anti_block_rate 1→30 (L30).
             UtilitySkill(129, "Hóa Hiểm Vi Di", "Hóa Hiểm Vi Di", 20, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
-                int ret = Link(lv, (1, 4, ""), (20, 46, ""));
+                int ret = Link(lv, (1, 1, ""), (30, 55, ""));
                 int def = Link(lv, (1, 48, ""), (20, 800, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.MeleeDamageReturnP, ret, -1, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, def, -1, 0));
+                // ponytail: anti_block_rate stored; consumption TODO (block-rate engine chưa có).
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AntiBlockRate, Link(lv, (1, 1, ""), (30, 30, "")), -1, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 0, 0, 0));
                 return d;
             }, skillStyle: PcSkillStyle.PassivityNpcState),
 
-            // 130 Túy Điệp Cuồng Vũ: buff (zuidie_kuangwu) [PC CharAnimId=43 state 43 aura]
+            // 130 Túy Điệp Cuồng Vũ: buff (zuidie_kuangwu) [PC slistcache 2026-07-15, CharAnimId=43 state 43 aura]
+            //   slistcache zuidie_kuangwu: allres_yan_p(1→1,L30=15), addfiredamage_v(10→175), addfiremagic_v(10→215),
+            //   deadlystrikeenhance_p(5→30 Conic), lifemax_yan_p(21→60 L35), +5 attr mới (me2metal/metal2me/returnres/anti_do_hurt/physicsres_yan).
             UtilitySkill(130, "Túy Điệp Cuồng Vũ ", "Túy Điệp Cuồng Vũ", 60, 400, SkillMissileForm.None, targetEnemy:false, targetSelf:true, stateSpecialId:43, levelData:(lv)=>{
                 var d = new SkillLevelData{level=lv};
                 int dur = Link(lv, (1, 18 * 120, ""), (30, 18 * 180, ""));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResP, Link(lv, (1, 1, ""), (30, 30, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResYanP, Link(lv, (1, 1, ""), (30, 15, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 10, ""), (30, 175, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 21, ""), (35, 20, "")), -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 21, ""), (35, 60, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (20, 30, "Conic")), dur, 0));
+                // ponytail: 5 attr mới slistcache — stored cho data parity; consumption TODO (engine series/return/anti-hurt chưa đầy đủ).
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.Me2MetalDamageP, Link(lv, (1, 1, ""), (30, 20, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.Metal2MeDamageP, Link(lv, (1, 1, ""), (30, 20, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ReturnResP, Link(lv, (1, 1, ""), (39, 20, ""), (40, 20, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AntiDoHurtP, Link(lv, (1, 0, ""), (29, 0, ""), (30, 10, ""), (40, 20, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResYanP, Link(lv, (1, 1, ""), (30, 30, "")), dur, 0));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 50, ""), (20, 100, "")), 0, 0));
                 return d;
             }, maxLevel: 30, charAnim: 43),
@@ -286,10 +298,10 @@ namespace VLTK.Sandbox
                 horseLimit: 1,
                 meleeType: PcMeleeType.None),
 
-            PassiveMasteryDao(360, "Tiêu Diêu Công ", "Tiêu Dao Công", 60,
-                attackSpeed: (lv) => Link(lv, (1, 6, ""), (20, 65, "")),
-                castSpeed: (lv) => Link(lv, (1, 6, ""), (20, 65, "")),
-                elementParam: 2, icon: "\\spr\\Ui\\skill\\逍遥功.spr", charAnim:11),
+            // 360 Tiêu Diêu Công [PC slistcache 2026-07-15 xiaoyao_gong]:
+            //   attackspeed_v/castspeed_v 6→65 (L20) +L25=90,L31=108,L32=118,L33=121;
+            //   addphysicsdamage_p 10→120, deadlystrikeenhance_p 1→20 Conic [slistcache NEW].
+            XiaoyaoGongPassive(360, "Tiêu Diêu Công ", "Tiêu Dao Công", 60, "\\spr\\Ui\\skill\\逍遥功.spr"),
 
             // 714 Hỗn Thiên Khí Công [PC slistcache + gaibang.lua::gaibang120 2026-06-30, RESOLVED]:
             //   PC row: SkillStyle=3 (PASSIVE), no active cast. gaibang120 table defines 'autoattackskill':
@@ -300,34 +312,33 @@ namespace VLTK.Sandbox
             //   Sau fix: PassivityNpcState, no active state. On-hit proc handled in CombatRuntimeService.
             PassiveAutoAttackSkill(714, "Hỗn Thiên Khí Công", "Hỗn Thiên Khí Công", 120),
 
-            // 720 Hỗn Thiên Khí Công_Quyết Chú [PC slistcache + gaibang.lua::gaibang120zuzhou 2026-06-30]:
+            // 720 Hỗn Thiên Khí Công_Quyết Chú [PC slistcache 2026-07-15 gaibang120zuzhou]:
             //   PC row: MisslesForm=6 (Stance), ChildSkillId=275, StateSpecialId=120, TargetEnemy=1.
-            //   gaibang120zuzhou defines 5 debuff attrs (L20): physicsres_p=-10, fireres_p=-15,
-            //   physicsresmax_p=-4, fireresmax_p=-6, rangedamagereturn_p=-30; duration=9*18=162 ticks.
-            //   Trước fix: mobile chỉ apply 2 (physicsres/fireres) + sai form=Surround → thiếu 3 debuff + sai parity.
+            //   slistcache: physicsres_yan_p(-1→-20 L25), fireres_yan_p(-1→-20), physicsresmax_p(-1→-10 L20),
+            //   fireresmax_p(-1→-15), rangedamagereturn_p(-4→-30), fastwalkrun_p(-9→-50 L23) [NEW giảm chạy].
             UtilitySkill(720, "Hỗn Thiên Khí Công_Quyết Chú", "Hỗn Thiên Khí Công Quyết Chí", 120, 440, SkillMissileForm.Stance, targetEnemy:true, targetSelf:false, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int dur = 18 * Link(lv, (1, 3, ""), (20, 9, ""));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResP, Link(lv, (1, -2, ""), (20, -10, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResP, Link(lv, (1, -3, ""), (20, -15, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResMaxP, Link(lv, (1, -1, ""), (15, -1, ""), (20, -4, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResMaxP, Link(lv, (1, -1, ""), (15, -2, ""), (20, -6, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResYanP, Link(lv, (1, -1, ""), (25, -20, ""), (26, -20, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResYanP, Link(lv, (1, -1, ""), (25, -20, ""), (26, -20, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsResMaxP, Link(lv, (1, -1, ""), (20, -10, ""), (21, -10, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireResMaxP, Link(lv, (1, -1, ""), (20, -15, ""), (21, -15, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, Link(lv, (1, -4, ""), (15, -25, ""), (20, -30, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FastWalkRunP, Link(lv, (1, -9, ""), (23, -50, "")), dur, 0));
                 return d;
             }),
 
-            WithCollideEvent(DamageSkillNew(1073, "Thời Thặng Lục Long", "Thời Thặng Lục Long", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
-                phys: (lv) => 0,
-                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
-                // PC gaibang.lua zhanggaibang150: skill_cost_v={{{1,12},{20,78},{23,98}}}
-                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
-                horseLimit: 1),
-                collideSkillId: 1072),  // PC gaibang.lua::zhanggaibang150 skill_collideevent[3]=1072 (L10+ gate)
+            // 1073 Thời Thặng Lục Long [PC slistcache 2026-07-15 zhanggaibang150]:
+            //   seriesdamage_p 40→80, firedamage_v 275→13750 (L50), skill_cost_v 12→78(+L23=98),
+            //   fatallystrike_p 1→30 (L30) [slistcache NEW], collideevent→1072 (L10+ gate).
+            WithCollideEvent(ZhangGaiBang150Skill(), collideSkillId: 1072, collideSkillLevel: 1),
 
-            DamageSkillNew(1074, "Bổng Huýnh Lược Địa", "Bổng Hoành Lược Mã", 150, 20, 512, 336, SkillMissileForm.Single, 1, false, false, 11,
-                phys: (lv) => Link(lv, (1, 10, ""), (15, 80, ""), (20, 165, "")),
-                fire: (lv) => (Link(lv, (1, 60, ""), (15, 120, ""), (20, 230, "")), 0, Link(lv, (1, 60, ""), (15, 160, ""), (20, 345, ""))),
-                cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, "")), 0, 0),
+            // 1074 Bổng Hoành Lược Mã [PC slistcache 2026-07-15 gungaibang150, MaxLevel=27]:
+            //   physicsenhance_p 10→165(+L23=267,L26=318), firedamage_v 60→230/345(+L23/L26), cost 20→50.
+            DamageSkillNew(1074, "Bổng Huýnh Lược Địa", "Bổng Hoành Lược Mã", 150, 27, 512, 336, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => Link(lv, (1, 10, ""), (15, 80, ""), (20, 165, ""), (23, 267, ""), (26, 318, "")),
+                fire: (lv) => (Link(lv, (1, 60, ""), (15, 120, ""), (20, 230, ""), (23, 362, ""), (26, 428, "")), 0, Link(lv, (1, 60, ""), (15, 160, ""), (20, 345, ""), (23, 567, ""), (26, 678, ""))),
+                cost: (lv) => (Link(lv, (1, 20, ""), (20, 50, ""), (23, 59, "")), 0, 0),
                 horseLimit: 1),
 
             DamageSkillNew(1539, "天下无狗NPC", "Thiên Hạ Vô Cẩu (NPC)", 1, 60, 512, 168, SkillMissileForm.Single, 1, false, false, 11,
@@ -644,6 +655,59 @@ namespace VLTK.Sandbox
             var s = BaseSkill(id, raw, vi, 10, 20, radius, SkillMissileForm.Single);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = child; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.waitTime = 5; s.timePerCast = 2; s.targetEnemy = true;
             AddLevels(s, lv => { var d = new SkillLevelData { level = lv }; d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, 1+lv,200,10)); d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV,0,0,0)); return d; });
+            return s;
+        }
+
+        // [CaiBang-slistcache 2026-07-15] PC gaibang.lua::zhanggaibang150 (skill 1073): active damage.
+        //   seriesdamage_p 40→80, firedamage_v 275→13750 (L50), skill_cost_v 12→78(+L23=98),
+        //   fatallystrike_p 1→30 (L30) [slistcache NEW].
+        private static SkillDefinition ZhangGaiBang150Skill()
+        {
+            var s = BaseSkill(1073, "Thời Thặng Lục Long", "Thời Thặng Lục Long", 150, 27, 512, SkillMissileForm.Single);
+            s.skillStyle = PcSkillStyle.Missiles; s.byMissile = true; s.childSkillId = 335; s.childSkillNum = 1; s.baseSkill = true;
+            s.charAnimId = 11; s.waitTime = 5; s.timePerCast = 2; s.targetEnemy = true; s.horseLimit = 1;
+            s.effectSourceId = Sprite("\\spr\\skill\\150\\gb\\gb_150_shichengjiulong_a.spr");
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, Link(lv, (1, 40, ""), (15, 40, ""), (20, 80, ""), (21, 82, "")), 0, 0));
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 275, ""), (50, 13750, ""), (51, 13750, "")), 0, Link(lv, (1, 275, ""), (50, 13750, ""), (51, 13750, ""))));
+                // ponytail: fatallystrike_p stored; consumption TODO (chí mạng.ignore-def engine chưa có, mapping tạm như DeadlyStrikePvisual).
+                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FatallyStrikeP, Link(lv, (1, 1, ""), (30, 30, ""), (31, 30, "")), 0, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 12, ""), (20, 78, ""), (23, 98, "")), 0, 0));
+                return d;
+            });
+            return s;
+        }
+
+        // [CaiBang-slistcache 2026-07-15] PC gaibang.lua::xiaoyao_gong (skill 360): passive ngoại công.
+        //   attackspeed_v/castspeed_v đa breakpoint (L20=65,L25=90,L31=108,L32=118,L33=121);
+        //   addphysicsdamage_p 10→120, deadlystrikeenhance_p 1→20 Conic [slistcache NEW].
+        private static SkillDefinition XiaoyaoGongPassive(int id, string raw, string vi, int req, string icon)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 11; s.targetOnly = false; s.iconSourceId = Sprite(icon);
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                int spd = Link(lv, (1, 6, ""), (20, 65, ""), (25, 90, ""), (31, 108, ""), (32, 118, ""), (33, 121, ""));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, spd, -1, 2));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.CastSpeedV, spd, -1, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 10, ""), (20, 120, "")), -1, 2));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 1, ""), (20, 20, "Conic")), -1, 0));
+                return d;
+            });
+            return s;
+        }
+
+        // [CaiBang-slistcache 2026-07-15] PC gaibang.lua::dagou_zhen (skill 124): passive SkillStyle=3.
+        //   addphysicsdamage_p 53→348 (+L21=369), lifemax_yan_p 1→50 (L50) [slistcache NEW].
+        private static SkillDefinition DogArrayPassive(int id, string raw, string vi, int req, string icon)
+        {
+            var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 11; s.targetOnly = false; s.iconSourceId = Sprite(icon);
+            AddLevels(s, lv => {
+                var d = new SkillLevelData { level = lv };
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddPhysicsDamageP, Link(lv, (1, 53, ""), (20, 348, ""), (21, 369, "")), -1, 2));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 1, ""), (50, 50, ""), (51, 50, "")), -1, 0));
+                return d;
+            });
             return s;
         }
 

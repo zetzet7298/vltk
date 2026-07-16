@@ -56,10 +56,13 @@ namespace VLTK.Sandbox
             [125] = "bangda_egou",         // Bổng Đả Ác Cẩu (newest PC Skills.txt row 125; chains to 359 + 1074).
             [127] = "huabu_liushou",       // Hoạt Bất Lưu Thủ.
             [128] = "kanglong_youhui",     // Kháng Long Hữu Hối.
+            [129] = "huaxian_weiyi",       // Hóa Hiểm Vi Di (slistcache LvlData1; meleedamagereturn_p + anti_block_rate).
             [130] = "zuidie_kuangwu",      // Túy Điệp Cuồng Vũ.
             [357] = "feilong_zaitian",     // Phi Long Tại Thiên.
             [358] = "qianlong_zaiyuan",    // Tiềm Long Tại Uyên (newest PC row 358; commented Lua table means row/default data wins).
             [359] = "tianxia_wugou",       // Thiên Hạ Vô Cẩu (MOD id, reuse 125 table).
+            [389] = "longzhan_yuye",        // Long Chiến Ư Dã (Phi Long collide-event sub-skill; slistcache LvlData1).
+            [1072] = "zhanggaibang150_2",  // Ngũ Diệu Càn Khôn (1073 collide-event sub-skill; slistcache LvlData1).
             [1073] = "zhanggaibang150",    // Thời Thặng Lục Long.
             [1074] = "gungaibang150",      // Bổng Hoành Lược Mã.
             [1101] = "zhanggaibang150",    // Multi-target variant, reuse 1073 table.

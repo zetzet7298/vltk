@@ -34,10 +34,11 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void DogArray_124_AddPhysicsDamageMatchesPcDagouZhenLua()
         {
-            // PC gaibang.lua::dagou_zhen: addphysicsdamage_p={{{1,10},{20,175}},{{1,-1},{30,-1}},{{1,2},{2,2}}}
+            // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua::dagou_zhen:
+            //   addphysicsdamage_p={{{1,53},{20,348},{21,369}},{{1,-1},{30,-1}},{{1,2},{2,2}}}
             var s = Catalog().Resolve(124);
-            Assert.AreEqual("AddPhysicsDamageP=10,-1,2", s.GetPcLevelData(1).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
-            Assert.AreEqual("AddPhysicsDamageP=175,-1,2", s.GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
+            Assert.AreEqual("AddPhysicsDamageP=53,-1,2", s.GetPcLevelData(1).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
+            Assert.AreEqual("AddPhysicsDamageP=348,-1,2", s.GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
         }
 
         [Test]
