@@ -194,12 +194,15 @@ namespace VLTK.Sandbox
             // 128 Kháng Long Hữu Hối: damage (kanglong_youhui)
             // [SECT-ALL fix 2026-06-15] PC source: skills.txt 128 IsMelee=0, ByMissle=0 → CAST skill, không melee.
             //   Comment cũ (commit e194a242a) nói "MeleeType=Melee_JumpAndAttack" là ĐỌC SAI PC source. Đã revert.
+            // [CaiBang-slistcache 2026-07-16] PC gaibang.lua::kanglong_youhui:
+            //   seriesdamage_p L1=10 → L20=50 (L21=52 nhưng maxLevel=20). Engine apply m_DamageAttribs.
             DamageSkillNew(128, "Kháng Long Hữu Hối", "Kháng Long Hữu Hối", 50, 20, 512, 48, SkillMissileForm.Fan, 15, false, false, 11,
                 phys: (lv) => 0,
                 fire: (lv) => (Link(lv, (1, 10, ""), (20, 536, "")), 0, Link(lv, (1, 10, ""), (20, 536, ""))),
                 cost: (lv) => (Link(lv, (1, 10, ""), (20, 50, "")), 0, 0),
                 horseLimit: 1,
-                meleeType: PcMeleeType.None), // [SECT-ALL] PC IsMelee=0 → không melee, không dash
+                meleeType: PcMeleeType.None,
+                series: (lv) => Link(lv, (1, 10, ""), (20, 50, ""))), // [SECT-ALL] PC IsMelee=0 → không melee, không dash
 
             // 129 Hóa Hiểm Vi Di: buff
             // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua::huaxian_weiyi:
@@ -777,7 +780,7 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        private static SkillDefinition DamageSkillNew(int id, string raw, string vi, int req, int max, int radius, int child, SkillMissileForm form, int childNum, bool isPhysical, bool targetOnly, int charAnim, Func<int,int> phys, Func<int,(int,int,int)> fire, Func<int,(int,int,int)> cost, Func<int,SkillLevelData> extra=null, int horseLimit=0, int missilesGenerateData=0, PcMeleeType meleeType=PcMeleeType.None)
+        private static SkillDefinition DamageSkillNew(int id, string raw, string vi, int req, int max, int radius, int child, SkillMissileForm form, int childNum, bool isPhysical, bool targetOnly, int charAnim, Func<int,int> phys, Func<int,(int,int,int)> fire, Func<int,(int,int,int)> cost, Func<int,SkillLevelData> extra=null, int horseLimit=0, int missilesGenerateData=0, PcMeleeType meleeType=PcMeleeType.None, Func<int,int> series=null)
         {
             var s = BaseSkill(id, raw, vi, req, max, radius, form); s.skillStyle = PcSkillStyle.Missiles; s.byMissile = true; s.childSkillId = child; s.childSkillNum = childNum; s.baseSkill = true; s.charAnimId = charAnim; s.waitTime = 5; s.timePerCast = 2; s.isPhysical = isPhysical; s.targetOnly = targetOnly; s.targetEnemy = true; s.horseLimit = horseLimit; s.missilesGenerateData = missilesGenerateData; s.meleeType = meleeType;
             s.effectSourceId = Sprite("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr");
@@ -786,6 +789,8 @@ namespace VLTK.Sandbox
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PhysicsEnhanceP, phys(lv), 0, 0));
                 var f = fire(lv);
                 d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, f.Item1, f.Item2, f.Item3));
+                if (series != null)
+                    d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.SeriesDamageP, series(lv), 0, 0));
                 var c = cost(lv);
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, c.Item1, c.Item2, c.Item3));
                 if (extra != null)

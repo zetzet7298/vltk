@@ -102,6 +102,8 @@ namespace VLTK.Tests.Sandbox
             var dragon = cat.Resolve(128).GetPcLevelData(20);
             Assert.AreEqual("FireDamageV=536,0,536", dragon.First(MagicAttributeKind.FireDamageV).ToString());
             Assert.AreEqual("SkillCostV=50,0,0", dragon.First(MagicAttributeKind.SkillCostV).ToString());
+            // [CaiBang-slistcache 2026-07-16] PC gaibang.lua::kanglong_youhui seriesdamage_p L20=50.
+            Assert.AreEqual("SeriesDamageP=50,0,0", dragon.First(MagicAttributeKind.SeriesDamageP).ToString());
         }
 
         [Test]
