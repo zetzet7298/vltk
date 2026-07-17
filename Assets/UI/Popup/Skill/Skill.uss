@@ -7,39 +7,69 @@
    ========================================================================== */
 
 .skill-body {
+    position: relative;
     flex-grow: 1;
     flex-direction: column;
     padding: 6px;
 }
 
+/* The skill popup body is already the PC's UiSkillsLive 191x278 lane.  Do not
+   add generic popup padding: UiSkillsFightSub coordinates are absolute to it. */
+.popup-window--pc-skill .skill-body {
+    width: 191px;
+    height: 278px;
+    padding: 0px;
+}
+
 .skill-summary {
+    position: absolute;
+    left: 153px;
+    top: 262px;
+    width: 36px;
+    height: 12px;
     color: rgb(255, 238, 145);
-    font-size: 13px;
+    font-size: 12px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
-    margin-bottom: 4px;
     -unity-text-outline-width: 1px;
     -unity-text-outline-color: rgb(0, 0, 0);
 }
 
 .skill-grid-scroll {
     flex-grow: 1;
+    overflow: hidden;
 }
 
-/* 5-column flex-wrap grid (5 x 38 = 190px fits the 205-wide body). PC parity:
-   UiSkillsFightSub.ini 5x5 grid of 36px slots. */
+/* The PC sheet keeps the full five-row catalog grid as its primary surface.
+   The touch-only assignment tray is rendered outside the PC sheet instead of
+   consuming or clipping any row of that source-authored grid. */
+.skill-body--has-selection .skill-grid-scroll {
+    flex-grow: 0;
+    /* Never hide the fifth PC row when the mobile tray opens. */
+    height: 258px;
+    overflow: hidden;
+}
+
+/* UiSkillsFightSub.ini: five columns, 36px icons at x=0,39,78,117,156;
+   five rows at y=3,54,105,156,207. The explicit 195px grid prevents UI
+   Toolkit from wrapping after four cells in the 191px viewport. */
 .skill-grid {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    position: relative;
+    width: 195px;
+    height: 309px;
+    flex-shrink: 0;
+}
+
+/* Đường Môn has 23 canonical roots, so its complete player catalog occupies
+   exactly the PC's five rows (last icon baseline at y=243). */
+.skill-body--pc-five-by-five .skill-grid {
+    height: 258px;
 }
 
 .skill-grid-cell {
     position: relative;
-    width: 38px;
+    width: 39px;
     height: 51px;
-    align-items: flex-start;
-    justify-content: flex-start;
 }
 
 .skill-grid-cell--selected {
@@ -54,6 +84,12 @@
 
 .skill-grid-slot--empty {
     background-color: rgba(0, 0, 0, 0.25);
+}
+
+/* The Vietnamese PC combat-lane sprite already draws the empty 5x5 slots.
+   Leave its exact backing visible rather than tinting a substitute cell. */
+.popup-window--pc-skill .skill-grid-slot--empty {
+    background-color: rgba(0, 0, 0, 0);
 }
 
 .skill-grid-level {
@@ -96,12 +132,34 @@
 /* Detail region — formerly the external IMGUI tooltip, now stacked inside the
    body. Derived entirely from the selected PcSkillPanelRow. */
 .skill-detail {
-    margin-top: 6px;
-    padding: 5px;
+    display: none;
+    position: absolute;
+    /* Place the mobile-only tray in the empty left-side safe area of the
+       1280×720 landscape HUD.  It avoids the PC panel itself, bottom chat
+       categories and right-side combat controls; the PC sheet stays centred. */
+    left: -300px;
+    top: 90px;
+    width: 280px;
+    height: 92px;
+    padding: 6px;
     background-color: rgba(18, 14, 10, 0.88);
     border-width: 1px;
     border-color: rgba(150, 112, 48, 0.55);
     flex-shrink: 0;
+}
+
+/* The unselected PC sheet is a pure five-row icon surface.  Mobile-only
+   detail/equip controls appear only after the player intentionally selects a
+   skill, so they never steal the fifth PC row from the baseline view. */
+.skill-body--has-selection .skill-detail {
+    display: flex;
+}
+
+/* The PC point counter occupies the same bottom-right coordinates as the
+   mobile replacement tray label.  Keep it in the baseline PC sheet, then
+   remove it while the touch-only assignment tray is open to avoid overlap. */
+.skill-body--has-selection .skill-summary {
+    display: none;
 }
 
 .skill-detail-title {
@@ -109,30 +167,34 @@
     font-size: 13px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
-    margin-bottom: 3px;
-    white-space: normal;
+    height: 16px;
+    flex-shrink: 0;
+    margin-bottom: 1px;
+    overflow: hidden;
 }
 
 .skill-detail-level {
     color: rgb(218, 255, 165);
     font-size: 12px;
     -unity-text-align: middle-center;
-    margin-bottom: 3px;
-    white-space: normal;
+    height: 14px;
+    flex-shrink: 0;
+    display: none;
+    overflow: hidden;
 }
 
 .skill-detail-summary {
     color: rgb(232, 220, 184);
     font-size: 11px;
     white-space: normal;
-    margin-bottom: 3px;
+    display: none;
 }
 
+/* The mobile replacement tray deliberately shows only the selected title,
+   assignment instruction and large target combat slots.  Verbose level text
+   remains in data; it does not belong in the PC-sized source sheet. */
 .skill-detail-next {
-    color: rgb(190, 220, 255);
-    font-size: 11px;
-    white-space: normal;
-    margin-bottom: 3px;
+    display: none;
 }
 
 .skill-detail-status {
@@ -140,5 +202,46 @@
     font-size: 11px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
-    white-space: normal;
+    display: none;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.skill-equip-label {
+    margin-top: 1px;
+    color: rgb(248, 219, 130);
+    font-size: 11px;
+    height: 14px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.skill-equip-slots {
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 4px;
+    height: 52px;
+    flex-shrink: 0;
+}
+
+.skill-equip-slot {
+    width: 52px;
+    height: 52px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-right: 1px;
+    font-size: 12px;
+}
+
+.skill-equip-slot--occupied {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-color: rgb(124, 91, 46);
+}
+
+.skill-equip-slot--selected {
+    border-color: rgb(245, 207, 88);
+    background-color: rgba(255, 211, 72, 0.24);
 }

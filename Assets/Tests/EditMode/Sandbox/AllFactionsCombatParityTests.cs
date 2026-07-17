@@ -124,9 +124,13 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void TangMen_HasAllPcSourceSkills_AndFaction()
         {
+            // SKL-TM-CATALOG-001: canonical-evidence count. Membership is exactly the 23
+            // pcLearnedSkillIds frozen in PcTangMenOracle.json (sha256 e4270bd1...). The 7
+            // shared roots (43,45,47,48,50,54,58) + 16 progression/skillbook-90/120/150 rows.
+            // 51/55/57 stay unresolved Unity-only (registered for display, not learned).
             var skills = PcCombatCatalogFactory.CreateTangMenSkills();
             Assert.That(skills.All(s => s.faction == CombatFaction.TangMen), Is.True);
-            Assert.That(skills.Count, Is.EqualTo(10));
+            Assert.That(skills.Count, Is.EqualTo(23));
         }
 
         [Test]

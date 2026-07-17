@@ -29,6 +29,11 @@ namespace VLTK.UI.Popup
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
             AddToClassList("popup-window");
+            // UiSkillsSheet is a compact PC sheet whose fight sub-page needs the
+            // full 191px content lane (UiSkillsLive.ini: Left=7, Width=191).
+            // Keep this string check so the generic shell has no assembly coupling.
+            if (content.GetType().FullName == "VLTK.UI.Skill.SkillContent")
+                AddToClassList("popup-window--pc-skill");
 
             // Robust modal geometry in the 1280×720 design space. USS percent/
             // translate can resolve to NaN in some Editor playmode refresh paths,
@@ -49,8 +54,21 @@ namespace VLTK.UI.Popup
             close.AddToClassList("popup-close");
             close.clicked += RaiseClosed;
 
-            header.Add(title);
+            bool isPcSkillSheet = ClassListContains("popup-window--pc-skill");
+            if (!isPcSkillSheet)
+                header.Add(title);
             header.Add(close);
+
+            // UiSkillsSheet.ini owns its title and both tab captions in the exact
+            // PC background sprite.  The checked combat-tab state remains a real
+            // element, layered over that background, so the mobile sheet begins
+            // in the same combat view rather than looking like generic chrome.
+            if (isPcSkillSheet)
+            {
+                var combatTab = new VisualElement { name = "PopupSkillCombatTab" };
+                combatTab.AddToClassList("popup-skill-combat-tab");
+                chrome.Add(combatTab);
+            }
 
             _body = new VisualElement { name = "PopupBody" };
             _body.AddToClassList("popup-body");
@@ -69,8 +87,21 @@ namespace VLTK.UI.Popup
             {
                 style.width = hint.Width;
                 style.height = hint.Height;
-                style.left = hint.Left;
-                style.top = hint.Top;
+                // Preserve PC pixels inside the sheet, but center that compact
+                // sheet in the mobile's 1280x720 design space.  The original PC
+                // Left/Top were desktop-window coordinates, not an in-game UX
+                // requirement; carrying them across made the modal visibly drift
+                // left on wide mobile HUDs.
+                if (ClassListContains("popup-window--pc-skill"))
+                {
+                    style.left = (1280f - hint.Width) * 0.5f;
+                    style.top = (720f - hint.Height) * 0.5f;
+                }
+                else
+                {
+                    style.left = hint.Left;
+                    style.top = hint.Top;
+                }
                 return;
             }
 

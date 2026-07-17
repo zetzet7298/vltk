@@ -23,11 +23,28 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, progression.fightSkillPoints);
             Assert.AreEqual(CombatFaction.KunLun, progression.faction);
             
-            int[] expectedSkills = { 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184 };
-            foreach (int id in expectedSkills)
+            // Canonical PC learning evidence is the 24-ID oracle set (PcKunLunOracle.json). The
+            // legacy panel may still display 170/177/180/183/184, but they are not learned/cast/
+            // upgrade state.
+            int[] expectedLearnedIds =
+            {
+                90, 167, 168, 169, 171, 172, 173, 174, 175, 176, 178, 179, 181, 182,
+                275, 372, 375, 392, 393, 394, 630, 717, 1080, 1081,
+            };
+            foreach (int id in expectedLearnedIds)
             {
                 Assert.IsTrue(progression.knownSkills.Contains(id), $"missing known skill {id}");
                 Assert.AreEqual(0, progression.skillLevels[id], $"PC join seed should keep skill {id} unspent at level 0");
+            }
+
+            var expectedKnownIds = expectedLearnedIds.Append(PcCombatCatalogFactory.UniversalLightnessSkill)
+                .OrderBy(id => id).ToArray();
+            CollectionAssert.AreEqual(expectedKnownIds, progression.knownSkills.OrderBy(id => id).ToArray());
+            foreach (int id in new[] { 170, 177, 180, 183, 184 })
+            {
+                Assert.IsFalse(progression.knownSkills.Contains(id), $"display-only residual {id} must not be learned");
+                Assert.IsFalse(progression.skillLevels.ContainsKey(id), $"display-only residual {id} must not have a level entry");
+                Assert.IsFalse(progression.CanUpgradeSkill(catalog.Resolve(id)), $"display-only residual {id} must not be upgradeable");
             }
         }
 
@@ -77,7 +94,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void SkillPanelSnapshot_ListsAllKunLunSkillsInPcSlotOrder()
+        public void SkillPanelSnapshot_ListsObservedKunLunDisplayRows_ResidualsNonUpgradeable()
         {
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog(null, includeKunLun: true);
             var progression = new PlayerProgressionState();
@@ -87,13 +104,33 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(200, snap.playerLevel);
             Assert.AreEqual(200, snap.skillPoints);
             Assert.AreEqual(CombatFaction.KunLun, snap.faction);
+            // uiOrder stays unproven against the frozen oracle: assert only the observed 18-row
+            // display contract as a set, never an inferred PC slot order.
             Assert.AreEqual(18, snap.rows.Count);
-            
-            int[] expectedSkills = { 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184 };
-            CollectionAssert.AreEqual(expectedSkills, snap.rows.Select(r => r.skillId).ToArray());
-            Assert.AreEqual(0, snap.rows[0].learnedLevel);
-            Assert.IsTrue(snap.rows[0].canUpgrade);
-            StringAssert.Contains("Côn Lôn", snap.rows[0].displayName);
+            int[] observedDisplayIds = { 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184 };
+            CollectionAssert.AreEquivalent(observedDisplayIds, snap.rows.Select(r => r.skillId).ToArray());
+            foreach (int id in new[] { 170, 177, 180, 183, 184 })
+                Assert.IsFalse(snap.rows.Single(r => r.skillId == id).canUpgrade,
+                    $"legacy display residual {id} must render as non-upgradeable");
+            var first = snap.rows.First(r => r.skillId == 167);
+            Assert.AreEqual(0, first.learnedLevel);
+            Assert.IsTrue(first.canUpgrade);
+            StringAssert.Contains("Côn Lôn", first.displayName);
+        }
+
+        [Test]
+        public void MaxAllSkillLevels_DoesNotPromoteKunLunDisplayResiduals()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog(null, includeKunLun: true);
+            var progression = new PlayerProgressionState { faction = CombatFaction.KunLun };
+
+            progression.MaxAllSkillLevels(catalog);
+
+            foreach (int id in new[] { 170, 177, 180, 183, 184 })
+            {
+                Assert.IsFalse(progression.knownSkills.Contains(id), $"display-only residual {id} must not be learned by MaxAll");
+                Assert.IsFalse(progression.skillLevels.ContainsKey(id), $"display-only residual {id} must not receive a max level");
+            }
         }
     }
 }

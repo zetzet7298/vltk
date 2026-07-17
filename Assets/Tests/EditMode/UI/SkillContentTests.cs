@@ -70,6 +70,71 @@ namespace VLTK.Tests.UI
             Assert.AreEqual(110f, hint.Top, "parity with prior inline Rect top");
         }
 
+        [Test]
+        public void PopupWindow_UsesDedicatedPcSkillChrome()
+        {
+            var content = MakeContent(new PlayerProgressionState());
+            var window = new VLTK.UI.Popup.PopupWindow(content);
+
+            Assert.IsTrue(window.ClassListContains("popup-window--pc-skill"),
+                "the 205px PC skill sheet must opt out of the generic 16px chrome gutters");
+            Assert.IsNotNull(window.Q("PopupSkillCombatTab"),
+                "the PC sheet must layer the checked combat tab over UiSkillsSheet's source-selected background");
+            Assert.IsNull(window.Q("PopupTitle"),
+                "the PC sheet title is part of the UiSkillsSheet sprite, not generic popup text");
+        }
+
+        [Test]
+        public void PopupWindow_CentersCompactPcSkillSheetInMobileDesignSpace()
+        {
+            var content = MakeContent(new PlayerProgressionState());
+            var window = new VLTK.UI.Popup.PopupWindow(content);
+
+            Assert.AreEqual((1280f - 205f) * 0.5f, window.style.left.value.value);
+            Assert.AreEqual((720f - 376f) * 0.5f, window.style.top.value.value);
+            Assert.AreEqual(205f, window.style.width.value.value);
+            Assert.AreEqual(376f, window.style.height.value.value);
+        }
+
+        [Test]
+        public void TangMen_UsesPcFiveByFiveSlotFootprint()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = new PlayerProgressionState();
+            progression.GrantTangMenSkillPanelProgression(catalog);
+            var content = new SkillContent(catalog, progression, CombatFaction.TangMen, "Đường Môn", ArtFolder);
+            var body = MakeBody(content);
+            content.OnShow();
+
+            var grid = body.Q("SkillGrid");
+            Assert.AreEqual(PcSkillPanelService.PcFightSkillSlotsPerPcPanel, grid.childCount,
+                "23 TangMen roots plus two empty cells fill the PC's five-by-five sheet without a sixth mobile row");
+            var fifth = grid[4];
+            Assert.AreEqual(156f, fifth.style.left.value.value);
+            Assert.AreEqual(3f, fifth.style.top.value.value);
+            var firstSecondRow = grid[5];
+            Assert.AreEqual(0f, firstSecondRow.style.left.value.value);
+            Assert.AreEqual(54f, firstSecondRow.style.top.value.value);
+        }
+
+        [Test]
+        public void TangMen_GridContainsEveryCanonicalRoot_AndOnlyTwoEmptySlots()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = new PlayerProgressionState();
+            progression.GrantTangMenSkillPanelProgression(catalog);
+            var content = new SkillContent(catalog, progression, CombatFaction.TangMen, "Đường Môn", ArtFolder);
+            var body = MakeBody(content);
+            content.OnShow();
+
+            var grid = body.Q("SkillGrid");
+            var ids = grid.Children().Where(IsPopulated).Select(c => (int)c.userData).ToArray();
+            CollectionAssert.AreEqual(PcSkillPanelService.PcTangMenSkillOrder, ids,
+                "the player-facing grid must expose every canonical TangMen root in PC source order");
+            Assert.AreEqual(2, grid.childCount - ids.Length,
+                "23 roots leave exactly two empty cells in UiSkillsFightSub.ini's 25-slot footprint");
+        }
+
         // --- T4: 30 cells, 26 populated, 4 empty for Cái Bang ---
         [Test]
         public void Build_Produces30Cells_26Populated_4Empty_ForCaiBang()
@@ -149,9 +214,10 @@ namespace VLTK.Tests.UI
             Assert.IsNotNull(detail);
 
             // First tap selects skill 125.
-            content.SelectSkill(125);
-            var cell125 = FindCell(grid, 125);
-            Assert.IsTrue(cell125.ClassListContains("skill-grid-cell--selected"), "selected skill cell is highlighted");
+              content.SelectSkill(125);
+              var cell125 = FindCell(grid, 125);
+              Assert.IsTrue(cell125.ClassListContains("skill-grid-cell--selected"), "selected skill cell is highlighted");
+              Assert.IsTrue(body.ClassListContains("skill-body--has-selection"), "selected state reserves visible detail space");
             var title = detail.Q<Label>("SkillDetailTitle");
             Assert.IsNotNull(title, "detail region renders after selecting");
             Assert.AreEqual("Bổng Đả Ác Cẩu", title.text);
@@ -161,8 +227,9 @@ namespace VLTK.Tests.UI
 
             // Second tap on the same skill deselects it.
             content.SelectSkill(125);
-            var cell125After = FindCell(grid, 125);
-            Assert.IsFalse(cell125After.ClassListContains("skill-grid-cell--selected"), "re-tap deselects");
+              var cell125After = FindCell(grid, 125);
+              Assert.IsFalse(cell125After.ClassListContains("skill-grid-cell--selected"), "re-tap deselects");
+              Assert.IsFalse(body.ClassListContains("skill-body--has-selection"), "deselect restores the PC catalog view");
             Assert.AreEqual(0, detail.childCount, "detail region is cleared on deselect");
         }
 
@@ -203,6 +270,69 @@ namespace VLTK.Tests.UI
             Assert.AreEqual(skill.maxLevel, progression.skillLevels[128], "reached PC max level");
             Assert.IsFalse(content.TryUpgrade(128), "PC rejects upgrades past skill max level");
         }
+
+        [Test]
+        public void SelectedLearnedActiveSkill_CanAssignToRequestedActiveDeckSlot()
+        {
+            var progression = new PlayerProgressionState();
+            int assignedSkillId = 0;
+            int assignedSlot = -1;
+            var content = new SkillContent(TestCatalogCache.NoviceAndCaiBang, progression,
+                CombatFaction.CaiBang, "Cái Bang", ArtFolder, grantProgression: null,
+                assignToActiveDeckSlot: (skillId, slot) =>
+                {
+                    assignedSkillId = skillId;
+                    assignedSlot = slot;
+                    return true;
+                });
+            MakeBody(content);
+            content.OnShow();
+            Assert.IsTrue(content.TryUpgrade(117));
+            content.SelectSkill(117);
+
+            Assert.IsTrue(content.TryAssignSelectedSkillToSlot(3));
+            Assert.AreEqual(117, assignedSkillId);
+            Assert.AreEqual(3, assignedSlot);
+        }
+
+        [Test]
+          public void SelectedUnlearnedSkill_CannotAssignToDeckSlot()
+        {
+            var progression = new PlayerProgressionState();
+            var content = new SkillContent(TestCatalogCache.NoviceAndCaiBang, progression,
+                CombatFaction.CaiBang, "Cái Bang", ArtFolder, grantProgression: null,
+                assignToActiveDeckSlot: (_, _) => true);
+            var body = MakeBody(content);
+            content.OnShow();
+            content.SelectSkill(117);
+
+            Assert.IsFalse(content.TryAssignSelectedSkillToSlot(0));
+            var slots = body.Q("SkillEquipSlots");
+            Assert.IsNotNull(slots, "unlearned active skills still explain their deck-assignment action");
+            Assert.AreEqual(CombatSkillSlotController.MobileSkillSlotCount, slots.childCount);
+              for (int i = 0; i < slots.childCount; i++)
+                  Assert.IsFalse(slots[i].enabledSelf, "unlearned skills must show disabled deck slots");
+          }
+
+          [Test]
+          public void SelectedLearnedSkill_IdentifiesTheActiveDeckAndCurrentSlot()
+          {
+              var progression = new PlayerProgressionState();
+              var content = new SkillContent(TestCatalogCache.NoviceAndCaiBang, progression,
+                  CombatFaction.CaiBang, "Cái Bang", ArtFolder, grantProgression: null,
+                  assignToActiveDeckSlot: (_, _) => true,
+                  activeDeckName: () => "B",
+                  activeDeckSlotSkill: slot => slot == 2 ? 117 : 0);
+              var body = MakeBody(content);
+              content.OnShow();
+              Assert.IsTrue(content.TryUpgrade(117));
+              content.SelectSkill(117);
+
+                Assert.AreEqual("Deck B — chạm ô để thay · chạm lại icon để đóng", body.Q<Label>("SkillEquipLabel").text);
+              var current = body.Q<Button>("SkillEquipSlot_3");
+              Assert.IsTrue(current.ClassListContains("skill-equip-slot--occupied"));
+              Assert.IsTrue(current.ClassListContains("skill-equip-slot--selected"));
+          }
 
         // --- T11: TryUpgrade honors the PC low-level gate ---
         [Test]

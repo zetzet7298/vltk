@@ -60,8 +60,8 @@ namespace VLTK.Tests.Sandbox
             var cat = Catalog();
             var s = cat.Resolve(127);
             Assert.IsNotNull(s, "skill 127 missing");
-            Assert.AreEqual(PcSkillStyle.InitiativeNpcState, s.skillStyle, "127 PC SkillStyle=0 (active cast buff)");
-            Assert.AreEqual(17, s.stateSpecialId, "127 PC StateSpecialId=17");
+            Assert.AreEqual(PcSkillStyle.Missiles, s.skillStyle, "127 canonical SkillStyle=0 maps to active Missiles");
+            Assert.AreEqual(0, s.stateSpecialId, "127 canonical slistcache StateSpecialId=0");
         }
 
         [Test]

@@ -1,7 +1,7 @@
 {
     "dotnet.defaultSolution": "vltk-mobile.slnx",
     "dotnet.dotnetPath": "/usr/bin/dotnet",
-    "dotrush.roslyn.dotnetSdkDirectory": "/usr/lib/dotnet/sdk/8.0.128",
+    "dotrush.roslyn.dotnetSdkDirectory": "/usr/lib/dotnet/sdk/8.0.129",
     "dotrush.msbuildProperties": {
         "DefineConstants": "UNITY_EDITOR"
     },

@@ -1196,7 +1196,22 @@ namespace VLTK.UI
                 ? progression.faction
                 : CombatFaction.CaiBang;
             manager.Show(new SkillContent(catalog, progression, faction, GetFactionNameVi(faction), artFolder,
-                grantProgression: sandbox != null ? sandbox.GrantFactionSkillPanelProgression : null));
+                grantProgression: sandbox != null ? sandbox.GrantFactionSkillPanelProgression : null,
+                  assignToActiveDeckSlot: (skillId, slot) =>
+                  {
+                      var hotbar = UnityEngine.Object.FindAnyObjectByType<CombatSkillSlotController>();
+                      return hotbar != null && hotbar.TryAssignLearnedActiveSkill(slot, skillId);
+                  },
+                  activeDeckName: () =>
+                  {
+                      var hotbar = UnityEngine.Object.FindAnyObjectByType<CombatSkillSlotController>();
+                      return hotbar == null ? string.Empty : (hotbar.ActiveDeckIndex == 0 ? "A" : "B");
+                  },
+                  activeDeckSlotSkill: slot =>
+                  {
+                      var hotbar = UnityEngine.Object.FindAnyObjectByType<CombatSkillSlotController>();
+                      return hotbar == null ? 0 : hotbar.GetAssignedSkill(slot);
+                  }));
             SubsystemLog.Info("HUD", "Open Kỹ năng võ công");
             CloseMapPreview();
         }

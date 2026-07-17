@@ -47,6 +47,16 @@ namespace VLTK.UI
     {
         public const int PcFightSkillSlotsPerPage = 30;
         public const int PcFightSkillPageCount = 1;
+        public const int PcFightSkillColumns = 5;
+        public const int PcFightSkillRowsPerPcPanel = 5;
+        public const int PcFightSkillSlotsPerPcPanel = PcFightSkillColumns * PcFightSkillRowsPerPcPanel;
+
+        // UiSkillsFightSub.ini physically contains five rows of five 36px slots.
+        // TangMen's 23 canonical player roots fit that authentic PC footprint.  The
+        // legacy 30-slot mobile catalog remains for other factions until each of
+        // their larger catalogs is reconciled against its PC pagination behavior.
+        public static int GetDisplaySlotCount(CombatFaction faction) =>
+            faction == CombatFaction.TangMen ? PcFightSkillSlotsPerPcPanel : PcFightSkillSlotsPerPage;
 
         // PC source: bin/client/script/skill/gaibang.lua + newest checked skills.txt rows.
         // 115-116 passive mastery, 117-130 active combat skills, 274/357/358/359/360 high-tier.
@@ -74,9 +84,16 @@ namespace VLTK.UI
             3, 4, 6, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21
         };
 
+        // Canonical learned roots from PcTangMenOracle.json.  The static oracle does
+        // not prove a separate PC UI ordering (uiOrder is null), so preserve the
+        // source membership order rather than retaining the old 10-row Unity view.
+        // 51/55/57 are explicitly unresolved display-only residuals: they must not
+        // be promoted into a player-facing learned/cast/equip list.
         public static readonly int[] PcTangMenSkillOrder =
         {
-            43, 45, 47, 48, 50, 51, 54, 55, 57, 58
+            43, 45, 47, 48, 50, 54, 58,
+            249, 302, 303, 339, 341, 342, 343, 345, 347, 349, 351,
+            710, 1069, 1070, 1071, 1110,
         };
 
         public static readonly int[] PcEMeiSkillOrder =

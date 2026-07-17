@@ -201,9 +201,8 @@ namespace VLTK.Tests.Sandbox
         public void SkillEffectVisual_SurroundSkill_SpawnsMultipleMissiles()
         {
             // PC skill 125 (Thiên Hạ Vô Cẩu) — Cái Bang surround burst with N missiles.
-            // [CaiBang-TianXiaWuGou 2026-06-19] PC gaibang.lua::bangda_egou (125 mapping) không có skill_misslenum_v;
-            //   catalog childSkillNum=0 → runtime fallback = max(1, 0) = 1 missile at L1.
-            //   PC gaibang.lua::tianxia_wugou (359 mapping) có skill_misslenum_v L1=1, L20=3 — runtime đọc qua Lua.
+            // Canonical slistcache skills.txt row 125: ChildSkillNum=16, MisslesForm=3.
+            // bangda_egou has no Lua count override, so static row count remains authoritative.
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
             var skill = catalog.Resolve(125);
             Assert.IsNotNull(skill, "Skill 125 should be in PC catalog.");
@@ -211,11 +210,55 @@ namespace VLTK.Tests.Sandbox
             var service = new SkillEffectVisualService(null, catalog);
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(50, 0), 1);
             Assert.IsNotNull(fx);
-            Assert.AreEqual(1, fx.missileCount, "PC skill 125 L1 = 1 missile (catalog childSkillNum=0 fallback).");
-            // PC straight-line: missilePositions null is OK when count=1 (UpdateMultiMissile handles single
-            //   missile via velocity-based straight-line toward target, no per-missile position array needed).
-            Assert.IsTrue(fx.missilePositions == null || fx.missilePositions.Length == 1,
-                "PC skill 125 L1 straight-line: missilePositions null OR single-position array");
+            Assert.AreEqual(16, fx.missileCount, "PC skill 125 uses sixteen surround missiles");
+            Assert.AreEqual(16, fx.missilePositions.Length);
+        }
+
+        [Test]
+        public void NestedByMissileVisual_CallbackResolvesStationaryChildDamage()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var runtime = new CombatRuntimeService(catalog, damage: new DamageFormulaService { RollPercent = _ => true });
+            var caster = new CombatActorState
+            {
+                actorId = 2,
+                faction = CombatFaction.CaiBang,
+                level = 200,
+                currentMana = 1000,
+                maxMana = 1000,
+                currentLife = 1000,
+                maxLife = 1000,
+                knownSkills = { 1073 },
+                skillLevels = { [1073] = 20 },
+            };
+            var targetActor = new CombatActorState
+            {
+                actorId = 99,
+                currentLife = 1000,
+                maxLife = 1000,
+                position = new Vector2(200, 0),
+            };
+            var report = runtime.Cast(caster, targetActor, 1073, targetActor.position, CombatRelation.Enemy);
+            int damageBefore = report.damageResults.Count;
+            int projectileBefore = report.projectiles.Count;
+            int lifeBefore = targetActor.currentLife;
+            var missile335 = report.projectiles.First(p => p.skillId == 335);
+            Assert.IsTrue(runtime.TryResolveProjectileCollision(caster, targetActor, report, missile335, targetActor.position));
+
+            var visuals = new SkillEffectVisualService(null, catalog);
+            var method = typeof(CombatSkillSlotController).GetMethod(
+                "ApplyProjectileCollisionResult", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(method);
+            method.Invoke(null, new object[]
+            {
+                null, visuals, catalog, runtime, caster, null, targetActor, report, targetActor.position,
+                damageBefore, projectileBefore, lifeBefore,
+            });
+
+            var nested = visuals.GetActiveEffects().Single();
+            Assert.IsNotNull(nested.onMissileCollided, "nested missile 334 visual must keep runtime collision callback");
+            nested.onMissileCollided(nested, 0, targetActor.position);
+            Assert.AreEqual(2, report.damageResults.Count, "visual lifecycle resolves delayed 1072 damage");
         }
 
         [Test]
@@ -400,10 +443,10 @@ namespace VLTK.Tests.Sandbox
                 .GetField("DefaultDeckByFaction", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
             Assert.IsNotNull(caiBangDeckField, "CombatSkillSlotController.DefaultDeckByFaction must exist.");
             var deckMap = (System.Collections.Generic.Dictionary<CombatFaction, int[]>)caiBangDeckField.GetValue(null);
-            CollectionAssert.AreEqual(new[] { 357, 210, 358, 1073, 130 }, deckMap[CombatFaction.CaiBang],
-                "Cái Bang default deck: Phi Long (357, main/primary attack slot 0) → Khinh công → Tiềm Long Tại Uyên → Thần Thủ Lệnh Long → Túy Điệp Cuồng Vũ");
-            Assert.AreEqual(1, deckMap[CombatFaction.CaiBang].Count(id => id == PcCombatCatalogFactory.UniversalLightnessSkill),
-                "Khinh công must appear exactly once in the right-thumb default deck.");
+            CollectionAssert.AreEqual(new[] { 117, 119, 122, 125, 128 }, deckMap[CombatFaction.CaiBang],
+                "Cái Bang sandbox default deck uses five canonical player damage skills");
+            Assert.AreEqual(0, deckMap[CombatFaction.CaiBang].Count(id => id == PcCombatCatalogFactory.UniversalLightnessSkill),
+                "Khinh công remains user-selectable instead of replacing a combat slot.");
             foreach (var f in factions)
             {
                 var order = PcSkillPanelService.GetPcSkillOrder(f.faction);
@@ -470,6 +513,17 @@ namespace VLTK.Tests.Sandbox
                 Object.DestroyImmediate(go);
                 Object.DestroyImmediate(playerGo);
             }
+        }
+
+        [Test]
+        public void CaiBangDeckMigration_DoesNotTreatPartiallyCustomizedDeckAsEmpty()
+        {
+            var method = typeof(CombatSkillSlotController).GetMethod(
+                "IsEmptyDeck", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(method);
+            Assert.IsTrue((bool)method.Invoke(null, new object[] { new[] { 0, 0, 0, 0, 0 } }));
+            Assert.IsFalse((bool)method.Invoke(null, new object[] { new[] { 359, 119, 0, 125, 128 } }),
+                "one cleared slot must not make a customized deck eligible for full replacement");
         }
 
         [Test]

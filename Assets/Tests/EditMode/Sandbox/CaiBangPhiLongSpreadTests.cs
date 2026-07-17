@@ -24,10 +24,11 @@ namespace VLTK.Tests.Sandbox
             var cat = Catalog();
             var s = cat.Resolve(357);
             Assert.IsNotNull(s);
-            // Phi Long catalog: attackRadius = 512, missileForm = Single (bundled PcSkills.txt 357 MissilesForm=0),
-            //   childSkillNum = 1 (runtime uses Lua skill_misslenum_v L20=4).
-            Assert.AreEqual(512, s.attackRadius, "357 PC AttackRadius L20=512");
-            Assert.AreEqual(SkillMissileForm.Single, s.missileForm, "357 PC MissilesForm=0 (Single)");
+            Assert.AreEqual(400, s.attackRadius, "357 canonical skills.txt base AttackRadius=400");
+            Assert.AreEqual(512, PcCaiBangLuaLevelService.GetAttackRadius(357, 20),
+                "357 Lua L20 runtime AttackRadius=512");
+            Assert.AreEqual(SkillMissileForm.Single, s.missileForm,
+                "PC form 0 has child missiles; Unity keeps single-projectile render fallback");
         }
 
         [Test]

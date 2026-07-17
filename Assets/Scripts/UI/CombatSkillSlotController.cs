@@ -287,19 +287,18 @@ namespace VLTK.UI
         // MobileSkillSlotCount = 5 → set đủ 5 skill theo thứ tự PC.
         // PC source: bin/client/script/skill/{gaibang,shaolin,...}.lua + skills.txt.
         // Fallback: lấy 5 skill active đầu tiên từ PcSkillPanelService.GetPcSkillOrder(faction).
-        // Legacy Cái Bang deck shape BEFORE the main-slot=Phi Long fix (Khinh Công sat at slot 0).
-        // Used by MigrateCaiBangDeckToDefaultIfNeeded to reorder old saves to the current default.
-        private static readonly int[] LegacyCaiBangDefaultDeck = { 210, 357, 358, 1073, 130 };
+        private static readonly int[][] LegacyCaiBangDefaultDecks =
+        {
+            new[] { 210, 357, 358, 1073, 130 },
+            new[] { 357, 210, 358, 1073, 130 },
+        };
 
         private static readonly System.Collections.Generic.Dictionary<CombatFaction, int[]> DefaultDeckByFaction =
             new System.Collections.Generic.Dictionary<CombatFaction, int[]>
             {
-                // Cái Bang default deck (PC-correct order): slot 0 is the faction basic attack =
-                // Phi Long Tại Thiên (357), which the main PrimaryAttackBtn resolves to and casts
-                // (ResolvePrimaryAttackSlot -> slot 0). Universal PC Khinh Công (210) stays at slot 1
-                // (most reachable utility). Khinh Công source: Skills.txt id=210,
-                // icon \spr\Ui\技能图标\轻功.spr (hash bf787a8a), script \script\skill\special\轻功.lua.
-                { CombatFaction.CaiBang, new[] { 357, 210, 358, 1073, 130 } },
+                // ponytail: PC quickbar is user-configurable; sandbox defaults to first five canonical
+                // player damage skills instead of mixing utility, inert 358, buff 130, and tier-150 events.
+                { CombatFaction.CaiBang, new[] { 117, 119, 122, 125, 128 } },
             };
 
         private void FillDefaultDeckIfEmpty()
@@ -341,9 +340,7 @@ namespace VLTK.UI
             rightSlotSkillId = deckASkillIds[1];
         }
 
-        // Normalize a Cái Bang deck to the current DefaultDeckByFaction order. Reorders legacy
-        // shapes (e.g. the old Khinh-Công-at-slot-0 deck) and fills empty slots, but never clobbers
-        // a user-customized deck. Ensures slot 0 = Phi Long (357) = main primary attack.
+        // Normalize only empty or known generated Cái Bang decks; preserve user-customized slots.
         private void MigrateCaiBangDeckToDefaultIfNeeded()
         {
             var manager = SandboxManager.Instance;
@@ -351,19 +348,19 @@ namespace VLTK.UI
             if (prog == null || prog.faction != CombatFaction.CaiBang) return;
             if (!DefaultDeckByFaction.TryGetValue(CombatFaction.CaiBang, out var defaults)) return;
             if (MatchesDeck(deckASkillIds, defaults)) return; // already the current default
-            if (!ContainsEmptySlot(deckASkillIds) && !MatchesDeck(deckASkillIds, LegacyCaiBangDefaultDeck)) return;
+            if (!IsEmptyDeck(deckASkillIds) && !MatchesAnyDeck(deckASkillIds, LegacyCaiBangDefaultDecks)) return;
 
             for (int i = 0; i < MobileSkillSlotCount; i++)
                 deckASkillIds[i] = i < defaults.Length ? defaults[i] : 0;
             SyncLegacySlotFields();
         }
 
-        private static bool ContainsEmptySlot(int[] deck)
+        private static bool IsEmptyDeck(int[] deck)
         {
             if (deck == null) return true;
             for (int i = 0; i < deck.Length; i++)
-                if (deck[i] <= 0) return true;
-            return false;
+                if (deck[i] > 0) return false;
+            return true;
         }
 
         private static bool MatchesDeck(int[] deck, int[] expected)
@@ -372,6 +369,14 @@ namespace VLTK.UI
             for (int i = 0; i < expected.Length; i++)
                 if (deck[i] != expected[i]) return false;
             return true;
+        }
+
+        private static bool MatchesAnyDeck(int[] deck, int[][] expectedDecks)
+        {
+            if (expectedDecks == null) return false;
+            foreach (var expected in expectedDecks)
+                if (MatchesDeck(deck, expected)) return true;
+            return false;
         }
 
         // (Removed GetDefaultSkillsForFaction hardcode - now uses PC source order via PcSkillPanelService)
@@ -423,6 +428,24 @@ namespace VLTK.UI
             SyncLegacySlotFields();
             RefreshSlotVisuals();
             SubsystemLog.Info("Combat", $"Assigned skill {skillId} to deck {ActiveDeckName()} slot {slot}");
+        }
+
+        /// <summary>
+        /// UI bridge used by the full skill-management panel. Keeps assignment validation
+        /// in the hotbar owner while assigning to whichever deck is currently active.
+        /// </summary>
+        public bool TryAssignLearnedActiveSkill(int slot, int skillId)
+        {
+            if (slot < 0 || slot >= MobileSkillSlotCount) return false;
+
+            var catalog = _catalog ?? SandboxManager.Instance?.CombatSkillCatalog;
+            var progression = _progression ?? SandboxManager.Instance?.PlayerProgression;
+            var skill = catalog?.Resolve(skillId);
+            if (skill == null || skill.skillStyle == PcSkillStyle.PassivityNpcState) return false;
+            if ((progression?.GetSkillLevel(skillId) ?? 0) <= 0) return false;
+
+            AssignSkill(slot, skillId);
+            return true;
         }
 
         public void ClearSlot(int slot) => AssignSkill(slot, 0);
@@ -933,33 +956,33 @@ namespace VLTK.UI
                                 ? (Vector2)liveTarget.transform.position
                                 : targetPos)
                             : null;
-                        var phiLongMissiles = skillId == 357 && report.projectiles != null
-                            ? report.projectiles.FindAll(projectile => projectile.skillId == 166)
+                        var collisionMissiles = skill.byMissile && report.projectiles != null
+                            ? report.projectiles.FindAll(projectile => projectile.skillId == skill.childSkillId)
                             : null;
-                        System.Action<ActiveSkillEffect, int, Vector2> onPhiLongMissileCollided = null;
-                        if (phiLongMissiles != null && phiLongMissiles.Count > 0)
+                        System.Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null;
+                        if (collisionMissiles != null && collisionMissiles.Count > 0)
                         {
-                            onPhiLongMissileCollided = (_, missileIndex, collisionPoint) =>
+                            onMissileCollided = (_, missileIndex, collisionPoint) =>
                             {
-                                if (missileIndex < 0 || missileIndex >= phiLongMissiles.Count || targetActor == null)
+                                if (missileIndex < 0 || missileIndex >= collisionMissiles.Count || targetActor == null)
                                     return;
 
                                 int damageCountBefore = report.damageResults?.Count ?? 0;
                                 int projectileCountBefore = report.projectiles?.Count ?? 0;
                                 int targetLifeBefore = targetActor.currentLife;
-                                if (!combatRuntime.TryResolvePhiLongCollision(
-                                        caster, targetActor, report, phiLongMissiles[missileIndex], collisionPoint))
+                                if (!combatRuntime.TryResolveProjectileCollision(
+                                        caster, targetActor, report, collisionMissiles[missileIndex], collisionPoint))
                                     return;
 
-                                ApplyPhiLongCollisionResult(
-                                    manager, effectService, catalog, target, targetActor, report, collisionPoint,
-                                    damageCountBefore, projectileCountBefore, targetLifeBefore);
+                                ApplyProjectileCollisionResult(
+                                    manager, effectService, catalog, combatRuntime, caster, target, targetActor,
+                                    report, collisionPoint, damageCountBefore, projectileCountBefore, targetLifeBefore);
                             };
                         }
 
                         var fx = effectService?.PlaySkillCast(
-                            skill, casterPos, targetPos, report.skillLevel, currentTargetPos, onPhiLongMissileCollided);
-                        if (skillId != 357 && target != null && target.enemyBehaviour != null && targetActor != null)
+                            skill, casterPos, targetPos, report.skillLevel, currentTargetPos, onMissileCollided);
+                        if (!skill.byMissile && target != null && target.enemyBehaviour != null && targetActor != null)
                             StartCoroutine(ApplyLiveEnemyHpAtImpact(target, targetActor.currentLife, skillId, report.skillLevel, report, fx));
 
                         string targetName = target != null ? target.name : "Self";
@@ -1073,10 +1096,12 @@ namespace VLTK.UI
             return 20f / 16f;
         }
 
-        private static void ApplyPhiLongCollisionResult(
+        private static void ApplyProjectileCollisionResult(
             SandboxManager manager,
             SkillEffectVisualService effectService,
             SkillCatalog catalog,
+            CombatRuntimeService combatRuntime,
+            CombatActorState caster,
             CombatTargetInfo target,
             CombatActorState targetActor,
             CombatCastReport report,
@@ -1094,7 +1119,7 @@ namespace VLTK.UI
             if (liveTarget != null)
             {
                 liveTarget.SetLife(targetActor.currentLife, showDamage: true);
-                EmitPhiLongCollisionFeedback(liveTarget, report.damageResults, damageCountBefore);
+                EmitProjectileCollisionFeedback(liveTarget, report.damageResults, damageCountBefore);
             }
 
             int visualDamage = Mathf.Max(0, targetLifeBefore - targetActor.currentLife);
@@ -1110,22 +1135,40 @@ namespace VLTK.UI
                     gameplayLoop.ProcessActorDeathPublic(glEnemy, gameplayLoop.Player);
             }
 
-            if (report.projectiles == null)
+            if (report.projectiles == null || report.projectiles.Count <= projectileCountBefore)
                 return;
 
-            for (int i = projectileCountBefore; i < report.projectiles.Count; i++)
-            {
-                if (report.projectiles[i].skillId != 195)
-                    continue;
+            var nestedMissiles = report.projectiles.GetRange(
+                projectileCountBefore, report.projectiles.Count - projectileCountBefore);
+            if (nestedMissiles.Count == 0 ||
+                !report.projectileImpactSkillIds.TryGetValue(nestedMissiles[0].instanceId, out int nestedSkillId))
+                return;
 
-                var collideVisual = catalog?.Resolve(389);
-                if (collideVisual != null)
-                    effectService?.PlaySkillCast(collideVisual, collisionPoint, collisionPoint, report.skillLevel);
-                break;
-            }
+            var nestedVisual = catalog?.Resolve(nestedSkillId);
+            if (nestedVisual == null) return;
+            int nestedLevel = report.projectileImpactSkillLevels.TryGetValue(nestedMissiles[0].instanceId, out int level)
+                ? level
+                : report.skillLevel;
+
+            effectService?.PlaySkillCast(
+                nestedVisual, collisionPoint, collisionPoint, nestedLevel, null,
+                (_, missileIndex, nestedCollisionPoint) =>
+                {
+                    if (missileIndex < 0 || missileIndex >= nestedMissiles.Count || combatRuntime == null || caster == null)
+                        return;
+                    int nestedDamageBefore = report.damageResults?.Count ?? 0;
+                    int nestedProjectileBefore = report.projectiles.Count;
+                    int nestedLifeBefore = targetActor.currentLife;
+                    if (!combatRuntime.TryResolveProjectileCollision(
+                            caster, targetActor, report, nestedMissiles[missileIndex], nestedCollisionPoint))
+                        return;
+                    ApplyProjectileCollisionResult(
+                        manager, effectService, catalog, combatRuntime, caster, target, targetActor, report,
+                        nestedCollisionPoint, nestedDamageBefore, nestedProjectileBefore, nestedLifeBefore);
+                });
         }
 
-        private static void EmitPhiLongCollisionFeedback(
+        private static void EmitProjectileCollisionFeedback(
             BaLangEnemyAi liveTarget,
             List<DamageResult> damageResults,
             int damageCountBefore)

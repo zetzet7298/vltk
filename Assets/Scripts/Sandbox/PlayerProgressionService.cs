@@ -25,7 +25,42 @@ namespace VLTK.Sandbox
             1161,   // Thừa Lục Long NPC
             1162,   // Cửu Cái Bang 150 NPC
         };
-        public static bool IsNpcVariant(int skillId) => NpcVariantSkillIds.Contains(skillId);
+          public static bool IsNpcVariant(int skillId) => NpcVariantSkillIds.Contains(skillId);
+
+          // Observed Unity panel rows without canonical PC learning evidence. They may be
+          // resolved for the legacy display contract, but must never enter player
+          // learned/cast/upgrade state.
+          public static readonly HashSet<int> TangMenDisplayResidualSkillIds = new()
+          {
+              51, 55, 57,
+          };
+          // SKL-KL-PROOF-001: canonical KunLun learned membership = the 24 progression/skillbook
+          // roots frozen in PcKunLunOracle.json (sha256 3be67129...). GrantFactionSkillPanel
+          // Progression, upgrade eligibility (via knownSkills), and MaxAllSkillLevels all honor this
+          // predicate: the catalog KunLun faction skills minus the five unresolved residuals below
+          // equal exactly this set. 170/177/180/183/184 and the 14 support-only relationship
+          // targets (14-22,290,342,387,399,1109) never enter learned/cast/upgrade state.
+          public static readonly HashSet<int> KunLunLearnedSkillIds = new()
+          {
+              90, 167, 168, 169, 171, 172, 173, 174, 175, 176, 178, 179, 181, 182,
+              275, 372, 375, 392, 393, 394, 630, 717, 1080, 1081,
+          };
+            public static readonly HashSet<int> KunLunDisplayResidualSkillIds = new()
+          {
+              170, 177, 180, 183, 184,
+            };
+            public static bool IsKunLunLearnedSkill(int skillId) => KunLunLearnedSkillIds.Contains(skillId);
+            public static bool IsCanonicalLearnedSkillForFaction(CombatFaction targetFaction, int skillId)
+            {
+                if (targetFaction == CombatFaction.KunLun)
+                    return IsKunLunLearnedSkill(skillId);
+                if (targetFaction == CombatFaction.TangMen)
+                    return !TangMenDisplayResidualSkillIds.Contains(skillId);
+                return true;
+            }
+            public static bool IsDisplayOnlyResidual(int skillId) =>
+              TangMenDisplayResidualSkillIds.Contains(skillId) ||
+              KunLunDisplayResidualSkillIds.Contains(skillId);
 
         public int level = 1;
         public int fightSkillPoints;
@@ -68,21 +103,45 @@ namespace VLTK.Sandbox
                 fightSkillPoints = baseline.points;
             faction = targetFaction;
 
-            if (catalog == null)
-                return;
+              if (targetFaction == CombatFaction.TangMen)
+              {
+                  foreach (int residualId in TangMenDisplayResidualSkillIds)
+                  {
+                      knownSkills.Remove(residualId);
+                      skillLevels.Remove(residualId);
+                  }
+              }
+              if (targetFaction == CombatFaction.KunLun)
+              {
+                  // SKL-KL-PROOF-001: defensively drop unresolved residuals; the faction-filter
+                  // loop below also excludes them via IsDisplayOnlyResidual so knownSkills ends up
+                  // exactly the 24 canonical learned roots.
+                  foreach (int residualId in KunLunDisplayResidualSkillIds)
+                  {
+                      knownSkills.Remove(residualId);
+                      skillLevels.Remove(residualId);
+                  }
+              }
 
-            foreach (var skill in catalog.All)
-            {
-                if (skill.faction != targetFaction)
-                    continue;
-                // Hide NPC/boss variants from the player skill panel.
-                if (IsNpcVariant(skill.skillId))
-                    continue;
+              if (catalog == null)
+                  return;
 
-                knownSkills.Add(skill.skillId);
-                if (!skillLevels.ContainsKey(skill.skillId))
-                    skillLevels[skill.skillId] = 0;
-            }
+              foreach (var skill in catalog.All)
+              {
+                    if (skill.faction != targetFaction)
+                        continue;
+                    if (!IsCanonicalLearnedSkillForFaction(targetFaction, skill.skillId))
+                        continue;
+                    // Hide NPC/boss variants from the player skill panel.
+                  if (IsNpcVariant(skill.skillId))
+                      continue;
+                  if (IsDisplayOnlyResidual(skill.skillId))
+                      continue;
+
+                    knownSkills.Add(skill.skillId);
+                    if (!skillLevels.ContainsKey(skill.skillId))
+                        skillLevels[skill.skillId] = 0;
+                }
 
             // PC universal action skill: Khinh Công (轻功, id=210) is not tied to a faction,
             // but it is a player action button/slot and must be known for KSkillList::FindSame.
@@ -175,10 +234,15 @@ namespace VLTK.Sandbox
             fightSkillPoints = baseline.points;
             foreach (var skill in catalog.All)
             {
-                bool factionSkill = skill.faction == CombatFaction.CaiBang || skill.faction == CombatFaction.WuDang || skill.faction == CombatFaction.Shaolin || skill.faction == CombatFaction.TangMen || skill.faction == CombatFaction.EMei || skill.faction == CombatFaction.TianWang || skill.faction == CombatFaction.WuDu || skill.faction == CombatFaction.CuiYan || skill.faction == CombatFaction.TianRen || skill.faction == CombatFaction.KunLun;
+                // SKL-KL-PROOF-001: operate on the current faction plus universal PC actions, not
+                // all faction definitions. Residuals (incl. KunLun 170/177/180/183/184) and NPC
+                // variants are excluded so only the canonical learned set can be maxed.
+                bool factionSkill = skill.faction == faction;
                 bool universalPcActionSkill = skill.skillId == PcCombatCatalogFactory.UniversalLightnessSkill || skill.isLeapSkill;
                 if (!factionSkill && !universalPcActionSkill) continue;
-                if (IsNpcVariant(skill.skillId)) continue;
+                if (factionSkill && !IsCanonicalLearnedSkillForFaction(faction, skill.skillId)) continue;
+                  if (IsNpcVariant(skill.skillId)) continue;
+                  if (IsDisplayOnlyResidual(skill.skillId)) continue;
                 int maxLv = skill.maxLevel > 0 ? skill.maxLevel : 1;
                 knownSkills.Add(skill.skillId);
                 skillLevels[skill.skillId] = maxLv;

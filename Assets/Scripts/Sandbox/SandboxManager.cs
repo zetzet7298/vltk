@@ -1648,18 +1648,20 @@ namespace VLTK.Sandbox
             }
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
-            // First-boot: default faction = Cái Bang (the PC sandbox convention).
+            // First-boot: default faction = Đường Môn. This is the fresh Stop/Play
+            // sandbox contract; a player-selected runtime faction is retained while alive.
             // Without this the player joins with faction=None, knownSkills empty,
             // and the skill panel shows 0 skills + slots are blank.
             if (PlayerProgression.faction == CombatFaction.None)
-                PlayerProgression.GrantFactionSkillPanelProgression(CombatSkillCatalog, CombatFaction.CaiBang);
+                PlayerProgression.GrantFactionSkillPanelProgression(
+                    CombatSkillCatalog, GameplayLoopService.DefaultPlayerFaction);
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
             // Wire skill cast sound → AudioService (PC missles.txt SoundPath)
             SkillEffectVisual.OnCastSound = (pcPath) => AudioService?.PlaySkillCast(pcPath);
 
             // Gameplay Loop: wire all subsystems together
             GameplayLoop = new GameplayLoopService(CombatSkillCatalog);
-            var gp = GameplayLoop.RegisterPlayer(PlayerActorId, "Cái Bang Đệ Tử", PlayerProgression.level, Vector2.zero);
+            var gp = GameplayLoop.RegisterPlayer(PlayerActorId, "Đường Môn Đệ Tử", PlayerProgression.level, Vector2.zero);
             gp.combat.knownSkills = PlayerProgression.knownSkills;
             gp.combat.skillLevels = PlayerProgression.skillLevels;
 

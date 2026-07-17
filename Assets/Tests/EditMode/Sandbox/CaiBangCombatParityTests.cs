@@ -57,6 +57,39 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBangCatalog_UsesCanonicalSlistcacheStaticRows()
+        {
+            Assert.IsNotNull(UnityEngine.Resources.Load<TextAsset>("Reference/PcCaiBangSkills"),
+                "canonical static rows must be sync-loadable from packaged Resources on Android");
+            var cat = Catalog();
+
+            var s125 = cat.Resolve(125);
+            Assert.AreEqual(16, s125.childSkillNum);
+            Assert.AreEqual(47, s125.childSkillId);
+            Assert.AreEqual(SkillMissileForm.Surround, s125.missileForm);
+            Assert.IsFalse(s125.byMissile);
+
+            var s359 = cat.Resolve(359);
+            Assert.AreEqual(16, s359.childSkillNum);
+            Assert.AreEqual(168, s359.childSkillId);
+            Assert.AreEqual(SkillMissileForm.Single, s359.missileForm,
+                "PC form 0 still has child missiles; Unity keeps single-projectile render fallback");
+            Assert.IsFalse(s359.byMissile);
+
+            var s1073 = cat.Resolve(1073);
+            Assert.AreEqual(27, s1073.maxLevel);
+            Assert.IsTrue(s1073.byMissile);
+            Assert.AreEqual(1101, s1073.startSkillId);
+            Assert.AreEqual(1103, s1073.flySkillId);
+            Assert.AreEqual(1, s1073.flyEventTime);
+
+            var s1074 = cat.Resolve(1074);
+            Assert.AreEqual(27, s1074.maxLevel);
+            Assert.AreEqual(5, s1074.childSkillNum);
+            Assert.IsTrue(s1074.byMissile);
+        }
+
+        [Test]
         public void Novice_MeleeAttack_UsesPcGateRangeCostAndAction()
         {
             var svc = new CombatRuntimeService(Catalog());
@@ -150,21 +183,18 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
             Assert.AreEqual(48, r.manaCost); // PC bangda_egou L20 skill_cost_v=48.
-            // [CaiBang-AddSkillDamage 2026-06-29] PC engine (KSkillList::GetAddSkillDamage) treats
-            // addskilldamage as a PASSIVE flat %-damage bonus, NOT a proc that casts the sub-skill.
-            // 125's addskilldamage entries passively buff 359/1074 WHEN THOSE skills are cast; casting
-            // 125 itself spawns only its OWN projectiles (Surround form, childSkillId=0 → none) and
-            // receives no self-bonus because nothing in the known set targets 125.
-            Assert.AreEqual(0, r.addSkillDamagePercent, "no learned skill grants addskilldamage to 125");
-            Assert.AreEqual(0, r.childProjectileCount, "125 must NOT spawn 359/1074 sub-skill missiles");
+            // slistcache skills.txt row 125: ChildSkillId=47, ChildSkillNum=16, MisslesForm=3.
+            // addskilldamage remains a passive bonus for 359/1074; these are 125's own 16 missiles.
+            Assert.AreEqual(35, r.addSkillDamagePercent, "learned 119 grants canonical addskilldamage2 +35% to 125");
+            Assert.AreEqual(16, r.childProjectileCount, "PC row 125 spawns sixteen child-47 missiles");
+            Assert.AreEqual(16, r.projectiles.Count(p => p.skillId == 47));
             Assert.IsFalse(r.projectiles.Any(p => p.skillId == 168), "casting 125 must not spawn 359/1074 chain dragons (missile 168)");
             Assert.Less(enemy.currentLife, 1000, "125 cast applies its own levelData damage");
-            Assert.AreEqual(2, svc.NextCastTime(beggar.actorId, 125));
+            Assert.AreEqual(0, svc.NextCastTime(beggar.actorId, 125), "canonical slistcache TimePerCast=0");
 
-            var onCooldown = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
-            Assert.AreEqual(CombatCastRejectReason.OnCooldown, onCooldown.reason);
+            var repeated = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(repeated.success, repeated.detail);
 
-            svc.AdvanceTime(2);
             beggar.rideHorse = true;
             var horseBlocked = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.AreEqual(CombatCastRejectReason.HorseRestricted, horseBlocked.reason);
@@ -236,8 +266,8 @@ namespace VLTK.Tests.Sandbox
             // Mobile comment cũ nói Style=3/anim=14 là ĐỌC SAI → fix về PC truth.
             var s = Catalog().Resolve(127);
             Assert.IsNotNull(s, "127 must be in catalog");
-            Assert.AreEqual(PcSkillStyle.InitiativeNpcState, s.skillStyle,
-                "PC slistcache 127 SkillStyle=0 → active cast buff, NOT passive always-on");
+            Assert.AreEqual(PcSkillStyle.Missiles, s.skillStyle,
+                "PC slistcache 127 SkillStyle=0 maps to active Missiles style, NOT passive always-on");
             Assert.AreEqual(11, s.charAnimId, "PC slistcache 127 CharAnimId=11");
             Assert.AreEqual(SkillMissileForm.Stance, s.missileForm, "PC slistcache 127 MisslesForm=6 (Stance)");
             Assert.IsTrue(s.targetSelf, "PC slistcache 127 TargetSelf=1");
@@ -342,12 +372,9 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang_1073_CollideEvent_Fires1072_OnMissileImpact()
+        public void CaiBang_1073_DamageAnd1072ResolveAtMissileImpact()
         {
-            // PC gaibang.lua::zhanggaibang150 (1073) skill_collideevent:
-            //   [1]={{1,0},{10,0},{10,1},{20,1}}  [3]={{1,1072},{20,1072}}
-            // => 1073 missile collide fires skill 1072 (Ngũ Diệu Càn Khôn) at L10+.
-            var svc = new CombatRuntimeService(Catalog());
+            var svc = new CombatRuntimeService(Catalog(), damage: new DamageFormulaService { RollPercent = _ => true });
             var beggar = Beggar();
             beggar.knownSkills.Add(1073);
             beggar.skillLevels[1073] = 20;
@@ -356,9 +383,26 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 1073, enemy.position, CombatRelation.Enemy);
 
             Assert.IsTrue(r.success, r.detail);
-            // PC: 1073 has collideSkillId wired to 1072.
-            var s1073 = Catalog().Resolve(1073);
-            Assert.AreEqual(1072, s1073.collideSkillId, "PC 1073 skill_collideevent[3]=1072");
+            Assert.AreEqual(0, r.damageResults.Count, "PC ByMissle=1: parent damage waits for missile impact");
+            Assert.AreEqual(1000, enemy.currentLife);
+            Assert.AreEqual(85, r.addSkillDamagePercent, "122(+40) and 128(+45) both grant 1073 damage");
+            Assert.AreEqual(1072, r.skill.collideSkillId);
+            Assert.AreEqual(1101, r.skill.startSkillId);
+            Assert.AreEqual(1103, r.skill.flySkillId);
+
+            var missile = r.projectiles.First(p => p.skillId == 335);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, enemy, r, missile, enemy.position));
+            Assert.AreEqual(1, r.damageResults.Count, "missile 335 impact applies only parent 1073 damage");
+            var stationary = r.projectiles.Single(p => p.skillId == 334);
+            Assert.IsFalse(svc.TryResolveProjectileCollision(beggar, enemy, r, missile, enemy.position),
+                "same projectile collision resolves once");
+
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, enemy, r, stationary, enemy.position));
+            Assert.AreEqual(2, r.damageResults.Count, "1072 damage resolves through its own stationary missile 334 lifecycle");
+            var childFire = Catalog().Resolve(1072).GetPcLevelData(20).damage
+                .Single(attr => attr.kind == MagicAttributeKind.FireDamageV);
+            Assert.AreEqual(childFire.value1, r.damageResults[1].rolledBase,
+                "skill_eventskilllevel passes parent L20 into collide child 1072");
         }
 
         [Test]
@@ -501,17 +545,19 @@ namespace VLTK.Tests.Sandbox
 
             var missile = r.projectiles.Single(p => p.skillId == 166);
             Assert.IsTrue(svc.TryResolvePhiLongCollision(beggar, enemy, r, missile, enemy.position));
+            Assert.AreEqual(1, r.damageResults.Count, "missile 166 collision applies only Phi Long damage");
+            Assert.AreEqual(2, r.projectiles.Count, "collision spawns 389's stationary child missile 195");
+            var stationary = r.projectiles.Single(p => p.skillId == 195);
+            Assert.IsFalse(svc.TryResolvePhiLongCollision(beggar, enemy, r, missile, enemy.position),
+                "the same missile must not fire 389 twice");
+
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, enemy, r, stationary, enemy.position));
             Assert.AreEqual(2, r.damageResults.Count,
-                "Collision applies 357 missile damage then its L10+ child 389 damage");
+                "389 damage resolves through its own stationary missile 195 lifecycle");
             var childFire = Catalog().Resolve(389).GetPcLevelData(11).damage
                 .Single(attr => attr.kind == MagicAttributeKind.FireDamageV);
             Assert.AreEqual(childFire.value1, r.damageResults[1].rolledBase,
                 "PC skill_eventskilllevel passes Phi Long L11 to collide child 389");
-            Assert.AreEqual(2, r.projectiles.Count, "Collision spawns 389's stationary child missile 195");
-            Assert.IsTrue(r.projectiles.Any(p => p.skillId == 195),
-                "389 is executed without requiring it in the caster's known-skill list");
-            Assert.IsFalse(svc.TryResolvePhiLongCollision(beggar, enemy, r, missile, enemy.position),
-                "The same missile must not fire 389 twice");
         }
 
         // === Phase 2 + 3 — Comprehensive PC parity tests for damage, radius, cost, count ===
@@ -744,8 +790,8 @@ namespace VLTK.Tests.Sandbox
             var skill1072 = cat.Resolve(1072);
             Assert.IsNotNull(skill1072, "Catalog should have 1072 (NguDieuCanKhon) for 1073 CollideEvent");
             Assert.AreEqual(334, skill1072.childSkillId, "1072 child missile = 334");
-            // 1072 has form=7 (aura/stationary) with form None in our model — no missile form.
-            Assert.IsTrue(skill1072.HasMissile == false, "1072 stationary, not a flying missile");
+            Assert.AreEqual(SkillMissileForm.Stationary, skill1072.missileForm,
+                "canonical slistcache row 1072 uses stationary missile form 7");
         }
 
         [Test]

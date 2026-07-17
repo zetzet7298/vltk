@@ -197,12 +197,23 @@ namespace VLTK.Tests.EditMode
         }
 
         [Test]
-        public void GetPcSkillTreeOrder_NonEmpty()
+          public void GetPcSkillTreeOrder_NonEmpty()
         {
             var order = SkillTreePanelService.GetPcSkillTreeOrder(VLTK.Model.CombatFaction.CaiBang);
             Assert.IsNotNull(order);
-            Assert.Greater(order.Count, 0);
-        }
+              Assert.Greater(order.Count, 0);
+          }
+
+          [Test]
+          public void TangMenSkillTreeOrder_UsesCanonicalPlayerLearnedRoots()
+          {
+              var order = SkillTreePanelService.GetPcSkillTreeOrder(VLTK.Model.CombatFaction.TangMen);
+              CollectionAssert.AreEqual(PcSkillPanelService.PcTangMenSkillOrder, order);
+              Assert.AreEqual(23, order.Count);
+              CollectionAssert.DoesNotContain(order, 51);
+              CollectionAssert.DoesNotContain(order, 55);
+              CollectionAssert.DoesNotContain(order, 57);
+          }
 
         [Test]
         public void CanLearn_RejectsNoPrereq()

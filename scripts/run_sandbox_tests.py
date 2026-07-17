@@ -118,8 +118,7 @@ def run():
     }
     
     if len(sys.argv) > 1:
-        # Allow specifying test name filter
-        test_args["test_names"] = [sys.argv[1]]
+        test_args["test_names"] = sys.argv[1:]
         
     while True:
         test_res = client.call_tool("run_tests", test_args)
@@ -183,9 +182,11 @@ def run():
         if not status:
             status = poll_res.get("status")
             
-        if status and status.lower() in ["completed", "success", "failed", "completed", "success", "failed"]:
+        if status and status.lower() in ["completed", "success", "succeeded", "failed"]:
             print("\n=== TEST RESULTS DETAIL ===")
             print(results_str or json.dumps(poll_res, indent=2))
+            if status.lower() == "failed":
+                raise SystemExit(1)
             break
         elif not status:
             if "passed" in results_str.lower() or "failed" in results_str.lower():

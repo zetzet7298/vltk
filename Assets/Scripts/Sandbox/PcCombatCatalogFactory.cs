@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using VLTK.Model;
 
@@ -61,6 +62,22 @@ namespace VLTK.Sandbox
             if (includeCuiYan) foreach (var s in CreateCuiYanSkills()) catalog.Register(s);
             if (includeTianRen) foreach (var s in CreateTianRenSkills()) catalog.Register(s);
             if (includeKunLun) foreach (var s in CreateKunLunSkills()) catalog.Register(s);
+            if (includeTangMen)
+            {
+                // SKL-TM-CATALOG-001: register Unity display residuals (51/55/57) and the 32
+                // relationship-target support/event defs AFTER all faction learned lists and
+                // only when unresolved, so existing faction definitions are never overwritten.
+                RegisterTangMenUnityDisplayResiduals(catalog);
+                RegisterTangMenRelationshipTargets(catalog);
+            }
+            if (includeKunLun)
+            {
+                // SKL-KL-PROOF-001: register Unity display residuals (170/177/180/183/184) and
+                // the 17 relationship-target support/event defs AFTER all faction learned lists
+                // and only when unresolved, so existing faction definitions are never overwritten.
+                RegisterKunLunUnityDisplayResiduals(catalog);
+                RegisterKunLunRelationshipTargets(catalog);
+            }
             return catalog;
         }
 
@@ -101,8 +118,101 @@ namespace VLTK.Sandbox
         public static List<SkillDefinition> CreateCaiBangSkills()
         {
             var list = BuildCaiBangSkillsRaw();
+            ApplyCaiBangPcStaticRows(list);
             ApplyCaiBangPcCastAudio(list);
             return list;
+        }
+
+        private static void ApplyCaiBangPcStaticRows(List<SkillDefinition> skills)
+        {
+            if (skills == null) return;
+            var bundled = Resources.Load<TextAsset>("Reference/PcCaiBangSkills");
+            string[] lines;
+            if (bundled != null)
+            {
+                lines = bundled.text.Replace("\r", string.Empty).Split('\n');
+            }
+            else
+            {
+                string path = Path.Combine(Application.streamingAssetsPath, "Reference", "PcCaiBangSkills.txt");
+                if (!File.Exists(path))
+                {
+                    Debug.LogWarning($"[PcCombatCatalogFactory] canonical Cái Bang skill slice missing: {path}");
+                    return;
+                }
+                lines = File.ReadAllLines(path);
+            }
+            if (lines.Length < 2) return;
+            var header = lines[0].Split('\t');
+            var columns = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i < header.Length; i++) columns[header[i].Trim()] = i;
+
+            int Value(string[] row, string name, int fallback = 0)
+            {
+                if (!columns.TryGetValue(name, out int index) || index < 0 || index >= row.Length)
+                    return fallback;
+                return int.TryParse(row[index].Trim(), out int value) ? value : fallback;
+            }
+
+            string Text(string[] row, string name, string fallback = null)
+            {
+                if (!columns.TryGetValue(name, out int index) || index < 0 || index >= row.Length)
+                    return fallback;
+                string value = row[index].Trim();
+                return value.Length > 0 ? value : fallback;
+            }
+
+            var byId = new Dictionary<int, SkillDefinition>();
+            foreach (var skill in skills)
+                if (skill != null) byId[skill.skillId] = skill;
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var row = lines[i].Split('\t');
+                int id = Value(row, "SkillId", -1);
+                if (!byId.TryGetValue(id, out var skill)) continue;
+
+                skill.skillStyle = (PcSkillStyle)Value(row, "SkillStyle", (int)skill.skillStyle);
+                skill.stateSpecialId = Value(row, "StateSpecialId", skill.stateSpecialId);
+                skill.isAura = Value(row, "IsAura", skill.isAura ? 1 : 0) != 0;
+                skill.attackRadius = Value(row, "AttackRadius", skill.attackRadius);
+                skill.missilesGenerate = Value(row, "MslsGenerate", skill.missilesGenerate);
+                skill.missilesGenerateData = Value(row, "MslsGenerateData", skill.missilesGenerateData);
+                int missileForm = Value(row, "MisslesForm", (int)skill.missileForm);
+                if (missileForm > 0) skill.missileForm = (SkillMissileForm)missileForm;
+                skill.childSkillId = Value(row, "ChildSkillId", skill.childSkillId);
+                skill.childSkillLevel = Value(row, "ChildSkillLevel", skill.childSkillLevel);
+                skill.childSkillNum = Value(row, "ChildSkillNum", skill.childSkillNum);
+                skill.baseSkill = Value(row, "BaseSkill", skill.baseSkill ? 1 : 0) != 0;
+                skill.charAnimId = Value(row, "CharAnimId", skill.charAnimId);
+                skill.isMelee = Value(row, "IsMelee", skill.isMelee ? 1 : 0) != 0;
+                skill.waitTime = Value(row, "WaitTime", skill.waitTime);
+                skill.skillCostType = Value(row, "SkillCostType", skill.skillCostType);
+                skill.cost = Value(row, "CostValue", skill.cost);
+                skill.timePerCast = Value(row, "TimePerCast", skill.timePerCast);
+                skill.isPhysical = Value(row, "IsPhysical", skill.isPhysical ? 1 : 0) != 0;
+                skill.targetOnly = Value(row, "TargetOnly", skill.targetOnly ? 1 : 0) != 0;
+                skill.targetEnemy = Value(row, "TargetEnemy", skill.targetEnemy ? 1 : 0) != 0;
+                skill.targetAlly = Value(row, "TargetAlly", skill.targetAlly ? 1 : 0) != 0;
+                skill.targetSelf = Value(row, "TargetSelf", skill.targetSelf ? 1 : 0) != 0;
+                skill.targetObj = Value(row, "TargetObj", skill.targetObj ? 1 : 0) != 0;
+                skill.byMissile = Value(row, "ByMissle", skill.byMissile ? 1 : 0) != 0;
+                skill.isUseAttackRating = Value(row, "IsUseAR", skill.isUseAttackRating ? 1 : 0) != 0;
+                skill.reqLevel = Value(row, "ReqLevel", skill.reqLevel);
+                skill.maxLevel = Value(row, "MaxLevel", skill.maxLevel);
+                skill.equipLimit = Value(row, "EqtLimit", skill.equipLimit);
+                skill.horseLimit = Value(row, "HorseLimit", skill.horseLimit);
+                skill.doHurt = Value(row, "DoHurt", skill.doHurt ? 1 : 0) != 0;
+                skill.weaponSkill = Value(row, "WeaponSkill", skill.weaponSkill ? 1 : 0) != 0;
+                skill.startSkillId = Value(row, "StartSkillId", skill.startSkillId);
+                skill.flySkillId = Value(row, "FlySkillId", skill.flySkillId);
+                skill.flyEventTime = Value(row, "FlyEventTime", skill.flyEventTime);
+                int collideSkillId = Value(row, "CollidSkillId", 0);
+                if (collideSkillId > 0) skill.collideSkillId = collideSkillId;
+                skill.vanishSkillId = Value(row, "VanishedSkillId", skill.vanishSkillId);
+                skill.lvlSetScript = Text(row, "LvlSetScript", skill.lvlSetScript);
+                skill.levelUpScript = Text(row, "LevelUpScript", skill.levelUpScript);
+            }
         }
 
         private static List<SkillDefinition> BuildCaiBangSkillsRaw() => new()
@@ -334,7 +444,7 @@ namespace VLTK.Sandbox
             // 1073 Thời Thặng Lục Long [PC slistcache 2026-07-15 zhanggaibang150]:
             //   seriesdamage_p 40→80, firedamage_v 275→13750 (L50), skill_cost_v 12→78(+L23=98),
             //   fatallystrike_p 1→30 (L30) [slistcache NEW], collideevent→1072 (L10+ gate).
-            WithCollideEvent(ZhangGaiBang150Skill(), collideSkillId: 1072, collideSkillLevel: 1),
+            WithCollideEvent(ZhangGaiBang150Skill(), collideSkillId: 1072, collideSkillLevel: 0),
 
             // 1074 Bổng Hoành Lược Mã [PC slistcache 2026-07-15 gungaibang150, MaxLevel=27]:
             //   physicsenhance_p 10→165(+L23=267,L26=318), firedamage_v 60→230/345(+L23/L26), cost 20→50.
@@ -355,26 +465,22 @@ namespace VLTK.Sandbox
             // PC skills.txt 1101: clone của 1073, ByMissle=1, ChildSkillId=335
             DamageSkillNew(1101, "时乘六龙(多)", "Thừa Lục Long (đa mục tiêu)", 150, 20, 512, 363, SkillMissileForm.Fan, 3, false, false, 11,
                 phys: (lv) => 0,
-                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
-                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                fire: (lv) => (Link(lv, (1, 275, ""), (50, 13750, ""), (51, 13750, "")), 0, Link(lv, (1, 275, ""), (50, 13750, ""), (51, 13750, ""))),
+                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, ""), (23, 98, "")), 0, 0),
                 horseLimit: 1),
 
-            // 1103 Thừa Lục Long (no script) — inert, no LvlSetScript; PC damage inline trong skills.txt
-            // PC skills.txt 1103: clone 1073, không có Lua, stats fixed
-            DamageSkillNew(1103, "时乘六龙(无脚本)", "Thừa Lục Long (không script)", 150, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
+            // 1103 is a fly-event visual carrier with empty LvlSetting/LvlData in canonical slistcache.
+            DamageSkillNew(1103, "时乘六龙(无脚本)", "Thừa Lục Long (không script)", 150, 20, 280, 344, SkillMissileForm.Stationary, 1, false, false, 11,
                 phys: (lv) => 0,
-                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
-                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                fire: (lv) => (0, 0, 0),
+                cost: (lv) => (0, 0, 0),
                 horseLimit: 1),
 
-            // 1161 Thừa Lục Long (NPC) — PC reuse zhanggaibang150 table
-            DamageSkillNew(1161, "时乘六龙NPC", "Thừa Lục Long (NPC)", 1, 60, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
+            // 1161 NPC variant reuses canonical zhanggaibang150 level data.
+            DamageSkillNew(1161, "时乘六龙NPC", "Thừa Lục Long (NPC)", 1, 20, 512, 335, SkillMissileForm.Single, 1, false, false, 11,
                 phys: (lv) => 0,
-                fire: (lv) => (Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, "")), 0, Link(lv, (1, 24, ""), (15, 720, ""), (20, 1800, ""))),
-                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, "")), 0, 0),
-                extra: (lv) => State(MagicAttributeKind.ConfuseP, Link(lv, (1, 40, ""), (20, 80, "")), -1, 0),
+                fire: (lv) => (Link(lv, (1, 275, ""), (50, 13750, ""), (51, 13750, "")), 0, Link(lv, (1, 275, ""), (50, 13750, ""), (51, 13750, ""))),
+                cost: (lv) => (Link(lv, (1, 12, ""), (20, 78, ""), (23, 98, "")), 0, 0),
                 horseLimit: 1),
 
             // 1162 Cửu Cái Bang 150 (NPC) — PC reuse gungaibang150 table
@@ -1363,19 +1469,216 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        public static List<SkillDefinition> CreateTangMenSkills() => new()
+        // ==== SKL-TM-CATALOG-001: TangMen canonical-oracle static mapper ============================
+        // The 23 rows below are copied verbatim from the frozen PcTangMenOracle.json
+        // (sha256 e4270bd1..., the independent expected authority). Only fields listed in each
+        // row's present[] are mapped; absent oracle fields are never guessed. ApplyTangMenOracle
+        // overlays these static fields on the 7 shared roots (43,45,47,48,50,54,58) which keep
+        // their existing pcLevelData/runtime magic, and on the 16 new static-only learned rows.
+        // 51/55/57 stay out of learned membership (unresolved Unity-only); their legacy builders
+        // are retained for Unity display residuals via RegisterTangMenUnityDisplayResiduals.
+        private sealed class TangMenOracleRow
         {
-            TangMenAnQi(),
-            TangMenPiLiDan(),
-            TangMenDuoHunBiao(),
-            TangMenXinYan(),
-            TangMenZhuiXinJian(),
-            TangMenThanhMoc(),
-            TangMenManThienHoaVu(),
-            TangMenThoiDocThuat(),
-            TangMenBangPhachHanQuang(),
-            TangMenThienLaDiaVong(),
+            public int skillId;
+            public int skillStyle, stateSpecialId, isAura, attackRadius, missilesGenerate, missilesGenerateData, missileForm;
+            public int childSkillId, childSkillLevel, childSkillNum, baseSkill, charAnimId, isMelee, waitTime, skillCostType;
+            public int cost, timePerCast, isPhysical, targetOnly, targetEnemy, targetAlly, targetSelf, targetObj, byMissile;
+            public int isUseAttackRating, reqLevel, maxLevel, equipLimit, horseLimit, doHurt, weaponSkill;
+            public int startSkillId, flySkillId, flyEventTime, collideSkillId, vanishSkillId;
+            public string manCastSndPath, fmCastSndPath, lvlSetScript, levelUpScript;
+            public string[] present;
+            public bool Has(string field) => present != null && Array.IndexOf(present, field) >= 0;
+        }
+
+        private static readonly TangMenOracleRow[] TangMenOracleRows =
+        {
+            new TangMenOracleRow { skillId=43, skillStyle=3, stateSpecialId=0, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=14, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=45, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=400, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=35, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k001.wav", fmCastSndPath="\\sound\\skill\\sound_k006.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=47, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=450, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=116, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=100, horseLimit=1, doHurt=1, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k002.wav", fmCastSndPath="\\sound\\skill\\sound_k007.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=48, skillStyle=3, stateSpecialId=0, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=14, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=60, maxLevel=30, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=50, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=360, missilesGenerate=2, missilesGenerateData=4, missileForm=1, childSkillId=37, childSkillLevel=-1, childSkillNum=2, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=1, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=101, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k003.wav", fmCastSndPath="\\sound\\skill\\sound_k008.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=54, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=400, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=38, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=102, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="0", fmCastSndPath="0", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=58, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=520, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=67, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=60, maxLevel=20, equipLimit=102, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=227, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=249, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=480, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=106, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=1, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=60, maxLevel=20, equipLimit=101, horseLimit=1, doHurt=1, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k004.wav", fmCastSndPath="\\sound\\skill\\sound_k009.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=302, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=470, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=96, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=80, maxLevel=20, equipLimit=102, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=301, flyEventTime=30, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=303, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=50, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=127, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=20, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=304, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=339, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=360, missilesGenerate=2, missilesGenerateData=5, missileForm=1, childSkillId=149, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=80, maxLevel=20, equipLimit=101, horseLimit=1, doHurt=1, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=340, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k003.wav", fmCastSndPath="\\sound\\skill\\sound_k008.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=341, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=400, missilesGenerate=1, missilesGenerateData=3, missileForm=2, childSkillId=151, childSkillLevel=-1, childSkillNum=5, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=60, maxLevel=20, equipLimit=100, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k001.wav", fmCastSndPath="\\sound\\skill\\sound_k006.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=342, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=360, missilesGenerate=5, missilesGenerateData=2, missileForm=2, childSkillId=152, childSkillLevel=-1, childSkillNum=5, baseSkill=1, charAnimId=11, isMelee=0, waitTime=2, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=80, maxLevel=20, equipLimit=100, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k003.wav", fmCastSndPath="\\sound\\skill\\sound_k008.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=343, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=50, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=153, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=344, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=345, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=50, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=155, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=40, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=346, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=347, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=50, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=157, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=348, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=349, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=50, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=159, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=50, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=350, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=351, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=50, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=161, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=80, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=352, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", levelUpScript="\\script\\skill\\lvlup_luanhuan_ji.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "levelUpScript", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=710, skillStyle=1, stateSpecialId=0, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=13, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=11, isMelee=0, waitTime=3, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=120, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=1069, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=360, missilesGenerate=2, missilesGenerateData=5, missileForm=1, childSkillId=331, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=3, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=150, maxLevel=27, equipLimit=101, horseLimit=1, doHurt=1, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=1097, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k003.wav", fmCastSndPath="\\sound\\skill\\sound_k008.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=1070, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=470, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=332, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=150, maxLevel=27, equipLimit=102, horseLimit=0, doHurt=1, weaponSkill=0, startSkillId=0, flySkillId=1098, flyEventTime=18, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k005.wav", fmCastSndPath="\\sound\\skill\\sound_k010.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=1071, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=360, missilesGenerate=5, missilesGenerateData=0, missileForm=2, childSkillId=333, childSkillLevel=-1, childSkillNum=5, baseSkill=1, charAnimId=11, isMelee=0, waitTime=2, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=150, maxLevel=27, equipLimit=100, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k003.wav", fmCastSndPath="\\sound\\skill\\sound_k008.wav", lvlSetScript="\\script\\skill\\tangmen.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
+            new TangMenOracleRow { skillId=1110, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=420, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=374, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=150, maxLevel=26, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=1113, manCastSndPath="\\sound\\skill\\sound_k001.wav", fmCastSndPath="\\sound\\skill\\sound_k006.wav", lvlSetScript="\\script\\skill\\tangmen.lua", levelUpScript="\\script\\skill\\lvlup_pililuanhuan_ji.lua", present=new[]{"attackRadius", "baseSkill", "byMissile", "charAnimId", "childSkillId", "childSkillLevel", "childSkillNum", "collideSkillId", "cost", "doHurt", "equipLimit", "flyEventTime", "flySkillId", "fmCastSndPath", "horseLimit", "isAura", "isMelee", "isPhysical", "isUseAttackRating", "levelUpScript", "lvlSetScript", "manCastSndPath", "maxLevel", "missileForm", "missilesGenerate", "missilesGenerateData", "reqLevel", "skillCostType", "skillStyle", "startSkillId", "stateSpecialId", "targetAlly", "targetEnemy", "targetObj", "targetOnly", "targetSelf", "timePerCast", "vanishSkillId", "waitTime", "weaponSkill"} },
         };
+
+        private static TangMenOracleRow TangMenRowFor(int skillId)
+        {
+            foreach (var row in TangMenOracleRows)
+                if (row.skillId == skillId) return row;
+            return null;
+        }
+
+        // Overlay the oracle's present[] static fields onto a TangMen SkillDefinition. Enum fields
+        // (skillStyle/missileForm) are cast from the raw oracle int so out-of-enum PC values (e.g.
+        // 710 missileForm=13) survive byte-exact; (int) round-trips them for parity comparison.
+        private static SkillDefinition ApplyTangMenOracle(SkillDefinition s)
+        {
+            var row = TangMenRowFor(s.skillId);
+            if (row == null) return s;
+            if (row.Has("skillStyle")) s.skillStyle = (PcSkillStyle)row.skillStyle;
+            if (row.Has("stateSpecialId")) s.stateSpecialId = row.stateSpecialId;
+            if (row.Has("isAura")) s.isAura = row.isAura != 0;
+            if (row.Has("attackRadius")) s.attackRadius = row.attackRadius;
+            if (row.Has("missilesGenerate")) s.missilesGenerate = row.missilesGenerate;
+            if (row.Has("missilesGenerateData")) s.missilesGenerateData = row.missilesGenerateData;
+            if (row.Has("missileForm")) s.missileForm = (SkillMissileForm)row.missileForm;
+            if (row.Has("childSkillId")) s.childSkillId = row.childSkillId;
+            if (row.Has("childSkillLevel")) s.childSkillLevel = row.childSkillLevel;
+            if (row.Has("childSkillNum")) s.childSkillNum = row.childSkillNum;
+            if (row.Has("baseSkill")) s.baseSkill = row.baseSkill != 0;
+            if (row.Has("charAnimId")) s.charAnimId = row.charAnimId;
+            if (row.Has("isMelee")) s.isMelee = row.isMelee != 0;
+            if (row.Has("waitTime")) s.waitTime = row.waitTime;
+            if (row.Has("skillCostType")) s.skillCostType = row.skillCostType;
+            if (row.Has("cost")) s.cost = row.cost;
+            if (row.Has("timePerCast")) s.timePerCast = row.timePerCast;
+            if (row.Has("isPhysical")) s.isPhysical = row.isPhysical != 0;
+            if (row.Has("targetOnly")) s.targetOnly = row.targetOnly != 0;
+            if (row.Has("targetEnemy")) s.targetEnemy = row.targetEnemy != 0;
+            if (row.Has("targetAlly")) s.targetAlly = row.targetAlly != 0;
+            if (row.Has("targetSelf")) s.targetSelf = row.targetSelf != 0;
+            if (row.Has("targetObj")) s.targetObj = row.targetObj != 0;
+            if (row.Has("byMissile")) s.byMissile = row.byMissile != 0;
+            if (row.Has("isUseAttackRating")) s.isUseAttackRating = row.isUseAttackRating != 0;
+            if (row.Has("reqLevel")) s.reqLevel = row.reqLevel;
+            if (row.Has("maxLevel")) s.maxLevel = row.maxLevel;
+            if (row.Has("equipLimit")) s.equipLimit = row.equipLimit;
+            if (row.Has("horseLimit")) s.horseLimit = row.horseLimit;
+            if (row.Has("doHurt")) s.doHurt = row.doHurt != 0;
+            if (row.Has("weaponSkill")) s.weaponSkill = row.weaponSkill != 0;
+            if (row.Has("startSkillId")) s.startSkillId = row.startSkillId;
+            if (row.Has("flySkillId")) s.flySkillId = row.flySkillId;
+            if (row.Has("flyEventTime")) s.flyEventTime = row.flyEventTime;
+            if (row.Has("collideSkillId")) s.collideSkillId = row.collideSkillId;
+            if (row.Has("vanishSkillId")) s.vanishSkillId = row.vanishSkillId;
+            if (row.Has("manCastSndPath")) s.manCastSndPath = row.manCastSndPath;
+            if (row.Has("fmCastSndPath")) s.fmCastSndPath = row.fmCastSndPath;
+            if (row.Has("lvlSetScript")) s.lvlSetScript = row.lvlSetScript;
+            if (row.Has("levelUpScript")) s.levelUpScript = row.levelUpScript;
+            return s;
+        }
+
+        // Static-only learned row: TangMen faction + wood series, no pcLevelData/runtime magic.
+        // Names are decoded from the byte-preserving PcTangMenSkills.txt slice with
+        // vltktool; runtime formula/effect data remains intentionally unclaimed.
+        private static SkillDefinition TangMenStaticOnly(int id)
+        {
+            string displayName = id switch
+            {
+                249 => "Tiểu Lý Phi Đao",
+                302 => "Bạo Vũ Lê Hoa",
+                303 => "Độc Thích Cốt",
+                339 => "Nhiếp Hồn Nguyệt Ảnh",
+                341 => "Tán Hoa Tiêu",
+                342 => "Cửu Cung Phi Tinh",
+                343 => "Xuyên Tâm Thích",
+                345 => "Hàn Băng Thích",
+                347 => "Địa Diệm Hỏa",
+                349 => "Lôi Kích Thuật",
+                351 => "Loạn Hoàn Kích",
+                710 => "Mê Ảnh Tung",
+                1069 => "Vô Ảnh Xuyên",
+                1070 => "Thiết Liên Tứ Sát",
+                1071 => "Càn Khôn Nhất Trịch",
+                1110 => "Tích Lịch Loạn Hoàn Kích",
+                _ => "Đường Môn " + id,
+            };
+            var s = BaseSkill(id, "TM" + id, displayName, 1, 1, 0, SkillMissileForm.None);
+            s.faction = CombatFaction.TangMen;
+            s.series = Series.Wood;
+            return s;
+        }
+
+        // SKL-TM-CATALOG-001: membership is exactly the 23 pcLearnedSkillIds frozen in
+        // PcTangMenOracle.json (sha256 e4270bd1...). The 7 shared roots keep their existing
+        // pcLevelData/runtime magic; ApplyTangMenOracle overlays the oracle's static fields.
+        // The 16 new learned rows are static-only. 51/55/57 stay excluded from learned
+        // membership (unresolved Unity-only); their legacy builders remain for display use.
+        public static List<SkillDefinition> CreateTangMenSkills()
+        {
+            return new List<SkillDefinition>
+            {
+                ApplyTangMenOracle(TangMenAnQi()),          // 43
+                ApplyTangMenOracle(TangMenPiLiDan()),       // 45
+                ApplyTangMenOracle(TangMenDuoHunBiao()),    // 47
+                ApplyTangMenOracle(TangMenXinYan()),        // 48
+                ApplyTangMenOracle(TangMenZhuiXinJian()),   // 50
+                ApplyTangMenOracle(TangMenManThienHoaVu()), // 54
+                ApplyTangMenOracle(TangMenThienLaDiaVong()),// 58
+                ApplyTangMenOracle(TangMenStaticOnly(249)),
+                ApplyTangMenOracle(TangMenStaticOnly(302)),
+                ApplyTangMenOracle(TangMenStaticOnly(303)),
+                ApplyTangMenOracle(TangMenStaticOnly(339)),
+                ApplyTangMenOracle(TangMenStaticOnly(341)),
+                ApplyTangMenOracle(TangMenStaticOnly(342)),
+                ApplyTangMenOracle(TangMenStaticOnly(343)),
+                ApplyTangMenOracle(TangMenStaticOnly(345)),
+                ApplyTangMenOracle(TangMenStaticOnly(347)),
+                ApplyTangMenOracle(TangMenStaticOnly(349)),
+                ApplyTangMenOracle(TangMenStaticOnly(351)),
+                ApplyTangMenOracle(TangMenStaticOnly(710)),
+                ApplyTangMenOracle(TangMenStaticOnly(1069)),
+                ApplyTangMenOracle(TangMenStaticOnly(1070)),
+                ApplyTangMenOracle(TangMenStaticOnly(1071)),
+                ApplyTangMenOracle(TangMenStaticOnly(1110)),
+            };
+        }
+
+        // 32 frozen relationship-target IDs (PcTangMenOracle.json relationshipTargetIds).
+        // Each must Resolve() in the full catalog but never appears in CreateTangMenSkills.
+        private static readonly int[] TangMenRelationshipTargetIds =
+        {
+            35, 37, 38, 67, 96, 106, 116, 127, 149, 151, 152, 153, 155, 157, 159, 161,
+            227, 301, 304, 331, 332, 333, 340, 344, 346, 348, 350, 352, 374, 1097, 1098, 1113
+        };
+
+        // Support/event definitions registered ONLY when unresolved, so existing faction
+        // definitions are never overwritten. Existence-only (Resolve() != null); no static
+        // parity is claimed for these relationship targets beyond their identifiers.
+        private static void RegisterTangMenRelationshipTargets(SkillCatalog catalog)
+        {
+            foreach (var id in TangMenRelationshipTargetIds)
+            {
+                if (catalog.Contains(id)) continue;
+                  catalog.Register(new SkillDefinition
+                  {
+                      skillId = id,
+                      nameNormalized = "TM_Rel_" + id,
+                      // Relationship targets are existence-only in this static wave, but
+                      // every registered production definition must still carry a valid
+                      // asset identifier for catalog-wide consumers.
+                      iconSourceId = Sprite(IconPathForSkill(id)),
+                  });
+            }
+        }
+
+        // 51/55/57 are Unity-observed display skills with no learned progression/skillbook
+        // evidence (oracle unity_only_unresolved, oracle_include=false). They stay OUT of
+        // CreateTangMenSkills learned membership but remain registered via their legacy
+        // builders (retaining existing runtime magic) so the player skill panel/UI order is
+        // unchanged. Registered only when unresolved so learned definitions win.
+        private static void RegisterTangMenUnityDisplayResiduals(SkillCatalog catalog)
+        {
+            if (!catalog.Contains(51)) catalog.Register(TangMenThanhMoc());
+            if (!catalog.Contains(55)) catalog.Register(TangMenThoiDocThuat());
+            if (!catalog.Contains(57)) catalog.Register(TangMenBangPhachHanQuang());
+        }
 
         private static SkillDefinition TangMenAnQi()
         {
@@ -1460,11 +1763,11 @@ namespace VLTK.Sandbox
             return PassiveResist(51, "青木", "Thanh Mộc", 30, MagicAttributeKind.LightingResP);
         }
 
-        // [SECT-QUICKWIN] §2.4.2 G4: PC ReqLevel=30 (mobile 50 sai), MisslesForm=6 (Fan, mobile Single sai),
-        //   WaitTime=5, HorseLimit=1. Sau fix: req=30, form=Fan, waitTime=5, horseLimit=1.
+        // [SECT-QUICKWIN] §2.4.2 G4: PC ReqLevel=30, MisslesForm=6 (Stance),
+        //   WaitTime=5, HorseLimit=1.
         private static SkillDefinition TangMenManThienHoaVu()
         {
-            var s = BaseSkill(54, "漫天花雨", "Mạn Thiên Hoa Vũ", 30, 20, 400, SkillMissileForm.Fan);
+            var s = BaseSkill(54, "漫天花雨", "Mạn Thiên Hoa Vũ", 30, 20, 400, SkillMissileForm.Stance);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 38; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.waitTime = 5; s.horseLimit = 1; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
@@ -3004,31 +3307,196 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        public static List<SkillDefinition> CreateKunLunSkills() => new()
+        // ==== SKL-KL-PROOF-001: KunLun canonical-oracle static mapper ===========================
+        // The 24 rows below are copied verbatim from the frozen PcKunLunOracle.json
+        // (sha256 3be67129..., the independent expected authority). Only fields listed in each
+        // row's present[] are mapped; absent oracle fields are never guessed. ApplyKunLunOracle
+        // overlays these static fields on the 14 shared roots (90,167-176,178,179,181,182) which
+        // keep their existing pcLevelData/runtime magic, and on the 10 new static-only learned
+        // rows (275,372,375,392,393,394,630,717,1080,1081). 170/177/180/183/184 stay out of
+        // learned membership (unresolved Unity-only); their legacy builders are retained for
+        // Unity display residuals via RegisterKunLunUnityDisplayResiduals.
+        private sealed class KunLunOracleRow
         {
-            KunLunPassiveDaofa(),
-            KunLunPassiveJianfa(),
-            KunLunHuPhongFa(),
-            KunLunDaiLangThucKhong(),
-            KunLunThanhPhongPhu(),
-            KunLunThienTeTanLoi(),
-            KunLunThienThanhDiaTroc(),
-            KunLunKiBanPhu(),
-            KunLunKhiHanNgaoTuyet(),
-            KunLunCuongPhongSauDien(),
-            KunLunBachXuyenNapHai(),
-            KunLunNhatKhiTamThanh(),
-            KunLunCuongLoiChanDia(),
-            KunLunDocTeTiTa(),
-            KunLunKhiTamPhu(),
-            KunLunNguLoiChanhPhap(),
-            KunLunTueNguyetVoTinhPhu(),
-            KunLunKimThienThoatXac(),
-            // [SECT-QUICKWIN] §2.9.1 G5: ID 90 Mê Tung Ảo Ảnh MOVE từ Nga My → Côn Luân.
-            // PC: skill thuộc Côn Luân (KunLun.lua), mobile trước fix đặt nhầm trong EMei catalog.
-            // Hàm giữ nguyên vị trí (vẫn dùng EMeiMeTungAoAnh để tránh move) — chỉ move call list.
-            EMeiMeTungAoAnh()
+            public int skillId;
+            public int skillStyle, stateSpecialId, isAura, attackRadius, missilesGenerate, missilesGenerateData, missileForm;
+            public int childSkillId, childSkillLevel, childSkillNum, baseSkill, charAnimId, isMelee, waitTime, skillCostType;
+            public int cost, timePerCast, isPhysical, targetOnly, targetEnemy, targetAlly, targetSelf, targetObj, byMissile;
+            public int isUseAttackRating, reqLevel, maxLevel, equipLimit, horseLimit, doHurt, weaponSkill;
+            public int startSkillId, flySkillId, flyEventTime, collideSkillId, vanishSkillId;
+            public string manCastSndPath, fmCastSndPath, lvlSetScript, levelUpScript;
+            public string[] present;
+            public bool Has(string field) => present != null && Array.IndexOf(present, field) >= 0;
+        }
+
+        private static readonly KunLunOracleRow[] KunLunOracleRows =
+        {
+            new KunLunOracleRow { skillId=90, skillStyle=0, stateSpecialId=64, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=20, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=1, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=50, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=167, skillStyle=3, stateSpecialId=0, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=14, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=1, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=168, skillStyle=3, stateSpecialId=0, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=14, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=169, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=300, missilesGenerate=2, missilesGenerateData=1, missileForm=1, childSkillId=14, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=1, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k001.wav", fmCastSndPath="\\sound\\skill\\sound_k006.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=171, skillStyle=0, stateSpecialId=17, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=19, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=1, targetSelf=1, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=172, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=360, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=15, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=0, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=399, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k002.wav", fmCastSndPath="\\sound\\skill\\sound_k007.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=173, skillStyle=3, stateSpecialId=13, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=20, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=1, targetSelf=1, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=174, skillStyle=0, stateSpecialId=66, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=20, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=1, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=20, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=175, skillStyle=0, stateSpecialId=54, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=20, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=1, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=40, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=176, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=180, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=16, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=50, maxLevel=20, equipLimit=1, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k003.wav", fmCastSndPath="\\sound\\skill\\sound_k008.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=178, skillStyle=3, stateSpecialId=16, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=21, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=1, targetSelf=1, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=1, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=179, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=400, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=17, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\\u00bf\u00f1\u00c0\u00d7\u00d5\u00f0\u00b5\u00d8m.wav", fmCastSndPath="\\sound\\skill\\\u00bf\u00f1\u00c0\u00d7\u00d5\u00f0\u00b5\u00d8f.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=181, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=22, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=2, skillCostType=0, cost=0, timePerCast=54, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=40, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=182, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=470, missilesGenerate=3, missilesGenerateData=5, missileForm=6, childSkillId=18, childSkillLevel=-1, childSkillNum=4, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=60, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\\u00ce\u00e5\u00c0\u00d7\u00d5\u00fd\u00b7\u00a8m.wav", fmCastSndPath="\\sound\\skill\\\u00ce\u00e5\u00c0\u00d7\u00d5\u00fd\u00b7\u00a8f.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=275, skillStyle=3, stateSpecialId=0, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=14, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=60, maxLevel=30, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=372, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=400, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=178, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=80, maxLevel=20, equipLimit=1, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k001.wav", fmCastSndPath="\\sound\\skill\\sound_k006.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=375, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=470, missilesGenerate=3, missilesGenerateData=5, missileForm=6, childSkillId=181, childSkillLevel=-1, childSkillNum=4, baseSkill=1, charAnimId=11, isMelee=0, waitTime=2, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=80, maxLevel=20, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=387, vanishSkillId=0, manCastSndPath="\\sound\\skill\\\u00ce\u00e5\u00c0\u00d7\u00d5\u00fd\u00b7\u00a8m.wav", fmCastSndPath="\\sound\\skill\\\u00ce\u00e5\u00c0\u00d7\u00d5\u00fd\u00b7\u00a8f.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=392, skillStyle=0, stateSpecialId=63, isAura=0, attackRadius=470, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=290, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=27, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=10, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=393, skillStyle=0, stateSpecialId=65, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=20, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=1, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=30, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=394, skillStyle=0, stateSpecialId=60, isAura=0, attackRadius=440, missilesGenerate=0, missilesGenerateData=0, missileForm=6, childSkillId=20, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=1, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=80, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", levelUpScript="\\script\\skill\\lvlup_zuixian_cuogu.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","levelUpScript","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=630, skillStyle=3, stateSpecialId=0, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=11, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=1, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=1, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=717, skillStyle=3, isAura=0, attackRadius=0, missilesGenerate=0, missilesGenerateData=0, missileForm=7, childSkillId=0, childSkillLevel=-1, childSkillNum=0, baseSkill=0, charAnimId=0, isMelee=0, waitTime=0, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=0, targetAlly=0, targetSelf=0, targetObj=0, byMissile=0, isUseAttackRating=0, reqLevel=120, maxLevel=20, equipLimit=-2, horseLimit=0, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=1080, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=400, missilesGenerate=0, missilesGenerateData=0, missileForm=1, childSkillId=342, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=1, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=150, maxLevel=27, equipLimit=1, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=0, manCastSndPath="\\sound\\skill\\sound_k001.wav", fmCastSndPath="\\sound\\skill\\sound_k006.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
+            new KunLunOracleRow { skillId=1081, skillStyle=0, stateSpecialId=0, isAura=0, attackRadius=512, missilesGenerate=3, missilesGenerateData=5, missileForm=6, childSkillId=372, childSkillLevel=-1, childSkillNum=1, baseSkill=1, charAnimId=11, isMelee=0, waitTime=5, skillCostType=0, cost=0, timePerCast=0, isPhysical=0, targetOnly=0, targetEnemy=1, targetAlly=0, targetSelf=0, targetObj=0, byMissile=1, isUseAttackRating=0, reqLevel=150, maxLevel=27, equipLimit=-2, horseLimit=1, doHurt=0, weaponSkill=0, startSkillId=0, flySkillId=0, flyEventTime=0, collideSkillId=0, vanishSkillId=1109, manCastSndPath="\\sound\\skill\\\u00ce\u00e5\u00c0\u00d7\u00d5\u00fd\u00b7\u00a8m.wav", fmCastSndPath="\\sound\\skill\\\u00ce\u00e5\u00c0\u00d7\u00d5\u00fd\u00b7\u00a8f.wav", lvlSetScript="\\script\\skill\\kunlun.lua", present=new[]{"attackRadius","baseSkill","byMissile","charAnimId","childSkillId","childSkillLevel","childSkillNum","collideSkillId","cost","doHurt","equipLimit","flyEventTime","flySkillId","fmCastSndPath","horseLimit","isAura","isMelee","isPhysical","isUseAttackRating","lvlSetScript","manCastSndPath","maxLevel","missileForm","missilesGenerate","missilesGenerateData","reqLevel","skillCostType","skillStyle","startSkillId","stateSpecialId","targetAlly","targetEnemy","targetObj","targetOnly","targetSelf","timePerCast","vanishSkillId","waitTime","weaponSkill"} },
         };
+
+        private static KunLunOracleRow KunLunRowFor(int skillId)
+        {
+            foreach (var row in KunLunOracleRows)
+                if (row.skillId == skillId) return row;
+            return null;
+        }
+
+        // Overlay the oracle's present[] static fields onto a KunLun SkillDefinition. Enum fields
+        // (skillStyle/missileForm) are cast from the raw oracle int so out-of-enum PC values survive
+        // byte-exact; (int) round-trips them for parity comparison. pcLevelData/runtime is preserved.
+        private static SkillDefinition ApplyKunLunOracle(SkillDefinition s)
+        {
+            var row = KunLunRowFor(s.skillId);
+            if (row == null) return s;
+            if (row.Has("skillStyle")) s.skillStyle = (PcSkillStyle)row.skillStyle;
+            if (row.Has("stateSpecialId")) s.stateSpecialId = row.stateSpecialId;
+            if (row.Has("isAura")) s.isAura = row.isAura != 0;
+            if (row.Has("attackRadius")) s.attackRadius = row.attackRadius;
+            if (row.Has("missilesGenerate")) s.missilesGenerate = row.missilesGenerate;
+            if (row.Has("missilesGenerateData")) s.missilesGenerateData = row.missilesGenerateData;
+            if (row.Has("missileForm")) s.missileForm = (SkillMissileForm)row.missileForm;
+            if (row.Has("childSkillId")) s.childSkillId = row.childSkillId;
+            if (row.Has("childSkillLevel")) s.childSkillLevel = row.childSkillLevel;
+            if (row.Has("childSkillNum")) s.childSkillNum = row.childSkillNum;
+            if (row.Has("baseSkill")) s.baseSkill = row.baseSkill != 0;
+            if (row.Has("charAnimId")) s.charAnimId = row.charAnimId;
+            if (row.Has("isMelee")) s.isMelee = row.isMelee != 0;
+            if (row.Has("waitTime")) s.waitTime = row.waitTime;
+            if (row.Has("skillCostType")) s.skillCostType = row.skillCostType;
+            if (row.Has("cost")) s.cost = row.cost;
+            if (row.Has("timePerCast")) s.timePerCast = row.timePerCast;
+            if (row.Has("isPhysical")) s.isPhysical = row.isPhysical != 0;
+            if (row.Has("targetOnly")) s.targetOnly = row.targetOnly != 0;
+            if (row.Has("targetEnemy")) s.targetEnemy = row.targetEnemy != 0;
+            if (row.Has("targetAlly")) s.targetAlly = row.targetAlly != 0;
+            if (row.Has("targetSelf")) s.targetSelf = row.targetSelf != 0;
+            if (row.Has("targetObj")) s.targetObj = row.targetObj != 0;
+            if (row.Has("byMissile")) s.byMissile = row.byMissile != 0;
+            if (row.Has("isUseAttackRating")) s.isUseAttackRating = row.isUseAttackRating != 0;
+            if (row.Has("reqLevel")) s.reqLevel = row.reqLevel;
+            if (row.Has("maxLevel")) s.maxLevel = row.maxLevel;
+            if (row.Has("equipLimit")) s.equipLimit = row.equipLimit;
+            if (row.Has("horseLimit")) s.horseLimit = row.horseLimit;
+            if (row.Has("doHurt")) s.doHurt = row.doHurt != 0;
+            if (row.Has("weaponSkill")) s.weaponSkill = row.weaponSkill != 0;
+            if (row.Has("startSkillId")) s.startSkillId = row.startSkillId;
+            if (row.Has("flySkillId")) s.flySkillId = row.flySkillId;
+            if (row.Has("flyEventTime")) s.flyEventTime = row.flyEventTime;
+            if (row.Has("collideSkillId")) s.collideSkillId = row.collideSkillId;
+            if (row.Has("vanishSkillId")) s.vanishSkillId = row.vanishSkillId;
+            if (row.Has("manCastSndPath")) s.manCastSndPath = row.manCastSndPath;
+            if (row.Has("fmCastSndPath")) s.fmCastSndPath = row.fmCastSndPath;
+            if (row.Has("lvlSetScript")) s.lvlSetScript = row.lvlSetScript;
+            if (row.Has("levelUpScript")) s.levelUpScript = row.levelUpScript;
+            return s;
+        }
+
+        // Static-only learned row: KunLun faction, no pcLevelData/runtime magic.
+        private static SkillDefinition KunLunStaticOnly(int id)
+        {
+            var s = BaseSkill(id, "KL" + id, "KunLun " + id, 1, 1, 0, SkillMissileForm.None);
+            s.faction = CombatFaction.KunLun;
+            return s;
+        }
+
+        // SKL-KL-PROOF-001: membership is exactly the 24 pcLearnedSkillIds frozen in
+        // PcKunLunOracle.json (sha256 3be67129...). The 14 shared roots keep their existing
+        // pcLevelData/runtime magic; ApplyKunLunOracle overlays the oracle's static fields. The
+        // 10 new learned rows are static-only. 170/177/180/183/184 stay excluded from learned
+        // membership (unresolved Unity-only); their legacy builders remain for display use.
+        public static List<SkillDefinition> CreateKunLunSkills()
+        {
+            return new List<SkillDefinition>
+            {
+                ApplyKunLunOracle(EMeiMeTungAoAnh()),        // 90
+                ApplyKunLunOracle(KunLunPassiveDaofa()),     // 167
+                ApplyKunLunOracle(KunLunPassiveJianfa()),    // 168
+                ApplyKunLunOracle(KunLunHuPhongFa()),        // 169
+                ApplyKunLunOracle(KunLunThanhPhongPhu()),    // 171
+                ApplyKunLunOracle(KunLunThienTeTanLoi()),    // 172
+                ApplyKunLunOracle(KunLunThienThanhDiaTroc()),// 173
+                ApplyKunLunOracle(KunLunKiBanPhu()),         // 174
+                ApplyKunLunOracle(KunLunKhiHanNgaoTuyet()),  // 175
+                ApplyKunLunOracle(KunLunCuongPhongSauDien()),// 176
+                ApplyKunLunOracle(KunLunNhatKhiTamThanh()),  // 178
+                ApplyKunLunOracle(KunLunCuongLoiChanDia()),  // 179
+                ApplyKunLunOracle(KunLunKhiTamPhu()),        // 181
+                ApplyKunLunOracle(KunLunNguLoiChanhPhap()),  // 182
+                ApplyKunLunOracle(KunLunStaticOnly(275)),
+                ApplyKunLunOracle(KunLunStaticOnly(372)),
+                ApplyKunLunOracle(KunLunStaticOnly(375)),
+                ApplyKunLunOracle(KunLunStaticOnly(392)),
+                ApplyKunLunOracle(KunLunStaticOnly(393)),
+                ApplyKunLunOracle(KunLunStaticOnly(394)),
+                ApplyKunLunOracle(KunLunStaticOnly(630)),
+                ApplyKunLunOracle(KunLunStaticOnly(717)),
+                ApplyKunLunOracle(KunLunStaticOnly(1080)),
+                ApplyKunLunOracle(KunLunStaticOnly(1081)),
+            };
+        }
+
+        // 17 frozen relationship-target IDs (PcKunLunOracle.json relationshipTargetIds).
+        // Each must Resolve() in the full catalog but never appears in CreateKunLunSkills. Three
+        // (178,181,372) are themselves learned via progression/skillbook and are therefore already
+        // registered; the remaining 14 are pure support/event targets registered existence-only.
+        private static readonly int[] KunLunRelationshipTargetIds =
+        {
+            14, 15, 16, 17, 18, 19, 20, 21, 22, 178, 181, 290, 342, 372, 387, 399, 1109
+        };
+
+        // Support/event definitions registered ONLY when unresolved, so existing faction
+        // definitions are never overwritten. Existence-only (Resolve() != null); no static parity
+        // is claimed for these relationship targets beyond their identifiers.
+        private static void RegisterKunLunRelationshipTargets(SkillCatalog catalog)
+        {
+            foreach (var id in KunLunRelationshipTargetIds)
+            {
+                if (catalog.Contains(id)) continue;
+                catalog.Register(new SkillDefinition
+                {
+                    skillId = id,
+                    nameNormalized = "KL_Rel_" + id,
+                    iconSourceId = Sprite(IconPathForSkill(id)),
+                });
+            }
+        }
+
+        // 170/177/180/183/184 are Unity-observed display skills with no learned
+        // progression/skillbook evidence (oracle unresolvedUnityOnly, oracle_include=false). They
+        // stay OUT of CreateKunLunSkills learned membership but remain registered via their legacy
+        // builders (retaining existing runtime magic) so the observed 18-row panel renders. They
+        // must never be learned/upgradeable. Registered only when unresolved so learned defs win.
+        private static void RegisterKunLunUnityDisplayResiduals(SkillCatalog catalog)
+        {
+            if (!catalog.Contains(170)) catalog.Register(KunLunDaiLangThucKhong());
+            if (!catalog.Contains(177)) catalog.Register(KunLunBachXuyenNapHai());
+            if (!catalog.Contains(180)) catalog.Register(KunLunDocTeTiTa());
+            if (!catalog.Contains(183)) catalog.Register(KunLunTueNguyetVoTinhPhu());
+            if (!catalog.Contains(184)) catalog.Register(KunLunKimThienThoatXac());
+        }
 
         private static SkillDefinition KunLunPassiveDaofa()
         {
@@ -3094,13 +3562,11 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        // [SECT-QUICKWIN] §2.9.2 G6 + G4: KunLun ID 172 "Thiên Tế Tấn Lôi" — radius sai + thiếu StartEvent.
-        // PC kunlun.lua::thien_te_tan_loi: StartEvent=1, StartSkill=399; attackRadius 384→448.
-        // Trước fix: radius 384 vs PC 448 (sai 14%), thiếu startSkill=399.
-        // Sau fix: radius 448 + s.startSkillId=399 (anchor cho Phase 4 wire).
+        // [SECT-QUICKWIN] §2.9.2 G6 + G4: KunLun ID 172 "Thiên Tế Tấn Lôi".
+        // Frozen oracle: StartEvent=1, StartSkill=399, attackRadius=360.
         private static SkillDefinition KunLunThienTeTanLoi()
         {
-            var s = BaseSkill(172, "天际迅雷", "Thiên Tế Tấn Lôi", 30, 20, 448, SkillMissileForm.Single);
+            var s = BaseSkill(172, "天际迅雷", "Thiên Tế Tấn Lôi", 30, 20, 360, SkillMissileForm.Single);
             s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 15; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 11; s.targetEnemy = true;
             s.startSkillId = 399; s.startSkillLevel = 1; // G6: anchor cho event chain (Phase 4 wire)
             AddLevels(s, lv => {

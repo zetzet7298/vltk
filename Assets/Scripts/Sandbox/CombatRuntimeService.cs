@@ -47,6 +47,8 @@ namespace VLTK.Sandbox
         public List<ProjectileInstance> projectiles = new();
         // Missile collision events are idempotent per projectile within this cast.
         public HashSet<int> resolvedCollisionProjectileIds = new();
+        public Dictionary<int, int> projectileImpactSkillIds = new();
+        public Dictionary<int, int> projectileImpactSkillLevels = new();
         public List<SkillMagicAttribute> appliedState = new();
         public List<DamageResult> damageResults = new();
         public string detail;
@@ -87,10 +89,54 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
-        /// Resolves one PC Phi Long Tại Thiên (357) missile-166 collision.
-        /// The parent cast has already passed its cast gates; this event deliberately does not
-        /// reapply known-skill, mana, or cooldown gates to child skill 389.
+        /// Resolves one PC ByMissle projectile collision. Parent damage and optional
+        /// collide-event sub-skill execute once per projectile instance.
         /// </summary>
+        public bool TryResolveProjectileCollision(
+            CombatActorState caster,
+            CombatActorState target,
+            CombatCastReport parentCast,
+            ProjectileInstance missile,
+            Vector2 collisionPoint,
+            ObstacleGrid grid = null)
+        {
+            if (caster == null || target == null || parentCast?.skill == null || missile == null ||
+                parentCast.projectiles == null || !parentCast.projectiles.Contains(missile))
+                return false;
+
+            var impactSkill = parentCast.skill;
+            int impactLevel = parentCast.skillLevel;
+            if (parentCast.projectileImpactSkillIds.TryGetValue(missile.instanceId, out int impactSkillId))
+            {
+                impactSkill = _catalog.Resolve(impactSkillId) ?? impactSkill;
+                if (parentCast.projectileImpactSkillLevels.TryGetValue(missile.instanceId, out int mappedLevel))
+                    impactLevel = mappedLevel;
+            }
+            if (!impactSkill.byMissile || !parentCast.resolvedCollisionProjectileIds.Add(missile.instanceId))
+                return false;
+
+            int addSkillDamagePercent = impactSkill.skillId == parentCast.skill.skillId ? parentCast.addSkillDamagePercent : 0;
+            ApplyDamage(caster, target, impactSkill.GetPcLevelData(impactLevel), parentCast, addSkillDamagePercent);
+            ProcessAutoAttackProcs(caster, target, parentCast);
+
+            int collideSkillId = impactSkill.collideSkillId;
+            if (collideSkillId > 0 && ShouldTriggerCollideEvent(impactSkill, impactLevel) &&
+                _catalog.Resolve(collideSkillId) is { } collideSub)
+            {
+                int collideLevel = impactSkill.collideSkillLevel > 0 ? impactSkill.collideSkillLevel : impactLevel;
+                int luaLevel = PcCaiBangLuaLevelService.Applies(impactSkill.skillId)
+                    ? PcCaiBangLuaLevelService.GetSingleValue(impactSkill.skillId, impactLevel, "skill_eventskilllevel", 1)
+                    : 0;
+                if (luaLevel > 0) collideLevel = luaLevel;
+
+                if (!collideSub.byMissile)
+                    ApplyDamage(caster, target, collideSub.GetPcLevelData(collideLevel), parentCast);
+                SpawnProjectiles(collideSub, caster, collisionPoint, grid, parentCast, collideLevel);
+            }
+
+            return true;
+        }
+
         public bool TryResolvePhiLongCollision(
             CombatActorState caster,
             CombatActorState target,
@@ -99,35 +145,15 @@ namespace VLTK.Sandbox
             Vector2 collisionPoint,
             ObstacleGrid grid = null)
         {
-            if (caster == null || target == null || parentCast?.skill?.skillId != 357 ||
-                missile == null || missile.skillId != 166 || !parentCast.projectiles.Contains(missile))
-                return false;
-            if (!parentCast.resolvedCollisionProjectileIds.Add(missile.instanceId))
-                return false;
+            return parentCast?.skill?.skillId == 357 &&
+                   TryResolveProjectileCollision(caster, target, parentCast, missile, collisionPoint, grid);
+        }
 
-            ApplyDamage(caster, target, parentCast.levelData, parentCast, parentCast.addSkillDamagePercent);
-            ProcessAutoAttackProcs(caster, target, parentCast);
-
-            // PC gaibang.lua::feilong_zaitian skill_collideevent enables 389 only at L10+.
-            if (parentCast.skillLevel >= 10 && _catalog.Resolve(389) is { } collideSub)
-            {
-                int collideLevel = parentCast.skill.collideSkillLevel > 0
-                    ? parentCast.skill.collideSkillLevel
-                    : parentCast.skillLevel;
-                var parentSkill = parentCast.skill;
-                try
-                {
-                    // ApplyDamage reads report.skill for the child skill's element/series metadata.
-                    parentCast.skill = collideSub;
-                    ApplyDamage(caster, target, collideSub.GetPcLevelData(collideLevel), parentCast);
-                    SpawnProjectiles(collideSub, caster, collisionPoint, grid, parentCast, collideLevel);
-                }
-                finally
-                {
-                    parentCast.skill = parentSkill;
-                }
-            }
-
+        private static bool ShouldTriggerCollideEvent(SkillDefinition skill, int skillLevel)
+        {
+            if (skill == null || skill.collideSkillId <= 0) return false;
+            if (PcCaiBangLuaLevelService.Applies(skill.skillId))
+                return PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, skillLevel, "skill_collideevent", 1) > 0;
             return true;
         }
 
@@ -246,16 +272,11 @@ namespace VLTK.Sandbox
             // addskilldamage entries target this skill. No proc chance, no sub-skill spawn.
             int addSkillDamageP = ComputeAddSkillDamagePercent(caster, skill.skillId);
             report.addSkillDamagePercent = addSkillDamageP;
-            // Phi Long Tại Thiên uses homing missile 166: its parent damage resolves at collision,
-            // not when KNpc starts the cast.
-            if (skill.skillId != 357)
+            // PC ByMissle skills resolve one damage application per projectile collision.
+            // Direct skills resolve immediately when the cast succeeds.
+            if (!skill.byMissile)
             {
                 ApplyDamage(caster, target, levelData, report, addSkillDamageP);
-                // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua::gaibang120 (skill 714): passive
-                // 'autoattackskill' — when bearer (target) is HIT, roll proc% → cast 720 on attacker.
-                // PC source: jx-cocos server KNpcAttribModify::autoskill (stores m_AutoAttackSkill) +
-                // KNpc::AutoDoSkill (casts 720 + SetNextCastTime(714, +nDelay=12s)). Proc fires once per
-                // damaging hit on the bearer, after damage is applied.
                 ProcessAutoAttackProcs(caster, target, report);
             }
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
@@ -265,21 +286,6 @@ namespace VLTK.Sandbox
             if (skill.isAura && skill.targetAlly && skill.stateSpecialId != 0)
             {
                 PropagateAllyAura(caster, skill, levelData, report);
-            }
-
-            // [CaiBang-PC-Parity 2026-06-30] PC gaibang.lua skill_collideevent — general missile-collide
-            // sub-skill firing. PC lua semantics:
-            //   skill_collideevent = { [1]={{1,0},{10,0},{10,1},{20,1}}, [3]={subSkillId} }
-            // [1] is the gate flag: 0 for L1-9, 1 for L10+ → sub-skill fires only at L10+.
-            // Phi Long Tại Thiên (357) must wait for each homing missile 166 to collide before
-            // firing 389; its visual collision lifecycle owns that follow-up.
-            if (skill.collideSkillId > 0 && skill.collideSkillId != 389 && skillLevel >= 10 &&
-                _catalog.Resolve(skill.collideSkillId) is { } collideSub)
-            {
-                int collideLvl = skill.collideSkillLevel > 0 ? skill.collideSkillLevel : skillLevel;
-                var collideLevelData = collideSub.GetPcLevelData(collideLvl);
-                ApplyDamage(caster, target, collideLevelData, report);
-                SpawnProjectiles(collideSub, caster, castPoint, grid, report, collideLvl);
             }
 
             // [SECT-QUICKWIN] Gap report baocao-all-sect-skills.md §2.4-2.9 G6: event chain generalizer.
@@ -661,11 +667,8 @@ namespace VLTK.Sandbox
         private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report, int forcedSkillLevel = 0)
         {
             // [SECT-QUICKWIN] §2.2.2 G2: allow cả Missiles và Melee (TianWang multi-hit pattern).
-            if (skill.childSkillNum <= 0) return;
             if (skill.skillStyle != PcSkillStyle.Missiles && skill.skillStyle != PcSkillStyle.Melee) return;
             int skillLevel = forcedSkillLevel > 0 ? forcedSkillLevel : ResolveLevel(caster, skill);
-            var kangLong = PcKangLongYouHuiTuning.Applies(skill.skillId) ? PcKangLongYouHuiTuning.AtLevel(skillLevel) : default;
-            bool useKangLong = PcKangLongYouHuiTuning.Applies(skill.skillId);
             // [CaiBang-LuaPort 2026-06-17] PcCaiBangModTuning (stale hardcoded tables) replaced
             // by PcCaiBangLuaLevelService, which reads từ Assets/StreamingAssets/Reference/gaibang.lua
             // SKILLS dict. 357/359/1073/1074 (MOD Vietnam Cái Bang) lấy count/form/radius từ đây.
@@ -676,9 +679,10 @@ namespace VLTK.Sandbox
             int luaAttackRadiusRaw = useLua ? PcCaiBangLuaLevelService.GetAttackRadius(skill.skillId, skillLevel) : 0;
             int luaFormInt = useLua ? PcCaiBangLuaLevelService.GetMissileForm(skill.skillId, skillLevel) : -1;
             SkillMissileForm luaForm = luaFormInt <= 0 ? skill.missileForm : (luaFormInt == 2 ? SkillMissileForm.Fan : SkillMissileForm.Single);
-            int count = luaCountRaw > 0 ? luaCountRaw : (useKangLong ? Mathf.Max(1, kangLong.missileCount) : Mathf.Max(1, skill.childSkillNum));
-            SkillMissileForm form = luaFormInt > 0 ? luaForm : (useKangLong ? kangLong.missileForm : skill.missileForm);
-            int attackRadius = luaAttackRadiusRaw > 0 ? luaAttackRadiusRaw : (useKangLong ? kangLong.attackRadius : skill.attackRadius);
+            int count = luaCountRaw > 0 ? luaCountRaw : Mathf.Max(0, skill.childSkillNum);
+            if (count <= 0) return;
+            SkillMissileForm form = luaFormInt > 0 ? luaForm : skill.missileForm;
+            int attackRadius = luaAttackRadiusRaw > 0 ? luaAttackRadiusRaw : skill.attackRadius;
             report.childProjectileCount += count;
             for (int i = 0; i < count; i++)
             {
@@ -714,7 +718,14 @@ namespace VLTK.Sandbox
                     return;
                 }
                 if (result.projectile != null)
+                {
                     report.projectiles.Add(result.projectile);
+                    if (skill.byMissile)
+                    {
+                        report.projectileImpactSkillIds[result.projectile.instanceId] = skill.skillId;
+                        report.projectileImpactSkillLevels[result.projectile.instanceId] = skillLevel;
+                    }
+                }
             }
         }
 
@@ -725,11 +736,11 @@ namespace VLTK.Sandbox
         // Slot[1] of an addskilldamage table holds the target skillId; slot[3] holds the percent.
         private static readonly (int grantSkillId, string[] slots)[] AddSkillDamageGrants =
         {
-            (119, new[] { "addskilldamage1" }),                         // yanmen_tuobo  → 359 (+40% L20)
-            (122, new[] { "addskilldamage1" }),                         // jianren_shenshou → 357 (+50% L20)
-            (125, new[] { "addskilldamage1", "addskilldamage2" }),      // bangda_egou → 359 (+60%) & 1074 (+50%)
-            (128, new[] { "addskilldamage1" }),                         // kanglong_youhui → 357 (+55% L20)
-            (359, new[] { "addskilldamage1" }),                         // tianxia_wugou → 1074 (+25% L20)
+            (119, new[] { "addskilldamage1", "addskilldamage2", "addskilldamage3" }),
+            (122, new[] { "addskilldamage1", "addskilldamage2", "addskilldamage3", "addskilldamage4" }),
+            (125, new[] { "addskilldamage1", "addskilldamage2" }),
+            (128, new[] { "addskilldamage1", "addskilldamage2", "addskilldamage3" }),
+            (359, new[] { "addskilldamage1" }),
         };
 
         /// <summary>
@@ -745,6 +756,8 @@ namespace VLTK.Sandbox
                 if (!caster.knownSkills.Contains(grantId)) continue;
                 int grantLevel = caster.skillLevels != null && caster.skillLevels.TryGetValue(grantId, out var lv) ? lv : 0;
                 if (grantLevel <= 0) continue;
+                int grantMaxLevel = _catalog.Resolve(grantId)?.maxLevel ?? grantLevel;
+                if (grantMaxLevel > 0) grantLevel = Mathf.Min(grantLevel, grantMaxLevel);
                 foreach (var slot in slots)
                 {
                     int target = PcCaiBangLuaLevelService.GetSingleValue(grantId, grantLevel, slot, 1);

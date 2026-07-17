@@ -35,8 +35,8 @@ namespace VLTK.UI
 
         private static readonly Dictionary<string, HudUserFacingArtReplacement> Replacements = new()
         {
-            { "技能", Entry("技能", "skill_panel_vi", "hud.skill.panel.title", "Kỹ năng võ công", true) },
-            { "技能－战斗分页", Entry("技能－战斗分页", "skill_panel_combat_tab_vi", "hud.skill.tab.combat", "Chiến đấu", true) },
+            { "技能", Entry("技能", "skill_panel_vi", "hud.skill.panel.title", "Kỹ năng võ công") },
+            { "技能－战斗分页", Entry("技能－战斗分页", "skill_panel_combat_tab_vi", "hud.skill.tab.combat", "Chiến đấu") },
             { "技能－关闭_00", Entry("技能－关闭_00", "btn_close_skill_00_vi", "hud.action.close", "Đóng") },
             { "技能－关闭_01", Entry("技能－关闭_01", "btn_close_skill_01_vi", "hud.action.close", "Đóng") },
             { "技能－关闭_02", Entry("技能－关闭_02", "btn_close_skill_02_vi", "hud.action.close", "Đóng") },

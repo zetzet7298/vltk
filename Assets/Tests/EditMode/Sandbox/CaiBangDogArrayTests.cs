@@ -27,7 +27,7 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(0, s.attackRadius);
             Assert.AreEqual(0, s.stateSpecialId);
             Assert.AreEqual(0, s.childSkillId);
-            Assert.AreEqual(SkillMissileForm.None, s.missileForm);
+            Assert.AreEqual(SkillMissileForm.Stationary, s.missileForm, "canonical MisslesForm=7 metadata");
             Assert.AreEqual(11, s.charAnimId);
         }
 

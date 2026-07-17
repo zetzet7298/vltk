@@ -26,8 +26,9 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(player.missileForm, npc.missileForm, "1539 missileForm = 359 missileForm");
             Assert.AreEqual(168, player.childSkillId, "359 PC child missile = 168");
             Assert.AreEqual(168, npc.childSkillId, "1539 PC child missile = 168");
-            Assert.AreEqual(512, player.attackRadius, "359 PC Lua L20 AttackRadius=512");
-            Assert.AreEqual(player.attackRadius, npc.attackRadius, "1539 attackRadius = 359 attackRadius");
+            Assert.AreEqual(400, player.attackRadius, "359 canonical skills.txt base AttackRadius=400");
+            Assert.AreEqual(512, PcCaiBangLuaLevelService.GetAttackRadius(359, 20), "359 Lua L20 runtime AttackRadius=512");
+            Assert.AreEqual(512, PcCaiBangLuaLevelService.GetAttackRadius(1539, 20), "1539 reuses tianxia_wugou Lua range");
         }
 
         [Test]

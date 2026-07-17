@@ -40,6 +40,32 @@
     -unity-background-scale-mode: scale-to-fill;
 }
 
+/* UiSkillsLive.ini: the fight sub-page is 191px wide at Left=7 inside the
+   205px skill sheet. SkillContent supplies its own 6px inset, so the shell
+   leaves one pixel on each side instead of the generic 16px popup gutter. */
+.popup-window--pc-skill .popup-chrome {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: none;
+    -unity-background-scale-mode: stretch-to-fill;
+    padding-top: 0px;
+    padding-left: 1px;
+    padding-right: 1px;
+    padding-bottom: 0px;
+}
+
+/* Vietnamese PC UiSkillsSheet main frame: exact selected bytes from the
+   Vietnamese package slice, not the Chinese fallback sprite. */
+.popup-window--pc-skill {
+    background-color: rgba(0, 0, 0, 0);
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/skill_panel_vi.png');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
 /* Title bar + close row, sitting on the top of the frame. */
 .popup-header {
     position: absolute;
@@ -80,8 +106,66 @@
     background-image: url('project://database/Assets/UI/Popup/Art/btn_close_vn_p.png');
 }
 
+/* UiSkillsSheet.ini CloseBtn: Left=53, Top=342, Width=97, Height=29.
+   The generic title is intentionally removed: the PC sprite already contains
+   the authoritative titlebar and its selected combat tab is overlaid below. */
+.popup-window--pc-skill .popup-header {
+    left: 53px;
+    top: 342px;
+    width: 97px;
+    height: 29px;
+}
+
+.popup-window--pc-skill .popup-title {
+    display: none;
+}
+
+.popup-window--pc-skill .popup-close {
+    width: 97px;
+    height: 29px;
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/btn_close_skill_00_vi.png');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+.popup-window--pc-skill .popup-close:hover {
+    /* UiSkillsSheet.ini: Over=2. */
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/btn_close_skill_02_vi.png');
+}
+
+.popup-window--pc-skill .popup-close:active {
+    /* UiSkillsSheet.ini: Down=1. */
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/btn_close_skill_01_vi.png');
+}
+
+/* Vietnamese PC UiSkillsSheet FightBtn: Left=7, Top=42, Width=95, Height=14. */
+.popup-skill-combat-tab {
+    position: absolute;
+    left: 7px;
+    top: 42px;
+    width: 95px;
+    height: 14px;
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/skill_fight_tab_01_vi.png');
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
 /* Content body slot (where IPopupContent mounts). */
 .popup-body {
     flex-grow: 1;
     overflow: hidden;
+}
+
+/* Vietnamese PC UiSkillsLive lane: the source slice supplies the 5x5 slot
+   backing and the Điểm label; SkillContent only layers real icons/levels. */
+.popup-window--pc-skill .popup-body {
+    position: absolute;
+    left: 7px;
+    top: 57px;
+    width: 191px;
+    height: 278px;
+    flex-grow: 0;
+    /* A selected skill opens the deliberately mobile-only assignment tray below
+       the fixed PC sheet.  Baseline PC content stays inside this lane. */
+    overflow: visible;
+    background-image: url('project://database/Assets/UI/HUD/Art/vi/skill_panel_combat_tab_vi.png');
+    -unity-background-scale-mode: stretch-to-fill;
 }

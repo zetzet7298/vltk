@@ -110,6 +110,9 @@ namespace VLTK.Sandbox
     /// </summary>
     public class GameplayLoopService
     {
+        // Sandbox boot contract: a fresh Stop/Play session starts as Đường Môn.
+        // Runtime faction switching can still replace this after boot.
+        public const CombatFaction DefaultPlayerFaction = CombatFaction.TangMen;
         // ── Sub-services ───────────────────────────────────────────────────
 
         public CombatRuntimeService Combat { get; }
@@ -200,12 +203,12 @@ namespace VLTK.Sandbox
                 worldPos = pos,
             };
             _player.combat.level = level;
-            _player.combat.faction = CombatFaction.CaiBang;
+            _player.combat.faction = DefaultPlayerFaction;
             _player.combat.currentLife = CalculateMaxLife(level);
             _player.combat.maxLife = _player.combat.currentLife;
             // maxMana lay tu PC formula (PcMaxManaFormula) de regen khong bi cap
             // nham qua maxLife va de cap level cao khong bi tran.
-            _player.combat.maxMana = PcMaxManaFormula.Compute(level, 0, CombatFaction.CaiBang);
+            _player.combat.maxMana = PcMaxManaFormula.Compute(level, 0, DefaultPlayerFaction);
             _player.combat.currentMana = _player.combat.maxMana;
             _player.combat.position = pos;
 

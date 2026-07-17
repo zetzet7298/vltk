@@ -38,19 +38,19 @@ namespace VLTK.Tests.Sandbox
         public void PassiveUtilitySkills_CharAnimMatchesNewestPc()
         {
             var cat = Catalog();
-            Assert.AreEqual(14, cat.Resolve(121).charAnimId, "121 PC CharAnimId=14 (utility)");
+            Assert.AreEqual(11, cat.Resolve(121).charAnimId, "121 canonical slistcache CharAnimId=11");
             Assert.AreEqual(11, cat.Resolve(124).charAnimId, "124 newest PC CharAnimId=11 (dagou_zhen passive row)");
             Assert.AreEqual(11, cat.Resolve(127).charAnimId, "127 PC CharAnimId=11 (slistcache authoritative; old test wrongly claimed 14)");
         }
 
         [Test]
-        public void TuyDiepCuongVu_CharAnim43_PcAccurate()
+        public void TuyDiepCuongVu_UsesCanonicalCastAnimation()
         {
-            // PC: 130 Túy Điệp Cuồng Vũ CharAnimId=43 (state 43 aura).
             var cat = Catalog();
             var s = cat.Resolve(130);
             Assert.IsNotNull(s);
-            Assert.AreEqual(43, s.charAnimId, "130 PC CharAnimId=43 (state 43 aura)");
+            Assert.AreEqual(11, s.charAnimId, "130 canonical slistcache CharAnimId=11; StateSpecialId remains 43");
+            Assert.AreEqual(43, s.stateSpecialId);
         }
 
         [Test]
@@ -60,15 +60,16 @@ namespace VLTK.Tests.Sandbox
             var skills = SkillSectCatalog.GetSkills(CombatFactionExt.CaiBangId);
             Assert.IsNotEmpty(skills, "Cái Bang sect missing");
             var byId = skills.ToDictionary(sk => sk.skillId);
+            Assert.AreEqual("Bổng Đả Ác Cẩu", byId[125].nameVi);
             Assert.AreEqual(11, byId[117].charAnimId, "117 sect charAnim=11");
             Assert.AreEqual(11, byId[119].charAnimId, "119 sect charAnim=11");
             Assert.AreEqual(11, byId[122].charAnimId, "122 sect charAnim=11");
-            Assert.AreEqual(14, byId[121].charAnimId, "121 sect charAnim=14");
+            Assert.AreEqual(11, byId[121].charAnimId, "121 canonical sect charAnim=11");
             Assert.AreEqual(11, byId[124].charAnimId, "124 sect charAnim=11");
-            Assert.AreEqual(14, byId[127].charAnimId, "127 sect charAnim=14");
+            Assert.AreEqual(11, byId[127].charAnimId, "127 canonical sect charAnim=11");
             Assert.AreEqual(11, byId[125].charAnimId, "125 sect charAnim=11");
             Assert.AreEqual(11, byId[128].charAnimId, "128 sect charAnim=11");
-            Assert.AreEqual(43, byId[130].charAnimId, "130 sect charAnim=43");
+            Assert.AreEqual(11, byId[130].charAnimId, "130 canonical sect charAnim=11");
             Assert.IsFalse(byId[117].isMelee, "117 sect melee=false (PC IsMelee=0)");
             Assert.IsFalse(byId[119].isMelee, "119 sect melee=false (PC IsMelee=0)");
             Assert.IsFalse(byId[122].isMelee, "122 sect melee=false (PC IsMelee=0)");

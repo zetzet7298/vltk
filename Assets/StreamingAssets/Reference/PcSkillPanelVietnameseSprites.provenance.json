@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "purpose": "Vietnamese PC winner sprites for UiSkillsSheet",
+  "package_order_evidence": {
+    "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+    "winner_package": "update01.pak",
+    "winner_index": 21,
+    "base_package": "spr.pak",
+    "base_index": 23
+  },
+  "ui_scheme_evidence": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/Ui/Ui3/UiSkillsSheet.ini",
+  "sprites": [
+    {
+      "logical_path": "\\Spr\\Ui3\\技能\\技能.spr",
+      "uid": "cfe5ad03",
+        "winner_source": "/var/www/jx-source/pak_unpacked/update01/unknown/cfe5ad03.spr",
+        "unity_asset": "Assets/UI/HUD/Art/vi/skill_panel_vi.png",
+        "frame": 0,
+        "export_sha256": "58404f664432b3be6dd6d13b15474fb69123ce896341ffaf4ed0fa244d85fe1c"
+    },
+    {
+      "logical_path": "\\Spr\\Ui3\\技能\\技能－战斗分页.spr",
+      "uid": "e089f4c9",
+        "winner_source": "/var/www/jx-source/pak_unpacked/update01/unknown/e089f4c9.spr",
+        "unity_asset": "Assets/UI/HUD/Art/vi/skill_panel_combat_tab_vi.png",
+        "frame": 0,
+        "export_sha256": "f1652a508812515aba59928ecb765ea0ca367ca43548b1017baff02686e0cf48"
+    },
+    {
+      "logical_path": "\\spr\\Ui3\\技能\\技能－关闭.spr",
+      "uid": "4d8449aa",
+      "winner_source": "/var/www/jx-source/pak_unpacked/update01/unknown/4d8449aa.spr",
+        "unity_assets": [
+        "Assets/UI/HUD/Art/vi/btn_close_skill_00_vi.png",
+        "Assets/UI/HUD/Art/vi/btn_close_skill_01_vi.png",
+        "Assets/UI/HUD/Art/vi/btn_close_skill_02_vi.png"
+        ],
+        "frames": { "up": 0, "down": 1, "over": 2 },
+        "export_sha256": {
+          "up": "a413b502a20f8d56fbb0e36e5569538009b2c64d917cc8278ab80fe3b6aba52a",
+          "down": "f950b7118e1f073a4269043146f7ddad86e1ca543aaf43df6de5d7d3058f6067",
+          "over": "1ce84f76877552a42018e11099201bccc26b8abcb9e9203db09741355c250c1c"
+        }
+    },
+    {
+      "logical_path": "\\Spr\\Ui3\\技能\\技能－战斗技能按钮.spr",
+      "uid": "f68817d0",
+        "winner_source": "/var/www/jx-source/pak_unpacked/update01/unknown/f68817d0.spr",
+        "unity_asset": "Assets/UI/HUD/Art/vi/skill_fight_tab_01_vi.png",
+        "frame": 1,
+        "export_sha256": "1d432f49b7918ff89516ff0cd378f7ca8995883e58032fafb9dcb9543225a6e4"
+    }
+  ]
+}
