@@ -336,8 +336,11 @@ namespace VLTK.Sandbox
                 var d = new SkillLevelData{level=lv};
                 int dur = Link(lv, (1, 18 * 120, ""), (30, 18 * 180, ""));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AllResYanP, Link(lv, (1, 1, ""), (30, 15, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, Link(lv, (1, 10, ""), (30, 175, "")), dur, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
+                // [CaiBang-FirePool 2026-07-17] PC gaibang.lua::zuidie_kuangwu grants BOTH addfiredamage_v(10→175)
+                //   and addfiremagic_v(10→215). Former code conflated them: addfiredamage_v was mislabeled
+                //   FireDamageV (base) and addfiremagic_v was mislabeled AddFireDamageV. Split to canonical kinds.
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, Link(lv, (1, 10, ""), (30, 175, "")), dur, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireMagicV, Link(lv, (1, 10, ""), (30, 215, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxYanP, Link(lv, (1, 21, ""), (35, 60, "")), dur, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.DeadlyStrikeEnhanceP, Link(lv, (1, 5, ""), (20, 30, "Conic")), dur, 0));
                 // ponytail: 5 attr mới slistcache — stored cho data parity; consumption TODO (engine series/return/anti-hurt chưa đầy đủ).
@@ -843,7 +846,7 @@ namespace VLTK.Sandbox
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, addFire(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireMagicV, addFire(lv), -1, elementParam));
                 return d;
             });
             return s;
@@ -854,7 +857,7 @@ namespace VLTK.Sandbox
             var s = BaseSkill(id, raw, vi, req, 20, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 14; s.targetOnly = false; s.iconSourceId = Sprite(icon);
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireDamageV, addfire(lv), -1, elementParam));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddFireMagicV, addfire(lv), -1, elementParam));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, lifemax(lv), -1, 0));
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ManaMaxP, manamax(lv), -1, 0));
                 return d;
@@ -1474,7 +1477,8 @@ namespace VLTK.Sandbox
         // (sha256 e4270bd1..., the independent expected authority). Only fields listed in each
         // row's present[] are mapped; absent oracle fields are never guessed. ApplyTangMenOracle
         // overlays these static fields on the 7 shared roots (43,45,47,48,50,54,58) which keep
-        // their existing pcLevelData/runtime magic, and on the 16 new static-only learned rows.
+        // their existing pcLevelData/runtime magic, and on the 16 PC-only learned rows (which now
+        // also carry canonical per-level damage/state via TangMenLearned).
         // 51/55/57 stay out of learned membership (unresolved Unity-only); their legacy builders
         // are retained for Unity display residuals via RegisterTangMenUnityDisplayResiduals.
         private sealed class TangMenOracleRow
@@ -1574,9 +1578,188 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        // Static-only learned row: TangMen faction + wood series, no pcLevelData/runtime magic.
-        // Names are decoded from the byte-preserving PcTangMenSkills.txt slice with
-        // vltktool; runtime formula/effect data remains intentionally unclaimed.
+        // ---- TangMen per-level damage/state data (SKL-TM-RUNTIME level-data wave) ----
+        // Sourced from the vendored canonical PC server tangmen.lua
+        // (Assets/StreamingAssets/Reference/PcTangMenSkillLevelData.lua, sha256 3f2e7c2a...).
+        // scripts/generate_tangmen_leveldata.py parses that lua + the hash-pinned
+        // PcTangMenSkills.txt / PcTangMenRelationshipTargets.txt LvlData columns and emits
+        // PcTangMenSkillLevelData.json; TangMenSkillLevelDataParityTests compares these
+        // builders against that JSON byte-for-byte. Mapping is SkillId -> pinned LvlData lua
+        // key, never by name/icon. Buckets mirror the existing shared-root builders
+        // (43/45/47/48/50/54/58): damage=PhysicsEnhanceP/SeriesDamageP/*DamageV,
+        // state=DeadlyStrikeP/StunP, skill=SkillCostV. Residual unsupported semantics
+        // (missle_speed_v, skill_attackradius, addskilldamage*, event/exp curves, nil-in-lua
+        // queries such as deadlystrike_p:nutang150) are recorded in the JSON under
+        // residualUnsupported and stay out of scope until the runtime model grows them.
+        private enum TmBucket { Damage, State, Skill }
+        private sealed class TmCurve { public MagicAttributeKind kind; public TmBucket bucket; public int[] p1, p2, p3; }
+
+        // Flattened {lvMark,val,...} curve; null/empty => lua-absent sub-curve (constant 0),
+        // matching the canonical GetSkillLevelData default {{0,0},{20,0}}. Linear between
+        // marks and extrapolated from the nearest endpoint segment outside the marks, matching
+        // canonical PC tangmen.lua Link()/Line semantics.
+        private static int TmLink(int lv, int[] flat)
+        {
+            if (flat == null || flat.Length == 0) return 0;
+            int n = flat.Length / 2;
+            if (n == 1) return flat[1];
+            if (lv < flat[0])
+                return Mathf.FloorToInt(flat[1] + (float)(lv - flat[0]) / (flat[2] - flat[0]) * (flat[3] - flat[1]));
+            if (lv > flat[2 * (n - 1)])
+            {
+                int x0 = flat[2 * (n - 2)], y0 = flat[2 * (n - 2) + 1];
+                int x1 = flat[2 * (n - 1)], y1 = flat[2 * (n - 1) + 1];
+                return x1 == x0 ? y1 : Mathf.FloorToInt(y0 + (float)(lv - x0) / (x1 - x0) * (y1 - y0));
+            }
+            for (int i = 1; i < n; i++)
+            {
+                int x0 = flat[2 * (i - 1)], y0 = flat[2 * (i - 1) + 1];
+                int x1 = flat[2 * i], y1 = flat[2 * i + 1];
+                if (lv <= x1)
+                {
+                    if (x1 == x0) return y1;
+                    return Mathf.FloorToInt(y0 + (float)(lv - x0) / (x1 - x0) * (y1 - y0));
+                }
+            }
+            return flat[2 * (n - 1) + 1];
+        }
+
+        private static SkillLevelData TmLevelData(int lv, TmCurve[] curves)
+        {
+            var d = new SkillLevelData { level = lv };
+            foreach (var c in curves)
+            {
+                var attr = new SkillMagicAttribute(c.kind, TmLink(lv, c.p1), TmLink(lv, c.p2), TmLink(lv, c.p3));
+                if (c.bucket == TmBucket.Damage) d.damage.Add(attr);
+                else if (c.bucket == TmBucket.State) d.state.Add(attr);
+                else d.skill.Add(attr);
+            }
+            return d;
+        }
+
+        private static readonly Dictionary<int, int> TangMenLevelMaxLevel = new()
+        {
+            [249]=20,[302]=20,[303]=20,[339]=20,[341]=20,[342]=20,[343]=20,[345]=20,[347]=20,[349]=20,[351]=20,[710]=20,[1069]=27,[1070]=27,[1071]=27,[1110]=26,
+            [227]=20,[301]=20,[304]=30,[340]=20,[344]=30,[346]=30,[348]=30,[350]=30,[352]=30,[1097]=20,[1098]=20,[1113]=21,
+        };
+
+        // ponytail: 28 skill-id -> curve table generated verbatim from PcTangMenSkillLevelData.json
+        // (scripts/generate_tangmen_leveldata.py). Hand-editing risks drift; regenerate + paste.
+        private static readonly Dictionary<int, TmCurve[]> TangMenLevelCurves = new()
+        {
+            [227] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,80,20,344}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,10,20,50,21,52}, p2=null, p3=null} },
+            [249] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,50,20,344}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.DeadlyStrikeP, bucket=TmBucket.State, p1=new[]{1,10,20,59}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,50,20,50}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,5,20,24}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,10,20,50,21,52}, p2=null, p3=null} },
+            [301] = new[] { new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,1,20,10}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,20,20,60,21,62}, p2=null, p3=null} },
+            [302] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,15,15,200,20,434}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,25,20,80}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,20,15,20,20,60,21,62}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,1,20,19}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}} },
+            [303] = new[] { new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,8,20,40}, p2=new[]{1,100,20,100}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,1,20,10}, p2=null, p3=null} },
+            [304] = new[] { new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,8,20,40}, p2=new[]{1,100,20,100}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,1,20,10}, p2=null, p3=null} },
+            [339] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,25,15,150,20,301}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.DeadlyStrikeP, bucket=TmBucket.State, p1=new[]{1,10,20,59}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,30,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,5,20,31}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,20,15,20,20,60,21,62}, p2=null, p3=null} },
+            [340] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,25,20,116}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,20,20,60,21,62}, p2=null, p3=null} },
+            [341] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,20,20,274}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.DeadlyStrikeP, bucket=TmBucket.State, p1=new[]{1,10,20,39}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,5,20,24}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,25,20,50}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,10,20,50,21,52}, p2=null, p3=null} },
+            [342] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,10,15,100,20,294}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.DeadlyStrikeP, bucket=TmBucket.State, p1=new[]{1,10,20,39}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,1,20,30}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,30,20,75}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,20,15,20,20,60,21,62}, p2=null, p3=null} },
+            [343] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=null, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,5,20,30}, p2=null, p3=null} },
+            [344] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=null, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,5,20,30}, p2=null, p3=null} },
+            [345] = new[] { new TmCurve{kind=MagicAttributeKind.ColdDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=new[]{1,1,20,18}, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,5,20,30}, p2=null, p3=null} },
+            [346] = new[] { new TmCurve{kind=MagicAttributeKind.ColdDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=new[]{1,1,20,18}, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,5,20,30}, p2=null, p3=null} },
+            [347] = new[] { new TmCurve{kind=MagicAttributeKind.FireDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=null, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,1,20,10}, p2=null, p3=null} },
+            [348] = new[] { new TmCurve{kind=MagicAttributeKind.FireDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=null, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,1,20,10}, p2=null, p3=null} },
+            [349] = new[] { new TmCurve{kind=MagicAttributeKind.LightingDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=null, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.StunP, bucket=TmBucket.State, p1=new[]{1,1,20,20}, p2=new[]{1,1,20,20}, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,10,20,50,21,52}, p2=null, p3=null} },
+            [350] = new[] { new TmCurve{kind=MagicAttributeKind.LightingDamageV, bucket=TmBucket.Damage, p1=new[]{1,60,20,400}, p2=null, p3=new[]{1,60,20,400}},
+                new TmCurve{kind=MagicAttributeKind.StunP, bucket=TmBucket.State, p1=new[]{1,1,20,20}, p2=new[]{1,1,20,20}, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,20,20,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,10,20,50,21,52}, p2=null, p3=null} },
+            [351] = new[] { new TmCurve{kind=MagicAttributeKind.FireDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,20,20,80}, p2=new[]{1,50,20,50}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.PhysicsDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.ColdDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=new[]{1,1,20,18}, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.LightingDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.StunP, bucket=TmBucket.State, p1=new[]{1,1,20,20}, p2=new[]{1,1,20,20}, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,60,20,120}, p2=null, p3=null} },
+            [352] = new[] { new TmCurve{kind=MagicAttributeKind.FireDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,20,20,80}, p2=new[]{1,50,20,50}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.PhysicsDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.ColdDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=new[]{1,1,20,18}, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.LightingDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.StunP, bucket=TmBucket.State, p1=new[]{1,1,20,20}, p2=new[]{1,1,20,20}, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,60,20,120}, p2=null, p3=null} },
+            [710] = new[] { new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,25,20,60}, p2=null, p3=null} },
+            [1069] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,30,15,180,20,360,23,576,26,684}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.DeadlyStrikeP, bucket=TmBucket.State, p1=new[]{1,12,20,72,23,90,26,100}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,40,20,80,23,92}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,6,20,38,23,48,26,53}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,40,15,40,20,80,21,82}, p2=null, p3=null} },
+            [1070] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,18,15,240,20,520,23,856,26,1024}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,35,20,100,23,120}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,40,15,40,20,80,21,82}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,1,20,25,23,32,26,36}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}} },
+            [1071] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,12,15,120,20,355,23,637,26,778}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.DeadlyStrikeP, bucket=TmBucket.State, p1=new[]{1,12,20,45,23,55,26,60}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,1,20,36,23,47,26,52}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,36,20,90,23,107}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,40,15,40,20,80,21,82}, p2=null, p3=null} },
+            [1097] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,30,20,140,23,174,26,192}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,40,20,80,21,82}, p2=null, p3=null} },
+            [1098] = new[] { new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,10,20,20,23,23}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,40,20,80,21,82}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,18,15,120,20,180,23,252,26,288}, p2=null, p3=null} },
+            [1110] = new[] { new TmCurve{kind=MagicAttributeKind.PhysicsEnhanceP, bucket=TmBucket.Damage, p1=new[]{1,20,20,80}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.DeadlyStrikeP, bucket=TmBucket.State, p1=new[]{1,1,20,8}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,12,20,12}, p2=null, p3=null},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,1,20,5}, p2=new[]{1,60,20,60}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.SeriesDamageP, bucket=TmBucket.Damage, p1=new[]{1,1,20,10}, p2=null, p3=null} },
+            [1113] = new[] { new TmCurve{kind=MagicAttributeKind.FireDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.PoisonDamageV, bucket=TmBucket.Damage, p1=new[]{1,20,20,80}, p2=new[]{1,50,20,50}, p3=new[]{1,10,20,10}},
+                new TmCurve{kind=MagicAttributeKind.PhysicsDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.ColdDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=new[]{1,1,20,18}, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.LightingDamageV, bucket=TmBucket.Damage, p1=new[]{1,100,20,400}, p2=null, p3=new[]{1,100,20,400}},
+                new TmCurve{kind=MagicAttributeKind.StunP, bucket=TmBucket.State, p1=new[]{1,1,20,20}, p2=new[]{1,1,20,20}, p3=null},
+                new TmCurve{kind=MagicAttributeKind.SkillCostV, bucket=TmBucket.Skill, p1=new[]{1,60,20,120}, p2=null, p3=null} },
+        };
+
+        // Static-only learned-row shell: TangMen faction + wood series. Display names are
+        // decoded from the byte-preserving PcTangMenSkills.txt slice with vltktool. Per-level
+        // damage/state data is attached separately by TangMenLearned / TangMenRelationshipTarget.
         private static SkillDefinition TangMenStaticOnly(int id)
         {
             string displayName = id switch
@@ -1605,11 +1788,50 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        // SKL-TM-CATALOG-001: membership is exactly the 23 pcLearnedSkillIds frozen in
+        // Learned TangMen row: shell (display name + TangMen/wood) plus canonical per-level
+        // damage/state data from PcTangMenSkillLevelData.lua. maxLevel is set from the same
+        // source before AddLevels so pcLevelData covers every learned level; ApplyTangMenOracle
+        // re-applies the same maxLevel from the static oracle afterwards.
+        private static SkillDefinition TangMenLearned(int id)
+        {
+            var s = TangMenStaticOnly(id);
+            if (TangMenLevelCurves.TryGetValue(id, out var curves))
+            {
+                s.maxLevel = TangMenLevelMaxLevel[id];
+                AddLevels(s, lv => TmLevelData(lv, curves));
+            }
+            return s;
+        }
+
+        // Relationship target that carries TangMen damage/state (collide/fly/vanish event of a
+        // learned root): same canonical level data, but it stays OUT of CreateTangMenSkills
+        // learned membership (registered via RegisterTangMenRelationshipTargets).
+        private static SkillDefinition TangMenRelationshipTarget(int id)
+        {
+            var s = new SkillDefinition
+            {
+                skillId = id,
+                nameNormalized = "TM_Rel_" + id,
+                faction = CombatFaction.TangMen,
+                series = Series.Wood,
+                iconSourceId = Sprite(IconPathForSkill(id)),
+                equipLimit = -2,
+            };
+            if (TangMenLevelCurves.TryGetValue(id, out var curves))
+            {
+                s.maxLevel = TangMenLevelMaxLevel[id];
+                AddLevels(s, lv => TmLevelData(lv, curves));
+            }
+            return s;
+        }
+
+        // SKL-TM-CATALOG-001 membership is exactly the 23 pcLearnedSkillIds frozen in
         // PcTangMenOracle.json (sha256 e4270bd1...). The 7 shared roots keep their existing
         // pcLevelData/runtime magic; ApplyTangMenOracle overlays the oracle's static fields.
-        // The 16 new learned rows are static-only. 51/55/57 stay excluded from learned
-        // membership (unresolved Unity-only); their legacy builders remain for display use.
+        // The 16 PC-only learned rows now carry canonical per-level damage/state from
+        // PcTangMenSkillLevelData.lua (SKL-TM-RUNTIME level-data wave). 51/55/57 stay excluded
+        // from learned membership (unresolved Unity-only); their legacy builders remain for
+        // display use.
         public static List<SkillDefinition> CreateTangMenSkills()
         {
             return new List<SkillDefinition>
@@ -1621,22 +1843,22 @@ namespace VLTK.Sandbox
                 ApplyTangMenOracle(TangMenZhuiXinJian()),   // 50
                 ApplyTangMenOracle(TangMenManThienHoaVu()), // 54
                 ApplyTangMenOracle(TangMenThienLaDiaVong()),// 58
-                ApplyTangMenOracle(TangMenStaticOnly(249)),
-                ApplyTangMenOracle(TangMenStaticOnly(302)),
-                ApplyTangMenOracle(TangMenStaticOnly(303)),
-                ApplyTangMenOracle(TangMenStaticOnly(339)),
-                ApplyTangMenOracle(TangMenStaticOnly(341)),
-                ApplyTangMenOracle(TangMenStaticOnly(342)),
-                ApplyTangMenOracle(TangMenStaticOnly(343)),
-                ApplyTangMenOracle(TangMenStaticOnly(345)),
-                ApplyTangMenOracle(TangMenStaticOnly(347)),
-                ApplyTangMenOracle(TangMenStaticOnly(349)),
-                ApplyTangMenOracle(TangMenStaticOnly(351)),
-                ApplyTangMenOracle(TangMenStaticOnly(710)),
-                ApplyTangMenOracle(TangMenStaticOnly(1069)),
-                ApplyTangMenOracle(TangMenStaticOnly(1070)),
-                ApplyTangMenOracle(TangMenStaticOnly(1071)),
-                ApplyTangMenOracle(TangMenStaticOnly(1110)),
+                ApplyTangMenOracle(TangMenLearned(249)),
+                ApplyTangMenOracle(TangMenLearned(302)),
+                ApplyTangMenOracle(TangMenLearned(303)),
+                ApplyTangMenOracle(TangMenLearned(339)),
+                ApplyTangMenOracle(TangMenLearned(341)),
+                ApplyTangMenOracle(TangMenLearned(342)),
+                ApplyTangMenOracle(TangMenLearned(343)),
+                ApplyTangMenOracle(TangMenLearned(345)),
+                ApplyTangMenOracle(TangMenLearned(347)),
+                ApplyTangMenOracle(TangMenLearned(349)),
+                ApplyTangMenOracle(TangMenLearned(351)),
+                ApplyTangMenOracle(TangMenLearned(710)),
+                ApplyTangMenOracle(TangMenLearned(1069)),
+                ApplyTangMenOracle(TangMenLearned(1070)),
+                ApplyTangMenOracle(TangMenLearned(1071)),
+                ApplyTangMenOracle(TangMenLearned(1110)),
             };
         }
 
@@ -1648,23 +1870,34 @@ namespace VLTK.Sandbox
             227, 301, 304, 331, 332, 333, 340, 344, 346, 348, 350, 352, 374, 1097, 1098, 1113
         };
 
+        // Damage-bearing TangMen relationship targets (collide/fly/vanish event chains of
+        // learned roots, sourced from tangmen.lua) carry canonical per-level damage/state
+        // via TangMenRelationshipTarget. The remaining support/projectile targets stay
+        // existence-only shells. Every target stays OUT of CreateTangMenSkills learned
+        // membership; only Resolve() is required for the relationship closure.
+        private static readonly HashSet<int> TangMenDamageBearingTargets = new()
+        {
+            227, 301, 304, 340, 344, 346, 348, 350, 352, 1097, 1098, 1113,
+        };
+
         // Support/event definitions registered ONLY when unresolved, so existing faction
-        // definitions are never overwritten. Existence-only (Resolve() != null); no static
-        // parity is claimed for these relationship targets beyond their identifiers.
+        // definitions are never overwritten. Damage-bearing TangMen targets carry canonical
+        // level data; cross-faction projectile/support targets remain existence-only.
         private static void RegisterTangMenRelationshipTargets(SkillCatalog catalog)
         {
             foreach (var id in TangMenRelationshipTargetIds)
             {
                 if (catalog.Contains(id)) continue;
-                  catalog.Register(new SkillDefinition
-                  {
-                      skillId = id,
-                      nameNormalized = "TM_Rel_" + id,
-                      // Relationship targets are existence-only in this static wave, but
-                      // every registered production definition must still carry a valid
-                      // asset identifier for catalog-wide consumers.
-                      iconSourceId = Sprite(IconPathForSkill(id)),
-                  });
+                catalog.Register(TangMenDamageBearingTargets.Contains(id)
+                    ? TangMenRelationshipTarget(id)
+                    : new SkillDefinition
+                    {
+                        skillId = id,
+                        nameNormalized = "TM_Rel_" + id,
+                        // Existence-only target: must still carry a valid asset identifier for
+                        // catalog-wide consumers.
+                        iconSourceId = Sprite(IconPathForSkill(id)),
+                    });
             }
         }
 
@@ -2701,22 +2934,19 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        // [SECT-QUICKWIN] §2.7.2 G7: CuiYan ID 100 "Hộ Thể Hàn Băng" — sai effect hoàn toàn.
-        // PC cuiyan.lua::huti_hanbing: meleedamagereturn_p {{1,5},{20,20}} + rangedamagereturn_p (damage return shield).
-        // Trước fix: ColdResP + AddDefenseV (cold res + def) — sai semantics gameplay. Thúy Yên trở thành tank thuần.
-        // Sau fix: giữ ColdResP fallback (Phase 4 thêm damage return attribute); sửa magnitude theo PC + charAnimId 2→11.
-        //   Tên "Hộ Thể Hàn Băng" = "Hộ thể bằng băng" = damage return shield PC.
+        // PC cuiyan.lua::huti_hanbing: both melee/range percent-return states,
+        // each 5→20% for 18*120 ticks. No cold-resistance or defense state.
         private static SkillDefinition CuiYanHoTheHanBang()
         {
             var s = BaseSkill(100, "护体寒冰", "Hộ Thể Hàn Băng", 40, 20, 0, SkillMissileForm.Surround);
             s.skillStyle = PcSkillStyle.InitiativeNpcState; s.charAnimId = 11; s.targetSelf = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                // [SECT-QUICKWIN] PC damage return cần MeleeDamageReturnP + RangeDamageReturnP (chưa có enum).
-                //   Phase 4 cần thêm. Tạm giữ ColdResP fallback.
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.ColdResP, Link(lv, (1, 10, ""), (20, 50, "")), 1200 + 1200 * lv, 0));
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 50, ""), (20, 450, "")), 1200 + 1200 * lv, 0));
-                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 20, 0, 0));
+                int returnPercent = Link(lv, (1, 5, ""), (20, 20, ""));
+                const int durationTicks = 18 * 120;
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.MeleeDamageReturnP, returnPercent, durationTicks, 0));
+                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, returnPercent, durationTicks, 0));
+                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, Link(lv, (1, 40, ""), (20, 60, "")), 0, 0));
                 return d;
             });
             return s;

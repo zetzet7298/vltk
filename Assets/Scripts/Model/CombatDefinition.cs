@@ -132,6 +132,12 @@ namespace VLTK.Model
         AddPoisonDamageV,
         AddColdDamageV,
         AddFireDamageV,
+        // [CaiBang-FirePool 2026-07-17] PC KNpcAttribModify keeps two separate fire accumulators:
+        //   addfiredamage_v -> m_CurrentFireDamage (consumed in the bIsPhysical branch)
+        //   addfiremagic_v  -> m_CurrentFireMagic  (consumed in the !bIsPhysical branch)
+        // Source: jx-source extracted_full.tar:10142-10153 (AddFireDamageV/AddFireMagicV) + :3183-3192 (damage branch).
+        // Do not conflate the two; runtime selects the pool by the source skill's isPhysical.
+        AddFireMagicV,
         AddLightingDamageV,
         StealLifeP,
         LifeReplenishV,

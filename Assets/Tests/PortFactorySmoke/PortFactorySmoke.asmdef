@@ -4,9 +4,12 @@
     "references": [
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
-        "VLTK.Sandbox",
+        "VLTK.Combat",
+        "VLTK.PortData",
+        "VLTK.Sandbox.Runtime",
         "VLTK.Core",
         "VLTK.Model",
+        "VLTK.Gameplay.Domain",
         "Network",
         "Unity.Mathematics",
         "VLTK.UI",

@@ -8,4 +8,7 @@ cd "$(dirname "$0")/.."
 python3 scripts/generate_tangmen_oracle.py --check
 
 python3 scripts/run_sandbox_tests.py \
-  VLTK.Tests.Sandbox.TangMenCanonicalOracleParityTests
+  VLTK.Tests.Sandbox.TangMenCanonicalOracleParityTests \
+  VLTK.Tests.Sandbox.TangMenSkillLevelDataParityTests \
+  VLTK.Tests.Sandbox.TangMenLuaLevelServiceTests \
+  VLTK.Tests.Sandbox.TangMenFlyEventRuntimeTests

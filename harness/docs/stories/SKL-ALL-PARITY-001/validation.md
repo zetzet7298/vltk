@@ -76,6 +76,16 @@ expected.
   SKL-TM-CATALOG-001 completed).
 - 8 phái còn lại = `weak_or_partial`. Không claim runtime/platform parity.
 
+## Runtime Correction Waves
+
+- Thúy Yên skill 100 `Hộ Thể Hàn Băng`: canonical Lua emits melee and ranged
+  damage return `5→20%` for 2160 ticks. The Unity catalog no longer fabricates
+  cold resistance or defense for this skill. Focused runtime job
+  `c289cd5997fa404ab94ad9315b31e91f` passes 4/4 for L1/L20 melee/range reflect
+  and recast behavior; the all-faction static regression job
+  `32ae78b1d695467b8ac57abb385a8112` passes 29/29. This is a bounded runtime
+  correction, not proof that Thúy Yên or the epic is complete.
+
 ## Residuals (epic-level, open)
 
 - Android packaged-data/device smoke.

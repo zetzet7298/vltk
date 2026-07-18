@@ -145,7 +145,10 @@ namespace VLTK.Tests.Sandbox
             var cat = Catalog();
             Assert.AreEqual("AddPhysicsDamageP=150,-1,2", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.AddPhysicsDamageP).ToString());
             Assert.AreEqual("DeadlyStrikeEnhanceP=25,-1,0", cat.Resolve(115).GetPcLevelData(20).First(MagicAttributeKind.DeadlyStrikeEnhanceP).ToString());
-            Assert.AreEqual("AddFireDamageV=275,-1,9", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.AddFireDamageV).ToString());
+            // [CaiBang-FirePool 2026-07-17] PC gaibang.lua::gaibang_zhangfa grants addfiremagic_v (25→275),
+            //   the MAGIC fire pool (m_CurrentFireMagic, consumed by !bIsPhysical skills). Formerly
+            //   conflated under AddFireDamageV; now its own kind AddFireMagicV.
+            Assert.AreEqual("AddFireMagicV=275,-1,9", cat.Resolve(116).GetPcLevelData(20).First(MagicAttributeKind.AddFireMagicV).ToString());
             Assert.AreEqual("FastWalkRunP=33,3240,0", cat.Resolve(127).GetPcLevelData(20).First(MagicAttributeKind.FastWalkRunP).ToString());
             Assert.AreEqual("ColdResP=52,25200,0", cat.Resolve(126).GetPcLevelData(20).First(MagicAttributeKind.ColdResP).ToString());
             // PC Lua 金乌映雪 returns Param2String(result,result,0) for skill_cost_v; preserve odd tuple.
@@ -251,9 +254,16 @@ namespace VLTK.Tests.Sandbox
                 "PC slistcache zuidie allres_yan_p");
             Assert.AreEqual(10, allRes.value1, "PC slistcache zuidie_kuangwu L20 allres_yan_p floors to 10");
             Assert.AreEqual(2867, allRes.value2, "PC zuidie_kuangwu L20 duration interpolates between 18*120 at L1 and 18*180 at L30");
-            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AddFireDamageV, out var addFire));
-            Assert.AreEqual(144, addFire.value1, "PC zuidie_kuangwu L20 addfiremagic_v floors to 144");
-            Assert.AreEqual(2867, addFire.value2);
+            // [CaiBang-FirePool 2026-07-17] zuidie_kuangwu grants BOTH PC fire pools:
+            //   addfiremagic_v(10→215, L20≈144) -> AddFireMagicV (magic pool)
+            //   addfiredamage_v(10→175, L20≈118) -> AddFireDamageV (physical pool)
+            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AddFireMagicV, out var addFireMagic),
+                "PC zuidie_kuangwu L20 addfiremagic_v stored under AddFireMagicV");
+            Assert.AreEqual(144, addFireMagic.value1, "PC zuidie_kuangwu L20 addfiremagic_v floors to 144");
+            Assert.AreEqual(2867, addFireMagic.value2);
+            Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.AddFireDamageV, out var addFireDmg),
+                "PC zuidie_kuangwu L20 addfiredamage_v stored under AddFireDamageV");
+            Assert.AreEqual(118, addFireDmg.value1, "PC zuidie_kuangwu L20 addfiredamage_v floors to 118");
             Assert.IsTrue(beggar.states.TryGetValue(MagicAttributeKind.LifeMaxYanP, out var lifeMaxYan));
             Assert.AreEqual(2867, lifeMaxYan.value2, "PC slistcache lifemax_yan_p duration finite (18*120→18*180), không còn sentinel -1");
         }
@@ -274,7 +284,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang_720_QuyetChu_AppliesAllPcFiveDebuffAttrs()
+          public void CaiBang_720_QuyetChu_AppliesAllPcFiveDebuffAttrs()
         {
             // PC gaibang.lua::gaibang120zuzhou (skill 720) defines 5 debuff attrs at L20:
             //   physicsres_p=-10, fireres_p=-15, physicsresmax_p=-4, fireresmax_p=-6,
@@ -301,8 +311,61 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(-30, rret.value1, "PC L20 rangedamagereturn_p=-30");
             Assert.AreEqual(162, pres.value2, "PC L20 duration=9*18=162 ticks");
             // PC slistcache 720: MisslesForm=6 (Stance), not mobile Surround.
-            Assert.AreEqual(SkillMissileForm.Stance, Catalog().Resolve(720).missileForm, "PC 720 MisslesForm=6");
-        }
+              Assert.AreEqual(SkillMissileForm.Stance, Catalog().Resolve(720).missileForm, "PC 720 MisslesForm=6");
+          }
+
+          [Test]
+          public void CaiBang_720_FireResMaxDebuffChangesPlayerDamageOutcome()
+          {
+              var catalog = Catalog();
+              const int probeSkillId = 990720;
+              var probe = new SkillDefinition
+              {
+                  skillId = probeSkillId,
+                  nameNormalized = "720 fire-cap probe",
+                  maxLevel = 1,
+                  skillStyle = PcSkillStyle.Missiles,
+                  targetEnemy = true,
+                  timePerCast = 0,
+              };
+              var probeData = new SkillLevelData { level = 1 };
+              probeData.damage.Add(new SkillMagicAttribute(MagicAttributeKind.FireDamageV, 100, 0, 100));
+              probe.pcLevelData.Add(probeData);
+              catalog.Register(probe);
+
+              var damage = new DamageFormulaService { Roll = (min, _) => min, RollPercent = _ => true };
+              var runtime = new CombatRuntimeService(catalog, damage: damage);
+              var source = Beggar();
+              source.knownSkills.Add(probeSkillId);
+              source.skillLevels[probeSkillId] = 1;
+
+              var control = Beggar();
+              control.actorId = 31;
+              control.currentLife = control.maxLife = 1000;
+              control.states[MagicAttributeKind.FireResP] = new SkillMagicAttribute(MagicAttributeKind.FireResP, 100, 0, 0);
+              control.states[MagicAttributeKind.FireResYanP] = new SkillMagicAttribute(MagicAttributeKind.FireResYanP, -17, 0, 0);
+              int controlDamage = runtime.Cast(source, control, probeSkillId, control.position, CombatRelation.Enemy)
+                  .damageResults.Single().finalDamage;
+
+              var debuffed = Beggar();
+              debuffed.actorId = 32;
+              debuffed.currentLife = debuffed.maxLife = 1000;
+              debuffed.states[MagicAttributeKind.FireResP] = new SkillMagicAttribute(MagicAttributeKind.FireResP, 100, 0, 0);
+              var applier = Beggar();
+              applier.actorId = 33;
+              applier.knownSkills.Add(720);
+              applier.skillLevels[720] = 20;
+              Assert.IsTrue(runtime.Cast(applier, debuffed, 720, debuffed.position, CombatRelation.Enemy).success);
+              int debuffedDamage = runtime.Cast(source, debuffed, probeSkillId, debuffed.position, CombatRelation.Enemy)
+                  .damageResults.Single().finalDamage;
+
+              Assert.AreEqual(25, controlDamage,
+                  "player fire resist is capped at canonical BASE_FIRE_RESIST_MAX=75");
+              Assert.AreEqual(40, debuffedDamage,
+                  "skill 720 L20 lowers the fire cap by 15 (75→60), so fixed 100 fire takes 40");
+              Assert.Greater(debuffedDamage, controlDamage,
+                  "physics/fire res-max fields must affect combat, not remain static catalog metadata");
+          }
 
         [Test]
         public void CaiBang_714_PassiveAutoAttack_ProcsSkill720OnBearerHit()
@@ -339,8 +402,74 @@ namespace VLTK.Tests.Sandbox
             // PC: proc fired → 720 debuff applied to attacker (enemy).
             Assert.IsTrue(enemy.states.TryGetValue(MagicAttributeKind.PhysicsResYanP, out var pres),
                 "720 debuff proc'd on attacker via 714 on-hit (slistcache physicsres_yan_p)");
-            Assert.AreEqual(-17, pres.value1, "PC slistcache 720 L20 physicsres_yan_p floor=-17 (proc'd from 714)");
-        }
+              Assert.AreEqual(-17, pres.value1, "PC slistcache 720 L20 physicsres_yan_p floor=-17 (proc'd from 714)");
+          }
+
+          [Test]
+          public void CaiBang_714_DecodesPcProcRateAtLevels1_15_20()
+          {
+              foreach (var expected in new[] { (level: 1, rate: 1), (level: 15, rate: 5), (level: 20, rate: 6) })
+              {
+                  var observed = new System.Collections.Generic.List<int>();
+                  var runtime = new CombatRuntimeService(Catalog(), damage: new DamageFormulaService
+                  {
+                      RollPercent = pct => { observed.Add(pct); return true; },
+                  });
+                  var bearer = Beggar();
+                  bearer.knownSkills.Add(714);
+                  bearer.skillLevels[714] = expected.level;
+                  bearer.currentLife = 100000;
+                  var attacker = Enemy(new Vector2(2, 0));
+                  attacker.faction = CombatFaction.CaiBang;
+                  attacker.currentMana = 1000;
+                  attacker.knownSkills.Add(117);
+                  attacker.skillLevels[117] = 20;
+
+                  var report = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+                  Assert.IsTrue(report.success, report.detail);
+                  CollectionAssert.Contains(observed, expected.rate,
+                      $"PC autoattackskill[3] low byte at L{expected.level} must be {expected.rate}%");
+                  Assert.AreEqual(216, runtime.NextCastTime(bearer.actorId, 714),
+                      "PC autoattackskill[3] high bytes encode 12*18=216 cooldown ticks");
+              }
+          }
+
+          [Test]
+          public void CaiBang_714_CooldownBoundaryRequiresCurrentTimeStrictlyGreaterThanNext()
+          {
+              int procRolls = 0;
+              var catalog = Catalog();
+              catalog.Resolve(117).timePerCast = 0; // isolate the 714 boundary from the attacker's own cooldown
+              var runtime = new CombatRuntimeService(catalog, damage: new DamageFormulaService
+              {
+                  RollPercent = pct => { if (pct == 6) procRolls++; return true; },
+              });
+              var bearer = Beggar();
+              bearer.knownSkills.Add(714);
+              bearer.skillLevels[714] = 20;
+              bearer.currentLife = 100000;
+              var attacker = Enemy(new Vector2(2, 0));
+              attacker.faction = CombatFaction.CaiBang;
+              attacker.currentMana = 1000;
+              attacker.knownSkills.Add(117);
+              attacker.skillLevels[117] = 20;
+
+              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              Assert.AreEqual(1, procRolls);
+              Assert.AreEqual(216, runtime.NextCastTime(bearer.actorId, 714));
+
+              runtime.AdvanceTime(215);
+              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              Assert.AreEqual(1, procRolls, "t+215 remains on cooldown");
+
+              runtime.AdvanceTime(1);
+              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              Assert.AreEqual(1, procRolls, "PC nextCastTime < currentTime: equality at t+216 still blocks");
+
+              runtime.AdvanceTime(1);
+              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              Assert.AreEqual(2, procRolls, "t+217 is the first eligible tick");
+          }
 
         [Test]
         public void CaiBang_357_CollideEvent_NoFireBelowLevel10_PcL10Gate()
@@ -406,6 +535,59 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_1073_FlyEvent_Dispatches1103PerDistinctTick()
+        {
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            beggar.knownSkills.Add(1073);
+            beggar.skillLevels[1073] = 20;
+            var enemy = Enemy(new Vector2(200, 0));
+            var report = svc.Cast(beggar, enemy, 1073, enemy.position, CombatRelation.Enemy);
+            var parentMissile = report.projectiles.First(p => p.skillId == 335);
+            int projectileCount = report.projectiles.Count;
+            int flyChildCount = report.projectiles.Count(p => p.skillId == 344);
+
+            Assert.AreEqual(1, report.skill.flyEventTime, "PC row 1073 FlyEventTime=1");
+            Assert.AreEqual(3, PcCaiBangLuaLevelService.GetMissileCount(1103, 20),
+                "PC zhanggaibang150 L20 skill_misslenum_v emits three 1103 child missiles");
+            Assert.IsTrue(svc.TryResolveProjectileFly(beggar, enemy, report, parentMissile, 1, enemy.position));
+            Assert.AreEqual(projectileCount + 3, report.projectiles.Count,
+                "PC 1073 FlyEvent must spawn all three L20 1103 child missiles");
+            var firstFlyChildren = report.projectiles.Skip(projectileCount).Where(p => p.skillId == 344).ToList();
+            Assert.AreEqual(3, firstFlyChildren.Count);
+            foreach (var flyChild in firstFlyChildren)
+            {
+                Assert.AreEqual(enemy.position, flyChild.origin,
+                    "PC ByMissle FlyEvent launches 1103 from parent missile event point");
+                Assert.AreEqual(1103, report.projectileImpactSkillIds[flyChild.instanceId]);
+                Assert.AreEqual(20, report.projectileImpactSkillLevels[flyChild.instanceId],
+                    "PC skill_eventskilllevel overrides row 1073 EventSkillLevel=1 with parent L20 for 1103");
+            }
+            CollectionAssert.Contains(report.resolvedLifecycleSkillIds, 1103);
+            Assert.IsFalse(svc.TryResolveProjectileFly(beggar, enemy, report, parentMissile, 1, enemy.position),
+                "same projectile/tick must be idempotent");
+            Assert.IsTrue(svc.TryResolveProjectileFly(beggar, enemy, report, parentMissile, 2, enemy.position),
+                "FlyEventTime=1 permits next distinct tick");
+            Assert.AreEqual(flyChildCount + 6, report.projectiles.Count(p => p.skillId == 344));
+        }
+
+        [Test]
+        public void CaiBang_1073_VisualServiceArmsCanonicalFlyCallback()
+        {
+            var catalog = Catalog();
+            var visual = new SkillEffectVisualService(null, catalog);
+            var fx = visual.PlaySkillCast(catalog.Resolve(1073), Vector2.zero, new Vector2(2000, 0), 20);
+
+            Assert.IsNotNull(fx);
+            Assert.IsTrue(fx.pcFlyEventEnabled);
+            Assert.AreEqual(1, fx.pcFlyEventIntervalTicks, "PC row 1073 FlyEventTime=1");
+            Assert.AreEqual(1103, fx.pcFlySkillId);
+            Assert.IsNotNull(fx.missileFlyEventOrdinals,
+                "visual flight must allocate ordinal tracking before the controller wires its callback");
+            Assert.AreEqual(fx.missileCount, fx.missileFlyEventOrdinals.Length);
+        }
+
+        [Test]
         public void NonCaiBang_CannotCastCaiBangSkill()
         {
             var svc = new CombatRuntimeService(Catalog());
@@ -444,12 +626,15 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void CaiBang_AttackRadius_ScalesPerLevelFromPcGaibangLua()
         {
-            // PC gaibang.lua short-range skills (117, 119, 122): skill_attackradius={{{1,320},{20,384}}}.
+            // PC gaibang.lua short-range skills (119, 122): skill_attackradius={{{1,320},{20,384}}}.
+            // [CaiBang-FailClosed117 2026-07-17] 117 (Đầu Thạch Vấn Lộ) has NO PC LvlData beyond skill_cost_v
+            //   (jx-source pak_unpacked/update03/settings/skills.txt row 117 col 73 = "skill_cost_v").
+            //   It must NOT borrow yanmen_tuobo (119); the lua service fails closed (returns 0).
             // PC gaibang.lua long-range skills (125, 128, 357, 359, 1073, 1074, 1539): skill_attackradius={{{1,448},{20,512}}}.
             // [CaiBang-LuaPort 2026-06-17] PcCaiBangSkillTuning/PcCaiBangModTuning removed;
             // PcCaiBangLuaLevelService reads radius straight từ gaibang.lua SKILLS dict.
             // 128 keeps its dedicated PcKangLongYouHuiTuning (level-curve richer than SKILLS dict).
-            int[] shortRange = { 117, 119, 122 };
+            int[] shortRange = { 119, 122 };
             int[] longRange  = { 125, 357, 359, 1073, 1074, 1539 };
 
             foreach (int id in shortRange)
@@ -460,6 +645,10 @@ namespace VLTK.Tests.Sandbox
                 Assert.GreaterOrEqual(mid, 320, $"L10 radius for {id} should be >= L1");
                 Assert.LessOrEqual(mid, 384, $"L10 radius for {id} should be <= L20");
             }
+            // 117 fail-closed: no PC LvlData → lua returns 0 at every level (no yanmen_tuobo borrow).
+            Assert.IsFalse(PcCaiBangLuaLevelService.Applies(117), "117 must not be mapped (no PC LvlData)");
+            Assert.AreEqual(0, PcCaiBangLuaLevelService.GetAttackRadius(117, 1), "117 fail-closed L1");
+            Assert.AreEqual(0, PcCaiBangLuaLevelService.GetAttackRadius(117, 20), "117 fail-closed L20");
             foreach (int id in longRange)
             {
                 Assert.AreEqual(448, PcCaiBangLuaLevelService.GetAttackRadius(id, 1), $"{id} L1");
@@ -471,36 +660,45 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang_117_CastAtR20_ReachesPcL20Radius()
+        public void CaiBang_117_CastUsesCanonicalStaticRadius_WhenLuaDataAbsent()
         {
-            // PC L20 attackRadius=384. Cast at distance 380 should succeed; at 400 should fail.
+            // PC Skills.txt static row pins attackRadius=280. Its Lua LvlData is empty, so no
+            // level curve may replace that static value.
             var svc = new CombatRuntimeService(Catalog());
             var beggar = Beggar();
-            var near = Enemy(new Vector2(380, 0));
+            var near = Enemy(new Vector2(270, 0));
             var r = svc.Cast(beggar, near, 117, near.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
 
             svc.AdvanceTime(20);
-            var far = Enemy(new Vector2(400, 0));
+            var far = Enemy(new Vector2(300, 0));
             var rejected = svc.Cast(beggar, far, 117, far.position, CombatRelation.Enemy);
             Assert.AreEqual(CombatCastRejectReason.OutOfRange, rejected.reason);
         }
 
         [Test]
-        public void CaiBang_117_CastAtLevel1_ReachesPcL1Radius()
+        public void CaiBang_117_CastAtLevel1_UsesFlatCatalogRadius_FailClosed()
         {
-            // PC L1 attackRadius=320. At L1, distance 300 should succeed; 350 should fail.
+            // [CaiBang-FailClosed117 2026-07-17] 117 has NO PC LvlData (row 117 LvlData1="skill_cost_v" only),
+            //   so there is no yanmen_tuobo L1 radius curve. Cast radius stays at the canonical static
+            //   catalog value (280) at every level — no fabricated L1 tightening.
             var svc = new CombatRuntimeService(Catalog());
             var beggar = Beggar();
             beggar.skillLevels[117] = 1;
-            var near = Enemy(new Vector2(300, 0));
+            Assert.AreEqual(0, PcCaiBangLuaLevelService.GetAttackRadius(117, 1), "117 fail-closed: lua returns 0");
+            var near = Enemy(new Vector2(270, 0));
             var r = svc.Cast(beggar, near, 117, near.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
 
-            svc.AdvanceTime(20);
-            var far = Enemy(new Vector2(350, 0));
-            var rejected = svc.Cast(beggar, far, 117, far.position, CombatRelation.Enemy);
-            Assert.AreEqual(CombatCastRejectReason.OutOfRange, rejected.reason);
+            // Use a fresh cast state so this assertion isolates range rather than cooldown.
+            var svc2 = new CombatRuntimeService(Catalog());
+            var beggar2 = Beggar();
+            beggar2.skillLevels[117] = 1;
+            // 270 < catalog 280 → still in range at L1 (no PC L1 Lua curve exists for 117).
+            var mid = Enemy(new Vector2(270, 0));
+            var inRange = svc2.Cast(beggar2, mid, 117, mid.position, CombatRelation.Enemy);
+            Assert.IsTrue(inRange.success,
+                $"117 uses canonical static radius 280 at L1 (fail-closed, no PC L1 curve): {inRange.reason} {inRange.detail}");
         }
 
         [Test]
@@ -576,9 +774,10 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(300, 0));
             var fx = visual.PlaySkillCast(cat.Resolve(117), beggar.position, enemy.position, 20);
             Assert.IsNotNull(fx, "117 visual should be configured");
-            // [CaiBang-LuaPort] Lua authoritative: yanmen_tuobo missle_speed_v L20=24 (mobile gaibang.lua).
-            // Engine missile 44 Speed=14 được override bởi Lua missle_speed_v.
-            Assert.AreEqual(24, fx.pcMissileSpeedPerTick, "PC Lua yanmen_tuobo missle_speed_v L20=24");
+            // [CaiBang-FailClosed117 2026-07-17] 117 no longer borrows yanmen_tuobo (no PC LvlData),
+            //   so the lua missle_speed_v override does not apply; visual falls back to engine
+            //   missile 44 Speed=14 (PC PcMissles.txt row 44 col 12). LifeTime=40 is engine, unchanged.
+            Assert.AreEqual(14, fx.pcMissileSpeedPerTick, "117 fail-closed: engine missile 44 Speed=14 (no lua override)");
             Assert.AreEqual(40, fx.pcMissileLifeTicks, "PC missile 44 LifeTime=40");
         }
 

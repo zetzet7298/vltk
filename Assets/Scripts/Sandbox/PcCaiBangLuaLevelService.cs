@@ -50,8 +50,13 @@ namespace VLTK.Sandbox
             [130] = "zuidie_kuangwu",      // Túy Điệp Cuồng Vũ
 
             // Active damage skills.
-            [117] = "yanmen_tuobo",        // Đầu Thạch Vấn Lộ (PC 117 thuộc inline gaibang.lua; mobile dùng bảng của yanmen_tuobo vì LvlData reference 沿门托钵).
-            [119] = "yanmen_tuobo",        // Duyên Môn Thoa Bát.
+            // [CaiBang-FailClosed117 2026-07-17] PC skills.txt row 117 (Đầu Thạch Vấn Lộ) IsPhysical=0
+            //   and LvlData1="skill_cost_v" ONLY — no 沿门托钵/yanmen_tuobo reference and no damage/level
+            //   interpolation table (verified jx-source pak_unpacked/update03/settings/skills.txt col 73).
+            //   The former `[117] = "yanmen_tuobo"` borrow was a fabricated guess that surfaced 119's full
+            //   table (radius scaling, missile speed, fire curve) for 117. Fail closed: 117 is NOT mapped,
+            //   so PcCaiBangLuaLevelService returns 0 and callers fall back to catalog/engine defaults.
+            [119] = "yanmen_tuobo",        // Duyên Môn Thoa Bát (PC IsPhysical=1, LvlData1=yanmen_tuobo).
             [122] = "jianren_shenshou",    // Kiến Nhân Thân Thủ.
             [125] = "bangda_egou",         // Bổng Đả Ác Cẩu (newest PC Skills.txt row 125; chains to 359 + 1074).
             [127] = "huabu_liushou",       // Hoạt Bất Lưu Thủ.
@@ -619,6 +624,29 @@ namespace VLTK.Sandbox
                 if (!float.TryParse(inner.Substring(valStart, pos - valStart).Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out val))
                     return null;
                 if (negVal == 1) val = -val;
+
+                // Canonical skill Lua commonly keeps simple arithmetic in level
+                // tables (for example missle_lifetime_v={...,{20,18*2}}).
+                // Evaluate only literal multiplication/division here; identifiers
+                // and general Lua expressions still fail closed.
+                while (true)
+                {
+                    SkipTrivia(inner, ref pos);
+                    if (pos >= inner.Length || (inner[pos] != '*' && inner[pos] != '/')) break;
+                    char op = inner[pos++];
+                    SkipTrivia(inner, ref pos);
+                    bool negativeFactor = pos < inner.Length && inner[pos] == '-';
+                    if (negativeFactor) pos++;
+                    int factorStart = pos;
+                    while (pos < inner.Length && (char.IsDigit(inner[pos]) || inner[pos] == '.')) pos++;
+                    if (factorStart == pos ||
+                        !float.TryParse(inner.Substring(factorStart, pos - factorStart), NumberStyles.Float,
+                            CultureInfo.InvariantCulture, out float factor))
+                        return null;
+                    if (negativeFactor) factor = -factor;
+                    if (op == '/' && Mathf.Approximately(factor, 0f)) return null;
+                    val = op == '*' ? val * factor : val / factor;
+                }
             }
             SkipTrivia(inner, ref pos);
             string func = null;

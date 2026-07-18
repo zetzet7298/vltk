@@ -315,7 +315,7 @@ namespace VLTK.Tests.PortFactorySmoke
         private static Type SandboxType(string shortName)
         {
             string fullName = "VLTK.Sandbox." + shortName;
-            Type type = TypeInAssembly("VLTK.Sandbox", fullName)
+            Type type = TypeInAssembly("VLTK.Sandbox.Runtime", fullName)
                       ?? TypeInAssembly("Assembly-CSharp", fullName);
             if (type == null)
             {

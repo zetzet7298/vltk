@@ -383,36 +383,12 @@ namespace VLTK.Sandbox
             int ticks = Mathf.FloorToInt(deltaTime * 18f);
             Combat.AdvanceTime(ticks);
 
-            // Tick down active state/buff durations for all actors
+            // Source nodes own timers. Projection only exposes aggregate compatibility state;
+            // expiry must remove one source contribution without deleting siblings of same kind.
             if (ticks > 0)
             {
                 foreach (var actor in _actors.Values)
-                {
-                    if (actor.combat != null && actor.combat.states != null)
-                    {
-                        List<MagicAttributeKind> expired = null;
-                        foreach (var kvp in actor.combat.states)
-                        {
-                            var attr = kvp.Value;
-                            if (attr.value2 > 0)
-                            {
-                                attr.value2 -= ticks;
-                                if (attr.value2 <= 0)
-                                {
-                                    expired ??= new List<MagicAttributeKind>();
-                                    expired.Add(kvp.Key);
-                                }
-                            }
-                        }
-                        if (expired != null)
-                        {
-                            foreach (var k in expired)
-                            {
-                                actor.combat.states.Remove(k);
-                            }
-                        }
-                    }
-                }
+                    actor.combat?.ExpireStateSources(ticks);
             }
 
             // Mana regen (PC: 1 mana/tick)

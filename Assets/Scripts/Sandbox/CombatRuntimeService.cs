@@ -5,8 +5,35 @@ using VLTK.Model;
 
 namespace VLTK.Sandbox
 {
+    public readonly struct CombatStateSourceKey : IEquatable<CombatStateSourceKey>
+    {
+        public readonly int actorId;
+        public readonly int skillId;
+
+        public CombatStateSourceKey(int actorId, int skillId)
+        {
+            this.actorId = actorId;
+            this.skillId = skillId;
+        }
+
+        public bool Equals(CombatStateSourceKey other) => actorId == other.actorId && skillId == other.skillId;
+        public override bool Equals(object obj) => obj is CombatStateSourceKey other && Equals(other);
+        public override int GetHashCode() => (actorId * 397) ^ skillId;
+    }
+
+    public sealed class CombatStateSourceNode
+    {
+        public int sourceLevel;
+        public bool isPermanentPassive;
+        public Dictionary<MagicAttributeKind, SkillMagicAttribute> attributes = new();
+    }
+
     public class CombatActorState
     {
+        // Skill id 0 reserves an explicit compatibility source for legacy direct `states` writes,
+        // persisted flattened state, and immediate attributes.
+        public const int CompatibilityStateSourceSkillId = 0;
+
         public int actorId;
         public CombatFaction faction;
         public int level = 1;
@@ -28,7 +55,201 @@ namespace VLTK.Sandbox
         public Vector2 position;
         public HashSet<int> knownSkills = new();
         public Dictionary<int, int> skillLevels = new();
+
+        // Compatibility projection for existing combat consumers. Do not write runtime skill state here.
         public Dictionary<MagicAttributeKind, SkillMagicAttribute> states = new();
+        public Dictionary<CombatStateSourceKey, CombatStateSourceNode> stateSources = new();
+        private readonly Dictionary<MagicAttributeKind, SkillMagicAttribute> _lastStateProjection = new();
+
+        public void ImportLegacyStates()
+        {
+            _lastStateProjection.Clear();
+            SynchronizeCompatibilityStates();
+            RebuildStateProjection();
+        }
+
+        public bool ApplySkillStateSource(int ownerActorId, int sourceSkillId, int sourceLevel, IEnumerable<SkillMagicAttribute> attributes, bool isPermanentPassive = false, bool forceReplace = false)
+        {
+            SynchronizeCompatibilityStates();
+            // PC state nodes live on the receiver and deduplicate by skill id. Two casters
+            // applying the same skill must therefore refresh/replace one receiver-owned node.
+            var key = new CombatStateSourceKey(ownerActorId, sourceSkillId);
+            if (stateSources.TryGetValue(key, out var existing) && !forceReplace && existing.sourceLevel > sourceLevel)
+                return false;
+
+            var node = existing ?? new CombatStateSourceNode();
+            node.sourceLevel = sourceLevel;
+            node.isPermanentPassive = isPermanentPassive;
+            node.attributes.Clear();
+            if (attributes != null)
+            {
+                foreach (var attr in attributes)
+                    node.attributes[attr.kind] = Copy(attr);
+            }
+            if (node.attributes.Count == 0) stateSources.Remove(key);
+            else stateSources[key] = node;
+            RebuildStateProjection();
+            return true;
+        }
+
+        public void ApplyCompatibilityState(SkillMagicAttribute attribute)
+        {
+            if (attribute == null) return;
+            SynchronizeCompatibilityStates();
+            var key = new CombatStateSourceKey(0, CompatibilityStateSourceSkillId);
+            if (!stateSources.TryGetValue(key, out var node))
+                stateSources[key] = node = new CombatStateSourceNode();
+            node.attributes[attribute.kind] = Copy(attribute);
+            RebuildStateProjection();
+        }
+
+        public void RemoveMissingPassiveSources(ISet<int> learnedPassiveSkillIds)
+        {
+            var removed = new List<CombatStateSourceKey>();
+            foreach (var source in stateSources)
+            {
+                if (source.Value.isPermanentPassive && source.Key.actorId == actorId && !learnedPassiveSkillIds.Contains(source.Key.skillId))
+                    removed.Add(source.Key);
+            }
+            foreach (var key in removed) stateSources.Remove(key);
+            if (removed.Count > 0) RebuildStateProjection();
+        }
+
+        public void ExpireStateSources(int ticks)
+        {
+            if (ticks <= 0) return;
+            SynchronizeCompatibilityStates();
+            var emptySources = new List<CombatStateSourceKey>();
+            foreach (var source in stateSources)
+            {
+                if (source.Value.isPermanentPassive) continue;
+                var expired = new List<MagicAttributeKind>();
+                foreach (var attribute in source.Value.attributes)
+                {
+                    if (attribute.Value.value2 <= 0) continue;
+                    attribute.Value.value2 -= ticks;
+                    if (attribute.Value.value2 <= 0) expired.Add(attribute.Key);
+                }
+                foreach (var kind in expired) source.Value.attributes.Remove(kind);
+                if (source.Value.attributes.Count == 0) emptySources.Add(source.Key);
+            }
+            foreach (var key in emptySources) stateSources.Remove(key);
+            RebuildStateProjection();
+        }
+
+        public void CopyNonPassiveStateProjectionTo(Dictionary<MagicAttributeKind, SkillMagicAttribute> destination)
+        {
+            if (destination == null) return;
+            SynchronizeCompatibilityStates();
+            destination.Clear();
+            foreach (var source in stateSources)
+            {
+                if (source.Value.isPermanentPassive) continue;
+                foreach (var attribute in source.Value.attributes)
+                    AddToProjection(destination, attribute.Value);
+            }
+        }
+
+        public void CopyStateSourcesFrom(CombatActorState source)
+        {
+            if (source == null) return;
+            source.SynchronizeCompatibilityStates();
+            source.RebuildStateProjection();
+            stateSources.Clear();
+            foreach (var sourcePair in source.stateSources)
+            {
+                var copy = new CombatStateSourceNode
+                {
+                    sourceLevel = sourcePair.Value.sourceLevel,
+                    isPermanentPassive = sourcePair.Value.isPermanentPassive,
+                };
+                foreach (var attribute in sourcePair.Value.attributes)
+                    copy.attributes[attribute.Key] = Copy(attribute.Value);
+                var destinationKey = sourcePair.Key.skillId == CompatibilityStateSourceSkillId
+                    ? sourcePair.Key
+                    : new CombatStateSourceKey(actorId, sourcePair.Key.skillId);
+                stateSources[destinationKey] = copy;
+            }
+            RebuildStateProjection();
+        }
+
+        public void SynchronizeCompatibilityStates()
+        {
+            states ??= new Dictionary<MagicAttributeKind, SkillMagicAttribute>();
+            stateSources ??= new Dictionary<CombatStateSourceKey, CombatStateSourceNode>();
+            var changed = new HashSet<MagicAttributeKind>(states.Keys);
+            changed.UnionWith(_lastStateProjection.Keys);
+            var compatibility = new CombatStateSourceKey(0, CompatibilityStateSourceSkillId);
+            stateSources.TryGetValue(compatibility, out var compatibilityNode);
+            foreach (var kind in changed)
+            {
+                states.TryGetValue(kind, out var visible);
+                _lastStateProjection.TryGetValue(kind, out var projected);
+                if (Same(visible, projected)) continue;
+                if (visible == null)
+                {
+                    compatibilityNode?.attributes.Remove(kind);
+                    continue;
+                }
+                var withoutCompatibility = BuildProjection(includePermanent: true, includeCompatibility: false);
+                withoutCompatibility.TryGetValue(kind, out var sourced);
+                if (compatibilityNode == null)
+                    stateSources[compatibility] = compatibilityNode = new CombatStateSourceNode();
+                compatibilityNode.attributes[kind] = new SkillMagicAttribute(
+                    kind,
+                    visible.value1 - (sourced?.value1 ?? 0),
+                    visible.value2,
+                    visible.value3 - (sourced?.value3 ?? 0));
+            }
+            if (compatibilityNode != null && compatibilityNode.attributes.Count == 0)
+                stateSources.Remove(compatibility);
+        }
+
+        public void RebuildStateProjection()
+        {
+            var projection = BuildProjection(includePermanent: true, includeCompatibility: true);
+            states.Clear();
+            foreach (var pair in projection) states[pair.Key] = pair.Value;
+            _lastStateProjection.Clear();
+            foreach (var pair in projection) _lastStateProjection[pair.Key] = Copy(pair.Value);
+        }
+
+        private Dictionary<MagicAttributeKind, SkillMagicAttribute> BuildProjection(bool includePermanent, bool includeCompatibility)
+        {
+            var projection = new Dictionary<MagicAttributeKind, SkillMagicAttribute>();
+            foreach (var source in stateSources)
+            {
+                if (!includePermanent && source.Value.isPermanentPassive) continue;
+                if (!includeCompatibility && source.Key.skillId == CompatibilityStateSourceSkillId) continue;
+                foreach (var attribute in source.Value.attributes)
+                    AddToProjection(projection, attribute.Value);
+            }
+            return projection;
+        }
+
+        private static void AddToProjection(Dictionary<MagicAttributeKind, SkillMagicAttribute> projection, SkillMagicAttribute attribute)
+        {
+            if (!projection.TryGetValue(attribute.kind, out var aggregate))
+            {
+                projection[attribute.kind] = Copy(attribute);
+                return;
+            }
+            aggregate.value1 += attribute.value1;
+            aggregate.value3 += attribute.value3;
+            aggregate.value2 = AggregateDuration(aggregate.value2, attribute.value2);
+        }
+
+        private static int AggregateDuration(int left, int right)
+        {
+            if (left < 0 || right < 0) return -1;
+            return Mathf.Max(left, right);
+        }
+
+        private static SkillMagicAttribute Copy(SkillMagicAttribute attribute) =>
+            attribute == null ? null : new SkillMagicAttribute(attribute.kind, attribute.value1, attribute.value2, attribute.value3);
+
+        private static bool Same(SkillMagicAttribute left, SkillMagicAttribute right) =>
+            left == null ? right == null : right != null && left.kind == right.kind && left.value1 == right.value1 && left.value2 == right.value2 && left.value3 == right.value3;
     }
 
     public class CombatCastReport
@@ -47,6 +268,12 @@ namespace VLTK.Sandbox
         public List<ProjectileInstance> projectiles = new();
         // Missile collision events are idempotent per projectile within this cast.
         public HashSet<int> resolvedCollisionProjectileIds = new();
+          // PC FlyEvent repeats at each Lua interval; key by projectile + interval ordinal.
+          public HashSet<(int projectileId, int eventOrdinal)> resolvedFlyEventKeys = new();
+          // PC VanishEvent fires once when a projectile lifetime ends.
+          public HashSet<int> resolvedVanishProjectileIds = new();
+          // Ordered lifecycle child identities for deterministic runtime assertions/diagnostics.
+          public List<int> resolvedLifecycleSkillIds = new();
         public Dictionary<int, int> projectileImpactSkillIds = new();
         public Dictionary<int, int> projectileImpactSkillLevels = new();
         public List<SkillMagicAttribute> appliedState = new();
@@ -116,24 +343,99 @@ namespace VLTK.Sandbox
                 return false;
 
             int addSkillDamagePercent = impactSkill.skillId == parentCast.skill.skillId ? parentCast.addSkillDamagePercent : 0;
-            ApplyDamage(caster, target, impactSkill.GetPcLevelData(impactLevel), parentCast, addSkillDamagePercent);
+            ApplyDamage(caster, target, impactSkill.GetPcLevelData(impactLevel), parentCast, impactSkill.isPhysical, addSkillDamagePercent);
             ProcessAutoAttackProcs(caster, target, parentCast);
 
-            int collideSkillId = impactSkill.collideSkillId;
-            if (collideSkillId > 0 && ShouldTriggerCollideEvent(impactSkill, impactLevel) &&
-                _catalog.Resolve(collideSkillId) is { } collideSub)
-            {
-                int collideLevel = impactSkill.collideSkillLevel > 0 ? impactSkill.collideSkillLevel : impactLevel;
-                int luaLevel = PcCaiBangLuaLevelService.Applies(impactSkill.skillId)
-                    ? PcCaiBangLuaLevelService.GetSingleValue(impactSkill.skillId, impactLevel, "skill_eventskilllevel", 1)
-                    : 0;
-                if (luaLevel > 0) collideLevel = luaLevel;
+            int collideSkillId = ResolveCollideSkillId(impactSkill, impactLevel);
+              if (collideSkillId > 0 && ShouldTriggerCollideEvent(impactSkill, impactLevel) &&
+                  _catalog.Resolve(collideSkillId) is { } collideSub)
+              {
+                  int collideLevel = ResolveEventSkillLevel(impactSkill, impactLevel, impactSkill.collideSkillLevel);
+                  parentCast.resolvedLifecycleSkillIds.Add(collideSkillId);
 
                 if (!collideSub.byMissile)
-                    ApplyDamage(caster, target, collideSub.GetPcLevelData(collideLevel), parentCast);
+                    ApplyDamage(caster, target, collideSub.GetPcLevelData(collideLevel), parentCast, collideSub.isPhysical);
                 SpawnProjectiles(collideSub, caster, collisionPoint, grid, parentCast, collideLevel);
             }
 
+            return true;
+        }
+
+          /// <summary>Resolves one PC VanishEvent when a projectile expires, idempotently.</summary>
+          public bool TryResolveProjectileVanish(
+              CombatActorState caster,
+              CombatActorState target,
+              CombatCastReport parentCast,
+              ProjectileInstance missile,
+              Vector2 eventPoint,
+              ObstacleGrid grid = null)
+          {
+              if (caster == null || target == null || parentCast?.skill == null || missile == null ||
+                  parentCast.projectiles == null || !parentCast.projectiles.Contains(missile) ||
+                  !parentCast.resolvedVanishProjectileIds.Add(missile.instanceId))
+                  return false;
+
+              var impactSkill = parentCast.skill;
+              int impactLevel = parentCast.skillLevel;
+              if (parentCast.projectileImpactSkillIds.TryGetValue(missile.instanceId, out int impactSkillId))
+              {
+                  impactSkill = _catalog.Resolve(impactSkillId) ?? impactSkill;
+                  if (parentCast.projectileImpactSkillLevels.TryGetValue(missile.instanceId, out int mappedLevel))
+                      impactLevel = mappedLevel;
+              }
+
+              int vanishSkillId = ResolveVanishSkillId(impactSkill, impactLevel);
+              if (vanishSkillId <= 0 || !ShouldTriggerVanishEvent(impactSkill, impactLevel)) return false;
+              var vanishSub = _catalog.Resolve(vanishSkillId);
+              if (vanishSub == null) return false;
+              int vanishLevel = ResolveEventSkillLevel(impactSkill, impactLevel, impactSkill.vanishSkillLevel);
+              parentCast.resolvedLifecycleSkillIds.Add(vanishSkillId);
+              if (!vanishSub.byMissile)
+                  ApplyDamage(caster, target, vanishSub.GetPcLevelData(vanishLevel), parentCast, vanishSub.isPhysical);
+              SpawnProjectiles(vanishSub, caster, eventPoint, grid, parentCast, vanishLevel);
+              return true;
+          }
+
+        /// <summary>Resolve one PC FlyEvent tick for a projectile, idempotently.</summary>
+        public bool TryResolveProjectileFly(
+            CombatActorState caster,
+            CombatActorState target,
+            CombatCastReport parentCast,
+            ProjectileInstance missile,
+            int eventOrdinal,
+            Vector2 eventPoint,
+            ObstacleGrid grid = null)
+        {
+            if (caster == null || target == null || parentCast?.skill == null || missile == null || eventOrdinal <= 0 ||
+                parentCast.projectiles == null || !parentCast.projectiles.Contains(missile))
+                return false;
+
+            var impactSkill = parentCast.skill;
+            int impactLevel = parentCast.skillLevel;
+            if (parentCast.projectileImpactSkillIds.TryGetValue(missile.instanceId, out int impactSkillId))
+            {
+                impactSkill = _catalog.Resolve(impactSkillId) ?? impactSkill;
+                if (parentCast.projectileImpactSkillLevels.TryGetValue(missile.instanceId, out int mappedLevel))
+                    impactLevel = mappedLevel;
+            }
+
+            // PC slistcache/settings/skills.txt row 1073: FlyEvent=1, FlySkillId=1103,
+            // FlyEventTime=1. KMissle fires this only while flying; caller supplies ordinal ticks.
+            bool flyEnabled = PcTangMenLuaLevelService.Applies(impactSkill.skillId)
+                ? PcTangMenLuaLevelService.FlyEnabled(impactSkill.skillId, impactLevel)
+                : impactSkill.skillId == 1073 && impactSkill.flySkillId == 1103 && impactSkill.flyEventTime == 1;
+            if (!flyEnabled || !parentCast.resolvedFlyEventKeys.Add((missile.instanceId, eventOrdinal)))
+                return false;
+
+              var flySub = _catalog.Resolve(impactSkill.flySkillId);
+              if (flySub == null) return false;
+              int flyLevel = ResolveEventSkillLevel(impactSkill, impactLevel, impactSkill.flySkillLevel);
+              parentCast.resolvedLifecycleSkillIds.Add(impactSkill.flySkillId);
+
+            if (!flySub.byMissile)
+                ApplyDamage(caster, target, flySub.GetPcLevelData(flyLevel), parentCast, flySub.isPhysical);
+            // PC KSkill::OnMissleEvent casts ByMissle FlyEvent children from parent missile position.
+            SpawnProjectiles(flySub, caster, eventPoint, grid, parentCast, flyLevel, eventPoint);
             return true;
         }
 
@@ -149,13 +451,52 @@ namespace VLTK.Sandbox
                    TryResolveProjectileCollision(caster, target, parentCast, missile, collisionPoint, grid);
         }
 
-        private static bool ShouldTriggerCollideEvent(SkillDefinition skill, int skillLevel)
-        {
-            if (skill == null || skill.collideSkillId <= 0) return false;
-            if (PcCaiBangLuaLevelService.Applies(skill.skillId))
-                return PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, skillLevel, "skill_collideevent", 1) > 0;
-            return true;
-        }
+          private static bool ShouldTriggerCollideEvent(SkillDefinition skill, int skillLevel)
+          {
+              if (skill == null || skill.collideSkillId <= 0) return false;
+              if (PcCaiBangLuaLevelService.Applies(skill.skillId))
+                  return PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, skillLevel, "skill_collideevent", 1) > 0;
+              if (PcTangMenLuaLevelService.Applies(skill.skillId))
+                  return PcTangMenLuaLevelService.CollideEnabled(skill.skillId, skillLevel) > 0;
+              return true;
+          }
+
+          private static bool ShouldTriggerVanishEvent(SkillDefinition skill, int skillLevel)
+          {
+              if (skill == null || skill.vanishSkillId <= 0) return false;
+              if (PcCaiBangLuaLevelService.Applies(skill.skillId))
+                  return PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, skillLevel, "skill_vanishedevent", 1) > 0;
+              if (PcTangMenLuaLevelService.Applies(skill.skillId))
+                  return PcTangMenLuaLevelService.VanishEnabled(skill.skillId, skillLevel) > 0;
+              return true;
+          }
+
+          private static int ResolveCollideSkillId(SkillDefinition skill, int skillLevel)
+          {
+              if (skill == null) return 0;
+              if (PcTangMenLuaLevelService.Applies(skill.skillId))
+                  return PcTangMenLuaLevelService.CollideSkillId(skill.skillId, skillLevel);
+              return skill.collideSkillId;
+          }
+
+          private static int ResolveVanishSkillId(SkillDefinition skill, int skillLevel)
+          {
+              if (skill == null) return 0;
+              if (PcTangMenLuaLevelService.Applies(skill.skillId))
+                  return PcTangMenLuaLevelService.VanishSkillId(skill.skillId, skillLevel);
+              return skill.vanishSkillId;
+          }
+
+          private static int ResolveEventSkillLevel(SkillDefinition skill, int skillLevel, int fallback)
+          {
+              int luaLevel = 0;
+              if (PcCaiBangLuaLevelService.Applies(skill?.skillId ?? 0))
+                  luaLevel = PcCaiBangLuaLevelService.GetSingleValue(skill.skillId, skillLevel, "skill_eventskilllevel", 1);
+              else if (PcTangMenLuaLevelService.Applies(skill?.skillId ?? 0))
+                  luaLevel = PcTangMenLuaLevelService.EventSkillLevel(skill.skillId, skillLevel);
+              if (luaLevel > 0) return luaLevel;
+              return fallback > 0 ? fallback : skillLevel;
+          }
 
         public CombatCastReport CastNpcPlan(CombatActorState caster, CombatActorState target, NpcBossSkillCastPlan plan, Vector2 targetPoint, CombatRelation relation, ObstacleGrid grid = null)
         {
@@ -266,7 +607,7 @@ namespace VLTK.Sandbox
             caster.currentMana -= report.manaCost;
 
             ApplyActionState(caster, skill, report);
-            ApplyStates(caster, target, relation, levelData, report);
+            ApplyStates(caster, target, relation, skill, skillLevel, levelData, report);
             // PC KNpc::AppendSkillEffect: addskilldamage is a passive flat %-damage amplifier
             // applied to THIS cast skill's own damage, summed from learned skills whose
             // addskilldamage entries target this skill. No proc chance, no sub-skill spawn.
@@ -276,7 +617,7 @@ namespace VLTK.Sandbox
             // Direct skills resolve immediately when the cast succeeds.
             if (!skill.byMissile)
             {
-                ApplyDamage(caster, target, levelData, report, addSkillDamageP);
+                ApplyDamage(caster, target, levelData, report, skill.isPhysical, addSkillDamageP);
                 ProcessAutoAttackProcs(caster, target, report);
             }
             SpawnProjectiles(skill, caster, castPoint, grid, report, forcedSkillLevel);
@@ -301,7 +642,7 @@ namespace VLTK.Sandbox
             {
                 var startLevel = skill.startSkillLevel > 0 ? skill.startSkillLevel : skillLevel;
                 var startLevelData = startSubSkill.GetPcLevelData(startLevel);
-                ApplyStates(caster, caster, CombatRelation.Self, startLevelData, report);
+                ApplyStates(caster, caster, CombatRelation.Self, startSubSkill, startLevel, startLevelData, report);
                 SpawnProjectiles(startSubSkill, caster, castPoint, grid, report, startLevel);
             }
 
@@ -369,24 +710,30 @@ namespace VLTK.Sandbox
                 report.totalFrames = caster.castFrame * 100 / (100 + Mathf.Max(0, caster.castSpeed));
         }
 
-        private void ApplyStates(CombatActorState caster, CombatActorState target, CombatRelation relation, SkillLevelData data, CombatCastReport report)
+        private void ApplyStates(CombatActorState caster, CombatActorState target, CombatRelation relation, SkillDefinition sourceSkill, int sourceLevel, SkillLevelData data, CombatCastReport report)
         {
             if (data == null) return;
-            CombatActorState receiver = relation == CombatRelation.Enemy ? target : caster;
+            CombatActorState receiver = relation == CombatRelation.Self ? caster : target ?? caster;
             if (receiver == null) receiver = caster;
-            foreach (var attr in data.state)
+
+            // Mobile migration: a higher source level atomically replaces a lower node; a lower
+            // recast is ignored. PC inspected replacement branch omits an explicit level/timer write.
+            // This normalized rule is mobile-only, needed for deterministic source-node expiry.
+            if (sourceSkill != null && receiver.ApplySkillStateSource(receiver.actorId, sourceSkill.skillId, sourceLevel, data.state))
             {
-                receiver.states[attr.kind] = attr;
-                report.appliedState.Add(attr);
+                foreach (var attr in data.state)
+                    report.appliedState.Add(attr);
             }
             foreach (var attr in data.immediate)
             {
-                receiver.states[attr.kind] = attr;
+                // Immediate attributes historically write the public dictionary. Keep that behavior
+                // through explicit compatibility ownership rather than pretending they are skill states.
+                receiver.ApplyCompatibilityState(attr);
                 report.appliedState.Add(attr);
             }
         }
 
-        private void ApplyDamage(CombatActorState caster, CombatActorState target, SkillLevelData data, CombatCastReport report, int addSkillDamagePercent = 0)
+        private void ApplyDamage(CombatActorState caster, CombatActorState target, SkillLevelData data, CombatCastReport report, bool skillIsPhysical, int addSkillDamagePercent = 0)
         {
             // [DMG-PORT-100] Port 100% từ PC KNpc::ReceiveDamage+CalcDamage.
             // PC source: KNpc.cpp:2842-2941 (ReceiveDamage) + 2445-2732 (CalcDamage).
@@ -510,11 +857,16 @@ namespace VLTK.Sandbox
                 {
                     // Base type buff (PC m_Current*Damage.nValue)
                     AddStateDamage(caster.states, attr.kind, ref extraDamageMin, ref extraDamageMax);
-                    // Add-type buff (AddPhysicsDamageP, AddFireDamageV, ...)
+                    // Add-type buff (AddPhysicsDamageP, AddFireDamageV, AddFireMagicV, ...).
+                    // [CaiBang-FirePool 2026-07-17] PC splits the fire-add buff into two pools:
+                    //   bIsPhysical  -> m_CurrentFireDamage (AddFireDamageV)
+                    //   !bIsPhysical -> m_CurrentFireMagic  (AddFireMagicV)
+                    // selected by the SOURCE skill's IsPhysical (PC KNpc.cpp bIsPhysical = pOrdinSkill->IsPhysical()).
+                    MagicAttributeKind fireAddKind = skillIsPhysical ? MagicAttributeKind.AddFireDamageV : MagicAttributeKind.AddFireMagicV;
                     MagicAttributeKind addKind = type switch
                     {
                         DamageType.Physics => MagicAttributeKind.AddPhysicsDamageP,
-                        DamageType.Fire => MagicAttributeKind.AddFireDamageV,
+                        DamageType.Fire => fireAddKind,
                         DamageType.Poison => MagicAttributeKind.AddPoisonDamageV,
                         DamageType.Cold => MagicAttributeKind.AddColdDamageV,
                         DamageType.Light => MagicAttributeKind.AddLightingDamageV,
@@ -529,11 +881,15 @@ namespace VLTK.Sandbox
                 if (max < min) max = min;
 
                 // Extract defender resist + armor (PC m_Current*Resist + m_*Armor.nValue[0])
-                int targetResist = 0;
-                int targetResistMax = 100;
-                int targetArmor = 0;
-                if (target.states != null)
-                {
+                  int targetResist = 0;
+                    // PC player base caps are 75 for all five damage types (KPlayer.cpp
+                    // BASE_*_RESIST_MAX). NPC-specific caps are not modeled in this actor slice.
+                    int targetResistMax = target.faction == CombatFaction.None ? 100 : 75;
+                  int targetArmor = 0;
+                  int meleeReturnPercent = 0;
+                  int rangeReturnPercent = 0;
+                  if (target.states != null)
+                  {
                     if (target.states.TryGetValue(MagicAttributeKind.AllResP, out var allRes))
                         targetResist += allRes.value1;
                     MagicAttributeKind resKind = type switch
@@ -557,12 +913,26 @@ namespace VLTK.Sandbox
                         DamageType.Fire => MagicAttributeKind.FireResYanP,
                         _ => MagicAttributeKind.AllResYanP,
                     };
-                    if (resYanKind != MagicAttributeKind.AllResYanP && target.states.TryGetValue(resYanKind, out var specResYan))
-                        targetResist += specResYan.value1;
+                      if (resYanKind != MagicAttributeKind.AllResYanP && target.states.TryGetValue(resYanKind, out var specResYan))
+                          targetResist += specResYan.value1;
+                      MagicAttributeKind resMaxKind = type switch
+                      {
+                          DamageType.Physics => MagicAttributeKind.PhysicsResMaxP,
+                          DamageType.Fire => MagicAttributeKind.FireResMaxP,
+                          _ => (MagicAttributeKind)(-1),
+                      };
+                      if ((int)resMaxKind >= 0 && target.states.TryGetValue(resMaxKind, out var resMax))
+                          targetResistMax += resMax.value1;
                     // Armor pool (PC m_*Armor.nValue[0]). Map AddDefenseV → physics armor alias.
-                    if (type == DamageType.Physics && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var armorDef))
-                        targetArmor = armorDef.value1;
-                }
+                      if (type == DamageType.Physics && target.states.TryGetValue(MagicAttributeKind.AddDefenseV, out var armorDef))
+                          targetArmor = armorDef.value1;
+                      // PC KNpcAttribModify::{Melee,Range}DamageReturnP accumulate into the
+                      // corresponding percent pools consumed by KNpc::CalcDamage.
+                      if (target.states.TryGetValue(MagicAttributeKind.MeleeDamageReturnP, out var meleeReturn))
+                          meleeReturnPercent += meleeReturn.value1;
+                      if (target.states.TryGetValue(MagicAttributeKind.RangeDamageReturnP, out var rangeReturn))
+                          rangeReturnPercent += rangeReturn.value1;
+                  }
 
                 // PC: KHÔNG pin rolledOverride → để DamageFormulaService random roll (KNpc.cpp:2466).
                 var result = _damage.Compute(
@@ -587,11 +957,24 @@ namespace VLTK.Sandbox
                         resist = targetResist,
                         resistMax = targetResistMax,
                         armor = targetArmor,
-                        currentMana = target.currentMana,
-                        series = target.faction.GetFactionSeries(),
-                        fiveElementsResist = 0
-                    });
-                target.currentLife = Mathf.Max(0, target.currentLife - result.finalDamage);
+                          currentMana = target.currentMana,
+                          series = target.faction.GetFactionSeries(),
+                          fiveElementsResist = 0,
+                          meleeDmgRetPercent = meleeReturnPercent,
+                          rangeDmgRetPercent = rangeReturnPercent
+                      });
+                  // PC KNpc.cpp:2669-2678 applies the ATTACKER's returnres_p after the
+                  // defender computes reflected melee/range damage.
+                  if (caster?.states != null &&
+                      caster.states.TryGetValue(MagicAttributeKind.ReturnResP, out var returnRes) &&
+                      returnRes.value1 != 0)
+                  {
+                      if (result.meleeReturnDamage != 0)
+                          result.meleeReturnDamage -= result.meleeReturnDamage * returnRes.value1 / DamageFormulaService.MaxPercent;
+                      if (result.rangeReturnDamage != 0)
+                          result.rangeReturnDamage -= result.rangeReturnDamage * returnRes.value1 / DamageFormulaService.MaxPercent;
+                  }
+                  target.currentLife = Mathf.Max(0, target.currentLife - result.finalDamage);
                 // Reflect damage về caster (PC KNpc.cpp:2648-2679) — áp ngay lên caster HP.
                 if (isMelee && result.meleeReturnDamage > 0 && caster != null)
                     caster.currentLife = Mathf.Max(0, caster.currentLife - result.meleeReturnDamage);
@@ -612,12 +995,18 @@ namespace VLTK.Sandbox
 
         // [CaiBang-slistcache 2026-07-15] PC gaibang.lua::gaibang120 (skill 714) 'autoattackskill'
         // passive proc config: when bearer is hit, roll proc% → cast targetSkill on attacker + cooldown.
-        // autoattackskill[0]=720*256+N → targetSkill=720. [2]=12*18*256+N → cooldownTicks=216 (12s), proc%=N.
-        // slistcache autoattackskill[3]: {1,1},{20,10},{21,10} (mobile cũ {1,1},{15,5},{20,6}).
-        private const int AutoAttackSkillBearerId = 714;
-        private const int AutoAttackTargetSkillId = 720;
-        private const int AutoAttackCooldownTicks = 12 * 18; // PC 216 ticks (12s @ 18fps)
-        private static int AutoAttackProcPercent(int level) => Mathf.RoundToInt(Mathf.Lerp(1f, 10f, Mathf.InverseLerp(1f, 20f, level)));
+          // autoattackskill[1]=720*256+N → target skill/level.
+          // autoattackskill[3]=12*18*256+N → cooldownTicks=216 and proc%=N.
+          private const int AutoAttackSkillBearerId = 714;
+          private const int AutoAttackTargetSkillId = 720;
+          private const int AutoAttackCooldownTicks = 12 * 18;
+          private static readonly List<PcCaiBangLuaLevelService.LuaPoint> AutoAttackRatePoints = new()
+          {
+              new PcCaiBangLuaLevelService.LuaPoint(1, 1, "Line"),
+              new PcCaiBangLuaLevelService.LuaPoint(15, 5, "Line"),
+              new PcCaiBangLuaLevelService.LuaPoint(20, 6, "Line"),
+              new PcCaiBangLuaLevelService.LuaPoint(21, 6, "Line"),
+          };
 
         private void ProcessAutoAttackProcs(CombatActorState attacker, CombatActorState bearer, CombatCastReport report)
         {
@@ -632,17 +1021,23 @@ namespace VLTK.Sandbox
             if (!tookHit) return;
             // Bearer must have learned the passive 714.
             if (!bearer.skillLevels.TryGetValue(AutoAttackSkillBearerId, out int lvl) || lvl <= 0) return;
-            // PC: 12s cooldown on the passive itself (KNpc::AutoDoSkill SetNextCastTime(714, +nDelay)).
-            if (_nextCastTime.TryGetValue((bearer.actorId, AutoAttackSkillBearerId), out int next) && CurrentTime < next)
-                return;
-            int procPct = AutoAttackProcPercent(lvl);
-            if (_damage.RollPercent != null && !_damage.RollPercent(procPct)) return;
-            // PC: cast skill 720 on the attacker — apply its debuff states to attacker.
-            if (_catalog.Resolve(AutoAttackTargetSkillId) is { } debuff && debuff.GetPcLevelData(lvl) is { } debuffData)
-            {
-                ApplyStates(bearer, attacker, CombatRelation.Enemy, debuffData, report);
-            }
-            _nextCastTime[(bearer.actorId, AutoAttackSkillBearerId)] = CurrentTime + AutoAttackCooldownTicks;
+              // Canonical server gaibang.lua encodes 720*256+level in slot 1 and
+              // 12*18*256+rate in slot 3. The repo-local client Lua is an older 1→10
+              // revision, so this runtime slice pins the authoritative server points.
+              int targetSkillId = AutoAttackTargetSkillId;
+              int targetSkillLevel = Mathf.Clamp(lvl, 1, 21);
+              int cooldownTicks = AutoAttackCooldownTicks;
+              int procPct = Mathf.FloorToInt(PcCaiBangLuaLevelService.Link(lvl, AutoAttackRatePoints));
+              // PC KNpc::AutoDoSkill allows the proc only when nextCastTime < currentTime.
+              if (_nextCastTime.TryGetValue((bearer.actorId, AutoAttackSkillBearerId), out int next) && CurrentTime <= next)
+                  return;
+              if (_damage.RollPercent != null && !_damage.RollPercent(procPct)) return;
+              // PC: cast skill 720 on the attacker — apply its debuff states to attacker.
+              if (_catalog.Resolve(targetSkillId) is { } debuff && debuff.GetPcLevelData(targetSkillLevel) is { } debuffData)
+              {
+                  ApplyStates(bearer, attacker, CombatRelation.Enemy, debuff, targetSkillLevel, debuffData, report);
+              }
+              _nextCastTime[(bearer.actorId, AutoAttackSkillBearerId)] = CurrentTime + cooldownTicks;
         }
 
         // PC: cộng state buff vào min/max (PC KNpcAttribModify::Add*DamageV + EnhanceP).
@@ -664,7 +1059,7 @@ namespace VLTK.Sandbox
         //   - TianWang 40 (PC MslsForm=11 thrust + multi-thrust)
         // Sau fix: cho phép cả Missiles và Melee spawn child. Mỗi Melee skill vẫn cần set childSkillId/childSkillNum
         //   riêng (xem catalog fix đợt này cho 9 TianWang active).
-        private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report, int forcedSkillLevel = 0)
+        private void SpawnProjectiles(SkillDefinition skill, CombatActorState caster, Vector2 targetPoint, ObstacleGrid grid, CombatCastReport report, int forcedSkillLevel = 0, Vector2? projectileOrigin = null)
         {
             // [SECT-QUICKWIN] §2.2.2 G2: allow cả Missiles và Melee (TianWang multi-hit pattern).
             if (skill.skillStyle != PcSkillStyle.Missiles && skill.skillStyle != PcSkillStyle.Melee) return;
@@ -708,7 +1103,7 @@ namespace VLTK.Sandbox
                     startSkillId = skill.startSkillId,  // propagate để mỗi child trigger start
                     startSkillLevel = skill.startSkillLevel,
                 };
-                var origin = child.skillId == 195 ? targetPoint : caster.position;
+                var origin = child.skillId == 195 ? targetPoint : projectileOrigin ?? caster.position;
                 var result = _projectiles.Cast(child, origin, targetPoint, grid);
                 if (!result.success)
                 {
@@ -779,15 +1174,14 @@ namespace VLTK.Sandbox
             foreach (var ally in AllyFinder(center, skill.attackRadius))
             {
                 if (ally == null || ally == caster || ally.currentLife <= 0) continue;
-                if (ally.states == null) continue;
-                foreach (var attr in data.state)
+                if (ally.ApplySkillStateSource(ally.actorId, skill.skillId, report.skillLevel, data.state))
                 {
-                    ally.states[attr.kind] = attr;
-                    report.appliedState.Add(attr);
+                    foreach (var attr in data.state)
+                        report.appliedState.Add(attr);
                 }
                 foreach (var attr in data.immediate)
                 {
-                    ally.states[attr.kind] = attr;
+                    ally.ApplyCompatibilityState(attr);
                     report.appliedState.Add(attr);
                 }
             }

@@ -903,11 +903,7 @@ namespace VLTK.UI
                         {
                             persistentPlayer.combat.currentLife = caster.currentLife;
                             persistentPlayer.combat.currentMana = caster.currentMana;
-                            persistentPlayer.combat.states.Clear();
-                            foreach (var kvp in caster.states)
-                            {
-                                persistentPlayer.combat.states[kvp.Key] = kvp.Value;
-                            }
+                            persistentPlayer.combat.CopyStateSourcesFrom(caster);
                         }
 
                         if (target != null && targetActor != null)
@@ -917,11 +913,7 @@ namespace VLTK.UI
                             {
                                 persistentTarget.combat.currentLife = targetActor.currentLife;
                                 persistentTarget.combat.currentMana = targetActor.currentMana;
-                                persistentTarget.combat.states.Clear();
-                                foreach (var kvp in targetActor.states)
-                                {
-                                    persistentTarget.combat.states[kvp.Key] = kvp.Value;
-                                }
+                                persistentTarget.combat.CopyStateSourcesFrom(targetActor);
                             }
                         }
 
@@ -959,9 +951,11 @@ namespace VLTK.UI
                         var collisionMissiles = skill.byMissile && report.projectiles != null
                             ? report.projectiles.FindAll(projectile => projectile.skillId == skill.childSkillId)
                             : null;
-                        System.Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null;
-                        if (collisionMissiles != null && collisionMissiles.Count > 0)
-                        {
+                            System.Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null;
+                            System.Action<ActiveSkillEffect, int, Vector2> onMissileFly = null;
+                            System.Action<ActiveSkillEffect, int, Vector2> onMissileVanish = null;
+                          if (collisionMissiles != null && collisionMissiles.Count > 0)
+                          {
                             onMissileCollided = (_, missileIndex, collisionPoint) =>
                             {
                                 if (missileIndex < 0 || missileIndex >= collisionMissiles.Count || targetActor == null)
@@ -974,14 +968,51 @@ namespace VLTK.UI
                                         caster, targetActor, report, collisionMissiles[missileIndex], collisionPoint))
                                     return;
 
-                                ApplyProjectileCollisionResult(
-                                    manager, effectService, catalog, combatRuntime, caster, target, targetActor,
-                                    report, collisionPoint, damageCountBefore, projectileCountBefore, targetLifeBefore);
-                            };
-                        }
+                                  ApplyProjectileCollisionResult(
+                                      manager, effectService, catalog, combatRuntime, caster, target, targetActor,
+                                      report, collisionPoint, damageCountBefore, projectileCountBefore, targetLifeBefore);
+                              };
+                                onMissileFly = (fx, missileIndex, eventPoint) =>
+                              {
+                                  if (fx == null || missileIndex < 0 || missileIndex >= collisionMissiles.Count || targetActor == null)
+                                      return;
+                                  int interval = fx.pcFlyEventIntervalTicks;
+                                  int ordinal = interval > 0
+                                      ? Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f / interval)
+                                      : 0;
+                                  int damageCountBefore = report.damageResults?.Count ?? 0;
+                                  int projectileCountBefore = report.projectiles?.Count ?? 0;
+                                  int targetLifeBefore = targetActor.currentLife;
+                                  if (!combatRuntime.TryResolveProjectileFly(
+                                          caster, targetActor, report, collisionMissiles[missileIndex], ordinal, eventPoint))
+                                      return;
+                                    ApplyProjectileCollisionResult(
+                                        manager, effectService, catalog, combatRuntime, caster, target, targetActor,
+                                        report, eventPoint, damageCountBefore, projectileCountBefore, targetLifeBefore);
+                                };
+                                onMissileVanish = (_, missileIndex, eventPoint) =>
+                                {
+                                    if (missileIndex < 0 || missileIndex >= collisionMissiles.Count || targetActor == null)
+                                        return;
+                                    int damageCountBefore = report.damageResults?.Count ?? 0;
+                                    int projectileCountBefore = report.projectiles?.Count ?? 0;
+                                    int targetLifeBefore = targetActor.currentLife;
+                                    if (!combatRuntime.TryResolveProjectileVanish(
+                                            caster, targetActor, report, collisionMissiles[missileIndex], eventPoint))
+                                        return;
+                                    ApplyProjectileCollisionResult(
+                                        manager, effectService, catalog, combatRuntime, caster, target, targetActor,
+                                        report, eventPoint, damageCountBefore, projectileCountBefore, targetLifeBefore);
+                                };
+                            }
 
-                        var fx = effectService?.PlaySkillCast(
-                            skill, casterPos, targetPos, report.skillLevel, currentTargetPos, onMissileCollided);
+                          var fx = effectService?.PlaySkillCast(
+                              skill, casterPos, targetPos, report.skillLevel, currentTargetPos, onMissileCollided);
+                            if (fx != null)
+                            {
+                                fx.onMissileFlyEvent = onMissileFly;
+                                fx.onMissileVanishEvent = onMissileVanish;
+                            }
                         if (!skill.byMissile && target != null && target.enemyBehaviour != null && targetActor != null)
                             StartCoroutine(ApplyLiveEnemyHpAtImpact(target, targetActor.currentLife, skillId, report.skillLevel, report, fx));
 
@@ -1328,13 +1359,7 @@ namespace VLTK.UI
                 actor.maxLife = persistentPlayer.combat.maxLife;
                 actor.currentMana = persistentPlayer.combat.currentMana;
                 actor.maxMana = persistentPlayer.combat.maxMana;
-                if (persistentPlayer.combat.states != null)
-                {
-                    foreach (var kvp in persistentPlayer.combat.states)
-                    {
-                        actor.states[kvp.Key] = new SkillMagicAttribute(kvp.Value.kind, kvp.Value.value1, kvp.Value.value2, kvp.Value.value3);
-                    }
-                }
+                actor.CopyStateSourcesFrom(persistentPlayer.combat);
             }
 
             foreach (var id in progression.knownSkills)
@@ -1345,7 +1370,45 @@ namespace VLTK.UI
             if (skill != null && (!actor.skillLevels.ContainsKey(skill.skillId) || actor.skillLevels[skill.skillId] <= 0))
                 actor.skillLevels[skill.skillId] = 1;
 
+            // CopyStateSourcesFrom imports legacy flattened state through compatibility ownership
+            // when old persistent actors have no nodes. Passives replace only their own nodes.
+            if (persistentPlayer == null || persistentPlayer.combat == null)
+                actor.ImportLegacyStates();
+            MaterializePassiveStates(actor, _catalog ?? manager?.CombatSkillCatalog);
+
             return actor;
+        }
+
+        // Learned passives become permanent nodes. Their contribution stays separate from
+        // temporary casts and legacy compatibility state, so load/materialize never double-adds it.
+        internal static void MaterializePassiveStates(CombatActorState actor, SkillCatalog catalog)
+        {
+            if (actor == null || catalog == null) return;
+            var learnedPassives = new HashSet<int>();
+            foreach (var knownId in actor.knownSkills)
+            {
+                var passive = catalog.Resolve(knownId);
+                if (passive == null || passive.skillStyle != PcSkillStyle.PassivityNpcState) continue;
+                learnedPassives.Add(knownId);
+                if (!actor.skillLevels.TryGetValue(knownId, out int level) || level <= 0) level = 1;
+                var data = passive.GetPcLevelData(level);
+                actor.ApplySkillStateSource(actor.actorId, knownId, level, data?.state, isPermanentPassive: true, forceReplace: true);
+            }
+            actor.RemoveMissingPassiveSources(learnedPassives);
+        }
+
+        /// <summary>
+        /// Existing save format remains flattened, but only non-passive nodes cross it.
+        /// Hydration imports that projection through compatibility ownership before passives rebuild.
+        /// </summary>
+        internal static void PersistStatesWithoutPassiveContributions(
+            CombatActorState actor,
+            SkillCatalog catalog,
+            Dictionary<MagicAttributeKind, SkillMagicAttribute> destination)
+        {
+            if (destination == null) return;
+            destination.Clear();
+            actor?.CopyNonPassiveStateProjectionTo(destination);
         }
 
         private CombatActorState CreateTargetActor(CombatTargetInfo target)
@@ -1360,6 +1423,7 @@ namespace VLTK.UI
             };
 
             var manager = SandboxManager.Instance;
+            bool copiedPersistentSourceNodes = false;
             if (manager != null && manager.GameplayLoop != null)
             {
                 var persistentTarget = manager.GameplayLoop.GetActor(target.enemyId);
@@ -1369,16 +1433,13 @@ namespace VLTK.UI
                     actor.maxLife = persistentTarget.combat.maxLife;
                     actor.currentMana = persistentTarget.combat.currentMana;
                     actor.maxMana = persistentTarget.combat.maxMana;
-                    if (persistentTarget.combat.states != null)
-                    {
-                        foreach (var kvp in persistentTarget.combat.states)
-                        {
-                            actor.states[kvp.Key] = new SkillMagicAttribute(kvp.Value.kind, kvp.Value.value1, kvp.Value.value2, kvp.Value.value3);
-                        }
-                    }
+                    actor.CopyStateSourcesFrom(persistentTarget.combat);
+                    copiedPersistentSourceNodes = true;
                 }
             }
 
+            if (!copiedPersistentSourceNodes)
+                actor.ImportLegacyStates();
             return actor;
         }
     }

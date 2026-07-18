@@ -1,0 +1,25 @@
+{
+    "name": "VLTK.Tests.PortData.EditMode",
+    "rootNamespace": "VLTK.Tests",
+    "references": [
+        "UnityEngine.TestRunner",
+        "UnityEditor.TestRunner",
+        "VLTK.Model",
+        "VLTK.PortData"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "nunit.framework.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [
+        "VLTK_ENABLE_TESTS"
+    ],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -68,7 +68,8 @@ namespace VLTK.Sandbox
             },
             [CombatFactionExt.CaiBangId] = new()
             {
-                [117] = new[] { (1, 320), (20, 384) },
+                  // Skill 117 has empty canonical PC LvlData; do not inherit the old
+                  // yanmen_tuobo radius curve. Runtime must fail closed to its catalog row.
                 [119] = new[] { (1, 320), (20, 384) },
                 [122] = new[] { (1, 320), (20, 384) },
                 [125] = new[] { (1, 448), (20, 512) },

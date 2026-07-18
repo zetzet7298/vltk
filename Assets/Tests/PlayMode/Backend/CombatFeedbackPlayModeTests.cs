@@ -53,9 +53,12 @@ namespace VLTK.Tests.PlayMode.Backend
             _view = _go.AddComponent<CombatFeedbackView>();
             _shake = _go.AddComponent<CameraShake>();
 
-            // Disable auto-run + giảm rounds để test nhanh
+            // Disable auto-run + giảm rounds để test nhanh. Giữ
+            // runCombatDemoOnComplete=true (mặc định production) để
+            // StartFullFlowAsync chain sang RunCombatDemoAsync — nếu không,
+            // IsCombatDemoCompleted sẽ không bao giờ true.
             _runner.runOnStart = false;
-            _runner.runCombatDemoOnComplete = false;
+            _runner.runCombatDemoOnComplete = true;
             _runner.combatDemoRounds = 3;
             _runner.critChance = 0f;  // 0% crit
             _runner.missChance = 0f;  // 0% miss → mọi event là Normal

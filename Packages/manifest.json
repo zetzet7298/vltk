@@ -2,6 +2,7 @@
   "dependencies": {
     "com.antigravity.ide": "https://github.com/billythekidz/UnityAntigravityIDE.git",
     "com.coplaydev.unity-mcp": "https://github.com/CoplayDev/unity-mcp.git?path=/MCPForUnity#main",
+    "com.handzlikchris.fastscriptreload": "https://github.com/handzlikchris/FastScriptReload.git?path=Assets#1.8",
     "com.unity.2d.pixel-perfect": "6.0.0",
     "com.unity.2d.psdimporter": "15.0.0",
     "com.unity.2d.sprite": "1.0.0",

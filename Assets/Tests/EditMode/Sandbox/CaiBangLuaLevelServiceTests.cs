@@ -124,20 +124,25 @@ namespace VLTK.Tests.Sandbox
             Assert.Greater(rangeL20.max, rangeL20.min, "L20 max > min → range damage confirmed");
         }
 
-        // --- Test 7: all Cái Bang skills have skill_attackradius ---
+        // --- Test 7: all Cái Bang skills with PC LvlData have skill_attackradius ---
         [Test]
-        public void Reads_All_24_CaiBang_Skills_Have_Skill_AttackRadius()
+        public void Reads_All_CaiBang_Skills_With_PcLvlData_Have_Skill_AttackRadius()
         {
-            // Bước 6 prompt: 24 skill Cái Bang. Mỗi skill có skill_attackradius trong gaibang.lua
+            // Bước 6 prompt: skill Cái Bang. Mỗi skill có skill_attackradius trong gaibang.lua
             // hoặc fallback default (320) nếu passive. Kiểm tra service trả về radius > 0 cho
             // mọi skillId active trong catalog.
-            int[] activeSkills = { 117, 119, 122, 125, 128, 357, 359, 1073, 1074, 1539 };
+            // [CaiBang-FailClosed117 2026-07-17] 117 (Đầu Thạch Vấn Lộ) removed: PC skills.txt row 117
+            //   LvlData1="skill_cost_v" only — no skill_attackradius curve. It fails closed (returns 0).
+            int[] activeSkills = { 119, 122, 125, 128, 357, 359, 1073, 1074, 1539 };
             foreach (int id in activeSkills)
             {
                 int r = PcCaiBangLuaLevelService.GetAttackRadius(id, 20);
                 Assert.Greater(r, 0, $"skill {id} must have positive attack radius at L20");
                 Assert.GreaterOrEqual(r, 320, $"skill {id} radius at L20 must be >= 320 (PC min)");
             }
+            // 117 fail-closed: no PC LvlData radius curve -> sentinel 0 (caller falls through to catalog).
+            Assert.AreEqual(0, PcCaiBangLuaLevelService.GetAttackRadius(117, 20),
+                "117 has no PC LvlData radius; lua service fails closed (returns 0)");
         }
 
         // --- Test 8: unknown skillId returns 0 (no data, caller falls through) ---
@@ -150,6 +155,18 @@ namespace VLTK.Tests.Sandbox
             // Callers check `> 0` before using, falling back to engine/catalog value.
             int r = PcCaiBangLuaLevelService.GetAttackRadius(unknown, 20);
             Assert.AreEqual(0, r, "unknown skill must return 0 sentinel (caller falls through to engine value)");
+        }
+
+        [Test]
+        public void Parser_EvaluatesLiteralMultiplicationInCanonicalLevelPoints()
+        {
+            const string lua = "SKILLS={probe={missle_lifetime_v={{{1,18},{20,18*2},{21,36/1}}}}}";
+            var parsed = PcCaiBangLuaLevelService.ParseGaibangText(lua);
+            var points = parsed["probe"]["missle_lifetime_v"][0];
+
+            Assert.AreEqual(18f, points[0].Value);
+            Assert.AreEqual(36f, points[1].Value);
+            Assert.AreEqual(36f, points[2].Value);
         }
     }
 }

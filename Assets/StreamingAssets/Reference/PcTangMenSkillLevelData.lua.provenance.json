@@ -1,0 +1,29 @@
+{
+  "schema": "vltk.canonical-lua-provenance/v1",
+  "description": "Byte-exact vendored copy of the canonical PC server TangMen level-data script. Runtime/tests consume these exact bytes; the factory builder and the level-data parity test are both derived from this source.",
+  "source": {
+    "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/skill/tangmen.lua",
+    "bytes": 23902,
+    "sha256": "3f2e7c2aba8329508adab3a6293f41be29a0d68a8d63ac5a34903bece0578c90",
+    "selection_rationale": "lvlSetScript for every TangMen skill in PcTangMenSkills.txt is \\script\\skill\\tangmen.lua; the evidenced canonical root for TangMen membership is /var/www/jx-source/01_tinh_kiem_source (same tree family as the hash-pinned Server skillbook.lua used by SKL-TM-PROOF-001). The bin/Server, bin/Server/Server, and bin/client copies under that root are byte-identical (sha256 3f2e7c2a...); the pak_unpacked/slistcache and repo cache/server_offline variants differ and are recorded as conflicting sources below."
+  },
+  "vendored": {
+    "path": "Assets/StreamingAssets/Reference/PcTangMenSkillLevelData.lua",
+    "bytes": 23902,
+    "sha256": "3f2e7c2aba8329508adab3a6293f41be29a0d68a8d63ac5a34903bece0578c90"
+  },
+  "conflicting_sources": [
+    {
+      "path": "/var/www/jx-source/pak_unpacked/slistcache/script/skill/tangmen.lua",
+      "sha256": "2d2ae4c6b5b657d4e5e5c040142493af3afe60970beb02f9c1ed35d249674b4b",
+      "bytes": 24354,
+      "note": "Different build revision; not the evidenced canonical root."
+    },
+    {
+      "path": "cache/server_offline/jxser/server1/script/skill/tangmen.lua",
+      "sha256": "276532ee1c3536f5c1741ac0fb9c924f3c32de1d2d0057ba154f8864f44c98e5",
+      "bytes": 22647,
+      "note": "Mobile shipped server_offline copy; a different build revision. Source conflict (documented, not silently resolved): for 19 of the 28 mapped skills the supported damage/state attributes are byte-identical to the vendored canonical source, but 9 skills have divergent supported-attr values -> 301 PoisonDamageV; 302 PhysicsEnhanceP/PoisonDamageV/SkillCostV; 339 PhysicsEnhanceP; 340 PhysicsEnhanceP; 341 DeadlyStrikeP/PhysicsEnhanceP/PoisonDamageV/SkillCostV; 342 DeadlyStrikeP/PhysicsEnhanceP/PoisonDamageV/SkillCostV; 351 ColdDamageV/FireDamageV/LightingDamageV/PhysicsDamageV/PoisonDamageV/SkillCostV; 352 same six; 1113 same six. The vendored jx-source canonical copy is selected per SKL-TM-PROOF-001 canonical-root evidence; the cache divergence is recorded as a source-conflict residual and must be reconciled before a PC-golden runtime claim."
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+    "name": "VLTK.PortData",
+    "rootNamespace": "VLTK.PortData",
+    "references": [
+        "VLTK.Core",
+        "VLTK.Model"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

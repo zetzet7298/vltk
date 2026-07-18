@@ -12,10 +12,11 @@ def parse_mcp_response(response_text):
     raise ValueError(f"Could not find data: line in response: {response_text}")
 
 class HttpMcpClient:
-    def __init__(self, base_url="http://127.0.0.1:8080"):
+    def __init__(self, base_url="http://127.0.0.1:8080", tool_timeout=60):
         self.base_url = f"{base_url}/mcp"
         self.session_id = None
         self.next_id = 1
+        self.tool_timeout = tool_timeout
 
     def connect(self):
         init_payload = {
@@ -91,7 +92,7 @@ class HttpMcpClient:
                 "mcp-session-id": self.session_id
             }
         )
-        with urllib.request.urlopen(req, timeout=60) as response:
+        with urllib.request.urlopen(req, timeout=self.tool_timeout) as response:
             body = response.read().decode('utf-8')
             res_json = parse_mcp_response(body)
             if "error" in res_json:

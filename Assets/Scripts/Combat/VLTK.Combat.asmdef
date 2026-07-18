@@ -1,0 +1,17 @@
+{
+    "name": "VLTK.Combat",
+    "rootNamespace": "VLTK.Sandbox",
+    "references": [
+        "VLTK.Model",
+        "VLTK.PortData"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

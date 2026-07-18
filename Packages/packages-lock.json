@@ -24,6 +24,13 @@
       },
       "hash": "c14de1e6dc01ab42d2bb358730cff954bce0ce6b"
     },
+    "com.handzlikchris.fastscriptreload": {
+      "version": "https://github.com/handzlikchris/FastScriptReload.git?path=Assets#1.8",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "99ea17853040062a42089cc53b815ca5b3debeb8"
+    },
     "com.unity.2d.common": {
       "version": "15.0.0",
       "depth": 1,

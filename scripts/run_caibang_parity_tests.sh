@@ -8,6 +8,7 @@ python3 scripts/run_sandbox_tests.py \
   VLTK.Tests.Sandbox.CaiBangCastSoundParityTests \
   VLTK.Tests.Sandbox.CaiBangCatalogCharAnimTests \
   VLTK.Tests.Sandbox.CaiBangCombatParityTests \
+  VLTK.Tests.Sandbox.CaiBangFirePoolParityTests \
   VLTK.Tests.Sandbox.CaiBangDogArrayTests \
   VLTK.Tests.Sandbox.CaiBangLuaLevelServiceTests \
   VLTK.Tests.Sandbox.CaiBangPhiLongCollisionAcceptanceTests \

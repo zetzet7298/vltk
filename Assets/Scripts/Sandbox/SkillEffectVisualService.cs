@@ -70,12 +70,29 @@ namespace VLTK.Sandbox
         /// Replaces hardcoded per-faction Configure*Visuals switch-cases.
         /// Flow: skill.childSkillId -> missile -> SPR paths + anim info + light color.
         /// </summary>
-        private void ConfigureDataDrivenVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
-        {
-            EnsureAutoMapperReady();
+          private void ConfigureDataDrivenVisuals(SkillDefinition skill, ActiveSkillEffect fx, int level)
+          {
+              EnsureAutoMapperReady();
+
+            if (PcTangMenLuaLevelService.Applies(skill.skillId))
+            {
+                fx.pcFlyEventEnabled = PcTangMenLuaLevelService.FlyEnabled(skill.skillId, level);
+                fx.pcFlyEventIntervalTicks = PcTangMenLuaLevelService.FlyInterval(skill.skillId, level);
+                fx.pcFlySkillId = PcTangMenLuaLevelService.FlySkillId(skill.skillId, level);
+            }
+            else if (skill.skillId == 1073 && skill.flySkillId == 1103 && skill.flyEventTime == 1)
+            {
+                // PC Skills.txt row 1073 emits child 1103 once per flying tick.
+                fx.pcFlyEventEnabled = true;
+                fx.pcFlyEventIntervalTicks = skill.flyEventTime;
+                fx.pcFlySkillId = skill.flySkillId;
+            }
 
             var config = _autoMapper.GetVisualConfig(skill);
             if (config == null) return;
+
+            int tangMenLifetimeTicks = PcTangMenLuaLevelService.MissileLifetime(skill.skillId, level);
+            int tangMenSpeedPerTick = PcTangMenLuaLevelService.MissileSpeed(skill.skillId, level);
 
             // Apply faction default color
             fx.color = config.lightColor;
@@ -123,10 +140,10 @@ namespace VLTK.Sandbox
             }
 
             // Stationary area effect (MoveKind=0)
-            if (config.isStationary)
-            {
-                if (config.HasFlightVisual)
-                {
+              if (config.isStationary)
+              {
+              if (config.HasFlightVisual)
+              {
                     var key = PcSkillVisualAutoMapper.SprPathToKey(config.flightSprPath);
                     SetupPcStationaryEffect(fx, key,
                         config.flightFrames,
@@ -134,17 +151,21 @@ namespace VLTK.Sandbox
                         System.Math.Max(1, config.flightIntervalTicks),
                         config.lightColor);
                 }
-                else if (config.HasExplodeVisual)
+                  else if (config.HasExplodeVisual)
                 {
                     var key = PcSkillVisualAutoMapper.SprPathToKey(config.explodeSprPath);
                     SetupPcStationaryEffect(fx, key,
                         config.explodeFrames,
                         System.Math.Max(1, config.explodeDirections),
                         System.Math.Max(1, config.explodeIntervalTicks),
-                        config.lightColor);
-                }
-                return;
-            }
+                          config.lightColor);
+                  }
+                  if (tangMenLifetimeTicks > 0)
+                      ApplyPcStationaryLifetime(fx, tangMenLifetimeTicks);
+                  if (fx.pcFlyEventEnabled)
+                      fx.missileFlyEventOrdinals = new int[1];
+                  return;
+              }
 
             // Flight missile visual
             if (config.HasFlightVisual)
@@ -162,20 +183,22 @@ namespace VLTK.Sandbox
                     int luaSpeed = PcCaiBangLuaLevelService.GetMissileSpeed(skill.skillId, level);
                     if (luaSpeed > 0) missileSpeed = luaSpeed;
                 }
+                if (tangMenSpeedPerTick > 0) missileSpeed = tangMenSpeedPerTick;
+                int missileLifetime = tangMenLifetimeTicks > 0 ? tangMenLifetimeTicks : config.missileLifetime;
 
-                SetupPcMissile(fx,
+                  SetupPcMissile(fx,
                     flightKey,
                     config.flightFrames,
                     System.Math.Max(1, config.flightDirections),
                     System.Math.Max(1, config.flightIntervalTicks),
                     missileSpeed,
-                    config.missileLifetime,
+                    missileLifetime,
                     explodeKey,
                     config.explodeFrames,
                     System.Math.Max(1, config.explodeDirections),
                     System.Math.Max(1, config.explodeIntervalTicks),
-                    config.lightColor);
-                fx.pcMissileMoveKind = config.moveKind;
+                      config.lightColor);
+                  fx.pcMissileMoveKind = config.moveKind;
 
 
                 // PC gaibang.lua: Single-form or fan-spread skills with skill_misslenum_v > 1 use dynamic spread.
@@ -211,7 +234,7 @@ namespace VLTK.Sandbox
                 }
 
                 // Multi-missile spread for other fan/surround forms
-                if (!luaSpreadConfigured && (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround || skill.missileForm == SkillMissileForm.Zone))
+                  if (!luaSpreadConfigured && (skill.missileForm == SkillMissileForm.Fan || skill.missileForm == SkillMissileForm.Surround || skill.missileForm == SkillMissileForm.Zone))
                 {
                     int count = System.Math.Max(1, skill.childSkillNum);
                     if (skill.missileForm == SkillMissileForm.Surround)
@@ -219,9 +242,11 @@ namespace VLTK.Sandbox
                     else if (skill.missileForm == SkillMissileForm.Zone)
                         SetupPcZoneMissiles(fx, count, skill.attackRadius);
                     else
-                        SetupPcCircleOutwardMissiles(fx, count);
-                }
-                return;
+                          SetupPcCircleOutwardMissiles(fx, count);
+                  }
+                  if (fx.pcFlyEventEnabled && fx.missileCount > 0)
+                      fx.missileFlyEventOrdinals = new int[fx.missileCount];
+                  return;
             }
 
             // Explosion-only (no flight) — common for buff/aura skills
@@ -348,7 +373,7 @@ namespace VLTK.Sandbox
                 startTime = Time.time,
                 phase = SkillEffectPhase.PreCast,
             };
-            effect.onMissileCollided = onMissileCollided;
+              effect.onMissileCollided = onMissileCollided;
 
             // Phase durations based on PC skill data
             // PC parity [2026-06-19]: PreCast = PC WaitTime (Skills.txt col 25) / 16f seconds.
@@ -377,7 +402,7 @@ namespace VLTK.Sandbox
             effect.missileDuration = effect.missileDistance / Mathf.Max(0.1f, effect.missileSpeed);
             effect.currentMissilePos = casterPos;
             // PC data-driven visual: auto-resolve from missles1.txt
-            ConfigureDataDrivenVisuals(skill, effect, skillLevel);
+              ConfigureDataDrivenVisuals(skill, effect, skillLevel);
             // [CaiBang-SoundParity 2026-06-18] PC KSkill::Cast fires the SKILL cast sound
             // (skills.txt col 7 ManCastSnd / col 8 FMCastSnd) at the cast frame, BEFORE
             // the missile spawns. This is distinct from the missile status sounds
@@ -415,9 +440,10 @@ namespace VLTK.Sandbox
             _activeEffects.Add(effect);
             effect.getCurrentTargetPos = getCurrentTargetPos;
 
-            if (effect.missileCount > 0)
-            {
-                effect.missileExplodeStartTime = new float[effect.missileCount];
+              if (effect.missileCount > 0)
+              {
+                  effect.missileExplodeStartTime = new float[effect.missileCount];
+                  effect.missileVanishEventFired = new bool[effect.missileCount];
                 for (int midx = 0; midx < effect.missileCount; midx++)
                     effect.missileExplodeStartTime[midx] = -1f;
 
@@ -493,21 +519,31 @@ namespace VLTK.Sandbox
                             allArrived = Vector2.Distance(fx.currentMissilePos, fx.ResolveMissileTarget(-1)) <= fx.arrivalRadius;
                         }
 
-                        bool timeout = (fx.elapsed - fx.phaseStart) >= fx.missileDuration * 1.5f;
-                        if (allArrived || timeout)
-                        {
-                            fx.phase = SkillEffectPhase.Impact;
+                          bool timeout = (fx.elapsed - fx.phaseStart) >= fx.missileDuration * 1.5f;
+                          if (allArrived || timeout)
+                          {
+                              TriggerVanishEvents(fx);
+                              fx.phase = SkillEffectPhase.Impact;
                             fx.phaseStart = fx.elapsed;
                         }
                         break;
 
 
-                    case SkillEffectPhase.Impact:
-                        if (fx.elapsed - fx.phaseStart >= fx.impactDuration)
-                        {
-                            fx.phase = SkillEffectPhase.Finished;
-                        }
-                        break;
+                      case SkillEffectPhase.Impact:
+                      {
+                          // KMissle checks CurrentLife >= LifeTime before OnFly.
+                          // Stationary TangMen missiles use Impact phase as flight lifecycle.
+                          int stationaryLifeTick = Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f + 0.0001f);
+                          if (fx.pcStationaryLifetimeOverride && stationaryLifeTick >= fx.pcMissileLifeTicks)
+                          {
+                              fx.phase = SkillEffectPhase.Finished;
+                              break;
+                          }
+                          TriggerFlyEvents(fx);
+                          if (fx.elapsed - fx.phaseStart >= fx.impactDuration)
+                              fx.phase = SkillEffectPhase.Finished;
+                          break;
+                      }
                 }
 
                 if (fx.phase == SkillEffectPhase.Finished)
@@ -519,9 +555,10 @@ namespace VLTK.Sandbox
 
         public List<ActiveSkillEffect> GetActiveEffects() => new(_activeEffects);
 
-        private bool UpdateMultiMissile(ActiveSkillEffect fx, float dt)
-        {
-            if (fx.missilePositions == null)
+          private bool UpdateMultiMissile(ActiveSkillEffect fx, float dt)
+          {
+              TriggerFlyEvents(fx);
+              if (fx.missilePositions == null)
             {
                 // Single missile: velocity-based toward target
                 Vector2 liveTarget = fx.getCurrentTargetPos != null ? fx.getCurrentTargetPos() : fx.targetPos;
@@ -536,8 +573,8 @@ namespace VLTK.Sandbox
                 {
                     fx.currentMissilePos = fx.ResolveMissileTarget(-1);
                 }
-                return false;
-            }
+              return false;
+          }
 
             if (UsesPcFollowTickSimulation(fx))
             {
@@ -579,6 +616,37 @@ namespace VLTK.Sandbox
             }
             return false;
         }
+
+          private static void TriggerFlyEvents(ActiveSkillEffect fx)
+        {
+            if (!fx.pcFlyEventEnabled || fx.pcFlyEventIntervalTicks <= 0)
+                return;
+            int tick = Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f + 0.0001f);
+            int ordinal = tick / fx.pcFlyEventIntervalTicks;
+            if (ordinal <= 0 || fx.missileFlyEventOrdinals == null) return;
+            for (int i = 0; i < fx.missileFlyEventOrdinals.Length; i++)
+            {
+                if ((fx.missileArrived != null && i < fx.missileArrived.Length && fx.missileArrived[i]) ||
+                    ordinal <= fx.missileFlyEventOrdinals[i]) continue;
+                fx.missileFlyEventOrdinals[i] = ordinal;
+                  fx.onMissileFlyEvent?.Invoke(fx, i, fx.missilePositions != null && i < fx.missilePositions.Length
+                      ? fx.missilePositions[i] : fx.targetPos);
+              }
+          }
+
+          private static void TriggerVanishEvents(ActiveSkillEffect fx)
+          {
+              if (fx.onMissileVanishEvent == null || fx.missileVanishEventFired == null) return;
+              for (int i = 0; i < fx.missileVanishEventFired.Length; i++)
+              {
+                  if (fx.missileVanishEventFired[i]) continue;
+                  fx.missileVanishEventFired[i] = true;
+                  Vector2 point = fx.missilePositions != null && i < fx.missilePositions.Length
+                      ? fx.missilePositions[i]
+                      : fx.ResolveMissileTarget(i);
+                  fx.onMissileVanishEvent.Invoke(fx, i, point);
+              }
+          }
 
         private static bool UsesPcFollowTickSimulation(ActiveSkillEffect fx)
         {
@@ -794,6 +862,14 @@ namespace VLTK.Sandbox
             fx.missileCount = 0;
             fx.missileDuration = 0.01f;
             fx.impactDuration = (frames * Mathf.Max(1, intervalTicks)) / 18f;
+        }
+
+        private static void ApplyPcStationaryLifetime(ActiveSkillEffect fx, int lifeTicks)
+        {
+            fx.pcMissileLifeTicks = lifeTicks;
+            fx.missileDuration = lifeTicks / 18f;
+            fx.impactDuration = fx.missileDuration;
+            fx.pcStationaryLifetimeOverride = true;
         }
 
         private void SetupPcKangLongSpread(ActiveSkillEffect fx, int count, int angleStep64, int firstStep)
@@ -1014,6 +1090,7 @@ namespace VLTK.Sandbox
         public int pcImpactDirections;
         public int pcImpactIntervalTicks = 1;
         public int pcMissileMoveKind = 1;
+        public bool pcStationaryLifetimeOverride;
 
 
         // (pcAuraFrameStart/End kept as no-op fields for backward compat with SkillEffectWorldOverlay; not used in default data-driven visuals)
@@ -1027,7 +1104,14 @@ namespace VLTK.Sandbox
         public string castSoundPath;  // PC skills.txt ManCastSnd/FMCastSnd.
         public string flightSoundPath; // PC SndFile2/MS_DoFly, played per missile instance.
         public string impactSoundPath; // PC SndFile4/MS_DoCollision, played per collision.
-        public Action<ActiveSkillEffect, int, Vector2> onMissileCollided;
+            public Action<ActiveSkillEffect, int, Vector2> onMissileCollided;
+            public Action<ActiveSkillEffect, int, Vector2> onMissileFlyEvent;
+            public Action<ActiveSkillEffect, int, Vector2> onMissileVanishEvent;
+          public bool pcFlyEventEnabled;
+          public int pcFlyEventIntervalTicks;
+          public int pcFlySkillId;
+            public int[] missileFlyEventOrdinals;
+            public bool[] missileVanishEventFired;
 
         public static Vector2 ResolveMissileTarget(ActiveSkillEffect fx, int index)
         {

@@ -565,7 +565,10 @@ namespace VLTK.Core
                 "badstatustimereduce_v" => MagicAttributeKind.BadStatusTimeReduceV,
                 "addpoisondamage_v" => MagicAttributeKind.AddPoisonDamageV,
                 "addcolddamage_v" => MagicAttributeKind.AddColdDamageV,
-                "addfiremagic_v" or "addfiredamage_v" => MagicAttributeKind.AddFireDamageV,
+                // [CaiBang-FirePool 2026-07-17] PC has two distinct fire-add kinds (jx-source
+                //   KNpcAttribModify::AddFireMagicV vs AddFireDamageV). Do not conflate.
+                "addfiremagic_v" => MagicAttributeKind.AddFireMagicV,
+                "addfiredamage_v" => MagicAttributeKind.AddFireDamageV,
                 "addlightingmagic_v" or "addlightingdamage_v" => MagicAttributeKind.AddLightingDamageV,
                 "steallife_p" => MagicAttributeKind.StealLifeP,
                 "lifereplenish_v" => MagicAttributeKind.LifeReplenishV,

@@ -6,7 +6,8 @@
         "UnityEditor.TestRunner",
         "VLTK.Core",
         "VLTK.Model",
-        "VLTK.Sandbox",
+        "VLTK.Gameplay.Domain",
+        "VLTK.Sandbox.Runtime",
         "VLTK.Resources",
         "VLTK.Sprites",
         "VLTK.Backend"
