@@ -99,7 +99,16 @@ CREATE TABLE content_releases (
   lua_sandbox_policy_version text NOT NULL CHECK (length(lua_sandbox_policy_version) BETWEEN 1 AND 64),
   lua_host_api_whitelist jsonb NOT NULL CHECK (jsonb_typeof(lua_host_api_whitelist)='array' AND jsonb_array_length(lua_host_api_whitelist)>0),
   lua_host_api_whitelist_sha256 bytea NOT NULL CHECK (octet_length(lua_host_api_whitelist_sha256)=32),
-  manifest_sha256 bytea NOT NULL CHECK (octet_length(manifest_sha256)=32), signature bytea NOT NULL, signing_key_id text NOT NULL,
+  manifest_sha256 bytea NOT NULL CHECK (octet_length(manifest_sha256)=32),
+  content_digest_sha256 bytea NOT NULL CHECK (octet_length(content_digest_sha256)=32),
+  catalog_union_size integer NOT NULL DEFAULT 242 CHECK (catalog_union_size=242),
+  catalog_union_sha256 bytea NOT NULL CHECK (octet_length(catalog_union_sha256)=32),
+  runtime_skill_policy_id text NOT NULL CHECK (length(runtime_skill_policy_id) BETWEEN 1 AND 128),
+  runtime_skill_policy jsonb NOT NULL CHECK (jsonb_typeof(runtime_skill_policy)='object'
+    AND runtime_skill_policy->>'sourceTool'='vltktool'
+    AND runtime_skill_policy->>'filesystemFallbackAllowed'='false'
+    AND runtime_skill_policy->>'runtimeParityClaimed'='false'),
+  signature bytea NOT NULL, signing_key_id text NOT NULL,
   status text NOT NULL DEFAULT 'staged' CHECK (status IN ('staged','active','retired','rejected')),
   created_at timestamptz NOT NULL DEFAULT now(), activated_at timestamptz, retired_at timestamptz, created_by text NOT NULL,
   UNIQUE (realm_id,id), UNIQUE (realm_id,id,source_snapshot_id),
@@ -116,7 +125,7 @@ CREATE TABLE admission_tickets (
   ticket_hash bytea NOT NULL CHECK (octet_length(ticket_hash)=32), protocol_version text NOT NULL DEFAULT 'game.v1',
   session_epoch bigint NOT NULL CHECK (session_epoch>0), issued_at timestamptz NOT NULL DEFAULT now(),
   expires_at timestamptz NOT NULL, consumed_at timestamptz, revoked_at timestamptz,
-  reconnect_grace_seconds integer NOT NULL DEFAULT 30 CHECK (reconnect_grace_seconds=30),
+  reconnect_grace_seconds integer NOT NULL DEFAULT 15 CHECK (reconnect_grace_seconds=15),
   CHECK (expires_at>issued_at), UNIQUE (realm_id,id), UNIQUE (ticket_hash),
   FOREIGN KEY (realm_id,auth_session_id,account_id) REFERENCES auth_sessions(realm_id,id,account_id),
   FOREIGN KEY (realm_id,account_id) REFERENCES accounts(realm_id,id),
@@ -303,6 +312,29 @@ CREATE TABLE runtime_checkpoints (
   UNIQUE (realm_id,character_id,session_epoch,server_tick)
 );
 CREATE UNIQUE INDEX uq_current_checkpoint ON runtime_checkpoints(realm_id,character_id) WHERE superseded_at IS NULL;
+CREATE TABLE encounter_preload_acks (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), realm_id uuid NOT NULL, character_id uuid NOT NULL,
+  session_epoch bigint NOT NULL CHECK (session_epoch>0), encounter_id text NOT NULL CHECK (length(encounter_id) BETWEEN 1 AND 128),
+  content_release_id uuid NOT NULL, content_digest_sha256 bytea NOT NULL CHECK (octet_length(content_digest_sha256)=32),
+  skill_ids integer[] NOT NULL CHECK (array_length(skill_ids,1) IS NOT NULL),
+  outcome text NOT NULL CHECK (outcome IN ('ready','content_mismatch','unavailable')),
+  failure_code text, client_ready_tick bigint NOT NULL CHECK (client_ready_tick>=0),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  FOREIGN KEY (realm_id,character_id) REFERENCES characters(realm_id,id),
+  FOREIGN KEY (realm_id,content_release_id) REFERENCES content_releases(realm_id,id),
+  UNIQUE (realm_id,id), UNIQUE (realm_id,character_id,session_epoch,encounter_id)
+);
+CREATE TABLE combat_lifecycle_events (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(), realm_id uuid NOT NULL, character_id uuid NOT NULL,
+  session_epoch bigint NOT NULL CHECK (session_epoch>0), server_tick bigint NOT NULL CHECK (server_tick>=0),
+  event_kind text NOT NULL CHECK (event_kind IN ('cast_recovery_started','cast_recovery_ended','missile_fly_started','missile_collided','missile_vanished','status_refreshed','status_expired')),
+  combat_event_id text NOT NULL CHECK (length(combat_event_id) BETWEEN 1 AND 128),
+  content_release_id uuid NOT NULL, payload jsonb NOT NULL CHECK (jsonb_typeof(payload)='object'),
+  created_at timestamptz NOT NULL DEFAULT now(),
+  FOREIGN KEY (realm_id,character_id) REFERENCES characters(realm_id,id),
+  FOREIGN KEY (realm_id,content_release_id) REFERENCES content_releases(realm_id,id),
+  UNIQUE (realm_id,id), UNIQUE (realm_id,character_id,session_epoch,combat_event_id)
+);
 CREATE TABLE idempotency_keys (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(), realm_id uuid NOT NULL REFERENCES realms(id), actor_id uuid NOT NULL,
   operation text NOT NULL, idempotency_key text NOT NULL, request_hash bytea NOT NULL CHECK (octet_length(request_hash)=32),

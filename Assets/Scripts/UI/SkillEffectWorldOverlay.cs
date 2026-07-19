@@ -39,6 +39,13 @@ namespace VLTK.UI
 
         public int sortingOrder = 32000;
 
+        [Header("Golden capture isolation")]
+        [Tooltip("Named layer required by manual golden capture. Missing layer disables overlay creation instead of leaking onto Default.")]
+        public string skillFxLayerName = GoldenSnapshotCaptureDriver.SkillFxLayerName;
+        [Tooltip("Test/GM injection. -1 resolves skillFxLayerName.")]
+        public int skillFxLayerOverride = -1;
+
+        private bool _layerFailureLogged;
         private readonly Dictionary<ActiveSkillEffect, RuntimeEffectVisual> _visuals = new();
         private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
         // Per-key header center + per-frame offset (for PC body-aura frame-offset animation).
@@ -101,6 +108,7 @@ namespace VLTK.UI
 
             var service = SandboxManager.Instance?.SkillEffectVisual;
             if (service == null) return;
+            if (!TryResolveSkillFxLayer(out var skillFxLayer)) return;
 
             var active = service.GetActiveEffects();
             var stillActive = new HashSet<ActiveSkillEffect>(active);
@@ -109,7 +117,7 @@ namespace VLTK.UI
             {
                 if (!_visuals.TryGetValue(fx, out var visual))
                 {
-                    visual = CreateVisual(fx);
+                    visual = CreateVisual(fx, skillFxLayer);
                     _visuals[fx] = visual;
                 }
                 UpdateVisual(fx, visual);
@@ -130,9 +138,10 @@ namespace VLTK.UI
 
         // ── Factory ──────────────────────────────────────────────────────────
 
-        private RuntimeEffectVisual CreateVisual(ActiveSkillEffect fx)
+        private RuntimeEffectVisual CreateVisual(ActiveSkillEffect fx, int skillFxLayer)
         {
             var root = new GameObject($"SkillVFX_{fx.skillId}_{fx.skillName}");
+            root.layer = skillFxLayer;
             root.transform.SetParent(SandboxManager.Instance?.worldRoot, false);
 
             var ring = CreateLine(root.transform, "PreCastRing", loop: true);
@@ -178,6 +187,7 @@ namespace VLTK.UI
             preCastSr.color = Color.white;
             preCastSr.enabled = false;
 
+            StampLayerRecursively(root, skillFxLayer);
             return new RuntimeEffectVisual
             {
                 root = root,
@@ -194,6 +204,7 @@ namespace VLTK.UI
         private LineRenderer CreateLine(Transform parent, string name, bool loop)
         {
             var go = new GameObject(name);
+            go.layer = parent.gameObject.layer;
             go.transform.SetParent(parent, false);
             var line = go.AddComponent<LineRenderer>();
             line.material = new Material(_lineMaterial); // instance per-line to avoid shared state
@@ -209,6 +220,42 @@ namespace VLTK.UI
             // LineRenderer uses its own generated mesh; ensure the material has a white texture.
             line.material.mainTexture = Texture2D.whiteTexture;
             return line;
+        }
+
+        public static bool ShouldDrawFallbackPreCastRing(ActiveSkillEffect fx) =>
+            fx != null && !fx.isAura;
+
+        public static void StampLayerRecursively(GameObject root, int layer)
+        {
+            if (root == null) throw new System.ArgumentNullException(nameof(root));
+            if (layer < 0 || layer > 31) throw new System.ArgumentOutOfRangeException(nameof(layer));
+            root.layer = layer;
+            foreach (Transform child in root.transform)
+                StampLayerRecursively(child.gameObject, layer);
+        }
+
+        private bool TryResolveSkillFxLayer(out int layer)
+        {
+            try
+            {
+                if (skillFxLayerOverride != -1)
+                {
+                    layer = GoldenSnapshotCaptureDriver.ResolveSkillFxLayer(injectedLayer: skillFxLayerOverride);
+                    return true;
+                }
+                layer = GoldenSnapshotCaptureDriver.ResolveSkillFxLayer(skillFxLayerName);
+                return true;
+            }
+            catch (System.Exception ex)
+            {
+                layer = -1;
+                if (!_layerFailureLogged)
+                {
+                    _layerFailureLogged = true;
+                    SubsystemLog.Warn("Golden", $"Skill effect overlay disabled: {ex.Message}");
+                }
+                return false;
+            }
         }
 
         // ── Per-frame update ─────────────────────────────────────────────────
@@ -247,11 +294,12 @@ namespace VLTK.UI
                             Vector2 offset = GetPcAuraFrameWorldOffset(fx, frameIdx, 1f);
 
                             float yOffset = 0f;
-                            bool isMounted = false;
-                            var player = SandboxManager.Instance?.PlayerController;
-                            if (player != null && player.visual != null)
+                            bool isMounted = fx.hasStateSourceKey && fx.stateOwnerMounted;
+                            if (!fx.hasStateSourceKey)
                             {
-                                isMounted = player.visual.IsMounted;
+                                var player = SandboxManager.Instance?.PlayerController;
+                                if (player != null && player.visual != null)
+                                    isMounted = player.visual.IsMounted;
                             }
 
                             if (fx.stateAuraPos == 1) // Head
@@ -277,13 +325,10 @@ namespace VLTK.UI
                             break;
                         }
 
-                        float dur = Mathf.Max(0.05f, fx.auraDuration);
-                        float t = Mathf.Clamp01(fx.elapsed / dur);
-                        float pulse = 0.5f + 0.5f * Mathf.Sin(fx.elapsed * fx.auraPulseRate * Mathf.PI * 2f);
-                        var c = fx.color;
-                        c.a = Mathf.Lerp(0.85f, 0.15f, t) * Mathf.Lerp(0.55f, 1f, pulse);
-                        float r = Mathf.Max(1f, fx.auraRadius) * Mathf.Lerp(0.85f, 1.15f, pulse);
-                        DrawRing(v.preCastRing, fx.casterPos, r, c, lineW * 1.25f);
+                        // Exact PC aura art is source-owned. If the mapped SPR is absent,
+                        // fail closed instead of inventing a generic pulse ring.
+                        Hide(v.preCastRing);
+                        v.pcPreCast.enabled = false;
                         Hide(v.impactRing);
                         Hide(v.trail);
                         SetMissileVisible(v, false);
@@ -306,7 +351,7 @@ namespace VLTK.UI
                         // do not draw fake geometry. The visible PC missile starts at MS_DoFly.
                         Hide(v.preCastRing);
                     }
-                    else
+                    else if (ShouldDrawFallbackPreCastRing(fx))
                     {
                         float dur = Mathf.Max(fx.preCastDuration, minPreCastDuration);
                         float t = Mathf.Clamp01(fx.elapsed / dur);
@@ -314,6 +359,10 @@ namespace VLTK.UI
                         c.a = Mathf.Lerp(1f, 0.3f, t);
                         float r = Mathf.Lerp(preCastRMin, preCastRMax, t);
                         DrawRing(v.preCastRing, fx.casterPos, r, c, lineW);
+                    }
+                    else
+                    {
+                        Hide(v.preCastRing);
                     }
                     Hide(v.impactRing);
                     Hide(v.trail);
@@ -437,6 +486,7 @@ namespace VLTK.UI
                     if (t < flashWindow && v.impactFlash == null)
                     {
                         var flashGo = new GameObject("Flash");
+                        flashGo.layer = v.root.layer;
                         flashGo.transform.SetParent(v.root.transform, false);
                         var fsr = flashGo.AddComponent<SpriteRenderer>();
                         fsr.sprite = _dotSprite;
@@ -490,11 +540,11 @@ namespace VLTK.UI
             // nImageDir = rounded nDir from 64-dir space into nSprDir; nFramePerDir = totalFrames / nSprDir;
             // Homing direction comes from the last simulated PC tick. Do not point the
             // renderer at the live target before KMissle's 9-tick retarget cadence fires.
-            int dir = ComputePc16Dir(fromPos, targetPos);
-            int framePerDir = Mathf.Max(1, fx.pcMissileTotalFrames / Mathf.Max(1, fx.pcMissileDirections));
+            int pcDir64 = ComputePcDirection64(fromPos, targetPos);
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
-            int localFrame = (lifeTick / Mathf.Max(1, fx.pcMissileIntervalTicks)) % framePerDir;
-            int frameIndex = Mathf.Clamp(dir * framePerDir + localFrame, 0, sprites.Length - 1);
+            int frameIndex = ComputePcMissileFrameIndex(pcDir64, fx.pcMissileTotalFrames,
+                fx.pcMissileDirections, lifeTick, fx.pcMissileIntervalTicks);
+            frameIndex = Mathf.Clamp(frameIndex, 0, sprites.Length - 1);
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcMissileSpriteKey);
         }
 
@@ -504,7 +554,21 @@ namespace VLTK.UI
             if (sprites == null || sprites.Length == 0) return null;
             float time = timeSinceImpact >= 0f ? timeSinceImpact : (fx.elapsed - fx.phaseStart);
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt(time * 18f));
-            int frameIndex = Mathf.Clamp(lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks), 0, sprites.Length - 1);
+            int frameIndex;
+            if (fx.pcStationaryLifetimeOverride && fx.pcMissileLifeTicks > 0)
+            {
+                // PC LoopPlay=0 stationary rows stretch the finite SPR sequence over
+                // LifeTime rather than advancing one frame per simulation tick.
+                int frameCount = Mathf.Max(1, fx.pcImpactTotalFrames);
+                int clampedTick = Mathf.Clamp(lifeTick, 0, fx.pcMissileLifeTicks - 1);
+                frameIndex = Mathf.Min(frameCount - 1,
+                    Mathf.FloorToInt(clampedTick * (float)frameCount / fx.pcMissileLifeTicks));
+            }
+            else
+            {
+                frameIndex = lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks);
+            }
+            frameIndex = Mathf.Clamp(frameIndex, 0, sprites.Length - 1);
             return sprites[frameIndex] ?? FirstValidPcSprite(fx.pcImpactSpriteKey);
         }
 
@@ -608,10 +672,14 @@ namespace VLTK.UI
         /// </summary>
         private static Vector2 ResolveLiveCasterPos(ActiveSkillEffect fx)
         {
+            if (fx?.getCurrentTargetPos != null)
+                return fx.getCurrentTargetPos();
+            if (fx != null && fx.hasStateSourceKey)
+                return fx.targetPos;
             var player = SandboxManager.Instance?.PlayerController;
             if (player != null)
                 return (Vector2)player.transform.position;
-            return fx.casterPos;
+            return fx?.casterPos ?? Vector2.zero;
         }
 
         private Sprite[] LoadPcSprites(string key)
@@ -674,16 +742,35 @@ namespace VLTK.UI
             return sprites;
         }
 
-        private static int ComputePc16Dir(Vector2 from, Vector2 to)
+        // PC source path: g_GetDirIndex(...) yields nDir [0,63], then KMissleRes
+        // maps that raw value to SPR directions. Keep all 64 buckets until that map.
+        private static int ComputePcSpriteDirection(Vector2 from, Vector2 to, int spriteDirections)
+            => MapPc64Direction(ComputePcDirection64(from, to), spriteDirections);
+
+        private static int ComputePcDirection64(Vector2 from, Vector2 to)
+            => SkillEffectRenderer.ComputePcDirection64(from, to);
+
+        private static int ComputePcDirection64FromInts(int fromX, int fromY, int toX, int toY)
+            => SkillEffectRenderer.ComputePcDirection64FromInts(fromX, fromY, toX, toY);
+
+        // PC KMissleRes direction conversion: width=64/nSprDir; round half up; wrap.
+        private static int MapPc64Direction(int pcDir64, int spriteDirections)
         {
-            Vector2 d = to - from;
-            if (d.sqrMagnitude < 0.001f) return 0;
-            // Mobile world uses +X east, +Y north. PC missile SPR frames are stored with image direction
-            // opposite to the movement vector bucket (observed mag_gb_05 dragon heads point back to caster
-            // without this PC 16-dir half-turn). Offset by 8 buckets = 180°.
-            float angle = Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg; // 0=N, +90=E
-            int dir = (Mathf.RoundToInt(angle / 22.5f) + 8) & 15;
-            return dir;
+            int directions = Mathf.Max(1, spriteDirections);
+            int nDir = pcDir64 & 63;
+            int width = 64 / directions;
+            int imageDir = nDir / width;
+            if (nDir % width >= 32 / directions) imageDir++;
+            return imageDir % directions;
+        }
+
+        private static int ComputePcMissileFrameIndex(int pcDir64, int totalFrames,
+            int spriteDirections, int lifeTick, int intervalTicks)
+        {
+            int directions = Mathf.Max(1, spriteDirections);
+            int framePerDir = Mathf.Max(1, totalFrames / directions);
+            int localFrame = (Mathf.Max(0, lifeTick) / Mathf.Max(1, intervalTicks)) % framePerDir;
+            return MapPc64Direction(pcDir64, directions) * framePerDir + localFrame;
         }
 
         private void RenderRendFlashes(ActiveSkillEffect fx, RuntimeEffectVisual v)
@@ -700,6 +787,7 @@ namespace VLTK.UI
                 else
                 {
                     var rendGo = new GameObject("RendFlash");
+                    rendGo.layer = v.root.layer;
                     rendGo.transform.SetParent(v.root.transform, false);
                     sr = rendGo.AddComponent<SpriteRenderer>();
                     sr.sprite = _dotSprite;

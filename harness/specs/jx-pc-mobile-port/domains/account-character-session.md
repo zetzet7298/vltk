@@ -18,7 +18,7 @@
 | --- | --- | --- |
 | Account | `FR-AUTH-001/002` | Credential không vào event/log; refresh rotation; actor chỉ truy cập character thuộc account. |
 | Character | `FR-CHAR-001/002` | Tối đa 3 active; soft-delete 7 ngày, giải phóng slot ngay, giữ tên; restore chỉ khi còn slot; create là một transaction đầy đủ. |
-| Session | `FR-SESS-001` | Một active gameplay session/account; thiết bị mới thay session cũ; resume grace 30 giây không nhân đôi command. |
+| Session | `FR-SESS-001` | Một active gameplay session/account; thiết bị mới thay session cũ; resume grace 15 giây không nhân đôi command. |
 
 ## Contract mục tiêu
 

@@ -34,4 +34,33 @@ namespace VLTK.UI.Popup
         float Left { get; }
         float Top { get; }
     }
+
+    /// <summary>
+    /// How a PC sheet wants its chrome rendered. <see cref="PopupWindow"/> reads this
+    /// instead of matching on the content type name. The default generic chrome is
+    /// used when the content does not implement <see cref="IPopupChromeHint"/>.
+    /// </summary>
+    public enum PopupChromeKind
+    {
+        /// <summary>Generic VLTK shell: frame + title bar + Đóng button.</summary>
+        Generic,
+        /// <summary>
+        /// Compact PC skill sheet (UiSkillsLive 205×376). Title and tab captions are
+        /// baked into the background sprite, so the shell hides the generic title
+        /// and renders only the combat-tab overlay.
+        /// </summary>
+        PcSkill,
+        /// <summary>
+        /// Compact PC character sheet (318×438). The four-tab captions, title and
+        /// close button are part of the sheet art, so the generic title/chrome is
+        /// hidden and the sheet is centred in the 1280×720 design space.
+        /// </summary>
+        PcCharacter,
+    }
+
+    /// <summary>Optional chrome hint a PC sheet implements to opt out of generic chrome.</summary>
+    public interface IPopupChromeHint
+    {
+        PopupChromeKind Chrome { get; }
+    }
 }

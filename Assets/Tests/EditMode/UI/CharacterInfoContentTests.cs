@@ -1,14 +1,14 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — HUD-003 Character Info content tests (EditMode, Category "Popup")
-// Spec REQ-5 (paperdoll bind), REQ-6 (stats bind), REQ-7 (Đánh giá placeholder),
-// REQ-4 (tabs), REQ-9 (action buttons), REQ-10 (EditMode coverage).
+// VLTK Mobile — HUD-003 Character Info PC combined panel tests (EditMode, Popup)
+// Verifies the 428×430 PC panel (config UID 2711122c): PcCharacter chrome +
+// centering, real SPR panel background, 12 equipment hit-zones per INI, stat
+// values at PC coords, +/- spend with disabled frame state, no remaining
+// placeholder, footer Item/Close wiring.
 // -----------------------------------------------------------------------------
 using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 using UnityEngine.UIElements;
-using VLTK.Backend.Dto;
-using VLTK.Model;
 using VLTK.Sandbox;
 using VLTK.UI.CharacterInfo;
 using VLTK.UI.Popup;
@@ -18,254 +18,270 @@ namespace VLTK.Tests.UI
     [TestFixture, Category("Popup")]
     public class CharacterInfoContentTests
     {
-        private static ItemDefinition TestItem(int id, string name = "Test Item")
-            => new ItemDefinition { itemId = id, nameNormalized = name };
+        private static PcStatsSnapshot Stats(int remain = 0, int str = 295, int dex = 38, int vit = 335, int inner = 15)
+            => new PcStatsSnapshot(
+                "Xích Lông Cẩu", "Hiệp Khách", 107, 0, 100, 0, 546,
+                4486, 5000, 842, 1000, 2883, 3000,
+                2591084696L, 12600000000L,
+                str, vit, dex, inner, remain,
+                "3013/8752", "0/0",
+                20, 48, 20, 20,
+                0, 49, 75, 54, 60);
 
-        private static InventoryService InventoryWith(params ItemDefinition[] items)
-        {
-            var importer = new ItemContractImporter();
-            importer.Import(new ItemContractBundle { items = new List<ItemDefinition>(items) });
-            return new InventoryService(importer);
-        }
-
+        // ---- Title / contract ----
         [Test]
         public void TitleVi_IsVietnamese()
         {
-            var content = new CharacterInfoContent(null, () => null);
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
             Assert.AreEqual("Thông Tin Nhân Vật", content.TitleVi);
         }
 
         [Test]
-        public void Build_CreatesThreeTabs_AndDefaultIsTrangBi()
+        public void Implements_Layout_And_Chrome_Hints_WithPcPanelFootprint()
         {
-            var content = new CharacterInfoContent(null, () => null);
-            var body = new VisualElement();
-
-            content.Build(body);
-
-            Assert.IsNotNull(body.Q("tab_thuoctinh"), "Thuộc tính tab button");
-            Assert.IsNotNull(body.Q("tab_trangbi"), "Trang bị tab button");
-            Assert.IsNotNull(body.Q("tab_danhgia"), "Đánh giá tab button");
-
-            // REQ-4: Trang bị is the default tab → visible, others hidden.
-            Assert.AreEqual(DisplayStyle.Flex, body.Q("TabBody_trangbi").style.display.value);
-            Assert.AreEqual(DisplayStyle.None, body.Q("TabBody_thuoctinh").style.display.value);
-            Assert.AreEqual(DisplayStyle.None, body.Q("TabBody_danhgia").style.display.value);
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
+            Assert.IsInstanceOf<IPopupLayoutHint>(content);
+            Assert.IsInstanceOf<IPopupChromeHint>(content);
+            var hint = (IPopupLayoutHint)content;
+            Assert.AreEqual(428f, hint.Width, "PC combined panel width (2711122c)");
+            Assert.AreEqual(430f, hint.Height, "PC combined panel height");
+            Assert.AreEqual(PopupChromeKind.PcCharacter, ((IPopupChromeHint)content).Chrome);
         }
 
         [Test]
-        public void SwitchTab_TogglesVisibleBody()
+        public void PopupWindow_HidesGenericChrome_AndCentersPanel()
         {
-            var content = new CharacterInfoContent(null, () => null);
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
+            var window = new VLTK.UI.Popup.PopupWindow(content);
+
+            Assert.IsTrue(window.ClassListContains("popup-window--pc-character"),
+                "PcCharacter panel opts out of generic chrome");
+            Assert.IsNull(window.Q<Label>("PopupTitle"),
+                "generic title hidden — panel sprite owns the title");
+            // Centered in 1280×720: (1280-428)/2 = 426 ; (720-430)/2 = 145
+            Assert.AreEqual(426f, window.style.left.value.value, 0.5f, "centered left");
+            Assert.AreEqual(145f, window.style.top.value.value, 0.5f, "centered top");
+        }
+
+        // ---- Build: panel + zones + buttons ----
+        [Test]
+        public void Build_CreatesPanelSprite_Overlay_AndFooterButtons()
+        {
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
             var body = new VisualElement();
             content.Build(body);
 
-            // tap Thuộc tính tab button
-            body.Q<Button>("tab_thuoctinh").SimulateClick();
-
-            Assert.AreEqual(DisplayStyle.Flex, body.Q("TabBody_thuoctinh").style.display.value);
-            Assert.AreEqual(DisplayStyle.None, body.Q("TabBody_trangbi").style.display.value);
+            Assert.IsNotNull(body.Q("Panel"), "PC panel sprite layer");
+            Assert.IsNotNull(body.Q("Paperdoll"), "equipment zone overlay");
+            Assert.IsNotNull(body.Q("Item"), "footer Hành trang button");
+            Assert.IsNotNull(body.Q("Close"), "footer Đóng button");
         }
 
-        [Test, Category("Equipment")]
-        public void Paperdoll_BindsRealEquipmentSlots_EquippedVsEmpty()
+        [Test]
+        public void Build_CreatesTwelveEquipmentZones_PerPcIni()
         {
-            var equipment = new PlayerEquipmentService();
-            // Equip visual slots (variant != default → equipped). Visual path must remain first.
-            equipment.Equip(PlayerEquipSlot.Head, variant: 2, itemId: 100010);
-            equipment.Equip(PlayerEquipSlot.Weapon, variant: 5, itemId: 100001);
-            equipment.Equip(PlayerEquipSlot.Body, variant: 3, itemId: 100062);
-            equipment.Equip(PlayerEquipSlot.Mount, variant: 16, itemId: 100200);
-
-            var content = new CharacterInfoContent(equipment, () => null);
-            var body = new VisualElement();
-            content.Build(body);
-            content.OnShow();   // re-read equipment
-
-            Assert.IsTrue(body.Q("Slot_helmet").ClassListContains("equipped"), "helmet visual slot should remain equipped");
-            Assert.IsTrue(body.Q("Slot_weapon").ClassListContains("equipped"), "weapon visual slot should remain equipped");
-            Assert.IsTrue(body.Q("Slot_armor").ClassListContains("equipped"), "armor visual slot should remain equipped");
-            Assert.IsTrue(body.Q("Slot_mount").ClassListContains("equipped"), "mount visual slot should remain equipped");
-
-            // Gameplay-bound slots without equipped items are now empty, not framework.
-            Assert.IsTrue(body.Q("Slot_ring").ClassListContains("empty"), "ring is bound gameplay slot and should be empty when unequipped");
-            Assert.IsTrue(body.Q("Slot_pendant").ClassListContains("empty"), "pendant should be empty when unequipped");
-            Assert.IsTrue(body.Q("Slot_trinket").ClassListContains("empty"), "trinket should be empty when unequipped");
-            Assert.IsTrue(body.Q("Slot_mask").ClassListContains("empty"), "mask should be empty when unequipped");
-        }
-
-        [Test, Category("Equipment")]
-        public void Paperdoll_HasReferenceSlotCount()
-        {
-            var content = new CharacterInfoContent(null, () => null);
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
             var body = new VisualElement();
             content.Build(body);
 
-            // Final PR-2 paperdoll has 13 slots (12 original + ring2); all defined slots present.
-            Assert.AreEqual(13, CharacterInfoPaperdoll.Slots.Count);
-            Assert.IsNotNull(body.Q("Slot_weapon"));
-            Assert.IsNotNull(body.Q("Slot_armor"));
-            Assert.IsNotNull(body.Q("Slot_helmet"));
-            Assert.IsNotNull(body.Q("Slot_mount"));
-            Assert.IsNotNull(body.Q("Slot_mask"));
-            Assert.IsNotNull(body.Q("Slot_pendant"));
-            Assert.IsNotNull(body.Q("Slot_trinket2"));
-            Assert.IsNotNull(body.Q("Slot_trinket"));
-            Assert.IsNotNull(body.Q("Slot_ring2"));
+            Assert.AreEqual(12, CharacterInfoContent.EquipZones.Count, "2711122c has 12 trang-bị zones");
+            foreach (var z in CharacterInfoContent.EquipZones)
+                Assert.IsNotNull(body.Q("Zone_" + z.key), "zone " + z.key);
         }
 
-        [Test, Category("Equipment")]
-        public void Paperdoll_TwoRings_BothPresent()
+        // ---- Stats bind + no "--" ----
+        [Test]
+        public void Stats_BindFromSnapshot_NoPlaceholder()
         {
-            var content = new CharacterInfoContent(null, () => null);
-            var body = new VisualElement();
-            content.Build(body);
-
-            Assert.IsNotNull(body.Q("Slot_ring"), "primary ring slot");
-            Assert.IsNotNull(body.Q("Slot_ring2"), "PC-parity second ring slot");
-        }
-
-        [Test, Category("Equipment")]
-        public void Paperdoll_SlotIdentifiers_FollowPcSemantics()
-        {
-            var content = new CharacterInfoContent(null, () => null);
-            var body = new VisualElement();
-            content.Build(body);
-
-            Assert.IsNull(body.Q("Slot_amulet"), "old sachet key must be renamed to pendant");
-            Assert.IsNull(body.Q("Slot_charm"), "old charm key must be renamed to trinket2");
-            Assert.IsNotNull(body.Q("Slot_pendant"), "pendant/sachet key");
-            Assert.IsNotNull(body.Q("Slot_trinket2"), "second ornament key");
-        }
-
-        [Test, Category("Equipment")]
-        public void Paperdoll_GameplaySlot_Equipped_ShowsEquippedClass()
-        {
-            var mask = TestItem(900001, "Mặt Nạ Test");
-            var inventory = InventoryWith(mask);
-            inventory.Equip(EquipSlot.Mask, mask.itemId);
-
-            var content = new CharacterInfoContent(null, () => null, inventory);
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => Stats(remain: 5)));
             var body = new VisualElement();
             content.Build(body);
             content.OnShow();
 
-            var maskCell = body.Q("Slot_mask");
-            Assert.IsNotNull(maskCell);
-            Assert.IsTrue(maskCell.ClassListContains("equipped"), "mask equipped in InventoryService should render equipped");
+            Assert.AreEqual("107", body.Q<Label>("Stat_Level").text);
+            Assert.AreEqual("4486", body.Q<Label>("Stat_Life").text);
+            Assert.AreEqual("295", body.Q<Label>("Stat_Strength").text);
+            Assert.AreEqual("3013/8752", body.Q<Label>("Stat_LeftDamage").text);
+            Assert.AreEqual("2591084696/12600000000", body.Q<Label>("Stat_Exp").text);
+            Assert.AreEqual("5", body.Q<Label>("Stat_RemainPoint").text);
+            Assert.AreEqual("75", body.Q<Label>("Stat_ResistLighting").text);
         }
 
-        [Test, Category("Equipment")]
-        public void Paperdoll_GameplaySlot_EquippedViaDict()
+        [Test]
+        public void NoComingSoonPlaceholder_Remains()
         {
-            var container = new VisualElement();
-            var item = TestItem(900002, "Mặt Nạ Dict");
-            var equipped = new Dictionary<EquipSlot, ItemDefinition>
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
+            var body = new VisualElement();
+            content.Build(body);
+            // The old "sắp ra mắt" placeholder must be gone.
+            Assert.IsNull(body.Q<Label>("Placeholder"));
+            Assert.IsNull(body.Q("Page_danhgia"));
+        }
+
+        // ---- +/- spend ----
+        [Test]
+        public void AddPoint_SpendsRemainPoint_AndDisablesWhenZero()
+        {
+            int remain = 2;
+            var state = new PcCharacterPanelState(() => Stats(remain: remain))
             {
-                { EquipSlot.Mask, item }
+                DistributePotential = kind =>
+                {
+                    if (remain <= 0) return false;
+                    remain--;
+                    return true;
+                }
             };
+            var content = new CharacterInfoContent(state);
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
 
-            CharacterInfoPaperdoll.Build(container, equipment: null, equippedItems: equipped);
-            Assert.IsTrue(container.Q("Slot_mask").ClassListContains("equipped"));
-            Assert.IsTrue(container.Q("Slot_pendant").ClassListContains("empty"));
+            Assert.IsTrue(content.TryDistribute(PcPotentialKind.Strength), "spend 1 succeeds");
+            Assert.AreEqual("1", body.Q<Label>("Stat_RemainPoint").text);
 
-            Assert.DoesNotThrow(() => CharacterInfoPaperdoll.Build(container, equipment: null, equippedItems: null));
-            Assert.IsTrue(container.Q("Slot_mask").ClassListContains("empty"), "null dict should be safe empty state");
+            Assert.IsTrue(content.TryDistribute(PcPotentialKind.Vitality));
+            Assert.IsFalse(content.TryDistribute(PcPotentialKind.Dexterity), "0 points left fails");
+            // Out of points → disabled frame applied.
+            Assert.IsTrue(body.Q("AddStrength").ClassListContains("char-add-point--disabled"));
         }
 
         [Test]
-        public void Stats_BindFromPlayerStateResponse()
+        public void AddPoint_NoCallback_StaysDisabled()
         {
-            var stats = new PlayerStateResponse
+            var state = new PcCharacterPanelState(() => Stats(remain: 5)) { DistributePotential = null };
+            var content = new CharacterInfoContent(state);
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
+
+            Assert.IsFalse(body.Q("AddStrength").enabledInHierarchy);
+        }
+
+        // ---- Gender background ----
+        [Test]
+        public void Panel_SelectsMaleFemaleBackground_ByProvider()
+        {
+            bool female = false;
+            var state = new PcCharacterPanelState(() => default) { IsFemaleProvider = () => female };
+            var content = new CharacterInfoContent(state);
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
+
+            var panel = body.Q("Panel");
+            Assert.IsFalse(panel.ClassListContains("char-panel--female"), "male default");
+
+            female = true;
+            content.OnShow();
+            Assert.IsTrue(panel.ClassListContains("char-panel--female"), "female after flip");
+        }
+
+        // ---- Equipment zone state ----
+        [Test]
+        public void Equipment_BoundZones_ShowEquippedState()
+        {
+            var equipped = new Dictionary<EquipSlot, bool>
             {
-                level = 42, strength = 35, dexterity = 25, vitality = 25, spirit = 15,
-                money = 12345, transLife = 1, repute = 999,
+                { EquipSlot.Helmet, true },
+                { EquipSlot.Weapon, true },
+                { EquipSlot.Mount, true },
             };
-            var content = new CharacterInfoContent(null, () => stats);
-            var body = new VisualElement();
-            content.Build(body);
-            content.OnShow();
-
-            Assert.AreEqual("42", body.Q<Label>("Stat_level_Value").text);
-            Assert.AreEqual("35", body.Q<Label>("Stat_strength_Value").text);
-            Assert.AreEqual("12345", body.Q<Label>("Stat_money_Value").text);
-            Assert.AreEqual("1", body.Q<Label>("Stat_transLife_Value").text);
-        }
-
-        [Test]
-        public void Stats_WithNullProvider_ShowPlaceholders()
-        {
-            var content = new CharacterInfoContent(null, () => null);
-            var body = new VisualElement();
-            content.Build(body);
-            content.OnShow();
-
-            Assert.AreEqual("--", body.Q<Label>("Stat_strength_Value").text);
-        }
-
-        [Test]
-        public void DanhGiaTab_HasPlaceholderMessage()
-        {
-            var content = new CharacterInfoContent(null, () => null);
-            var body = new VisualElement();
-            content.Build(body);
-
-            var placeholder = body.Q<Label>("Placeholder");
-            Assert.IsNotNull(placeholder);
-            Assert.IsTrue(placeholder.text.Contains("sắp ra mắt"),
-                "Đánh giá tab must show a 'coming soon' placeholder (REQ-7)");
-        }
-
-        [Test]
-        public void ActionButtons_AllPresent_NonDestructive()
-        {
-            var content = new CharacterInfoContent(null, () => null);
-            var body = new VisualElement();
-            content.Build(body);
-
-            // REQ-9: Khóa / Đính / Tháo present and clickable without throwing.
-            Assert.IsNotNull(body.Q("btn_lock"), "Khóa button");
-            Assert.IsNotNull(body.Q("btn_embed"), "Đính button");
-            Assert.IsNotNull(body.Q("btn_unequip"), "Tháo button");
-
-            Assert.DoesNotThrow(() =>
+            var state = new PcCharacterPanelState(() => default)
             {
-                body.Q<Button>("btn_lock").SimulateClick();
-                body.Q<Button>("btn_embed").SimulateClick();
-                body.Q<Button>("btn_unequip").SimulateClick();
-            }, "action buttons must be non-destructive in slice 1");
-        }
-
-        [Test]
-        public void OnShow_RefreshesPaperdollAfterEquip()
-        {
-            var equipment = new PlayerEquipmentService();
-            var content = new CharacterInfoContent(equipment, () => null);
+                EquipmentStateProvider = () => equipped
+            };
+            var content = new CharacterInfoContent(state);
             var body = new VisualElement();
             content.Build(body);
             content.OnShow();
-            Assert.IsTrue(body.Q("Slot_armor").ClassListContains("empty"));
 
-            equipment.Equip(PlayerEquipSlot.Body, variant: 2, itemId: 100062);
-            content.OnShow();   // re-read
+            Assert.IsTrue(body.Q("Zone_Cap").ClassListContains("char-equip-zone--equipped"));
+            Assert.IsTrue(body.Q("Zone_Weapon").ClassListContains("char-equip-zone--equipped"));
+            Assert.IsTrue(body.Q("Zone_Horse").ClassListContains("char-equip-zone--equipped"));
+            Assert.IsTrue(body.Q("Zone_Ring1").ClassListContains("char-equip-zone--empty"));
+            var bangle = body.Q("Zone_Bangle");
+            Assert.IsTrue(bangle.ClassListContains("char-equip-zone--bindable") == false,
+                "Bangle has no EquipSlot enum → framework, not bindable");
+        }
 
-            Assert.IsTrue(body.Q("Slot_armor").ClassListContains("equipped"),
-                "OnShow must refresh paperdoll to reflect new equip");
+        [Test]
+        public void Equipment_BackendMissingButtons_Disabled()
+        {
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
+            var body = new VisualElement();
+            content.Build(body);
+
+            Assert.IsFalse(body.Q<Button>("BtnLock").enabledInHierarchy);
+            Assert.IsFalse(body.Q<Button>("BtnBind").enabledInHierarchy);
+            Assert.IsFalse(body.Q<Button>("BtnUnBind").enabledInHierarchy);
+        }
+
+        // ---- Footer Close raises popup close ----
+        [Test]
+        public void FooterCloseButton_RaisesPopupWindowClose()
+        {
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
+            var window = new VLTK.UI.Popup.PopupWindow(content);
+
+            bool fired = false;
+            window.Closed += () => fired = true;
+
+            var closeBtn = window.Q<Button>("Close");
+            Assert.IsNotNull(closeBtn, "footer Close button present in window");
+            closeBtn.SimulateClick();
+            Assert.IsTrue(fired, "footer Close raises PopupWindow.Closed");
+        }
+
+        [Test]
+        public void OnShow_RefreshesEquipmentAfterEquip()
+        {
+            var equipped = new Dictionary<EquipSlot, bool>();
+            var state = new PcCharacterPanelState(() => default)
+            {
+                EquipmentStateProvider = () => equipped
+            };
+            var content = new CharacterInfoContent(state);
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
+            Assert.IsTrue(body.Q("Zone_Cap").ClassListContains("char-equip-zone--empty"));
+
+            equipped[EquipSlot.Helmet] = true;
+            content.OnShow();
+            Assert.IsTrue(body.Q("Zone_Cap").ClassListContains("char-equip-zone--equipped"));
+        }
+
+        [Test]
+        public void OnClose_ClearsInternalRefs()
+        {
+            var content = new CharacterInfoContent(new PcCharacterPanelState(() => default));
+            var body = new VisualElement();
+            content.Build(body);
+            content.OnShow();
+            Assert.DoesNotThrow(() => content.OnClose());
+        }
+
+        // ---- helpers ----
+        private static bool DispatchPointerDown(VisualElement el)
+        {
+            if (el == null) return false;
+            var evt = PointerDownEvent.GetPooled();
+            evt.target = el;
+            el.SendEvent(evt);
+            return true;
         }
     }
 
     /// <summary>Simulates a button click without needing a real event loop.</summary>
     internal static class ButtonTestExt
     {
-        // UIElements Button.clickable.Invoke is protected; invoke via reflection on the
-        // Clickable instance so tests don't need a live input event loop.
         public static void SimulateClick(this Button btn)
         {
             var clickable = btn?.clickable;
             if (clickable == null) return;
             var invoke = clickable.GetType().GetMethod("Invoke",
                 BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            // Invoke(EventBase) needs an event; build a minimal ClickEvent.
             var evt = ClickEvent.GetPooled();
             evt.target = btn;
             invoke?.Invoke(clickable, new object[] { evt });

@@ -120,12 +120,13 @@ unconsumed state attributes (`fatallystrike_p`, `anti_do_hurt_p`,
   302/339/1069/1070/1110 temporal/event cases; PC runtime golden
 comparison; Android/device capture; and exact runtime asset/audio parity.
 
-The global skill-coverage audit is also stale: recomputed inventory is 242
-versus committed 245, with provenance-request drift. This is recorded as a
-repository residual rather than hidden by narrowing tests. Herdr writer lanes
-also edited outside their declared write scopes; the files were reviewed and
-retained because the edits are part of this bounded slice, with scope
-enforcement recorded as Harness friction.
+The prior global skill-coverage drift is now reconciled by Gate 0: the accepted
+static union is 242 rows, matching `SKL-ALL-PARITY-001/coverage-matrix.json`.
+This remains membership/content scope only; runtime parity, PC golden and
+Android/device evidence stay blocked. Herdr writer lanes also edited outside
+their declared write scopes; the files were reviewed and retained because the
+edits are part of this bounded slice, with scope enforcement recorded as
+Harness friction.
 
 Therefore the story outcome is `partial`; it must not be marked `PARITY_DONE`.
 
@@ -165,4 +166,5 @@ per projectile. These bounded chains do not prove every Đường Môn skill.
 
 Still open: Cái Bang Fly/Vanish events, remaining unconsumed state attributes, remaining
 Đường Môn trap/homing/lifecycle coverage, exact PC runtime golden comparison,
-Android/device capture, and the global 242-versus-245 inventory drift.
+and Android/device capture. The old 242-versus-245 inventory drift is resolved
+as 242 static union scope, not runtime parity.

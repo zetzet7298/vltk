@@ -1,0 +1,214 @@
+{
+  "schema_version": 1,
+  "purpose": "Exact PC package.ini winners for HorseVisual AvailableHorseIds.",
+  "winner_rule": "Highest present package.ini index containing UID wins; all 27 supplied package files were indexed. spr.pak index 23 wins over update01.pak index 21; four declared package files are absent from supplied client data.",
+  "items_total": 5,
+  "staged_count": 5,
+  "missing_count": 0,
+  "items": [
+    {
+      "logical_path": "spr\\item\\equip\\horse\\horse001.spr",
+      "normalized_path": "\\spr\\item\\equip\\horse\\horse001.spr",
+      "uid": "aa100ee6",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6974656d5c65717569705c686f7273655c686f7273653030312e737072",
+      "status": "created",
+      "missing_reason": null,
+      "package_winner": {
+        "package_ini": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-source/pak_unpacked/spr/spr/item/equip/horse/horse001.spr",
+        "sha256": "d9de84b832a302baee7468daa701c7f33b2180418047d21cf4429180c84f1fc0",
+        "bytes": 4002,
+        "frames": 1,
+        "directions": 1,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 908544,
+          "decompressed_size": 4002,
+          "flag": "0x01000e52"
+        },
+        "extraction_byte_match": true
+      },
+      "shadowed_candidates": [
+        {
+          "package_index": 21,
+          "package_name": "update01.pak",
+          "sha256": "d9de84b832a302baee7468daa701c7f33b2180418047d21cf4429180c84f1fc0",
+          "bytes": 4002
+        }
+      ]
+    },
+    {
+      "logical_path": "spr\\item\\equip\\horse\\horse003.spr",
+      "normalized_path": "\\spr\\item\\equip\\horse\\horse003.spr",
+      "uid": "a1243bda",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6974656d5c65717569705c686f7273655c686f7273653030332e737072",
+      "status": "created",
+      "missing_reason": null,
+      "package_winner": {
+        "package_ini": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-source/pak_unpacked/spr/spr/item/equip/horse/horse003.spr",
+        "sha256": "a681a154fef216b9c2e1510a3a1a7f423e6937266448927254eb9e24200a2f8a",
+        "bytes": 4407,
+        "frames": 1,
+        "directions": 1,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 915633,
+          "decompressed_size": 4407,
+          "flag": "0x01000fb7"
+        },
+        "extraction_byte_match": true
+      },
+      "shadowed_candidates": [
+        {
+          "package_index": 21,
+          "package_name": "update01.pak",
+          "sha256": "a681a154fef216b9c2e1510a3a1a7f423e6937266448927254eb9e24200a2f8a",
+          "bytes": 4407
+        }
+      ]
+    },
+    {
+      "logical_path": "spr\\item\\equip\\horse\\horse005.spr",
+      "normalized_path": "\\spr\\item\\equip\\horse\\horse005.spr",
+      "uid": "bfc8d4de",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6974656d5c65717569705c686f7273655c686f7273653030352e737072",
+      "status": "created",
+      "missing_reason": null,
+      "package_winner": {
+        "package_ini": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-source/pak_unpacked/spr/spr/item/equip/horse/horse005.spr",
+        "sha256": "fa4ce1cdfe7e794474e1ce898eb2df8978366a3a6b482d22344ff38fb869657b",
+        "bytes": 4208,
+        "frames": 1,
+        "directions": 1,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 923624,
+          "decompressed_size": 4208,
+          "flag": "0x01000efe"
+        },
+        "extraction_byte_match": true
+      },
+      "shadowed_candidates": [
+        {
+          "package_index": 21,
+          "package_name": "update01.pak",
+          "sha256": "fa4ce1cdfe7e794474e1ce898eb2df8978366a3a6b482d22344ff38fb869657b",
+          "bytes": 4208
+        }
+      ]
+    },
+    {
+      "logical_path": "spr\\item\\equip\\horse\\horse007.spr",
+      "normalized_path": "\\spr\\item\\equip\\horse\\horse007.spr",
+      "uid": "badcc1d2",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6974656d5c65717569705c686f7273655c686f7273653030372e737072",
+      "status": "created",
+      "missing_reason": null,
+      "package_winner": {
+        "package_ini": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-source/pak_unpacked/spr/spr/item/equip/horse/horse007.spr",
+        "sha256": "2b15b225eb559dd9610bb9876322cd248dbfb98d4b6b6e3a3117f7efbe5222f0",
+        "bytes": 3700,
+        "frames": 1,
+        "directions": 1,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 931453,
+          "decompressed_size": 3700,
+          "flag": "0x01000d5d"
+        },
+        "extraction_byte_match": true
+      },
+      "shadowed_candidates": [
+        {
+          "package_index": 21,
+          "package_name": "update01.pak",
+          "sha256": "2b15b225eb559dd9610bb9876322cd248dbfb98d4b6b6e3a3117f7efbe5222f0",
+          "bytes": 3700
+        }
+      ]
+    },
+    {
+      "logical_path": "spr\\item\\equip\\horse\\horse009.spr",
+      "normalized_path": "\\spr\\item\\equip\\horse\\horse009.spr",
+      "uid": "b1e0fad6",
+      "uid_path_encoding": "gbk",
+      "uid_path_bytes_hex": "5c7370725c6974656d5c65717569705c686f7273655c686f7273653030392e737072",
+      "status": "created",
+      "missing_reason": null,
+      "package_winner": {
+        "package_ini": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+        "package_index": 23,
+        "package_name": "spr.pak",
+        "source_extraction_path": "/var/www/jx-source/pak_unpacked/spr/spr/item/equip/horse/horse009.spr",
+        "sha256": "3708c3ca99096a7bbe179e70b3be0b0d98a9aeb7da5901431a64478b4f8ca2cd",
+        "bytes": 3824,
+        "frames": 1,
+        "directions": 1,
+        "header_color_count": 256,
+        "pak_entry": {
+          "offset": 938962,
+          "decompressed_size": 3824,
+          "flag": "0x01000cae"
+        },
+        "extraction_byte_match": true
+      },
+      "shadowed_candidates": [
+        {
+          "package_index": 21,
+          "package_name": "update01.pak",
+          "sha256": "3708c3ca99096a7bbe179e70b3be0b0d98a9aeb7da5901431a64478b4f8ca2cd",
+          "bytes": 3824
+        }
+      ]
+    }
+  ],
+  "package_resolution": {
+    "declared_package_count": 31,
+    "scanned_present_package_count": 27,
+    "unavailable_declared_packages": [
+      {
+        "package_index": 0,
+        "package_name": "vltkcache.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      },
+      {
+        "package_index": 26,
+        "package_name": "settings.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      },
+      {
+        "package_index": 27,
+        "package_name": "ui.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      },
+      {
+        "package_index": 28,
+        "package_name": "script.pak",
+        "reason": "package.ini entry absent from supplied PC client data"
+      }
+    ],
+    "present_package_matches_per_item": [
+      21,
+      23
+    ],
+    "highest_present_match": {
+      "package_index": 23,
+      "package_name": "spr.pak"
+    }
+  }
+}

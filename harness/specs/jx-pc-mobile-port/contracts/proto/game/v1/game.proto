@@ -22,6 +22,7 @@ message ClientEnvelope {
       ReviveCommand revive = 20;
       ProgressionCommand progression = 21;
       CompanionCommand companion = 22;
+      EncounterPreloadAck encounter_preload_ack = 23;
   }
 }
 message ServerEnvelope {
@@ -52,6 +53,8 @@ message ServerEnvelope {
       ReviveState revive_state = 26;
       ProgressionEvent progression = 27;
       CompanionEvent companion = 28;
+      RuntimeSkillPolicy runtime_skill_policy = 29;
+      ActiveCombatResyncState active_combat_resync = 30;
   }
 }
 message ClientHello {
@@ -62,6 +65,8 @@ message ClientHello {
   uint64 resume_session_epoch = 5;
   uint64 last_applied_server_seq = 6;
   uint64 last_applied_server_tick = 7;
+  ContentDigest accepted_content = 8;
+  uint32 supported_reconnect_grace_seconds = 9; // Approved Gate 0 value is 15.
 }
 message ServerHello {
   string protocol = 1;
@@ -77,6 +82,9 @@ message ServerHello {
   ResumeOutcome resume_outcome = 11;
   uint64 replay_from_server_seq = 12;
   uint64 replay_from_server_tick = 13;
+  ContentDigest active_content = 14;
+  uint32 reconnect_grace_seconds = 15; // Must equal 15.
+  RuntimeSkillPolicy skill_policy = 16;
 }
 enum ResumeOutcome {
   RESUME_OUTCOME_UNSPECIFIED = 0;
@@ -157,6 +165,7 @@ message ResyncRequest {
   // send UseInventoryItem inside InventoryCommand with expected_revision.
   Reason reason = 1;
   uint64 last_good_tick = 2;
+  bool include_active_combat = 3;
 }
 message WorldSnapshot {
   uint64 baseline_tick = 1;
@@ -417,6 +426,66 @@ enum AutomationState {
     uint64 cost_amount = 5;
     uint32 destination_map_id = 6;
   }
+message ContentDigest {
+  string content_release_id = 1;
+  string manifest_sha256 = 2;
+  string source_snapshot_id = 3;
+  uint32 catalog_union_size = 4; // Must equal 242 for Gate 0.
+  string catalog_union_sha256 = 5;
+  string runtime_skill_policy_id = 6;
+  string client_projection_sha256 = 7;
+}
+message RuntimeSkillPolicy {
+  string policy_id = 1;
+  uint32 catalog_union_size = 2; // Must equal 242.
+  string catalog_union_sha256 = 3;
+  bool filesystem_fallback_allowed = 4; // Must be false; source tool is vltktool.
+  bool runtime_parity_claimed = 5; // Must be false until PC/Android evidence unblocks.
+  string pc_runtime_evidence_status = 6; // BLOCKED in Gate 0.
+  string android_physical_evidence_status = 7; // BLOCKED in Gate 0.
+}
+message EncounterPreloadAck {
+  string encounter_id = 1;
+  ContentDigest accepted_content = 2;
+  repeated uint32 skill_ids = 3;
+  uint64 client_ready_tick = 4;
+  PreloadAckOutcome outcome = 5;
+  string failure_code = 6;
+}
+enum PreloadAckOutcome {
+  PRELOAD_ACK_OUTCOME_UNSPECIFIED = 0;
+  PRELOAD_ACK_OUTCOME_READY = 1;
+  PRELOAD_ACK_OUTCOME_CONTENT_MISMATCH = 2;
+  PRELOAD_ACK_OUTCOME_UNAVAILABLE = 3;
+}
+message ActiveCastState {
+  string cast_id = 1;
+  string source_entity_id = 2;
+  uint32 skill_id = 3;
+  uint32 skill_level = 4;
+  uint64 started_tick = 5;
+  uint64 recovery_until_tick = 6;
+}
+message ActiveMissileState {
+  string missile_instance_id = 1;
+  uint32 missile_id = 2;
+  string source_entity_id = 3;
+  uint64 spawned_tick = 4;
+  sint32 x = 5;
+  sint32 y = 6;
+}
+message ActiveStatusState {
+  string target_entity_id = 1;
+  StatusEffectDelta status = 2;
+}
+message ActiveCombatResyncState {
+  uint64 baseline_tick = 1;
+  fixed64 baseline_checksum = 2;
+  repeated ActiveCastState active_casts = 3;
+  repeated ActiveMissileState active_missiles = 4;
+  repeated ActiveStatusState active_statuses = 5;
+  bool full = 6;
+}
 message CombatEvent {
   string event_id = 1;
   uint64 server_tick = 2;
@@ -442,6 +511,11 @@ message CombatEvent {
   bytes rng_audit_token = 22;
   repeated StatusEffectDelta status_effects = 23;
   repeated CombatResultFlag results = 24;
+  uint64 lifecycle_revision = 25;
+  uint64 lifecycle_started_tick = 26;
+  uint64 lifecycle_ends_tick = 27;
+  string lifecycle_reason = 28;
+  ActiveCombatResyncState resync_state = 29;
 }
 enum CombatEventKind {
   COMBAT_EVENT_KIND_UNSPECIFIED = 0;
@@ -455,6 +529,13 @@ enum CombatEventKind {
   COMBAT_EVENT_KIND_STATUS_REMOVED = 8;
   COMBAT_EVENT_KIND_DEATH = 9;
   COMBAT_EVENT_KIND_REVIVE = 10;
+  COMBAT_EVENT_KIND_CAST_RECOVERY_STARTED = 11;
+  COMBAT_EVENT_KIND_CAST_RECOVERY_ENDED = 12;
+  COMBAT_EVENT_KIND_MISSILE_FLY_STARTED = 13;
+  COMBAT_EVENT_KIND_MISSILE_COLLIDED = 14;
+  COMBAT_EVENT_KIND_MISSILE_VANISHED = 15;
+  COMBAT_EVENT_KIND_STATUS_REFRESHED = 16;
+  COMBAT_EVENT_KIND_STATUS_EXPIRED = 17;
 }
 enum DamageSchool {
   DAMAGE_SCHOOL_UNSPECIFIED = 0;
@@ -481,6 +562,8 @@ message StatusEffectDelta {
   uint32 stacks = 2;
   uint64 expires_at_tick = 3;
   bool removed = 4;
+  uint64 applied_at_tick = 5;
+  bool refreshed = 6;
 }
 message InventoryItemDelta {
   string item_id = 1;

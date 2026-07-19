@@ -192,7 +192,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(16, r.childProjectileCount, "PC row 125 spawns sixteen child-47 missiles");
             Assert.AreEqual(16, r.projectiles.Count(p => p.skillId == 47));
             Assert.IsFalse(r.projectiles.Any(p => p.skillId == 168), "casting 125 must not spawn 359/1074 chain dragons (missile 168)");
-            Assert.Less(enemy.currentLife, 1000, "125 cast applies its own levelData damage");
+            // PC KSkill::Cast (KSkills.cpp:348): SkillStyle=Missiles -> CastMissles() only, no direct damage.
+            // 125 damage resolves on the first spawned missile impact (OnMissleEvent).
+            Assert.AreEqual(1000, enemy.currentLife, "125 is Missile-style: parent damage waits for missile impact");
+            var first125Missile = r.projectiles.First(p => p.skillId == 47);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, enemy, r, first125Missile, enemy.position));
+            Assert.Less(enemy.currentLife, 1000, "125 missile impact applies its own levelData damage");
             Assert.AreEqual(0, svc.NextCastTime(beggar.actorId, 125), "canonical slistcache TimePerCast=0");
 
             var repeated = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
@@ -324,7 +329,10 @@ namespace VLTK.Tests.Sandbox
                   skillId = probeSkillId,
                   nameNormalized = "720 fire-cap probe",
                   maxLevel = 1,
-                  skillStyle = PcSkillStyle.Missiles,
+                  // Test fixture: Melee delivery so the fire-resist-cap math is exercised via direct
+              // damage. A Missile-style probe with childSkillNum=0 would spawn no missile and (PC
+              // KSkill::Cast) never apply damage, which is irrelevant to the res-cap assertion here.
+              skillStyle = PcSkillStyle.Melee,
                   targetEnemy = true,
                   timePerCast = 0,
               };
@@ -393,6 +401,11 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(enemy, beggar, 117, beggar.position, CombatRelation.Enemy);
 
             Assert.IsTrue(r.success, r.detail);
+            // PC KSkill::Cast: 117 SkillStyle=Missiles -> the proc fires on missile impact, not on Cast.
+            var missile117 = r.projectiles.FirstOrDefault(p => p.skillId == 44);
+            Assert.IsNotNull(missile117, "117 spawned its child-44 missile");
+            Assert.IsTrue(svc.TryResolveProjectileCollision(enemy, beggar, r, missile117, beggar.position),
+                "117 missile impact lands on beggar");
             // PC: 714 is passive (Style=3), NOT active UtilitySkill.
             Assert.AreEqual(PcSkillStyle.PassivityNpcState, Catalog().Resolve(714).skillStyle,
                 "PC slistcache 714 SkillStyle=3 (passive)");
@@ -427,6 +440,11 @@ namespace VLTK.Tests.Sandbox
 
                   var report = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
                   Assert.IsTrue(report.success, report.detail);
+                  // PC KSkill::Cast: 117 SkillStyle=Missiles -> proc fires on missile impact.
+                  var missile = report.projectiles.FirstOrDefault(p => p.skillId == 44);
+                  Assert.IsNotNull(missile, "117 spawned its child-44 missile");
+                  Assert.IsTrue(runtime.TryResolveProjectileCollision(attacker, bearer, report, missile, bearer.position),
+                      "117 missile impact lands on bearer");
                   CollectionAssert.Contains(observed, expected.rate,
                       $"PC autoattackskill[3] low byte at L{expected.level} must be {expected.rate}%");
                   Assert.AreEqual(216, runtime.NextCastTime(bearer.actorId, 714),
@@ -454,21 +472,39 @@ namespace VLTK.Tests.Sandbox
               attacker.knownSkills.Add(117);
               attacker.skillLevels[117] = 20;
 
-              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              var c0 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              Assert.IsTrue(c0.success, c0.detail);
+              ResolveFirstMissile44(runtime, attacker, bearer, c0);
               Assert.AreEqual(1, procRolls);
               Assert.AreEqual(216, runtime.NextCastTime(bearer.actorId, 714));
 
               runtime.AdvanceTime(215);
-              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              var c1 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              Assert.IsTrue(c1.success, c1.detail);
+              ResolveFirstMissile44(runtime, attacker, bearer, c1);
               Assert.AreEqual(1, procRolls, "t+215 remains on cooldown");
 
               runtime.AdvanceTime(1);
-              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              var c2 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              Assert.IsTrue(c2.success, c2.detail);
+              ResolveFirstMissile44(runtime, attacker, bearer, c2);
               Assert.AreEqual(1, procRolls, "PC nextCastTime < currentTime: equality at t+216 still blocks");
 
               runtime.AdvanceTime(1);
-              Assert.IsTrue(runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy).success);
+              var c3 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              Assert.IsTrue(c3.success, c3.detail);
+              ResolveFirstMissile44(runtime, attacker, bearer, c3);
               Assert.AreEqual(2, procRolls, "t+217 is the first eligible tick");
+          }
+
+          // PC KSkill::Cast: 117 SkillStyle=Missiles -> damage/proc defers to missile impact.
+          // Resolving the single spawned child-44 missile against the bearer triggers the 714
+          // passive-autoattack proc exactly when the bearer actually takes a damaging hit.
+          private static void ResolveFirstMissile44(CombatRuntimeService runtime, CombatActorState attacker, CombatActorState bearer, CombatCastReport report)
+          {
+              var missile = report.projectiles.FirstOrDefault(p => p.skillId == 44);
+              if (missile != null)
+                  runtime.TryResolveProjectileCollision(attacker, bearer, report, missile, bearer.position);
           }
 
         [Test]
@@ -512,7 +548,7 @@ namespace VLTK.Tests.Sandbox
             var r = svc.Cast(beggar, enemy, 1073, enemy.position, CombatRelation.Enemy);
 
             Assert.IsTrue(r.success, r.detail);
-            Assert.AreEqual(0, r.damageResults.Count, "PC ByMissle=1: parent damage waits for missile impact");
+            Assert.AreEqual(0, r.damageResults.Count, "PC SkillStyle=Missiles: parent damage waits for missile impact");
             Assert.AreEqual(1000, enemy.currentLife);
             Assert.AreEqual(85, r.addSkillDamagePercent, "122(+40) and 128(+45) both grant 1073 damage");
             Assert.AreEqual(1072, r.skill.collideSkillId);
@@ -796,13 +832,17 @@ namespace VLTK.Tests.Sandbox
             var enemy = Enemy(new Vector2(200, 0));
             var r = svc.Cast(beggar, enemy, 122, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(r.success, r.detail);
+            // PC KSkill::Cast: 122 SkillStyle=Missiles -> CastMissles() only. Damage defers to the
+            // single spawned child-46 missile impact (OnMissleEvent). addskilldamage is a passive
+            // %-amp (see CaiBang_AddSkillDamage_IsPassiveDamageAmp_NotChainSpawn), not a chain spawn.
+            Assert.AreEqual(1, r.projectiles.Count, "122 spawns a single child-46 missile");
+            var missile122 = r.projectiles.First(p => p.skillId == 46);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, enemy, r, missile122, enemy.position));
             var rolled = r.damageResults.Sum(d => d.rolledBase);
             Assert.That(rolled, Is.GreaterThan(50), $"L20 fire rolled base should be substantial, got {rolled}");
-            // [CaiBang-AddSkillDamage 2026-06-19] 122 addskilldamage1 chain → 357 (Phi Long) chance L20=50%.
-            //   Nếu chain fires: 4 missiles × rolledBase(1..215) ≈ max 860. Sum có thể reach ~1100 với 122 main hit.
-            //   Trước fix [2026-06-19]: expectation chỉ check ≤220 (giả định single hit) → fail khi chain fires.
-            //   Sau fix: upper bound = 1×220 + 4×220 = 1100 (PC: 122 main 215+var + chain 357 4 missiles × 215+var).
-            Assert.That(rolled, Is.LessThanOrEqualTo(1100), $"L20 fire rolled base: 122 main + chain to 357 max 4×215 = 1100, got {rolled}");
+            // PC gaibang.lua::jianren_shenshou L20 firedamage_v[3] max=215. Deterministic RollPercent=true
+            // rolls the max, so a single missile impact yields exactly 215 (no chain spawn).
+            Assert.That(rolled, Is.LessThanOrEqualTo(215), $"L20 single-missile fire rolled base max=215, got {rolled}");
         }
 
         [Test]
@@ -817,18 +857,26 @@ namespace VLTK.Tests.Sandbox
             beggar.knownSkills.Add(117);
             beggar.skillLevels[117] = 20;
 
-            UnityEngine.Random.InitState(20260629);
+            // PC KSkill::Cast: 117 SkillStyle=Missiles -> CastMissles() only. Damage defers to the
+            // single spawned child-44 missile impact (OnMissleEvent). Random roll happens at impact.
             var noResEnemy = Enemy(new Vector2(200, 0));
             var noRes = svc.Cast(beggar, noResEnemy, 117, noResEnemy.position, CombatRelation.Enemy);
             Assert.IsTrue(noRes.success, noRes.detail);
+            Assert.AreEqual(0, noRes.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            UnityEngine.Random.InitState(20260629);
+            var noResMissile = noRes.projectiles.First(p => p.skillId == 44);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, noResEnemy, noRes, noResMissile, noResEnemy.position));
             int noResDamage = noRes.damageResults.Sum(d => d.finalDamage);
 
             svc.AdvanceTime(2);
-            UnityEngine.Random.InitState(20260629);
             var resistedEnemy = Enemy(new Vector2(200, 0));
             resistedEnemy.states[MagicAttributeKind.AllResP] = new SkillMagicAttribute(MagicAttributeKind.AllResP, 50, -1, 0);
             var resisted = svc.Cast(beggar, resistedEnemy, 117, resistedEnemy.position, CombatRelation.Enemy);
             Assert.IsTrue(resisted.success, resisted.detail);
+            Assert.AreEqual(0, resisted.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            UnityEngine.Random.InitState(20260629);
+            var resistedMissile = resisted.projectiles.First(p => p.skillId == 44);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, resistedEnemy, resisted, resistedMissile, resistedEnemy.position));
             int resistedDamage = resisted.damageResults.Sum(d => d.finalDamage);
 
             Assert.That(noResDamage, Is.GreaterThan(0), "baseline damage should hit with deterministic RollPercent=true");
@@ -910,7 +958,12 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(3, report.childProjectileCount, "Runtime should spawn Lua-derived 3 homing child missiles at L20");
             Assert.AreEqual(3, report.projectiles.Count);
             Assert.That(report.projectiles.All(p => p.skillId == 168), Is.True, "All runtime children should use PC missile 168");
-            Assert.Less(enemy.currentLife, 1000, "Deterministic hit should apply PC-derived damage before projectile visuals resolve");
+            // PC KSkill::Cast: 359 SkillStyle=Missiles -> CastMissles() only. Damage defers to missile
+            // impact (OnMissleEvent). Resolve the first of the three spawned missiles.
+            Assert.AreEqual(1000, enemy.currentLife, "359 Missile-style: parent damage waits for missile impact");
+            var first359Missile = report.projectiles.First(p => p.skillId == 168);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, enemy, report, first359Missile, enemy.position));
+            Assert.Less(enemy.currentLife, 1000, "359 missile impact applies PC-derived damage");
         }
 
         [Test]

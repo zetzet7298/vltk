@@ -131,6 +131,7 @@ namespace VLTK.UI
         private HudDataBridge _bridge;
         private MinimapService _minimapService;
         private bool _initialized;
+        private VisualElement _boundRoot;
         private SprRuntimeService _sprService;
         private Texture2D _minimapTexture;
         private Texture2D _previewTexture;
@@ -323,6 +324,14 @@ namespace VLTK.UI
 
         private void EnsureRuntimeReady()
         {
+            var doc = GetComponent<UIDocument>();
+            var currentRoot = doc?.rootVisualElement?.Q("GameHud");
+            if (_initialized && (_boundRoot == null || currentRoot == null || !ReferenceEquals(_boundRoot, currentRoot)))
+            {
+                _initialized = false;
+                _actionTogglesBound = false;
+            }
+
             if (_initialized)
                 return;
 
@@ -524,6 +533,7 @@ namespace VLTK.UI
                 _mapPreviewFrame.RegisterCallback<PointerDownEvent>(OnPreviewMapPointerDown);
             }
 
+            _boundRoot = root;
             _initialized = true;
         }
 
@@ -625,16 +635,6 @@ namespace VLTK.UI
                 if (treasure != null)
                     LoadIcon(treasure, artPath, "btn_treasure");
 
-                // Main combat slot (PrimaryAttackBtn SlotIcon): shows Phi Long Tại Thiên (357),
-                // which is slot 0 of the Cái Bang default deck and what TriggerPrimaryAttack casts via
-                // ResolvePrimaryAttackSlot(). Keep this icon in sync with DefaultDeckByFaction slot 0
-                // if the primary attack skill ever changes.
-                var primaryIcon = root.Q("PrimaryAttackBtn")?.Q("SlotIcon");
-                if (primaryIcon != null)
-                {
-                    var generatedArtPath = HudArtPathResolver.ResolveGeneratedArtRoot(artFolder);
-                    LoadIcon(primaryIcon, generatedArtPath, "cai_bang_skill_357");
-                }
             }
         }
 
@@ -651,10 +651,10 @@ namespace VLTK.UI
 
         private void LoadIcon(VisualElement el, string artPath, string name)
         {
-            LoadIcon(this, el, artPath, name);
+            LoadIcon(this, el, artPath, name, null);
         }
 
-        private static void LoadIcon(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name)
+        private static void LoadIcon(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name, System.Func<bool> shouldApply)
         {
             if (el == null)
             {
@@ -667,6 +667,7 @@ namespace VLTK.UI
             {
                 LoadTextureIntoElement(coroutineHost, png, name, tex =>
                 {
+                    if (!ShouldApplyIconRequest(shouldApply)) return;
                     el.style.backgroundImage = new StyleBackground(tex);
                     UnityEngine.Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: successfully loaded {0} ({1}x{2}) onto {3}", name, tex.width, tex.height, el.name));
                 });
@@ -675,6 +676,7 @@ namespace VLTK.UI
 
             LoadTextureIntoElement(null, png, name, tex =>
             {
+                if (!ShouldApplyIconRequest(shouldApply)) return;
                 el.style.backgroundImage = new StyleBackground(tex);
                 UnityEngine.Debug.Log(string.Format(System.Globalization.CultureInfo.InvariantCulture, "[HUD] LoadIcon: successfully loaded {0} ({1}x{2}) onto {3}", name, tex.width, tex.height, el.name));
             });
@@ -683,13 +685,24 @@ namespace VLTK.UI
         /// <summary>Static version for use by CombatSkillSlotController.</summary>
         public static void LoadIconStatic(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name)
         {
-            LoadIcon(coroutineHost, el, artPath, name);
+            LoadIcon(coroutineHost, el, artPath, name, null);
         }
+
+        public static void LoadIconStatic(MonoBehaviour coroutineHost, VisualElement el, string artPath, string name, System.Func<bool> shouldApply)
+        {
+            LoadIcon(coroutineHost, el, artPath, name, shouldApply);
+        }
+
+        public static bool ShouldApplyIconRequest(uint requestGeneration, uint currentGeneration)
+            => requestGeneration == currentGeneration;
+
+        public static bool ShouldApplyIconRequest(System.Func<bool> shouldApply)
+            => shouldApply?.Invoke() != false;
 
         /// <summary>Legacy synchronous entry point. Prefer passing a MonoBehaviour for StreamingAssets/mobile paths.</summary>
         public static void LoadIconStatic(VisualElement el, string artPath, string name)
         {
-            LoadIcon(null, el, artPath, name);
+            LoadIcon(null, el, artPath, name, null);
         }
 
         private void LoadPanelArt(string artPath)
@@ -1140,9 +1153,9 @@ namespace VLTK.UI
         private void OnQuickSlotClick(int slotIndex) => SubsystemLog.Info("HUD", string.Format(System.Globalization.CultureInfo.InvariantCulture, "Quick slot {0}: consume intent (backend effect pending)", slotIndex));
         private void OnStatusClick()
         {
-            // HUD-003: open Character Info via PopupManager. Equipment binds to the
-            // live PlayerEquipmentService; stats provider is null until the backend
-            // PlayerStateResponse is wired into the HUD (slice 1 shows '--' rows).
+            // HUD-003: open the PC Character sheet via PopupManager (mirrors OnSkillsClick).
+            // Null-safe: degrade gracefully when PopupManager is not initialised, and
+            // close any open map preview first (handled in OnSkillsClick too).
             var manager = PopupManager.Instance;
             if (manager == null)
             {
@@ -1150,10 +1163,23 @@ namespace VLTK.UI
                 return;
             }
             var sandbox = SandboxManager.Instance;
+            var bridge = _bridge;
+            var loop = sandbox != null ? sandbox.GameplayLoop : null;
             var equipment = sandbox != null ? sandbox.EquipmentService : null;
             var inventory = sandbox != null ? sandbox.InventoryService : null;
-            manager.Show(new CharacterInfoContent(equipment, statsProvider: null, inventory: inventory));
-            SubsystemLog.Info("HUD", "Open Character Status");
+            var titles = sandbox != null ? sandbox.TitleService : null;
+            var meridians = sandbox != null ? sandbox.MeridianService : null;
+            System.Func<bool> isFemale = () =>
+            {
+                var pc = sandbox != null ? sandbox.PlayerController : null;
+                return pc != null && pc.isFemale;
+            };
+            System.Action openInventory = () => OnItemsClick();
+            var state = CharacterInfoRuntimeAdapter.Build(
+                bridge, loop, equipment, inventory, titles, meridians, isFemale, openInventory);
+            manager.Show(new CharacterInfoContent(state));
+            SubsystemLog.Info("HUD", "Open Thông Tin Nhân Vật (PC sheet)");
+            CloseMapPreview();
         }
         private void OnItemsClick()
         {

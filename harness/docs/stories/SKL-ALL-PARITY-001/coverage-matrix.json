@@ -21,19 +21,19 @@
   "generated_artifacts": {
     "slice": {
       "path": "Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.txt",
-      "sha256": "bc05ca2aa192de367f06166813665a575cdd13ff7153d70dfaafb231b1dcfb55",
-      "bytes": 170358
+      "sha256": "4886dcaedb1dbe7c61b9ce357f3fdc4037515dc0a00b55e731399739e3340189",
+      "bytes": 169258
     },
     "provenance": {
       "path": "Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.provenance.json",
-      "sha256": "58a5e8d81c95f5c8926224572f2ec025af2eb0af9d1cfb5a6f4a646e091ebfc5",
+      "sha256": "bf49efe6917ccf2f89e63608ae8be8d9cfb83a250a806e09b98c1fa121797c25",
       "schema": "vltk.table-slice-provenance/v1"
     }
   },
   "selection_authority": "PC progression (skills_table.lua) and skillbook (skillbook.lua) are canonical learned-membership evidence; Unity PcSkillPanelService arrays are observed display only.",
   "membership_caveat": "These sources prove learned-membership evidence and observed display scope; they do not prove UI slot order, runtime/platform parity, or child/support/event resolution.",
   "ui_order_caveat": "UI order is never inferred: PC tiers and skillbook grants prove membership, not panel slot order.",
-  "global_union_size": 245,
+  "global_union_size": 242,
   "global_union_skill_ids": [
     3,
     4,
@@ -72,10 +72,7 @@
     47,
     48,
     50,
-    51,
     54,
-    55,
-    57,
     58,
     60,
     62,
@@ -453,7 +450,7 @@
       "unity_display_only_unresolved_count": 6,
       "symmetric_gap_count": 15,
       "relationship_bearing_union_row_count": 17,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 3,
@@ -1158,7 +1155,7 @@
       "unity_display_only_unresolved_count": 0,
       "symmetric_gap_count": 8,
       "relationship_bearing_union_row_count": 16,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 23,
@@ -1766,22 +1763,7 @@
         47,
         48,
         50,
-        51,
         54,
-        55,
-        57,
-        58
-      ],
-      "union_skill_ids": [
-        43,
-        45,
-        47,
-        48,
-        50,
-        51,
-        54,
-        55,
-        57,
         58,
         249,
         302,
@@ -1800,10 +1782,35 @@
         1071,
         1110
       ],
-      "shared_count": 7,
-      "pc_learned_only_count": 16,
-      "unity_display_only_unresolved_count": 3,
-      "symmetric_gap_count": 19,
+      "union_skill_ids": [
+        43,
+        45,
+        47,
+        48,
+        50,
+        54,
+        58,
+        249,
+        302,
+        303,
+        339,
+        341,
+        342,
+        343,
+        345,
+        347,
+        349,
+        351,
+        710,
+        1069,
+        1070,
+        1071,
+        1110
+      ],
+      "shared_count": 23,
+      "pc_learned_only_count": 0,
+      "unity_display_only_unresolved_count": 0,
+      "symmetric_gap_count": 0,
       "relationship_bearing_union_row_count": 20,
       "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
@@ -1907,22 +1914,6 @@
           }
         },
         {
-          "skill_id": 51,
-          "classification": "unity_display_only_unresolved",
-          "progression_evidence": [],
-          "skillbook_evidence": [],
-          "pc_learned": false,
-          "observed_display": true,
-          "canonical_source": {
-            "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
-            "line": 52
-          },
-          "categories": [
-            "passive"
-          ],
-          "direct_relationships": {}
-        },
-        {
           "skill_id": 54,
           "classification": "shared",
           "progression_evidence": [
@@ -1943,38 +1934,6 @@
           "direct_relationships": {
             "child_skill_id": 38
           }
-        },
-        {
-          "skill_id": 55,
-          "classification": "unity_display_only_unresolved",
-          "progression_evidence": [],
-          "skillbook_evidence": [],
-          "pc_learned": false,
-          "observed_display": true,
-          "canonical_source": {
-            "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
-            "line": 56
-          },
-          "categories": [
-            "buff_state"
-          ],
-          "direct_relationships": {}
-        },
-        {
-          "skill_id": 57,
-          "classification": "unity_display_only_unresolved",
-          "progression_evidence": [],
-          "skillbook_evidence": [],
-          "pc_learned": false,
-          "observed_display": true,
-          "canonical_source": {
-            "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
-            "line": 58
-          },
-          "categories": [
-            "buff_state"
-          ],
-          "direct_relationships": {}
         },
         {
           "skill_id": 58,
@@ -2002,13 +1961,13 @@
         },
         {
           "skill_id": 249,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_7"
           ],
           "skillbook_evidence": [],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 250
@@ -2023,7 +1982,7 @@
         },
         {
           "skill_id": 302,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_9"
           ],
@@ -2031,7 +1990,7 @@
             "skillbook_90"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 303
@@ -2049,13 +2008,13 @@
         },
         {
           "skill_id": 303,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_3"
           ],
           "skillbook_evidence": [],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 304
@@ -2073,7 +2032,7 @@
         },
         {
           "skill_id": 339,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_9"
           ],
@@ -2081,7 +2040,7 @@
             "skillbook_90"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 340
@@ -2099,13 +2058,13 @@
         },
         {
           "skill_id": 341,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_7"
           ],
           "skillbook_evidence": [],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 342
@@ -2120,7 +2079,7 @@
         },
         {
           "skill_id": 342,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_9"
           ],
@@ -2128,7 +2087,7 @@
             "skillbook_90"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 343
@@ -2144,13 +2103,13 @@
         },
         {
           "skill_id": 343,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_4"
           ],
           "skillbook_evidence": [],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 344
@@ -2168,13 +2127,13 @@
         },
         {
           "skill_id": 345,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_5"
           ],
           "skillbook_evidence": [],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 346
@@ -2192,13 +2151,13 @@
         },
         {
           "skill_id": 347,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_2"
           ],
           "skillbook_evidence": [],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 348
@@ -2216,13 +2175,13 @@
         },
         {
           "skill_id": 349,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_6"
           ],
           "skillbook_evidence": [],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 350
@@ -2240,13 +2199,13 @@
         },
         {
           "skill_id": 351,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [],
           "skillbook_evidence": [
             "skillbook_90"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 352
@@ -2264,7 +2223,7 @@
         },
         {
           "skill_id": 710,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [
             "progression_tier_9"
           ],
@@ -2272,7 +2231,7 @@
             "skillbook_120"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 712
@@ -2284,13 +2243,13 @@
         },
         {
           "skill_id": 1069,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [],
           "skillbook_evidence": [
             "skillbook_150"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 1069
@@ -2308,13 +2267,13 @@
         },
         {
           "skill_id": 1070,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [],
           "skillbook_evidence": [
             "skillbook_150"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 1070
@@ -2332,13 +2291,13 @@
         },
         {
           "skill_id": 1071,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [],
           "skillbook_evidence": [
             "skillbook_150"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 1071
@@ -2354,13 +2313,13 @@
         },
         {
           "skill_id": 1110,
-          "classification": "pc_learned_only",
+          "classification": "shared",
           "progression_evidence": [],
           "skillbook_evidence": [
             "skillbook_150"
           ],
           "pc_learned": true,
-          "observed_display": false,
+          "observed_display": true,
           "canonical_source": {
             "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
             "line": 1110
@@ -2553,7 +2512,7 @@
       "unity_display_only_unresolved_count": 1,
       "symmetric_gap_count": 9,
       "relationship_bearing_union_row_count": 18,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 60,
@@ -3229,7 +3188,7 @@
       "unity_display_only_unresolved_count": 4,
       "symmetric_gap_count": 14,
       "relationship_bearing_union_row_count": 20,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 77,
@@ -3912,7 +3871,7 @@
       "unity_display_only_unresolved_count": 2,
       "symmetric_gap_count": 8,
       "relationship_bearing_union_row_count": 12,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 95,
@@ -5167,7 +5126,7 @@
       "unity_display_only_unresolved_count": 5,
       "symmetric_gap_count": 12,
       "relationship_bearing_union_row_count": 20,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 131,
@@ -5843,7 +5802,7 @@
       "unity_display_only_unresolved_count": 5,
       "symmetric_gap_count": 11,
       "relationship_bearing_union_row_count": 14,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 151,
@@ -6478,7 +6437,7 @@
       "unity_display_only_unresolved_count": 5,
       "symmetric_gap_count": 16,
       "relationship_bearing_union_row_count": 20,
-      "proof_state": "weak_or_partial",
+      "proof_state": "canonical_static_verified_learned_scope",
       "membership_rows": [
         {
           "skill_id": 90,
@@ -7071,81 +7030,85 @@
       ]
     }
   ],
-  "ranking": [
-    {
-      "rank": 1,
-      "key": "KunLun",
-      "name": "Côn Luân",
-      "symmetric_gap_count": 16,
-      "relationship_bearing_union_row_count": 20,
-      "pc_learned_only_count": 11,
-      "unity_display_only_unresolved_count": 5
-    },
-    {
-      "rank": 2,
-      "key": "Shaolin",
-      "name": "Thiếu Lâm",
-      "symmetric_gap_count": 15,
-      "relationship_bearing_union_row_count": 17,
-      "pc_learned_only_count": 9,
-      "unity_display_only_unresolved_count": 6
-    },
-    {
-      "rank": 3,
-      "key": "EMei",
-      "name": "Nga My",
-      "symmetric_gap_count": 14,
-      "relationship_bearing_union_row_count": 20,
-      "pc_learned_only_count": 10,
-      "unity_display_only_unresolved_count": 4
-    },
-    {
-      "rank": 4,
-      "key": "TianRen",
-      "name": "Thiên Nhẫn",
-      "symmetric_gap_count": 12,
-      "relationship_bearing_union_row_count": 20,
-      "pc_learned_only_count": 7,
-      "unity_display_only_unresolved_count": 5
-    },
-    {
-      "rank": 5,
-      "key": "WuDang",
-      "name": "Võ Đang",
-      "symmetric_gap_count": 11,
-      "relationship_bearing_union_row_count": 14,
-      "pc_learned_only_count": 6,
-      "unity_display_only_unresolved_count": 5
-    },
-    {
-      "rank": 6,
-      "key": "WuDu",
-      "name": "Ngũ Độc",
-      "symmetric_gap_count": 9,
-      "relationship_bearing_union_row_count": 18,
-      "pc_learned_only_count": 8,
-      "unity_display_only_unresolved_count": 1
-    },
-    {
-      "rank": 7,
-      "key": "TianWang",
-      "name": "Thiên Vương",
-      "symmetric_gap_count": 8,
-      "relationship_bearing_union_row_count": 16,
-      "pc_learned_only_count": 8,
-      "unity_display_only_unresolved_count": 0
-    },
-    {
-      "rank": 8,
-      "key": "CuiYan",
-      "name": "Thúy Yên",
-      "symmetric_gap_count": 8,
-      "relationship_bearing_union_row_count": 12,
-      "pc_learned_only_count": 6,
-      "unity_display_only_unresolved_count": 2
-    }
-  ],
+  "ranking": [],
   "excluded_from_ranking": [
+    {
+      "key": "Shaolin",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-S-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-S-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "049c73b9e67f2a18dddbcc026ff8a6996ce1117210686e004eac07398be059a1",
+      "membership_path": "harness/docs/stories/SKL-S-PROOF-001/membership-classification.json",
+      "membership_sha256": "73bf4f791e37b2b63d276740ad5886b05c22286c2941cb521cdfc839f5e517a6"
+    },
+    {
+      "key": "EMei",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-EM-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-EM-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "002618cbfb3c79c0e7e57bc7669de37653dc437ff912ffc5349bf4676db8873d",
+      "membership_path": "harness/docs/stories/SKL-EM-PROOF-001/membership-classification.json",
+      "membership_sha256": "cafa206bbe716699e996dc15e5e892163c71e67ad3df34d08f955b9a19b89d62"
+    },
+    {
+      "key": "TianRen",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-TR-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-TR-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "d75fa4da27e66c51920db80273999d222547287ccf87c4bdf131b5136a2bef45",
+      "membership_path": "harness/docs/stories/SKL-TR-PROOF-001/membership-classification.json",
+      "membership_sha256": "466c38f90cf841ae279c2580f0b1b513e9573cf382da1b1eb70b27814c985685"
+    },
+    {
+      "key": "WuDang",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-WD-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-WD-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "1cbab681c8b4bc6ab808bace54e20620c8a5b4028c5f618de2838a4a3b3fd351",
+      "membership_path": "harness/docs/stories/SKL-WD-PROOF-001/membership-classification.json",
+      "membership_sha256": "35104b51d81ceb96934798ed6c79b19af42c1837ba786ab92fa8110712e45472"
+    },
+    {
+      "key": "WuDu",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-WDU-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-WDU-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "bdf78af995faff3448217fef3663a159b7f0581c7ad5b047bd2b456c5d03b59e",
+      "membership_path": "harness/docs/stories/SKL-WDU-PROOF-001/membership-classification.json",
+      "membership_sha256": "4cc693683e6112a6f299790d801fc1e8f856bf5b4a27597dc6665a6d4828194a"
+    },
+    {
+      "key": "TianWang",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-TW-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-TW-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "2601a8f03517ad07e930e0fd248f80b547315b4591a07a28a567407ea55a469e",
+      "membership_path": "harness/docs/stories/SKL-TW-PROOF-001/membership-classification.json",
+      "membership_sha256": "5cc932f515c69355179dfe485017288bc60d1134cba4c2cb8f74fde5c0a8cb67"
+    },
+    {
+      "key": "CuiYan",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-CY-PROOF-001"
+      ],
+      "proof_path": "harness/docs/stories/SKL-CY-PROOF-001/static-catalog-proof.json",
+      "proof_sha256": "5e2123bf27ff82b6889260d9c14d4b598a81f41680c9f61667d0ed004cbf108a",
+      "membership_path": "harness/docs/stories/SKL-CY-PROOF-001/membership-classification.json",
+      "membership_sha256": "b045ad3292ca61820d947ff2c3d37e8876ad9b0027f437234eacfda5beb1eac1"
+    },
     {
       "key": "TangMen",
       "proof_state": "canonical_static_verified_learned_scope",
@@ -7166,20 +7129,31 @@
       ],
       "oracle_path": "Assets/StreamingAssets/Reference/PcCaiBangOracle.json",
       "oracle_sha256": "91d3251aef30f755f3480a2104a48227eaffd8e7ea8fbf495d189dd185ed84da"
+    },
+    {
+      "key": "KunLun",
+      "proof_state": "canonical_static_verified_learned_scope",
+      "stories": [
+        "SKL-KL-PROOF-001"
+      ],
+      "oracle_path": "Assets/StreamingAssets/Reference/PcKunLunOracle.json",
+      "oracle_sha256": "3be6712946489b82d2595eae77894bcf022f0b6cd4d43977850572c700be399f",
+      "membership_path": "harness/docs/stories/SKL-KL-PROOF-001/membership-classification.json",
+      "membership_sha256": "1d2643f30287f3386dadefdb3dcceb0a1d6666e2497c68d9f9a7827be80d86ca"
     }
   ],
   "recommended_next_story": {
-    "id": "SKL-KL-PROOF-001",
-    "title": "Côn Luân canonical learned-membership and static catalog proof",
-    "winner": "KunLun",
-    "symmetric_gap_count": 16,
+    "id": null,
+    "title": null,
+    "winner": null,
+    "symmetric_gap_count": null,
     "reason": "Highest symmetric membership gap among non-completed factions: PC-learned and Unity-display membership must be reconciled against canonical sources before any oracle."
   },
   "summary_counts": {
     "factions": 10,
-    "union_rows_total": 245,
-    "shared_total": 124,
-    "pc_learned_only_total": 81,
-    "unity_display_only_unresolved_total": 40
+    "union_rows_total": 242,
+    "shared_total": 140,
+    "pc_learned_only_total": 65,
+    "unity_display_only_unresolved_total": 37
   }
 }

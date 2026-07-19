@@ -10,6 +10,7 @@ using VLTK.Core;
 using VLTK.Sprites;
 using VLTK.Model;
 using VLTK.Sandbox.ItemData;
+using VLTK.SkillPort;
 
 namespace VLTK.Sandbox
 {
@@ -207,6 +208,10 @@ namespace VLTK.Sandbox
                  "50ms catches hitch sources without spamming.")]
         public int bootTimingLogThresholdMs = 50;
 
+        [Header("SkillPort authoritative presentation")]
+        [Tooltip("Editor/development only. Production always rejects the repository test signing key.")]
+        public bool allowTestOnlySkillPortFixtureInDevelopment;
+
         public static SandboxManager Instance { get; private set; }
         public SandboxBootReport BootReport { get; private set; }
         public bool IsInitialized { get; private set; }
@@ -242,8 +247,10 @@ namespace VLTK.Sandbox
         public FemalePlayerVisual FemalePlayerVisual { get; private set; }
         public SkillCatalog CombatSkillCatalog { get; private set; }
         public CombatRuntimeService CombatRuntime { get; private set; }
+        public SandboxAuthoritativeCombatPresentationHost AuthoritativeCombatPresentation { get; private set; }
         public GameplayLoopService GameplayLoop { get; private set; }
         public PlayerProgressionState PlayerProgression { get; private set; }
+        public event Action<CombatFaction> RuntimeFactionSwitched;
         public QuestService QuestService { get; private set; }
         public PcSkillRegistry PcSkillsFull { get; private set; }
         public ItemDatabase ItemDb { get; private set; }
@@ -949,23 +956,9 @@ namespace VLTK.Sandbox
                     _inventoryService = new InventoryService(importer, _equipmentService);
                     _equipmentService.OnEquipChanged += (evt) => {
                         if (PlayerController != null && PlayerController.visual != null)
-                        {
-                            PlayerController.visual.SetEquipVariant(evt.slot, evt.newVariant);
-                            if (evt.slot == PlayerEquipSlot.Weapon)
-                            {
-                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
-                                PlayerController.EquipWeapon(wType);
-                            }
-                        }
+                            ApplyEquipmentVisualChange(PlayerController.visual, evt.slot, evt.itemId, evt.newVariant, PlayerController.EquipWeapon);
                         if (FemalePlayerVisual != null)
-                        {
-                            FemalePlayerVisual.SetEquipVariant(evt.slot, evt.newVariant);
-                            if (evt.slot == PlayerEquipSlot.Weapon)
-                            {
-                                var wType = PlayerEquipmentService.GetWeaponType(evt.itemId, evt.newVariant);
-                                FemalePlayerVisual.SetWeapon(wType);
-                            }
-                        }
+                            ApplyEquipmentVisualChange(FemalePlayerVisual, evt.slot, evt.itemId, evt.newVariant, FemalePlayerVisual.SetWeapon);
                     };
                 }
                 ShopService = new ShopService(ItemDb, initialSilver: 5000);
@@ -1004,6 +997,21 @@ namespace VLTK.Sandbox
             RecordBootTiming("ItemData.LazyLoad", watch.ElapsedMilliseconds);
             SubsystemLog.Info("SandboxBoot", $"Item data lazy-loaded in {watch.ElapsedMilliseconds}ms " +
                 $"(ItemDb={(ItemDb != null ? "ok" : "null")}, inv={(_inventoryService != null ? "ok" : "null")}).");
+        }
+
+        public static void ApplyEquipmentVisualChange(IPlayerVisual visual, PlayerEquipSlot slot, int itemId, int newVariant, Action<PcWeaponType, int> applyWeapon = null)
+        {
+            if (visual == null) return;
+            if (slot == PlayerEquipSlot.Weapon)
+            {
+                var weapon = PlayerEquipmentService.GetWeaponType(itemId, newVariant);
+                if (applyWeapon != null)
+                    applyWeapon(weapon, newVariant);
+                else
+                    visual.SetWeapon(weapon, newVariant);
+                return;
+            }
+            visual.SetEquipVariant(slot, newVariant);
         }
 
         private System.Collections.IEnumerator LoadOptionalServicesCoroutine()
@@ -1648,7 +1656,7 @@ namespace VLTK.Sandbox
             }
             CombatRuntime = new CombatRuntimeService(CombatSkillCatalog);
             PlayerProgression ??= new PlayerProgressionState();
-            // First-boot: default faction = Đường Môn. This is the fresh Stop/Play
+            // First-boot: default faction = Cái Bang. This is the fresh Stop/Play
             // sandbox contract; a player-selected runtime faction is retained while alive.
             // Without this the player joins with faction=None, knownSkills empty,
             // and the skill panel shows 0 skills + slots are blank.
@@ -1658,10 +1666,14 @@ namespace VLTK.Sandbox
             SkillEffectVisual = new SkillEffectVisualService(new SprRuntimeService(), CombatSkillCatalog);
             // Wire skill cast sound → AudioService (PC missles.txt SoundPath)
             SkillEffectVisual.OnCastSound = (pcPath) => AudioService?.PlaySkillCast(pcPath);
+            InitializeAuthoritativeCombatPresentation();
 
             // Gameplay Loop: wire all subsystems together
             GameplayLoop = new GameplayLoopService(CombatSkillCatalog);
-            var gp = GameplayLoop.RegisterPlayer(PlayerActorId, "Đường Môn Đệ Tử", PlayerProgression.level, Vector2.zero);
+            var gp = GameplayLoop.RegisterPlayer(PlayerActorId, "Cái Bang Đệ Tử", PlayerProgression.level, Vector2.zero);
+            gp.combat.faction = PlayerProgression.faction;
+            gp.combat.maxMana = PcMaxManaFormula.Compute(PlayerProgression.level, 0, PlayerProgression.faction);
+            gp.combat.currentMana = gp.combat.maxMana;
             gp.combat.knownSkills = PlayerProgression.knownSkills;
             gp.combat.skillLevels = PlayerProgression.skillLevels;
 
@@ -1670,6 +1682,9 @@ namespace VLTK.Sandbox
             PlayerProgression.MaxAllSkillLevels(CombatSkillCatalog);
             gp.combat.knownSkills = PlayerProgression.knownSkills;
             gp.combat.skillLevels = PlayerProgression.skillLevels;
+            gp.combat.MaterializeLearnedPassiveStates(CombatSkillCatalog);
+            SkillEffectVisual?.SynchronizeStateAuras(
+                gp.combat, gp.worldPos, ResolveLocalPlayerAuraPosition);
 
             // Auto-grant horse at level 30+ per PC horseres.txt progression.
             // Sandbox default: player joins at level 30 (CaiBang quest complete),
@@ -1693,7 +1708,140 @@ namespace VLTK.Sandbox
             GameplayLoop.OnLevelUp += e =>
                 SubsystemLog.Info("Gameplay", $"LEVEL UP! {e.oldLevel} → {e.newLevel}");
             // GameplayLoop.OnDamage += e =>
-            //     SubsystemLog.Info("Gameplay", $"DMG: {e.attackerId}→{e.targetId} -{e.damage} ({e.type})");
+              //     SubsystemLog.Info("Gameplay", $"DMG: {e.attackerId}→{e.targetId} -{e.damage} ({e.type})");
+          }
+
+        private void InitializeAuthoritativeCombatPresentation()
+        {
+            string directory = Path.Combine(Application.streamingAssetsPath, "Generated/SkillPort");
+            SkillPortProjectionLoadResult load =
+                allowTestOnlySkillPortFixtureInDevelopment && (Application.isEditor || Debug.isDebugBuild)
+                    ? SkillPortClientProjectionLoader.LoadDevelopmentFixtureFromDirectory(directory)
+                    : SkillPortClientProjectionLoader.LoadFromDirectory(directory);
+            if (!load.success)
+            {
+                AuthoritativeCombatPresentation = null;
+                SubsystemLog.Info("SkillPort", "Authoritative presentation disabled: " + load.detail);
+                return;
+            }
+
+            AuthoritativeCombatPresentation =
+                new SandboxAuthoritativeCombatPresentationHost(this, load.projection);
+        }
+
+        public bool RequiresAuthoritativeSkillInput(int skillId)
+        {
+            return AuthoritativeCombatPresentation != null &&
+                   AuthoritativeCombatPresentation.RequiresAuthoritativeInput(skillId);
+        }
+
+        public void BeginAuthoritativeCombatSession(
+            ulong sessionEpoch,
+            ulong initialServerSequence,
+            ulong initialServerTick,
+            string localEntityId)
+        {
+            AuthoritativeCombatPresentation?.BeginSession(
+                sessionEpoch,
+                initialServerSequence,
+                initialServerTick,
+                localEntityId);
+        }
+
+        public AuthoritativePresentationDispatchResult ApplyAuthoritativeServerEnvelope(byte[] bytes)
+        {
+            return AuthoritativeCombatPresentation != null
+                ? AuthoritativeCombatPresentation.ApplyServerEnvelope(bytes)
+                : AuthoritativePresentationDispatchResult.PolicyBlocked;
+        }
+
+        /// <summary>
+        /// GM-only in-memory transition used to test every faction without restarting the scene.
+        /// It intentionally does not alter inventory, weapon, mount, position, or SkillPort policy.
+        /// </summary>
+        public bool TrySwitchRuntimeFaction(CombatFaction targetFaction, out string detail)
+        {
+            if (targetFaction == CombatFaction.None ||
+                !Enum.IsDefined(typeof(CombatFaction), targetFaction))
+            {
+                detail = $"Unsupported runtime faction: {targetFaction}";
+                return false;
+            }
+
+            var player = GameplayLoop?.Player;
+            if (CombatSkillCatalog == null || PlayerProgression == null || player?.combat == null)
+            {
+                detail = "Combat runtime is not initialized";
+                return false;
+            }
+
+            PlayerProgression.ReplaceFactionSkillPanelProgression(CombatSkillCatalog, targetFaction);
+            PlayerProgression.MaxAllSkillLevels(CombatSkillCatalog);
+
+            CombatActorState combat = player.combat;
+            combat.faction = targetFaction;
+            combat.level = PlayerProgression.level;
+            combat.knownSkills = PlayerProgression.knownSkills;
+            combat.skillLevels = PlayerProgression.skillLevels;
+            combat.activeSkillId = 0;
+            combat.currentWeaponSkillId = 0;
+            combat.fightMode = true;
+            combat.ClearSkillStateSources();
+            combat.MaterializeLearnedPassiveStates(CombatSkillCatalog);
+            combat.currentLife = Mathf.Max(1, combat.maxLife);
+            combat.currentMana = Mathf.Max(0, combat.maxMana);
+            player.level = PlayerProgression.level;
+
+            if (PlayerController != null)
+            {
+                PcWeaponType preservedWeapon = PlayerController.EquippedWeapon;
+                PlayerController.CancelDash();
+                PlayerController.ResetMovementState();
+                combat.position = PlayerController.transform.position;
+                combat.rideHorse = PlayerController.Mount != null && PlayerController.Mount.IsMounted;
+
+                if (targetFaction == CombatFaction.EMei || targetFaction == CombatFaction.CuiYan)
+                    PlayerController.SetGender(true);
+                else if (targetFaction == CombatFaction.Shaolin)
+                    PlayerController.SetGender(false);
+                PlayerController.EquipWeapon(preservedWeapon);
+            }
+
+            int clearedCooldowns = CombatRuntime?.ResetActorCooldowns(combat.actorId) ?? 0;
+            if (GameplayLoop?.Combat != null && !ReferenceEquals(GameplayLoop.Combat, CombatRuntime))
+                clearedCooldowns += GameplayLoop.Combat.ResetActorCooldowns(combat.actorId);
+            int clearedEffects = SkillEffectVisual?.ClearActiveEffects() ?? 0;
+            AuthoritativeCombatPresentation?.ClearTransientPresentationState();
+            SynchronizeLocalPlayerStateAuras();
+
+            int notificationFailures = NotifyRuntimeFactionSwitched(targetFaction);
+            detail = $"Faction={targetFaction}, skills={PlayerProgression.knownSkills.Count}, " +
+                     $"cooldownsCleared={clearedCooldowns}, effectsCleared={clearedEffects}, " +
+                     $"notificationFailures={notificationFailures}";
+            SubsystemLog.Info("GM", "Runtime faction switch: " + detail);
+            return true;
+        }
+
+        private int NotifyRuntimeFactionSwitched(CombatFaction targetFaction)
+        {
+            Delegate[] listeners = RuntimeFactionSwitched?.GetInvocationList();
+            if (listeners == null) return 0;
+            int failures = 0;
+            foreach (Delegate listener in listeners)
+            {
+                try
+                {
+                    ((Action<CombatFaction>)listener)(targetFaction);
+                }
+                catch (Exception ex)
+                {
+                    failures++;
+                    SubsystemLog.Warn(
+                        "GM",
+                        $"RuntimeFactionSwitched listener failed after committed switch: {ex.Message}");
+                }
+            }
+            return failures;
         }
 
         public void GrantFactionSkillPanelProgression(CombatFaction targetFaction)
@@ -2651,6 +2799,50 @@ namespace VLTK.Sandbox
             }
 
             GameplayLoop?.Tick(Time.deltaTime);
+            SynchronizeLocalPlayerStateAuras();
+            SynchronizeEnemyStateAuras();
+        }
+
+        private void SynchronizeLocalPlayerStateAuras()
+        {
+            var player = GameplayLoop?.Player;
+            if (player?.combat == null) return;
+            player.combat.MaterializeLearnedPassiveStates(CombatSkillCatalog);
+            SkillEffectVisual?.SynchronizeStateAuras(
+                player.combat, player.worldPos, ResolveLocalPlayerAuraPosition);
+        }
+
+        private Vector2 ResolveLocalPlayerAuraPosition()
+        {
+            if (PlayerController != null)
+                return PlayerController.transform.position;
+            return GameplayLoop?.Player?.worldPos ?? Vector2.zero;
+        }
+
+        private void SynchronizeEnemyStateAuras()
+        {
+            if (GameplayLoop == null || EnemyRuntime == null || SkillEffectVisual == null)
+                return;
+
+            foreach (var entry in EnemyRuntime.Entries)
+            {
+                var actor = GameplayLoop.GetActor(10000 + entry.instanceId);
+                if (actor?.combat == null) continue;
+                if (actor.isDead || entry.enemyBehaviour == null)
+                {
+                    SkillEffectVisual.RemoveStateAurasForActor(actor.combat.actorId);
+                    continue;
+                }
+
+                var liveEnemy = entry.enemyBehaviour;
+                Vector2 position = liveEnemy.transform.position;
+                SkillEffectVisual.SynchronizeStateAuras(
+                    actor.combat,
+                    position,
+                    () => liveEnemy != null
+                        ? (Vector2)liveEnemy.transform.position
+                        : actor.worldPos);
+            }
         }
 
         // ── IMapTeleportHost implementation ──────────────────────────────────

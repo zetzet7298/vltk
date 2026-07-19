@@ -30,6 +30,8 @@ namespace VLTK.Tests.Sandbox
             public int LastNewVariant;
             public int LastItemId;
             public int LastOldItemId;
+            public int LastNewItemId;
+            public int LastSaveItemId;
             public int LastSaveVariant;
 
             public void RefreshVisual(PlayerEquipSlot slot, int oldVariant, int newVariant, int itemId)
@@ -45,6 +47,7 @@ namespace VLTK.Tests.Sandbox
             {
                 WeaponCalls++;
                 LastOldItemId = oldItemId;
+                LastNewItemId = newItemId;
                 LastNewVariant = newVariant;
             }
             public void OnArmorChanged(int oldVariant, int newVariant, int itemId) { ArmorCalls++; }
@@ -54,6 +57,7 @@ namespace VLTK.Tests.Sandbox
             public void SaveEquipmentState(int itemId, PlayerEquipSlot slot, int variant)
             {
                 SaveCalls++;
+                LastSaveItemId = itemId;
                 LastSaveVariant = variant;
             }
         }
@@ -97,20 +101,60 @@ namespace VLTK.Tests.Sandbox
         {
             var svc = new PlayerEquipmentService();
             int fired = 0;
-            svc.OnEquipChanged += e => fired++;
+            EquipChangeEvent last = default;
+            svc.OnEquipChanged += e =>
+            {
+                fired++;
+                last = e;
+            };
             svc.Equip(PlayerEquipSlot.Body, 25, 1234);
             Assert.AreEqual(1, fired);
+            Assert.AreEqual(PlayerEquipSlot.Body, last.slot);
+            Assert.AreEqual(1, last.oldVariant);
+            Assert.AreEqual(25, last.newVariant);
+            Assert.AreEqual(0, last.oldItemId);
+            Assert.AreEqual(1234, last.itemId);
         }
 
         [Test]
-        public void Equip_SameVariant_NoEvent()
+        public void Equip_SameItemAndVariant_NoEvent()
         {
-            var svc = new PlayerEquipmentService();
+            var host = new FakeHost();
+            var svc = new PlayerEquipmentService(host);
             svc.Equip(PlayerEquipSlot.Body, 25, 1234);
             int fired = 0;
             svc.OnEquipChanged += e => fired++;
-            svc.Equip(PlayerEquipSlot.Body, 25, 9999); // same variant
+            svc.Equip(PlayerEquipSlot.Body, 25, 1234);
             Assert.AreEqual(0, fired);
+            Assert.AreEqual(1, host.RefreshCalls);
+            Assert.AreEqual(1, host.SaveCalls);
+        }
+
+        [Test]
+        public void Equip_SameVariantDifferentItem_FiresOnce()
+        {
+            var host = new FakeHost();
+            var svc = new PlayerEquipmentService(host);
+            svc.Equip(PlayerEquipSlot.Body, 25, 1234);
+            int fired = 0;
+            EquipChangeEvent last = default;
+            svc.OnEquipChanged += e =>
+            {
+                fired++;
+                last = e;
+            };
+
+            svc.Equip(PlayerEquipSlot.Body, 25, 9999);
+
+            Assert.AreEqual(1, fired);
+            Assert.AreEqual(2, host.RefreshCalls);
+            Assert.AreEqual(2, host.SaveCalls);
+            Assert.AreEqual(25, last.oldVariant);
+            Assert.AreEqual(25, last.newVariant);
+            Assert.AreEqual(1234, last.oldItemId);
+            Assert.AreEqual(9999, last.itemId);
+            Assert.AreEqual(9999, host.LastItemId);
+            Assert.AreEqual(9999, host.LastSaveItemId);
         }
 
         [Test]
@@ -176,6 +220,92 @@ namespace VLTK.Tests.Sandbox
             var svc = new PlayerEquipmentService(host);
             svc.Equip(PlayerEquipSlot.Weapon, 5, 7777);
             Assert.AreEqual(1, host.WeaponCalls);
+            Assert.AreEqual(0, host.LastOldItemId);
+            Assert.AreEqual(7777, host.LastNewItemId);
+        }
+
+        [Test]
+        public void Equip_WeaponSameItemAndVariant_Idempotent()
+        {
+            var host = new FakeHost();
+            var svc = new PlayerEquipmentService(host);
+            svc.Equip(PlayerEquipSlot.Weapon, 5, 7777);
+            int fired = 0;
+            svc.OnEquipChanged += e => fired++;
+
+            svc.Equip(PlayerEquipSlot.Weapon, 5, 7777);
+
+            Assert.AreEqual(0, fired);
+            Assert.AreEqual(1, host.RefreshCalls);
+            Assert.AreEqual(1, host.SfxCalls);
+            Assert.AreEqual(1, host.LogCalls);
+            Assert.AreEqual(1, host.SaveCalls);
+            Assert.AreEqual(1, host.WeaponCalls);
+            Assert.AreEqual(PcWeaponType.ShortWeapon, svc.GetCurrentWeaponType());
+        }
+
+        [Test]
+        public void Equip_WeaponSameVariantDifferentItem_ReportsTrueOldNewItemIds()
+        {
+            var host = new FakeHost();
+            var svc = new PlayerEquipmentService();
+            svc.Equip(PlayerEquipSlot.Weapon, 5, 1111);
+            svc.AttachHost(host);
+            int fired = 0;
+            EquipChangeEvent last = default;
+            svc.OnEquipChanged += e =>
+            {
+                fired++;
+                last = e;
+            };
+
+            svc.Equip(PlayerEquipSlot.Weapon, 5, 2222);
+
+            Assert.AreEqual(1, fired);
+            Assert.AreEqual(1, host.RefreshCalls);
+            Assert.AreEqual(1, host.SfxCalls);
+            Assert.AreEqual(1, host.LogCalls);
+            Assert.AreEqual(1, host.SaveCalls);
+            Assert.AreEqual(1, host.WeaponCalls);
+            Assert.AreEqual(5, last.oldVariant);
+            Assert.AreEqual(5, last.newVariant);
+            Assert.AreEqual(1111, last.oldItemId);
+            Assert.AreEqual(2222, last.itemId);
+            Assert.AreEqual(1111, host.LastOldItemId);
+            Assert.AreEqual(2222, host.LastNewItemId);
+            Assert.AreEqual(2222, host.LastItemId);
+            Assert.AreEqual(2222, host.LastSaveItemId);
+            Assert.AreEqual(5, host.LastSaveVariant);
+        }
+
+        [Test]
+        public void Equip_WeaponDefaultVariantDifferentItem_FiresAndMarksEquipped()
+        {
+            var host = new FakeHost();
+            var svc = new PlayerEquipmentService(host);
+            int fired = 0;
+            EquipChangeEvent last = default;
+            svc.OnEquipChanged += e =>
+            {
+                fired++;
+                last = e;
+            };
+
+            svc.Equip(PlayerEquipSlot.Weapon, 0, 9000);
+
+            Assert.AreEqual(1, fired);
+            Assert.IsTrue(svc.IsEquipped(PlayerEquipSlot.Weapon));
+            Assert.AreEqual(0, svc.GetVariant(PlayerEquipSlot.Weapon));
+            Assert.AreEqual(1, host.RefreshCalls);
+            Assert.AreEqual(1, host.WeaponCalls);
+            Assert.AreEqual(0, last.oldVariant);
+            Assert.AreEqual(0, last.newVariant);
+            Assert.AreEqual(0, last.oldItemId);
+            Assert.AreEqual(9000, last.itemId);
+            Assert.AreEqual(0, host.LastOldItemId);
+            Assert.AreEqual(9000, host.LastNewItemId);
+            Assert.AreEqual(9000, host.LastSaveItemId);
+            Assert.AreEqual(0, host.LastSaveVariant);
         }
 
         [Test]
@@ -216,6 +346,43 @@ namespace VLTK.Tests.Sandbox
             svc.Equip(PlayerEquipSlot.Body, 25, 1234);
             svc.Unequip(PlayerEquipSlot.Body);
             Assert.AreEqual(1, svc.GetVariant(PlayerEquipSlot.Body));
+            Assert.IsFalse(svc.IsEquipped(PlayerEquipSlot.Body));
+        }
+
+        [Test]
+        public void Unequip_WeaponDefaultVariantItem_ClearsIdentityAndDispatches()
+        {
+            var host = new FakeHost();
+            var svc = new PlayerEquipmentService(host);
+            int fired = 0;
+            EquipChangeEvent last = default;
+            svc.OnEquipChanged += e =>
+            {
+                fired++;
+                last = e;
+            };
+
+            svc.Equip(PlayerEquipSlot.Weapon, 0, 9000);
+            svc.Unequip(PlayerEquipSlot.Weapon);
+
+            Assert.AreEqual(2, fired);
+            Assert.IsFalse(svc.IsEquipped(PlayerEquipSlot.Weapon));
+            Assert.AreEqual(0, svc.GetVariant(PlayerEquipSlot.Weapon));
+            Assert.AreEqual(PcWeaponType.EmptyHand, svc.GetCurrentWeaponType());
+            Assert.AreEqual(2, host.RefreshCalls);
+            Assert.AreEqual(2, host.SfxCalls);
+            Assert.AreEqual(2, host.LogCalls);
+            Assert.AreEqual(2, host.SaveCalls);
+            Assert.AreEqual(2, host.WeaponCalls);
+            Assert.AreEqual(0, last.oldVariant);
+            Assert.AreEqual(0, last.newVariant);
+            Assert.AreEqual(9000, last.oldItemId);
+            Assert.AreEqual(0, last.itemId);
+            Assert.AreEqual(9000, host.LastOldItemId);
+            Assert.AreEqual(0, host.LastNewItemId);
+            Assert.AreEqual(0, host.LastItemId);
+            Assert.AreEqual(0, host.LastSaveItemId);
+            Assert.AreEqual(0, host.LastSaveVariant);
         }
 
         // ── AttachHost ─────────────────────────────────────────────────────
@@ -278,24 +445,37 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void WeaponVariantToType_Empty_EmptyHand()
+        public void WeaponVariantToType_MapsEveryCanonicalBaseWeaponVariant()
         {
-            Assert.AreEqual(PcWeaponType.EmptyHand,
-                PlayerEquipmentService.WeaponVariantToType(0));
+            Assert.AreEqual(PcWeaponType.EmptyHand, PlayerEquipmentService.WeaponVariantToType(0));
+            AssertWeaponVariants(PcWeaponType.ShortWeapon, 1, 2, 3, 4, 5, 6, 19, 20, 21, 22);
+            AssertWeaponVariants(PcWeaponType.LongWeapon, 7, 8, 9, 10, 11, 12, 23, 24, 25, 26);
+            AssertWeaponVariants(PcWeaponType.DualWeapon, 13, 14, 15, 16, 17, 18, 27, 28, 29, 30);
+            Assert.AreEqual(PcWeaponType.EmptyHand, PlayerEquipmentService.WeaponVariantToType(-1));
+            Assert.AreEqual(PcWeaponType.EmptyHand, PlayerEquipmentService.WeaponVariantToType(31));
+        }
+
+        [TestCase(0, 0, PcWeaponType.ShortWeapon)]
+        [TestCase(0, 1, PcWeaponType.ShortWeapon)]
+        [TestCase(0, 2, PcWeaponType.LongWeapon)]
+        [TestCase(0, 3, PcWeaponType.LongWeapon)]
+        [TestCase(0, 4, PcWeaponType.DualWeapon)]
+        [TestCase(0, 5, PcWeaponType.DualWeapon)]
+        [TestCase(1, 0, PcWeaponType.HiddenWeapon)]
+        [TestCase(1, 99, PcWeaponType.HiddenWeapon)]
+        public void PcItemTupleToWeaponType_MapsCanonicalDetailAndParticularRows(
+            int detailType, int particularType, PcWeaponType expected)
+        {
+            Assert.AreEqual(expected,
+                PlayerEquipmentService.PcItemTupleToWeaponType(0, detailType, particularType));
         }
 
         [Test]
-        public void WeaponVariantToType_Short_ShortWeapon()
+        public void PcItemTupleToWeaponType_UnknownRowsFailClosedToEmptyHand()
         {
-            Assert.AreEqual(PcWeaponType.ShortWeapon,
-                PlayerEquipmentService.WeaponVariantToType(5));
-        }
-
-        [Test]
-        public void WeaponVariantToType_Staff_LongWeapon()
-        {
-            Assert.AreEqual(PcWeaponType.LongWeapon,
-                PlayerEquipmentService.WeaponVariantToType(15));
+            Assert.AreEqual(PcWeaponType.EmptyHand, PlayerEquipmentService.PcItemTupleToWeaponType(1, 0, 0));
+            Assert.AreEqual(PcWeaponType.EmptyHand, PlayerEquipmentService.PcItemTupleToWeaponType(0, 0, 6));
+            Assert.AreEqual(PcWeaponType.EmptyHand, PlayerEquipmentService.PcItemTupleToWeaponType(0, 2, 0));
         }
 
         [Test]
@@ -317,6 +497,12 @@ namespace VLTK.Tests.Sandbox
         {
             // Any id in 0-139 that's not in the special list returns 9
             Assert.AreEqual(9, PlayerEquipmentService.ItemToHelmetVariant(50));
+        }
+
+        private static void AssertWeaponVariants(PcWeaponType expected, params int[] variants)
+        {
+            foreach (int variant in variants)
+                Assert.AreEqual(expected, PlayerEquipmentService.WeaponVariantToType(variant), $"variant {variant}");
         }
     }
 }

@@ -110,9 +110,9 @@ namespace VLTK.Sandbox
     /// </summary>
     public class GameplayLoopService
     {
-        // Sandbox boot contract: a fresh Stop/Play session starts as Đường Môn.
+        // Sandbox boot contract: a fresh Stop/Play session starts as Cái Bang.
         // Runtime faction switching can still replace this after boot.
-        public const CombatFaction DefaultPlayerFaction = CombatFaction.TangMen;
+        public const CombatFaction DefaultPlayerFaction = CombatFaction.CaiBang;
         // ── Sub-services ───────────────────────────────────────────────────
 
         public CombatRuntimeService Combat { get; }

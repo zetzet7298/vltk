@@ -196,13 +196,16 @@ namespace VLTK.Sandbox
 
             // Default light color from faction
             config.lightColor = GetFactionDefaultColor(skill.faction);
+            // State visual and child missile are independent PC namespaces. A skill may
+            // own both (for example Vô Hình Độc 69 and Ngũ Hành Trận 146).
+            ApplyStateAura(skill, config);
 
-            // Core mapping: skill.childSkillId → missile visual data
+            // Visuals stay on skill.childSkillId. Event status audio may belong to the
+            // event skill's own missile row; ApplyMissileAudio handles that separately.
             int missileId = skill.childSkillId;
             if (missileId <= 0)
             {
-                // No missile. State self-buff skill may still have a state aura SPR.
-                ApplyStateAura(skill, config);
+                ApplyMissileAudio(skill, null, config);
                 return config;
             }
 
@@ -210,12 +213,13 @@ namespace VLTK.Sandbox
 
             if (_missileVisuals == null || !_missileVisuals.TryGet(missileId, out var mv))
             {
-                // Try to get basic info from PcMissileRegistry as fallback
+                // Try to get basic info from PcMissileRegistry as fallback.
                 if (PcMissileRegistry.TryGet(missileId, out var basic))
                 {
                     config.missileSpeed = basic.speed;
                     config.missileLifetime = basic.lifetime;
                 }
+                ApplyMissileAudio(skill, null, config);
                 return config;
             }
 
@@ -248,13 +252,28 @@ namespace VLTK.Sandbox
             config.dmgRange = mv.dmgRange;
             config.lightColor = mv.LightColor;
             config.lightRadius = mv.lightRadius;
-            // PC KMissle plays SndFile2 for each MS_DoFly instance and SndFile4
-            // when that individual missile creates its collision effect.
-            if (mv.PrimaryFlight != null && !string.IsNullOrEmpty(mv.PrimaryFlight.soundPath))
-                config.flightSoundPath = mv.PrimaryFlight.soundPath;
-            if (mv.PrimaryCollision != null && !string.IsNullOrEmpty(mv.PrimaryCollision.soundPath))
-                config.impactSoundPath = mv.PrimaryCollision.soundPath;
+            ApplyMissileAudio(skill, mv, config);
             return config;
+        }
+
+        // Child missile owns status audio. Relationship/event rows own it only when
+        // they are audio-only: 352 has SndFile2 but no flight SPR; 128's own row has
+        // unrelated art, while child 48 is the spawned Khang Long missile.
+        private void ApplyMissileAudio(SkillDefinition skill, PcMissileFullVisual childMissile,
+            PcSkillVisualConfig config)
+        {
+            var audioMissile = childMissile;
+            if (!skill.byMissile && _missileVisuals != null &&
+                _missileVisuals.TryGet(skill.skillId, out var eventMissile) &&
+                eventMissile.PrimaryFlight != null && !eventMissile.PrimaryFlight.HasSpr &&
+                !string.IsNullOrEmpty(eventMissile.PrimaryFlight.soundPath))
+            {
+                audioMissile = eventMissile;
+            }
+
+            if (audioMissile == null) return;
+            config.flightSoundPath = audioMissile.PrimaryFlight?.soundPath;
+            config.impactSoundPath = audioMissile.PrimaryCollision?.soundPath;
         }
 
         /// <summary>
@@ -267,6 +286,7 @@ namespace VLTK.Sandbox
             var aura = GetStateAuraData(skill.stateSpecialId);
             if (string.IsNullOrEmpty(aura.sprPath)) return;
             config.stateAuraSprPath = aura.sprPath;
+            config.stateAuraTotalFrames = aura.totalFrames;
             config.stateAuraIntervalTicks = aura.intervalTicks;
             config.stateAuraFrameStart = aura.frameStart;
             config.stateAuraFrameEnd = aura.frameEnd;

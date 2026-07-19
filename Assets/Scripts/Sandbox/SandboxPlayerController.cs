@@ -64,6 +64,31 @@ namespace VLTK.Sandbox
         public bool IsMeditating { get; private set; }
         public float targetArriveDistance = 8f;
 
+        [Header("PC Cast Presentation")]
+        [Tooltip("PC speed bonus percent. Logical action clock uses BaseValue.ini's 20 frames, not Skills.txt WaitTime.")]
+        public float attackSpeedPercent;
+        public float castSpeedPercent;
+        public bool IsSkillActionLocked => _forcedVisualAction.HasValue && _forcedVisualRemaining > 0f;
+        public float ForcedActionRemaining => Mathf.Max(0f, _forcedVisualRemaining);
+        public float ForcedActionDuration => _forcedVisualDuration;
+        public float ForcedActionEffectTime => _forcedVisualEffectTime;
+        public int ForcedActionTotalTicks => _forcedVisualTotalTicks;
+        public float ForcedActionProgress
+        {
+            get
+            {
+                if (_forcedVisualTotalTicks <= 0 || _forcedVisualDuration <= 0f)
+                    return 0f;
+                float elapsed = Mathf.Max(0f, _forcedVisualDuration - _forcedVisualRemaining);
+                int currentTick = Mathf.Clamp(
+                    Mathf.FloorToInt(elapsed * PcFramesPerSecond + 0.0001f),
+                    0,
+                    Mathf.Max(0, _forcedVisualTotalTicks - 1));
+                return currentTick / (float)_forcedVisualTotalTicks;
+            }
+        }
+        public event System.Action OnPcSkillActionEffect;
+
         // [SECT-ALL] Dash state machine cho melee skill THẬT SỰ (Cái Bang Bổng Pháp, etc.).
         // PC source: KNpc::DoRunAttack (0x0809b9c0) sets m_214=0x12 (LUNGE_STATE) cho close-range.
         // KNpc::NewJump (0x08099fd0) dùng TestMovePos + stores distance ở m_1834 cho long-range.
@@ -92,8 +117,15 @@ namespace VLTK.Sandbox
 
         private const float TrapContactRadius = 16f;
 
+        private const int PcBaseActionFrames = 20;
+        private const int PcPercentBase = 100;
+        private const float PcFramesPerSecond = 18f;
         private PlayerVisualAction? _forcedVisualAction;
-        private float _forcedVisualUntil;
+        private int _forcedVisualTotalTicks;
+        private float _forcedVisualDuration;
+        private float _forcedVisualEffectTime;
+        private float _forcedVisualRemaining;
+        private bool _forcedVisualEffectEmitted;
         private PcWeaponType _equippedWeapon;
 
         public PcWeaponType EquippedWeapon => _equippedWeapon;
@@ -180,6 +212,8 @@ namespace VLTK.Sandbox
 
         public void SetMoveInput(Vector2 input)
         {
+            if (IsSkillActionLocked)
+                return;
             Vector2 clamped = Vector2.ClampMagnitude(input, 1f);
             if (IsMeditating && clamped.sqrMagnitude > 0.0001f)
                 StopMeditation("Dừng ngồi thiền để di chuyển");
@@ -191,6 +225,8 @@ namespace VLTK.Sandbox
 
         public void MoveTo(Vector2 worldTarget)
         {
+            if (IsSkillActionLocked)
+                return;
             if (IsMeditating)
                 StopMeditation("Dừng ngồi thiền để di chuyển");
 
@@ -281,22 +317,68 @@ namespace VLTK.Sandbox
                 visual.SetWeapon(weapon);
         }
 
-        /// <summary>
-        /// Trigger the PC client action selected by Skills.txt CharAnimId.
-        /// For Cái Bang Bổng Pháp (staff), this uses 长武器魔法 (MG04) action;
-        /// for Chưởng Pháp (empty hand), this uses 空手魔法 (MG01) action.
-        /// </summary>
-        public void PlayPcSkillAction(int charAnimId, float durationSeconds)
+        public void EquipWeapon(PcWeaponType weapon, int exactVariant)
         {
-            var action = ResolveAction(charAnimId, _equippedWeapon);
-            if (action == null)
+            _equippedWeapon = weapon;
+            EnsureVisual();
+            if (visual != null)
+                visual.SetWeapon(weapon, exactVariant);
+        }
+
+        /// <summary>Trigger CharAnim 9/10/11. WaitTime is cooldown metadata, never pose length.</summary>
+        public void PlayPcSkillAction(int charAnimId, float ignoredWaitTimeSeconds, int horseLimit = 0)
+        {
+            // KSkills.cpp rejects HorseLimit before assigning ClientDoing/action.
+            if ((horseLimit == 1 && Mount.IsMounted) || (horseLimit == 2 && !Mount.IsMounted))
                 return;
 
-            EnsureVisual();
+            var action = ResolveAction(charAnimId, _equippedWeapon);
+            if (!action.HasValue)
+                return;
+
+            float speed = action == PlayerVisualAction.Attack || action == PlayerVisualAction.Attack1
+                ? attackSpeedPercent : castSpeedPercent;
             _forcedVisualAction = action.Value;
-            _forcedVisualUntil = Time.time + Mathf.Max(0.05f, durationSeconds);
+            _forcedVisualTotalTicks = ResolvePcActionTicks(speed);
+            _forcedVisualDuration = _forcedVisualTotalTicks / PcFramesPerSecond;
+            _forcedVisualEffectTime = (_forcedVisualTotalTicks * 60 / 100) / PcFramesPerSecond;
+            _forcedVisualRemaining = _forcedVisualDuration;
+            _forcedVisualEffectEmitted = false;
+            MoveInput = Vector2.zero;
+            HasMoveTarget = false;
+            LastMoveDelta = Vector2.zero;
+            EnsureVisual();
             if (visual != null)
                 visual.SetAction(action.Value);
+        }
+
+        private void AdvanceForcedVisualAction(float deltaTime)
+        {
+            if (!IsSkillActionLocked)
+                return;
+
+            _forcedVisualRemaining = Mathf.Max(0f, _forcedVisualRemaining - deltaTime);
+            if (_forcedVisualRemaining < 0.0001f)
+                _forcedVisualRemaining = 0f;
+            if (!_forcedVisualEffectEmitted && _forcedVisualDuration - _forcedVisualRemaining + 0.0001f >= _forcedVisualEffectTime)
+            {
+                _forcedVisualEffectEmitted = true;
+                OnPcSkillActionEffect?.Invoke();
+            }
+        }
+
+        public static int ResolvePcActionTicks(float speedPercent)
+        {
+            // PC KNpc stores m_CurrentAttackSpeed/m_CurrentCastSpeed as int and
+            // performs integer division. Unity-facing stats are floats, so discard
+            // the fractional part toward zero before reproducing that calculation.
+            int pcSpeed = speedPercent >= 0f
+                ? Mathf.FloorToInt(speedPercent)
+                : Mathf.CeilToInt(speedPercent);
+            int denominator = Mathf.Max(1, PcPercentBase + pcSpeed);
+            int totalTicks = PcBaseActionFrames * PcPercentBase / denominator;
+            totalTicks -= totalTicks % 2;
+            return totalTicks > 0 ? totalTicks : 1;
         }
 
         /// <summary>
@@ -376,8 +458,6 @@ namespace VLTK.Sandbox
             Vector2 preservedTarget = MoveTarget;
             bool preservedHasTarget = HasMoveTarget;
             EnsureVisual();
-            _forcedVisualAction = PlayerVisualAction.Jump;
-            _forcedVisualUntil = Time.time + Mathf.Max(0.05f, duration);
             if (visual != null)
                 visual.SetAction(PlayerVisualAction.Jump);
             BeginDash(worldTarget, duration);
@@ -424,7 +504,11 @@ namespace VLTK.Sandbox
                 return;  // skip normal movement logic khi đang dash
             }
 
-            Vector2 input = Vector2.ClampMagnitude(MoveInput, 1f);
+            AdvanceForcedVisualAction(dt);
+            bool actionLocked = IsSkillActionLocked;
+            Vector2 input = actionLocked ? Vector2.zero : Vector2.ClampMagnitude(MoveInput, 1f);
+            if (actionLocked)
+                HasMoveTarget = false;
             if (HasMoveTarget)
             {
                 var pos = (Vector2)transform.position;
@@ -505,14 +589,16 @@ namespace VLTK.Sandbox
                 // Drive PC walk/run + 打坐 (meditate) modes into the visual every frame.
                 visual.walkMode = !IsRunning;
                 visual.isMeditating = IsMeditating;
-                if (_forcedVisualAction.HasValue && Time.time < _forcedVisualUntil)
+                if (IsSkillActionLocked)
                 {
                     visual.SetAction(_forcedVisualAction.Value);
+                    visual.SetLogicalActionProgress(ForcedActionProgress);
                     visual.Tick(dt);
                 }
                 else
                 {
                     _forcedVisualAction = null;
+                    visual.SetLogicalActionProgress(-1f);
                     visual.SetMoveInput(input);
                     visual.Tick(dt);
                 }
@@ -561,12 +647,13 @@ namespace VLTK.Sandbox
             else if (femaleV != null)
                 visual = femaleV;
 
-            if (visual != null)
-            {
-                visual.playAutomatically = false;
-                ApplyActiveEquipmentVariants();
-                return;
-            }
+              if (visual != null)
+              {
+                  visual.playAutomatically = false;
+                  ApplyActiveEquipmentVariants();
+                  visual.SetMounted(Mount.IsMounted);
+                  return;
+              }
 
             // Create new visual based on gender
             if (isFemale)
@@ -584,9 +671,10 @@ namespace VLTK.Sandbox
                 var mv = go.AddComponent<MalePlayerVisual>();
                 mv.playAutomatically = false;
                 visual = mv;
-            }
-            ApplyActiveEquipmentVariants();
-        }
+              }
+              ApplyActiveEquipmentVariants();
+              visual.SetMounted(Mount.IsMounted);
+          }
 
         public void SetGender(bool female)
         {
@@ -623,7 +711,13 @@ namespace VLTK.Sandbox
                 var visualMono = visual as MonoBehaviour;
                 if (visualMono != null)
                 {
-                    Destroy(visualMono.gameObject);
+                    // Detach before deferred Destroy so EnsureVisual cannot rediscover the
+                    // wrong-gender component through GetComponentInChildren in this frame.
+                    visualMono.transform.SetParent(null, worldPositionStays: false);
+                    if (Application.isPlaying)
+                        Destroy(visualMono.gameObject);
+                    else
+                        DestroyImmediate(visualMono.gameObject);
                 }
                 visual = null;
             }
@@ -642,12 +736,15 @@ namespace VLTK.Sandbox
             if (SandboxManager.Instance != null && SandboxManager.Instance.EquipmentService != null)
             {
                 var eq = SandboxManager.Instance.EquipmentService;
+                _equippedWeapon = eq.GetCurrentWeaponType();
+                // SetWeapon picks action bank; exact equip row owns weapon SPR variant in one refresh.
+                visual.SetWeapon(_equippedWeapon, eq.GetVariant(PlayerEquipSlot.Weapon));
                 foreach (PlayerEquipSlot slot in System.Enum.GetValues(typeof(PlayerEquipSlot)))
                 {
+                    if (slot == PlayerEquipSlot.Weapon) continue;
                     visual.SetEquipVariant(slot, eq.GetVariant(slot));
                 }
-                var weaponVariant = eq.GetVariant(PlayerEquipSlot.Weapon);
-                _equippedWeapon = eq.GetCurrentWeaponType();
+                return;
             }
             visual.SetWeapon(_equippedWeapon);
         }
@@ -658,13 +755,7 @@ namespace VLTK.Sandbox
         /// </summary>
         public static PlayerVisualAction? ResolveAction(int charAnimId, PcWeaponType weapon)
         {
-            return charAnimId switch
-            {
-                7 or 8 => PlayerVisualAction.Attack,
-                9 or 10 or 11 => PlayerVisualAction.Magic,
-                14 => null,
-                _ => null,
-            };
+            return MalePlayerSpriteCatalog.ResolveAction(charAnimId, weapon);
         }
 
         private void EnsureHorse()

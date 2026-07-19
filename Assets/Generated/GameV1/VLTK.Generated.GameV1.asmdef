@@ -1,0 +1,16 @@
+{
+    "name": "VLTK.Generated.GameV1",
+    "rootNamespace": "Game.V1",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Google.Protobuf.dll"
+    ],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

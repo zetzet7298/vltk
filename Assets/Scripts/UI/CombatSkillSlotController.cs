@@ -12,7 +12,7 @@ namespace VLTK.UI
 {
     /// <summary>
     /// Mobile-first combat hotbar using PC-derived JX icon art.
-    /// Layout semantics: 4 assignable skill slots, A/B deck switch,
+    /// Layout semantics: primary attack plus 5 assignable skill slots, A/B deck switch,
     /// tap-to-auto-target, hold/drag-to-aim with cancel zone, and target lock.
     /// PC behavior source remains KNpc nearest-enemy style targeting via CombatAutoTargetService.
     /// </summary>
@@ -24,10 +24,14 @@ namespace VLTK.UI
         public int rightSlotSkillId;
 
         [Header("Mobile decks")]
+        [SerializeField] private int deckAPrimarySkillId;
+        [SerializeField] private int deckBPrimarySkillId;
+        [SerializeField] private int hotbarSchemaVersion;
         [SerializeField] private int[] deckASkillIds = new int[MobileSkillSlotCount];
         [SerializeField] private int[] deckBSkillIds = new int[MobileSkillSlotCount];
 
         public const int MobileSkillSlotCount = 5;
+        private const int CurrentHotbarSchemaVersion = 4;
         private const float SlotDragCancelThreshold = 45f;
         private const float PickerTapMoveThreshold = 12f;
         private const int PrimaryAttackPseudoSlot = -2;
@@ -37,6 +41,8 @@ namespace VLTK.UI
         private readonly Label[] _skillLabels = new Label[MobileSkillSlotCount];
 
         private VisualElement _primaryAttackBtn;
+        private VisualElement _primaryAttackIcon;
+        private Label _primaryAttackLabel;
         private VisualElement _deckSwitchBtn;
         private Label _deckSwitchLabel;
         private VisualElement _cancelCastZone;
@@ -63,12 +69,16 @@ namespace VLTK.UI
         private bool _pickerPointerDown;
         private SkillCatalog _catalog;
         private PlayerProgressionState _progression;
+        private SandboxManager _runtimeFactionManager;
+        private uint _runtimeFactionGeneration;
+        private uint _iconRequestGeneration;
 
         private int _lockedTargetId = -1;
         private string _lockedTargetName = string.Empty;
 
         public int LeftSkillId => GetDeck(0)[0];
         public int RightSkillId => GetDeck(0)[1];
+        public int PrimarySkillId => GetAssignedPrimarySkill();
         public int ActiveDeckIndex => _activeDeckIndex;
         public int LockedTargetId => _lockedTargetId;
         public bool IsPickerVisible => _skillPickerOverlay != null && !_skillPickerOverlay.ClassListContains("hidden");
@@ -77,7 +87,20 @@ namespace VLTK.UI
 
         private void Start()
         {
+            SubscribeToRuntimeFactionChanges();
             BindElements();
+        }
+
+        private void OnEnable()
+        {
+            SubscribeToRuntimeFactionChanges();
+        }
+
+        private void OnDisable()
+        {
+            if (_runtimeFactionManager != null)
+                _runtimeFactionManager.RuntimeFactionSwitched -= ResetForRuntimeFaction;
+            _runtimeFactionManager = null;
         }
 
         private void Update()
@@ -87,6 +110,7 @@ namespace VLTK.UI
 
         private void EnsureRuntimeReady()
         {
+            SubscribeToRuntimeFactionChanges();
             if (_initialized && !IsBoundToCurrentVisualTree())
             {
                 _initialized = false;
@@ -112,7 +136,19 @@ namespace VLTK.UI
         {
             _catalog = catalog;
             _progression = progression;
+            SubscribeToRuntimeFactionChanges();
             BindElements();
+        }
+
+        private void SubscribeToRuntimeFactionChanges()
+        {
+            var manager = SandboxManager.Instance;
+            if (ReferenceEquals(manager, _runtimeFactionManager)) return;
+            if (_runtimeFactionManager != null)
+                _runtimeFactionManager.RuntimeFactionSwitched -= ResetForRuntimeFaction;
+            _runtimeFactionManager = manager;
+            if (_runtimeFactionManager != null)
+                _runtimeFactionManager.RuntimeFactionSwitched += ResetForRuntimeFaction;
         }
 
         private void BindElements()
@@ -131,6 +167,7 @@ namespace VLTK.UI
 
             EnsureDeckArrays();
             ImportLegacySlotsIfNeeded();
+            MigrateLegacyHotbarIfNeeded();
             FillDefaultDeckIfEmpty();
             MigrateCaiBangDeckToDefaultIfNeeded();
 
@@ -156,6 +193,8 @@ namespace VLTK.UI
             _primaryAttackBtn = root.Q("PrimaryAttackBtn");
             if (_primaryAttackBtn != null)
             {
+                _primaryAttackIcon = _primaryAttackBtn.Q("SlotIcon");
+                _primaryAttackLabel = _primaryAttackBtn.Q<Label>("SlotLabel");
                 _primaryAttackBtn.pickingMode = PickingMode.Position;
                 _primaryAttackBtn.RegisterCallback<PointerDownEvent>(evt =>
                 {
@@ -268,6 +307,9 @@ namespace VLTK.UI
             return true;
         }
 
+        private bool IsHotbarEmpty(int primarySkillId, int[] deck)
+            => primarySkillId <= 0 && IsDeckEmpty(deck);
+
         private void ImportLegacySlotsIfNeeded()
         {
             if (IsDeckEmpty(deckASkillIds))
@@ -282,76 +324,229 @@ namespace VLTK.UI
             }
         }
 
-        // PC source skill order per faction. PC gốc JX: 1 ô là skill tấn công cơ bản
-        // của phái, các ô còn lại là skill cao cấp / chiêu thức đặc trưng.
-        // MobileSkillSlotCount = 5 → set đủ 5 skill theo thứ tự PC.
-        // PC source: bin/client/script/skill/{gaibang,shaolin,...}.lua + skills.txt.
-        // Fallback: lấy 5 skill active đầu tiên từ PcSkillPanelService.GetPcSkillOrder(faction).
-        private static readonly int[][] LegacyCaiBangDefaultDecks =
+        // Primary gets an eligible active learned faction skill. MobileSkillSlotCount remains regular slots only.
+        // Cái Bang uses the requested runtime test deck; other factions retain PC source order.
+        private const int CaiBangDefaultPrimarySkillId = 357; // Phi Long Tại Thiên
+        private static readonly int[] CaiBangDefaultRegularSkillIds =
         {
-            new[] { 210, 357, 358, 1073, 130 },
-            new[] { 357, 210, 358, 1073, 130 },
+            127, // Hoạt Bất Lưu Thủ
+            359, // Thiên Hạ Vô Cẩu
+            130, // Túy Điệp Cuồng Vũ
+            125, // Bổng Đả Ác Cẩu
+            128, // Kháng Long Hữu Hối
         };
 
-        private static readonly System.Collections.Generic.Dictionary<CombatFaction, int[]> DefaultDeckByFaction =
-            new System.Collections.Generic.Dictionary<CombatFaction, int[]>
-            {
-                // ponytail: PC quickbar is user-configurable; sandbox defaults to first five canonical
-                // player damage skills instead of mixing utility, inert 358, buff 130, and tier-150 events.
-                { CombatFaction.CaiBang, new[] { 117, 119, 122, 125, 128 } },
-            };
+        private static readonly int[][] LegacyCaiBangDefaultDecks =
+        {
+            new[] { 357, 359, 130, 125, 128 },
+            new[] { 118, 119, 120, 121, 122 },
+            new[] { 210, 357, 358, 1073, 130 },
+            new[] { 357, 210, 358, 1073, 130 },
+            new[] { 117, 119, 122, 125, 128 },
+        };
 
         private void FillDefaultDeckIfEmpty()
         {
-            if (!IsDeckEmpty(deckASkillIds)) return;
+            if (!IsHotbarEmpty(deckAPrimarySkillId, deckASkillIds)) return;
 
             var manager = SandboxManager.Instance;
             var prog = _progression ?? manager?.PlayerProgression;
             if (prog == null) return;
 
-            int[] defaults;
-            if (DefaultDeckByFaction.TryGetValue(prog.faction, out var perFaction))
-            {
-                // Per-faction PC-source order (Cái Bang) — cố định 5 skill.
-                defaults = perFaction;
-            }
-            else
-            {
-                // Fallback: lấy 5 skill active đầu tiên từ PC order (skip passives, NPC variant, unknown).
-                var catalog = _catalog ?? manager?.CombatSkillCatalog;
-                var order = PcSkillPanelService.GetPcSkillOrder(prog.faction);
-                var list = new System.Collections.Generic.List<int>();
-                foreach (var skillId in order)
-                {
-                    if (list.Count >= MobileSkillSlotCount) break;
-                    if (PcSkillPanelService.IsNpcVariant(skillId)) continue;
-                    if (!prog.knownSkills.Contains(skillId) && prog.GetSkillLevel(skillId) <= 0) continue;
-                    var skill = catalog?.Resolve(skillId);
-                    if (skill != null && skill.skillStyle == PcSkillStyle.PassivityNpcState) continue;
-                    list.Add(skillId);
-                }
-                defaults = list.ToArray();
-            }
-
-            for (int i = 0; i < MobileSkillSlotCount && i < defaults.Length; i++)
-                deckASkillIds[i] = defaults[i];
-
-            leftSlotSkillId = deckASkillIds[0];
-            rightSlotSkillId = deckASkillIds[1];
+            ApplyDefaultHotbarToDeckA(BuildDefaultSkillIdsForFaction(prog.faction));
+            SyncLegacySlotFields();
         }
 
-        // Normalize only empty or known generated Cái Bang decks; preserve user-customized slots.
-        private void MigrateCaiBangDeckToDefaultIfNeeded()
+        private int[] BuildDefaultSkillIdsForFaction(CombatFaction faction)
         {
             var manager = SandboxManager.Instance;
             var prog = _progression ?? manager?.PlayerProgression;
-            if (prog == null || prog.faction != CombatFaction.CaiBang) return;
-            if (!DefaultDeckByFaction.TryGetValue(CombatFaction.CaiBang, out var defaults)) return;
-            if (MatchesDeck(deckASkillIds, defaults)) return; // already the current default
-            if (!IsEmptyDeck(deckASkillIds) && !MatchesAnyDeck(deckASkillIds, LegacyCaiBangDefaultDecks)) return;
+            var catalog = _catalog ?? manager?.CombatSkillCatalog;
+            if (prog == null || catalog == null) return Array.Empty<int>();
 
+            var order = PcSkillPanelService.GetPcSkillOrder(faction);
+            if (faction == CombatFaction.CaiBang)
+                return BuildCaiBangDefaultSkillIds(order, catalog, prog);
+
+            var list = new List<int>(MobileSkillSlotCount + 1);
+            var seen = new HashSet<int>();
+            foreach (var skillId in order)
+            {
+                if (list.Count >= MobileSkillSlotCount + 1) break;
+                if (!IsEligibleDefaultSkill(skillId, faction, catalog, prog)) continue;
+                if (seen.Add(skillId)) list.Add(skillId);
+            }
+            return list.ToArray();
+        }
+
+        private static int[] BuildCaiBangDefaultSkillIds(
+            IReadOnlyList<int> pcOrder,
+            SkillCatalog catalog,
+            PlayerProgressionState progression)
+        {
+            var eligible = new HashSet<int>();
+            foreach (var skillId in pcOrder)
+                if (IsEligibleDefaultSkill(skillId, CombatFaction.CaiBang, catalog, progression))
+                    eligible.Add(skillId);
+
+            var regularDefaults = new HashSet<int>(CaiBangDefaultRegularSkillIds);
+            var result = new List<int>(MobileSkillSlotCount + 1);
+            var seen = new HashSet<int>();
+
+            if (eligible.Contains(CaiBangDefaultPrimarySkillId))
+            {
+                result.Add(CaiBangDefaultPrimarySkillId);
+                seen.Add(CaiBangDefaultPrimarySkillId);
+            }
+            else
+            {
+                // Reduced catalogs fall back to the first eligible skill outside the regular deck.
+                foreach (var skillId in pcOrder)
+                {
+                    if (!eligible.Contains(skillId) || regularDefaults.Contains(skillId)) continue;
+                    result.Add(skillId);
+                    seen.Add(skillId);
+                    break;
+                }
+            }
+
+            foreach (var skillId in CaiBangDefaultRegularSkillIds)
+                if (eligible.Contains(skillId) && seen.Add(skillId))
+                    result.Add(skillId);
+
+            // Fail soft if a requested skill is absent from a reduced catalog.
+            foreach (var skillId in pcOrder)
+            {
+                if (result.Count >= MobileSkillSlotCount + 1) break;
+                if (eligible.Contains(skillId) && seen.Add(skillId))
+                    result.Add(skillId);
+            }
+
+            return result.ToArray();
+        }
+
+        private static bool IsEligibleDefaultSkill(
+            int skillId,
+            CombatFaction faction,
+            SkillCatalog catalog,
+            PlayerProgressionState progression)
+        {
+            if (skillId <= 0) return false;
+            if (PcSkillPanelService.IsNpcVariant(skillId)) return false;
+            if ((progression?.GetSkillLevel(skillId) ?? 0) <= 0) return false;
+            var skill = catalog?.Resolve(skillId);
+            if (skill == null) return false;
+            if (skill.faction != faction) return false;
+            if (skill.skillStyle == PcSkillStyle.PassivityNpcState) return false;
+            return true;
+        }
+
+        private void ApplyDefaultHotbarToDeckA(int[] defaultSkillIds)
+        {
+            deckAPrimarySkillId = defaultSkillIds != null && defaultSkillIds.Length > 0 ? defaultSkillIds[0] : 0;
             for (int i = 0; i < MobileSkillSlotCount; i++)
-                deckASkillIds[i] = i < defaults.Length ? defaults[i] : 0;
+                deckASkillIds[i] = defaultSkillIds != null && i + 1 < defaultSkillIds.Length ? defaultSkillIds[i + 1] : 0;
+        }
+
+        private void MigrateLegacyHotbarIfNeeded()
+        {
+            if (hotbarSchemaVersion >= CurrentHotbarSchemaVersion) return;
+
+            var manager = SandboxManager.Instance;
+            var prog = _progression ?? manager?.PlayerProgression;
+            if (prog == null) return;
+
+            var defaults = BuildDefaultSkillIdsForFaction(prog.faction);
+            bool normalizeGeneratedCaiBang = prog.faction == CombatFaction.CaiBang && defaults.Length > 0;
+            MigrateLegacyDeck(ref deckAPrimarySkillId, deckASkillIds, defaults, normalizeGeneratedCaiBang);
+            MigrateLegacyDeck(ref deckBPrimarySkillId, deckBSkillIds, defaults, normalizeGeneratedCaiBang);
+            hotbarSchemaVersion = CurrentHotbarSchemaVersion;
+            SyncLegacySlotFields();
+        }
+
+        private void MigrateLegacyDeck(ref int primarySkillId, int[] deck, int[] defaults, bool normalizeGeneratedCaiBang)
+        {
+            if (deck == null || IsEmptyDeck(deck)) return;
+
+            if (normalizeGeneratedCaiBang && MatchesAnyDeck(deck, LegacyCaiBangDefaultDecks))
+            {
+                primarySkillId = defaults[0];
+                for (int i = 0; i < MobileSkillSlotCount; i++)
+                    deck[i] = i + 1 < defaults.Length ? defaults[i + 1] : 0;
+                return;
+            }
+
+            if (primarySkillId <= 0)
+                primarySkillId = SelectLegacyPrimarySkill(deck, defaults);
+        }
+
+        private int SelectLegacyPrimarySkill(int[] deck, int[] defaults)
+        {
+            var used = new HashSet<int>();
+            for (int i = 0; i < MobileSkillSlotCount && deck != null && i < deck.Length; i++)
+                if (deck[i] > 0) used.Add(deck[i]);
+
+            if (defaults != null)
+            {
+                foreach (int skillId in defaults)
+                    if (skillId > 0 && !used.Contains(skillId))
+                        return skillId;
+            }
+
+            var manager = SandboxManager.Instance;
+            var prog = _progression ?? manager?.PlayerProgression;
+            var catalog = _catalog ?? manager?.CombatSkillCatalog;
+            CombatFaction faction = prog?.faction ?? CombatFaction.None;
+            for (int i = 0; i < MobileSkillSlotCount && deck != null && i < deck.Length; i++)
+                if (IsEligibleDefaultSkill(deck[i], faction, catalog, prog))
+                    return deck[i];
+
+            return defaults != null && defaults.Length > 0 ? defaults[0] : 0;
+        }
+
+        /// <summary>Hard-reset targeting and both hotbar decks after the GM changes faction.</summary>
+        public void ResetForRuntimeFaction(CombatFaction faction)
+        {
+            _runtimeFactionGeneration++;
+            var manager = SandboxManager.Instance;
+            if (manager != null)
+            {
+                _catalog = manager.CombatSkillCatalog;
+                _progression = manager.PlayerProgression;
+            }
+
+            _pressedSlot = -1;
+            _pressedPointerId = -1;
+            _slotPointerDown = false;
+            _aimingDrag = false;
+            HideCancelCastZone();
+            CloseSkillPicker();
+            ClearTargetLock();
+            ResetHotbarToDefaults(BuildDefaultSkillIdsForFaction(faction), forceActiveDeckA: true);
+        }
+
+        // Legacy one-off hook kept for old generated Cái Bang decks; schema migration owns work now.
+        private void MigrateCaiBangDeckToDefaultIfNeeded()
+        {
+            if (hotbarSchemaVersion >= CurrentHotbarSchemaVersion) return;
+
+            var manager = SandboxManager.Instance;
+            var prog = _progression ?? manager?.PlayerProgression;
+            if (prog == null || prog.faction != CombatFaction.CaiBang) return;
+
+            var defaults = BuildDefaultSkillIdsForFaction(CombatFaction.CaiBang);
+            if (defaults.Length == 0) return;
+
+            var regularDefaults = new int[MobileSkillSlotCount];
+            for (int i = 0; i < MobileSkillSlotCount; i++)
+                regularDefaults[i] = i + 1 < defaults.Length ? defaults[i + 1] : 0;
+
+            if (deckAPrimarySkillId == defaults[0] && MatchesDeck(deckASkillIds, regularDefaults)) return;
+            if (!IsEmptyDeck(deckASkillIds)
+                && !MatchesDeck(deckASkillIds, regularDefaults)
+                && !MatchesAnyDeck(deckASkillIds, LegacyCaiBangDefaultDecks)) return;
+
+            ApplyDefaultHotbarToDeckA(defaults);
             SyncLegacySlotFields();
         }
 
@@ -388,36 +583,51 @@ namespace VLTK.UI
             return GetDeck(deckIndex < 0 ? _activeDeckIndex : deckIndex)[slot];
         }
 
-        /// <summary>Assign a skill to a specific slot on the active deck.</summary>
-        /// <summary>
-        /// Reset cả 2 deck A/B về 0 cho tất cả 4 slot, sau đó gán default skills
-        /// cho deck A theo skillId array. Force _activeDeckIndex về 0 (deck A) để
-        /// user thấy thay đổi ngay lập tức. Đây là hard-reset, dùng khi switch phái.
-        /// </summary>
+        public int GetAssignedPrimarySkill(int deckIndex = -1)
+            => (deckIndex < 0 ? _activeDeckIndex : deckIndex) == 1 ? deckBPrimarySkillId : deckAPrimarySkillId;
+
+        /// <summary>Back-compat regular-slot reset. Dedicated primary clears unless caller uses six-skill reset.</summary>
         public void ResetDeckToDefaults(int[] defaultSkillIds, bool forceActiveDeckA = true)
+            => ResetDeckToDefaults(0, defaultSkillIds, forceActiveDeckA);
+
+        public void ResetHotbarToDefaults(int[] defaultSkillIds, bool forceActiveDeckA = true)
+        {
+            int primarySkillId = defaultSkillIds != null && defaultSkillIds.Length > 0 ? defaultSkillIds[0] : 0;
+            var regularSkillIds = new int[MobileSkillSlotCount];
+            for (int i = 0; i < MobileSkillSlotCount; i++)
+                regularSkillIds[i] = defaultSkillIds != null && i + 1 < defaultSkillIds.Length ? defaultSkillIds[i + 1] : 0;
+            ResetDeckToDefaults(primarySkillId, regularSkillIds, forceActiveDeckA);
+        }
+
+        /// <summary>
+        /// Reset cả 2 deck A/B về 0 cho primary + 5 regular slots, sau đó gán default skills
+        /// cho deck A. Force _activeDeckIndex về 0 (deck A) để user thấy thay đổi ngay lập tức.
+        /// </summary>
+        public void ResetDeckToDefaults(int primarySkillId, int[] defaultSkillIds, bool forceActiveDeckA = true)
         {
             EnsureDeckArrays();
-            // Force về deck A để user thấy đúng deck mà họ vừa gán
             if (forceActiveDeckA) _activeDeckIndex = 0;
-            // Clear cả 2 deck hoàn toàn (zero out all slots)
+
+            deckAPrimarySkillId = 0;
+            deckBPrimarySkillId = 0;
             for (int i = 0; i < MobileSkillSlotCount; i++)
             {
                 deckASkillIds[i] = 0;
                 deckBSkillIds[i] = 0;
             }
-            // Gán default skills cho deck A (đang active sau khi force)
+
+            deckAPrimarySkillId = Mathf.Max(0, primarySkillId);
+            hotbarSchemaVersion = CurrentHotbarSchemaVersion;
             if (defaultSkillIds != null)
             {
                 int count = Mathf.Min(defaultSkillIds.Length, MobileSkillSlotCount);
                 for (int i = 0; i < count; i++)
-                {
-                    if (defaultSkillIds[i] > 0)
-                        deckASkillIds[i] = defaultSkillIds[i];
-                }
+                    deckASkillIds[i] = Mathf.Max(0, defaultSkillIds[i]);
             }
+
             SyncLegacySlotFields();
             RefreshSlotVisuals();
-            SubsystemLog.Info("Combat", $"ResetDeckToDefaults: forced deck A active, deckA=[{string.Join(",", deckASkillIds)}], deckB=[{string.Join(",", deckBSkillIds)}]");
+            SubsystemLog.Info("Combat", $"ResetDeckToDefaults: forced deck A active, primaryA={deckAPrimarySkillId}, primaryB={deckBPrimarySkillId}, deckA=[{string.Join(",", deckASkillIds)}], deckB=[{string.Join(",", deckBSkillIds)}]");
         }
 
         public void AssignSkill(int slot, int skillId)
@@ -430,6 +640,16 @@ namespace VLTK.UI
             SubsystemLog.Info("Combat", $"Assigned skill {skillId} to deck {ActiveDeckName()} slot {slot}");
         }
 
+        public void AssignPrimarySkill(int skillId)
+        {
+            if (_activeDeckIndex == 1)
+                deckBPrimarySkillId = Mathf.Max(0, skillId);
+            else
+                deckAPrimarySkillId = Mathf.Max(0, skillId);
+            RefreshSlotVisuals();
+            SubsystemLog.Info("Combat", $"Assigned primary skill {skillId} to deck {ActiveDeckName()}");
+        }
+
         /// <summary>
         /// UI bridge used by the full skill-management panel. Keeps assignment validation
         /// in the hotbar owner while assigning to whichever deck is currently active.
@@ -437,18 +657,32 @@ namespace VLTK.UI
         public bool TryAssignLearnedActiveSkill(int slot, int skillId)
         {
             if (slot < 0 || slot >= MobileSkillSlotCount) return false;
-
-            var catalog = _catalog ?? SandboxManager.Instance?.CombatSkillCatalog;
-            var progression = _progression ?? SandboxManager.Instance?.PlayerProgression;
-            var skill = catalog?.Resolve(skillId);
-            if (skill == null || skill.skillStyle == PcSkillStyle.PassivityNpcState) return false;
-            if ((progression?.GetSkillLevel(skillId) ?? 0) <= 0) return false;
+            if (!IsLearnedActiveSkill(skillId)) return false;
 
             AssignSkill(slot, skillId);
             return true;
         }
 
+        public bool TryAssignLearnedActivePrimarySkill(int skillId)
+        {
+            if (!IsLearnedActiveSkill(skillId)) return false;
+            AssignPrimarySkill(skillId);
+            return true;
+        }
+
+        private bool IsLearnedActiveSkill(int skillId)
+        {
+            if (PcSkillPanelService.IsNpcVariant(skillId)) return false;
+            var catalog = _catalog ?? SandboxManager.Instance?.CombatSkillCatalog;
+            var progression = _progression ?? SandboxManager.Instance?.PlayerProgression;
+            var skill = catalog?.Resolve(skillId);
+            if (skill == null || skill.skillStyle == PcSkillStyle.PassivityNpcState) return false;
+            if ((progression?.GetSkillLevel(skillId) ?? 0) <= 0) return false;
+            return true;
+        }
+
         public void ClearSlot(int slot) => AssignSkill(slot, 0);
+        public void ClearPrimarySkill() => AssignPrimarySkill(0);
 
         public void ToggleDeck()
         {
@@ -640,26 +874,21 @@ namespace VLTK.UI
 
         public void TriggerPrimaryAttack()
         {
-            int slot = ResolvePrimaryAttackSlot();
-            if (slot >= 0)
+            int skillId = GetAssignedPrimarySkill();
+            if (skillId > 0)
             {
-                TriggerSkillSlot(slot, GetAssignedSkill(slot));
+                TriggerSkillSlot(PrimaryAttackPseudoSlot, skillId);
                 return;
             }
 
             if (TryLockNearestTarget())
-                SubsystemLog.Info("Combat", $"Primary attack locked target {_lockedTargetName}; assign a skill to cast.");
-            else
-                OpenSkillPicker(0);
+                SubsystemLog.Info("Combat", $"Primary attack locked target {_lockedTargetName}; assign a primary skill to cast.");
         }
 
+        public int ResolvePrimaryAttackSkill() => GetAssignedPrimarySkill();
+
         public int ResolvePrimaryAttackSlot()
-        {
-            if (GetAssignedSkill(0) > 0) return 0;
-            for (int i = 1; i < MobileSkillSlotCount; i++)
-                if (GetAssignedSkill(i) > 0) return i;
-            return -1;
-        }
+            => GetAssignedPrimarySkill() > 0 ? PrimaryAttackPseudoSlot : -1;
 
         public bool TryLockNearestTarget()
         {
@@ -797,31 +1026,56 @@ namespace VLTK.UI
 
         private void RefreshSlotVisuals()
         {
+            _iconRequestGeneration++;
+            uint iconRequestGeneration = _iconRequestGeneration;
             string artPath = HudArtPathResolver.ResolveGeneratedArtRoot("UI/HUD/Art");
+            int primarySkillId = GetAssignedPrimarySkill();
+            UpdateSkillIcon(_primaryAttackIcon, primarySkillId, artPath, iconRequestGeneration);
+            UpdatePrimaryLabel(primarySkillId);
+
             for (int i = 0; i < MobileSkillSlotCount; i++)
             {
                 int skillId = GetAssignedSkill(i);
-                var icon = _skillIcons[i];
-                if (icon != null)
-                {
-                    if (skillId > 0)
-                    {
-                        GameHudController.LoadIconStatic(this, icon, artPath, $"cai_bang_skill_{skillId}");
-                        icon.RemoveFromClassList("empty");
-                        icon.style.display = DisplayStyle.Flex;
-                    }
-                    else
-                    {
-                        icon.style.backgroundImage = new StyleBackground();
-                        icon.AddToClassList("empty");
-                        icon.style.display = DisplayStyle.Flex;
-                    }
-                }
+                UpdateSkillIcon(_skillIcons[i], skillId, artPath, iconRequestGeneration);
                 UpdateSlotLabel(_skillLabels[i], i, skillId);
             }
 
             if (_deckSwitchLabel != null)
                 _deckSwitchLabel.text = ActiveDeckName();
+        }
+
+        private void UpdateSkillIcon(VisualElement icon, int skillId, string artPath, uint iconRequestGeneration)
+        {
+            if (icon == null) return;
+            if (skillId > 0)
+            {
+                GameHudController.LoadIconStatic(
+                    this,
+                    icon,
+                    artPath,
+                    $"cai_bang_skill_{skillId}",
+                    () => GameHudController.ShouldApplyIconRequest(iconRequestGeneration, _iconRequestGeneration));
+                icon.RemoveFromClassList("empty");
+                icon.style.display = DisplayStyle.Flex;
+                return;
+            }
+
+            icon.style.backgroundImage = new StyleBackground();
+            icon.AddToClassList("empty");
+            icon.style.display = DisplayStyle.Flex;
+        }
+
+        private void UpdatePrimaryLabel(int skillId)
+        {
+            if (_primaryAttackLabel == null) return;
+            if (skillId <= 0)
+            {
+                _primaryAttackLabel.text = "P";
+                return;
+            }
+            var catalog = _catalog ?? SandboxManager.Instance?.CombatSkillCatalog;
+            var skill = catalog?.Resolve(skillId);
+            _primaryAttackLabel.text = skill == null ? skillId.ToString() : ShortenSkillName(skill.DisplayName);
         }
 
         private void UpdateSlotLabel(Label label, int slot, int skillId)
@@ -857,6 +1111,16 @@ namespace VLTK.UI
             var skill = catalog?.Resolve(skillId);
             if (skill == null) return;
 
+            // A Go-authoritative skill must never fall back to local damage or
+            // local projectile callbacks. Missing command transport fails closed.
+            if (manager.RequiresAuthoritativeSkillInput(skillId))
+            {
+                SubsystemLog.Info(
+                    "Combat",
+                    $"Authoritative skill input required for {skillId}; local cast suppressed");
+                return;
+            }
+
             var player = manager.PlayerController;
             if (player == null) return;
 
@@ -880,7 +1144,7 @@ namespace VLTK.UI
 
             if (target != null || (skill.targetSelf && !skill.targetEnemy))
             {
-                player.PlayPcSkillAction(skill.charAnimId, PcCastAnimationDurationSeconds(skill));
+                player.PlayPcSkillAction(skill.charAnimId, 0f, skill.horseLimit);
 
                 if (target != null)
                 {
@@ -908,7 +1172,7 @@ namespace VLTK.UI
 
                         if (target != null && targetActor != null)
                         {
-                            var persistentTarget = manager.GameplayLoop?.GetActor(target.enemyId);
+                              var persistentTarget = manager.GameplayLoop?.GetActor(targetActor.actorId);
                             if (persistentTarget != null && persistentTarget.combat != null)
                             {
                                 persistentTarget.combat.currentLife = targetActor.currentLife;
@@ -948,8 +1212,9 @@ namespace VLTK.UI
                                 ? (Vector2)liveTarget.transform.position
                                 : targetPos)
                             : null;
-                        var collisionMissiles = skill.byMissile && report.projectiles != null
-                            ? report.projectiles.FindAll(projectile => projectile.skillId == skill.childSkillId)
+                        int rootMissileSkillId = skill.childSkillId != 0 ? skill.childSkillId : skill.skillId;
+                        var collisionMissiles = report.projectiles != null
+                            ? report.projectiles.FindAll(projectile => projectile.skillId == rootMissileSkillId)
                             : null;
                             System.Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null;
                             System.Action<ActiveSkillEffect, int, Vector2> onMissileFly = null;
@@ -1008,18 +1273,38 @@ namespace VLTK.UI
 
                           var fx = effectService?.PlaySkillCast(
                               skill, casterPos, targetPos, report.skillLevel, currentTargetPos, onMissileCollided);
-                            if (fx != null)
-                            {
+                          if (targetActor != null)
+                          {
+                              effectService?.SynchronizeStateAuras(
+                                  targetActor, targetPos, currentTargetPos);
+                          }
+                          else
+                          {
+                              effectService?.SynchronizeStateAuras(
+                                  caster, casterPos,
+                                  () => player != null ? (Vector2)player.transform.position : caster.position);
+                          }
+                              if (fx != null)
+                              {
                                 fx.onMissileFlyEvent = onMissileFly;
                                 fx.onMissileVanishEvent = onMissileVanish;
                             }
-                        if (!skill.byMissile && target != null && target.enemyBehaviour != null && targetActor != null)
-                            StartCoroutine(ApplyLiveEnemyHpAtImpact(target, targetActor.currentLife, skillId, report.skillLevel, report, fx));
+                        if ((collisionMissiles == null || collisionMissiles.Count == 0) &&
+                            target != null && target.enemyBehaviour != null && targetActor != null)
+                            StartCoroutine(ApplyLiveEnemyHpAtImpact(
+                                target,
+                                targetActor.currentLife,
+                                skillId,
+                                report.skillLevel,
+                                report,
+                                fx,
+                                _runtimeFactionGeneration));
 
                         string targetName = target != null ? target.name : "Self";
                         float targetDist = target != null ? target.distance : 0f;
                         int targetHp = targetActor != null ? targetActor.currentLife : 0;
-                        SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} [{ActiveDeckName()}-{slot + 1}] → {targetName} " +
+                        string slotName = slot == PrimaryAttackPseudoSlot ? "P" : (slot + 1).ToString();
+                        SubsystemLog.Info("Combat", $"Cast {skill.DisplayName} [{ActiveDeckName()}-{slotName}] → {targetName} " +
                                                      $"(dmg={report.damageResults.Count}, pendingHp={targetHp}, range={targetDist:F0})");
                     }
                     else
@@ -1030,7 +1315,7 @@ namespace VLTK.UI
             }
             else
             {
-                player.PlayPcSkillAction(skill.charAnimId, PcCastAnimationDurationSeconds(skill));
+                player.PlayPcSkillAction(skill.charAnimId, 0f, skill.horseLimit);
                 var effectService = manager.SkillEffectVisual;
                 // No target: shoot forward in player's facing direction (PC: KNpc fires toward facing dir)
                 int facing = player.visual != null ? player.visual.GetCurrentDirection() : 0;
@@ -1116,15 +1401,11 @@ namespace VLTK.UI
             return null;
         }
 
+        // Legacy VFX lead-time helper. Pose lock is owned by SandboxPlayerController's 18-frame clock.
         private static float PcCastAnimationDurationSeconds(SkillDefinition skill)
         {
-            if (skill == null) return 0f;
-            if (skill.charAnimId == 14) return 0f; // cdo_none stance/passive (no cast anim)
-            // PC parity [2026-06-19]: PC WaitTime (Skills.txt col 25) = ticks, 16 ticks/sec.
-            // Skill-specific WaitTime drives cast anim duration. Fallback 20f/16f if WaitTime=0
-            // (default m_CastFrame=20 ticks cho damage skills không khai báo WaitTime).
-            if (skill.waitTime > 0) return skill.waitTime / 16f;
-            return 20f / 16f;
+            if (skill == null || skill.charAnimId == 14) return 0f;
+            return skill.waitTime > 0 ? skill.waitTime / 16f : 20f / 16f;
         }
 
         private static void ApplyProjectileCollisionResult(
@@ -1146,12 +1427,23 @@ namespace VLTK.UI
 
             if (target != null)
                 target.currentLife = targetActor.currentLife;
-            var liveTarget = target?.enemyBehaviour;
-            if (liveTarget != null)
-            {
-                liveTarget.SetLife(targetActor.currentLife, showDamage: true);
-                EmitProjectileCollisionFeedback(liveTarget, report.damageResults, damageCountBefore);
-            }
+              var liveTarget = target?.enemyBehaviour;
+              if (liveTarget != null)
+              {
+                  liveTarget.SetLife(targetActor.currentLife, showDamage: true);
+                  EmitProjectileCollisionFeedback(liveTarget, report.damageResults, damageCountBefore);
+              }
+
+              Vector2 stateOwnerPosition = liveTarget != null
+                  ? (Vector2)liveTarget.transform.position
+                  : collisionPoint;
+              System.Func<Vector2> currentStateOwnerPosition = liveTarget != null
+                  ? (System.Func<Vector2>)(() => liveTarget != null
+                      ? (Vector2)liveTarget.transform.position
+                      : stateOwnerPosition)
+                  : null;
+              effectService?.SynchronizeStateAuras(
+                  targetActor, stateOwnerPosition, currentStateOwnerPosition);
 
             int visualDamage = Mathf.Max(0, targetLifeBefore - targetActor.currentLife);
             var gameplayLoop = manager?.GameplayLoop;
@@ -1181,8 +1473,10 @@ namespace VLTK.UI
                 ? level
                 : report.skillLevel;
 
+            Vector2 nestedOrigin = nestedMissiles[0].origin;
+            Vector2 nestedTarget = nestedMissiles[0].target;
             effectService?.PlaySkillCast(
-                nestedVisual, collisionPoint, collisionPoint, nestedLevel, null,
+                nestedVisual, nestedOrigin, nestedTarget, nestedLevel, null,
                 (_, missileIndex, nestedCollisionPoint) =>
                 {
                     if (missileIndex < 0 || missileIndex >= nestedMissiles.Count || combatRuntime == null || caster == null)
@@ -1228,9 +1522,17 @@ namespace VLTK.UI
                 CombatFeedbackBus.Raise(new CombatFeedbackEvent(kind, totalDamage, worldPos));
         }
 
-        private IEnumerator ApplyLiveEnemyHpAtImpact(CombatTargetInfo target, int hp, int skillId, int skillLevel, CombatCastReport report, ActiveSkillEffect fx)
+        private IEnumerator ApplyLiveEnemyHpAtImpact(
+            CombatTargetInfo target,
+            int hp,
+            int skillId,
+            int skillLevel,
+            CombatCastReport report,
+            ActiveSkillEffect fx,
+            uint factionGeneration)
         {
             if (target?.enemyBehaviour == null) yield break;
+            if (factionGeneration != _runtimeFactionGeneration) yield break;
             if (fx == null)
             {
                 target.enemyBehaviour.SetLife(hp, showDamage: true);
@@ -1238,7 +1540,12 @@ namespace VLTK.UI
             }
 
             while (fx.phase != SkillEffectPhase.Impact && fx.phase != SkillEffectPhase.Finished)
+            {
+                if (factionGeneration != _runtimeFactionGeneration) yield break;
                 yield return null;
+            }
+
+            if (factionGeneration != _runtimeFactionGeneration) yield break;
 
             if (target.enemyBehaviour != null)
             {
@@ -1346,6 +1653,7 @@ namespace VLTK.UI
                 faction = progression.faction,
                 level = playerLevel,
                 fightMode = true,
+                rideHorse = player.Mount != null && player.Mount.IsMounted,
                 position = player.transform.position,
                 currentMana = playerMana,
                 currentLife = 100,
@@ -1383,18 +1691,7 @@ namespace VLTK.UI
         // temporary casts and legacy compatibility state, so load/materialize never double-adds it.
         internal static void MaterializePassiveStates(CombatActorState actor, SkillCatalog catalog)
         {
-            if (actor == null || catalog == null) return;
-            var learnedPassives = new HashSet<int>();
-            foreach (var knownId in actor.knownSkills)
-            {
-                var passive = catalog.Resolve(knownId);
-                if (passive == null || passive.skillStyle != PcSkillStyle.PassivityNpcState) continue;
-                learnedPassives.Add(knownId);
-                if (!actor.skillLevels.TryGetValue(knownId, out int level) || level <= 0) level = 1;
-                var data = passive.GetPcLevelData(level);
-                actor.ApplySkillStateSource(actor.actorId, knownId, level, data?.state, isPermanentPassive: true, forceReplace: true);
-            }
-            actor.RemoveMissingPassiveSources(learnedPassives);
+            actor?.MaterializeLearnedPassiveStates(catalog);
         }
 
         /// <summary>
@@ -1415,7 +1712,7 @@ namespace VLTK.UI
         {
             var actor = new CombatActorState
             {
-                actorId = target.enemyId + 1000,
+                  actorId = target.enemyId + 10000,
                 faction = CombatFaction.None,
                 position = target.position,
                 currentLife = target.currentLife,
@@ -1426,7 +1723,7 @@ namespace VLTK.UI
             bool copiedPersistentSourceNodes = false;
             if (manager != null && manager.GameplayLoop != null)
             {
-                var persistentTarget = manager.GameplayLoop.GetActor(target.enemyId);
+                  var persistentTarget = manager.GameplayLoop.GetActor(actor.actorId);
                 if (persistentTarget != null && persistentTarget.combat != null)
                 {
                     actor.currentLife = persistentTarget.combat.currentLife;

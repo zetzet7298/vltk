@@ -21,11 +21,10 @@ namespace VLTK.Tests.Sandbox
     /// <see cref="MalePlayerVisual.spritesRootOverride"/>.
     ///
     /// Source priority for fixture data (in order):
-    ///   1. <c>sourceRoot</c> argument (defaults to <c>StreamingAssets/Sprites</c>
-    ///      where the canonical extracted PC SPRs are already hashed by UID).
+    ///   1. Explicit <c>sourceRoot</c> argument.
     ///   2. <c>STREAMING_SPRITES_OVERRIDE</c> env var (CI / hermetic builds).
-    ///   3. The temp dir already populated by a prior <see cref="StageForTests"/>
-    ///      call (idempotent).
+    ///   3. The repo-local <c>SpritesRuntime</c> canonical UID slice used by Editor.
+    ///   4. <c>StreamingAssets/Sprites</c> when the external runtime slice is absent.
     ///
     /// Each part spec emitted by <see cref="MalePlayerSpriteCatalog.BuildParts"/>
     /// for a (weapon × action) pair is hashed via
@@ -56,9 +55,9 @@ namespace VLTK.Tests.Sandbox
         /// </summary>
         /// <param name="sourceRoot">
         /// Optional override for where to read the canonical SPR bytes from.
-        /// Defaults to <c>Path.Combine(Application.streamingAssetsPath, "Sprites")</c>
-        /// (the existing UID-hashed fixture root) or the
-        /// <see cref="DefaultSourceRootEnvVar"/> env var if set.
+        /// Defaults to <c>SpritesRuntime</c>, then
+        /// <c>Path.Combine(Application.streamingAssetsPath, "Sprites")</c>, or the
+        /// <see cref="DefaultSourceRootEnvVar"/> env var when set.
         /// </param>
         /// <param name="tempRoot">
         /// Optional explicit temp dir. When null, a unique dir under
@@ -122,8 +121,8 @@ namespace VLTK.Tests.Sandbox
         /// Resolve the source root in priority order:
         ///   1. Caller-supplied non-empty string.
         ///   2. <see cref="DefaultSourceRootEnvVar"/> env var.
-        ///   3. <c>Application.streamingAssetsPath + "Sprites"</c> (the
-        ///      project's UID-hashed fixture root).
+        ///   3. Project-root <c>SpritesRuntime</c>, matching <see cref="SprRuntimeService"/>.
+        ///   4. <c>Application.streamingAssetsPath + "Sprites"</c> as fallback.
         /// </summary>
         public static string ResolveSourceRoot(string overridePath)
         {
@@ -133,7 +132,7 @@ namespace VLTK.Tests.Sandbox
             if (!string.IsNullOrEmpty(env))
                 return env;
 
-            string localRuntime = Path.GetFullPath(Path.Combine(Application.dataPath, "..", "SpritesRuntime"));
+            string localRuntime = Path.GetFullPath(Path.Combine(Application.dataPath, "..", SprRuntimeService.DefaultSpritesRoot));
             if (Directory.Exists(localRuntime))
                 return localRuntime;
 
@@ -177,16 +176,13 @@ namespace VLTK.Tests.Sandbox
 
         private static void StageOnFootFixtures(string sourceRoot, string destRoot, List<StagedFixture> staged)
         {
-            // Cover every on-foot weapon × action combination the test suite
-            // exercises. Mounted (Ride / RideMove) is staged separately because
-            // its catalog is built via BuildMountedParts and uses different
-            // variant numbers (mount outfit 050, horse 016).
             PcWeaponType[] weapons =
             {
                 PcWeaponType.EmptyHand,
                 PcWeaponType.ShortWeapon,
                 PcWeaponType.LongWeapon,
                 PcWeaponType.DualWeapon,
+                PcWeaponType.HiddenWeapon,
             };
             PlayerVisualAction[] actions =
             {
@@ -194,6 +190,7 @@ namespace VLTK.Tests.Sandbox
                 PlayerVisualAction.Move,
                 PlayerVisualAction.Magic,
                 PlayerVisualAction.Attack,
+                PlayerVisualAction.Attack1,
             };
             foreach (var weapon in weapons)
             {
@@ -208,20 +205,36 @@ namespace VLTK.Tests.Sandbox
 
         private static void StageMountedFixtures(string sourceRoot, string destRoot, List<StagedFixture> staged)
         {
-            // Mounted idle (RD01), walk (HW01), and run/gallop (HR01) share
-            // the same BuildMountedParts helper but the catalog selects the suffix
-            // at the call site. Stage all with mount outfit 050 rider and horse 016 body.
-            string[] suffixes = { "RD01", "HW01", "HR01" };
-            foreach (var suffix in suffixes)
+            PcWeaponType[] weapons =
             {
-                var parts = MalePlayerSpriteCatalog.BuildMountedParts(
-                    bodyVariant: 50,
-                    headVariant: 50,
-                    hairVariant: 50,
-                    horseVariant: 16,
-                    suffix: suffix);
-                foreach (var spec in parts)
-                    StageOne(sourceRoot, destRoot, spec.sourcePath, staged);
+                PcWeaponType.EmptyHand,
+                PcWeaponType.ShortWeapon,
+                PcWeaponType.LongWeapon,
+                PcWeaponType.DualWeapon,
+                PcWeaponType.HiddenWeapon,
+            };
+            PlayerVisualAction[] actions =
+            {
+                PlayerVisualAction.Ride,
+                PlayerVisualAction.RideWalk,
+                PlayerVisualAction.RideMove,
+                PlayerVisualAction.RideAttack,
+                PlayerVisualAction.RideAttack1,
+                PlayerVisualAction.RideMagic,
+            };
+            foreach (var weapon in weapons)
+            {
+                foreach (var action in actions)
+                {
+                    var parts = MalePlayerSpriteCatalog.BuildParts(action, weapon,
+                        MalePlayerSpriteCatalog.ArmorVariant,
+                        MalePlayerSpriteCatalog.ArmorVariant,
+                        MalePlayerSpriteCatalog.GetWeaponSprVariant(weapon),
+                        MalePlayerSpriteCatalog.ArmorVariant,
+                        MalePlayerSpriteCatalog.MountHorseVariant);
+                    foreach (var spec in parts)
+                        StageOne(sourceRoot, destRoot, spec.sourcePath, staged);
+                }
             }
         }
 
@@ -242,6 +255,7 @@ namespace VLTK.Tests.Sandbox
                 PcWeaponType.ShortWeapon,
                 PcWeaponType.LongWeapon,
                 PcWeaponType.DualWeapon,
+                PcWeaponType.HiddenWeapon,
             };
             PlayerVisualAction[] actions =
             {
@@ -249,6 +263,7 @@ namespace VLTK.Tests.Sandbox
                 PlayerVisualAction.Move,
                 PlayerVisualAction.Magic,
                 PlayerVisualAction.Attack,
+                PlayerVisualAction.Attack1,
             };
             foreach (var weapon in weapons)
             {
@@ -260,18 +275,28 @@ namespace VLTK.Tests.Sandbox
                 }
             }
 
-            // Also stage mounted actions for female.
-            string[] suffixes = { "RD01", "HW01", "HR01" };
-            foreach (var suffix in suffixes)
+            PlayerVisualAction[] mountedActions =
             {
-                var parts = FemalePlayerSpriteCatalog.BuildMountedParts(
-                    bodyVariant: 50,
-                    headVariant: 50,
-                    hairVariant: 50,
-                    horseVariant: 16,
-                    suffix: suffix);
-                foreach (var spec in parts)
-                    StageOne(resolvedSource, dest, spec.sourcePath, staged);
+                PlayerVisualAction.Ride,
+                PlayerVisualAction.RideWalk,
+                PlayerVisualAction.RideMove,
+                PlayerVisualAction.RideAttack,
+                PlayerVisualAction.RideAttack1,
+                PlayerVisualAction.RideMagic,
+            };
+            foreach (var weapon in weapons)
+            {
+                foreach (var action in mountedActions)
+                {
+                    var parts = FemalePlayerSpriteCatalog.BuildParts(action, weapon,
+                        FemalePlayerSpriteCatalog.ArmorVariant,
+                        FemalePlayerSpriteCatalog.ArmorVariant,
+                        FemalePlayerSpriteCatalog.GetWeaponSprVariant(weapon),
+                        FemalePlayerSpriteCatalog.ArmorVariant,
+                        FemalePlayerSpriteCatalog.MountHorseVariant);
+                    foreach (var spec in parts)
+                        StageOne(resolvedSource, dest, spec.sourcePath, staged);
+                }
             }
 
             return dest;

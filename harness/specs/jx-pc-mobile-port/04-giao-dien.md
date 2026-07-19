@@ -264,7 +264,7 @@ Quy tắc Back: đóng dialog, rồi bottom sheet, rồi primary panel; tại HU
 
 **Tên màn hình**: `UI-SKILL-TREE` - Kỹ năng và bộ phím combat
 
-**Ý nghĩa**: Xem cây kỹ năng novice/10 phái, tăng điểm và gán skill vào slot mobile.
+**Ý nghĩa**: Xem cây kỹ năng novice/10 phái theo 242-row union đã pin, tăng điểm và gán skill vào slot mobile; runtime parity vẫn chờ golden.
 
 **Hình ảnh**: Icon/frame SPR PC canonical; cấp, cooldown, mô tả và chi phí là runtime Việt từ content pin version.
 
@@ -472,7 +472,7 @@ reward dùng text/số runtime tiếng Việt.
 | --- | --- | --- | --- | --- |
 | 1 | Tap Auto | Bật tại anchor hiện tại | Gửi start intent với rule deck/content revision; server xác nhận anchor/hard leash | State starting -> active; không tự mở rộng leash |
 | 2 | Tap badge/cài đặt | Xem rule deck lớn, dễ chạm | Bottom sheet chọn skill/loot/stop option theo contract | Gán skill bằng tap rồi tap slot, không drag/drop |
-| 3 | Tap skill/attack manual | Soft override combat | Manual intent mới nhất ưu tiên, sau recovery auto dùng lại cùng selector | Không tạo target policy thứ hai |
+| 3 | Tap skill/attack manual | Soft override combat | Manual intent mới nhất ưu tiên, sau recovery auto dùng lại cùng selector; lifecycle event recovery/fly/collide/vanish/status refresh/expire cập nhật UI | Không tạo target policy thứ hai; không coi transport ACK là skill success |
 | 4 | Kéo joystick | Soft override movement | Hủy approach hiện tại; auto không kéo player ngược tức thì, chỉ resume nếu vẫn trong leash/policy | Auto-path là state độc lập |
 | 5 | Tap Dừng | Dừng chủ động | Gửi stop intent, UI chờ reason/event | Không chỉ tắt badge local |
 | 6 | Vượt hard leash | Quay về anchor cố định | Hủy target/approach, server điều hướng về anchor; không scan ngoài leash | Không tự mở rộng radius hoặc đổi anchor |
@@ -492,5 +492,5 @@ reward dùng text/số runtime tiếng Việt.
 | --- | --- | --- | --- | --- |
 | 1 | Mất heartbeat/WSS | Vào reconnect | Freeze mutation/input combat, giữ read-only visual có nhãn stale | Không tự báo skill/economy thành công |
 | 2 | Tự thử lại | Resume session | Backoff có jitter; gửi resume token/last sequence | Có nút Thử lại khi phù hợp |
-| 3 | Resume thành công | Reconcile | Nhận snapshot/delta, xử lý pending intent theo idempotency, rồi bỏ overlay | Panel đang mở phải refresh revision |
+| 3 | Resume thành công | Reconcile | Nhận snapshot/delta/active combat resync, xử lý pending intent theo idempotency và exact content digest, rồi bỏ overlay | Panel đang mở phải refresh revision; content mismatch bootstrap lại |
 | 4 | Resume thất bại/session hết | Quay lại auth | Nêu lý do an toàn, bảo toàn dữ liệu đã commit | Không fallback C# mock/catalog |

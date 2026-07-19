@@ -233,10 +233,16 @@ namespace VLTK.Tests.Sandbox
                 Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
 
                 svc.Equip(EquipSlot.Weapon, 42);
-                Assert.AreEqual(PcWeaponType.DualWeapon, equipment.GetCurrentWeaponType());
-                Assert.AreEqual(PcWeaponType.DualWeapon, controller.EquippedWeapon);
-                Assert.AreEqual(PcWeaponType.DualWeapon, controller.visual.currentWeapon);
-                Assert.IsTrue(controller.visual.HasAllRequiredParts, string.Join("\n", controller.visual.LastMissingRequiredParts));
+                  Assert.AreEqual(PcWeaponType.DualWeapon, equipment.GetCurrentWeaponType());
+                  Assert.AreEqual(PcWeaponType.DualWeapon, controller.EquippedWeapon);
+                  Assert.AreEqual(PcWeaponType.DualWeapon, controller.visual.currentWeapon);
+                  Assert.IsFalse(controller.visual.HasAllRequiredParts,
+                      "The inventory bridge must preserve the canonical fail-closed state while dual idle weapon bytes are not staged.");
+                  CollectionAssert.AreEquivalent(new[]
+                  {
+                      MalePlayerSpriteCatalog.BuildPath("LW", MalePlayerSpriteCatalog.DualWeaponVariant, "ST06"),
+                      MalePlayerSpriteCatalog.BuildPath("RW", MalePlayerSpriteCatalog.DualWeaponVariant, "ST06"),
+                  }, controller.visual.LastMissingRequiredParts);
 
                 svc.Unequip(EquipSlot.Weapon);
                 Assert.AreEqual(PcWeaponType.EmptyHand, equipment.GetCurrentWeaponType());

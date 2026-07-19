@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -58,14 +59,19 @@ namespace VLTK.UI
             }
         }
 
+        public static bool ShouldDrawFallbackPreCastCircle(ActiveSkillEffect fx) => fx != null && !fx.isAura;
+
         private void DrawPreCast(ActiveSkillEffect fx)
         {
             // (Removed pcAuraFrameStart/End sub-range; loops full frame range)
-            if (fx.isAura && fx.HasPcPreCastSprite)
+            if (fx != null && fx.isAura)
             {
-                DrawPcAuraSprite(fx);
+                if (fx.HasPcPreCastSprite)
+                    DrawPcAuraSprite(fx);
                 return;
             }
+
+            if (!ShouldDrawFallbackPreCastCircle(fx)) return;
 
             // Draw a pulsing circle at caster position (PreCast effect)
             var screenPos = WorldToScreen(fx.casterPos);
@@ -166,26 +172,128 @@ namespace VLTK.UI
         /// </summary>
         private static Sprite SelectPcMissileFrame(ActiveSkillEffect fx, Sprite[] sprites, Vector2 fromPos, Vector2 targetPos)
         {
-            int dir = ComputePc16Dir(fromPos, targetPos);
-            int framePerDir = Mathf.Max(1, fx.pcMissileTotalFrames / Mathf.Max(1, fx.pcMissileDirections));
+            int pcDir64 = ComputePcDirection64(fromPos, targetPos);
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
-            int localFrame = (lifeTick / Mathf.Max(1, fx.pcMissileIntervalTicks)) % framePerDir;
-            int frameIndex = Mathf.Clamp(dir * framePerDir + localFrame, 0, sprites.Length - 1);
+            int frameIndex = ComputePcMissileFrameIndex(pcDir64, fx.pcMissileTotalFrames,
+                fx.pcMissileDirections, lifeTick, fx.pcMissileIntervalTicks);
+            frameIndex = Mathf.Clamp(frameIndex, 0, sprites.Length - 1);
             return sprites[frameIndex];
         }
 
-        /// <summary>
-        /// PC 16-direction bucket. Ported from SkillEffectWorldOverlay.ComputePc16Dir.
-        /// Mobile world: +X east, +Y north. PC missile SPR frames point back to caster,
-        /// so +8 buckets (180°) flip the head to face travel direction.
-        /// </summary>
-        private static int ComputePc16Dir(Vector2 from, Vector2 to)
+        // PC source path: g_GetDirIndex(...) yields nDir [0,63], then KMissleRes
+        // maps that raw value to SPR directions. Keep all 64 buckets until that map.
+        private static int ComputePcSpriteDirection(Vector2 from, Vector2 to, int spriteDirections)
+            => MapPc64Direction(ComputePcDirection64(from, to), spriteDirections);
+
+        // Exact PC KMath.cpp g_nSinBuffer[0..31], fixed-point 1024.
+        // g_GetDirIdxForFindPath only scans this descending half of g_nSin.
+        private static readonly int[] PcScanSin =
         {
-            Vector2 d = to - from;
-            if (d.sqrMagnitude < 0.001f) return 0;
-            float angle = Mathf.Atan2(d.x, d.y) * Mathf.Rad2Deg; // 0=N, +90=E
-            int dir = (Mathf.RoundToInt(angle / 22.5f) + 8) & 15;
-            return dir;
+            1024, 1019, 1004, 979, 946, 903, 851, 791,
+            724, 649, 568, 482, 391, 297, 199, 100,
+            0, -100, -199, -297, -391, -482, -568, -649,
+            -724, -791, -851, -903, -946, -979, -1004, -1019,
+        };
+
+        // Exact PC KMath.h qsqrt table. CSV SHA-256: a4032c8b5461213d4053c9c451e786f143c3a76dce73545c72e01c3bead53deb.
+        private static readonly int[] PcSqrtTable =
+        {
+            531980127, 532026288, 532072271, 532118079, 532163712, 532209174, 532254465, 532299589,
+            532344546, 532389339, 532433970, 532478440, 532522750, 532566903, 532610900, 532654744,
+            532698434, 532741974, 532785365, 532828607, 532871704, 532914655, 532957463, 533000129,
+            533042654, 533085041, 533127289, 533169401, 533211378, 533253220, 533294931, 533336509,
+            533377958, 533419278, 533460470, 533501535, 533542475, 533583291, 533623984, 533664554,
+            533705004, 533745334, 533785545, 533825638, 533865615, 533905476, 533945222, 533984855,
+            534024374, 534063782, 534103079, 534142267, 534181345, 534220315, 534259178, 534297934,
+            534336585, 534375132, 534413574, 534451914, 534490152, 534528288, 534566324, 534604260,
+            534642098, 534679837, 534717478, 534755023, 534792473, 534829827, 534867086, 534904252,
+            534941325, 534978305, 535015194, 535051992, 535088699, 535125317, 535161846, 535198287,
+            535234640, 535270905, 535307085, 535343178, 535379187, 535415110, 535450950, 535486706,
+            535522379, 535557970, 535593480, 535628908, 535664255, 535699523, 535734711, 535769820,
+            535804850, 535839803, 535874678, 535909476, 535944198, 535978844, 536013414, 536047910,
+            536082331, 536116678, 536150952, 536185153, 536219281, 536253337, 536287322, 536321235,
+            536355078, 536388850, 536422553, 536456186, 536489750, 536523246, 536556673, 536590033,
+            536623325, 536656551, 536689709, 536722802, 536755829, 536788791, 536821688, 536854520,
+            536887280, 536919921, 536952436, 536984827, 537017094, 537049241, 537081267, 537113174,
+            537144963, 537176637, 537208195, 537239640, 537270972, 537302193, 537333304, 537364306,
+            537395200, 537425987, 537456669, 537487246, 537517720, 537548091, 537578361, 537608530,
+            537638600, 537668572, 537698446, 537728224, 537757906, 537787493, 537816986, 537846387,
+            537875696, 537904913, 537934040, 537963078, 537992027, 538020888, 538049662, 538078350,
+            538106952, 538135470, 538163903, 538192254, 538220521, 538248707, 538276812, 538304837,
+            538332781, 538360647, 538388434, 538416144, 538443776, 538471332, 538498812, 538526217,
+            538553548, 538580804, 538607987, 538635097, 538662136, 538689102, 538715997, 538742822,
+            538769577, 538796263, 538822880, 538849428, 538875909, 538902322, 538928668, 538954949,
+            538981163, 539007312, 539033396, 539059416, 539085373, 539111265, 539137095, 539162863,
+            539188568, 539214212, 539239794, 539265316, 539290778, 539316180, 539341522, 539366806,
+            539392031, 539417197, 539442306, 539467358, 539492352, 539517290, 539542171, 539566997,
+            539591768, 539616483, 539641143, 539665749, 539690301, 539714800, 539739245, 539763637,
+            539787976, 539812264, 539836499, 539860682, 539884815, 539908896, 539932927, 539956907,
+            539980838, 540004718, 540028549, 540052332, 540076065, 540099750, 540123387, 540146976,
+            540170517, 540194011, 540217458, 540240858, 540264211, 540287519, 540310780, 540333996,
+        };
+
+        private const int PcQsqrtBiasBits = ((23 + 127) << 23) + (1 << 22);
+        private static readonly float PcQsqrtBias = BitConverter.Int32BitsToSingle(PcQsqrtBiasBits);
+
+        // KMath.h g_GetDirIdxForFindPath: integer position endpoints, qsqrt distance,
+        // fixed-point sine scan, then mirror for positive X. Same position is -1.
+        internal static int ComputePcDirection64(Vector2 from, Vector2 to)
+            => ComputePcDirection64FromInts(Mathf.RoundToInt(from.x), Mathf.RoundToInt(from.y),
+                Mathf.RoundToInt(to.x), Mathf.RoundToInt(to.y));
+
+        internal static int ComputePcDirection64FromInts(int fromX, int fromY, int toX, int toY)
+        {
+            if (fromX == toX && fromY == toY) return -1;
+
+            int dx = toX - fromX;
+            int dy = toY - fromY;
+            int distance = ComputePcDistance(dx, dy);
+            if (distance == 0) return -1;
+
+            int sin = (dy << 10) / distance;
+            sin = Mathf.Clamp(sin, -1024, 1024);
+            int direction = -1;
+            for (int i = 0; i < PcScanSin.Length; i++)
+            {
+                if (sin > PcScanSin[i]) break;
+                direction = i;
+            }
+            return dx > 0 ? 63 - direction : direction;
+        }
+
+        private static int ComputePcDistance(int dx, int dy)
+        {
+            int squaredDistance = dx * dx + dy * dy;
+            float root = ComputePcQsqrt(squaredDistance);
+            return BitConverter.SingleToInt32Bits(root + PcQsqrtBias) - PcQsqrtBiasBits;
+        }
+
+        private static float ComputePcQsqrt(float value)
+        {
+            int bits = BitConverter.SingleToInt32Bits(value);
+            int exponent = (bits >> 1) & 0x3f800000;
+            int tableIndex = (bits >> 16) & 0xff;
+            return BitConverter.Int32BitsToSingle(exponent + PcSqrtTable[tableIndex]);
+        }
+
+        // PC KMissleRes direction conversion: width=64/nSprDir; round half up; wrap.
+        private static int MapPc64Direction(int pcDir64, int spriteDirections)
+        {
+            int directions = Mathf.Max(1, spriteDirections);
+            int nDir = pcDir64 & 63;
+            int width = 64 / directions;
+            int imageDir = nDir / width;
+            if (nDir % width >= 32 / directions) imageDir++;
+            return imageDir % directions;
+        }
+
+        private static int ComputePcMissileFrameIndex(int pcDir64, int totalFrames,
+            int spriteDirections, int lifeTick, int intervalTicks)
+        {
+            int directions = Mathf.Max(1, spriteDirections);
+            int framePerDir = Mathf.Max(1, totalFrames / directions);
+            int localFrame = (Mathf.Max(0, lifeTick) / Mathf.Max(1, intervalTicks)) % framePerDir;
+            return MapPc64Direction(pcDir64, directions) * framePerDir + localFrame;
         }
 
         /// <summary>
@@ -275,7 +383,20 @@ namespace VLTK.UI
 
             int lifeTick = Mathf.Max(0, Mathf.FloorToInt((fx.elapsed - fx.phaseStart) * 18f));
             int framePerDir = Mathf.Max(1, fx.pcImpactTotalFrames / Mathf.Max(1, fx.pcImpactDirections));
-            int localFrame = (lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks)) % framePerDir;
+            int localFrame;
+            if (fx.pcStationaryLifetimeOverride && fx.pcMissileLifeTicks > 0)
+            {
+                // PC non-loop stationary missiles stretch their finite SPR sequence
+                // across the missile lifetime (e.g. missile 359: 19 frames/31 ticks:
+                // tick 0 -> frame 0, tick 18 -> frame 11, tick 30 -> frame 18).
+                int clampedTick = Mathf.Clamp(lifeTick, 0, fx.pcMissileLifeTicks - 1);
+                localFrame = Mathf.Min(framePerDir - 1,
+                    Mathf.FloorToInt(clampedTick * (float)framePerDir / fx.pcMissileLifeTicks));
+            }
+            else
+            {
+                localFrame = (lifeTick / Mathf.Max(1, fx.pcImpactIntervalTicks)) % framePerDir;
+            }
             int frameIndex = Mathf.Clamp(localFrame, 0, sprites.Length - 1);
 
             var sprite = sprites[frameIndex] ?? sprites[0];
@@ -292,11 +413,7 @@ namespace VLTK.UI
         {
             var sprites = LoadPcSprites(fx.pcPreCastSpriteKey);
             if (sprites == null || sprites.Length == 0)
-            {
-                var sp = WorldToScreen(ResolveLiveCasterPos(fx));
-                DrawCircle(sp, 24f, fx.color, 2f);
                 return;
-            }
 
             int lo = fx.pcAuraFrameStart;
             int hi = fx.pcAuraFrameEnd > 0 ? fx.pcAuraFrameEnd : sprites.Length - 1;
@@ -325,11 +442,12 @@ namespace VLTK.UI
             Vector2 basePos = ResolveLiveCasterPos(fx);
 
             float yOffset = 0f;
-            bool isMounted = false;
-            var player = SandboxManager.Instance?.PlayerController;
-            if (player != null && player.visual != null)
+            bool isMounted = fx.hasStateSourceKey && fx.stateOwnerMounted;
+            if (!fx.hasStateSourceKey)
             {
-                isMounted = player.visual.IsMounted;
+                var player = SandboxManager.Instance?.PlayerController;
+                if (player != null && player.visual != null)
+                    isMounted = player.visual.IsMounted;
             }
 
             if (fx.stateAuraPos == 1) // Head
@@ -419,10 +537,14 @@ namespace VLTK.UI
         /// <summary>Live caster position so body-aura buffs follow the player.</summary>
         private static Vector2 ResolveLiveCasterPos(ActiveSkillEffect fx)
         {
+            if (fx?.getCurrentTargetPos != null)
+                return fx.getCurrentTargetPos();
+            if (fx != null && fx.hasStateSourceKey)
+                return fx.targetPos;
             var player = SandboxManager.Instance?.PlayerController;
             if (player != null)
                 return (Vector2)player.transform.position;
-            return fx.casterPos;
+            return fx?.casterPos ?? Vector2.zero;
         }
 
         private Vector2 WorldToScreen(Vector2 worldPos)

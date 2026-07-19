@@ -10,6 +10,7 @@ cho realtime 18 Hz. PostgreSQL mục tiêu là phiên bản 16.
 | `proto/game/v1/game.proto` | WSS binary realtime |
 | `sql/game.v1.sql` | Schema/invariant PostgreSQL 16 |
 | `content/manifest.v1.schema.json` | Content/config/Lua provenance |
+| `content/v1/skill_catalog.proto` | SkillPort canonical catalog + server/client projections |
 | `errors.md`, `idempotency.md`, `versioning.md` | Semantics dùng chung |
 | `realtime-semantics.md`, `protobuf-fuzz.md` | ACK/resume/delta và fuzz gate WSS |
 | `legacy-mapping.md` | Cô lập C# REST/Mock trong DevHarness và map production adapter |
@@ -20,3 +21,11 @@ server tick, không bằng clock client.
 `last_processed_client_seq`/`ack_server_seq` chỉ là transport ACK. Business
 success cần `CommandResult.outcome=COMMITTED`; economy còn cần transaction
 `POSTED` sau commit PostgreSQL.
+
+Gate 0 addendum: bootstrap/WSS thương lượng `ContentDigest` exact
+`contentReleaseId + manifestSha256 + sourceSnapshotId + catalogUnionSha256 + clientProjectionSha256` với
+`catalogUnionSize=242`. Runtime skill policy phải dùng `vltktool`, cấm
+filesystem fallback và giữ PC runtime/Android physical evidence `BLOCKED` cho
+đến khi có golden. Reconnect grace chuẩn là 15 giây. Combat lifecycle events
+cho recovery/fly/collide/vanish/status refresh/expire chỉ là additive `game.v1`
+fields; N/N-1 client bỏ qua field unknown.

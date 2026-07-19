@@ -18,6 +18,7 @@ namespace VLTK.UI.Popup
     {
         private readonly IPopupContent _content;
         private readonly VisualElement _body;
+        private readonly PopupChromeKind _chrome;
 
         /// <summary>The content mounted inside this shell.</summary>
         public IPopupContent Content => _content;
@@ -29,11 +30,15 @@ namespace VLTK.UI.Popup
         {
             _content = content ?? throw new ArgumentNullException(nameof(content));
             AddToClassList("popup-window");
-            // UiSkillsSheet is a compact PC sheet whose fight sub-page needs the
-            // full 191px content lane (UiSkillsLive.ini: Left=7, Width=191).
-            // Keep this string check so the generic shell has no assembly coupling.
-            if (content.GetType().FullName == "VLTK.UI.Skill.SkillContent")
+            // PC sheets own their title and tab captions in the background sprite and
+            // want to be centred in the 1280×720 design space. Read a typed hint
+            // instead of matching on the content type name so the shell has no
+            // assembly coupling and new PC sheets only add a enum value + impl.
+            _chrome = (content as IPopupChromeHint)?.Chrome ?? PopupChromeKind.Generic;
+            if (_chrome == PopupChromeKind.PcSkill)
                 AddToClassList("popup-window--pc-skill");
+            else if (_chrome == PopupChromeKind.PcCharacter)
+                AddToClassList("popup-window--pc-character");
 
             // Robust modal geometry in the 1280×720 design space. USS percent/
             // translate can resolve to NaN in some Editor playmode refresh paths,
@@ -54,16 +59,17 @@ namespace VLTK.UI.Popup
             close.AddToClassList("popup-close");
             close.clicked += RaiseClosed;
 
-            bool isPcSkillSheet = ClassListContains("popup-window--pc-skill");
-            if (!isPcSkillSheet)
+            bool isPcSheet = _chrome != PopupChromeKind.Generic;
+            bool hideShellClose = _chrome == PopupChromeKind.PcCharacter;
+            if (!isPcSheet)
                 header.Add(title);
-            header.Add(close);
+            if (!hideShellClose)
+                header.Add(close);
 
-            // UiSkillsSheet.ini owns its title and both tab captions in the exact
-            // PC background sprite.  The checked combat-tab state remains a real
-            // element, layered over that background, so the mobile sheet begins
-            // in the same combat view rather than looking like generic chrome.
-            if (isPcSkillSheet)
+            // PC sheets bake their title and tab captions into the background sprite.
+            // The skill sheet additionally layers a combat-tab overlay so the sheet
+            // opens in the combat view rather than looking like generic chrome.
+            if (_chrome == PopupChromeKind.PcSkill)
             {
                 var combatTab = new VisualElement { name = "PopupSkillCombatTab" };
                 combatTab.AddToClassList("popup-skill-combat-tab");
@@ -73,12 +79,23 @@ namespace VLTK.UI.Popup
             _body = new VisualElement { name = "PopupBody" };
             _body.AddToClassList("popup-body");
 
-            chrome.Add(header);
+            if (_chrome != PopupChromeKind.PcCharacter)
+                chrome.Add(header);
             chrome.Add(_body);
             Add(chrome);
 
             // Let the content populate its body.
             content.Build(_body);
+
+            // PC sheets hide the shell's own close button (the title/close captions
+            // are baked into their background sprite). Their body carries a real
+            // Close affordance that must raise the same shell close event.
+            if (isPcSheet)
+            {
+                var bodyClose = _body.Q<Button>("Close");
+                if (bodyClose != null)
+                    bodyClose.clicked += RaiseClosed;
+            }
         }
 
         private void ApplyLayoutHint(IPopupContent content)
@@ -87,12 +104,12 @@ namespace VLTK.UI.Popup
             {
                 style.width = hint.Width;
                 style.height = hint.Height;
-                // Preserve PC pixels inside the sheet, but center that compact
-                // sheet in the mobile's 1280x720 design space.  The original PC
-                // Left/Top were desktop-window coordinates, not an in-game UX
-                // requirement; carrying them across made the modal visibly drift
-                // left on wide mobile HUDs.
-                if (ClassListContains("popup-window--pc-skill"))
+                // Preserve PC pixels inside the sheet, but center that compact sheet
+                // in the mobile's 1280x720 design space.  The original PC Left/Top
+                // were desktop-window coordinates, not an in-game UX requirement;
+                // carrying them across made the modal visibly drift left on wide
+                // mobile HUDs. Applies to every PC sheet (skill, character, future).
+                if (_chrome != PopupChromeKind.Generic)
                 {
                     style.left = (1280f - hint.Width) * 0.5f;
                     style.top = (720f - hint.Height) * 0.5f;

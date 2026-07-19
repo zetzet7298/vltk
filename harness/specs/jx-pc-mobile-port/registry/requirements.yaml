@@ -712,7 +712,7 @@ requirements:
   - TEST-CONTENT-001
   - TEST-CONTENT-002
   - TEST-COVERAGE-001
-  title: Content provenance immutable và config gameplay authority ở Go
+  title: Content digest exact, runtime skill policy vltktool và config gameplay authority ở Go
   owner: content
   objective: OBJ-007
   lifecycle: SPECIFIED

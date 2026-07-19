@@ -96,6 +96,14 @@ namespace VLTK.Sandbox
         public void GrantFactionSkillPanelProgression(SkillCatalog catalog, CombatFaction targetFaction)
         {
             bool firstGrant = faction != targetFaction || knownSkills.Count == 0;
+            // A runtime faction switch replaces the learned set. Keeping the previous
+            // faction here makes the combat actor pass the known-skill gate for both
+            // factions and leaves the hotbar populated with stale skills.
+            if (firstGrant)
+            {
+                knownSkills.Clear();
+                skillLevels.Clear();
+            }
             // Lay baseline theo mon phai (khong con hard-code CaiBang).
             var baseline = GetFactionSkillPanelBaseline(targetFaction);
             level = baseline.level;
@@ -152,6 +160,14 @@ namespace VLTK.Sandbox
                 if (!skillLevels.ContainsKey(lightness.skillId) || skillLevels[lightness.skillId] <= 0)
                     skillLevels[lightness.skillId] = 1;
             }
+        }
+
+        /// <summary>GM runtime switch: rebuild the learned set even when selecting the current faction.</summary>
+        public void ReplaceFactionSkillPanelProgression(SkillCatalog catalog, CombatFaction targetFaction)
+        {
+            knownSkills.Clear();
+            skillLevels.Clear();
+            GrantFactionSkillPanelProgression(catalog, targetFaction);
         }
 
         /// <summary>

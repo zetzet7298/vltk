@@ -18,6 +18,7 @@ canonical_contracts:
   rest: contracts/openapi/game.v1.yaml
   realtime: contracts/proto/game/v1/game.proto
   content: contracts/content/manifest.v1.schema.json
+  skill_catalog: contracts/content/v1/skill_catalog.proto
   data: contracts/sql/game.v1.sql
   data_negative: contracts/sql/game.v1.negative.sql
 phases:

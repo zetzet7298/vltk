@@ -141,67 +141,41 @@ namespace VLTK.Sandbox
                 return;
             }
 
-            // Adjust gender if faction is restricted
-            if (manager.PlayerController != null)
+            if (!manager.TrySwitchRuntimeFaction(faction, out string detail))
             {
-                if (faction == CombatFaction.EMei || faction == CombatFaction.CuiYan)
-                {
-                    manager.PlayerController.SetGender(true); // Female
-                }
-                else if (faction == CombatFaction.Shaolin)
-                {
-                    manager.PlayerController.SetGender(false); // Male
-                }
+                SubsystemLog.Warn("GMPlayerTab", $"Không thể chuyển sang {faction}: {detail}");
+                return;
             }
 
-            // Initialize progression faction
-            manager.GrantFactionSkillPanelProgression(faction);
+            // Restore the HUD before opening its skill popup. Opening the popup while the GM
+            // panel is still hiding GameHud makes the successful transition look like a broken HUD.
+            manager.GmPanel?.Close();
 
-            // Re-apply to gameplay actor
-            var loop = manager.GameplayLoop;
-            if (loop != null && loop.Player != null)
-            {
-                var player = loop.Player;
-                player.combat.faction = faction;
-                player.combat.knownSkills.Clear();
-                foreach (var id in manager.PlayerProgression.knownSkills)
-                    player.combat.knownSkills.Add(id);
-                player.combat.skillLevels.Clear();
-                foreach (var kv in manager.PlayerProgression.skillLevels)
-                    player.combat.skillLevels[kv.Key] = kv.Value > 0 ? kv.Value : 1;
-            }
-
-            // (Removed per-faction default slot assignment from GMPlayerTab.SwitchToFaction.
-            //  Default slots are now driven by PC source skill order in CombatSkillSlotController.FillDefaultDeckIfEmpty,
-            //  which is invoked on boot from GameHudController.Awake + on every deck bind. No need to reset here.)
-
-            // Refresh UI GameHudController
+            // Auto-open the canonical skill popup after the manager-owned transition.
+            // CombatSkillSlotController listens to RuntimeFactionSwitched and rebuilds its decks.
             var hudType = System.Type.GetType("VLTK.UI.GameHudController, VLTK.UI");
             if (hudType != null)
             {
                 var hudObj = Object.FindAnyObjectByType(hudType);
                 if (hudObj != null)
                 {
-                    // Luon auto-open skill popup sau khi switch phai (de user thay skill list moi ngay).
-                    // BtnSkills now opens SkillContent via PopupManager.OnSkillsClick; the inline
-                    // OpenSkillPanel/IsSkillPanelVisible HUD surface was retired in migrate-skill-panel-popup.
                     var openMethod = hudType.GetMethod("OnSkillsClick", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
                     if (openMethod != null)
                     {
-                        openMethod.Invoke(hudObj, null);
-                        UnityEngine.Debug.Log($"[GM] Auto-opened skill popup for faction {faction}");
-                    }
-                    var slotCtrlType = System.Type.GetType("VLTK.UI.CombatSkillSlotController, VLTK.UI");
-                    if (slotCtrlType != null)
-                    {
-                        var refreshMethod = slotCtrlType.GetMethod("RefreshSlotVisuals");
-                        if (refreshMethod != null)
-                            refreshMethod.Invoke(UnityEngine.Object.FindAnyObjectByType(slotCtrlType), null);
+                        try
+                        {
+                            openMethod.Invoke(hudObj, null);
+                            UnityEngine.Debug.Log($"[GM] Auto-opened skill popup for faction {faction}");
+                        }
+                        catch (System.Exception ex)
+                        {
+                            SubsystemLog.Warn("GMPlayerTab", $"Faction switched, but skill popup failed: {ex.Message}");
+                        }
                     }
                 }
             }
 
-            SubsystemLog.Info("GM", $"Chuyển phái thành công: {faction}");
+            SubsystemLog.Info("GMPlayerTab", $"Chuyển phái thành công: {detail}");
         }
 
         private void MaxAllStats()

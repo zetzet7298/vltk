@@ -8,6 +8,7 @@
         "VLTK.Model",
         "VLTK.Gameplay.Domain",
         "VLTK.Sandbox.Runtime",
+        "VLTK.UI",
         "VLTK.Resources",
         "VLTK.Sprites",
         "VLTK.Backend"

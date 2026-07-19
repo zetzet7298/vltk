@@ -214,6 +214,7 @@ namespace VLTK.Sandbox
                 cost = row.costValue,
                 skillCostType = row.skillCostType,
                 timePerCast = row.timePerCast,
+                timePerCastOnHorse = row.timePerCastOnHorse,
                 waitTime = row.waitTime,
                 attackRadius = row.attackRadius,
                 isPhysical = row.isPhysical,

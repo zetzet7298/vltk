@@ -27,7 +27,12 @@ sau apply phải khớp `state_checksum`. Sai một điều kiện, client bỏ 
 `ServerHello.resume_outcome` là kết quả authoritative: `DELTA_REPLAY` công bố
 điểm bắt đầu replay; `FULL_SNAPSHOT` tạo baseline mới;
 `GRACE_EXPIRED`/`BASELINE_MISMATCH`/`SESSION_REPLACED` giải thích fallback hoặc
-rejection. Field `resumed` chỉ là compatibility hint, không điều khiển state.
+rejection. Field `resumed` chỉ là compatibility hint, không điều khiển state. Grace chuẩn là 15 giây.
+
+`ClientHello.accepted_content` và `ServerHello.active_content` phải khớp exact
+content digest trước khi client coi preload/cast là hợp lệ. Mismatch dẫn tới
+`RESUME_BASELINE_MISMATCH` hoặc content error ổn định; client không được fallback
+filesystem hay tự đổi release.
 
 Server không gửi delta tham chiếu baseline thuộc content release/session epoch
 khác. Client không resume auto-combat, auto-path hoặc pending cast từ local cache;
@@ -63,3 +68,9 @@ accept và lấy hard leash từ signed content release/preset; giá trị hiệ
 Hủy reticle trước khi thả là local-only `CancelAim`, không phải wire command.
 Hồi sinh dùng `ReviveState` revisioned và `ReviveCommand`; chỉ `CommandResult`
 COMMITTED cùng `CombatEvent` REVIVE và snapshot authoritative mới đóng overlay.
+
+Server có thể gửi `ActiveCombatResyncState` khi resync để phục hồi cast đang
+recovery, missile đang fly và status còn hiệu lực. `CombatEvent.kind` lifecycle
+mới cho recovery/fly/collide/vanish/status refresh/expire là semantic event;
+transport ACK không thay thế được chúng. Encounter preload chỉ sẵn sàng sau
+`EncounterPreloadAck` khớp `ContentDigest`.

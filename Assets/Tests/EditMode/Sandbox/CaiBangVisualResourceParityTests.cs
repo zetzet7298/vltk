@@ -56,12 +56,14 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(12, a43.frameEnd, "state 43 aura frameEnd");
             Assert.AreEqual(16, a43.totalFrames, "state 43 aura totalFrames");
             Assert.AreEqual(1, a43.directions, "state 43 aura directions");
+            Assert.AreEqual(1, a43.intervalTicks, "state 43 aura frame interval");
 
             var a44 = PcSkillVisualAutoMapper.GetStateAuraData(44);
             Assert.AreEqual(DaCauTranStateAuraSpr, a44.sprPath, "state 44 aura SPR path mismatch vs PC source");
             Assert.AreEqual(2, a44.position, "state 44 aura position (2=feet)");
             Assert.AreEqual(8, a44.totalFrames, "state 44 aura totalFrames");
             Assert.AreEqual(1, a44.directions, "state 44 aura directions");
+            Assert.AreEqual(1, a44.intervalTicks, "state 44 aura frame interval");
         }
 
         [Test]

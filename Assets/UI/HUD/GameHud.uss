@@ -1320,6 +1320,7 @@
     top: 0;
     right: 0;
     bottom: 0;
+    z-index: 1001;
     background-color: rgba(0, 0, 0, 0);   /* backdrop drawn by PopupManager child */
     picking-mode: Ignore;                  /* let taps pass through to game when empty */
 }

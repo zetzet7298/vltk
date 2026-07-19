@@ -35,6 +35,7 @@ namespace VLTK.Sandbox
         private static readonly Dictionary<int, string> MissileSpeedSkillIdToName = new()
         {
               [58] = "tianluo_diwang",
+              [339] = "shehun_yueying",
               [1069] = "feidaotang150",
               [1071] = "jiugong_feixing",
         };
@@ -74,6 +75,15 @@ namespace VLTK.Sandbox
             if (!attrs.TryGetValue(attribute, out var slots) || slot < 1 || slot > slots.Count) return 0;
             var points = slots[slot - 1];
             return points == null || points.Count == 0 ? 0 : UnityEngine.Mathf.FloorToInt(PcCaiBangLuaLevelService.Link(level, points));
+        }
+
+        public static bool HasAttribute(int skillId, string attribute)
+        {
+            EnsureLoaded();
+            return SkillIdToName.TryGetValue(skillId, out var key) &&
+                   _skills.TryGetValue(key, out var attrs) &&
+                   attrs.TryGetValue(attribute, out var slots) &&
+                   slots != null && slots.Exists(points => points != null && points.Count > 0);
         }
 
         private static int GetSingleValue(string key, int level, string attribute, int slot = 1)

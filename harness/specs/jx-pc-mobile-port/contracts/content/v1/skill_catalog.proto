@@ -1,0 +1,221 @@
+syntax = "proto3";
+package content.v1;
+option go_package = "vltk.dev/contracts/content/v1;contentv1";
+
+// Canonical SkillPort content contract. Values mirror compiler evidence only:
+// static integer/source-path fields, lifecycle refs, presentation refs, asset
+// blockers, runtime policy, and reproducibility metadata. Formula/effect
+// semantics stay absent until canonical PC/runtime evidence exists.
+message SkillCatalog {
+  CatalogHeader header = 1;
+  RuntimeSkillPolicy runtime_skill_policy = 2;
+  repeated FactionProgression factions = 3;
+  repeated SkillRow rows = 4;
+  ReproducibilityMetadata reproducibility = 5;
+}
+
+message ServerSkillCatalog {
+  ProjectionHeader header = 1;
+  RuntimeSkillPolicy runtime_skill_policy = 2;
+  repeated FactionProgression factions = 3;
+  repeated ServerSkillRow rows = 4;
+  ReproducibilityMetadata reproducibility = 5;
+}
+
+message ClientSkillCatalog {
+  ProjectionHeader header = 1;
+  RuntimeSkillPolicy runtime_skill_policy = 2;
+  repeated FactionProgression factions = 3;
+  repeated ClientSkillRow rows = 4;
+  ReproducibilityMetadata reproducibility = 5;
+}
+
+message CatalogHeader {
+  uint32 schema_version = 1;
+  string schema_id = 2;
+  string tool_revision = 3;
+  string deterministic_build_time_utc = 4;
+  uint32 catalog_union_size = 5;
+  string catalog_union_sha256 = 6;
+  string source_snapshot_id = 7;
+  string skill_slice_sha256 = 8;
+  uint32 static_field_count = 9;
+  uint32 missile_rows_discoverable = 10;
+  uint32 state_rows_discoverable = 11;
+  uint32 golden_ready_count = 12;
+}
+
+message ProjectionHeader {
+  uint32 schema_version = 1;
+  string projection_name = 2;
+  string tool_revision = 3;
+  string deterministic_build_time_utc = 4;
+  uint32 catalog_union_size = 5;
+  string catalog_union_sha256 = 6;
+  string source_snapshot_id = 7;
+  string projection_sha256 = 8;
+}
+
+message RuntimeSkillPolicy {
+  string policy_id = 1;
+  uint32 catalog_union_size = 2;
+  string catalog_union_sha256 = 3;
+  string source_tool = 4;
+  bool filesystem_fallback_allowed = 5;
+  bool runtime_parity_claimed = 6;
+  string pc_runtime_evidence_status = 7;
+  string android_physical_evidence_status = 8;
+  repeated string blockers = 9;
+}
+
+message FactionProgression {
+  uint32 faction_index = 1;
+  string key = 2;
+  string name = 3;
+  repeated uint32 progression_skill_ids = 4;
+  repeated TierSkillIds progression_by_tier = 5;
+  repeated uint32 skillbook_skill_ids = 6;
+  repeated LevelSkillIds skillbook_by_level = 7;
+  repeated uint32 union_skill_ids = 8;
+  repeated uint32 unity_display_skill_ids = 9;
+}
+
+message TierSkillIds {
+  string tier = 1;
+  repeated uint32 skill_ids = 2;
+}
+
+message LevelSkillIds {
+  uint32 level = 1;
+  repeated uint32 skill_ids = 2;
+}
+
+message SkillRow {
+  uint32 skill_id = 1;
+  string skill_name = 2;
+  ExposureState exposure_state = 3;
+  repeated FactionMembership factions = 4;
+  repeated StaticField static_fields = 5;
+  repeated TypedNode typed_nodes = 6;
+  repeated LifecycleRelation relations = 7;
+  StateRelation state_relation = 8;
+  repeated AssetDependency asset_dependencies = 9;
+  repeated string blockers = 10;
+}
+
+message ServerSkillRow {
+  uint32 skill_id = 1;
+  string skill_name = 2;
+  ExposureState exposure_state = 3;
+  repeated StaticField static_fields = 4;
+  repeated LifecycleRelation relations = 5;
+  repeated string blockers = 6;
+}
+
+message ClientSkillRow {
+  uint32 skill_id = 1;
+  string skill_name = 2;
+  ExposureState exposure_state = 3;
+  repeated FactionMembership factions = 4;
+  repeated StaticField presentation_fields = 5;
+  StateRelation state_relation = 6;
+  repeated AssetDependency asset_dependencies = 7;
+  repeated string blockers = 8;
+}
+
+message FactionMembership {
+  uint32 faction_index = 1;
+  string key = 2;
+  string name = 3;
+  string classification = 4;
+}
+
+message StaticField {
+  string name = 1;
+  string source_column = 2;
+  StaticFieldKind kind = 3;
+  NodeKind node_kind = 4;
+  oneof value {
+    sint64 int_value = 10;
+    string text_value = 11;
+  }
+}
+
+message TypedNode {
+  NodeKind kind = 1;
+  string status = 2;
+  uint32 field_count = 3;
+}
+
+message LifecycleRelation {
+  LifecycleRelationType type = 1;
+  uint32 source_skill_id = 2;
+  uint32 target_id = 3;
+  string target_kind = 4;
+  string proof_state = 5;
+  repeated string blockers = 6;
+}
+
+message StateRelation {
+  uint32 source_skill_id = 1;
+  uint32 target_id = 2;
+  string target_kind = 3;
+  string proof_state = 4;
+  repeated string blockers = 5;
+}
+
+message AssetDependency {
+  uint32 skill_id = 1;
+  string kind = 2;
+  string source_field = 3;
+  string source_path = 4;
+  string status = 5;
+  repeated string blockers = 6;
+}
+
+message ReproducibilityMetadata {
+  string protoc_version = 1;
+  string python_protobuf_version = 2;
+  string compiler_tool_revision = 3;
+  string deterministic_build_time_utc = 4;
+  repeated ArtifactHash artifact_hashes = 5;
+  bool double_run_required_by_cli = 6;
+}
+
+message ArtifactHash {
+  string logical_path = 1;
+  string sha256 = 2;
+  uint64 size_bytes = 3;
+}
+
+enum ExposureState {
+  EXPOSURE_STATE_UNSPECIFIED = 0;
+  EXPOSURE_STATE_EXPOSED = 1;
+  EXPOSURE_STATE_PC_ONLY = 2;
+  EXPOSURE_STATE_EVIDENCE_PENDING = 3;
+}
+
+enum StaticFieldKind {
+  STATIC_FIELD_KIND_UNSPECIFIED = 0;
+  STATIC_FIELD_KIND_INT = 1;
+  STATIC_FIELD_KIND_TICKS = 2;
+  STATIC_FIELD_KIND_PATH = 3;
+}
+
+enum NodeKind {
+  NODE_KIND_UNSPECIFIED = 0;
+  NODE_KIND_EFFECT = 1;
+  NODE_KIND_PRESENTATION = 2;
+  NODE_KIND_LIFECYCLE = 3;
+  NODE_KIND_STATE = 4;
+  NODE_KIND_MISSILE = 5;
+}
+
+enum LifecycleRelationType {
+  LIFECYCLE_RELATION_TYPE_UNSPECIFIED = 0;
+  LIFECYCLE_RELATION_TYPE_CHILD = 1;
+  LIFECYCLE_RELATION_TYPE_START = 2;
+  LIFECYCLE_RELATION_TYPE_FLY = 3;
+  LIFECYCLE_RELATION_TYPE_COLLIDE = 4;
+  LIFECYCLE_RELATION_TYPE_VANISH = 5;
+}

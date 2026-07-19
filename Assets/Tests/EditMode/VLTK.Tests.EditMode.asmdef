@@ -14,7 +14,10 @@
         "VLTK.UI",
         "VLTK.Resources",
         "VLTK.Sprites",
-        "VLTK.Backend"
+        "VLTK.Backend",
+        "VLTK.Generated.GameV1",
+        "VLTK.Generated.ContentV1",
+        "VLTK.SkillPort"
     ],
     "includePlatforms": [
         "Editor"
@@ -23,7 +26,8 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Google.Protobuf.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [

@@ -33,7 +33,7 @@ namespace VLTK.UI.Skill
     /// scrollable page, binds/mutates skill data ONLY through PcSkillPanelService,
     /// and grants faction skill-panel progression on open (gameplay-critical, idempotent).
     /// </summary>
-    public sealed class SkillContent : IPopupContent, IPopupLayoutHint
+    public sealed class SkillContent : IPopupContent, IPopupLayoutHint, IPopupChromeHint
     {
         // Strict parity with the prior inline Rect(338, 110, 205, 376). The skill sheet
         // art (UiSkillsSheet.ini) is authored at 205x376; these four values are the full
@@ -43,6 +43,11 @@ namespace VLTK.UI.Skill
         public float Height => 376f;
         public float Left => 338f;
         public float Top => 110f;
+
+        // PC sheet chrome: the skill panel bakes its title and both tab captions
+        // into the background sprite, so the shell hides the generic title and
+        // layers the combat-tab overlay (PopupChromeKind.PcSkill).
+        public PopupChromeKind Chrome => PopupChromeKind.PcSkill;
 
         private readonly SkillCatalog _catalog;
         private readonly PlayerProgressionState _progression; // LIVE ref — mutated by TryUpgrade

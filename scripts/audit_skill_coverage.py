@@ -58,19 +58,124 @@ RELATIONSHIP_FIELDS = (
 # Completed-wave exclusions are accepted only after their repo-local proof
 # artifacts pass the pinned integrity and scope checks below.
 COMPLETED_WAVE_SPECS = {
+    "Shaolin": {
+        "proof": "harness/docs/stories/SKL-S-PROOF-001/static-catalog-proof.json",
+        "proof_sha256": "049c73b9e67f2a18dddbcc026ff8a6996ce1117210686e004eac07398be059a1",
+        "proof_schema": "vltk.shaolin.static-catalog-proof/v1",
+        "membership": "harness/docs/stories/SKL-S-PROOF-001/membership-classification.json",
+        "membership_sha256": "73bf4f791e37b2b63d276740ad5886b05c22286c2941cb521cdfc839f5e517a6",
+        "membership_schema": "vltk.shaolin.membership-classification/v1",
+        "slice": "harness/docs/stories/SKL-S-PROOF-001/PcShaolinSkills.txt",
+        "provenance": "harness/docs/stories/SKL-S-PROOF-001/PcShaolinSkills.provenance.json",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-S-PROOF-001"],
+        "require_current_display": True,
+    },
+    "EMei": {
+        "proof": "harness/docs/stories/SKL-EM-PROOF-001/static-catalog-proof.json",
+        "proof_sha256": "002618cbfb3c79c0e7e57bc7669de37653dc437ff912ffc5349bf4676db8873d",
+        "proof_schema": "vltk.emei.static-catalog-proof/v1",
+        "membership": "harness/docs/stories/SKL-EM-PROOF-001/membership-classification.json",
+        "membership_sha256": "cafa206bbe716699e996dc15e5e892163c71e67ad3df34d08f955b9a19b89d62",
+        "membership_schema": "vltk.emei.membership-classification/v1",
+        "slice": "harness/docs/stories/SKL-EM-PROOF-001/PcEMeiSkills.txt",
+        "provenance": "harness/docs/stories/SKL-EM-PROOF-001/PcEMeiSkills.provenance.json",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-EM-PROOF-001"],
+        "require_current_display": True,
+    },
+    "TianRen": {
+        "proof": "harness/docs/stories/SKL-TR-PROOF-001/static-catalog-proof.json",
+        "proof_sha256": "d75fa4da27e66c51920db80273999d222547287ccf87c4bdf131b5136a2bef45",
+        "proof_schema": "vltk.tianren.static-catalog-proof/v1",
+        "membership": "harness/docs/stories/SKL-TR-PROOF-001/membership-classification.json",
+        "membership_sha256": "466c38f90cf841ae279c2580f0b1b513e9573cf382da1b1eb70b27814c985685",
+        "membership_schema": "vltk.tianren.membership-classification/v1",
+        "slice": "harness/docs/stories/SKL-TR-PROOF-001/PcTianRenSkills.txt",
+        "provenance": "harness/docs/stories/SKL-TR-PROOF-001/PcTianRenSkills.provenance.json",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-TR-PROOF-001"],
+        "require_current_display": True,
+    },
+    "WuDang": {
+        "proof": "harness/docs/stories/SKL-WD-PROOF-001/static-catalog-proof.json",
+        "proof_sha256": "1cbab681c8b4bc6ab808bace54e20620c8a5b4028c5f618de2838a4a3b3fd351",
+        "proof_schema": "vltk.wudang.static-catalog-proof/v1",
+        "membership": "harness/docs/stories/SKL-WD-PROOF-001/membership-classification.json",
+        "membership_sha256": "35104b51d81ceb96934798ed6c79b19af42c1837ba786ab92fa8110712e45472",
+        "membership_schema": "vltk.wudang.membership-classification/v1",
+        "slice": "harness/docs/stories/SKL-WD-PROOF-001/PcWuDangSkills.txt",
+        "provenance": "harness/docs/stories/SKL-WD-PROOF-001/PcWuDangSkills.provenance.json",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-WD-PROOF-001"],
+        "require_current_display": True,
+    },
+    "WuDu": {
+        "proof": "harness/docs/stories/SKL-WDU-PROOF-001/static-catalog-proof.json",
+        "proof_sha256": "bdf78af995faff3448217fef3663a159b7f0581c7ad5b047bd2b456c5d03b59e",
+        "proof_schema": "vltk.wudu.static-catalog-proof/v1",
+        "membership": "harness/docs/stories/SKL-WDU-PROOF-001/membership-classification.json",
+        "membership_sha256": "4cc693683e6112a6f299790d801fc1e8f856bf5b4a27597dc6665a6d4828194a",
+        "membership_schema": "vltk.wudu.membership-classification/v1",
+        "slice": "harness/docs/stories/SKL-WDU-PROOF-001/PcWuDuSkills.txt",
+        "provenance": "harness/docs/stories/SKL-WDU-PROOF-001/PcWuDuSkills.provenance.json",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-WDU-PROOF-001"],
+        "require_current_display": True,
+    },
+    "TianWang": {
+        "proof": "harness/docs/stories/SKL-TW-PROOF-001/static-catalog-proof.json",
+        "proof_sha256": "2601a8f03517ad07e930e0fd248f80b547315b4591a07a28a567407ea55a469e",
+        "proof_schema": "vltk.tianwang.static-catalog-proof/v1",
+        "membership": "harness/docs/stories/SKL-TW-PROOF-001/membership-classification.json",
+        "membership_sha256": "5cc932f515c69355179dfe485017288bc60d1134cba4c2cb8f74fde5c0a8cb67",
+        "membership_schema": "vltk.tianwang.membership-classification/v1",
+        "slice": "harness/docs/stories/SKL-TW-PROOF-001/PcTianWangSkills.txt",
+        "provenance": "harness/docs/stories/SKL-TW-PROOF-001/PcTianWangSkills.provenance.json",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-TW-PROOF-001"],
+        "require_current_display": True,
+    },
+    "CuiYan": {
+        "proof": "harness/docs/stories/SKL-CY-PROOF-001/static-catalog-proof.json",
+        "proof_sha256": "5e2123bf27ff82b6889260d9c14d4b598a81f41680c9f61667d0ed004cbf108a",
+        "proof_schema": "vltk.cuiyan.static-catalog-proof/v1",
+        "membership": "harness/docs/stories/SKL-CY-PROOF-001/membership-classification.json",
+        "membership_sha256": "b045ad3292ca61820d947ff2c3d37e8876ad9b0027f437234eacfda5beb1eac1",
+        "membership_schema": "vltk.cuiyan.membership-classification/v1",
+        "slice": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanSkills.txt",
+        "provenance": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanSkills.provenance.json",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-CY-PROOF-001"],
+        "require_current_display": True,
+    },
     "TangMen": {
         "oracle": "Assets/StreamingAssets/Reference/PcTangMenOracle.json",
         "oracle_sha256": "e4270bd12a534b229c962c3fc322a9271aaefc6b99d062e3df0711a5b0f84f89",
+        "oracle_schema": "vltk.tangmen.static-oracle/v1",
         "membership": "harness/docs/stories/SKL-TM-PROOF-001/membership-classification.json",
         "membership_sha256": "5802e1abfd4df48b75e708baef9d4767adf0be5d02da771c37465142eb175f2a",
+        "membership_schema": "vltk.tangmen.membership-classification/v1",
         "proof_state": "canonical_static_verified_learned_scope",
         "stories": ["SKL-TM-PROOF-001", "SKL-TM-CATALOG-001"],
     },
     "CaiBang": {
         "oracle": "Assets/StreamingAssets/Reference/PcCaiBangOracle.json",
         "oracle_sha256": "91d3251aef30f755f3480a2104a48227eaffd8e7ea8fbf495d189dd185ed84da",
+        "oracle_schema": "vltk.caibang.static-oracle/v1",
         "proof_state": "canonical_static_verified_display_scope",
         "stories": ["SKL-CB-PROOF-002"],
+    },
+    "KunLun": {
+        "oracle": "Assets/StreamingAssets/Reference/PcKunLunOracle.json",
+        "oracle_sha256": "3be6712946489b82d2595eae77894bcf022f0b6cd4d43977850572c700be399f",
+        "oracle_schema": "vltk.kunlun.static-oracle/v1",
+        "membership": "harness/docs/stories/SKL-KL-PROOF-001/membership-classification.json",
+        "membership_sha256": "1d2643f30287f3386dadefdb3dcceb0a1d6666e2497c68d9f9a7827be80d86ca",
+        "membership_schema": "vltk.kunlun.membership-classification/v1",
+        "proof_state": "canonical_static_verified_learned_scope",
+        "stories": ["SKL-KL-PROOF-001"],
+        "require_current_display": True,
     },
 }
 
@@ -102,10 +207,81 @@ def verify_canonical_sources(root: Path) -> None:
             raise SystemExit(f"canonical source hash drift: {path} ({actual})")
 
 
-def verify_completed_waves(repo: Path) -> dict[str, dict]:
-    """Return exclusions only when their frozen local proof artifacts validate."""
+def verify_completed_waves(repo: Path, factions: list[dict]) -> dict[str, dict]:
+    """Return exclusions only when frozen proof matches current scope evidence."""
+    by_key = {faction["key"]: faction for faction in factions}
     completed: dict[str, dict] = {}
     for key, spec in COMPLETED_WAVE_SPECS.items():
+        faction = by_key.get(key)
+        if faction is None:
+            raise SystemExit(f"missing completed-wave faction: {key}")
+        if "proof" in spec:
+            proof_path = repo / spec["proof"]
+            membership_path = repo / spec["membership"]
+            slice_path = repo / spec["slice"]
+            provenance_path = repo / spec["provenance"]
+            if not all(path.is_file() for path in (proof_path, membership_path, slice_path, provenance_path)):
+                raise SystemExit(f"missing {key} completed-wave proof artifact")
+            proof_bytes = proof_path.read_bytes()
+            membership_bytes = membership_path.read_bytes()
+            if digest(proof_bytes) != spec["proof_sha256"] or digest(membership_bytes) != spec["membership_sha256"]:
+                raise SystemExit(f"{key} completed-wave proof hash drift")
+            proof = json.loads(proof_bytes)
+            membership = json.loads(membership_bytes)
+            learned = set(faction["learned"])
+            display = set(faction["display"])
+            union = sorted(learned | display)
+            run_vltktool(CANONICAL_ROOT / "pak_unpacked/slistcache/settings/skills.txt", union, slice_path, provenance_path, check=True)
+            manifest = json.loads(provenance_path.read_text(encoding="utf-8"))
+            rows = read_slice_rows(slice_path.read_bytes())
+            shared = set(membership.get("shared_ids", []))
+            learned_only = {item["skill_id"] for item in membership.get("pc_learned_only", [])}
+            unresolved = {item["skill_id"] for item in membership.get("unity_only_unresolved", [])}
+            relationship_targets = sorted({
+                target for skill_id in learned for target in direct_relationships(rows[skill_id]).values()
+            })
+            if (
+                proof.get("schema") != spec["proof_schema"]
+                or proof.get("canonical_sources", {}).get("static_rows", {}).get("sha256") != SKILLS_SHA
+                or proof.get("canonical_sources", {}).get("progression", {}).get("sha256") != PROGRESSION_SHA
+                or proof.get("canonical_sources", {}).get("skillbook", {}).get("sha256") != SKILLBOOK_SHA
+                or proof.get("membership_source") != spec["membership"]
+                or proof.get("membership_sha256") != spec["membership_sha256"]
+                or proof.get("slice_source") != spec["slice"]
+                or proof.get("slice_sha256") != digest(slice_path.read_bytes())
+                or proof.get("provenance_source") != spec["provenance"]
+                or proof.get("provenance_sha256") != digest(provenance_path.read_bytes())
+                or proof.get("pc_learned_skill_ids") != sorted(learned)
+                or proof.get("observed_unity_display_ids") != sorted(display)
+                or proof.get("shared_ids") != sorted(learned & display)
+                or proof.get("pc_learned_only_ids") != sorted(learned - display)
+                or proof.get("unity_only_unresolved_ids") != sorted(display - learned)
+                or proof.get("learned_relationship_target_ids") != relationship_targets
+                or proof.get("relationship_self_reference_learned_ids") != sorted(set(relationship_targets) & learned)
+                or proof.get("unity_only_relationship_target_ids") != sorted((display - learned) & set(relationship_targets))
+                or proof.get("ui_order", "missing") is not None
+                or membership.get("schema") != spec["membership_schema"]
+                or membership.get("status") != "reviewed_static_membership_evidence"
+                or membership.get("ui_contract", {}).get("ordered_skill_ids", "missing") is not None
+                or set(membership.get("pc_learned_evidence_ids", [])) != learned
+                or set(membership.get("unity_display_ids", [])) != display
+                or shared & learned_only
+                or shared | learned_only != learned
+                or shared & unresolved
+                or shared | unresolved != display
+                or manifest.get("schema") != "vltk.table-slice-provenance/v1"
+                or manifest.get("source", {}).get("sha256") != SKILLS_SHA
+                or manifest.get("requested_ids") != union
+                or manifest.get("selected_ids") != union
+                or set(rows) != set(union)
+            ):
+                raise SystemExit(f"{key} completed-wave proof scope evidence drift")
+            completed[key] = {
+                "proof_state": spec["proof_state"], "stories": spec["stories"],
+                "proof_path": spec["proof"], "proof_sha256": spec["proof_sha256"],
+                "membership_path": spec["membership"], "membership_sha256": spec["membership_sha256"],
+            }
+            continue
         oracle_path = repo / spec["oracle"]
         if not oracle_path.is_file():
             raise SystemExit(f"missing completed-wave oracle: {oracle_path}")
@@ -116,27 +292,44 @@ def verify_completed_waves(repo: Path) -> dict[str, dict]:
         if not sidecar.is_file() or sidecar.read_text(encoding="ascii").split()[0] != spec["oracle_sha256"]:
             raise SystemExit(f"completed-wave oracle sidecar drift: {sidecar}")
         oracle = json.loads(oracle_bytes)
+        if oracle.get("schema") != spec["oracle_schema"]:
+            raise SystemExit(f"{key} completed-wave oracle schema drift")
 
-        if key == "TangMen":
+        if "membership" in spec:
             membership_path = repo / spec["membership"]
+            if not membership_path.is_file():
+                raise SystemExit(f"missing completed-wave membership: {membership_path}")
             membership_bytes = membership_path.read_bytes()
             if digest(membership_bytes) != spec["membership_sha256"]:
                 raise SystemExit(f"completed-wave membership hash drift: {membership_path}")
             membership = json.loads(membership_bytes)
-            unresolved = {item["skill_id"] for item in membership["unity_only_unresolved"]}
+            learned = set(faction["learned"])
+            shared = set(membership.get("shared_ids", []))
+            learned_only = {item["skill_id"] for item in membership.get("pc_learned_only", [])}
+            unresolved = {item["skill_id"] for item in membership.get("unity_only_unresolved", [])}
+            historical_display = set(membership.get("unity_display_ids", []))
             if (
-                oracle.get("schema") != "vltk.tangmen.static-oracle/v1"
-                or oracle.get("membershipSha256") != spec["membership_sha256"]
-                or len(oracle.get("pcLearnedSkillIds", [])) != 23
-                or oracle.get("uiOrder", "missing") is not None
+                membership.get("schema") != spec["membership_schema"]
                 or membership.get("status") != "reviewed_static_membership_evidence"
-                or len(membership.get("pc_learned_evidence_ids", [])) != 23
-                or unresolved != {51, 55, 57}
+                or membership.get("ui_contract", {}).get("ordered_skill_ids", "missing") is not None
+                or oracle.get("membershipSha256") != spec["membership_sha256"]
+                or oracle.get("membershipSource") != spec["membership"]
+                or oracle.get("uiOrder", "missing") is not None
+                or set(membership.get("pc_learned_evidence_ids", [])) != learned
+                or set(oracle.get("pcLearnedSkillIds", [])) != learned
+                or shared & learned_only
+                or shared | learned_only != learned
+                or shared & unresolved
+                or shared | unresolved != historical_display
+                or {item["skill_id"] for item in oracle.get("unresolvedUnityOnly", [])} != unresolved
+                or (spec.get("require_current_display") and (
+                    historical_display != set(faction["display"])
+                    or set(oracle.get("observedUnityDisplayIds", [])) != set(faction["display"])
+                ))
             ):
-                raise SystemExit("TangMen completed-wave scope evidence drift")
-        elif key == "CaiBang":
-            if oracle.get("schema") != "vltk.caibang.static-oracle/v1" or len(oracle.get("rootSkillIds", [])) != 26:
-                raise SystemExit("CaiBang completed-wave scope evidence drift")
+                raise SystemExit(f"{key} completed-wave scope evidence drift")
+        elif set(oracle.get("rootSkillIds", [])) != set(faction["display"]):
+            raise SystemExit(f"{key} completed-wave display scope evidence drift")
 
         completed[key] = {
             "proof_state": spec["proof_state"],
@@ -379,8 +572,8 @@ def build_membership_rows(faction: dict, rows: dict[int, dict[str, str]], skill_
 
 def build(repo: Path, sources: dict, slice_path: Path, manifest_path: Path) -> tuple[dict, bytes]:
     verify_canonical_sources(sources["root"])
-    completed_waves = verify_completed_waves(repo)
     factions_data, global_union = compute_membership(repo, sources)
+    completed_waves = verify_completed_waves(repo, factions_data)
     rows = verify_slice_artifacts(global_union, slice_path, manifest_path)
     # Canonical source line per row comes from the verified vltktool provenance.
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -519,8 +712,8 @@ def build(repo: Path, sources: dict, slice_path: Path, manifest_path: Path) -> t
 
 
 def _initials(key: str) -> str:
-    """CamelCase initials: KunLun->KL, CaiBang->CB, TangMen->TM."""
-    return "".join(c for c in key if c.isupper())
+    """Stable unique story codes; WuDang and WuDu both otherwise produce WD."""
+    return {"WuDang": "WD", "WuDu": "WDU"}.get(key, "".join(c for c in key if c.isupper()))
 
 
 def rank_factions(faction_entries: list[dict], completed_waves: dict[str, dict]) -> list[dict]:

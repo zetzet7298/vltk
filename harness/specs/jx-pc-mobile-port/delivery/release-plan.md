@@ -26,7 +26,7 @@
 | Availability | 99.5% mỗi tháng |
 | RPO | <=5 phút |
 | RTO | <=60 phút |
-| Reconnect grace | 30 giây |
+| Reconnect grace | 15 giây |
 | Checkpoint age | <=5 giây |
 
 PostgreSQL 16 hiện có được dùng với database, role và migrations riêng. Backup tự động, WAL archive, PITR và restore drill là gate; không đặt credential vào specs.

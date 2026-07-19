@@ -16,7 +16,7 @@
 
 | Miền | Positive | Boundary/negative | Failure/recovery |
 | --- | --- | --- | --- |
-| Auth/session | Register/login/refresh/select | brute force, token/ticket replay, duplicate login | socket drop, revoke, reconnect 30s |
+| Auth/session | Register/login/refresh/select | brute force, token/ticket replay, duplicate login | socket drop, revoke, reconnect 15s |
 | Movement/channel | joystick/path/transfer | invalid speed/coordinate/epoch | channel drain, process restart |
 | Combat/skill | cast/hit/buff/missile | out-of-range, cooldown, cancel, bad target | late/reordered input, reconciliation |
 | Inventory/economy | loot/equip/buy/trade | full bag, insufficient funds, stale offer | crash before/after commit, retry receipt |

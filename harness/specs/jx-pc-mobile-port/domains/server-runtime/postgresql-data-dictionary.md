@@ -342,7 +342,9 @@ Bootstrap `POST` chọn character; consume atomic trước WSS admission; không
 | 11 | `expires_at` | `timestamptz` | Không khai báo trong SQL | Có | `NOT NULL`; Không có `DEFAULT`; Ràng buộc cấp bảng: `RB-09-01` | Thời điểm `expires` của bản ghi. |
 | 12 | `consumed_at` | `timestamptz` | Không khai báo trong SQL | Không | Không có constraint inline; Không có `DEFAULT` | Thời điểm `consumed` của bản ghi. |
 | 13 | `revoked_at` | `timestamptz` | Không khai báo trong SQL | Không | Không có constraint inline; Không có `DEFAULT` | Thời điểm `revoked` của bản ghi. |
-| 14 | `reconnect_grace_seconds` | `integer` | Không khai báo trong SQL | Có | `NOT NULL DEFAULT 30 CHECK (reconnect_grace_seconds=30)` | Giá trị `reconnect_grace_seconds` của bản ghi `admission_tickets` theo DDL. |
+| 14 | `reconnect_grace_seconds` | `integer` | Không khai báo trong SQL | Có | `NOT NULL DEFAULT 15 CHECK (reconnect_grace_seconds=15)` | Giá trị `reconnect_grace_seconds` của bản ghi `admission_tickets` theo DDL. |
+
+Gate 0 addendum: DDL hiện thêm `content_releases.catalog_union_size/catalog_union_sha256/runtime_skill_policy`, `encounter_preload_acks` và `combat_lifecycle_events`. Từ điển chi tiết cho bảng mới sẽ được regenerate từ SQL sau khi Go runtime chọn migration generator; contract hiện hành là `contracts/sql/game.v1.sql`.
 
 **Ràng buộc cấp bảng**
 

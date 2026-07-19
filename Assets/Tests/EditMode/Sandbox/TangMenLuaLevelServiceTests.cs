@@ -30,6 +30,13 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void ShehunYueying_MissileSpeedUsesCanonicalLuaCurve()
+        {
+            Assert.AreEqual(28, PcTangMenLuaLevelService.MissileSpeed(339, 1));
+            Assert.AreEqual(32, PcTangMenLuaLevelService.MissileSpeed(339, 20));
+        }
+
+        [Test]
         public void UnknownOrAbsentEventFailsClosed()
         {
             Assert.IsFalse(PcTangMenLuaLevelService.Applies(999999));

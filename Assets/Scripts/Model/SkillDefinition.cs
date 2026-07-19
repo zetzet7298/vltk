@@ -43,6 +43,7 @@ namespace VLTK.Model
         public int cost;                 // CostValue / magic_skill_cost_v
         public int skillCostType;        // SkillCostType (PC NPCATTRIB, 0=mana)
         public int timePerCast;          // TimePerCast / m_nMinTimePerCast
+        public int timePerCastOnHorse;   // TimePerCastOnHorse
         public int waitTime;             // WaitTime / m_nWaitTime
         public int attackRadius;         // m_nAttackRadius (range, source units)
         public bool isPhysical;          // m_bIsPhysical

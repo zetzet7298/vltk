@@ -113,11 +113,11 @@ namespace VLTK.Sandbox
         public static int Count => _missiles.Count;
 
         /// <summary>
-        /// Load runtime missile rows from the full PC missles1.txt source when it is
-        /// staged under Reference/PcAttrib. The PC file contains duplicate id 408;
-        /// sequential dictionary insertion keeps the later row, which is the policy
-        /// used by this runtime registry. Legacy PcMissles/ModMissles remain fallback
-        /// sources for environments without the audited PcAttrib copy.
+        /// Load runtime missile rows from the full slistcache.pak missles payload when
+        /// staged under Reference/PcAttrib/missles1.txt. The current 513-row source has
+        /// unique ids; sequential dictionary insertion still defines last-row-wins if
+        /// a future canonical source reintroduces duplicates. Legacy PcMissles/ModMissles
+        /// remain fallbacks for environments without the audited PcAttrib copy.
         /// </summary>
 
         public static void Initialize(string streamingAssetsPath)

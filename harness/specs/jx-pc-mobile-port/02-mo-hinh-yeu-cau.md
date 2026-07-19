@@ -22,7 +22,7 @@ graph TD
   C --> C1[Smart target/lock/aim]
   C --> C2[Cast 18 Hz/reconcile/replay]
   S --> S1[Shared + novice]
-  S --> S2[10 phái]
+  S --> S2[242-row union 10 phái]
   I --> I1[60 ô/use/equip]
   I --> I2[Loot/shop/trade transaction]
   Q --> Q1[Talk/menu/Lua sandbox]
@@ -72,7 +72,7 @@ stateDiagram-v2
 | 1 | FC-A Tài khoản, nhân vật, phiên | REST identity/bootstrap và lifecycle WSS, truy vết `FR-AUTH-001`, `FR-AUTH-002`, `FR-CHAR-001`, `FR-CHAR-002` và `FR-SESS-001`. |
 | 2 | FC-W Thế giới, map, di chuyển | Map content, spawn, barrier, AOI, transfer và reconciliation. |
 | 3 | FC-C Combat, mục tiêu | Tap nút attack/skill để auto-acquire, lock/aim, server-authoritative 18 Hz, deterministic replay. |
-| 4 | FC-S Skill, tiến triển | Shared, novice, 10 phái; học/nâng/cast; EXP/cấp 1-200. |
+| 4 | FC-S Skill, tiến triển | Shared, novice và 242-row union 10 phái; học/nâng/cast; EXP/cấp 1-200. |
 | 5 | FC-I Item, túi, trang bị, loot | 60 ô một-item-một-ô; loot/use/equip/shop; mutation transaction. |
 | 6 | FC-Q NPC, quest | Tương tác NPC, Lua 5.1 sandbox, state/reward quest. |
 | 7 | FC-U Tự động | Auto-path và auto-combat có hard leash, target/skill/loot policy. |
@@ -196,7 +196,7 @@ graph LR
 | **D2** | World snapshot/AOI, skill manifest, server tick, deterministic RNG seed |
 | **D3** | Actor alive/in-world, target valid/relation/range/LOS, cost/cooldown, latest-pending policy |
 | **D4** | HP/MP/state/cooldown/aggro/loot delta và replay audit |
-| **D5** | Command accepted/rejected; target/cast/combat/loot events |
+| **D5** | Command accepted/rejected; target/cast/combat/loot events; lifecycle recovery/fly/collide/vanish/status refresh/expire |
 | **D6** | Target frame, aim preview, pending/casting/recovery, damage/state/error feedback |
 | **Giải thuật** | B1: tap attack/skill tự chọn theo lock -> lệch hướng nhỏ nhất -> gần nhất; hold-drag magnetize trong cone, không tap actor nhỏ. B2: release tạo intent; local queue chỉ giữ pending mới nhất. B3: server nhận ở tick 18 Hz, authorize và validate. B4: tính integer/fixed-point + deterministic RNG. B5: commit state/economy nếu có. B6: phát event; client reconcile prediction. |
 
@@ -210,7 +210,7 @@ graph LR
 | **Bộ nhớ phụ** | MinIO golden SHA-256; manifest case/source/content/tool revision |
 | **D1** | Case ID, actor build, 5 NPC, skill/level, input sequence, tick/seed |
 | **D2** | Static source/content và runtime golden khi có |
-| **D3** | Shared + novice + 10 phái đủ catalog; hash/locale/provenance pin; reviewer độc lập |
+| **D3** | Shared + novice + 242-row union 10 phái đủ catalog; hash/locale/provenance pin; reviewer độc lập; PC runtime golden khi có, không suy từ static proof |
 | **D4** | Actual event/state/frame sequence, diff, status và sign-off |
 | **D5** | PASS/FAIL/BLOCKED; divergence đầu tiên; SSIM từng case |
 | **D6** | Coverage dashboard; claim tối đa `SPECIFIED/FUNCTIONAL` khi thiếu runtime golden |
@@ -380,9 +380,9 @@ graph LR
 
 ## Cách thức triển khai
 
-Ứng dụng là mobile app Unity qua WAN. Production dùng REST cho đăng ký/login/refresh/logout/reset, realm, character và bootstrap; WSS Protobuf `game.v1` cho realtime. Backend mục tiêu là Go 1.26 modular monolith, một process cho mỗi realm; PostgreSQL 16 là CSDL production duy nhất và tập trung theo realm/deployment. MinIO giữ artifact/golden có SHA-256, không nằm trên đường authoritative gameplay. Lua 5.1 chạy trong sandbox bên trong game process qua host API whitelist. C# mock/catalog cũ chỉ DevHarness, production không fallback.
+Ứng dụng là mobile app Unity qua WAN. Production dùng REST cho đăng ký/login/refresh/logout/reset, realm, character và bootstrap; WSS Protobuf `game.v1` cho realtime. Bootstrap/hello pin exact content digest và runtime skill policy (`vltktool`, không filesystem fallback, không claim runtime parity khi golden còn `BLOCKED`). Backend mục tiêu là Go 1.26 modular monolith, một process cho mỗi realm; PostgreSQL 16 là CSDL production duy nhất và tập trung theo realm/deployment. MinIO giữ artifact/golden có SHA-256, không nằm trên đường authoritative gameplay. Lua 5.1 chạy trong sandbox bên trong game process qua host API whitelist. C# mock/catalog cũ chỉ DevHarness, production không fallback.
 
-Realm đầu tiên dùng một process, availability 99,5%, RPO 5 phút, RTO 60 phút; TLS ingress, PostgreSQL session durable, reconnect grace 30 giây và backup/WAL/restore drill là bắt buộc. Mọi bundle production immutable và pin version/hash/locale/provenance.
+Realm đầu tiên dùng một process, availability 99,5%, RPO 5 phút, RTO 60 phút; TLS ingress, PostgreSQL session durable, reconnect grace 15 giây và backup/WAL/restore drill là bắt buộc. Mọi bundle production immutable và pin version/hash/locale/provenance.
 
 ## Sơ đồ triển khai
 

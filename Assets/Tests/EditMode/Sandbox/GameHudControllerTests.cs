@@ -34,6 +34,7 @@ namespace VLTK.Tests.Sandbox
         [SetUp]
         public void Setup()
         {
+            PopupManager.SetInstance(null);
             _go = new GameObject("GameHudControllerTestsGo");
             _hud = _go.AddComponent<GameHudController>();
 
@@ -95,6 +96,7 @@ namespace VLTK.Tests.Sandbox
         [TearDown]
         public void TearDown()
         {
+            PopupManager.SetInstance(null);
             if (_go != null)
             {
                 Object.DestroyImmediate(_go);
@@ -120,6 +122,7 @@ namespace VLTK.Tests.Sandbox
         {
             // BtnTeam now opens the Team popup via PopupManager (see TeamContentTests).
             // Without an initialised PopupManager the handler must degrade gracefully.
+            PopupManager.SetInstance(null);
             Assert.IsNull(PopupManager.Instance);
             Assert.DoesNotThrow(() => InvokePrivateMethod("OnTeamClick"));
         }
@@ -130,6 +133,7 @@ namespace VLTK.Tests.Sandbox
             // BtnFaction now opens the Faction popup via PopupManager (see FactionContentTests).
             // It must no longer toggle the StallCurrencySelector, and must degrade gracefully
             // when PopupManager is not initialised.
+            PopupManager.SetInstance(null);
             Assert.IsNull(PopupManager.Instance);
             Assert.IsTrue(_stallCurrencySelector.ClassListContains("hidden"));
             Assert.DoesNotThrow(() => InvokePrivateMethod("OnFactionClick"));
@@ -143,6 +147,7 @@ namespace VLTK.Tests.Sandbox
             // BtnSkills now opens the Skill popup via PopupManager (see SkillContentTests).
             // It must degrade gracefully when PopupManager is not initialised and must no longer
             // toggle any inline skill panel (the inline CaiBangSkillPanel is retired).
+            PopupManager.SetInstance(null);
             Assert.IsNull(PopupManager.Instance);
             Assert.DoesNotThrow(() => InvokePrivateMethod("OnSkillsClick"));
         }
@@ -227,6 +232,46 @@ namespace VLTK.Tests.Sandbox
 
             Assert.AreEqual(expected, HudArtPathResolver.ResolveArtRoot("UI/HUD/Art"));
             Assert.AreNotEqual(legacyDataPath, HudArtPathResolver.ResolveArtRoot("UI/HUD/Art"));
+        }
+
+        [Test]
+        [Category("HudPersistence")]
+        public void GMPanel_OpenClose_PreservesHudDocumentTreeAndActionButtons()
+        {
+            var document = _go.GetComponent<UIDocument>();
+            Assert.IsNotNull(document);
+            document.rootVisualElement.Add(_root);
+            var horseButton = new VisualElement { name = "ActionBtnHorse" };
+            _root.Add(horseButton);
+
+            var gmGo = new GameObject("GMPanelHudPreservationTest");
+            var panelRoot = new GameObject("PanelRoot");
+            panelRoot.transform.SetParent(gmGo.transform, false);
+            var gmPanel = gmGo.AddComponent<GMPanelController>();
+            gmPanel.panelRoot = panelRoot;
+            typeof(GMPanelController)
+                .GetField("_cachedHudDoc", BindingFlags.Instance | BindingFlags.NonPublic)
+                ?.SetValue(gmPanel, document);
+
+            try
+            {
+                var originalRoot = document.rootVisualElement.Q("GameHud");
+                gmPanel.Open();
+
+                Assert.IsTrue(document.enabled, "GM overlay must not disable UIDocument and rebuild its visual tree");
+                Assert.AreEqual(DisplayStyle.None, originalRoot.style.display.value);
+
+                gmPanel.Close();
+
+                Assert.IsTrue(document.enabled);
+                Assert.AreSame(originalRoot, document.rootVisualElement.Q("GameHud"));
+                Assert.AreSame(horseButton, document.rootVisualElement.Q("ActionBtnHorse"));
+                Assert.AreEqual(DisplayStyle.Flex, originalRoot.style.display.value);
+            }
+            finally
+            {
+                Object.DestroyImmediate(gmGo);
+            }
         }
 
             [Test]
@@ -360,6 +405,18 @@ namespace VLTK.Tests.Sandbox
 
                 // Popup overlay must still be present
                 Assert.IsNotNull(root.Q("PopupOverlay"), "PopupOverlay must remain (regression)");
+            }
+
+            [Test]
+            public void LoadIconRequestGeneration_RejectsStaleAndAcceptsCurrent()
+            {
+                uint currentGeneration = 7;
+
+                Assert.IsFalse(GameHudController.ShouldApplyIconRequest(6, currentGeneration));
+                Assert.IsTrue(GameHudController.ShouldApplyIconRequest(7, currentGeneration));
+                Assert.IsFalse(GameHudController.ShouldApplyIconRequest(() => false));
+                Assert.IsTrue(GameHudController.ShouldApplyIconRequest(() => true));
+                Assert.IsTrue(GameHudController.ShouldApplyIconRequest((System.Func<bool>)null));
             }
 
         }

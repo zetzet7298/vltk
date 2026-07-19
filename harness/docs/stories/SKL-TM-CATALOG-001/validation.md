@@ -23,6 +23,9 @@ targets must resolve without becoming learned skills.
 - `Assets/StreamingAssets/Reference/PcTangMenOracle.json`
 - `Assets/StreamingAssets/Reference/PcTangMenSkills.txt`
 - `Assets/StreamingAssets/Reference/PcTangMenRelationshipTargets.txt`
+- `Assets/Resources/Reference/PcTangMenRelationshipTargets.txt` — APK-safe exact byte copy.
+  Both SHA-256: `888c93cde48ec22160e12386580bca3aafc2b74d5bc16ba21b70c06a9a8007ba`.
+  Production loader uses only the `Resources` TextAsset; missing/malformed asset yields inert targets.
 
 ## Commands
 

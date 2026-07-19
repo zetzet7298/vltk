@@ -1,0 +1,12 @@
+{
+  "android_physical_evidence": "BLOCKED",
+  "blocked_tuple_cases": 14520,
+  "catalog_union_size": 242,
+  "matrix_sha256": "acf75c76389f4c691defa0fb6ad651302238ec6f94e01e1e1406bea86a4d4ec4",
+  "parity_done": false,
+  "pc_golden_evidence": "BLOCKED",
+  "production_signing_ready": false,
+  "review_ready_tuple_cases": 0,
+  "schema": "vltk.skill-port.review-summary/v1",
+  "tuple_cases": 14520
+}

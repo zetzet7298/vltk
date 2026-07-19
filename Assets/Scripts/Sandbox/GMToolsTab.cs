@@ -21,6 +21,10 @@ namespace VLTK.Sandbox
         public Dropdown filterSeverityDropdown;  // All/Info/Warning/Error
         public Dropdown filterKindDropdown;      // All/Map/Region/Sprite/Config
 
+        [Header("Manual golden capture")]
+        [Tooltip("Required stable case identity. Invoke CaptureActiveSkillFx from explicit GM UI only.")]
+        public string goldenCaptureCaseId;
+
         private ProjectCoverageReport _report;
         private const int MAX_ISSUES_DISPLAY = 200;
 
@@ -53,6 +57,22 @@ namespace VLTK.Sandbox
 
             SubsystemLog.Info("GMToolsTab", $"Coverage report generated: {_report.totalMaps} maps");
             RefreshDisplay();
+        }
+
+        /// <summary>Explicit GM-only capture. It never accepts this snapshot as a golden.</summary>
+        public void CaptureActiveSkillFx()
+        {
+            try
+            {
+                var snapshot = GoldenSnapshotCaptureDriver.CaptureActive(SandboxManager.Instance, goldenCaptureCaseId);
+                SetSummary($"Captured {snapshot.mapId}/{snapshot.caseId} skill={snapshot.skillId} frame={snapshot.frame} tick={snapshot.tick}");
+                SubsystemLog.Info("Golden", $"GM captured {snapshot.mapId}/{snapshot.caseId}; not accepted as golden");
+            }
+            catch (System.Exception ex)
+            {
+                SetSummary($"Golden capture failed: {ex.Message}");
+                SubsystemLog.Warn("Golden", $"GM capture failed: {ex.Message}");
+            }
         }
 
         public void ClearReport()

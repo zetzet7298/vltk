@@ -44,7 +44,11 @@ namespace VLTK.Tests.Sandbox
                 skillId = skillId,
                 nameNormalized = melee ? "melee return probe" : "range return probe",
                 maxLevel = 1,
-                skillStyle = PcSkillStyle.Missiles,
+                // Test fixture: Melee delivery so the probe deals direct damage (a Missile-style
+                // probe with no child missile would spawn nothing and, PC KSkill::Cast, apply no
+                // damage). The melee-vs-range return routing is driven by meleeType below
+                // (CombatRuntimeService line: isMelee = meleeType != None), independent of SkillStyle.
+                skillStyle = PcSkillStyle.Melee,
                 targetEnemy = true,
                 isPhysical = true,
                 meleeType = melee ? PcMeleeType.AttackWithBlur : PcMeleeType.None,

@@ -24,7 +24,7 @@ release; code mới là thay đổi additive.
 
 | Nhóm | Stable code | Retry/phục hồi |
 | --- | --- | --- |
-| Protocol/session | `PROTOCOL_MALFORMED_FRAME`, `PROTOCOL_FRAME_TOO_LARGE`, `PROTOCOL_UNSUPPORTED_VERSION`, `SEQUENCE_GAP`, `SESSION_EPOCH_MISMATCH`, `RESUME_BASELINE_MISMATCH`, `RESUME_GRACE_EXPIRED` | Resync/reconnect theo code; malformed/oversize không retry cùng frame |
+| Protocol/session | `PROTOCOL_MALFORMED_FRAME`, `PROTOCOL_FRAME_TOO_LARGE`, `PROTOCOL_UNSUPPORTED_VERSION`, `SEQUENCE_GAP`, `SESSION_EPOCH_MISMATCH`, `RESUME_BASELINE_MISMATCH`, `RESUME_GRACE_EXPIRED`, `CONTENT_DIGEST_MISMATCH`, `ENCOUNTER_PRELOAD_UNAVAILABLE` | Resync/reconnect theo code; malformed/oversize không retry cùng frame; content mismatch phải bootstrap lại, không fallback filesystem |
 | World/move | `WORLD_NOT_READY`, `MAP_NOT_FOUND`, `MOVE_BLOCKED`, `TRANSFER_IN_PROGRESS`, `TRANSFER_DESTINATION_UNAVAILABLE`, `TRANSFER_EXPIRED` | Snapshot lại hoặc retry destination khi `retryable=true` |
 | Target/combat | `TARGET_REQUIRED`, `TARGET_INVALID`, `TARGET_NOT_VISIBLE`, `TARGET_OUT_OF_RANGE`, `SKILL_NOT_LEARNED`, `SKILL_ON_COOLDOWN`, `SKILL_RESOURCE_INSUFFICIENT`, `CAST_AIM_INVALID`, `CAST_INTERRUPTED`, `COMBAT_STATE_FORBIDS_ACTION` | Chỉ retry khi state/tick/target đã đổi; không spam cùng command |
 | Inventory/loot | `INVENTORY_FULL`, `INVENTORY_REVISION_CONFLICT`, `INVENTORY_STACK_INCOMPATIBLE`, `INVENTORY_QUANTITY_INVALID`, `ITEM_NOT_FOUND`, `ITEM_SLOT_CONFLICT`, `ITEM_LOCKED`, `ITEM_REQUIREMENT_FAILED`, `ITEM_COMBAT_LOCKED`, `LOOT_NOT_FOUND`, `LOOT_OWNERSHIP_DENIED`, `LOOT_EXPIRED` | Refresh revision/snapshot; ownership denial không retry |

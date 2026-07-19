@@ -277,7 +277,7 @@ namespace VLTK.Sandbox
             var info = StrVal(c, col, infoCol);
             var snd = StrVal(c, col, sndCol);
 
-            if (string.IsNullOrEmpty(spr) && string.IsNullOrEmpty(info))
+            if (string.IsNullOrEmpty(spr) && string.IsNullOrEmpty(info) && string.IsNullOrEmpty(snd))
                 return null;
 
             var slot = new MissileAnimSlot

@@ -6,7 +6,8 @@ namespace VLTK.Tests.Sandbox
 {
     public class PcMissileSourceAuditTests
     {
-        private const string PcServerSettings = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings";
+        private const string PcLooseServerMissles = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/Missles.txt";
+        private const string PcPakUnpackedMissles = "/var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt";
         private static string RepoRoot => Directory.GetCurrentDirectory();
         private static string ReferenceRoot => Path.Combine(RepoRoot, "Assets/StreamingAssets/Reference");
         private static string PcAttribRoot => Path.Combine(ReferenceRoot, "PcAttrib");
@@ -32,14 +33,12 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void ParseCanonicalPcMissles1Txt_ReportsExactSourceTruthAndDuplicateId408()
+        public void ParseCanonicalPcMissles1Txt_ReportsExactPakTruthWithoutDuplicates()
         {
             string path = Path.Combine(PcAttribRoot, "missles1.txt");
 
             var audit = PcMissileSourceAudit.ParseFile(path);
-            // PC missles1.txt has been updated since the test was written — the canonical
-            // jx-source migration brought in additional rows (13,938 → 14,452 bytes; 514 lines).
-            // The test expectations are now the post-migration truth values.
+            // Runtime winner is the slistcache.pak \settings\missles.txt payload.
             Assert.AreEqual("e893c7af74d43672f1513b8325e31ba3270ebe425ac668f1b444e81db845e8bc", audit.sha256);
             Assert.AreEqual(PcMissileSourceAudit.ExpectedHeaderSha256, audit.headerSha256);
             Assert.AreEqual(105850, audit.byteCount);
@@ -87,36 +86,52 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual("4f79cde57b199747ce1fa65216c46ede3596c8e5c9bafd1b73c8f137269ee66e", versusMissles.right.sha256);
             Assert.IsFalse(versusMissles1.sameDataRowCount);
             Assert.IsFalse(versusMissles1.sameIdSequence);
-            // Post-jx-source migration: missles1.txt has 72 exclusive ids (523..636) that are
-            // not in ModMissles.txt. The test reflects the current source state.
-            Assert.GreaterOrEqual(versusMissles1.idsOnlyInLeft.Length, 70,
-                "missles1.txt should have at least 70 ids not in ModMissles.txt after jx-source migration.");
-            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft, 523, "id 523 is a post-migration missles1-exclusive id.");
-            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft, 636, "id 636 is the post-migration max missles1-exclusive id.");
+            Assert.AreEqual(114, versusMissles1.differingRowByteCount);
+            Assert.AreEqual(72, versusMissles1.idsOnlyInLeft.Length);
+            Assert.AreEqual(0, versusMissles1.idsOnlyInRight.Length);
+            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft, 523);
+            CollectionAssert.Contains(versusMissles1.idsOnlyInLeft, 636);
         }
 
         [Test]
-        public void ServerPcSourceFiles_MatchCanonicalRepoPcAttribCopies_WhenAvailable()
+        public void PakMisslesComparedWithRepoMissles_CountsChangedAndMissingRows()
         {
-            string serverMissles = Path.Combine(PcServerSettings, "missles.txt");
-            string serverMissles1 = Path.Combine(PcServerSettings, "missles1.txt");
-            if (!File.Exists(serverMissles) || !File.Exists(serverMissles1))
+            var comparison = PcMissileSourceAudit.CompareFiles(
+                Path.Combine(PcAttribRoot, "missles1.txt"),
+                Path.Combine(PcAttribRoot, "missles.txt"));
+
+            Assert.IsFalse(comparison.sameDataRowCount);
+            Assert.IsFalse(comparison.sameIdSequence);
+            Assert.IsFalse(comparison.sameUniqueIdSet);
+            Assert.AreEqual(110, comparison.differingRowByteCount);
+            Assert.AreEqual(72, comparison.idsOnlyInLeft.Length);
+            Assert.AreEqual(0, comparison.idsOnlyInRight.Length);
+        }
+
+        [Test]
+        public void MountedPcSources_MatchSelectedRepoCopies_WhenAvailable()
+        {
+            if (!File.Exists(PcLooseServerMissles) || !File.Exists(PcPakUnpackedMissles))
             {
                 Assert.Ignore("PC source tree is not mounted in this environment.");
             }
 
-            Assert.IsTrue(PcMissileSourceAudit.CompareFiles(serverMissles, Path.Combine(PcAttribRoot, "missles.txt")).exactBytes);
-            Assert.IsTrue(PcMissileSourceAudit.CompareFiles(serverMissles1, Path.Combine(PcAttribRoot, "missles1.txt")).exactBytes);
+            Assert.IsTrue(PcMissileSourceAudit.CompareFiles(
+                PcLooseServerMissles,
+                Path.Combine(ReferenceRoot, "ModMissles.txt")).exactBytes);
+            Assert.IsTrue(PcMissileSourceAudit.CompareFiles(
+                PcPakUnpackedMissles,
+                Path.Combine(PcAttribRoot, "missles1.txt")).exactBytes);
         }
+
         [Test]
-        public void PcMissileRegistry_RuntimeLoadsFullMissles1TableAndLateDuplicate408Wins()
+        public void PcMissileRegistry_RuntimeLoadsFullPakTableWith513UniqueIds()
         {
             string streamingAssets = Path.Combine(RepoRoot, "Assets/StreamingAssets");
 
             PcMissileRegistry.ClearAndInitialize(streamingAssets);
 
-            // Post-jx-source migration: missles1.txt has 513 unique missile rows (id 1..636).
-            // All unique ids should load into the runtime registry.
+            // slistcache.pak missles payload has 513 unique missile rows (id 1..636).
             Assert.AreEqual(513, PcMissileRegistry.Count,
                 "Runtime registry should load full PC missles1.txt unique-id coverage.");
             Assert.IsTrue(PcMissileRegistry.TryGet(1, out _), "First id 1 must resolve at runtime.");

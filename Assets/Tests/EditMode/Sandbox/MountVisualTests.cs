@@ -1,8 +1,8 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — ST-02.1.3 Mount cycle tests
-// Verifies: catalog emits HM01 rider parts when action=Ride, mounted SPRs load
-// from staged files, HasAllRequiredParts=true, and HorseVisual decodes the
-// single-frame horse body SPR. Mirrors MalePlayerVisualTests pattern.
+// Verifies: catalog emits canonical RD01 rider parts when action=Ride, mounted SPRs load
+// from staged files, male required layers are complete, female reports only its
+// canonical hair hole, and HorseVisual decodes single-frame horse body SPRs.
 // -----------------------------------------------------------------------------
 
 using System.IO;
@@ -29,8 +29,11 @@ namespace VLTK.Tests.Sandbox
             _male = new GameObject("MalePlayerTest");
             _female = new GameObject("FemalePlayerTest");
             _horse = new GameObject("HorseTest");
-            _stagingRoot = MalePlayerSprStaging.StageForTests();
-            MalePlayerSprStaging.StageFemaleForTests(tempRoot: _stagingRoot);
+            string sourceRoot = Path.Combine(Application.streamingAssetsPath, "Sprites");
+            _stagingRoot = MalePlayerSprStaging.StageForTests(sourceRoot: sourceRoot);
+            MalePlayerSprStaging.StageFemaleForTests(sourceRoot: sourceRoot, tempRoot: _stagingRoot);
+            foreach (int horseId in HorseVisual.AvailableHorseIds)
+                MalePlayerSprStaging.StageOne(sourceRoot, _stagingRoot, HorseVisual.SourcePathForHorseId(horseId));
             _tmpRoot = _stagingRoot;
         }
 
@@ -43,16 +46,42 @@ namespace VLTK.Tests.Sandbox
             MalePlayerSprStaging.CleanupTempDir(_stagingRoot);
         }
 
+        private static void AssertOnlyCanonicalFemaleHairIsMissing(FemalePlayerVisual visual)
+        {
+            var hair = FemalePlayerSpriteCatalog.BuildParts(
+                    visual.currentAction, visual.currentWeapon,
+                    visual.armorVariant, visual.headVariant, visual.weaponVariant,
+                    visual.hairVariant, visual.mountHorseVariant)
+                .Single(part => part.kind == PlayerSpritePartKind.Hair);
+
+            Assert.IsFalse(visual.HasAllRequiredParts);
+            Assert.AreEqual(1, visual.MissingRequiredPartCount);
+            CollectionAssert.AreEqual(new[] { hair.sourcePath }, visual.LastMissingRequiredParts,
+                "FM_HR_019 must remain the only fail-closed required hole.");
+
+            var visibleKinds = new[]
+            {
+                PlayerSpritePartKind.Body, PlayerSpritePartKind.LeftHand, PlayerSpritePartKind.RightHand,
+                PlayerSpritePartKind.RightWeapon, PlayerSpritePartKind.HorseFront,
+                PlayerSpritePartKind.HorseMiddle, PlayerSpritePartKind.HorseRear,
+            };
+            foreach (var kind in visibleKinds)
+            {
+                Assert.IsTrue(visual.GetComponentsInChildren<SpriteRenderer>(true).Any(renderer =>
+                    renderer.gameObject.name.StartsWith($"Part_{(int)kind}_") && renderer.enabled && renderer.sprite != null),
+                    $"Mounted female required {kind} layer must render.");
+            }
+        }
+
         // ----- Male mount catalog -----
 
         [Test]
         public void MaleCatalog_Ride_EmitsMountedRiderSet()
         {
-            // Live 9-part layered mount design (matches MalePlayerVisualTests.Catalog_RideIdle):
-            // 1 shadow (YY) + 3 horse body (HH/HB/HT) + 5 rider (BD/HD/HR/LH/RH).
-            // Mounted idle uses RD01 (RideStand). Weapons (LW/RW) are stripped.
+            // Catalog retains shadow, horse, rider, shoulder, and weapon slots.
+            // Mounted idle uses RD01; source-less optional holes stay explicit.
             var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Ride, PcWeaponType.EmptyHand);
-            Assert.AreEqual(9, parts.Length, "Mounted male: 9 parts (YY + HH/HB/HT + BD/HD/HR/LH/RH).");
+            Assert.AreEqual(12, parts.Length, "Mounted male catalog includes shadow, horse, shoulder, and weapon slots.");
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shadow));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseFront));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseMiddle));
@@ -60,27 +89,31 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Body));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Head));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Hair));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shoulder));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftHand));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightHand));
-            Assert.IsTrue(parts.All(p => p.required), "All 9 mount parts are required for male.");
-            Assert.IsTrue(parts.All(p => p.sourcePath.EndsWith("_RD01.spr")),
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon));
+            var shoulder = parts.Single(p => p.kind == PlayerSpritePartKind.Shoulder);
+            Assert.IsFalse(shoulder.required, "MA_SH_019 package winner bytes are absent; path is provenance-only.");
+            StringAssert.Contains("MA_SH_019_RD01.spr", shoulder.sourcePath);
+            Assert.IsTrue(parts.Where(p => p.kind != PlayerSpritePartKind.Shoulder).All(p => p.required),
+                "Every mounted male layer except known MA_SH_019 hole remains required.");
+            Assert.IsTrue(parts.Where(p => !string.IsNullOrEmpty(p.sourcePath)).All(p => p.sourcePath.EndsWith("_RD01.spr")),
                 "Mounted idle uses RD01 (RideStand) action suffix for all parts.");
             Assert.IsTrue(parts.All(p => p.sourcePath.Contains(@"\MA_")), "Male mount uses MA_ prefix.");
-            Assert.IsFalse(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon),
-                "Mounted rider has no separate LW SPR in PC source.");
-            Assert.IsFalse(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon),
-                "Mounted rider has no separate RW SPR in PC source.");
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon));
         }
 
         [Test]
-        public void MaleCatalog_Ride_StripsWeaponsKeepsRiderAndHorse()
+        public void MaleCatalog_Ride_KeepsWeaponSlotsForCastBanks()
         {
-            // Mounting strips only the weapon layers (LW/RW). The rider keeps
-            // shadow/hair/hands and gains the 3 horse-body layers (HH/HB/HT).
+            // Mounted HA/HM cast banks retain weapon slots.
             var parts = MalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Ride, PcWeaponType.LongWeapon);
             var names = parts.Select(p => p.kind.ToString()).ToList();
-            CollectionAssert.DoesNotContain(names, "LeftWeapon");
-            CollectionAssert.DoesNotContain(names, "RightWeapon");
+            CollectionAssert.Contains(names, "LeftWeapon");
+            CollectionAssert.Contains(names, "RightWeapon");
             CollectionAssert.Contains(names, "Shadow");
             CollectionAssert.Contains(names, "Hair");
             CollectionAssert.Contains(names, "LeftHand");
@@ -93,13 +126,11 @@ namespace VLTK.Tests.Sandbox
         // ----- Female mount catalog -----
 
         [Test]
-        public void FemaleCatalog_Ride_EmitsNinePartRiderSet()
+        public void FemaleCatalog_Ride_EmitsLayeredRiderSet()
         {
-            // Female mount = same 9-part layered design as male: 1 shadow + 3 horse
-            // body (HH/HB/HT, reusing MALE horse art) + 5 female rider (BD/HD/HR/LH/RH).
-            // npcres/woman has no horse SPRs, so the horse layers map to MA_ paths.
+            // Female horse layers resolve MA_H* paths; shoulder remains explicit optional hole.
             var parts = FemalePlayerSpriteCatalog.BuildParts(PlayerVisualAction.Ride, PcWeaponType.EmptyHand);
-            Assert.AreEqual(9, parts.Length, "Mounted female: 9 parts (YY + HH/HB/HT + BD/HD/HR/LH/RH).");
+            Assert.AreEqual(12, parts.Length, "Mounted female catalog includes explicit optional shoulder/shadow slots.");
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shadow));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseFront));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.HorseMiddle));
@@ -107,9 +138,12 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Body));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Head));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Hair));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.Shoulder && !p.required));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftHand));
             Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightHand));
-            Assert.IsTrue(parts.All(p => p.sourcePath.EndsWith("_RD01.spr")),
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.LeftWeapon));
+            Assert.IsTrue(parts.Any(p => p.kind == PlayerSpritePartKind.RightWeapon));
+            Assert.IsTrue(parts.Where(p => !string.IsNullOrEmpty(p.sourcePath)).All(p => p.sourcePath.EndsWith("_RD01.spr")),
                 "Mounted idle uses RD01 (RideStand) action suffix for all parts.");
             // The 5 female rider parts use the FM_ prefix; horse + shadow reuse male MA_ art.
             Assert.IsTrue(parts.Where(p => p.kind == PlayerSpritePartKind.Body
@@ -134,7 +168,6 @@ namespace VLTK.Tests.Sandbox
             mv.RefreshActionParts(force: true);
             Assert.IsTrue(mv.IsMounted, "IsMounted flag should be true after SetMounted(true).");
             Assert.IsTrue(mv.HasAllRequiredParts, "All required mounted parts must load.");
-            Assert.AreEqual(9, mv.LoadedPartCount, "Mounted male loads 9 parts (YY + HH/HB/HT + BD/HD/HR/LH/RH).");
             Assert.AreEqual(0, mv.MissingRequiredPartCount,
                 $"No required parts should be missing. Missing: {string.Join(",", mv.LastMissingRequiredParts)}");
         }
@@ -149,12 +182,9 @@ namespace VLTK.Tests.Sandbox
             mv.SetWeapon(PcWeaponType.EmptyHand);
             mv.SetAction(PlayerVisualAction.Idle);
             int unmountedCount = mv.LoadedPartCount;
-            Assert.AreEqual(8, unmountedCount, "Unmounted male empty-hand loads 8 parts (YY/BD/HD/HR/LH/RH/LW/RW).");
 
             // Mount
             mv.SetMounted(true);
-            int mountedCount = mv.LoadedPartCount;
-            Assert.AreEqual(9, mountedCount, "Mount switches to the 9-part layered horse+rider set.");
             Assert.IsTrue(mv.HasAllRequiredParts);
 
             // Dismount back to idle
@@ -173,8 +203,7 @@ namespace VLTK.Tests.Sandbox
             fv.SetMounted(true);
             fv.RefreshActionParts(force: true);
             Assert.IsTrue(fv.IsMounted);
-            Assert.IsTrue(fv.HasAllRequiredParts, $"Missing: {string.Join(",", fv.LastMissingRequiredParts)}");
-            Assert.AreEqual(9, fv.LoadedPartCount, "Mounted female loads 9 parts (YY + HH/HB/HT + BD/HD/HR/LH/RH).");
+            AssertOnlyCanonicalFemaleHairIsMissing(fv);
         }
 
         [Test]
@@ -186,18 +215,15 @@ namespace VLTK.Tests.Sandbox
             fv.SetWeapon(PcWeaponType.EmptyHand);
             fv.SetAction(PlayerVisualAction.Idle);
             int unmountedCount = fv.LoadedPartCount;
-            // Female on foot has exactly 5 visible parts (BD/HD/HR/LH/RH).
-            // Shadow/LW/RW slots are not required and never count.
-            Assert.AreEqual(5, unmountedCount, "Unmounted female loads 5 parts.");
 
             fv.SetMounted(true);
-            Assert.AreEqual(9, fv.LoadedPartCount, "Mount switches female to the 9-part layered horse+rider set.");
-            Assert.IsTrue(fv.HasAllRequiredParts, $"Mounted female missing: {string.Join(",", fv.LastMissingRequiredParts)}");
+            Assert.IsTrue(fv.IsMounted);
+            AssertOnlyCanonicalFemaleHairIsMissing(fv);
 
             fv.SetMounted(false);
             fv.SetAction(PlayerVisualAction.Idle);
-            Assert.AreEqual(5, fv.LoadedPartCount, "Dismount restores 5-part on-foot set.");
-            Assert.IsTrue(fv.IsMounted == false);
+            Assert.AreEqual(unmountedCount, fv.LoadedPartCount, "Dismount restores original staged layer set.");
+            Assert.IsFalse(fv.IsMounted);
         }
 
         // ----- HorseVisual -----

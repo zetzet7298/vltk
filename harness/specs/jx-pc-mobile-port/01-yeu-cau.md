@@ -132,7 +132,7 @@ Trường: `idempotency_key`, actor, operation, item instance/slot/quantity/mone
 **Bộ phận: Gameplay, Backend, Unity, QA** |  |  |  |  |  |
 | --- | --- | --- | --- | --- | --- |
 | **STT** | **Nghiệp vụ** | **Mô tả tóm tắt** | **Biểu mẫu** | **Quy định** | **Ghi chú** |
-| 1 | OBJ-P0-001 Combat Parity Lab | 5 NPC, shared + novice + 10 phái, replay xác định | BM02 | QD-CBT-001/002, QD-PAR-001 | P0; golden runtime `BLOCKED` |
+| 1 | OBJ-P0-001 Combat Parity Lab | 5 NPC, 242-row shared/novice/10-phái union, replay xác định | BM02 | QD-CBT-001/002, QD-PAR-001 | P0; golden runtime `BLOCKED` |
 | 2 | OBJ-P1-001 Vertical slice | Login -> tạo nhân vật -> map 53 -> combat -> loot -> túi/mặc -> cấp 200 -> lưu | BM01-03 | QD-INV-001, QD-ECO-001 | P1 |
 | 3 | OBJ-P2-001 World PvE | Nhiều map, NPC/quest, tự tìm đường, tổ đội, thú cưỡi | BM02 | QD-CONT-001, QD-LUA-001 | P2 catalog |
 | 4 | OBJ-P3-001 Social/economy | Chat, trade, guild, pet, shop/economy | BM03 | QD-ECO-001 | P3 catalog |
@@ -146,7 +146,7 @@ Trường: `idempotency_key`, actor, operation, item instance/slot/quantity/mone
 | 1 | FR-SKL-003 Catalog skill | Skill/level/branch/effect content | Theo manifest đã pin; không sửa code protocol |
 | 2 | FR-QST-001 Quest/event | Lua + content version | Script sandbox đã ký/hash |
 | 3 | FR-PVP-002 Event | Lịch, map, reward | Cấu hình LiveOps được duyệt |
-| 4 | NFR-CONT-001 Bundle | Version/locale/source hash | Immutable trong một release |
+| 4 | NFR-CONT-001 Bundle | Version/locale/source hash + 242-row union digest + runtime skill policy | Immutable trong một release; exact digest negotiation |
 
 ## Danh sách yêu cầu hiệu quả
 
@@ -160,7 +160,7 @@ Trường: `idempotency_key`, actor, operation, item instance/slot/quantity/mone
 | 5 | Economy commit | Không ACK trước commit | Audit append-only | Crash test bắt buộc |
 | 6 | Android thấp | >=30 FPS | Working set mục tiêu <=1,5 GB | Thiết bị 4 GB |
 | 7 | Android trung-cao | Mục tiêu 60 FPS | Asset tiered | Không phải release gate thấp |
-| 8 | Reconnect | Resume không nhân đôi command | Command window bounded | Grace 30 giây; avatar vẫn ở world và có thể bị đánh |
+| 8 | Reconnect | Resume không nhân đôi command | Command window bounded | Grace 15 giây; avatar vẫn ở world và có thể bị đánh |
 | 9 | Content load | Không hot-reload production | Bundle immutable | Pin hash |
 | 10 | Golden visual | SSIM >=0,99 từng case | MinIO SHA-256 | Runtime capture `BLOCKED` |
 
@@ -253,7 +253,7 @@ Trường: `idempotency_key`, actor, operation, item instance/slot/quantity/mone
 | **Bảng trách nhiệm yêu cầu tiến hóa** |  |  |  |  |
 | --- | --- | --- | --- | --- |
 | **STT** | **Nghiệp vụ** | **Người dùng** | **Phần mềm** | **Ghi chú** |
-| 1 | Content release | Chọn release đã duyệt | Verify version/hash/locale | Reconciler duyệt |
+| 1 | Content release | Chọn release đã duyệt | Verify exact digest/version/hash/locale/policy | Reconciler duyệt; `vltktool`, không filesystem fallback |
 | 2 | Skill/quest wave | Không cần cập nhật app nếu contract giữ nguyên | Nạp bundle immutable | P2-P4 |
 | 3 | Schema migration | Không thao tác | Expand/migrate/contract + rollback | Test restore |
 | 4 | Protocol evolution | Cập nhật client tương thích | Version envelope | Breaking gate |
@@ -268,7 +268,7 @@ Trường: `idempotency_key`, actor, operation, item instance/slot/quantity/mone
 | 3 | Android | Chọn quality tier | >=30 FPS trên 4 GB | NFR-MOB-001 |
 | 4 | Economy | Có thể retry | Idempotent/commit-before-ACK | Crash gate |
 | 5 | Resume | Chờ reconnect | Khử trùng command | Reconnect gate |
-| 6 | Content | Không | Cache bundle pinned | No hot reload |
+| 6 | Content | Không | Cache bundle pinned theo exact digest | No hot reload; mismatch bootstrap lại |
 | 7 | DB | Không | Index/transaction/realm isolation theo pha 3 | PostgreSQL role riêng, cấm client truy cập trực tiếp |
 | 8 | Lua | Chọn action | Budget instruction/time/memory | Mặc định 100.000 instruction, 5 ms và 8 MB mỗi invocation; fail closed |
 | 9 | Golden | Cung cấp capture khi có | SHA/SSIM/replay | `BLOCKED` runtime |
@@ -346,7 +346,7 @@ Tên người dùng sử dụng để gọi nghiệp vụ đó trong thực tế
 | **Thời gian liên quan** | P0 và regression mỗi release content/combat |
 | **Không gian liên quan** | Realm lab cô lập, deterministic seed; PC runtime capture hiện `BLOCKED` |
 | **Nghiệp vụ liên quan** | FR-TGT-001/002, FR-CBT-001..004, FR-SKL-001..003, NFR-PAR-001 |
-| **Mô tả bước tiến hành** | B1: khóa source/content/hash/locale và case. B2: spawn actor + 5 NPC với state chuẩn. B3: chạy shared, novice và toàn bộ skill 10 phái bằng input/tick/seed cố định. B4: thu event, state, damage, missile và frame sequence. B5: so logic 100%, visual SSIM >=0,99 từng case. B6: reviewer ký evidence; thiếu capture giữ `SPECIFIED/FUNCTIONAL`, tuyệt đối không `PARITY_DONE`. |
+| **Mô tả bước tiến hành** | B1: khóa source/content/hash/locale và case. B2: spawn actor + 5 NPC với state chuẩn. B3: chạy shared, novice và toàn bộ 242-row shared/novice/10-phái union bằng input/tick/seed cố định. B4: thu event, state, damage, missile và frame sequence. B5: so logic 100%, visual SSIM >=0,99 từng case. B6: reviewer ký evidence; thiếu capture giữ `SPECIFIED/FUNCTIONAL`, tuyệt đối không `PARITY_DONE`. |
 
 ## OBJ-P2-001: Mở rộng thế giới PvE
 

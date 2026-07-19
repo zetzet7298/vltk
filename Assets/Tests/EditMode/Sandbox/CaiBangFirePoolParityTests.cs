@@ -127,9 +127,13 @@ namespace VLTK.Tests.Sandbox
             beggar.states[MagicAttributeKind.AddFireMagicV] = Attr(MagicAttributeKind.AddFireMagicV, 100);
             beggar.states[MagicAttributeKind.AddFireDamageV] = Attr(MagicAttributeKind.AddFireDamageV, 500);
             var e1 = Enemy(new Vector2(200, 0));
-            UnityEngine.Random.InitState(20260717);
             var r1 = svc.Cast(beggar, e1, 117, e1.position, CombatRelation.Enemy);
             Assert.IsTrue(r1.success, r1.detail);
+            // PC KSkill::Cast: 117 SkillStyle=Missiles -> damage defers to missile impact.
+            Assert.AreEqual(0, r1.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            UnityEngine.Random.InitState(20260717);
+            var m1 = r1.projectiles.First(p => p.skillId == 44);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, e1, r1, m1, e1.position));
             int dmgWithBoth = r1.damageResults.Sum(d => d.finalDamage);
             Assert.Greater(dmgWithBoth, 0, "117 magic fire must deal damage");
 
@@ -137,9 +141,12 @@ namespace VLTK.Tests.Sandbox
             beggar.states.Remove(MagicAttributeKind.AddFireDamageV);
             svc.AdvanceTime(20);
             var e2 = Enemy(new Vector2(200, 0));
-            UnityEngine.Random.InitState(20260717); // identical roll sequence
-            var r2 = svc.Cast(beggar, e2, 117, e2.position, CombatRelation.Enemy);
+            var r2 = svc.Cast(beggar, e2, 117, e2.position, CombatRelation.Enemy); // identical roll sequence
             Assert.IsTrue(r2.success, r2.detail);
+            Assert.AreEqual(0, r2.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            UnityEngine.Random.InitState(20260717);
+            var m2 = r2.projectiles.First(p => p.skillId == 44);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, e2, r2, m2, e2.position));
             int dmgMagicOnly = r2.damageResults.Sum(d => d.finalDamage);
 
             // Magic fire reads AddFireMagicV(100) in both casts -> identical damage.
@@ -161,18 +168,25 @@ namespace VLTK.Tests.Sandbox
             beggar.states[MagicAttributeKind.AddFireMagicV] = Attr(MagicAttributeKind.AddFireMagicV, 500);
             beggar.states[MagicAttributeKind.AddFireDamageV] = Attr(MagicAttributeKind.AddFireDamageV, 100);
             var e1 = Enemy(new Vector2(200, 0));
-            UnityEngine.Random.InitState(20260717);
             var r1 = svc.Cast(beggar, e1, 119, e1.position, CombatRelation.Enemy);
             Assert.IsTrue(r1.success, r1.detail);
+            // PC KSkill::Cast: 119 SkillStyle=Missiles -> damage defers to missile impact.
+            Assert.AreEqual(0, r1.damageResults.Count, "119 Missile-style: damage waits for missile impact");
+            UnityEngine.Random.InitState(20260717);
+            var m1 = r1.projectiles.First(p => p.skillId == 45);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, e1, r1, m1, e1.position));
             int dmgWithBoth = r1.damageResults.Sum(d => d.finalDamage);
             Assert.Greater(dmgWithBoth, 0, "119 physical fire must deal damage");
 
             beggar.states.Remove(MagicAttributeKind.AddFireMagicV);
             svc.AdvanceTime(20);
             var e2 = Enemy(new Vector2(200, 0));
-            UnityEngine.Random.InitState(20260717);
             var r2 = svc.Cast(beggar, e2, 119, e2.position, CombatRelation.Enemy);
             Assert.IsTrue(r2.success, r2.detail);
+            Assert.AreEqual(0, r2.damageResults.Count, "119 Missile-style: damage waits for missile impact");
+            UnityEngine.Random.InitState(20260717);
+            var m2 = r2.projectiles.First(p => p.skillId == 45);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, e2, r2, m2, e2.position));
             int dmgPhysOnly = r2.damageResults.Sum(d => d.finalDamage);
 
             // Physical fire reads AddFireDamageV(100) in both casts -> identical damage,
@@ -336,12 +350,19 @@ namespace VLTK.Tests.Sandbox
 
             UnityEngine.Random.InitState(20260717);
             var eA = Enemy(new Vector2(200, 0));
-            int dmgA = svc.Cast(without116, eA, 117, eA.position, CombatRelation.Enemy).damageResults.Sum(d => d.finalDamage);
+            var rA = svc.Cast(without116, eA, 117, eA.position, CombatRelation.Enemy);
+            // PC KSkill::Cast: 117 SkillStyle=Missiles -> damage defers to missile impact.
+            var mA = rA.projectiles.First(p => p.skillId == 44);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(without116, eA, rA, mA, eA.position));
+            int dmgA = rA.damageResults.Sum(d => d.finalDamage);
             Assert.Greater(dmgA, 0, "117 baseline magic fire must deal damage");
 
             UnityEngine.Random.InitState(20260717);
             var eB = Enemy(new Vector2(200, 0));
-            int dmgB = svc.Cast(with116, eB, 117, eB.position, CombatRelation.Enemy).damageResults.Sum(d => d.finalDamage);
+            var rB = svc.Cast(with116, eB, 117, eB.position, CombatRelation.Enemy);
+            var mB = rB.projectiles.First(p => p.skillId == 44);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(with116, eB, rB, mB, eB.position));
+            int dmgB = rB.damageResults.Sum(d => d.finalDamage);
 
             Assert.Greater(dmgB, dmgA,
                 "the AddFireMagicV materialized from learned 116 must raise 117 magic-fire damage via the normal path");

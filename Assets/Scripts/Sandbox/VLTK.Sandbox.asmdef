@@ -9,6 +9,8 @@
         "VLTK.PortData",
         "VLTK.World",
         "VLTK.Sprites",
+        "VLTK.SkillPort",
+        "VLTK.Generated.GameV1",
         "Unity.InputSystem"
     ],
     "includePlatforms": [],

@@ -83,17 +83,18 @@ def test_canonical_sources_match_pinned_hashes():
     assert json.loads(PROVENANCE.read_text())["source"]["sha256"] == audit.SKILLS_SHA
 
 
-def test_global_union_size_is_245():
+def test_global_union_size_is_242():
     fac = _all_factions()
     union = set()
     for f in fac.values():
         union |= f["union"]
-    assert len(union) == 245
+    assert len(union) == 242
 
 
-def test_ranking_winner_is_kunlun_gap_16():
+def test_emei_probe_is_gap_14_before_emei_completed_wave_exclusion():
     fac = _all_factions()
-    completed = audit.verify_completed_waves(ROOT)
+    completed = audit.verify_completed_waves(ROOT, [dict(key=key, **value) for key, value in fac.items()])
+    completed.pop("EMei")
     rel_fields = ("ChildSkillId", "StartSkillId", "FlySkillId", "CollidSkillId", "VanishedSkillId")
     slice_rows = audit.read_slice_rows(SLICE.read_bytes())
     candidates = []
@@ -107,14 +108,21 @@ def test_ranking_winner_is_kunlun_gap_16():
         )
         candidates.append((key, gap, rel))
     candidates.sort(key=lambda c: (-c[1], -c[2], c[0]))
-    assert candidates[0] == ("KunLun", 16, 20)
+    assert candidates[0] == ("EMei", 14, 20)
+
+
+def test_emei_partition_is_pinned_without_promoting_kunlun_90():
+    emei = _all_factions()["EMei"]
+    assert emei["learned"] == {77, 79, 80, 82, 85, 86, 88, 89, 91, 92, 93, 252, 282, 328, 332, 380, 385, 712, 1061, 1062, 1114}
+    assert emei["unity_only"] == {81, 83, 84, 87}
+    assert 90 not in emei["learned"]
 
 
 def test_committed_matrix_matches_recompute():
     sources = {"root": CANONICAL_ROOT, "skill_txt": SKILLS_TXT, "progression": PROGRESSION, "skillbook": SKILLBOOK}
     _, serialized = audit.build(ROOT, sources, SLICE, PROVENANCE)
     assert serialized == MATRIX.read_bytes()
-    assert audit.digest(serialized) == "175704e055670c57547a82ee65297f0e5d81c7b8e637f4de3cc9e03a79bab60e"
+    assert audit.digest(serialized) == "866532662b6440e3f35257b9d4840412d3432c13f822cd15eccadaf8db9f3254"
 
 
 def test_partitions_and_unions_are_exact():
@@ -167,30 +175,62 @@ def test_global_partition_invariant():
 def test_ranking_order_and_exclusion():
     data = json.loads(MATRIX.read_text())
     keys = [r["key"] for r in data["ranking"]]
-    completed = audit.verify_completed_waves(ROOT)
-    assert keys[0] == "KunLun"
-    assert set(completed) == {"TangMen", "CaiBang"}
+    completed = audit.verify_completed_waves(ROOT, _completed_factions())
+    assert set(completed) == {"Shaolin", "TianWang", "EMei", "TianRen", "WuDang", "WuDu", "CuiYan", "TangMen", "CaiBang", "KunLun"}
     assert all(key not in keys for key in completed)
     # Deterministic sort: descending gap, then descending rel count, then key.
     triples = [(r["symmetric_gap_count"], r["relationship_bearing_union_row_count"], r["key"]) for r in data["ranking"]]
     assert triples == sorted(triples, key=lambda t: (-t[0], -t[1], t[2]))
-    # Tie at gap 8 must order TianWang (rel 16) before CuiYan (rel 12).
-    assert keys.index("TianWang") < keys.index("CuiYan")
+    assert keys == []
+
+
+def _completed_factions():
+    return [dict(key=key, **value) for key, value in _all_factions().items()]
+
+
+def test_completed_shaolin_display_drift_is_rejected():
+    factions = _completed_factions()
+    shaolin = next(faction for faction in factions if faction["key"] == "Shaolin")
+    shaolin["display"] = set(shaolin["display"]) - {4}
+    with pytest.raises(SystemExit, match="Shaolin completed-wave proof scope evidence drift"):
+        audit.verify_completed_waves(ROOT, factions)
+
+
+def test_completed_kunlun_display_drift_is_rejected():
+    factions = _completed_factions()
+    kunlun = next(faction for faction in factions if faction["key"] == "KunLun")
+    kunlun["display"] = set(kunlun["display"]) - {167}
+    with pytest.raises(SystemExit, match="KunLun completed-wave scope evidence drift"):
+        audit.verify_completed_waves(ROOT, factions)
+
+
+def test_completed_cuiyan_display_drift_is_rejected():
+    factions = _completed_factions()
+    cuiyan = next(faction for faction in factions if faction["key"] == "CuiYan")
+    cuiyan["display"] = set(cuiyan["display"]) - {95}
+    with pytest.raises(SystemExit, match="CuiYan completed-wave proof scope evidence drift"):
+        audit.verify_completed_waves(ROOT, factions)
 
 
 def test_proof_states_and_recommended_story():
     data = json.loads(MATRIX.read_text())
     by_key = {fe["key"]: fe for fe in data["factions"]}
-    completed = audit.verify_completed_waves(ROOT)
+    completed = audit.verify_completed_waves(ROOT, _completed_factions())
     assert {item["key"] for item in data["excluded_from_ranking"]} == set(completed)
     assert by_key["CaiBang"]["proof_state"] == "canonical_static_verified_display_scope"
+    assert by_key["Shaolin"]["proof_state"] == "canonical_static_verified_learned_scope"
     assert by_key["TangMen"]["proof_state"] == "canonical_static_verified_learned_scope"
-    for key in ("Shaolin", "KunLun", "EMei", "WuDu", "CuiYan", "TianRen", "WuDang", "TianWang"):
-        assert by_key[key]["proof_state"] == "weak_or_partial"
+    assert by_key["KunLun"]["proof_state"] == "canonical_static_verified_learned_scope"
+    assert by_key["EMei"]["proof_state"] == "canonical_static_verified_learned_scope"
+    assert by_key["TianRen"]["proof_state"] == "canonical_static_verified_learned_scope"
+    assert by_key["WuDang"]["proof_state"] == "canonical_static_verified_learned_scope"
+    assert by_key["WuDu"]["proof_state"] == "canonical_static_verified_learned_scope"
+    assert by_key["TianWang"]["proof_state"] == "canonical_static_verified_learned_scope"
+    assert by_key["CuiYan"]["proof_state"] == "canonical_static_verified_learned_scope"
     rec = data["recommended_next_story"]
-    assert rec["id"] == "SKL-KL-PROOF-001"
-    assert rec["winner"] == "KunLun"
-    assert rec["symmetric_gap_count"] == 16
+    assert rec["id"] is None
+    assert rec["winner"] is None
+    assert rec["symmetric_gap_count"] is None
 
 
 def test_slice_and_provenance_boundary():

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using VLTK.Core;
 using VLTK.Model;
 
 namespace VLTK.Sandbox
@@ -78,7 +79,84 @@ namespace VLTK.Sandbox
                 RegisterKunLunUnityDisplayResiduals(catalog);
                 RegisterKunLunRelationshipTargets(catalog);
             }
+            ApplyAllFactionPcStaticRows(catalog);
+            RegisterAllFactionRelationshipTargets(catalog, includeEMei, includeWuDu, includeCuiYan, includeTianRen, includeWuDang);
             return catalog;
+        }
+
+        private static void ApplyAllFactionPcStaticRows(SkillCatalog catalog)
+        {
+            if (catalog == null) return;
+            string[] lines;
+            var bundled = Resources.Load<TextAsset>("Reference/PcAllFactionLearnedDisplaySkills");
+            if (bundled != null)
+            {
+                lines = bundled.text.Replace("\r", string.Empty).Split('\n');
+            }
+            else
+            {
+                string path = Path.Combine(
+                    Application.streamingAssetsPath,
+                    "Reference",
+                    "PcAllFactionLearnedDisplaySkills.txt");
+                if (!File.Exists(path))
+                {
+                    Debug.LogWarning($"[PcCombatCatalogFactory] canonical all-faction skill slice missing: {path}");
+                    return;
+                }
+                lines = File.ReadAllLines(path);
+            }
+
+            foreach (var expected in PcConfigParser.ParseSkillsLines(lines))
+            {
+                var actual = catalog.Resolve(expected.skillId);
+                if (actual != null)
+                    ApplyPcStaticPresentation(actual, expected);
+            }
+        }
+
+        private static void ApplyPcStaticPresentation(
+            SkillDefinition actual,
+            SkillDefinition expected)
+        {
+            actual.skillStyle = expected.skillStyle;
+            actual.stateSpecialId = expected.stateSpecialId;
+            actual.isAura = expected.isAura;
+            actual.attackRadius = expected.attackRadius;
+            actual.missilesGenerate = expected.missilesGenerate;
+            actual.missilesGenerateData = expected.missilesGenerateData;
+            // Populated PC rows 357/359 encode MisslesForm=0 while still spawning a
+            // child missile. Preserve the factory's explicit Single fallback for that
+            // engine representation; true no-child form 0 rows remain None.
+            if (expected.missileForm != SkillMissileForm.None || expected.childSkillId <= 0)
+                actual.missileForm = expected.missileForm;
+            actual.childSkillId = expected.childSkillId;
+            actual.childSkillLevel = expected.childSkillLevel;
+            actual.childSkillNum = expected.childSkillNum;
+            actual.baseSkill = expected.baseSkill;
+            actual.charAnimId = expected.charAnimId;
+            actual.isMelee = expected.isMelee;
+            actual.waitTime = expected.waitTime;
+            actual.skillCostType = expected.skillCostType;
+            actual.cost = expected.cost;
+            actual.timePerCast = expected.timePerCast;
+            actual.timePerCastOnHorse = expected.timePerCastOnHorse;
+            actual.isPhysical = expected.isPhysical;
+            actual.targetOnly = expected.targetOnly;
+            actual.targetEnemy = expected.targetEnemy;
+            actual.targetAlly = expected.targetAlly;
+            actual.targetSelf = expected.targetSelf;
+            actual.targetObj = expected.targetObj;
+            actual.byMissile = expected.byMissile;
+            actual.isUseAttackRating = expected.isUseAttackRating;
+            actual.reqLevel = expected.reqLevel;
+            actual.maxLevel = expected.maxLevel;
+            actual.equipLimit = expected.equipLimit;
+            actual.horseLimit = expected.horseLimit;
+            actual.doHurt = expected.doHurt;
+            actual.weaponSkill = expected.weaponSkill;
+            actual.lvlSetScript = expected.lvlSetScript;
+            actual.levelUpScript = expected.levelUpScript;
         }
 
         public static SkillCatalog CreateNoviceCoreSectAndModCatalog(string modSkillsPath, IAssetRegistry assets = null, bool includeWuDang = true, bool includeShaolin = true, bool includeTangMen = true, bool includeEMei = true, bool includeTianWang = true, bool includeWuDu = true, bool includeCuiYan = true, bool includeTianRen = true, bool includeKunLun = true)
@@ -190,6 +268,7 @@ namespace VLTK.Sandbox
                 skill.skillCostType = Value(row, "SkillCostType", skill.skillCostType);
                 skill.cost = Value(row, "CostValue", skill.cost);
                 skill.timePerCast = Value(row, "TimePerCast", skill.timePerCast);
+                skill.timePerCastOnHorse = Value(row, "TimePerCastOnHorse", skill.timePerCastOnHorse);
                 skill.isPhysical = Value(row, "IsPhysical", skill.isPhysical ? 1 : 0) != 0;
                 skill.targetOnly = Value(row, "TargetOnly", skill.targetOnly ? 1 : 0) != 0;
                 skill.targetEnemy = Value(row, "TargetEnemy", skill.targetEnemy ? 1 : 0) != 0;
@@ -285,11 +364,13 @@ namespace VLTK.Sandbox
             ResistBuff(126, "Kim Ô ánh Tuyết", "Kim Ô Ánh Tuyết", 40, MagicAttributeKind.ColdResP, costBugReturnsResultTwice:true),
 
             // 127 Hoạt Bất Lưu Thủ [PC slistcache ec1243ff.dat 2026-06-30, authoritative]:
-            //   SkillStyle=0 (active cast self-buff), MisslesForm=6 (Stance/Self), CharAnimId=11, TargetSelf=1.
+            //   SkillStyle=0 (active cast self-buff), StateSpecialId=0, IsAura=0,
+            //   MisslesForm=6 (Stance/Self), CharAnimId=11, WaitTime=5, TargetSelf=1.
             //   LvlSetScript=gaibang.lua::huabu_liushou: fastwalkrun_p 9→66 (speed%), dur 18*120→18*180 ticks, cost 24→50.
             //   Trước fix (sai): comment mobile ghi Style=3/anim=14 (đọc sai PC) → bị đóng cứng thành passive always-on.
-            //   Sau fix: InitiativeNpcState (active cast buff), charAnim=11, form=Stance → khớp PC slistcache.
-            UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 400, SkillMissileForm.Stance, targetEnemy:false, targetSelf:true, stateSpecialId:17, levelData:(lv)=>{
+            //   Sau fix: Missiles (PC SkillStyle=0), charAnim=11, form=Stance → khớp PC slistcache.
+            // State 17 belongs to Côn Lôn (kl_10_滑不留手.spr); never borrow it here.
+            UtilitySkill(127, "Hoạt Bất Lưu Thủ 11", "Hoạt Bất Lưu Thủ", 10, 0, SkillMissileForm.Stance, targetEnemy:false, targetSelf:true, stateSpecialId:0, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 // [CaiBang-slistcache 2026-07-15] PC slistcache gaibang.lua::huabu_liushou:
                 //   fastwalkrun_p 5→33 (giảm hiệu quả gia tốc, comment PC "降低加速跑速效果").
@@ -299,7 +380,8 @@ namespace VLTK.Sandbox
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
                 return d;
-            }, skillStyle: PcSkillStyle.InitiativeNpcState, maxLevel: 20, charAnim: 11),
+            }, skillStyle: PcSkillStyle.Missiles, maxLevel: 20, charAnim: 11,
+                waitTime: 5, childSkillLevel: -1),
 
             // 128 Kháng Long Hữu Hối: damage (kanglong_youhui)
             // [SECT-ALL fix 2026-06-15] PC source: skills.txt 128 IsMelee=0, ByMissle=0 → CAST skill, không melee.
@@ -360,7 +442,9 @@ namespace VLTK.Sandbox
                 addfire: (lv) => Link(lv, (1, 35, ""), (20, 750, "")),
                 elementParam: 9, icon: "\\spr\\Ui\\技能图标\\icon_sk_gb_32.spr"),
 
-            UtilitySkill(277, "Hoạt Bất Lưu Thủ ", "Hoành Bách Lộ Thiên", 40, 400, SkillMissileForm.Surround, targetEnemy:false, targetSelf:true, stateSpecialId:3, levelData:(lv)=>{
+            // Newer row 277 references state 57, but the PC state row is a stub without
+            // package bytes. Keep the canonical id so presentation fails closed.
+            UtilitySkill(277, "Hoạt Bất Lưu Thủ ", "Hoành Bách Lộ Thiên", 40, 0, SkillMissileForm.Stance, targetEnemy:false, targetSelf:true, stateSpecialId:57, levelData:(lv)=>{
                 var d = new SkillLevelData { level = lv };
                 int pct = Link(lv, (1, 9, ""), (20, 66, ""));
                 int dur = -1; // Permanent duration (N/A) in sandbox
@@ -368,7 +452,8 @@ namespace VLTK.Sandbox
                 int cost = Link(lv, (1, 24, ""), (20, 50, ""));
                 d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, cost, 0, 0));
                 return d;
-            }),
+            }, skillStyle: PcSkillStyle.Missiles, charAnim: 11, waitTime: 5,
+                childSkillId: 114, childSkillLevel: -1, childSkillNum: 1, baseSkill: true),
 
             // 357 Phi Long Tại Thiên [SECT-ALL fix 2026-06-15]
             // PC source EVIDENCE (đọc từ 00.src-tinh-kiem/Client 6.0/settings/skills.txt + file/skill/gaibang.lua):
@@ -514,8 +599,10 @@ namespace VLTK.Sandbox
             [119] = ("\\sound\\skill\\sound_k002.wav", "\\sound\\skill\\sound_k007.wav", null),
             [122] = ("\\sound\\skill\\sound_k003.wav", "\\sound\\skill\\sound_k008.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
             [125] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
+            [127] = (null, null, "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
             [128] = ("\\sound\\skill\\sound_k005.wav", "\\sound\\skill\\sound_k010.wav", "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
             // MOD Vietnam Cái Bang additions (PC Tinh Kiem source).
+            [277] = (null, null, "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
             [357] = ("\\sound\\skill\\sound_k005.wav", "\\sound\\skill\\sound_k010.wav", "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr"),
             [358] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
             [359] = ("\\sound\\skill\\sound_k004.wav", "\\sound\\skill\\sound_k009.wav", "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr"),
@@ -945,8 +1032,8 @@ namespace VLTK.Sandbox
         // [CaiBang-Catalog 2026-06-19] PC stance/passive buff charAnimId=14 (cdo_none, no cast animation).
         //   Default charAnimId=11 (Cái Bang cast anim mag_tr_16_施魔法.spr) for active damage skills.
         //   Sau fix: charAnimId parameter cho UtilitySkill, default 14 cho stance/utility/passive.
-        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20, int charAnim = 14, bool isLeapSkill = false)
-        { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = charAnim; s.isLeapSkill = isLeapSkill; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
+        private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20, int charAnim = 14, bool isLeapSkill = false, int waitTime = 0, int childSkillId = 0, int childSkillLevel = 0, int childSkillNum = 0, bool baseSkill = false)
+        { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = charAnim; s.isLeapSkill = isLeapSkill; s.waitTime = waitTime; s.childSkillId = childSkillId; s.childSkillLevel = childSkillLevel; s.childSkillNum = childSkillNum; s.baseSkill = baseSkill; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
         /// <summary>Override PreCastSpr với path từ jx-source (khác PC stock 2011).</summary>
         private static SkillDefinition WithJxPreCast(SkillDefinition s, string jxPreCastSprPath)
         { s.effectSourceId = Sprite(jxPreCastSprPath); return s; }
@@ -956,6 +1043,20 @@ namespace VLTK.Sandbox
         // Runtime fires it at missile impact, honoring PC lua [1] L10+ gate.
         private static SkillDefinition WithCollideEvent(SkillDefinition s, int collideSkillId, int collideSkillLevel = 1)
         { s.collideSkillId = collideSkillId; s.collideSkillLevel = collideSkillLevel; return s; }
+
+        private static readonly Dictionary<int, int> PcMountedRecastTicks = new()
+        {
+            [19] = 5,
+            [20] = 54,
+            [40] = 27,
+            [138] = 40,
+            [164] = 25,
+            [181] = 54,
+            [392] = 27,
+        };
+
+        private static int MountedRecastTicksFor(int skillId, int fallback = 0) =>
+            PcMountedRecastTicks.TryGetValue(skillId, out int ticks) ? ticks : fallback;
 
         private static SkillDefinition BaseSkill(int id, string raw, string vi, int req, int max, int radius, SkillMissileForm form)
         {
@@ -974,7 +1075,7 @@ namespace VLTK.Sandbox
             return new SkillDefinition 
             { 
                 skillId=id, nameRaw=raw, nameNormalized=vi, reqLevel=req, maxLevel=max, 
-                attackRadius=radius, missileForm=form, 
+                attackRadius=radius, missileForm=form, timePerCastOnHorse=MountedRecastTicksFor(id),
                 faction = IsCaiBangSkill(id) ? CombatFaction.CaiBang : IsWuDangSkill(id) ? CombatFaction.WuDang : IsShaolinSkill(id) ? CombatFaction.Shaolin : IsTangMenSkill(id) ? CombatFaction.TangMen : IsEMeiSkill(id) ? CombatFaction.EMei : IsTianWangSkill(id) ? CombatFaction.TianWang : IsWuDuSkill(id) ? CombatFaction.WuDu : IsCuiYanSkill(id) ? CombatFaction.CuiYan : IsTianRenSkill(id) ? CombatFaction.TianRen : IsKunLunSkill(id) ? CombatFaction.KunLun : CombatFaction.None, 
                 iconSourceId = Sprite(iconPath), equipLimit=-2 
             };
@@ -1206,26 +1307,63 @@ namespace VLTK.Sandbox
             return Mathf.FloorToInt(term1 - term2 + y1);
         }
 
-        public static List<SkillDefinition> CreateShaolinSkills() => new()
+        // SKL-S-CAST-PRESENT-001. Source: pinned SKL-S-PROOF-001 exact vltktool slice.
+        // Empty/"0" cast sound and empty PreCastSpr remain empty: no CLIENTACTION, blend, or generic-SPR inference.
+        private static readonly Dictionary<int, (int charAnim, int waitTime, string manCast, string fmCast, string preCastSpr)> ShaolinPcCastPresentation = new()
         {
-            ShaolinPassiveJianFa(),
-            ShaolinPassiveGunFa(),
-            ShaolinPassiveDaoFa(),
-            ShaolinPassiveQuanFa(),
-            ShaolinHunyuanYiqi(),
-            ShaolinJingangFumo(),
-            ShaolinHengsaoLiuhe(),
-            ShaolinJingangHuti(),
-            ShaolinLadiChengfo(),
-            ShaolinHanglongBayu(),
-            ShaolinBudongMingwang(),
-            ShaolinLuohanZhen(),
-            ShaolinLongzhaoHuzhua(),
-            ShaolinHuiyanZhou(),
-            ShaolinMoheWuliang(),
-            ShaolinShiziHou(),
-            ShaolinYijinJing(),
+            [3] = (14, 0, null, null, null), [4] = (14, 0, null, null, null), [6] = (14, 0, null, null, null),
+            [8] = (14, 0, null, null, null), [9] = (14, 0, null, null, null),
+            [10] = (9, 0, "\\sound\\skill\\sound_k001.wav", null, null),
+            [11] = (10, 0, "\\sound\\skill\\sound_k002.wav", null, null), [12] = (14, 0, null, null, null),
+            [13] = (11, 5, "\\sound\\skill\\sound_k011.wav", null, "\\spr\\skill\\少林\\sl_02_清心梵音.spr"),
+            [14] = (11, 5, "\\sound\\skill\\sound_k003.wav", null, null),
+            [15] = (11, 5, "\\sound\\skill\\不动明王咒.wav", null, "\\spr\\skill\\少林\\sl_05_不动明王咒.spr"),
+            [16] = (14, 0, null, null, null), [17] = (10, 0, "\\sound\\skill\\sound_k004.wav", null, null),
+            [18] = (11, 0, "\\sound\\skill\\慧眼咒.wav", null, "\\spr\\skill\\少林\\sl_04_慧眼咒.spr"),
+            [19] = (11, 5, "\\sound\\skill\\摩诃无量.wav", null, null),
+            [20] = (11, 2, "\\sound\\skill\\狮子吼.wav", null, "\\spr\\skill\\少林\\sl_06_狮子吼.spr"),
+            [21] = (14, 0, null, null, null),
         };
+
+        private static void ApplyShaolinPcCastPresentation(List<SkillDefinition> skills)
+        {
+            if (skills == null) return;
+            foreach (var skill in skills)
+            {
+                if (skill == null || !ShaolinPcCastPresentation.TryGetValue(skill.skillId, out var entry)) continue;
+                skill.charAnimId = entry.charAnim;
+                skill.waitTime = entry.waitTime;
+                skill.manCastSndPath = entry.manCast;
+                skill.fmCastSndPath = entry.fmCast;
+                skill.effectSourceId = string.IsNullOrEmpty(entry.preCastSpr) ? null : Sprite(entry.preCastSpr);
+            }
+        }
+
+        public static List<SkillDefinition> CreateShaolinSkills()
+        {
+            var skills = new List<SkillDefinition>
+            {
+                ShaolinPassiveJianFa(),
+                ShaolinPassiveGunFa(),
+                ShaolinPassiveDaoFa(),
+                ShaolinPassiveQuanFa(),
+                ShaolinHunyuanYiqi(),
+                ShaolinJingangFumo(),
+                ShaolinHengsaoLiuhe(),
+                ShaolinJingangHuti(),
+                ShaolinLadiChengfo(),
+                ShaolinHanglongBayu(),
+                ShaolinBudongMingwang(),
+                ShaolinLuohanZhen(),
+                ShaolinLongzhaoHuzhua(),
+                ShaolinHuiyanZhou(),
+                ShaolinMoheWuliang(),
+                ShaolinShiziHou(),
+                ShaolinYijinJing(),
+            };
+            ApplyShaolinPcCastPresentation(skills);
+            return skills;
+        }
 
         private static SkillDefinition ShaolinPassiveJianFa()
         {
@@ -1486,7 +1624,7 @@ namespace VLTK.Sandbox
             public int skillId;
             public int skillStyle, stateSpecialId, isAura, attackRadius, missilesGenerate, missilesGenerateData, missileForm;
             public int childSkillId, childSkillLevel, childSkillNum, baseSkill, charAnimId, isMelee, waitTime, skillCostType;
-            public int cost, timePerCast, isPhysical, targetOnly, targetEnemy, targetAlly, targetSelf, targetObj, byMissile;
+            public int cost, timePerCast, timePerCastOnHorse, isPhysical, targetOnly, targetEnemy, targetAlly, targetSelf, targetObj, byMissile;
             public int isUseAttackRating, reqLevel, maxLevel, equipLimit, horseLimit, doHurt, weaponSkill;
             public int startSkillId, flySkillId, flyEventTime, collideSkillId, vanishSkillId;
             public string manCastSndPath, fmCastSndPath, lvlSetScript, levelUpScript;
@@ -1552,6 +1690,8 @@ namespace VLTK.Sandbox
             if (row.Has("skillCostType")) s.skillCostType = row.skillCostType;
             if (row.Has("cost")) s.cost = row.cost;
             if (row.Has("timePerCast")) s.timePerCast = row.timePerCast;
+            if (row.Has("timePerCastOnHorse")) s.timePerCastOnHorse = row.timePerCastOnHorse;
+            else s.timePerCastOnHorse = MountedRecastTicksFor(s.skillId, s.timePerCastOnHorse);
             if (row.Has("isPhysical")) s.isPhysical = row.isPhysical != 0;
             if (row.Has("targetOnly")) s.targetOnly = row.targetOnly != 0;
             if (row.Has("targetEnemy")) s.targetEnemy = row.targetEnemy != 0;
@@ -1803,20 +1943,118 @@ namespace VLTK.Sandbox
             return s;
         }
 
-        // Relationship target that carries TangMen damage/state (collide/fly/vanish event of a
-        // learned root): same canonical level data, but it stays OUT of CreateTangMenSkills
-        // learned membership (registered via RegisterTangMenRelationshipTargets).
-        private static SkillDefinition TangMenRelationshipTarget(int id)
+        private readonly struct TangMenRelationshipFields
+        {
+            public readonly int skillStyle, missileForm, childSkillId, childSkillLevel, childSkillNum;
+            public readonly int collideSkillId, vanishSkillId, flySkillId, flyEventTime, eventSkillLevel, timePerCastOnHorse;
+            public readonly bool byMissile, isMelee;
+
+            public TangMenRelationshipFields(int skillStyle, int missileForm, int childSkillId,
+                int childSkillLevel, int childSkillNum, int collideSkillId, int vanishSkillId,
+                int flySkillId, int flyEventTime, int eventSkillLevel, int timePerCastOnHorse, bool byMissile, bool isMelee)
+            {
+                this.skillStyle = skillStyle;
+                this.missileForm = missileForm;
+                this.childSkillId = childSkillId;
+                this.childSkillLevel = childSkillLevel;
+                this.childSkillNum = childSkillNum;
+                this.collideSkillId = collideSkillId;
+                this.vanishSkillId = vanishSkillId;
+                this.flySkillId = flySkillId;
+                this.flyEventTime = flyEventTime;
+                this.eventSkillLevel = eventSkillLevel;
+                this.timePerCastOnHorse = timePerCastOnHorse;
+                this.byMissile = byMissile;
+                this.isMelee = isMelee;
+            }
+        }
+
+        // Generated canonical slice: PcTangMenRelationshipTargets.txt is the bounded closure
+        // of TangMen learned-row relationship IDs. Resources bundles exact source bytes into APK;
+        // never use StreamingAssets File APIs here because Android packages it inside a JAR.
+        private static Dictionary<int, TangMenRelationshipFields> LoadTangMenRelationshipFields()
+        {
+            var fields = new Dictionary<int, TangMenRelationshipFields>();
+            var bundled = Resources.Load<TextAsset>("Reference/PcTangMenRelationshipTargets");
+            if (bundled == null)
+            {
+                Debug.LogWarning("[PcCombatCatalogFactory] bundled TangMen relationship slice missing");
+                return fields;
+            }
+
+            // Canonical bytes are Windows-1252, but this bounded loader consumes only
+            // ASCII headers/numeric fields. Read bytes directly so packaging cannot transcode them.
+            var lines = System.Text.Encoding.ASCII.GetString(bundled.bytes)
+                .Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+            if (lines.Length < 2) return fields;
+            var columns = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            var header = lines[0].Split('\t');
+            for (int i = 0; i < header.Length; i++) columns[header[i].Trim()] = i;
+
+            string[] required = { "SkillId", "SkillStyle", "MisslesForm", "ChildSkillId", "ChildSkillLevel",
+                "ChildSkillNum", "CollidSkillId", "VanishedSkillId", "FlySkillId", "FlyEventTime",
+                "EventSkillLevel", "ByMissle", "IsMelee" };
+            foreach (var name in required)
+            {
+                if (columns.ContainsKey(name)) continue;
+                Debug.LogWarning($"[PcCombatCatalogFactory] malformed bundled TangMen relationship slice: missing {name}");
+                return new Dictionary<int, TangMenRelationshipFields>();
+            }
+
+            int Value(string[] row, string name, int fallback = 0)
+            {
+                int index = columns[name];
+                return index < row.Length && int.TryParse(row[index].Trim(), out int value) ? value : fallback;
+            }
+
+            int OptionalValue(string[] row, string name, int fallback = 0) =>
+                columns.ContainsKey(name) ? Value(row, name, fallback) : fallback;
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var row = lines[i].Split('\t');
+                if (row.Length < header.Length) continue;
+                int id = Value(row, "SkillId", -1);
+                if (id <= 0) continue;
+                fields[id] = new TangMenRelationshipFields(
+                    Value(row, "SkillStyle"), Value(row, "MisslesForm"),
+                    Value(row, "ChildSkillId"), Value(row, "ChildSkillLevel"), Value(row, "ChildSkillNum"),
+                    Value(row, "CollidSkillId"), Value(row, "VanishedSkillId"), Value(row, "FlySkillId"),
+                    Value(row, "FlyEventTime"), Value(row, "EventSkillLevel"), OptionalValue(row, "TimePerCastOnHorse"),
+                    Value(row, "ByMissle") != 0, Value(row, "IsMelee") != 0);
+            }
+            return fields;
+        }
+
+        // PC KSkills dispatches fly/collide/vanish as independent skills. This target owns its
+        // own direct child missile; event IDs remain separate lifecycle edges, not visual fallbacks.
+        private static SkillDefinition TangMenRelationshipTarget(int id, TangMenRelationshipFields fields)
         {
             var s = new SkillDefinition
             {
                 skillId = id,
                 nameNormalized = "TM_Rel_" + id,
-                faction = CombatFaction.TangMen,
+                // Support/event-only ID: Resolve() yes, learned/progression faction membership no.
+                faction = CombatFaction.None,
                 series = Series.Wood,
                 iconSourceId = Sprite(IconPathForSkill(id)),
                 equipLimit = -2,
+                skillStyle = (PcSkillStyle)fields.skillStyle,
+                childSkillId = fields.childSkillId,
+                childSkillLevel = fields.childSkillLevel,
+                childSkillNum = fields.childSkillNum,
+                collideSkillId = fields.collideSkillId,
+                collideSkillLevel = fields.eventSkillLevel,
+                vanishSkillId = fields.vanishSkillId,
+                vanishSkillLevel = fields.eventSkillLevel,
+                flySkillId = fields.flySkillId,
+                flySkillLevel = fields.eventSkillLevel,
+                flyEventTime = fields.flyEventTime,
+                timePerCastOnHorse = fields.timePerCastOnHorse,
+                byMissile = fields.byMissile,
+                isMelee = fields.isMelee,
             };
+            if (fields.missileForm > 0) s.missileForm = (SkillMissileForm)fields.missileForm;
             if (TangMenLevelCurves.TryGetValue(id, out var curves))
             {
                 s.maxLevel = TangMenLevelMaxLevel[id];
@@ -1870,35 +2108,212 @@ namespace VLTK.Sandbox
             227, 301, 304, 331, 332, 333, 340, 344, 346, 348, 350, 352, 374, 1097, 1098, 1113
         };
 
-        // Damage-bearing TangMen relationship targets (collide/fly/vanish event chains of
-        // learned roots, sourced from tangmen.lua) carry canonical per-level damage/state
-        // via TangMenRelationshipTarget. The remaining support/projectile targets stay
-        // existence-only shells. Every target stays OUT of CreateTangMenSkills learned
-        // membership; only Resolve() is required for the relationship closure.
-        private static readonly HashSet<int> TangMenDamageBearingTargets = new()
-        {
-            227, 301, 304, 340, 344, 346, 348, 350, 352, 1097, 1098, 1113,
-        };
-
         // Support/event definitions registered ONLY when unresolved, so existing faction
-        // definitions are never overwritten. Damage-bearing TangMen targets carry canonical
-        // level data; cross-faction projectile/support targets remain existence-only.
+        // definitions are never overwritten. Canonical relationship rows carry their own
+        // child/fly/collide/vanish fields; a missing source row stays existence-only.
         private static void RegisterTangMenRelationshipTargets(SkillCatalog catalog)
         {
+            var fieldsById = LoadTangMenRelationshipFields();
             foreach (var id in TangMenRelationshipTargetIds)
             {
                 if (catalog.Contains(id)) continue;
-                catalog.Register(TangMenDamageBearingTargets.Contains(id)
-                    ? TangMenRelationshipTarget(id)
-                    : new SkillDefinition
-                    {
-                        skillId = id,
-                        nameNormalized = "TM_Rel_" + id,
-                        // Existence-only target: must still carry a valid asset identifier for
-                        // catalog-wide consumers.
-                        iconSourceId = Sprite(IconPathForSkill(id)),
-                    });
+                if (fieldsById.TryGetValue(id, out var fields))
+                {
+                    catalog.Register(TangMenRelationshipTarget(id, fields));
+                    continue;
+                }
+                catalog.Register(new SkillDefinition
+                {
+                    skillId = id,
+                    nameNormalized = "TM_Rel_" + id,
+                    // Missing canonical row stays an inert shell; do not invent relationships.
+                    iconSourceId = Sprite(IconPathForSkill(id)),
+                });
             }
+        }
+
+        private readonly struct PcRelationshipRow
+        {
+            public readonly int skillStyle, stateSpecialId, isAura, attackRadius, missilesGenerate, missilesGenerateData;
+            public readonly int missileForm, childSkillId, childSkillLevel, childSkillNum, baseSkill, charAnimId;
+            public readonly int eventSkillLevel, isMelee, waitTime, skillCostType, cost, timePerCast, timePerCastOnHorse;
+            public readonly int isPhysical, targetOnly, targetEnemy, targetAlly, targetSelf, targetObj, byMissile, isUseAttackRating;
+            public readonly int startSkillId, flySkillId, flyEventTime, collideSkillId, vanishSkillId;
+            public readonly int reqLevel, maxLevel, equipLimit, horseLimit, doHurt, weaponSkill, series;
+            public readonly string lvlSetScript, levelUpScript;
+
+            public PcRelationshipRow(IReadOnlyDictionary<string, int> values, IReadOnlyDictionary<string, string> text)
+            {
+                int V(string name, int fallback = 0) => values.TryGetValue(name, out int value) ? value : fallback;
+                string T(string name) => text.TryGetValue(name, out var value) ? value : string.Empty;
+
+                skillStyle = V("SkillStyle"); stateSpecialId = V("StateSpecialId"); isAura = V("IsAura");
+                attackRadius = V("AttackRadius"); missilesGenerate = V("MslsGenerate"); missilesGenerateData = V("MslsGenerateData");
+                missileForm = V("MisslesForm"); childSkillId = V("ChildSkillId"); childSkillLevel = V("ChildSkillLevel");
+                childSkillNum = V("ChildSkillNum"); baseSkill = V("BaseSkill"); charAnimId = V("CharAnimId");
+                eventSkillLevel = V("EventSkillLevel"); isMelee = V("IsMelee"); waitTime = V("WaitTime");
+                skillCostType = V("SkillCostType"); cost = V("CostValue"); timePerCast = V("TimePerCast");
+                timePerCastOnHorse = V("TimePerCastOnHorse"); isPhysical = V("IsPhysical"); targetOnly = V("TargetOnly");
+                targetEnemy = V("TargetEnemy"); targetAlly = V("TargetAlly"); targetSelf = V("TargetSelf");
+                targetObj = V("TargetObj"); byMissile = V("ByMissle"); isUseAttackRating = V("IsUseAR");
+                startSkillId = V("StartSkillId"); flySkillId = V("FlySkillId"); flyEventTime = V("FlyEventTime");
+                collideSkillId = V("CollidSkillId"); vanishSkillId = V("VanishedSkillId"); reqLevel = V("ReqLevel");
+                maxLevel = V("MaxLevel"); equipLimit = V("EqtLimit", -2); horseLimit = V("HorseLimit");
+                doHurt = V("DoHurt"); weaponSkill = V("WeaponSkill"); series = V("Series", -1);
+                lvlSetScript = T("LvlSetScript"); levelUpScript = T("LevelUpScript");
+            }
+        }
+
+        private static readonly int[] EMeiRelationshipTargetIds = { 243, 329, 331, 1089, 1115 };
+        private static readonly int[] CuiYanRelationshipTargetIds = { 398, 112, 338, 1064, 1093, 1102 };
+        private static readonly int[] TianRenRelationshipTargetIds = { 192, 363, 723, 1131, 337 };
+        private static readonly int[] WuDuRelationshipTargetIds = { 354, 383, 1094, 1095 };
+        private static readonly int[] WuDangRelationshipTargetIds = { 371, 738, 1107 };
+
+        private static void RegisterAllFactionRelationshipTargets(SkillCatalog catalog, bool includeEMei, bool includeWuDu, bool includeCuiYan, bool includeTianRen, bool includeWuDang)
+        {
+            if (catalog == null) return;
+            if (includeEMei) RegisterRelationshipTargets(catalog, "Reference/PcRelationshipTargets/PcEMeiRelationshipTargets", EMeiRelationshipTargetIds, "EM");
+            if (includeCuiYan) RegisterRelationshipTargets(catalog, "Reference/PcRelationshipTargets/PcCuiYanRelationshipTargets", CuiYanRelationshipTargetIds, "CY");
+            if (includeTianRen) RegisterRelationshipTargets(catalog, "Reference/PcRelationshipTargets/PcTianRenRelationshipTargets", TianRenRelationshipTargetIds, "TR");
+            if (includeWuDu) RegisterRelationshipTargets(catalog, "Reference/PcRelationshipTargets/PcWuDuRelationshipTargets", WuDuRelationshipTargetIds, "WDU");
+            if (includeWuDang) RegisterRelationshipTargets(catalog, "Reference/PcRelationshipTargets/PcWuDangRelationshipTargets", WuDangRelationshipTargetIds, "WD");
+        }
+
+        private static void RegisterRelationshipTargets(SkillCatalog catalog, string resourcePath, int[] ids, string prefix)
+        {
+            var rows = LoadRelationshipRows(resourcePath, prefix);
+            foreach (int id in ids)
+            {
+                if (catalog.Contains(id)) continue;
+                if (!rows.TryGetValue(id, out var row)) continue;
+                catalog.Register(RelationshipTarget(catalog, id, prefix, row));
+            }
+        }
+
+        private static Dictionary<int, PcRelationshipRow> LoadRelationshipRows(string resourcePath, string prefix)
+        {
+            var rowsById = new Dictionary<int, PcRelationshipRow>();
+            var bundled = Resources.Load<TextAsset>(resourcePath);
+            if (bundled == null)
+            {
+                Debug.LogWarning($"[PcCombatCatalogFactory] bundled {prefix} relationship slice missing: {resourcePath}");
+                return rowsById;
+            }
+
+            var lines = System.Text.Encoding.ASCII.GetString(bundled.bytes)
+                .Replace("\r\n", "\n").Replace('\r', '\n').Split('\n');
+            if (lines.Length < 2) return rowsById;
+
+            var columns = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            var header = lines[0].Split('\t');
+            for (int i = 0; i < header.Length; i++) columns[header[i].Trim()] = i;
+            if (!columns.ContainsKey("SkillId")) return rowsById;
+
+            int Value(string[] row, string name, int fallback = 0)
+            {
+                if (!columns.TryGetValue(name, out int index) || index >= row.Length) return fallback;
+                return int.TryParse(row[index].Trim(), out int value) ? value : fallback;
+            }
+
+            string Text(string[] row, string name)
+            {
+                if (!columns.TryGetValue(name, out int index) || index >= row.Length) return string.Empty;
+                return row[index].Trim();
+            }
+
+            string[] numericFields =
+            {
+                "SkillStyle", "StateSpecialId", "IsAura", "AttackRadius", "MslsGenerate", "MslsGenerateData",
+                "MisslesForm", "ChildSkillId", "ChildSkillLevel", "ChildSkillNum", "BaseSkill", "CharAnimId",
+                "EventSkillLevel", "IsMelee", "WaitTime", "SkillCostType", "CostValue", "TimePerCast", "TimePerCastOnHorse",
+                "IsPhysical", "TargetOnly", "TargetEnemy", "TargetAlly", "TargetSelf", "TargetObj", "ByMissle", "IsUseAR",
+                "StartSkillId", "FlySkillId", "FlyEventTime", "CollidSkillId", "VanishedSkillId", "ReqLevel", "MaxLevel",
+                "EqtLimit", "HorseLimit", "DoHurt", "WeaponSkill", "Series"
+            };
+
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var row = lines[i].Split('\t');
+                int id = Value(row, "SkillId", -1);
+                if (id <= 0) continue;
+                var values = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                foreach (var name in numericFields) values[name] = Value(row, name, name == "EqtLimit" ? -2 : 0);
+                var text = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                {
+                    ["LvlSetScript"] = Text(row, "LvlSetScript"),
+                    ["LevelUpScript"] = Text(row, "LevelUpScript"),
+                };
+                rowsById[id] = new PcRelationshipRow(values, text);
+            }
+            return rowsById;
+        }
+
+        private static int ResolvedEventTargetOrZero(SkillCatalog catalog, int targetId)
+        {
+            // ponytail: fail closed; register bounded rows only, do not invent missing second-hop event skills.
+            return targetId > 0 && catalog.Contains(targetId) ? targetId : 0;
+        }
+
+        private static SkillDefinition RelationshipTarget(SkillCatalog catalog, int id, string prefix, PcRelationshipRow row)
+        {
+            int startSkillId = ResolvedEventTargetOrZero(catalog, row.startSkillId);
+            int flySkillId = ResolvedEventTargetOrZero(catalog, row.flySkillId);
+            int collideSkillId = ResolvedEventTargetOrZero(catalog, row.collideSkillId);
+            int vanishSkillId = ResolvedEventTargetOrZero(catalog, row.vanishSkillId);
+            var s = new SkillDefinition
+            {
+                skillId = id,
+                nameNormalized = prefix + "_Rel_" + id,
+                // Support/event-only ID: Resolve() yes, learned/progression faction membership no.
+                faction = CombatFaction.None,
+                series = row.series >= 0 && row.series <= 6 ? (Series)row.series : Series.Nil,
+                iconSourceId = Sprite(IconPathForSkill(id)),
+                equipLimit = row.equipLimit,
+                skillStyle = (PcSkillStyle)row.skillStyle,
+                stateSpecialId = row.stateSpecialId,
+                isAura = row.isAura != 0,
+                attackRadius = row.attackRadius,
+                missilesGenerate = row.missilesGenerate,
+                missilesGenerateData = row.missilesGenerateData,
+                childSkillId = row.childSkillId,
+                childSkillLevel = row.childSkillLevel,
+                childSkillNum = row.childSkillNum,
+                baseSkill = row.baseSkill != 0,
+                charAnimId = row.charAnimId,
+                isMelee = row.isMelee != 0,
+                waitTime = row.waitTime,
+                skillCostType = row.skillCostType,
+                cost = row.cost,
+                timePerCast = row.timePerCast,
+                timePerCastOnHorse = row.timePerCastOnHorse,
+                isPhysical = row.isPhysical != 0,
+                targetOnly = row.targetOnly != 0,
+                targetEnemy = row.targetEnemy != 0,
+                targetAlly = row.targetAlly != 0,
+                targetSelf = row.targetSelf != 0,
+                targetObj = row.targetObj != 0,
+                byMissile = row.byMissile != 0,
+                isUseAttackRating = row.isUseAttackRating != 0,
+                startSkillId = startSkillId,
+                startSkillLevel = startSkillId > 0 ? row.eventSkillLevel : 0,
+                flySkillId = flySkillId,
+                flySkillLevel = flySkillId > 0 ? row.eventSkillLevel : 0,
+                flyEventTime = flySkillId > 0 ? row.flyEventTime : 0,
+                collideSkillId = collideSkillId,
+                collideSkillLevel = collideSkillId > 0 ? row.eventSkillLevel : 0,
+                vanishSkillId = vanishSkillId,
+                vanishSkillLevel = vanishSkillId > 0 ? row.eventSkillLevel : 0,
+                reqLevel = row.reqLevel,
+                maxLevel = row.maxLevel,
+                horseLimit = row.horseLimit,
+                doHurt = row.doHurt != 0,
+                weaponSkill = row.weaponSkill != 0,
+                lvlSetScript = row.lvlSetScript,
+                levelUpScript = row.levelUpScript,
+            };
+            if (row.missileForm > 0) s.missileForm = (SkillMissileForm)row.missileForm;
+            return s;
         }
 
         // 51/55/57 are Unity-observed display skills with no learned progression/skillbook
@@ -2525,13 +2940,16 @@ namespace VLTK.Sandbox
         // [SECT-QUICKWIN] §2.2.2 G7: PC tianwang.lua::tianwang_zhanyi = PASSIVE mastery
         //   lifemax_p {{1,21},{30,185}} + lifemax_yan_p {{1,21},{35,160},{36,160}}
         //   + deadlystrikeenhance_p {{1,5},{30,45}} + attackspeed_v {{1,5},{30,65}}
-        //   + charAnimId=11 (không phải 14) + stateSpecialId=49.
+        //   + charAnimId=11 (không phải 14). Canonical presentation row has
+        //   StateSpecialId=0, IsAura=0 and therefore no attached aura SPR.
         // Trước fix: chỉ có ManaMaxP + DeadlyStrikeEnhanceP sai magnitude (2/20 vs PC 5/45).
         //   Mất 3/4 attribute (HP max tăng 185%, attack speed +65, life_max_yan_p smoke).
         // Sau fix: đầy đủ 4 attribute đúng PC magnitude.
         private static SkillDefinition TianWangThienVuongChienY()
         {
-            var s = BaseSkill(36, "天王战意", "Thiên Vương Chiến Ý", 60, 30, 0, SkillMissileForm.None); s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 11; s.stateSpecialId = 49;
+            var s = BaseSkill(36, "天王战意", "Thiên Vương Chiến Ý", 60, 30, 0, SkillMissileForm.Stationary);
+            s.skillStyle = PcSkillStyle.PassivityNpcState; s.charAnimId = 11; s.stateSpecialId = 0;
+            s.childSkillLevel = -1; s.targetSelf = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.LifeMaxP, Link(lv, (1, 21, ""), (30, 185, "")), -1, 0));          // PC: HP+185% ở L30
@@ -2741,23 +3159,31 @@ namespace VLTK.Sandbox
         }
 
         // [SECT-QUICKWIN] §2.5.2 G7 (CRITICAL gameplay): WuDu ID 69 "Vô Hình Độc" — đổi nhầm class attribute.
-        // PC wudu.lua::wuxing_gu (per-skill wuxing-gu.lua): fastwalkrun_p {{1,-10},{25,-50}} (movement speed buff).
-        // Tên "Vô Hình Độc" = "Tàng hình lao tới" — gameplay cốt lõi là TỐC ĐỘ DI CHUYỂN, không phải tấn công.
-        // Trước fix: AttackSpeedV (tấn công nhanh hơn), PC: FastWalkRunP (chạy nhanh hơn — tàng hình lao tới).
-        // Sau fix: giữ AttackSpeedV làm fallback (MagicAttributeKind.FastWalkRunP chưa có trong enum — Phase 4 thêm).
-        //   Đồng thời sửa PoisonDamageV magnitude theo PC L20 max 25 (mobile L20=220 sai 9×).
-        // NOTE: Full fix cần thêm FastWalkRunP enum + runtime di chuyển tăng tốc.
+        // PC wudu.lua::wuxing_gu: fastwalkrun_p {{1,-10},{25,-50},{26,-50}},
+        // duration {{1,18*2},{20,18*2}}. Negative value slows the affected enemy.
+        // Trước fix: AttackSpeedV (sai loại) và duration 66-1166 giây (sai PC 2 giây).
+        // Static PC row: SkillStyle=2, StateSpecialId=6, IsAura=1, MisslesForm=7,
+        // ChildSkillId=203, BaseSkill=0, CharAnimId=11, AttackRadius=400.
+        // Gameplay Lua values remain separately proof-gated; do not infer them from presentation fields.
         private static SkillDefinition WuDuVoHinhDoc()
         {
-            var s = BaseSkill(69, "无形蛊", "Vô Hình Độc", 30, 20, 400, SkillMissileForm.Surround);
-            s.skillStyle = PcSkillStyle.Missiles; s.childSkillId = 5; s.childSkillNum = 1; s.baseSkill = true; s.charAnimId = 2; s.targetEnemy = true;
+            var s = BaseSkill(69, "无形蛊", "Vô Hình Độc", 30, 20, 400, SkillMissileForm.Stationary);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.stateSpecialId = 6; s.isAura = true;
+            s.childSkillId = 203; s.childSkillLevel = -1; s.childSkillNum = 1; s.baseSkill = false;
+            s.charAnimId = 11; s.targetEnemy = true;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
-                // PC magnitude: L1=5, L20=25 (per-skill wuxing-gu.lua formula 5+level, tối đa 25 ở L20).
-                d.damage.Add(new SkillMagicAttribute(MagicAttributeKind.PoisonDamageV, Link(lv, (1, 5, ""), (20, 25, "")), 0, Link(lv, (1, 5, ""), (20, 25, ""))));
-                // [SECT-QUICKWIN] Phase 4 cần thay bằng FastWalkRunP (-10→-50 âm = tăng tốc di chuyển).
-                d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AttackSpeedV, Link(lv, (1, 5, ""), (20, 30, "")), 600 + 600 * lv, 0));
-                d.skill.Add(new SkillMagicAttribute(MagicAttributeKind.SkillCostV, 15, 0, 0));
+                // PC wudu.lua poisondamage_v channels: amount 5→25, interval 20, duration 25.
+                d.damage.Add(new SkillMagicAttribute(
+                    MagicAttributeKind.PoisonDamageV,
+                    Link(lv, (1, 5, ""), (20, 25, "")),
+                    20,
+                    25));
+                d.state.Add(new SkillMagicAttribute(
+                    MagicAttributeKind.FastWalkRunP,
+                    Link(lv, (1, -10, ""), (25, -50, ""), (26, -50, "")),
+                    18 * 2,
+                    0));
                 return d;
             });
             return s;
@@ -3453,8 +3879,10 @@ namespace VLTK.Sandbox
 
         private static SkillDefinition TianRenNguHanhTran()
         {
-            var s = BaseSkill(146, "五行阵", "Ngũ Hành Trận", 40, 20, 180, SkillMissileForm.None);
-            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.isAura = true; s.stateSpecialId = 226; s.childSkillId = 226; s.childSkillLevel = 1; s.childSkillNum = 1; s.targetSelf = true; s.charAnimId = 14;
+            var s = BaseSkill(146, "五行阵", "Ngũ Hành Trận", 40, 20, 180, SkillMissileForm.Stationary);
+            s.skillStyle = PcSkillStyle.InitiativeNpcState; s.isAura = true; s.stateSpecialId = 29;
+            s.childSkillId = 226; s.childSkillLevel = -1; s.childSkillNum = 1;
+            s.targetSelf = true; s.charAnimId = 14;
             AddLevels(s, lv => {
                 var d = new SkillLevelData { level = lv };
                 d.state.Add(new SkillMagicAttribute(MagicAttributeKind.AddDefenseV, Link(lv, (1, 75, ""), (20, 550, "")), 18, 0));
@@ -3551,7 +3979,7 @@ namespace VLTK.Sandbox
             public int skillId;
             public int skillStyle, stateSpecialId, isAura, attackRadius, missilesGenerate, missilesGenerateData, missileForm;
             public int childSkillId, childSkillLevel, childSkillNum, baseSkill, charAnimId, isMelee, waitTime, skillCostType;
-            public int cost, timePerCast, isPhysical, targetOnly, targetEnemy, targetAlly, targetSelf, targetObj, byMissile;
+            public int cost, timePerCast, timePerCastOnHorse, isPhysical, targetOnly, targetEnemy, targetAlly, targetSelf, targetObj, byMissile;
             public int isUseAttackRating, reqLevel, maxLevel, equipLimit, horseLimit, doHurt, weaponSkill;
             public int startSkillId, flySkillId, flyEventTime, collideSkillId, vanishSkillId;
             public string manCastSndPath, fmCastSndPath, lvlSetScript, levelUpScript;
@@ -3618,6 +4046,8 @@ namespace VLTK.Sandbox
             if (row.Has("skillCostType")) s.skillCostType = row.skillCostType;
             if (row.Has("cost")) s.cost = row.cost;
             if (row.Has("timePerCast")) s.timePerCast = row.timePerCast;
+            if (row.Has("timePerCastOnHorse")) s.timePerCastOnHorse = row.timePerCastOnHorse;
+            else s.timePerCastOnHorse = MountedRecastTicksFor(s.skillId, s.timePerCastOnHorse);
             if (row.Has("isPhysical")) s.isPhysical = row.isPhysical != 0;
             if (row.Has("targetOnly")) s.targetOnly = row.targetOnly != 0;
             if (row.Has("targetEnemy")) s.targetEnemy = row.targetEnemy != 0;

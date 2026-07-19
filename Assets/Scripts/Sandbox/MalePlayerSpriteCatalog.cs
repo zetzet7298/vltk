@@ -13,14 +13,18 @@ namespace VLTK.Sandbox
     {
         Idle,       // ST01 (fight-stand / 空手站立1)
         Move,       // RN01/RN03 (run)
-        Magic,      // MG01/MG04 (magic cast)
-        Attack,     // AT04/AT05 (melee attack)
+        Magic,      // MG02..MG05 (magic cast)
+        Attack,     // physical attack 1
+        Attack1,    // physical attack 2
         Ride,       // RD01 (mounted IDLE: RideStand — full 8-dir layered horse+rider)
         RideWalk,   // HW01 (mounted WALK: RideWalk — full 8-dir layered horse+rider)
         RideMove,   // HR01 (mounted RUN: RideRun gallop — full 8-dir layered horse+rider)
         Walk,       // WK01/WK04 (PC 走路 — walk mode, slower than run; 男主角躯体.txt)
         Sit,        // ZZ01 (PC 打坐 — meditate / cross-legged sit; one suffix for all weapons)
         Jump,       // JP01 (PC 跳跃 — Khinh Công leap; one suffix for all weapons)
+        RideAttack, // HA01 (mounted slash)
+        RideAttack1,// HA02 (mounted thrust)
+        RideMagic,  // HM01 (mounted magic)
     }
 
     /// <summary>
@@ -29,10 +33,17 @@ namespace VLTK.Sandbox
     /// </summary>
     public enum PcWeaponType
     {
-        EmptyHand = 0,     // 空手 → ST01, RN01, MG01
-        ShortWeapon = 1,   // 短武器 → ST04, RN02, MG02
+        EmptyHand = 0,     // 空手 → ST01, RN01, MG02
+        ShortWeapon = 1,   // 短武器 → ST04, RN02, MG03
         LongWeapon = 2,    // 长武器(棍/枪) → ST05, RN03, MG04
         DualWeapon = 3,    // 双武器 → ST06, RN04, MG05
+        HiddenWeapon = 4,  // 暗器 → ST01, RN01, MG02; physical attacks use MG01
+    }
+
+    public enum PcWeaponMotionProfile
+    {
+        PrimaryPhysicalOrder = 0,
+        AlternatePhysicalOrder = 1,
     }
 
     public enum PlayerSpritePartKind
@@ -79,17 +90,18 @@ namespace VLTK.Sandbox
     /// 男主角未骑马关联表.txt maps (weapon category × CLIENTACTION) → action name,
     /// and each action has its own SPR file set per body part.
     ///
-    /// Current defaults: armor variant 19, shadow variant 999.
+    /// Current package.ini defaults: rider variant 019, horse variant 001, shadow 999.
     /// Empty hand: right weapon variant 000, Long staff (长棍类1): variant 010.
     /// </summary>
     public static class MalePlayerSpriteCatalog
     {
         public const string SourceRoot = @"spr\npcres\man";
         public const int DirectionCount = 8;
-        public const int ArmorVariant = 19;
-        public const int MountArmorVariant = 050;  // MA_(BD/HD/HR/LH/RH)_050 — mounted rider outfit.
-        public const int MountAltArmorVariant = 072; // alt mounted rider outfit.
-        public const int MountHorseVariant = 019;   // MA_(HH/HB/HT)_019 — horse body (front/mid/back).
+        // package.ini winners: MA body/head/hands use 019; MA horse uses 001.
+        public const int ArmorVariant = 019;
+        public const int MountArmorVariant = 019;
+        public const int MountAltArmorVariant = 072; // alternate package winner.
+        public const int MountHorseVariant = 001;
         public const int MountAltHorseVariant = 018; // alt horse body.
         public const int ShadowVariant = 999;
         // PC mount tables (pak_unpacked/_slistcache/unknown/d14d05cc.dat):
@@ -105,33 +117,36 @@ namespace VLTK.Sandbox
         // PC action suffixes per weapon type. From 男主角未骑马关联表.txt columns:
         // cdo_fightstand maps to: 空手站立1=ST01, 短武器站立=ST04, 长武器站立=ST05, 双武器站立=ST06
         // cdo_run maps to:        空手跑步=RN01, 短武器跑步=RN02, 长武器跑步=RN03, 双武器跑步=RN04
-        // cdo_magic maps to:      空手魔法=MG01, 短武器魔法=MG02, 长武器魔法=MG04, 双武器魔法=MG05
-        // cdo_attack (long staff) maps to: 长武器劈=AT05 (primary)
-        private static readonly string[,] ActionSuffix = new string[4, 4]
+        // cdo_magic maps to:      空手魔法=MG02, 短武器魔法=MG03, 长武器魔法=MG04, 双武器魔法=MG05, 暗器=MG01.
+        // 暗器: cdo_attack/cdo_attack1=MG01; cdo_magic=MG02.
+        private static readonly string[,] ActionSuffix = new string[5, 6]
         {
-            // Idle,            Move,            Magic,            Attack
-            { "ST01",          "RN01",          "MG01",           "AT01" }, // EmptyHand
-            { "ST04",          "RN02",          "MG02",           "AT03" }, // ShortWeapon
-            { "ST05",          "RN03",          "MG04",           "AT05" }, // LongWeapon
-            { "ST06",          "RN04",          "MG05",           "AT07" }, // DualWeapon
+            // Idle,    Move,    Magic,   Attack, Attack1, unused
+            { "ST01", "RN01", "MG02", "AT01", "AT01", "" }, // EmptyHand
+            { "ST04", "RN02", "MG03", "AT02", "AT03", "" }, // ShortWeapon
+            { "ST05", "RN03", "MG04", "AT04", "AT05", "" }, // LongWeapon
+            { "ST06", "RN04", "MG05", "AT06", "AT07", "" }, // DualWeapon
+            { "ST01", "RN01", "MG02", "MG01", "MG01", "" }, // HiddenWeapon
         };
 
         // Weapon right-hand SPR variant per weapon type (from 男主角右手武器.txt)
-        private static readonly int[] WeaponSprVariant = new int[4]
+        private static readonly int[] WeaponSprVariant = new int[5]
         {
             EmptyWeaponVariant,  // EmptyHand
             ShortWeaponVariant,  // ShortWeapon (单手剑1 = RW_001)
             StaffWeaponVariant,  // LongWeapon (长棍类1 = RW_010)
             DualWeaponVariant,   // DualWeapon (双剑类1 = LW/RW_013)
+            EmptyWeaponVariant,  // HiddenWeapon uses empty weapon layers.
         };
 
         // PC 男主角躯体.txt walk column (走路): WK01=FreeWalk/NormalWalk, WK02=MeleeW, WK03=RangeW, WK04=DoubleW.
-        private static readonly string[] WalkSuffix = new string[4]
+        private static readonly string[] WalkSuffix = new string[5]
         {
             "WK01", // EmptyHand
             "WK02", // ShortWeapon
             "WK03", // LongWeapon
             "WK04", // DualWeapon
+            "WK01", // HiddenWeapon
         };
         // PC 打坐 (SitDown) and 跳跃 (JumpFly) columns: ONE shared suffix for every weapon type.
         public const string SitSuffix = "ZZ01";
@@ -142,6 +157,41 @@ namespace VLTK.Sandbox
         /// Used by MalePlayerVisual.SetWeapon to keep weaponVariant in sync.
         /// </summary>
         public static int GetWeaponSprVariant(PcWeaponType weapon) => WeaponSprVariant[(int)weapon];
+
+        /// <summary>
+        /// PC relation-table rows swap cdo_attack/cdo_attack1 for knife, staff and
+        /// dual-hammer variants while keeping the same broad equip family.
+        /// </summary>
+        public static PcWeaponMotionProfile ResolveMotionProfile(PcWeaponType weapon, int weaponVariant)
+        {
+            return weapon switch
+            {
+                PcWeaponType.ShortWeapon when weaponVariant is >= 4 and <= 6 or >= 20 and <= 22
+                    => PcWeaponMotionProfile.AlternatePhysicalOrder,
+                PcWeaponType.LongWeapon when weaponVariant is >= 10 and <= 12 or >= 25 and <= 26
+                    => PcWeaponMotionProfile.AlternatePhysicalOrder,
+                PcWeaponType.DualWeapon when weaponVariant is >= 16 and <= 18 or >= 29 and <= 30
+                    => PcWeaponMotionProfile.AlternatePhysicalOrder,
+                _ => PcWeaponMotionProfile.PrimaryPhysicalOrder,
+            };
+        }
+
+        public static string ResolveFootActionSuffix(PlayerVisualAction action, PcWeaponType weapon,
+            int weaponVariant = AutoWeaponVariant)
+        {
+            int effectiveWeaponVariant = weaponVariant == AutoWeaponVariant
+                ? WeaponSprVariant[(int)weapon]
+                : weaponVariant;
+            PlayerVisualAction resolvedAction = action;
+            if (ResolveMotionProfile(weapon, effectiveWeaponVariant) == PcWeaponMotionProfile.AlternatePhysicalOrder)
+            {
+                if (action == PlayerVisualAction.Attack)
+                    resolvedAction = PlayerVisualAction.Attack1;
+                else if (action == PlayerVisualAction.Attack1)
+                    resolvedAction = PlayerVisualAction.Attack;
+            }
+            return ActionSuffix[(int)weapon, (int)resolvedAction];
+        }
 
         // Sentinel value: when weaponVariant equals this, BuildParts auto-resolves
         // from the weapon type via WeaponSprVariant.
@@ -165,23 +215,20 @@ namespace VLTK.Sandbox
         /// </summary>
         public static PlayerSpritePartSpec[] BuildParts(PlayerVisualAction action, PcWeaponType weapon, int bodyVariant = ArmorVariant, int headVariant = ArmorVariant, int weaponVariant = AutoWeaponVariant, int hairVariant = ArmorVariant, int horseVariant = MountHorseVariant)
         {
-            // Mounted actions use mount outfit (050/072) by default.
-            // When caller passes the non-mounted default, auto-upgrade to MountArmorVariant.
-            int mountBody = (bodyVariant == 19 || bodyVariant == 50 || bodyVariant == 72) ? bodyVariant : MountArmorVariant;
-            int mountHead = (headVariant == 19 || headVariant == 50 || headVariant == 72) ? headVariant : MountArmorVariant;
-            int mountHair = (hairVariant == 19 || hairVariant == 50 || hairVariant == 72) ? hairVariant : MountArmorVariant;
-
-            if (action == PlayerVisualAction.Ride)
-                return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountIdleSuffix);
-            if (action == PlayerVisualAction.RideWalk)
-                return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountWalkSuffix);
-            if (action == PlayerVisualAction.RideMove)
-                return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant, MountMoveSuffix);
+            // Mounted defaults stay on canonical 019 via default args; explicit equipped variants pass through.
+            int mountBody = bodyVariant;
+            int mountHead = headVariant;
+            int mountHair = hairVariant;
 
             // Auto-resolve weapon variant from weapon type when caller passes the sentinel default.
             int effectiveWeaponVariant = (weaponVariant == AutoWeaponVariant)
                 ? WeaponSprVariant[(int)weapon]
                 : weaponVariant;
+
+            if (action == PlayerVisualAction.Ride || action == PlayerVisualAction.RideWalk || action == PlayerVisualAction.RideMove ||
+                action == PlayerVisualAction.RideAttack || action == PlayerVisualAction.RideAttack1 || action == PlayerVisualAction.RideMagic)
+                return BuildMountedParts(mountBody, mountHead, mountHair, horseVariant,
+                    PlayerMountService.GetMountedActionSuffix(action, weapon), weapon, effectiveWeaponVariant);
 
             int wIdx = (int)weapon;
             // Walk/Sit/Jump resolve to dedicated PC suffixes (男主角躯体.txt):
@@ -192,27 +239,26 @@ namespace VLTK.Sandbox
                 PlayerVisualAction.Walk => WalkSuffix[wIdx],
                 PlayerVisualAction.Sit  => SitSuffix,
                 PlayerVisualAction.Jump => JumpSuffix,
-                _ => ActionSuffix[wIdx, (int)action],
+                _ => ResolveFootActionSuffix(action, weapon, effectiveWeaponVariant),
             };
-            string rightWeaponSuffix = (weapon == PcWeaponType.ShortWeapon && action == PlayerVisualAction.Magic)
-                ? "MG03" // PC 男主角右手武器.txt: MeleeWMagic uses MA_RW_001_MG03.spr.
-                : suffix;
             int lwVariant = (weapon == PcWeaponType.DualWeapon) ? effectiveWeaponVariant : EmptyWeaponVariant;
 
             // Long staff has no left weapon SPR — only right hand holds the staff.
             // Dual weapons would have both. For other types, left weapon is empty (still has SPR).
             bool leftWeaponRequired = weapon != PcWeaponType.LongWeapon;
 
+            string shoulderPath = BuildShoulderPath(bodyVariant, suffix);
             return new PlayerSpritePartSpec[]
             {
                 new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
                 new(PlayerSpritePartKind.Body,         "Body",         BuildPath("BD", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.Head,         "Head",         BuildPath("HD", headVariant, suffix)),
                 new(PlayerSpritePartKind.Hair,         "Hair",         BuildPath("HR", hairVariant, suffix)),
+                new(PlayerSpritePartKind.Shoulder,     "Shoulder",     shoulderPath, IsShoulderRequired(bodyVariant)),
                 new(PlayerSpritePartKind.LeftHand,     "LeftHand",     BuildPath("LH", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.RightHand,    "RightHand",    BuildPath("RH", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.LeftWeapon,   "LeftWeapon",   BuildPath("LW", lwVariant, suffix), leftWeaponRequired),
-                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", effectiveWeaponVariant, rightWeaponSuffix)),
+                new(PlayerSpritePartKind.RightWeapon,  "RightWeapon",  BuildPath("RW", effectiveWeaponVariant, suffix)),
             };
         }
 
@@ -220,7 +266,12 @@ namespace VLTK.Sandbox
         /// Build the full mounted layered set with dynamic rider and horse parts.
         /// </summary>
         public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant, int headVariant, int hairVariant, int horseVariant, string suffix)
+            => BuildMountedParts(bodyVariant, headVariant, hairVariant, horseVariant, suffix, PcWeaponType.EmptyHand, EmptyWeaponVariant);
+
+        public static PlayerSpritePartSpec[] BuildMountedParts(int bodyVariant, int headVariant, int hairVariant, int horseVariant, string suffix, PcWeaponType weapon, int weaponVariant)
         {
+            int leftWeaponVariant = weapon == PcWeaponType.DualWeapon ? weaponVariant : EmptyWeaponVariant;
+            string shoulderPath = BuildShoulderPath(bodyVariant, suffix);
             return new PlayerSpritePartSpec[]
             {
                 new(PlayerSpritePartKind.Shadow,      "Shadow",       BuildPath("YY", ShadowVariant, suffix)),
@@ -232,8 +283,11 @@ namespace VLTK.Sandbox
                 new(PlayerSpritePartKind.Body,        "MountBody",   BuildPath("BD", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.Head,        "MountHead",   BuildPath("HD", headVariant, suffix)),
                 new(PlayerSpritePartKind.Hair,        "MountHair",   BuildPath("HR", hairVariant, suffix)),
+                new(PlayerSpritePartKind.Shoulder,    "MountShoulder", shoulderPath, IsShoulderRequired(bodyVariant)),
                 new(PlayerSpritePartKind.LeftHand,    "MountLeftHand",  BuildPath("LH", bodyVariant, suffix)),
                 new(PlayerSpritePartKind.RightHand,   "MountRightHand", BuildPath("RH", bodyVariant, suffix)),
+                new(PlayerSpritePartKind.LeftWeapon,  "MountLeftWeapon", BuildPath("LW", leftWeaponVariant, suffix)),
+                new(PlayerSpritePartKind.RightWeapon, "MountRightWeapon", BuildPath("RW", weaponVariant, suffix)),
             };
         }
 
@@ -247,6 +301,19 @@ namespace VLTK.Sandbox
             return SourceRoot + @"\" + fileName;
         }
 
+        private static string BuildShoulderPath(int variant, string action)
+        {
+            // PC Settings/NpcRes/男主角肩膀.txt covers variants 001..021 only.
+            return variant is >= 1 and <= 21 ? BuildPath("SH", variant, action) : string.Empty;
+        }
+
+        private static bool IsShoulderRequired(int variant)
+        {
+            // package.ini audit: SH_019 cast winner bytes are absent. Keep its path
+            // for provenance, but do not fail or render a guessed shoulder layer.
+            return variant is >= 1 and <= 21 && variant != ArmorVariant;
+        }
+
         /// <summary>
         /// Map PC Skills.txt CharAnimId + current weapon type to a visual action.
         /// PC KNpc.cpp đổi CharAnimId thành CLIENTACTION rồi KNpcRes::SetAction chọn suffix theo vũ khí.
@@ -255,8 +322,9 @@ namespace VLTK.Sandbox
         {
             return charAnimId switch
             {
-                7 or 8 => PlayerVisualAction.Attack,
-                9 or 10 or 11 => PlayerVisualAction.Magic,
+                9 => PlayerVisualAction.Attack,
+                10 => PlayerVisualAction.Attack1,
+                11 => PlayerVisualAction.Magic,
                 14 => null,   // Passive/aura — không chạy animation nhân vật
                 _ => null,
             };

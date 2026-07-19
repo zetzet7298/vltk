@@ -279,12 +279,15 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void GetMountedActionSuffix_All()
+        public void GetMountedActionSuffix_UsesCanonicalBanks_AndHiddenCollapsesToHM01()
         {
-            Assert.AreEqual("RS01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Idle, PcWeaponType.ShortWeapon));
-            Assert.AreEqual("RG01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Move, PcWeaponType.ShortWeapon));
-            Assert.AreEqual("RA01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Attack, PcWeaponType.ShortWeapon));
-            Assert.AreEqual("RM01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Magic, PcWeaponType.ShortWeapon));
+            Assert.AreEqual("RD01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Idle, PcWeaponType.ShortWeapon));
+            Assert.AreEqual("HR01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Move, PcWeaponType.ShortWeapon));
+            Assert.AreEqual("HA01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Attack, PcWeaponType.ShortWeapon));
+            Assert.AreEqual("HA02", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Attack1, PcWeaponType.ShortWeapon));
+            Assert.AreEqual("HM01", PlayerMountService.GetMountedActionSuffix(PlayerVisualAction.Magic, PcWeaponType.ShortWeapon));
+            foreach (var action in new[] { PlayerVisualAction.Attack, PlayerVisualAction.Attack1, PlayerVisualAction.Magic })
+                Assert.AreEqual("HM01", PlayerMountService.GetMountedActionSuffix(action, PcWeaponType.HiddenWeapon));
         }
 
         [Test]

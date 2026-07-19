@@ -156,15 +156,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_PlayCast_StartsInPreCastPhase()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 128,
-                nameNormalized = "Kháng Long Hữu Hối",
-                attackRadius = 360,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(128);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
             Assert.IsNotNull(fx);
@@ -264,15 +258,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_PreCastAdvancesToMissile()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 117,
-                nameNormalized = "Ném Đá Hỏi Đường",
-                attackRadius = 280,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(117);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
             Assert.AreEqual(SkillEffectPhase.PreCast, fx.phase);
@@ -285,15 +273,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_SingleMissileDoesNotImpactBeforeArrival()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 117,
-                nameNormalized = "Ném Đá Hỏi Đường",
-                attackRadius = 280,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(117);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
 
@@ -309,15 +291,9 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void SkillEffectVisual_MissileAdvancesToImpact()
         {
-            var service = new SkillEffectVisualService(null);
-            var skill = new SkillDefinition
-            {
-                skillId = 117,
-                nameNormalized = "Ném Đá Hỏi Đường",
-                attackRadius = 280,
-                missileForm = SkillMissileForm.Single,
-                timePerCast = 2,
-            };
+            var catalog = TestCatalogCache.NoviceAndCaiBang;
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(117);
 
             var fx = service.PlaySkillCast(skill, Vector2.zero, new Vector2(100, 0), 1);
             // Advance past PreCast + Missile
@@ -416,12 +392,8 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void GetDefaultSkillsForFaction_ReturnsCorrectSkillsForAllFactions()
         {
-            // PC source-derived default deck per faction. PC gốc JX: 1 ô là skill tấn công cơ bản
-            // của phái, các ô còn lại là skill cao cấp / chiêu thức đặc trưng.
-            // Cái Bang uses explicit per-faction default deck (PC gaibang.lua + newest skills.txt rows):
-            // Phi Long (357) → Khinh công (210) → Tiềm Long Tại Uyên (358) → Thần Thủ Lệnh Long (1073) → Túy Điệp Cuồng Vũ (130).
-            // Other factions use the first 5 entries from PcSkillPanelService.GetPcSkillOrder(faction) directly.
-            // (Cái Bang's per-faction default deck is tested separately below.)
+            // Other factions derive their default hotbar from PC order after filtering unresolved,
+            // NPC variants, passives, and unlearned skills. Cái Bang has a requested runtime deck.
             var factions = new[]
             {
                 new { faction = CombatFaction.WuDang, slot0 = 151, slot1 = 152, slot2 = 153, slot3 = 154, slot4 = 155 },
@@ -438,15 +410,30 @@ namespace VLTK.Tests.Sandbox
             Assert.AreEqual(5, CombatSkillSlotController.MobileSkillSlotCount,
                 "Mobile uses 5-slot deck (PC JX default 5 combat skills per faction).");
 
-            // Cái Bang: explicit per-faction default deck via CombatSkillSlotController.DefaultDeckByFaction.
-            var caiBangDeckField = typeof(CombatSkillSlotController)
-                .GetField("DefaultDeckByFaction", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
-            Assert.IsNotNull(caiBangDeckField, "CombatSkillSlotController.DefaultDeckByFaction must exist.");
-            var deckMap = (System.Collections.Generic.Dictionary<CombatFaction, int[]>)caiBangDeckField.GetValue(null);
-            CollectionAssert.AreEqual(new[] { 117, 119, 122, 125, 128 }, deckMap[CombatFaction.CaiBang],
-                "Cái Bang sandbox default deck uses five canonical player damage skills");
-            Assert.AreEqual(0, deckMap[CombatFaction.CaiBang].Count(id => id == PcCombatCatalogFactory.UniversalLightnessSkill),
-                "Khinh công remains user-selectable instead of replacing a combat slot.");
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = new PlayerProgressionState();
+            progression.GrantFactionSkillPanelProgression(catalog, CombatFaction.CaiBang);
+            progression.MaxAllSkillLevels(catalog);
+            var go = new GameObject("CaiBangRequestedDefaultHotbarTest");
+            try
+            {
+                var controller = go.AddComponent<CombatSkillSlotController>();
+                controller.Initialize(catalog, progression);
+
+                var expectedRegulars = new[] { 127, 359, 130, 125, 128 };
+                CollectionAssert.AreEqual(
+                    expectedRegulars,
+                    Enumerable.Range(0, CombatSkillSlotController.MobileSkillSlotCount)
+                        .Select(slot => controller.GetAssignedSkill(slot, 0))
+                        .ToArray(),
+                    "Cái Bang regular slots must use the requested runtime order");
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill(0),
+                    "Phi Long Tại Thiên must occupy the dedicated primary slot");
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
             foreach (var f in factions)
             {
                 var order = PcSkillPanelService.GetPcSkillOrder(f.faction);
@@ -527,7 +514,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void MobileDeck_AssignsFourSlotsAndSwitchesIndependentDecks()
+        public void MobileDeck_AssignsFiveSlotsAndSwitchesIndependentDecks()
         {
             var go = new GameObject("CombatDeckTest");
             var controller = go.AddComponent<CombatSkillSlotController>();
@@ -537,9 +524,10 @@ namespace VLTK.Tests.Sandbox
                 controller.AssignSkill(1, 359);
                 controller.AssignSkill(2, 117);
                 controller.AssignSkill(3, 128);
+                controller.AssignSkill(4, 125);
 
                 Assert.AreEqual(357, controller.GetAssignedSkill(0));
-                Assert.AreEqual(128, controller.GetAssignedSkill(3));
+                Assert.AreEqual(125, controller.GetAssignedSkill(4));
                 Assert.AreEqual(357, controller.LeftSkillId, "legacy left slot should mirror deck A slot 0");
                 Assert.AreEqual(359, controller.RightSkillId, "legacy right slot should mirror deck A slot 1");
 
@@ -559,22 +547,205 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void PrimaryAttack_UsesSlotZeroThenFirstAssignedSkill()
+        public void PrimaryAttack_UsesDedicatedPrimaryPerDeckOnly()
         {
             var go = new GameObject("PrimaryAttackSlotTest");
             var controller = go.AddComponent<CombatSkillSlotController>();
             try
             {
-                Assert.AreEqual(-1, controller.ResolvePrimaryAttackSlot());
                 controller.AssignSkill(2, 117);
-                Assert.AreEqual(2, controller.ResolvePrimaryAttackSlot());
-                controller.AssignSkill(0, 357);
-                Assert.AreEqual(0, controller.ResolvePrimaryAttackSlot());
+                Assert.AreEqual(0, controller.ResolvePrimaryAttackSkill(), "primary must not borrow regular slots");
+                Assert.AreEqual(-1, controller.ResolvePrimaryAttackSlot());
+
+                controller.AssignPrimarySkill(357);
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill());
+                Assert.AreEqual(357, controller.ResolvePrimaryAttackSkill());
+
+                controller.ToggleDeck();
+                Assert.AreEqual(0, controller.GetAssignedPrimarySkill(), "deck B primary starts empty");
+                controller.AssignPrimarySkill(153);
+                Assert.AreEqual(153, controller.GetAssignedPrimarySkill());
+
+                controller.ToggleDeck();
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill(), "deck A primary survives deck B edits");
             }
             finally
             {
                 Object.DestroyImmediate(go);
             }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_NonCaiBangCustomDeckPreservesRegularsAndAddsPrimary()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.WuDang);
+            var deckA = new[] { 153, 154, 155, 156, 157 };
+            var go = new GameObject("LegacyWuDangHotbarMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckASkillIds", (int[])deckA.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+
+                controller.Initialize(catalog, progression);
+
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.WuDang, deckA, 0);
+                for (int i = 0; i < deckA.Length; i++)
+                    Assert.AreEqual(deckA[i], controller.GetAssignedSkill(i, 0));
+                Assert.Greater(GetPrivateInt(controller, "hotbarSchemaVersion"), 0);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_CustomCaiBangDeckPreservesRegularsAndAddsDistinctPrimary()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.CaiBang);
+            var deckA = new[] { 119, 122, 125, 128, 130 };
+            var go = new GameObject("LegacyCaiBangCustomHotbarMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckASkillIds", (int[])deckA.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+
+                controller.Initialize(catalog, progression);
+
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.CaiBang, deckA, 0);
+                for (int i = 0; i < deckA.Length; i++)
+                    Assert.AreEqual(deckA[i], controller.GetAssignedSkill(i, 0));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_PreviousCaiBangDefaultUpgradesRequestedRuntimeDeck()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.CaiBang);
+            var go = new GameObject("LegacyCaiBangRequestedRuntimeDeckMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckAPrimarySkillId", 117);
+                SetPrivateField(controller, "deckASkillIds", new[] { 357, 359, 130, 125, 128 });
+                SetPrivateField(controller, "hotbarSchemaVersion", 3);
+
+                controller.Initialize(catalog, progression);
+
+                CollectionAssert.AreEqual(
+                    new[] { 127, 359, 130, 125, 128 },
+                    Enumerable.Range(0, CombatSkillSlotController.MobileSkillSlotCount)
+                        .Select(slot => controller.GetAssignedSkill(slot, 0))
+                        .ToArray());
+                Assert.AreEqual(357, controller.GetAssignedPrimarySkill(0));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_PopulatedDeckBMigratesPrimaryAndPreservesRegulars()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.WuDang);
+            var deckB = new[] { 153, 154, 155, 156, 157 };
+            var go = new GameObject("LegacyDeckBHotbarMigrationTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                SetPrivateField(controller, "deckBSkillIds", (int[])deckB.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+
+                controller.Initialize(catalog, progression);
+
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.WuDang, deckB, 1);
+                for (int i = 0; i < deckB.Length; i++)
+                    Assert.AreEqual(deckB[i], controller.GetAssignedSkill(i, 1));
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        [Test]
+        public void LegacyHotbarMigration_IsIdempotentAfterSchemaUpgrade()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
+            var progression = LearnedProgression(catalog, CombatFaction.WuDang);
+            var go = new GameObject("LegacyHotbarMigrationIdempotentTest");
+            var controller = go.AddComponent<CombatSkillSlotController>();
+            try
+            {
+                var deckA = new[] { 153, 154, 155, 156, 157 };
+                SetPrivateField(controller, "deckASkillIds", (int[])deckA.Clone());
+                SetPrivateField(controller, "hotbarSchemaVersion", 0);
+                controller.Initialize(catalog, progression);
+                AssertMigratedPrimary(controller, catalog, progression, CombatFaction.WuDang, deckA, 0);
+
+                controller.AssignPrimarySkill(159);
+                controller.Initialize(catalog, progression);
+
+                Assert.AreEqual(159, controller.GetAssignedPrimarySkill(0));
+                Assert.Greater(GetPrivateInt(controller, "hotbarSchemaVersion"), 0);
+            }
+            finally
+            {
+                Object.DestroyImmediate(go);
+            }
+        }
+
+        private static PlayerProgressionState LearnedProgression(SkillCatalog catalog, CombatFaction faction)
+        {
+            var progression = new PlayerProgressionState();
+            progression.GrantFactionSkillPanelProgression(catalog, faction);
+            progression.MaxAllSkillLevels(catalog);
+            return progression;
+        }
+
+        private static void AssertMigratedPrimary(
+            CombatSkillSlotController controller,
+            SkillCatalog catalog,
+            PlayerProgressionState progression,
+            CombatFaction faction,
+            int[] regularSkillIds,
+            int deckIndex)
+        {
+            int primarySkillId = controller.GetAssignedPrimarySkill(deckIndex);
+            Assert.Greater(primarySkillId, 0);
+            CollectionAssert.DoesNotContain(regularSkillIds, primarySkillId,
+                "legacy migration should prefer a distinct primary when the faction has one");
+            var skill = catalog.Resolve(primarySkillId);
+            Assert.IsNotNull(skill);
+            Assert.AreEqual(faction, skill.faction);
+            Assert.AreNotEqual(PcSkillStyle.PassivityNpcState, skill.skillStyle);
+            Assert.Greater(progression.GetSkillLevel(primarySkillId), 0);
+        }
+
+        private static void SetPrivateField(CombatSkillSlotController controller, string fieldName, object value)
+        {
+            typeof(CombatSkillSlotController)
+                .GetField(fieldName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
+                ?.SetValue(controller, value);
+        }
+
+        private static int GetPrivateInt(CombatSkillSlotController controller, string fieldName)
+        {
+            var field = typeof(CombatSkillSlotController)
+                .GetField(fieldName, System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            Assert.IsNotNull(field, fieldName);
+            return (int)field.GetValue(controller);
         }
 
         [Test]
@@ -717,7 +888,7 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void VisualService_PlayStateAura_ConfiguresAuraPermanently()
+        public void VisualService_PlayStateAura_UsesPcStateDurationAndExpires()
         {
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
             var service = new SkillEffectVisualService(null, catalog);
@@ -729,9 +900,32 @@ namespace VLTK.Tests.Sandbox
             var fx = service.PlaySkillCast(skill, Vector2.zero, Vector2.zero, 1);
             Assert.IsNotNull(fx);
             Assert.IsTrue(fx.isAura);
-            Assert.AreEqual(float.MaxValue, fx.auraDuration);
-            Assert.AreEqual(float.MaxValue, fx.preCastDuration);
+            Assert.AreEqual(120f, fx.auraDuration, 0.001f, "Túy Điệp L1 lasts 18*120 PC ticks = 120 seconds");
+            Assert.AreEqual(fx.auraDuration, fx.preCastDuration);
             Assert.AreEqual("\\spr\\skill\\丐帮\\mag_gb_11_醉蝶狂舞.spr", fx.pcPreCastSpriteKey);
+
+            service.Update(119.9f);
+            Assert.AreEqual(1, service.ActiveEffectCount);
+            service.Update(0.2f);
+            Assert.AreEqual(0, service.ActiveEffectCount);
+        }
+
+        [Test]
+        public void VisualService_HoatBatLuuThu_UsesCanonicalPreCastWithoutBorrowedAura()
+        {
+            var catalog = PcCombatCatalogFactory.CreateNoviceAndCaiBangCatalog();
+            var service = new SkillEffectVisualService(null, catalog);
+            var skill = catalog.Resolve(127);
+
+            Assert.IsNotNull(skill);
+            Assert.AreEqual(0, skill.stateSpecialId);
+            Assert.IsFalse(skill.isAura);
+
+            var fx = service.PlaySkillCast(skill, Vector2.zero, Vector2.zero, 1);
+            Assert.IsNotNull(fx);
+            Assert.IsFalse(fx.isAura);
+            Assert.AreEqual("\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr", fx.pcPreCastSpriteKey);
+            Assert.AreNotEqual("\\spr\\skill\\昆仑\\kl_10_滑不留手.spr", fx.pcPreCastSpriteKey);
         }
     }
 }

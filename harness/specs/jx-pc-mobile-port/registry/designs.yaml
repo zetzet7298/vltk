@@ -12,4 +12,6 @@ designs:
   - {id: DOM-STGPE, path: domains/social-trade-guild-pvp-endgame.md, owner: social-endgame}
   - {id: DOM-UI, path: domains/ui-hud-panels/README.md, owner: unity-ui}
   - {id: DOM-CONTENT, path: domains/content-assets-avatar-audio/README.md, owner: content}
+  - {id: CON-SKL-CATALOG-001, path: contracts/content/v1/skill_catalog.proto, owner: skills-content}
+  - {id: CON-CONTENT-MANIFEST-001, path: contracts/content/manifest.v1.schema.json, owner: content}
   - {id: DOM-SERVER, path: domains/server-runtime/README.md, owner: backend-data}

@@ -37,7 +37,7 @@ catalog `DISCOVERED` hay một test PASS đơn lẻ để suy ra phase đã đ�
 ### P0 Combat Parity Lab
 
 - Năm training NPC chỉ xuất hiện với DevHarness profile.
-- Catalog đóng recursive graph cho novice và 10 phái: root skill, level, child/event, missile, buff/debuff, cost, cooldown, target mode, damage/status, audio.
+- Catalog đóng recursive graph cho 242-row shared/novice/10-phái union: root skill, level, child/event, missile, buff/debuff, cost, cooldown, target mode, damage/status, audio; static scope không tự thành runtime parity.
 - Cùng seed và intent sequence tạo authoritative state hash duy nhất trên Go. C#
   chỉ là test adapter/presentation oracle đọc event/snapshot để đối chiếu hash,
   tuyệt đối không chứa authoritative gameplay rule hoặc production simulation thứ hai.
@@ -46,7 +46,7 @@ catalog `DISCOVERED` hay một test PASS đơn lẻ để suy ra phase đã đ�
 
 ### P1 Ba Lăng vertical slice
 
-- Auth/character flow, soft-delete 7 ngày, single active session và reconnect grace 30 giây chạy E2E.
+- Auth/character flow, soft-delete 7 ngày, single active session và reconnect grace 15 giây chạy E2E.
 - Map ID 53 được load trực tiếp, không alias 79; coordinate/collision/spawn/portal/minimap cùng bundle hash.
 - Loot, wallet, inventory 60 slot, equip/stat/consumable/NPC buy-sell và level 1-200 persist qua restart.
 - Item/economy commit trước semantic ACK; retry không nhân đôi.

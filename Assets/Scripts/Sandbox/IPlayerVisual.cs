@@ -25,6 +25,7 @@ namespace VLTK.Sandbox
         bool playAutomatically { get; set; }
 
         int LoadedPartCount { get; }
+        int ActionPartsRefreshCount { get; }
         int CurrentFrameInDirection { get; }
         bool HasAllRequiredParts { get; }
         int MissingRequiredPartCount { get; }
@@ -39,8 +40,11 @@ namespace VLTK.Sandbox
         void SetAction(PlayerVisualAction action);
         void SetMounted(bool mounted);
         void SetWeapon(PcWeaponType weapon);
+        void SetWeapon(PcWeaponType weapon, int exactVariant);
         void SetDirection(int nextDirection);
         void SetEquipVariant(PlayerEquipSlot slot, int variant);
+        /// <summary>Set controller-owned normalized cast progress. Pass a negative value to resume Tick cadence.</summary>
+        void SetLogicalActionProgress(float normalizedProgress);
         void Tick(float deltaTime);
     }
 }

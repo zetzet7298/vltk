@@ -48,3 +48,11 @@ adrs:
   acceptance_evidence:
   - governance/adrs/ADR-0006-postgresql-durability.md
   path: governance/adrs/ADR-0006-postgresql-durability.md
+- id: ADR-0007
+  dri: architecture
+  reviewer: qa-parity-review
+  phase: P0-P1
+  status: ACCEPTED
+  acceptance_evidence:
+  - governance/adrs/ADR-0007-gate0-content-combat-contract.md
+  path: governance/adrs/ADR-0007-gate0-content-combat-contract.md

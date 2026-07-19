@@ -210,14 +210,21 @@ namespace VLTK.Sandbox
         /// </summary>
         public static string GetMountedActionSuffix(PlayerVisualAction action, PcWeaponType weapon)
         {
-            // PC riding action table: different suffixes when mounted
+            // PC Settings/NpcRes/{男,女}主角骑马关联表.txt.
+            // Never substitute non-canonical legacy banks.
+            if (weapon == PcWeaponType.HiddenWeapon && action is PlayerVisualAction.RideAttack or PlayerVisualAction.Attack or
+                PlayerVisualAction.RideAttack1 or PlayerVisualAction.Attack1 or PlayerVisualAction.RideMagic or PlayerVisualAction.Magic)
+                return "HM01";
+
             return action switch
             {
-                PlayerVisualAction.Idle   => "RS01", // Ride stand
-                PlayerVisualAction.Move   => "RG01", // Ride gallop
-                PlayerVisualAction.Attack => "RA01", // Ride attack
-                PlayerVisualAction.Magic  => "RM01", // Ride magic
-                _ => "RS01",
+                PlayerVisualAction.Ride or PlayerVisualAction.Idle => MalePlayerSpriteCatalog.MountIdleSuffix,
+                PlayerVisualAction.RideWalk or PlayerVisualAction.Walk => MalePlayerSpriteCatalog.MountWalkSuffix,
+                PlayerVisualAction.RideMove or PlayerVisualAction.Move => MalePlayerSpriteCatalog.MountMoveSuffix,
+                PlayerVisualAction.RideAttack or PlayerVisualAction.Attack => "HA01",
+                PlayerVisualAction.RideAttack1 or PlayerVisualAction.Attack1 => "HA02",
+                PlayerVisualAction.RideMagic or PlayerVisualAction.Magic => "HM01",
+                _ => MalePlayerSpriteCatalog.MountIdleSuffix,
             };
         }
 

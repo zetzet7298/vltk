@@ -27,21 +27,21 @@ namespace VLTK.Sandbox
         {
             var map = isFemale ? FemaleBodyMap : MaleBodyMap;
             if (map.TryGetValue(resId, out int val)) return val;
-            return isFemale ? 50 : 19; // Default staged variants
+            return isFemale ? FemalePlayerSpriteCatalog.ArmorVariant : MalePlayerSpriteCatalog.ArmorVariant;
         }
 
         public static int MapHead(bool isFemale, int resId)
         {
             var map = isFemale ? FemaleHeadMap : MaleHeadMap;
             if (map.TryGetValue(resId, out int val)) return val;
-            return isFemale ? 50 : 19; // Default staged variants
+            return isFemale ? FemalePlayerSpriteCatalog.ArmorVariant : MalePlayerSpriteCatalog.ArmorVariant;
         }
 
         public static int MapHair(bool isFemale, int resId)
         {
             var map = isFemale ? FemaleHairMap : MaleHairMap;
             if (map.TryGetValue(resId, out int val)) return val;
-            return isFemale ? 50 : 19; // Default staged variants
+            return isFemale ? FemalePlayerSpriteCatalog.ArmorVariant : MalePlayerSpriteCatalog.ArmorVariant;
         }
 
         public static int MapWeapon(bool isFemale, int resId)

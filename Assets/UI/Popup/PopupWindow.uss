@@ -66,6 +66,37 @@
     -unity-background-scale-mode: stretch-to-fill;
 }
 
+/* PC character panel owns its complete frame/title/footer in its SPR. The shell
+   must not add generic gutters, frame art, clipping, or header height. */
+.popup-window--pc-character {
+    background-color: rgba(0, 0, 0, 0);
+    background-image: none;
+}
+
+.popup-window--pc-character .popup-chrome {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    padding-top: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-bottom: 0px;
+    background-color: rgba(0, 0, 0, 0);
+    background-image: none;
+}
+
+.popup-window--pc-character .popup-body {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 428px;
+    height: 430px;
+    flex-grow: 0;
+    overflow: visible;
+}
+
 /* Title bar + close row, sitting on the top of the frame. */
 .popup-header {
     position: absolute;

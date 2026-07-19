@@ -1,0 +1,12 @@
+{
+  "forbidden_production_key_ids": [
+    "test-only-skill-port-ed25519-fixture-v1"
+  ],
+  "production_allowed": false,
+  "production_blocker": "production release gate rejects signingKeyId test-only-skill-port-ed25519-fixture-v1",
+  "schema": "vltk.skill_port.release_gate/v1",
+  "signing_key_id": "test-only-skill-port-ed25519-fixture-v1",
+  "signing_public_key_base64": "CyyE9b877r0utcwrxl7nzHGJHZC/yBCBc57ga7RCKP8=",
+  "signing_status": "development-test-only",
+  "tool_revision": "skill_port_compiler_py_protobuf_ed25519/v2"
+}

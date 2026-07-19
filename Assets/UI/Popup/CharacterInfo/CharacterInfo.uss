@@ -1,145 +1,89 @@
 /* =============================================================================
-   VLTK Mobile — HUD-003 Character Info content (CharacterInfo.uss)
-   3 tabs, header, paperdoll, action buttons. Design space 1280x720.
+   VLTK Mobile — HUD-003 Character Info combined PC panel (CharacterInfo.uss)
+   Panel 428×430 (config UID 2711122c). The panel sprite
+   (panel_male.png/panel_female.png) bakes in every Vietnamese label, the
+   character silhouette and the equipment slot frames. USS only styles the
+   overlaid live values, hit-zone tints and footer buttons.
    ========================================================================== */
 
 .char-info-body {
+    position: relative;
     flex-grow: 1;
-    padding: 8px;
+    padding: 0;
 }
 
-/* ---- Tab bar ---- */
-.char-tab-bar {
-    flex-direction: row;
-    justify-content: space-around;
-    margin-bottom: 8px;
-    padding: 2px;
+/* ---- PC panel sprite background (428×430) ---- */
+.char-panel {
+    background-image: url("Art/panel_male.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+.char-panel--female {
+    background-image: url("Art/panel_female.png");
 }
 
-.char-tab {
-    flex-grow: 1;
-    margin: 0 2px;
-    padding: 4px 8px;
-    color: rgb(220, 240, 255);
-    background-color: rgba(40, 30, 20, 0.7);
+/* ---- Stat value labels (overlaid on the baked PC label sprite) ---- */
+.char-stat-value-green {
+    color: rgb(110, 255, 110);
+    font-size: 12px;
+    -unity-text-align: middle-left;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    overflow: hidden;
+}
+.char-stat-value-gold {
+    color: rgb(255, 220, 95);
+    font-size: 12px;
+    -unity-text-align: middle-left;
+    -unity-font-style: bold;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    overflow: hidden;
+}
+
+/* ---- Equipment hit-zones (transparent overlay; slot frame is in the sprite) ---- */
+.char-equip-zone {
+    border-width: 0;
+    background-color: rgba(0, 0, 0, 0);
+    -unity-background-scale-mode: scale-to-fit;
+}
+.char-equip-zone--bindable {
+    /* invisible until equipped/empty tint applied */
+}
+.char-equip-zone--equipped {
+    background-color: rgba(80, 200, 120, 0.30);
     border-width: 1px;
-    border-color: rgba(180, 140, 60, 0.6);
-    font-size: 14px;
-    -unity-text-align: middle-center;
-    -unity-text-outline-width: 1px;
-    -unity-text-outline-color: rgb(0, 0, 0);
+    border-color: rgba(140, 230, 150, 0.55);
 }
-.char-tab.active {
-    background-color: rgba(120, 80, 30, 0.9);
-    border-color: rgb(220, 180, 80);
-    -unity-font-style: bold;
+.char-equip-zone--empty {
+    background-color: rgba(0, 0, 0, 0.18);
 }
 
-.char-tab-body {
-    flex-grow: 1;
-    padding: 4px;
+/* ---- +/- spend buttons (状态加点按钮改.spr) ---- */
+.char-add-point {
+    background-image: url("Art/btn_addpoint_up.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+.char-add-point--disabled {
+    opacity: 0.4;
 }
 
-/* ---- Paperdoll ---- */
-.char-paperdoll-wrap {
-    flex-grow: 1;
-    align-items: center;
-}
-
-.char-paperdoll {
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-content: flex-start;
-    padding: 4px;
-}
-
-.char-paperdoll-slot {
-    width: 88px;
-    height: 88px;
-    margin: 4px;
-    border-width: 2px;
-    border-color: rgba(120, 90, 40, 0.7);
-    background-color: rgba(20, 15, 10, 0.55);
-    align-items: center;
-    justify-content: flex-end;
-}
-.char-paperdoll-slot.equipped {
-    border-color: rgb(240, 200, 90);
-    background-color: rgba(80, 60, 20, 0.6);
-}
-.char-paperdoll-slot.empty {
-    border-color: rgba(90, 70, 50, 0.5);
-    background-color: rgba(15, 12, 8, 0.5);
-}
-.char-paperdoll-slot.framework {
-    border-color: rgba(60, 110, 160, 0.6);
-    background-color: rgba(15, 25, 40, 0.4);
-}
-
-.char-paperdoll-slot-label {
-    font-size: 11px;
-    color: rgb(230, 220, 200);
-    margin-bottom: 2px;
-    -unity-text-align: middle-center;
-    -unity-text-outline-width: 1px;
-    -unity-text-outline-color: rgb(0, 0, 0);
-}
-
-/* ---- Stats list ---- */
-.char-stats-list {
-    flex-direction: column;
-    padding: 4px 12px;
-}
-
-.char-stat-row {
-    flex-direction: row;
-    justify-content: space-between;
-    margin: 1px 0;
-    padding: 2px 6px;
-    border-bottom-width: 1px;
-    border-bottom-color: rgba(140, 110, 50, 0.3);
-}
-
-.char-stat-label {
-    color: rgb(220, 210, 180);
-    font-size: 14px;
-}
-.char-stat-value {
-    color: rgb(255, 230, 120);
-    font-size: 14px;
-    -unity-font-style: bold;
-}
-
-/* ---- Placeholder ---- */
-.char-placeholder {
-    flex-grow: 1;
-    color: rgb(180, 170, 150);
-    font-size: 15px;
-    -unity-text-align: middle-center;
-    padding: 24px;
-}
-
-/* ---- Action buttons ---- */
-.char-actions {
-    flex-direction: row;
-    justify-content: center;
-    margin-top: 6px;
-    padding: 4px;
-}
-
-.char-action-btn {
-    margin: 0 6px;
-    padding: 5px 16px;
+/* ---- Backend-missing equipment action buttons ---- */
+.char-equip-btn {
     color: rgb(220, 240, 255);
     background-color: rgba(60, 40, 20, 0.8);
     border-width: 1px;
     border-color: rgba(180, 140, 60, 0.7);
-    font-size: 14px;
+    font-size: 11px;
     -unity-text-align: middle-center;
     -unity-text-outline-width: 1px;
     -unity-text-outline-color: rgb(0, 0, 0);
 }
-.char-action-btn:hover {
-    background-color: rgba(100, 70, 30, 0.9);
+
+/* ---- Footer Item + Close hit targets (captions/borders baked into SPR) ---- */
+.char-footer-btn {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+.char-footer-btn:hover {
+    background-color: rgba(255, 220, 80, 0.08);
 }

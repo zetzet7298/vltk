@@ -55,7 +55,7 @@ Schema máy đọc cho một case nằm tại `delivery/case-matrices/skill-pari
 2. Join setting/server script và literal faction IDs bằng evidence path + hash; mâu thuẫn ghi contradiction, không chọn theo tên Việt.
 3. Xác định membership/branch/level range từ authority đã reconcile; một row có thể là child/missile nội bộ nhưng chỉ có đúng một owner/disposition.
 4. Sinh case theo từng skill canonical và từng level hợp lệ. Không dùng một skill đại diện cho cả phái và không coi 1.554 row đều là skill người chơi có thể học.
-5. Shared/novice/phái chỉ chuyển `SPECIFIED` khi selection query tái lập được. Novice `SKILL-1/2/53` đã `SOURCE_PROVEN`; shared và 10 phái vẫn `BLOCKED` trong ma trận P0 cho đến khi candidate joins chứng minh branch/learnability và owner disposition.
+5. Shared/novice/phái dùng 242-row union đã được matrix `SKL-ALL-PARITY-001` pin làm scope static hiện hành. Đây là membership/content scope, không phải runtime parity; công thức, proc order, visual/audio và PC golden vẫn giữ `BLOCKED` cho tới khi có oracle runtime.
 
 ### Ma trận case P0 bắt buộc
 

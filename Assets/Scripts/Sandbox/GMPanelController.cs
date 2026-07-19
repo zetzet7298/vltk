@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 using VLTK.Core;
 
 
@@ -46,6 +47,9 @@ namespace VLTK.Sandbox
         private GameObject _equipmentPanel;
         private GameObject _joystickGo;
         private UnityEngine.UIElements.UIDocument _cachedHudDoc;
+        private UnityEngine.UIElements.VisualElement _cachedHudRoot;
+        private UnityEngine.UIElements.StyleEnum<UnityEngine.UIElements.DisplayStyle> _cachedHudDisplay;
+        private bool _hudDisplayCaptured;
         private Behaviour _cachedHudOverlay;
 
         private void EnsureInitialized()
@@ -77,7 +81,7 @@ namespace VLTK.Sandbox
             var txt = newButtonGo.GetComponentInChildren<Text>();
             if (txt != null) txt.text = "Trang bị";
 
-            var btn = newButtonGo.GetComponent<Button>();
+            var btn = newButtonGo.GetComponent<UnityEngine.UI.Button>();
             btn.onClick.RemoveAllListeners(); // Clear cloned listeners
 
             // Create new TabEntry
@@ -209,15 +213,10 @@ namespace VLTK.Sandbox
                     _joystickGo.SetActive(false);
                 }
 
-                // Hide UI Toolkit HUD to prevent blocking clicks on the left buttons (especially ChatInputRow/ChatBar)
-                if (_cachedHudDoc == null)
-                {
-                    _cachedHudDoc = UnityEngine.Object.FindAnyObjectByType<UnityEngine.UIElements.UIDocument>();
-                }
-                if (_cachedHudDoc != null)
-                {
-                    _cachedHudDoc.enabled = false;
-                }
+                // Hide the HUD without disabling UIDocument. Toggling UIDocument.enabled can
+                // rebuild its visual tree, leaving GameHudController bound to stale elements
+                // after the GM panel closes (missing HUD/action buttons after faction switch).
+                SetHudHidden(true);
 
                 // Hide IMGUI HUD Overlay
                 if (_cachedHudOverlay == null)
@@ -259,15 +258,8 @@ namespace VLTK.Sandbox
                     _joystickGo = null;
                 }
 
-                // Restore UI Toolkit HUD
-                if (_cachedHudDoc == null)
-                {
-                    _cachedHudDoc = UnityEngine.Object.FindAnyObjectByType<UnityEngine.UIElements.UIDocument>();
-                }
-                if (_cachedHudDoc != null)
-                {
-                    _cachedHudDoc.enabled = true;
-                }
+                // Restore the same HUD visual tree and all of its existing bindings.
+                SetHudHidden(false);
 
                 // Restore IMGUI HUD Overlay
                 if (_cachedHudOverlay == null)
@@ -298,6 +290,57 @@ namespace VLTK.Sandbox
                     if (chatBtn != null) chatBtn.SetActive(true);
                 }
             }
+        }
+
+        private void SetHudHidden(bool hidden)
+        {
+            var hudRoot = ResolveHudRoot();
+            if (hudRoot == null) return;
+
+            if (hidden)
+            {
+                if (!_hudDisplayCaptured)
+                {
+                    _cachedHudDisplay = hudRoot.style.display;
+                    _hudDisplayCaptured = true;
+                }
+                hudRoot.style.display = UnityEngine.UIElements.DisplayStyle.None;
+                return;
+            }
+
+            if (_hudDisplayCaptured)
+                hudRoot.style.display = _cachedHudDisplay;
+            else
+                hudRoot.style.display = UnityEngine.UIElements.DisplayStyle.Flex;
+            _hudDisplayCaptured = false;
+        }
+
+        private UnityEngine.UIElements.VisualElement ResolveHudRoot()
+        {
+            if (_cachedHudDoc != null)
+            {
+                var cachedRoot = _cachedHudDoc.rootVisualElement?.Q("GameHud");
+                if (cachedRoot != null)
+                {
+                    _cachedHudRoot = cachedRoot;
+                    return _cachedHudRoot;
+                }
+            }
+
+            var documents = UnityEngine.Object.FindObjectsByType<UnityEngine.UIElements.UIDocument>(
+                FindObjectsInactive.Include,
+                FindObjectsSortMode.None);
+            foreach (var document in documents)
+            {
+                var root = document?.rootVisualElement?.Q("GameHud");
+                if (root == null) continue;
+                _cachedHudDoc = document;
+                _cachedHudRoot = root;
+                return _cachedHudRoot;
+            }
+
+            _cachedHudRoot = null;
+            return null;
         }
 
         private void UpdateTabPanels()

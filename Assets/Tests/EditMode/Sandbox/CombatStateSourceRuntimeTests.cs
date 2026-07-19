@@ -242,6 +242,40 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void DeserializedPositiveAndNegativeRangeReturnSources_AggregateThenExpireIndependently()
+        {
+            var catalog = Catalog();
+            var runtime = new CombatRuntimeService(catalog, damage: new DamageFormulaService
+            {
+                Roll = (min, _) => min,
+                RollPercent = _ => true,
+            });
+            var defender = Actor(2);
+            // Mirrors post-load stateSources before compatibility projection rebuild: PC handler adds
+            // both contributions; the shorter Cái Bang 720-style debuff expires independently.
+            defender.stateSources[new CombatStateSourceKey(defender.actorId, FirstBuff)] = new CombatStateSourceNode
+            {
+                sourceLevel = 1,
+                attributes = { [MagicAttributeKind.RangeDamageReturnP] = new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, 40, 20, 0) },
+            };
+            defender.stateSources[new CombatStateSourceKey(defender.actorId, 720)] = new CombatStateSourceNode
+            {
+                sourceLevel = 20,
+                attributes = { [MagicAttributeKind.RangeDamageReturnP] = new SkillMagicAttribute(MagicAttributeKind.RangeDamageReturnP, -30, 10, 0) },
+            };
+            var attacker = Actor(3);
+            Learn(attacker, RangeProbe);
+
+            var stacked = runtime.Cast(attacker, defender, RangeProbe, defender.position, CombatRelation.Enemy).damageResults.Single();
+            Assert.AreEqual(10, stacked.rangeReturnDamage, "PC RangeDamageReturnP sums +40 and -30 from live sources");
+
+            defender.ExpireStateSources(10);
+            var restored = runtime.Cast(attacker, defender, RangeProbe, defender.position, CombatRelation.Enemy).damageResults.Single();
+            Assert.AreEqual(40, defender.states[MagicAttributeKind.RangeDamageReturnP].value1);
+            Assert.AreEqual(40, restored.rangeReturnDamage, "only Cái Bang 720-style negative source expires");
+        }
+
+        [Test]
         public void Skill720NegativeRangeReturn_ClampsReflectThenRestoresAfterOnly720Expires()
         {
             var catalog = Catalog();

@@ -34,6 +34,7 @@ namespace VLTK.Sandbox
         public PlayerEquipSlot slot;
         public int oldVariant;
         public int newVariant;
+        public int oldItemId;
         public int itemId;
     }
 
@@ -48,6 +49,7 @@ namespace VLTK.Sandbox
         private IPlayerEquipmentHost _host;
 
         private readonly Dictionary<PlayerEquipSlot, int> _equipped = new();
+        private readonly Dictionary<PlayerEquipSlot, int> _equippedItemIds = new();
         private int _currentWeaponItemId = 0;
 
         /// <summary>Event fired khi equipment thay đổi.</summary>
@@ -65,12 +67,12 @@ namespace VLTK.Sandbox
         }
 
         /// <summary>
-        /// True khi slot không ở default variant (đã được trang bị). Read-only bind.
+        /// True khi slot có variant khác default hoặc item identity khác 0 (đã được trang bị). Read-only bind.
         /// HUD-003 Character Info paperdoll dùng để phân biệt ô đã/trống.
         /// </summary>
         public bool IsEquipped(PlayerEquipSlot slot)
         {
-            return GetVariant(slot) != DefaultVariant(slot);
+            return GetVariant(slot) != DefaultVariant(slot) || GetItemId(slot) != 0;
         }
 
         /// <summary>
@@ -79,21 +81,23 @@ namespace VLTK.Sandbox
         /// </summary>
         public void Equip(PlayerEquipSlot slot, int variant, int itemId = 0)
         {
+            int old = GetVariant(slot);
+            int oldItemId = GetItemId(slot);
+            if (old == variant && oldItemId == itemId) return;
+
+            _equipped[slot] = variant;
+            _equippedItemIds[slot] = itemId;
             if (slot == PlayerEquipSlot.Weapon)
             {
                 _currentWeaponItemId = itemId;
             }
-
-            int old = GetVariant(slot);
-            if (old == variant) return;
-
-            _equipped[slot] = variant;
 
             OnEquipChanged?.Invoke(new EquipChangeEvent
             {
                 slot = slot,
                 oldVariant = old,
                 newVariant = variant,
+                oldItemId = oldItemId,
                 itemId = itemId,
             });
 
@@ -107,7 +111,7 @@ namespace VLTK.Sandbox
                 switch (slot)
                 {
                     case PlayerEquipSlot.Weapon:
-                        _host.OnWeaponChanged(_currentWeaponItemId, itemId, variant);
+                        _host.OnWeaponChanged(oldItemId, itemId, variant);
                         break;
                     case PlayerEquipSlot.Body:
                         _host.OnArmorChanged(old, variant, itemId);
@@ -128,7 +132,7 @@ namespace VLTK.Sandbox
         /// <summary>Gỡ trang bị một slot về default.</summary>
         public void Unequip(PlayerEquipSlot slot)
         {
-            Equip(slot, DefaultVariant(slot));
+            Equip(slot, DefaultVariant(slot), 0);
         }
 
         /// <summary>Map weapon type từ equipment.</summary>
@@ -142,10 +146,29 @@ namespace VLTK.Sandbox
             return weaponVariant switch
             {
                 0 => PcWeaponType.EmptyHand,
-                >= 1 and <= 9 => PcWeaponType.ShortWeapon,
-                MalePlayerSpriteCatalog.DualWeaponVariant => PcWeaponType.DualWeapon,
-                >= 10 and <= 19 => PcWeaponType.LongWeapon,
-                >= 20 => PcWeaponType.DualWeapon,
+                (>= 1 and <= 6) or (>= 19 and <= 22) => PcWeaponType.ShortWeapon,
+                (>= 7 and <= 12) or (>= 23 and <= 26) => PcWeaponType.LongWeapon,
+                (>= 13 and <= 18) or (>= 27 and <= 30) => PcWeaponType.DualWeapon,
+                _ => PcWeaponType.EmptyHand,
+            };
+        }
+
+        /// <summary>
+        /// PC GameDataDef.h EQUIPDETAILTYPE + melee particular mapping.
+        /// Melee particulars are sword, blade, staff, spear, dual hammer, dual blade.
+        /// Range weapons use the hidden-weapon presentation bank.
+        /// </summary>
+        public static PcWeaponType PcItemTupleToWeaponType(int itemGenre, int detailType, int particularType)
+        {
+            if (itemGenre != 0)
+                return PcWeaponType.EmptyHand;
+
+            return detailType switch
+            {
+                0 when particularType is 0 or 1 => PcWeaponType.ShortWeapon,
+                0 when particularType is 2 or 3 => PcWeaponType.LongWeapon,
+                0 when particularType is 4 or 5 => PcWeaponType.DualWeapon,
+                1 => PcWeaponType.HiddenWeapon,
                 _ => PcWeaponType.EmptyHand,
             };
         }
@@ -163,22 +186,12 @@ namespace VLTK.Sandbox
                         // Mock items
                         if (item.itemId >= 1001 && item.itemId <= 1042)
                         {
-                            int v = item.resId;
-                            if (v >= 1 && v <= 9) return PcWeaponType.ShortWeapon;
-                            if (v >= 10 && v <= 19) return PcWeaponType.LongWeapon;
-                            return PcWeaponType.DualWeapon;
+                            return WeaponVariantToType(variant);
                         }
 
-                        if (item.itemGenre == 0 && item.detailType == 9) // Vũ khí cận chiến
+                        if (item.itemGenre == 0 && item.detailType is 0 or 1)
                         {
-                            int part = item.particularType;
-                            if (part >= 1 && part <= 21) return PcWeaponType.ShortWeapon;
-                            if (part >= 22 && part <= 41) return PcWeaponType.LongWeapon;
-                            if (part >= 42 && part <= 71) return PcWeaponType.DualWeapon;
-                        }
-                        else if (item.itemGenre == 0 && item.detailType == 10) // Vũ khí tầm xa
-                        {
-                            return PcWeaponType.ShortWeapon;
+                            return PcItemTupleToWeaponType(item.itemGenre, item.detailType, item.particularType);
                         }
                     }
                 }
@@ -199,6 +212,11 @@ namespace VLTK.Sandbox
         /// PC helmet variants mapped from ItemDefinition.
         /// </summary>
         public int GetHelmetVariant() => GetVariant(PlayerEquipSlot.Head);
+
+        private int GetItemId(PlayerEquipSlot slot)
+        {
+            return _equippedItemIds.TryGetValue(slot, out int id) ? id : 0;
+        }
 
         // ── Defaults ───────────────────────────────────────────────────────
 

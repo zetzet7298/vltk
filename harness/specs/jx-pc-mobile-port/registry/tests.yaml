@@ -153,7 +153,7 @@ tests:
   - GATE-G4
   layer: e2e
   gate: G4
-  title: Avatar ton tai va full snapshot trong grace 30 giay.
+  title: Avatar ton tai va full snapshot trong grace 15 giay.
 - id: TEST-CHANNEL-001
   dri: qa-e2e
   reviewer: domain-owner-review
@@ -318,7 +318,7 @@ tests:
   - GATE-G1
   layer: content
   gate: G1
-  title: Immutable bundle hash va signature.
+  title: Immutable bundle exact digest hash signature va N/N-1 negotiation.
 - id: TEST-CBT-001
   dri: qa-gameplay
   reviewer: domain-owner-review
@@ -362,7 +362,7 @@ tests:
   - GATE-G1
   layer: content
   gate: G1
-  title: Package first-match winner.
+  title: Package first-match winner qua vltktool, khong filesystem fallback.
 - id: TEST-CONTENT-002
   dri: qa-content
   reviewer: domain-owner-review
@@ -395,7 +395,7 @@ tests:
   - GATE-G1
   layer: content
   gate: G1
-  title: Catalog coverage va reference closure.
+  title: Catalog coverage, 242-row skill union va reference closure.
 - id: TEST-IIEL-001
   dri: qa-economy
   reviewer: domain-owner-review
@@ -527,7 +527,7 @@ tests:
   - GATE-G3
   layer: gameplay
   gate: G3
-  title: Skill catalog shared novice 10 phai.
+  title: Skill catalog shared novice 10 phai 242-row union.
 - id: TEST-SKL-002
   dri: qa-gameplay
   reviewer: domain-owner-review
@@ -736,7 +736,7 @@ tests:
   - GATE-G2
   layer: contract
   gate: G2
-  title: Protobuf game.v1 malformed frame and boundary fuzz fails closed without state mutation.
+  title: Protobuf game.v1 malformed frame, additive lifecycle tags va boundary fuzz fails closed without state mutation.
 - id: TEST-SQLNEG-001
   dri: qa-data
   reviewer: database-review
