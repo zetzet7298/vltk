@@ -1,0 +1,14 @@
+{
+    "name": "VLTK.Production.UI.Runtime",
+    "rootNamespace": "VLTK.Production.UI.Runtime",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

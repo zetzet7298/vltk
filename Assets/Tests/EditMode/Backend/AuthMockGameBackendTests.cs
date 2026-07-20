@@ -7,6 +7,7 @@
 
 using System.Threading.Tasks;
 using NUnit.Framework;
+using UnityEngine;
 using VLTK.Backend;
 using VLTK.Backend.Dto;
 using VLTK.Backend.Mock;
@@ -15,16 +16,59 @@ namespace VLTK.Tests.Backend
 {
     public class AuthMockGameBackendTests
     {
-        private static BackendConfig NewConfig() => new BackendConfig
+        private BackendConfig _config;
+
+        private BackendConfig NewConfig()
         {
-            baseUrl = "http://test:8020",
-            apiPrefix = "/v1",
-            useMock = true,
-        };
+            _config = ScriptableObject.CreateInstance<BackendConfig>();
+            _config.baseUrl = "http://test:8020";
+            _config.apiPrefix = "/v1";
+            _config.useMock = true;
+            return _config;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (_config != null)
+                UnityEngine.Object.DestroyImmediate(_config);
+            _config = null;
+        }
 
         // ============================================================
         // LoginAsync
         // ============================================================
+
+        [Test]
+        public async Task CreateAccountAsync_ReturnsSafeAccountShape()
+        {
+            var backend = new MockGameBackend(NewConfig());
+            var resp = await backend.CreateAccountAsync(new AccountCreateRequest
+            {
+                accName = "alice",
+                password = "plaintext",
+            });
+
+            Assert.IsTrue(resp.IsSuccess);
+            Assert.AreEqual("alice", resp.data.accName);
+            Assert.IsFalse(resp.data.isBanned);
+        }
+
+        [Test]
+        public async Task CreateRoleAsync_ReturnsRequestedIdentity()
+        {
+            var backend = new MockGameBackend(NewConfig());
+            var resp = await backend.CreateRoleAsync(new RoleCreateRequest
+            {
+                account = "alice",
+                roleName = "AliceRole",
+                faction = -1,
+            });
+
+            Assert.IsTrue(resp.IsSuccess);
+            Assert.AreEqual("AliceRole", resp.data.roleName);
+            Assert.AreEqual("alice", resp.data.account);
+        }
 
         [Test]
         public async Task LoginAsync_ReturnsEchoedAccName()

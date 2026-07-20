@@ -17,7 +17,10 @@ from typing import Any
 
 UNITY_ROOT = Path('/var/www/vltk-mobile')
 PC_ROOT = Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem')
-JX_MAP_PORT_REL = Path('harness/.agents/skills/jx-map-port/scripts/jx_map_port.py')
+JX_MAP_PORT_RELS = (
+    Path('harness/.agents/skills/jx-map-port/scripts/jx_map_port.py'),
+    Path('stale-harness/.agents/skills/jx-map-port/scripts/jx_map_port.py'),
+)
 SPR_LABEL_MAP = Path('/var/www/jx-source/pak_unpacked/_labels.json')
 SPR_UNPACK_MANIFEST = Path('/var/www/jx-source/pak_unpacked/_unpack_summary.json')
 PROVENANCE_SAMPLE_LIMIT = 5
@@ -153,6 +156,19 @@ def count_files(path: Path, pattern: str) -> int:
     return sum(1 for _ in path.glob(pattern))
 
 
+def resolve_pc_maplist(root: Path, pc_root: Path) -> Path:
+    candidates = (
+        root / 'Assets/StreamingAssets/Reference/PcMap/maplist.ini',
+        pc_root / 'Client 6.0/settings/maplist.ini',
+        pc_root / 'bin/client/settings/MapList.ini',
+        pc_root / 'Utility/Run/Settings/MapList.ini',
+    )
+    for candidate in candidates:
+        if candidate.is_file():
+            return candidate
+    return candidates[0]
+
+
 def read_pc_map_ids(maplist: Path) -> set[int]:
     ids: set[int] = set()
     for raw in maplist.read_bytes().splitlines():
@@ -179,8 +195,8 @@ def git_tracked_generated(unity_root: Path) -> int | None:
 
 
 def load_jx_module(root: Path) -> Any | None:
-    path = root / JX_MAP_PORT_REL
-    if not path.is_file():
+    path = next((root / rel for rel in JX_MAP_PORT_RELS if (root / rel).is_file()), None)
+    if path is None:
         return None
     try:
         spec = importlib.util.spec_from_file_location('jx_map_port_verify_jx', path)
@@ -329,7 +345,7 @@ def verify_visual_catalogs(
     coverage = load_json(sa / 'MapPortCoverage.json')
     aliases = load_json(sa / 'MapAliasCatalog.json')
     geometries = load_json(sa / 'MapGeometryCatalog.json')
-    pc_ids = read_pc_map_ids(pc_root / 'Client 6.0/settings/maplist.ini')
+    pc_ids = read_pc_map_ids(resolve_pc_maplist(root, pc_root))
     alias_ids = {int(a['mapId']) for a in aliases.get('aliases', [])}
     geometry_keys = {g['geometryKey'] for g in geometries.get('geometries', [])}
 
@@ -783,6 +799,26 @@ def verify_default_map(audit: Audit, root: Path) -> None:
     }
 
 
+def verify_map_runtime(audit: Audit, root: Path) -> None:
+    verifier_path = root / 'scripts/map_runtime/verify.py'
+    runtime_dir = root / 'Assets/StreamingAssets/MapRuntime'
+    if not verifier_path.is_file():
+        audit.require(False, 'map-runtime verifier is missing')
+        return
+    try:
+        if str(verifier_path.parent) not in sys.path:
+            sys.path.insert(0, str(verifier_path.parent))
+        spec = importlib.util.spec_from_file_location('map_runtime_verify', verifier_path)
+        if spec is None or spec.loader is None:
+            raise RuntimeError('cannot load map-runtime verifier')
+        module = importlib.util.module_from_spec(spec)
+        sys.modules['map_runtime_verify'] = module
+        spec.loader.exec_module(module)
+        audit.facts['mapRuntime'] = module.verify_dir(runtime_dir)
+    except Exception as ex:
+        audit.require(False, f'map-runtime verification failed: {ex}')
+
+
 def run_audit(args: argparse.Namespace) -> Audit:
     root = args.unity_root.resolve()
     pc_root = args.pc_root.resolve()
@@ -801,6 +837,7 @@ def run_audit(args: argparse.Namespace) -> Audit:
     verify_npc_sprites(audit, root)
     verify_interactive_catalogs(audit, root)
     verify_default_map(audit, root)
+    verify_map_runtime(audit, root)
     audit.facts['regenerateCommands'] = REGENERATE_COMMANDS
     return audit
 

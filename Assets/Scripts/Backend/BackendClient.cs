@@ -64,6 +64,10 @@ namespace VLTK.Backend
 
         // ---- FS-02B (auth → role → player) ----
 
+        public Task<BackendResponse<AccountResponse>> CreateAccountAsync(
+            AccountCreateRequest request, CancellationToken ct = default)
+            => Backend.CreateAccountAsync(request, ct);
+
         public Task<BackendResponse<LoginResponse>> LoginAsync(
             string accName,
             string password,
@@ -75,6 +79,10 @@ namespace VLTK.Backend
         public Task<BackendResponse<RoleListResponse>> ListRolesAsync(
             string accName, CancellationToken ct = default)
             => Backend.ListRolesAsync(accName, ct);
+
+        public Task<BackendResponse<RoleResponse>> CreateRoleAsync(
+            RoleCreateRequest request, CancellationToken ct = default)
+            => Backend.CreateRoleAsync(request, ct);
 
         public Task<BackendResponse<PlayerStateResponse>> GetPlayerStateAsync(
             int roleId, CancellationToken ct = default)

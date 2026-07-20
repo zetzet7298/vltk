@@ -22,7 +22,9 @@ Stdlib-only. Accepts a project root and inspects production asmdefs under
          Model < Gameplay.Domain < {PortData,Combat,World}
                                    < Sandbox.Runtime < UI
 
-     Core/Resources/Sprites/Backend are *deliberate boundaries*: they take
+      Generated protobuf assemblies are the lowest production seam, followed
+      by SkillPort and the production networking/world/UI composition layers.
+      Core/Resources/Sprites/Backend are *deliberate boundaries*: they take
      part in cycle detection but are exempt from the rank rule, so existing
      intentional edges to/from them never produce false positives.
   6. Forbidden inward dependencies — no production assembly may reference a
@@ -52,13 +54,20 @@ from typing import Dict, Iterable, List, Optional, Set, Tuple
 # Keyed by the asmdef ``name`` field (NOT the directory or filename, which can
 # differ — e.g. VLTK.Sandbox.asmdef declares name "VLTK.Sandbox.Runtime").
 LAYER_RANKS: Dict[str, int] = {
+    "VLTK.Generated.GameV1": 0,
+    "VLTK.Generated.ContentV1": 0,
     "VLTK.Model": 0,
     "VLTK.Gameplay.Domain": 1,
+    "VLTK.SkillPort": 1,
     "VLTK.PortData": 2,
     "VLTK.Combat": 2,
     "VLTK.World": 2,
+    "VLTK.Production.Networking": 2,
+    "VLTK.Production.World.Unity": 2,
     "VLTK.Sandbox.Runtime": 3,
+    "VLTK.Production.UI.Runtime": 3,
     "VLTK.UI": 4,
+    "VLTK.Production.App": 4,
 }
 
 # Deliberate boundaries: participate in cycle detection but are exempt from the
@@ -95,9 +104,9 @@ def forbidden_reason(name: str) -> Optional[str]:
 
 # --- Discovery / parsing ----------------------------------------------------
 
-def discover_asmdefs(scripts_dir: Path) -> List[Path]:
-    """All production asmdefs under ``Assets/Scripts``, sorted for determinism."""
-    return sorted(scripts_dir.rglob("*.asmdef"))
+def discover_asmdefs(*roots: Path) -> List[Path]:
+    """All production asmdefs below the supplied roots, sorted deterministically."""
+    return sorted(path for root in roots for path in root.rglob("*.asmdef"))
 
 
 def parse_asmdef(path: Path) -> Tuple[str, List[str]]:
@@ -343,7 +352,10 @@ def run(root: Path) -> Findings:
         findings.add(f"[config] {scripts_dir} does not exist")
         return findings
 
-    asmdef_paths = discover_asmdefs(scripts_dir)
+    # Generated protobuf assemblies live outside Assets/Scripts but are part of
+    # the production dependency graph. Including their asmdefs resolves those
+    # references without weakening the unknown-VLTK fail-closed rule.
+    asmdef_paths = discover_asmdefs(scripts_dir, root / "Assets" / "Generated")
     parsed: List[Tuple[Path, str, List[str]]] = []
     for p in asmdef_paths:
         try:

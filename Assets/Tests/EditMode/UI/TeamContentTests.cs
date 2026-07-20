@@ -21,38 +21,46 @@ namespace VLTK.Tests.UI
         }
 
         [Test]
-        public void ImplementsLayoutHint_ForPopupShell()
+        public void ImplementsPcSheetHints_ForPopupShell()
         {
             var content = new TeamContent(null);
             Assert.IsInstanceOf<IPopupLayoutHint>(content);
-            var hint = (IPopupLayoutHint)content;
-            Assert.AreEqual(480f, hint.Width);
-            Assert.AreEqual(520f, hint.Height);
+            Assert.AreEqual(PopupChromeKind.PcTeam, content.Chrome);
+            Assert.AreEqual(340f, content.Width);
+            Assert.AreEqual(229f, content.Height);
         }
 
         [Test]
-        public void Build_CreatesRosterAndControlsSections()
+        public void Build_CreatesPcSheetListsAndButtons()
         {
             var content = new TeamContent(null);
             var body = new VisualElement();
             content.Build(body);
 
-            Assert.IsNotNull(body.Q("TeamRoster"));
-            Assert.IsNotNull(body.Q("TeamControls"));
+            Assert.IsNotNull(body.Q("TeamPanel"));
+            Assert.IsNotNull(body.Q("TeamMemberList"));
+            Assert.IsNotNull(body.Q("TeamNearbyList"));
+            Assert.IsNotNull(body.Q<Button>("Invite"));
+            Assert.IsNotNull(body.Q<Button>("Kick"));
+            Assert.IsNotNull(body.Q<Button>("Appoint"));
+            Assert.IsNotNull(body.Q<Button>("Refresh"));
+            Assert.IsNotNull(body.Q<Button>("Leave"));
+            Assert.IsNotNull(body.Q<Button>("CloseTeam"));
+            Assert.IsNotNull(body.Q<Button>("Close"));
         }
 
         [Test]
-        public void Build_PopulatesPcControlManifestRows()
+        public void Build_DisablesBackendButtonsButKeepsCloseEnabled()
         {
             var content = new TeamContent(null);
             var body = new VisualElement();
             content.Build(body);
 
-            var controls = body.Q("TeamControlList");
-            Assert.IsNotNull(controls);
-            Assert.AreEqual(8, controls.childCount, "PC a05d7a2c has 8 team controls");
-            Assert.AreEqual("Mời vào đội", controls[0].Q<Label>("ControlLabel").text);
-            Assert.AreEqual("a05d7a2c / Invite", controls[0].Q<Label>("ControlSource").text);
+            Assert.IsFalse(body.Q<Button>("Invite").enabledSelf);
+            Assert.IsFalse(body.Q<Button>("Kick").enabledSelf);
+            Assert.IsFalse(body.Q<Button>("Appoint").enabledSelf);
+            Assert.IsFalse(body.Q<Button>("Refresh").enabledSelf);
+            Assert.IsTrue(body.Q<Button>("Close").enabledSelf);
         }
 
         [Test]
@@ -62,7 +70,7 @@ namespace VLTK.Tests.UI
             var body = new VisualElement();
             content.Build(body);
 
-            var roster = body.Q("TeamRosterList");
+            var roster = body.Q("TeamMemberList");
             Assert.IsNotNull(roster);
             Assert.GreaterOrEqual(roster.childCount, 1, "Null party should still render a status row");
         }
@@ -75,7 +83,7 @@ namespace VLTK.Tests.UI
             content.Build(body);
 
             Assert.DoesNotThrow(() => content.OnShow());
-            Assert.IsNotNull(body.Q("TeamRosterList"));
+            Assert.IsNotNull(body.Q("TeamMemberList"));
         }
     }
 }

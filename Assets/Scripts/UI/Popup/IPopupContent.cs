@@ -51,11 +51,25 @@ namespace VLTK.UI.Popup
         /// </summary>
         PcSkill,
         /// <summary>
-        /// Compact PC character sheet (318×438). The four-tab captions, title and
-        /// close button are part of the sheet art, so the generic title/chrome is
-        /// hidden and the sheet is centred in the 1280×720 design space.
+        /// Compact PC character sheet. Title, close and frame are part of the sheet
+        /// art, so the generic title/chrome is hidden and the sheet is centred.
         /// </summary>
         PcCharacter,
+        /// <summary>
+        /// Compact PC inventory sheet (UiItem 214×454). Title, buttons and frame are
+        /// part of the sheet art; Unity overlays only slots and live values.
+        /// </summary>
+        PcInventory,
+        /// <summary>
+        /// Compact PC team sheet (UiTeam a05d7a2c 340×229). Title, buttons and
+        /// frame are part of the sheet art; Unity overlays roster/nearby text.
+        /// </summary>
+        PcTeam,
+        /// <summary>
+        /// PC Kỳ Trân Các/Bảo Vật sheet (9e5f75d1, background.spr 563×476).
+        /// The sheet owns its frame; Unity overlays live mall rows and hit zones.
+        /// </summary>
+        PcTreasure,
     }
 
     /// <summary>Optional chrome hint a PC sheet implements to opt out of generic chrome.</summary>

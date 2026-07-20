@@ -1,32 +1,34 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — HUD-003 Team / Tổ đội popup content
-// PC source captured by TeamPanelService: a05d7a2c.dat (组队 window).
-// This slice is read-only UI parity: expose PC-derived controls + live party
-// roster (PartyService). Invite/kick/appoint/leave/dismiss gameplay remains
-// follow-up work.
+// VLTK Mobile — PC Team / Đội popup content
+// Source: PC a05d7a2c.dat (组队), 340×229.
+// Art: exact SPR frames vendored under Assets/UI/Popup/Team/Art.
 // -----------------------------------------------------------------------------
-using System.Collections.Generic;
 using UnityEngine.UIElements;
 using VLTK.Sandbox;
 using VLTK.UI.Popup;
 
 namespace VLTK.UI.Team
 {
-    /// <summary>Popup body for BtnTeam: Vietnamese Đội / tổ đội overview.</summary>
-    public sealed class TeamContent : IPopupContent, IPopupLayoutHint
+    /// <summary>Popup body for BtnTeam: PC team sheet with live party roster.</summary>
+    public sealed class TeamContent : IPopupContent, IPopupLayoutHint, IPopupChromeHint
     {
+        public const float PcWidth = 340f;
+        public const float PcHeight = 229f;
+
         public string TitleVi => "Đội";
-        public float Width => 480f;
-        public float Height => 520f;
-        public float Left => 400f;
-        public float Top => 70f;
+        public float Width => PcWidth;
+        public float Height => PcHeight;
+        public float Left => (1280f - PcWidth) * 0.5f;
+        public float Top => (720f - PcHeight) * 0.5f;
+        public PopupChromeKind Chrome => PopupChromeKind.PcTeam;
 
         private readonly PartyService _party;
         private readonly bool _nearbyListClosed;
 
-        private VisualElement _rosterList;
-        private VisualElement _controlList;
-        private Label _footer;
+        private VisualElement _memberList;
+        private VisualElement _nearbyList;
+        private Label _leaderAbility;
+        private Label _inputEdit;
 
         public TeamContent(PartyService party, bool nearbyListClosed = false)
         {
@@ -39,35 +41,42 @@ namespace VLTK.UI.Team
             body.Clear();
             body.AddToClassList("team-body");
 
-            var rosterPanel = new VisualElement { name = "TeamRoster" };
-            rosterPanel.AddToClassList("team-panel");
-            rosterPanel.Add(new Label("Thành viên đội") { name = "TeamRosterTitle" });
-            rosterPanel.Q<Label>("TeamRosterTitle").AddToClassList("team-section-title");
+            var panel = new VisualElement { name = "TeamPanel" };
+            panel.AddToClassList("team-panel-pc");
+            body.Add(panel);
 
-            var rosterScroll = new ScrollView { name = "TeamRosterScroll" };
-            rosterScroll.AddToClassList("team-roster-scroll");
-            _rosterList = new VisualElement { name = "TeamRosterList" };
-            _rosterList.AddToClassList("team-roster-list");
-            rosterScroll.Add(_rosterList);
-            rosterPanel.Add(rosterScroll);
-            body.Add(rosterPanel);
+            _memberList = new VisualElement { name = "TeamMemberList" };
+            _memberList.AddToClassList("team-member-list");
+            panel.Add(_memberList);
 
-            var controlsPanel = new VisualElement { name = "TeamControls" };
-            controlsPanel.AddToClassList("team-panel");
-            controlsPanel.Add(new Label("Nút/chức năng từ PC") { name = "TeamControlsTitle" });
-            controlsPanel.Q<Label>("TeamControlsTitle").AddToClassList("team-section-title");
+            _nearbyList = new VisualElement { name = "TeamNearbyList" };
+            _nearbyList.AddToClassList("team-nearby-list");
+            panel.Add(_nearbyList);
 
-            var controlScroll = new ScrollView { name = "TeamControlScroll" };
-            controlScroll.AddToClassList("team-control-scroll");
-            _controlList = new VisualElement { name = "TeamControlList" };
-            _controlList.AddToClassList("team-control-list");
-            controlScroll.Add(_controlList);
-            controlsPanel.Add(controlScroll);
-            body.Add(controlsPanel);
+            var thumb = new VisualElement { name = "NearbyScrollThumb" };
+            thumb.AddToClassList("team-nearby-scroll-thumb");
+            panel.Add(thumb);
 
-            _footer = new Label("Read-only: mời/trục xuất/rời đội sẽ làm ở slice gameplay.") { name = "TeamFooter" };
-            _footer.AddToClassList("team-footer");
-            body.Add(_footer);
+            _leaderAbility = new Label(string.Empty) { name = "LeaderAbility" };
+            _leaderAbility.AddToClassList("team-leader-ability");
+            panel.Add(_leaderAbility);
+
+            _inputEdit = new Label(string.Empty) { name = "InputEdit" };
+            _inputEdit.AddToClassList("team-input-edit");
+            panel.Add(_inputEdit);
+
+            panel.Add(DisabledButton("Invite", "team-command-btn team-btn-invite"));
+            panel.Add(DisabledButton("Kick", "team-command-btn team-btn-kick"));
+            panel.Add(DisabledButton("Appoint", "team-command-btn team-btn-appoint"));
+            panel.Add(DisabledButton("Refresh", "team-command-btn team-btn-refresh"));
+            panel.Add(DisabledButton(ShowDismissButton() ? "Dismiss" : "Leave", ShowDismissButton()
+                ? "team-command-btn team-btn-dismiss"
+                : "team-command-btn team-btn-leave"));
+            panel.Add(DisabledButton("CloseTeam", "team-close-team-btn"));
+
+            var close = new Button { name = "Close", text = string.Empty };
+            close.AddToClassList("team-cancel-btn");
+            panel.Add(close);
 
             Refresh();
         }
@@ -76,49 +85,71 @@ namespace VLTK.UI.Team
 
         public void OnClose()
         {
-            _rosterList = null;
-            _controlList = null;
-            _footer = null;
+            _memberList = null;
+            _nearbyList = null;
+            _leaderAbility = null;
+            _inputEdit = null;
         }
 
         private void Refresh()
         {
-            if (_rosterList == null || _controlList == null) return;
+            if (_memberList == null || _nearbyList == null) return;
 
-            _rosterList.Clear();
-            foreach (var row in TeamPanelService.BuildRows(_party, _nearbyListClosed))
-                _rosterList.Add(MakeRosterRow(row));
+            _memberList.Clear();
+            if (_party == null || _party.MemberCount == 0)
+            {
+                _memberList.Add(MakeRow("Chưa lập đội"));
+                if (_leaderAbility != null) _leaderAbility.text = "";
+            }
+            else
+            {
+                foreach (var member in _party.Members)
+                    _memberList.Add(MakeRow(FormatMember(member)));
+                if (_leaderAbility != null)
+                    _leaderAbility.text = string.Format(
+                        System.Globalization.CultureInfo.InvariantCulture,
+                        "{0}/6", _party.MemberCount);
+            }
 
-            _controlList.Clear();
-            foreach (var control in TeamPanelService.PcControls)
-                _controlList.Add(MakeControlRow(control));
+            _nearbyList.Clear();
+            _nearbyList.Add(MakeRow(_nearbyListClosed ? "Tìm đội đã đóng" : "Chưa có DS lân cận"));
+
+            if (_inputEdit != null)
+                _inputEdit.text = "";
         }
 
-        private static Label MakeRosterRow(string text)
+        private bool ShowDismissButton()
+        {
+            if (_party == null || _party.MemberCount == 0 || _party.Members == null)
+                return false;
+            return _party.Members.Count > 0 && _party.Members[0] != null && _party.Members[0].isLeader;
+        }
+
+        private static Label MakeRow(string text)
         {
             var label = new Label(text);
-            label.AddToClassList("team-roster-row");
+            label.AddToClassList("team-list-row");
             return label;
         }
 
-        private static VisualElement MakeControlRow(TeamPanelService.PcTeamControl control)
+        private static string FormatMember(PartyMember member)
         {
-            var row = new VisualElement();
-            row.AddToClassList("team-control-row");
+            if (member == null) return string.Empty;
+            return string.Format(
+                System.Globalization.CultureInfo.InvariantCulture,
+                "{0}{1} Lv{2}",
+                member.isLeader ? "★" : "•",
+                string.IsNullOrEmpty(member.nameVi) ? "?" : member.nameVi,
+                member.level);
+        }
 
-            var label = new Label(control.labelVi) { name = "ControlLabel" };
-            label.AddToClassList("team-control-label");
-            row.Add(label);
-
-            var action = new Label(control.actionVi) { name = "ControlAction" };
-            action.AddToClassList("team-control-action");
-            row.Add(action);
-
-            var source = new Label("a05d7a2c / " + control.pcSection) { name = "ControlSource" };
-            source.AddToClassList("team-control-source");
-            row.Add(source);
-
-            return row;
+        private static Button DisabledButton(string name, string classes)
+        {
+            var button = new Button { name = name, text = string.Empty };
+            foreach (var cls in classes.Split(' '))
+                button.AddToClassList(cls);
+            button.SetEnabled(false);
+            return button;
         }
     }
 }

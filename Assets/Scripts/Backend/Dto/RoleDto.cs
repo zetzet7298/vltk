@@ -24,6 +24,15 @@ using System.Collections.Generic;
 
 namespace VLTK.Backend.Dto
 {
+    /// <summary>Request body cho POST /v1/role.</summary>
+    [Serializable]
+    public sealed class RoleCreateRequest
+    {
+        public string account;
+        public string roleName;
+        public int faction = -1;
+    }
+
     /// <summary>Một nhân vật trong account. Field camelCase khớp backend.</summary>
     [Serializable]
     public sealed class RoleResponse

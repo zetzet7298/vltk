@@ -17,79 +17,50 @@
 - Không copy candidate chỉ để làm evidence. Chỉ vendor exact bytes vào repo-local slice khi asset/config đã được chọn và thực sự dùng.
 - Không sửa bất kỳ file nào dưới `/var/www/jx-source`.
 
-## Unity MCP Skill Matrix
+## Backend Game Server Rules
 
-Use `/var/www/vltk-mobile/harness/.agents/skills/unity-mcp-orchestrator/SKILL.md` Orchestrate Unity Editor via MCP (Model Context Protocol) tools and resources. Use when working with Unity projects through MCP for Unity - creating/modifying GameObjects, editing scripts, managing scenes, running tests, or any Unity Editor automation. Provides best practices, tool schemas, and workflow patterns for effective Unity-MCP integration.
+- Backend nằm tại `/var/www/vltk-mobile/backend` và là **Git repo riêng** với repo
+  `/var/www/vltk-mobile`; chạy `git`, cài dependency, lint và test từ đúng repo,
+  đồng thời giữ nguyên mọi thay đổi không thuộc task.
+- Trước khi sửa backend, đọc `/var/www/vltk-mobile/backend/AGENTS.md`, `README.md`
+  và `pyproject.toml` trong repo đó, rồi dùng `srcwalk` khảo sát đúng module,
+  caller, dependency và test liên quan. Không dùng số file, số commit `Pxxx`,
+  docstring hay test chỉ kiểm tra constant để kết luận tiến độ/runtime parity.
+- Thứ tự source of truth: hành vi PC từ **đúng file đang tồn tại** dưới
+  `/var/www/jx-source` -> target contract tại
+  `/var/www/vltk-mobile/domains/server-runtime/README.md`, `contracts/` và
+  `Assets/Scripts/Backend/` trong repo mobile -> implementation cùng executable
+  tests trong backend. Nếu các tầng mâu thuẫn, nêu rõ và không tự chọn theo
+  comment/commit cũ.
+- Mỗi slice port phải xác minh đúng variant client/server, version và language;
+  ghi exact source path + Git commit/hash, function/line mapping, chuỗi `Include`,
+  engine API/data dependency và phần chưa port. Nhiều file PC trùng basename nên
+  path trong docstring không phải bằng chứng nếu path đó không tồn tại.
+- Phân loại trạng thái từng slice là `runtime-wired`, `metadata-only`,
+  `stub/TODO` hoặc `missing`. Chỉ gọi là hoàn tất khi behavior thực sự được wire
+  qua application/API hoặc game loop và có test outcome; constant/string mô tả
+  Lua engine call không phải implementation.
+- Không đoán behavior của C++/Lua engine, global state, scheduler, RNG, encoding,
+  index hay time unit. Giữ rõ semantics 1-based/0-based, TCVN3/GB2312/raw bytes;
+  nếu chưa chứng minh được thì để gap/TODO có source evidence, không bịa default
+  hoặc silently normalize dữ liệu.
+- Stack hiện tại là Python 3.12, FastAPI, SQLAlchemy/PostgreSQL và modular
+  monolith DDD. Domain giữ pure; application điều phối use case; infrastructure
+  chứa adapter/repository; API chỉ gọi application. Không mở rộng cross-layer
+  import hoặc tiện tay refactor các vi phạm legacy ngoài slice đang làm.
+- Router được auto-discover và lỗi import chỉ bị log rồi bỏ qua; sau thay đổi API
+  phải kiểm tra route thực sự xuất hiện trong app/OpenAPI, không coi server boot
+  thành công là đủ. Mọi đổi endpoint/DTO/envelope phải đối chiếu Unity
+  `IGameBackend`/DTO và contract tương ứng.
+- Port local lấy từ `.env`/README (hiện là `8120`), không hard-code theo scaffold
+  `8020`. Backend là game server độc lập; không thêm phụ thuộc auth/user/ERP nếu
+  không có contract được chấp thuận.
+- Validation mặc định: test unit nhỏ nhất, rồi `ruff check` và `black --check`
+  trên phạm vi thay đổi; mở rộng theo wiring/contract. `tests/integration/` và
+  `tests/e2e/` dùng PostgreSQL thật và fixture có `TRUNCATE ... CASCADE`: chỉ chạy
+  khi đã xác minh database test disposable/isolated, tuyệt đối không chạy vào DB
+  shared, dev có dữ liệu hoặc production.
 
-## Unity Refactor And Fast-Iteration Rules
-
-These rules bind every agent and subagent. Delegation requires a bounded
-assembly/module scope and an explicit validation target.
-
-### Refactor Boundaries
-
-- Reduce `Assets/Scripts/Sandbox/` toward roughly **5-10 cohesive assemblies**;
-  add neither broad subsystems nor assemblies per class, fixture, parser, or
-  narrow feature. Prove every edge from code, starting with:
-
-  ```text
-  VLTK.Model
-      <- VLTK.Gameplay.Domain
-          <- VLTK.PortData / VLTK.Combat / VLTK.World
-              <- VLTK.Sandbox.Runtime
-                  <- VLTK.UI
-  ```
-
-  Arrows point from consumer to dependency. Keep edges one-way; inner/domain/data
-  code must not reference UI, Editor, tests, or scene composition. Reject cycles
-  and reuse `Core`, `Resources`, `Sprites`, and `Backend`.
-- Before any script move or `.asmdef` edit, use `srcwalk` to map symbols,
-  callers, dependencies, consumers, and tests; record the intended owner and
-  dependency direction. Folder names are not evidence.
-- Refactor one compiling/testable slice at a time; separate behavior from
-  moves/boundaries unless explicitly coupled. Move scripts with their `.meta`;
-  never recreate them or change GUIDs.
-- Do not change global defines, Enter Play Mode, Code Optimization, Auto Refresh,
-  or hot-reload packages unless the current request explicitly authorizes it.
-
-### Dead-code Cleanup
-
-- Before deleting, run `srcwalk assess`, `trace callers`, and `deps`; also check
-  tests, reflection/string lookup, serialization, runtime-init/`MonoBehaviour`
-  roots, generated hooks, and Editor tooling project-wide. Zero callers is not
-  proof; keep anything with unresolved dynamic, serialized, provenance, or
-  external reach.
-- Delete script + `.meta` only after ownership/GUID review. Never remove tests,
-  weaken assertions, discard source/provenance for speed, or mix cleanup with
-  unrelated API/data changes. Then run `srcwalk review`, clean compile, zero new
-  Console errors, focused EditMode, and relevant PlayMode smoke; report files/LOC,
-  evidence/caveats, and claim speed only from comparable measurements.
-
-### Compile And Test Loop
-
-- Daily loop uses Debug Code Optimization:
-
-  ```text
-  Play once -> supported method-body edit -> Fast Script Reload
-    -> live check -> smallest related EditMode batch
-  ```
-
-- Use `scripts/run_unity_test_profile.py` when available. `M:path` is only for a
-  known existing method-body edit; never use explicit paths/profiles to hide
-  structural work or bypass automatic escalation.
-- Fast Script Reload must already be installed/healthy; it is never completion
-  proof, and production code must not bend to fit it. Unsupported or structural
-  edits (fields, serialization, inheritance, public/generic API, moves, asmdefs)
-  require normal full compile, zero new Console errors, focused tests, and the
-  relevant integration/PlayMode smoke.
-- Use focused EditMode for pure logic; reserve PlayMode for Unity lifecycle,
-  scenes, physics, animation, input, rendering, or platform behavior. Unity MCP
-  edits already request import/compile: do not refresh again; wait for reload and
-  read Console errors before testing.
-- Use Release only for profiling/final verification. Performance claims require
-  comparable before/after Unity/Bee evidence with mode, assembly size, duration,
-  dependents, and exact proof. Never weaken/delete/exclude tests for speed;
-  profile/define changes need explicit authorization and a full-verification path.
 
 <!-- HARNESS:BEGIN -->
 ## Harness

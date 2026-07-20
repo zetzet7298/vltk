@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package game.v1;
 
-option go_package = "vltk.dev/server-runtime/gen/game/v1;gamev1";
 
 // WebSocket carries exactly one length-delimited ClientEnvelope or
 // ServerEnvelope per binary message. Compression is disabled until negotiated.

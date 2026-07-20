@@ -68,12 +68,18 @@
 
 /* PC character panel owns its complete frame/title/footer in its SPR. The shell
    must not add generic gutters, frame art, clipping, or header height. */
-.popup-window--pc-character {
+.popup-window--pc-character,
+.popup-window--pc-inventory,
+.popup-window--pc-team,
+.popup-window--pc-treasure {
     background-color: rgba(0, 0, 0, 0);
     background-image: none;
 }
 
-.popup-window--pc-character .popup-chrome {
+.popup-window--pc-character .popup-chrome,
+.popup-window--pc-inventory .popup-chrome,
+.popup-window--pc-team .popup-chrome,
+.popup-window--pc-treasure .popup-chrome {
     position: absolute;
     left: 0px;
     top: 0px;
@@ -93,6 +99,36 @@
     top: 0px;
     width: 428px;
     height: 430px;
+    flex-grow: 0;
+    overflow: visible;
+}
+
+.popup-window--pc-inventory .popup-body {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 214px;
+    height: 454px;
+    flex-grow: 0;
+    overflow: visible;
+}
+
+.popup-window--pc-team .popup-body {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 340px;
+    height: 229px;
+    flex-grow: 0;
+    overflow: visible;
+}
+
+.popup-window--pc-treasure .popup-body {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 563px;
+    height: 476px;
     flex-grow: 0;
     overflow: visible;
 }

@@ -2,17 +2,17 @@
 
 ## Mục tiêu và ranh giới
 
-`server-runtime` là Go 1.26 modular monolith, một deployment unit nhưng các
-module có data ownership và API nội bộ rõ ràng. Server authoritative đối với
+`backend/` là Python 3 + FastAPI modular monolith, một deployment unit ban đầu
+với các module DDD có data ownership và API nội bộ rõ ràng. Server authoritative đối với
 identity, character, vị trí, combat, inventory và economy; Unity chỉ dự đoán
 để hiển thị rồi reconcile theo snapshot server.
 
 | Module | Trách nhiệm | Owned tables | Giao tiếp |
 | --- | --- | --- | --- |
-| `identity` | Login, refresh, revoke, WSS ticket | `accounts`, `auth_sessions` | REST `auth` |
-| `realm` | Realm availability, admission | `realms` | bootstrap nội bộ |
-| `character` | Tạo/chọn nhân vật, chỉ số lâu dài | `characters`, `character_stats` | REST `characters` |
-| `runtime` | Session game, input ordering, tick 18 Hz, checkpoint | `runtime_checkpoints` | WSS `game.v1` |
+| `account` | Tạo/login/logout account game | `accounts` | REST `/v1/account` |
+| `role` | Tạo/chọn nhân vật | `roles` | REST `/v1/role` |
+| `map` | Map catalog, scene và movement hiện tại | `role_scenes` | REST `/v1/map`, `/v1/movement` |
+| `runtime` | Session, input ordering, tick 18 Hz, checkpoint | `[CẦN XÁC NHẬN]` | Realtime chưa triển khai |
 | `inventory` | Item instance, slot và quantity invariant | `inventory_items` | command nội bộ |
 | `skill-combat` | Skill state, cast gate, damage/buff | `character_skills` | command WSS |
 | `economy` | Wallet, double-entry ledger, idempotency | `wallets`, `economy_*` | command nội bộ |
@@ -26,19 +26,18 @@ hợp dùng interface application hoặc projection; transaction xuyên module c
 ## Bố cục triển khai đích
 
 ```text
-cmd/server                 composition root duy nhất
-internal/<module>/domain   aggregate, invariant, domain event thuần Go
-internal/<module>/app      use case và port
-internal/<module>/infra    PostgreSQL/crypto/content adapters
-internal/transport/rest    OpenAPI adapters
-internal/transport/wss     Protobuf framing, admission và tick loop
-internal/platform          tx, outbox, clock, ids, telemetry
+backend/app/main.py                         composition root FastAPI
+backend/app/modules/<module>/domain         aggregate và invariant thuần Python
+backend/app/modules/<module>/application    use case, schema và port
+backend/app/modules/<module>/infrastructure SQLAlchemy/adapters
+backend/app/modules/<module>/api/v1         FastAPI routers
+backend/app/infrastructure                  UoW, database và platform adapters
 ```
 
-Đây là quy ước kiến trúc, không phải yêu cầu tạo backend code trong slice tài
-liệu này. Import được phép hướng vào `domain`/`app`; module không import
-`infra` của module khác. Mỗi request có `request_id`, `trace_id`, `realm_id`,
-actor và content release trong context.
+Implementation hiện hữu nằm tại `backend/`. Dependency hướng vào
+`domain`/`application`; module không import infrastructure concrete của module
+khác. Request correlation/realm/content context đầy đủ còn phải được chứng minh
+trước production.
 
 ## Invariant runtime
 
@@ -57,14 +56,12 @@ actor và content release trong context.
 
 ## Luồng chính
 
-1. REST login cấp access token ngắn hạn và refresh token xoay vòng.
-2. `GET /v1/bootstrap` trả realm, release content và WSS ticket dùng một lần.
-3. Client chọn/tạo character bằng REST, sau đó mở `wss://.../v1/game` với
-   subprotocol `game.v1` và gửi `ClientHello`.
-4. Runtime nạp checkpoint, xác nhận `ServerHello`, nhận `InputBatch`, mô phỏng
-   18 Hz và phát snapshot/delta.
-5. Khi disconnect, runtime flush checkpoint; outbox worker phát sự kiện
-   at-least-once, consumer dedupe bằng `event_id`.
+1. Production Editor client tạo/login account qua `/v1/account`.
+2. Client tạo/chọn role qua `/v1/role`.
+3. Client vào canonical map `53` qua `/v1/map/enter` và gửi vị trí qua
+   `/v1/movement`.
+4. Realtime 18 Hz, admission, resume và checkpoint là follow-up riêng; REST
+   movement hiện tại không được xem là bằng chứng hoàn tất các seam đó.
 
 ## Failure và vận hành
 

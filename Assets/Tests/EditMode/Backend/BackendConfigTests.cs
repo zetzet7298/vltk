@@ -12,15 +12,15 @@ namespace VLTK.Tests.Backend
     public class BackendConfigTests
     {
         [Test]
-        public void Defaults_AreOfflineSafe()
+        public void ResourceDefaults_TargetPythonBackend()
         {
             // BackendConfig.LoadOrDefault phải luôn trả về một instance
             // (kể cả khi Resources/BackendConfig.asset chưa tồn tại).
             var cfg = BackendConfig.LoadOrDefault();
             Assert.IsNotNull(cfg, "LoadOrDefault must never return null");
-            Assert.IsTrue(cfg.useMock, "useMock default phải là true (offline-first)");
+            Assert.IsFalse(cfg.useMock, "Production resource config phải dùng REST thật");
             Assert.IsFalse(string.IsNullOrEmpty(cfg.baseUrl), "baseUrl phải có giá trị mặc định");
-            Assert.IsTrue(cfg.baseUrl.Contains("8020"), "baseUrl mặc định phải trỏ về cổng 8020");
+            Assert.IsTrue(cfg.baseUrl.Contains("8120"), "baseUrl production phải trỏ về cổng 8120");
         }
 
         [Test]

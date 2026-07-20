@@ -100,6 +100,28 @@ namespace VLTK.Backend.Mock
 
         // ---- FS-02B ----
 
+        public Task<BackendResponse<AccountResponse>> CreateAccountAsync(
+            AccountCreateRequest request, CancellationToken ct = default)
+        {
+            if (request == null || string.IsNullOrEmpty(request.accName) ||
+                string.IsNullOrEmpty(request.password))
+            {
+                return Task.FromResult(BackendResponse<AccountResponse>.Failure(
+                    "validation_error", "account request không hợp lệ"));
+            }
+            return Task.FromResult(new BackendResponse<AccountResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = new AccountResponse
+                {
+                    id = 1,
+                    accName = request.accName,
+                    serviceFlag = request.serviceFlag,
+                },
+            });
+        }
+
         public Task<BackendResponse<LoginResponse>> LoginAsync(
             string accName,
             string password,
@@ -163,6 +185,31 @@ namespace VLTK.Backend.Mock
                 code = "200",
                 message = "Mock",
                 data = data,
+            });
+        }
+
+        public Task<BackendResponse<RoleResponse>> CreateRoleAsync(
+            RoleCreateRequest request, CancellationToken ct = default)
+        {
+            if (request == null || string.IsNullOrEmpty(request.account) ||
+                string.IsNullOrEmpty(request.roleName))
+            {
+                return Task.FromResult(BackendResponse<RoleResponse>.Failure(
+                    "validation_error", "role request không hợp lệ"));
+            }
+            return Task.FromResult(new BackendResponse<RoleResponse>
+            {
+                code = "200",
+                message = "Mock",
+                data = new RoleResponse
+                {
+                    id = 1,
+                    roleName = request.roleName,
+                    account = request.account,
+                    faction = request.faction,
+                    factionName = request.faction >= 0 ? "Mock faction" : null,
+                    level = 1,
+                },
             });
         }
 

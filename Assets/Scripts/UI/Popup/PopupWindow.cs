@@ -39,6 +39,12 @@ namespace VLTK.UI.Popup
                 AddToClassList("popup-window--pc-skill");
             else if (_chrome == PopupChromeKind.PcCharacter)
                 AddToClassList("popup-window--pc-character");
+            else if (_chrome == PopupChromeKind.PcInventory)
+                AddToClassList("popup-window--pc-inventory");
+            else if (_chrome == PopupChromeKind.PcTeam)
+                AddToClassList("popup-window--pc-team");
+            else if (_chrome == PopupChromeKind.PcTreasure)
+                AddToClassList("popup-window--pc-treasure");
 
             // Robust modal geometry in the 1280×720 design space. USS percent/
             // translate can resolve to NaN in some Editor playmode refresh paths,
@@ -60,7 +66,10 @@ namespace VLTK.UI.Popup
             close.clicked += RaiseClosed;
 
             bool isPcSheet = _chrome != PopupChromeKind.Generic;
-            bool hideShellClose = _chrome == PopupChromeKind.PcCharacter;
+            bool hideShellClose = _chrome == PopupChromeKind.PcCharacter
+                || _chrome == PopupChromeKind.PcInventory
+                || _chrome == PopupChromeKind.PcTeam
+                || _chrome == PopupChromeKind.PcTreasure;
             if (!isPcSheet)
                 header.Add(title);
             if (!hideShellClose)
@@ -79,7 +88,7 @@ namespace VLTK.UI.Popup
             _body = new VisualElement { name = "PopupBody" };
             _body.AddToClassList("popup-body");
 
-            if (_chrome != PopupChromeKind.PcCharacter)
+            if (!hideShellClose)
                 chrome.Add(header);
             chrome.Add(_body);
             Add(chrome);

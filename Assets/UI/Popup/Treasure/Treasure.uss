@@ -1,106 +1,252 @@
 /* =============================================================================
-   VLTK Mobile — HUD-003 Treasure / Bảo Vật content (Treasure.uss)
-   Read-only slice based on PC Kỳ Trân Các / Giỏ Hàng / Rương Báu manifests.
+   VLTK Mobile — PC Kỳ Trân Các / Bảo Vật popup (9e5f75d1.dat)
+   Background/goods/buttons are exact SPR exports. Unity overlays live mall text.
    ========================================================================== */
 
 .treasure-body {
-    flex-grow: 1;
-    padding: 8px;
+    width: 563px;
+    height: 476px;
+    padding: 0;
+    margin: 0;
 }
 
-.treasure-tabs {
-    flex-direction: row;
-    height: 34px;
-    margin-bottom: 8px;
-    flex-shrink: 0;
+.treasure-panel-pc {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 563px;
+    height: 476px;
+    background-image: url("Art/panel_mall.png");
+    -unity-background-scale-mode: stretch-to-fill;
 }
 
-.treasure-tab {
-    flex-grow: 1;
-    height: 28px;
-    margin: 0 3px;
-    padding: 3px 4px;
-    color: rgb(230, 245, 255);
-    background-color: rgba(36, 26, 16, 0.95);
-    border-width: 1px;
-    border-color: rgba(210, 165, 70, 0.8);
-    font-size: 13px;
+.treasure-nav-btn,
+.treasure-small-btn,
+.treasure-buy-btn,
+.treasure-close-hit {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    border-width: 0;
+    -unity-background-scale-mode: stretch-to-fill;
+    color: rgb(169, 211, 190);
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    font-size: 12px;
+    -unity-text-align: middle-center;
+}
+
+.treasure-nav-btn:disabled,
+.treasure-small-btn:disabled,
+.treasure-buy-btn:disabled {
+    opacity: 1;
+}
+
+/* [SellType] Left=5 Top=30 Width=62 Height=20, PC button_page.spr missing in canonical unpack; use same small PC button family. */
+.treasure-sell-type {
+    left: 5px;
+    top: 30px;
+    width: 62px;
+    height: 20px;
+    background-image: url("Art/btn_lr_up.png");
+    color: rgb(202, 230, 171);
+}
+
+/* [LeftBtn] Left=345 Top=54 Width=66 Height=20 */
+.treasure-left-btn {
+    left: 345px;
+    top: 54px;
+    width: 66px;
+    height: 20px;
+    background-image: url("Art/btn_lr_up.png");
+}
+.treasure-left-btn:hover { background-image: url("Art/btn_lr_over.png"); }
+.treasure-left-btn:active { background-image: url("Art/btn_lr_down.png"); }
+
+/* [RightBtn] Left=463 Top=54 Width=66 Height=20 */
+.treasure-right-btn {
+    left: 463px;
+    top: 54px;
+    width: 66px;
+    height: 20px;
+    background-image: url("Art/btn_lr_up.png");
+}
+.treasure-right-btn:hover { background-image: url("Art/btn_lr_over.png"); }
+.treasure-right-btn:active { background-image: url("Art/btn_lr_down.png"); }
+
+/* [ShoppingCart] Left=463 Top=29 Width=66 Height=20 */
+.treasure-cart-btn {
+    left: 463px;
+    top: 29px;
+    width: 66px;
+    height: 20px;
+    background-image: url("Art/btn_lr_up.png");
+    color: rgb(255, 255, 0);
+    -unity-text-outline-color: rgb(255, 90, 0);
+}
+.treasure-cart-btn:hover { background-image: url("Art/btn_lr_over.png"); }
+.treasure-cart-btn:active { background-image: url("Art/btn_lr_down.png"); }
+
+/* [PageInfo] Left=407 Top=58 Width=60 */
+.treasure-page-info {
+    position: absolute;
+    left: 407px;
+    top: 58px;
+    width: 60px;
+    height: 14px;
+    color: rgb(202, 230, 171);
+    font-size: 12px;
     -unity-text-align: middle-center;
     -unity-text-outline-width: 1px;
     -unity-text-outline-color: rgb(0, 0, 0);
 }
 
-.treasure-tab.active {
-    color: rgb(255, 238, 145);
-    background-color: rgba(120, 80, 30, 0.9);
-    border-color: rgb(220, 180, 80);
-    -unity-font-style: bold;
+.treasure-goods-layer {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 563px;
+    height: 430px;
 }
 
-.treasure-panel {
-    margin-bottom: 8px;
-    padding: 7px;
-    background-color: rgba(18, 14, 10, 0.88);
+/* [MarketGoods] Start=18,76 Diff=5,4 Width=171 Height=74 Image=goods.spr */
+.treasure-goods-card {
+    position: absolute;
+    width: 171px;
+    height: 74px;
+    background-image: url("Art/goods.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+/* [MarketGoods_ItemBox] Left=4 Top=20 Width=26 Height=26 */
+.treasure-item-box {
+    position: absolute;
+    left: 4px;
+    top: 20px;
+    width: 26px;
+    height: 26px;
+    background-color: rgba(0, 0, 0, 0.25);
     border-width: 1px;
-    border-color: rgba(150, 112, 48, 0.55);
+    border-color: rgba(95, 72, 34, 0.85);
+    align-items: center;
+    justify-content: center;
 }
 
-.treasure-section-title {
-    color: rgb(255, 230, 130);
-    font-size: 13px;
-    -unity-font-style: bold;
-    margin-bottom: 5px;
+.treasure-item-id {
+    color: rgb(255, 237, 165);
+    font-size: 8px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+/* [MarketGoods_GoodsName] Left=8 Top=4 Width=160 */
+.treasure-goods-name {
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    width: 160px;
+    height: 14px;
+    color: rgb(255, 237, 165);
+    font-size: 11px;
+    -unity-text-align: middle-center;
     -unity-text-outline-width: 1px;
     -unity-text-outline-color: rgb(0, 0, 0);
+    overflow: hidden;
+    white-space: nowrap;
 }
 
-.treasure-summary-list {
-    flex-direction: column;
-}
-
-.treasure-summary-row {
-    color: rgb(232, 220, 184);
-    font-size: 12px;
-    white-space: normal;
-    margin-bottom: 3px;
-}
-
-.treasure-control-scroll {
-    height: 244px;
-}
-
-.treasure-control-list {
-    flex-direction: column;
-}
-
-.treasure-control-row {
-    margin-bottom: 5px;
-    padding: 5px;
-    background-color: rgba(46, 34, 18, 0.78);
-    border-width: 1px;
-    border-color: rgba(130, 95, 42, 0.65);
-}
-
-.treasure-control-label {
-    color: rgb(255, 240, 165);
-    font-size: 12px;
-    -unity-font-style: bold;
-}
-
-.treasure-control-action {
-    color: rgb(226, 218, 190);
-    font-size: 11px;
-    white-space: normal;
-}
-
-.treasure-control-source {
-    color: rgb(150, 195, 235);
+.treasure-original-label,
+.treasure-price-label {
+    position: absolute;
+    left: 40px;
+    width: 46px;
+    height: 14px;
+    color: rgb(202, 230, 171);
     font-size: 10px;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
 }
 
-.treasure-footer {
-    color: rgb(190, 170, 125);
+.treasure-original-label { top: 21px; }
+.treasure-price-label { top: 38px; }
+
+.treasure-original-value,
+.treasure-price-value {
+    position: absolute;
+    left: 70px;
+    width: 88px;
+    height: 14px;
+    font-size: 10px;
+    -unity-text-align: middle-right;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.treasure-original-value {
+    top: 21px;
+    color: rgb(0, 134, 132);
+}
+
+.treasure-price-value {
+    top: 38px;
+    color: rgb(34, 228, 36);
+}
+
+/* [MarketGoods_Buy] Left=118 Top=52 Width=47 Height=20 */
+.treasure-buy-btn {
+    left: 118px;
+    top: 52px;
+    width: 47px;
+    height: 20px;
+    background-image: url("Art/btn_buy_up.png");
+}
+.treasure-buy-btn:hover { background-image: url("Art/btn_buy_over.png"); }
+.treasure-buy-btn:active { background-image: url("Art/btn_buy_down.png"); }
+.treasure-buy-btn:disabled { background-image: url("Art/btn_buy_disabled.png"); }
+
+/* [MarketGoods_DisCount] Left=92 Top=22 Width=35 Height=24 */
+.treasure-discount-badge {
+    position: absolute;
+    left: 92px;
+    top: 22px;
+    width: 35px;
+    height: 24px;
+    background-image: url("Art/badge_discount.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+/* [MarketGoods_imgNewArrival] Left=10 Top=50 Width=35 Height=24 */
+.treasure-new-badge {
+    position: absolute;
+    left: 10px;
+    top: 50px;
+    width: 35px;
+    height: 24px;
+    background-image: url("Art/badge_new_green.png");
+    -unity-background-scale-mode: stretch-to-fill;
+}
+
+/* [CloseBtn] Left=538 Top=3 Width=22 Height=21; source free_close_radius.spr absent, keep exact hit zone. */
+.treasure-close-hit {
+    left: 538px;
+    top: 3px;
+    width: 22px;
+    height: 21px;
+    background-color: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, 0);
+}
+
+.treasure-hunt-status {
+    position: absolute;
+    left: 18px;
+    top: 438px;
+    width: 520px;
+    height: 18px;
+    color: rgb(202, 230, 171);
     font-size: 11px;
-    white-space: normal;
     -unity-text-align: middle-center;
+    -unity-text-outline-width: 1px;
+    -unity-text-outline-color: rgb(0, 0, 0);
 }

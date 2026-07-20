@@ -1,0 +1,21 @@
+{
+    "name": "VLTK.Production.App",
+    "rootNamespace": "VLTK.Production.App",
+    "references": [
+        "VLTK.Generated.GameV1",
+        "VLTK.Backend",
+        "VLTK.Production.Networking",
+        "VLTK.Production.UI.Runtime",
+        "VLTK.Production.World.Unity",
+        "VLTK.SkillPort"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

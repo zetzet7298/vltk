@@ -2,7 +2,7 @@
 // VLTK.Backend — BackendClientRunner
 // MonoBehaviour runtime "wirer": load BackendConfig (Resources/BackendConfig
 // asset → StreamingAssets/BackendConfig.json override) → tạo BackendClient
-// → thực thi luồng login → list roles → enter map.
+// → thực thi luồng create/login → create/select role → enter map.
 //
 // Mục đích: cung cấp một runtime entry point cho Bootstrap scene để verify
 // rằng end-to-end (StreamingAssets config → REST/Mock → server) hoạt động,
@@ -42,6 +42,20 @@ namespace VLTK.Backend
 
         [Tooltip("Client IP override (optional) — gửi kèm login body.")]
         public string clientIp;
+
+        [Header("First-run provisioning")]
+        [Tooltip("Nếu login trả 401, tạo account development rồi login lại một lần.")]
+        public bool createAccountOnLoginFailure = true;
+
+        [Tooltip("Nếu account chưa có role, tạo role development đầu tiên.")]
+        public bool createRoleWhenMissing = true;
+
+        [Tooltip("Tên role deterministic dùng cho lần chạy đầu.")]
+        public string defaultRoleName = "runner_smoke_role";
+
+        [Tooltip("Môn phái role lần đầu; -1 = chưa nhập môn.")]
+        [Range(-1, 9)]
+        public int defaultRoleFaction = -1;
 
         [Tooltip("map_id để enter sau khi có role đầu tiên. Mặc định 1 = Phượng Tường.")]
         [Min(1)]
@@ -98,6 +112,15 @@ namespace VLTK.Backend
                  "đầu đồng bộ vị trí runtime. Bắt buộc gán trong Inspector; " +
                  "null = skip (không tạo sync).")]
         public GameObject playerObject;
+
+        /// <summary>
+        /// Config injection cho test/host đặc biệt. Khi null, runner dùng
+        /// Resources + StreamingAssets như runtime bình thường.
+        /// </summary>
+        public BackendConfig ConfigOverride { get; set; }
+
+        /// <summary>Client injection cho focused tests; runtime để null.</summary>
+        public BackendClient ClientOverride { get; set; }
 
         /// <summary>BackendClient thực sự dùng để gọi API (cho diagnostics/UI).</summary>
         public BackendClient Client { get; private set; }
@@ -162,11 +185,13 @@ namespace VLTK.Backend
             }
 
             // 1. Load config — Resources/BackendConfig.asset → default.
-            Config = BackendConfig.LoadOrDefault();
-            // 2. Áp dụng override từ StreamingAssets/BackendConfig.json (nếu có).
-            Config.ApplyStreamingAssetsOverrideIfPresent();
+            Config = ConfigOverride != null ? ConfigOverride : BackendConfig.LoadOrDefault();
+            // 2. Chỉ runtime config mới nhận StreamingAssets override; config
+            // inject trong test phải giữ nguyên để không gọi network ngoài ý muốn.
+            if (ConfigOverride == null)
+                Config.ApplyStreamingAssetsOverrideIfPresent();
             // 3. Tạo BackendClient (mock vs rest theo config.useMock).
-            Client = new BackendClient(Config);
+            Client = ClientOverride ?? new BackendClient(Config);
 
             Debug.Log($"[BackendClientRunner] config: baseUrl={Config.baseUrl} " +
                       $"apiPrefix={Config.apiPrefix} useMock={Config.useMock} " +
@@ -181,8 +206,26 @@ namespace VLTK.Backend
             try
             {
                 // Luồng 1: POST /v1/account/login
-                var login = await Client.LoginAsync(accName, password, null, clientIp, ct);
-                if (!login.IsSuccess)
+                  var login = await Client.LoginAsync(accName, password, null, clientIp, ct);
+                  if (!login.IsSuccess && createAccountOnLoginFailure && login.code == "401")
+                  {
+                      var createdAccount = await Client.CreateAccountAsync(
+                          new AccountCreateRequest
+                          {
+                              accName = accName,
+                              password = password,
+                              serviceFlag = 0,
+                          }, ct);
+                      if (!createdAccount.IsSuccess)
+                      {
+                          LastError = $"create account failed: {createdAccount.code} {createdAccount.message}";
+                          Debug.LogError($"[BackendClientRunner] {LastError}");
+                          return;
+                      }
+                      Debug.Log($"[BackendClientRunner] account created: accName={createdAccount.data.accName}");
+                      login = await Client.LoginAsync(accName, password, null, clientIp, ct);
+                  }
+                  if (!login.IsSuccess)
                 {
                     LastError = $"login failed: {login.code} {login.message}";
                     Debug.LogError($"[BackendClientRunner] {LastError}");
@@ -199,16 +242,39 @@ namespace VLTK.Backend
                     Debug.LogError($"[BackendClientRunner] {LastError}");
                     return;
                 }
-                if (roles.data == null || roles.data.roles == null || roles.data.roles.Count == 0)
-                {
-                    LastError = "list roles returned 0 roles; không thể enter map.";
-                    Debug.LogError($"[BackendClientRunner] {LastError}");
-                    return;
-                }
-                var firstRole = roles.data.roles[0];
-                Debug.Log($"[BackendClientRunner] list roles OK: account={roles.data.account} " +
-                          $"count={roles.data.roles.Count} firstRoleId={firstRole.id} " +
-                          $"name={firstRole.roleName} faction={firstRole.factionName}");
+                  RoleResponse firstRole = null;
+                  if (roles.data != null && roles.data.roles != null && roles.data.roles.Count > 0)
+                  {
+                      firstRole = roles.data.roles[0];
+                  }
+                  else if (createRoleWhenMissing)
+                  {
+                      var createdRole = await Client.CreateRoleAsync(
+                          new RoleCreateRequest
+                          {
+                              account = login.data.accName,
+                              roleName = defaultRoleName,
+                              faction = defaultRoleFaction,
+                          }, ct);
+                      if (!createdRole.IsSuccess)
+                      {
+                          LastError = $"create role failed: {createdRole.code} {createdRole.message}";
+                          Debug.LogError($"[BackendClientRunner] {LastError}");
+                          return;
+                      }
+                      firstRole = createdRole.data;
+                      Debug.Log($"[BackendClientRunner] role created: roleId={firstRole.id} name={firstRole.roleName}");
+                  }
+                  if (firstRole == null)
+                  {
+                      LastError = "list roles returned 0 roles; không thể enter map.";
+                      Debug.LogError($"[BackendClientRunner] {LastError}");
+                      return;
+                  }
+                  int roleCount = roles.data?.roles?.Count ?? 0;
+                  Debug.Log($"[BackendClientRunner] role ready: account={login.data.accName} " +
+                            $"listedCount={roleCount} roleId={firstRole.id} " +
+                            $"name={firstRole.roleName} faction={firstRole.factionName}");
 
                 // Luồng 3: POST /v1/map/enter {roleId, mapId, posX, posY}
                 var enterReq = new EnterMapRequest

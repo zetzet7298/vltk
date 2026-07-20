@@ -23,8 +23,8 @@ namespace VLTK.Backend
         public const string StreamingAssetsOverridePath = "BackendConfig.json";
 
         [Header("Endpoints")]
-        [Tooltip("Base URL của FastAPI game server (không bao gồm /v1). Mặc định localhost cổng 8020.")]
-        public string baseUrl = "http://127.0.0.1:8020";
+        [Tooltip("Base URL của FastAPI game server (không bao gồm /v1). Mặc định localhost cổng 8120.")]
+        public string baseUrl = "http://127.0.0.1:8120";
 
         [Tooltip("API prefix, mặc định /v1 theo convention của backend.")]
         public string apiPrefix = "/v1";

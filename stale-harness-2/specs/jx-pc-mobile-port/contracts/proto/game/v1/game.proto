@@ -1,0 +1,786 @@
+syntax = "proto3";
+package game.v1;
+
+// One length-delimited envelope per WSS binary message, subprotocol game.v1.
+message ClientEnvelope {
+  string request_id = 1;
+  uint64 session_epoch = 2;
+  uint64 client_seq = 3;
+  uint64 ack_server_seq = 4;
+  oneof payload {
+    ClientHello hello = 10;
+    InputBatch input_batch = 11;
+    ResyncRequest resync = 12;
+    Ping ping = 13;
+    InventoryCommand inventory = 14;
+    EconomyCommand economy = 15;
+    QuestCommand quest = 16;
+    ChannelCommand channel = 17;
+      SocialCommand social = 18;
+      AutomationCommand automation = 19;
+      ReviveCommand revive = 20;
+      ProgressionCommand progression = 21;
+      CompanionCommand companion = 22;
+      EncounterPreloadAck encounter_preload_ack = 23;
+  }
+}
+message ServerEnvelope {
+  string request_id = 1;
+  uint64 session_epoch = 2;
+  uint64 server_seq = 3;
+  // Transport acknowledgement only: this sequence was parsed and processed in
+  // order. It MUST NOT be interpreted as command acceptance or durable success.
+  uint64 last_processed_client_seq = 4;
+  uint64 server_tick = 5;
+  oneof payload {
+    ServerHello hello = 10;
+    WorldSnapshot snapshot = 11;
+    CommandResult command_result = 12;
+    Error error = 13;
+    Pong pong = 14;
+    ShutdownNotice shutdown = 15;
+    InventoryEvent inventory = 16;
+    EconomyEvent economy = 17;
+    QuestEvent quest = 18;
+    ChannelEvent channel = 19;
+    SocialEvent social = 20;
+    TargetChanged target_changed = 21;
+    InventorySnapshot inventory_snapshot = 22;
+      AutomationEvent automation = 23;
+      CombatEvent combat = 24;
+      WorldDelta world_delta = 25;
+      ReviveState revive_state = 26;
+      ProgressionEvent progression = 27;
+      CompanionEvent companion = 28;
+      RuntimeSkillPolicy runtime_skill_policy = 29;
+      ActiveCombatResyncState active_combat_resync = 30;
+  }
+}
+message ClientHello {
+  string protocol = 1;
+  string ticket = 2;
+  string client_version = 3;
+  string content_release_id = 4;
+  uint64 resume_session_epoch = 5;
+  uint64 last_applied_server_seq = 6;
+  uint64 last_applied_server_tick = 7;
+  ContentDigest accepted_content = 8;
+  uint32 supported_reconnect_grace_seconds = 9; // Approved Gate 0 value is 15.
+}
+message ServerHello {
+  string protocol = 1;
+  string realm_id = 2;
+  string character_id = 3;
+  string content_release_id = 4;
+  uint32 tick_rate_hz = 5; // Must equal 18.
+  uint64 initial_tick = 6;
+  uint64 session_epoch = 7;
+  uint32 max_input_batch = 8;
+  uint32 max_frame_bytes = 9;
+  bool resumed = 10 [deprecated = true]; // Compatibility hint; use resume_outcome.
+  ResumeOutcome resume_outcome = 11;
+  uint64 replay_from_server_seq = 12;
+  uint64 replay_from_server_tick = 13;
+  ContentDigest active_content = 14;
+  uint32 reconnect_grace_seconds = 15; // Must equal 15.
+  RuntimeSkillPolicy skill_policy = 16;
+}
+enum ResumeOutcome {
+  RESUME_OUTCOME_UNSPECIFIED = 0;
+  RESUME_OUTCOME_NEW_SESSION = 1;
+  RESUME_OUTCOME_DELTA_REPLAY = 2;
+  RESUME_OUTCOME_FULL_SNAPSHOT = 3;
+  RESUME_OUTCOME_GRACE_EXPIRED = 4;
+  RESUME_OUTCOME_BASELINE_MISMATCH = 5;
+  RESUME_OUTCOME_SESSION_REPLACED = 6;
+}
+message InputBatch { repeated PlayerInput inputs = 1; }
+message PlayerInput {
+  uint64 input_seq = 1;
+  uint64 target_tick = 2;
+  string command_id = 3;
+  oneof command {
+    MoveInput move = 10;
+    CastSkillInput cast_skill = 11;
+      UseItemInput use_item = 12 [deprecated = true];
+    InteractInput interact = 13;
+    SelectTargetInput select_target = 14;
+    ClearTargetInput clear_target = 15;
+  }
+}
+message MoveInput {
+  sint32 axis_x_milli = 1;
+  sint32 axis_y_milli = 2;
+  uint32 facing_millirad = 3;
+  bool stop = 4;
+}
+message CastSkillInput {
+  uint32 skill_id = 1;
+  string target_entity_id = 2;
+  sint32 target_x = 3 [deprecated = true];
+  sint32 target_y = 4 [deprecated = true];
+  uint32 skill_level = 5;
+  uint64 expected_world_revision = 6;
+  TargetMode target_mode = 7;
+  // DIRECTION_AIM uses a quantized direction vector; GROUND_AIM uses a
+  // quantized world point. Units/rounding come from the pinned content release.
+  // Other modes set both to zero.
+  sint32 aim_x_q = 8;
+  sint32 aim_y_q = 9;
+  bool allow_lock_fallback = 10;
+}
+enum TargetMode {
+  TARGET_MODE_UNSPECIFIED = 0;
+  TARGET_MODE_LOCKED_QUICK_CAST = 1;
+  TARGET_MODE_SMART_QUICK_CAST = 2;
+  TARGET_MODE_DIRECTION_AIM = 3;
+  TARGET_MODE_GROUND_AIM = 4;
+  TARGET_MODE_AUTO_COMBAT = 5;
+  TARGET_MODE_CONTEXT_INTERACT = 6;
+}
+  message UseItemInput {
+  string inventory_item_id = 1;
+  uint32 quantity = 2;
+  string target_entity_id = 3;
+}
+message InteractInput { string entity_id = 1; uint32 action_id = 2; }
+// Candidate comes from attack/skill auto-acquire or the explicit lock control,
+// never from a direct tap on a small world actor.
+message SelectTargetInput {
+  string target_entity_id = 1;
+  bool lock = 2;
+}
+message ClearTargetInput {
+  string expected_target_entity_id = 1;
+}
+message ResyncRequest {
+  enum Reason {
+    REASON_UNSPECIFIED = 0;
+    BASELINE_MISSING = 1;
+    CHECKSUM_MISMATCH = 2;
+    SEQUENCE_GAP = 3;
+  }
+  // Deprecated: item use is a durable inventory mutation and new clients MUST
+  // send UseInventoryItem inside InventoryCommand with expected_revision.
+  Reason reason = 1;
+  uint64 last_good_tick = 2;
+  bool include_active_combat = 3;
+}
+message WorldSnapshot {
+  uint64 baseline_tick = 1;
+  bool full = 2;
+  repeated EntityState upserts = 3;
+  repeated string removed_entity_ids = 4;
+  PlayerResources resources = 5;
+  fixed64 state_checksum = 6;
+}
+// A delta applies only when baseline_tick and baseline_checksum match the last
+// fully applied state. Any gap/mismatch requires ResyncRequest and a full snapshot.
+message WorldDelta {
+  uint64 baseline_tick = 1;
+  fixed64 baseline_checksum = 2;
+  uint64 server_tick = 3;
+  repeated EntityState upserts = 4;
+  repeated string removed_entity_ids = 5;
+  PlayerResources resources = 6;
+  fixed64 state_checksum = 7;
+}
+message EntityState {
+  string entity_id = 1;
+  EntityKind kind = 2;
+  uint32 template_id = 3;
+  uint32 map_id = 4;
+  sint32 x = 5;
+  sint32 y = 6;
+  uint32 facing_millirad = 7;
+  sint64 hp = 8;
+  sint64 max_hp = 9;
+  uint32 state_flags = 10;
+  uint64 version = 11;
+  AppearanceState appearance = 12;
+}
+message AppearanceState {
+  uint32 appearance_id = 1;
+  uint64 revision = 2;
+  repeated uint32 equipment_visual_ids = 3;
+  uint32 mount_visual_id = 4;
+}
+enum EntityKind {
+  ENTITY_KIND_UNSPECIFIED = 0;
+  ENTITY_KIND_CHARACTER = 1;
+  ENTITY_KIND_NPC = 2;
+  ENTITY_KIND_ITEM_DROP = 3;
+  ENTITY_KIND_OBJECT = 4;
+}
+message PlayerResources {
+  sint64 hp = 1;
+  sint64 mana = 2;
+  sint64 stamina = 3;
+  sint64 experience = 4;
+  uint64 version = 5;
+}
+message CommandResult {
+  string command_id = 1;
+  uint64 input_seq = 2;
+  bool accepted = 3 [deprecated = true]; // Compatibility hint; use outcome.
+  string code = 4;
+  string detail = 5;
+  repeated EconomyDelta economy = 6;
+  CommandOutcome outcome = 7;
+  uint64 committed_server_tick = 8;
+  uint64 durable_revision = 9;
+}
+// Only COMMITTED is durable business success. REJECTED is a final business
+// failure; SCHEDULED means execution is pending and MUST later receive a final result.
+enum CommandOutcome {
+  COMMAND_OUTCOME_UNSPECIFIED = 0;
+  COMMAND_OUTCOME_COMMITTED = 1;
+  COMMAND_OUTCOME_REJECTED = 2;
+  COMMAND_OUTCOME_SCHEDULED = 3;
+}
+message EconomyDelta {
+  string currency = 1;
+  sint64 delta = 2;
+  sint64 balance = 3;
+  string transaction_id = 4;
+}
+message Error {
+  string code = 1;
+  string detail = 2;
+  bool retryable = 3;
+  string command_id = 4;
+  uint32 retry_after_ms = 5;
+}
+
+message InventoryCommand {
+  string command_id = 1;
+  uint64 expected_revision = 2;
+  oneof action {
+    MoveInventoryItem move = 10;
+    EquipInventoryItem equip = 11;
+    DropInventoryItem drop = 12;
+    PickupLoot pickup = 13;
+    SwapInventoryItems swap = 14;
+    MergeInventoryStacks merge = 15;
+      SortInventory sort = 16;
+      SplitInventoryStack split = 17;
+      UseInventoryItem use = 18;
+      DestroyInventoryItem destroy = 19;
+      UnequipInventoryItem unequip = 20;
+  }
+}
+message TargetChanged {
+  string target_entity_id = 1;
+  bool locked = 2;
+  string reason = 3;
+}
+// All inventory commands originate from tap/action-sheet flows. No command
+// represents pointer drag/drop or client-authoritative layout mutation.
+// Move requires an empty destination. Occupied destinations must use explicit
+// swap or merge so retries cannot change meaning after a concurrent revision.
+message MoveInventoryItem { string item_id = 1; string container = 2; uint32 slot = 3; }
+message EquipInventoryItem { string item_id = 1; uint32 equipment_slot = 2; bool unequip = 3; }
+message DropInventoryItem { string item_id = 1; uint32 quantity = 2; }
+message PickupLoot { string loot_entity_id = 1; }
+message SwapInventoryItems {
+  string first_item_id = 1;
+  string second_item_id = 2;
+}
+message MergeInventoryStacks {
+  string source_item_id = 1;
+  string destination_item_id = 2;
+  uint32 quantity = 3;
+}
+message SortInventory {
+  string container = 1;
+  string content_sort_policy_key = 2;
+}
+  message SplitInventoryStack {
+  string source_item_id = 1;
+  uint32 quantity = 2;
+  SplitDestinationPolicy destination_policy = 3;
+  }
+  message UseInventoryItem {
+    string item_id = 1;
+    uint32 quantity = 2;
+    string target_entity_id = 3;
+  }
+  message DestroyInventoryItem {
+    string item_id = 1;
+    uint32 quantity = 2;
+  }
+  message UnequipInventoryItem { string item_id = 1; }
+enum SplitDestinationPolicy {
+  SPLIT_DESTINATION_POLICY_UNSPECIFIED = 0;
+  SPLIT_DESTINATION_POLICY_LOWEST_EMPTY_SLOT = 1;
+}
+// Every InventoryCommand receives one final InventoryEvent. REJECTED has no
+// item deltas and reports the current authoritative revision/capacity state.
+  message InventoryEvent {
+  string command_id = 1;
+  uint64 revision = 2;
+  repeated InventoryItemDelta items = 3;
+  InventoryOutcome outcome = 4;
+  InventoryFailureReason failure_reason = 5;
+  uint32 capacity = 6;
+    uint32 occupied_slots = 7;
+    InventoryEventKind event_kind = 8;
+    string grant_id = 9;
+    string loot_entity_id = 10;
+  }
+  enum InventoryEventKind {
+    INVENTORY_EVENT_KIND_UNSPECIFIED = 0;
+    INVENTORY_EVENT_KIND_COMMAND_RESULT = 1;
+    INVENTORY_EVENT_KIND_LOOT_GRANTED = 2;
+  }
+message InventorySnapshot {
+  uint32 capacity = 1; // Must equal 60 for the bag container.
+  uint64 revision = 2;
+  repeated InventoryItemDelta items = 3;
+  uint32 occupied_slots = 4;
+  bool full = 5; // Must equal occupied_slots == capacity.
+}
+enum InventoryOutcome {
+  INVENTORY_OUTCOME_UNSPECIFIED = 0;
+  INVENTORY_OUTCOME_COMMITTED = 1;
+  INVENTORY_OUTCOME_REJECTED = 2;
+}
+enum InventoryFailureReason {
+  INVENTORY_FAILURE_REASON_UNSPECIFIED = 0;
+  INVENTORY_FAILURE_REASON_FULL = 1;
+  INVENTORY_FAILURE_REASON_REVISION_CONFLICT = 2;
+  INVENTORY_FAILURE_REASON_ITEM_NOT_FOUND = 3;
+  INVENTORY_FAILURE_REASON_SLOT_CONFLICT = 4;
+  INVENTORY_FAILURE_REASON_STACK_INCOMPATIBLE = 5;
+  INVENTORY_FAILURE_REASON_QUANTITY_INVALID = 6;
+  INVENTORY_FAILURE_REASON_ITEM_LOCKED = 7;
+  INVENTORY_FAILURE_REASON_COMBAT_LOCKED = 8;
+  INVENTORY_FAILURE_REASON_REQUIREMENT_FAILED = 9;
+}
+  message AutomationCommand {
+    string command_id = 1;
+    AutomationAction action = 2;
+    sint32 anchor_x = 3 [deprecated = true];
+    sint32 anchor_y = 4 [deprecated = true];
+    uint32 hard_leash = 5 [deprecated = true];
+    uint64 expected_world_revision = 6;
+    string preset_key = 7;
+  }
+  // The server ignores deprecated anchor/leash fields. On START_COMBAT it pins
+  // the authoritative actor position as anchor and derives hard_leash from the
+  // signed content release/preset before emitting AutomationEvent.
+enum AutomationAction {
+  AUTOMATION_ACTION_UNSPECIFIED = 0;
+  AUTOMATION_ACTION_START_COMBAT = 1;
+  AUTOMATION_ACTION_STOP_COMBAT = 2;
+}
+message AutomationEvent {
+  string command_id = 1;
+  string state = 2 [deprecated = true];
+  string reason = 3 [deprecated = true];
+  sint32 anchor_x = 4;
+  sint32 anchor_y = 5;
+  uint32 hard_leash = 6;
+  AutomationState state_code = 7;
+  AutomationStoppedReason stopped_reason = 8;
+}
+enum AutomationState {
+  AUTOMATION_STATE_UNSPECIFIED = 0;
+  AUTOMATION_STATE_STARTING = 1;
+  AUTOMATION_STATE_ACTIVE = 2;
+  AUTOMATION_STATE_SOFT_OVERRIDE = 3;
+  AUTOMATION_STATE_RETURNING_TO_ANCHOR = 4;
+  AUTOMATION_STATE_STOPPING = 5;
+  AUTOMATION_STATE_STOPPED = 6;
+}
+// Set only with AUTOMATION_STATE_STOPPED. Leash breach is not terminal; it
+// transitions to RETURNING_TO_ANCHOR and therefore is intentionally absent.
+  enum AutomationStoppedReason {
+  AUTOMATION_STOPPED_REASON_UNSPECIFIED = 0;
+  AUTOMATION_STOPPED_REASON_USER_TOGGLE = 1;
+  AUTOMATION_STOPPED_REASON_DEATH = 2;
+  AUTOMATION_STOPPED_REASON_DISCONNECTED = 3;
+  AUTOMATION_STOPPED_REASON_CHANNEL_TRANSFER = 4;
+  AUTOMATION_STOPPED_REASON_INVENTORY_FULL = 5;
+  AUTOMATION_STOPPED_REASON_SESSION_REPLACED = 6;
+  AUTOMATION_STOPPED_REASON_INVALID_CONFIG = 7;
+    AUTOMATION_STOPPED_REASON_CONTENT_RELEASE_MISMATCH = 8;
+  }
+  message ReviveCommand {
+    string command_id = 1;
+    string option_id = 2;
+    uint64 expected_death_revision = 3;
+  }
+  message ReviveState {
+    uint64 death_revision = 1;
+    bool dead = 2;
+    uint64 available_at_server_tick = 3;
+    repeated ReviveOption options = 4;
+  }
+  message ReviveOption {
+    string option_id = 1;
+    bool available = 2;
+    string unavailable_code = 3;
+    string cost_currency = 4;
+    uint64 cost_amount = 5;
+    uint32 destination_map_id = 6;
+  }
+message ContentDigest {
+  string content_release_id = 1;
+  string manifest_sha256 = 2;
+  string source_snapshot_id = 3;
+  uint32 catalog_union_size = 4; // Must equal 242 for Gate 0.
+  string catalog_union_sha256 = 5;
+  string runtime_skill_policy_id = 6;
+  string client_projection_sha256 = 7;
+}
+message RuntimeSkillPolicy {
+  string policy_id = 1;
+  uint32 catalog_union_size = 2; // Must equal 242.
+  string catalog_union_sha256 = 3;
+  bool filesystem_fallback_allowed = 4; // Must be false; source tool is vltktool.
+  bool runtime_parity_claimed = 5; // Must be false until PC/Android evidence unblocks.
+  string pc_runtime_evidence_status = 6; // BLOCKED in Gate 0.
+  string android_physical_evidence_status = 7; // BLOCKED in Gate 0.
+}
+message EncounterPreloadAck {
+  string encounter_id = 1;
+  ContentDigest accepted_content = 2;
+  repeated uint32 skill_ids = 3;
+  uint64 client_ready_tick = 4;
+  PreloadAckOutcome outcome = 5;
+  string failure_code = 6;
+}
+enum PreloadAckOutcome {
+  PRELOAD_ACK_OUTCOME_UNSPECIFIED = 0;
+  PRELOAD_ACK_OUTCOME_READY = 1;
+  PRELOAD_ACK_OUTCOME_CONTENT_MISMATCH = 2;
+  PRELOAD_ACK_OUTCOME_UNAVAILABLE = 3;
+}
+message ActiveCastState {
+  string cast_id = 1;
+  string source_entity_id = 2;
+  uint32 skill_id = 3;
+  uint32 skill_level = 4;
+  uint64 started_tick = 5;
+  uint64 recovery_until_tick = 6;
+}
+message ActiveMissileState {
+  string missile_instance_id = 1;
+  uint32 missile_id = 2;
+  string source_entity_id = 3;
+  uint64 spawned_tick = 4;
+  sint32 x = 5;
+  sint32 y = 6;
+}
+message ActiveStatusState {
+  string target_entity_id = 1;
+  StatusEffectDelta status = 2;
+}
+message ActiveCombatResyncState {
+  uint64 baseline_tick = 1;
+  fixed64 baseline_checksum = 2;
+  repeated ActiveCastState active_casts = 3;
+  repeated ActiveMissileState active_missiles = 4;
+  repeated ActiveStatusState active_statuses = 5;
+  bool full = 6;
+}
+message CombatEvent {
+  string event_id = 1;
+  uint64 server_tick = 2;
+  string source_entity_id = 3;
+  string target_entity_id = 4;
+  uint32 skill_id = 5;
+  sint64 value = 6; // Signed legacy-compatible magnitude; semantics come from kind.
+  string state_code = 7;
+  string audio_cue_id = 8;
+  string cast_id = 9;
+  CombatEventKind kind = 10;
+  uint32 skill_level = 11;
+  uint32 hit_index = 12;
+  DamageSchool damage_school = 13;
+  uint32 result_flags = 14;
+  sint64 target_hp_after = 15;
+  sint64 target_mana_after = 16;
+  sint32 impact_x = 17;
+  sint32 impact_y = 18;
+  uint32 missile_id = 19;
+  uint32 animation_id = 20;
+  uint32 visual_effect_id = 21;
+  bytes rng_audit_token = 22;
+  repeated StatusEffectDelta status_effects = 23;
+  repeated CombatResultFlag results = 24;
+  uint64 lifecycle_revision = 25;
+  uint64 lifecycle_started_tick = 26;
+  uint64 lifecycle_ends_tick = 27;
+  string lifecycle_reason = 28;
+  ActiveCombatResyncState resync_state = 29;
+}
+enum CombatEventKind {
+  COMBAT_EVENT_KIND_UNSPECIFIED = 0;
+  COMBAT_EVENT_KIND_CAST_STARTED = 1;
+  COMBAT_EVENT_KIND_CAST_CANCELLED = 2;
+  COMBAT_EVENT_KIND_MISSILE_SPAWNED = 3;
+  COMBAT_EVENT_KIND_HIT = 4;
+  COMBAT_EVENT_KIND_HEAL = 5;
+  COMBAT_EVENT_KIND_RESOURCE_CHANGED = 6;
+  COMBAT_EVENT_KIND_STATUS_APPLIED = 7;
+  COMBAT_EVENT_KIND_STATUS_REMOVED = 8;
+  COMBAT_EVENT_KIND_DEATH = 9;
+  COMBAT_EVENT_KIND_REVIVE = 10;
+  COMBAT_EVENT_KIND_CAST_RECOVERY_STARTED = 11;
+  COMBAT_EVENT_KIND_CAST_RECOVERY_ENDED = 12;
+  COMBAT_EVENT_KIND_MISSILE_FLY_STARTED = 13;
+  COMBAT_EVENT_KIND_MISSILE_COLLIDED = 14;
+  COMBAT_EVENT_KIND_MISSILE_VANISHED = 15;
+  COMBAT_EVENT_KIND_STATUS_REFRESHED = 16;
+  COMBAT_EVENT_KIND_STATUS_EXPIRED = 17;
+}
+enum DamageSchool {
+  DAMAGE_SCHOOL_UNSPECIFIED = 0;
+  DAMAGE_SCHOOL_PHYSICAL = 1;
+  DAMAGE_SCHOOL_METAL = 2;
+  DAMAGE_SCHOOL_WOOD = 3;
+  DAMAGE_SCHOOL_WATER = 4;
+  DAMAGE_SCHOOL_FIRE = 5;
+  DAMAGE_SCHOOL_EARTH = 6;
+  DAMAGE_SCHOOL_INTERNAL = 7;
+}
+enum CombatResultFlag {
+  COMBAT_RESULT_FLAG_UNSPECIFIED = 0;
+  COMBAT_RESULT_FLAG_CRITICAL = 1;
+  COMBAT_RESULT_FLAG_DODGED = 2;
+  COMBAT_RESULT_FLAG_BLOCKED = 3;
+  COMBAT_RESULT_FLAG_IMMUNE = 4;
+  COMBAT_RESULT_FLAG_KILLING_BLOW = 5;
+  COMBAT_RESULT_FLAG_REFLECTED = 6;
+  COMBAT_RESULT_FLAG_ABSORBED = 7;
+}
+message StatusEffectDelta {
+  uint32 effect_id = 1;
+  uint32 stacks = 2;
+  uint64 expires_at_tick = 3;
+  bool removed = 4;
+  uint64 applied_at_tick = 5;
+  bool refreshed = 6;
+}
+message InventoryItemDelta {
+  string item_id = 1;
+  uint32 template_id = 2;
+  string container = 3;
+  uint32 slot = 4;
+  uint32 quantity = 5;
+  bool removed = 6;
+  uint64 version = 7;
+}
+
+message EconomyCommand {
+  string command_id = 1;
+  uint64 expected_revision = 2;
+  EconomyAction action = 3;
+  string target_id = 4;
+  string currency = 5;
+  sint64 amount = 6;
+  repeated string item_ids = 7;
+}
+enum EconomyAction {
+  ECONOMY_ACTION_UNSPECIFIED = 0;
+  ECONOMY_ACTION_BUY = 1;
+  ECONOMY_ACTION_SELL = 2;
+  ECONOMY_ACTION_TRADE_CONFIRM = 3;
+  ECONOMY_ACTION_STALL_BUY = 4;
+  ECONOMY_ACTION_GUILD_DONATE = 5;
+}
+message EconomyEvent {
+  string command_id = 1;
+  string transaction_id = 2;
+  repeated EconomyDelta balances = 3;
+  repeated InventoryItemDelta items = 4;
+  uint64 revision = 5;
+  EconomyTransactionState transaction_state = 6;
+  uint64 posted_server_tick = 7;
+}
+enum EconomyTransactionState {
+  ECONOMY_TRANSACTION_STATE_UNSPECIFIED = 0;
+  ECONOMY_TRANSACTION_STATE_PENDING = 1;
+  ECONOMY_TRANSACTION_STATE_POSTED = 2;
+  ECONOMY_TRANSACTION_STATE_REVERSED = 3;
+  ECONOMY_TRANSACTION_STATE_FAILED = 4;
+}
+
+message QuestCommand {
+  string command_id = 1;
+  uint64 expected_revision = 2;
+  QuestAction action = 3;
+  uint32 quest_id = 4;
+  string npc_entity_id = 5;
+  // Required exactly when action=QUEST_ACTION_SELECT_OPTION; forbidden otherwise.
+  QuestOptionSelection selected_option = 6;
+}
+message QuestOptionSelection {
+  string dialogue_instance_id = 1;
+  uint32 option_id = 2;
+  uint64 expected_dialogue_revision = 3;
+}
+enum QuestAction {
+  QUEST_ACTION_UNSPECIFIED = 0;
+  QUEST_ACTION_ACCEPT = 1;
+  QUEST_ACTION_ABANDON = 2;
+  QUEST_ACTION_CLAIM_REWARD = 3;
+  QUEST_ACTION_SELECT_OPTION = 4;
+}
+message QuestEvent {
+  string command_id = 1;
+  uint32 quest_id = 2;
+  QuestState state = 3;
+  repeated QuestObjective objectives = 4;
+  string reward_grant_id = 5;
+  uint64 revision = 6;
+}
+  enum QuestState {
+    QUEST_STATE_UNSPECIFIED = 0;
+    QUEST_STATE_ACCEPTED = 1;
+  QUEST_STATE_ACTIVE = 2;
+  QUEST_STATE_COMPLETABLE = 3;
+  QUEST_STATE_COMPLETED = 4;
+    QUEST_STATE_FAILED = 5;
+    QUEST_STATE_ABANDONED = 6;
+    QUEST_STATE_UNAVAILABLE = 7;
+    QUEST_STATE_AVAILABLE = 8;
+  }
+message QuestObjective { string key = 1; uint64 current = 2; uint64 target = 3; }
+
+message ChannelCommand {
+  string command_id = 1;
+  string destination_channel_id = 2;
+  uint32 destination_map_id = 3;
+}
+message ChannelEvent {
+  string command_id = 1;
+  string transfer_id = 2;
+  ChannelTransferState state = 3;
+  string channel_id = 4;
+  uint32 map_id = 5;
+  uint64 commit_tick = 6;
+}
+enum ChannelTransferState {
+  CHANNEL_TRANSFER_STATE_UNSPECIFIED = 0;
+  CHANNEL_TRANSFER_STATE_PREPARED = 1;
+  CHANNEL_TRANSFER_STATE_COMMITTED = 2;
+  CHANNEL_TRANSFER_STATE_FAILED = 3;
+  CHANNEL_TRANSFER_STATE_EXPIRED = 4;
+}
+
+  message SocialCommand {
+  string command_id = 1;
+  SocialAction action = 2;
+  string aggregate_id = 3;
+  string target_character_id = 4;
+  string text = 5;
+    uint64 expected_revision = 6;
+    string mode_key = 7;
+    uint32 option_id = 8;
+}
+enum SocialAction {
+  SOCIAL_ACTION_UNSPECIFIED = 0;
+  SOCIAL_ACTION_PARTY_INVITE = 1;
+  SOCIAL_ACTION_PARTY_ACCEPT = 2;
+  SOCIAL_ACTION_PARTY_LEAVE = 3;
+  SOCIAL_ACTION_FRIEND_REQUEST = 4;
+  SOCIAL_ACTION_FRIEND_ACCEPT = 5;
+  SOCIAL_ACTION_CHAT_SEND = 6;
+  SOCIAL_ACTION_CHAT_REPORT = 7;
+  SOCIAL_ACTION_TRADE_LOCK = 8;
+  SOCIAL_ACTION_TRADE_CONFIRM = 9;
+    SOCIAL_ACTION_GUILD_ACTION = 10;
+    SOCIAL_ACTION_TEAM_CREATE = 11;
+    SOCIAL_ACTION_TEAM_INVITE = 12;
+    SOCIAL_ACTION_TEAM_REPLY = 13;
+    SOCIAL_ACTION_TEAM_KICK = 14;
+    SOCIAL_ACTION_TRADE_OFFER = 15;
+    SOCIAL_ACTION_TRADE_CANCEL = 16;
+    SOCIAL_ACTION_GUILD_CREATE = 17;
+    SOCIAL_ACTION_GUILD_APPLY = 18;
+    SOCIAL_ACTION_GUILD_ROLE = 19;
+    SOCIAL_ACTION_GUILD_LEAVE = 20;
+    SOCIAL_ACTION_PK_MODE_CHANGE = 21;
+    SOCIAL_ACTION_EVENT_ENROLL = 22;
+    SOCIAL_ACTION_EVENT_LEAVE = 23;
+    SOCIAL_ACTION_EVENT_CLAIM_REWARD = 24;
+}
+message SocialEvent {
+  string command_id = 1;
+  SocialEventKind kind = 2;
+  string aggregate_id = 3;
+  repeated string character_ids = 4;
+  string actor_character_id = 5;
+  string text = 6;
+  uint64 revision = 7;
+}
+enum SocialEventKind {
+  SOCIAL_EVENT_KIND_UNSPECIFIED = 0;
+  SOCIAL_EVENT_KIND_PARTY_ROSTER = 1;
+  SOCIAL_EVENT_KIND_FRIEND_STATE = 2;
+  SOCIAL_EVENT_KIND_CHAT_MESSAGE = 3;
+  SOCIAL_EVENT_KIND_CHAT_MODERATION = 4;
+  SOCIAL_EVENT_KIND_TRADE_STATE = 5;
+    SOCIAL_EVENT_KIND_GUILD_STATE = 6;
+    SOCIAL_EVENT_KIND_PK_STATE = 7;
+    SOCIAL_EVENT_KIND_EVENT_STATE = 8;
+    SOCIAL_EVENT_KIND_LADDER_STATE = 9;
+  }
+  message ProgressionCommand {
+    string command_id = 1;
+    uint64 expected_revision = 2;
+    ProgressionAction action = 3;
+    string attribute_key = 4;
+    uint32 points = 5;
+    uint32 skill_id = 6;
+    uint32 skill_level = 7;
+    uint32 faction_id = 8;
+  }
+  enum ProgressionAction {
+    PROGRESSION_ACTION_UNSPECIFIED = 0;
+    PROGRESSION_ACTION_ALLOCATE_ATTRIBUTE = 1;
+    PROGRESSION_ACTION_LEARN_SKILL = 2;
+    PROGRESSION_ACTION_UPGRADE_SKILL = 3;
+    PROGRESSION_ACTION_JOIN_FACTION = 4;
+    PROGRESSION_ACTION_LEAVE_FACTION = 5;
+  }
+  message ProgressionEvent {
+    string command_id = 1;
+    uint64 revision = 2;
+    sint64 experience_delta = 3;
+    uint32 level = 4;
+    uint32 available_attribute_points = 5;
+    uint32 available_skill_points = 6;
+    uint32 faction_id = 7;
+    ProgressionAction action = 8;
+  }
+  message CompanionCommand {
+    string command_id = 1;
+    uint64 expected_revision = 2;
+    CompanionAction action = 3;
+    string companion_id = 4;
+    string mode_key = 5;
+  }
+  enum CompanionAction {
+    COMPANION_ACTION_UNSPECIFIED = 0;
+    COMPANION_ACTION_EQUIP_MOUNT = 1;
+    COMPANION_ACTION_RIDE = 2;
+    COMPANION_ACTION_DISMOUNT = 3;
+    COMPANION_ACTION_SUMMON_PET = 4;
+    COMPANION_ACTION_DISMISS_PET = 5;
+    COMPANION_ACTION_SET_PET_MODE = 6;
+  }
+  message CompanionEvent {
+    string command_id = 1;
+    uint64 revision = 2;
+    CompanionAction action = 3;
+    string companion_id = 4;
+    bool active = 5;
+    uint32 speed_modifier_milli = 6;
+  }
+message Ping { uint64 client_time_ms = 1; }
+message Pong { uint64 client_time_ms = 1; uint64 server_time_ms = 2; }
+message ShutdownNotice { uint32 retry_after_seconds = 1; string reason = 2; }

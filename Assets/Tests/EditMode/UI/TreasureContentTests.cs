@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — HUD-003 Treasure popup tests (EditMode, Popup)
-// Verifies BtnTreasure content uses PC-derived manifests and Vietnamese labels.
+// Verifies BtnTreasure content uses PC SPR sheet/hit zones, not a mobile mockup.
 // -----------------------------------------------------------------------------
 using NUnit.Framework;
 using UnityEngine.UIElements;
@@ -20,41 +20,56 @@ namespace VLTK.Tests.UI
         }
 
         [Test]
-        public void ImplementsLayoutHint_ForPopupShell()
+        public void ImplementsPcSheetHints_ForPopupShell()
         {
             var content = new TreasureContent(null, null);
             Assert.IsInstanceOf<IPopupLayoutHint>(content);
-            var hint = (IPopupLayoutHint)content;
-            Assert.AreEqual(520f, hint.Width);
-            Assert.AreEqual(520f, hint.Height);
+            Assert.AreEqual(PopupChromeKind.PcTreasure, content.Chrome);
+            Assert.AreEqual(563f, content.Width);
+            Assert.AreEqual(476f, content.Height);
         }
 
         [Test]
-        public void Build_CreatesThreePcSections()
+        public void Build_CreatesPcMallSheetAndButtons()
         {
             var content = new TreasureContent(null, null);
             var body = new VisualElement();
             content.Build(body);
 
-            Assert.IsNotNull(body.Q("TreasureTabs"));
-            var tabs = body.Q("TreasureTabs").Children();
-            int count = 0;
-            foreach (var _ in tabs) count++;
-            Assert.AreEqual(3, count, "Kỳ Trân Các / Giỏ Hàng / Rương Báu tabs are shown");
+            Assert.IsNotNull(body.Q("TreasurePanel"));
+            Assert.IsNotNull(body.Q("MarketGoodsLayer"));
+            Assert.IsNotNull(body.Q<Button>("SellType"));
+            Assert.IsNotNull(body.Q<Button>("LeftBtn"));
+            Assert.IsNotNull(body.Q<Button>("RightBtn"));
+            Assert.IsNotNull(body.Q<Button>("ShoppingCart"));
+            Assert.IsNotNull(body.Q<Button>("Close"));
+            Assert.IsNull(body.Q("TreasureTabs"), "PC sheet must not show the old mobile/fake tab strip");
         }
 
         [Test]
-        public void Build_PopulatesPcControlManifestRows()
+        public void Build_BackendButtonsDisabledButCloseEnabled()
         {
             var content = new TreasureContent(null, null);
             var body = new VisualElement();
             content.Build(body);
 
-            var controls = body.Q("TreasureControlList");
+            Assert.IsFalse(body.Q<Button>("SellType").enabledSelf);
+            Assert.IsFalse(body.Q<Button>("LeftBtn").enabledSelf);
+            Assert.IsFalse(body.Q<Button>("RightBtn").enabledSelf);
+            Assert.IsFalse(body.Q<Button>("ShoppingCart").enabledSelf);
+            Assert.IsTrue(body.Q<Button>("Close").enabledSelf);
+        }
+
+        [Test]
+        public void Build_NullServicesStillShowsPcGoodsFrame()
+        {
+            var content = new TreasureContent(null, null);
+            var body = new VisualElement();
+            content.Build(body);
+
+            var controls = body.Q("MarketGoodsLayer");
             Assert.IsNotNull(controls);
-            Assert.GreaterOrEqual(controls.childCount, 10, "PC control manifest rows should be visible");
-            Assert.AreEqual("Nạp thẻ", controls[0].Q<Label>("ControlLabel").text);
-            Assert.AreEqual("9e5f75d1 / PrePaid", controls[0].Q<Label>("ControlSource").text);
+            Assert.GreaterOrEqual(controls.childCount, 1, "Null services should still render inside the PC MarketGoods frame");
         }
 
         [Test]
@@ -65,7 +80,7 @@ namespace VLTK.Tests.UI
             content.Build(body);
 
             Assert.DoesNotThrow(() => content.OnShow());
-            Assert.IsNotNull(body.Q("TreasureSummaryList"));
+            Assert.IsNotNull(body.Q("TreasureHuntStatus"));
         }
     }
 }

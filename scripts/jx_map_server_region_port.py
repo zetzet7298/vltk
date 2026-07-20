@@ -20,7 +20,10 @@ from typing import Any
 
 UNITY_ROOT = Path('/var/www/vltk-mobile')
 PC_ROOT = Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem')
-JX_MAP_PORT = UNITY_ROOT / 'harness/.agents/skills/jx-map-port/scripts/jx_map_port.py'
+JX_MAP_PORT_CANDIDATES = (
+    UNITY_ROOT / 'harness/.agents/skills/jx-map-port/scripts/jx_map_port.py',
+    UNITY_ROOT / 'stale-harness/.agents/skills/jx-map-port/scripts/jx_map_port.py',
+)
 REGION_WARN_LIMIT = 4096
 
 
@@ -34,7 +37,15 @@ def load_module(path: Path, name: str):
     return mod
 
 
-jx = load_module(JX_MAP_PORT, 'jx_map_port_single')
+def resolve_jx_map_port() -> Path:
+    for candidate in JX_MAP_PORT_CANDIDATES:
+        if candidate.is_file():
+            return candidate
+    tried = ', '.join(str(p) for p in JX_MAP_PORT_CANDIDATES)
+    raise RuntimeError(f'Cannot find repository-local jx_map_port.py; tried {tried}')
+
+
+jx = load_module(resolve_jx_map_port(), 'jx_map_port_single')
 
 
 def write_json(path: Path, payload: Any) -> None:

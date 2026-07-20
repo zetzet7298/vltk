@@ -3,7 +3,6 @@
 // Spec analog REQ-5 (grid bind), REQ-8 (BtnItems), REQ-10 (EditMode coverage).
 // Uses the same ItemContractImporter seeding pattern as InventoryServiceTests.
 // -----------------------------------------------------------------------------
-using System.Reflection;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine.UIElements;
@@ -144,17 +143,21 @@ namespace VLTK.Tests.UI
         }
 
         [Test]
-        public void Build_CreatesFiveFilterTabs()
+        public void Build_CreatesPcSheetGridAndButtons()
         {
             var content = new InventoryContent(null);
             var body = new VisualElement();
             content.Build(body);
 
-            Assert.IsNotNull(body.Q("tab_all"));
-            Assert.IsNotNull(body.Q("tab_equip"));
-            Assert.IsNotNull(body.Q("tab_med"));
-            Assert.IsNotNull(body.Q("tab_mat"));
-            Assert.IsNotNull(body.Q("tab_other"));
+            var grid = body.Q("InvGrid");
+            Assert.IsNotNull(body.Q("InventoryPanel"));
+            Assert.IsNotNull(grid);
+            Assert.AreEqual(InventoryGridBuilder.TotalCells, grid.childCount);
+            Assert.IsNotNull(body.Q<Button>("MakeAdvBtn"));
+            Assert.IsNotNull(body.Q<Button>("MarkPriceBtn"));
+            Assert.IsNotNull(body.Q<Button>("MakeStallBtn"));
+            Assert.IsNotNull(body.Q<Button>("OpenStatus"));
+            Assert.IsNotNull(body.Q<Button>("Close"));
         }
 
         [Test]
@@ -178,24 +181,13 @@ namespace VLTK.Tests.UI
         }
 
         [Test]
-        public void TabTrangBi_FiltersToEquippableOnly()
+        public void ChromeHint_UsesPcInventorySheetSize()
         {
-            var db = DbWith(Item(1, "Kiếm", genre: 1), Item(2, "Thuốc", genre: 8), Item(3, "Quặng", genre: 9));
-            var svc = new InventoryService(db);
-            svc.AddItem(1); svc.AddItem(2); svc.AddItem(3);
+            var content = new InventoryContent(null);
 
-            var content = new InventoryContent(svc);
-            var body = new VisualElement();
-            content.Build(body);
-
-            // switch to Trang Bị tab via private method; UI callback itself is PointerDown.
-            Assert.IsNotNull(body.Q<Label>("tab_equip"));
-            typeof(InventoryContent).GetMethod("SwitchTab", BindingFlags.Instance | BindingFlags.NonPublic)
-                ?.Invoke(content, new object[] { "equip" });
-
-            var grid = body.Q("InvGrid");
-            int filled = grid.Query(className: "filled").ToList().Count;
-            Assert.AreEqual(1, filled, "Trang Bị shows only the equippable Weapon");
+            Assert.AreEqual(PopupChromeKind.PcInventory, content.Chrome);
+            Assert.AreEqual(214f, content.Width);
+            Assert.AreEqual(454f, content.Height);
         }
 
         [Test]

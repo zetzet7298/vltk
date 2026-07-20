@@ -590,6 +590,22 @@ namespace VLTK.Backend.Rest
 
         // -------- FS-02B (auth) --------
 
+        public Task<BackendResponse<AccountResponse>> CreateAccountAsync(
+            AccountCreateRequest request, CancellationToken ct = default)
+        {
+            if (request == null || string.IsNullOrEmpty(request.accName) ||
+                string.IsNullOrEmpty(request.password))
+            {
+                return Task.FromResult(BackendResponse<AccountResponse>.Failure(
+                    "invalid_arg", "account request/accName/password trống"));
+            }
+            string url = Config.ResolveApiUrl("account");
+            return ExecuteAsync<AccountResponse>(
+                method: "POST", url: url, queryParams: null,
+                bodyJson: JsonConvert.SerializeObject(request),
+                isEnvelope: true, ct: ct);
+        }
+
         public Task<BackendResponse<LoginResponse>> LoginAsync(
             string accName, string password, string otp = null,
             string clientIp = null, CancellationToken ct = default)
@@ -617,6 +633,22 @@ namespace VLTK.Backend.Rest
             return ExecuteAsync<RoleListResponse>(
                 method: "GET", url: url, queryParams: null,
                 bodyJson: null, isEnvelope: true, ct: ct);
+        }
+
+        public Task<BackendResponse<RoleResponse>> CreateRoleAsync(
+            RoleCreateRequest request, CancellationToken ct = default)
+        {
+            if (request == null || string.IsNullOrEmpty(request.account) ||
+                string.IsNullOrEmpty(request.roleName))
+            {
+                return Task.FromResult(BackendResponse<RoleResponse>.Failure(
+                    "invalid_arg", "role request/account/roleName trống"));
+            }
+            string url = Config.ResolveApiUrl("role");
+            return ExecuteAsync<RoleResponse>(
+                method: "POST", url: url, queryParams: null,
+                bodyJson: JsonConvert.SerializeObject(request),
+                isEnvelope: true, ct: ct);
         }
 
         public Task<BackendResponse<PlayerStateResponse>> GetPlayerStateAsync(

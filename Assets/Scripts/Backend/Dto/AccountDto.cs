@@ -23,6 +23,28 @@ using Newtonsoft.Json;
 
 namespace VLTK.Backend.Dto
 {
+    /// <summary>Request body cho POST /v1/account.</summary>
+    [Serializable]
+    public sealed class AccountCreateRequest
+    {
+        public string accName;
+        public string password;
+        public string secPassword;
+        public int serviceFlag;
+    }
+
+    /// <summary>Account trả về từ POST /v1/account; không chứa password/hash.</summary>
+    [Serializable]
+    public sealed class AccountResponse
+    {
+        public int id;
+        public string accName;
+        public bool isBanned;
+        public bool isUseOtp;
+        public int serviceFlag;
+        public int extPoint;
+    }
+
     /// <summary>
     /// Request body cho POST /v1/account/login.
     /// Tất cả field camelCase, KHÔNG hash password phía client.

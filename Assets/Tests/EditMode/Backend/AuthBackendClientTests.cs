@@ -6,9 +6,12 @@
 // -----------------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using NUnit.Framework;
+using UnityEngine;
 using VLTK.Backend;
+using VLTK.Backend.Dto;
 using VLTK.Backend.Mock;
 using VLTK.Backend.Rest;
 using VLTK.Backend.Tests;
@@ -18,14 +21,26 @@ namespace VLTK.Tests.Backend
     public class AuthBackendClientTests
     {
         private const string BaseUrl = "http://127.0.0.1:8020";
+        private readonly List<BackendConfig> _configs = new();
 
-        private static BackendConfig NewConfig(bool useMock) => new BackendConfig
+        private BackendConfig NewConfig(bool useMock)
         {
-            baseUrl = BaseUrl,
-            apiPrefix = "/v1",
-            useMock = useMock,
-            defaultTimeoutSeconds = 5,
-        };
+            var config = ScriptableObject.CreateInstance<BackendConfig>();
+            config.baseUrl = BaseUrl;
+            config.apiPrefix = "/v1";
+            config.useMock = useMock;
+            config.defaultTimeoutSeconds = 5;
+            _configs.Add(config);
+            return config;
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            foreach (BackendConfig config in _configs)
+                UnityEngine.Object.DestroyImmediate(config);
+            _configs.Clear();
+        }
 
         // ============================================================
         // Mock routing
@@ -67,6 +82,49 @@ namespace VLTK.Tests.Backend
         // ============================================================
         // REST routing with injected FakeHttpTransport
         // ============================================================
+
+        [Test]
+        public async Task CreateAccountAsync_UseRest_PostsFastApiContract()
+        {
+            var fake = new FakeHttpTransport();
+            fake.QueueResponse("POST", "/v1/account", 200,
+                "{\"code\":\"200\",\"message\":\"Success\",\"data\":{" +
+                "\"id\":7,\"accName\":\"alice\",\"isBanned\":false," +
+                "\"isUseOtp\":false,\"serviceFlag\":0,\"extPoint\":0}}");
+            var client = new BackendClient(NewConfig(useMock: false), fake);
+
+            var resp = await client.CreateAccountAsync(new AccountCreateRequest
+            {
+                accName = "alice",
+                password = "pw",
+            });
+
+            Assert.IsTrue(resp.IsSuccess);
+            Assert.AreEqual("alice", resp.data.accName);
+            Assert.That(fake.Sent[0].Body, Does.Contain("\"accName\":\"alice\""));
+        }
+
+        [Test]
+        public async Task CreateRoleAsync_UseRest_PostsFastApiContract()
+        {
+            var fake = new FakeHttpTransport();
+            fake.QueueResponse("POST", "/v1/role", 200,
+                "{\"code\":\"200\",\"message\":\"Success\",\"data\":{" +
+                "\"id\":42,\"roleName\":\"AliceRole\",\"account\":\"alice\"," +
+                "\"faction\":-1,\"factionName\":null,\"level\":1}}");
+            var client = new BackendClient(NewConfig(useMock: false), fake);
+
+            var resp = await client.CreateRoleAsync(new RoleCreateRequest
+            {
+                account = "alice",
+                roleName = "AliceRole",
+                faction = -1,
+            });
+
+            Assert.IsTrue(resp.IsSuccess);
+            Assert.AreEqual(42, resp.data.id);
+            Assert.That(fake.Sent[0].Body, Does.Contain("\"roleName\":\"AliceRole\""));
+        }
 
         [Test]
         public async Task LoginAsync_UseRest_GoesThroughInjectedTransport()

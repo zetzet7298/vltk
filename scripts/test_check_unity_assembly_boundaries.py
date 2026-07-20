@@ -170,6 +170,24 @@ class SuccessTests(unittest.TestCase):
         finally:
             p.close()
 
+    def test_generated_protobuf_assemblies_resolve_production_references(self):
+        p = FakeProject()
+        try:
+            generated = p.root / "Assets" / "Generated" / "GameV1"
+            generated.mkdir(parents=True)
+            (generated / "VLTK.Generated.GameV1.asmdef").write_text(
+                asmdef("VLTK.Generated.GameV1"), encoding="utf-8"
+            )
+            (generated / "VLTK.Generated.GameV1.asmdef.meta").write_text(
+                meta(p._next_guid()), encoding="utf-8"
+            )
+            p.add_asmdef(
+                "VLTK.Production.Networking", ["VLTK.Generated.GameV1"]
+            )
+            self.assertEqual(_lines(p.findings()), [])
+        finally:
+            p.close()
+
 
 class GraphViolationTests(unittest.TestCase):
     def test_cycle_detected(self):

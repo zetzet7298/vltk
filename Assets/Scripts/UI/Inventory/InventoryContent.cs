@@ -1,8 +1,7 @@
 // -----------------------------------------------------------------------------
-// VLTK Mobile — HUD-003 Inventory window content (IPopupContent, slice 2)
-// Title "Hành Trang". Filter tabs (mobile-custom): Tất cả / Trang bị / Thuốc /
-// Vật phẩm / Khác. Grid 6×10. Footer = slot count N/28. Read-only bind.
-// REQ-8 analog (BtnItems). ADR-I3 (mobile filters), ADR-I4 (read-only).
+// VLTK Mobile — PC Hành Trang popup content
+// Source: PC UiItem 05ea8560.dat (update03), 214×454, 6×10 ItemBox.
+// Art: exact SPR frames vendored under Assets/UI/Popup/Inventory/Art.
 // -----------------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
@@ -14,47 +13,41 @@ using VLTK.UI.Popup;
 
 namespace VLTK.UI.Inventory
 {
-    /// <summary>One filter-tab definition.</summary>
-    internal readonly struct InventoryFilterTab
+    /// <summary>Inventory popup content: PC Hành trang sheet, 6×10 grid, live item bind.</summary>
+    public sealed class InventoryContent : IPopupContent, IPopupLayoutHint, IPopupChromeHint
     {
-        public readonly string key;
-        public readonly string labelVi;
-        public readonly PcItemCategory? category;   // null = Tất cả
-        public InventoryFilterTab(string key, string labelVi, PcItemCategory? category)
-        { this.key = key; this.labelVi = labelVi; this.category = category; }
-    }
+        // PC [Main] from 05ea8560.dat.
+        public const float PcWidth = 214f;
+        public const float PcHeight = 454f;
+        public const float ItemBoxLeft = 24f;
+        public const float ItemBoxTop = 72f;
+        public const float ItemBoxWidth = 168f;
+        public const float ItemBoxHeight = 280f;
+        public const int ItemBoxColumns = 6;
+        public const int ItemBoxRows = 10;
 
-    /// <summary>Inventory popup content: title, 5 filter tabs, 6×10 grid, footer.</summary>
-    public sealed class InventoryContent : IPopupContent, IPopupLayoutHint
-    {
         public string TitleVi => "Hành Trang";
-        public float Width => 430f;
-        public float Height => 560f;
-        public float Left => 425f;   // centered in 1280 design space
-        public float Top => 40f;     // above bottom hotbar
+        public float Width => PcWidth;
+        public float Height => PcHeight;
+        public float Left => (1280f - PcWidth) * 0.5f;
+        public float Top => (720f - PcHeight) * 0.5f;
+        public PopupChromeKind Chrome => PopupChromeKind.PcInventory;
 
         private readonly InventoryService _inventory;
         private readonly IItemIconResolver _iconResolver;
+        private readonly Action _openStatusPanel;
 
-        private static readonly IReadOnlyList<InventoryFilterTab> Tabs = new[]
-        {
-            new InventoryFilterTab("all",    "Tất Cả",   null),
-            new InventoryFilterTab("equip",  "Trang Bị", PcItemCategory.Weapon),   // bucket: Weapon..Ring equippables
-            new InventoryFilterTab("med",    "Thuốc",    PcItemCategory.Medicament),
-            new InventoryFilterTab("mat",    "Vật Phẩm", PcItemCategory.Material),
-            new InventoryFilterTab("other",  "Khác",     null),                     // misc; computed below
-        };
-
-        // Tab button + grid + footer refs.
-        private readonly Dictionary<string, Label> _tabButtons = new();
         private VisualElement _grid;
         private Label _slotCount;
-        private string _activeTab = "all";
 
-        public InventoryContent(InventoryService inventory, IItemIconResolver iconResolver = null)
+        public InventoryContent(
+            InventoryService inventory,
+            IItemIconResolver iconResolver = null,
+            Action openStatusPanel = null)
         {
             _inventory = inventory;
             _iconResolver = iconResolver;
+            _openStatusPanel = openStatusPanel;
         }
 
         public void Build(VisualElement body)
@@ -62,39 +55,45 @@ namespace VLTK.UI.Inventory
             body.Clear();
             body.AddToClassList("inv-body");
 
-            // Tab bar
-            var tabBar = new VisualElement { name = "InvTabBar" };
-            tabBar.AddToClassList("inv-tab-bar");
-            foreach (var tab in Tabs)
-            {
-                var btn = new Label(tab.labelVi) { name = "tab_" + tab.key };
-                btn.AddToClassList("inv-tab");
-                btn.AddToClassList("inv-tab-label");
-                var key = tab.key;
-                btn.RegisterCallback<PointerDownEvent>(_ => SwitchTab(key));
-                tabBar.Add(btn);
-                _tabButtons[tab.key] = btn;
-            }
-            body.Add(tabBar);
+            var panel = new VisualElement { name = "InventoryPanel" };
+            panel.AddToClassList("inv-panel");
+            body.Add(panel);
 
-            // Grid (scrollable wrapper to fit 6×10 in mobile space)
-            var scroll = new ScrollView { name = "InvGridScroll" };
-            scroll.AddToClassList("inv-grid-scroll");
+            // PC ItemBox: Left=24 Top=72 Width=168 Height=280 HUnits=6 VUnits=10 UnitBorder=1.
             _grid = new VisualElement { name = "InvGrid" };
             _grid.AddToClassList("inv-grid-host");
-            scroll.Add(_grid);
-            body.Add(scroll);
+            panel.Add(_grid);
 
-            // Footer
-            var footer = new VisualElement { name = "InvFooter" };
-            footer.AddToClassList("inv-footer");
-            _slotCount = new Label("--/--") { name = "SlotCount" };
+            // The PC panel has a Money text lane at Left=53 Top=353. Runtime currently
+            // exposes item count, not authoritative money, so show used/capacity rather
+            // than fabricate currency.
+            _slotCount = new Label("0/60") { name = "SlotCount" };
             _slotCount.AddToClassList("inv-slot-count");
-            footer.Add(_slotCount);
-            body.Add(footer);
+            panel.Add(_slotCount);
+
+            var makeAdv = DisabledButton("MakeAdvBtn", "inv-stall-btn inv-stall-adv");
+            var markPrice = DisabledButton("MarkPriceBtn", "inv-stall-btn inv-stall-price");
+            var makeStall = DisabledButton("MakeStallBtn", "inv-stall-btn inv-stall-toggle");
+            panel.Add(makeAdv);
+            panel.Add(markPrice);
+            panel.Add(makeStall);
+
+            var getMoney = DisabledButton("GetMoneyBtn", "inv-action-btn inv-money-btn");
+            panel.Add(getMoney);
+
+            var openStatus = new Button { name = "OpenStatus", text = string.Empty };
+            openStatus.AddToClassList("inv-action-btn");
+            openStatus.AddToClassList("inv-status-btn");
+            openStatus.clicked += () => _openStatusPanel?.Invoke();
+            panel.Add(openStatus);
+
+            var close = new Button { name = "Close", text = string.Empty };
+            close.AddToClassList("inv-action-btn");
+            close.AddToClassList("inv-close-btn");
+            panel.Add(close);
 
             RebuildGrid();
-            SwitchTab("all");
+            RefreshFooter();
         }
 
         public void OnShow()
@@ -105,77 +104,33 @@ namespace VLTK.UI.Inventory
 
         public void OnClose()
         {
-            _tabButtons.Clear();
-        }
-
-        // ---- internals ----
-        private PcItemCategory? ActiveFilter()
-        {
-            foreach (var t in Tabs) if (t.key == _activeTab) return t.category;
-            return null;
         }
 
         private IReadOnlyList<InventoryEntry> Entries =>
-            _inventory != null ? _inventory.Inventory : System.Array.Empty<InventoryEntry>();
+            _inventory != null ? _inventory.Inventory : Array.Empty<InventoryEntry>();
 
         private void RebuildGrid()
         {
             if (_grid == null) return;
-            var filter = ActiveFilterForRebuild();
-            InventoryGridBuilder.Build(_grid, Entries, filter, _iconResolver);
-        }
-
-        // 'Trang Bị' tab buckets all equippable categories; 'Khác' shows non-equip non-listed.
-        private PcItemCategory? ActiveFilterForRebuild()
-        {
-            if (_activeTab == "equip" || _activeTab == "other") return null; // filtered manually below
-            return ActiveFilter();
-        }
-
-        private void SwitchTab(string key)
-        {
-            _activeTab = key;
-            // 'all'/'equip'/'other' need custom handling; rebuild + apply manual filter.
-            if (key == "all" || key == "med" || key == "mat")
-            {
-                RebuildGrid();
-            }
-            else
-            {
-                // equip: keep only equippable categories; other: keep non-equippable, non-mat/med
-                var filtered = new List<InventoryEntry>();
-                foreach (var e in Entries)
-                {
-                    if (e?.item == null) continue;
-                    var cat = EquipmentSlotMappingService.ItemTypeToCategory(e.item.itemGenre);
-                    bool equippable = EquipmentSlotMappingService.IsEquippable(cat);
-                    if (key == "equip" && equippable) filtered.Add(e);
-                    else if (key == "other" && !equippable
-                             && cat != PcItemCategory.Medicament
-                             && cat != PcItemCategory.Material) filtered.Add(e);
-                }
-                InventoryGridBuilder.Build(_grid, filtered, null, _iconResolver);
-            }
-            ApplyTabActiveStyles();
-            RefreshFooter();
-        }
-
-        private void ApplyTabActiveStyles()
-        {
-            foreach (var kv in _tabButtons)
-            {
-                if (kv.Key == _activeTab) kv.Value.AddToClassList("active");
-                else kv.Value.RemoveFromClassList("active");
-            }
+            InventoryGridBuilder.Build(_grid, Entries, filter: null, iconResolver: _iconResolver);
         }
 
         private void RefreshFooter()
         {
-            if (_slotCount == null || _inventory == null) return;
-            int used = _inventory.Inventory.Count;
+            if (_slotCount == null) return;
+            int used = _inventory != null ? _inventory.Inventory.Count : 0;
             _slotCount.text = string.Format(
                 System.Globalization.CultureInfo.InvariantCulture,
                 "{0}/{1}", used, InventoryService.MaxInventorySlots);
+        }
+
+        private static Button DisabledButton(string name, string classes)
+        {
+            var button = new Button { name = name, text = string.Empty };
+            foreach (var cls in classes.Split(' '))
+                button.AddToClassList(cls);
+            button.SetEnabled(false);
+            return button;
         }
     }
 }

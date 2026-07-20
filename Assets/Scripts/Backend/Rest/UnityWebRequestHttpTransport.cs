@@ -48,13 +48,27 @@ namespace VLTK.Backend.Rest
                     await Task.Yield();
                 }
 
-                if (uwr.result == UnityWebRequest.Result.Success)
-                {
-                    string body = uwr.downloadHandler != null ? uwr.downloadHandler.text : string.Empty;
-                    return HttpTransportResult.Ok((int)uwr.responseCode, body);
-                }
+                  string body = uwr.downloadHandler != null ? uwr.downloadHandler.text : string.Empty;
+                  if (uwr.result == UnityWebRequest.Result.Success)
+                  {
+                      return HttpTransportResult.Ok((int)uwr.responseCode, body);
+                  }
 
-                string errMsg = $"{uwr.result}: {uwr.error}";
+                  // Unity đánh dấu HTTP 4xx/5xx là ProtocolError, nhưng đây vẫn
+                  // là response hợp lệ ở tầng transport. Giữ status code để
+                  // RestGameBackend/runner có thể phân biệt 401, 403, 409, 422…
+                  // và thực hiện policy first-run provisioning đúng contract.
+                  if (uwr.result == UnityWebRequest.Result.ProtocolError)
+                  {
+                      return HttpTransportResult.Ok((int)uwr.responseCode, body);
+                  }
+
+                  if (ct.IsCancellationRequested)
+                  {
+                      return HttpTransportResult.Error("cancelled", null);
+                  }
+
+                  string errMsg = $"{uwr.result}: {uwr.error}";
                 SubsystemLog.Warn(Subsystem, $"{request.Method} {request.Url} -> {errMsg}");
                 return HttpTransportResult.Error(errMsg, null);
             }

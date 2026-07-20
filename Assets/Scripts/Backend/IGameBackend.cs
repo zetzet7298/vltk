@@ -64,6 +64,13 @@ namespace VLTK.Backend
         // ---- FS-02B (auth → role → player) ----
 
         /// <summary>
+        /// Gọi POST /v1/account để tạo account game. Password gửi plaintext và
+        /// được FastAPI backend băm theo contract server PC.
+        /// </summary>
+        Task<BackendResponse<AccountResponse>> CreateAccountAsync(
+            AccountCreateRequest request, CancellationToken ct = default);
+
+        /// <summary>
         /// Gọi POST /v1/account/login với body JSON
         /// <c>{accName, password, otp?, clientIp?}</c>. Password gửi PLAINTEXT —
         /// KHÔNG hash trước (server tự hash MD5-IN-HOA để so sánh).
@@ -92,6 +99,10 @@ namespace VLTK.Backend
         /// </summary>
         Task<BackendResponse<RoleListResponse>> ListRolesAsync(
             string accName, CancellationToken ct = default);
+
+        /// <summary>Gọi POST /v1/role để tạo role đầu tiên cho account.</summary>
+        Task<BackendResponse<RoleResponse>> CreateRoleAsync(
+            RoleCreateRequest request, CancellationToken ct = default);
 
         /// <summary>
         /// Gọi GET /v1/player/by-role/{roleId}. Trả về trạng thái nhân vật
