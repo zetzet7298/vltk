@@ -79,10 +79,10 @@ namespace VLTK.Sandbox
                 RegisterKunLunUnityDisplayResiduals(catalog);
                 RegisterKunLunRelationshipTargets(catalog);
             }
-            RegisterMissingLearnedSkillStubs(catalog);
+            RegisterMissingLearnedSkillStubs(catalog, includeShaolin, includeTianWang, includeEMei, includeCuiYan, includeWuDu, includeTianRen, includeWuDang, includeTangMen);
             ApplyAllFactionPcStaticRows(catalog);
-            ApplyPcFanSpreadParity(catalog);
             RegisterAllFactionRelationshipTargets(catalog, includeEMei, includeWuDu, includeCuiYan, includeTianRen, includeWuDang);
+            ApplyPcFanSpreadParity(catalog);
             return catalog;
         }
 
@@ -191,11 +191,26 @@ namespace VLTK.Sandbox
             (1056, "\\spr\\skill\\1502\\sl\\sl_150_gunshao_dl.spr"),
         };
 
-        private static void RegisterMissingLearnedSkillStubs(SkillCatalog catalog)
+        // SKL-ALLFAC-002: stub registration honors the same faction gates as the
+        // faction builders, so a CaiBang-only catalog stays CaiBang-only.
+        private static void RegisterMissingLearnedSkillStubs(SkillCatalog catalog, bool includeShaolin, bool includeTianWang, bool includeEMei, bool includeCuiYan, bool includeWuDu, bool includeTianRen, bool includeWuDang, bool includeTangMen)
         {
             foreach (var stub in MissingLearnedSkillStubs)
             {
                 if (catalog.Resolve(stub.id) != null) continue;
+                bool gate = stub.faction switch
+                {
+                    CombatFaction.Shaolin => includeShaolin,
+                    CombatFaction.TianWang => includeTianWang,
+                    CombatFaction.EMei => includeEMei,
+                    CombatFaction.CuiYan => includeCuiYan,
+                    CombatFaction.WuDu => includeWuDu,
+                    CombatFaction.TianRen => includeTianRen,
+                    CombatFaction.WuDang => includeWuDang,
+                    CombatFaction.TangMen => includeTangMen,
+                    _ => false,
+                };
+                if (!gate) continue;
                 var s = BaseSkill(stub.id, stub.name, stub.name, 1, 1, 0, SkillMissileForm.None);
                 s.faction = stub.faction;
                 foreach (var spr in MissingSkillPreCastSpr)
