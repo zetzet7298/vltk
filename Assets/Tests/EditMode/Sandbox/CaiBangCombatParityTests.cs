@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
@@ -208,6 +209,40 @@ namespace VLTK.Tests.Sandbox
             beggar.rideHorse = true;
             var horseBlocked = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
             Assert.AreEqual(CombatCastRejectReason.HorseRestricted, horseBlocked.reason);
+        }
+
+        [Test]
+        public void CaiBang_125_SurroundMissilesSpreadAroundCasterPcCastCircle()
+        {
+            // PC KSkills.cpp CastCircle (SKILL_MF_Circle): missiles evenly spaced over 360°,
+            // missile 0 along caster→target. Trước fix: cả 16 projectile dùng chung targetPoint
+            // (chụm 1 hướng). Sau fix: missile 0 giữ targetPoint; còn lại tỏa quanh caster tại
+            // bán kính attackRadius (Lua bangda_egou L20 skill_attackradius=512).
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            var enemy = Enemy(new Vector2(300, 0));
+            var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+            Assert.AreEqual(16, r.projectiles.Count);
+
+            var first = r.projectiles[0];
+            Assert.AreEqual(enemy.position, first.target, "missile 0 bay về địch như PC castDir");
+
+            // Các missile còn lại nằm trên vòng tròn bán kính 512 quanh caster, cách đều 22.5°.
+            var directions = new List<Vector2>();
+            for (int i = 1; i < r.projectiles.Count; i++)
+            {
+                var toTarget = r.projectiles[i].target - beggar.position;
+                Assert.AreEqual(512f, toTarget.magnitude, 0.01f, $"missile {i} target trên vòng attackRadius");
+                directions.Add(toTarget.normalized);
+            }
+            for (int i = 0; i + 1 < directions.Count; i++)
+            {
+                float deg = Mathf.Acos(Mathf.Clamp(Vector2.Dot(directions[i], directions[i + 1]), -1f, 1f)) * Mathf.Rad2Deg;
+                Assert.AreEqual(22.5f, deg, 0.01f, $"missile {i + 1}→{i + 2} cách đều 360/16");
+            }
+            // Hướng missile 1 = castDir (0°) + 22.5° (ngược chiều kim đồng hồ, hệ tọa độ Unity).
+            Assert.AreEqual(Mathf.PI / 8f, Mathf.Atan2(directions[0].y, directions[0].x), 0.001f);
         }
 
         [Test]

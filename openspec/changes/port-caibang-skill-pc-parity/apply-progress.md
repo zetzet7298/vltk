@@ -158,3 +158,11 @@ buffs 359/1074 damage when those are cast), which is a visible gameplay/visual c
   (đọc 55296 thay vì 55306). Thêm vòng `+`/`-` (precedence Lua). Verify raw=55306 → 216/10%.
 - Test: group "CaiBang" 147 total / 146 passed / 1 failed (WuDang 165 pre-existing, ngoài scope).
 - Evidence: `evidence/three-bug-parity-fix-2026-07-17.md`.
+- Phase 6 (2026-07-17): 125 "Bổng Đả Ác Cẩu" missile spread — 16 tia bổng chụm 1 chỗ.
+  - Root cause 2 chỗ: `SetupSurroundMissiles` radius cố định 1.5 (visual) + `SpawnProjectiles`
+    dùng chung targetPoint cho mọi missile (runtime).
+  - Fix theo PC `KSkills.cpp CastCircle`: missile i = castDir + 360°/16·i, spawn tại caster
+    (Value2=0), bay full lifetime; runtime missile 0 giữ targetPoint, i>0 tỏa vòng attackRadius (512).
+  - Verify: test mới spread (missile 0→địch, 1–15 vòng 512 cách đều 22.5°) pass; CaiBang group
+    131/131; play-mode PlaySkillCast(125) → 16 tia mag=512, angle0=0/angle1=22.5.
+  - Evidence: `evidence/caibang-125-surround-spread-fix-2026-07-17.md`.

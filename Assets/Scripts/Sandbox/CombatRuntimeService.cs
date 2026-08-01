@@ -1208,6 +1208,15 @@ namespace VLTK.Sandbox
             SkillMissileForm form = luaFormInt > 0 ? luaForm : skill.missileForm;
             int attackRadius = luaAttackRadiusRaw > 0 ? luaAttackRadiusRaw : skill.attackRadius;
             report.childProjectileCount += count;
+            // PC KSkills.cpp CastCircle (SKILL_MF_Circle, e.g. 125 bangda_egou): m_nChildSkillNum
+            // missiles phóng đều quanh caster — hướng missile i = castDir + 360/num*i, spawn tại
+            // caster (nFirstStep=Value2=0). Trước fix (2026-07-17): mọi missile dùng chung
+            // targetPoint → 16 tia bổng chụm 1 hướng. Missile 0 giữ targetPoint để va chạm địch
+            // tại đích như PC; phần còn lại bay đến vòng attackRadius.
+            Vector2 castDir = targetPoint - caster.position;
+            float baseAngle = castDir.sqrMagnitude > 0.0001f ? Mathf.Atan2(castDir.y, castDir.x) : 0f;
+            bool surroundSpread = form == SkillMissileForm.Surround && count > 1 && attackRadius > 0;
+            float angleStep = surroundSpread ? 2f * Mathf.PI / count : 0f;
             for (int i = 0; i < count; i++)
             {
                 int childId = skill.childSkillId != 0 ? skill.childSkillId : skill.skillId;
@@ -1233,7 +1242,14 @@ namespace VLTK.Sandbox
                     startSkillLevel = skill.startSkillLevel,
                 };
                 var origin = child.skillId == 195 ? targetPoint : projectileOrigin ?? caster.position;
-                var result = _projectiles.Cast(child, origin, targetPoint, grid);
+                Vector2 missileTarget = targetPoint;
+                if (surroundSpread && i > 0)
+                {
+                    float angle = baseAngle + angleStep * i;
+                    var dir = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+                    missileTarget = caster.position + dir * attackRadius;
+                }
+                var result = _projectiles.Cast(child, origin, missileTarget, grid);
                 if (!result.success)
                 {
                     report.success = false;

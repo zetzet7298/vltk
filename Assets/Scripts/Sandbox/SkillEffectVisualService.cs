@@ -1374,19 +1374,31 @@ namespace VLTK.Sandbox
             }
         }
 
+        // PC KSkills.cpp CastCircle (SKILL_MF_Circle, e.g. gaibang.lua bangda_egou 125 "Bổng Đả Ác Cẩu"):
+        // m_nChildSkillNum missiles evenly spaced over full 360° (nDirPerNum = MaxMissleDir/ChildSkillNum),
+        // missile 0 along caster→target dir, spawn at caster (nFirstStep=Value2=0), fly full lifetime range.
+        // Trước fix (2026-07-17): radius cố định 1.5 → 16 tia bổng chụm quanh player thay vì tỏa ra.
         private void SetupSurroundMissiles(ActiveSkillEffect fx, int count)
         {
             fx.missileCount = count;
             fx.missilePositions = new Vector2[count];
+            fx.missileOrigins = new Vector2[count];
             fx.missileTargets = new Vector2[count];
-            float angleStep = 360f / count;
-            float radius = 1.5f;
+            Vector2 baseDir = fx.targetPos - fx.casterPos;
+            float targetDist = Mathf.Max(1f, baseDir.magnitude);
+            baseDir /= targetDist;
+
+            // PC parity: non-homing missiles fly their full lifetime range (speed * duration).
+            float distance = fx.missileSpeed * fx.missileDuration;
+            if (distance < targetDist) distance = targetDist;
+
+            float angleStep = 360f / Mathf.Max(1, count);
             for (int i = 0; i < count; i++)
             {
-                float angle = Mathf.Deg2Rad * (i * angleStep);
-                var offset = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
+                Vector2 dir = Rotate(baseDir, i * angleStep);
+                fx.missileOrigins[i] = fx.casterPos;
                 fx.missilePositions[i] = fx.casterPos;
-                fx.missileTargets[i] = fx.casterPos + offset;
+                fx.missileTargets[i] = fx.casterPos + dir * distance;
             }
         }
 
