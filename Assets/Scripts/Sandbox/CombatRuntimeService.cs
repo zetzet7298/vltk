@@ -665,7 +665,7 @@ namespace VLTK.Sandbox
                 castPoint = caster.position;
             var dist = Vector2.Distance(caster.position, castPoint);
             int attackRadius = ResolveAttackRadius(skill, skillLevel);
-            if (attackRadius > 0 && dist > attackRadius * RangeWorldPerPcUnit)
+            if (attackRadius > 0 && dist > attackRadius * RangeWorldPerPcUnit + 0.999f) // PC int-distance parity: boundary equality is in range
                 return Reject(report, CombatCastRejectReason.OutOfRange, $"KNpc::DoSkill: distance {dist:F1} > AttackRadius {attackRadius}");
 
             // [SECT-DASH] §2.1 G1 + §2.4.2 G1: PC Melee_Jump / Melee_JumpAndAttack (KNpc.cpp line 1834-1873)

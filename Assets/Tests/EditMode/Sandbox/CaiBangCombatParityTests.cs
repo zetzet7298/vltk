@@ -246,6 +246,20 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
+        public void CaiBang_125_CastAtExactRangeBoundary_SucceedsPcIntDistanceParity()
+        {
+            // PC so int distance (truncate): đứng đúng biên AttackRadius (L20=512) vẫn cast được.
+            // Trước fix (2026-07-17): float noise 512.00001 > 512.0 → OutOfRange → không missile/visual.
+            var svc = new CombatRuntimeService(Catalog());
+            var beggar = Beggar();
+            var enemy = Enemy(new Vector2(512, 0));
+            var r = svc.Cast(beggar, enemy, 125, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+            Assert.AreEqual(16, r.projectiles.Count);
+            Assert.AreEqual(512f, r.projectiles[0].target.magnitude, 0.001f);
+        }
+
+        [Test]
         public void CaiBang_BuffsAndAura_TargetSelfOrAllyAndApplyState()
         {
             var svc = new CombatRuntimeService(Catalog());
