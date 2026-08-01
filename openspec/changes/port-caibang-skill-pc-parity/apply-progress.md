@@ -166,3 +166,18 @@ buffs 359/1074 damage when those are cast), which is a visible gameplay/visual c
   - Verify: test mới spread (missile 0→địch, 1–15 vòng 512 cách đều 22.5°) pass; CaiBang group
     131/131; play-mode PlaySkillCast(125) → 16 tia mag=512, angle0=0/angle1=22.5.
   - Evidence: `evidence/caibang-125-surround-spread-fix-2026-07-17.md`.
+- Phase 6b (2026-07-17): 125 cast fail OutOfRange tại biên tầm 512 (float noise).
+  - `ProjectileService.Cast` + `CombatRuntimeService` KNpc::DoSkill so `dist > range + 0.999f`
+    (= FloorToInt parity, PC int distance truncation: 512 ≤ 512 còn cast được).
+  - Verify: test `CaiBang_125_CastAtExactRangeBoundary_SucceedsPcIntDistanceParity` pass, CaiBang 132/132.
+- Phase 6c (2026-07-17): missile SPR frame chọn sai hướng — tia bổng "xoay loạn xạ" (user bug report).
+  - Root cause: `SkillEffectRenderer.ComputePcDirection64` port nguyên PC `g_GetDirIndex` (KMath.h)
+    vốn định nghĩa trong screen space y-DOWN, nhưng Unity world y-UP → diagonal bị mirror đứng.
+    Cardinal (dọc/ngang) tình cờ đúng nên chỉ thấy sai ở tia chéo → cảm giác xoay loạn.
+  - Fix 1: flip Y trong `ComputePcDirection64` (wrapper) trước khi vào int-scan PC.
+  - Fix 2 (precision): round DELTA (to-from) thay vì round từng endpoint — world coords float lớn
+    làm hiệu 1px hướng bay mất precision; caller scale direction ×4096 trước khi truyền.
+  - Verify: 12/12 `SkillVisualDataDrivenParityTests` (test mới: Unity up→dir31, up-right→40, mirror rows),
+    48/48 CaiBang, full EditMode 4873 — không failure mới; play-mode: 16 tia bucket 12,11,10,9,8,7,6,5,
+    4,3,2,1,0,15,14,13 đúng chiều kim đồng hồ theo hướng bay (radial PC).
+  - Evidence: `evidence/caibang-125-missile-direction-fix-2026-07-17.md`.
