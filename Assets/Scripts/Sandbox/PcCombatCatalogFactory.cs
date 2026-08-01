@@ -307,11 +307,16 @@ namespace VLTK.Sandbox
                 addFire: (lv) => Link(lv, (1, 25, ""), (20, 275, "")),
                 elementParam: 9, icon: "\\spr\\Ui\\技能图标\\icon_sk_gb_aq.spr"),
 
-            // 117 Ném Đá Hỏi Đường: damage (yanmen_tuobo) [PC radius L20=384]
-            DamageSkillNew(117, "Đầu Thạch Vấn Lộ ", "Ném Đá Hỏi Đường", 10, 20, 384, 44, SkillMissileForm.Single, 1, false, false, 11,
-                phys: (lv) => Link(lv, (1, 10, ""), (20, 55, "")),
-                fire: (lv) => (Link(lv, (1, 10, ""), (20, 100, "")), 0, Link(lv, (1, 10, ""), (20, 150, ""))),
-                cost: (lv) => (10, 0, 0)),
+            // 117 Đầu Thạch Vấn Lộ: PC row LvlSetting1..3 = physicsdamage_v/firedamage_v/skill_cost_v
+            // nhưng LvlData1..3 RỖNG ở MỌI nguồn PC (client_offline_extracted, server_offline,
+            // slistcache ec1243ff) → KSkills::GetSkillLevelData fail-closed → 0 attribs, 0 cost,
+            // AttackRadius=280 (row value). Skill chỉ là "thăm dò hư thực đối phương" (SkillDesc PC).
+            // Trước fix (sai): mượn data của 119 yanmen_tuobo (phys 10→55, fire 10→100/150, cost 10,
+            // radius 384) → 117 gây sát thương ảo 125+ thay vì ~0 như PC.
+            DamageSkillNew(117, "Đầu Thạch Vấn Lộ ", "Ném Đá Hỏi Đường", 10, 20, 280, 44, SkillMissileForm.Single, 1, false, false, 11,
+                phys: (lv) => 0,
+                fire: (lv) => (0, 0, 0),
+                cost: (lv) => (0, 0, 0)),
 
             // 118 Cô Mộc Độn Lôi: buff
             ResistBuff(118, "Cô Mộc Độn Lôi ", "Cô Mộc Độn Lôi", 10, MagicAttributeKind.LightingResP),
@@ -346,9 +351,10 @@ namespace VLTK.Sandbox
             DogArrayPassive(124, "Đả Cẩu bổng", "Đả Cẩu Bổng Pháp", 30, "\\spr\\Ui\\技能图标\\icon_sk_gb_23.spr"),
 
             // 125 Bổng Đả Ác Cẩu: damage (bangda_egou) [PC radius L20=512]
-            // PC source: Skills.txt 125 SkillStyle=0, MissilesForm=4 (Chain), CharAnimId=11, ChildSkillNum=0 (Lua runtime).
-            //   gaibang.lua::tianxia_wugou skill_misslenum_v L1=1, L20=3 (Unity runtime đọc qua PcCaiBangLuaLevelService).
-            //   attackradius L20=400 (PC jx-source, bundled PcSkills.txt đồng ý).
+            // PC source: Skills.txt 125 SkillStyle=0, MissilesForm=3 (Circle — enum eMisslesForm
+            //   SKILL_MF_Circle, KHÔNG phải 4/Chain như comment cũ ghi), CharAnimId=11,
+            //   ChildSkillNum=16 (row), gaibang.lua::bangda_egou skill_misslenum_v không tồn tại
+            //   (row 16 missiles giữ nguyên).
             // Trước fix [2026-06-19]: childNum hardcoded 16 (sai PC), missileForm=Surround (form 3, sai PC form 4).
             //   attackRadius=512 (sai PC L20=400).
             // Sau fix: attackRadius=400 (PC), childSkillNum=0 (PC runtime dùng Lua skill_misslenum_v).

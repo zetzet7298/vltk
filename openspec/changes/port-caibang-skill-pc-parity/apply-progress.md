@@ -143,3 +143,18 @@ Phase 4:
 Holding commit for user review: this reverses the Phase 4 addskilldamage "chain spawn" model
 (casting Bổng Đả Ác Cẩu 125 no longer launches extra 359/1074 dragons; instead 125 passively
 buffs 359/1074 damage when those are cast), which is a visible gameplay/visual change.
+
+## Phase 5 (2026-07-17) — 3 runtime bugs + Lua parser gap (verify lại theo PC source)
+
+- Bug #1: `CombatRuntimeService.AddSkillDamageGrants` thiếu 357 → 1073/1101 cast ra 0% (PC 25%).
+  Thêm `(357, addskilldamage1/addskilldamage2)`. Verify: 122+128+357 @20 → 1073/1101 = **110%**.
+- Bug #2: `AutoAttackRatePoints` (714 proc) fabricated `{1,1},{15,5},{20,6},{21,6}` →
+  đúng PC `{1,1},{20,10},{21,10}` (3 nguồn Lua đồng ý `12*18*256+10`), CD 216 ticks.
+  Verify runtime roll pct=10, nextCastTime=216.
+- Bug #3: 117 Đầu Thạch Vấn Lộ mượn data 119 (phys 10→55, fire 10→100/150, cost 10, radius 384)
+  → PC LvlData rỗng mọi nguồn: 0 attribs, cost 0, radius 280. Fix catalog về 0/0/0 + 280.
+  Verify play-mode production cast: manaCost=0, damage sau impact=0.
+- Gap: `PcCaiBangLuaLevelService` parser chỉ evaluate `*`/`/`, drop `+10` của autoattackskill
+  (đọc 55296 thay vì 55306). Thêm vòng `+`/`-` (precedence Lua). Verify raw=55306 → 216/10%.
+- Test: group "CaiBang" 147 total / 146 passed / 1 failed (WuDang 165 pre-existing, ngoài scope).
+- Evidence: `evidence/three-bug-parity-fix-2026-07-17.md`.

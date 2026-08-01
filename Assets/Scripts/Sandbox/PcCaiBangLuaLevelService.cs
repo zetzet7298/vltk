@@ -647,6 +647,26 @@ namespace VLTK.Sandbox
                     if (op == '/' && Mathf.Approximately(factor, 0f)) return null;
                     val = op == '*' ? val * factor : val / factor;
                 }
+                // [CaiBang-714 2026-07-17] PC gaibang.lua::gaibang120.autoattackskill
+                //   slot[1] = {1,720*256+1},{20,720*256+20} ; slot[3] = {1,12*18*256+1},
+                //   {20,12*18*256+10} (client_offline + server_offline + slistcache đồng ý).
+                //   Lua precedence: + / - bind looser than * / ; left-to-right.
+                //   Trước fix: parser chỉ evaluate * và / → đọc 12*18*256 (thiếu +10)
+                //   → low byte 0 → proc% 0 thay vì PC 10 tại L20.
+                while (true)
+                {
+                    SkipTrivia(inner, ref pos);
+                    if (pos >= inner.Length || (inner[pos] != '+' && inner[pos] != '-')) break;
+                    char addOp = inner[pos++];
+                    SkipTrivia(inner, ref pos);
+                    int addStart = pos;
+                    while (pos < inner.Length && (char.IsDigit(inner[pos]) || inner[pos] == '.')) pos++;
+                    if (addStart == pos ||
+                        !float.TryParse(inner.Substring(addStart, pos - addStart), NumberStyles.Float,
+                            CultureInfo.InvariantCulture, out float addTerm))
+                        return null;
+                    val = addOp == '+' ? val + addTerm : val - addTerm;
+                }
             }
             SkipTrivia(inner, ref pos);
             string func = null;

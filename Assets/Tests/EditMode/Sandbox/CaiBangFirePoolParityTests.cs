@@ -34,7 +34,7 @@ namespace VLTK.Tests.Sandbox
             currentMana = 500,
             position = Vector2.zero,
             knownSkills = { 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130 },
-            skillLevels = { [117] = 20, [119] = 20, [130] = 20 },
+            skillLevels = { [117] = 20, [119] = 20, [122] = 20, [130] = 20 },
         };
 
         private static CombatActorState Enemy(Vector2 pos) =>
@@ -115,11 +115,12 @@ namespace VLTK.Tests.Sandbox
         // Independent of catalog damage numbers: both fire pools are set with DISTINCT magnitudes and
         // we assert the magic skill's damage depends only on the AddFireMagicV magnitude.
         [Test]
-        public void CaiBang117_MagicFire_ConsumesAddFireMagicVPool_IgnoresPhysicalPool()
+        public void CaiBang122_MagicFire_ConsumesAddFireMagicVPool_IgnoresPhysicalPool()
         {
-            // PC: 117 IsPhysical=0 (magic). Canonical fire pool = m_CurrentFireMagic (AddFireMagicV).
+            // PC: 122 (jianren_shenshou) IsPhysical=0 (magic). Canonical fire pool = m_CurrentFireMagic (AddFireMagicV).
             // Pre-fix runtime always read AddFireDamageV for fire regardless of isPhysical, so a magic
             // fire skill absorbed the physical pool and ignored the magic pool.
+            // (Dùng 122 thay 117: PC 117 LvlData rỗng → 0 damage; 122 mới là magic-fire thật của PC.)
             var svc = new CombatRuntimeService(Catalog(), damage: new DamageFormulaService { RollPercent = _ => true });
             var beggar = Beggar();
 
@@ -127,32 +128,32 @@ namespace VLTK.Tests.Sandbox
             beggar.states[MagicAttributeKind.AddFireMagicV] = Attr(MagicAttributeKind.AddFireMagicV, 100);
             beggar.states[MagicAttributeKind.AddFireDamageV] = Attr(MagicAttributeKind.AddFireDamageV, 500);
             var e1 = Enemy(new Vector2(200, 0));
-            var r1 = svc.Cast(beggar, e1, 117, e1.position, CombatRelation.Enemy);
+            var r1 = svc.Cast(beggar, e1, 122, e1.position, CombatRelation.Enemy);
             Assert.IsTrue(r1.success, r1.detail);
-            // PC KSkill::Cast: 117 SkillStyle=Missiles -> damage defers to missile impact.
-            Assert.AreEqual(0, r1.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            // PC KSkill::Cast: 122 SkillStyle=Missiles -> damage defers to missile impact.
+            Assert.AreEqual(0, r1.damageResults.Count, "122 Missile-style: damage waits for missile impact");
             UnityEngine.Random.InitState(20260717);
-            var m1 = r1.projectiles.First(p => p.skillId == 44);
+            var m1 = r1.projectiles.First(p => p.skillId == 46);
             Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, e1, r1, m1, e1.position));
             int dmgWithBoth = r1.damageResults.Sum(d => d.finalDamage);
-            Assert.Greater(dmgWithBoth, 0, "117 magic fire must deal damage");
+            Assert.Greater(dmgWithBoth, 0, "122 magic fire must deal damage");
 
             // Drop the PHYSICAL pool only; keep the magic pool identical.
             beggar.states.Remove(MagicAttributeKind.AddFireDamageV);
             svc.AdvanceTime(20);
             var e2 = Enemy(new Vector2(200, 0));
-            var r2 = svc.Cast(beggar, e2, 117, e2.position, CombatRelation.Enemy); // identical roll sequence
+            var r2 = svc.Cast(beggar, e2, 122, e2.position, CombatRelation.Enemy); // identical roll sequence
             Assert.IsTrue(r2.success, r2.detail);
-            Assert.AreEqual(0, r2.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            Assert.AreEqual(0, r2.damageResults.Count, "122 Missile-style: damage waits for missile impact");
             UnityEngine.Random.InitState(20260717);
-            var m2 = r2.projectiles.First(p => p.skillId == 44);
+            var m2 = r2.projectiles.First(p => p.skillId == 46);
             Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, e2, r2, m2, e2.position));
             int dmgMagicOnly = r2.damageResults.Sum(d => d.finalDamage);
 
             // Magic fire reads AddFireMagicV(100) in both casts -> identical damage.
             // Pre-fix: cast 1 read AddFireDamageV(500), cast 2 read AddFireDamageV(0) -> very different.
             Assert.AreEqual(dmgMagicOnly, dmgWithBoth,
-                "magic fire skill 117 must consume AddFireMagicV; the physical AddFireDamageV magnitude (500) must not change its damage");
+                "magic fire skill 122 must consume AddFireMagicV; the physical AddFireDamageV magnitude (500) must not change its damage");
         }
 
         // ---- Runtime: a PHYSICAL fire skill consumes AddFireDamageV (canonical confirmation). ----
@@ -216,6 +217,10 @@ namespace VLTK.Tests.Sandbox
             };
             a.knownSkills.Add(117);
             a.skillLevels[117] = 20;
+            // 122 (jianren_shenshou) is the magic-fire attacker used by the feed tests;
+            // PC skills.txt row 122 IsPhysical=0, missile 46 (jianren_shenshou).
+            a.knownSkills.Add(122);
+            a.skillLevels[122] = 20;
             if (knows116)
             {
                 a.knownSkills.Add(116);
@@ -330,12 +335,13 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang116_NormalPath_AddFireMagicV_Feeds117MagicFireDamage()
+        public void CaiBang116_NormalPath_AddFireMagicV_Feeds122MagicFireDamage()
         {
             // End-to-end normal path: the AddFireMagicV materialized from learned 116 must raise a
-            // magic-fire skill's damage (117 IsPhysical=0). Two identical players, identical seed and
-            // enemy; the ONLY difference is whether 116 was learned. No state is injected — both actors
-            // are built solely through MaterializePassiveStates.
+            // magic-fire skill's damage (122 jianren_shenshou IsPhysical=0). Two identical players,
+            // identical seed and enemy; the ONLY difference is whether 116 was learned. No state is
+            // injected — both actors are built solely through MaterializePassiveStates.
+            // (Dùng 122 thay 117: PC 117 LvlData rỗng → 0 damage; 122 mới là magic-fire thật của PC.)
             var svc = new CombatRuntimeService(Catalog(), damage: new DamageFormulaService { RollPercent = _ => true });
 
             var without116 = CaiBangPlayer(knows116: false);
@@ -350,22 +356,22 @@ namespace VLTK.Tests.Sandbox
 
             UnityEngine.Random.InitState(20260717);
             var eA = Enemy(new Vector2(200, 0));
-            var rA = svc.Cast(without116, eA, 117, eA.position, CombatRelation.Enemy);
-            // PC KSkill::Cast: 117 SkillStyle=Missiles -> damage defers to missile impact.
-            var mA = rA.projectiles.First(p => p.skillId == 44);
+            var rA = svc.Cast(without116, eA, 122, eA.position, CombatRelation.Enemy);
+            // PC KSkill::Cast: 122 SkillStyle=Missiles -> damage defers to missile impact.
+            var mA = rA.projectiles.First(p => p.skillId == 46);
             Assert.IsTrue(svc.TryResolveProjectileCollision(without116, eA, rA, mA, eA.position));
             int dmgA = rA.damageResults.Sum(d => d.finalDamage);
-            Assert.Greater(dmgA, 0, "117 baseline magic fire must deal damage");
+            Assert.Greater(dmgA, 0, "122 baseline magic fire must deal damage");
 
             UnityEngine.Random.InitState(20260717);
             var eB = Enemy(new Vector2(200, 0));
-            var rB = svc.Cast(with116, eB, 117, eB.position, CombatRelation.Enemy);
-            var mB = rB.projectiles.First(p => p.skillId == 44);
+            var rB = svc.Cast(with116, eB, 122, eB.position, CombatRelation.Enemy);
+            var mB = rB.projectiles.First(p => p.skillId == 46);
             Assert.IsTrue(svc.TryResolveProjectileCollision(with116, eB, rB, mB, eB.position));
             int dmgB = rB.damageResults.Sum(d => d.finalDamage);
 
             Assert.Greater(dmgB, dmgA,
-                "the AddFireMagicV materialized from learned 116 must raise 117 magic-fire damage via the normal path");
+                "the AddFireMagicV materialized from learned 116 must raise 122 magic-fire damage via the normal path");
         }
 
         [Test]

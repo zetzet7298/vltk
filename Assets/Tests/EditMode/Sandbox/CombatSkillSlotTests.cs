@@ -849,11 +849,12 @@ namespace VLTK.Tests.Sandbox
                 level = 60,
                 fightMode = true,
                 position = Vector2.zero,
-                knownSkills = { 117 },
-                skillLevels = { [117] = 20 }
+                knownSkills = { 122 },
+                skillLevels = { [122] = 20 }
             };
             
             // Add a fire damage buff to the player
+            // (Dùng 122 jianren_shenshou: PC 117 LvlData rỗng → 0 damage, không dùng làm skill test được.)
             player.states[MagicAttributeKind.FireDamageV] = new SkillMagicAttribute(MagicAttributeKind.FireDamageV, 50, 180, 0);
             
             var enemy = new CombatActorState
@@ -865,8 +866,11 @@ namespace VLTK.Tests.Sandbox
             };
             
             // Case 1: Enemy has no resistances
-            var report1 = svc.Cast(player, enemy, 117, enemy.position, CombatRelation.Enemy);
+            var report1 = svc.Cast(player, enemy, 122, enemy.position, CombatRelation.Enemy);
             Assert.IsTrue(report1.success);
+            // PC KSkill::Cast: 122 SkillStyle=Missiles -> damage waits for missile impact.
+            foreach (var m1 in report1.projectiles.Where(p => p.skillId == 46))
+                svc.TryResolveProjectileCollision(player, enemy, report1, m1, enemy.position);
             int lifeAfterCast1 = enemy.currentLife;
             
             // Bypass cooldown
@@ -877,7 +881,9 @@ namespace VLTK.Tests.Sandbox
             
             // Case 2: Enemy has AllResP active
             enemy.states[MagicAttributeKind.AllResP] = new SkillMagicAttribute(MagicAttributeKind.AllResP, 30, -1, 0); // 30% resist
-            var report2 = svc.Cast(player, enemy, 117, enemy.position, CombatRelation.Enemy);
+            var report2 = svc.Cast(player, enemy, 122, enemy.position, CombatRelation.Enemy);
+            foreach (var m2 in report2.projectiles.Where(p => p.skillId == 46))
+                svc.TryResolveProjectileCollision(player, enemy, report2, m2, enemy.position);
             Assert.IsTrue(report2.success);
             int lifeAfterCast2 = enemy.currentLife;
             

@@ -127,10 +127,12 @@ namespace VLTK.Tests.Sandbox
         public void CaiBang_DamageSkills_MatchLuaLevelFormulas()
         {
             var cat = Catalog();
+            // [CaiBang-slistcache 2026-07-17] PC row 117 LvlData1..3 RỖNG (mọi nguồn) → 0 attribs.
+            //   Trước fix (sai): mượn bảng yanmen_tuobo của 119 → 55/100-150/cost 10.
             var throwStone = cat.Resolve(117).GetPcLevelData(20);
-            Assert.AreEqual("PhysicsEnhanceP=55,0,0", throwStone.First(MagicAttributeKind.PhysicsEnhanceP).ToString());
-            Assert.AreEqual("FireDamageV=100,0,150", throwStone.First(MagicAttributeKind.FireDamageV).ToString());
-            Assert.AreEqual("SkillCostV=10,0,0", throwStone.First(MagicAttributeKind.SkillCostV).ToString());
+            Assert.AreEqual("PhysicsEnhanceP=0,0,0", throwStone.First(MagicAttributeKind.PhysicsEnhanceP).ToString());
+            Assert.AreEqual("FireDamageV=0,0,0", throwStone.First(MagicAttributeKind.FireDamageV).ToString());
+            Assert.AreEqual("SkillCostV=0,0,0", throwStone.First(MagicAttributeKind.SkillCostV).ToString());
 
             var dragon = cat.Resolve(128).GetPcLevelData(20);
             Assert.AreEqual("FireDamageV=536,0,536", dragon.First(MagicAttributeKind.FireDamageV).ToString());
@@ -392,20 +394,20 @@ namespace VLTK.Tests.Sandbox
             beggar.skillLevels[714] = 20;
             beggar.currentLife = 1000;
             var enemy = Enemy(new Vector2(2, 0)); // attacker (becomes target of proc'd 720)
-            enemy.knownSkills.Add(117); // enemy needs a damaging CaiBang skill to cast on beggar
-            enemy.skillLevels[117] = 20;
+            enemy.knownSkills.Add(122); // enemy needs a damaging CaiBang magic-fire skill (PC 117 deals 0)
+            enemy.skillLevels[122] = 20;
             enemy.faction = CombatFaction.CaiBang;
             enemy.currentMana = 500;
 
-            // enemy casts 117 on beggar → beggar is hit → beggar's 714 procs → 720 debuff on enemy.
-            var r = svc.Cast(enemy, beggar, 117, beggar.position, CombatRelation.Enemy);
+            // enemy casts 122 on beggar → beggar is hit → beggar's 714 procs → 720 debuff on enemy.
+            var r = svc.Cast(enemy, beggar, 122, beggar.position, CombatRelation.Enemy);
 
             Assert.IsTrue(r.success, r.detail);
-            // PC KSkill::Cast: 117 SkillStyle=Missiles -> the proc fires on missile impact, not on Cast.
-            var missile117 = r.projectiles.FirstOrDefault(p => p.skillId == 44);
-            Assert.IsNotNull(missile117, "117 spawned its child-44 missile");
-            Assert.IsTrue(svc.TryResolveProjectileCollision(enemy, beggar, r, missile117, beggar.position),
-                "117 missile impact lands on beggar");
+            // PC KSkill::Cast: 122 SkillStyle=Missiles -> the proc fires on missile impact, not on Cast.
+            var missile122 = r.projectiles.FirstOrDefault(p => p.skillId == 46);
+            Assert.IsNotNull(missile122, "122 spawned its child-46 missile");
+            Assert.IsTrue(svc.TryResolveProjectileCollision(enemy, beggar, r, missile122, beggar.position),
+                "122 missile impact lands on beggar");
             // PC: 714 is passive (Style=3), NOT active UtilitySkill.
             Assert.AreEqual(PcSkillStyle.PassivityNpcState, Catalog().Resolve(714).skillStyle,
                 "PC slistcache 714 SkillStyle=3 (passive)");
@@ -421,7 +423,9 @@ namespace VLTK.Tests.Sandbox
           [Test]
           public void CaiBang_714_DecodesPcProcRateAtLevels1_15_20()
           {
-              foreach (var expected in new[] { (level: 1, rate: 1), (level: 15, rate: 5), (level: 20, rate: 6) })
+              // PC gaibang120.autoattackskill slot[3] = {{1,12*18*256+1},{20,12*18*256+10},{21,12*18*256+10}}
+              // → low byte proc%: L1=1, L15=floor(1+14/19*9)=7, L20=10. (verified 2026-07-17, 3 nguồn PC).
+              foreach (var expected in new[] { (level: 1, rate: 1), (level: 15, rate: 7), (level: 20, rate: 10) })
               {
                   var observed = new System.Collections.Generic.List<int>();
                   var runtime = new CombatRuntimeService(Catalog(), damage: new DamageFormulaService
@@ -435,21 +439,43 @@ namespace VLTK.Tests.Sandbox
                   var attacker = Enemy(new Vector2(2, 0));
                   attacker.faction = CombatFaction.CaiBang;
                   attacker.currentMana = 1000;
-                  attacker.knownSkills.Add(117);
-                  attacker.skillLevels[117] = 20;
+                  attacker.knownSkills.Add(122);
+                  attacker.skillLevels[122] = 20;
 
-                  var report = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+                  var report = runtime.Cast(attacker, bearer, 122, bearer.position, CombatRelation.Enemy);
                   Assert.IsTrue(report.success, report.detail);
-                  // PC KSkill::Cast: 117 SkillStyle=Missiles -> proc fires on missile impact.
-                  var missile = report.projectiles.FirstOrDefault(p => p.skillId == 44);
-                  Assert.IsNotNull(missile, "117 spawned its child-44 missile");
+                  // PC KSkill::Cast: 122 SkillStyle=Missiles -> proc fires on missile impact.
+                  var missile = report.projectiles.FirstOrDefault(p => p.skillId == 46);
+                  Assert.IsNotNull(missile, "122 spawned its child-46 missile");
                   Assert.IsTrue(runtime.TryResolveProjectileCollision(attacker, bearer, report, missile, bearer.position),
-                      "117 missile impact lands on bearer");
+                      "122 missile impact lands on bearer");
                   CollectionAssert.Contains(observed, expected.rate,
                       $"PC autoattackskill[3] low byte at L{expected.level} must be {expected.rate}%");
                   Assert.AreEqual(216, runtime.NextCastTime(bearer.actorId, 714),
                       "PC autoattackskill[3] high bytes encode 12*18=216 cooldown ticks");
               }
+          }
+
+          [Test]
+          public void CaiBang_714_LuaServiceDecodesAutoattackskillFullPcExpression()
+          {
+              // [CaiBang-714 2026-07-17] PC gaibang.lua::gaibang120.autoattackskill (line 370,
+              // client_offline + server_offline + newest slistcache deu dong y):
+              //   slot[1] = {{1,720*256 + 1},{20,720*256 + 20},{21,720*256 + 21}}
+              //   slot[3] = {{1,12*18*256 + 1},{20,12*18*256 + 10},{21,12*18*256 + 10}}
+              // Parser truoc fix chi evaluate * va / -> doc 12*18*256 (low byte 0), sai PC (+10).
+              // Sau fix: doc du 12*18*256+10=55306 -> /256=216 ticks CD, %256=10 proc%.
+              Assert.AreEqual(12 * 18 * 256 + 10,
+                  PcCaiBangLuaLevelService.GetSingleValue(714, 20, "autoattackskill", 3),
+                  "PC autoattackskill[3] L20 raw = 12*18*256+10 (parser phai ho tro +)");
+              int raw = PcCaiBangLuaLevelService.GetSingleValue(714, 20, "autoattackskill", 3);
+              Assert.AreEqual(216, raw / 256, "PC: /256 = 12*18=216 cooldown ticks");
+              Assert.AreEqual(10, raw % 256, "PC: %256 = proc% 10 tai L20");
+              Assert.AreEqual(1, PcCaiBangLuaLevelService.GetSingleValue(714, 1, "autoattackskill", 3) % 256,
+                  "PC: L1 proc% = 1");
+              Assert.AreEqual(720 * 256 + 20,
+                  PcCaiBangLuaLevelService.GetSingleValue(714, 20, "autoattackskill", 1),
+                  "PC autoattackskill[1] L20 raw = 720*256+20 (target skill 720, level 20)");
           }
 
           [Test]
@@ -460,7 +486,7 @@ namespace VLTK.Tests.Sandbox
               catalog.Resolve(117).timePerCast = 0; // isolate the 714 boundary from the attacker's own cooldown
               var runtime = new CombatRuntimeService(catalog, damage: new DamageFormulaService
               {
-                  RollPercent = pct => { if (pct == 6) procRolls++; return true; },
+                  RollPercent = pct => { if (pct == 10) procRolls++; return true; },
               });
               var bearer = Beggar();
               bearer.knownSkills.Add(714);
@@ -469,40 +495,40 @@ namespace VLTK.Tests.Sandbox
               var attacker = Enemy(new Vector2(2, 0));
               attacker.faction = CombatFaction.CaiBang;
               attacker.currentMana = 1000;
-              attacker.knownSkills.Add(117);
-              attacker.skillLevels[117] = 20;
+              attacker.knownSkills.Add(122);
+              attacker.skillLevels[122] = 20;
 
-              var c0 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              var c0 = runtime.Cast(attacker, bearer, 122, bearer.position, CombatRelation.Enemy);
               Assert.IsTrue(c0.success, c0.detail);
-              ResolveFirstMissile44(runtime, attacker, bearer, c0);
+              ResolveFirstChildMissile(runtime, attacker, bearer, c0, 46);
               Assert.AreEqual(1, procRolls);
               Assert.AreEqual(216, runtime.NextCastTime(bearer.actorId, 714));
 
               runtime.AdvanceTime(215);
-              var c1 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              var c1 = runtime.Cast(attacker, bearer, 122, bearer.position, CombatRelation.Enemy);
               Assert.IsTrue(c1.success, c1.detail);
-              ResolveFirstMissile44(runtime, attacker, bearer, c1);
+              ResolveFirstChildMissile(runtime, attacker, bearer, c1, 46);
               Assert.AreEqual(1, procRolls, "t+215 remains on cooldown");
 
               runtime.AdvanceTime(1);
-              var c2 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              var c2 = runtime.Cast(attacker, bearer, 122, bearer.position, CombatRelation.Enemy);
               Assert.IsTrue(c2.success, c2.detail);
-              ResolveFirstMissile44(runtime, attacker, bearer, c2);
+              ResolveFirstChildMissile(runtime, attacker, bearer, c2, 46);
               Assert.AreEqual(1, procRolls, "PC nextCastTime < currentTime: equality at t+216 still blocks");
 
               runtime.AdvanceTime(1);
-              var c3 = runtime.Cast(attacker, bearer, 117, bearer.position, CombatRelation.Enemy);
+              var c3 = runtime.Cast(attacker, bearer, 122, bearer.position, CombatRelation.Enemy);
               Assert.IsTrue(c3.success, c3.detail);
-              ResolveFirstMissile44(runtime, attacker, bearer, c3);
+              ResolveFirstChildMissile(runtime, attacker, bearer, c3, 46);
               Assert.AreEqual(2, procRolls, "t+217 is the first eligible tick");
           }
 
-          // PC KSkill::Cast: 117 SkillStyle=Missiles -> damage/proc defers to missile impact.
-          // Resolving the single spawned child-44 missile against the bearer triggers the 714
+          // PC KSkill::Cast: 122 SkillStyle=Missiles -> damage/proc defers to missile impact.
+          // Resolving the spawned child-46 missile against the bearer triggers the 714
           // passive-autoattack proc exactly when the bearer actually takes a damaging hit.
-          private static void ResolveFirstMissile44(CombatRuntimeService runtime, CombatActorState attacker, CombatActorState bearer, CombatCastReport report)
+          private static void ResolveFirstChildMissile(CombatRuntimeService runtime, CombatActorState attacker, CombatActorState bearer, CombatCastReport report, int childSkillId)
           {
-              var missile = report.projectiles.FirstOrDefault(p => p.skillId == 44);
+              var missile = report.projectiles.FirstOrDefault(p => p.skillId == childSkillId);
               if (missile != null)
                   runtime.TryResolveProjectileCollision(attacker, bearer, report, missile, bearer.position);
           }
@@ -846,36 +872,74 @@ namespace VLTK.Tests.Sandbox
         }
 
         [Test]
-        public void CaiBang_117_DefenderAllResStateReducesIncomingDamage()
+        public void CaiBang_117_NoFabricatedDamage_MatchesPcEmptyLvlData()
+        {
+            // PC truth (verified 2026-07-17, 3 nguồn đồng ý — client_offline_extracted/skills.txt,
+            // server_offline/settings/skills.txt, slistcache ec1243ff PcCaiBangSkills.txt):
+            //   row 117 LvlSetting1..3 = physicsdamage_v / firedamage_v / skill_cost_v nhưng
+            //   LvlData1..3 RỖNG → GetSkillLevelData("", level) → "" → 0 attribs, cost = row CostValue = 0.
+            //   AttackRadius = 280 (row). Đầu Thạch Vấn Lộ chỉ là skill "thăm dò" (SkillDesc PC).
+            //   Trước fix (sai): mượn bảng yanmen_tuobo của 119 → 117 gây 125+ dmg, tốn 10 mana.
+            var d1 = Catalog().Resolve(117).GetPcLevelData(1);
+            var d20 = Catalog().Resolve(117).GetPcLevelData(20);
+            Assert.IsFalse(d1.damage.Any(a => a.kind == MagicAttributeKind.PhysicsDamageV && a.value1 != 0),
+                "117 L1 must have NO nonzero PhysicsDamageV (PC LvlData empty)");
+            Assert.IsFalse(d20.damage.Any(a => a.kind == MagicAttributeKind.PhysicsDamageV && a.value1 != 0),
+                "117 L20 must have NO nonzero PhysicsDamageV");
+            Assert.IsFalse(d20.damage.Any(a => a.kind == MagicAttributeKind.FireDamageV && (a.value1 != 0 || a.value3 != 0)),
+                "117 L20 must have NO nonzero FireDamageV");
+            Assert.IsFalse(d20.skill.Any(a => a.kind == MagicAttributeKind.SkillCostV && a.value1 != 0),
+                "117 L20 cost=0 (PC skill_cost_v empty → row CostValue=0)");
+            Assert.AreEqual(280, Catalog().Resolve(117).attackRadius, "117 AttackRadius=280 (PC row value)");
+
+            var svc = new CombatRuntimeService(Catalog(), damage: new DamageFormulaService { RollPercent = _ => true });
+            var beggar = Beggar();
+            beggar.knownSkills.Add(117);
+            beggar.skillLevels[117] = 20;
+            var enemy = Enemy(new Vector2(200, 0));
+            var r = svc.Cast(beggar, enemy, 117, enemy.position, CombatRelation.Enemy);
+            Assert.IsTrue(r.success, r.detail);
+            Assert.AreEqual(0, r.manaCost, "PC 117 mana cost = 0");
+            Assert.AreEqual(1, r.childProjectileCount, "PC row 117 ChildSkillNum=1 → missile 44 vẫn bay (thăm dò)");
+            Assert.AreEqual(0, r.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            var m = r.projectiles.First(p => p.skillId == 44);
+            Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, enemy, r, m, enemy.position));
+            Assert.AreEqual(0, r.damageResults.Sum(d => d.finalDamage),
+                "PC 117 has no damage attribs → missile impact deals 0 damage (probe skill)");
+        }
+
+        [Test]
+        public void CaiBang_122_DefenderAllResStateReducesIncomingDamage()
         {
             // PC KNpc.cpp::CalcDamage reads m_CurrentXxxResist from the defender, then applies:
             //   nDamage -= nDamage * nRes / MAX_PERCENT.
             // Runtime parity: CombatRuntimeService must convert active defender states into DefenderStats.
+            // (Dùng 122 — magic fire thật của PC; 117 giờ là probe 0 damage theo PC LvlData rỗng.)
             var deterministicDamage = new DamageFormulaService { RollPercent = _ => true };
             var svc = new CombatRuntimeService(Catalog(), damage: deterministicDamage);
             var beggar = Beggar();
-            beggar.knownSkills.Add(117);
-            beggar.skillLevels[117] = 20;
+            beggar.knownSkills.Add(122);
+            beggar.skillLevels[122] = 20;
 
-            // PC KSkill::Cast: 117 SkillStyle=Missiles -> CastMissles() only. Damage defers to the
-            // single spawned child-44 missile impact (OnMissleEvent). Random roll happens at impact.
+            // PC KSkill::Cast: 122 SkillStyle=Missiles -> CastMissles() only. Damage defers to the
+            // single spawned child-46 missile impact (OnMissleEvent). Random roll happens at impact.
             var noResEnemy = Enemy(new Vector2(200, 0));
-            var noRes = svc.Cast(beggar, noResEnemy, 117, noResEnemy.position, CombatRelation.Enemy);
+            var noRes = svc.Cast(beggar, noResEnemy, 122, noResEnemy.position, CombatRelation.Enemy);
             Assert.IsTrue(noRes.success, noRes.detail);
-            Assert.AreEqual(0, noRes.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            Assert.AreEqual(0, noRes.damageResults.Count, "122 Missile-style: damage waits for missile impact");
             UnityEngine.Random.InitState(20260629);
-            var noResMissile = noRes.projectiles.First(p => p.skillId == 44);
+            var noResMissile = noRes.projectiles.First(p => p.skillId == 46);
             Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, noResEnemy, noRes, noResMissile, noResEnemy.position));
             int noResDamage = noRes.damageResults.Sum(d => d.finalDamage);
 
             svc.AdvanceTime(2);
             var resistedEnemy = Enemy(new Vector2(200, 0));
             resistedEnemy.states[MagicAttributeKind.AllResP] = new SkillMagicAttribute(MagicAttributeKind.AllResP, 50, -1, 0);
-            var resisted = svc.Cast(beggar, resistedEnemy, 117, resistedEnemy.position, CombatRelation.Enemy);
+            var resisted = svc.Cast(beggar, resistedEnemy, 122, resistedEnemy.position, CombatRelation.Enemy);
             Assert.IsTrue(resisted.success, resisted.detail);
-            Assert.AreEqual(0, resisted.damageResults.Count, "117 Missile-style: damage waits for missile impact");
+            Assert.AreEqual(0, resisted.damageResults.Count, "122 Missile-style: damage waits for missile impact");
             UnityEngine.Random.InitState(20260629);
-            var resistedMissile = resisted.projectiles.First(p => p.skillId == 44);
+            var resistedMissile = resisted.projectiles.First(p => p.skillId == 46);
             Assert.IsTrue(svc.TryResolveProjectileCollision(beggar, resistedEnemy, resisted, resistedMissile, resistedEnemy.position));
             int resistedDamage = resisted.damageResults.Sum(d => d.finalDamage);
 

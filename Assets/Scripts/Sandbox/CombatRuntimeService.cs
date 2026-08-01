@@ -1125,12 +1125,16 @@ namespace VLTK.Sandbox
           private const int AutoAttackSkillBearerId = 714;
           private const int AutoAttackTargetSkillId = 720;
           private const int AutoAttackCooldownTicks = 12 * 18;
+          // [CaiBang-slistcache 2026-07-17] PC gaibang.lua::gaibang120.autoattackskill slot[3]
+          // (client_offline + server_offline + newest slistcache đều đồng ý):
+          //   {{1,12*18*256+1},{20,12*18*256+10},{21,12*18*256+10}}
+          //   → low byte = proc %: L1=1%, L20=10%, L21=10% (interp L15 floor=7%).
+          // Trước fix (sai): {1,1},{15,5},{20,6},{21,6} — giá trị fabricated, không có trong PC Lua.
           private static readonly List<PcCaiBangLuaLevelService.LuaPoint> AutoAttackRatePoints = new()
           {
               new PcCaiBangLuaLevelService.LuaPoint(1, 1, "Line"),
-              new PcCaiBangLuaLevelService.LuaPoint(15, 5, "Line"),
-              new PcCaiBangLuaLevelService.LuaPoint(20, 6, "Line"),
-              new PcCaiBangLuaLevelService.LuaPoint(21, 6, "Line"),
+              new PcCaiBangLuaLevelService.LuaPoint(20, 10, "Line"),
+              new PcCaiBangLuaLevelService.LuaPoint(21, 10, "Line"),
           };
 
         private void ProcessAutoAttackProcs(CombatActorState attacker, CombatActorState bearer, CombatCastReport report)
@@ -1260,6 +1264,11 @@ namespace VLTK.Sandbox
             (125, new[] { "addskilldamage1", "addskilldamage2" }),
             (128, new[] { "addskilldamage1", "addskilldamage2", "addskilldamage3" }),
             (359, new[] { "addskilldamage1" }),
+            // [CaiBang-slistcache 2026-07-17] PC gaibang.lua::feilong_zaitian:
+            //   addskilldamage1 → target 1073 +1→25% (L20=25)
+            //   addskilldamage2 → target 1101 +1→25% (L20=25)
+            // Trước fix (sai): thiếu 357 → 1073/1101 cast ra addSkillDmg=0 thay vì PC 25%.
+            (357, new[] { "addskilldamage1", "addskilldamage2" }),
         };
 
         /// <summary>
