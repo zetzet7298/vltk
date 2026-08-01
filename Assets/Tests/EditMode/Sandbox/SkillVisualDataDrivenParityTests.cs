@@ -141,8 +141,12 @@ namespace VLTK.Tests.Sandbox
             var fromInts = DirectionMethod(rendererType, "ComputePcDirection64FromInts");
             var fromVector = DirectionMethod(rendererType, "ComputePcDirection64");
             Assert.AreEqual(-1, (int)fromVector.Invoke(null, new object[] { Vector2.zero, Vector2.zero }));
-            Assert.AreEqual(0, (int)fromVector.Invoke(null, new object[] { Vector2.zero, Vector2.up * 1024f }));
+            // Unity world is +Y UP; ComputePcDirection64 flips Y into PC screen space
+            // (+Y down) before the KMath scan. Unity up -> PC dir 31, down -> PC dir 0.
+            Assert.AreEqual(31, (int)fromVector.Invoke(null, new object[] { Vector2.zero, Vector2.up * 1024f }));
             Assert.AreEqual(47, (int)fromVector.Invoke(null, new object[] { Vector2.zero, Vector2.right * 1024f }));
+            // Unity up-right -> PC up-right (40; qsqrt exact-45 rounds to dir 40), not mirrored down-right (55).
+            Assert.AreEqual(40, (int)fromVector.Invoke(null, new object[] { Vector2.zero, Vector2.one * 1024f }));
 
             foreach (var test in new[]
             {
@@ -162,6 +166,11 @@ namespace VLTK.Tests.Sandbox
                 int actual = (int)fromInts.Invoke(null,
                     new object[] { test.Item1, test.Item2, test.Item3, test.Item4 });
                 Assert.AreEqual(test.Item5, actual, $"from=({test.Item1},{test.Item2}) to=({test.Item3},{test.Item4})");
+
+            // PC-space rows above feed FromInts directly; the Unity wrapper must mirror Y:
+            // PC (1024,1024) down-right == Unity (1024,-1024) down-right.
+            Assert.AreEqual(55, (int)fromVector.Invoke(null, new object[] { Vector2.zero, new Vector2(1024f, -1024f) }));
+            Assert.AreEqual(23, (int)fromVector.Invoke(null, new object[] { Vector2.zero, new Vector2(-1024f, 1024f) }));
             }
         }
 

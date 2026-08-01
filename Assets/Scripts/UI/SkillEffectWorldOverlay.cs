@@ -420,7 +420,9 @@ namespace VLTK.UI
                             else
                             {
                                 Vector2 direction = fx.ResolveMissileDirection(i);
-                                renderer.sprite = SelectPcMissileFrame(fx, mp, mp + direction);
+                                // 4096x scale keeps the 1px travel direction resolvable after
+                                // int rounding in ComputePcDirection64 (PC mps int parity).
+                                renderer.sprite = SelectPcMissileFrame(fx, mp, mp + direction * 4096f);
                                 renderer.transform.position = new Vector3(mp.x, mp.y, 0f);
                                 renderer.transform.localScale = Vector3.one * Mathf.Max(0.01f, fx.pcSpriteRenderScale);
                                 renderer.color = Color.white;

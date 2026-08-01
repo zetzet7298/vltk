@@ -159,7 +159,9 @@ namespace VLTK.UI
                     : fx.currentMissilePos;
                 Vector2 direction = fx.ResolveMissileDirection(i);
 
-                var sprite = SelectPcMissileFrame(fx, sprites, missilePos, missilePos + direction);
+                // 4096x scale keeps the 1px travel direction resolvable after
+                // int rounding in ComputePcDirection64 (PC mps int parity).
+                var sprite = SelectPcMissileFrame(fx, sprites, missilePos, missilePos + direction * 4096f);
                 if (sprite == null || sprite.texture == null) continue;
 
                 DrawSpriteScreen(sprite, missilePos);
@@ -238,8 +240,13 @@ namespace VLTK.UI
         // KMath.h g_GetDirIdxForFindPath: integer position endpoints, qsqrt distance,
         // fixed-point sine scan, then mirror for positive X. Same position is -1.
         internal static int ComputePcDirection64(Vector2 from, Vector2 to)
-            => ComputePcDirection64FromInts(Mathf.RoundToInt(from.x), Mathf.RoundToInt(from.y),
-                Mathf.RoundToInt(to.x), Mathf.RoundToInt(to.y));
+            // PC g_GetDirIndex (KMath.h) is defined in screen space where +Y is DOWN.
+            // Unity world is +Y UP, so flip Y before the int-based PC scan, otherwise
+            // diagonal headings come out vertically mirrored (sticks visibly "spin").
+            // Round the DELTA, not each endpoint: world coords are large floats and
+            // Round(a)-Round(b) != Round(a-b) destroys a 1px travel direction.
+            => ComputePcDirection64FromInts(0, 0,
+                Mathf.RoundToInt(to.x - from.x), -Mathf.RoundToInt(to.y - from.y));
 
         internal static int ComputePcDirection64FromInts(int fromX, int fromY, int toX, int toY)
         {
