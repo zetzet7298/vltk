@@ -139,7 +139,7 @@ namespace UnityEditor.Localization.UI
             var prop = new StringPropertyData()
             {
                 entryNameLabel = Styles.entryName,
-                expandedSessionKey = $"{property.serializedObject.targetObject.GetInstanceID()}-{property.propertyPath}",
+                expandedSessionKey = $"{InstanceIdHelper.GetInstanceIdString(property.serializedObject.targetObject)}-{property.propertyPath}",
                 localizedString = property.GetActualObjectForSerializedProperty<LocalizedString>(fieldInfo),
                 variableArguments = new ReorderableListExtended(property.serializedObject, property.FindPropertyRelative("m_LocalVariables"))
                 {

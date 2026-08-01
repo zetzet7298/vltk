@@ -18,15 +18,11 @@ namespace UnityEditor.Localization.UI
     {
         static List<Locale> s_Locales = new List<Locale>();
 
-        #if UNITY_2023_2_OR_NEWER
-        [Obsolete("UxmlFactory is deprecated and will be removed. Use UxmlElementAttribute instead.", false)]
-        #endif
+        #if !UNITY_2023_2_OR_NEWER
         public new class UxmlFactory : UxmlFactory<ProjectLocalePopupField, UxmlTraits> {}
 
-        #if UNITY_2023_2_OR_NEWER
-        [Obsolete("UxmlTraits is deprecated and will be removed. Use UxmlElementAttribute instead.", false)]
-        #endif
         public new class UxmlTraits : PopupField<Locale>.UxmlTraits {}
+        #endif
 
         /// <summary>
         /// Creates a new instance of the field.

@@ -1,0 +1,595 @@
+skillId	name	faction	style	radius	form	childId	childNum
+1	Đòn dài	None	Missiles	100	Single	64	1
+2	Tấn công tầm xa	None	Missiles	320	Single	65	1
+53	Tấn công cận chiến	None	Missiles	75	Single	63	1
+196	Ném đá	None	Missiles	180	Single	87	1
+199	Nhổ độc	None	Missiles	180	Single	90	1
+210	Khinh công	None	InitiativeNpcState	400	None	0	0
+115	Cái Bang Bổng Pháp	CaiBang	PassivityNpcState	0	Stationary	0	0
+116	Cái Bang Chưởng Pháp	CaiBang	PassivityNpcState	0	Stationary	0	0
+117	Ném Đá Hỏi Đường	CaiBang	Missiles	280	Single	44	1
+118	Cô Mộc Độn Lôi	CaiBang	Missiles	400	Stance	49	1
+119	Duyên Môn Thác Bát	CaiBang	Missiles	240	Single	45	1
+120	Bôn Lưu Đáo Hải	CaiBang	Missiles	400	Stance	50	1
+121	Diệu Thủ Không Không	CaiBang	InitiativeNpcState	180	Stance	0	0
+122	Kiến Nhân Thân Thủ	CaiBang	Missiles	300	Single	46	1
+123	Khuê Mộc Tinh Chiếu	CaiBang	Missiles	400	Stance	51	1
+124	Đả Cẩu Bổng Pháp	CaiBang	PassivityNpcState	0	Stationary	0	1
+125	Bổng Đả Ác Cẩu	CaiBang	Missiles	72	Surround	47	16
+126	Kim Ô Ánh Tuyết	CaiBang	Missiles	400	Stance	52	1
+127	Hoạt Bất Lưu Thủ	CaiBang	Missiles	0	Stance	0	0
+128	Kháng Long Hữu Hối	CaiBang	Missiles	400	Fan	48	8
+129	Hóa Hiểm Vi Di	CaiBang	PassivityNpcState	400	Stationary	0	0
+130	Túy Điệp Cuồng Vũ	CaiBang	InitiativeNpcState	0	Stationary	0	0
+274	Giương Long Chưởng	CaiBang	PassivityNpcState	0	Stationary	0	0
+277	Hoành Bách Lộ Thiên	CaiBang	Missiles	0	Stance	114	1
+357	Phi Long Tại Thiên	CaiBang	Missiles	400	Single	166	3
+359	Thiên Hạ Vô Cẩu (player)	CaiBang	Missiles	400	Single	168	16
+358	Tiềm Long Tại Uyên	CaiBang	Missiles	570	Stationary	167	1
+360	Tiêu Dao Công	CaiBang	PassivityNpcState	0	Stationary	0	0
+714	Hỗn Thiên Khí Công	CaiBang	PassivityNpcState	0	Stationary	0	0
+720	Hỗn Thiên Khí Công Quyết Chí	CaiBang	Missiles	440	Stance	275	1
+1073	Thời Thặng Lục Long	CaiBang	Missiles	400	Single	335	1
+1074	Bổng Hoành Lược Mã	CaiBang	Missiles	400	Single	336	5
+1539	Thiên Hạ Vô Cẩu	CaiBang	Missiles	400	None	168	16
+1101	Thừa Lục Long (đa mục tiêu)	CaiBang	Missiles	400	Single	363	1
+1103	Thừa Lục Long (không script)	CaiBang	Missiles	280	Stationary	344	1
+1161	Thừa Lục Long (NPC)	CaiBang	Missiles	400	Single	335	1
+1162	Cửu Cái Bang 150 (NPC)	CaiBang	Missiles	400	Single	336	5
+389	Long Chiến Ư Dã	CaiBang	Missiles	570	Stationary	195	1
+1072	Ngũ Diệu Càn Khôn	None	Missiles	570	Stationary	334	1
+209	Đả Cẩu Trận Tử Đạn	CaiBang	Missiles	180	Surround	92	1
+151	Võ Đang Kiếm Pháp	WuDang	PassivityNpcState	0	Stationary	0	0
+152	Võ Đang Quyền Pháp	WuDang	PassivityNpcState	0	Stationary	0	0
+154	Âm Dương Khí	WuDang	PassivityNpcState	0	Stationary	0	0
+153	Nộ Lôi Chỉ	WuDang	Missiles	400	Single	24	1
+155	Thương Hải Minh Nguyệt	WuDang	Missiles	480	Single	25	1
+156	Thuần Dương Tâm Pháp	WuDang	PassivityNpcState	0	Stationary	0	0
+157	Tọa Vọng Vô Ngã	WuDang	InitiativeNpcState	0	Stationary	0	0
+158	Kiếm Phi Kinh Thiên	WuDang	Missiles	400	Stance	26	1
+159	Thất Tinh Trận	WuDang	InitiativeNpcState	180	Stationary	211	1
+160	Thế Vân Tung	WuDang	PassivityNpcState	0	Stationary	0	0
+161	Lưỡng Nghi Tâm Pháp	WuDang	PassivityNpcState	0	Stationary	0	0
+162	Huyền Nhất Vô Tượng	WuDang	Missiles	520	Stance	27	1
+163	Nhân Kiếm Hợp Nhất	WuDang	InitiativeNpcState	0	Stance	215	1
+164	Bác Cấp Nhi Phục	WuDang	Missiles	470	Stance	28	1
+165	Vô Ngã Vô Kiếm	WuDang	Missiles	400	Fan	29	16
+166	Thái Cực Thần Công	WuDang	PassivityNpcState	0	Stationary	0	0
+3	Thiếu Lâm Kiếm Pháp	Shaolin	PassivityNpcState	0	Stationary	0	0
+4	Thiếu Lâm Côn Pháp	Shaolin	PassivityNpcState	0	Stationary	0	0
+6	Thiếu Lâm Đao Pháp	Shaolin	PassivityNpcState	0	Stationary	0	0
+8	Thiếu Lâm Quyền Pháp	Shaolin	PassivityNpcState	0	Stationary	0	0
+9	Hỗn Nguyên Nhất Khí Công	Shaolin	PassivityNpcState	0	Stationary	0	0
+10	Kim Cang Phục Ma	Shaolin	Melee	90	8	216	1
+11	Hoành Tảo Lục Hợp	Shaolin	Missiles	90	Stationary	86	1
+12	Kim Cang Hộ Thể	Shaolin	PassivityNpcState	0	Stationary	0	0
+13	Lập Địa Thành Phật	Shaolin	Missiles	400	Surround	76	1
+14	Hàng Long Bất Vũ	Shaolin	Missiles	90	Stationary	66	1
+15	Bất Động Minh Vương	Shaolin	Missiles	400	Surround	76	1
+16	La Hán Trận	Shaolin	InitiativeNpcState	180	Stationary	202	1
+17	Long Trảo Hổ Trảo	Shaolin	Melee	90	8	218	1
+18	Huệ Nhãn Chú	Shaolin	Missiles	400	Surround	76	1
+19	Ma Ha Vô Lượng	Shaolin	Missiles	200	Single	61	2
+20	Sư Tử Hống	Shaolin	Missiles	90	Stationary	77	1
+21	Dịch Cân Kinh	Shaolin	PassivityNpcState	0	Stationary	0	0
+43	Đường Môn Ám Khí	TangMen	PassivityNpcState	0	Stationary	0	0
+45	Tích Lịch Đơn	TangMen	Missiles	400	Single	35	1
+47	Đoạt Hồn Tiêu	TangMen	Missiles	450	Single	116	1
+48	Tâm Nhãn	TangMen	PassivityNpcState	0	Stationary	0	0
+50	Truy Tâm Tiễn	TangMen	Missiles	360	Single	37	2
+54	Mạn Thiên Hoa Vũ	TangMen	Missiles	400	Stance	38	1
+58	Thiên La Địa Võng	TangMen	Missiles	520	Single	67	1
+249	Tiểu Lý Phi Đao	TangMen	Missiles	480	Stance	106	1
+302	Bạo Vũ Lê Hoa	TangMen	Missiles	470	Stance	96	1
+303	Độc Thích Cốt	TangMen	Missiles	50	Stationary	127	1
+339	Nhiếp Hồn Nguyệt Ảnh	TangMen	Missiles	360	Single	149	1
+341	Tán Hoa Tiêu	TangMen	Missiles	400	Fan	151	5
+342	Cửu Cung Phi Tinh	TangMen	Missiles	360	Fan	152	5
+343	Xuyên Tâm Thích	TangMen	Missiles	50	Stationary	153	1
+345	Hàn Băng Thích	TangMen	Missiles	50	Stationary	155	1
+347	Địa Diệm Hỏa	TangMen	Missiles	50	Stationary	157	1
+349	Lôi Kích Thuật	TangMen	Missiles	50	Stationary	159	1
+351	Loạn Hoàn Kích	TangMen	Missiles	50	Stationary	161	1
+710	Mê Ảnh Tung	TangMen	Melee	0	13	0	0
+1069	Vô Ảnh Xuyên	TangMen	Missiles	360	Single	331	1
+1070	Thiết Liên Tứ Sát	TangMen	Missiles	470	Stance	332	1
+1071	Càn Khôn Nhất Trịch	TangMen	Missiles	360	Fan	333	5
+1110	Tích Lịch Loạn Hoàn Kích	TangMen	Missiles	420	Single	374	1
+77	Nga My Kiếm Pháp	EMei	PassivityNpcState	0	Stationary	0	0
+79	Nga My Chưởng Pháp	EMei	PassivityNpcState	0	Stationary	0	0
+80	Phiêu Tuyết Xuyên Vân	EMei	Missiles	240	Single	68	1
+81	Thu Phong Diệp	EMei	InitiativeNpcState	0	Stationary	204	1
+82	Tứ Tượng Đồng Quy	EMei	Missiles	570	Stance	101	1
+83	Vọng Nguyệt	EMei	InitiativeNpcState	180	Stationary	205	1
+84	Phong Vũ Phiêu Hương	EMei	InitiativeNpcState	180	Stance	0	0
+85	Nhất Diệp Tri Thu	EMei	Missiles	180	Single	2	1
+86	Lưu Thủy	EMei	InitiativeNpcState	180	Stationary	206	1
+87	Băng Tâm Quyết	EMei	PassivityNpcState	0	Stationary	0	0
+88	Bất Diệt Bất Tuyệt	EMei	Missiles	360	Single	3	1
+89	Mộng Điệp	EMei	InitiativeNpcState	180	Stationary	207	1
+91	Phật Quang Phổ Chiếu	EMei	Missiles	400	Stationary	4	1
+92	Phật Tâm Từ Hữu	EMei	InitiativeNpcState	180	Stationary	208	1
+93	Từ Hàng Phổ Độ	EMei	Missiles	400	Stance	5	1
+23	Thiên Vương Thương Pháp	TianWang	PassivityNpcState	0	Stationary	0	0
+24	Thiên Vương Đao Pháp	TianWang	PassivityNpcState	0	Stationary	0	0
+26	Thiên Vương Chùy Pháp	TianWang	PassivityNpcState	0	Stationary	0	0
+29	Trảm Long Quyết	TianWang	Melee	72	12	405	1
+30	Hồi Phong Lạc Nhạn	TianWang	Melee	90	12	219	2
+31	Hành Vân Quyết	TianWang	Melee	72	12	406	1
+32	Vô Tâm Trảm	TianWang	Melee	90	12	220	1
+33	Tĩnh Tâm Quyết	TianWang	InitiativeNpcState	0	Stationary	0	0
+34	Kinh Lôi Trảm	TianWang	Melee	72	12	404	1
+35	Dương Quan Tam Điệp	TianWang	Melee	90	12	221	3
+36	Thiên Vương Chiến Ý	TianWang	PassivityNpcState	0	Stationary	0	0
+37	Bát Phong Trảm	TianWang	Melee	90	12	222	1
+40	Đoạn Hồn Thích	TianWang	Melee	200	11	224	1
+41	Huyết Chiến Bát Phương	TianWang	Melee	90	12	225	4
+42	Kim Chung Tráo	TianWang	InitiativeNpcState	0	Stationary	0	0
+60	Ngũ Độc Đao Pháp	WuDu	PassivityNpcState	0	Stationary	0	0
+62	Ngũ Độc Chưởng Pháp	WuDu	PassivityNpcState	0	Stationary	0	0
+63	Độc Sa Chưởng	WuDu	Missiles	180	Single	30	1
+64	Băng Lam Huyền Tinh	WuDu	Missiles	440	Stance	20	1
+65	Huyết Đao Độc Sát	WuDu	Missiles	400	Single	31	1
+66	Tạp Nan Dược Kinh	WuDu	PassivityNpcState	0	Stationary	0	0
+67	Cửu Thiên Cuồng Lôi	WuDu	Missiles	440	Stance	20	1
+68	U Minh Khô Lâu	WuDu	Missiles	400	Single	32	1
+69	Vô Hình Độc	WuDu	InitiativeNpcState	400	Stationary	203	1
+70	Chích Dương Thệ Thiên	WuDu	Missiles	440	Stance	20	1
+71	Thiên Cương Địa Sát	WuDu	Missiles	420	Stance	33	1
+72	Xuyên Tâm Độc Thích	WuDu	Missiles	440	Stance	20	1
+73	Vạn Độc Thực Tâm	WuDu	Missiles	440	Stance	20	1
+74	Chu Cáp Thanh Minh	WuDu	Missiles	400	Single	34	2
+75	Ngũ Độc Kỳ Kinh	WuDu	PassivityNpcState	0	Stationary	0	0
+76	Di Hoa Tiếp Ngọc	WuDu	InitiativeNpcState	0	Stationary	0	0
+95	Thúy Yên Đao Pháp	CuiYan	PassivityNpcState	0	Stationary	0	0
+97	Thúy Yên Song Đao	CuiYan	PassivityNpcState	0	Stationary	0	0
+99	Phong Hoa Tuyết Nguyệt	CuiYan	Missiles	360	Single	6	1
+100	Hộ Thể Hàn Băng	CuiYan	InitiativeNpcState	0	Stationary	0	0
+101	Trị Liệu Thuật	CuiYan	Missiles	400	Stance	13	1
+102	Phong Quyển Tàn Tuyết	CuiYan	Missiles	360	Single	7	1
+103	Thiên Lý Băng Phong	CuiYan	InitiativeNpcState	0	Stationary	0	0
+105	Vũ Đả Lê Hoa	CuiYan	Missiles	300	Stance	8	4
+108	Mục Dã Lưu Tinh	CuiYan	Missiles	420	Stance	9	1
+109	Tuyết Ảnh	CuiYan	InitiativeNpcState	0	Stationary	0	0
+111	Bích Hải Triều Sinh	CuiYan	Missiles	72	Stationary	10	1
+113	Phù Vân Tán Tuyết	CuiYan	Missiles	400	Stance	12	1
+114	Băng Cốt Tuyết Tâm	CuiYan	PassivityNpcState	0	Stationary	0	0
+131	Thiên Nhẫn Đao Pháp	TianRen	PassivityNpcState	0	Stationary	0	0
+132	Thiên Nhẫn Thương Pháp	TianRen	PassivityNpcState	0	Stationary	0	0
+135	Tàn Dương Như Huyết	TianRen	Missiles	270	Single	54	1
+136	Hỏa Liên Phần Hoa	TianRen	Missiles	440	Stance	20	1
+137	Ảo Ảnh Phi Hồ	TianRen	Missiles	440	Stance	20	1
+138	Thôi Sơn Điền Hải	TianRen	Missiles	400	Single	55	10
+139	Hỗn Thủy Mạc Ngư	TianRen	Missiles	60	Single	70	1
+140	Phi Hồng Vô Tích	TianRen	Missiles	440	Stance	20	1
+141	Liệt Hỏa Tình Thiên	TianRen	Missiles	72	Surround	56	16
+142	Thâu Thiên Hoán Nhật	TianRen	Missiles	60	Single	69	1
+143	Lịch Ma Đoạt Hồn	TianRen	Missiles	440	Stance	20	1
+144	Minh Tôn Bản Sinh	TianRen	PassivityNpcState	0	Stationary	0	0
+145	Đơn Chỉ Liệt Diệm	TianRen	Missiles	280	Single	57	1
+146	Ngũ Hành Trận	TianRen	InitiativeNpcState	180	Stationary	226	1
+147	Huyền Minh Hấp Tinh	TianRen	Missiles	60	Single	71	1
+148	Ma Diệm Thất Sát	TianRen	Missiles	570	Stance	58	1
+149	Thực Cốt Huyết Nhận	TianRen	InitiativeNpcState	0	Stationary	0	0
+150	Thiên Ma Giải Thể	TianRen	InitiativeNpcState	0	Stationary	0	0
+361	Vân Long Kích	None	Missiles	60	Single	169	1
+362	Thiên Ngoại Lưu Tinh	None	Missiles	420	Stance	171	1
+363	Nghiệp Hỏa Phần Thành	None	Missiles	570	Surround	170	1
+364	Bi Tô Thanh Phong	None	Missiles	440	Stance	20	1
+1075	Giang Hải Não Lan	None	Missiles	60	Single	337	1
+1076	Tật Hỏa Liệu Nguyên	None	Missiles	570	Stance	366	1
+192	Ngự Phong Thuật	None	InitiativeNpcState	0	Surround	0	0
+371	Nhân Kiếm Hợp Nhất Start	None	InitiativeNpcState	0	Surround	0	0
+90	Mê Tung Ảo Ảnh	KunLun	Missiles	440	Stance	20	1
+167	Côn Lôn Đao Pháp	KunLun	PassivityNpcState	0	Stationary	0	0
+168	Côn Lôn Kiếm Pháp	KunLun	PassivityNpcState	0	Stationary	0	0
+169	Hô Phong Pháp	KunLun	Missiles	300	Single	14	1
+171	Thanh Phong Phù	KunLun	Missiles	440	Stance	19	1
+172	Thiên Tế Tấn Lôi	KunLun	Missiles	360	Single	15	1
+173	Thiên Thanh Địa Trọc	KunLun	PassivityNpcState	440	Stance	20	1
+174	Ki Bán Phù	KunLun	Missiles	440	Stance	20	1
+175	Khi Hàn Ngạo Tuyết	KunLun	Missiles	440	Stance	20	1
+176	Cuồng Phong Sậu Điện	KunLun	Missiles	180	Single	16	1
+178	Nhất Khí Tam Thanh	KunLun	PassivityNpcState	440	Stance	21	1
+179	Cuồng Lôi Chấn Địa	KunLun	Missiles	400	Stance	17	1
+181	Khí Tâm Phù	KunLun	Missiles	440	Stance	22	1
+182	Ngũ Lôi Chánh Pháp	KunLun	Missiles	470	Stance	18	4
+275	KunLun 275	KunLun	PassivityNpcState	0	Stationary	0	0
+372	KunLun 372	KunLun	Missiles	400	Single	178	1
+375	KunLun 375	KunLun	Missiles	470	Stance	181	4
+392	KunLun 392	KunLun	Missiles	470	Stance	290	1
+393	KunLun 393	KunLun	Missiles	440	Stance	20	1
+394	KunLun 394	KunLun	Missiles	440	Stance	20	1
+630	KunLun 630	KunLun	PassivityNpcState	0	Stationary	0	0
+717	KunLun 717	KunLun	PassivityNpcState	0	Stationary	0	0
+1080	KunLun 1080	KunLun	Missiles	400	Single	342	1
+1081	KunLun 1081	KunLun	Missiles	512	Stance	372	1
+51	Thanh Mộc	TangMen	PassivityNpcState	400	None	0	0
+55	Thối Độc Thuật	TangMen	Missiles	400	Surround	0	1
+57	Băng Phách Hàn Quang	TangMen	Missiles	400	Surround	0	1
+38	TM_Rel_38	None	Melee	0	10	223	1
+96	TM_Rel_96	None	PassivityNpcState	0	Stationary	0	0
+106	TM_Rel_106	None	Summon	0	Single	0	0
+227	TM_Rel_227	None	Missiles	0	Surround	36	3
+301	TM_Rel_301	None	Missiles	0	Surround	126	8
+304	TM_Rel_304	None	Missiles	0	Stance	128	4
+331	TM_Rel_331	None	Missiles	0	Surround	144	4
+332	TM_Rel_332	None	InitiativeNpcState	180	Stationary	333	1
+333	TM_Rel_333	None	Missiles	0	Surround	137	1
+340	TM_Rel_340	None	Missiles	0	Stationary	150	1
+344	TM_Rel_344	None	Missiles	0	Stance	154	4
+346	TM_Rel_346	None	Missiles	0	Stance	156	4
+348	TM_Rel_348	None	Missiles	0	Stance	158	4
+350	TM_Rel_350	None	Missiles	0	Stance	160	4
+352	TM_Rel_352	None	Missiles	0	Stance	162	4
+374	TM_Rel_374	None	Missiles	0	Stance	180	1
+1097	TM_Rel_1097	None	Missiles	0	Stationary	359	1
+1098	TM_Rel_1098	None	Missiles	0	Surround	360	8
+1113	TM_Rel_1113	None	Missiles	0	Stationary	161	1
+170	Đại Lãng Thực Không	KunLun	InitiativeNpcState	0	Stationary	0	0
+177	Bách Xuyên Nạp Hải	KunLun	InitiativeNpcState	440	Stationary	0	0
+180	Độc Tê Tị Tà	KunLun	InitiativeNpcState	0	Stationary	0	0
+183	Tuế Nguyệt Vô Tình	KunLun	Missiles	180	Stance	23	1
+184	Kim Thiền Thoát Xác	KunLun	InitiativeNpcState	0	Stationary	0	0
+22	KL_Rel_22	None	Missiles	0	None	0	0
+290	KL_Rel_290	None	Missiles	0	None	0	0
+387	KL_Rel_387	None	Missiles	0	None	0	0
+399	KL_Rel_399	None	Missiles	0	None	0	0
+1109	KL_Rel_1109	None	Missiles	0	None	0	0
+243	EM_Rel_243	None	Missiles	400	Surround	1	4
+329	EM_Rel_329	None	Missiles	400	Stationary	143	1
+1089	EM_Rel_1089	None	Missiles	800	Surround	325	8
+1115	EM_Rel_1115	None	Missiles	400	Stance	376	1
+398	CY_Rel_398	None	Missiles	360	Single	196	16
+112	CY_Rel_112	None	Missiles	0	Surround	11	16
+338	CY_Rel_338	None	Missiles	400	Stationary	148	1
+1064	CY_Rel_1064	None	Missiles	400	Fan	354	5
+1093	CY_Rel_1093	None	Missiles	400	Stationary	355	1
+1102	CY_Rel_1102	None	Missiles	240	None	362	3
+723	TR_Rel_723	None	14	180	Stationary	273	1
+1131	TR_Rel_1131	None	Missiles	60	Single	337	1
+337	TR_Rel_337	None	Missiles	240	Single	147	1
+354	WDU_Rel_354	None	Missiles	420	None	164	1
+383	WDU_Rel_383	None	Missiles	420	None	204	1
+1094	WDU_Rel_1094	None	Missiles	420	Stance	356	1
+1095	WDU_Rel_1095	None	Missiles	420	None	357	1
+738	WD_Rel_738	None	Missiles	0	Stationary	275	1
+1107	WD_Rel_1107	None	Missiles	470	Stationary	369	1
+1216	Đăng Điệp Đại Chiêu Âm Tào Địa Trảo	None	Missiles	420	Surround	400	16
+1217	Kỹ năng Mod 1217	None	Missiles	420	None	400	1
+1218	Kỹ năng Mod 1218	None	Missiles	420	Surround	400	10
+1219	Kỹ năng Mod 1219	None	Missiles	420	None	401	1
+1220	Kim Quyên La Hán	Shaolin	PassivityNpcState	0	None	0	0
+1221	Chinh Chiến Bát Phương	Shaolin	PassivityNpcState	0	None	0	0
+1222	Sâm La Độc Hải	Shaolin	PassivityNpcState	0	None	0	0
+1223	Hấp Tinh trận	Shaolin	PassivityNpcState	0	None	0	0
+1224	Ba La Tâm Kinh	Shaolin	PassivityNpcState	0	None	0	0
+1225	Huyền Băng Vô Tức	Shaolin	PassivityNpcState	0	None	0	0
+1226	Liệt Hỏa Phẫn Thiên	Shaolin	PassivityNpcState	0	None	0	0
+1227	Ô Y Quyết	Shaolin	PassivityNpcState	0	None	0	0
+1228	Chân Vũ Thất Tiệt	Shaolin	PassivityNpcState	0	None	0	0
+1229	Thiên Cương Khất Kính	Shaolin	PassivityNpcState	0	None	0	0
+1230	Minh Kính Vô Di	EMei	InitiativeNpcState	0	None	0	0
+1231	Du Long Chân Khí	WuDang	Missiles	0	None	275	1
+1232	Hồn ảnh Tùng Sanh	WuDu	Missiles	420	None	357	1
+1233	Xác suất hóa giảI sát thương hoàn toàn	None	InitiativeNpcState	0	None	0	0
+1234	Từ Hàng Phổ Độ	EMei	Missiles	400	None	5	1
+1235	Dung Tuyết Vô Tung	EMei	InitiativeNpcState	0	None	0	0
+1236	Ma Âm Phệ Phách	TianRen	InitiativeNpcState	0	None	0	0
+1237	Thiên Hành Khí Công	EMei	InitiativeNpcState	0	None	0	0
+1238	Âm Dương Khí Quyết	EMei	InitiativeNpcState	0	None	0	0
+1239	Tiên Thiên Cương Khí	EMei	InitiativeNpcState	0	None	0	0
+1240	Kỹ năng Mod 1240	None	InitiativeNpcState	0	None	0	0
+1241	Kỹ năng Mod 1241	None	InitiativeNpcState	0	None	0	0
+1242	Kỹ năng Mod 1242	None	InitiativeNpcState	0	None	0	0
+1243	Kỹ năng Mod 1243	None	InitiativeNpcState	0	None	0	0
+1244	Kỹ năng Mod 1244	None	InitiativeNpcState	0	None	0	0
+1245	Kỹ năng Mod 1245	None	InitiativeNpcState	0	None	0	0
+1246	Kỹ năng Mod 1246	None	InitiativeNpcState	0	None	0	0
+1247	Kỹ năng Mod 1247	None	InitiativeNpcState	0	None	0	0
+1248	Kỹ năng Mod 1248	None	InitiativeNpcState	0	None	0	0
+1249	Khôi ẩn - Hắc Thần	None	PassivityNpcState	0	None	0	0
+1250	ºÚẫủÍã¿ứìỗệọ	None	Missiles	440	None	275	1
+1251	Tụ ẩn - Hắc Thần	None	PassivityNpcState	0	None	0	0
+1252	ºÚẫủằÔÍúìỗệọ	None	Missiles	440	None	275	1
+1253	Giáp ẩn - Hắc Thần	None	PassivityNpcState	0	None	0	0
+1254	ºÚẫủàÀÅÛáăệỳ	None	InitiativeNpcState	0	None	0	0
+1255	Hài ẩn - Hắc Thần	None	PassivityNpcState	0	None	0	0
+1256	ºÚẫủÃÍềÂéơìểáăệỳ	None	InitiativeNpcState	0	None	0	0
+1257	Đái ẩn - Hắc Thần	None	PassivityNpcState	0	None	0	0
+1258	Kỹ năng Mod 1258	None	InitiativeNpcState	0	None	0	0
+1259	ệéễẵẹĂ°ẻẩỹạõằãấụéễ	None	PassivityNpcState	0	None	0	0
+1260	ễẵÄẽậẻẵðạõằãẳẳÄĩ	None	PassivityNpcState	0	None	0	0
+1261	ễẵÄẽậẻẵðÅĩậÙạõằã	None	PassivityNpcState	0	None	0	0
+1262	Càn Khôn Vô Lượng	None	PassivityNpcState	0	None	0	0
+1263	ẹèằăéƯểù	CuiYan	Missiles	800	None	108	1
+1264	Phong Ma Quyết	None	PassivityNpcState	0	None	0	0
+1265	ằÔÍú7ºÅáăệỳ	None	Missiles	440	None	275	1
+1266	Triệt Vũ Phong Thế	None	PassivityNpcState	0	None	0	0
+1267	Kỹ năng Mod 1267	None	InitiativeNpcState	0	None	0	0
+1268	Íổẳềạõằã-200ẳả	None	InitiativeNpcState	0	None	0	0
+1269	Người Tuyết	None	Missiles	400	Single	402	1
+1270	Ông Già Noel	None	Missiles	400	Single	402	1
+1271	Thiên Sứ Giáng Sinh	None	Missiles	400	Single	402	1
+1272	Kỹ năng Mod 1272	None	Missiles	400	Single	402	1
+1273	Kỹ năng Mod 1273	None	Missiles	400	Single	402	1
+1274	Tinh Linh	None	Missiles	400	Single	402	1
+1275	Heo trắng	None	Missiles	400	Single	402	1
+1276	Bạch Hổ	None	Missiles	400	Single	402	1
+1277	2013ÄờVIPạõằã	None	PassivityNpcState	0	None	0	0
+1278	Kỹ năng Mod 1278	None	Missiles	800	Surround	403	8
+1279	Kỹ năng Mod 1279	None	Missiles	800	Surround	403	4
+1280	Kỹ năng Mod 1280	None	Missiles	800	None	403	1
+1281	ễêàâìÊáÊÊăạƠÊâ	None	PassivityNpcState	0	None	0	0
+1282	ễêàâìÊáÊÊăãÀÊâ	None	PassivityNpcState	0	None	0	0
+1283	Toái Cốt	None	PassivityNpcState	0	None	0	0
+1284	Dịch Tủy	None	PassivityNpcState	0	None	0	0
+1285	ậộạầéĐạỷ	None	InitiativeNpcState	0	None	0	0
+1286	ềìậốéĐạỷ	None	InitiativeNpcState	0	None	0	0
+1287	ễẵÄẽèỡẽÂẻịàéầ°ấđạõằã	None	InitiativeNpcState	0	None	0	0
+1288	ễẵÄẽàụầđẳẳÄĩ	CuiYan	Missiles	800	None	404	4
+1289	ễẵÄẽể°ẻốãỗầéÀâếạẳẳÄĩ	None	InitiativeNpcState	0	None	0	0
+1290	Võ công vốn có	None	PassivityNpcState	0	None	0	0
+1291	ÄờấịÅÚ	TangMen	Missiles	800	Single	396	1
+1292	ÄờấịÅÚ±ơếă	TangMen	Missiles	800	None	398	1
+1293	éÂÄờìÊáÊÊăạƠÊâ	None	InitiativeNpcState	0	None	0	0
+1294	éÂÄờìÊáÊÊăãÀÊâ	None	InitiativeNpcState	0	None	0	0
+1295	Kỹ năng Mod 1295	EMei	InitiativeNpcState	180	None	1170	1
+1296	Tự hào ý chí chiến đấu	EMei	PassivityNpcState	440	None	1297	1
+1297	°Áẩằếẵềõìểà¯	EMei	Missiles	440	Surround	92	1
+1298	Tăng Sinh lực (%)	None	InitiativeNpcState	0	None	0	0
+1299	Tăng Nội lực (%)	None	InitiativeNpcState	0	None	0	0
+1300	Giảm thọ thương	None	InitiativeNpcState	0	None	0	0
+1301	Giảm thời gian trúng độc	None	InitiativeNpcState	0	None	0	0
+1302	Giảm thời gian trì hoãn	None	InitiativeNpcState	0	None	0	0
+1303	ẳừẹÊễẻấ±ẳọ	None	InitiativeNpcState	0	None	0	0
+1304	Tăng kháng hoàn toàn	None	InitiativeNpcState	0	None	0	0
+1305	ẹêÄÚẫẽẽịễửẳểÊă°Ùãệ±ẩÊâ	None	InitiativeNpcState	0	None	0	0
+1306	Tăng tốc độ chạy	None	InitiativeNpcState	0	None	0	0
+1307	Tăng né tránh	None	InitiativeNpcState	0	None	0	0
+1308	Kỹ năng Mod 1308	None	InitiativeNpcState	0	None	0	0
+1309	ẳểạƠậÙ	None	InitiativeNpcState	0	None	0	0
+1310	Hợp thành kĩ năng công kích	None	InitiativeNpcState	0	None	0	0
+1311	Tăng tỉ lệ trọng kích	None	InitiativeNpcState	0	None	0	0
+1312	Kỹ năng Mod 1312	None	InitiativeNpcState	0	None	0	0
+1313	Kỹ năng Mod 1313	None	PassivityNpcState	0	None	0	0
+1314	Kỹ năng Mod 1314	None	PassivityNpcState	0	None	0	0
+1315	Kỹ năng Mod 1315	None	PassivityNpcState	0	None	0	0
+1316	Kỹ năng Mod 1316	None	PassivityNpcState	0	None	0	0
+1317	Sát khí quyết	None	InitiativeNpcState	0	None	0	0
+1318	Trường sinh quyết	None	InitiativeNpcState	0	None	0	0
+1319	Hổ kích	None	PassivityNpcState	600	None	0	0
+1320	Xuyên Thạch	None	InitiativeNpcState	600	None	275	1
+1321	Ngọc Thạch Phiến	None	PassivityNpcState	0	None	0	0
+1322	Hư Nhược Vô Lực	None	InitiativeNpcState	400	None	273	1
+1323	Lăng Phong	None	PassivityNpcState	0	None	0	0
+1324	Nhật Nhiên	None	InitiativeNpcState	440	None	275	1
+1325	Nhật Như Sơn	None	PassivityNpcState	0	None	0	0
+1326	Huyết Dũng	None	InitiativeNpcState	440	None	275	1
+1327	Đẩu Uyển	None	PassivityNpcState	0	None	0	0
+1328	Tàn Phong Vân Quyền	None	Missiles	400	None	273	1
+1329	Đoạn Nguyệt	None	PassivityNpcState	0	None	0	0
+1330	phiến	None	InitiativeNpcState	440	None	275	1
+1331	Tâm Tinh Thức	None	PassivityNpcState	0	None	0	0
+1332	Vô Ngã	None	InitiativeNpcState	440	None	0	0
+1333	Kết băng	TangMen	Missiles	440	None	20	1
+1334	ễẵÄẽ9áăệỳ1	None	InitiativeNpcState	440	None	275	1
+1335	ễẵÄẽ9áăệỳ2	None	InitiativeNpcState	440	None	275	1
+1336	Vũ Uy Thuật (trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1337	Nhược Thủy Thuật (trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1338	Trấn Sơn Thuật (trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1339	Yên Ba Thuật (trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1340	Trường Sinh Thuật (trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1341	Bá Hải Thuật (trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1342	Thần Tuệ Thuật(trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1343	Truy Cảnh Thuật (trùng sinh 6)	WuDang	PassivityNpcState	0	None	0	0
+1344	Càn Khôn Vô Lượng	None	PassivityNpcState	0	None	0	0
+1345	2013ạóệíểÂéÛắÛấì	None	InitiativeNpcState	0	None	0	0
+1346	ễẵÄẽệỉằữéĐạỷ	None	InitiativeNpcState	0	None	0	0
+1347	Bạch Hồng Quán Nhật	EMei	Missiles	400	Single	412	1
+1348	Vân Chưng Hà úy	EMei	Missiles	400	None	275	1
+1349	Kiếm Tông Tổng Quyết	EMei	PassivityNpcState	0	None	0	0
+1350	Dưỡng Ngô Kiếm Pháp	EMei	PassivityNpcState	0	None	0	0
+1351	Kim Nhạn Hoành Không	EMei	Missiles	480	Single	413	3
+1352	Hữu Phụng Lai Nghi	EMei	Missiles	0	None	275	1
+1353	ẵðẹóºỏ¿ế2	EMei	Missiles	0	None	275	1
+1354	Hi Di Kiếm Pháp	EMei	PassivityNpcState	0	None	0	0
+1355	Thiên Thân Đảo Huyền	EMei	Missiles	360	None	414	4
+1356	èỡẫðàạéỹ2	EMei	Missiles	0	None	275	1
+1357	Cao Sơn Lưu Thủy	EMei	Missiles	0	None	275	1
+1358	Huyễn Nhãn Vân Yên	EMei	InitiativeNpcState	0	None	0	0
+1359	ằÃẹÛễặọẻ2	EMei	PassivityNpcState	0	None	0	0
+1360	Thương Tùng Nghênh Khách	EMei	Missiles	480	None	415	6
+1361	Kỹ năng Mod 1361	EMei	Missiles	480	None	416	6
+1362	Kỹ năng Mod 1362	EMei	Missiles	480	None	417	6
+1363	Thái Nhạc Tam Thanh Phong	EMei	Missiles	480	Fan	418	3
+1364	Đoạt Mệnh Liên Hoàn Tam Tiên Kiếm	EMei	InitiativeNpcState	0	None	0	0
+1365	Tử Hà Kiếm Khí	EMei	PassivityNpcState	0	None	0	0
+1366	Lạc Nhạn Kinh Hồng	None	Missiles	0	None	275	1
+1367	ìẽẽẳẵÊặứ3	None	InitiativeNpcState	0	None	0	0
+1368	Độc Cô Cửu Kiếm	EMei	Missiles	480	Surround	418	9
+1369	Cửu kiếm hợp nhất	EMei	InitiativeNpcState	0	None	0	0
+1370	Hạo Nhiên Chi Khí	None	PassivityNpcState	0	None	0	0
+1371	ºặẩằệđặứ2	None	InitiativeNpcState	0	None	0	0
+1372	Thanh Vân Tống Sảng	EMei	Missiles	400	Single	427	1
+1373	Kỹ năng vô hiệu Thanh Phong Chiếm Vị	EMei	Missiles	0	None	275	1
+1374	Long Nhiễu Thân	None	PassivityNpcState	0	None	0	0
+1375	Hải Nạp Bách Xuyên	None	PassivityNpcState	0	None	0	0
+1376	Long Huyền Kiếm Khí	EMei	Missiles	360	None	421	1
+1377	Long Huyền Kiếm Khí 2	EMei	Missiles	0	None	275	1
+1378	Khí Chấn Sơn Hà	None	PassivityNpcState	0	None	0	0
+1379	Khí Quán Trường Hồng	None	PassivityNpcState	0	None	0	0
+1380	Ma Vân Kiếm Khí	EMei	Missiles	360	None	419	1
+1381	Kiếm Khí Vô Cấp	EMei	Missiles	360	None	428	1
+1382	Phách Thạch Phá Ngọc	EMei	Missiles	380	Single	426	3
+1383	Åỹấ¯ặặểủ2	EMei	Missiles	220	Single	426	1
+1384	Thần Quang Toàn Nhiễu	EMei	Missiles	600	None	425	1
+1385	ẫủạõéýẩặ2	EMei	Missiles	360	None	428	1
+1386	Kỹ năng Mod 1386	Shaolin	Melee	400	None	1417	1
+1387	Kỹ năng Mod 1387	Shaolin	PassivityNpcState	0	None	0	0
+1388	Kỹ năng Mod 1388	TangMen	InitiativeNpcState	600	None	1389	1
+1389	Kỹ năng Mod 1389	TangMen	Missiles	180	None	314	1
+1390	Kỹ năng Mod 1390	TangMen	Missiles	50	None	405	1
+1391	Kỹ năng Mod 1391	TangMen	Missiles	0	None	406	4
+1392	Kỹ năng Mod 1392	EMei	InitiativeNpcState	180	None	1393	1
+1393	Kỹ năng Mod 1393	EMei	Missiles	180	Surround	92	1
+1394	Kỹ năng Mod 1394	CaiBang	Missiles	400	Fan	48	8
+1395	Kỹ năng Mod 1395	CaiBang	Missiles	72	Surround	56	16
+1396	Kỹ năng Mod 1396	WuDang	Missiles	400	None	274	1
+1397	Kỹ năng Mod 1397	WuDang	Missiles	440	None	410	1
+1398	Kỹ năng Mod 1398	Shaolin	InitiativeNpcState	180	None	1399	1
+1399	Kỹ năng Mod 1399	Shaolin	Missiles	180	Surround	92	1
+1400	Kỹ năng Mod 1400	Shaolin	PassivityNpcState	0	None	0	0
+1401	Kỹ năng Mod 1401	EMei	Missiles	72	None	10	1
+1402	Kỹ năng Mod 1402	CaiBang	Missiles	72	Surround	47	16
+1403	Kỹ năng Mod 1403	WuDang	Missiles	400	None	411	2
+1404	Kỹ năng Mod 1404	WuDang	Missiles	400	None	408	5
+1405	Kỹ năng Mod 1405	CaiBang	InitiativeNpcState	0	None	0	0
+1406	Kỹ năng Mod 1406	CaiBang	InitiativeNpcState	600	None	409	1
+1407	ẻồÃởểựẹâềỵ	None	InitiativeNpcState	0	None	0	0
+1408	Hợp thành kĩ năng công kích	None	InitiativeNpcState	0	None	0	0
+1409	èỉấõểựẹâềỵ	None	PassivityNpcState	0	None	0	0
+1410	Kỹ năng Mod 1410	EMei	Missiles	0	None	275	1
+1411	Kiếm Khí Vô Định	EMei	Missiles	0	None	420	2
+1412	ÁỳéýẵÊặứ±ơếă	EMei	Missiles	0	None	422	2
+1413	ÄƯễặẵÊặứ±ơếă	EMei	Missiles	0	None	424	2
+1414	Kỹ năng Mod 1414	EMei	Missiles	0	None	275	1
+1415	ÁữéầÂềằãằữ	CaiBang	Missiles	400	Surround	295	3
+1416	ÁữéầÂềằãằữìểẳẳÄĩ	TangMen	Missiles	50	None	161	1
+1417	Kỹ năng Mod 1417	None	Missiles	75	Single	284	1
+1418	ễẵÄẽậẻẵðạõằãẳẳÄĩảÀ°ễèỡẽÂ	EMei	PassivityNpcState	0	None	0	0
+1419	Kỹ năng Mod 1419	EMei	Missiles	0	None	425	1
+1420	Kiếm Pháp - Thái Nhạc Tam Thanh Phong	EMei	Missiles	480	Fan	429	1
+1421	Kiếm pháp - Độc Cô Cửu Kiếm	EMei	Missiles	480	Surround	429	1
+1422	N±ảắưẹộ	None	InitiativeNpcState	0	None	0	0
+1423	N±ảắưẹộ(ẻịéĐạỷàÄ)	None	InitiativeNpcState	0	None	0	0
+1424	Kỹ năng Mod 1424	Shaolin	PassivityNpcState	0	None	0	0
+1425	Quan Tinh Luyện Thần	None	PassivityNpcState	0	None	0	0
+1426	Bích Hải Triều Sinh (Kiếm Tiên Lý Bạch)	EMei	Missiles	72	None	10	1
+1427	Bế Nguyệt Phất Trần (Kiếm Tiên Lý Bạch)	EMei	InitiativeNpcState	180	None	1428	1
+1428	Kĩ năng Bế Nguyệt Phất Trần (Kiếm Tiên Lý Bạch)	EMei	Missiles	180	Surround	92	1
+1429	Tật Phong Đơn  (ngoại)	None	InitiativeNpcState	0	None	0	0
+1430	Tật Phong Đơn  (nội)	None	InitiativeNpcState	0	None	0	0
+1431	Tụ Nguyên Tán (ngoại)	None	InitiativeNpcState	0	None	0	0
+1432	Tụ Nguyên Tán (nội)	None	InitiativeNpcState	0	None	0	0
+1433	Tiêu Dao Tán	None	InitiativeNpcState	0	None	0	0
+1434	Hộ Thần Đơn	None	InitiativeNpcState	0	None	0	0
+1435	Hộ Tâm Đơn	None	InitiativeNpcState	0	None	0	0
+1436	Hành Khí Tán	None	InitiativeNpcState	0	None	0	0
+1437	Hộ Khí Đơn	None	InitiativeNpcState	0	None	0	0
+1438	Lưu Vân Tán	None	InitiativeNpcState	0	None	0	0
+1439	Hộ Giáp Đơn	None	InitiativeNpcState	0	None	0	0
+1440	Ngưng Thần Tán	None	InitiativeNpcState	0	None	0	0
+1441	ễẵÄẽìứặùẳẳÄĩ2	None	PassivityNpcState	0	None	0	0
+1442	ễẵÄẽìứặùẳẳÄĩ4	None	PassivityNpcState	0	None	0	0
+1443	ễẵÄẽìứặùẳẳÄĩ1	EMei	InitiativeNpcState	180	None	1170	1
+1444	ìứặùẳẳÄĩ1ìểà¯	EMei	Missiles	180	Surround	137	1
+1445	ễẵÄẽìứặùẳẳÄĩ3	EMei	InitiativeNpcState	180	None	1170	1
+1446	ìứặùẳẳÄĩ3ìểà¯	EMei	Missiles	180	Surround	137	1
+1447	Vòng hào quang Thần Lộc	EMei	InitiativeNpcState	180	None	1170	1
+1448	ểìẩđàÄÀĂễựÊăạầÍãÊâ	None	InitiativeNpcState	0	None	0	0
+1449	Kỹ năng Mod 1449	None	InitiativeNpcState	0	None	0	0
+1450	Kỹ năng Mod 1450	None	PassivityNpcState	0	None	0	0
+1451	ậÀÀẽấúàÄéĐạỷ	None	InitiativeNpcState	0	None	0	0
+1452	Kỹ năng Mod 1452	None	PassivityNpcState	0	None	0	0
+1453	ệéễẵểẹềờẩỹẩôẳẳÄĩ+1	None	InitiativeNpcState	180	None	0	1
+1454	Kỹ năng Mod 1454	None	PassivityNpcState	0	None	0	0
+1455	Kỹ năng Mod 1455	None	PassivityNpcState	0	None	0	0
+1456	Mãnh Hổ Khiếu Nha chiêu thứ nhất	None	PassivityNpcState	0	None	0	0
+1457	ÃÍằÂéƠẹÀàÚềằấẵìỗệọ	None	Missiles	440	None	275	1
+1458	Mãnh Hổ Khiếu Nha chiêu thứ hai	None	PassivityNpcState	0	None	0	0
+1459	ÃÍằÂéƠẹÀàÚảỵấẵìỗệọ	None	Missiles	440	None	275	1
+1460	Mãnh Hổ Khiếu Nha chiêu thứ ba	None	PassivityNpcState	0	None	0	0
+1461	ÃÍằÂéƠẹÀàÚẩýấẵìỗệọ	None	Missiles	440	None	275	1
+1462	Mãnh Hổ Khiếu Nha chiêu thứ tư	None	PassivityNpcState	0	None	0	0
+1463	ÃÍằÂéƠẹÀàÚậÄấẵìỗệọ	None	Missiles	440	None	275	1
+1464	Mãnh Hổ Khiếu Nha chiêu thứ năm	None	PassivityNpcState	0	None	0	0
+1465	ÃÍằÂéƠẹÀàÚẻồấẵìỗệọ	None	Missiles	440	None	275	1
+1466	ấđÄờìÊáÊÊăạƠÊâ	None	InitiativeNpcState	0	None	0	0
+1467	Kỹ năng Mod 1467	None	InitiativeNpcState	0	None	0	0
+1468	Kỹ năng Mod 1468	None	InitiativeNpcState	0	None	0	0
+1469	Kỹ năng Mod 1469	None	InitiativeNpcState	0	None	0	0
+1470	Kỹ năng Mod 1470	Shaolin	PassivityNpcState	0	None	0	0
+1471	Pháo	CuiYan	Missiles	800	None	430	1
+1472	Kỹ năng Mod 1472	None	InitiativeNpcState	0	None	0	0
+1473	Kỹ năng Mod 1473	None	InitiativeNpcState	0	None	0	0
+1474	ềậá°ẩẻÊăễửẳể¿ạéễÊâ	None	InitiativeNpcState	0	None	0	0
+1475	ẳẫá°ẩẻÊăẵààÍ¿ạéễÊâ	None	InitiativeNpcState	0	None	0	0
+1476	Kỹ năng Mod 1476	None	InitiativeNpcState	0	None	0	0
+1477	ẳẫợ±ÁễÊăạƠằữẳẳÄĩẳừẫÙÊâ	None	InitiativeNpcState	0	None	0	0
+1478	Kỹ năng Mod 1478	None	InitiativeNpcState	0	None	0	0
+1479	Kỹ năng Mod 1479	None	InitiativeNpcState	0	None	0	0
+1480	Kỹ năng Mod 1480	None	Missiles	0	None	431	1
+1481	Kỹ năng Mod 1481	None	PassivityNpcState	0	None	0	0
+1482	Kỹ năng Mod 1482	None	PassivityNpcState	0	None	0	0
+1483	Kỹ năng Mod 1483	None	PassivityNpcState	0	None	0	0
+1484	Kỹ năng Mod 1484	None	PassivityNpcState	0	None	0	0
+1485	Kỹ năng Mod 1485	None	InitiativeNpcState	180	None	0	1
+1486	Kỹ năng Mod 1486	Shaolin	InitiativeNpcState	448	Single	301	1
+1487	ắứẫ±XºÅẳẳÄĩÊăàƠẩậÊâ	CaiBang	Missiles	1000	Surround	295	3
+1488	ắứẫ±XºÅìểẳẳÄĩÊăàƠẩậÊâ	TangMen	Missiles	800	None	161	1
+1489	Àọ±ựẳẳÄĩÊăàƠẩậÊâ	CaiBang	Missiles	800	Surround	307	32
+1490	Àọ±ự±ựầẵÊăàƠẩậÊâ	TangMen	Missiles	800	None	308	1
+1491	ạÅắứẫ±ảắấệÊăàƠẩậÊâ	TangMen	Missiles	420	None	20	1
+1492	ãÂẫọệâệởÍứÊăàƠẩậÊâ	TangMen	Missiles	420	None	164	1
+1493	ÄĐềụấẫặầ_ậổằỳìòả¯ÊăàƠẩậÊâ	CaiBang	InitiativeNpcState	180	None	273	1
+1494	Kim Cang Chi Nộ.	None	PassivityNpcState	0	None	0	0
+1495	Bích Mộc Chi Nộ.	Shaolin	PassivityNpcState	0	None	0	0
+1496	Hàn Băng Chi Nộ.	EMei	PassivityNpcState	0	None	0	0
+1497	Viêm Dương Chi Nộ.	TangMen	PassivityNpcState	0	None	0	0
+1498	Lôi Đình Chi Nộ.	CaiBang	PassivityNpcState	0	None	0	0
+1499	Kim Cang Chi Nộ.	None	Missiles	520	None	275	1
+1500	Bích Mộc Chi Nộ.	Shaolin	Missiles	520	None	275	1
+1501	Hàn Băng Chi Nộ.	EMei	Missiles	520	None	275	1
+1502	Viêm Dương Chi Nộ.	TangMen	Missiles	520	None	275	1
+1503	Lôi Đình Chi Nộ.	CaiBang	Missiles	520	None	275	1
+1504	Kim Cang Chi Hộ.	None	InitiativeNpcState	0	None	275	1
+1505	Bích Mộc Chi Hộ.	Shaolin	InitiativeNpcState	0	None	275	1
+1506	Hàn Băng Chi Hộ.	EMei	InitiativeNpcState	0	None	275	1
+1507	Viêm Dương Chi Hộ.	TangMen	InitiativeNpcState	0	None	275	1
+1508	Lôi Đình Chi Hộ.	CaiBang	InitiativeNpcState	0	None	275	1
+1509	Kim Cang Chi Hộ.	None	PassivityNpcState	0	None	0	0
+1510	Bích Mộc Chi Hộ.	Shaolin	PassivityNpcState	0	None	0	0
+1511	Hàn Băng Chi Hộ.	EMei	PassivityNpcState	0	None	0	0
+1512	Viêm Dương Chi Hộ.	TangMen	PassivityNpcState	0	None	0	0
+1513	Lôi Đình Chi Hộ.	CaiBang	PassivityNpcState	0	None	0	0
+1514	Càn Khôn Vô Lượng	None	PassivityNpcState	0	None	0	0
+1515	Dung Kim.	None	PassivityNpcState	0	None	0	0
+1516	Phá Mộc.	None	PassivityNpcState	0	None	0	0
+1517	Hủ Thủy.	None	PassivityNpcState	0	None	0	0
+1518	Khư Hỏa.	None	PassivityNpcState	0	None	0	0
+1519	Liệt Thổ.	None	PassivityNpcState	0	None	0	0
+1520	Thiên Nộ Cuồng Lan	None	PassivityNpcState	0	None	0	0
+1521	ÄƯÚưẻịÁ¿boss	Shaolin	Missiles	700	Surround	432	64
+1522	ắÅạơãẫéầboss	TangMen	Missiles	700	Surround	433	64
+1523	èỡợáàỉẫãboss	CaiBang	Missiles	700	Surround	434	32
+1524	Kỹ năng Mod 1524	EMei	Missiles	700	Surround	435	64
+1525	Kỹ năng Mod 1525	EMei	Missiles	700	Surround	436	64
+1526	Kỹ năng Mod 1526	CaiBang	Missiles	700	Surround	437	64
+1527	Áềằðầộèỡboss	CaiBang	Missiles	700	Surround	438	64
+1528	ẻịẻềẻịẵÊboss	WuDang	Missiles	700	Surround	439	64
+1529	ẻồÀìếýãăboss	WuDang	Missiles	700	Surround	440	64
+1530	ểÄằờấẫể°boss	CaiBang	Missiles	700	Surround	441	32
+1531	Miễn dịch Kim Mộc	Shaolin	PassivityNpcState	0	None	0	0
+1532	Miễn dịch Mộc Thủy	Shaolin	PassivityNpcState	0	None	0	0
+1533	Miễn dịch Thủy Hỏa	Shaolin	PassivityNpcState	0	None	0	0
+1534	Miễn dịch Hỏa Thổ	Shaolin	PassivityNpcState	0	None	0	0
+1535	Miễn dịch Thổ Kim	Shaolin	PassivityNpcState	0	None	0	0
+1536	Phá Thiên Trảm	TianWang	Melee	90	None	326	1
+1537	Nhiếp Hồn Nguyệt ảnh	TangMen	Missiles	360	Single	149	1
+1538	Tam Nga Tề Tuyết	EMei	Missiles	360	None	142	3
+1540	Nhân Kiếm Hợp Nhất	WuDang	Missiles	90	Single	175	3
+1541	Kỹ năng Mod 1541	EMei	Missiles	72	None	10	1
+1542	Diệt Hồn Phần Thiên	None	PassivityNpcState	0	None	0	0
+1543	Đồng Tường Thiết Bích	None	PassivityNpcState	0	None	0	0
+1544	Cuồng Bạo Chiến Đấu	None	PassivityNpcState	0	None	0	0
+1545	Ngũ Hành Tý Hộ	None	PassivityNpcState	0	None	0	0
+1546	Bào Hao Trùng Kích	None	PassivityNpcState	0	None	0	0
+1547	Phục Cừu Đả Kích	None	PassivityNpcState	0	None	0	0
+1548	Dũ Hợp Tư Dưỡng	None	PassivityNpcState	0	None	0	0
+1549	Huyết Dục	None	InitiativeNpcState	0	None	0	0
+1550	Chiến Thiên	None	InitiativeNpcState	0	None	0	0
+1551	Thương Hồng	None	InitiativeNpcState	0	None	0	0
+1552	Lang Hạo	None	InitiativeNpcState	0	None	0	0
+1553	Triệu Mãnh	None	InitiativeNpcState	0	None	0	0
+1554	Miễn dịch sát thương	Shaolin	PassivityNpcState	0	None	0	0

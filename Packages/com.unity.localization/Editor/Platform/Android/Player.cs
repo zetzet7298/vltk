@@ -82,11 +82,14 @@ namespace UnityEditor.Localization.Platform.Android
             if (appInfo == null)
                 throw new ArgumentNullException(nameof(appInfo));
 
+            var minApi = (int)PlayerSettings.Android.minSdkVersion;
+            bool useBcp47 = minApi >= 21; // We can use BCP 47 language tags for resource folders on Android 5.0+ (API 21+). https://developer.android.com/guide/topics/resources/localization#bcp47-tags
+
             var project = new GradleProjectSettings();
             foreach (var locale in LocalizationEditorSettings.GetLocales())
             {
-                var localeIdentifier = GenerateAndroidLanguageCode(locale.Identifier);
-                GenerateLocalizedXmlFile("App Name", Path.Combine(Directory.CreateDirectory(Path.Combine(project.GetResFolderPath(projectDirectory), "values-b+" + localeIdentifier)).FullName, k_InfoFile), locale, appInfo);
+                var localeIdentifier = GenerateAndroidLanguageCode(locale.Identifier, useBcp47);
+                GenerateLocalizedXmlFile("App Name", Path.Combine(Directory.CreateDirectory(Path.Combine(project.GetResFolderPath(projectDirectory), "values-" + localeIdentifier)).FullName, k_InfoFile), locale, appInfo);
 
                 //Generate icons
                 var folderNames = new List<string>
@@ -127,22 +130,45 @@ namespace UnityEditor.Localization.Platform.Android
             androidManifest.SaveIfModified();
         }
 
-        internal static string GenerateAndroidLanguageCode(LocaleIdentifier localeIdentifier)
+        internal static string GenerateAndroidLanguageCode(LocaleIdentifier localeIdentifier, bool useBcp47)
         {
-            // When we use System Language as Locale Source Chinese (Simplified) code is represented as (zh-hans) and Chinese (Traditional) code is represented as (zh-hant).
-            // But Android Localization is case-sensitive and ony supports Chinese (Simplified) code as (zh-Hans) and Chinese (Traditional) code as (zh-Hant).
-            // https://developer.android.com/reference/java/util/Locale.LanguageRange
-            localeIdentifier = localeIdentifier.Code.Contains("hans") ? localeIdentifier.Code.Replace("hans", "Hans") : localeIdentifier.Code.Contains("hant") ? localeIdentifier.Code.Replace("hant", "Hant") : localeIdentifier;
+            // Normalize special languages
             var code = localeIdentifier.Code;
 
-            var IsSpecialLocaleIdentifier = code.Contains("Hans") || code.Contains("Hant") || code.Contains("Latn") || code.Contains("Cyrl") || code.Contains("Arab") || code.Contains("valencia");
+            // Indonesian and Hebrew legacy codes on Android
+            if (code.Equals("id", StringComparison.OrdinalIgnoreCase) || code.Equals("id-ID", StringComparison.OrdinalIgnoreCase))
+                code = "in";
+            else if (code.Equals("he", StringComparison.OrdinalIgnoreCase) || code.Equals("he-IL", StringComparison.OrdinalIgnoreCase))
+                code = "iw";
 
-            // The language is defined by a two-letter ISO 639-1 language code, optionally followed by a two letter ISO 3166-1-alpha-2 region code (preceded by lowercase r).
-            // The codes are not case-sensitive; the r prefix is used to distinguish the region portion. You cannot specify a region alone.
-            // https://developer.android.com/guide/topics/resources/providing-resources
-            localeIdentifier = code.Contains("-") ? IsSpecialLocaleIdentifier ? code.Replace("-", "+") : code.Replace("-", "-r") : localeIdentifier;
+            // Normalize Chinese scripts casing
+            code = code.Replace("hans", "Hans").Replace("hant", "Hant");
 
-            return localeIdentifier.Code;
+            if (useBcp47)
+            {
+                // Convert separators to + for BCP 47 resource folders
+                // e.g., zh-Hans-CN -> b+zh+Hans+CN
+                return "b+" + code.Replace("-", "+");
+            }
+            else
+            {
+                // Special handling for es-419
+                if (code.Equals("es-419", StringComparison.OrdinalIgnoreCase))
+                    return "es-rMX";
+
+                // Detect script/variant presence
+                bool hasSpecialSubtag = code.Contains("Hans") || code.Contains("Hant") ||
+                                        code.Contains("Latn") || code.Contains("Cyrl") ||
+                                        code.Contains("Arab") || code.Contains("valencia");
+
+                // Legacy -r folders: lang[-rREGION]
+                // Only insert -r if there is a hyphen and no script/variant that would be invalid pre-21
+                // e.g., en-GB -> en-rGB ; es-MX -> es-rMX
+                if (code.Contains("-") && !hasSpecialSubtag)
+                    return code.Replace("-", "-r");
+
+                return code;
+            }
         }
 
         static void GenerateIconDirectory(List<string> folderNames, string path, Locale locale)

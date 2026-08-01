@@ -34,7 +34,7 @@ namespace UnityEditor.Localization.UI.Toolkit
             }
             else
             {
-                var propEditor = new PropertyField(element, label.text) { style = {paddingLeft = leftMargin } };
+                var propEditor = new PropertyField(element, label.text) { style = { paddingLeft = leftMargin } };
                 propEditor.BindProperty(list.ListProperty.serializedObject);
                 propEditor.SetEnabled(!IsReadOnly(element));
 

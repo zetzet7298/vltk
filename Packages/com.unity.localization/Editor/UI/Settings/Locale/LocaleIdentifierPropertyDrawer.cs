@@ -23,6 +23,7 @@ namespace UnityEditor.Localization.UI
             foldout.BindProperty(property);
 
             var localeField = new ObjectField { objectType = typeof(Locale), value = LocalizationEditorSettings.GetLocale(code.stringValue) };
+            localeField.Q<Label>().RemoveFromClassList("unity-text-element"); // Prevent the margin being removed
             localeField.AddToClassList("unity-base-field__input");
             localeField.RegisterCallback<MouseDownEvent>(evt => evt.StopPropagation());
             localeField.RegisterCallback<MouseUpEvent>(evt => evt.StopPropagation());
@@ -35,6 +36,8 @@ namespace UnityEditor.Localization.UI
             foldout.hierarchy[0].Add(localeField);
             foldout.hierarchy[0].hierarchy[0].RemoveFromClassList("unity-base-field__input");
             foldout.hierarchy[0].hierarchy[0].AddToClassList("unity-base-field__label");
+            foldout.hierarchy[0].hierarchy[0].style.paddingLeft = 0;
+            localeField.style.marginRight = 0;
 
             var codeField = new TextField { label = "Code" };
             codeField.RegisterValueChangedCallback(evt =>

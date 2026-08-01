@@ -191,7 +191,7 @@ namespace UnityEditor.Localization.Plugins.XLIFF
 
             foreach (var row in StringTableCollection.GetRowEnumerator(source, target))
             {
-                if (row.TableEntries[0] != null && row.TableEntries[0].SharedEntry.Metadata.HasMetadata<ExcludeEntryFromExport>())
+                if (row.KeyEntry.Metadata.HasMetadata<ExcludeEntryFromExport>())
                     continue;
 
                 var unit = group.AddNewTranslationUnit();

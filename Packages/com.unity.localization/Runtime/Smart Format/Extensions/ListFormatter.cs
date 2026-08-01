@@ -32,6 +32,15 @@ namespace UnityEngine.Localization.SmartFormat.Extensions
     [Serializable]
     public class ListFormatter : FormatterBase, ISource, IFormatterLiteralExtractor
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            CollectionIndex = -1;
+        }
+        #endif
+
         [SerializeReference, HideInInspector]
         SmartSettings m_SmartSettings;
 

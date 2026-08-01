@@ -9,6 +9,15 @@ namespace UnityEngine.Localization.SmartFormat
     /// </summary>
     public static class Smart
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            Default = CreateDefaultSmartFormat();
+        }
+        #endif
+
         /// <inheritdoc cref="SmartFormatter.Format(string, object[])"/>
         public static string Format(string format, params object[] args)
         {

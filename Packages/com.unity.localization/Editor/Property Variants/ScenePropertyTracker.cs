@@ -35,8 +35,14 @@ namespace UnityEditor.Localization.PropertyVariants
 
                 stream.GetChangeGameObjectStructureEvent(i, out var eventArgs);
 
-                if (!(EditorUtility.InstanceIDToObject(eventArgs.instanceId) is GameObject goAsset
-                      && goAsset.GetComponent<GameObjectLocalizer>() is {} objectLocalizer)) continue;
+                #if UNITY_6000_5_OR_NEWER
+                if (!(EditorUtility.EntityIdToObject(eventArgs.entityId)
+                #elif UNITY_6000_3_OR_NEWER
+                if (!(EditorUtility.EntityIdToObject(eventArgs.instanceId)
+                #else
+                if (!(EditorUtility.InstanceIDToObject(eventArgs.instanceId)
+                #endif
+                is GameObject goAsset && goAsset.GetComponent<GameObjectLocalizer>() is { } objectLocalizer)) continue;
 
                 var removedComponents = objectLocalizer.TrackedObjects.Where(t => t.Target == null).ToList();
                 if (removedComponents.Count == 0)

@@ -58,6 +58,8 @@ namespace VLTK.Model
         public int childSkillId;         // ChildSkillId
         public int childSkillLevel;      // ChildSkillLevel (0 means current level in PC missile skills)
         public int childSkillNum;        // ChildSkillNum
+        public int missileDirStep;       // PC m_nValue1 (PcSkills Param1) — fan spread step in 1/64-circle units; 0 = default 1
+        public int missileFirstStep;     // PC m_nValue2 (PcSkills Param2) — fan/circle missile spawn offset from caster (px)
         public bool baseSkill;           // BaseSkill
         public int charAnimId;           // CharAnimId (PC client action id)
         public bool targetOnly;          // TargetOnly

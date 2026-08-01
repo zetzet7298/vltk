@@ -82,7 +82,7 @@ namespace UnityEditor.Localization.Plugins.CSV
                     reporter?.ReportProgress("Writing Contents", 0.1f);
                     foreach (var row in collection.GetRowEnumeratorUnsorted())
                     {
-                        if (row.TableEntries[0] != null && row.TableEntries[0].SharedEntry.Metadata.HasMetadata<ExcludeEntryFromExport>())
+                        if (row.KeyEntry.Metadata.HasMetadata<ExcludeEntryFromExport>())
                             continue;
 
                         csvWriter.NextRecord();

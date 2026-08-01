@@ -2,7 +2,7 @@ using System;
 
 namespace UnityEngine.Localization.Metadata
 {
-    [HideInInspector]
+    [HideInInspector, Serializable]
     class AssetTypeMetadata : SharedTableCollectionMetadata
     {
         [SerializeField, HideInInspector]

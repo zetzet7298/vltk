@@ -12,7 +12,7 @@ namespace VLTK.Tests.PlayMode.Tooling
         private void Awake()
         {
             _observedRevision = Revision();
-            LastInstanceId = GetInstanceID();
+            LastInstanceId = (int)(EntityId.ToULong(GetEntityId()) & 0xFFFFFFFFu);
             LastObservedRevision = _observedRevision;
             Debug.Log($"[FSR-PILOT] instance={LastInstanceId} revision={LastObservedRevision}");
         }
@@ -24,7 +24,7 @@ namespace VLTK.Tests.PlayMode.Tooling
                 return;
 
             _observedRevision = revision;
-            LastInstanceId = GetInstanceID();
+            LastInstanceId = (int)(EntityId.ToULong(GetEntityId()) & 0xFFFFFFFFu);
             LastObservedRevision = revision;
             Debug.Log($"[FSR-PILOT] instance={LastInstanceId} revision={LastObservedRevision}");
         }

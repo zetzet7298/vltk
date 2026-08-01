@@ -276,7 +276,12 @@ namespace UnityEditor.Localization
         void OnSelectEntry()
         {
             var provider = CreateSearchProvider();
+
+            #if UNITY_2022_3_OR_NEWER
+            var context = UnityEditor.Search.SearchService.CreateContext(new[] { provider }, string.Empty, SearchFlags.UseSessionSettings);
+            #else
             var context = UnityEditor.Search.SearchService.CreateContext(provider);
+            #endif
 
             var picker = new LocalizedReferencePicker<TCollection>(context, "table entry", m_TableProperty, m_EntryProperty);
             picker.Show();

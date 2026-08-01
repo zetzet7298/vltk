@@ -1,8 +1,11 @@
+using System;
+
 namespace UnityEngine.Localization.Pseudo
 {
     /// <summary>
     /// Reverses all strings, to simulate right-to-left locales.
     /// </summary>
+    [Serializable]
     public class Mirror : IPseudoLocalizationMethod
     {
         /// <summary>

@@ -14,10 +14,9 @@ namespace UnityEditor.Localization.UI
     #endif
     public partial class XliffVersionPopup : PopupField<XliffVersion>
     {
-        #if UNITY_2023_3_OR_NEWER
-        [Obsolete("UxmlFactory is deprecated and will be removed. Use UxmlElementAttribute instead.", false)]
-        #endif
+        #if !UNITY_2023_3_OR_NEWER
         public new class UxmlFactory : UxmlFactory<XliffVersionPopup> {}
+        #endif
 
         /// <summary>
         /// Creates a new instance of the field.

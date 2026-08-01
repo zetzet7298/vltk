@@ -7,6 +7,16 @@ namespace UnityEngine.Localization.SmartFormat.Net.Utilities
     /// </summary>
     internal static class SystemTime
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            Now = () => DateTime.Now;
+            OffsetNow = () => DateTimeOffset.Now;
+        }
+        #endif
+
         /// <summary>
         /// Normally this is a pass-through to DateTime.Now, but it can be overridden with SetDateTime( .. ) for unit testing and debugging.
         /// </summary>

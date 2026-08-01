@@ -6,6 +6,7 @@ using System.Text;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Metadata;
 using UnityEngine.Localization.Tables;
+using UnityEngine.Pool;
 using static UnityEngine.Localization.Tables.SharedTableData;
 
 namespace UnityEditor.Localization
@@ -103,6 +104,52 @@ namespace UnityEditor.Localization
 
             // Now replace the old list with our new one that is in the correct order.
             SharedData.Entries = sortedEntries;
+        }
+
+        /// <inheritdoc/>
+        public override LocalizationTable AddNewTable(LocaleIdentifier localeIdentifier, string path)
+        {
+            // Record the Smart string entries so we can sync the new table to match.
+            using (HashSetPool<long>.Get(out var smartStringEntries))
+            {
+                var tables = StringTables;
+                foreach(var entry in SharedData.Entries)
+                {
+                    bool isSmart = false;
+                    foreach (var table in tables)
+                    {
+                        if (table.GetEntry(entry.Id)?.IsSmart != true)
+                        {
+                            isSmart = false;
+                            break;
+                        }
+                        isSmart = true;
+                    }
+
+                    // If all the entries are marked as smart then we want to do the same to the new table.
+                    if (isSmart)
+                        smartStringEntries.Add(entry.Id);
+                }
+
+                var newTable = base.AddNewTable(localeIdentifier, path);
+
+                // Now sync the new table's smart string entries.
+                var stringTable = (StringTable)newTable;
+                foreach (var entryId in smartStringEntries)
+                {
+                    var entry = stringTable.AddEntry(entryId, string.Empty);
+                    entry.IsSmart = true;
+                }
+
+                if (smartStringEntries.Count > 0)
+                {
+                    EditorUtility.SetDirty(stringTable);
+                    SaveChangesToDisk();
+                    LocalizationEditorSettings.EditorEvents.RaiseCollectionModified(this, this);
+                }
+
+                return newTable;
+            }
         }
 
         /// <summary>

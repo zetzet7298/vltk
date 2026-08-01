@@ -15,6 +15,15 @@ namespace UnityEngine.Localization.SmartFormat.Extensions
     [Serializable]
     public class PersistentVariablesSource : ISource, IDictionary<string, VariablesGroupAsset>, ISerializationCallbackReceiver
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            s_IsUpdating = default;
+        }
+        #endif
+
         [Serializable]
         class NameValuePair
         {

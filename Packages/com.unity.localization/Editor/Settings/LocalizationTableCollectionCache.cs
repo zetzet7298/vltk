@@ -101,15 +101,6 @@ namespace UnityEditor.Localization
             return null;
         }
 
-        public LocalizationTableCollection FindCollectionForInstanceId(int tableInstanceID)
-        {
-            if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(tableInstanceID, out var guid, out long _))
-            {
-                return FindCollectionFromDependencyGuid(guid);
-            }
-            return null;
-        }
-
         public LocalizationTableCollection FindCollectionFromDependencyGuid(string tableGuid)
         {
             if (CollectionDependencies.TryGetValue(tableGuid, out var collection))
@@ -255,7 +246,7 @@ namespace UnityEditor.Localization
         {
             foreach (var table in collection.Tables)
             {
-                var guid = LocalizationEditorSettings.Instance.GetAssetGuid(table.GetInstanceId());
+                var guid = LocalizationEditorSettings.Instance.GetAssetGuid(table.asset);
                 m_GuidToCollection[guid] = collection;
             }
 

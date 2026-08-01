@@ -7,7 +7,7 @@ namespace UnityEngine.Localization.Pseudo
     /// </summary>
     public static class TypicalCharacterSets
     {
-        internal static Dictionary<SystemLanguage, char[]> s_TypicalCharacterSets = new Dictionary<SystemLanguage, char[]>
+        internal readonly static Dictionary<SystemLanguage, char[]> s_TypicalCharacterSets = new Dictionary<SystemLanguage, char[]>
         {
             // Taken from https://www.gamasutra.com/blogs/IGDALocalizationSIG/20180504/317560/PseudoLocalization__A_Must_in_Video_Gaming
             { SystemLanguage.Czech, "áčďéěíňóřšťúůýÁČĎÉĚÍŇÓŘŠŤÚŮÝ‚„".ToCharArray() },

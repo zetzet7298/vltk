@@ -17,6 +17,15 @@ namespace UnityEngine.Localization.Settings
     /// </remarks>
     public class LocalizationSettings : ScriptableObject, IReset, IDisposable
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            s_Instance = default;
+        }
+        #endif
+
         /// <summary>
         /// The name to use when retrieving the LocalizationSettings from CustomObject API.
         /// </summary>
@@ -711,8 +720,6 @@ namespace UnityEngine.Localization.Settings
             // Use ReferenceEquals so we dont get false positives when using MoQ
             if (ReferenceEquals(settings, null))
             {
-                Debug.LogWarning("Could not find localization settings. Default will be used.");
-
                 settings = CreateInstance<LocalizationSettings>();
                 settings.name = "Default Localization Settings";
             }

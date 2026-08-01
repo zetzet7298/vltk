@@ -504,15 +504,13 @@ namespace UnityEditor.Localization
             return null;
         }
 
-        internal virtual AddressableAssetEntry GetAssetEntry(Object asset) => GetAssetEntry(asset.GetInstanceID());
-
-        internal virtual AddressableAssetEntry GetAssetEntry(int instanceId)
+        internal virtual AddressableAssetEntry GetAssetEntry(Object asset)
         {
             var settings = GetAddressableAssetSettings(false);
             if (settings == null)
                 return null;
 
-            var guid = GetAssetGuid(instanceId);
+            var guid = GetAssetGuid(asset);
             return settings.FindAssetEntry(guid);
         }
 
@@ -747,12 +745,6 @@ namespace UnityEditor.Localization
         internal virtual void CreateAsset(Object asset, string path)
         {
             AssetDatabase.CreateAsset(asset, path);
-        }
-
-        internal string GetAssetGuid(int instanceId)
-        {
-            Debug.Assert(AssetDatabase.TryGetGUIDAndLocalFileIdentifier(instanceId, out string guid, out long _), "Failed to extract the asset Guid");
-            return guid;
         }
 
         internal string GetAssetGuid(Object asset)

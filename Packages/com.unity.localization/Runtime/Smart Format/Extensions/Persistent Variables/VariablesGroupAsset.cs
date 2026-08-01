@@ -10,6 +10,7 @@ namespace UnityEngine.Localization.SmartFormat.PersistentVariables
     /// Provides a reference to a <see cref="VariablesGroupAsset"/>.
     /// </summary>
     [DisplayName("Nested Variables Group")]
+    [Serializable]
     public class NestedVariablesGroup : Variable<VariablesGroupAsset>, IVariableGroup
     {
         /// <inheritdoc/>

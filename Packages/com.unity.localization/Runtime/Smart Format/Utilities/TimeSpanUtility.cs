@@ -8,6 +8,20 @@ namespace UnityEngine.Localization.SmartFormat.Utilities
 {
     public static class TimeSpanUtility
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            DefaultFormatOptions =
+                TimeSpanFormatOptions.AbbreviateOff
+                | TimeSpanFormatOptions.LessThan
+                | TimeSpanFormatOptions.TruncateAuto
+                | TimeSpanFormatOptions.RangeSeconds
+                | TimeSpanFormatOptions.RangeDays;
+        }
+        #endif
+
         /// <summary>
         /// <para>Turns a TimeSpan into a human-readable text.</para>
         /// <para>Uses the specified timeSpanFormatOptions.</para>

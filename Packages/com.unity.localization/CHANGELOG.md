@@ -2,6 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## [1.5.12] - 2026-06-15
+
+### Fixed
+
+- Added LocalizedTextCoreFontAsset for localizing Textcore FontAssets.
+- Added support for localizing dropdowns across UI Toolkit, UGUI, and TMP. Includes LocalizedStringListEvent support for UGUI and TMP, plus binding UI Toolkit dropdown choices to LocalizedStringList or LocalizedStringGroup.
+- Fixed a possible threading issue when `StringFromGuid` was called from `TableReference.OnBeforeSerialize` which can come from multiple threads. (UUM-139286)
+- Fixed allocations when assigning a value to `IVariable.Value`. ([UUM-137873](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-137873))
+- Fixed an issue with the localization files not being correctly setup when build the xcode project for OSX. ([UUM-132514](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-132514))
+- Fixed iOS Xcode build failing with "Build input file cannot be found: en.lproj/InfoPlist.strings" when the iOS App Info metadata was used in a project whose locale set did not include English. (LOC-1133)
+- Fixed not sending the `TableEntryAdded` event when the "New Entry" button was clicked in the table editor window. ([UUM-138011](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-138011))
+- Fixed some warnings regarding missing serializable attributes. ([UUM-140407](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-140407))
+- Fixed the Google Sheets extension throwing a cryptic "RunSynchronously may not be called on a task not bound to a delegate" error when OAuth needed a fresh sign-in. Authorization now shows a cancelable progress bar while it waits and reports a clear message if it fails or is canceled. ([UUM-144385](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-144385))
+- Removed use of `RemoveWhere` on Addressable labels. This is to support future versions of Addressables which have changed to use an ISet.
+
+## [1.5.11] - 2026-03-18
+
+### Fixed
+
+- Removed use of UxmlFactory and UxmlTraits in Unity 6+.
+- Removed use of GetInstanceId from Unity 6.3+.
+
+## [1.5.10] - 2026-03-12
+
+### Fixed
+
+- Added missing `Serializable` attribute to `FormatterBase`. ([LOC-1282](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1282))
+- Added support for BCP 47 resource locale codes on Android 21+. (UUM-132466). ([UUM-132466](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-132466))
+- Adjusted the localization tables window so only the search bar shrinks/expands and all other buttons remain fixed. (LOC-1278)
+- Changed the Table Key ID Field so it is a selectable label and can now be copied. (LOC-1305)
+- Disabled the horizontal scroll in the ReorderableListView component. It was occasionally appearing when unnecessary and should not be required. ([LOC-1287](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1287))
+- Fix the samples not being included in the package data.
+- Fixed alignment of Project Locale identifier field. ([LOC-1277](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1277))
+- Fixed an issue where nested LocalizedStrings could not have their local variables queried. ([UUM-134944](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-134944))
+- Fixed an issue where the ExcludeEntryFromExport metadata would be ignored when exporting to CSV and XLIFF if the first table entry was null. ([UUM-136670](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-136670))
+- Fixed Android using the wrong app name locale codes for Indonesian and Hebrew. (LOC-1272)
+- Fixed the wrong group being used to resolve assets when a SharedGroup was assigned to the GroupResolver. ([UUM-135659](https://issuetracker.unity3d.com/product/unity/issues/guid/UUM-135659))
+- Fixed UI Builder picker so it saves the view state.
+- Improved fast enter playmode support. (UUM-131023)
+- Removed warning when using default localization settings. (LOC-1290)
+- When a new String Table is added, the IsSmart flag will now be propagated to its entries if it is already consistently set across all existing tables. ([LOC-1274](https://issuetracker.unity3d.com/product/unity/issues/guid/LOC-1274))
+
 ## [1.5.9] - 2025-11-13
 
 ### Fixed

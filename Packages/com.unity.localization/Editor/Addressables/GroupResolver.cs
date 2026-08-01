@@ -135,7 +135,7 @@ namespace UnityEditor.Localization.Addressables
         /// <returns>The asset entry for the added asset.</returns>
         public virtual AddressableAssetEntry AddToGroup(Object asset, IList<LocaleIdentifier> locales, AddressableAssetSettings aaSettings, bool createUndo)
         {
-            var group = SharedGroup ?? GetGroup(locales, asset, aaSettings, createUndo);
+            var group = GetGroup(locales, asset, aaSettings, createUndo);
             var guid = GetAssetGuid(asset);
             var assetEntry = aaSettings.FindAssetEntry(guid);
 
@@ -238,7 +238,7 @@ namespace UnityEditor.Localization.Addressables
 
         AddressableAssetEntry GetAssetEntry(Object asset, AddressableAssetSettings aaSettings) => aaSettings.FindAssetEntry(GetAssetGuid(asset));
 
-        static string GetAssetGuid(Object asset)
+        internal virtual string GetAssetGuid(Object asset)
         {
             if (AssetDatabase.TryGetGUIDAndLocalFileIdentifier(asset, out var guid, out long _))
                 return guid;

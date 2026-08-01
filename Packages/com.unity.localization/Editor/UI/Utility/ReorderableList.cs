@@ -341,7 +341,6 @@ namespace UnityEditor.Localization.UI.Toolkit
             if (selected != null)
             {
                 m_ScrollView.RemoveAt(m_SelectedIndex);
-                //m_ScrollView.Remove(selected);
                 RemoveCallback?.Invoke(this, m_SelectedIndex);
 
                 var newSelection = Mathf.Min(Count - 1, m_SelectedIndex);

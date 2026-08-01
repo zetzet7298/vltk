@@ -455,7 +455,7 @@ namespace UnityEngine.Localization
             if (GetType() == other.GetType())
             {
                 var result = String.CompareOrdinal(LocaleName, other.LocaleName);
-                return result != 0 ? result : GetInstanceID().CompareTo(other.GetInstanceID());
+                return result != 0 ? result : InstanceIdHelper.GetInstanceId(this).CompareTo(InstanceIdHelper.GetInstanceId(other));
             }
 
             // Normal Locale's go before PseudoLocale's

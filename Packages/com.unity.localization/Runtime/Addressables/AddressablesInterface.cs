@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.Localization.Operations;
-using UnityEngine.Pool;
 using UnityEngine.ResourceManagement;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -18,6 +17,15 @@ namespace UnityEngine.Localization
     internal class AddressablesInterface
     {
         static AddressablesInterface s_Instance;
+
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            s_Instance = default;
+        }
+        #endif
 
         public static AddressablesInterface Instance
         {

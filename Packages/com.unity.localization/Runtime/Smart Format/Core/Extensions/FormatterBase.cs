@@ -1,3 +1,5 @@
+using System;
+
 namespace UnityEngine.Localization.SmartFormat.Core.Extensions
 {
     /// <summary>
@@ -7,6 +9,7 @@ namespace UnityEngine.Localization.SmartFormat.Core.Extensions
     /// This example shows how to create a formatter to format an integer that represents bytes.
     /// <code source="../../../../DocCodeSamples.Tests/ByteFormatter.cs"/>
     /// </example>
+    [Serializable]
     public abstract class FormatterBase : IFormatter, ISerializationCallbackReceiver
     {
         [SerializeField]

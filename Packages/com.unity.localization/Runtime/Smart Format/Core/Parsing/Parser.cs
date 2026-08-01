@@ -11,6 +11,15 @@ namespace UnityEngine.Localization.SmartFormat.Core.Parsing
     [Serializable]
     public class Parser
     {
+        #if UNITY_EDITOR && UNITY_6000_0_OR_NEWER
+        //  Fast Enter Play Mode support
+        [RuntimeInitializeOnLoadMethod]
+        static void ResetStaticsOnLoad()
+        {
+            s_ParsingErrorText = default;
+        }
+        #endif
+
         [SerializeField]
         char m_OpeningBrace = '{';
 

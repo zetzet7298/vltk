@@ -500,11 +500,13 @@ namespace UnityEngine.Localization
         {
             readonly string m_Localized;
             readonly StringTableEntry m_StringTableEntry;
+            readonly IVariableGroup m_LocalVariables;
 
-            public StringTableEntryVariable(string localized, StringTableEntry entry)
+            public StringTableEntryVariable(string localized, StringTableEntry entry, IVariableGroup localVariables)
             {
                 m_Localized = localized;
                 m_StringTableEntry = entry;
+                m_LocalVariables = localVariables;
             }
 
             public bool TryGetValue(string key, out IVariable value)
@@ -517,6 +519,9 @@ namespace UnityEngine.Localization
                         return true;
                     }
                 }
+
+                if (m_LocalVariables != null && m_LocalVariables.TryGetValue(key, out value))
+                    return true;
 
                 value = null;
                 return false;
@@ -587,7 +592,7 @@ namespace UnityEngine.Localization
             if (!entry.IsSmart)
             {
                 var result = LocalizationSettings.StringDatabase.GenerateLocalizedString(operation.Result.Table, entry, TableReference, TableEntryReference, locale, Arguments);
-                return new StringTableEntryVariable(result, entry);
+                return new StringTableEntryVariable(result, entry, this);
             }
 
             var formatCache = entry?.GetOrCreateFormatCache();
@@ -625,7 +630,7 @@ namespace UnityEngine.Localization
                     // We may need to consider keeping multiple lists of callbacks in the future.
                     UpdateVariableListeners(formatCache.VariableTriggers);
                 }
-                return new StringTableEntryVariable(result, entry);
+                return new StringTableEntryVariable(result, entry, this);
             }
         }
 

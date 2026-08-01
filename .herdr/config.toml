@@ -1,0 +1,25 @@
+version = 1
+
+# VLTK implementation and engineering peer lanes prefer Gemini Flash High.
+# Omitted fallbacks inherit the provider-diverse defaults from the plugin.
+[agents.peer]
+primary = "pi:local-gemini"
+
+[agents.peer.targets.local-gemini]
+model = "gemini-3.6-flash-high"
+thinking = "high"
+
+[agents."shadow-co-worker"]
+primary = "pi:local-gemini"
+
+[agents."shadow-co-worker".targets.local-gemini]
+model = "gemini-3.6-flash-high"
+thinking = "high"
+
+# Proof work uses the same validated Gemini 3.6 Flash High route.
+[agents."proof-auditor"]
+primary = "pi:local-gemini"
+
+[agents."proof-auditor".targets.local-gemini]
+model = "gemini-3.6-flash-high"
+thinking = "high"

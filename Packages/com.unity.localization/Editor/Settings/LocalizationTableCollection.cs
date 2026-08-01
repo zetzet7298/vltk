@@ -328,7 +328,7 @@ namespace UnityEditor.Localization
                 throw new ArgumentNullException(nameof(table));
 
             // We use the instance id so as not to force the tables to be loaded.
-            var tableInstanceID = table.GetInstanceID();
+            var tableInstanceID = InstanceIdHelper.GetInstanceId(table);
             var index = m_Tables.FindIndex(t => t.GetInstanceId() == tableInstanceID);
 
             if (index == -1)
@@ -413,7 +413,7 @@ namespace UnityEditor.Localization
         public virtual bool ContainsTable(LocalizationTable table)
         {
             // We use the instance id so as not to force the tables to be loaded.
-            var tableInstanceID = table.GetInstanceID();
+            var tableInstanceID = InstanceIdHelper.GetInstanceId(table);
             return m_Tables.Any(t => t.GetInstanceId() == tableInstanceID);
         }
 
@@ -660,9 +660,13 @@ namespace UnityEditor.Localization
             var localeLabel = AddressHelper.FormatAssetLabel(table.LocaleIdentifier);
 
             // Only update labels if the current locale label has changed
-            if (tableEntry.labels.Any(label => label != localeLabel && AddressHelper.IsLocaleLabel(label)))
-                foreach (var l in tableEntry.labels.Where(AddressHelper.IsLocaleLabel).ToList()) tableEntry.labels.Remove(l);
-
+            // local patch: iterate filtered copy, never mutate during enumeration
+            var currentLabels = tableEntry.labels.Where(AddressHelper.IsLocaleLabel).ToList();
+            foreach (var label in currentLabels)
+            {
+                if (label != localeLabel)
+                    tableEntry.labels.Remove(label);
+            }
             tableEntry.SetLabel(localeLabel, true, true);
         }
 
