@@ -227,3 +227,22 @@ Assets/StreamingAssets/sound.meta
 /Captures/
 /harness/screenshots/
 *.slnx
+
+# ─────────────────────────────────────────────────
+# Canonical Unity.gitignore additions (github/gitignore)
+# ─────────────────────────────────────────────────
+*.unitypackage
+*.app
+*.unitypackage.meta
+crashlytics-build.properties
+crashlytics-build.properties.meta
+.vsconfig
+/Assets/Plugins/Editor/JetBrains/
+/Assets/Plugins/Editor/JetBrains.meta
+# Gradle wrapper output (Android)
+.gradle/
+*.apk.meta
+*.aab.meta
+# Burst cache
+Library/Bee/
+Library/Bee.artifacts/
