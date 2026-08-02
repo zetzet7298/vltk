@@ -1,0 +1,18 @@
+{
+    "name": "VLTK.Survivor.Runtime",
+    "rootNamespace": "VLTK.Survivor",
+    "references": [
+        "VLTK.Sandbox.Runtime",
+        "VLTK.Core",
+        "Unity.InputSystem"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

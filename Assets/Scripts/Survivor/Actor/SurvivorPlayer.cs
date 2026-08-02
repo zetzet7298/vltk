@@ -1,0 +1,108 @@
+using UnityEngine;
+
+namespace VLTK.Survivor
+{
+    public sealed class SurvivorPlayer : MonoBehaviour
+    {
+        public float MoveSpeed = 5f;
+        public float Damage = 1f;
+        public float AttackInterval = 0.6f;
+        public int Projectiles = 1;
+        public int MaxHp = 5;
+        public float PickupRadius = 1.6f;
+
+        public int Hp { get; private set; }
+        public int Level { get; private set; } = 1;
+        public int Xp { get; private set; }
+        public int XpToNext => 5 + (Level - 1) * 3;
+        public bool Dead => Hp <= 0;
+
+        private IActorVisual _visual;
+        private float _attackCd;
+        private float _invuln;
+
+        public void Init(IActorVisual v, Vector3 pos)
+        {
+            _visual = v;
+            Hp = MaxHp;
+            transform.position = pos;
+            _visual.SyncPosition(pos);
+        }
+
+        public void AddXp(int n)
+        {
+            Xp += n;
+            while (Xp >= XpToNext)
+            {
+                Xp -= XpToNext;
+                Level++;
+                SurvivorGameDirector.Instance.OnLevelUp(this);
+            }
+        }
+
+        public void ApplyCard(SkillCard c)
+        {
+            switch (c.kind)
+            {
+                case SkillEffectKind.Damage: Damage *= 1.25f; break;
+                case SkillEffectKind.AttackSpeed: AttackInterval *= 0.8f; break;
+                case SkillEffectKind.MoveSpeed: MoveSpeed *= 1.15f; break;
+                case SkillEffectKind.MultiShot: Projectiles++; break;
+                case SkillEffectKind.MaxHp: MaxHp++; Hp = Mathf.Min(MaxHp, Hp + 1); break;
+            }
+        }
+
+        public void TakeDamage(int d)
+        {
+            if (_invuln > 0 || Dead) return;
+            Hp -= d;
+            _invuln = 0.6f;
+            if (Hp <= 0)
+            {
+                Hp = 0;
+                _visual?.SetAlive(false);
+                SurvivorGameDirector.Instance.OnPlayerDied();
+            }
+        }
+
+        private void Update()
+        {
+            if (Dead) return;
+            float dt = Time.deltaTime;
+            if (_invuln > 0) _invuln -= dt;
+
+            var dir = SurvivorGameDirector.Instance.Input.Move;
+            if (dir.sqrMagnitude > 1f) dir.Normalize();
+            var p = transform.position + (Vector3)(dir * MoveSpeed * dt);
+            var b = SurvivorGameDirector.Instance.ArenaHalf;
+            p.x = Mathf.Clamp(p.x, -b.x, b.x);
+            p.y = Mathf.Clamp(p.y, -b.y, b.y);
+            transform.position = p;
+            _visual?.SyncPosition(p);
+            _visual?.PlayMove(dir.sqrMagnitude > 0.01f);
+
+            _attackCd -= dt;
+            if (_attackCd <= 0f) { _attackCd = AttackInterval; Fire(); }
+        }
+
+        private void Fire()
+        {
+            var target = SurvivorGameDirector.Instance.NearestMonster(transform.position);
+            if (target == null) return;
+            var d = (Vector2)(target.transform.position - transform.position);
+            if (d.sqrMagnitude < 0.0001f) return;
+            var baseDir = d.normalized;
+            for (int i = 0; i < Projectiles; i++)
+            {
+                float spread = Projectiles > 1 ? (i - (Projectiles - 1) / 2f) * 0.18f : 0f;
+                SurvivorGameDirector.Instance.SpawnProjectile(transform.position, Rotate(baseDir, spread), Damage);
+            }
+        }
+
+        private static Vector2 Rotate(Vector2 v, float a)
+        {
+            float c = Mathf.Cos(a), s = Mathf.Sin(a);
+            return new Vector2(v.x * c - v.y * s, v.x * s + v.y * c);
+        }
+    }
+}

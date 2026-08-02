@@ -221,3 +221,9 @@ AudioRuntime/
 # ─────────────────────────────────────────────────
 Assets/StreamingAssets/sound/
 Assets/StreamingAssets/sound.meta
+
+# Dev artifacts
+/Screenshots/
+/Captures/
+/harness/screenshots/
+*.slnx

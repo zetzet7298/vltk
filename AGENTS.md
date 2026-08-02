@@ -27,22 +27,45 @@
 - `PcAllFactionLearnedDisplaySkills.txt` = TCVN3; `PcSkills.txt` = GBK — decode bằng `PcText.Tcvn3Table`/GBK, đọc UTF-8 sẽ sinh U+FFFD.
 - Verify chuẩn: probe `PlaySkillCast` trong play mode (phase + HasPcPreCastSprite + missileDirections), đối chiếu `PcFanSpreadParity` từ PcSkills.txt Param1/Param2.
 
+## Survivor Mode (DHCD-parity roguelike)
 
-<!-- HARNESS:BEGIN -->
-## Harness
+Mode MỚI song song Sandbox — KHÔNG sửa code Sandbox. Offline prototype trước, backend P3. Portrait bắt buộc.
 
-Choose the request class before any Harness operation.
+**Tham chiếu:**
+- Plan: `docs/SURVIVOR_PLAN.md` (phases P0–P3, JX→dhcd slot map)
+- DHCD distilled loop: `C:/Projects/dhcd/docs/evidence/r-dhcd-*.md` (001 card economy, 002 modal queue, 003 timescale pause, 006 drop-xp)
+- DHCD server: KHÔNG reverse (xem `C:/Projects/dhcd/docs/server-reverse-decision.md`)
+- DHCD RandomSkillConfig encrypted (FastXXTEA) → build own skill library từ JX PcSkills.txt, không port dhcd data
 
-- When the requested outcome is only an answer, explanation, review, diagnosis,
-  plan, or status report: inspect only the material needed to respond. Keep the
-  task read-only. Do not bootstrap, initialize or migrate a database, record
-  intake, or record a trace.
-- When the user explicitly asks to change, build, fix, or write repository
-  artifacts: first run `scripts/bootstrap-harness.sh`
-  on macOS/Linux or `.\scripts\bootstrap-harness.ps1` on Windows. Then use
-  `docs/FEATURE_INTAKE.md` to classify and record the request, query
-  `scripts/bin/harness-cli query matrix --active --summary` on macOS/Linux or
-  `.\scripts\bin\harness-cli.exe query matrix --active --summary` on Windows,
-  and retrieve only the lane- and task-specific context described in
-  `docs/CONTEXT_RULES.md`.
-<!-- HARNESS:END -->
+**Quyết định kỹ thuật:**
+- `float` không FP (chưa cần deterministic)
+- Camera 2D ortho nhìn +Z, XY plane (JX SPR = side-view)
+- Visual seam: `IActorVisual` — proxy màu P1, bridge JX (MalePlayerVisual adapter) P1.5
+- Tuân thủ ask-matt: setup-matt-pocock-skills → wayfinder → to-spec → to-tickets → implement
+
+**P1 skeleton đã build + verified (compile sạch, play test OK):**
+- Scene: `Assets/Scenes/Survivor.unity` (Main Camera ortho size 6 + SurvivorDirector)
+- asmdef: `Assets/Scripts/Survivor/VLTK.Survivor.Runtime.asmdef` (refs Sandbox, Core, InputSystem)
+- `SurvivorGameDirector.cs` — lifecycle parity BattleLevelLogic (Init/Start/GameStart/Update/GameEnd) + match brain (spawn/XP/levelup/gameover)
+- `Actor/` — `SurvivorPlayer` (joystick+keyboard, auto-attack, XP/level, i-frame, ApplyCard), `SurvivorMonster` (AI chase+contact dmg+drop), `XpGem` (magnet pickup), `IActorVisual`+`ProxyActorVisual`+`ProxyVisuals` (placeholder sprite màu)
+- `Combat/Projectile.cs` — travel + hit
+- `Level/WaveSpawner.cs` — ramp interval/batch, perimeter spawn
+- `Skill/SkillCard.cs` — 5 flat stat card (Damage/AtkSpeed/MoveSpeed/MultiShot/MaxHp)
+- `UI/SurvivorJoystick.cs` (touch left-half + WASD), `UI/OverlayPanel.cs` (portrait uGUI: levelup 3-card + gameover restart, timescale pause parity r-dhcd-003)
+- `BattleContext.cs`, `LevelStatus.cs` (stubs)
+
+**Next:** P1.5 bridge JX visual → P2 full skill library + boss/shop/box/endless → P3 backend. Wayfinder chart trước khi build P2 (session riêng, HITL).
+
+## Agent skills
+
+### Issue tracker
+
+Issues live as markdown under `.scratch/` (local tracker, one file per ticket). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default five-role vocabulary (`needs-triage` / `needs-info` / `ready-for-agent` / `ready-for-human` / `wontfix`). See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` + `docs/adr/` at repo root. See `docs/agents/domain.md`.
