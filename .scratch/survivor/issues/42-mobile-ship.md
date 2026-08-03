@@ -39,3 +39,9 @@
 - SPR miss count: **1** (`MA_SH_019_ST01.spr` chưa staged — fail-closed đúng, phần còn lại 16 SPR loaded). Audio miss 3 (fail-closed im lặng, đã biết P2).
 
 **Ghi chú scene wiring:** components add qua MCP lúc đầu sinh MonoScript embedded thiếu guid (Unity 6 multi-class file) → đã sửa scene bằng guid đúng + tách file MonoBehaviour riêng. `PlayerSettings.runInBackground` bật tạm trong editor session để profiling nền (KHÔNG commit).
+
+### Council review P2 total (2026-08-03) — FAIL integration seam
+- Review: commit range 0a649b663~1..8cbdee0e3, 258/258 survivor EditMode re-run xanh.
+- **Verdict FAIL**: 6/9 feature hệ dead-wired. Blocker: skill boot (SkillService/Cast không assign, Generated/ chưa generate), supply (SupplyMgr/SupplyBar không caller), WaveIndexSource chưa wire, OnApplicationPause không có. Minor: Select LevelUp/Shop thiếu Contains, Boss Hp<=0 trước ReportHp.
+- **Challenge sai (lead verify)**: monster visual JX đã wire — SurvivorMonster.Init destroy proxy + AddComponent JxNpcVisual (line 26-46), VisualRes boss012/ResolveByIndex.
+- Fix → ticket 43 (wiring). Test suite cần +1 boot smoke test.
