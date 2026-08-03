@@ -159,6 +159,12 @@ namespace VLTK.Survivor
         private SurvivorText _text;
         private float _timer;
 
+        // ticket 42: safe-area notch — top-anchored elements dịch xuống khi padding.Top > 0.
+        private RectTransform[] _topElements;
+        private Vector2[] _topBase;
+        private float _appliedTopPx = -1f;
+        private const float ReferenceHeight = 1920f; // CanvasScaler reference (1080×1920)
+
         /// <summary>i18n: override cho hot-switch (ticket 38) / test; mặc định tự load bundle.</summary>
         public SurvivorText Texts
         {
@@ -216,6 +222,18 @@ namespace VLTK.Survivor
             // Wave/boss banner: giữa cao, vàng
             _bannerText = MakeAnchorText("Banner", _canvas.transform, 52, new Color(1f, 0.85f, 0.3f),
                 new Vector2(0.5f, 1f), new Vector2(0, -230), TextAnchor.MiddleCenter);
+
+            // ticket 42: thu thập top-anchored elements (bar bg + text) cho safe-area inset
+            _topElements = new[]
+            {
+                (RectTransform)_hpFill.transform.parent, // HpBar bg
+                (RectTransform)_xpFill.transform.parent, // XpBar bg
+                (RectTransform)_levelText.transform,
+                (RectTransform)_timerText.transform,
+                (RectTransform)_bannerText.transform,
+            };
+            _topBase = new Vector2[_topElements.Length];
+            for (int i = 0; i < _topElements.Length; i++) _topBase[i] = _topElements[i].anchoredPosition;
         }
 
         private void Update()
@@ -238,6 +256,24 @@ namespace VLTK.Survivor
             int waveIndex = WaveIndexSource != null ? WaveIndexSource() : 0;
             _banner.Poll(waveIndex, d.ActiveBoss != null, Time.deltaTime);
             _bannerText.text = _banner.Current;
+
+            ApplySafeArea();
+        }
+
+        /// <summary>
+        /// ticket 42: notch/cutout — dịch top-anchored elements xuống theo
+        /// SurvivorPlatformSettings.CurrentSafePadding.Top (normalized × reference
+        /// height ≈ px). Chỉ apply khi giá trị đổi (tránh layout churn mỗi frame).
+        /// Editor/desktop safeArea = full screen → padding 0 → vị trí base (no-op).
+        /// </summary>
+        private void ApplySafeArea()
+        {
+            float topPx = SurvivorPlatformSettings.CurrentSafePadding.Top * ReferenceHeight;
+            if (Mathf.Abs(topPx - _appliedTopPx) <= 0.5f) return;
+            _appliedTopPx = topPx;
+            var off = new Vector2(0f, -topPx);
+            for (int i = 0; i < _topElements.Length; i++)
+                _topElements[i].anchoredPosition = _topBase[i] + off;
         }
 
         /// <summary>Snapshot run cho gameover (nguồn public thật; Kills chưa có counter → 0).</summary>

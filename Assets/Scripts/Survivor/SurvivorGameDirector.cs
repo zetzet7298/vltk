@@ -19,6 +19,14 @@ namespace VLTK.Survivor
         public readonly SurvivorJoystick Input = new SurvivorJoystick();
         public SurvivorPlayer Player { get; private set; }
         public List<SurvivorMonster> Monsters { get; } = new List<SurvivorMonster>();
+
+        /// <summary>
+        /// Spawn-gate (ticket 42, đòn bẩy 60fps): non-null trả false → bỏ qua spawn
+        /// monster thường (boss luôn spawn — parity, exempt trim). SurvivorMonsterCap
+        /// đăng ký khi tồn tại trong scene. Fail-closed: gate null → spawn tự do
+        /// (sandbox/không cấu hình → hành vi cũ, không đổi).
+        /// </summary>
+        public System.Func<int, bool> MonsterSpawnGate;
         public Transform PlayerTransform => Player != null ? Player.transform : null;
 
         private readonly List<Projectile> _projectiles = new List<Projectile>();
@@ -131,6 +139,8 @@ namespace VLTK.Survivor
             // own: boss wave lặp (loop table) khi boss cũ còn sống → không spawn boss thứ 2
             // (boss sống xuyên wave tới khi chết — parity; chết rồi thì wave boss kế spawn mới)
             if (info.IsBoss && ActiveBoss != null) return;
+            // ticket 42: cap gate — chặn spawn thường khi đạt cap (boss exempt)
+            if (!info.IsBoss && MonsterSpawnGate != null && !MonsterSpawnGate(Monsters.Count)) return;
             var go = new GameObject(info.IsBoss ? "boss" : info.IsElite ? "elite" : "monster");
             var vis = go.AddComponent<ProxyActorVisual>();
             // own tier visual: boss to đỏ sẫm, elite tím, thường đỏ

@@ -221,6 +221,9 @@ GameObject:
   m_Component:
   - component: {fileID: 993412937}
   - component: {fileID: 993412936}
+  - component: {fileID: 993412940}
+  - component: {fileID: 993412939}
+  - component: {fileID: 993412938}
   m_Layer: 0
   m_Name: SurvivorDirector
   m_TagString: Untagged
@@ -241,6 +244,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: VLTK.Survivor.Runtime::VLTK.Survivor.SurvivorGameDirector
   ArenaHalf: {x: 3.3, y: 5.8}
+  SkillCastCount: 0
+  OccupiedMask: 0
+  BossPhases: []
+  BossSkillPool: []
+  DropTable: {fileID: 0}
 --- !u!4 &993412937
 Transform:
   m_ObjectHideFlags: 0
@@ -256,6 +264,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &993412938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993412935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 001b1cdafb094aa4e9d03dc5f7981560, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: VLTK.Survivor.Runtime::VLTK.Survivor.PerfBudgetMonitor
+  ReportIntervalSeconds: 5
+--- !u!114 &993412939
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993412935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36fa02159bfad7e45bf5493fa4919284, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: VLTK.Survivor.Runtime::VLTK.Survivor.SurvivorMonsterCap
+  Config:
+    MaxMonsters: 80
+  TrimExcess: 1
+--- !u!114 &993412940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 993412935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c25ba6db7f6c0d343a18c724c640f10f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: VLTK.Survivor.Runtime::VLTK.Survivor.SurvivorPlatformSettings
+  LockPortrait: 1
+  TargetFrameRate: 60
+  KeepScreenAwake: 1
+  JoystickRadius: 140
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
