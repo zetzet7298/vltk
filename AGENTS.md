@@ -19,7 +19,7 @@
 
 ## SPR Parity PC → Mobile (kinh nghiệm)
 
-- Mobile chỉ hiển thị SPR đã staged hash dạng `Assets/StreamingAssets/Sprites/{hash}.spr`; preCast/missile path từ PcSkills.txt / missles.txt là GBK bytes, hash = `SprRuntimeService.ComputePathUidHex` (GB2312, thử signed + unsigned). Không bịa path.
+- Mobile chỉ hiển thị SPR đã staged hash dạng `SpritesRuntime/{hash}.spr` (root = project `/SpritesRuntime`, 67.499 file — KHÔNG phải `Assets/StreamingAssets/Sprites` chỉ có 1.160 file; xem `SprRuntimeService.DefaultSpritesRoot`); preCast/missile path từ PcSkills.txt / missles.txt là GBK bytes, hash = `SprRuntimeService.ComputePathUidHex` (GB2312, thử signed + unsigned). Không bịa path.
 - Fail-closed: không gán sprite chưa staged. Skill Finished-ngay không phải lúc nào cũng bug — nhiều child missile KHÔNG có cột sprite trong missles.txt (ví dụ 20/408/274/1083..1088), PC cũng không visual.
 - Melee (MisslesForm=12 + IsMelee=1): visual qua child missile, không cần PreCastSpr; nếu `isMelee` set sai → fail-closed. Form 12 không nằm trong enum `SkillMissileForm`.
 - Fan spread (SKILL_MF_Spread) PC: dir_i = castDir + Param1×(i−half), đơn vị 1/64 vòng, spawn offset = Param2 px (KSkills.cpp CastSpread). Không chia 360° quanh caster.

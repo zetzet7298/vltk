@@ -10,6 +10,7 @@
         "VLTK.Combat",
         "VLTK.PortData",
         "VLTK.Sandbox.Runtime",
+        "VLTK.Survivor.Runtime",
         "VLTK.World",
         "VLTK.UI",
         "VLTK.Resources",

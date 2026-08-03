@@ -1,0 +1,10 @@
+4 | Thiếu Lâm Côn pháp | shaolin.lua
+5 | Thiếu Lâm thương pháp (##) | shaolin.lua
+6 | Thiếu Lâm Đao pháp | shaolin.lua
+7 | Thiếu Lâm Chùy pháp (##) | shaolin.lua
+8 | Thiếu Lâm Quyền Pháp | shaolin.lua
+9 | Hỗn Nguyên Nhất Khí công | shaolin.lua
+10 | Kim Cang Phục Ma | shaolin.lua
+11 | Hoành Tảo Lục Hợp | shaolin.lua
+12 | Kim Cang Hộ Thể | shaolin.lua
+13 | Lập Địa Thành Phật | shaolin.lua

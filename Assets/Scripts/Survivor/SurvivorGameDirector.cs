@@ -27,6 +27,26 @@ namespace VLTK.Survivor
         private OverlayPanel _overlay;
         private bool _paused;
 
+        // --- wave trigger context (ticket 30) ---
+        public int SkillCastCount;  // P2 skill system sẽ ++ (trigger type 4); P1 luôn 0
+        public int OccupiedMask;    // capture-mode ticket sẽ set (trigger type 7-9)
+        private readonly Dictionary<SurvivorMonster, int> _monsterIds = new Dictionary<SurvivorMonster, int>();
+        private readonly Dictionary<SurvivorMonster, int> _monsterWave = new Dictionary<SurvivorMonster, int>();
+        private SurvivorMonster _boss;
+
+        // --- boss (ticket 31) ---
+        [Header("Boss (ticket 31)")]
+        public List<BossPhaseDef> BossPhases;                  // null → SurvivorBoss.DefaultPhases()
+        public List<SkillDef> BossSkillPool = new List<SkillDef>(); // BossNpc pool (ticket 26); rỗng → boss chỉ chase/kit (fail-closed)
+        public DropTableSO DropTable;                          // booty drop table; null → chỉ gem burst (fail-closed)
+        public System.Random DropRng = new System.Random();
+
+        /// <summary>Boss wrapper active (phase/booty); inner = SurvivorMonster trong Monsters.</summary>
+        public SurvivorBoss ActiveBoss { get; private set; }
+
+        /// <summary>Boss HP% cho trigger type 3; không có boss → 1 (trigger không fire).</summary>
+        public float BossHpPercent => _boss != null && _boss.MaxHp > 0f ? _boss.Hp / _boss.MaxHp : 1f;
+
         private void Awake()
         {
             Instance = this;
@@ -45,6 +65,7 @@ namespace VLTK.Survivor
             OnUpdate();
             Input.Update();
             _spawner.Tick(Time.deltaTime, SpawnMonsterAt);
+            if (_spawner.ConsumeWaveFinished()) CleanupWaveMonsters();
         }
 
         private void OnDestroy() => OnDestroyInternal();
@@ -56,6 +77,8 @@ namespace VLTK.Survivor
             SpawnPlayer();
             _overlay = OverlayPanel.Build();
             _spawner = new WaveSpawner();
+            SurvivorAudioMgr.EnsureInstance();
+            SurvivorAudioMgr.Instance?.SetContext(SurvivorAudioContext.Battle);
             Debug.Log("[Survivor] OnInit");
             return true;
         }
@@ -88,31 +111,61 @@ namespace VLTK.Survivor
 
         public void SpawnProjectile(Vector3 pos, Vector2 dir, float dmg)
         {
-            var go = new GameObject("proj");
+            SpawnProjectile(pos, dir, dmg, 10f, 2f, "", SkillImpactSource.None, null);
+        }
+
+        /// <summary>Ticket 27: đạn skill — speed/life từ missles.txt, visual child staged, attribution.</summary>
+        public void SpawnProjectile(Vector3 pos, Vector2 dir, float dmg, float speed, float life,
+            string spriteUid, SkillImpactSource source, object caster)
+        {
+            var go = new GameObject(spriteUid.Length > 0 ? "skill_proj" : "proj");
             var p = go.AddComponent<Projectile>();
-            p.Init(pos, dir, dmg);
+            p.Init(pos, dir, dmg, source, caster, spriteUid);
+            p.speed = speed;
+            p.life = life;
             _projectiles.Add(p);
         }
 
-        private void SpawnMonsterAt(Vector3 pos)
+        private void SpawnMonsterAt(MonsterSpawnInfo info)
         {
-            var go = new GameObject("monster");
+            // own: boss wave lặp (loop table) khi boss cũ còn sống → không spawn boss thứ 2
+            // (boss sống xuyên wave tới khi chết — parity; chết rồi thì wave boss kế spawn mới)
+            if (info.IsBoss && ActiveBoss != null) return;
+            var go = new GameObject(info.IsBoss ? "boss" : info.IsElite ? "elite" : "monster");
             var vis = go.AddComponent<ProxyActorVisual>();
-            vis.color = new Color(0.9f, 0.3f, 0.3f);
-            vis.worldSize = new Vector2(0.7f, 0.9f);
+            // own tier visual: boss to đỏ sẫm, elite tím, thường đỏ
+            if (info.IsBoss) { vis.color = new Color(0.55f, 0.1f, 0.1f); vis.worldSize = new Vector2(1.7f, 2.1f); }
+            else if (info.IsElite) { vis.color = new Color(0.7f, 0.35f, 0.95f); vis.worldSize = new Vector2(1.0f, 1.3f); }
+            else { vis.color = new Color(0.9f, 0.3f, 0.3f); vis.worldSize = new Vector2(0.7f, 0.9f); }
             var m = go.AddComponent<SurvivorMonster>();
-            m.Init(vis, pos);
+            m.MaxHp = 3f * info.HpMul;                       // base 3 HP (P1) × tier/pool ratio
+            m.Speed = 1.6f * info.SpeedMul;                  // base 1.6 (P1) × tier
+            m.ContactDamage = Mathf.Max(1, Mathf.RoundToInt(info.AtkMul));
+            m.XpDrop = info.IsBoss ? 10 : info.IsElite ? 3 : 1; // own reward tier
+            if (info.IsBoss) m.VisualRes = "boss012";        // ticket 35 staged; SPR thiếu → proxy (fail-closed)
+            m.Init(vis, info.Pos);
+            _monsterIds[m] = info.MonsterId;                 // kill attribution cho trigger kill%/kill-all
+            _monsterWave[m] = _spawner.CurrentWaveIndex;     // stamp wave cho cleanup đúng đối tượng
+            if (info.IsBoss) _boss = m;
+            if (info.IsBoss)
+            {
+                var boss = go.AddComponent<SurvivorBoss>();
+                boss.Init(m, BossPhases ?? SurvivorBoss.DefaultPhases(), BossSkillPool);
+                ActiveBoss = boss;
+                SurvivorAudioMgr.Instance?.SetContext(SurvivorAudioContext.Boss); // boss spawn → nhạc boss
+            }
             Monsters.Add(m);
         }
 
         private void SpawnPlayer()
         {
             var go = new GameObject("player");
-            var vis = go.AddComponent<ProxyActorVisual>();
-            vis.color = new Color(0.3f, 0.8f, 1f);
-            vis.worldSize = new Vector2(0.7f, 1.1f);
+            // P1.5: JxPlayerVisual tự probe SPR → MalePlayerVisual hoặc fallback ProxyActorVisual.
+            var vis = go.AddComponent<JxPlayerVisual>();
             Player = go.AddComponent<SurvivorPlayer>();
             Player.Init(vis, Vector3.zero);
+            Player.LevelUp += p => OnLevelUp(p);
+            Player.Died += _ => OnPlayerDied();
         }
 
         private void SpawnArenaVisual()
@@ -131,13 +184,80 @@ namespace VLTK.Survivor
         // --- events ---
         public void OnProjectileGone(Projectile p) => _projectiles.Remove(p);
 
+        /// <summary>Wave index cho HUD (ticket 37) — 1 dòng wire WaveIndexSource.</summary>
+        public int WaveIndex => _spawner.CurrentWaveIndex;
+
+        /// <summary>Tổng monster đã kill (gameover stats 37).</summary>
+        public int Kills { get; private set; }
+
         public void OnMonsterKilled(SurvivorMonster m)
         {
             Monsters.Remove(m);
+            Kills++;
+            if (_monsterIds.TryGetValue(m, out int id)) _spawner.OnMonsterKilled(id);
+            _monsterIds.Remove(m);
+            _monsterWave.Remove(m);
+            if (_boss == m) _boss = null;
+            SpawnGem(m.transform.position, m.XpDrop);
+        }
+
+        /// <summary>Booty boss (ticket 31): gem burst + DropTable roll theo BootyID phase active.
+        /// Gọi từ SurvivorBoss.SpawnBooty (Update poll hoặc OnDestroy fallback) — luôn sau
+        /// OnMonsterKilled(inner) nên gem base đã spawn trước.</summary>
+        public void OnBossKilled(SurvivorBoss boss)
+        {
+            if (boss == null) return;
+            if (ActiveBoss == boss) ActiveBoss = null;
+            SurvivorAudioMgr.Instance?.SetContext(SurvivorAudioContext.Battle); // boss chết → nhạc battle
+            SpawnGemBurst(boss.transform.position, boss.BootyGems, boss.BootyGemAmount);
+            if (DropTable == null || boss.BootyId <= 0) return; // fail-closed: chỉ gem burst
+            var rolls = new SurvivorCollectItemMgr(DropTable).RollActorDrop(boss.BootyId, DropRng);
+            for (int i = 0; i < rolls.Count; i++)
+            {
+                // Gold/Heal/Magnet/Bomb chưa có runtime spawn (ticket 13/32/33 supply) → bỏ qua fail-closed
+                if (rolls[i].OutputType != DropOutputType.Xp) continue;
+                SpawnGem(boss.transform.position, rolls[i].Amount > 0 ? rolls[i].Amount : 1);
+            }
+        }
+
+        public void SpawnGem(Vector3 pos, int amount)
+        {
             var go = new GameObject("gem");
             var g = go.AddComponent<XpGem>();
-            g.Init(m.transform.position, m.XpDrop);
+            g.Init(pos, amount);
             _gems.Add(g);
+        }
+
+        public void SpawnGemBurst(Vector3 pos, int count, int amount)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                var off = Random.insideUnitCircle * 0.8f;
+                SpawnGem(pos + new Vector3(off.x, off.y, 0f), amount);
+            }
+        }
+
+        /// <summary>
+        /// Dọn monster còn sống sau wave finish (parity TimeOverCheckDestoryMonster khi
+        /// IsDeleteAllMonster). Chỉ destroy monster stamp wave cũ — không đụng wave mới
+        /// (dhcd cho wave chồng nhau; own: 1 wave active). Boss wave (deleteAll=false)
+        /// giữ boss sống cho wave kế trigger HP%.
+        /// </summary>
+        private void CleanupWaveMonsters()
+        {
+            if (!_spawner.WaveCleanupMonsters) return;
+            int cur = _spawner.CurrentWaveIndex;
+            for (int i = Monsters.Count - 1; i >= 0; i--)
+            {
+                var m = Monsters[i];
+                if (m == _boss) continue; // parity: boss entity sống xuyên wave tới khi chết (chết → booty ticket 31)
+                _monsterWave.TryGetValue(m, out int stamp);
+                if (stamp >= cur) continue; // thuộc wave đang chạy
+                _monsterIds.Remove(m);
+                _monsterWave.Remove(m);
+                Destroy(m.gameObject);
+                Monsters.RemoveAt(i);
+            }
         }
 
         public void OnGemCollected(XpGem g) => _gems.Remove(g);

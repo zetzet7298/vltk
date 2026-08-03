@@ -1,32 +1,53 @@
+using System;
 using UnityEngine;
 
 namespace VLTK.Survivor
 {
     /// <summary>
-    /// Minimal wave spawner. parity dhcd WaveRefresh (spawn time/interval/limit).
-    /// P1: perimeter spawn, interval ramps down, batch ramps up. P2: real WaveConfig pools.
+    /// Wave driver. parity dhcd LevelMonsterMgr lifecycle:
+    /// StartSpawn → WaveFuncByX.Trigger → CreateCurWave → WaveRefresh batch spawn → Finish.
+    /// Wave table tự author (WaveManager.DefaultTable) nạp qua DIY hook InitByDiyLevelWave.
+    /// Giữ API Tick(dt, spawnAt); spawnAt giờ nhận MonsterSpawnInfo (boss/elite/ratio).
     /// </summary>
     public sealed class WaveSpawner
     {
-        private float _timer = 1f;     // first wave quick
-        private float _elapsed;
+        private readonly WaveManager _mgr = new WaveManager();
 
-        public void Tick(float dt, System.Action<Vector3> spawnAt)
+        public WaveSpawner()
         {
-            _elapsed += dt;
-            _timer -= dt;
-            float interval = Mathf.Max(0.6f, 2.5f - _elapsed * 0.01f);
-            if (_timer > 0f) return;
+            _mgr.InitByDiyLevelWave(WaveManager.DefaultTable());
+            _mgr.BornPos = PerimeterPos;
+            _mgr.StartSpawn();
+        }
 
-            _timer = interval;
-            int count = 4 + Mathf.FloorToInt(_elapsed / 15f);
-            var half = SurvivorGameDirector.Instance.ArenaHalf;
-            float r = Mathf.Max(half.x, half.y) + 1f;
-            for (int i = 0; i < count; i++)
+        public bool WaveCleanupMonsters => _mgr.LastWaveCleanupMonsters;
+        public bool TableDone => _mgr.TableDone;
+        public int CurrentWaveIndex => _mgr.WaveIndex;
+
+        public void Tick(float dt, Action<MonsterSpawnInfo> spawnAt)
+        {
+            var d = SurvivorGameDirector.Instance;
+            if (d == null) return;
+            var ctx = new WaveTriggerContext
             {
-                float ang = Random.value * Mathf.PI * 2f;
-                spawnAt(new Vector3(Mathf.Cos(ang) * r, Mathf.Sin(ang) * r, 0f));
-            }
+                BossHpPercent = d.BossHpPercent,
+                SkillCastCount = d.SkillCastCount,
+                OccupiedMask = d.OccupiedMask,
+            };
+            _mgr.Tick(dt, spawnAt, ctx);
+        }
+
+        public void OnMonsterKilled(int monsterId) => _mgr.OnMonsterKilled(monsterId);
+
+        public bool ConsumeWaveFinished() => _mgr.ConsumeWaveFinished();
+
+        private Vector3 PerimeterPos()
+        {
+            var d = SurvivorGameDirector.Instance;
+            var half = d != null ? d.ArenaHalf : new Vector2(3.3f, 5.8f);
+            float r = Mathf.Max(half.x, half.y) + 1f;
+            float ang = UnityEngine.Random.value * Mathf.PI * 2f;
+            return new Vector3(Mathf.Cos(ang) * r, Mathf.Sin(ang) * r, 0f);
         }
     }
 }

@@ -11,11 +11,19 @@ namespace VLTK.Survivor
         public int MaxHp = 5;
         public float PickupRadius = 1.6f;
 
+        /// <summary>Ticket 27: roster skill cast runtime (orchestrator seed debug 1 skill tới ticket 29).</summary>
+        public SkillCastRuntime Cast;
+
         public int Hp { get; private set; }
         public int Level { get; private set; } = 1;
         public int Xp { get; private set; }
         public int XpToNext => 5 + (Level - 1) * 3;
         public bool Dead => Hp <= 0;
+
+        // ponytail: decouple từ Singleton Director — Director subscribe ở SpawnPlayer,
+        // test pure logic không cần Director.
+        public event System.Action<SurvivorPlayer> LevelUp;
+        public event System.Action<SurvivorPlayer> Died;
 
         private IActorVisual _visual;
         private float _attackCd;
@@ -36,7 +44,7 @@ namespace VLTK.Survivor
             {
                 Xp -= XpToNext;
                 Level++;
-                SurvivorGameDirector.Instance.OnLevelUp(this);
+                LevelUp?.Invoke(this);
             }
         }
 
@@ -61,7 +69,7 @@ namespace VLTK.Survivor
             {
                 Hp = 0;
                 _visual?.SetAlive(false);
-                SurvivorGameDirector.Instance.OnPlayerDied();
+                Died?.Invoke(this);
             }
         }
 
@@ -82,6 +90,7 @@ namespace VLTK.Survivor
             _visual?.PlayMove(dir.sqrMagnitude > 0.01f);
 
             _attackCd -= dt;
+            Cast?.Tick(dt);
             if (_attackCd <= 0f) { _attackCd = AttackInterval; Fire(); }
         }
 
@@ -92,6 +101,15 @@ namespace VLTK.Survivor
             var d = (Vector2)(target.transform.position - transform.position);
             if (d.sqrMagnitude < 0.0001f) return;
             var baseDir = d.normalized;
+            // Ticket 27 hook tối thiểu: roster skill ready → cast thay cho auto-attack tick này;
+            // skill đang cd → TryCast false → auto-attack tiếp tục (không đứt nhịp).
+            if (Cast != null && Cast.TryCast(baseDir, out var plan))
+            {
+                SurvivorAudioMgr.Instance?.PlaySkillCast(plan.SkillId);
+                SkillCastSpawner.Spawn(SurvivorGameDirector.Instance, plan, transform.position, this);
+                return;
+            }
+            SurvivorAudioMgr.Instance?.PlayEvent(SurvivorAudioEvent.Cast);
             for (int i = 0; i < Projectiles; i++)
             {
                 float spread = Projectiles > 1 ? (i - (Projectiles - 1) / 2f) * 0.18f : 0f;

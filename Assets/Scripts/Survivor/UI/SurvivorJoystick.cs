@@ -12,7 +12,9 @@ namespace VLTK.Survivor
 
         private int _fingerId = -1;
         private Vector2 _origin;
-        private const float Radius = 140f;
+
+        /// <summary>Bán kính joystick px (ticket 42 additive: const→field — SurvivorPlatformSettings chỉnh cho thiết bị).</summary>
+        public float Radius = 140f;
 
         public void Update()
         {
