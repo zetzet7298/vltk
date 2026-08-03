@@ -55,6 +55,25 @@ namespace VLTK.Survivor
         public const int FullClearSkillId = 9004;
         public const int HealBuffId = 9101;           // buff heal do supply tạo (không trùng skill ids)
 
+        /// <summary>
+        /// Adapter SurvivorPlayer → ISurvivorDamageable (supply heal target, ticket
+        /// 43 wiring). Heal qua ApplyDot(IsHeal) — KHÔNG vào damage ledger (BuffDot
+        /// heal variant).
+        /// </summary>
+        public sealed class SurvivorPlayerDamageable : ISurvivorDamageable
+        {
+            private readonly SurvivorPlayer _player;
+            public SurvivorPlayerDamageable(SurvivorPlayer p) { _player = p; }
+            public int Hp => _player != null ? _player.Hp : 0;
+            public int MaxHp => _player != null ? _player.MaxHp : 0;
+            public void ApplyDot(DamageInfo info)
+            {
+                if (_player == null) return;
+                if (info.IsHeal) _player.Heal(Mathf.Max(1, info.Damage));
+                else _player.TakeDamage(info.Damage);
+            }
+        }
+
         /// <summary>1 slot supply — trạng thái + cd riêng.</summary>
         public sealed class SupplySlot
         {

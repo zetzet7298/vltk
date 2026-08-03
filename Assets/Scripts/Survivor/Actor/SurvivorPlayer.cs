@@ -73,6 +73,13 @@ namespace VLTK.Survivor
             }
         }
 
+        /// <summary>Heal (ticket 43, supply heal qua impact 28) — clamp tới MaxHp.</summary>
+        public void Heal(int n)
+        {
+            if (Dead || n <= 0) return;
+            Hp = Mathf.Min(MaxHp, Hp + n);
+        }
+
         private void Update()
         {
             if (Dead) return;

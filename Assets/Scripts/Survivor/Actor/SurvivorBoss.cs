@@ -192,12 +192,15 @@ namespace VLTK.Survivor
         {
             var m = Monster;
             if (m == null || _bootySpawned) return;
+            // ticket 43 (council FAIL): ReportHp TRƯỚC death check — đòn chí mạng
+            // phải chạm window phase cuối (spawn booty phase active đúng) trước khi
+            // Update này thấy Hp <= 0. hp clamp 0 để loss = maxHp (phase cuối).
+            if (_skills != null) _skills.Tick(Time.deltaTime);
+            if (_machine != null && _machine.ReportHp(m.MaxHp, Mathf.Max(0f, m.Hp))) ApplyPhase(_machine.PhaseIndex);
             // death poll: nếu Update wrapper chạy sau đòn chí mạng trong frame —
             // inner Die() đã Destroy GO (deferred end-of-frame) → vẫn spawn booty.
             // Update chạy TRƯỚC đòn chí mạng → OnDestroy fallback bắt (dưới).
             if (m.Hp <= 0f) { SpawnBooty(); return; }
-            if (_skills != null) _skills.Tick(Time.deltaTime);
-            if (_machine != null && _machine.ReportHp(m.MaxHp, m.Hp)) ApplyPhase(_machine.PhaseIndex);
             var def = _machine != null ? _machine.Current : null;
             if (def != null && def.AiMode == BossAiMode.Cast) DoCastAi(m);
         }

@@ -16,8 +16,11 @@
 //    (RandomSkillLibraryConfig.IsMaxLevel parity-shape) → card trùng chỉ nâng
 //    cấp tới cap, không tràn.
 //  - Pick → SkillCastRuntime.Learn (roster ticket 27).
-//  - Pause card scope: CardChoicePause ref-count (r-dhcd-003 m_pauseCount
-//    parity-shape; own: timeScale ∈ {0,1}, KHÔNG claim input lock).
+//  - Pause card scope: SurvivorPause ref-count scope "CardChoice" (r-dhcd-003
+//    m_pauseCount parity-shape; own: timeScale ∈ {0,1}, KHÔNG claim input lock).
+//    ticket 43: dùng CHUNG SurvivorPause toàn game (director inject) — card +
+//    settings + app-lifecycle + gameover + levelup chung 1 counter, không bao
+//    giờ resume nhầm khi scope khác còn giữ.
 // Core thuần (không scene, RNG + gold + pause inject qua delegate) = EditMode
 // test được (spec Testing Decisions).
 // -----------------------------------------------------------------------------
@@ -74,35 +77,6 @@ namespace VLTK.Survivor
         public int LearnCount;    // box: lượt chọn còn lại
         /// <summary>Box đã chọn (LevelBoxEventParam.WillLearnSkillList parity).</summary>
         public readonly List<SkillDef> Learned = new List<SkillDef>();
-    }
-
-    /// <summary>
-    /// Ref-count pause cho card modal (r-dhcd-003 m_pauseCount parity-shape;
-    /// own: chỉ card scope, timeScale ∈ {0,1}). Ticket 40 (settings/pause
-    /// scopes) sẽ mở rộng thành SurvivorPause nhiều scope — bản này card-only.
-    /// </summary>
-    public sealed class CardChoicePause
-    {
-        private readonly System.Action<bool> _apply;
-        private int _count;
-
-        public CardChoicePause(System.Action<bool> apply) { _apply = apply; }
-
-        public bool IsPaused => _count > 0;
-        public int Count => _count;
-
-        public void Acquire()
-        {
-            if (_count == 0) _apply(true);
-            _count++;
-        }
-
-        public void Release()
-        {
-            if (_count <= 0) return;
-            _count--;
-            if (_count == 0) _apply(false);
-        }
     }
 
     /// <summary>
@@ -196,16 +170,18 @@ namespace VLTK.Survivor
         private readonly System.Func<ulong, int, bool> _trySpendGold; // null = shop không mua/reroll được (fail-closed)
         private float _now;
 
-        public readonly CardChoicePause Pause;
+        public readonly SurvivorPause Pause;
 
         public SkillChoiceService(SkillCastRuntime roster, SkillChoicePool pool, System.Random rng,
-            System.Func<ulong, int, bool> trySpendGold = null, CardChoicePause pause = null)
+            System.Func<ulong, int, bool> trySpendGold = null, SurvivorPause pause = null)
         {
             _roster = roster;
             _pool = pool;
             _rng = rng;
             _trySpendGold = trySpendGold;
-            Pause = pause ?? new CardChoicePause(paused => Time.timeScale = paused ? 0f : 1f);
+            // ticket 43: pause dùng CHUNG SurvivorPause toàn game (director inject) —
+            // nếu null tự tạo standalone (test / chưa wire) với apply timescale.
+            Pause = pause ?? new SurvivorPause(paused => Time.timeScale = paused ? 0f : 1f);
         }
 
         /// <summary>
@@ -248,6 +224,7 @@ namespace VLTK.Survivor
             switch (ev.Mode)
             {
                 case SkillChoiceMode.LevelUp:
+                    if (!Contains(ev, card.Def)) return false; // ticket 43: card lạ → từ chối (Box đã có)
                     _roster.Learn(card.Def);
                     Close(roleId);
                     return true;
@@ -261,6 +238,7 @@ namespace VLTK.Survivor
                     return true;
 
                 case SkillChoiceMode.Shop:
+                    if (!Contains(ev, card.Def)) return false; // ticket 43: card lạ → từ chối trước khi trừ vàng
                     if (_trySpendGold == null || !_trySpendGold(roleId, card.Price)) return false;
                     _roster.Learn(card.Def);
                     Close(roleId);
@@ -300,7 +278,7 @@ namespace VLTK.Survivor
             if (!_players.TryGetValue(roleId, out var d)) return;
             d.Current = null;
             d.BeginWaitingLearnTime = float.NegativeInfinity;
-            Pause.Release();
+            Pause.Release(SurvivorPause.CardChoiceScope);
             Pump(d);
         }
 
@@ -334,7 +312,7 @@ namespace VLTK.Survivor
                 LearnCount = param.Mode == SkillChoiceMode.Box ? Mathf.Max(1, param.LearnNum) : 0,
             };
             d.BeginWaitingLearnTime = _now + WaitingLearnWindow; // SetPlayerWaiting parity
-            Pause.Acquire();
+            Pause.Acquire(SurvivorPause.CardChoiceScope);
         }
 
         private SkillChoiceCard[] DrawCards(SkillChoiceMode mode, int learnNum)

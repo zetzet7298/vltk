@@ -73,7 +73,7 @@ namespace VLTK.Tests.Survivor
         private static SkillChoiceService MakeService(SkillCastRuntime roster, System.Random rng,
             SkillChoicePool pool = null, GoldLog gold = null, List<bool> pauseLog = null)
         {
-            var pause = new CardChoicePause(p => { if (pauseLog != null) pauseLog.Add(p); });
+            var pause = new SurvivorPause(p => { if (pauseLog != null) pauseLog.Add(p); });
             System.Func<ulong, int, bool> spend = gold != null ? gold.TrySpend : (System.Func<ulong, int, bool>)null;
             return new SkillChoiceService(roster, pool ?? PoolOf(1, 2, 3, 4, 5), rng, spend, pause);
         }
@@ -368,32 +368,91 @@ namespace VLTK.Tests.Survivor
             Assert.AreEqual(0, pool.Draw(1, rt, new System.Random(1)).Count, "max → loại khỏi pool");
         }
 
+        [Test]
+        public void Select_LevelUp_CardOutsideDraw_Refused_NoLearn()
+        {
+            var rt = new SkillCastRuntime();
+            var svc = MakeService(rt, new System.Random(7));
+            svc.Tick(0);
+            svc.Request(1, SkillChoiceMode.LevelUp);
+
+            var outside = Def(999); // không nằm trong event cards
+            Assert.IsFalse(svc.Select(1, new SkillChoiceCard(outside)), "ticket 43: card lạ → từ chối");
+            Assert.AreEqual(0, rt.GetLevel(outside.Id), "không learn card lạ");
+            Assert.IsNotNull(svc.Current(1), "modal giữ nguyên (không close)");
+            Assert.AreEqual(1, svc.Pause.Count, "pause giữ (modal còn mở)");
+        }
+
+        [Test]
+        public void Select_Shop_CardOutsideDraw_Refused_BeforeGold()
+        {
+            var gold = new GoldLog(100);
+            var rt = new SkillCastRuntime();
+            var svc = MakeService(rt, new System.Random(9), gold: gold);
+            svc.Tick(0);
+            svc.Request(1, SkillChoiceMode.Shop);
+
+            var outside = Def(999);
+            Assert.IsFalse(svc.Select(1, new SkillChoiceCard(outside, price: 10)), "ticket 43: card lạ → từ chối");
+            Assert.AreEqual(0, gold.Spent.Count, "card lạ KHÔNG trừ vàng");
+            Assert.AreEqual(0, rt.GetLevel(outside.Id), "không learn card lạ");
+        }
+
         // ------------------------------------------------------------------
-        // CardChoicePause ref-count: timescale {0,1} qua delegate
+        // SurvivorPause ref-count per-scope: timescale {0,1} qua delegate
         // ------------------------------------------------------------------
 
         [Test]
-        public void CardChoicePause_RefCount_OnlyZeroRestores()
+        public void SurvivorPause_RefCount_OnlyZeroRestores()
         {
             var log = new List<bool>();
-            var pause = new CardChoicePause(p => log.Add(p));
+            var pause = new SurvivorPause(p => log.Add(p));
 
-            pause.Acquire();  // → true
-            pause.Acquire();  // count 2, không ghi (đã pause)
-            pause.Release();  // count 1, không ghi
+            pause.Acquire("A");  // → true
+            pause.Acquire("A");  // count 2, không ghi (đã pause)
+            pause.Release("A");  // count 1, không ghi
             Assert.AreEqual(1, log.Count, "chỉ transition 0→1 ghi true");
             Assert.IsTrue(pause.IsPaused);
             Assert.AreEqual(1, pause.Count);
 
-            pause.Release();  // count 0 → false
+            pause.Release("A");  // count 0 → false
             Assert.AreEqual(2, log.Count);
             CollectionAssert.AreEqual(new[] { true, false }, log);
             Assert.IsFalse(pause.IsPaused);
             Assert.AreEqual(0, pause.Count);
 
-            pause.Release();  // dưới 0 → no-op
+            pause.Release("A");  // dưới 0 → no-op
             Assert.AreEqual(2, log.Count, "release thừa không phá ref-count");
             Assert.IsFalse(pause.IsPaused);
+        }
+
+        [Test]
+        public void SurvivorPause_Scopes_Independent_ReleaseOneKeepsOtherPaused()
+        {
+            var log = new List<bool>();
+            var pause = new SurvivorPause(p => log.Add(p));
+
+            pause.Acquire("CardChoice");    // 0→1: true
+            pause.Acquire("AppLifecycle");  // count 2
+            pause.Release("CardChoice");    // vẫn còn AppLifecycle → KHÔNG apply false
+            Assert.IsTrue(pause.IsPaused, "scope khác còn giữ → vẫn pause");
+            Assert.AreEqual(1, log.Count, "không resume nhầm giữa chừng");
+
+            pause.Release("AppLifecycle");  // 1→0: false
+            Assert.AreEqual(2, log.Count);
+            CollectionAssert.AreEqual(new[] { true, false }, log);
+            Assert.IsFalse(pause.IsPaused);
+        }
+
+        [Test]
+        public void SurvivorPause_UnknownScopeRelease_NoOp()
+        {
+            var log = new List<bool>();
+            var pause = new SurvivorPause(p => log.Add(p));
+            pause.Release("NeverAcquired");
+            pause.Acquire(null); // scope null → bỏ qua
+            Assert.AreEqual(0, pause.Count);
+            Assert.AreEqual(0, log.Count);
         }
     }
 }

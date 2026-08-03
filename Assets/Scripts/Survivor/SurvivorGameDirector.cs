@@ -21,6 +21,24 @@ namespace VLTK.Survivor
         public List<SurvivorMonster> Monsters { get; } = new List<SurvivorMonster>();
 
         /// <summary>
+        /// Pause chung ref-count per-scope (ticket 43, spec D13): CardChoice/
+        /// Settings/AppLifecycle/GameOver/LevelUp chung 1 counter — resume chỉ
+        /// khi TẤT CẢ scope release (không resume nhầm khi card mở + app background).
+        /// Boot tạo trong OnInit; null trước boot (fail-safe).
+        /// </summary>
+        public SurvivorPause Pause { get; private set; }
+
+        /// <summary>Overlay modal (levelup/gameover) — boot trong OnInit.</summary>
+        public OverlayPanel Overlay => _overlay;
+
+        /// <summary>Settings panel (ticket 40/43) — boot trong OnInit; null nếu boot chưa chạy.</summary>
+        public SurvivorAudioSettingsPanel SettingsPanel => _settingsPanel;
+
+        /// <summary>Supply mgr + bar (ticket 33/43) — boot trong OnInit; null nếu boot chưa chạy.</summary>
+        public SurvivorSupplyMgr Supply => _supply;
+        public SupplyBar SupplyBar => _supplyBar;
+
+        /// <summary>
         /// Spawn-gate (ticket 42, đòn bẩy 60fps): non-null trả false → bỏ qua spawn
         /// monster thường (boss luôn spawn — parity, exempt trim). SurvivorMonsterCap
         /// đăng ký khi tồn tại trong scene. Fail-closed: gate null → spawn tự do
@@ -33,7 +51,10 @@ namespace VLTK.Survivor
         private readonly List<XpGem> _gems = new List<XpGem>();
         private WaveSpawner _spawner;
         private OverlayPanel _overlay;
-        private bool _paused;
+        private SurvivorSupplyMgr _supply;
+        private SupplyBar _supplyBar;
+        private SkillChoiceService _skillChoice;
+        private SurvivorAudioSettingsPanel _settingsPanel;
 
         // --- wave trigger context (ticket 30) ---
         public int SkillCastCount;  // P2 skill system sẽ ++ (trigger type 4); P1 luôn 0
@@ -69,11 +90,24 @@ namespace VLTK.Survivor
 
         private void Update()
         {
-            if (_paused) return;
+            if (Pause != null && Pause.IsPaused) return;
             OnUpdate();
+            _skillChoice?.Tick(Time.time); // waiting window (ticket 29) — modal bỏ quên → auto-close
             Input.Update();
             _spawner.Tick(Time.deltaTime, SpawnMonsterAt);
             if (_spawner.ConsumeWaveFinished()) CleanupWaveMonsters();
+        }
+
+        /// <summary>
+        /// App lifecycle (spec D13): ra ngoài app → pause; vào lại → resume.
+        /// Scope AppLifecycle ref-count chung — card/settings đang mở vẫn giữ pause.
+        /// Unity gọi trước/trong Awake trên vài platform → null-check fail-safe.
+        /// </summary>
+        private void OnApplicationPause(bool paused)
+        {
+            if (Pause == null) return;
+            if (paused) Pause.Acquire(SurvivorPause.AppLifecycleScope);
+            else Pause.Release(SurvivorPause.AppLifecycleScope);
         }
 
         private void OnDestroy() => OnDestroyInternal();
@@ -81,12 +115,19 @@ namespace VLTK.Survivor
         // --- lifecycle hooks (parity BattleLevelLogic). MVP: boot match. ---
         protected virtual bool OnInit()
         {
+            // reset timescale về 1 mỗi run mới — scene reload sau gameover/pause
+            // không mang theo timescale cũ (Pause apply delegate là per-instance).
+            Time.timeScale = 1f;
+            Pause = new SurvivorPause(paused => Time.timeScale = paused ? 0f : 1f);
             SpawnArenaVisual();
             SpawnPlayer();
-            _overlay = OverlayPanel.Build();
+            _overlay = OverlayPanel.Build(); // cũng dựng SurvivorHud (EnsureInstance)
             _spawner = new WaveSpawner();
             SurvivorAudioMgr.EnsureInstance();
             SurvivorAudioMgr.Instance?.SetContext(SurvivorAudioContext.Battle);
+            BootSkillSystem();   // ticket 43: roster + skill choice + boss pool + supply
+            BootSupplyBar();
+            BootSettingsAndHud();
             Debug.Log("[Survivor] OnInit");
             return true;
         }
@@ -191,6 +232,76 @@ namespace VLTK.Survivor
             go.transform.position = new Vector3(0, 0, 5);
         }
 
+        // ------------------------------------------------------------------
+        // ticket 43: boot wiring P2 (council FAIL fix — dead-wired feature)
+        // ------------------------------------------------------------------
+
+        /// <summary>
+        /// Skill boot (ticket 43): catalog runtime từ StreamingAssets → roster
+        /// (Player.Cast) + skill choice (overlay.SkillService) + boss pool.
+        /// Fail-closed: catalog rỗng → roster trống (auto-attack P1), pool rỗng
+        /// → levelup rơi về legacy P1 (TryShowSkillChoice false), boss pool rỗng
+        /// → boss chase-only (SurvivorBoss fail-closed). KHÔNG crash.
+        /// </summary>
+        private void BootSkillSystem()
+        {
+            var catalog = SurvivorSkillCatalogService.LoadFromStreamingAssets();
+
+            Player.Cast = new SkillCastRuntime();
+
+            var pool = new SkillChoicePool();
+            var playerDefs = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player);
+            for (int i = 0; i < playerDefs.Count; i++) pool.Add(playerDefs[i]);
+
+            _skillChoice = new SkillChoiceService(Player.Cast, pool, new System.Random(), null, Pause);
+            _overlay.SkillService = _skillChoice; // levelup → modal skill thật (thay P1 flat-card)
+
+            BossSkillPool = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.BossNpc);
+
+            _supply = new SurvivorSupplyMgr();
+            _supply.Setup(SurvivorSkillCatalogService.SupplyDefs(catalog)); // heal/bomb slot enabled (fail-closed)
+            _supply.Caster = Player;
+            _supply.HealTarget = new SurvivorSupplyMgr.SurvivorPlayerDamageable(Player);
+        }
+
+        /// <summary>Supply bar (ticket 33/43): Build + OnUse → effect thật (heal/bomb/magnet/full-clear).</summary>
+        private void BootSupplyBar()
+        {
+            if (_supply == null) return;
+            _supplyBar = SupplyBar.Build(_supply);
+            _supplyBar.OnUse = OnSupplyUsed;
+        }
+
+        private void OnSupplyUsed(SupplyKind kind)
+        {
+            switch (kind)
+            {
+                case SupplyKind.Heal: _supply.UseHeal(); break;
+                case SupplyKind.Bomb: _supply.UseBomb(Player != null ? Player.transform.position : Vector3.zero, Monsters); break;
+                case SupplyKind.Magnet: _supply.UseMagnet(_gems); break;
+                default: _supply.UseFullClear(Monsters); break;
+            }
+        }
+
+        /// <summary>
+        /// Settings panel + HUD wire (ticket 43): wave banner nguồn thật + i18n
+        /// CHUNG 1 SurvivorText instance (panel SetLanguage → HUD/Overlay refresh).
+        /// HUD resolve: Instance (play mode Awake set) hoặc FindAnyObjectByType
+        /// (EditMode boot — Awake không chạy, test seam).
+        /// </summary>
+        private void BootSettingsAndHud()
+        {
+            var hud = SurvivorHud.Instance;
+            if (hud == null) hud = UnityEngine.Object.FindAnyObjectByType<SurvivorHud>();
+            if (hud != null)
+                hud.WaveIndexSource = () => WaveIndex; // 1 dòng wire (ticket 37) — banner wave số thật
+
+            // i18n chung: overlay + settings panel dùng CHUNG instance của HUD
+            var text = hud != null ? hud.Texts : SurvivorText.LoadFromStreamingAssets();
+            if (_overlay != null) _overlay.Language = text;
+            _settingsPanel = SurvivorAudioSettingsPanel.Build(text, Pause);
+        }
+
         // --- events ---
         public void OnProjectileGone(Projectile p) => _projectiles.Remove(p);
 
@@ -274,26 +385,22 @@ namespace VLTK.Survivor
 
         public void OnLevelUp(SurvivorPlayer p)
         {
-            // parity r-dhcd-003: timescale pause while card open
-            _paused = true;
-            Time.timeScale = 0f;
+            // parity r-dhcd-003: timescale pause while card open. ticket 43: dùng
+            // SurvivorPause scope LevelUp — onClosed (cả 2 path modal) release;
+            // service path không gọi onPick nên director không tự resume.
+            Pause.Acquire(SurvivorPause.LevelUpScope);
             var cards = PickCards(3);
-            _overlay.ShowLevelUp(cards, card =>
-            {
-                p.ApplyCard(card);
-                _overlay.Hide();
-                Time.timeScale = 1f;
-                _paused = false;
-            });
+            _overlay.ShowLevelUp(cards,
+                card => p.ApplyCard(card),
+                () => Pause.Release(SurvivorPause.LevelUpScope));
         }
 
         public void OnPlayerDied()
         {
-            _paused = true;
-            Time.timeScale = 0f;
+            Pause.Acquire(SurvivorPause.GameOverScope);
             _overlay.ShowGameOver(() =>
             {
-                Time.timeScale = 1f;
+                Pause.Release(SurvivorPause.GameOverScope);
                 SceneManager.LoadScene("Survivor");
             });
         }

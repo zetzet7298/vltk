@@ -20,7 +20,6 @@ namespace VLTK.Survivor
         /// hook qua public API: Request/Current/Select/Close.
         /// </summary>
         public SkillChoiceService SkillService { get; set; }
-
         /// <summary>i18n (38): override cho hot-switch; mặc định tự load bundle StreamingAssets.</summary>
         public SurvivorText Language
         {
@@ -73,13 +72,17 @@ namespace VLTK.Survivor
         /// ShowSkillChoice), fallback legacy P1 flat-card path (giữ API cũ).
         /// Router: pool 29 phải có card mới kích hoạt; chưa có pool/card hoặc đang
         /// bận request → legacy (fail-closed, không chết màn).
+        /// onClosed (ticket 43): fire khi modal đóng (cả 2 path) — director
+        /// release pause scope LevelUp; service path KHÔNG gọi onPick nên director
+        /// không thể tự biết modal đã đóng nếu không có hook này.
         /// </summary>
-        public void ShowLevelUp(List<SkillCard> cards, System.Action<SkillCard> onPick)
+        public void ShowLevelUp(List<SkillCard> cards, System.Action<SkillCard> onPick,
+            System.Action onClosed = null)
         {
             ClearButtons();
             ClearStatRows();
-            if (SkillService != null && TryShowSkillChoice(1u)) return; // 29: modal skill thật
-            ShowLegacyLevelUp(cards, onPick);
+            if (SkillService != null && TryShowSkillChoice(1u, onClosed)) return; // 29: modal skill thật
+            ShowLegacyLevelUp(cards, onPick, onClosed);
         }
 
         /// <summary>
@@ -117,7 +120,7 @@ namespace VLTK.Survivor
         /// <summary>
         /// Ticket 29: modal card từ SkillChoiceService (SkillDef-based, icon
         /// fail-closed proxy khi SPR chưa staged). Pause acquire/release do
-        /// service quản lý (CardChoicePause) — Overlay chỉ render + callback
+        /// service quản lý (SurvivorPause scope CardChoice) — Overlay chỉ render + callback
         /// (caller đóng).
         /// </summary>
         public void ShowSkillChoice(IReadOnlyList<SkillChoiceCard> cards, string title,
@@ -155,8 +158,10 @@ namespace VLTK.Survivor
         /// <summary>
         /// Legacy P1 flat-card path: render 3 card, onPick trực tiếp (director
         /// apply + resume) — giữ API cũ cho tới khi pool 29 được wire.
+        /// ticket 43: modal tự hide + fire onClosed (director release pause scope).
         /// </summary>
-        private void ShowLegacyLevelUp(List<SkillCard> cards, System.Action<SkillCard> onPick)
+        private void ShowLegacyLevelUp(List<SkillCard> cards, System.Action<SkillCard> onPick,
+            System.Action onClosed)
         {
             _title.text = Loc("survivor.card.title");
             _canvas.enabled = true;
@@ -167,7 +172,12 @@ namespace VLTK.Survivor
                 var btn = MakeButton($"Card{i}", transform, card.title, card.desc);
                 float y = 150f - i * 260f;
                 ((RectTransform)btn.transform).anchoredPosition = new Vector2(0, y);
-                btn.onClick.AddListener(() => onPick(card));
+                btn.onClick.AddListener(() =>
+                {
+                    _canvas.enabled = false;
+                    onPick(card);
+                    onClosed?.Invoke();
+                });
                 _buttons.Add(btn.gameObject);
             }
         }
@@ -177,9 +187,10 @@ namespace VLTK.Survivor
         /// pick → service.Select (learn roster + close + release pause). Fail-closed:
         /// đang bận request (false) hoặc pool không có card → false → legacy.
         /// Service path cần roster+pool do owner wiring cấp; chưa wire → luôn false
-        /// (không crash, levelup chạy P1).
+        /// (không crash, levelup chạy P1). onClosed → director release scope LevelUp
+        /// (ticket 43 — service path không gọi onPick).
         /// </summary>
-        private bool TryShowSkillChoice(ulong roleId)
+        private bool TryShowSkillChoice(ulong roleId, System.Action onClosed)
         {
             if (!SkillService.Request(roleId, SkillChoiceMode.LevelUp)) return false; // busy → queue
             var ev = SkillService.Current(roleId);
@@ -189,7 +200,12 @@ namespace VLTK.Survivor
                 return false;
             }
             ShowSkillChoice(ev.Cards, Loc("survivor.card.title"),
-                card => { if (SkillService.Select(roleId, card)) _canvas.enabled = false; });
+                card =>
+                {
+                    if (!SkillService.Select(roleId, card)) return; // card lạ → modal giữ nguyên
+                    _canvas.enabled = false;
+                    onClosed?.Invoke();
+                });
             return true;
         }
 

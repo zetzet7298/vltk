@@ -155,6 +155,10 @@ namespace VLTK.Survivor
     /// Build() dựng runtime (pattern OverlayPanel) — không cần prefab/scene setup.
     /// Mọi thay đổi → controller (apply mixer ngay + save persist). Fail-closed:
     /// thiếu SurvivorAudioMgr → sink null, value chỉ persist; bootstrap Awake áp sau.
+    /// ticket 43 wiring: Build(text, pause) — text = SurvivorText CHUNG (HUD/Overlay
+    /// cùng instance → SetLanguage hot-switch hiển thị), pause = SurvivorPause chung
+    /// (mở panel → Acquire SettingsScope, đóng → Release). Kèm launcher ⚙ (canvas
+    /// riêng order 85) + nút ✕ đóng — không cần menu/settings UI khác.
     /// </summary>
     public sealed class SurvivorAudioSettingsPanel : MonoBehaviour
     {
@@ -165,8 +169,9 @@ namespace VLTK.Survivor
         private Image _viImage;
         private Image _enImage;
         private SurvivorAudioSettingsController _ctrl;
+        private SurvivorPause _pause;
 
-        public static SurvivorAudioSettingsPanel Build()
+        public static SurvivorAudioSettingsPanel Build(SurvivorText text = null, SurvivorPause pause = null)
         {
             var go = new GameObject("SurvivorAudioSettingsPanel");
             go.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
@@ -185,18 +190,21 @@ namespace VLTK.Survivor
             }
 
             var panel = go.AddComponent<SurvivorAudioSettingsPanel>();
-            panel.Construct();
+            panel.Construct(text, pause);
             panel.Hide();
+            MakeLauncher(panel, pause);
             return panel;
         }
 
-        private void Construct()
+        private void Construct(SurvivorText text, SurvivorPause pause)
         {
             _canvas = GetComponent<Canvas>();
+            _pause = pause;
             _ctrl = new SurvivorAudioSettingsController(
                 new SurvivorSaveService(),
                 SurvivorAudioMgr.Instance != null ? new SurvivorAudioMgrSink() : null,
-                new PlayerPrefsSaveStorage());
+                new PlayerPrefsSaveStorage(),
+                text);
             _ctrl.Load();
 
             MakeText(transform, "Title", new Vector2(0.5f, 0.92f), new Vector2(0.5f, 0.5f), 64,
@@ -218,13 +226,96 @@ namespace VLTK.Survivor
                 Color.white, "Ngôn ngữ", TextAnchor.MiddleCenter);
             _viImage = MakeLangButton("LangVi", transform, new Vector2(0.40f, 0.24f), "VI");
             _enImage = MakeLangButton("LangEn", transform, new Vector2(0.60f, 0.24f), "EN");
-            _viImage.transform.parent.GetComponent<Button>().onClick.AddListener(() => SetLang("vi"));
-            _enImage.transform.parent.GetComponent<Button>().onClick.AddListener(() => SetLang("en"));
+            // Button cùng GO với Image (MakeLangButton) — lấy component ngay trên GO,
+            // KHÔNG qua transform.parent (root panel không có Button → NRE khi boot).
+            _viImage.GetComponent<Button>().onClick.AddListener(() => SetLang("vi"));
+            _enImage.GetComponent<Button>().onClick.AddListener(() => SetLang("en"));
             RefreshLangHighlight();
 
             _masterSlider.onValueChanged.AddListener(v => { _ctrl.SetMasterVolume(v); _ctrl.Save(); });
             _bgmSlider.onValueChanged.AddListener(v => { _ctrl.SetBgmVolume(v); _ctrl.Save(); });
             _sfxSlider.onValueChanged.AddListener(v => { _ctrl.SetSfxVolume(v); _ctrl.Save(); });
+
+            MakeCloseButton(transform);
+        }
+
+        /// <summary>Launcher ⚙ canvas riêng (order 85 — dưới supply 90/overlay 100): bấm → mở panel.</summary>
+        private static void MakeLauncher(SurvivorAudioSettingsPanel panel, SurvivorPause pause)
+        {
+            var go = new GameObject("SurvivorSettingsLauncher");
+            go.AddComponent<Canvas>().renderMode = RenderMode.ScreenSpaceOverlay;
+            go.GetComponent<Canvas>().sortingOrder = 85;
+            var scaler = go.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080, 1920);
+            scaler.matchWidthOrHeight = 0.5f;
+            go.AddComponent<GraphicRaycaster>();
+
+            var btnGo = new GameObject("Gear", typeof(RectTransform), typeof(Image), typeof(Button));
+            btnGo.transform.SetParent(go.transform, false);
+            var rt = (RectTransform)btnGo.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(1f, 1f);
+            rt.anchoredPosition = new Vector2(-70f, -170f); // dưới level text HUD (top-right)
+            rt.sizeDelta = new Vector2(110f, 110f);
+            var img = btnGo.GetComponent<Image>();
+            img.color = new Color(0.2f, 0.2f, 0.28f, 0.9f);
+            img.raycastTarget = true;
+
+            var lbl = new GameObject("Lbl", typeof(RectTransform), typeof(Text));
+            lbl.transform.SetParent(btnGo.transform, false);
+            var t = lbl.GetComponent<Text>();
+            t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            t.fontSize = 52;
+            t.color = Color.white;
+            t.alignment = TextAnchor.MiddleCenter;
+            t.text = "⚙";
+            t.raycastTarget = false;
+            ((RectTransform)lbl.transform).anchorMin = ((RectTransform)lbl.transform).anchorMax = new Vector2(0.5f, 0.5f);
+            ((RectTransform)lbl.transform).sizeDelta = rt.sizeDelta;
+
+            btnGo.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (panel._canvas.enabled)
+                {
+                    panel.Hide();
+                    pause?.Release(SurvivorPause.SettingsScope);
+                }
+                else
+                {
+                    panel.Show();
+                    pause?.Acquire(SurvivorPause.SettingsScope);
+                }
+            });
+        }
+
+        /// <summary>✕ đóng panel → release pause scope Settings.</summary>
+        private void MakeCloseButton(Transform parent)
+        {
+            var go = new GameObject("Close", typeof(RectTransform), typeof(Image), typeof(Button));
+            go.transform.SetParent(parent, false);
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0f, 1f);
+            rt.anchoredPosition = new Vector2(70f, -70f);
+            rt.sizeDelta = new Vector2(100f, 100f);
+            go.GetComponent<Image>().color = new Color(0.2f, 0.2f, 0.28f, 0.9f);
+
+            var lbl = new GameObject("Lbl", typeof(RectTransform), typeof(Text));
+            lbl.transform.SetParent(go.transform, false);
+            var t = lbl.GetComponent<Text>();
+            t.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            t.fontSize = 48;
+            t.color = Color.white;
+            t.alignment = TextAnchor.MiddleCenter;
+            t.text = "✕";
+            t.raycastTarget = false;
+            ((RectTransform)lbl.transform).anchorMin = ((RectTransform)lbl.transform).anchorMax = new Vector2(0.5f, 0.5f);
+            ((RectTransform)lbl.transform).sizeDelta = rt.sizeDelta;
+
+            go.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Hide();
+                _pause?.Release(SurvivorPause.SettingsScope);
+            });
         }
 
         private void SetLang(string lang)
