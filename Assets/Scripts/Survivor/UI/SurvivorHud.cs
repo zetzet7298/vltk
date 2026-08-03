@@ -163,7 +163,6 @@ namespace VLTK.Survivor
         private RectTransform[] _topElements;
         private Vector2[] _topBase;
         private float _appliedTopPx = -1f;
-        private const float ReferenceHeight = 1920f; // CanvasScaler reference (1080×1920)
 
         /// <summary>i18n: override cho hot-switch (ticket 38) / test; mặc định tự load bundle.</summary>
         public SurvivorText Texts
@@ -262,13 +261,14 @@ namespace VLTK.Survivor
 
         /// <summary>
         /// ticket 42: notch/cutout — dịch top-anchored elements xuống theo
-        /// SurvivorPlatformSettings.CurrentSafePadding.Top (normalized × reference
-        /// height ≈ px). Chỉ apply khi giá trị đổi (tránh layout churn mỗi frame).
+        /// SurvivorPlatformSettings.CurrentSafePadding.Top (normalized × canvas unit
+        /// height thật — match=0.5 → rect.height ≠ 1920 trên device 19.5:9/20:9).
+        /// Chỉ apply khi giá trị đổi (tránh layout churn mỗi frame).
         /// Editor/desktop safeArea = full screen → padding 0 → vị trí base (no-op).
         /// </summary>
         private void ApplySafeArea()
         {
-            float topPx = SurvivorPlatformSettings.CurrentSafePadding.Top * ReferenceHeight;
+            float topPx = SurvivorPlatformSettings.CurrentSafePadding.Top * ((RectTransform)_canvas.transform).rect.height;
             if (Mathf.Abs(topPx - _appliedTopPx) <= 0.5f) return;
             _appliedTopPx = topPx;
             var off = new Vector2(0f, -topPx);

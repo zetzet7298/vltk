@@ -40,13 +40,21 @@ namespace VLTK.Survivor
         public int ActiveCount => SurvivorGameDirector.Instance != null
             ? SurvivorGameDirector.Instance.Monsters.Count : 0;
 
-        private System.Func<int, bool> _gate; // cache delegate — không alloc/frame ở LateUpdate
+        private System.Func<int, bool> _gate;   // cache delegate — không alloc/frame ở LateUpdate
+        private System.Func<int, bool> _exempt; // cache delegate exempt boss (đọc qua _boss holder)
+        private SurvivorMonster _boss;          // holder — delegate không capture per-frame var
 
         private void Awake()
         {
             // gate nhận activeCount từ director mỗi lần gọi → số liệu tươi
             _gate = active => MonsterCapPolicy.CanSpawn(active,
                 Config != null ? Config.MaxMonsters : 0);
+            // exempt đọc _boss (mutable holder) → cache 1 lần, không alloc closure/frame
+            _exempt = i =>
+            {
+                var d = SurvivorGameDirector.Instance;
+                return _boss != null && d != null && d.Monsters[i] == _boss;
+            };
         }
 
         private void LateUpdate()
@@ -56,9 +64,8 @@ namespace VLTK.Survivor
             var d = SurvivorGameDirector.Instance;
             if (d == null) return; // fail-closed: không director → không đụng gì
             int cap = MonsterCapPolicy.EffectiveCap(Config != null ? Config.MaxMonsters : 0);
-            var boss = d.ActiveBoss != null ? d.ActiveBoss.Monster : null;
-            var toTrim = MonsterCapPolicy.PickTrimIndices(d.Monsters.Count, cap,
-                i => boss != null && d.Monsters[i] == boss);
+            _boss = d.ActiveBoss != null ? d.ActiveBoss.Monster : null;
+            var toTrim = MonsterCapPolicy.PickTrimIndices(d.Monsters.Count, cap, _exempt);
             LastTrimCount = toTrim.Count;
             if (LastTrimCount == 0) return;
             for (int k = toTrim.Count - 1; k >= 0; k--) // index giảm dần → không lệch list
