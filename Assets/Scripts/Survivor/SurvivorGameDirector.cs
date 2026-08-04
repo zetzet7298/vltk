@@ -90,9 +90,13 @@ namespace VLTK.Survivor
 
         private void Update()
         {
+            // ticket 44: Tick TRƯỚC early-return — waiting window (ticket 29/O6)
+            // phải chạy cả khi paused (modal mở ⇔ CardChoice scope ⇔ IsPaused).
+            // Tick dùng Time.unscaledTime (KHÔNG phải Time.time — time bị timeScale
+            // đóng băng khi paused → auto-close chết, premise correction ticket 44).
+            _skillChoice?.Tick(Time.unscaledTime);
             if (Pause != null && Pause.IsPaused) return;
             OnUpdate();
-            _skillChoice?.Tick(Time.time); // waiting window (ticket 29) — modal bỏ quên → auto-close
             Input.Update();
             _spawner.Tick(Time.deltaTime, SpawnMonsterAt);
             if (_spawner.ConsumeWaveFinished()) CleanupWaveMonsters();

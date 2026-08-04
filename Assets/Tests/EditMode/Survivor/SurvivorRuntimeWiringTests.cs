@@ -99,6 +99,63 @@ namespace VLTK.Tests.Survivor
         }
 
         // ------------------------------------------------------------------
+        // ticket 44: waiting-window auto-close — Tick khi paused + scope release
+        // đầy đủ (CardChoice + LevelUp), timescale 1 sau close; pick không regression
+        // ------------------------------------------------------------------
+
+        [Test]
+        public void LevelUp_AutoClose_ReleasesBothScopes_TimescaleRestored()
+        {
+            var svc = _director.Overlay.SkillService;
+            svc.Tick(0f);
+            _director.OnLevelUp(null); // levelup service path: LevelUp + CardChoice scope, modal hiện
+            Assert.IsTrue(_director.Overlay.IsVisible, "modal skill mở");
+            Assert.AreEqual(2, _director.Pause.Count, "LevelUp + CardChoice đều giữ pause");
+            Assert.AreEqual(0f, Time.timeScale, "paused → timescale 0");
+
+            // Tick khi paused (EditMode: gọi trực tiếp — director.Update dời Tick
+            // lên trước early-return nên PlayMode chạy được chính xác path này)
+            svc.Tick(31f); // quá WaitingLearnWindow 30s → service auto-close
+            Assert.IsNull(svc.Current(1), "event đóng (không auto-learn — fail-closed)");
+            Assert.AreEqual(1, _director.Pause.Count, "CardChoice release — LevelUp còn giữ (chờ onClosed)");
+            Assert.AreEqual(0, _director.Pause.ScopeCount(SurvivorPause.CardChoiceScope), "CardChoice scope hết");
+            Assert.AreEqual(1, _director.Pause.ScopeCount(SurvivorPause.LevelUpScope), "LevelUp chưa release — đây là leak ticket 44 nếu thiếu poll");
+            Assert.AreEqual(0f, Time.timeScale, "vẫn kẹt pause (LevelUp còn giữ)");
+
+            _director.Overlay.PollSkillChoiceAutoClose(); // Overlay.Update poll (PlayMode chạy tự động)
+            Assert.IsFalse(_director.Overlay.IsVisible, "modal tự đóng (canvas hide)");
+            Assert.AreEqual(0, _director.Pause.Count, "LevelUp release qua onClosed hook — không leak scope");
+            Assert.AreEqual(0, _director.Pause.ScopeCount(SurvivorPause.LevelUpScope), "LevelUp scope hết");
+            Assert.IsFalse(_director.Pause.IsPaused);
+            Assert.AreEqual(1f, Time.timeScale, "timescale về 1 sau auto-close");
+        }
+
+        [Test]
+        public void LevelUp_PickCard_Closes_NoLeak_PollNoFalseClose()
+        {
+            var svc = _director.Overlay.SkillService;
+            svc.Tick(0f);
+            _director.OnLevelUp(null);
+            Assert.IsTrue(_director.Overlay.IsVisible, "modal mở bình thường");
+            Assert.AreEqual(2, _director.Pause.Count);
+
+            // poll khi modal còn mở (chưa timeout) → KHÔNG đóng nhầm
+            _director.Overlay.PollSkillChoiceAutoClose();
+            Assert.IsTrue(_director.Overlay.IsVisible, "modal còn mở → poll không fire");
+            Assert.AreEqual(2, _director.Pause.Count, "poll không đụng pause khi modal còn mở");
+
+            var card = svc.Current(1).Cards[0];
+            Assert.IsTrue(svc.Select(1, card), "pick card (như button listener)");
+            Assert.AreEqual(1, _director.Player.Cast.GetLevel(card.Def.Id), "pick → Learn vào roster thật");
+            Assert.AreEqual(1, _director.Pause.Count, "service Close release CardChoice");
+
+            _director.Overlay.PollSkillChoiceAutoClose(); // listener path hide + onClosed (tương đương EditMode)
+            Assert.IsFalse(_director.Overlay.IsVisible, "modal đóng sau pick");
+            Assert.AreEqual(0, _director.Pause.Count, "LevelUp release — không leak");
+            Assert.AreEqual(1f, Time.timeScale, "timescale về 1");
+        }
+
+        // ------------------------------------------------------------------
         // catalog smoke — StreamingAssets thật (repo committed)
         // ------------------------------------------------------------------
 

@@ -11,7 +11,8 @@
         "VLTK.UI",
         "VLTK.Resources",
         "VLTK.Sprites",
-        "VLTK.Backend"
+        "VLTK.Backend",
+        "VLTK.Survivor.Runtime"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

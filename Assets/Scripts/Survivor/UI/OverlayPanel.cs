@@ -13,6 +13,10 @@ namespace VLTK.Survivor
         private readonly List<GameObject> _buttons = new();
         private readonly List<GameObject> _statRows = new();
         private SurvivorText _language;
+        /// <summary>Ticket 44: modal skill thật (service path) đang hiển thị — auto-close poll chỉ chạy khi flag này set.</summary>
+        private bool _skillModalVisible;
+        /// <summary>Ticket 44: onClosed của modal skill đang hiển thị (cùng closure đường pick — release LevelUpScope).</summary>
+        private System.Action _skillOnClosed;
 
         /// <summary>
         /// Ticket 29/37: SkillChoiceService (owner wiring set). null → levelup
@@ -79,6 +83,7 @@ namespace VLTK.Survivor
         public void ShowLevelUp(List<SkillCard> cards, System.Action<SkillCard> onPick,
             System.Action onClosed = null)
         {
+            _skillModalVisible = false; // ticket 44: reset flag — modal mới, poll chờ TryShowSkillChoice set lại
             ClearButtons();
             ClearStatRows();
             if (SkillService != null && TryShowSkillChoice(1u, onClosed)) return; // 29: modal skill thật
@@ -92,6 +97,7 @@ namespace VLTK.Survivor
         /// </summary>
         public void ShowGameOver(System.Action onRestart)
         {
+            _skillModalVisible = false; // ticket 44: gameover không phải skill modal — poll không đóng nhầm
             ClearButtons();
             ClearStatRows();
             _title.text = Loc("survivor.gameover.title");
@@ -116,6 +122,27 @@ namespace VLTK.Survivor
         }
 
         public void Hide() => _canvas.enabled = false;
+
+        /// <summary>Ticket 44: modal hiện đang bật (levelup/gameover).</summary>
+        public bool IsVisible => _canvas != null && _canvas.enabled;
+
+        /// <summary>
+        /// Ticket 44: auto-close (waiting window timeout) — service Close chỉ
+        /// release CardChoiceScope; LevelUpScope + canvas hide chỉ đi qua onClosed
+        /// hook (đường pick). Poll mỗi frame: modal skill biến mất mà chưa pick
+        /// (service đóng) → hide + fire onClosed (closure đúng lifecycle) — không
+        /// leak scope, timescale về 1.
+        /// </summary>
+        public void PollSkillChoiceAutoClose()
+        {
+            if (!_skillModalVisible) return;
+            if (SkillService == null || SkillService.Current(1u) != null) return;
+            _skillModalVisible = false;
+            _canvas.enabled = false;
+            _skillOnClosed?.Invoke();
+        }
+
+        private void Update() => PollSkillChoiceAutoClose();
 
         /// <summary>
         /// Ticket 29: modal card từ SkillChoiceService (SkillDef-based, icon
@@ -204,8 +231,11 @@ namespace VLTK.Survivor
                 {
                     if (!SkillService.Select(roleId, card)) return; // card lạ → modal giữ nguyên
                     _canvas.enabled = false;
+                    _skillModalVisible = false; // ticket 44: đóng qua pick — poll không fire lần 2
                     onClosed?.Invoke();
                 });
+            _skillModalVisible = true; // ticket 44: modal skill thật đang hiển thị — auto-close poll canh
+            _skillOnClosed = onClosed;
             return true;
         }
 

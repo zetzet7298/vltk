@@ -153,7 +153,9 @@ namespace VLTK.Survivor
         public const int MaxLevelUpRerolls = 2;   // reroll levelup giới hạn own — không kẹt build, không vô hạn
         public const int ShopCardPrice = 10;      // giá mua card shop (XianDaoShopConfig.BuyPriceWeight parity-shape, own số)
         public const int ShopRerollPrice = 5;     // giá reroll shop cố định (RefreshPrice parity-shape, own số)
-        public const float WaitingLearnWindow = 30f; // beginWaitingLearnTime window (O6 own): hết → auto-close
+        /// <summary>beginWaitingLearnTime window (O6 own): hết → auto-close. Instance field (không const)
+        /// — runtime mặc định 30s, test rút timeout (ticket 44 PlayMode) không đợi thật.</summary>
+        public float WaitingLearnWindow = 30f;
 
         private sealed class PlayerData
         {
