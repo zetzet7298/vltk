@@ -480,7 +480,7 @@ namespace VLTK.Sandbox
         private int PlayerBaseSortingOrder()
         {
             // Ticket 46: survivor bridge set sortingBaseOverride theo worldY mỗi frame
-            // (ApplyFrame/ApplySorting đọc lại mỗi tick → tự re-sort). -1 = mặc định PC.
+            // (ApplyFrame/ApplySorting đọc lại mỗi tick → tự re-sort). int.MinValue = mặc định PC.
             return sortingBaseOverride != int.MinValue ? sortingBaseOverride : MapRenderer.PlayerSortingOrder;
         }
 

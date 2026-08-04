@@ -3,7 +3,7 @@
 // Ticket 46: Y-sort refine — side-view XY (camera +Z): Y cao = xa = render TRƯỚC
 // (sortingOrder thấp). Player + monster + proxy CÙNG công thức ActorDepth.BaseOrder.
 // Seam: EditMode pure-logic + runtime component (không scene, không PlayMode).
-// Sandbox hook: sortingBaseOverride (-1 = mặc định PC, KHÔNG đổi behavior).
+// Sandbox hook: sortingBaseOverride (int.MinValue = mặc định PC, KHÔNG đổi behavior).
 // -----------------------------------------------------------------------------
 
 using System.Collections;
@@ -150,7 +150,8 @@ namespace VLTK.Tests.Survivor
                 player.sortingBaseOverride = ActorDepth.BaseOrder(2f); // player đứng SAU (Y cao)
                 player.RefreshActionParts(force: true);                // kết thúc bằng ApplySorting
                 int playerBodyBehind = BodyOrder(player);
-                Assert.Greater(0, playerBodyBehind - (ActorDepth.BaseOrder(2f) + 40), "body order = base + part offset");
+                int bodyOffset = MalePlayerSpriteCatalog.SortingOffset(PlayerSpritePartKind.Body, player.direction);
+                Assert.AreEqual(ActorDepth.BaseOrder(2f) + bodyOffset, playerBodyBehind, "body order = base + exact part offset");
 
                 player.sortingBaseOverride = ActorDepth.BaseOrder(-1f); // player đứng TRƯỚC (Y thấp)
                 player.RefreshActionParts(force: true);

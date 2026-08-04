@@ -65,6 +65,7 @@ namespace VLTK.Survivor
             else
             {
                 _visual?.PlayMove(false);
+                _visual?.SyncDepth(transform.position.y); // ticket 47: monster đứng yên vẫn Y-sort (không double-call — else chỉ chạy khi dist≤0.001)
             }
             if (dist < 0.7f) SurvivorGameDirector.Instance.Player.TakeDamage(ContactDamage);
         }
