@@ -54,6 +54,7 @@ route clear → handoff sang `to-spec` (session riêng).
 - 2026-08-02: to-spec xong — [spec.md](spec.md) published `ready-for-agent`. Resolve tickets 10-15/17-24 thành Implementation Decisions (evidence research + own-design defaults); số balance + ramp endless + elite để playtest chốt. Next: to-tickets → implement. AGENTS.md SPR root note đã sửa (`/SpritesRuntime`).
 - 2026-08-02: to-tickets xong — tickets 26-42 published `ready-for-agent` (dependency order: 26→27→29/31/33/34/37/40/41/42; frontier = 26, 28, 30, 32, 35, 36, 38, 39).
 - 2026-08-04: ticket 43 close — runtime wiring P2 (council FAIL fix) verified + council re-review PASS (pi session). Implementer verify trước đó (265/265) + re-run hiện tại 277/277. Frontier giờ: 29, 31, 33, 34, 37 (42 blocked bởi 34/37; 40/41 thực chất verified 233/233 — header chưa cập nhật, cần close docs).
+- 2026-08-04: ticket 29 close — player pool = Cái Bang (`gaibang` LvlSetScript filter, 33 skill, khớp PcCaiBangSkills.txt). 3-mode + queue + reroll đã class-level verified trước; pi session verify final 277/277 + PlayMode (3 card gaibang thật, cast missiles=1). Frontier: 31, 33, 34, 37 (42 blocked 34/37).
 
 ## Not yet specified
 
