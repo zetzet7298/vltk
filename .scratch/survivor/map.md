@@ -55,6 +55,8 @@ route clear → handoff sang `to-spec` (session riêng).
 - 2026-08-02: to-tickets xong — tickets 26-42 published `ready-for-agent` (dependency order: 26→27→29/31/33/34/37/40/41/42; frontier = 26, 28, 30, 32, 35, 36, 38, 39).
 - 2026-08-04: ticket 43 close — runtime wiring P2 (council FAIL fix) verified + council re-review PASS (pi session). Implementer verify trước đó (265/265) + re-run hiện tại 277/277. Frontier giờ: 29, 31, 33, 34, 37 (42 blocked bởi 34/37; 40/41 thực chất verified 233/233 — header chưa cập nhật, cần close docs).
 - 2026-08-04: ticket 29 close — player pool = Cái Bang (`gaibang` LvlSetScript filter, 33 skill, khớp PcCaiBangSkills.txt). 3-mode + queue + reroll đã class-level verified trước; pi session verify final 277/277 + PlayMode (3 card gaibang thật, cast missiles=1). Frontier: 31, 33, 34, 37 (42 blocked 34/37).
+- 2026-08-04: ticket 48 mở — 8-direction animation sai (player không gọi SetDirection; monster cần verify mapping). Handoff LEAD, baseline HEAD.
+- 2026-08-04: ticket 48 close — 8-way facing fix (commit 63ddd4ac0): player gọi SetDirection qua UpdateFacing (idle-hold + cache), monster cache facing, null-guard Instance. EditMode Survivor 283/283 + PlayMode 2/2 (8 hướng qua bridge + monster chase + screenshots). Full-suite failures Backend/Sandbox proven pre-existing. Frontier: 31, 33, 34, 37.
 
 ## Not yet specified
 
