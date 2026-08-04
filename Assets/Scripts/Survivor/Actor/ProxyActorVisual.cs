@@ -20,6 +20,13 @@ namespace VLTK.Survivor
         }
 
         public void SyncPosition(Vector3 worldPos) => transform.position = worldPos;
+        // Ticket 46: Y cao = xa = render trước. Fail-closed: renderer chưa có (Start chưa
+        // chạy) → bỏ qua, không crash — proxy chưa sync nằm order 0 (dưới mọi JX actor).
+        public void SyncDepth(float worldY)
+        {
+            if (_sr == null) return;
+            _sr.sortingOrder = ActorDepth.BaseOrder(worldY);
+        }
         public void SetDirection(int dirIndex8) { }
         public void PlayMove(bool moving) { }
         public void SetAlive(bool alive) => gameObject.SetActive(alive);

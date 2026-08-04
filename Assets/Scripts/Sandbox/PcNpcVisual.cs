@@ -33,6 +33,14 @@ namespace VLTK.Sandbox
         public string standShadowSourcePath = @"spr\npcres\man\MA_YY_999_ST01.spr";
         public string walkShadowSourcePath = @"spr\npcres\man\MA_YY_999_RN01.spr";
 
+        /// <summary>
+        /// Ticket 46 — Y-sort bridge override (survivor side-view: Y cao = xa = render trước).
+        /// ≠ int.MinValue → thay "MapRenderer.PlayerSortingOrder - 10" làm base (JxNpcVisual set theo worldY);
+        /// int.MinValue → hành vi PC mặc định (KHÔNG đổi behavior). Shadow luôn base - 10, clamp int16.
+        /// Sentinel ngoài band int16 clamp (BaseOrder có thể trả -32768 = short.MinValue).
+        /// </summary>
+        public int sortingBaseOverride = int.MinValue;
+
         private SpriteRenderer _renderer;
         private Transform _spriteRoot;
         private SpriteRenderer _shadowRenderer;
@@ -172,7 +180,7 @@ namespace VLTK.Sandbox
             }
             _renderer.sprite = sprite;
             _spriteRoot.localPosition = clip.offsets[idx];
-            _renderer.sortingOrder = MapRenderer.PlayerSortingOrder - 10;
+            _renderer.sortingOrder = ActorSortingBase;
             ApplyShadowFrame(time);
         }
 
@@ -198,7 +206,7 @@ namespace VLTK.Sandbox
             int idx = Mathf.Clamp(dir * clip.framesPerDirection + frameInDir, 0, clip.sprites.Length - 1);
             _shadowRenderer.sprite = clip.sprites[idx];
             _spriteRoot.localPosition = clip.offsets[idx];
-            _shadowRenderer.sortingOrder = MapRenderer.PlayerSortingOrder - 20;
+            _shadowRenderer.sortingOrder = ShadowSortingBase;
         }
 
         // Returns true if the natural frame at this index is unusable (null or a wide shadow tile
@@ -264,7 +272,7 @@ namespace VLTK.Sandbox
             _renderer = child.GetComponent<SpriteRenderer>();
             if (_renderer == null) _renderer = child.gameObject.AddComponent<SpriteRenderer>();
             _renderer.sortingLayerName = "Default";
-            _renderer.sortingOrder = MapRenderer.PlayerSortingOrder - 10;
+            _renderer.sortingOrder = ActorSortingBase;
         }
 
         private void EnsureShadowRenderer()
@@ -282,7 +290,20 @@ namespace VLTK.Sandbox
             _shadowRenderer = child.GetComponent<SpriteRenderer>();
             if (_shadowRenderer == null) _shadowRenderer = child.gameObject.AddComponent<SpriteRenderer>();
             _shadowRenderer.sortingLayerName = "Default";
-            _shadowRenderer.sortingOrder = MapRenderer.PlayerSortingOrder - 20;
+            _shadowRenderer.sortingOrder = ShadowSortingBase;
+        }
+
+        /// <summary>Ticket 46 — base sorting theo override (hoặc mặc định PC), shadow = base - 10 clamp int16.</summary>
+        private int ActorSortingBase => sortingBaseOverride != int.MinValue ? sortingBaseOverride : MapRenderer.PlayerSortingOrder - 10;
+        private int ShadowSortingBase => Mathf.Max(short.MinValue, ActorSortingBase - 10);
+
+        /// <summary>Ticket 46 — áp dụng ngay sorting base (bridge gọi khi SyncDepth; test EditMode không có Update loop).</summary>
+        public void ApplySortingBase()
+        {
+            EnsureRenderer();
+            EnsureShadowRenderer();
+            _renderer.sortingOrder = ActorSortingBase;
+            if (_shadowRenderer != null) _shadowRenderer.sortingOrder = ShadowSortingBase;
         }
 
         private ClipRuntime LoadClip(string sourcePath)

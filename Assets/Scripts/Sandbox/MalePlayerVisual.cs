@@ -40,6 +40,13 @@ namespace VLTK.Sandbox
         public float pixelsPerUnit = 1f;
         public string spritesRootOverride;
 
+        /// <summary>
+        /// Ticket 46 — Y-sort bridge override (survivor side-view: Y cao = xa = render trước).
+        /// ≠ int.MinValue → thay MapRenderer.PlayerSortingOrder làm base (JxPlayerVisual set theo worldY);
+        /// int.MinValue → hành vi PC mặc định (KHÔNG đổi behavior). Sentinel ngoài band int16 clamp.
+        /// </summary>
+        public int sortingBaseOverride = int.MinValue;
+
         [Header("Diagnostics")]
         public bool logMissingParts = true;
 
@@ -472,7 +479,9 @@ namespace VLTK.Sandbox
         // (int16) sortingOrder is needed -- that overflow is exactly what broke the map art.
         private int PlayerBaseSortingOrder()
         {
-            return MapRenderer.PlayerSortingOrder;
+            // Ticket 46: survivor bridge set sortingBaseOverride theo worldY mỗi frame
+            // (ApplyFrame/ApplySorting đọc lại mỗi tick → tự re-sort). -1 = mặc định PC.
+            return sortingBaseOverride != int.MinValue ? sortingBaseOverride : MapRenderer.PlayerSortingOrder;
         }
 
         private void ApplySorting()

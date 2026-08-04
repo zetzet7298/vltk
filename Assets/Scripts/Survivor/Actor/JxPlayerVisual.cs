@@ -56,6 +56,7 @@ namespace VLTK.Survivor
 
         // --- IActorVisual forward ---
         public void SyncPosition(Vector3 p) => _impl?.SyncPosition(p);
+        public void SyncDepth(float y) => _impl?.SyncDepth(y);
         public void SetDirection(int d) => _impl?.SetDirection(d);
         public void PlayMove(bool m) => _impl?.PlayMove(m);
         public void SetAlive(bool a) => _impl?.SetAlive(a);
@@ -73,6 +74,9 @@ namespace VLTK.Survivor
                 _sr = v.GetComponent<SpriteRenderer>();
             }
             public void SyncPosition(Vector3 p) => _t.position = p;
+            // Ticket 46: set base override — MalePlayerVisual.ApplyFrame đọc PlayerBaseSortingOrder
+            // mỗi tick (playAutomatically) → tự re-sort toàn bộ part renderer.
+            public void SyncDepth(float worldY) => _v.sortingBaseOverride = ActorDepth.BaseOrder(worldY);
             public void SetDirection(int d) => _v.SetDirection(d);
             // ponytail: SetAction Move/Idle đủ; direction do SurvivorPlayer input drive riêng nếu cần.
             public void PlayMove(bool m) => _v.SetAction(m ? PlayerVisualAction.Move : PlayerVisualAction.Idle);

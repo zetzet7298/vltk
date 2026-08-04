@@ -35,6 +35,7 @@ namespace VLTK.Survivor
             Hp = MaxHp;
             transform.position = pos;
             _visual.SyncPosition(pos);
+            _visual.SyncDepth(pos.y); // ticket 46: depth ngay tại spawn
         }
 
         public void AddXp(int n)
@@ -94,6 +95,7 @@ namespace VLTK.Survivor
             p.y = Mathf.Clamp(p.y, -b.y, b.y);
             transform.position = p;
             _visual?.SyncPosition(p);
+            _visual?.SyncDepth(p.y); // ticket 46: Y-sort mỗi frame
             _visual?.PlayMove(dir.sqrMagnitude > 0.01f);
 
             _attackCd -= dt;

@@ -42,6 +42,7 @@ namespace VLTK.Survivor
             Hp = MaxHp;
             transform.position = pos;
             _visual.SyncPosition(pos);
+            _visual.SyncDepth(pos.y); // ticket 46: depth ngay tại spawn (trước Update đầu tiên)
         }
 
         private void Update()
@@ -56,6 +57,7 @@ namespace VLTK.Survivor
                 var p = transform.position + (Vector3)(d.normalized * step);
                 transform.position = p;
                 _visual?.SyncPosition(p);
+                _visual?.SyncDepth(p.y); // ticket 46: Y-sort mỗi lần di chuyển
                 // Ticket 35: hướng theo vector di chuyển (JX dir order, giống player).
                 _visual?.SetDirection(MalePlayerSpriteCatalog.DirectionFromMove(d.normalized));
                 _visual?.PlayMove(true);

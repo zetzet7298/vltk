@@ -58,6 +58,7 @@ namespace VLTK.Survivor
 
         // --- IActorVisual forward ---
         public void SyncPosition(Vector3 p) => _impl?.SyncPosition(p);
+        public void SyncDepth(float y) => _impl?.SyncDepth(y);
         public void SetDirection(int d) => _impl?.SetDirection(d);
         public void PlayMove(bool m) => _impl?.PlayMove(m);
         public void SetAlive(bool a) => _impl?.SetAlive(a);
@@ -78,6 +79,14 @@ namespace VLTK.Survivor
             }
 
             public void SyncPosition(Vector3 p) => _t.position = p;
+
+            // Ticket 46: override base + áp dụng ngay (PcNpcVisual ghi sortingOrder hardcode
+            // mỗi ApplyFrame — set override để frame sau tự đúng, ApplySortingBase cho ngay lập tức).
+            public void SyncDepth(float worldY)
+            {
+                _v.sortingBaseOverride = ActorDepth.BaseOrder(worldY);
+                _v.ApplySortingBase();
+            }
 
             // JX direction order (MalePlayerSpriteCatalog.DirectionFromMove):
             // 0=S 1=SW 2=W 3=NW 4=N 5=NE 6=E 7=SE → vector angle = 270° - 45°*d.

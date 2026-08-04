@@ -17,6 +17,7 @@ namespace VLTK.Tests.Survivor
         private sealed class StubVisual : IActorVisual
         {
             public void SyncPosition(Vector3 p) { }
+            public void SyncDepth(float y) { }
             public void SetDirection(int d) { }
             public void PlayMove(bool m) { }
             public void SetAlive(bool a) { }
