@@ -68,6 +68,8 @@ Full survivor suite (VLTK.Tests.Survivor): 271/271 passed (0 failed, 0 skipped, 
   = 267 cũ + 4 mới — tất cả xanh
 ```
 
-**Ghi chú:** Full `VLTK.Tests.EditMode` assembly có 26 failures ở `Backend.*`/`Sandbox.*` — xác nhận **pre-existing**: stash toàn bộ diff ticket 45 (về baseline), chạy `AuthRestGameBackendTests.LoginAsync_EmptyAccName_ValidationErrorBeforeSend` → fail y hệt (`validation_error` vs `invalid_arg`). Không liên quan survivor (0 fail trong `VLTK.Tests.Survivor`).
+**Ghi chú:** Full `VLTK.Tests.EditMode` assembly có 26 failures ở `Backend.*`/`Sandbox.*` — **pre-existing** (structural reasoning, không stash entry): diff ticket 45 chỉ đụng 4 file Survivor (`SurvivorGameDirector.cs`, `OverlayPanel.cs`, `SurvivorScopeLeakTests.cs` + .meta); `Assets/Tests/EditMode/Backend/` untouched trong `7a1f7abc2..HEAD`; failure `validation_error` vs `invalid_arg` thuộc server contract (payload trả về khác expectation) ngoài phạm vi Survivor. Không liên quan survivor (0 fail trong `VLTK.Tests.Survivor`).
+
+**Re-review mini-fix (poll null-guard):** `65dc4e864` — `PollSkillChoiceAutoClose` bỏ qua `SkillService == null` (public settable, bị set null khi modal mở → NRE mỗi frame). Guard cũ `SkillService == null || Current(1u) != null` đã bị thay bởi 44b; hồi phục null-safety, giữ identity check.
 
 **P1 scope note:** sau fix, count = CardChoice(1) + GameOver(1) khi chết lúc modal mở — CardChoiceScope là service event modal cũ bị gameover thay thế, scene reload (restart) dọn; không phải leak vô hạn (LevelUpScope — mục tiêu ticket — về 0 ngay).
