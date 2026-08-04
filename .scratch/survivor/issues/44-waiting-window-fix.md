@@ -8,7 +8,7 @@ vẫn click được, nhưng feature O6 không tồn tại runtime).
 
 **Blocked by:** None — baseline `df8b0788a`.
 
-**Status:** ready-for-review
+**Status:** done — council review PASS
 
 ## Fix (2 phần, KHÔNG tách rời — fix nông sẽ leak)
 

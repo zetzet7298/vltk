@@ -6,7 +6,7 @@ cả 2 verdict PASS) phát hiện 2 đường leak LevelUpScope còn lại — c
 
 **Blocked by:** None — baseline `7a1f7abc2` (fix 44) + `6e795114b` (docs).
 
-**Status:** ready-for-review
+**Status:** done — council review PASS
 
 ## Phần 1 — Player chết khi modal mở → LevelUpScope kẹt (44a)
 
