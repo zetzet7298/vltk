@@ -6,7 +6,7 @@ cả 2 verdict PASS) phát hiện 2 đường leak LevelUpScope còn lại — c
 
 **Blocked by:** None — baseline `7a1f7abc2` (fix 44) + `6e795114b` (docs).
 
-**Status:** ready-for-agent
+**Status:** ready-for-review
 
 ## Phần 1 — Player chết khi modal mở → LevelUpScope kẹt (44a)
 
@@ -50,4 +50,24 @@ paused — reachable khi box/shop wire).
 
 ## Verified
 
-- (trống — chờ implementer)
+**Commit:** `eae0ede21` (branch dev)
+
+**Files changed:**
+- `Assets/Scripts/Survivor/SurvivorGameDirector.cs` — P1: `OnPlayerDied` release `LevelUpScope` trước `ShowGameOver` (no-op khi scope vắng)
+- `Assets/Scripts/Survivor/UI/OverlayPanel.cs` — P2: `_renderedEvent` identity + poll `ReferenceEquals(Current(roleId), _renderedEvent)` fail-closed; reset identity ở ShowLevelUp/ShowGameOver/pick/poll; `ClearButtons`/`ClearStatRows` guard `Application.isPlaying` (Destroy → DestroyImmediate ở edit mode, test seam)
+- `Assets/Tests/EditMode/Survivor/SurvivorScopeLeakTests.cs` (+.meta) — 4 test mới
+
+**Test output (thật, EditMode):**
+```
+SurvivorScopeLeakTests: 4/4 passed (1.0s)
+  - PlayerDied_WhileModalOpen_ReleasesLevelUpScope_GameOverShows
+  - PlayerDied_NoModal_LevelUpReleaseNoOp_GameOverNormal
+  - AutoClose_QueueHasNewEvent_PollClosesFailsClosed_NoStaleCard
+  - Poll_ModalOpen_SameEvent_NoFalseClose_NoRegression
+Full survivor suite (VLTK.Tests.Survivor): 271/271 passed (0 failed, 0 skipped, 5.1s)
+  = 267 cũ + 4 mới — tất cả xanh
+```
+
+**Ghi chú:** Full `VLTK.Tests.EditMode` assembly có 26 failures ở `Backend.*`/`Sandbox.*` — xác nhận **pre-existing**: stash toàn bộ diff ticket 45 (về baseline), chạy `AuthRestGameBackendTests.LoginAsync_EmptyAccName_ValidationErrorBeforeSend` → fail y hệt (`validation_error` vs `invalid_arg`). Không liên quan survivor (0 fail trong `VLTK.Tests.Survivor`).
+
+**P1 scope note:** sau fix, count = CardChoice(1) + GameOver(1) khi chết lúc modal mở — CardChoiceScope là service event modal cũ bị gameover thay thế, scene reload (restart) dọn; không phải leak vô hạn (LevelUpScope — mục tiêu ticket — về 0 ngay).
