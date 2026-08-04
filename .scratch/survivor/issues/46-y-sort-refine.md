@@ -9,7 +9,7 @@ Player đứng sau monster (Y cao hơn) → player vẽ đè monster = sai depth
 comment (JxPlayerVisual.cs:11-12 "monster P1.5 vẫn Proxy → Y-sort refine = P2 khi monster cũng
 PC visual") — giờ monster ĐÃ PC visual (ticket 35 JxNpcVisual) → condition met.
 
-**Status:** ready-for-review
+**Status:** done — council dual review PASS (46) / followups applied (47)
 
 ## Root cause
 

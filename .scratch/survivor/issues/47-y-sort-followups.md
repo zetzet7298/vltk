@@ -3,7 +3,7 @@
 **What to build:** Dual review ticket 46 (46a `f458d4fc` + 46b `105ef9eb`, cả 2 PASS) — 3 mục nhỏ
 không block, làm cho đúng + chặt hơn. Baseline `8edaa0d22`.
 
-**Blocked by:** None. **Status:** ready-for-review
+**Blocked by:** None. **Status:** done — council dual review PASS (46) / followups applied (47)
 
 ## Mục 1 — Comment sentinel sai (46b)
 
