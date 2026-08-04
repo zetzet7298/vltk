@@ -5,7 +5,7 @@ game loop thật. Class-level code đã verified (258/258); phần thiếu là B
 
 **Blocked by:** None — can start immediately (baseline `8cbdee0e3`).
 
-**Status:** ready-for-agent
+**Status:** done — verified + council re-review PASS (2026-08-04, pi session)
 
 ## Blocker (council challenges, đã verify bằng grep + read)
 
@@ -66,6 +66,20 @@ game loop thật. Class-level code đã verified (258/258); phần thiếu là B
 - **NRE kết luận (SurvivorMonster.cs:67 `Instance.Player.TakeDamage` + SurvivorGameDirector.cs:97 `_spawner.Tick`)**: KHÔNG tái hiện trong play sạch (3 vòng play, monster contact damage chạy thật, 2 vòng scene teardown reload) → xác nhận là FSR hot-reload race lúc implementer edit khi play. Ghi note, KHÔNG fix (theo contract).
 - EditMode suite Survivor: **265/265 passed, 0 failed** (258 baseline + 7 mới: 3 SurvivorRuntimeWiringTests boot smoke/catalog real sizes, 2 Select Contains guard, 3 SurvivorPause scopes — CardChoicePause cũ bị thay, test cũ thay tương ứng).
 - Ghi chú phụ: 1 tên skill hiển thị mojibake (`ấ±³ậÁựÁỳnpc` id 1161) — TCVN3/GBK decode 1 dòng lệch, ngoài acceptance (cosmetic).
+
+## Council re-review (2026-08-04, pi session) — PASS
+
+- Diff `df8b0788a` vs baseline `8cbdee0e3` (741 insertions, 15 files, sandbox untouched):
+  - ✅ Blocker 1 skill boot: `BootSkillSystem` — `Player.Cast = SkillCastRuntime`, `Overlay.SkillService = SkillChoiceService` (pool player thật), `BossSkillPool` fill từ catalog boss/npc, supply setup fail-closed
+  - ✅ Blocker 2 supply: `BootSupplyBar` (`SupplyBar.Build` + `OnUse` → heal/bomb/magnet/full-clear thật) + `SurvivorPlayerDamageable` adapter (Heal clamp MaxHp)
+  - ✅ Blocker 3: `WaveIndexSource = () => WaveIndex` (EditMode fallback FindAnyObjectByType)
+  - ✅ Blocker 4: `OnApplicationPause` → `SurvivorPause.AppLifecycleScope` ref-count; settings panel `Build(text, pause)` + launcher ⚙/✕ + NRE fix (lang Button cùng GO)
+  - ✅ Minor 5: `Select` LevelUp/Shop `Contains(ev, card.Def)` trước learn/spend (Box đã có)
+  - ✅ Minor 6: `SurvivorBoss.Update` — `ReportHp` trước death check, hp clamp 0 → loss = maxHp
+  - ✅ Boot smoke test: `SurvivorRuntimeWiringTests` (3 test: wire all, levelup service-path non-legacy, catalog real sizes) — chống tái phạm dead-wiring
+- `SurvivorPause` ref-count per-scope (5 scope), apply transition 0→1/1→0 — release đúng scope không nuốt pause scope khác; `Update` Tick trước early-return (ticket 44 đã sửa sau, dùng unscaledTime)
+- EditMode suite hiện tại (sau 44-47): **277/277 PASSED** (0 failed, 3.96s) — job `17eee45fd4a940db9ab29e7c8ecfc490`
+- Verdict: **PASS** — mọi blocker cũ đã wire vào game loop thật, không phát hiện challenge mới.
 
 ## Snapshot (xml) — implementer report
 
