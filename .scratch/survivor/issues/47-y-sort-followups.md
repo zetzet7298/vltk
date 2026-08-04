@@ -3,7 +3,7 @@
 **What to build:** Dual review ticket 46 (46a `f458d4fc` + 46b `105ef9eb`, cả 2 PASS) — 3 mục nhỏ
 không block, làm cho đúng + chặt hơn. Baseline `8edaa0d22`.
 
-**Blocked by:** None. **Status:** ready-for-agent
+**Blocked by:** None. **Status:** ready-for-review
 
 ## Mục 1 — Comment sentinel sai (46b)
 
@@ -43,4 +43,23 @@ tăng độ chặt (đọc code xác nhận tên hàm/kiểu trước).
 
 ## Verified
 
-- (trống — chờ implementer)
+**Commit:** `158506fc1` (branch dev)
+
+**Files changed (3):**
+- `Assets/Scripts/Sandbox/MalePlayerVisual.cs` — comment sentinel: `-1 = mặc định PC` → `int.MinValue = mặc định PC` (MỤC 1, comment-only)
+- `Assets/Scripts/Survivor/Actor/SurvivorMonster.cs` — nhánh else (dist≤0.001) gọi `_visual?.SyncDepth(transform.position.y)` (MỤC 2); không double-call: 2 nhánh if/else loại trừ nhau, move branch giữ `p.y`, else branch dùng `transform.position.y` (position không đổi khi đứng yên)
+- `Assets/Tests/EditMode/Survivor/SurvivorYSortTests.cs` — comment header sentinel (MỤC 1) + test 6 pin exact: `Assert.AreEqual(ActorDepth.BaseOrder(2f) + MalePlayerSpriteCatalog.SortingOffset(PlayerSpritePartKind.Body, player.direction), playerBodyBehind)` thay `Assert.Greater(0, ...+40)` (MỤC 3; `direction` là public property trên MalePlayerVisual, đọc live tại assert)
+
+**Test output (thật, EditMode qua Unity MCP):**
+```
+SurvivorYSortTests (group VLTK.Tests.Survivor.SurvivorYSortTests): 6/6 passed (0 failed, 0 skipped)
+  - PlayerAndMonster_SharedFormula_OrderFollowsWorldY  PASS (pin exact offset — SPR staging thật)
+  - ActorDepth_HigherY_LowerOrder / ClampsToInt16Band / Proxy_* / NpcVisual_*  PASS
+Full survivor suite (group VLTK.Tests.Survivor): 277/277 passed (0 failed, 0 skipped), 4.6s
+  — count không đổi (277 = 271 cũ + 6 YSort; không thêm/bớt test)
+```
+
+**Ghi chú:**
+- Grep `-1 = mặc định` trong Assets/Scripts + Assets/Tests: 0 match (acceptance MỤC 1 ✓)
+- MỤC 2 verify bằng code-inspect (acceptance cho phép): else branch gọi SyncDepth mỗi frame khi đứng yên, idempotent (cùng Y → cùng order); move branch chỉ chạy khi dist>0.001 → không bao giờ double-call cùng frame
+- Defer mục (issue ghi): KHÔNG làm, giữ nguyên như ticket chỉ định
