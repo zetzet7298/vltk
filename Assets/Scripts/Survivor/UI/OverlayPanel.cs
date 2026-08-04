@@ -17,6 +17,10 @@ namespace VLTK.Survivor
         private bool _skillModalVisible;
         /// <summary>Ticket 44: onClosed của modal skill đang hiển thị (cùng closure đường pick — release LevelUpScope).</summary>
         private System.Action _skillOnClosed;
+        /// <summary>Ticket 45 (44b): event đã render lên modal — poll so identity (ReferenceEquals) với
+        /// Current(roleId), không phải null-check — auto-close pump ra event mới cùng roleId
+        /// (box/shop queue) không thể giữ modal card cũ.</summary>
+        private SkillChoiceEvent _renderedEvent;
 
         /// <summary>
         /// Ticket 29/37: SkillChoiceService (owner wiring set). null → levelup
@@ -84,6 +88,7 @@ namespace VLTK.Survivor
             System.Action onClosed = null)
         {
             _skillModalVisible = false; // ticket 44: reset flag — modal mới, poll chờ TryShowSkillChoice set lại
+            _renderedEvent = null;      // ticket 45: reset event identity — modal mới (poll không đóng nhầm)
             ClearButtons();
             ClearStatRows();
             if (SkillService != null && TryShowSkillChoice(1u, onClosed)) return; // 29: modal skill thật
@@ -98,6 +103,7 @@ namespace VLTK.Survivor
         public void ShowGameOver(System.Action onRestart)
         {
             _skillModalVisible = false; // ticket 44: gameover không phải skill modal — poll không đóng nhầm
+            _renderedEvent = null;      // ticket 45: dọn identity — gameover không phải skill modal
             ClearButtons();
             ClearStatRows();
             _title.text = Loc("survivor.gameover.title");
@@ -136,8 +142,15 @@ namespace VLTK.Survivor
         public void PollSkillChoiceAutoClose()
         {
             if (!_skillModalVisible) return;
-            if (SkillService == null || SkillService.Current(1u) != null) return;
+            // ticket 45 (44b): modal chỉ hợp lệ khi service vẫn đang hiển thị ĐÚNG
+            // event đã render. Event biến mất (auto-close thường) HOẶC là event khác
+            // (Close → Pump trigger queue mới cùng roleId) → fail-closed đóng modal
+            // + fire onClosed — không giữ card cũ, không kẹt LevelUpScope.
+            var ev = _renderedEvent;
+            var c = ev != null ? SkillService.Current(ev.RoleId) : null;
+            if (c != null && ReferenceEquals(c, ev)) return;
             _skillModalVisible = false;
+            _renderedEvent = null;
             _canvas.enabled = false;
             _skillOnClosed?.Invoke();
         }
@@ -170,13 +183,23 @@ namespace VLTK.Survivor
 
         private void ClearButtons()
         {
-            foreach (var b in _buttons) if (b != null) Destroy(b);
+            foreach (var b in _buttons)
+            {
+                if (b == null) continue;
+                // test seam (ticket 45 EditMode): boot test gọi ShowGameOver/ShowLevelUp
+                // khi !Application.isPlaying — Destroy bị cấm, dùng DestroyImmediate.
+                if (Application.isPlaying) Destroy(b); else DestroyImmediate(b);
+            }
             _buttons.Clear();
         }
 
         private void ClearStatRows()
         {
-            foreach (var r in _statRows) if (r != null) Destroy(r);
+            foreach (var r in _statRows)
+            {
+                if (r == null) continue;
+                if (Application.isPlaying) Destroy(r); else DestroyImmediate(r);
+            }
             _statRows.Clear();
         }
 
@@ -232,10 +255,12 @@ namespace VLTK.Survivor
                     if (!SkillService.Select(roleId, card)) return; // card lạ → modal giữ nguyên
                     _canvas.enabled = false;
                     _skillModalVisible = false; // ticket 44: đóng qua pick — poll không fire lần 2
+                    _renderedEvent = null;      // ticket 45: dọn identity — pick xong modal không còn event
                     onClosed?.Invoke();
                 });
             _skillModalVisible = true; // ticket 44: modal skill thật đang hiển thị — auto-close poll canh
             _skillOnClosed = onClosed;
+            _renderedEvent = ev;       // ticket 45: event identity cho poll (roleId nằm trong event)
             return true;
         }
 

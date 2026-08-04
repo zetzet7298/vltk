@@ -401,6 +401,11 @@ namespace VLTK.Survivor
 
         public void OnPlayerDied()
         {
+            // ticket 45 (44a): player chết khi modal levelup mở → monster damage
+            // không check Pause → LevelUpScope chưa release (onClosed không bao
+            // giờ fire — ShowGameOver tắt poll). Release TRƯỚC ShowGameOver;
+            // no-op khi scope vắng → an toàn path không modal.
+            Pause.Release(SurvivorPause.LevelUpScope);
             Pause.Acquire(SurvivorPause.GameOverScope);
             _overlay.ShowGameOver(() =>
             {
