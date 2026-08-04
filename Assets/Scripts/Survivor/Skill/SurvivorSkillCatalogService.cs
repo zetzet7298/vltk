@@ -61,8 +61,10 @@ namespace VLTK.Survivor
         /// <summary>
         /// Lọc catalog → List SkillDef của 1 pool (Player / BossNpc), thứ tự giữ
         /// theo file. catalog null/rỗng → list rỗng (fail-closed).
+        /// faction != null → chỉ giữ skill của phái đó (LvlSetScript key, ví dụ
+        /// "gaibang") — pool theo phái (ticket 29: player pool = Cái Bang).
         /// </summary>
-        public static List<SkillDef> Defs(SurvivorSkillCatalog catalog, SurvivorSkillPool pool)
+        public static List<SkillDef> Defs(SurvivorSkillCatalog catalog, SurvivorSkillPool pool, string faction = null)
         {
             var res = new List<SkillDef>();
             if (catalog == null) return res;
@@ -70,6 +72,7 @@ namespace VLTK.Survivor
             {
                 var row = catalog.Skills[i];
                 if (row.Pool != pool) continue;
+                if (faction != null && row.Faction != faction) continue;
                 res.Add(SkillDef.FromRow(row));
             }
             return res;

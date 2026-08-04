@@ -168,6 +168,11 @@ namespace VLTK.Tests.Survivor
             Assert.Greater(catalog.MissileRows, 0, "missles.txt ~441 row");
             var boss = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.BossNpc);
             Assert.Greater(boss.Count, 0, "boss/npc pool không rỗng");
+            // ticket 29: player pool = Cái Bang — 33 skill thật (khớp PcCaiBangSkills.txt)
+            var gaibang = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player, "gaibang");
+            Assert.AreEqual(33, gaibang.Count, "gaibang pool đủ 33 skill (cross-check PcCaiBangSkills.txt)");
+            var gaibangAll = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player);
+            Assert.Greater(gaibangAll.Count, gaibang.Count, "faction filter thu hẹp đúng (452 → 33)");
             var supply = SurvivorSkillCatalogService.SupplyDefs(catalog);
             Assert.GreaterOrEqual(supply.Count, 1, "có ≥1 supply skill (heal/bomb tag)");
         }

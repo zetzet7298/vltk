@@ -254,7 +254,10 @@ namespace VLTK.Survivor
             Player.Cast = new SkillCastRuntime();
 
             var pool = new SkillChoicePool();
-            var playerDefs = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player);
+            // ticket 29: player pool = môn phái Cái Bang (gaibang.lua — LvlSetScript
+            // col 70, KHÔNG phải CharClass). 33 skill thật từ PcSkills.txt
+            // (khớp Reference/PcCaiBangSkills.txt 33 rows — cross-check).
+            var playerDefs = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player, "gaibang");
             for (int i = 0; i < playerDefs.Count; i++) pool.Add(playerDefs[i]);
 
             _skillChoice = new SkillChoiceService(Player.Cast, pool, new System.Random(), null, Pause);
