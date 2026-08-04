@@ -16,6 +16,7 @@ namespace VLTK.Survivor
         public float Hp { get; private set; }
         private IActorVisual _visual;
         private Transform _player;
+        private int _facing = -1; // ticket 48: chỉ SetDirection khi hướng đổi (NpcBridge tạo Vector2 mới mỗi lần)
 
         /// <summary>Ticket 27 attribution ledger: SumSkillDamage mỗi hit, KillSource = TopSource lúc die.</summary>
         public SurvivorDamageLedger Ledger { get; } = new SurvivorDamageLedger();
@@ -58,8 +59,14 @@ namespace VLTK.Survivor
                 transform.position = p;
                 _visual?.SyncPosition(p);
                 _visual?.SyncDepth(p.y); // ticket 46: Y-sort mỗi lần di chuyển
-                // Ticket 35: hướng theo vector di chuyển (JX dir order, giống player).
-                _visual?.SetDirection(MalePlayerSpriteCatalog.DirectionFromMove(d.normalized));
+                // Ticket 35/48: hướng theo vector di chuyển (JX dir order, giống player);
+                // cache — chỉ SetDirection khi hướng đổi (tránh garbage allocation NpcBridge).
+                int facing = MalePlayerSpriteCatalog.DirectionFromMove(d.normalized);
+                if (facing != _facing)
+                {
+                    _facing = facing;
+                    _visual?.SetDirection(facing);
+                }
                 _visual?.PlayMove(true);
             }
             else

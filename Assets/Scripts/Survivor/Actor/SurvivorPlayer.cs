@@ -1,4 +1,5 @@
 using UnityEngine;
+using VLTK.Sandbox;
 
 namespace VLTK.Survivor
 {
@@ -28,6 +29,7 @@ namespace VLTK.Survivor
         private IActorVisual _visual;
         private float _attackCd;
         private float _invuln;
+        private int _facing = -1; // ticket 48: facing 8-way cache, -1 = chưa set
 
         public void Init(IActorVisual v, Vector3 pos)
         {
@@ -84,23 +86,44 @@ namespace VLTK.Survivor
         private void Update()
         {
             if (Dead) return;
+            var inst = SurvivorGameDirector.Instance;
+            if (inst == null) return; // scene teardown giữa frame — đừng NRE
             float dt = Time.deltaTime;
             if (_invuln > 0) _invuln -= dt;
 
-            var dir = SurvivorGameDirector.Instance.Input.Move;
+            var dir = inst.Input.Move;
             if (dir.sqrMagnitude > 1f) dir.Normalize();
             var p = transform.position + (Vector3)(dir * MoveSpeed * dt);
-            var b = SurvivorGameDirector.Instance.ArenaHalf;
+            var b = inst.ArenaHalf;
             p.x = Mathf.Clamp(p.x, -b.x, b.x);
             p.y = Mathf.Clamp(p.y, -b.y, b.y);
             transform.position = p;
             _visual?.SyncPosition(p);
             _visual?.SyncDepth(p.y); // ticket 46: Y-sort mỗi frame
-            _visual?.PlayMove(dir.sqrMagnitude > 0.01f);
+            bool moving = dir.sqrMagnitude > 0.01f;
+            _visual?.PlayMove(moving);
+            // Ticket 48: facing 8-way theo hướng di chuyển; idle giữ hướng cuối (không reset),
+            // chỉ SetDirection khi hướng ĐỔI (tránh spam mỗi frame).
+            if (UpdateFacing(ref _facing, dir))
+                _visual?.SetDirection(_facing);
 
             _attackCd -= dt;
             Cast?.Tick(dt);
             if (_attackCd <= 0f) { _attackCd = AttackInterval; Fire(); }
+        }
+
+        /// <summary>
+        /// Ticket 48: facing-cache semantics — move ≈ 0 → giữ nguyên (idle không reset);
+        /// move hợp lệ → facing 0-7; trả true CHỈ khi facing thực sự đổi (caller SetDirection 1 lần).
+        /// Static để EditMode test — logic duy nhất player + monster dùng chung convention.
+        /// </summary>
+        public static bool UpdateFacing(ref int facing, Vector2 move)
+        {
+            if (move.sqrMagnitude <= 0.01f) return false;
+            int next = MalePlayerSpriteCatalog.DirectionFromMove(move);
+            if (next == facing) return false;
+            facing = next;
+            return true;
         }
 
         private void Fire()
