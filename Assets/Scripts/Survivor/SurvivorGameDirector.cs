@@ -119,6 +119,9 @@ namespace VLTK.Survivor
         // --- lifecycle hooks (parity BattleLevelLogic). MVP: boot match. ---
         protected virtual bool OnInit()
         {
+            // portrait lock (ticket 42): PlayerSettings đã lock build; guard runtime
+            // này bảo hiểm thiết bị xoay màn hình (editor no-op).
+            UnityEngine.Screen.orientation = UnityEngine.ScreenOrientation.Portrait;
             // reset timescale về 1 mỗi run mới — scene reload sau gameover/pause
             // không mang theo timescale cũ (Pause apply delegate là per-instance).
             Time.timeScale = 1f;

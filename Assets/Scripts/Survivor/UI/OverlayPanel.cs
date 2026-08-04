@@ -9,6 +9,7 @@ namespace VLTK.Survivor
     public sealed class OverlayPanel : MonoBehaviour
     {
         private Canvas _canvas;
+        private UnityEngine.UI.Image _dim; // ticket 42: dim nền modal — text không nổi trên game world
         private Text _title;
         private readonly List<GameObject> _buttons = new();
         private readonly List<GameObject> _statRows = new();
@@ -68,11 +69,55 @@ namespace VLTK.Survivor
         private void Construct()
         {
             _canvas = GetComponent<Canvas>();
+            MakeDim();
 
             _title = MakeText("Title", transform, 64, new Color(1f, 0.85f, 0.3f));
             _title.rectTransform.anchorMin = _title.rectTransform.anchorMax = new Vector2(0.5f, 0.82f);
             _title.rectTransform.anchoredPosition = Vector2.zero;
             _title.alignment = TextAnchor.MiddleCenter;
+        }
+
+        /// <summary>
+        /// Dim overlay full-canvas (ticket 42): modal text đọc được trên game world.
+        /// Sibling đầu tiên → nằm dưới mọi text/button modal; raycast chặn click
+        /// lọt xuống game. Show/Hide theo canvas.
+        /// </summary>
+        private void MakeDim()
+        {
+            var go = new GameObject("Dim", typeof(RectTransform), typeof(UnityEngine.UI.Image));
+            go.transform.SetParent(transform, false);
+            go.transform.SetAsFirstSibling();
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = Vector2.zero;
+            rt.anchorMax = Vector2.one;
+            rt.sizeDelta = Vector2.zero;
+            var img = go.GetComponent<UnityEngine.UI.Image>();
+            img.color = new Color(0f, 0f, 0f, 0.55f);
+            img.raycastTarget = true;
+            _dim = img;
+        }
+
+        private void ShowDim() { if (_dim != null) _dim.enabled = true; }
+        private void HideDim() { if (_dim != null) _dim.enabled = false; }
+
+        /// <summary>
+        /// Khung nền modal gameover (ticket 42): panel bán trong suốt gom stat rows
+        /// + nút restart — sibling sau dim, trước title (title giữ trên, vàng).
+        /// Tạo lazy mỗi lần show, clear ở Hide (rows/button thay đổi theo run).
+        /// </summary>
+        private void MakeModalPanel()
+        {
+            var go = new GameObject("ModalPanel", typeof(RectTransform), typeof(UnityEngine.UI.Image));
+            go.transform.SetParent(transform, false);
+            go.transform.SetSiblingIndex(1); // sau dim(0), trước title
+            var rt = (RectTransform)go.transform;
+            rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
+            rt.anchoredPosition = new Vector2(0f, -200f);
+            rt.sizeDelta = new Vector2(900f, 1000f);
+            var img = go.GetComponent<UnityEngine.UI.Image>();
+            img.color = new Color(0.07f, 0.07f, 0.11f, 0.97f);
+            img.raycastTarget = false;
+            _statRows.Add(go); // dọn chung với rows ở Hide/clear kế
         }
 
         /// <summary>
@@ -106,8 +151,10 @@ namespace VLTK.Survivor
             _renderedEvent = null;      // ticket 45: dọn identity — gameover không phải skill modal
             ClearButtons();
             ClearStatRows();
+            MakeModalPanel(); // ticket 42: khung nền gom rows + button — text không nổi trên game world
             _title.text = Loc("survivor.gameover.title");
             _canvas.enabled = true;
+            ShowDim();
 
             var stats = SurvivorHud.Instance != null ? SurvivorHud.Instance.Snapshot() : null;
             var lines = SurvivorHudLogic.FormatGameOver(stats, Language);
@@ -117,17 +164,23 @@ namespace VLTK.Survivor
                 row.text = lines[i];
                 var rt = (RectTransform)row.transform;
                 rt.anchorMin = rt.anchorMax = new Vector2(0.5f, 0.5f);
-                rt.anchoredPosition = new Vector2(0, 40f - i * 90f);
+                // ticket 42 portrait: rows + button trong panel (900×1000 @ -200 →
+                // ref y 260..1260); title @1574 giữ trên panel. anchoredPos dương = lên.
+                rt.anchoredPosition = new Vector2(0, 100f - i * 120f);
                 _statRows.Add(row.gameObject);
             }
 
             var btn = MakeButton("Restart", transform, Loc("survivor.gameover.restart"), "tap để bắt đầu lại");
-            ((RectTransform)btn.transform).anchoredPosition = new Vector2(0, -160);
+            ((RectTransform)btn.transform).anchoredPosition = new Vector2(0, -280);
             btn.onClick.AddListener(() => onRestart());
             _buttons.Add(btn.gameObject);
         }
 
-        public void Hide() => _canvas.enabled = false;
+        public void Hide()
+        {
+            _canvas.enabled = false;
+            HideDim();
+        }
 
         /// <summary>Ticket 44: modal hiện đang bật (levelup/gameover).</summary>
         public bool IsVisible => _canvas != null && _canvas.enabled;
@@ -170,6 +223,7 @@ namespace VLTK.Survivor
             ClearStatRows();
             _title.text = title;
             _canvas.enabled = true;
+            ShowDim();
             for (int i = 0; i < cards.Count; i++)
             {
                 var card = cards[i];
@@ -215,6 +269,7 @@ namespace VLTK.Survivor
         {
             _title.text = Loc("survivor.card.title");
             _canvas.enabled = true;
+            ShowDim();
             int n = cards != null ? cards.Count : 0;
             for (int i = 0; i < n; i++)
             {
@@ -274,6 +329,11 @@ namespace VLTK.Survivor
             t.fontSize = size;
             t.color = color;
             t.raycastTarget = false;
+            // ticket 42 portrait fix: rect mặc định (100,100) + wrap mặc định → text
+            // 40-64px bị wrap/cắt chữ ("Thiên" → "Thi", title cắt). Overflow → 1 dòng
+            // đầy đủ, vẽ ngoài rect không clip (layout cha giữ khoảng cách riêng).
+            t.horizontalOverflow = HorizontalWrapMode.Overflow;
+            t.verticalOverflow = VerticalWrapMode.Overflow;
             return t;
         }
 
