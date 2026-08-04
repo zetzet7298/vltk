@@ -4,7 +4,7 @@
 
 **Blocked by:** 36 (Audio pipeline), 38 (i18n VN/EN), 39 (Save/progression)
 
-**Status:** ready-for-agent
+**Status:** done — implement P2 core (0a649b663) + ticket 44/45 scope lifecycle (dual review PASS)
 
 - [ ] Settings UI chỉnh volume → mixer ngay + lưu; quality + lang áp runtime
 - [ ] Pause: mở settings/gameover/ra ngoài app → timescale 0 đúng scope ref-count, resume đúng

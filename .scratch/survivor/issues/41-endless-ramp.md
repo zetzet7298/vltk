@@ -4,7 +4,7 @@
 
 **Blocked by:** 30 (Wave breadth), 31 (Boss multi-phase)
 
-**Status:** ready-for-agent
+**Status:** done — implement P2 core (0a649b663) + verified (DifficultyCurve, tests xanh)
 
 - [ ] Clear wave cố định → endless loop không hồi kết
 - [ ] Ramp linear: quái mạnh hơn/nhiều hơn, boss xuất hiện định kỳ tăng dần (hệ số config)

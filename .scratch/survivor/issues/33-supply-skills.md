@@ -4,7 +4,7 @@
 
 **Blocked by:** 27 (Skill cast runtime), 28 (Impact/buff system), 32 (Collect/drop/magnet/level curve)
 
-**Status:** ready-for-agent
+**Status:** done — implement P2 core (0a649b663) + verified (SupplyDefs/SupplyBar, tests xanh)
 
 - [x] Heal: hồi đúng lượng qua impact; bomb: dmg vùng đúng; magnet: hút toàn màn; full-clear: dmg toàn quái
 - [x] Slot UI + cooldown riêng từng supply, dùng lại được sau cooldown

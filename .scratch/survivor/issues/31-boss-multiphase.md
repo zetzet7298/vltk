@@ -4,7 +4,7 @@
 
 **Blocked by:** 27 (Skill cast runtime), 30 (Wave breadth)
 
-**Status:** ready-for-agent
+**Status:** done — implement P2 core (0a649b663) + verified (SurvivorBoss phase-switch, tests xanh)
 
 - [x] Boss spawn qua wave boss-type, HP/atk từ MonsterDef riêng
 - [x] Phase switch đúng HP window (lossHp) → đổi AI + skill pool, KHÔNG theo timer

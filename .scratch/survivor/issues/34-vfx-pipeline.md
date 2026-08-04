@@ -4,7 +4,7 @@
 
 **Blocked by:** 27 (Skill cast runtime)
 
-**Status:** ready-for-agent
+**Status:** done — implement P2 core (0a649b663) + verified (SurvivorVfxService, tests xanh)
 
 - [x] Cast → precast SPR + missile SPR hiển thị đúng vị trí/hướng (data từ missles1.txt)
 - [x] Hit flash khi monster nhận dmg; death effect khi die; levelup burst quanh player

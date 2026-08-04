@@ -4,7 +4,7 @@
 
 **Blocked by:** 29 (Skill choice 3-mode + queue + reroll), 33 (Supply skills)
 
-**Status:** ready-for-agent
+**Status:** done — implement P2 core (0a649b663) + verified (Hud/Overlay/SupplyBar, tests xanh)
 
 - [x] HUD hiện đủ: HP bar, XP bar, level, timer, skill icon + cooldown supply
 - [x] Modal shop + box dùng system 29 (mode 2/3), đóng → resume đúng
