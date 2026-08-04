@@ -147,7 +147,7 @@ namespace VLTK.Survivor
             // (Close → Pump trigger queue mới cùng roleId) → fail-closed đóng modal
             // + fire onClosed — không giữ card cũ, không kẹt LevelUpScope.
             var ev = _renderedEvent;
-            var c = ev != null ? SkillService.Current(ev.RoleId) : null;
+            var c = ev != null && SkillService != null ? SkillService.Current(ev.RoleId) : null;
             if (c != null && ReferenceEquals(c, ev)) return;
             _skillModalVisible = false;
             _renderedEvent = null;
