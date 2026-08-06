@@ -39,13 +39,31 @@ namespace VLTK.Survivor
             npc.pixelsPerUnit = pixelsPerUnit;
             npc.Configure(spec.standPath, spec.walkPath, spec.referencePixel);
             if (npc.HasAnyClip)
+            {
+                // Ticket B: PcNpcVisual.Update tự-drive moving từ position delta (ngưỡng
+                // sqrMag > 0.01 = 0.1 units/frame = speed ≥6.25/s) — monster thường 1.6/s
+                // KHÔNG qua ngưỡng → ghi đè moving=true của bridge → stand frame khi chạy.
+                // Fix adapter: disable Update self-drive, bridge tick thủ công (Tick public
+                // advance _time + ApplyFrame với direction/moving do bridge set).
+                npc.enabled = false;
+                _npc = npc;
                 _impl = new NpcBridge(npc);
+            }
             else
             {
                 // ponytail: fail-closed — SPR map nhưng chưa staged → proxy màu, không crash.
                 Destroy(npc);
                 AddProxy(spec.fallbackColor, spec.fallbackSize);
             }
+        }
+
+        private PcNpcVisual _npc;
+
+        // Thay PcNpcVisual.Update (đã disable): tick animation với direction/moving
+        // do bridge SetMoveInput set — walk frame chạy đúng tốc độ monster thật.
+        private void Update()
+        {
+            if (_npc != null) _npc.Tick(Time.deltaTime);
         }
 
         private void AddProxy(Color color, Vector2 size)

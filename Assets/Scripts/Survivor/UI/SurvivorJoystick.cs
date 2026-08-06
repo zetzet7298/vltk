@@ -1,44 +1,36 @@
+using System;
 using UnityEngine;
 
 namespace VLTK.Survivor
 {
     /// <summary>
-    /// Touch (left half) + keyboard joystick. Self-contained, no inspector deps.
-    /// activeInputHandler = Both, so UnityEngine.Input works.
+    /// Keyboard joystick (WASD/arrows) + touch-override seam cho uGUI joystick UI.
+    /// Self-contained, no inspector deps. activeInputHandler = Both, nên
+    /// UnityEngine.Input hoạt động.
+    /// Touch-override: SurvivorJoystickUi.Build wire 2 delegate này vào
+    /// MobileJoystick (Sandbox) — joystick đang giữ → move từ MobileJoystick
+    /// (deadzone + smoothing đã xử lý); release → về keyboard (KeyDir).
     /// </summary>
     public sealed class SurvivorJoystick
     {
+        /// <summary>Move output mỗi frame (touch override hoặc keyboard).</summary>
         public Vector2 Move;
 
-        private int _fingerId = -1;
-        private Vector2 _origin;
+        /// <summary>uGUI joystick đang được giữ? null → keyboard-only (EditMode/test).</summary>
+        public Func<bool> TouchOverrideActive;
 
-        /// <summary>Bán kính joystick px (ticket 42 additive: const→field — SurvivorPlatformSettings chỉnh cho thiết bị).</summary>
-        public float Radius = 140f;
+        /// <summary>Move vector từ uGUI joystick (đã qua deadzone, ≤1).</summary>
+        public Func<Vector2> TouchOverrideMove;
 
         public void Update()
         {
-            Vector2 key = KeyDir();
-
-            Vector2 touchVec = Vector2.zero;
-            bool touch = false;
-            for (int i = 0; i < Input.touchCount; i++)
+            if (TouchOverrideActive != null && TouchOverrideActive())
             {
-                var tc = Input.GetTouch(i);
-                if (_fingerId == -1 && tc.phase == TouchPhase.Began && tc.position.x < Screen.width * 0.5f)
-                {
-                    _fingerId = tc.fingerId;
-                    _origin = tc.position;
-                }
-                if (tc.fingerId == _fingerId)
-                {
-                    if (tc.phase == TouchPhase.Ended || tc.phase == TouchPhase.Canceled) _fingerId = -1;
-                    else { touchVec = ((Vector2)tc.position - _origin) / Radius; touch = true; }
-                }
+                var m = TouchOverrideMove != null ? TouchOverrideMove() : Vector2.zero;
+                Move = m.sqrMagnitude > 1f ? m.normalized : m;
+                return;
             }
-
-            Move = touch ? Vector2.ClampMagnitude(touchVec, 1f) : key;
-            if (Move.sqrMagnitude > 1f) Move.Normalize();
+            Move = KeyDir();
         }
 
         private static Vector2 KeyDir()

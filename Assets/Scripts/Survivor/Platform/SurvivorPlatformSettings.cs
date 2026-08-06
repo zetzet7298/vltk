@@ -11,9 +11,7 @@
 //  - 60fps: Application.targetFrameRate = 60 (vsync mobile mặc định off).
 //  - Safe-area: notch/cutout → CurrentSafePadding (normalized inset 4 cạnh);
 //    consumer UI (HUD/Overlay ticket 37) đọc static này — additive, không sửa 37.
-//  - Joystick: SurvivorJoystick đã dùng Input.touch + WASD fallback (đã verify);
-//    Radius const→field (edit ADDITIVE, báo ticket) để thiết bị to/nhỏ chỉnh được.
-// Fail-closed: director null → bỏ qua joystick; safe-area invalid → padding 0.
+// Fail-closed: safe-area invalid → padding 0.
 // -----------------------------------------------------------------------------
 
 using UnityEngine;
@@ -66,9 +64,6 @@ namespace VLTK.Survivor
         [Tooltip("Giữ màn hình sáng khi chơi.")]
         public bool KeepScreenAwake = true;
 
-        [Tooltip("Bán kính joystick px (SurvivorJoystick.Radius — const→field additive).")]
-        public float JoystickRadius = 140f;
-
         /// <summary>Safe-area inset normalized mới nhất — UI đọc static này.</summary>
         public static SafePadding CurrentSafePadding { get; private set; }
 
@@ -92,8 +87,6 @@ namespace VLTK.Survivor
 #endif
             if (TargetFrameRate > 0) Application.targetFrameRate = TargetFrameRate;
             if (KeepScreenAwake) Screen.sleepTimeout = SleepTimeout.NeverSleep;
-            var d = SurvivorGameDirector.Instance;
-            if (d != null && JoystickRadius > 0f) d.Input.Radius = JoystickRadius; // additive — không sửa joystick logic
         }
 
         private void RefreshSafeArea(bool force)

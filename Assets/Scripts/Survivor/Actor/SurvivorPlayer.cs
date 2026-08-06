@@ -71,6 +71,7 @@ namespace VLTK.Survivor
             if (Hp <= 0)
             {
                 Hp = 0;
+                SurvivorVfxService.PlayDeath(transform.position); // Scope C: player death burst trước khi ẩn visual
                 _visual?.SetAlive(false);
                 Died?.Invoke(this);
             }

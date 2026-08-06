@@ -66,12 +66,12 @@ namespace VLTK.Survivor
         {
             private readonly MalePlayerVisual _v;
             private readonly Transform _t;
-            private readonly SpriteRenderer _sr;
+            private readonly SpriteRenderer[] _renderers;
             internal MaleBridge(MalePlayerVisual v)
             {
                 _v = v;
                 _t = v.transform;
-                _sr = v.GetComponent<SpriteRenderer>();
+                _renderers = v.GetComponentsInChildren<SpriteRenderer>(true);
             }
             public void SyncPosition(Vector3 p) => _t.position = p;
             // Ticket 46: set base override — MalePlayerVisual.ApplyFrame đọc PlayerBaseSortingOrder
@@ -80,7 +80,14 @@ namespace VLTK.Survivor
             public void SetDirection(int d) => _v.SetDirection(d);
             // ponytail: SetAction Move/Idle đủ; direction do SurvivorPlayer input drive riêng nếu cần.
             public void PlayMove(bool m) => _v.SetAction(m ? PlayerVisualAction.Move : PlayerVisualAction.Idle);
-            public void SetAlive(bool a) { if (_sr) _sr.enabled = a; _v.enabled = a; }
+            // Scope C: mirror PcNpcBridge — tắt mọi part renderer khi dead (root _sr null nên
+            // SetAlive cũ chỉ tắt component, SPR parts vẫn hiển thị).
+            public void SetAlive(bool a)
+            {
+                _v.enabled = a; // dừng frame tick khi dead
+                foreach (var sr in _renderers)
+                    if (sr) sr.enabled = a;
+            }
         }
     }
 }

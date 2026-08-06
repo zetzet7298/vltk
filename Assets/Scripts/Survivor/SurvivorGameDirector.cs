@@ -38,6 +38,9 @@ namespace VLTK.Survivor
         public SurvivorSupplyMgr Supply => _supply;
         public SupplyBar SupplyBar => _supplyBar;
 
+        /// <summary>Joystick UI runtime (uGUI) — boot trong OnInit; null nếu boot chưa chạy.</summary>
+        public SurvivorJoystickUi JoystickUi => _joystickUi;
+
         /// <summary>
         /// Spawn-gate (ticket 42, đòn bẩy 60fps): non-null trả false → bỏ qua spawn
         /// monster thường (boss luôn spawn — parity, exempt trim). SurvivorMonsterCap
@@ -53,6 +56,7 @@ namespace VLTK.Survivor
         private OverlayPanel _overlay;
         private SurvivorSupplyMgr _supply;
         private SupplyBar _supplyBar;
+        private SurvivorJoystickUi _joystickUi;
         private SkillChoiceService _skillChoice;
         private SurvivorAudioSettingsPanel _settingsPanel;
 
@@ -129,6 +133,7 @@ namespace VLTK.Survivor
             SpawnArenaVisual();
             SpawnPlayer();
             _overlay = OverlayPanel.Build(); // cũng dựng SurvivorHud (EnsureInstance)
+            _joystickUi = SurvivorJoystickUi.Build(Input); // sau overlay — EventSystem đã có (ensure idempotent)
             _spawner = new WaveSpawner();
             SurvivorAudioMgr.EnsureInstance();
             SurvivorAudioMgr.Instance?.SetContext(SurvivorAudioContext.Battle);
