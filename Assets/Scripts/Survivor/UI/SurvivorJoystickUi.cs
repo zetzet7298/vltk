@@ -6,11 +6,10 @@ namespace VLTK.Survivor
 {
     /// <summary>
     /// Joystick UI runtime cho Survivor (portrait 1080x1920, góc dưới-trái).
-    /// MOBILE-ONLY: Build trả null trên non-mobile (desktop editor/build) →
-    /// SurvivorJoystick về keyboard-only (TouchOverride null). Lý do: game
-    /// ship mobile, keyboard đã đủ desktop; joystick UI trên desktop chỉ chặn
-    /// click vùng 280px góc dưới-trái. Verify touch joystick = Android build/
-    /// device (editor play = desktop → không hiện, đúng báo cáo IsMobilePlatform).
+    /// SHOW: mobile platform HOẶC editor (dev/test) — editor play phải thấy
+    /// joystick để verify touch path trên desktop. HIDDEN: chỉ khi desktop/mac
+    /// build thật (non-editor): keyboard đã đủ, joystick UI chỉ chặn click vùng
+    /// 280px góc dưới-trái. Verify touch joystick thật = Android build/device.
     /// Build pattern OverlayPanel.Build: canvas riêng sortingOrder 70 (dưới
     /// HUD 80 / supply 90 / overlay modal 100 → dim modal chặn raycast khi
     /// levelup/gameover), GraphicRaycaster + EventSystem (ensure idempotent).
@@ -24,8 +23,10 @@ namespace VLTK.Survivor
 
         public static SurvivorJoystickUi Build(SurvivorJoystick input)
         {
-            // gate mobile (fail-closed: null → director JoystickUi null-safe, keyboard-only)
-            if (!Application.isMobilePlatform) return null;
+            // gate show: mobile platform HOẶC editor (dev/test); desktop/mac build thật → null
+            // fail-closed: null → director JoystickUi null-safe, keyboard-only
+            bool showUi = Application.isMobilePlatform || Application.isEditor;
+            if (!showUi) return null;
             var go = new GameObject("SurvivorJoystickUi");
             var canvas = go.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
