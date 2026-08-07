@@ -1,5 +1,7 @@
 # Project: JX Player Visual Runtime Fixes
 
+> Scope: this file documents the JX player-visual initiative only; for the full repository map read `AGENTS.md` first.
+
 ## Architecture
 - Module/package boundaries: player visual system in `VLTK.Sandbox` namespace.
 - Main components:

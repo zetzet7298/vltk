@@ -246,3 +246,7 @@ crashlytics-build.properties.meta
 # Burst cache
 Library/Bee/
 Library/Bee.artifacts/
+
+# Harness core maintenance binary
+scripts/bin/harness
+scripts/bin/harness.exe

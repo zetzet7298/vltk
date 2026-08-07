@@ -1,5 +1,7 @@
 # Issue tracker: Local Markdown
 
+> **Archived** — canonical tracker is now `docs/plans/active/` (see `docs/WORKFLOW.md`). Historical issues moved to `docs/archive/scratch/`.
+
 Issues and specs for this repo live as markdown files in `.scratch/`.
 
 ## Conventions

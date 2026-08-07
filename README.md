@@ -138,30 +138,14 @@ Implementation prompts do not go straight to code. They first pass through
 feature intake, become story-sized work when needed, and then carry both product
 validation and harness maintenance expectations.
 
-## Current State
+## Repository State
 
-This repository is in Harness v0.
+This README is the upstream `harness-experimental` project README; it describes
+the upstream project, not this worktree.
 
-There is no application implementation and no baked-in product specification
-yet. The current work is the reusable project harness: the file structure,
-agent operating model, feature intake process, story templates, and validation
-expectations that help humans and agents turn a future user-provided spec into
-implementation work.
-
-## Product Sources
-
-No product contract is currently defined.
-
-When a user provides a project specification, add or reference it as the input
-spec for the first buildout, then derive smaller living artifacts from it:
-
-- `docs/product/`: current product contract files, created from the spec.
-- `docs/stories/`: story packets and backlog created from selected work.
-- `docs/TEST_MATRIX.md`: behavior-to-proof control panel.
-- `docs/decisions/`: durable decisions and tradeoffs.
-
-Do not keep a project-specific spec or product breakdown in this harness until
-a real project supplies one.
+This worktree is the vltk-mobile Unity game project (see `Packages/manifest.json`
+and `ProjectSettings/ProjectVersion.txt`). Read `AGENTS.md` for the repository
+entry map; `PROJECT.md` documents the player-visual initiative.
 
 ## Repository Structure
 
