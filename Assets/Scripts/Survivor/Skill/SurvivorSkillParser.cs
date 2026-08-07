@@ -32,6 +32,7 @@ namespace VLTK.Survivor
         public const int ColChildSkillId = 20;
         public const int ColChildSkillNum = 22; // magic misslenum → PC m_nChildSkillNum (fan count, ticket 27)
         public const int ColIsMelee = 26;
+        public const int ColWaitTime = 27;
         public const int ColTimePerCast = 31;
         public const int ColIsPhysical = 33;
         public const int ColByMissle = 41;
@@ -130,6 +131,7 @@ namespace VLTK.Survivor
                 Faction = FactionKey(Str(cols, ColLvlSetScript)),
                 Form = Int(cols, ColMisslesForm),
                 IsMelee = Int(cols, ColIsMelee) > 0,
+                WaitTime = Int(cols, ColWaitTime),
                 SpawnsMissile = Int(cols, ColByMissle) > 0,
                 IsAura = Int(cols, ColIsAura) > 0,
                 ChildMissileId = Int(cols, ColChildSkillId),

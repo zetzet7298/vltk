@@ -45,6 +45,9 @@ namespace VLTK.UI
         [Tooltip("Test/GM injection. -1 resolves skillFxLayerName.")]
         public int skillFxLayerOverride = -1;
 
+        /// <summary>Injectable SkillEffectVisualService. Null falls back to SandboxManager singleton (Sandbox scene).</summary>
+        public SkillEffectVisualService Service;
+
         private bool _layerFailureLogged;
         private readonly Dictionary<ActiveSkillEffect, RuntimeEffectVisual> _visuals = new();
         private readonly Dictionary<string, Sprite[]> _pcSpriteCache = new();
@@ -106,7 +109,7 @@ namespace VLTK.UI
             EnsureResources();
             if (_cam == null) return;
 
-            var service = SandboxManager.Instance?.SkillEffectVisual;
+            var service = Service ?? SandboxManager.Instance?.SkillEffectVisual;
             if (service == null) return;
             if (!TryResolveSkillFxLayer(out var skillFxLayer)) return;
 

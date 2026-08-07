@@ -25,6 +25,7 @@ namespace VLTK.Survivor
 
         public int Form;            // 7 = ranged dominant, 12 = melee (outside SkillMissileForm enum)
         public bool IsMelee;
+        public int WaitTime;            // PC WaitTime (col 27, ticks 1/16s)
         public bool SpawnsMissile;
         public bool IsAura;
 
@@ -63,6 +64,7 @@ namespace VLTK.Survivor
             def.InDisplayFile = row.InDisplayFile;
             def.Form = row.Form;
             def.IsMelee = row.IsMelee;
+            def.WaitTime = row.WaitTime;
             def.SpawnsMissile = row.SpawnsMissile;
             def.IsAura = row.IsAura;
             def.ChildMissileId = row.ChildMissileId;

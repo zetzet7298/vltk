@@ -5,7 +5,9 @@
         "VLTK.Sandbox.Runtime",
         "VLTK.Core",
         "Unity.InputSystem",
-        "VLTK.Sprites"
+        "VLTK.Sprites",
+        "VLTK.UI",
+        "VLTK.Model"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

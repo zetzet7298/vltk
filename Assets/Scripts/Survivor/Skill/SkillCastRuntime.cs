@@ -42,6 +42,8 @@ namespace VLTK.Survivor
     public struct SkillCastPlan
     {
         public int SkillId;
+        public SkillDef SourceDef; // PC frame-exact VFX adapter needs full def
+        public int Level;
         public bool IsMelee;
         public Vector2 CastDir;
         public float Damage;
@@ -179,6 +181,8 @@ namespace VLTK.Survivor
             var plan = new SkillCastPlan
             {
                 SkillId = def.Id,
+                SourceDef = def,
+                Level = level,
                 IsMelee = melee,
                 CastDir = castDir,
                 Damage = DamageFor(def, level),
@@ -242,20 +246,41 @@ namespace VLTK.Survivor
         {
             if (director == null) return;
             var source = new SkillImpactSource(plan.SkillId, 0);
+
+            // PC frame-exact VFX via Sandbox pipeline (4 active Cai Bang skills).
+            // Visual ONLY -- gameplay damage stays in MeleeHit / SpawnProjectile below.
+            bool usePcVfx = director.SkillFx != null
+                            && plan.SourceDef != null
+                            && CaiBangActiveSkillSet.IsActive(plan.SkillId);
+
             if (plan.IsMelee)
             {
-                ShowMeleeFlash(plan, pos);
+                if (usePcVfx)
+                    director.SkillFx.Cast(plan.SourceDef, pos, (Vector2)pos + plan.CastDir * 2f, plan.Level);
+                else
+                    ShowMeleeFlash(plan, pos);
                 MeleeHit(director, plan, pos, source, caster);
                 return;
             }
-            ShowPreCast(plan, pos);
+
+            if (usePcVfx)
+            {
+                Vector2 target = (Vector2)pos + plan.CastDir * (plan.MissileSpeed * plan.MissileLife);
+                director.SkillFx.Cast(plan.SourceDef, pos, target, plan.Level);
+            }
+            else
+            {
+                ShowPreCast(plan, pos);
+            }
+
             for (int i = 0; i < plan.Missiles.Length; i++)
             {
                 director.SpawnProjectile(
                     pos + (Vector3)plan.Missiles[i].Offset,
                     plan.Missiles[i].Dir, plan.Damage,
                     plan.MissileSpeed, plan.MissileLife,
-                    plan.MissileSprUid, source, caster);
+                    usePcVfx ? "" : plan.MissileSprUid,
+                    source, caster);
             }
         }
 

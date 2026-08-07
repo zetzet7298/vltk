@@ -50,6 +50,9 @@ namespace VLTK.Survivor
         public System.Func<int, bool> MonsterSpawnGate;
         public Transform PlayerTransform => Player != null ? Player.transform : null;
 
+        /// <summary>PC frame-exact skill VFX adapter (owns SkillEffectVisualService + WorldOverlay). Null before OnInit.</summary>
+        public SurvivorSkillFx SkillFx { get; private set; }
+
         private readonly List<Projectile> _projectiles = new List<Projectile>();
         private readonly List<XpGem> _gems = new List<XpGem>();
         private WaveSpawner _spawner;
@@ -132,6 +135,7 @@ namespace VLTK.Survivor
             Pause = new SurvivorPause(paused => Time.timeScale = paused ? 0f : 1f);
             SpawnArenaVisual();
             SpawnPlayer();
+            SkillFx = new GameObject("SurvivorSkillFx").AddComponent<SurvivorSkillFx>();
             _overlay = OverlayPanel.Build(); // cũng dựng SurvivorHud (EnsureInstance)
             _joystickUi = SurvivorJoystickUi.Build(Input); // sau overlay — EventSystem đã có (ensure idempotent)
             _spawner = new WaveSpawner();
