@@ -75,6 +75,9 @@ namespace VLTK.Survivor
         public SkillChoiceCard[] Cards;
         public int RerollsLeft;   // levelup only (FrameCmdRerandomSkill)
         public int LearnCount;    // box: lượt chọn còn lại
+        /// <summary>Phase 2 (PORT_CAIBANG §3 Gap C): bootstrap run-start — Close từ chối,
+        /// timeout re-trigger cùng event (KHÔNG auto-close/auto-learn).</summary>
+        public bool IsBootstrap;
         /// <summary>Box đã chọn (LevelBoxEventParam.WillLearnSkillList parity).</summary>
         public readonly List<SkillDef> Learned = new List<SkillDef>();
     }
@@ -218,6 +221,39 @@ namespace VLTK.Survivor
             return true;
         }
 
+        /// <summary>
+        /// Phase 2 (PORT_CAIBANG §3 Gap C): run-start bootstrap — ép modal 2 card
+        /// đầu (128, 125) ngay khi game start. BẮT PICK: KHÔNG skip (Close từ chối),
+        /// KHÔNG reroll (RerollsLeft=0), timescale=0 (CardChoiceScope) tới click.
+        /// Path RIÊNG — KHÔNG đụng parity draw (Request/DrawCards weight/reroll).
+        /// Fail-closed: đang waiting → false (không chồng modal); skillId không có
+        /// trong pool → false (không bịa card); trả true khi event đã mở.
+        /// </summary>
+        public bool TriggerBootstrap(ulong roleId, int[] skillIds)
+        {
+            var d = GetOrCreate(roleId);
+            if (IsWaiting(d)) return false;                       // không chồng modal
+            if (skillIds == null || skillIds.Length == 0) return false;
+            var cards = new SkillChoiceCard[skillIds.Length];
+            for (int i = 0; i < skillIds.Length; i++)
+            {
+                var cfg = _pool.FindById(skillIds[i]);
+                if (cfg == null) return false;                    // fail-closed: skill lạ
+                cards[i] = new SkillChoiceCard(cfg.Def, 0);
+            }
+            d.Current = new SkillChoiceEvent
+            {
+                RoleId = d.RoleId,
+                Mode = SkillChoiceMode.LevelUp,
+                Cards = cards,
+                RerollsLeft = 0,                                  // bootstrap KHÔNG reroll
+                IsBootstrap = true,
+            };
+            d.BeginWaitingLearnTime = _now + WaitingLearnWindow;
+            Pause.Acquire(SurvivorPause.CardChoiceScope);         // timescale=0 tới pick
+            return true;
+        }
+
         public SkillChoiceEvent Current(ulong roleId)
         {
             return _players.TryGetValue(roleId, out var d) ? d.Current : null;
@@ -247,7 +283,7 @@ namespace VLTK.Survivor
                 case SkillChoiceMode.LevelUp:
                     if (!Contains(ev, card.Def)) return false; // ticket 43: card lạ → từ chối (Box đã có)
                     _roster.Learn(card.Def);
-                    Close(roleId);
+                    CloseInternal(d); // pick phải đóng được (kể cả bootstrap) — Close public từ chối IsBootstrap
                     return true;
 
                 case SkillChoiceMode.Box:
@@ -255,14 +291,14 @@ namespace VLTK.Survivor
                     _roster.Learn(card.Def);
                     ev.Learned.Add(card.Def);
                     ev.LearnCount--;
-                    if (ev.LearnCount <= 0) Close(roleId);
+                    if (ev.LearnCount <= 0) CloseInternal(d);
                     return true;
 
                 case SkillChoiceMode.Shop:
                     if (!Contains(ev, card.Def)) return false; // ticket 43: card lạ → từ chối trước khi trừ vàng
                     if (_trySpendGold == null || !_trySpendGold(roleId, card.Price)) return false;
                     _roster.Learn(card.Def);
-                    Close(roleId);
+                    CloseInternal(d);
                     return true;
 
                 default:
@@ -292,11 +328,20 @@ namespace VLTK.Survivor
 
         /// <summary>
         /// Đóng modal không chọn (OnMiJiResultUIClose parity) → SetPlayerNotWaiting
-        /// + release pause + CheckWaitingList pump.
+        /// + release pause + CheckWaitingList pump. Phase 2 (Gap C): bootstrap
+        /// modal TỪ CHỐI Close — chỉ pick (Select → CloseInternal) mới đóng
+        /// (bắt pick: không skip được card đầu).
         /// </summary>
         public void Close(ulong roleId)
         {
             if (!_players.TryGetValue(roleId, out var d)) return;
+            if (d.Current != null && d.Current.IsBootstrap) return;
+            CloseInternal(d);
+        }
+
+        /// <summary>Đóng event thật sự: clear + release pause + CheckWaitingList pump.</summary>
+        private void CloseInternal(PlayerData d)
+        {
             d.Current = null;
             d.BeginWaitingLearnTime = float.NegativeInfinity;
             Pause.Release(SurvivorPause.CardChoiceScope);
@@ -307,6 +352,9 @@ namespace VLTK.Survivor
         /// Game loop tick (now giây): timeout waiting window → auto-close (O6
         /// own). Fail-closed: KHÔNG auto-learn — player chỉ bỏ lỡ event, state
         /// queue giữ nguyên, event kế tiếp pump bình thường.
+        /// Phase 2 (Gap C): bootstrap timeout → re-trigger CÙNG event (reset
+        /// window, giữ object identity — Overlay poll ReferenceEquals không đóng
+        /// nhầm modal), KHÔNG auto-close/auto-learn.
         /// </summary>
         public void Tick(float now)
         {
@@ -314,7 +362,15 @@ namespace VLTK.Survivor
             foreach (var kv in _players)
             {
                 var d = kv.Value;
-                if (d.Current != null && !IsWaiting(d)) Close(kv.Key);
+                if (d.Current == null || IsWaiting(d)) continue;
+                if (d.Current.IsBootstrap)
+                {
+                    d.BeginWaitingLearnTime = _now + WaitingLearnWindow;
+                }
+                else
+                {
+                    CloseInternal(d); // auto-close thường giữ nguyên parity
+                }
             }
         }
 

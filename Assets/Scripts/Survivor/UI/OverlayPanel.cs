@@ -319,6 +319,39 @@ namespace VLTK.Survivor
             return true;
         }
 
+        /// <summary>
+        /// Phase 2 (PORT_CAIBANG §3 Gap C): render bootstrap modal từ event ĐÃ CÓ
+        /// (director gọi TriggerBootstrap trước — KHÔNG Request draw, KHÔNG đụng
+        /// parity path). Poll canh identity giống TryShowSkillChoice: timeout
+        /// re-trigger giữ nguyên event object → modal không đóng nhầm; pick →
+        /// service.Select (learn + CloseInternal release CardChoiceScope) → hide.
+        /// Fail-closed: event rỗng/không có → onClosed fire, không render modal rỗng.
+        /// KHÔNG có nút close trên modal (ShowSkillChoice không vẽ close) + service
+        /// Close() từ chối IsBootstrap → chỉ pick mới đóng.
+        /// </summary>
+        public void ShowBootstrapSkillChoice(SkillChoiceService service, ulong roleId,
+            System.Action onClosed = null)
+        {
+            var ev = service != null ? service.Current(roleId) : null;
+            if (ev == null || ev.Cards == null || ev.Cards.Length == 0)
+            {
+                onClosed?.Invoke();
+                return;
+            }
+            ShowSkillChoice(ev.Cards, Loc("survivor.card.title"),
+                card =>
+                {
+                    if (!service.Select(roleId, card)) return; // card lạ → modal giữ nguyên
+                    _canvas.enabled = false;
+                    _skillModalVisible = false;
+                    _renderedEvent = null;
+                    onClosed?.Invoke();
+                });
+            _skillModalVisible = true;
+            _skillOnClosed = onClosed;
+            _renderedEvent = ev;
+        }
+
         // --- uGUI helpers ---
         private static Text MakeText(string name, Transform parent, int size, Color color)
         {

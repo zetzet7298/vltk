@@ -144,7 +144,21 @@ namespace VLTK.Survivor
             return true;
         }
         protected virtual bool OnStart() { Debug.Log("[Survivor] OnStart"); return true; }
-        protected virtual void OnGameStart() { Debug.Log("[Survivor] OnGameStart"); }
+        protected virtual void OnGameStart()
+        {
+            Debug.Log("[Survivor] OnGameStart");
+            // Phase 2 (PORT_CAIBANG §3 Gap C): run-start bootstrap — ép modal 2
+            // card đầu (128, 125) ngay sau spawn player. BẮT PICK: không skip,
+            // không reroll, timescale=0 (CardChoiceScope) tới click. roleId dùng
+            // 1u (OverlayPanel.TryShowSkillChoice cũng hardcode 1u — player không
+            // có RoleId field). Fail-closed: TriggerBootstrap false (đang waiting /
+            // skill lạ / pool thiếu) → game chạy bình thường, không crash.
+            if (_skillChoice != null && _overlay != null)
+            {
+                if (_skillChoice.TriggerBootstrap(1u, new[] { 128, 125 }))
+                    _overlay.ShowBootstrapSkillChoice(_skillChoice, 1u);
+            }
+        }
         protected virtual void OnUpdate() { }
         protected virtual void OnDestroyInternal() { if (Instance == this) Instance = null; }
         protected virtual void OnAfterBattleEnd() { }
