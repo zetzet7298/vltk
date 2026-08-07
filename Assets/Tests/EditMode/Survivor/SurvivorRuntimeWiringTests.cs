@@ -93,7 +93,14 @@ namespace VLTK.Tests.Survivor
             Assert.IsTrue(svc.Request(1, SkillChoiceMode.LevelUp), "levelup request trigger ngay (rảnh)");
             var ev = svc.Current(1);
             Assert.IsNotNull(ev, "event mở modal");
-            Assert.AreEqual(3, ev.Cards.Length, "levelup 3 card");
+            // PORT_CAIBANG: pool scope 4 skill active + depend unlock → roster rỗng
+            // chỉ 2 candidate tier1 (128/125) → 2 card, KHÔNG phải 3 (spec Phase 1
+            // validation: levelup đầu tiên chỉ hiện 2 card 128/125).
+            Assert.AreEqual(2, ev.Cards.Length, "levelup roster rỗng → 2 card tier1 (128/125)");
+            var ids = new System.Collections.Generic.HashSet<int>();
+            for (int i = 0; i < ev.Cards.Length; i++) ids.Add(ev.Cards[i].Def.Id);
+            Assert.IsTrue(ids.Contains(128) && ids.Contains(125), "2 card đầu = 128 + 125");
+            Assert.IsFalse(ids.Contains(1073) && ids.Contains(1074), "1073/1074 chưa đủ prereq → không xuất hiện");
             Assert.IsNotNull(ev.Cards[0].Def, "card là SkillDef thật (không phải P1 flat-card)");
             Assert.AreEqual(1, _director.Pause.Count, "modal mở → pause acquire (scope LevelUp/CardChoice)");
         }

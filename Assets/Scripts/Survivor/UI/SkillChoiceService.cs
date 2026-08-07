@@ -83,19 +83,29 @@ namespace VLTK.Survivor
     /// Card pool theo weight own-design (RandomSkillConfig.LevelUpRandomWeight
     /// parity-shape; số liệu own — weight mặc định 1, gán cao hơn cho card
     /// hiếm). Draw không trùng, theo weight walk (total → roll → walk).
+    /// ticket PORT_CAIBANG: Entries = List&lt;SurvivorSkillLibraryConfig&gt; (Def +
+    /// DependSkills parity dhcd) — Draw cand-filter thêm depend unlock, KHÔNG
+    /// sửa weight walk / MaxLevel filter (plan §3 Gap B).
     /// </summary>
     public sealed class SkillChoicePool
     {
         public const int DefaultWeight = 1;
 
-        public readonly List<SkillDef> Entries = new List<SkillDef>();
+        public readonly List<SurvivorSkillLibraryConfig> Entries = new List<SurvivorSkillLibraryConfig>();
         private readonly Dictionary<int, int> _weights = new Dictionary<int, int>();
 
+        /// <summary>Convenience: def không depend → luôn sẵn (DependSkills rỗng).</summary>
         public void Add(SkillDef def, int weight = DefaultWeight)
         {
             if (def == null) return;
-            Entries.Add(def);
-            _weights[def.Id] = weight;
+            Add(new SurvivorSkillLibraryConfig(def), weight);
+        }
+
+        public void Add(SurvivorSkillLibraryConfig cfg, int weight = DefaultWeight)
+        {
+            if (cfg == null || cfg.Def == null) return;
+            Entries.Add(cfg);
+            _weights[cfg.Def.Id] = weight;
         }
 
         public int WeightOf(int skillId)
@@ -103,32 +113,41 @@ namespace VLTK.Survivor
             return _weights.TryGetValue(skillId, out int w) && w > 0 ? w : DefaultWeight;
         }
 
-        /// <summary>Draw ≤ count card không trùng theo weight; loại skill đã MaxLevel.</summary>
+        /// <summary>Draw ≤ count card không trùng theo weight; loại skill MaxLevel + depend chưa thỏa.</summary>
         public List<SkillDef> Draw(int count, SkillCastRuntime roster, System.Random rng)
         {
             var res = new List<SkillDef>();
-            var cand = new List<SkillDef>(Entries.Count);
+            var cand = new List<SurvivorSkillLibraryConfig>(Entries.Count);
             for (int i = 0; i < Entries.Count; i++)
             {
-                var def = Entries[i];
-                if (AtMaxLevel(def, roster)) continue;
-                cand.Add(def);
+                var cfg = Entries[i];
+                if (!cfg.IsDependMet(roster)) continue;    // Gap B: depend unlock (dhcd parity)
+                if (AtMaxLevel(cfg.Def, roster)) continue; // MaxLevel filter giữ nguyên
+                cand.Add(cfg);
             }
             while (res.Count < count && cand.Count > 0)
             {
                 int total = 0;
-                for (int i = 0; i < cand.Count; i++) total += WeightOf(cand[i].Id);
+                for (int i = 0; i < cand.Count; i++) total += WeightOf(cand[i].Def.Id);
                 int roll = rng.Next(total);
                 int idx = 0;
                 for (int acc = 0; idx < cand.Count; idx++)
                 {
-                    acc += WeightOf(cand[idx].Id);
+                    acc += WeightOf(cand[idx].Def.Id);
                     if (roll < acc) break;
                 }
-                res.Add(cand[idx]);
+                res.Add(cand[idx].Def);
                 cand.RemoveAt(idx);
             }
             return res;
+        }
+
+        /// <summary>Helper tra config theo skillId (Phase 2 bootstrap TriggerBootstrap dùng); null nếu không có.</summary>
+        public SurvivorSkillLibraryConfig FindById(int skillId)
+        {
+            for (int i = 0; i < Entries.Count; i++)
+                if (Entries[i].Def.Id == skillId) return Entries[i];
+            return null;
         }
 
         private static bool AtMaxLevel(SkillDef def, SkillCastRuntime roster)

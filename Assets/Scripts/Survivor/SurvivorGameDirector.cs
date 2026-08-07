@@ -262,11 +262,18 @@ namespace VLTK.Survivor
             Player.Cast = new SkillCastRuntime();
 
             var pool = new SkillChoicePool();
-            // ticket 29: player pool = môn phái Cái Bang (gaibang.lua — LvlSetScript
-            // col 70, KHÔNG phải CharClass). 33 skill thật từ PcSkills.txt
-            // (khớp Reference/PcCaiBangSkills.txt 33 rows — cross-check).
+            // ticket 29 + PORT_CAIBANG: player pool = 4 skill ACTIVE Cái Bang
+            // (whitelist CaiBangActiveSkillSet — không cả phái; gaibang.lua =
+            // LvlSetScript col 70, KHÔNG phải CharClass). Depend unlock chain
+            // parity dhcd (plan §3 Gap B): 1073 mở khi 128 ≥ Lv5, 1074 mở khi
+            // 125 ≥ Lv5 (own-tuning Lv5; 128/125 luôn sẵn tier 1).
             var playerDefs = SurvivorSkillCatalogService.Defs(catalog, SurvivorSkillPool.Player, "gaibang");
-            for (int i = 0; i < playerDefs.Count; i++) pool.Add(playerDefs[i]);
+            for (int i = 0; i < playerDefs.Count; i++)
+            {
+                var def = playerDefs[i];
+                if (!CaiBangActiveSkillSet.IsActive(def.Id)) continue; // Gap A: whitelist 4 id
+                pool.Add(new SurvivorSkillLibraryConfig(def, DependSkillsFor(def.Id)));
+            }
 
             _skillChoice = new SkillChoiceService(Player.Cast, pool, new System.Random(), null, Pause);
             _overlay.SkillService = _skillChoice; // levelup → modal skill thật (thay P1 flat-card)
@@ -277,6 +284,24 @@ namespace VLTK.Survivor
             _supply.Setup(SurvivorSkillCatalogService.SupplyDefs(catalog)); // heal/bomb slot enabled (fail-closed)
             _supply.Caster = Player;
             _supply.HealTarget = new SurvivorSupplyMgr.SurvivorPlayerDamageable(Player);
+        }
+
+        /// <summary>
+        /// Depend chain 4 skill active Cái Bang (plan §3 Gap B config; Lv5 =
+        /// own-tuning — adjust không cần code change). 128/125 tier 1: null =
+        /// luôn sẵn. 1073 ← 128 Lv5; 1074 ← 125 Lv5 (Remove=false: unlock gate).
+        /// </summary>
+        private static List<SurvivorSkillDependEntry> DependSkillsFor(int id)
+        {
+            switch (id)
+            {
+                case 1073:
+                    return new List<SurvivorSkillDependEntry> { new SurvivorSkillDependEntry(128, 5) };
+                case 1074:
+                    return new List<SurvivorSkillDependEntry> { new SurvivorSkillDependEntry(125, 5) };
+                default:
+                    return null;
+            }
         }
 
         /// <summary>Supply bar (ticket 33/43): Build + OnUse → effect thật (heal/bomb/magnet/full-clear).</summary>
