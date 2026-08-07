@@ -11,6 +11,7 @@
 
 using NUnit.Framework;
 using VLTK.Model;
+using VLTK.Sandbox;
 using VLTK.Survivor;
 
 namespace VLTK.Tests.Survivor
@@ -143,6 +144,48 @@ namespace VLTK.Tests.Survivor
             var sd = SurvivorSkillFx.BuildSkillDefinition(def);
             Assert.AreEqual(SkillMissileForm.None, sd.missileForm, "Form 12 -> None");
             Assert.IsFalse(sd.HasMissile, "melee -> no missile");
+        }
+
+        // ------------------------------------------------------------------
+        // Unit bridge (world parity Survivor vs Sandbox)
+        // ------------------------------------------------------------------
+
+        [Test]
+        public void NormalizeToWorldUnits_DividesPxBy40_AndScalesSprites()
+        {
+            // Sandbox pipeline outputs PC pixel space (ppu=1). Survivor world is
+            // ÷PxPerUnit (40) — normalize must scale every px quantity and set the
+            // SPR render scale to 1/40 so a 194px dragon renders ~4.9 units.
+            var fx = new ActiveSkillEffect
+            {
+                casterPos = new UnityEngine.Vector2(0f, 0f),
+                targetPos = new UnityEngine.Vector2(960f, 0f),
+                currentMissilePos = new UnityEngine.Vector2(40f, 20f),
+                missileSpeed = 324f,
+                pcMissileSpeedPerTick = 18,
+                arrivalRadius = 4f,
+                rendRadius = 4f,
+                missileDistance = 960f,
+                missilePositions = new[] { new UnityEngine.Vector2(40f, 20f), new UnityEngine.Vector2(80f, 0f) },
+                missileOrigins = new[] { new UnityEngine.Vector2(0f, 0f) },
+                missileTargets = new[] { new UnityEngine.Vector2(960f, 0f) },
+            };
+
+            SurvivorSkillFx.NormalizeToWorldUnits(fx);
+
+            Assert.AreEqual(0f, fx.casterPos.x);
+            Assert.AreEqual(24f, fx.targetPos.x, 0.001f);          // 960/40
+            Assert.AreEqual(1f, fx.currentMissilePos.x, 0.001f);   // 40/40
+            Assert.AreEqual(0.5f, fx.currentMissilePos.y, 0.001f); // 20/40
+            Assert.AreEqual(324f / 40f, fx.missileSpeed, 0.001f);
+            Assert.AreEqual(0, fx.pcMissileSpeedPerTick);          // 18/40 rounds to 0 (speed fallback owns step)
+            Assert.AreEqual(0.1f, fx.arrivalRadius, 0.001f);
+            Assert.AreEqual(0.1f, fx.rendRadius, 0.001f);
+            Assert.AreEqual(24f, fx.missileDistance, 0.001f);
+            Assert.AreEqual(1f / 40f, fx.pcSpriteRenderScale, 0.001f);
+            Assert.AreEqual(1f, fx.missilePositions[0].x, 0.001f);
+            Assert.AreEqual(2f, fx.missilePositions[1].x, 0.001f);
+            Assert.AreEqual(24f, fx.missileTargets[0].x, 0.001f);
         }
     }
 }

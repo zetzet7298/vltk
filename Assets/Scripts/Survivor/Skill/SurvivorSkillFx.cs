@@ -8,6 +8,13 @@
 // overlay's Service field is injected so its LateUpdate renders our service's
 // ActiveSkillEffects instead of the SandboxManager singleton.
 //
+// UNIT BRIDGE (world parity Survivor vs Sandbox): the Sandbox pipeline simulates
+// in PC pixel space (1 unit = 1 px, SPRs ppu=1, Sandbox camera ortho 300) while
+// Survivor runs in ÷PxPerUnit units (player SPRs ppu=40, camera ortho 6). Without
+// conversion a 194px fire-dragon SPR rendered at ppu=1 dwarfs the 12-unit viewport
+// (~16×) → invisible, and px-space speeds/radii make the missile arrive instantly.
+// Cast() therefore normalizes the effect to Survivor units (÷40) + scale 1/40.
+//
 // Visual ONLY: gameplay damage is handled separately by SkillCastSpawner
 // (MeleeHit / SpawnProjectile). onMissileCollided is NOT wired (no double damage).
 // -----------------------------------------------------------------------------
@@ -58,7 +65,47 @@ namespace VLTK.Survivor
         {
             if (_service == null || def == null) return;
             var sd = BuildSkillDefinition(def);
-            _service.PlaySkillCast(sd, casterPos, targetPos, Mathf.Max(1, level));
+            var fx = _service.PlaySkillCast(sd, casterPos, targetPos, Mathf.Max(1, level));
+            if (fx != null)
+                NormalizeToWorldUnits(fx);
+        }
+
+        /// <summary>
+        /// Convert a Sandbox ActiveSkillEffect from PC pixel space to Survivor world
+        /// units (÷PxPerUnit). The service simulates positions/speeds/radii in PC px
+        /// (SPR ppu=1, Sandbox camera ortho 300); Survivor's ÷40 world needs every
+        /// px quantity scaled down and the SPR render scale set to 1/PxPerUnit so a
+        /// 194px dragon renders ~4.9 units instead of 194 units (16× the viewport).
+        /// Fail-safe: only touches the returned effect; Sandbox pipeline untouched.
+        /// </summary>
+        public static void NormalizeToWorldUnits(ActiveSkillEffect fx)
+        {
+            const float k = 1f / SkillCastRuntime.PxPerUnit; // 1/40
+
+            fx.casterPos *= k;
+            fx.targetPos *= k;
+            fx.currentMissilePos *= k;
+            fx.missileSpeed *= k;
+            fx.pcMissileSpeedPerTick = Mathf.RoundToInt(fx.pcMissileSpeedPerTick * k);
+            fx.arrivalRadius *= k;
+            fx.rendRadius *= k;
+            fx.missileDistance *= k;
+            fx.pcSpriteRenderScale = k;
+
+            ScaleArray(fx.missilePositions, k);
+            ScaleArray(fx.missileOrigins, k);
+            ScaleArray(fx.missileTargets, k);
+            ScaleArray(fx.missileTargetOffsets, k);
+            if (fx.rendPositions != null)
+                for (int i = 0; i < fx.rendPositions.Count; i++)
+                    fx.rendPositions[i] *= k;
+        }
+
+        private static void ScaleArray(Vector2[] arr, float k)
+        {
+            if (arr == null) return;
+            for (int i = 0; i < arr.Length; i++)
+                arr[i] *= k;
         }
 
         /// <summary>
