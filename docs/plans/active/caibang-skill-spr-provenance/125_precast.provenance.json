@@ -1,0 +1,30 @@
+{
+  "schema": "vltk.survivor-caibang-spr-provenance/v1",
+  "skill_id": 125,
+  "visual_kind": "precast",
+  "logical_path": "\\spr\\skill\\天忍\\mag_tr_16_施魔法.spr",
+  "uid": "3cae8f47",
+  "hash": {
+    "tool": "vltktool.jx_hash.hash_resource_path",
+    "encoding": "gbk",
+    "path_bytes_hex": "5c7370725c736b696c6c5cccecc8cc5c6d61675f74725f31365fcaa9c4a7b7a82e737072",
+    "signed_uid": "3cae8f47",
+    "unsigned_uid": "2810395c"
+  },
+  "package": {
+    "index": 22,
+    "name": "skills.pak",
+    "priority_rule": "lowest package.ini index wins"
+  },
+  "source": "extracted from pak via vltktool.unpak_tool.decompress_entry (WSL Ubuntu-24.04, libucl1)",
+  "staged_path": "SpritesRuntime/3cae8f47.spr",
+  "bytes": 25855,
+  "sha256": "bc268609fb8c45c64c55204c8e12f0e5b30b2dda590382163d3276c65ce9a13f",
+  "spr": {
+    "parser": "vltktool.extract_item_spr",
+    "frames_total": 5,
+    "color_count": 256,
+    "decode_status": "ok"
+  },
+  "status": "staged"
+}

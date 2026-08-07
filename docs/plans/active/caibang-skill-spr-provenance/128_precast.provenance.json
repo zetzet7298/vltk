@@ -1,0 +1,30 @@
+{
+  "schema": "vltk.survivor-caibang-spr-provenance/v1",
+  "skill_id": 128,
+  "visual_kind": "precast",
+  "logical_path": "\\spr\\skill\\天忍\\mag_bz_huo3_爆炸效果.spr",
+  "uid": "b91ab706",
+  "hash": {
+    "tool": "vltktool.jx_hash.hash_resource_path",
+    "encoding": "gbk",
+    "path_bytes_hex": "5c7370725c736b696c6c5cccecc8cc5c6d61675f627a5f68756f335fb1acd5a8d0a7b9fb2e737072",
+    "signed_uid": "b91ab706",
+    "unsigned_uid": "7940dc00"
+  },
+  "package": {
+    "index": 22,
+    "name": "skills.pak",
+    "priority_rule": "lowest package.ini index wins"
+  },
+  "source": "extracted from pak via vltktool.unpak_tool.decompress_entry (WSL Ubuntu-24.04, libucl1)",
+  "staged_path": "SpritesRuntime/b91ab706.spr",
+  "bytes": 75205,
+  "sha256": "2da899f1b7e56985e3a850731fd7b1ad1e1bb0ab68a280f2f20809d1fbc13c6f",
+  "spr": {
+    "parser": "vltktool.extract_item_spr",
+    "frames_total": 6,
+    "color_count": 256,
+    "decode_status": "ok"
+  },
+  "status": "staged"
+}

@@ -28,7 +28,7 @@
 - Verify chuẩn: probe `PlaySkillCast` trong play mode (phase + HasPcPreCastSprite + missileDirections), đối chiếu `PcFanSpreadParity` từ PcSkills.txt Param1/Param2.
 
 ## Survivor Mode (DHCD-parity roguelike)
-
+Sandbox đã port được khá nhiều so với PC rồi. khi làm survivor phải tham chiếu sandbox
 Mode MỚI song song Sandbox — KHÔNG sửa code Sandbox. Offline prototype trước, backend P3. Portrait bắt buộc.
 
 **Tham chiếu:**

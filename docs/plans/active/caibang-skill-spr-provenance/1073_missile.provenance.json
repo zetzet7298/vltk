@@ -1,0 +1,30 @@
+{
+  "schema": "vltk.survivor-caibang-spr-provenance/v1",
+  "skill_id": 1073,
+  "visual_kind": "missile",
+  "logical_path": "\\spr\\skill\\1502\\gb\\gb_150_zhanggai_zd.spr",
+  "uid": "377228dc",
+  "hash": {
+    "tool": "vltktool.jx_hash.hash_resource_path",
+    "encoding": "gbk",
+    "path_bytes_hex": "5c7370725c736b696c6c5c313530325c67625c67625f3135305f7a68616e676761695f7a642e737072",
+    "signed_uid": "377228dc",
+    "unsigned_uid": "377228dc"
+  },
+  "package": {
+    "index": 3,
+    "name": "updatejx09.pak",
+    "priority_rule": "lowest package.ini index wins"
+  },
+  "source": "extracted from pak via vltktool.unpak_tool.decompress_entry (WSL Ubuntu-24.04, libucl1)",
+  "staged_path": "SpritesRuntime/377228dc.spr",
+  "bytes": 432643,
+  "sha256": "2730e079969b8c37be5fc22bb4b1c584a7358e5a7ac693c92da9922a5a0a949f",
+  "spr": {
+    "parser": "vltktool.extract_item_spr",
+    "frames_total": 16,
+    "color_count": 256,
+    "decode_status": "ok"
+  },
+  "status": "staged"
+}

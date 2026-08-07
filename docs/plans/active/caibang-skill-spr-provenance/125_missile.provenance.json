@@ -1,0 +1,30 @@
+{
+  "schema": "vltk.survivor-caibang-spr-provenance/v1",
+  "skill_id": 125,
+  "visual_kind": "missile",
+  "logical_path": "\\spr\\skill\\丐帮\\mag_gb_04_天下无狗.spr",
+  "uid": "04e27976",
+  "hash": {
+    "tool": "vltktool.jx_hash.hash_resource_path",
+    "encoding": "gbk",
+    "path_bytes_hex": "5c7370725c736b696c6c5cd8a4b0ef5c6d61675f67625f30345fcceccfc2cedeb9b72e737072",
+    "signed_uid": "04e27976",
+    "unsigned_uid": "d9c97ace"
+  },
+  "package": {
+    "index": 22,
+    "name": "skills.pak",
+    "priority_rule": "lowest package.ini index wins"
+  },
+  "source": "extracted from pak via vltktool.unpak_tool.decompress_entry (WSL Ubuntu-24.04, libucl1)",
+  "staged_path": "SpritesRuntime/04e27976.spr",
+  "bytes": 306741,
+  "sha256": "4d240a7753413267380d901b1217569275ba58211eff118bbcae57ed379b88e0",
+  "spr": {
+    "parser": "vltktool.extract_item_spr",
+    "frames_total": 64,
+    "color_count": 256,
+    "decode_status": "ok"
+  },
+  "status": "staged"
+}
