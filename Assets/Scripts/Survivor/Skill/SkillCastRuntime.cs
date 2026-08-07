@@ -25,6 +25,7 @@
 // SkillPrecastFx) tách cùng file, không gọi từ core.
 // -----------------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using VLTK.Sprites;
@@ -265,8 +266,29 @@ namespace VLTK.Survivor
 
             if (usePcVfx)
             {
-                Vector2 target = (Vector2)pos + plan.CastDir * (plan.MissileSpeed * plan.MissileLife);
-                director.SkillFx.Cast(plan.SourceDef, pos, target, plan.Level);
+                // PC parity: homing + impact (KMissle.cpp MISSLE_MMK_Follow).
+                // Pick nearest alive monster in the cast half-plane; if found the missile
+                // chases its live position (getCurrentTargetPos) so it no longer fades at a
+                // fixed point, and the impact SPR renders at the hit location (service
+                // renders impact via SpawnCollideSubEffect when onMissileCollided is null).
+                // No monster -> getCurrentTargetPos null -> straight line like before.
+                Vector2 staticTarget = (Vector2)pos + plan.CastDir * (plan.MissileSpeed * plan.MissileLife);
+                SurvivorMonster homingTarget = PickHomingTarget(director, pos, plan.CastDir);
+                if (homingTarget != null)
+                {
+                    const float k = 1f / PxPerUnit; // post-normalize space (world / PxPerUnit)
+                    var captured = homingTarget;
+                    Vector2 fallback = staticTarget * k;
+                    Func<Vector2> getCurrentTargetPos = () =>
+                        (captured != null && captured.Hp > 0f)
+                            ? (Vector2)captured.transform.position * k
+                            : fallback;
+                    director.SkillFx.Cast(plan.SourceDef, pos, staticTarget, plan.Level, getCurrentTargetPos, null);
+                }
+                else
+                {
+                    director.SkillFx.Cast(plan.SourceDef, pos, staticTarget, plan.Level);
+                }
             }
             else
             {
@@ -284,6 +306,28 @@ namespace VLTK.Survivor
             }
         }
 
+        /// <summary>
+        /// Nearest alive monster in the cast half-plane (Dot(castDir, to) >= 0).
+        /// Gives the missile VFX a homing target (PC KMissle follows the nearest NPC).
+        /// Returns null if none -- caller falls back to a straight-line missile.
+        /// </summary>
+        private static SurvivorMonster PickHomingTarget(SurvivorGameDirector director, Vector3 pos, Vector2 castDir)
+        {
+            var list = director.Monsters;
+            SurvivorMonster best = null;
+            float bestDist = float.MaxValue;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var m = list[i];
+                if (m == null || m.Hp <= 0f) continue;
+                Vector2 to = (Vector2)(m.transform.position - pos);
+                float dist = to.magnitude;
+                if (dist < 0.0001f) continue;
+                if (Vector2.Dot(castDir, to / dist) < 0f) continue; // behind caster
+                if (dist < bestDist) { bestDist = dist; best = m; }
+            }
+            return best;
+        }
         /// <summary>Melee: hit mọi monster trong MeleeRadius nửa mặt trước hướng cast + attribution.</summary>
         private static void MeleeHit(SurvivorGameDirector director, SkillCastPlan plan, Vector3 pos,
             SkillImpactSource source, object caster)

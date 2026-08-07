@@ -19,6 +19,7 @@
 // (MeleeHit / SpawnProjectile). onMissileCollided is NOT wired (no double damage).
 // -----------------------------------------------------------------------------
 
+using System;
 using UnityEngine;
 using VLTK.Model;
 using VLTK.Sandbox;
@@ -62,10 +63,27 @@ namespace VLTK.Survivor
         /// applied separately by SkillCastSpawner — this is visual-only.
         /// </summary>
         public void Cast(SkillDef def, Vector2 casterPos, Vector2 targetPos, int level)
+            => Cast(def, casterPos, targetPos, level, null, null);
+
+        /// <summary>
+        /// Play PC frame-exact VFX with optional live target tracking (PC parity:
+        /// KMissle.cpp MISSLE_MMK_Follow re-aims each tick toward the followed NPC).
+        /// A non-null getCurrentTargetPos makes single missiles home toward the monster
+        /// (SkillEffectVisualService single-missile path uses it regardless of MoveKind).
+        /// Pass onMissileCollided = null so the service renders the impact SPR itself
+        /// (SpawnCollideSubEffect). NormalizeToWorldUnits scales every effect position by
+        /// 1/PxPerUnit AFTER PlaySkillCast, so getCurrentTargetPos must return values in
+        /// that same post-normalization space (world / PxPerUnit) -- callers scale monster
+        /// world positions by 1/PxPerUnit inside the lambda. Visual ONLY.
+        /// </summary>
+        public void Cast(SkillDef def, Vector2 casterPos, Vector2 targetPos, int level,
+            Func<Vector2> getCurrentTargetPos,
+            Action<ActiveSkillEffect, int, Vector2> onMissileCollided = null)
         {
             if (_service == null || def == null) return;
             var sd = BuildSkillDefinition(def);
-            var fx = _service.PlaySkillCast(sd, casterPos, targetPos, Mathf.Max(1, level));
+            var fx = _service.PlaySkillCast(sd, casterPos, targetPos, Mathf.Max(1, level),
+                getCurrentTargetPos, onMissileCollided);
             if (fx != null)
                 NormalizeToWorldUnits(fx);
         }
