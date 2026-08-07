@@ -287,6 +287,7 @@ Port:
 | 4th skill id sai → port nhầm skill | Đã chốt Q1 = 1074 gungaibang150 |
 | Tier timing cân bằng kém → card hiếm quá/đầy quá | Config trong SO, tuning sau playtest (note header) |
 | dhcd parity bị break bởi depend/bstrap | Depend + bootstrap tách module riêng, không sửa parity draw path có sẵn (TriggerBootstrap path độc lập) |
+| Unit-space double-scale (Phase 5 VFX homing): Survivor world units (÷40) lẫn với PC px service (ppu=1) → missile 40× ngắn | FIXED 1064e8391 → REVISE: SurvivorSkillFx.Cast ×PxPerUnit (40) trước PlaySkillCast, NormalizeToWorldUnits ÷40 sau; SkillCastSpawner homing lambda + targetPos trả WORLD units (bỏ k=1/40); targetPos=monster world pos vì Cái Bang MoveKind=1 (Line) → service arrival/impact dùng targetPos cố định (ResolveMissileTarget chỉ homing MoveKind=5). Probe: missile tới monster (3,2), impact rendPositions=[(3,2)] |
 | Star display IconSprite chưa có art | Text ★/☆ fallback; art add sau không break logic |
 
 ## 8. Validation tổng (claim done)

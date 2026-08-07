@@ -71,10 +71,13 @@ namespace VLTK.Survivor
         /// A non-null getCurrentTargetPos makes single missiles home toward the monster
         /// (SkillEffectVisualService single-missile path uses it regardless of MoveKind).
         /// Pass onMissileCollided = null so the service renders the impact SPR itself
-        /// (SpawnCollideSubEffect). NormalizeToWorldUnits scales every effect position by
-        /// 1/PxPerUnit AFTER PlaySkillCast, so getCurrentTargetPos must return values in
-        /// that same post-normalization space (world / PxPerUnit) -- callers scale monster
-        /// world positions by 1/PxPerUnit inside the lambda. Visual ONLY.
+        /// (SpawnCollideSubEffect). Visual ONLY.
+        ///
+        /// UNIT BRIDGE: callers pass casterPos/targetPos in WORLD units; this method
+        /// scales them ×PxPerUnit into PC px so PlaySkillCast simulates at px scale, then
+        /// NormalizeToWorldUnits (÷PxPerUnit) lands every position back in world units.
+        /// Skipping the ×PxPerUnit pre-scale double-scales 40× (missile fades 40× short).
+        /// getCurrentTargetPos runs during Update AFTER normalize → plain WORLD units.
         /// </summary>
         public void Cast(SkillDef def, Vector2 casterPos, Vector2 targetPos, int level,
             Func<Vector2> getCurrentTargetPos,
@@ -82,8 +85,11 @@ namespace VLTK.Survivor
         {
             if (_service == null || def == null) return;
             var sd = BuildSkillDefinition(def);
-            var fx = _service.PlaySkillCast(sd, casterPos, targetPos, Mathf.Max(1, level),
-                getCurrentTargetPos, onMissileCollided);
+            // World units → PC px: PlaySkillCast simulates in px; NormalizeToWorldUnits
+            // divides by PxPerUnit afterwards to return to world units (÷40 after ×40).
+            const float worldToPx = SkillCastRuntime.PxPerUnit;
+            var fx = _service.PlaySkillCast(sd, casterPos * worldToPx, targetPos * worldToPx,
+                Mathf.Max(1, level), getCurrentTargetPos, onMissileCollided);
             if (fx != null)
                 NormalizeToWorldUnits(fx);
         }

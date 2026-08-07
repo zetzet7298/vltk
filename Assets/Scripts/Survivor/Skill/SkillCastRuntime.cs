@@ -276,14 +276,22 @@ namespace VLTK.Survivor
                 SurvivorMonster homingTarget = PickHomingTarget(director, pos, plan.CastDir);
                 if (homingTarget != null)
                 {
-                    const float k = 1f / PxPerUnit; // post-normalize space (world / PxPerUnit)
+                    // Lambda chạy lúc Update SAU NormalizeToWorldUnits → missilePositions
+                    // đã world units → lambda phải trả WORLD units (KHÔNG nhân 1/PxPerUnit;
+                    // nhân k sẽ 40× sai — missile nhắm (0.075,0.05) khi monster ở (3,2)).
                     var captured = homingTarget;
-                    Vector2 fallback = staticTarget * k;
+                    Vector2 fallback = staticTarget;
                     Func<Vector2> getCurrentTargetPos = () =>
                         (captured != null && captured.Hp > 0f)
-                            ? (Vector2)captured.transform.position * k
+                            ? (Vector2)captured.transform.position
                             : fallback;
-                    director.SkillFx.Cast(plan.SourceDef, pos, staticTarget, plan.Level, getCurrentTargetPos, null);
+                    // targetPos = monster world pos (KHÔNG staticTarget): Cái Bang 4 skill
+                    // đều MoveKind=1 (Line) → service ResolveMissileTarget chỉ homing khi
+                    // MoveKind=5, nên arrival/collision/impact dùng targetPos CỐ ĐỊNH.
+                    // Truyền monster pos để impact render đúng điểm trúng; staticTarget
+                    // chỉ là fallback khi lambda null (monster chết giữa bay).
+                    director.SkillFx.Cast(plan.SourceDef, pos, (Vector2)homingTarget.transform.position,
+                        plan.Level, getCurrentTargetPos, null);
                 }
                 else
                 {
