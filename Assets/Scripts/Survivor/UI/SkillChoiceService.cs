@@ -45,16 +45,25 @@ namespace VLTK.Survivor
         }
     }
 
-    /// <summary>1 card trên modal (LevelSkillShopParam parity-shape: Price &gt; 0 = shop mua).</summary>
+    /// <summary>1 card trên modal (LevelSkillShopParam parity-shape: Price &gt; 0 = shop mua).
+    /// Phase 3 (PORT_CAIBANG §3 Gap D): Level/MaxLevel/Stars snapshot lúc draw — card hiển thị
+    /// cấp độ sao đúng theo roster tại thời điểm vẽ (pick → draw sau → sao tăng).
+    /// Stars = SurvivorSkillTuning.StarCount(Level, MaxLevel) tính trong ctor (mọi path đều đúng).</summary>
     public readonly struct SkillChoiceCard
     {
         public readonly SkillDef Def;
         public readonly int Price;
+        public readonly int Level;     // roster.GetLevel(def.Id) lúc draw (0 = chưa học)
+        public readonly int MaxLevel;  // def.MaxLevel (fallback 99 khi def thiếu)
+        public readonly int Stars;     // ceil(Level*N_STARS/MaxLevel)
 
-        public SkillChoiceCard(SkillDef def, int price = 0)
+        public SkillChoiceCard(SkillDef def, int price = 0, int level = 0, int maxLevel = 0)
         {
             Def = def;
             Price = price;
+            Level = level;
+            MaxLevel = maxLevel;
+            Stars = SurvivorSkillTuning.StarCount(level, maxLevel);
         }
 
         public string Title =>
@@ -239,7 +248,7 @@ namespace VLTK.Survivor
             {
                 var cfg = _pool.FindById(skillIds[i]);
                 if (cfg == null) return false;                    // fail-closed: skill lạ
-                cards[i] = new SkillChoiceCard(cfg.Def, 0);
+                cards[i] = MakeCard(cfg.Def, 0);
             }
             d.Current = new SkillChoiceEvent
             {
@@ -400,8 +409,20 @@ namespace VLTK.Survivor
             int price = mode == SkillChoiceMode.Shop ? ShopCardPrice : 0;
             var defs = _pool.Draw(count, _roster, _rng);
             var cards = new SkillChoiceCard[defs.Count];
-            for (int i = 0; i < defs.Count; i++) cards[i] = new SkillChoiceCard(defs[i], price);
+            for (int i = 0; i < defs.Count; i++) cards[i] = MakeCard(defs[i], price);
             return cards;
+        }
+
+        /// <summary>
+        /// Phase 3 (Gap D): card snapshot level/stars từ roster + def — dùng chung
+        /// draw thường + bootstrap (bootstrap run-start: roster rỗng → Lv 0/20, 0★).
+        /// MaxLevel fallback 99 khi def thiếu (AtMaxLevel parity).
+        /// </summary>
+        private SkillChoiceCard MakeCard(SkillDef def, int price)
+        {
+            int level = _roster != null ? _roster.GetLevel(def.Id) : 0;
+            int max = def.MaxLevel > 0 ? def.MaxLevel : 99;
+            return new SkillChoiceCard(def, price, level, max);
         }
 
         /// <summary>CheckWaitingList parity: rảnh → dequeue FIFO → trigger tiếp.</summary>

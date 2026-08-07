@@ -227,7 +227,7 @@ namespace VLTK.Survivor
             for (int i = 0; i < cards.Count; i++)
             {
                 var card = cards[i];
-                var btn = MakeChoiceButton($"Card{i}", transform, card.Title, card.Desc, card.IconUid, card.Price);
+                var btn = MakeChoiceButton($"Card{i}", transform, card);
                 float y = 150f - i * 260f;
                 ((RectTransform)btn.transform).anchoredPosition = new Vector2(0, y);
                 btn.onClick.AddListener(() => onPick(card));
@@ -392,9 +392,14 @@ namespace VLTK.Survivor
             return go.GetComponent<Button>();
         }
 
-        /// <summary>Card skill thật (ticket 29): icon SPR fail-closed + giá shop nếu có.</summary>
-        private static Button MakeChoiceButton(string name, Transform parent, string title,
-            string desc, string iconUid, int price)
+        /// <summary>
+        /// Card skill thật (ticket 29): icon SPR fail-closed + giá shop nếu có.
+        /// Phase 3 (PORT_CAIBANG §3 Gap D): star row ★/☆ (N_STARS ký tự, filled =
+        /// Stars) + dòng 'Lv {Level}/{MaxLevel}' dưới title — text fallback (art
+        /// IconSprite chưa có, add sau không break logic). Fail-closed: card level
+        /// 0 → 0★ đúng; MaxLevel thiếu → ctor đã fallback 99.
+        /// </summary>
+        private static Button MakeChoiceButton(string name, Transform parent, SkillChoiceCard card)
         {
             var go = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
             go.transform.SetParent(parent, false);
@@ -407,7 +412,7 @@ namespace VLTK.Survivor
             var iconGo = new GameObject("Icon", typeof(RectTransform), typeof(Image));
             iconGo.transform.SetParent(go.transform, false);
             var iconImg = iconGo.GetComponent<Image>();
-            var sp = SpriteLoader.Resolve(iconUid);
+            var sp = SpriteLoader.Resolve(card.IconUid);
             if (sp != null) { iconImg.sprite = sp; iconImg.color = Color.white; }
             else { iconImg.sprite = ProxyVisuals.White(); iconImg.color = new Color(0.55f, 0.8f, 1f, 0.9f); }
             var iconRt = (RectTransform)iconGo.transform;
@@ -416,25 +421,47 @@ namespace VLTK.Survivor
             iconRt.sizeDelta = new Vector2(110f, 110f);
 
             var lbl = MakeText("Lbl", go.transform, 46, Color.white);
-            lbl.text = title;
+            lbl.text = card.Title;
             lbl.rectTransform.anchorMin = lbl.rectTransform.anchorMax = new Vector2(0.5f, 0.72f);
             lbl.rectTransform.anchoredPosition = new Vector2(60f, 0f);
 
-            var d = MakeText("Desc", go.transform, 32, new Color(0.8f, 0.8f, 0.85f));
-            d.text = desc;
-            d.rectTransform.anchorMin = d.rectTransform.anchorMax = new Vector2(0.5f, 0.3f);
+            // Phase 3: star row dưới title (★ filled = Stars, ☆ empty = N-Stars)
+            var st = MakeText("Stars", go.transform, 30, new Color(1f, 0.85f, 0.3f));
+            st.text = StarRow(card.Stars, SurvivorSkillTuning.N_STARS);
+            st.alignment = TextAnchor.MiddleCenter; // rect 100×100 + UpperLeft default → glyph lệch 50px, đè dòng khác
+            st.rectTransform.anchorMin = st.rectTransform.anchorMax = new Vector2(0.5f, 0.62f);
+            st.rectTransform.anchoredPosition = new Vector2(60f, 0f);
+
+            // Phase 3: cấp độ skill 'Lv {Level}/{MaxLevel}'
+            var lv = MakeText("Lv", go.transform, 26, new Color(0.75f, 0.75f, 0.8f));
+            lv.text = "Lv " + card.Level + "/" + card.MaxLevel;
+            lv.alignment = TextAnchor.MiddleCenter;
+            lv.rectTransform.anchorMin = lv.rectTransform.anchorMax = new Vector2(0.5f, 0.45f);
+            lv.rectTransform.anchoredPosition = new Vector2(60f, 0f);
+
+            var d = MakeText("Desc", go.transform, 26, new Color(0.8f, 0.8f, 0.85f));
+            d.text = card.Desc;
+            d.alignment = TextAnchor.MiddleCenter; // không đè lên dòng Lv (UpperLeft + rect to lệch glyph)
+            d.rectTransform.anchorMin = d.rectTransform.anchorMax = new Vector2(0.5f, 0.25f);
             d.rectTransform.anchoredPosition = new Vector2(60f, 0f);
 
-            if (price > 0)
+            if (card.Price > 0)
             {
                 var pr = MakeText("Price", go.transform, 34, new Color(1f, 0.85f, 0.3f));
-                pr.text = price + " vàng";
+                pr.text = card.Price + " vàng";
                 pr.rectTransform.anchorMin = pr.rectTransform.anchorMax = new Vector2(1f, 1f);
                 pr.rectTransform.anchoredPosition = new Vector2(-20f, -16f);
                 pr.alignment = TextAnchor.UpperRight;
             }
 
             return go.GetComponent<Button>();
+        }
+
+        /// <summary>Star string: 'filled ★' × stars + 'empty ☆' × (n-stars); clamp [0,n].</summary>
+        private static string StarRow(int stars, int n)
+        {
+            stars = Mathf.Clamp(stars, 0, n);
+            return new string('★', stars) + new string('☆', n - stars);
         }
     }
 }

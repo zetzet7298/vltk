@@ -399,6 +399,89 @@ namespace VLTK.Tests.Survivor
         }
 
         // ------------------------------------------------------------------
+        // Phase 3: star level (PORT_CAIBANG §3 Gap D) — ceil(level*N/MaxLevel)
+        // ------------------------------------------------------------------
+
+        [Test]
+        public void StarCount_LevelZero_ZeroStars()
+        {
+            Assert.AreEqual(0, SurvivorSkillTuning.StarCount(0, 20), "level 0 → 0★ (bootstrap card)");
+            Assert.AreEqual(0, SurvivorSkillTuning.StarCount(0, 0), "max<=0 → 0★ fail-closed (không div-by-zero)");
+        }
+
+        [Test]
+        public void StarCount_MidLevel_Ceil()
+        {
+            Assert.AreEqual(1, SurvivorSkillTuning.StarCount(1, 20), "ceil(1*5/20)=ceil(0.25)=1");
+            Assert.AreEqual(3, SurvivorSkillTuning.StarCount(12, 20), "ceil(3.0)=3");
+            Assert.AreEqual(4, SurvivorSkillTuning.StarCount(15, 20), "ceil(3.75)=4");
+            Assert.AreEqual(5, SurvivorSkillTuning.StarCount(19, 20), "ceil(4.75)=5 — công thức ceil plan Q5");
+        }
+
+        [Test]
+        public void StarCount_MaxLevel_FiveStars()
+        {
+            Assert.AreEqual(5, SurvivorSkillTuning.StarCount(20, 20), "level = MaxLevel → 5★");
+            Assert.AreEqual(5, SurvivorSkillTuning.StarCount(99, 99));
+            Assert.AreEqual(0, SurvivorSkillTuning.StarCount(-1, 20), "level âm clamp về 0★");
+        }
+
+        [Test]
+        public void DrawCards_CardCarriesLevelMaxLevelStars_FromRoster()
+        {
+            var def = Def(128, maxLevel: 20);
+            var pool = new SkillChoicePool();
+            pool.Add(def);
+            var rt = new SkillCastRuntime();
+            rt.Learn(def, 12); // roster level 12
+            var svc = MakeService(rt, new System.Random(1), pool);
+            svc.Tick(0);
+            Assert.IsTrue(svc.Request(1, SkillChoiceMode.LevelUp));
+
+            var card = svc.Current(1).Cards[0];
+            Assert.AreEqual(12, card.Level, "Level = roster.GetLevel(id) lúc draw");
+            Assert.AreEqual(20, card.MaxLevel, "MaxLevel = def.MaxLevel");
+            Assert.AreEqual(3, card.Stars, "ceil(12*5/20)=3");
+        }
+
+        [Test]
+        public void Pick_ThenRedraw_StarsIncrease()
+        {
+            var def = Def(1, maxLevel: 20);
+            var pool = new SkillChoicePool();
+            pool.Add(def);
+            var rt = new SkillCastRuntime();
+            var svc = MakeService(rt, new System.Random(1), pool);
+            svc.Tick(0);
+
+            svc.Request(1, SkillChoiceMode.LevelUp);
+            Assert.AreEqual(0, svc.Current(1).Cards[0].Stars, "chưa học → 0★");
+            svc.Select(1, svc.Current(1).Cards[0]); // level 1
+
+            Assert.IsTrue(svc.Request(1, SkillChoiceMode.LevelUp), "draw lại sau pick");
+            var card = svc.Current(1).Cards[0];
+            Assert.AreEqual(1, card.Level, "pick → roster level tăng");
+            Assert.AreEqual(1, card.Stars, "ceil(1*5/20)=1 → 1★");
+            svc.Close(1);
+        }
+
+        [Test]
+        public void Bootstrap_CardLevelZero_ZeroStars()
+        {
+            var pool = new SkillChoicePool();
+            pool.Add(Def(128, maxLevel: 20));
+            var svc = MakeService(new SkillCastRuntime(), new System.Random(1), pool);
+            svc.Tick(0);
+            Assert.IsTrue(svc.TriggerBootstrap(1, new[] { 128 }));
+
+            var card = svc.Current(1).Cards[0];
+            Assert.AreEqual(0, card.Level, "run start roster chưa học → Lv 0");
+            Assert.AreEqual(20, card.MaxLevel, "MaxLevel 128 = 20 (PcSkills.txt col 53)");
+            Assert.AreEqual(0, card.Stars, "0★ fail-closed đúng");
+            Assert.IsTrue(svc.Select(1, card), "pick đóng được");
+        }
+
+        // ------------------------------------------------------------------
         // SurvivorPause ref-count per-scope: timescale {0,1} qua delegate
         // ------------------------------------------------------------------
 
