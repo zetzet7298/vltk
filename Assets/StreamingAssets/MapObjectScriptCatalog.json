@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedAtUtc": "2026-06-08T07:51:51Z",
-  "sourceScriptRoot": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script",
+  "sourceScriptRoot": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script",
   "hashRule": "PC g_FileName2Id signed-char over leading-backslash GBK script path",
   "entries": [
     {

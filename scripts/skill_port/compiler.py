@@ -204,7 +204,7 @@ def source_snapshot(repo: Path, paths: dict[str, Path], coverage: dict, provenan
     }
     out["progression"] = coverage.get("canonical_sources", {}).get("progression", {})
     out["skillbook"] = coverage.get("canonical_sources", {}).get("skillbook", {})
-    package_ini = Path("/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini")
+    package_ini = Path("/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini")
     out["package_ini"] = (
         {"path": package_ini.as_posix(), "sha256": sha256_bytes(package_ini.read_bytes()), "bytes": package_ini.stat().st_size}
         if package_ini.is_file() else {"path": package_ini.as_posix(), "blocker": "package_ini_missing"}
@@ -772,7 +772,7 @@ def build_artifacts(repo: Path, coverage_path: Path, presentation_path: Path, sl
     source_snapshot_id = "skillport-gate0-dev-snapshot"
     manifest_source_snapshot = {
         "snapshotId": source_snapshot_id,
-        "sourceRoot": "/var/www/jx-source",
+        "sourceRoot": "/var/www/jx-pc",
         "capturedAt": FIXED_BUILD_TIME_UTC,
         "treeSha256": sha256_bytes(canonical_json(provenance_doc["source_snapshot"])),
         "vcsRevision": "0000000-test-only-dev-artifact",

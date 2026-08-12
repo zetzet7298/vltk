@@ -26,7 +26,7 @@ route clear → handoff sang `to-spec` (session riêng).
 - DHCD evidence = **declaration + partial IL recovery, KHÔNG authoritative behavior**.
   Numeric balance (card weights r-dhcd-001, drop/XP r-dhcd-006) **BLOCKED/encrypted FastXXTEA,
   key blocked** → KHÔNG port dhcd data, build own library từ JX `PcSkills.txt`. KHÔNG reverse
-  dhcd server. PC source `C:/Projects/jx-source` read-only; SPR/PAK/hash → `C:/Projects/vltktool`,
+  dhcd server. PC source `C:/Projects/jx-pc` read-only; SPR/PAK/hash → `C:/Projects/vltktool`,
   không bịa path. Fail-closed SPR.
 - **SPR root thực tế = project `/SpritesRuntime` (67.499 file)**, KHÔNG phải
   `Assets/StreamingAssets/Sprites` (research 08 phát hiện — sửa note AGENTS khi to-spec).

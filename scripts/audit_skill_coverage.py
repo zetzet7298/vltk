@@ -19,7 +19,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-CANONICAL_ROOT = Path("/var/www/jx-source")
+CANONICAL_ROOT = Path("/var/www/jx-pc")
 VLTKTOOL = Path("/home/zet/Projects/vltktool/extract_table_slice.py")
 
 CANONICAL_FILES = {

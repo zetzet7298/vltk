@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — typed lookup over imported PC itemexchange_setting tables.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/itemexchange_setting
+// Source of truth: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/itemexchange_setting
 // Catalog/read-only only: this does not execute or mutate item exchange runtime.
 // -----------------------------------------------------------------------------
 

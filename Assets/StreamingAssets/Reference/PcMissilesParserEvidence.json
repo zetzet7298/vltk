@@ -3,6 +3,6 @@
   "runtimeUniqueMissileIds": 466,
   "duplicatePolicy": "last-row-wins for duplicate id 408",
   "requiredRuntimeIds": [442, 443, 467],
-  "source": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/missles1.txt",
+  "source": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/missles1.txt",
   "runtimeLoader": "PcMissileRegistry prefers Assets/StreamingAssets/Reference/PcAttrib/missles1.txt"
 }

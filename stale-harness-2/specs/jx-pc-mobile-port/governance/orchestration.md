@@ -8,7 +8,7 @@ specs. Nó không cấp quyền nâng lifecycle nếu thiếu evidence theo
 
 | Bước | DRI | Đầu vào | Đầu ra/gate mở bước sau |
 | --- | --- | --- | --- |
-| 1. Khóa corpus | Reconciler | `/var/www/jx-source` read-only, active `package.ini`, `vltktool` revision | Source snapshot, package order, corpus census và contradiction ledger; claim chưa chứng minh giữ `BLOCKED` |
+| 1. Khóa corpus | Reconciler | `/var/www/jx-pc` read-only, active `package.ini`, `vltktool` revision | Source snapshot, package order, corpus census và contradiction ledger; claim chưa chứng minh giữ `BLOCKED` |
 | 2. Pha 1 CNPM | Product/spec-governance | Nhu cầu người dùng, quyết định đã chốt, evidence bước 1 | `01-yeu-cau.md` đúng template, requirement/AC/owner hợp lệ; validator authoring sạch |
 | 3. Pha 2 CNPM | Architecture/domain owners | Pha 1 đã hợp lệ | `02-mo-hinh-yeu-cau.md`, quyền, state, D1-D6 và seam; không mở pha 3/4 nếu requirement đầu vào chưa có |
 | 4. Domain shards | Owner từng miền | Requirement và source authority đã pin | Invariant, behavior, failure mode, test và blocker theo file ownership bên dưới |

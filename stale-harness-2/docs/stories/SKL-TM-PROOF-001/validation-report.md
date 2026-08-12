@@ -11,7 +11,7 @@ This report proves bounded static membership/catalog parity only.
 ## Commands Run
 
 ```text
-python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids <32-direct-target-ids> --output Assets/StreamingAssets/Reference/PcTangMenRelationshipTargets.txt --manifest Assets/StreamingAssets/Reference/PcTangMenRelationshipTargets.provenance.json --check
+python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids <32-direct-target-ids> --output Assets/StreamingAssets/Reference/PcTangMenRelationshipTargets.txt --manifest Assets/StreamingAssets/Reference/PcTangMenRelationshipTargets.provenance.json --check
 python3 -m py_compile scripts/generate_tangmen_oracle.py scripts/test_generate_tangmen_oracle.py
 python3 -m pytest scripts/test_generate_tangmen_oracle.py -q
 python3 scripts/generate_tangmen_oracle.py --check

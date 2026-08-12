@@ -31,9 +31,9 @@ Planning/evidence phase started. No implementation changes have been applied und
   - `evidence/caibang-skill-matrix.md`
 - Loaded/used mandatory PC resource resolver workflow and project PC port rules.
 - Researched required PC docs:
-  - `/var/www/jx-source/docs/3_ky_nang_va_chieu_thuc.md`
-  - `/var/www/jx-source/docs/client_port/03_skills.md`
-  - `/var/www/jx-source/docs/backend_port/03_skills.md`
+  - `/var/www/jx-pc/docs/3_ky_nang_va_chieu_thuc.md`
+  - `/var/www/jx-pc/docs/client_port/03_skills.md`
+  - `/var/www/jx-pc/docs/backend_port/03_skills.md`
 - Per project instruction, attempted external research through Exa and DeepWiki before implementation:
   - Exa: Unity 2D homing projectile/determinism references.
   - DeepWiki: UnityCsReference question about deterministic 2D projectile movement and testing caveats.
@@ -85,7 +85,7 @@ Phase 4:
   - Test verifies runtime cast uses Lua-derived range/projectile count and spawns 3 child projectiles with skill id `168` while deterministic damage hits.
   - Verified filtered CaiBang tests green: Unity EditMode job `3e0333e30783495198988834fc4300fe`, 84 total / 84 passed / 0 failed / 0 skipped.
 - Completed remaining Phase 4 active-data audit/fix slice:
-  - Searched required PC source-of-truth path `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`; it is absent in this environment, so used already-established SDD fallback evidence from `/var/www/jx-source/Client 6.0`, Server 6.0, `pak_unpacked`, and mobile Reference files.
+  - Searched required PC source-of-truth path `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem`; it is absent in this environment, so used already-established SDD fallback evidence from `/var/www/jx-pc/Client 6.0`, Server 6.0, `pak_unpacked`, and mobile Reference files.
   - Found stale mobile override for skill `358`: mobile treated it as Kháng Long/player `kanglong_youhui`, but newest PC `skills.txt` rows identify `358` as `Tiềm Long Tại Uyên` / `qianlong_zaiyuan`, `ChildSkillId=167`, `MisslesForm=7`, `AttackRadius=570`, `WaitTime=5`, `CharAnimId=11`.
   - Confirmed checked `gaibang.lua` sources keep `qianlong_zaiyuan` commented out; therefore row/default missile data wins and 358 must not borrow Kháng Long (128) Lua damage/count/form data.
   - Added `SkillMissileForm.Stationary = 7`, mapped `358 -> qianlong_zaiyuan`, updated 358 catalog to PC row/default data, and removed stale KLHH icon/comment overrides.

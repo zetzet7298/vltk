@@ -21,7 +21,7 @@ Không có shard nào được coi là hoàn thành chỉ vì đã có heading h
 
 ## Source hierarchy
 
-- JX identity, map, NPC, item, skill base, SPR/VFX/WAV: `/var/www/jx-source` theo [source-hierarchy](01-governance/source-hierarchy.md).
+- JX identity, map, NPC, item, skill base, SPR/VFX/WAV: `/var/www/jx-pc` theo [source-hierarchy](01-governance/source-hierarchy.md).
 - DHCD combat loop, wave, drop, card/reroll và UX clue: corpus `/home/zet/Projects/dhcd`, chỉ trong phạm vi [evidence-register](01-governance/evidence-register.md).
 - Reverse thiếu evidence: `/var/www/reverse-skill`, đầu ra phải cập nhật vào `/home/zet/Projects/dhcd`.
 - Unity code hiện hữu: nguồn tái sử dụng và migration evidence, không thay thế PC source.

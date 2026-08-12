@@ -83,7 +83,7 @@ parity.
 - JX remains authoritative for identity, maps, NPCs, items, base skills, and
   SPR/VFX/WAV. Apply `jx-pc-port-rule` before any PC-to-Unity port change.
 - DHCD may provide behavior only when this workflow records adequate evidence.
-- Do not write under `/var/www/jx-source`.
+- Do not write under `/var/www/jx-pc`.
 - Preserve unresolved gameplay constants as provisional. Do not invent offer
   count, weight, RNG, cost, cap, timing, ordering, or fallback behavior.
 - Worker and explorer delegation must also follow the exact model, reasoning,

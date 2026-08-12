@@ -64,7 +64,7 @@ outputs:
   sha256: b9b58db10ebf6b7ab9307bb452df8e6a7a7bbc7575f6d5df43ed2a575c69ccca
 package_ini:
   authority: active Vietnamese client manifest
-  path: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini
+  path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini
   sha256: 5df520aa74b2eee925eac58ecf17939d50a6a51ad463568dcc4e755457039784
 packages:
 - asset_index_blocker: Package file thiếu tại configured client data root.
@@ -501,7 +501,7 @@ schema_version: 2
 source_git:
   dirty: true
   revision: d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91
-source_root: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem
+source_root: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem
 vltktool:
   decode_module: decode_item_texts_vi.decode_best
   dirty: true

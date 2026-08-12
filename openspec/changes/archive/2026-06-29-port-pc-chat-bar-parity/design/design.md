@@ -1,6 +1,6 @@
 # Design: port-pc-chat-bar-parity
 
-> PC source of truth: `jx-source/pak_unpacked/1024/unknown/7e20a7ac.ini`
+> PC source of truth: `jx-pc/pak_unpacked/1024/unknown/7e20a7ac.ini`
 > (聊天条 chat bar window). Skill: `jx-hud-port` + `jx-pc-port-rule`.
 
 ## Skill resolution

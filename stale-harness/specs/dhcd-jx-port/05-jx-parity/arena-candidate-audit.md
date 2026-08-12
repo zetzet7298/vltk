@@ -7,7 +7,7 @@
 | Owner / reviewer | JX map owner / technical reviewer |
 | Cập nhật | 2026-07-16 |
 
-> Read-only enumeration. No byte under `/var/www/jx-source` was modified or
+> Read-only enumeration. No byte under `/var/www/jx-pc` was modified or
 > copied; nothing was vendored into this repo. Every value below is either an
 > absolute disk fact (path/size/SHA-256/count) or explicitly `unresolved`. No
 > candidate is selected, enabled, or called a pilot arena.
@@ -26,7 +26,7 @@ Textual name/script/MapList line không chứng minh map ID, collision, bounds, 
 
 ## MapList.ini candidate enumeration
 
-Nine `maplist.ini` files exist under `/var/www/jx-source/pak_unpacked/`; **no**
+Nine `maplist.ini` files exist under `/var/www/jx-pc/pak_unpacked/`; **no**
 `version`/`load-order`/`manifest`/`paklist`/`filelist` artifact was found at
 depth ≤ 2 of `pak_unpacked` to declare an active winner. Recorded sizes/SHA-256:
 
@@ -124,12 +124,12 @@ canonical source was not modified or copied.
 | Evidence | Command/tool | Result and limitation |
 |---|---|---|
 | Loose map lookup (default root) | `python3 .agents/skills/jx-map-port/scripts/list_maps.py --id 209` (also `210`,`211`,`925`,`975`) | No output. The helper reads `Utility/Run/Settings/MapList.ini` (7893 bytes), which contains **none** of the target IDs; it therefore cannot establish identity for any requested ID. The target IDs are present in `bin/client/settings/MapList.ini` (193794 bytes) and the pak `maplist.ini` files instead. |
-| MapList.ini enumeration | `find /var/www/jx-source/pak_unpacked -iname maplist.ini` + `sha256sum`/`stat -c%s` | 9 runtime `maplist.ini` packages; sizes/SHA-256 recorded above. Only `dmjx03`,`vlmp`,`slistcache`,`slistfree` carry the candidate names; no version/load-order/manifest declares a winner. |
-| Runtime map settings (original) | `python3 /home/zet/Projects/vltktool/parse_map_settings.py --maps-pak /var/www/jx-source/pak_unpacked/maps_pak --output …` (2026-07-15) | vltktool commit `fea4c244a4945ba9423f82a4bfd3492e55b4329a`, toolVersion `1.2.0`; emitted a 304-byte empty catalog, SHA-256 `c511239e9a3040c346cfa539c90a9870c487d54ae1ec34cf0b1342317173d3c8`. **Correction:** the path `pak_unpacked/maps_pak` does **not** exist (the unpacked maps package is `pak_unpacked/maps/`); the empty catalog therefore reflects a missing input path, not an empty maps package. |
+| MapList.ini enumeration | `find /var/www/jx-pc/pak_unpacked -iname maplist.ini` + `sha256sum`/`stat -c%s` | 9 runtime `maplist.ini` packages; sizes/SHA-256 recorded above. Only `dmjx03`,`vlmp`,`slistcache`,`slistfree` carry the candidate names; no version/load-order/manifest declares a winner. |
+| Runtime map settings (original) | `python3 /home/zet/Projects/vltktool/parse_map_settings.py --maps-pak /var/www/jx-pc/pak_unpacked/maps_pak --output …` (2026-07-15) | vltktool commit `fea4c244a4945ba9423f82a4bfd3492e55b4329a`, toolVersion `1.2.0`; emitted a 304-byte empty catalog, SHA-256 `c511239e9a3040c346cfa539c90a9870c487d54ae1ec34cf0b1342317173d3c8`. **Correction:** the path `pak_unpacked/maps_pak` does **not** exist (the unpacked maps package is `pak_unpacked/maps/`); the empty catalog therefore reflects a missing input path, not an empty maps package. |
 | Runtime map settings (recheck) | same command (2026-07-16) | 304 bytes again, SHA-256 `493a57e13db814a95d94f8b57301ffe23184af3ff32bb47af9ddc2b29efee2f0`. SHA differs from the original because the emitted JSON embeds a `generatedAt` timestamp; the reproducible facts are "304 bytes, zero map settings, toolVersion 1.2.0". No Region_C/Region_S/`maplist.ini` evidence follows from this. |
 | Loose geometry enumeration | `find …/bin/client/maps -ipath '*<name>*' -name '*_Region_C.dat'` and `-iname '*.wor'` | `.wor` + `Region_C.dat` counts recorded above; `Region_S` = 0 for all three candidates. |
 | Resolver capability | `python3 /home/zet/Projects/vltktool/resolve_uid.py --help` | Tool requires a concrete PAK, UID, and narrow source path. No PAK winner or non-guessed logical resource path was recovered, so no UID/hash operation was run. |
-| Label cross-check | Scoped `_labels.json` discovery under `/var/www/jx-source/pak_unpacked` | No label file recovered in the inspected runtime tree; `name_vi_cross_check` is `unresolved` for all candidates. |
+| Label cross-check | Scoped `_labels.json` discovery under `/var/www/jx-pc/pak_unpacked` | No label file recovered in the inspected runtime tree; `name_vi_cross_check` is `unresolved` for all candidates. |
 
 ## Decode status
 

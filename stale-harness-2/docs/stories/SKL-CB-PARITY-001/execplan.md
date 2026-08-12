@@ -29,7 +29,7 @@ Risk flags:
 Hard gates:
 
 - Không đoán PAK/hash/encoding; dùng `vltktool` nếu chạm encoded content.
-- Không sửa `/var/www/jx-source`.
+- Không sửa `/var/www/jx-pc`.
 - Không claim runtime parity vượt quá evidence.
 - Một writer cho cùng ownership boundary.
 

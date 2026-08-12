@@ -19,7 +19,7 @@ File tồn tại không đủ; SPR phải kiểm action/direction/frame, VFX ph�
 
 ## Vendor policy
 
-- `/var/www/jx-source` read-only.
+- `/var/www/jx-pc` read-only.
 - Chỉ copy exact bytes vào repo-local selected source khi đã chọn và dùng.
 - Không commit secret hoặc toàn bộ PAK.
 - Manifest ghi source path/hash để có thể tái kiểm.

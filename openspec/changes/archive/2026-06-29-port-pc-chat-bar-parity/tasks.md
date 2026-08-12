@@ -34,7 +34,7 @@ Chain strategy: stacked-to-main
       +`_f1`, `btn_chat_sys_up`+`_f1`/`_f2`, `btn_chat_sys_down`+`_f1`/`_f2`,
       `btn_chat_scroll_thumb_pc`, `chat_icon_self_pc`, `chat_icon_friend_pc`,
       `chat_icon_stranger_pc`, `btn_chat_channel_friend`, `btn_chat_channel_stranger`).
-      PC source: `jx-source/pak_unpacked/{spr,dmjx01}/unknown/<hash>.spr`.
+      PC source: `jx-pc/pak_unpacked/{spr,dmjx01}/unknown/<hash>.spr`.
 
 ---
 

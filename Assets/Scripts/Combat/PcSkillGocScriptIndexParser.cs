@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC skill-goc source index parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/server/home_jxser_bachkim_6.0/server1/script/skill-goc
+// Source of truth: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/server/home_jxser_bachkim_6.0/server1/script/skill-goc
 // Imported file: StreamingAssets/Reference/PcSkillGocScript/skill_goc_source_index.txt
 // Catalog only: preserves source file evidence (path/size/SHA) without executing
 // Lua or inferring combat/runtime semantics.

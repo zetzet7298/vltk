@@ -803,7 +803,7 @@ namespace VLTK.Sandbox
 
         public static List<SkillDefinition> CreateWuDangSkills() => new()
         {
-            // Source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/wudang.lua
+            // Source: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill2/wudang.lua
             WuDangPassiveJianFa(),
             WuDangPassiveQuanFa(),
             WuDangYinYangQi(),
@@ -1192,7 +1192,7 @@ namespace VLTK.Sandbox
         //   Sau fix: charAnimId parameter cho UtilitySkill, default 14 cho stance/utility/passive.
         private static SkillDefinition UtilitySkill(int id, string raw, string vi, int req, int radius, SkillMissileForm form, bool targetEnemy, bool targetSelf, int stateSpecialId=0, Func<int,SkillLevelData> levelData=null, PcSkillStyle skillStyle = PcSkillStyle.InitiativeNpcState, int maxLevel = 20, int charAnim = 14, bool isLeapSkill = false, int waitTime = 0, int childSkillId = 0, int childSkillLevel = 0, int childSkillNum = 0, bool baseSkill = false)
         { var s = BaseSkill(id, raw, vi, req, maxLevel, radius, form); s.skillStyle = skillStyle; s.targetEnemy = targetEnemy; s.targetSelf = targetSelf; s.stateSpecialId = stateSpecialId; s.charAnimId = charAnim; s.isLeapSkill = isLeapSkill; s.waitTime = waitTime; s.childSkillId = childSkillId; s.childSkillLevel = childSkillLevel; s.childSkillNum = childSkillNum; s.baseSkill = baseSkill; AddLevels(s, levelData ?? (lv => new SkillLevelData{level=lv})); return s; }
-        /// <summary>Override PreCastSpr với path từ jx-source (khác PC stock 2011).</summary>
+        /// <summary>Override PreCastSpr với path từ jx-pc (khác PC stock 2011).</summary>
         private static SkillDefinition WithJxPreCast(SkillDefinition s, string jxPreCastSprPath)
         { s.effectSourceId = Sprite(jxPreCastSprPath); return s; }
 

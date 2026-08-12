@@ -4,10 +4,10 @@ This map is navigation guidance. Re-run `srcwalk show` before citing line number
 
 ## Source priority
 
-1. `/var/www/jx-source/pak_unpacked/` is the canonical extracted runtime corpus.
+1. `/var/www/jx-pc/pak_unpacked/` is the canonical extracted runtime corpus.
 2. Determine the active package winner from client PAK order with `jx-pc-resource-resolver`.
-3. Use the audited C++ source under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` to interpret table enums, dispatch, timing, and event order.
-4. Use `/var/www/jx-source/docs/SOURCE_INDEX.md`, scan reports, and backend/client port docs as indexes, not substitutes for the underlying source.
+3. Use the audited C++ source under `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/` to interpret table enums, dispatch, timing, and event order.
+4. Use `/var/www/jx-pc/docs/SOURCE_INDEX.md`, scan reports, and backend/client port docs as indexes, not substitutes for the underlying source.
 5. Treat `Assets/StreamingAssets/Reference/`, Unity parsers, tests, comments, screenshots, and old reports as comparison material only.
 
 The bundled helper defaults to `pak_unpacked/slistcache`. That is a selected package for reconnaissance, not proof that `slistcache` wins the active PAK load order.

@@ -177,7 +177,7 @@ namespace VLTK.Sandbox
                     : null;
 
                 // PC gaibang.lua overrides: missle_speed_v takes priority over engine missles.txt Speed.
-                // Source: jx-source bin/client/script/skill/gaibang.lua per-skill interpolation tables.
+                // Source: jx-pc bin/client/script/skill/gaibang.lua per-skill interpolation tables.
                 int missileSpeed = config.missileSpeed;
                 if (PcCaiBangLuaLevelService.Applies(skill.skillId))
                 {

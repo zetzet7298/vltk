@@ -16,9 +16,9 @@ definition, draw-order table, and SPR candidate, and use
 ## PC Evidence And Model
 
 1. Read the selected player definition and draw-order data under
-   `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/`.
+   `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/`.
    Resolve the corresponding `spr\npcres\man` or `spr\npcres\woman` parts from
-   `/var/www/jx-source/pak_unpacked/`.
+   `/var/www/jx-pc/pak_unpacked/`.
 2. A character is layered SPR parts, not one sprite. Each action chooses the
    appropriate frame per direction; per-frame offsets share a reference pixel,
    and the PC draw-order table controls layer order.

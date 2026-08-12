@@ -6,8 +6,8 @@ namespace VLTK.Tests.Sandbox
 {
     public class PcMissileSourceAuditTests
     {
-        private const string PcLooseServerMissles = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/Missles.txt";
-        private const string PcPakUnpackedMissles = "/var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt";
+        private const string PcLooseServerMissles = "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/Missles.txt";
+        private const string PcPakUnpackedMissles = "/var/www/jx-pc/pak_unpacked/slistcache/settings/missles.txt";
         private static string RepoRoot => Directory.GetCurrentDirectory();
         private static string ReferenceRoot => Path.Combine(RepoRoot, "Assets/StreamingAssets/Reference");
         private static string PcAttribRoot => Path.Combine(ReferenceRoot, "PcAttrib");

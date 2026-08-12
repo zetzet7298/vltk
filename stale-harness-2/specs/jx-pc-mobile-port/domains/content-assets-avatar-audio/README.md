@@ -2,7 +2,7 @@
 
 ## Phạm vi và authority
 
-Miền này sở hữu discovery/resolve/extract/compile content, provenance package, asset visual, map bundle identity, avatar compositing, audio catalog và golden/parity gate. Runtime production chỉ đọc content bundle immutable đã pin; `~/Projects/vltktool` là công cụ duy nhất để resolve/extract/hash/encoding từ corpus PC, còn `/var/www/jx-source` luôn read-only.
+Miền này sở hữu discovery/resolve/extract/compile content, provenance package, asset visual, map bundle identity, avatar compositing, audio catalog và golden/parity gate. Runtime production chỉ đọc content bundle immutable đã pin; `~/Projects/vltktool` là công cụ duy nhất để resolve/extract/hash/encoding từ corpus PC, còn `/var/www/jx-pc` luôn read-only.
 
 Thứ tự authority là manifest tiếng Việt active `bin/client/package.ini`, package mở thành công theo key số tăng dần và lookup first-match; tiếp theo là client source/config/PAK matching. Package không active không được tham gia winner dù tên/mtime trông mới hơn. `~/Projects/vltk` và Unity hiện hữu chỉ là reference/as-is.
 

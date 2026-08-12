@@ -68,7 +68,7 @@ Pause for human confirmation if:
   version, and active load-order evidence.
 - A logical path, UID, encoding, label, decode result, or legal state is
   unavailable, ambiguous, or conflicting.
-- Work would vendor bytes, modify `/var/www/jx-source`, alter runtime behavior,
+- Work would vendor bytes, modify `/var/www/jx-pc`, alter runtime behavior,
   or enable any pilot/public distribution.
 - A legal approval, owner, expiry, or distribution boundary must be interpreted
   rather than supplied as evidence.

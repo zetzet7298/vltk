@@ -21,7 +21,7 @@ This change delivers two things:
    matching the PC VLTK layout: 3 tabs, equipment paperdoll, Khóa/Đính/Tháo/Đóng buttons.
 
 PC behaviour: windows are GBK-encoded INI layouts (`[Main]` background SPR + child sections) in
-`jx-source/pak_unpacked`. Vietnamese client SPRs carry a `_vn` suffix. No C++ popup source
+`jx-pc/pak_unpacked`. Vietnamese client SPRs carry a `_vn` suffix. No C++ popup source
 exists; the classic status window appears engine-side, so we reconstruct from the reference image
 with PC frame art.
 

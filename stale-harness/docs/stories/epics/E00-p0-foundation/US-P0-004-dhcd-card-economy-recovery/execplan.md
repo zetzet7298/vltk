@@ -19,7 +19,7 @@ In scope:
 Out of scope:
 
 - Unity/client/server implementation or data defaults.
-- JX resource lookup, asset selection, or writes under `/var/www/jx-source`.
+- JX resource lookup, asset selection, or writes under `/var/www/jx-pc`.
 - Runtime instrumentation without an explicitly available authorized target.
 - Product ADRs that replace missing reverse evidence.
 
@@ -87,4 +87,4 @@ Pause and retain unresolved status if:
 - A proposed number comes from a name, UI assumption, product preference, or
   an unversioned/default configuration.
 - Validation would require modifying the canonical reverse inputs, Unity, or
-  `/var/www/jx-source`.
+  `/var/www/jx-pc`.

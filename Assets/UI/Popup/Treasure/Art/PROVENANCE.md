@@ -1,6 +1,6 @@
 # Treasure popup PC SPR provenance
 
-Canonical source: `/var/www/jx-source/pak_unpacked` (read-only). Logical-path UIDs computed with `~/Projects/vltktool/jx_hash.py`; PNG frames extracted with `extract_item_spr.py`.
+Canonical source: `/var/www/jx-pc/pak_unpacked` (read-only). Logical-path UIDs computed with `~/Projects/vltktool/jx_hash.py`; PNG frames extracted with `extract_item_spr.py`.
 
 | Unity file | UID/package | PC logical path | Frame | SHA-256 |
 |---|---:|---|---:|---|

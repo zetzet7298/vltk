@@ -22,7 +22,7 @@
 2. Card pick UI phải có **icon SPR đúng skill** (không proxy nếu đã staged).
 3. Card xuất hiện **tỉ lệ thuận thời gian run** — run càng dài, skill sau (theo thứ tự 1→4) mới mở.
 4. **Mặc định run start**: player chọn 1 trong 2 card đầu (128, 125).
-5. **Cấp độ sao** từng skill = cấp độ skill trong jx-source (level/MaxLevel).
+5. **Cấp độ sao** từng skill = cấp độ skill trong jx-pc (level/MaxLevel).
 6. Logic/behavior tham chiếu dhcd (`LevelRandomSkillCtrl` parity đã có sẵn).
 7. **VFX phải giống sandbox** — precast SPR + child missile SPR y hệt Sandbox `SkillEffectVisualService`.
 

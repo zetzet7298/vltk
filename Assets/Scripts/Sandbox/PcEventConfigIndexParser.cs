@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC event config source index parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem only:
+// Source of truth: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem only:
 //   Client 6.0/settings/event
 //   Server 6.0/server/home_jxser*/server1/settings/event
 // Catalog/schema evidence only. This does not claim event runtime behavior.

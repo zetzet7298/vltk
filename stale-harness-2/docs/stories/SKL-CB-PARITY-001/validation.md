@@ -18,7 +18,7 @@ Mỗi sửa đổi phải nối được: PC source/config line hoặc exact ext
 ## Fixtures
 
 - `CombatActorState` Cái Bang trong `CaiBangCombatParityTests`.
-- Canonical Cái Bang PC source dưới `/var/www/jx-source`.
+- Canonical Cái Bang PC source dưới `/var/www/jx-pc`.
 - Repo-local `Assets/StreamingAssets/Reference/gaibang.lua` chỉ dùng khi exact provenance được kiểm tra.
 
 ## Commands
@@ -31,7 +31,7 @@ bash scripts/run_caibang_parity_tests.sh
 
 ## Acceptance Evidence
 
-- Canonical static rows extracted from `/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt` into exact repo slices:
+- Canonical static rows extracted from `/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt` into exact repo slices:
   - `Assets/StreamingAssets/Reference/PcCaiBangSkills.txt` for audit/readability.
   - `Assets/Resources/Reference/PcCaiBangSkills.bytes` for synchronous packaged runtime loading on Android.
 - `PcCombatCatalogFactory` overlays canonical skill style, state, missile, child/event, targeting, animation, wait/cooldown and ByMissle fields for player Cái Bang rows; Unity render fallback is retained only where PC form `0` still owns child missiles.

@@ -36,5 +36,5 @@ this story must otherwise remain fail-closed.
 
 - No Unity map import, collision test, scene, runtime port, or pilot enablement.
 - No selected winner from textual IDs/hash/name evidence alone.
-- No byte vendoring, copying, or writes under `/var/www/jx-source`.
+- No byte vendoring, copying, or writes under `/var/www/jx-pc`.
 - No legal-clearance or internal/public distribution claim.

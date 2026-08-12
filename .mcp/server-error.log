@@ -8,26 +8,32 @@
 |                                                                             |
 |                                                                             |
 |                                                                             |
-|                                FastMCP 3.4.6                                |
+|                                FastMCP 3.4.7                                |
 |                            https://gofastmcp.com                            |
 |                                                                             |
-|                 \U0001f5a5  Server:      mcp-for-unity-server, 3.4.6                 |
+|                 \U0001f5a5  Server:      mcp-for-unity-server, 3.4.7                 |
 |                 \U0001f680 Deploy free: https://horizon.prefect.io                  |
 |                                                                             |
 +-----------------------------------------------------------------------------+
 
 
-[08/07/26 08:40:23] INFO     Starting MCP server               transport.py:361
+[08/12/26 08:32:34] INFO     Starting MCP server               transport.py:361
                              'mcp-for-unity-server' with                       
                              transport 'http' on                               
                              http://127.0.0.1:8080/mcp                         
-INFO:     Started server process [15780]
+INFO:     Started server process [20788]
 INFO:     Waiting for application startup.
-2026-08-07 08:40:24,026 - mcp.server.streamable_http_manager - INFO - StreamableHTTP session manager started
+2026-08-12 08:32:34,819 - mcp.server.streamable_http_manager - INFO - StreamableHTTP session manager started
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)
-INFO:     127.0.0.1:62292 - "WebSocket /hub/plugin" [accepted]
+INFO:     127.0.0.1:63756 - "WebSocket /hub/plugin" [accepted]
 INFO:     connection open
-2026-08-07 08:42:16,798 - transport.plugin_hub - INFO - Plugin registered: vltk-mobile (f5ebb74dcc07f433)
-2026-08-07 08:42:18,050 - transport.plugin_hub - INFO - Registered 35 tools for session 93e65db1-fe29-4b70-bd47-2decb6cec3bb
-2026-08-07 08:42:18,051 - transport.plugin_hub - INFO - Server-level tool visibility synced from Unity: enabled=[animation, asset_gen, core, docs, probuilder, profiling, scripting_ext, testing, ui, vfx], disabled=[], total_transforms=19, unity_start=9
+2026-08-12 08:34:24,321 - transport.plugin_hub - INFO - Plugin registered: vltk-mobile (f5ebb74dcc07f433)
+2026-08-12 08:34:25,561 - transport.plugin_hub - INFO - Registered 35 tools for session 6d56a45c-bfd8-460d-a9b1-4649ff05e08b
+2026-08-12 08:34:25,562 - transport.plugin_hub - INFO - Server-level tool visibility synced from Unity: enabled=[animation, asset_gen, core, docs, probuilder, profiling, scripting_ext, testing, ui, vfx], disabled=[], total_transforms=19, unity_start=9
+2026-08-12 08:34:31,307 - transport.plugin_hub - INFO - Plugin session 6d56a45c-bfd8-460d-a9b1-4649ff05e08b disconnected (1005)
+2026-08-12 08:49:30,035 - mcp.server.streamable_http_manager - INFO - Created new transport with session ID: d76fcb507af8424087cb97c5646f6540
+2026-08-12 08:49:30,108 - mcp.server.streamable_http_manager - INFO - Created new transport with session ID: ef99210735d54a2ba484728bbbd91744
+2026-08-12 08:49:30,223 - mcp.server.streamable_http_manager - INFO - Created new transport with session ID: b5ac98b39a674546a0ad6006f086779a
+2026-08-12 08:49:30,250 - mcp.server.streamable_http_manager - INFO - Created new transport with session ID: 8bdd5051620f4da0b2a54190687bc6f9
+2026-08-12 08:49:30,873 - mcp.server.streamable_http_manager - INFO - Created new transport with session ID: ba709bafa4bb4f31aad59d71fa5aa103

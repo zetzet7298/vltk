@@ -34,7 +34,7 @@ Risk flags:
 Hard gates:
 
 - PAK/SPR/DAT/hash/encoding operations use `~/Projects/vltktool` only.
-- `/var/www/jx-source` remains read-only.
+- `/var/www/jx-pc` remains read-only.
 - No validation weakening or Unity-derived expected oracle.
 
 ## Work Phases

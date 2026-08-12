@@ -38,7 +38,7 @@ Observed on 2026-07-20:
 ```text
 Python relevant integration: 37 passed.
 Python full suite: 18,258 passed; 5 unrelated failures because the canonical PC
-  activitysys/config/12/variables.lua path is absent from /var/www/jx-source.
+  activitysys/config/12/variables.lua path is absent from /var/www/jx-pc.
 Map tests: 6 passed.
 Map verifier: verified_unsigned_fail_closed; productionSignatureVerified=false.
 Unity compile: PASS, zero compiler errors.

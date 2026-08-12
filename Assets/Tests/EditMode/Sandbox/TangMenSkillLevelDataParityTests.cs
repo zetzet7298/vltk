@@ -57,7 +57,7 @@ namespace VLTK.Tests.Sandbox
             Assert.IsTrue(File.Exists(LuaPath), $"vendored canonical lua missing: {LuaPath}");
             Assert.AreEqual(LuaSha256, Sha256Hex(LuaPath),
                 "PcTangMenSkillLevelData.lua drifted from the canonical PC server tangmen.lua; "
-                + "re-vendor from /var/www/jx-source/.../bin/Server/script/skill/tangmen.lua and "
+                + "re-vendor from /var/www/jx-pc/.../bin/Server/script/skill/tangmen.lua and "
                 + "update PcTangMenSkillLevelData.lua.provenance.json");
 
             // Byte-exactness: the vendored copy MUST equal the canonical source it documents.

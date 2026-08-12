@@ -4,7 +4,7 @@
   "runtimeClaim": true,
   "notes": [
     "PcMissileRegistry now prefers Reference/PcAttrib/missles1.txt for runtime load when present.",
-    "PC source backing repo-pcattrib/missles1.txt is slistcache.pak entry \\settings\\missles.txt mirrored at /var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt.",
+    "PC source backing repo-pcattrib/missles1.txt is slistcache.pak entry \\settings\\missles.txt mirrored at /var/www/jx-pc/pak_unpacked/slistcache/settings/missles.txt.",
     "Current canonical PC missile tables use the 57-column schema/header hash recorded below.",
     "Duplicate-id policy: current repo-pcattrib/missles1.txt has no duplicate MissileId; if duplicates reappear, sequential table load is last-row-wins."
   ],
@@ -13,7 +13,7 @@
   "sources": [
     {
       "label": "pc-source-server/Missles.txt",
-      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/Missles.txt",
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/Missles.txt",
       "bytes": 89786,
       "sha256": "4f79cde57b199747ce1fa65216c46ede3596c8e5c9bafd1b73c8f137269ee66e",
       "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
@@ -32,7 +32,7 @@
     },
     {
       "label": "pc-pak-slistcache/missles.txt",
-      "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt",
+      "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/missles.txt",
       "bytes": 105850,
       "sha256": "e893c7af74d43672f1513b8325e31ba3270ebe425ac668f1b444e81db845e8bc",
       "headerSha256": "e7a8ce5c9855fe3fcd4e7c655e746d39e8385d530a01c4d46d512803d8efff7f",
@@ -49,7 +49,7 @@
         57
       ],
       "pak": {
-        "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/slistcache.pak",
+        "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/slistcache.pak",
         "bytes": 2914491,
         "sha256": "eb2dd75384d152086a80b8c8fb8c0e4311e00bce7cf5d14c40423ccab4945150",
         "entries": 827,

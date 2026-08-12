@@ -9,9 +9,9 @@ high-risk hiện hành là `#3`; story đang được thực thi qua Herdr run
   `orch-5c58d1c2131bc464` (re-audit wave; prior integration wave was
   `orch-46fc75190d57cfa7`).
 
-Canonical PC source là cây read-only `/var/www/jx-source`, trong đó source engine
+Canonical PC source là cây read-only `/var/www/jx-pc`, trong đó source engine
 được pin tại repo lồng
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`. Worktree PC đang
+`/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem`. Worktree PC đang
 dirty nên mọi claim behavior phải ghi cả commit và SHA-256 của file thực tế đã
 đọc. Mobile contracts tại `/var/www/vltk-mobile/domains/server-runtime/`,
 `/var/www/vltk-mobile/contracts/` và `/var/www/vltk-mobile/Assets/Scripts/Backend/`
@@ -42,7 +42,7 @@ coverage inventory, gap matrix, roadmap/checklist và completion audit.
 ## Non-Goals
 
 - Không implement hoặc refactor runtime backend trong story này.
-- Không sửa bất kỳ byte nào dưới `/var/www/jx-source`.
+- Không sửa bất kỳ byte nào dưới `/var/www/jx-pc`.
 - Không phục hồi specs/stories đang bị xóa trong worktree mobile; chỉ đối chiếu
   target hiện tồn tại và ghi path exact.
 - Không đặc tả UI/rendering/audio/SPR thuần client, trừ seam mà server phải phát dữ liệu hoặc enforce rule.

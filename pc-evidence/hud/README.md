@@ -1,6 +1,6 @@
 # Bảng Tra Cứu Tên File SPR Gốc Cho Giao Diện HUD (PC Client 6.0)
 
-Tài liệu này lưu trữ danh sách các tập tin ảnh giao diện HUD dưới dạng `.spr` thực tế được giải nén từ game PC gốc Võ Lâm Truyền Kỳ 1 tại `/var/www/jx-source/`.
+Tài liệu này lưu trữ danh sách các tập tin ảnh giao diện HUD dưới dạng `.spr` thực tế được giải nén từ game PC gốc Võ Lâm Truyền Kỳ 1 tại `/var/www/jx-pc/`.
 
 Do hệ thống đóng gói PAK sử dụng mã băm (hash UID) một chiều cho đường dẫn, các file này được giải nén thành tên file hệ lục phân (hex) trong các thư mục `unknown` của từng thư mục giải nén PAK tương ứng.
 
@@ -102,13 +102,13 @@ Geometry Hành Trang tái dựng theo `[ItemBox]` từ companion/stash INI (`94a
 
 ## 5. Tỉ lệ màn hình & Độ phân giải gốc trên PC (Screen Resolution & Aspect Ratio)
 
-Game PC gốc (`jx-source`) được thiết kế chạy trên màn hình CRT cũ với tỉ lệ khung hình chuẩn là **4:3**. Game hỗ trợ hai độ phân giải chính được định nghĩa trong tệp cấu hình `config.ini` của Client:
+Game PC gốc (`jx-pc`) được thiết kế chạy trên màn hình CRT cũ với tỉ lệ khung hình chuẩn là **4:3**. Game hỗ trợ hai độ phân giải chính được định nghĩa trong tệp cấu hình `config.ini` của Client:
 *   **`800x600`** (Tỉ lệ 4:3) - `Resolution=0`
 *   **`1024x768`** (Tỉ lệ 4:3) - `Resolution=1` (Đây là chế độ hiển thị mặc định của game)
 
 Tất cả các tài nguyên ảnh giao diện `.spr` và hệ thống bố cục (layout) trong file INI đều được thiết kế dựa trên các kích thước gốc 4:3 này. Khi port sang nền tảng di động (tỉ lệ màn hình rộng hiện nay như 16:9, 18:9, 19.5:9), **không được** nhân tỷ lệ thô trực tiếp cho ảnh (gây méo). Thay vào đó, áp dụng neo góc màn hình (Anchor) theo cụm HUD (topbar neo Top-Center, minimap neo Top-Right, chat neo Bottom-Left, toolbar neo Bottom-Center), giữ nguyên tỉ lệ ảnh (Aspect Ratio) của từng `.spr`, và co giãn theo tỉ lệ màn hình thực tế của thiết bị.
 
-> **Ghi chú sửa nguồn**: Cơ chế nội bộ `curSalx = frameSize.height / frameSize.width` từng bị ghi nhầm — nguồn thực là bản port C++ `jx-cocos` (`~/Projects/jx-cocos`), **không phải PC gốc**. Đã gỡ bỏ. Từ đây nguồn duy nhất là `/var/www/jx-source` (file INI trong `pak_unpacked/1024` + `config.ini`).
+> **Ghi chú sửa nguồn**: Cơ chế nội bộ `curSalx = frameSize.height / frameSize.width` từng bị ghi nhầm — nguồn thực là bản port C++ `jx-cocos` (`~/Projects/jx-cocos`), **không phải PC gốc**. Đã gỡ bỏ. Từ đây nguồn duy nhất là `/var/www/jx-pc` (file INI trong `pak_unpacked/1024` + `config.ini`).
 
 ---
 

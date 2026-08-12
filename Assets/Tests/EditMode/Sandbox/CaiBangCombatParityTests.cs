@@ -166,7 +166,7 @@ namespace VLTK.Tests.Sandbox
             // PC truth (verified 2026-06-29): gaibang.lua has NO confuse/混乱/迷惑 keyword at all,
             // and missles.txt has no state-apply column. Therefore NO Cai Bang player skill applies
             // a Confuse state at cast time. Previous catalog entries adding ConfuseP were fabricated.
-            // PC source: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua
+            // PC source: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua
             //           + pak_unpacked/slistcache/unknown/08bcd3fc.dat (missles, no state cols).
             var cat = Catalog();
             int[] ids = { 117, 119, 122, 125, 128, 357, 359, 1073, 1074 };
@@ -739,7 +739,7 @@ namespace VLTK.Tests.Sandbox
         {
             // PC gaibang.lua short-range skills (119, 122): skill_attackradius={{{1,320},{20,384}}}.
             // [CaiBang-FailClosed117 2026-07-17] 117 (Đầu Thạch Vấn Lộ) has NO PC LvlData beyond skill_cost_v
-            //   (jx-source pak_unpacked/update03/settings/skills.txt row 117 col 73 = "skill_cost_v").
+            //   (jx-pc pak_unpacked/update03/settings/skills.txt row 117 col 73 = "skill_cost_v").
             //   It must NOT borrow yanmen_tuobo (119); the lua service fails closed (returns 0).
             // PC gaibang.lua long-range skills (125, 128, 357, 359, 1073, 1074, 1539): skill_attackradius={{{1,448},{20,512}}}.
             // [CaiBang-LuaPort 2026-06-17] PcCaiBangSkillTuning/PcCaiBangModTuning removed;

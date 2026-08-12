@@ -86,7 +86,7 @@ granting one non-overlapping writer scope.
   performs final damage before cleanup. Time zero is a no-op.
 - A noncanonical `Assets/StreamingAssets/Reference/KNpc.cpp` copy lacks the
   cleanup branch; it is recorded only as variant drift and cannot override the
-  `/var/www/jx-source` source of truth.
+  `/var/www/jx-pc` source of truth.
 - Delivery implementation proof passed `41` focused domain/runtime/checkpoint
   tests; full combat regression passed `669`. Changed-scope Ruff/Black, strict
   specs and diff check passed. Broad combat Ruff/Black retains legacy failures

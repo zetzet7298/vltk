@@ -17,8 +17,8 @@
 | `E-DHCD-SERVER-DECISION` | `/home/zet/Projects/dhcd/docs/server-reverse-decision.md:1-35` | backend target là contract mới; không cần DHCD wire compatibility | Không phải thiết kế API hoàn chỉnh |
 | `E-DHCD-APK` | `/var/www/dhcd/localization_vi/output/apktool_clean_from_full/lib/arm64-v8a/libil2cpp.so` | input binary đã hash trong docs | Chỉ là artifact input, không tự chứng minh behavior |
 | `E-DHCD-METADATA` | `/var/www/dhcd/localization_vi/output/apktool_clean_from_full/assets/bin/Data/Managed/Metadata/global-metadata.dat` | metadata matching đã hash trong docs | Cần matching binary khi reverse lại |
-| `E-JX-PAK` | `/var/www/jx-source/pak_unpacked/` | candidate runtime assets/config | Mỗi file cần manifest resolver riêng |
-| `E-JX-LEGACY` | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` | behavior/config source evidence | Không tự động là PAK winner |
+| `E-JX-PAK` | `/var/www/jx-pc/pak_unpacked/` | candidate runtime assets/config | Mỗi file cần manifest resolver riêng |
+| `E-JX-LEGACY` | `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/` | behavior/config source evidence | Không tự động là PAK winner |
 | `E-JX-TOOL` | `/home/zet/Projects/vltktool/` | resolver/decode/hash evidence | Command và version phải ghi theo asset |
 | `E-UNITY` | `/var/www/vltk-mobile` | code reuse/migration surface | Không phải source of truth cho JX parity |
 | `E-HARNESS-DB` | `/var/www/vltk-mobile/scripts/schema/001-init.sql` | harness SQLite metadata tables nếu cần test tooling | Không phải game PostgreSQL schema |
@@ -37,7 +37,7 @@ Runtime check 2026-07-15: `docker inspect postgres --format ...` reported `/post
 | `/var/www/vltk-mobile/scripts/schema/001-init.sql` | 5651 | `c7d3f13ae6849aacdcee7538b5f6a159f237ff5676d0df261855a874dabb96b3` |
 | `/home/zet/.codex/attachments/19ad23fc-a9f3-4549-9e80-41e12e77df01/pasted-text-1.txt` | 4643 | `1378e2a1442d224fc1a0c884c0418bd11e6dd1323fab7ec9d56a5d2538375e4a` |
 
-Directory sources (`/var/www/jx-source`, `/var/www/vltk-mobile`, `/home/zet/Projects/dhcd`) require per-selected-file manifest/hash; a directory path alone is not an asset provenance record. Pure to-be/design records may use `design-only`; `[CẦN XÁC NHẬN]` is allowed only while status is `not_started`, `blocked` or `provisional`, and can never satisfy `verified`.
+Directory sources (`/var/www/jx-pc`, `/var/www/vltk-mobile`, `/home/zet/Projects/dhcd`) require per-selected-file manifest/hash; a directory path alone is not an asset provenance record. Pure to-be/design records may use `design-only`; `[CẦN XÁC NHẬN]` is allowed only while status is `not_started`, `blocked` or `provisional`, and can never satisfy `verified`.
 
 ## Card bắt buộc cho evidence mới
 

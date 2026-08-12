@@ -18,8 +18,8 @@ This is a technical follow-up to the archived `bind-accessory-equipment-slots` c
 - Existing loader: `Assets/Scripts/Sandbox/ItemData/PcItemBatchLoader.cs`
 - Existing similar parsers: `PcPendantParser`, `PcRingParser`, `PcAmuletParser`
 - PC source:
-  - `/var/www/jx-source/Server 6.0/server/home_jxser/server1/settings/item/004/mask.txt`
-  - `/var/www/jx-source/Server 6.0/server/home_jxser/server1/settings/item/004/shipin.txt`
+  - `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/settings/item/004/mask.txt`
+  - `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/settings/item/004/shipin.txt`
 - Scout report: `harness/harness/planning/scout-mask-shipin-parsers.md`
 - Exa research: Unity/CSV parser practice supports header-aware tab-delimited parsing and integration tests.
 - DeepWiki repo query was unavailable because the GitHub repo is not indexed.

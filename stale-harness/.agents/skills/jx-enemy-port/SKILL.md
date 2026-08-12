@@ -17,19 +17,19 @@ and resource-first MCP checks.
 ## PC Evidence
 
 1. Locate the selected map's server data under
-   `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/maps/`
+   `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/maps/`
    and enumerate its `*_Region_S.dat` candidates. `Region_C` is client map
    decoration and is not evidence for server enemy spawns.
 2. Parse the `Region_S` NPC section using the matching C++ definitions under
-   `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`. Preserve
+   `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/`. Preserve
    template ID, MPS X/Y, kind, level, facing, camp, series, raw GBK name, and
    script data.
 3. Resolve each template against
-   `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcS.txt`.
+   `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcS.txt`.
    Verify names against the spawn record; use its stats, AI fields, and
    `NpcResType` only after the row is confirmed.
 4. Resolve every selected SPR through `jx-pc-resource-resolver` in
-   `/var/www/jx-source/pak_unpacked/`. If no exact visual is available, retain
+   `/var/www/jx-pc/pak_unpacked/`. If no exact visual is available, retain
    the authoritative spawn as a non-rendered marker or report it; do not ship a
    placeholder.
 

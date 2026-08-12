@@ -22,7 +22,7 @@ In scope:
 Out of scope:
 
 - Unity, server, scene, asset, runtime, or feature-flag changes.
-- Copying/vendoring bytes or modifying `/var/www/jx-source`.
+- Copying/vendoring bytes or modifying `/var/www/jx-pc`.
 - Selecting, enabling, or claiming a pilot arena from textual IDs, names, or
   hashes alone.
 - Legal clearance or any distribution claim.

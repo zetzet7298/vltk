@@ -2119,7 +2119,7 @@ class Validator:
         expected_revision = source_state.get("revision")
         if source_state.get("dirty") is True and isinstance(expected_revision, str):
             expected_revision += "+dirty"
-        expected_revision = f"jx-source:{expected_revision}" if isinstance(expected_revision, str) else None
+        expected_revision = f"jx-pc:{expected_revision}" if isinstance(expected_revision, str) else None
         for entity_id, entity in self.entities.items():
             if not entity_id.startswith("EVID-") or entity.get("kind") != "source":
                 continue

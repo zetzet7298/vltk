@@ -52,14 +52,14 @@ Button/panel SPRs below exist in `update01.pak` and `spr.pak`; `update01.pak` wi
 ## Extraction commands
 
 ```bash
-python3 ~/Projects/vltktool/decode_ui_ini.py --file /var/www/jx-source/pak_unpacked/update03/unknown/05ea8560.dat
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/312b30c9.spr --out-root /tmp/vltk-inventory-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/03fb698d.spr --out-root /tmp/vltk-inventory-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/d00e7b1d.spr --out-root /tmp/vltk-inventory-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/8bc8706b.spr --out-root /tmp/vltk-inventory-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/72378328.spr --out-root /tmp/vltk-inventory-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/cea0ceea.spr --out-root /tmp/vltk-inventory-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/cd3a967b.spr --out-root /tmp/vltk-inventory-spr
+python3 ~/Projects/vltktool/decode_ui_ini.py --file /var/www/jx-pc/pak_unpacked/update03/unknown/05ea8560.dat
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/312b30c9.spr --out-root /tmp/vltk-inventory-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/03fb698d.spr --out-root /tmp/vltk-inventory-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/d00e7b1d.spr --out-root /tmp/vltk-inventory-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/8bc8706b.spr --out-root /tmp/vltk-inventory-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/72378328.spr --out-root /tmp/vltk-inventory-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/cea0ceea.spr --out-root /tmp/vltk-inventory-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/cd3a967b.spr --out-root /tmp/vltk-inventory-spr
 ```
 
 ## Coordinate source

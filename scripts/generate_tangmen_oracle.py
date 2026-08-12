@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 
-CANONICAL_ROOT = Path("/var/www/jx-source")
+CANONICAL_ROOT = Path("/var/www/jx-pc")
 CANONICAL_FILES = {
     "pak_unpacked/slistcache/settings/skills.txt": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c",
     "01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua": "7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3",

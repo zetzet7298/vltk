@@ -5,11 +5,11 @@ corpus is already available:
 
 | What | Path |
 |---|---|
-| Loose source/config/map tree | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` |
-| MapList.ini | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/MapList.ini` |
-| Loose maps and `.wor` bounds | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/maps/` |
-| C++ map/renderer format evidence | `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` |
-| Unpacked runtime PAK assets/data | `/var/www/jx-source/pak_unpacked/` |
+| Loose source/config/map tree | `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/` |
+| MapList.ini | `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/MapList.ini` |
+| Loose maps and `.wor` bounds | `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/maps/` |
+| C++ map/renderer format evidence | `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/` |
+| Unpacked runtime PAK assets/data | `/var/www/jx-pc/pak_unpacked/` |
 
 The extraction scripts accept original PAK input only when it exists beneath
 the canonical source root. For asset selection, paths, encodings, and

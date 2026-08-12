@@ -9,13 +9,13 @@ Use this skill first for every PC-to-Unity port. It defines the only source hier
 
 ## Canonical Sources
 
-- `/var/www/jx-source` is the sole canonical PC corpus and is read-only.
+- `/var/www/jx-pc` is the sole canonical PC corpus and is read-only.
 - Start with the scoped loose source and documentation:
-  - Docs: `/var/www/jx-source/01_tinh_kiem_source/tai-lieu-game`
-  - Source index: `/var/www/jx-source/docs/SOURCE_INDEX.md`
-  - Audit report: `/var/www/jx-source/docs/SCAN_REPORT_TINH_KIEM.md`
-  - C++ and client source: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`
-- Then inspect the canonical unpacked runtime data at `/var/www/jx-source/pak_unpacked/`.
+  - Docs: `/var/www/jx-pc/01_tinh_kiem_source/tai-lieu-game`
+  - Source index: `/var/www/jx-pc/docs/SOURCE_INDEX.md`
+  - Audit report: `/var/www/jx-pc/docs/SCAN_REPORT_TINH_KIEM.md`
+  - C++ and client source: `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/`
+- Then inspect the canonical unpacked runtime data at `/var/www/jx-pc/pak_unpacked/`.
 - For JX x DHCD work, JX is authoritative for identity, maps, NPCs, items, skill base data, and SPR/VFX/WAV. Use DHCD behavior only with matching evidence or reverse-engineering evidence.
 - Unity code, generated assets, screenshots, prior ports, and guesses are implementation clues, never proof.
 
@@ -25,7 +25,7 @@ Use this skill first for every PC-to-Unity port. It defines the only source hier
 2. Compare that evidence with the current Unity implementation, then make the smallest change that matches the PC result.
 3. Do not invent names, formulas, timing, frames, effects, coordinates, fallback behavior, or asset mappings.
 4. Preserve original encodings while inspecting PC files. Localize user-facing Unity text only while retaining the source mapping.
-5. Do not modify anything under `/var/www/jx-source`.
+5. Do not modify anything under `/var/www/jx-pc`.
 
 ## Provenance Record
 

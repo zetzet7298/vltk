@@ -2,7 +2,7 @@
 
 ## Goal
 
-Đưa toàn bộ player-facing skill 10 phái đến evidence-backed parity với canonical jx-source, theo wave nhỏ, runnable và review độc lập.
+Đưa toàn bộ player-facing skill 10 phái đến evidence-backed parity với canonical jx-pc, theo wave nhỏ, runnable và review độc lập.
 
 ## Risk
 

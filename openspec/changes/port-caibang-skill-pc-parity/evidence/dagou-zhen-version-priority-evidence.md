@@ -8,11 +8,11 @@ This corrects an older mobile interpretation that treated `124` as `SkillStyle=2
 ## Compared PC sources
 All checked newest PC skill tables agree for row `124`:
 
-- `/var/www/jx-source/Client 6.0/settings/skills.txt`
-- `/var/www/jx-source/Server 6.0/server/home_jxser/server1/settings/skills.txt`
-- `/var/www/jx-source/Server 6.0/server/home_jxser/server1/script/skill2/skills.txt`
-- `/var/www/jx-source/Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/skills.txt`
-- `/var/www/jx-source/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill2/skills.txt`
+- `/var/www/jx-pc/Client 6.0/settings/skills.txt`
+- `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/settings/skills.txt`
+- `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/script/skill2/skills.txt`
+- `/var/www/jx-pc/Server 6.0/server/home_jxser_bachkim_6.0/server1/settings/skills.txt`
+- `/var/www/jx-pc/Server 6.0/server/home_jxser_bachkim_6.0/server1/script/skill2/skills.txt`
 
 Row `124` values:
 

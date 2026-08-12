@@ -24,7 +24,7 @@ Ghi `C:/Projects/vltk-mobile/.scratch/survivor/research/skill-library.md`: bản
 form|visual-staged?|own-SkillDef-field-map), fail-closed list, schema doc, supply subset. Đọc:
 `PcSkills.txt` (GBK), `PcAllFactionLearnedDisplaySkills.txt` (TCVN3), `missles.txt`, Sandbox
 `PcSkill*Parser`, `bin/client/package.ini` (winner priority), `C:/Projects/vltktool`
-(`resolve_uid.py`, `extract_item_spr.py`), `C:/Projects/jx-source` read-only.
+(`resolve_uid.py`, `extract_item_spr.py`), `C:/Projects/jx-pc` read-only.
 
 Fail-closed: KHÔNG bịa path/sprite. Chỉ kết luận portability dựa staged-hash thực.
 

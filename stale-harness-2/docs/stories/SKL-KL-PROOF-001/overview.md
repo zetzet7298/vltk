@@ -32,5 +32,5 @@ nhất quán.
 
 - Không claim runtime curve, projectile timing, visual/audio hoặc Android parity.
 - Không tự thêm 5 Unity-only ID vào learned state khi PC evidence chưa chứng minh.
-- Không sửa `/var/www/jx-source`.
+- Không sửa `/var/www/jx-pc`.
 - Không suy UI order từ progression/skillbook membership.

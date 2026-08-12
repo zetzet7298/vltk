@@ -26,7 +26,7 @@ Narrow claim: this proves no **state aura** attaches. Some roots still have PC p
 ```bash
 cd /home/zet/Projects/vltktool
 python3 extract_table_slice.py \
-  --input /var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt \
+  --input /var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt \
   --key-column SkillId \
   --ids 15,90,174,175,177,273,277,282,332,356,364,391,392,393,394,716,720 \
   --output /tmp/vltk-state-residuals/skills-slice.txt \
@@ -35,7 +35,7 @@ python3 extract_table_slice.py \
 
 Result:
 
-- source: `/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt`
+- source: `/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt`
 - source bytes: `845831`
 - source sha256: `c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c`
 - slice sha256: `a8987e7d5e595eedb6fa9e584789026741b68b48b6c875c418e747b324c04a02`
@@ -72,8 +72,8 @@ cd /home/zet/Projects/vltktool
 python3 - <<'PY'
 from pathlib import Path
 import hashlib
-loaded=Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/状态与光效图形对照表.txt')
-stub=Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/状态与光效图形对照表.txt')
+loaded=Path('/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/状态与光效图形对照表.txt')
+stub=Path('/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/状态与光效图形对照表.txt')
 for label,p in [('loaded',loaded),('npcres_stub',stub)]:
     raw=p.read_bytes(); text=raw.decode('gbk')
     rows=[]
@@ -93,7 +93,7 @@ PY
 
 Result:
 
-- loaded table path: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/状态与光效图形对照表.txt`
+- loaded table path: `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/状态与光效图形对照表.txt`
 - loaded bytes: `3513`
 - loaded sha256: `4166fdd4c8f28db74c244bf7eb71eab16fb6227840cbc3c97ad62511a5700898`
 - loaded encoding: `gbk`
@@ -112,7 +112,7 @@ Same `vltktool` command above.
 
 Result:
 
-- stub table path: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/状态与光效图形对照表.txt`
+- stub table path: `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/状态与光效图形对照表.txt`
 - stub bytes: `2699`
 - stub sha256: `a4210c45fba27ba0e6d1829c2cd0587a341b73c40a6da3d10a3561ed9f0317c0`
 - stub encoding: `gbk`
@@ -132,7 +132,7 @@ python3 - <<'PY'
 from pathlib import Path
 from jx_hash import hash_resource_path
 from resolve_uid import pak_uids
-root=Path('/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data')
+root=Path('/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data')
 paks=list(root.glob('*.pak'))
 uid_to_paks={}
 for pak in paks:
@@ -146,7 +146,7 @@ for raw in ['style3.spr', r'\style3.spr', r'\spr\style3.spr', r'\spr\npcres\styl
         p=uid_to_paks.get(h.uid, [])
         print(f'  uid={h.uid:08x} encoding={h.encoding} path_bytes_hex={h.byte_hex} in_paks={p[:8]} count={len(p)}')
 PY
-find /var/www/jx-source/pak_unpacked -iname 'style3.spr' -print | sed -n '1,20p'
+find /var/www/jx-pc/pak_unpacked -iname 'style3.spr' -print | sed -n '1,20p'
 ```
 
 Result:
@@ -158,12 +158,12 @@ Result:
   - `\spr\npcres\style3.spr`: uid `fffc0ca9`, `in_paks=[]`.
   - `\spr\npcres\style\style3.spr`: uid `a138b3ab`, `in_paks=[]`.
   - `\spr\skill\style3.spr`: uid `0044d249`, `in_paks=[]`.
-- unpacked bytes check: no `/var/www/jx-source/pak_unpacked/**/style3.spr` output.
+- unpacked bytes check: no `/var/www/jx-pc/pak_unpacked/**/style3.spr` output.
 - positive control state `44` path `\spr\skill\丐帮\mag_gb_12_打狗阵.spr`:
   - winning package: `skills.pak`
   - UID: `202667bb`
   - encoding: `gbk`
-  - unpacked bytes: `/var/www/jx-source/pak_unpacked/skills/unknown/202667bb.spr`
+  - unpacked bytes: `/var/www/jx-pc/pak_unpacked/skills/unknown/202667bb.spr`
 
 `vltktool` command for positive SPR frame proof:
 
@@ -173,7 +173,7 @@ python3 - <<'PY'
 from pathlib import Path
 from extract_item_spr import parse_frames, decode_frame_rgba
 import hashlib
-p=Path('/var/www/jx-source/pak_unpacked/skills/unknown/202667bb.spr')
+p=Path('/var/www/jx-pc/pak_unpacked/skills/unknown/202667bb.spr')
 data=p.read_bytes(); fc,cc,frames,off=parse_frames(data); palette=data[0x20:0x20+cc*3]
 print('file',p)
 print('bytes',len(data),'sha256',hashlib.sha256(data).hexdigest(),'frame_count',fc,'color_count',cc)
@@ -210,6 +210,6 @@ Disproven:
 
 Unresolved / caveats:
 
-- Lost external packages could theoretically contain another `style3.spr`, but current canonical jx-source PAK set and unpacked tree do not.
+- Lost external packages could theoretically contain another `style3.spr`, but current canonical jx-pc PAK set and unpacked tree do not.
 - Some root skills route through child missile/precast visuals. Empty residual state aura must not be worded as "skill has no visual." It only means no state aura is attached.
 - No production C# or state mapping data changed here; future real PC package evidence should update mapping with exact path/UID/frames, not a guessed fallback.

@@ -5,7 +5,7 @@
 1. Runtime manifest tiếng Việt active tại `bin/client/package.ini` và winner theo đúng `KPakList`.
 2. Client C++/Lua/config/PAK tương ứng cho behavior quan sát được, visual, UI và audio.
 3. Server C++/Lua/config cho validation, persistence, economy và công thức authoritative khi evidence đầy đủ.
-4. Tài liệu PC tại `/var/www/jx-source/01_tinh_kiem_source/tai-lieu-game` làm nguồn hỗ trợ.
+4. Tài liệu PC tại `/var/www/jx-pc/01_tinh_kiem_source/tai-lieu-game` làm nguồn hỗ trợ.
 5. Unity hiện tại chỉ chứng minh as-is; `~/Projects/vltk` chỉ tham khảo UX.
 
 Khi client và server mâu thuẫn, không tự chọn bằng tên file, mtime hoặc cảm tính. Ghi cả hai claim vào contradiction ledger; visual/interaction ưu tiên active client, authority ẩn ưu tiên server chỉ khi protocol/version khớp.

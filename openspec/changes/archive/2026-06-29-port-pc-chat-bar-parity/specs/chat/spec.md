@@ -1,7 +1,7 @@
 # Chat Specification
 
 > Domain: **chat**. New domain introduced by change `port-pc-chat-bar-parity`.
-> PC source of truth: `jx-source/pak_unpacked/1024/unknown/7e20a7ac.ini`
+> PC source of truth: `jx-pc/pak_unpacked/1024/unknown/7e20a7ac.ini`
 > (the 聊天条 "chat bar" window). `default_locale: vi`.
 
 ## Purpose
@@ -9,7 +9,7 @@
 A persistent, PC-parity chat surface docked in the HUD bottom-center lane. It renders a
 scrolling message history, a toggleable system/combat message strip, a channel selector
 with on/off filtering, and a message input row. All structural pieces, channel data, and
-visible art are sourced 100% from the PC client (`jx-source`); no fabricated art and
+visible art are sourced 100% from the PC client (`jx-pc`); no fabricated art and
 no invented channel names, colors, or rate limits.
 
 The data layer already exists and is PC-authentic (`VLTK.Sandbox.ChatService` channel
@@ -131,7 +131,7 @@ channel names, colors, or limits that differ from PC.
 ### Requirement: PC SPR art and provenance
 
 Every visible chat-bar frame piece, toggle, scroll control, and channel icon SHALL be a
-genuine decoded PC SPR from `jx-source`, resolved by JX Pack Hash (GBK path → hash →
+genuine decoded PC SPR from `jx-pc`, resolved by JX Pack Hash (GBK path → hash →
 file on disk). The pieces include: chat bar bottom/top/middle frames
 (`聊天条底部改`/`顶部改`/`中部改`), shadow toggle (`聊天条阴影按钮`), system-window toggle
 (`提示信息窗－开关`), scroll up/down (`提示信息窗－上`/`下`), scroll thumb (`通用拖动条`),

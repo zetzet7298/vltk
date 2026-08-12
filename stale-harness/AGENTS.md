@@ -2,11 +2,11 @@
 
 ## PC Source Of Truth
 
-- PC docs chuẩn: `/var/www/jx-source/01_tinh_kiem_source/tai-lieu-game`.
-- Canonical PC source duy nhất là `/var/www/jx-source`; coi toàn bộ cây này là read-only.
-- Canonical runtime/PAK đã unpack là `/var/www/jx-source/pak_unpacked/`.
-- Index/audit hiện hành: `/var/www/jx-source/docs/SOURCE_INDEX.md` và `/var/www/jx-source/docs/SCAN_REPORT_TINH_KIEM.md`.
-- C++/source tree cần tra trước khi port: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`.
+- PC docs chuẩn: `/var/www/jx-pc/01_tinh_kiem_source/tai-lieu-game`.
+- Canonical PC source duy nhất là `/var/www/jx-pc`; coi toàn bộ cây này là read-only.
+- Canonical runtime/PAK đã unpack là `/var/www/jx-pc/pak_unpacked/`.
+- Index/audit hiện hành: `/var/www/jx-pc/docs/SOURCE_INDEX.md` và `/var/www/jx-pc/docs/SCAN_REPORT_TINH_KIEM.md`.
+- C++/source tree cần tra trước khi port: `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/`.
 - Với port JX x DHCD: JX là authority cho identity, map, NPC, item, skill base và SPR/VFX/WAV; behavior DHCD chỉ dùng khi có evidence/reverse tương ứng.
 
 ## Canonical Skill Root
@@ -33,7 +33,7 @@
 - Enumerate toàn bộ candidate hợp lệ, xác định patch/version và active package/load-order winner. Mtime chỉ là tie-breaker sau khi version/load-order tương đương.
 - Mỗi selected source/asset phải ghi original path, pack/version, load-order winner, UID nếu có, encoding/path bytes, byte count và SHA-256.
 - Không copy candidate chỉ để làm evidence. Chỉ vendor exact bytes vào repo-local slice khi asset/config đã được chọn và thực sự dùng.
-- Không sửa bất kỳ file nào dưới `/var/www/jx-source`.
+- Không sửa bất kỳ file nào dưới `/var/www/jx-pc`.
 - Nếu source thiếu hoặc mâu thuẫn: fail closed, đánh dấu provisional/blocked và chạy reverse/ghi ADR phù hợp; không tự bịa behavior, sprite, effect, formula, frame, tên hoặc tọa độ.
 
 ### Tool hỗ trợ

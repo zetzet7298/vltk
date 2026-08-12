@@ -23,7 +23,7 @@ Bridge JX visual/VFX/audio vào Survivor qua `IActorVisual` adapter, KHÔNG sử
 
 Ghi `research/visual-vfx-audio-bridge.md`: API table, adapter contract, SPR fail-closed note,
 audio inventory + pipeline, VFX parity surface. Đọc `Assets/Scripts/Sandbox/` (grep visual/
-service/audio), `package.ini`, jx-source audio dir.
+service/audio), `package.ini`, jx-pc audio dir.
 
 ## Answer
 

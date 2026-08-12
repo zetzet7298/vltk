@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC dailogsys source index parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/dailogsys
+// Source of truth: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/dailogsys
 // Imported file: StreamingAssets/Reference/PcDialogSys/dialogsys_source_index.txt
 // Catalog only: no Lua execution or behavior emulation is claimed.
 // -----------------------------------------------------------------------------

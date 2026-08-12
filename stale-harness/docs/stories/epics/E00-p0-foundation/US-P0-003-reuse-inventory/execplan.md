@@ -21,7 +21,7 @@ Excluded:
 
 - Unity runtime, scene, asset, test, or editor changes.
 - Unity MCP operations.
-- Changes under `/var/www/jx-source`.
+- Changes under `/var/www/jx-pc`.
 - Arena dependency or any arena implementation.
 
 ## Risk Classification

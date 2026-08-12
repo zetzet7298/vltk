@@ -8,7 +8,7 @@ Missile 352 `SndFile4` / `MS_DoCollision` is empty. No collision WAV exists in i
 
 ## Canonical config proof
 
-`~/Projects/vltktool/extract_table_slice.py` selected row 352 from canonical `/var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt`. Its SHA-256 is byte-identical to pinned `Assets/StreamingAssets/Reference/PcAttrib/missles1.txt` (`e893c7af74d43672f1513b8325e31ba3270ebe425ac668f1b444e81db845e8bc`). `slistcache.pak` is package.ini priority index `2`; available update-table copies either omit 352 or have the same selected Snd fields.
+`~/Projects/vltktool/extract_table_slice.py` selected row 352 from canonical `/var/www/jx-pc/pak_unpacked/slistcache/settings/missles.txt`. Its SHA-256 is byte-identical to pinned `Assets/StreamingAssets/Reference/PcAttrib/missles1.txt` (`e893c7af74d43672f1513b8325e31ba3270ebe425ac668f1b444e81db845e8bc`). `slistcache.pak` is package.ini priority index `2`; available update-table copies either omit 352 or have the same selected Snd fields.
 
 | field | value |
 | --- | --- |
@@ -58,9 +58,9 @@ This is config/callback reachability only. It does not prove Android APK decode,
 
 ```bash
 cd ~/Projects/vltktool
-python3 extract_table_slice.py --input /var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt --key-column MissleId --ids 352 --output /tmp/tm352.tsv --manifest /tmp/tm352.json
-cmp /var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt /var/www/vltk-mobile/Assets/StreamingAssets/Reference/PcAttrib/missles1.txt
-python3 resolve_uid.py --pak /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/sound.pak --uid 01e95b13 --scan-dir /var/www/jx-source/pak_unpacked/slistcache/settings/missles.txt --max-files 1
-cmp /tmp/tm352-01e95b13-winner.wav /var/www/jx-source/pak_unpacked/sound/unknown/01e95b13.wav
+python3 extract_table_slice.py --input /var/www/jx-pc/pak_unpacked/slistcache/settings/missles.txt --key-column MissleId --ids 352 --output /tmp/tm352.tsv --manifest /tmp/tm352.json
+cmp /var/www/jx-pc/pak_unpacked/slistcache/settings/missles.txt /var/www/vltk-mobile/Assets/StreamingAssets/Reference/PcAttrib/missles1.txt
+python3 resolve_uid.py --pak /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/data/sound.pak --uid 01e95b13 --scan-dir /var/www/jx-pc/pak_unpacked/slistcache/settings/missles.txt --max-files 1
+cmp /tmp/tm352-01e95b13-winner.wav /var/www/jx-pc/pak_unpacked/sound/unknown/01e95b13.wav
 sha256sum /var/www/vltk-mobile/Assets/StreamingAssets/sound/skill/飘雪穿云.wav
 ```

@@ -1,5 +1,5 @@
 # VLTK Mobile PC VNG event source index
-# Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/vng_event
+# Source of truth: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/script/vng_event
 # Catalog only: source file evidence for script/vng_event; Lua is never executed by the parser/service.
 # TotalFiles=195; LuaFiles=195; LuaFileDirectories=65; SourceDirectories=68
 SourceIndex	SourceRoot	RelativePath	Directory	FileName	Extension	IsLua	SizeBytes	Sha256

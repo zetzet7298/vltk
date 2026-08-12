@@ -79,7 +79,7 @@ Because this is a data/model prerequisite, treating it as a UI-only patch would 
    Empty Mask/Amulet/Charm/Trinket slots should remain visible as slot frames with Vietnamese labels or existing empty-slot affordance. Missing items should not throw and should not collapse layout.
 
 4. **PC parity before invention**  
-   Slot/category semantics must be checked against PC source/data under `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem` and/or project reference files before implementation. Do not invent category meanings. If slot art or labels need PC resources, resolve via `jx-pc-resource-resolver` rather than guessing hashed SPR names.
+   Slot/category semantics must be checked against PC source/data under `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem` and/or project reference files before implementation. Do not invent category meanings. If slot art or labels need PC resources, resolve via `jx-pc-resource-resolver` rather than guessing hashed SPR names.
 
 5. **Save compatibility first**  
    If equipment state is serialized by enum names/integers, adding slots must avoid corrupting existing saves. Prefer append-only enum changes or explicit serialization keys if current code requires it.

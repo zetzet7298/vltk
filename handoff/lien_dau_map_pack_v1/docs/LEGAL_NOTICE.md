@@ -4,7 +4,7 @@
 
 Gói này chứa dữ liệu map và sprite reference được port từ nguồn PC JX/VLTK:
 
-- PC source root: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`
+- PC source root: `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem`
 - Map 396: `特殊用地\武林大会专用\武林大会会场`
 - Map 397: `特殊用地\联赛比赛用地`
 

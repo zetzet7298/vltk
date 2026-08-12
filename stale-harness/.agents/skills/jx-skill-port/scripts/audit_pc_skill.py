@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any, Iterable
 
 
-DEFAULT_JX_ROOT = Path("/var/www/jx-source/pak_unpacked")
+DEFAULT_JX_ROOT = Path("/var/www/jx-pc/pak_unpacked")
 
 TCVN3_TABLE = (
     0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,

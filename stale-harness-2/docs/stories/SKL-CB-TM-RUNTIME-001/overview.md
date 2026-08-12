@@ -38,6 +38,6 @@ runtime parity.
 ## Non-Goals
 
 - Claiming all ten factions are complete from two-faction proof.
-- Modifying any file under `/var/www/jx-source`.
+- Modifying any file under `/var/www/jx-pc`.
 - Guessing encoded tables, PAK winners, SPR assets, formulas, or UI order.
 - Treating aggregate EditMode pass counts as PC runtime golden evidence.

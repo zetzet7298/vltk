@@ -1,13 +1,13 @@
 # 🎮 Tài Liệu Port HUD — Võ Lâm Truyền Kỳ PC → Mobile
 
-> **Mục tiêu**: Tái tạo 100% HUD game PC tại `/var/www/jx-source` sang phiên bản mobile tại `/var/www/vltk-mobile`, giữ nguyên layout, Việt hoá, và logic hiển thị.
+> **Mục tiêu**: Tái tạo 100% HUD game PC tại `/var/www/jx-pc` sang phiên bản mobile tại `/var/www/vltk-mobile`, giữ nguyên layout, Việt hoá, và logic hiển thị.
 
 ---
 
 ## 📁 Cấu Trúc File HUD PC (Nguồn)
 
 ```
-jx-source/pak_unpacked/ (unpacked from update01/update03/etc.)
+jx-pc/pak_unpacked/ (unpacked from update01/update03/etc.)
 ├── ui/                         # UI config root (runtime)
 │   ├── setting.ini             # Cài đặt chung, Map colors, shortcut sets
 │   ├── MiniSkill.ini           # Buff/Debuff panel (204 buffs đã Việt hoá)
@@ -650,5 +650,5 @@ Width=170, Height=50 per member
 
 ---
 
-*Generated từ deep scan knowledge graph + file analysis — `/var/www/jx-source`*  
+*Generated từ deep scan knowledge graph + file analysis — `/var/www/jx-pc`*  
 *Target project: `/var/www/vltk-mobile`*

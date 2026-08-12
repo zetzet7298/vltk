@@ -1,6 +1,6 @@
 // -----------------------------------------------------------------------------
 // VLTK Mobile — PC event drop-rate source index parser.
-// Source of truth: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/droprate/event
+// Source of truth: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/Server/settings/droprate/event
 // Data-only index: records PC file metadata and numeric [N] drop rows; it does
 // not alter the existing PcDropRate runtime registry or loot behavior.
 // -----------------------------------------------------------------------------

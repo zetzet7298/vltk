@@ -81,17 +81,17 @@ aaa26e1c84918851605a35a287a2b8162f08fa7a9f112499de0be53386e13232  scroll_thumb.p
 ## Extraction commands
 
 ```bash
-python3 ~/Projects/vltktool/decode_ui_ini.py --file /var/www/jx-source/pak_unpacked/update03/unknown/a05d7a2c.dat
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/7d78d2d7.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/1c90fcf9.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/5b04c0d7.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/72aeaccd.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/83205731.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/9149d29d.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/580687af.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/1ed485e1.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/34ac9480.spr --out-root /tmp/vltk-team-spr
-python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/23fe2a10.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/decode_ui_ini.py --file /var/www/jx-pc/pak_unpacked/update03/unknown/a05d7a2c.dat
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/7d78d2d7.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/1c90fcf9.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/5b04c0d7.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/72aeaccd.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/83205731.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/9149d29d.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/580687af.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/1ed485e1.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/34ac9480.spr --out-root /tmp/vltk-team-spr
+python3 ~/Projects/vltktool/extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/23fe2a10.spr --out-root /tmp/vltk-team-spr
 ```
 
 ## Coordinate source

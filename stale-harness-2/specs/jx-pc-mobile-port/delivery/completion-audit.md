@@ -16,7 +16,7 @@
 | --- | --- | --- | --- |
 | Dòng 5-8 | Chỉ sửa specs/validator; không sửa Unity/Go/dhcd | `delivery/spec-scope-manifest.yaml`; cần immutable baseline/diff evidence từng wave | ĐẠT về policy; `BLOCKED` kiểm chứng compliance wave vì worktree có dirty path ngoài scope không thể quy attribution; không nhận hoặc hoàn nguyên chúng |
 | Dòng 9-10 | Tiếng Việt, domain-first, client + server; P0-P1 sâu | Bốn tài liệu CNPM + `domains/`, fixture/matrix P0 | ĐẠT ở spec; runtime parity còn blocked |
-| Dòng 12-13 | jx-source read-only; vltktool cho PAK/hash/encoding | Source policy + snapshot/package/UID catalog | ĐẠT ở spec; G1 `BLOCKED` vì 4 PAK thiếu và winner chưa resolve |
+| Dòng 12-13 | jx-pc read-only; vltktool cho PAK/hash/encoding | Source policy + snapshot/package/UID catalog | ĐẠT ở spec; G1 `BLOCKED` vì 4 PAK thiếu và winner chưa resolve |
 | Dòng 17-30 | Đủ cấu trúc package bắt buộc | Required-layout validator | ĐẠT |
 | Dòng 32-33 | Giữ heading/thứ tự/cột bốn template CNPM | CNPM signature validator | ĐẠT |
 | Dòng 35-36 | Pha 1 có >=40 nhu cầu, actor/BM/QĐ/FR/NFR/trách nhiệm/AC | `01-yeu-cau.md` | ĐẠT |

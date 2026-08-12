@@ -70,7 +70,7 @@ namespace VLTK.Sandbox
         public int translife4SkillPoints;
         public int translife4UsedSkillPoints;
 
-        // Horse unlock: PC source jx-source/00.src-tinh-kiem/Client 6.0/settings/item/000/horseres.txt
+        // Horse unlock: PC source jx-pc/00.src-tinh-kiem/Client 6.0/settings/item/000/horseres.txt
         // Sandbox default: player joins at level 30 (CaiBang quest complete) and unlocks
         // a basic horse. SandboxBoot overrides to red (id=5) so testers see the 5-color mount.
         public const int MinHorseLevel = 30;

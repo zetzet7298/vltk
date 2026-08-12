@@ -31,7 +31,7 @@ The Khinh Công icon SHALL be decoded/imported from the PC SPR path `\spr\Ui\技
 - WHEN provenance is inspected
 - THEN it references PC path `\spr\Ui\技能图标\轻功.spr`
 - AND hash `bf787a8a`
-- AND `/var/www/jx-source/pak_unpacked/.../bf787a8a.spr`
+- AND `/var/www/jx-pc/pak_unpacked/.../bf787a8a.spr`
 
 #### Scenario: Khinh Công icon renders in HUD
 

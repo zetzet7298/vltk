@@ -2,7 +2,7 @@
 
 ## Source Boundary
 
-- Static rows: `/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt`.
+- Static rows: `/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt`.
 - Exact repo slice: `Assets/StreamingAssets/Reference/PcCaiBangSkills.txt`, SHA-256 `7aa82d708a8ecdbdcdf6d7e2ce1974fde9286832d6f2ffff1d3c2d182a440973`.
 - Relationship supplement: canonical client `bin/client/script/skill/gaibang.lua`, SHA-256 `56d9910a0d601ee28f40f26f257af1bb6f98757c8319a1b336926bc9d4471ed8`.
 - Canonical tree là read-only; encoded/extracted assets tiếp tục dùng `vltktool`.

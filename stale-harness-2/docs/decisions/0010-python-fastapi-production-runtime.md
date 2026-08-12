@@ -47,7 +47,7 @@ authorized permanent removal of the Go backend.
 
 Positive:
 
-- One backend owns ongoing server porting from `/var/www/jx-source`.
+- One backend owns ongoing server porting from `/var/www/jx-pc`.
 - Production and Sandbox can share the existing typed FastAPI client surface.
 - The first Editor run can provision deterministic development identity data.
 

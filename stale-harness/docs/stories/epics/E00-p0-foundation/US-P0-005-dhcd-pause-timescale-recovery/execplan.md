@@ -14,7 +14,7 @@ In scope:
 
 Out of scope:
 
-- Unity implementation, gameplay defaults, and `/var/www/jx-source`.
+- Unity implementation, gameplay defaults, and `/var/www/jx-pc`.
 
 ## Risk Classification
 

@@ -4,9 +4,9 @@ User clarification: when the PC client/source contains multiple versions of the 
 
 ## Rule
 1. Compare available sources when data conflicts:
-   - `/var/www/jx-source/pak_unpacked/*`
-   - `/var/www/jx-source/Client 6.0/*`
-   - `/var/www/jx-source/Server 6.0/*`
+   - `/var/www/jx-pc/pak_unpacked/*`
+   - `/var/www/jx-pc/Client 6.0/*`
+   - `/var/www/jx-pc/Server 6.0/*`
    - mobile snapshot under `Assets/StreamingAssets/Reference/*`
 2. Prefer the newest/update override version, not merely the mobile snapshot.
 3. Record the winning source path in the evidence file for the slice.

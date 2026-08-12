@@ -3,9 +3,9 @@
 This report presents a comprehensive, read-only parity audit comparing the Mobile Cái Bang skill implementation in the Unity client codebase against the newest-VNG PC server/client update data.
 
 ## PC Sources Consulted
-1. **Authoritative PC skills.txt**: `/var/www/jx-source/pak_unpacked/slistcache/unknown/ec1243ff.dat` (overrides loose Client/Server configs)
-2. **Authoritative PC gaibang.lua**: `/var/www/jx-source/Client 6.0/script/skill/gaibang.lua` (identical to active Server version `/var/www/jx-source/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`)
-3. **Authoritative PC missles.txt**: `/var/www/jx-source/pak_unpacked/slistcache/unknown/08bcd3fc.dat`
+1. **Authoritative PC skills.txt**: `/var/www/jx-pc/pak_unpacked/slistcache/unknown/ec1243ff.dat` (overrides loose Client/Server configs)
+2. **Authoritative PC gaibang.lua**: `/var/www/jx-pc/Client 6.0/script/skill/gaibang.lua` (identical to active Server version `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`)
+3. **Authoritative PC missles.txt**: `/var/www/jx-pc/pak_unpacked/slistcache/unknown/08bcd3fc.dat`
 
 ---
 

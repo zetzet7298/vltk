@@ -7,7 +7,7 @@ port achieves equivalent results with three mechanisms working together.
 ## The original engine: KIpoTree spatial binary tree
 
 Source:
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/Scene/KIpoTree.cpp`,
+`/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/Scene/KIpoTree.cpp`,
 with `KIpotBranch.cpp` and `KIpotLeaf.cpp` beside it.
 
 ### Tree structure

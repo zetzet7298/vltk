@@ -17,11 +17,11 @@ tests, Play Mode, console, and screenshots.
 ## Canonical Inputs
 
 - Source and loose map/config data:
-  `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`
+  `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/`
 - Runtime/extracted package data:
-  `/var/www/jx-source/pak_unpacked/`
+  `/var/www/jx-pc/pak_unpacked/`
 - C++ format and renderer evidence:
-  `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/`
+  `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/`
 
 Use the exact `MapList.ini` entry, `.wor` bounds, and `Region_C` cells selected
 from those roots. Resolve every referenced SPR before staging it. Do not

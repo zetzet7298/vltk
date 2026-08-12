@@ -4,7 +4,7 @@
 
 - Exact row authority: `harness/docs/stories/SKL-S-PROOF-001/PcShaolinSkills.txt`, SHA-256 `b6978c108ac0dc521e143e5f45d192babf2a818c75128983f2f3157b69e3c5c6`.
 - Byte-preserving provenance: `harness/docs/stories/SKL-S-PROOF-001/PcShaolinSkills.provenance.json`, SHA-256 `e8920fdd977127651cea6d584a9e0823f21ac438b036ed8ab536fd2ea834a9a1`.
-- Encoded source hash verified only through vltktool provenance: `/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt` = `c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c`.
+- Encoded source hash verified only through vltktool provenance: `/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt` = `c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c`.
 
 ## Catalog mapping
 

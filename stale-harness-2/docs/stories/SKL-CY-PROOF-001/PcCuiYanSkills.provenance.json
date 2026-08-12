@@ -50,7 +50,7 @@
   },
   "source": {
     "bytes": 845831,
-    "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
+    "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
     "sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c"
   },
   "source_lines": [

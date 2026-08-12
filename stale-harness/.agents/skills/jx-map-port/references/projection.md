@@ -3,9 +3,9 @@
 All of this is already implemented in the project (`MapRenderer.cs`, `RegionParser.cs`,
 `GroundLayerParser.cs`, `BuildinObjParser.cs`). This file documents *why* it works so you
 can debug or port the renderer elsewhere. Source of truth:
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/Scene/KScenePlaceRegionC.{h,cpp}`
+`/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/Scene/KScenePlaceRegionC.{h,cpp}`
 and
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Represent/Represent3/KRepresentShell3.cpp`.
+`/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Represent/Represent3/KRepresentShell3.cpp`.
 
 ## Region scene geometry
 
@@ -166,7 +166,7 @@ These are in the same coordinate space — the gate renders above the ground til
 
 The original engine does NOT use simple Y-sorting for draw order. It uses a **spatial
 binary tree** (`KIpoTree`) implemented in
-`/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/Scene/KIpoTree.cpp`
+`/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src/Scene/KIpoTree.cpp`
 and `KIpotBranch.cpp` beside it:
 
 1. A branch has a split line (head point → end point) and two children (UP=0, DOWN=1).

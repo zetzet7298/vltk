@@ -69,13 +69,13 @@ namespace VLTK.Tests.Sandbox
             var catalog = PcCombatCatalogFactory.CreateNoviceAndCoreSectCatalog();
             var visual = new SkillEffectVisualService(null, catalog);
             var fx153 = visual.PlaySkillCast(catalog.Resolve(153), UnityEngine.Vector2.zero, new UnityEngine.Vector2(300, 0), 20);
-            Assert.That(fx153.pcPreCastSpriteKey, Is.EqualTo("3dfcabc2"), "jx-source SPR hash for WuDang precast");
-            Assert.That(fx153.pcMissileSpriteKey, Is.EqualTo("c9ba5bf1"), "jx-source SPR hash for WuDang missile");
+            Assert.That(fx153.pcPreCastSpriteKey, Is.EqualTo("3dfcabc2"), "jx-pc SPR hash for WuDang precast");
+            Assert.That(fx153.pcMissileSpriteKey, Is.EqualTo("c9ba5bf1"), "jx-pc SPR hash for WuDang missile");
             Assert.That(fx153.pcMissileSpeedPerTick, Is.EqualTo(20));
             Assert.That(fx153.pcMissileLifeTicks, Is.EqualTo(16));
 
             var fx165 = visual.PlaySkillCast(catalog.Resolve(165), UnityEngine.Vector2.zero, new UnityEngine.Vector2(300, 0), 20);
-            Assert.That(fx165.pcMissileSpriteKey, Is.EqualTo("01744d1a"), "jx-source SPR hash for WuDang 165 missile");
+            Assert.That(fx165.pcMissileSpriteKey, Is.EqualTo("01744d1a"), "jx-pc SPR hash for WuDang 165 missile");
             Assert.That(fx165.pcMissileSpeedPerTick, Is.EqualTo(20));
             Assert.That(fx165.pcMissileLifeTicks, Is.EqualTo(16));
             Assert.That(fx165.missileCount, Is.EqualTo(8), "PC wudang.lua L20: 8 missiles");

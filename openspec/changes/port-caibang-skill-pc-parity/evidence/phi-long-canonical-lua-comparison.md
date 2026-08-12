@@ -5,11 +5,11 @@ The old mobile test ignored level-20 Phi Long lane assertions because `gaibang.l
 
 ## Compared files
 - `Assets/StreamingAssets/Reference/gaibang.lua`
-- `/var/www/jx-source/Client 6.0/file/skill/gaibang.lua`
-- `/var/www/jx-source/Client 6.0/script/skill/gaibang.lua`
-- `/var/www/jx-source/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`
-- `/var/www/jx-source/pak_unpacked/update03/script/skill/gaibang.lua`
-- `/var/www/jx-source/pak_unpacked/vltkdata/script/skill/gaibang.lua`
+- `/var/www/jx-pc/Client 6.0/file/skill/gaibang.lua`
+- `/var/www/jx-pc/Client 6.0/script/skill/gaibang.lua`
+- `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`
+- `/var/www/jx-pc/pak_unpacked/update03/script/skill/gaibang.lua`
+- `/var/www/jx-pc/pak_unpacked/vltkdata/script/skill/gaibang.lua`
 
 ## Common canonical block
 All checked canonical Lua sources include:

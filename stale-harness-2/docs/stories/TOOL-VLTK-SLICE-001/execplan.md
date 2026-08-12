@@ -13,7 +13,7 @@ In scope:
 
 Out of scope:
 
-- Existing dirty vltktool files, PAK extraction, decoding, Unity or jx-source edits.
+- Existing dirty vltktool files, PAK extraction, decoding, Unity or jx-pc edits.
 
 ## Risk Classification
 

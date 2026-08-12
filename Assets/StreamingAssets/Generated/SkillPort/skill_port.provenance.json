@@ -11,7 +11,7 @@
     "canonical_static_rows": {
       "coverage_sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c",
       "not_hashed_by_compiler": true,
-      "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
+      "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
       "sha256_from_vltktool_provenance": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c"
     },
     "coverage_matrix": {
@@ -22,13 +22,13 @@
     "kpaklist": {
       "blocker": "active_KPakList_not_discoverable",
       "searched": [
-        "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/KPakList.ini",
-        "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/KPakList.txt"
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/KPakList.ini",
+        "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/KPakList.txt"
       ]
     },
     "package_ini": {
       "bytes": 550,
-      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini",
       "sha256": "5df520aa74b2eee925eac58ecf17939d50a6a51ad463568dcc4e755457039784"
     },
     "presentation_inventory": {
@@ -37,7 +37,7 @@
       "sha256": "fc8d1da339148ce00c9ddc3b46bbdc01add4f1fa66dc30e074e831eebba512c9"
     },
     "progression": {
-      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
       "provides": "PC active-category progression membership (skills_table.lua)",
       "sha256": "7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3"
     },
@@ -52,7 +52,7 @@
       "sha256": "bf49efe6917ccf2f89e63608ae8be8d9cfb83a250a806e09b98c1fa121797c25"
     },
     "skillbook": {
-      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
       "provides": "level 90/120/150 skillbook grants (skillbook.lua)",
       "sha256": "4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9"
     }

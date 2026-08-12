@@ -4,7 +4,7 @@
 - [ ] Create `openspec/changes/port-caibang-skill-pc-parity/evidence/caibang-skill-matrix.md` with one row per current mobile Cai Bang skill.
 - [ ] Decode/verify PC names and skill rows from `Assets/StreamingAssets/Reference/PcSkill/skills.txt` for all matrix rows.
 - [ ] Decode/verify missile rows from `Assets/StreamingAssets/Reference/PcAttrib/missles.txt` for all missile-based Cai Bang skills.
-- [ ] Compare mobile `Assets/StreamingAssets/Reference/gaibang.lua` with canonical PC gaibang Lua files under `/var/www/jx-source/Client 6.0/`, `Server 6.0/`, and `pak_unpacked/`.
+- [ ] Compare mobile `Assets/StreamingAssets/Reference/gaibang.lua` with canonical PC gaibang Lua files under `/var/www/jx-pc/Client 6.0/`, `Server 6.0/`, and `pak_unpacked/`.
 - [ ] Record resource paths and hashed filenames for initial Phi Long assets using `jx-pc-resource-resolver`.
 
 ## Phase 1 - Phi Long Tại Thiên Homing First Slice

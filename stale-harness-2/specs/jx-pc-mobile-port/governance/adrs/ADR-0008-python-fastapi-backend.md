@@ -6,7 +6,7 @@
   là game backend duy nhất. Production Unity dùng typed REST client hiện hữu;
   Go `server-runtime/` bị xóa. Realtime 18 Hz là seam Python tiếp theo và không
   được tuyên bố hoàn tất trong migration này.
-- **Hệ quả:** Mọi port server tiếp theo từ `/var/www/jx-source` đi vào
+- **Hệ quả:** Mọi port server tiếp theo từ `/var/www/jx-pc` đi vào
   `backend/app/modules/`; contract camelCase của FastAPI/Unity phải giữ test.
   Protobuf language-neutral/C# có thể tồn tại cho feature khác nhưng không chứng
   minh một Go runtime còn hoạt động.

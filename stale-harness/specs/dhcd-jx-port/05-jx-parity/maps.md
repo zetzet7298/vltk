@@ -9,7 +9,7 @@
 
 ## Rule
 
-Map runtime truth là candidate thuộc patch/version và active client load-order winner đã chứng minh trong `/var/www/jx-source/pak_unpacked/`; không chọn chỉ vì file mới nhất. Legacy source chỉ là behavior/config evidence, mtime chỉ tie-breaker sau khi version/load-order tương đương. Không sửa canonical source.
+Map runtime truth là candidate thuộc patch/version và active client load-order winner đã chứng minh trong `/var/www/jx-pc/pak_unpacked/`; không chọn chỉ vì file mới nhất. Legacy source chỉ là behavior/config evidence, mtime chỉ tie-breaker sau khi version/load-order tương đương. Không sửa canonical source.
 
 ## Required evidence
 

@@ -25,10 +25,10 @@ levels, point spending, faction lists, and their combat-slot links.
    combat behavior, `Missles.txt`. Establish package/version and the active
    load-order winner.
 2. Read the relevant extracted C++ under
-   `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` for panel
+   `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/` for panel
    interaction, selection, ordering, and point-spend behavior.
 3. Cross-check the selected runtime data and UI resources in
-   `/var/www/jx-source/pak_unpacked/`. Resolve paths, encoding, UID, candidate
+   `/var/www/jx-pc/pak_unpacked/`. Resolve paths, encoding, UID, candidate
    winner, and decoded SPR through `jx-pc-resource-resolver`.
 4. Record source path, package/version, SHA-256, row/line or function, and
    `skillId` before making an implementation claim.

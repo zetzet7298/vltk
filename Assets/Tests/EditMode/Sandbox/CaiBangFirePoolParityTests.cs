@@ -11,14 +11,14 @@ namespace VLTK.Tests.Sandbox
     // and the skill-117 fail-closed. Every expected value below is derived from canonical PC source,
     // NOT from the production catalog/runtime, so these tests fail on the pre-fix implementation and
     // pass after the fix:
-    //   - PC gaibang.lua (jx-source .../bin/client/script/skill/gaibang.lua):
+    //   - PC gaibang.lua (jx-pc .../bin/client/script/skill/gaibang.lua):
     //       gaibang_zhangfa:  addfiremagic_v={{{1,25},{20,275}}}            -> 116 grants magic pool
     //       zuidie_kuangwu:   addfiremagic_v={{{1,10},{30,215}}}            -> L20 floors to 144
     //                         addfiredamage_v={{{1,10},{30,175}}}           -> L20 floors to 118
-    //   - PC skills.txt (jx-source pak_unpacked/update03/settings/skills.txt):
+    //   - PC skills.txt (jx-pc pak_unpacked/update03/settings/skills.txt):
     //       row 117 IsPhysical=0, LvlData1="skill_cost_v" only (no yanmen_tuobo reference)
     //       row 119 IsPhysical=1, LvlData1="yanmen_tuobo" (legitimate)
-    //   - PC KNpc damage branch (jx-source extracted_full.tar:3183-3192): fire damage consumes
+    //   - PC KNpc damage branch (jx-pc extracted_full.tar:3183-3192): fire damage consumes
     //       m_CurrentFireMagic (!bIsPhysical) or m_CurrentFireDamage (bIsPhysical).
     [TestFixture, Category("CaiBang")]
     public class CaiBangFirePoolParityTests
@@ -95,7 +95,7 @@ namespace VLTK.Tests.Sandbox
         [Test]
         public void CaiBang117_LuaServiceFailsClosed_NoYanmenTuoboBorrow()
         {
-            // PC skills.txt row 117 LvlData1="skill_cost_v" only (verified jx-source
+            // PC skills.txt row 117 LvlData1="skill_cost_v" only (verified jx-pc
             // pak_unpacked/update03/settings/skills.txt col 73). Pre-fix mapped 117->"yanmen_tuobo"
             // (skill 119's table), fabricating radius/missile/fire data. Fail closed: not mapped.
             Assert.IsFalse(PcCaiBangLuaLevelService.Applies(117),

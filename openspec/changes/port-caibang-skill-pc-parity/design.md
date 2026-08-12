@@ -10,10 +10,10 @@ This change ports Cai Bang skills by making PC source data the authoritative inp
 - Missile rows: `Assets/StreamingAssets/Reference/PcAttrib/missles.txt`
 - Lua level formulas: `Assets/StreamingAssets/Reference/gaibang.lua`
 - PC canonical scripts:
-  - `/var/www/jx-source/Client 6.0/file/skill/gaibang.lua`
-  - `/var/www/jx-source/Client 6.0/file/skill/gaibang/gaibang-zhangfa.lua`
-  - `/var/www/jx-source/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`
-  - `/var/www/jx-source/pak_unpacked/*/script/skill/gaibang.lua`
+  - `/var/www/jx-pc/Client 6.0/file/skill/gaibang.lua`
+  - `/var/www/jx-pc/Client 6.0/file/skill/gaibang/gaibang-zhangfa.lua`
+  - `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`
+  - `/var/www/jx-pc/pak_unpacked/*/script/skill/gaibang.lua`
 
 ### Evidence matrix
 Create a checked-in audit artifact under the change directory, for example `openspec/changes/port-caibang-skill-pc-parity/evidence/caibang-skill-matrix.md`, with one row per skill. Required columns:
@@ -76,7 +76,7 @@ Process:
 2. Normalize with leading backslash and lowercase/backslashes.
 3. Encode using GBK/CP1258/latin1/utf-8 as appropriate.
 4. Compute JX Pack Hash UID exactly as documented in `jx-pc-resource-resolver`.
-5. Search under `/var/www/jx-source/pak_unpacked/`.
+5. Search under `/var/www/jx-pc/pak_unpacked/`.
 6. Cross-check `_labels.json`, `label_map_raw.json`, or decoded SPR frames when resource language/visual ambiguity exists.
 7. Import into mobile with deterministic dimensions/frame metadata.
 

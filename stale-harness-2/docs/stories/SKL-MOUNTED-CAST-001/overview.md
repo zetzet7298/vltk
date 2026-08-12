@@ -21,7 +21,7 @@
 
 ## Source authority
 
-- `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/男主角未骑马关联表.txt:1-33`
+- `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/Utility/Run/Settings/NpcRes/男主角未骑马关联表.txt:1-33`
 - Same directory: `女主角未骑马关联表.txt:1-33`, `男主角骑马关联表.txt:1-33`, `女主角骑马关联表.txt:1-33`.
 - Layer filename columns: `男主角躯体.txt:1-5`, `女主角躯体.txt:1-5`, `男主角左手武器.txt:1-5`, `男主角右手武器.txt:1-5`, `女主角左手武器.txt:1-5`, `女主角右手武器.txt:1-5`.
 - `SwordOnline/Sources/Core/Src/KNpc.h:70-88` defines `cdo_attack`, `cdo_attack1`, `cdo_magic`; `KNpc.cpp:2162-2197` clocks physical/cast actions and resets logical frame; `KNpc.cpp:2292-2300` recovers at total frame and emits at effect percentage.

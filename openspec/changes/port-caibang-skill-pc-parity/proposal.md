@@ -20,14 +20,14 @@ The mobile implementation already contains Cai Bang skill handling, but several 
 - Do not run full EditMode suite except as a final pre-push gate or after shared combat changes require it.
 
 ## Evidence Sources
-- PC docs: `/var/www/jx-source/docs/3_ky_nang_va_chieu_thuc.md`
-- PC client skill docs: `/var/www/jx-source/docs/client_port/03_skills.md`
-- PC backend skill docs: `/var/www/jx-source/docs/backend_port/03_skills.md`
+- PC docs: `/var/www/jx-pc/docs/3_ky_nang_va_chieu_thuc.md`
+- PC client skill docs: `/var/www/jx-pc/docs/client_port/03_skills.md`
+- PC backend skill docs: `/var/www/jx-pc/docs/backend_port/03_skills.md`
 - PC source/config candidates:
-  - `/var/www/jx-source/Client 6.0/file/skill/gaibang.lua`
-  - `/var/www/jx-source/Client 6.0/file/skill/gaibang/gaibang-zhangfa.lua`
-  - `/var/www/jx-source/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`
-  - `/var/www/jx-source/pak_unpacked/*/script/skill/gaibang.lua`
+  - `/var/www/jx-pc/Client 6.0/file/skill/gaibang.lua`
+  - `/var/www/jx-pc/Client 6.0/file/skill/gaibang/gaibang-zhangfa.lua`
+  - `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/script/skill/gaibang.lua`
+  - `/var/www/jx-pc/pak_unpacked/*/script/skill/gaibang.lua`
 - Mobile reference data:
   - `Assets/StreamingAssets/Reference/gaibang.lua`
   - `Assets/StreamingAssets/Reference/PcSkill/skills.txt`

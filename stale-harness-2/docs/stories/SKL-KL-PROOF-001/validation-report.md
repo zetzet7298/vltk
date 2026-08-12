@@ -12,8 +12,8 @@ golden vẫn ngoài report này.
 ## Commands Run
 
 ```text
-python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids <24-learned-ids> --output Assets/StreamingAssets/Reference/PcKunLunSkills.txt --manifest Assets/StreamingAssets/Reference/PcKunLunSkills.provenance.json --check
-python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids <17-relationship-target-ids> --output Assets/StreamingAssets/Reference/PcKunLunRelationshipTargets.txt --manifest Assets/StreamingAssets/Reference/PcKunLunRelationshipTargets.provenance.json --check
+python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids <24-learned-ids> --output Assets/StreamingAssets/Reference/PcKunLunSkills.txt --manifest Assets/StreamingAssets/Reference/PcKunLunSkills.provenance.json --check
+python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids <17-relationship-target-ids> --output Assets/StreamingAssets/Reference/PcKunLunRelationshipTargets.txt --manifest Assets/StreamingAssets/Reference/PcKunLunRelationshipTargets.provenance.json --check
 python3 -m py_compile scripts/generate_kunlun_oracle.py scripts/test_generate_kunlun_oracle.py
 python3 -m pytest scripts/test_audit_skill_coverage.py scripts/test_generate_kunlun_oracle.py -q
 python3 scripts/audit_skill_coverage.py --check

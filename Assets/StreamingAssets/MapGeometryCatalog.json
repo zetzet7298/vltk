@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "generatedAtUtc": "2026-06-07T18:41:23Z",
-  "sourceMaplist": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini",
+  "sourceMaplist": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/maplist.ini",
   "isPartialRun": false,
   "totalGeometries": 332,
   "geometries": [

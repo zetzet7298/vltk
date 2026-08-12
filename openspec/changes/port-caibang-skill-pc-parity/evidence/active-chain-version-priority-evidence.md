@@ -6,10 +6,10 @@ User clarified that when multiple PC versions exist, the port must prefer the ne
 ## Compared sources
 - `Assets/StreamingAssets/Reference/PcSkill/skills.txt`
 - `Assets/StreamingAssets/Reference/gaibang.lua`
-- `/var/www/jx-source/pak_unpacked/_slistcache/script/skill/gaibang.lua`
-- `/var/www/jx-source/pak_unpacked/vltkdata/script/skill/gaibang.lua`
-- `/var/www/jx-source/Client 6.0/file/skill/gaibang.lua`
-- `/var/www/jx-source/Server 6.0/server/home_jxser/server1/script/skill-goc/gaibang.lua`
+- `/var/www/jx-pc/pak_unpacked/_slistcache/script/skill/gaibang.lua`
+- `/var/www/jx-pc/pak_unpacked/vltkdata/script/skill/gaibang.lua`
+- `/var/www/jx-pc/Client 6.0/file/skill/gaibang.lua`
+- `/var/www/jx-pc/Server 6.0/server/home_jxser/server1/script/skill-goc/gaibang.lua`
 
 For the checked attributes, mobile reference, `_slistcache`, `vltkdata`, Client 6.0, and Server skill-goc agree.
 

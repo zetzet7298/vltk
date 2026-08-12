@@ -8,9 +8,9 @@ platform hay PC golden parity.
 
 ## Canonical Evidence
 
-- Progression: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua`, block `shaolin`, lines 1386–1396, SHA-256 `7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3`.
-- Skillbook: `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua`, faction index 0, line 2, SHA-256 `4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9`.
-- Static rows: `/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt`, SHA-256 `c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c`, verified only through vltktool provenance.
+- Progression: `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua`, block `shaolin`, lines 1386–1396, SHA-256 `7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3`.
+- Skillbook: `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua`, faction index 0, line 2, SHA-256 `4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9`.
+- Static rows: `/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt`, SHA-256 `c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c`, verified only through vltktool provenance.
 
 ## Result
 

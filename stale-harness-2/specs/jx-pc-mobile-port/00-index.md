@@ -46,7 +46,7 @@
 - Code hiện hữu chỉ được ghi `DISCOVERED / UNVERIFIED` cho tới khi có flow trace, test và evidence canonical.
 - `FUNCTIONAL` không đồng nghĩa `PARITY_DONE`; `VISUAL_DEBT` không được ẩn bằng tolerance trung bình.
 - Claim thiếu nguồn phải ghi `[CẦN XÁC NHẬN]`, `BLOCKED`, owner và điều kiện gỡ block; không được bịa fallback production.
-- `/var/www/jx-source` là read-only. PAK/SPR/DAT/hash/encoding chỉ xử lý qua `~/Projects/vltktool`.
+- `/var/www/jx-pc` là read-only. PAK/SPR/DAT/hash/encoding chỉ xử lý qua `~/Projects/vltktool`.
 
 ## Package liên quan
 

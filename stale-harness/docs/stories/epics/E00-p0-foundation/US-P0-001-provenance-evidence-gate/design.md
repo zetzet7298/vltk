@@ -48,7 +48,7 @@ not fabricate PAK-only UID, encoding, path-byte, label, or decode fields.
 6. Keep the result unresolved/provisional or stop when evidence does not support
    a winner; only a complete reviewed record can become verified.
 
-`/var/www/jx-source` is read-only. Exact bytes may be vendored only after a
+`/var/www/jx-pc` is read-only. Exact bytes may be vendored only after a
 winner is selected and the asset is actually used by an approved later story;
 this story neither selects nor vendors bytes.
 

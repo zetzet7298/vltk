@@ -20,7 +20,7 @@ import re
 from pathlib import Path
 
 
-CANONICAL_ROOT = Path("/var/www/jx-source")
+CANONICAL_ROOT = Path("/var/www/jx-pc")
 
 # Pinned hash of the canonical encoded skills table. Validated ONLY through the
 # vltktool provenance ``source.sha256`` field; this script never opens skills.txt.

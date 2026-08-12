@@ -31,6 +31,6 @@ proof visible. Completion proves the inventory contract, not a runtime migration
 ## Non-Goals
 
 - No Unity code, scene, asset, runtime, or save migration.
-- No Unity MCP operation and no modification of `/var/www/jx-source`.
+- No Unity MCP operation and no modification of `/var/www/jx-pc`.
 - No PC source/asset selection, resolver claim, visual parity claim, or runtime
   migration-complete claim.

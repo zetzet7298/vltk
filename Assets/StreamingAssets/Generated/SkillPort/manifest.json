@@ -220,7 +220,7 @@
     "capturedAt": "1970-01-01T00:00:00Z",
     "catalogGeneratorRevision": "skill_port_compiler_py_protobuf_ed25519/v2",
     "snapshotId": "skillport-gate0-dev-snapshot",
-    "sourceRoot": "/var/www/jx-source",
+    "sourceRoot": "/var/www/jx-pc",
     "treeSha256": "acb651dac32aa145ed762022b39520ede6010015558a99893bdb293c6b8be779",
     "vcsRevision": "0000000-test-only-dev-artifact"
   },

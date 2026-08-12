@@ -3,17 +3,17 @@
     "regular_progression": {
       "line_end": 1449,
       "line_start": 1442,
-      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua",
       "sha256": "7e46896c4d5c3fc33cf3b1119ec3e6cf7b1a2c8d7a64ab25d2087331646642b3"
     },
     "skillbook_grants": {
       "line": 7,
-      "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
+      "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua",
       "sha256": "4e5361a6d2756f3596fcc86155dd579b8bf15f69c73651d7f9e8c40f3337d0d9"
     },
     "static_rows": {
       "hash_status": "verified_vltktool_provenance",
-      "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
+      "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
       "provenance_path": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanSkills.provenance.json",
       "slice_bytes": 14893,
       "slice_path": "harness/docs/stories/SKL-CY-PROOF-001/PcCuiYanSkills.txt",

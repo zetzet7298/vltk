@@ -45,9 +45,9 @@ For `状态加点按钮改.spr`, `update01.pak` wins over `spr.pak`.
 
 ```bash
 cd ~/Projects/vltktool
-python3 extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update03/unknown/e3ecbac9.spr --out-root /tmp/char-spr-extract
-python3 extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update03/unknown/6ce319ab.spr --out-root /tmp/char-spr-extract
-python3 extract_item_spr.py --file /var/www/jx-source/pak_unpacked/update01/unknown/9e87942b.spr --out-root /tmp/char-spr-extract
+python3 extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update03/unknown/e3ecbac9.spr --out-root /tmp/char-spr-extract
+python3 extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update03/unknown/6ce319ab.spr --out-root /tmp/char-spr-extract
+python3 extract_item_spr.py --file /var/www/jx-pc/pak_unpacked/update01/unknown/9e87942b.spr --out-root /tmp/char-spr-extract
 ```
 
 Then copied exact output files into:
@@ -62,7 +62,7 @@ Decoded with:
 
 ```bash
 cd ~/Projects/vltktool
-python3 decode_ui_ini.py --file /var/www/jx-source/pak_unpacked/update03/unknown/2711122c.dat
+python3 decode_ui_ini.py --file /var/www/jx-pc/pak_unpacked/update03/unknown/2711122c.dat
 ```
 
 Important sections wired in code:

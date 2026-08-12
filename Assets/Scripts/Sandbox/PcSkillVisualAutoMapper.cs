@@ -314,7 +314,7 @@ namespace VLTK.Sandbox
         /// </summary>
         /// <summary>
         /// State aura visual data from PC source: 状态与光效图形对照表.txt.
-        /// PC source: jx-source Utility/Run/Settings/状态与光效图形对照表.txt.
+        /// PC source: jx-pc Utility/Run/Settings/状态与光效图形对照表.txt.
         /// State ID 0 = no aura. Position: 1=头顶(head) 2=脚底(feet) 3=身上(body).
         /// Columns: stateId, sprPath, position, playMode, frameStart, frameEnd,
         /// totalFrames, directions, frameInterval, name.
@@ -332,7 +332,7 @@ namespace VLTK.Sandbox
 
         /// <summary>
         /// Returns PC state aura visual config for a given state ID.
-        /// Source: jx-source 状态与光效图形对照表.txt — all 44 visual states (6-49).
+        /// Source: jx-pc 状态与光效图形对照表.txt — all 44 visual states (6-49).
         /// States 1-5 are built-in (stun/poison/freeze/burn/confuse) with no SPR.
         /// </summary>
         public static PcStateAuraData GetStateAuraData(int stateId) => stateId switch
@@ -431,7 +431,7 @@ namespace VLTK.Sandbox
         /// Apply per-missile path overrides from <see cref="MissilePathOverrides"/>.
         /// PC missles.txt references some SPRs that don't exist in any PAK
         /// (older 2011 stock paths). The override table replaces those with
-        /// the actual Tinh Kiem / jx-source PAK paths that DO exist.
+        /// the actual Tinh Kiem / jx-pc PAK paths that DO exist.
         /// </summary>
         private static string ResolveMissileSprPath(string originalPath, int missileId)
         {

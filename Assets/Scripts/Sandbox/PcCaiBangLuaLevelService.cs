@@ -52,7 +52,7 @@ namespace VLTK.Sandbox
             // Active damage skills.
             // [CaiBang-FailClosed117 2026-07-17] PC skills.txt row 117 (Đầu Thạch Vấn Lộ) IsPhysical=0
             //   and LvlData1="skill_cost_v" ONLY — no 沿门托钵/yanmen_tuobo reference and no damage/level
-            //   interpolation table (verified jx-source pak_unpacked/update03/settings/skills.txt col 73).
+            //   interpolation table (verified jx-pc pak_unpacked/update03/settings/skills.txt col 73).
             //   The former `[117] = "yanmen_tuobo"` borrow was a fabricated guess that surfaced 119's full
             //   table (radius scaling, missile speed, fire curve) for 117. Fail closed: 117 is NOT mapped,
             //   so PcCaiBangLuaLevelService returns 0 and callers fall back to catalog/engine defaults.

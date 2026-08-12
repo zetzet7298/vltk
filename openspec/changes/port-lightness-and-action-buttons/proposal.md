@@ -5,7 +5,7 @@
 Improve the mobile combat HUD by making the right-thumb controls useful and PC-source backed:
 
 - Swap the currently empty combat sub-slot with assigned sub-slot 1 so the first visible sub-slot keeps an assigned combat skill.
-- Port PC Khinh Công (lightness skill) from `jx-source`, including its PC icon, and assign it to the slot made empty by the swap.
+- Port PC Khinh Công (lightness skill) from `jx-pc`, including its PC icon, and assign it to the slot made empty by the swap.
 - Replace the current action-button no-op/log behavior with real walk/run, mount/dismount, and meditate/sit behavior where existing Unity runtime services already support it.
 
 ## Problem
@@ -61,7 +61,7 @@ The current mobile HUD exposes five combat sub-slots and action buttons (`Action
 | --- | --- |
 | Khinh Công skill | `Assets/StreamingAssets/Reference/PcSkills.txt` line ~211: Vietnamese row `Khinh công`, `SkillId=210`. |
 | PC skill icon path | Canonical GBK path: `\spr\Ui\技能图标\轻功.spr`. The Reference file displays the same path mojibaked as `\spr\Ui\技能图标\ầỏạƯ.spr` due encoding. |
-| PC icon hash | JX Pack hash `gbk=bf787a8a`, found at `/var/www/jx-source/pak_unpacked/update01/unknown/bf787a8a.spr` and `/var/www/jx-source/pak_unpacked/spr/unknown/bf787a8a.spr`. |
+| PC icon hash | JX Pack hash `gbk=bf787a8a`, found at `/var/www/jx-pc/pak_unpacked/update01/unknown/bf787a8a.spr` and `/var/www/jx-pc/pak_unpacked/spr/unknown/bf787a8a.spr`. |
 | PC script path | Canonical path: `\script\skill\special\轻功.lua`; Reference file displays mojibaked `\script\skill\special\ầỏạƯ.lua`. |
 | Current combat HUD | `Assets/UI/HUD/GameHud.uxml` defines `SkillSlot0..4`, `PrimaryAttackBtn`, and action buttons `ActionBtnRun`, `ActionBtnHorse`, `ActionBtnSit`. |
 | Current default Cái Bang deck | `CombatSkillSlotController.DefaultDeckByFaction` currently assigns `{357,358,1073,130,127}` with `MobileSkillSlotCount=5`. |
@@ -70,7 +70,7 @@ The current mobile HUD exposes five combat sub-slots and action buttons (`Action
 
 ### Source caveat
 
-The mandatory PC source path from the porting rule, `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem`, is absent on disk in this environment. Implementation must therefore treat `/var/www/vltk-mobile/Assets/StreamingAssets/Reference/PcSkills.txt` plus `/var/www/jx-source/pak_unpacked/...` as the available PC evidence for this proposal, and should record that caveat in code/provenance where PC runtime behavior cannot be fully verified.
+The mandatory PC source path from the porting rule, `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem`, is absent on disk in this environment. Implementation must therefore treat `/var/www/vltk-mobile/Assets/StreamingAssets/Reference/PcSkills.txt` plus `/var/www/jx-pc/pak_unpacked/...` as the available PC evidence for this proposal, and should record that caveat in code/provenance where PC runtime behavior cannot be fully verified.
 
 ## Risks and mitigations
 

@@ -11,7 +11,7 @@
 
 | Claim | Authority | Không được dùng thay thế |
 |---|---|---|
-| JX identity, ID, map, NPC, item, skill base | `/var/www/jx-source/pak_unpacked/` và source audit liên quan | screenshot, generated dump, mapping cũ |
+| JX identity, ID, map, NPC, item, skill base | `/var/www/jx-pc/pak_unpacked/` và source audit liên quan | screenshot, generated dump, mapping cũ |
 | PAK hash, encoding, SPR/VFX/WAV | `~/Projects/vltktool` + resolver evidence | tự hash/đoán tên file |
 | DHCD loop/wave/card/drop clue | `/home/zet/Projects/dhcd/reconstructed-types` và docs | “cảm giác” từ game khác |
 | Reverse gap | `/var/www/reverse-skill` rồi cập nhật `/home/zet/Projects/dhcd` | bịa code để lấp lỗ hổng |

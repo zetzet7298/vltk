@@ -9,7 +9,7 @@ adapter gap, shadow gap, migration-test gap, feature flag, rollback, and
 retirement criteria. Missing PC or migration evidence keeps the row
 `provisional`.
 
-The authoritative PC corpus is read-only `/var/www/jx-source`. Current Unity
+The authoritative PC corpus is read-only `/var/www/jx-pc`. Current Unity
 source is implementation evidence only; it cannot establish JX behavior,
 identity, visual parity, or a selected PC resource.
 

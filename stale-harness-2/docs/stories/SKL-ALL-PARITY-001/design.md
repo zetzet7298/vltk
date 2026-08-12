@@ -2,8 +2,8 @@
 
 ## Source Authority
 
-1. `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/` cho engine semantics.
-2. `/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt` và exact PAK/config rows cho static metadata.
+1. `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/` cho engine semantics.
+2. `/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt` và exact PAK/config rows cho static metadata.
 3. Canonical sect Lua cho level curves, event gates và special behavior.
 4. `~/Projects/vltktool` bắt buộc cho PAK/SPR/DAT/hash/encoded config.
 

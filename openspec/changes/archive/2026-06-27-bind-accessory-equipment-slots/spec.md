@@ -2,7 +2,7 @@
 
 > Change: `bind-accessory-equipment-slots` · Domain: **equipment-binding** (new domain — no
 > canonical spec existed under `openspec/specs/`; this is written as a full domain spec).
-> Source of truth: PC `/var/www/jx-source` `GameDataDef.h` `ITEM_PART` +
+> Source of truth: PC `/var/www/jx-pc` `GameDataDef.h` `ITEM_PART` +
 > `EQUIPDETAILTYPE`, and item text tables under `settings/item/004`
 > (`amulet.txt`, `pendant.txt`, `mask.txt`, `shipin.txt`, `ring.txt`).
 > `default_locale: vi`. This slice is **binding/render only** (no equip/unequip/socket logic).

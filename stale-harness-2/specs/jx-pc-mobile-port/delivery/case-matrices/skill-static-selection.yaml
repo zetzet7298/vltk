@@ -1,9 +1,9 @@
 schema_version: 1
 artifact_id: SKILL-STATIC-SELECTION-001
 source_authority:
-  source_revision: jx-source:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
+  source_revision: jx-pc:d4bfc04a3dbb8f964be1ee8cd9b6dec6fc4e1b91+dirty
   source_snapshot_status: DIRTY_BLOCKED_FOR_RELEASE
-  client_skills_path: /var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/Skills.txt
+  client_skills_path: /var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/Skills.txt
   client_skills_sha256: 62142f7e6587e5e39105249b07e35d16ca72efa9f7351d2d274ff57dbf91e097
   client_rows: 1554
   columns: 114

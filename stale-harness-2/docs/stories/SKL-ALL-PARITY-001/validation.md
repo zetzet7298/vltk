@@ -140,7 +140,7 @@ order hay presentation parity.
 ```bash
 cd /var/www/vltk-mobile
 ids=$(jq -r '.requested_ids | join(",")' Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.provenance.json)
-python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids "$ids" --output Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.txt --manifest Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.provenance.json --check
+python3 /home/zet/Projects/vltktool/extract_table_slice.py --input /var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt --key-column SkillId --ids "$ids" --output Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.txt --manifest Assets/StreamingAssets/Reference/PcAllFactionLearnedDisplaySkills.provenance.json --check
 python3 -m py_compile scripts/audit_skill_coverage.py scripts/test_audit_skill_coverage.py
 python3 -m pytest scripts/test_audit_skill_coverage.py -q
 python3 scripts/audit_skill_coverage.py --check

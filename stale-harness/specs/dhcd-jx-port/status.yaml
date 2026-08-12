@@ -205,11 +205,11 @@ evidence_sources:
     scope: Không reverse server DHCD cho target mới; backend là contract mới.
     confidence: verified-decision
   - id: E-JX-ROOT
-    path: /var/www/jx-source
+    path: /var/www/jx-pc
     scope: Canonical PC source, read-only.
     confidence: policy
   - id: E-JX-PAK
-    path: /var/www/jx-source/pak_unpacked
+    path: /var/www/jx-pc/pak_unpacked
     scope: Runtime PAK winner candidate; phải resolver/decode trước khi chọn.
     confidence: policy
   - id: E-JX-RESOLVER

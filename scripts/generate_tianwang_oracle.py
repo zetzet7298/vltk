@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CANONICAL_ROOT = Path("/var/www/jx-source")
+CANONICAL_ROOT = Path("/var/www/jx-pc")
 VLTKTOOL = Path("/home/zet/Projects/vltktool/extract_table_slice.py")
 PROGRESSION_REL = "01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/global/skills_table.lua"
 SKILLBOOK_REL = "01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/item/skillbook.lua"

@@ -252,7 +252,7 @@ public interface IJxVisualBridge
 
 - Tool: `C:/Projects/vltktool/` — `resolve_uid.py`, `extract_item_spr.py`, `find_spr_by_image.py`,
   `scan_required_spr.py`, `spr_encoder.py`.
-- Winner theo package priority: `C:/Projects/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/
+- Winner theo package priority: `C:/Projects/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/
   client/package.ini` — 31 paks, `sound.pak` idx 30, `spr.pak` idx 23, `update01.pak` idx 21 (Vietnamese
   override). Rule: dùng vltktool resolve, không tự suy luận.
 - KHÔNG bịa path: missile/precast path từ `PcSkills.txt` (PreCastSpr col) + `missles1.txt` (AnimFile1..4)
@@ -282,7 +282,7 @@ public interface IJxVisualBridge
 | `Assets/StreamingAssets/Reference/PcMusic/` | `musicset.txt` + `musicfightset.ini` (metadata registry, chưa có clip audio) |
 | `Assets/StreamingAssets/Audio/BGM|SFX|Ambient` | def mặc định của AudioService trỏ `Audio/BGM/*.ogg`... — disk chỉ thấy `Audio/SFX/ui_click.wav`; **BGM/Ambient chưa staged** → PlayBGM sẽ warn missing. |
 | `cache/server_offline/jxser/server1/pak/maps.pak` (+.mps) | runtime PAK local; `package.ini` trong cache chỉ 4 mục server — KHÔNG phải client full pak |
-| jx-source loose wav | `find` toàn tree: KHÔNG có wav rời — audio chỉ nằm trong PAK (client `sound.pak`, package.ini idx 30) |
+| jx-pc loose wav | `find` toàn tree: KHÔNG có wav rời — audio chỉ nằm trong PAK (client `sound.pak`, package.ini idx 30) |
 
 → Inventory: skill cast/impact SFX = có sẵn 28 wav + `skill.manCastSndPath`/`fmCastSndPath`
 (`SkillDefinition.cs:127-128`, col 7/8 Skills.txt) + `config.flightSoundPath`/`impactSoundPath` (SndFile2/4).
@@ -363,5 +363,5 @@ Fail-closed đã nằm trong service (mục 1.5) — adapter chỉ cần:
 - `Assets/Scripts/Survivor/Actor/IActorVisual.cs`, `ProxyActorVisual.cs`; `VLTK.Survivor.Runtime.asmdef`
 - `Assets/StreamingAssets/sound/skill/` (28 wav), `Reference/PcAttrib/missles1.txt` (514 dòng),
   `Reference/PcMusic/musicset.txt`, `Reference/PcNpcS.txt`
-- `C:/Projects/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini` (31 paks, sound.pak idx 30)
+- `C:/Projects/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/package.ini` (31 paks, sound.pak idx 30)
 - `C:/Projects/vltktool/` (resolve_uid.py, extract_item_spr.py, find_spr_by_image.py, scan_required_spr.py)

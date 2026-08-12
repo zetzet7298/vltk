@@ -1,8 +1,14 @@
 # SURVIVOR_PLAN — vltk-mobile × DHCD gameplay parity
 
+> **⚠ SUPERSEDED (2026-07-15)** — stale. Plan ghi tại
+> `docs/plans/active/dhcd-feature-docs-plan.md`. DHCD feature reference mới tại
+> `C:/Projects/dhcd/docs/features/` (INDEX + 10 core + 8 meta + ADR #1/#2).
+> Port spec mới sẽ dựng lại sau khi feature docs hoàn. File này giữ làm history,
+> không edit thêm.
+
 > Mục tiêu: game survivor roguelike mới trong vltk-mobile. Gameplay parity
 > **DHCD (Đại Hiệp Chế Đạo / 墨迹大侠)**. Visual / UI / nhân vật / skill dùng
-> asset JX (jx-source) đã port trong Sandbox. **Offline single-player trước**.
+> asset JX (jx-pc) đã port trong Sandbox. **Offline single-player trước**.
 > Mode/scene MỚI song song Sandbox (giữ Sandbox làm reference + nguồn asset).
 > Orientation **portrait**.
 

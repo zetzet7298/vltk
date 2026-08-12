@@ -13,7 +13,7 @@ import hashlib
 import json
 from pathlib import Path
 
-CANONICAL_ROOT = Path("/var/www/jx-source")
+CANONICAL_ROOT = Path("/var/www/jx-pc")
 CANONICAL_FILES = {
     "pak_unpacked/slistcache/settings/skills.txt": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c",
     "01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua": "56d9910a0d601ee28f40f26f257af1bb6f98757c8319a1b336926bc9d4471ed8",
@@ -121,12 +121,12 @@ def build(source: Path) -> bytes:
         "schema": "vltk.caibang.static-oracle/v1",
         "canonicalSources": [
             {
-                "path": "/var/www/jx-source/pak_unpacked/slistcache/settings/skills.txt",
+                "path": "/var/www/jx-pc/pak_unpacked/slistcache/settings/skills.txt",
                 "sha256": "c77892fb33b6e63783c554bd075caa4891d9b9ec8abb70084582a5c24156e40c",
                 "provides": "static rows",
             },
             {
-                "path": "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua",
+                "path": "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/script/skill/gaibang.lua",
                 "sha256": "56d9910a0d601ee28f40f26f257af1bb6f98757c8319a1b336926bc9d4471ed8",
                 "provides": "357/1073 collide relationships",
             },

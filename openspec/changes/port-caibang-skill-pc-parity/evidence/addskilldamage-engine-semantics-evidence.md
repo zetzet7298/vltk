@@ -5,7 +5,7 @@ Does casting a Cai Bang skill that has `addskilldamageN` (e.g. Thiên Hạ Vô C
 Ác Cẩu 125) spawn the listed sub-skill's missiles/visual, or only modify damage?
 
 ## Source of truth
-PC engine C++ at `/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src`.
+PC engine C++ at `/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/SwordOnline/Sources/Core/Src`.
 
 ### 1. Parse: `addskilldamage1..9` stored as magic attribs
 `KSkills.cpp:2544`:

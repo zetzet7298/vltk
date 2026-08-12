@@ -21,7 +21,7 @@ forbidden_paths:
     reason: Unity brownfield ngoài phạm vi specs
   - path: harness/specs/dhcd-jx-port/**
     reason: Bộ specs khác, phải bảo toàn
-  - path: /var/www/jx-source/**
+  - path: /var/www/jx-pc/**
     reason: Corpus PC chỉ đọc
 audit_semantics:
   claim: LIMITED_TO_OWNED_PATHS

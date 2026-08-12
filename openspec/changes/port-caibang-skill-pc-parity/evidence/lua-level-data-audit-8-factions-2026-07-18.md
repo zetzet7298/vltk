@@ -6,7 +6,7 @@ Audit nguồn level data PC (`bin/Server/script/skill/*.lua`) vs runtime mobile
 Shaolin, TianWang, EMei, CuiYan, WuDu, TianRen, WuDang, KunLun.
 (CaiBang + TangMen đã port: `PcCaiBangLuaLevelService`, `PcTangMenLuaLevelService`.)
 
-## PC nguồn (jx-source, read-only)
+## PC nguồn (jx-pc, read-only)
 `01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server/script/skill/`
 - shaolin.lua 645 dòng, tianwang.lua 778, emei.lua 640, cuiyan.lua 640,
   wudu.lua 616, tianren.lua 619, wudang.lua 665, kunlun.lua 621 (tổng 5,224)

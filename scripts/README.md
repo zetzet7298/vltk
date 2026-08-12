@@ -7,15 +7,15 @@ This directory contains harness automation tools plus VLTK PC→Mobile audit/por
 Scripts that inspect PC data must read the canonical source combination:
 
 ```text
-/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client
-/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server
-/var/www/jx-source/pak_unpacked
+/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client
+/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/Server
+/var/www/jx-pc/pak_unpacked
 ```
 
 The unpack manifest is:
 
 ```text
-/var/www/jx-source/pak_unpacked/_unpack_summary.json
+/var/www/jx-pc/pak_unpacked/_unpack_summary.json
 ```
 
 Do not point new scripts at old temporary unpack trees; they were removed. Use `unpak_tool.py` only for narrow repair/re-unpack cases.

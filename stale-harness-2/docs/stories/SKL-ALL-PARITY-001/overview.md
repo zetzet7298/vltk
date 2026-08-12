@@ -2,14 +2,14 @@
 
 ## Current Behavior
 
-Cái Bang đã có Harness story riêng và verifier 136/136 pass. Các phái còn lại đang dựa nhiều vào catalog hard-code, test tự nhất quán và coverage không đồng đều. Chưa có matrix chứng minh mọi skill chủ động, bị động, buff, utility, aura, child/event và NPC/player variant khớp canonical `/var/www/jx-source`.
+Cái Bang đã có Harness story riêng và verifier 136/136 pass. Các phái còn lại đang dựa nhiều vào catalog hard-code, test tự nhất quán và coverage không đồng đều. Chưa có matrix chứng minh mọi skill chủ động, bị động, buff, utility, aura, child/event và NPC/player variant khớp canonical `/var/www/jx-pc`.
 
 ## Target Behavior
 
 Mọi player-facing skill của 10 phái phải có chuỗi evidence:
 
 ```text
-canonical jx-source row/Lua/C++/PAK
+canonical jx-pc row/Lua/C++/PAK
 → repo-local exact slice khi runtime cần
 → Unity catalog/model mapping
 → runtime behavior
@@ -37,7 +37,7 @@ trên PC thì Unity cũng không được tự bịa hiệu ứng.
 
 ## Non-Goals
 
-- Không sửa canonical `/var/www/jx-source`.
+- Không sửa canonical `/var/www/jx-pc`.
 - Không claim 99%/100% visual/audio/frame parity khi chưa có PC runtime golden
   và Android/device playback evidence cho cùng skill matrix.
 - Không port NPC-only skill nếu không ảnh hưởng player chain; ghi riêng trong matrix.

@@ -8,7 +8,7 @@ namespace VLTK.Tests.Sandbox
     public class PcScrollParserTests
     {
         private const int ExpectedPcScrollRows = 2600;
-        private const string PcSourcePath = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/scroll.txt";
+        private const string PcSourcePath = "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem/bin/client/settings/scroll.txt";
         private static string ReferencePath => Path.Combine(
             Directory.GetCurrentDirectory(),
             "Assets/StreamingAssets/Reference/PcMap/scroll.txt");

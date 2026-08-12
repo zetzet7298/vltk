@@ -10,7 +10,7 @@ Usage:
 """
 import argparse, os, re, sys
 
-SOURCE_ROOT = "/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem"
+SOURCE_ROOT = "/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem"
 MAPLIST = os.path.join(SOURCE_ROOT, "Utility/Run/Settings/MapList.ini")
 RUN_MAPS = os.path.join(SOURCE_ROOT, "Utility/Run/maps")
 

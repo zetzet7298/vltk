@@ -10,7 +10,7 @@ Handoff từ: [wayfinder map](map.md) (đã close research 01-09 + design 16/25;
 Người chơi mobile muốn một mode survivor roguelike offline (portrait, chạm) trong
 `vltk-mobile`: đứng trong arena, đánh quái theo đợt, hút XP, lên cấp, chọn skill từ 3 card,
 sống sót càng lâu càng tốt. Loop-shape theo Đại Hiệp Chế Đạo (DHCD), visual/content lấy từ
-JX (jx-source) đã port trong Sandbox. Hiện chỉ có P1 skeleton: auto-attack + 1 loại card flat-stat,
+JX (jx-pc) đã port trong Sandbox. Hiện chỉ có P1 skeleton: auto-attack + 1 loại card flat-stat,
 chưa có skill library thật, wave đơn điệu, không boss/shop/box/endless, không save/settings/i18n,
 không audio/VFX, chưa build mobile. DHCD RandomSkillConfig mã hóa (FastXXTEA, key blocked) →
 KHÔNG port được data dhcd; balance số phải tự thiết kế.

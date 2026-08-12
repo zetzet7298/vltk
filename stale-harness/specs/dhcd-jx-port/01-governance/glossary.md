@@ -9,7 +9,7 @@
 
 | Thuật ngữ | Định nghĩa |
 |---|---|
-| JX | Võ Lâm Truyền Kỳ PC source tại `/var/www/jx-source`; authority cho identity và visual |
+| JX | Võ Lâm Truyền Kỳ PC source tại `/var/www/jx-pc`; authority cho identity và visual |
 | DHCD | Corpus client đã reverse tại `/home/zet/Projects/dhcd`; evidence cho loop, không phải runtime target |
 | Source of truth | Nguồn được phép quyết định một loại claim cụ thể, theo source hierarchy |
 | Candidate | Asset/map/config có thể dùng nhưng chưa qua resolver/decode/golden |

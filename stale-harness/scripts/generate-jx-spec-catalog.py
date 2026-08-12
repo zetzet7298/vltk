@@ -15,7 +15,7 @@ from pathlib import Path
 import yaml
 
 
-SOURCE_ROOT = Path("/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem")
+SOURCE_ROOT = Path("/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem")
 CLIENT_ROOT = SOURCE_ROOT / "bin/client"
 CLIENT_SETTINGS = SOURCE_ROOT / "bin/client/settings"
 SERVER_SETTINGS = (

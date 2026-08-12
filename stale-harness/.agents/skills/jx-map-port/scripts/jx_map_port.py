@@ -235,7 +235,7 @@ def main():
     ap.add_argument("--project-map-id", type=int, required=True, help="Unity StreamingAssets Map_{id}_C")
     ap.add_argument("--unity-root", default="/var/www/vltk-mobile")
     ap.add_argument("--source-root",
-                    default="/var/www/jx-source/01_tinh_kiem_source/source/00.src-tinh-kiem",
+                    default="/var/www/jx-pc/01_tinh_kiem_source/source/00.src-tinh-kiem",
                     help="canonical read-only JX source root")
     ap.add_argument("--data-dir", default=None,
                     help="override PAK dir (default <source-root>/bin/Client/data)")

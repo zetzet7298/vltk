@@ -74,7 +74,7 @@ def test_map79_alias_testdata_absolute_and_loose_paths_rejected():
     cases = [
         ("allowMapIds", [53, 79], "map 79"),
         ("artifactToken", "TestData", "forbidden runtime fallback token"),
-        ("artifactToken", "/var/www/jx-source", "forbidden runtime fallback token"),
+        ("artifactToken", "/var/www/jx-pc", "forbidden runtime fallback token"),
     ]
     for field, value, message in cases:
         with tempfile.TemporaryDirectory() as d:
