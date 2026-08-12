@@ -1,9 +1,0 @@
-schema_version: 1
-gates:
-  - {id: GATE-G0, phase: G0, title: CNPM và trace closure, status: READY, owner: spec-governance, exit_criteria: Authoring và premerge validator 0 finding}
-  - {id: GATE-G1, phase: G1, title: Source provenance và census closure, status: BLOCKED, owner: content-parity, exit_criteria: Clean pinned vltktool resolve đủ package index UID winner locale và hash}
-  - {id: GATE-G2, phase: G2, title: Contract compatibility, status: BLOCKED, owner: backend-contract, exit_criteria: TEST-CONTRACT-001 và TEST-CONTRACT-002 có PASS artifact cùng revision sau OpenAPI Proto JSON Schema và PostgreSQL 16 runtime validation}
-  - {id: GATE-G3, phase: G3, title: Determinism và parity, status: BLOCKED, owner: qa-parity, exit_criteria: Live PC golden logic 100 phần trăm và SSIM từng case tối thiểu 0.99}
-  - {id: GATE-G4, phase: G4, title: E2E recovery security, status: UNVERIFIED, owner: gameplay-platform, exit_criteria: E2E reconnect economy Lua RLS và recovery pass}
-  - {id: GATE-G5, phase: G5, title: Load và device, status: UNVERIFIED, owner: performance, exit_criteria: 1000 CCU và device matrix đạt SLO}
-  - {id: GATE-G6, phase: G6, title: Migration restore release, status: UNVERIFIED, owner: sre-release, exit_criteria: Rehearsal restore rollback và approval hoàn tất}
